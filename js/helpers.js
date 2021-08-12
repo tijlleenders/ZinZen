@@ -1,0 +1,1864 @@
+'use strict'
+
+function openGraphModal() {
+    emptyModal()
+    $("#modal-title").html("<h4 class=\"modal-title\"> Overview of all your goals</h4>");
+    $("#modal-body").html('<iframe width="100%" height="684" frameborder="0"\
+  src="https://observablehq.com/embed/@d3/force-directed-graph?cells=chart"></iframe>')
+    $("#myModal").modal("show");
+}
+
+function openMainMailModal() {
+    emptyModal()
+    $("#modal-header-content").html('<h4 class="modal-title">1990\'s style inbox</h4>')
+    $("#modal-body").html('\
+  <div class="row">\
+  <div class="col">\
+    <div id="modal-inbox">\
+      This <b>inbox</b> shows messages that don\'t belong in goal-specific mailboxes.<br />\
+      There should be very few messages here as they require context switching.<br />\
+      <br />\
+      <b>Want this?</b> You can! <b><a\
+          href="https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"><br />Fund\
+          it.</a></b>\
+      ( Set TIP to <b>"Other - 0%"</b> )<br />\
+    </div>\
+  </div>\
+</div>')
+    $("#myModal").modal("show");
+}
+
+function updateModalSettingsUI() {
+    $("#modal-header-content").html('<h4 class="modal-title">Settings</h4>')
+    let settingsHTML = ``
+
+    settingsHTML += '\
+  <div class="row">\
+    <div class="col">\
+    Account<br />'
+    if (settings.get("owner")[0] != undefined &&
+        settings.get("owner")[0] != "") {
+        settingsHTML += '<div id="logout"><button name="logout-buttonx" id="logout-buttonx" type="button" class="btn btn-outline-secondary btn-sm">Log out</button></div>'
+    } else {
+        settingsHTML += '<div id="login"><button name="login-buttonx" id="login-buttonx" type="button" class="btn btn-outline-secondary btn-sm">Log in</button></div>'
+    }
+    settingsHTML += '  <div id="install-app"><button name="install-app-button" id="install-app-button" type="button" class="btn btn-outline-secondary btn-sm">Install app (only on android)</button></div>'
+
+    settingsHTML += '  <div id="allow-notify"><button name="allow-notify-button" id="allow-notify-button" type="button" class="btn btn-outline-secondary btn-sm">Check if notifications allowed</button></div>'
+    settingsHTML += '<div id="allow-notify-message" class="sub-title"></div>'
+    settingsHTML += '\
+    </div>\
+  </div>\
+  '
+    settingsHTML += `
+  <div class="row">\
+    <div class="col">\
+      <div id="modal-settings-screenmode">\
+        <br />\
+        Screenmode<br />\
+        <button type="button" class="btn btn-outline-secondary btn-sm" name="screenModeDark" id="screen-mode-dark" autocomplete="off">Dark</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" name="screenModeLight" id="screen-mode-light" autocomplete="off">Light</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" name="screenModeTimeBased" id="screen-mode-time-based" autocomplete="off">Time-based</button>
+      </div>\
+    </div>\
+  </div>
+  `
+
+    $("#modal-body").html(settingsHTML)
+    if (settings.get("screenMode")[0] == "dark") {
+        $("#screen-mode-dark").addClass('active')
+    } else {
+        $("#screen-mode-light").addClass('active')
+    }
+}
+
+function updateModalVisibilitiesUI() {
+    let sharedAnonymously = $("#modal-share-anonymously").data("shareAnonymously")
+    let sharedPublicly = $("#modal-share-publicly").data("sharePublicly")
+    let sharedSelectively = $("#modal-share-selectively").data("shareSelectively")
+
+    sharedAnonymously == "shareAnonymously" ? sharedAnonymously = true : sharedAnonymously = false
+    sharedPublicly == "sharePublicly" ? sharedPublicly = true : sharedPublicly = false
+    sharedSelectively == "undefined" ? sharedSelectively = true : sharedSelectively = false
+
+    let bodyHTML = getVisibilitesBodyHTML(sharedAnonymously, sharedPublicly, sharedSelectively)
+    $("#modal-body").html(bodyHTML)
+}
+
+function updateModalScheduleUI() {
+    updateStatusUI()
+    updateStartUI()
+    updateFinishUI()
+    updateDurationUI()
+    updateDaytimePrefUI() //Todo: from scheduleData
+    updateTimePerSlotUI()
+    updateTimePerDayUI()
+    updateTimePerWeekUI()
+    updateScheduleStatusUI()
+}
+
+function updateModalScheduleConstraintsUI() {
+    updateDurationUI()
+    updateFinishUI()
+}
+
+function updateModalUI() {
+    switch ($("#myModal").data("modalType")) {
+        case "settings":
+            updateModalSettingsUI()
+            break;
+        case "schedule":
+            updateModalSchedule()
+            break;
+        case "visibilities":
+            updateModalVisibilitiesUI()
+            break;
+        case "finish":
+            updateModalScheduleConstraintsUI()
+            break;
+        default:
+            console.log("modalType to render UI for not recognized")
+    }
+}
+
+function updateScheduleStatusUI() {
+    let status = $("#schedule-status").data("status")
+    switch (status) {
+        case "proposal":
+            let proposal = JSON.parse($("#schedule-status").data("proposal"))
+            let proposedHTML = '<p class="text-center">Current: '
+            let currentBegin = new Date($("#modal-status").data("scheduledBeginISO"))
+            let currentEnd = new Date($("#modal-status").data("scheduledEndISO"))
+            let currentDurationString = formatDuration((currentEnd.valueOf() - currentBegin.valueOf()) / 1000).short
+            proposedHTML += currentBegin.toLocaleString() + ' ' + currentDurationString + '</br>'
+            proposedHTML += 'Proposal:<br />'
+            proposal.forEach((element, index) => {
+                let begin = new Date(element.begin)
+                let end = new Date(element.end)
+                let durationString = formatDuration((end.valueOf() - begin.valueOf()) / 1000).short
+                proposedHTML = proposedHTML + begin.toLocaleString() + ' ' + durationString + '</br>'
+            });
+            if (proposal.length == 0) {
+                proposedHTML = '<p class="text-center">No possibilities for these criteria'
+            }
+            proposedHTML = proposedHTML + '</p>'
+            $("#schedule-status").html(proposedHTML)
+            break;
+        case "probing":
+            $("#schedule-status").html('<div class="spinner-grow mx-auto"></div>')
+            break;
+        default:
+            console.log("default status... not handled")
+    }
+}
+
+function openSettingsModal() {
+    emptyModal()
+    $("#myModal").data("modalType", "settings")
+    updateModalUI()
+    $("#myModal").modal("show")
+}
+
+function openModal(id, modalType) {
+    if (
+        $("#myModal").data("idx") == id &&
+        $("#myModal").hasClass('in') // is it showing?
+    ) {
+        console.log("openModal called for " + modalType + " modal with id " + id + " - but modal already open")
+        return //without refresh?
+    }
+    emptyModal()
+    $("#myModal").data("modalType", modalType)
+    $("#myModal").data("idx", id)
+    $("#myModal").data("firstCall", true)
+    send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}') //will fill the modal upon response
+    $("#myModal").modal("show")
+}
+
+function emptyModal() {
+    $("#myModal").data("modalType", "")
+    $("#modal-header-content").html('<h4 class="modal-title">...</h4>')
+    $("#modal-body").empty()
+    $("#modal-footer-content").empty()
+    $("#myModal").data("idx", "")
+        //Todo: aggregate vars per modal type into named arrays ie schedulePrefs
+    $("#myModal").data("timesOfDaysPref", "")
+    $("#modal-start").data("start", "")
+    $("#modal-finish").data("finish", "")
+    $("#modal-duration").data("duration", "")
+    $("#modal-timesOfDaysPref").data("timesOfDaysPref", "")
+    $("#modal-budget-per-slot").data("minSize", "")
+    $("#modal-budget-per-slot").data("maxSize", "")
+    $("#modal-budget-per-day").data("minTimesPerDay", "")
+    $("#modal-budget-per-day").data("maxTimesPerDay", "")
+    $("#modal-budget-per-week").data("minTimesPerWeek", "")
+    $("#modal-budget-per-week").data("maxTimesPerWeek", "")
+}
+
+function getScheduleData() {
+    let scheduleData = {}
+    scheduleData.id = $("#myModal").data("idx")
+    scheduleData.status = $("#modal-status").data("status")
+    scheduleData.start = $("#modal-start").data("start")
+    if (scheduleData.start == undefined) {
+        scheduleData.start = new Date().toISOString()
+    }
+    scheduleData.finish = $("#modal-finish").data("finish")
+    if (scheduleData.finish == undefined) {
+        scheduleData.finish = new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
+    }
+    scheduleData.duration = $("#modal-duration").data("duration")
+    scheduleData.timesOfDaysPref = $("#modal-timesOfDaysPref").data("timesOfDaysPref").toString()
+    scheduleData.minSize = $("#modal-budget-per-slot").data("minSize")
+    scheduleData.maxSize = $("#modal-budget-per-slot").data("maxSize")
+    scheduleData.minTimesPerDay = $("#modal-budget-per-day").data("minTimesPerDay")
+    scheduleData.maxTimesPerDay = $("#modal-budget-per-day").data("maxTimesPerDay")
+    scheduleData.minTimesPerWeek = $("#modal-budget-per-week").data("minTimesPerWeek")
+    scheduleData.maxTimesPerWeek = $("#modal-budget-per-week").data("maxTimesPerWeek")
+    console.log("scheduleData:", scheduleData)
+    return scheduleData
+}
+
+function updateSettings() {
+    console.log("updating settings...")
+    updateScreenMode()
+    updateModalSettingsUI()
+}
+
+function updateScreenMode() {
+    if (document.documentElement.getAttribute("data-theme") != settings.get("screenMode")[0]) {
+        document.documentElement.setAttribute("data-theme", settings.get("screenMode")[0])
+    }
+}
+
+function sendProbeRequest() {
+    let upsertGoal = {
+        action: "command",
+        command: "probe",
+        scheduleData: getScheduleData()
+    }
+    $("#schedule-status").data("status", "probing")
+    updateScheduleStatusUI()
+    send(JSON.stringify(upsertGoal))
+}
+
+function setSkeletonHTMLForScheduleConstraints() {
+    let headerHTML = `<h4 class="modal-title">Time options for ...</h4>`
+    $("#modal-header-content").html(headerHTML)
+    let bodyHTML = `
+  <div class="row mt-2" id="options-row">
+    <div class="col">
+      <div class="accordion .accordion-flush" id="schedule-accordion">
+
+      <div class="accordion-item" id="collapse-item-finish">
+          <h2 class="accordion-header" id="heading-finish">
+            <button class="accordion-button collapsed" id="accordion-button-finish" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse-finish" aria-expanded="false" aria-controls="collapse-finish">
+              <div id="modal-finish">
+                <p class="text-center">No due date</p>
+              </div>
+            </button>
+          </h2>
+          <div id="collapse-finish" class="accordion-collapse collapse" aria-labelledby="heading-finish"
+            data-bs-parent="#schedule-accordion">
+            <div class="accordion-body">
+              <div id="modal-finish-modify" class="subtitles">
+                <button name="quick-set-today-button" id="quick-set-today-button" type="button" class="btn btn-outline-secondary btn-sm">Today</button>
+                <button name="quick-set-tomorrow-button" id="quick-set-tomorrow-button" type="button" class="btn btn-outline-secondary btn-sm">Tomorrow</button>
+                <button name="quick-set-next-week-button" id="quick-set-next-week-button" type="button" class="btn btn-outline-secondary btn-sm">Next week</button>
+                <button name="quick-set-next-month-button" id="quick-set-next-month-button" type="button" class="btn btn-outline-secondary btn-sm">Next month</button>
+                <button name="quick-set-custom-button" id="quick-set-custom-button" type="button" class="btn btn-outline-secondary btn-sm">Custom</button>
+                <div id="due-date-time-picker" class="d-flex justify-content-center"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-duration">
+            <button class="accordion-button collapsed" id="accordion-button-duration" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-duration"
+              aria-expanded="false" aria-controls="collapse-duration">
+              <div id="modal-duration">
+                <p class="text-center">Reserve 1h</p>
+              </div>
+            </button>
+          </h2>
+          <div id="collapse-duration" class="accordion-collapse collapse" aria-labelledby="heading-duration"
+            data-bs-parent="#schedule-accordion">
+            <div class="accordion-body">
+              <div id="modal-duration-modify">
+                <table class="table">
+                  <tr>
+                    <th>
+                      <div><button type="button" id="add-week-button" class="btn btn-light ">+</button></div>
+                    </th>
+                    <th>
+                      <div><button type="button" id="add-day-button" class="btn btn-light ">+</button></div>
+                    </th>
+                    <th>
+                      <div><button type="button" id="add-hour-button" class="btn btn-light ">+</button></div>
+                    </th>
+                    <th>
+                      <div><button type="button" id="add-minute-button" class="btn btn-light ">+</button>
+                      </div>
+                    </th>
+                    <th>
+                      <div><button type="button" id="add-second-button" class="btn btn-light ">+</button>
+                      </div>
+                    </th>
+                  </tr>
+                  <tr>
+                    <td id="duration-weeks">w</td>
+                    <td id="duration-days">d</td>
+                    <td id="duration-hours">h</td>
+                    <td id="duration-minutes">m</td>
+                    <td id="duration-seconds">s</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div><button type="button" id="remove-week-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div><button type="button" id="remove-day-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div><button type="button" id="remove-hour-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div><button type="button" id="remove-minute-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div><button type="button" id="remove-second-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+    </div>
+  </div>`
+    $("#modal-body").html(bodyHTML)
+}
+
+function setSkeletonHTMLForSchedule() {
+    let headerHTML = `<h4 class="modal-title">schedule</h4>`
+    $("#modal-header-content").html(headerHTML)
+    let bodyHTML = `
+  <div class="row align-text-center mt-2">
+    <div class="col" id="modal-status">    
+      <div class="control-icons semi-transparent mx-1" id="delete-schedule" data-bs-toggle="tooltip"
+          data-bs-placement="bottom" title="" data-bs-original-title="Delete">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
+      <path  d="M9.036 7.976a.75.75 0 00-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 101.06 1.06L12 13.06l2.963 2.964a.75.75 0 001.061-1.06L13.061 12l2.963-2.964a.75.75 0 10-1.06-1.06L12 10.939 9.036 7.976z">
+      </path><path fill-rule="evenodd" fill="none" stroke-width="2"
+      d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
+      </svg>
+      </div>
+      <div class="control-icons semi-transparent mx-1" id="done-schedule" data-bs-toggle="tooltip"
+                data-bs-placement="bottom" title="" data-bs-original-title="Mark as done">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+          <path stroke-width="1"
+            d="M17.28 9.28a.75.75 0 00-1.06-1.06l-5.97 5.97-2.47-2.47a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l6.5-6.5z" />
+          <path fill-rule="evenodd" fill="none" stroke-width="2"
+            d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
+        </svg>
+      </div>
+      <div class="control-icons semi-transparent mx-1" id="promised-schedule" data-bs-toggle="tooltip"
+      data-bs-placement="bottom" title="" data-bs-original-title="Mark as promised">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+          <path fill="none" stroke-width="2"
+            d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
+        </svg>
+      </div>
+      <div class="control-icons semi-transparent mx-1" id="maybe-schedule" data-bs-toggle="tooltip"
+      data-bs-placement="bottom" title="" data-bs-original-title="Mark as maybe">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+          <path fill="none" stroke-width="2" stroke-dasharray="2.47"
+            d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
+        </svg>
+      </div>    
+    </div>  
+  </div>
+  <div class="row mt-2 d-none" id="deleted-options-row">
+    <div class="col">
+      <button type="button" class="btn btn-outline-secondary" id="delete-this">Didn't do - delete!</button>
+    </div>
+  </div>
+  <div class="row mt-2 d-none" id="done-options-row">
+    <div class="col">
+      <div id="time-spent-slider">
+        <label for="time-spent" class="form-label">Time actually spent:</label>
+        <input type="range" class="form-range" id="time-spent"> 
+      </div>
+      <div id="mood-done">
+        How do you feel about achieving this goal?
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2" id="options-row">
+    <div class="col">
+      <div class="accordion .accordion-flush" id="schedule-accordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-start">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse-start" aria-expanded="false" aria-controls="collapse-start">
+              <div id="modal-start">
+                <p class="text-center">Starts asap</p>
+              </div>
+            </button>
+          </h2>
+          <div id="collapse-start" class="accordion-collapse collapse" aria-labelledby="heading-start"
+            data-bs-parent="#schedule-accordion">
+            <div class="accordion-body">
+              <div id="modal-start-modify" class="subtitles">
+                <div id="start-date-time-picker" class="d-flex justify-content-center"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-finish">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse-finish" aria-expanded="false" aria-controls="collapse-finish">
+              <div id="modal-finish">
+                <p class="text-center">Finishes asap</p>
+              </div>
+            </button>
+          </h2>
+          <div id="collapse-finish" class="accordion-collapse collapse" aria-labelledby="heading-finish"
+            data-bs-parent="#schedule-accordion">
+            <div class="accordion-body">
+              <div id="modal-finish-modify" class="subtitles">
+                <div id="due-date-time-picker" class="d-flex justify-content-center"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-duration">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse-duration" aria-expanded="false" aria-controls="collapse-duration">
+              <div id="modal-duration">
+                <p class="text-center">Reserve 1h</p>
+              </div>
+            </button>
+          </h2>
+          <div id="collapse-duration" class="accordion-collapse collapse" aria-labelledby="heading-duration"
+            data-bs-parent="#schedule-accordion">
+            <div class="accordion-body">
+              <div id="modal-duration-modify">
+                <table class="table">
+                  <tr>
+                    <th>
+                      <div><button type="button" id="add-week-button" class="btn btn-light ">+</button></div>
+                    </th>
+                    <th>
+                      <div><button type="button" id="add-day-button" class="btn btn-light ">+</button></div>
+                    </th>
+                    <th>
+                      <div><button type="button" id="add-hour-button" class="btn btn-light ">+</button></div>
+                    </th>
+                    <th>
+                      <div><button type="button" id="add-minute-button" class="btn btn-light ">+</button>
+                      </div>
+                    </th>
+                    <th>
+                      <div><button type="button" id="add-second-button" class="btn btn-light ">+</button>
+                      </div>
+                    </th>
+                  </tr>
+                  <tr>
+                    <td id="duration-weeks">w</td>
+                    <td id="duration-days">d</td>
+                    <td id="duration-hours">h</td>
+                    <td id="duration-minutes">m</td>
+                    <td id="duration-seconds">s</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div><button type="button" id="remove-week-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div><button type="button" id="remove-day-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div><button type="button" id="remove-hour-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div><button type="button" id="remove-minute-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div><button type="button" id="remove-second-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-timesOfDaysPref">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse-timesOfDaysPref" aria-expanded="false" aria-controls="collapse-timesOfDaysPref">
+              <div id="modal-timesOfDaysPref">
+                <p class="text-center">Anytime except night</p>
+              </div>
+            </button>
+          </h2>
+          <div id="collapse-timesOfDaysPref" class="accordion-collapse collapse" aria-labelledby="heading-timesOfDaysPref"
+            data-bs-parent="#schedule-accordion">
+            <div class="accordion-body">
+              <div id="modal-timesOfDaysPref-modify">
+                <table class="table text-center">
+                  <tr>
+                    <td></td>
+                    <td>
+                      <div id="daytimePrefNight-0" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="16" height="16" fill="currentColor" class="bi bi-moon-stars" viewBox="0 0 16 16">
+                          <path
+                            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                          <path
+                            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefMorning-1" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefAfternoon-2" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                          <path
+                            d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefEvening-3" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="row">
+                      <div id="daytimePrefMon-0" class="daytimeDay">Mon</div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefMonNight-0" class="daytime very-transparent"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-moon-stars" viewBox="0 0 16 16">
+                          <path
+                            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                          <path
+                            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefMonMorning-1" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                          height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefMonAfternoon-2" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                          <path
+                            d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefMonEvening-3" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                          height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="row">
+                      <div id="daytimePrefTue-4" class="daytimeDay">Tue</div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefTueNight-4" class="daytime very-transparent"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-moon-stars" viewBox="0 0 16 16">
+                          <path
+                            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                          <path
+                            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefTueMorning-5" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                          height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefTueAfternoon-6" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                          <path
+                            d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefTueEvening-7" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                          height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="row">
+                      <div id="daytimePrefWed-8" class="daytimeDay">Wed</div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefWedNight-8" class="daytime very-transparent"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-moon-stars" viewBox="0 0 16 16">
+                          <path
+                            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                          <path
+                            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefWedMorning-9" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                          height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefWedAfternoon-10" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                          <path
+                            d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefWedEvening-11" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="row">
+                      <div id="daytimePrefThu-12" class="daytimeDay">Thu</div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefThuNight-12" class="daytime very-transparent"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-moon-stars" viewBox="0 0 16 16">
+                          <path
+                            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                          <path
+                            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefThuMorning-13" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefThuAfternoon-14" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                          <path
+                            d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefThuEvening-15" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="row">
+                      <div id="daytimePrefFri-16" class="daytimeDay">Fri</div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefFriNight-16" class="daytime very-transparent"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-moon-stars" viewBox="0 0 16 16">
+                          <path
+                            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                          <path
+                            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefFriMorning-17" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefFriAfternoon-18" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                          <path
+                            d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefFriEvening-19" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="row">
+                      <div id="daytimePrefSat-20" class="daytimeDay">Sat</div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefSatNight-20" class="daytime very-transparent"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-moon-stars" viewBox="0 0 16 16">
+                          <path
+                            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                          <path
+                            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefSatMorning-21" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefSatAfternoon-22" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                          <path
+                            d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefSatEvening-23" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td scope="row">
+                      <div id="daytimePrefSun-24" class="daytimeDay">Sun</div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefSunNight-24" class="daytime very-transparent"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-moon-stars" viewBox="0 0 16 16">
+                          <path
+                            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
+                          <path
+                            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefSunMorning-25" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefSunAfternoon-26" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
+                          <path
+                            d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+                        </svg></div>
+                    </td>
+                    <td>
+                      <div id="daytimePrefSunEvening-27" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+                          width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
+                          <path
+                            d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                        </svg></div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-budget-per-slot">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse-budget-per-slot" aria-expanded="false" aria-controls="collapse-budget-per-slot">
+              <div id="modal-budget-per-slot">
+                <p class="text-center">30m-1h per slot</p>
+              </div>
+            </button>
+          </h2>
+          <div id="collapse-budget-per-slot" class="accordion-collapse collapse" aria-labelledby="heading-budget-per-slot"
+            data-bs-parent="#schedule-accordion">
+            <div class="accordion-body">
+              <div id="modal-budget-per-slot-modify">
+                <table class="table text-center">
+                  <tr>
+                    <td colspan="2">
+                      Min per slot
+                    </td>
+                    <td colspan="2">
+                      Max per slot
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div id="remove-min-per-slot-button-area"><button type="button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div id="add-min-per-slot-button-area"><button type="button" class="btn btn-light">+</button></div>
+                    </td>
+                    <td>
+                      <div id="remove-max-per-slot-button-area"><button type="button" class="btn btn-light">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div id="add-max-per-slot-button-area"><button type="button" class="btn btn-light">+</button></div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-budget-per-day">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse-budget-per-day" aria-expanded="false" aria-controls="collapse-budget-per-day">
+              <div id="modal-budget-per-day">
+                <p class="text-center">0-1 times per day</p>
+              </div>
+            </button>
+          </h2>
+          <div id="collapse-budget-per-day" class="accordion-collapse collapse" aria-labelledby="heading-budget-per-day"
+            data-bs-parent="#schedule-accordion">
+            <div class="accordion-body">
+              <div id="modal-budget-per-day-modify">
+                <table class="table text-center">
+                  <tr>
+                    <td colspan="2">
+                      Min per day
+                    </td>
+                    <td colspan="2">
+                      Max per day
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div id="remove-min-per-day-button-area"><button type="button" id="remove-min-per-day-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div id="add-min-per-day-button-area"><button type="button" id="add-min-per-day-button" class="btn btn-light ">+</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div id="remove-max-per-day-button-area"><button type="button" id="remove-max-per-day-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div id="add-max-per-day-button-area"><button type="button" id="add-max-per-day-button" class="btn btn-light ">+</button>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading-budget-per-week">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapse-budget-per-week" aria-expanded="false" aria-controls="collapse-budget-per-week">
+              <div id="modal-budget-per-week">
+                <p class="text-center">1-5 times per week</p>
+              </div>
+            </button>
+          </h2>
+          <div id="collapse-budget-per-week" class="accordion-collapse collapse" aria-labelledby="heading-budget-per-week"
+            data-bs-parent="#schedule-accordion">
+            <div class="accordion-body">
+              <div id="modal-budget-per-week-modify">
+                <table class="table text-center">
+                  <tr>
+                    <td colspan="2">
+                      Min per week
+                    </td>
+                    <td colspan="2">
+                      Max per week
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div id="remove-min-per-week-button-area"><button type="button" id="remove-min-per-week-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div id="add-min-per-week-button-area"><button type="button" id="add-min-per-week-button" class="btn btn-light ">+</button></div>
+                    </td>
+                    <td>
+                      <div id="remove-max-per-week-button-area"><button type="button" id="remove-max-per-week-button" class="btn btn-light ">-</button>
+                      </div>
+                    </td>
+                    <td>
+                      <div id="add-max-per-week-button-area"><button type="button" id="add-max-per-week-button" class="btn btn-light ">+</button></div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="proposal-row">
+    <div class="col">
+      <hr />
+      <div id="schedule-status">
+        <p class="text-center">No changes yet...</p>
+      </div>
+    </div>
+  </div>`
+    $("#modal-body").html(bodyHTML)
+}
+
+function setSkeletonHTMLForVisibilities() {
+    let headerHTML = `<h4 class="modal-title">Visibilities</h4>`
+    $("#modal-header-content").html(headerHTML)
+
+    let sharedAnonymously = false
+    let sharedPublicly = false
+    let sharedSelectively = false
+
+    let bodyHTML = getVisibilitesBodyHTML(sharedAnonymously, sharedPublicly, sharedSelectively)
+    $("#modal-body").html(bodyHTML)
+}
+
+function getVisibilitesBodyHTML(sharedAnonymously, sharedPublicly, sharedSelectively) {
+    let dontShareAnonymouslyIsChecked
+    let shareAnonymouslyIsChecked
+    sharedAnonymously ? dontShareAnonymouslyIsChecked = "" : dontShareAnonymouslyIsChecked = "checked"
+    sharedAnonymously ? shareAnonymouslyIsChecked = "checked" : shareAnonymouslyIsChecked = ""
+
+    let dontSharePubliclyIsChecked
+    let sharePubliclyIsChecked
+    sharedPublicly ? dontSharePubliclyIsChecked = "" : dontSharePubliclyIsChecked = "checked"
+    sharedPublicly ? sharePubliclyIsChecked = "checked" : sharePubliclyIsChecked = ""
+
+    let dontShareSelectivelyIsChecked
+    let shareSelectivelyIsChecked
+    sharedSelectively ? dontShareSelectivelyIsChecked = "" : dontShareSelectivelyIsChecked = "checked"
+    sharedSelectively ? shareSelectivelyIsChecked = "checked" : shareSelectivelyIsChecked = ""
+
+    let bodyHTML = `\
+  <div class="row">\
+    <div class="col">\
+      <div id="modal-share-anonymously">\
+        <input type="radio" class="btn-check" name="anonymous-options" id="dont-share-anonymously" autocomplete="off" ` + dontShareAnonymouslyIsChecked + `>
+          <label class="btn btn-outline-secondary btn-sm" for="dont-share-anonymously">Don't</label>
+        <input type="radio" class="btn-check" name="anonymous-options" id="share-anonymously" autocomplete="off" ` + shareAnonymouslyIsChecked + `>
+          <label class="btn btn-outline-secondary btn-sm" for="share-anonymously">Share anonymously</label> to help others<br />\
+      </div>\
+      <br />\
+      <div id="modal-share-publicly">\
+        <input type="radio" class="btn-check" name="public-options" id="dont-share-publicly" autocomplete="off" ` + dontSharePubliclyIsChecked + `>
+          <label class="btn btn-outline-secondary btn-sm" for="dont-share-publicly">Don't</label>
+        <input type="radio" class="btn-check" name="public-options" id="share-publicly" autocomplete="off" ` + sharePubliclyIsChecked + `>
+          <label class="btn btn-outline-secondary btn-sm" for="share-publicly">Share publicly</label> on my profile<br />\        
+      </div>\
+      <br />\
+      <div id="modal-share-selectively">\
+        <input type="radio" class="btn-check" name="selective-options" id="dont-share-selectively" autocomplete="off" ` + dontShareSelectivelyIsChecked + `>
+          <label class="btn btn-outline-secondary btn-sm" for="dont-share-selectively">Don't</label>
+        <input type="radio" class="btn-check" name="selective-options" id="share-selectively" autocomplete="off" ` + shareSelectivelyIsChecked + `>
+          <label class="btn btn-outline-secondary btn-sm" for="share-selectively">Share selectively</label> with others...<br />\
+      </div>\
+    </div>\
+  </div>\
+  `
+    $("#modal-body").html(bodyHTML)
+}
+
+function setDataFieldsForSchedule(properties) {
+    let headerHTML = `<h4 class="modal-title">` + properties.get("title")[0] + `</h4>`
+    $("#modal-header-content").html(headerHTML)
+
+    $("#modal-status").data("status", properties.get("status")[0])
+
+    $("#modal-status").data("scheduledBeginISO", properties.get("scheduledBeginISO"))
+    $("#modal-status").data("scheduledEndISO", properties.get("scheduledEndISO"))
+
+    $("#modal-start").data("start", (new Date(properties.get("start")[0])).toISOString())
+    $("#modal-finish").data("finish", (new Date(properties.get("finish")[0])).toISOString())
+
+    if (properties.has("duration") && properties.get("duration")[0] != "") {
+        var duration = properties.get("duration")[0]
+    } else {
+        console.log("setting standard duration")
+        duration = 3600
+    }
+    $("#modal-duration").data("duration", duration)
+
+    let timesOfDaysPref = JSON.parse("[" + properties.get("timesOfDaysPref")[0] + "]")
+    $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPref)
+
+    $("#modal-budget-per-slot").data("minSize", properties.get("minSize")[0])
+    $("#modal-budget-per-slot").data("maxSize", properties.get("maxSize")[0])
+    $("#modal-budget-per-day").data("minTimesPerDay", properties.get("minTimesPerDay")[0])
+    $("#modal-budget-per-day").data("maxTimesPerDay", properties.get("maxTimesPerDay")[0])
+    $("#modal-budget-per-week").data("minTimesPerWeek", properties.get("minTimesPerWeek")[0])
+    $("#modal-budget-per-week").data("maxTimesPerWeek", properties.get("maxTimesPerWeek")[0])
+    sendProbeRequest()
+}
+
+function setDataFieldsForScheduleConstraints(properties) {
+    let headerHTML = `<h4 class="modal-title">` + properties.get("title")[0] + `</h4>`
+    $("#modal-header-content").html(headerHTML)
+
+    $("#modal-status").data("status", properties.get("status")[0])
+
+    $("#modal-status").data("scheduledBeginISO", properties.get("scheduledBeginISO"))
+    $("#modal-status").data("scheduledEndISO", properties.get("scheduledEndISO"))
+
+    $("#modal-start").data("start", (new Date(properties.get("start")[0])).toISOString())
+
+    if (properties.has("finish") && properties.get("finish")[0] != "") {
+        $("#modal-finish").data("finish", (new Date(properties.get("finish")[0])).toISOString())
+    }
+
+    if (properties.has("duration") && properties.get("duration")[0] != "") {
+        var duration = properties.get("duration")[0]
+    }
+    $("#modal-duration").data("duration", duration)
+
+    if (properties.has("timesOfDaysPref") && properties.get("timesOfDaysPref")[0] != "") {
+        let timesOfDaysPref = JSON.parse("[" + properties.get("timesOfDaysPref")[0] + "]")
+        $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPref)
+    }
+
+    if (properties.has("minSize") && properties.get("minSize")[0] != "") {
+        $("#modal-budget-per-slot").data("minSize", properties.get("minSize")[0])
+    }
+
+    if (properties.has("maxSize") && properties.get("maxSize")[0] != "") {
+        $("#modal-budget-per-slot").data("maxSize", properties.get("maxSize")[0])
+    }
+
+    if (properties.has("minTimesPerDay") && properties.get("minTimesPerDay")[0] != "") {
+        $("#modal-budget-per-day").data("minTimesPerDay", properties.get("minTimesPerDay")[0])
+    }
+
+    if (properties.has("maxTimesPerDay") && properties.get("maxTimesPerDay")[0] != "") {
+        $("#modal-budget-per-day").data("maxTimesPerDay", properties.get("maxTimesPerDay")[0])
+    }
+
+    if (properties.has("minTimesPerWeek") && properties.get("minTimesPerWeek")[0] != "") {
+        $("#modal-budget-per-week").data("minTimesPerWeek", properties.get("minTimesPerWeek")[0])
+    }
+
+    if (properties.has("maxTimesPerWeek") && properties.get("maxTimesPerWeek")[0] != "") {
+        $("#modal-budget-per-week").data("maxTimesPerWeek", properties.get("maxTimesPerWeek")[0])
+    }
+}
+
+function setDataFieldsForVisibilities(properties) {
+    if (properties.has("shareAnonymously")) {
+        $("#modal-share-anonymously").data("shareAnonymously", properties.get("shareAnonymously")[0])
+    } else {
+        $("#modal-share-anonymously").data("shareAnonymously", "dontShareAnonymously")
+    }
+    if (properties.has("sharePublicly")) {
+        $("#modal-share-publicly").data("sharePublicly", properties.get("sharePublicly")[0])
+    } else {
+        $("#modal-share-publicly").data("sharePublicly", "dontSharePublicly")
+    }
+    if (properties.has("shareSelectively")) {
+        $("#modal-share-selectively").data("shareSelectively", properties.get("shareSelectively")[0])
+    } else {
+        $("#modal-share-selectively").data("shareSelectively", [])
+    }
+}
+
+function dueDateInModalChanged(ev) {
+    console.log("ev:", ev)
+    if (ev.date.valueOf()) {
+        console.log("due date selected:", ev.date.toISOString())
+        let previousDate = new Date($("#modal-finish").data("finish"))
+        $("#modal-finish").data("finish", ev.date.toISOString())
+        $("#myModal").data("firstCall", false)
+        let chosenDateTime = new Date(ev.date.toISOString())
+        let chosenDateTimeString = ev.date.toISOString()
+        let now = new Date()
+        if (Math.abs(now - chosenDateTime) > 1500 || Math.abs(previousDate - chosenDateTime) < 5000) {
+            updateFinishUI()
+            let goalId = $("#myModal").data("idx")
+            let upsertGoal = {
+                action: "command",
+                command: "upsertGoal",
+                goalId: goalId,
+                finish: chosenDateTimeString
+            }
+            send(JSON.stringify(upsertGoal))
+            $("#collapse-finish").collapse('hide')
+        }
+    }
+    $("#myModal").data("modalType", "finish")
+}
+
+function startDateInModalChanged(ev) {
+    console.log("ev:", ev)
+    if (ev.date.valueOf()) {
+        console.log("start date selected:", ev.date.toISOString())
+        let previousDate = new Date($("#modal-start").data("start"))
+        $("#modal-start").data("start", ev.date.toISOString())
+        let chosenDateTime = new Date(ev.date.toISOString())
+        let now = new Date()
+        if (Math.abs(now - chosenDateTime) > 1500 || Math.abs(previousDate - chosenDateTime) < 5000) {
+            updateStartUI()
+            sendProbeRequest()
+            $("#collapse-start").collapse('hide')
+        }
+    }
+}
+
+function generateSimpleGoalHTML(goalId, title, status, tags) {
+    let cardStyle = "card" + tags[0]
+    let goalSvg = getGoalSvg(status)
+    let html = '\
+<div class="row goal card ' + cardStyle + ' shadow-sm mb-4" id=play-"' +
+        goalId +
+        '" data-status="' +
+        status +
+        '">\
+  <div class="col">\
+    <div class="row" id="goal-title-row-' +
+        goalId +
+        '">\
+      <div class="col nopadding">\
+        <div class="title icons" id="title-' +
+        goalId +
+        '">\
+          <div class="mr-3 todo-circle" id="todo-circle-' +
+        goalId +
+        '">\
+            ' + goalSvg + '\
+          </div>\
+          ' +
+        '<div class="mx-2">' + title + '</div>' +
+        '\
+        </div>\
+      </div>\
+    </div>\
+  </div>\
+</div>'
+    return html
+}
+
+function getGoalSvg(status, id) {
+    let goalSvg
+    switch (status) {
+        case "done":
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">\
+        <path stroke="#959595" fill="#959595" stroke-width="1"\
+          d="M17.28 9.28a.75.75 0 00-1.06-1.06l-5.97 5.97-2.47-2.47a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l6.5-6.5z" />\
+        <path stroke="#959595" fill-rule="evenodd" fill="none" stroke-width="2"\
+          d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />\
+        </svg>'
+            break;
+
+        case "promised":
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">\
+        <path stroke="#959595" fill="none" stroke-width="2"\
+          d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />\
+        </svg>'
+            break;
+
+        case "maybe":
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">\
+        <path stroke="#959595" fill="none" stroke-width="2" stroke-dasharray="2.47"\
+          d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />\
+        </svg>'
+            break;
+
+        case "deleted":
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">\
+      <path stroke="#959595" fill="#959595" d="M9.036 7.976a.75.75 0 00-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 101.06 1.06L12 13.06l2.963 2.964a.75.75 0 001.061-1.06L13.061 12l2.963-2.964a.75.75 0 10-1.06-1.06L12 10.939 9.036 7.976z">\
+      </path><path stroke="#959595" fill-rule="evenodd" fill="none" stroke-width="2"\
+      d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />\
+      </svg>'
+            break;
+
+        default:
+            console.log("getGoalSvg status not handled.")
+            break;
+    }
+    return goalSvg
+}
+
+function generateGoalHTML(properties) {
+    //Todo replace this by map.get(gremlin.process.t.id/label) -- can't figure it out...
+    var propIterator = properties.values()
+    var goalId = propIterator.next().value
+    var label = propIterator.next().value
+
+    let directParents = properties.get('directParents')
+    let ultimateParents = properties.get('ultimateParents')
+    let subCount = properties.get('subCount')
+    let finish = ""
+    if (properties.has("finish") && properties.get("finish")[0] != "") {
+        finish = properties.get("finish")[0]
+    }
+
+    let visibilities = 'Private'
+    if (properties.has("shareAnonymously") && properties.get("shareAnonymously")[0] == "shareAnonymously") {
+        visibilities = 'Anonymous'
+    }
+
+    if (properties.has("sharePublicly") && properties.get("sharePublicly")[0] == "sharePublicly") {
+        visibilities = 'Public'
+    }
+
+    var title = properties.get("title")[0]
+    var duration = properties.get("duration")[0]
+    let durationString = formatDuration(duration).short
+    let durationTransparency = ""
+    if (durationString == "0m") {
+        durationTransparency = "semi-transparent"
+    }
+    console.log("duration", duration)
+    console.log("finish", finish)
+
+    //Todo: 18 subs (18h 20m)... First due x, last due x
+    let subTitle = ''
+    if (subCount > 0) {
+        subTitle += subCount + " sub"
+        if (subCount > 1) {
+            subTitle += 's'
+        }
+    } else {
+        if (durationString != "0m") {
+            subTitle += durationString
+        }
+        subTitle += '&zwnj;'
+        if (finish != "") {
+            let localTimeLeft = dayjs().to(new dayjs(finish))
+            subTitle += ' Due ' + localTimeLeft
+        }
+
+    }
+
+
+    var tag = properties.get("tags")[0]
+    var status
+
+    status = properties.get("status")[0]
+
+    let goalSvg = getGoalSvg(status, goalId)
+
+    let cardStyle = "card" + tag
+
+    let parentRowAndColHTML = ''
+    if (directParents.length != 0) {
+        let parentTitles = directParents.map(parent => parent.get("title")[0]);
+        let parentIds = directParents.map(parent => parent.values().next().value);
+        parentRowAndColHTML += '<div class="row" id="goal-parents-row-' +
+            goalId +
+            '">\
+      <div class="col text-end" id="goal-parents-' +
+            goalId +
+            '">\
+    '
+        if (parentTitles.length > 1) {
+            parentTitles.forEach(function(title, index) {
+                parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentIds[index] + '">' + title + "</div>"
+            })
+        }
+        parentRowAndColHTML += '</div></div>'
+    }
+
+    let tagHTML = ''
+        //only set tag icon if top level goal
+    if (directParents.length == 0) {
+        tagHTML = '\
+    <div class="tags mx-1" id="tags-' +
+            goalId +
+            '">\
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z"/></svg>\
+          </div>'
+    }
+
+    let returnHTML = `
+  <div class="row goal card ` + cardStyle + ` shadow-sm mb-2" id="` + goalId + `" data-status="` + status + `">
+    <div id="carousel-` + goalId + `" class="carousel slide">
+      <div class="carousel-inner-` + goalId + `">
+        <div class="carousel-item active d-flex" id="carousel-item-1-` + goalId + `">
+
+          <div class="col-2 circle-col d-flex align-items-center align-text-center" id="circle-col-` + goalId + `">
+            <div class="mr-3 todo-circle" id="todo-circle-` + goalId + `">` + goalSvg + `</div>
+          </div>
+          <div class="col-10">
+            ` + parentRowAndColHTML + `
+            <div class="row" id="goal-title-row-` + goalId + `">
+              <div class="col d-flex">
+                <div class="title d-flex icons" id="title-` + goalId + `">              
+                  <div class="me-auto d-inline-block text-truncate title-text" id="title-text-` + goalId + `">` + title + `</div>
+                </div>
+              </div>
+            </div>
+            <div class="row" id="subtext-row-` + goalId + `">
+              <div class="col d-flex align-self-center" id="subtext-col-` + goalId + `">
+                <div class="icons sub-title" id="subtext-` + goalId + `">` + subTitle + `</div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+
+        <div class="carousel-item" id="carousel-item-2-` + goalId + `">
+          <div class="row edit-buttons ` + cardStyle + `" id="buttons-row-` + goalId + `" data-status="` + status + `">
+            <div class="col d-flex flex-column icons edit-buttons-col" id="delete-col-` + goalId + `" data-status="` + status + `">
+                <svg id="delete-icon-` + goalId + `" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M16 1.75V3h5.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H8V1.75C8 .784 8.784 0 9.75 0h4.5C15.216 0 16 .784 16 1.75zm-6.5 0a.25.25 0 01.25-.25h4.5a.25.25 0 01.25.25V3h-5V1.75z"></path><path d="M4.997 6.178a.75.75 0 10-1.493.144L4.916 20.92a1.75 1.75 0 001.742 1.58h10.684a1.75 1.75 0 001.742-1.581l1.413-14.597a.75.75 0 00-1.494-.144l-1.412 14.596a.25.25 0 01-.249.226H6.658a.25.25 0 01-.249-.226L4.997 6.178z"></path><path d="M9.206 7.501a.75.75 0 01.793.705l.5 8.5A.75.75 0 119 16.794l-.5-8.5a.75.75 0 01.705-.793zm6.293.793A.75.75 0 1014 8.206l-.5 8.5a.75.75 0 001.498.088l.5-8.5z"></path></svg>
+                <div class="sub-title">Delete forever</div>
+            </div>           
+            <div class="col d-flex flex-column icons edit-buttons-col" id="finish-col-` + goalId + `" data-status="` + status + `">
+                <svg id="finish-icon-` + goalId + `" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M6.75 0a.75.75 0 01.75.75V3h9V.75a.75.75 0 011.5 0V3h2.75c.966 0 1.75.784 1.75 1.75v16a1.75 1.75 0 01-1.75 1.75H3.25a1.75 1.75 0 01-1.75-1.75v-16C1.5 3.784 2.284 3 3.25 3H6V.75A.75.75 0 016.75 0zm-3.5 4.5a.25.25 0 00-.25.25V8h18V4.75a.25.25 0 00-.25-.25H3.25zM21 9.5H3v11.25c0 .138.112.25.25.25h17.5a.25.25 0 00.25-.25V9.5z"></path></svg>
+                <div class="sub-title">Schedule</div>
+            </div>
+            <div class="col d-flex flex-column icons edit-buttons-col" id="visibilities-col-` + goalId + `" data-status="` + status + `">
+                <svg id="visibilities-icon-` + goalId + `" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M15.5 12a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z"></path><path fill-rule="evenodd" d="M12 3.5c-3.432 0-6.125 1.534-8.054 3.24C2.02 8.445.814 10.352.33 11.202a1.6 1.6 0 000 1.598c.484.85 1.69 2.758 3.616 4.46C5.876 18.966 8.568 20.5 12 20.5c3.432 0 6.125-1.534 8.054-3.24 1.926-1.704 3.132-3.611 3.616-4.461a1.6 1.6 0 000-1.598c-.484-.85-1.69-2.757-3.616-4.46C18.124 5.034 15.432 3.5 12 3.5zM1.633 11.945c.441-.774 1.551-2.528 3.307-4.08C6.69 6.314 9.045 5 12 5c2.955 0 5.309 1.315 7.06 2.864 1.756 1.553 2.866 3.307 3.307 4.08a.111.111 0 01.017.056.111.111 0 01-.017.056c-.441.774-1.551 2.527-3.307 4.08C17.31 17.685 14.955 19 12 19c-2.955 0-5.309-1.315-7.06-2.864-1.756-1.553-2.866-3.306-3.307-4.08A.11.11 0 011.616 12a.11.11 0 01.017-.055z"></path></svg>
+                <div class="sub-title">` + visibilities + `</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>  
+  </div>
+      `
+
+    return returnHTML
+}
+
+function reviver(key, value) {
+    if (typeof value === 'object' && value !== null) {
+        if (value.dataType === 'Map') {
+            return new Map(value.value);
+        }
+    }
+    return value;
+}
+
+function replacer(key, value) {
+    if (value instanceof Map) {
+        return {
+            dataType: 'Map',
+            value: Array.from(value.entries()), // or with spread: value: [...value]
+        };
+    } else {
+        return value;
+    }
+}
+
+function formatDuration(duration) {
+    var result = {}
+
+    if (duration == undefined || duration < 0) {
+        throw "can't have negative duration in formatDuration"
+    }
+    duration = Math.abs(duration)
+    var weeks = Math.floor(duration / (3600 * 24 * 7))
+    var days = Math.floor((duration - weeks * 3600 * 24 * 7) / (3600 * 24))
+    var hours = Math.floor((duration - weeks * 3600 * 24 * 7 - days * 3600 * 24) / 3600)
+    var minutes = Math.floor((duration - weeks * 3600 * 24 * 7 - days * 3600 * 24 - hours * 3600) / 60)
+    var seconds = Math.floor(duration % 60)
+
+    result.weeks = weeks + "w"
+    result.days = days + "d"
+    result.hours = hours + "h"
+    result.minutes = minutes + "m"
+    result.seconds = seconds + "s"
+
+    result.short = ""
+    if (weeks > 0) {
+        if (days > 0) {
+            result.short = weeks + "w " + days + "d"
+        } else {
+            result.short = weeks + "w"
+        }
+        return result
+    }
+    if (days > 0) {
+        if (hours > 0) {
+            result.short = days + "d " + hours + "h"
+        } else {
+            result.short = days + "d"
+        }
+        return result
+    }
+    if (hours > 0) {
+        if (minutes > 0) {
+            result.short = hours + "h " + minutes + "m"
+        } else {
+            result.short = hours + "h"
+        }
+        return result
+    }
+    if (minutes >= 0) {
+        if (seconds > 0) {
+            result.short = minutes + "m " + seconds + "s"
+        } else {
+            result.short = minutes + "m"
+        }
+        return result
+    }
+
+    return result
+}
+
+function updateBreadcrumbUI() {
+    let top = $("#breadcrumb").data("top")
+    let goals = $("#breadcrumb").data("goals")
+    let breadcrumbHTML = ''
+    if (goals.length != 0) {
+        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumb-me">' + top + '</button>'
+        goals.forEach(goal => {
+            breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + goal.id + '">' + goal.properties.title[0].value + '</button>'
+        })
+        $("#breadcrumb").html(breadcrumbHTML)
+        $("#breadcrumbGoal-" + goals[goals.length - 1].id).addClass('active')
+    } else {
+        $("#breadcrumb").html(breadcrumbHTML)
+    }
+}
+
+function updateStatusUI() {
+    let status = $("#modal-status").data("status")
+    switch (status) {
+        case "deleted":
+            $("#done-schedule").addClass("semi-transparent")
+            $("#promised-schedule").addClass("semi-transparent")
+            $("#maybe-schedule").addClass("semi-transparent")
+            $("#delete-schedule").removeClass("semi-transparent")
+            $("#done-options-row").addClass("d-none")
+            $("#options-row").addClass("d-none")
+            $("#proposal-row").addClass("d-none")
+            $("#modal-footer-content").html('<button type="button" class="btn btn-secondary" id="delete-this">Delete this!</button>')
+            break;
+
+        case "done":
+            $("#done-schedule").removeClass("semi-transparent")
+            $("#promised-schedule").addClass("semi-transparent")
+            $("#maybe-schedule").addClass("semi-transparent")
+            $("#proposal-row").addClass("d-none")
+            $("#options-row").addClass("d-none")
+            $("#done-options-row").removeClass("d-none")
+            $("#delete-schedule").addClass("semi-transparent")
+            $("#modal-footer-content").html('<button type="button" class="btn btn-secondary" id="complete-this">Complete this!</button>')
+            break;
+
+        case "promised":
+            $("#done-schedule").addClass("semi-transparent")
+            $("#promised-schedule").removeClass("semi-transparent")
+            $("#maybe-schedule").addClass("semi-transparent")
+            $("#proposal-row").removeClass("d-none")
+            $("#options-row").removeClass("d-none")
+            $("#done-options-row").addClass("d-none")
+            $("#delete-schedule").addClass("semi-transparent")
+            $("#modal-footer-content").html('<button type="button" class="btn btn-secondary" id="schedule-this">Schedule this!</button>')
+            break;
+
+        case "maybe":
+            $("#done-schedule").addClass("semi-transparent")
+            $("#promised-schedule").addClass("semi-transparent")
+            $("#maybe-schedule").removeClass("semi-transparent")
+            $("#done-options-row").addClass("d-none")
+            $("#proposal-row").addClass("d-none")
+            $("#delete-schedule").addClass("semi-transparent")
+            $("#modal-footer-content").html('<button type="button" class="btn btn-secondary" id="maybe-this">Maybe this!</button>')
+            break;
+
+        default:
+            throw "couldn't handle status in handleIncomingProperties helper function"
+    }
+}
+
+function updateStartUI() { //Todo: use locale for picker timezone
+    let startISOString = $("#modal-start").data("start")
+    $("#start-date-time-picker").datetimepicker({
+        format: 'yyyy-mm-ddThh:ii:ssZ',
+        initialDate: new Date(startISOString),
+        todayHighlight: true,
+        todayBtn: "linked"
+    }).on('changeDate', function(ev) {
+        console.log("changeDate event")
+        startDateInModalChanged(ev)
+    });
+    if (startISOString != "") {
+        let localTimeLeft = dayjs().to(new dayjs(startISOString))
+        $("#modal-start").html('<p class="text-center">Start >= ' + localTimeLeft + "</p>")
+    } else {
+        $("#modal-start").html('<p class="text-center">Starts asap</p>')
+    }
+}
+
+function updateFinishUI() { //Todo: use locale for picker timezone
+    let finishISOString = $("#modal-finish").data("finish")
+    console.log("firstCall:", $("#myModal").data("firstCall"))
+    if (finishISOString != undefined) {
+        $("#due-date-time-picker").datetimepicker({
+            format: 'yyyy-mm-ddThh:ii:ssZ',
+            initialDate: new Date(finishISOString),
+            todayHighlight: true,
+            todayBtn: "linked"
+        }).on('changeDate', function(ev) {
+            console.log("changeDate event")
+            dueDateInModalChanged(ev)
+        });
+        let localTimeLeft = dayjs().to(new dayjs(finishISOString))
+        $("#modal-finish").html('<p class="text-center">Finish ' + localTimeLeft + "</p>")
+
+        let now = new dayjs()
+        switch (finishISOString) {
+            case now.endOf('day').toISOString():
+                $("#quick-set-today-button").addClass('active')
+                break;
+            case now.add(1, 'day').endOf('day').toISOString():
+                $("#quick-set-tomorrow-button").addClass('active')
+                break;
+            case now.add(1, 'week').endOf('week').toISOString():
+                $("#quick-set-next-week-button").addClass('active')
+                break;
+            case now.add(1, 'month').endOf('month').toISOString():
+                $("#quick-set-next-month-button").addClass('active')
+                break;
+            default:
+                $("#quick-set-custom-button").addClass('active')
+                break;
+        }
+        openAccordionAccordingly()
+    }
+}
+
+function openAccordionAccordingly() {
+    switch ($("#myModal").data("modalType")) {
+        case "finish":
+            if ($("#myModal").data("firstCall") == true) {
+                $("#accordion-button-finish").click()
+                $("#myModal").data("firstCall", false)
+            }
+            break;
+        case "duration":
+            if (!$("#collapse-duration").hasClass('show')) {
+                $("#accordion-button-duration").click()
+            }
+            $("#myModal").data("firstCall", true)
+            break;
+        default:
+            $("#myModal").data("firstCall", false)
+            break;
+    }
+}
+
+function updateDurationUI() {
+    let duration = $("#modal-duration").data("duration")
+    var durationJson = formatDuration(duration)
+    $("#duration-weeks").html(durationJson.weeks)
+    $("#duration-days").html(durationJson.days)
+    $("#duration-hours").html(durationJson.hours)
+    $("#duration-minutes").html(durationJson.minutes)
+    $("#duration-seconds").html(durationJson.seconds)
+    $("#modal-duration").html('<p class="text-center">Takes ' + durationJson.short + '</p>')
+    openAccordionAccordingly()
+}
+
+function updateDaytimePrefUI() {
+
+    let timesOfDaysPref = $("#modal-timesOfDaysPref").data("timesOfDaysPref")
+
+    timesOfDaysPref[0] == 0 ? $("#daytimePrefMonNight-0").addClass("very-transparent") : $("#daytimePrefMonNight-0").removeClass("very-transparent")
+    timesOfDaysPref[1] == 0 ? $("#daytimePrefMonMorning-1").addClass("very-transparent") : $("#daytimePrefMonMorning-1").removeClass("very-transparent")
+    timesOfDaysPref[2] == 0 ? $("#daytimePrefMonAfternoon-2").addClass("very-transparent") : $("#daytimePrefMonAfternoon-2").removeClass("very-transparent")
+    timesOfDaysPref[3] == 0 ? $("#daytimePrefMonEvening-3").addClass("very-transparent") : $("#daytimePrefMonEvening-3").removeClass("very-transparent")
+
+    timesOfDaysPref[4] == 0 ? $("#daytimePrefTueNight-4").addClass("very-transparent") : $("#daytimePrefTueNight-4").removeClass("very-transparent")
+    timesOfDaysPref[5] == 0 ? $("#daytimePrefTueMorning-5").addClass("very-transparent") : $("#daytimePrefTueMorning-5").removeClass("very-transparent")
+    timesOfDaysPref[6] == 0 ? $("#daytimePrefTueAfternoon-6").addClass("very-transparent") : $("#daytimePrefTueAfternoon-6").removeClass("very-transparent")
+    timesOfDaysPref[7] == 0 ? $("#daytimePrefTueEvening-7").addClass("very-transparent") : $("#daytimePrefTueEvening-7").removeClass("very-transparent")
+
+    timesOfDaysPref[8] == 0 ? $("#daytimePrefWedNight-8").addClass("very-transparent") : $("#daytimePrefWedNight-8").removeClass("very-transparent")
+    timesOfDaysPref[9] == 0 ? $("#daytimePrefWedMorning-9").addClass("very-transparent") : $("#daytimePrefWedMorning-9").removeClass("very-transparent")
+    timesOfDaysPref[10] == 0 ? $("#daytimePrefWedAfternoon-10").addClass("very-transparent") : $("#daytimePrefWedAfternoon-10").removeClass("very-transparent")
+    timesOfDaysPref[11] == 0 ? $("#daytimePrefWedEvening-11").addClass("very-transparent") : $("#daytimePrefWedEvening-11").removeClass("very-transparent")
+
+    timesOfDaysPref[12] == 0 ? $("#daytimePrefThuNight-12").addClass("very-transparent") : $("#daytimePrefThuNight-12").removeClass("very-transparent")
+    timesOfDaysPref[13] == 0 ? $("#daytimePrefThuMorning-13").addClass("very-transparent") : $("#daytimePrefThuMorning-13").removeClass("very-transparent")
+    timesOfDaysPref[14] == 0 ? $("#daytimePrefThuAfternoon-14").addClass("very-transparent") : $("#daytimePrefThuAfternoon-14").removeClass("very-transparent")
+    timesOfDaysPref[15] == 0 ? $("#daytimePrefThuEvening-15").addClass("very-transparent") : $("#daytimePrefThuEvening-15").removeClass("very-transparent")
+
+    timesOfDaysPref[16] == 0 ? $("#daytimePrefFriNight-16").addClass("very-transparent") : $("#daytimePrefFriNight-16").removeClass("very-transparent")
+    timesOfDaysPref[17] == 0 ? $("#daytimePrefFriMorning-17").addClass("very-transparent") : $("#daytimePrefFriMorning-17").removeClass("very-transparent")
+    timesOfDaysPref[18] == 0 ? $("#daytimePrefFriAfternoon-18").addClass("very-transparent") : $("#daytimePrefFriAfternoon-18").removeClass("very-transparent")
+    timesOfDaysPref[19] == 0 ? $("#daytimePrefFriEvening-19").addClass("very-transparent") : $("#daytimePrefFriEvening-19").removeClass("very-transparent")
+
+    timesOfDaysPref[20] == 0 ? $("#daytimePrefSatNight-20").addClass("very-transparent") : $("#daytimePrefSatNight-20").removeClass("very-transparent")
+    timesOfDaysPref[21] == 0 ? $("#daytimePrefSatMorning-21").addClass("very-transparent") : $("#daytimePrefSatMorning-21").removeClass("very-transparent")
+    timesOfDaysPref[22] == 0 ? $("#daytimePrefSatAfternoon-22").addClass("very-transparent") : $("#daytimePrefSatAfternoon-22").removeClass("very-transparent")
+    timesOfDaysPref[23] == 0 ? $("#daytimePrefSatEvening-23").addClass("very-transparent") : $("#daytimePrefSatEvening-23").removeClass("very-transparent")
+
+    timesOfDaysPref[24] == 0 ? $("#daytimePrefSunNight-24").addClass("very-transparent") : $("#daytimePrefSunNight-24").removeClass("very-transparent")
+    timesOfDaysPref[25] == 0 ? $("#daytimePrefSunMorning-25").addClass("very-transparent") : $("#daytimePrefSunMorning-25").removeClass("very-transparent")
+    timesOfDaysPref[26] == 0 ? $("#daytimePrefSunAfternoon-26").addClass("very-transparent") : $("#daytimePrefSunAfternoon-26").removeClass("very-transparent")
+    timesOfDaysPref[27] == 0 ? $("#daytimePrefSunEvening-27").addClass("very-transparent") : $("#daytimePrefSunEvening-27").removeClass("very-transparent")
+
+    formatDaytimePrefString(timesOfDaysPref)
+    sendProbeRequest()
+}
+
+function updateTimePerSlotUI() {
+    let minSize = $("#modal-budget-per-slot").data("minSize")
+    let maxSize = $("#modal-budget-per-slot").data("maxSize")
+    let minString = formatDuration(minSize).short
+    let maxString = formatDuration(maxSize).short
+    $("#modal-budget-per-slot").html('<p class="text-center">' + minString + '-' + maxString + ' per slot</p>')
+}
+
+function updateTimePerDayUI() {
+    let minTimesPerDay = $("#modal-budget-per-day").data("minTimesPerDay")
+    let maxTimesPerDay = $("#modal-budget-per-day").data("maxTimesPerDay")
+    $("#modal-budget-per-day").html('<p class="text-center">' + minTimesPerDay + '-' + maxTimesPerDay + ' per day</p>')
+}
+
+function updateTimePerWeekUI() {
+    let minTimesPerWeek = $("#modal-budget-per-week").data("minTimesPerWeek")
+    let maxTimesPerWeek = $("#modal-budget-per-week").data("maxTimesPerWeek")
+    $("#modal-budget-per-week").html('<p class="text-center">' + minTimesPerWeek + '-' + maxTimesPerWeek + ' per week</p>')
+}
+
+function formatDaytimePrefString(timesOfDaysPref) {
+    console.log("timesOfDaysPref:", timesOfDaysPref.toString())
+        //Todo: format nicely
+    switch (timesOfDaysPref.toString()) {
+        case "0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Anyday, anytime except night</p>')
+            break;
+        case "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Anyday, anytime incl. night</p>')
+            break;
+        case "0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Anyday, during the day</p>')
+            break;
+        case "0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Any morning</p>')
+            break;
+        case "0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Any afternoon</p>')
+            break;
+        case "0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Any evening</p>')
+            break;
+        case "1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Any night</p>')
+            break;
+
+        case "0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Workdays, anytime except night</p>')
+            break;
+        case "1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Workdays, anytime incl. night</p>')
+            break;
+        case "0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Workdays, during the day</p>')
+            break;
+        case "0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Workdays, any morning</p>')
+            break;
+        case "0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Workdays, any afternoon</p>')
+            break;
+        case "0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Workdays, any evening</p>')
+            break;
+        case "1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Workdays, any night</p>')
+            break;
+
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Weekends, anytime except night</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Weekends, anytime incl. night</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Weekends, during the day</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Weekends, any morning</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Weekends, any afternoon</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Weekends, any evening</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Weekends, any night</p>')
+            break;
+
+        case "0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Monday mornings</p>')
+            break;
+        case "0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Tuesday mornings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Wednesday mornings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Thursday mornings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Friday mornings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Saturnday mornings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Sunday mornings</p>')
+            break;
+
+        case "0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Monday afternoons</p>')
+            break;
+        case "0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Tuesday afternoons</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Wednesday afternoons</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Thursday afternoons</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Friday afternoons</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Saturnday afternoons</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Sunday afternoons</p>')
+            break;
+
+        case "0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Monday evenings</p>')
+            break;
+        case "0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Tuesday evenings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Wednesday evenings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Thursday evenings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Friday evenings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Saturnday evenings</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Sunday evenings</p>')
+            break;
+
+        case "0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Mondays, during the day</p>')
+            break;
+        case "0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Tuesdays, during the day</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Wednesdays, during the day</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Thursdays, during the day</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Fridays, during the day</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Saturndays, during the day</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Sundays, during the day</p>')
+            break;
+
+        case "0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Mondays, anytime except night</p>')
+            break;
+        case "0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Tuesdays, anytime except night</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Wednesdays, anytime except night</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Thursdays, anytime except night</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Fridays, anytime except night</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Saturndays, anytime except night</p>')
+            break;
+        case "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1":
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Sundays, anytime except night</p>')
+            break;
+
+        default:
+            $("#modal-timesOfDaysPref").html('<p class="text-center">Custom</p>')
+            break;
+    }
+}

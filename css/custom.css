@@ -1,0 +1,914 @@
+html,
+[data-theme="dark"] {
+    --text-color: #d4d4d4;
+    /*copy/paste from VSCode themes*/
+    --editor-background: #1e1e1e;
+    /*the one I chose: #0e0e0e;*/
+    --editor-foreground: #d4d4d4;
+    --menu-background: #252526;
+    --menu-foreground: #cccccc;
+    --editor-selectionHighlightBackground: #add6ff26;
+    --editor-inactiveSelectionBackground: #3a3d41;
+    --card1: #23211A;
+    --card2: #412b19;
+    --card3: #5c272c;
+    --card4: #4D2136;
+    --card5: #355049;
+    --card6: #11282C;
+    --card7: #351d31;
+    --card8: #04123A;
+    --card9: #063728;
+    --card10: #47201b;
+}
+
+[data-theme="light"] {
+    --text-color: #000000;
+    /*copy/paste from VSCode themes*/
+    --editor-background: #ffffff;
+    --editor-foreground: #000000;
+    --menu-background: #f3f3f3;
+    --menu-foreground: #616161;
+    --editor-selectionHighlightBackground: #add6ff80;
+    --editor-inactiveSelectionBackground: #e5ebf1;
+    --card1: #f0efeb;
+    --card2: #fff1e6;
+    --card3: #fde2e4;
+    --card4: #fad2e1;
+    --card5: #e2ece9;
+    --card6: #bee1e6;
+    --card7: #e2d6e0;
+    --card8: #dfe7fd;
+    --card9: #DAFBF1;
+    --card10: #FEDDD8;
+}
+
+
+/* ref */
+
+
+/* "activityBarBadge.background": "#007acc",
+"editor.background": "#ffffff",
+"editor.foreground": "#000000",
+"editor.inactiveSelectionBackground": "#e5ebf1",
+"editor.selectionHighlightBackground": "#add6ff80",
+"editorIndentGuide.activeBackground": "#939393",
+"editorIndentGuide.background": "#d3d3d3",
+"editorSuggestWidget.background": "#f3f3f3",
+"input.placeholderForeground": "#767676",
+"list.hoverBackground": "#e8e8e8",
+"notebook.cellBorderColor": "#e8e8e8",
+"notebook.selectedCellBackground": "#c8ddf150",
+"ports.iconRunningProcessForeground": "#369432",
+"searchEditor.textInputBorder": "#cecece",
+"settings.numberInputBorder": "#cecece",
+"settings.textInputBorder": "#cecece",
+"sideBarSectionHeader.background": "#00000000",
+"sideBarSectionHeader.border": "#61616130",
+"sideBarTitle.foreground": "#6f6f6f",
+"statusBarItem.errorBackground": "#c72e0f",
+"statusBarItem.remoteBackground": "#16825d",
+"statusBarItem.remoteForeground": "#ffffff",
+"tab.lastPinnedBorder": "#61616130", */
+
+
+/* https://blog.assistancy.be/blog/bootstrap-5-override-theme-colors-sass */
+
+
+/* // First override some or all individual color variables */
+
+
+/* $primary: #25408f;
+$secondary: #8f5325;
+$success: #3e8d63;
+$info: #13101c;
+$warning: #945707;
+$danger: #d62518;
+$light: #f8f9fa;
+$dark: #343a40; */
+
+
+/* // Then add them to your custom theme-colors map, together with any additional colors you might need */
+
+
+/* $theme-colors: (
+  primary: $primary,
+  secondary: $secondary,
+  success: $success,
+  info: $info,
+  warning: $warning,
+  danger: $danger,
+  light: $light,
+  dark: $dark,
+  // add any additional color below
+); */
+
+body {
+    height: 100%;
+    padding-bottom: 40px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--editor-background);
+    color: var(--text-color);
+    --duration: 0.5s;
+    --timing: ease;
+    transition: color var(--duration) var(--timing), background-color var(--duration) var(--timing);
+}
+
+.card {
+    border-radius: 10px;
+    color: var(--text-color);
+    /* background-color: var(--menu-background); */
+    flex-direction: row;
+    --duration: 0.5s;
+    --timing: ease;
+    transition: color var(--duration) var(--timing), background-color var(--duration) var(--timing);
+}
+
+.control-part-screen {
+    background: var(--menu-background);
+    --duration: 0.5s;
+    --timing: ease;
+    transition: background-color var(--duration) var(--timing);
+}
+
+.modal-content,
+.modal-header,
+.modal-body,
+.modal-footer {
+    background-color: var(--menu-background);
+    color: var(--menu-foreground)
+}
+
+.icons {
+    color: #000000;
+    /*not used but just for jQuery.parentsUntil() selector  */
+}
+
+.form-input-custom {
+    width: 50%;
+    padding: 5px;
+    margin: auto;
+    color: var(--menu-foreground);
+    /* background: #121212; */
+}
+
+.form-command-custom {
+    display: flex;
+    float: middle;
+    flex-grow: 1;
+    border-radius: 5px;
+    padding: 5px;
+    margin: auto;
+    color: var(--menu-foreground);
+    background: var(--menu-background);
+    text-align: center;
+}
+
+.input-group>.custom-select:not(:last-child),
+.input-group>.form-control:not(:last-child) {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.btn-block-custom {
+    display: block;
+    margin: auto;
+}
+
+.shaded-bg {
+    /* background: #121212; */
+    opacity: 0.9;
+    color: var(--menu-foreground);
+    padding: 0px;
+}
+
+.tags {
+    float: left;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    fill: #108301;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.mood,
+.connect,
+.notes,
+.collaboration,
+.location,
+.budget,
+.due,
+.workflow,
+.visibilities,
+.mail,
+.image,
+.cancel-command,
+.link {
+    float: left;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    fill: #7e7e7e;
+}
+
+.buttonrow {
+    flex-wrap: nowrap
+}
+
+.navigate-back {
+    float: right;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    fill: #959595;
+}
+
+.mood:hover,
+.connect:hover,
+.notes:hover,
+.collaboration:hover,
+.location:hover,
+.budget:hover,
+.due:hover,
+.workflow:hover,
+.mail:hover,
+.visibilities:hover,
+.clear-selected:hover,
+.navigate-back:hover,
+.cancel-command:hover,
+.link:hover,
+.image:hover {
+    fill: rgb(154, 204, 248);
+}
+
+.title,
+.title-selected {
+    color: var(--menu-foreground);
+    height: 40px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    display: flex;
+    flex-grow: 100;
+    overflow: hidden;
+    align-items: flex-end;
+    --duration: 0.5s;
+    --timing: ease;
+    transition: color var(--duration) var(--timing),
+}
+
+.table {
+    color: var(--text-color);
+}
+
+.edit-buttons {
+    height: 55px;
+}
+
+.edit-buttons-col {
+    align-items: center;
+    justify-content: center;
+}
+
+.octicon-selected {
+    fill: var(--editor-foreground);
+    --duration: 0.5s;
+    --timing: ease;
+    transition: fill var(--duration) var(--timing);
+}
+
+.octicon-highlight {
+    fill: rgb(154, 204, 248);
+}
+
+.align-text-center {
+    text-align: center;
+}
+
+.control-icons {
+    cursor: pointer;
+    display: inline-block;
+    margin: auto;
+    stroke: var(--editor-foreground);
+    fill: var(--editor-foreground);
+}
+
+.modal-submit {
+    display: flex;
+    float: left;
+    vertical-align: text-top;
+}
+
+.modal-email {
+    display: flex;
+    float: left;
+    width: 50%;
+    vertical-align: text-top;
+}
+
+.modal-title {
+    display: flex;
+    float: right;
+    vertical-align: text-top;
+}
+
+.semi-transparent {
+    opacity: 35%;
+}
+
+.very-transparent {
+    opacity: 15%;
+}
+
+.parent-link {
+    color: var(--menu-foreground);
+    opacity: 30%;
+    font-size: small;
+}
+
+.no-lists-yet {
+    color: var(--menu-foreground);
+    opacity: 60%;
+    font-size: small;
+    text-align: center;
+}
+
+.sub-title {
+    color: var(--menu-foreground);
+    opacity: 35%;
+    font-size: small;
+}
+
+.edit-goal {
+    color: var(--menu-foreground);
+    font-size: small;
+}
+
+.edit-goal-col {
+    border-left: 1px solid lightgray;
+}
+
+.app-version {
+    color: var(--menu-foreground);
+    opacity: 15%;
+    font-size: x-small;
+}
+
+.tag-path:hover {
+    stroke: rgb(154, 204, 248);
+    stroke-width: 4;
+    filter: brightness(95%);
+}
+
+.card1 {
+    background-color: var(--card1);
+    border-width: 2px;
+}
+
+.card1:hover {
+    background-color: var(--card1);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.card2 {
+    background-color: var(--card2);
+    border-width: 2px;
+}
+
+.card2:hover {
+    background-color: var(--card2);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.card3 {
+    background-color: var(--card3);
+    border-width: 2px;
+}
+
+.card3:hover {
+    background-color: var(--card3);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.card4 {
+    background-color: var(--card4);
+    border-width: 2px;
+}
+
+.card4:hover {
+    background-color: var(--card4);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.card5 {
+    background-color: var(--card5);
+    border-width: 2px;
+}
+
+.card5:hover {
+    background-color: var(--card5);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.card6 {
+    background-color: var(--card6);
+    border-width: 2px;
+}
+
+.card6:hover {
+    background-color: var(--card6);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.card7 {
+    background-color: var(--card7);
+    border-width: 2px;
+}
+
+.card7:hover {
+    background-color: var(--card7);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.card8 {
+    background-color: var(--card8);
+    border-width: 2px;
+}
+
+.card8:hover {
+    background-color: var(--card8);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.card9 {
+    background-color: var(--card9);
+    border-width: 2px;
+}
+
+.card9:hover {
+    background-color: var(--card9);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.card10 {
+    background-color: var(--card10);
+    border-width: 2px;
+}
+
+.card10:hover {
+    background-color: var(--card10);
+    border-width: 2px;
+    border-color: var(--editor-selectionHighlightBackground);
+    filter: brightness(105%);
+}
+
+.tag1 {
+    fill: var(--card1);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag2 {
+    fill: var(--card2);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag3 {
+    fill: var(--card3);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag4 {
+    fill: var(--card4);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag5 {
+    fill: var(--card5);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag6 {
+    fill: var(--card6);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag7 {
+    fill: var(--card7);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag8 {
+    fill: var(--card8);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag9 {
+    fill: var(--card9);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag10 {
+    fill: var(--card10);
+    stroke: grey;
+    stroke-width: 1;
+}
+
+.tag-selected {
+    stroke-width: 2;
+    stroke: black;
+}
+
+.happy {
+    width: 80%;
+    stroke: none;
+    stroke-width: 1;
+    fill: lightgrey;
+    float: left;
+}
+
+.happy-minus {
+    width: 12%;
+    stroke: none;
+    stroke-width: 1;
+    fill: lightgrey;
+    float: left;
+}
+
+.unhappy-minus {
+    width: 12%;
+    stroke: none;
+    stroke-width: 1;
+    fill: lightgrey;
+    float: right;
+}
+
+.unhappy {
+    width: 80%;
+    stroke: none;
+    fill: lightgrey;
+    stroke-width: 1;
+    float: right;
+}
+
+.mood-path:hover {
+    stroke: rgb(154, 204, 248);
+    stroke-width: 4;
+    filter: brightness(95%);
+}
+
+.unhappy-0 {
+    fill: lightgrey;
+}
+
+.unhappy-1 {
+    fill: rgb(250, 220, 220);
+}
+
+.unhappy-2 {
+    fill: rgb(214, 124, 124);
+}
+
+.unhappy-3 {
+    fill: rgb(196, 76, 76);
+}
+
+.unhappy-4 {
+    fill: rgb(177, 27, 27);
+}
+
+.unhappy-5 {
+    fill: rgb(118, 18, 18);
+}
+
+.happy-0 {
+    fill: lightgrey;
+}
+
+.happy-1 {
+    fill: rgb(212, 250, 204);
+}
+
+.happy-2 {
+    fill: rgb(144, 218, 129);
+}
+
+.happy-3 {
+    fill: rgb(67, 168, 50);
+}
+
+.happy-4 {
+    fill: rgb(17, 111, 0);
+}
+
+.happy-5 {
+    fill: rgb(10, 87, 0);
+}
+
+.subtitles {
+    color: var(--menu-foreground);
+}
+
+.swirl-out-bck-animation {
+    animation: swirl-out-bck 1.0s 1 ease-in forwards;
+}
+
+.jello-vertical-animation {
+    animation: jello-vertical 0.1s 1 ease-out forwards;
+}
+
+
+/* ----------------------------------------------
+ * Generated by Animista on 2021-8-10 11:21:42
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+@-webkit-keyframes swirl-out-bck {
+    0% {
+        -webkit-transform: rotate(0) scale(1);
+        transform: rotate(0) scale(1);
+        opacity: 1
+    }
+    100% {
+        -webkit-transform: rotate(-540deg) scale(0);
+        transform: rotate(-540deg) scale(0);
+        opacity: 0
+    }
+}
+
+@keyframes swirl-out-bck {
+    0% {
+        -webkit-transform: rotate(0) scale(1);
+        transform: rotate(0) scale(1);
+        opacity: 1
+    }
+    100% {
+        -webkit-transform: rotate(-540deg) scale(0);
+        transform: rotate(-540deg) scale(0);
+        opacity: 0
+    }
+}
+
+@-webkit-keyframes slide-out-fwd-center {
+    0% {
+        -webkit-transform: translateZ(1);
+        transform: translateZ(1);
+        opacity: 1
+    }
+    100% {
+        -webkit-transform: translateZ(600px);
+        transform: translateZ(600px);
+        opacity: 0
+    }
+}
+
+@keyframes slide-out-fwd-center {
+    0% {
+        -webkit-transform: translateZ(1);
+        transform: translateZ(1);
+        opacity: 1
+    }
+    100% {
+        -webkit-transform: translateZ(600px);
+        transform: translateZ(600px);
+        opacity: 0
+    }
+}
+
+@-webkit-keyframes slide-in-bck-center {
+    0% {
+        -webkit-transform: translateZ(600px);
+        transform: translateZ(600px);
+        opacity: 0
+    }
+    100% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+    }
+}
+
+@keyframes slide-in-bck-center {
+    0% {
+        -webkit-transform: translateZ(600px);
+        transform: translateZ(600px);
+        opacity: 0
+    }
+    100% {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        opacity: 1
+    }
+}
+
+@-webkit-keyframes slide-in-top {
+    0% {
+        -webkit-transform: translateY(-1000px);
+        transform: translateY(-1000px);
+        opacity: 0
+    }
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+        opacity: 1
+    }
+}
+
+@keyframes slide-in-top {
+    0% {
+        -webkit-transform: translateY(-1000px);
+        transform: translateY(-1000px);
+        opacity: 0
+    }
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+        opacity: 1
+    }
+}
+
+@-webkit-keyframes shake-top {
+    0%,
+    100% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        -webkit-transform-origin: 50% 0;
+        transform-origin: 50% 0
+    }
+    10% {
+        -webkit-transform: rotate(2deg);
+        transform: rotate(2deg)
+    }
+    20%,
+    40%,
+    60% {
+        -webkit-transform: rotate(-4deg);
+        transform: rotate(-4deg)
+    }
+    30%,
+    50%,
+    70% {
+        -webkit-transform: rotate(4deg);
+        transform: rotate(4deg)
+    }
+    80% {
+        -webkit-transform: rotate(-2deg);
+        transform: rotate(-2deg)
+    }
+    90% {
+        -webkit-transform: rotate(2deg);
+        transform: rotate(2deg)
+    }
+}
+
+@keyframes shake-top {
+    0%,
+    100% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        -webkit-transform-origin: 50% 0;
+        transform-origin: 50% 0
+    }
+    10% {
+        -webkit-transform: rotate(2deg);
+        transform: rotate(2deg)
+    }
+    20%,
+    40%,
+    60% {
+        -webkit-transform: rotate(-4deg);
+        transform: rotate(-4deg)
+    }
+    30%,
+    50%,
+    70% {
+        -webkit-transform: rotate(4deg);
+        transform: rotate(4deg)
+    }
+    80% {
+        -webkit-transform: rotate(-2deg);
+        transform: rotate(-2deg)
+    }
+    90% {
+        -webkit-transform: rotate(2deg);
+        transform: rotate(2deg)
+    }
+}
+
+@-webkit-keyframes jello-vertical {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+    30% {
+        -webkit-transform: scale3d(.75, 1.25, 1);
+        transform: scale3d(.75, 1.25, 1)
+    }
+    40% {
+        -webkit-transform: scale3d(1.25, .75, 1);
+        transform: scale3d(1.25, .75, 1)
+    }
+    50% {
+        -webkit-transform: scale3d(.85, 1.15, 1);
+        transform: scale3d(.85, 1.15, 1)
+    }
+    65% {
+        -webkit-transform: scale3d(1.05, .95, 1);
+        transform: scale3d(1.05, .95, 1)
+    }
+    75% {
+        -webkit-transform: scale3d(.95, 1.05, 1);
+        transform: scale3d(.95, 1.05, 1)
+    }
+    100% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+}
+
+@keyframes jello-vertical {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+    30% {
+        -webkit-transform: scale3d(.75, 1.25, 1);
+        transform: scale3d(.75, 1.25, 1)
+    }
+    40% {
+        -webkit-transform: scale3d(1.25, .75, 1);
+        transform: scale3d(1.25, .75, 1)
+    }
+    50% {
+        -webkit-transform: scale3d(.85, 1.15, 1);
+        transform: scale3d(.85, 1.15, 1)
+    }
+    65% {
+        -webkit-transform: scale3d(1.05, .95, 1);
+        transform: scale3d(1.05, .95, 1)
+    }
+    75% {
+        -webkit-transform: scale3d(.95, 1.05, 1);
+        transform: scale3d(.95, 1.05, 1)
+    }
+    100% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+}
+
+@-webkit-keyframes blink-1 {
+    0%,
+    50%,
+    100% {
+        opacity: 1
+    }
+    25%,
+    75% {
+        opacity: 0
+    }
+}
+
+@keyframes blink-1 {
+    0%,
+    50%,
+    100% {
+        opacity: 1
+    }
+    25%,
+    75% {
+        opacity: 0
+    }
+}
