@@ -29,7 +29,7 @@ function openMainMailModal() {
 }
 
 function updateModalSettingsUI() {
-    $("#modal-header-content").html('<h4 class="modal-title">Settings</h4>')
+    $("#modal-header-content").html('<h4 class="modal-title">ZinZen Settings</h4>')
     let settingsHTML = ``
 
     settingsHTML += '\
@@ -42,6 +42,7 @@ function updateModalSettingsUI() {
     } else {
         settingsHTML += '<div id="login"><button name="login-buttonx" id="login-buttonx" type="button" class="btn btn-outline-secondary btn-sm">Log in</button></div>'
     }
+    settingsHTML += '<div id="about"><button name="about-button" id="about-button" type="button" class="btn btn-outline-secondary btn-sm">About ZinZen</button></div>'
     settingsHTML += '  <div id="install-app"><button name="install-app-button" id="install-app-button" type="button" class="btn btn-outline-secondary btn-sm">Install app (only on android)</button></div>'
 
     settingsHTML += '  <div id="allow-notify"><button name="allow-notify-button" id="allow-notify-button" type="button" class="btn btn-outline-secondary btn-sm">Check if notifications allowed</button></div>'
