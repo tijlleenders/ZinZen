@@ -91,8 +91,13 @@ function navigateToHome() {
 }
 
 $("#top-settings").click(function() {
-    openSettingsModal()
-        //Todo: if main-promised hasClass d-none set calendar button active else set promised button active
+    if (publicOrPrivate == undefined ||
+        publicOrPrivate == "public") {
+        location.href = "https://ZinZen.me"
+    } else {
+        openSettingsModal()
+            //Todo: if main-promised hasClass d-none set calendar button active else set promised button active
+    }
 })
 
 $("#top-lists").click(function() {
