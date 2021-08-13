@@ -7,5 +7,5 @@ window._config = {
     privateWSEndpoint: 'wss://xpa01v6f0d.execute-api.eu-west-1.amazonaws.com',
     publicWSEndpoint: 'wss://g8fn6uxmwk.execute-api.eu-west-1.amazonaws.com',
     redirectURI: 'https://www.zinzen.me/index.html',
-    deployVersion: 'v 12:00:30<br />21-08-12'
+    deployVersion: 'v 06:01:51<br />21-08-13'
 };
