@@ -2,6 +2,7 @@
 config/
 
 ./todo
+./done
 
 # Logs
 logs
@@ -108,3 +109,5 @@ dist
 # TernJS port file
 .tern-port
 todo
+done
+config/config.js
