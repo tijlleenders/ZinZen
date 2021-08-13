@@ -8,13 +8,10 @@ $("#myModal").on("click", "#login-buttonx", function() {
 
 $("#myModal").on("click", "#logout-buttonx", function() {
     console.log("log out")
-    let redirectURL = "https://auth.zinzen.me/logout?\
-    response_type=code&\
-    client_id=" + _config.appClientId + "&\
-    redirect_uri=" + _config.redirectURI + "&\
-    state=" + sessionStorage.getItem("pkce_state") + "&\
-    scope=openid+profile+aws.cognito.signin.user.admin"
-    console.log("redirect URL:", redirectURL)
+    let redirectURL = "https://auth.zinzen.me/logout?response_type=code&client_id=" + _config.appClientId +
+        "&redirect_uri=" + _config.redirectURI +
+        "&state=" + sessionStorage.getItem("pkce_state") +
+        "&scope=email+openid"
     sessionStorage.clear()
     location.href = redirectURL
 })
