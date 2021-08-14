@@ -5,6 +5,7 @@ var received_msg
 var settings = []
 var publicOrPrivate = undefined
 var serviceWorker = null
+var sessionId = uuidv4()
 
 var myHeaders = new Headers();
 myHeaders.set('Cache-Control', 'no-store');
@@ -136,6 +137,7 @@ function send(jsonString) {
     if (publicOrPrivate == "public") {
         if (urlParams.get('profile') != undefined) {
             json.profile = urlParams.get('profile')
+            json.sessionId = sessionId
         }
     }
     console.log("sending:", JSON.stringify(json))
