@@ -239,6 +239,9 @@ $("#main-promised").on("click", ".goal", function(event) {
                     break;
             }
             $("#modal-status").data("status", status) //necessary for fast/consistant UI update
+            if (publicOrPrivate == 'public') {
+                $("#subtext-" + nodeId.slice(-36)).append('<br />Suggested owner to set status to ' + status)
+            }
             var messageJson = {
                 action: "command",
                 command: "upsertGoal",
