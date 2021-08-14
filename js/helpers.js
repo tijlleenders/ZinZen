@@ -1239,11 +1239,20 @@ function getGoalSvg(status, id) {
     return goalSvg
 }
 
-function generateGoalHTML(properties) {
+function generateGoalHTML(id) {
+    let properties = $("#" + id).data("properties")
+
     //Todo replace this by map.get(gremlin.process.t.id/label) -- can't figure it out...
     var propIterator = properties.values()
     var goalId = propIterator.next().value
     var label = propIterator.next().value
+
+    var tag = properties.get("tags")[0]
+    let cardStyle = "card" + tag
+    $("#" + goalId).addClass(cardStyle)
+
+    let status = properties.get("status")[0]
+    $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
 
     let directParents = properties.get('directParents')
     let ultimateParents = properties.get('ultimateParents')
@@ -1291,15 +1300,8 @@ function generateGoalHTML(properties) {
 
     }
 
-
-    var tag = properties.get("tags")[0]
-    var status
-
-    status = properties.get("status")[0]
-
     let goalSvg = getGoalSvg(status, goalId)
 
-    let cardStyle = "card" + tag
 
     let parentRowAndColHTML = ''
     if (directParents.length != 0) {
@@ -1332,7 +1334,6 @@ function generateGoalHTML(properties) {
     }
 
     let returnHTML = `
-  <div class="row goal card ` + cardStyle + ` shadow-sm mb-2" id="` + goalId + `" data-status="` + status + `">
     <div id="carousel-` + goalId + `" class="carousel slide">
       <div class="carousel-inner-` + goalId + `">
         <div class="carousel-item active d-flex" id="carousel-item-1-` + goalId + `">
@@ -1376,8 +1377,7 @@ function generateGoalHTML(properties) {
         </div>
 
       </div>
-    </div>  
-  </div>
+    </div>
       `
 
     return returnHTML

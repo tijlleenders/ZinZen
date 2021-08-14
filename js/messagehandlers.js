@@ -72,15 +72,15 @@ async function handleIncomingProperties(properties) {
 
     }
 
-    if ($('#' + id).length) {
-        console.log("incoming id exists on page somewhere")
-            //Todo: check incoming vs existing status and act accordingly
-        $("#" + id).replaceWith(generateGoalHTML(properties))
-    } else {
-        console.log("prepending")
-        $("#add-a-goal").empty() //Todo: no effect?
-        $("#main-promised").prepend(generateGoalHTML(properties))
+    if (!$('#' + id).length) {
+        console.log("id not yet present, prepending")
+        $("#add-a-goal").empty() //Empties the No lists here
+        let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
+        $("#main-promised").prepend(goalHTML)
     }
+    $("#" + id).data('properties', properties)
+    $("#" + id).html(generateGoalHTML(id))
+
     $("#carousel-" + id).carousel({
         touch: true,
         interval: false
