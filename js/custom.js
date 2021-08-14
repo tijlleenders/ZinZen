@@ -162,6 +162,7 @@ if (
     console.log('showing profile while logged in: ' + urlParams.get('profile'))
     openWS("publicUser", "public", _config.publicWSEndpoint)
     publicOrPrivate = "public"
+    $("#inputCommand").attr('placeholder', 'Suggest something to add...')
 } else if (
     urlParams.get('profile') != undefined &&
     urlParams.get('code') == undefined
@@ -169,6 +170,7 @@ if (
     console.log('showing profile without being logged in' + urlParams.get('profile'))
     openWS("publicUser", "public", _config.publicWSEndpoint)
     publicOrPrivate = "public"
+    $("#inputCommand").attr('placeholder', 'Suggest something to add...')
 } else if (
     urlParams.get('profile') == undefined &&
     urlParams.get('code') == undefined
