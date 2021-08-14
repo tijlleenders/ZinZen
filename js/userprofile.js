@@ -85,6 +85,15 @@ async function redirectUserAgentToAuthorizeEndpoint() {
         })
 }
 
+async function redirectUserAgentToSignupEndpoint() {
+    createSessionPKCEState()
+    createSessionPKCECodeVerifier()
+    createSessionPKCECodeChallenge()
+        .then(result => {
+            location.href = "https://" + _config.domain + "/signup?response_type=code&state=" + sessionStorage.getItem('pkce_state') + "&client_id=" + _config.appClientId + "&redirect_uri=" + _config.redirectURI + "&scope=openid&code_challenge_method=S256&code_challenge=" + sessionStorage.getItem('code_challenge');
+        })
+}
+
 async function requestToken(code) {
     try {
         console.log("requesting tokens with code:", code)

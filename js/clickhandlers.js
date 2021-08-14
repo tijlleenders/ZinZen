@@ -6,6 +6,10 @@ $("#main-login").click(function() {
     redirectUserAgentToAuthorizeEndpoint()
 })
 
+$("#main-login").click(function() {
+    redirectUserAgentToSignupEndpoint()
+})
+
 $("#main-about").click(function() {
     $("#main-info-about-details").removeClass('d-none')
     $("#main-info-privacy-details").addClass('d-none')
