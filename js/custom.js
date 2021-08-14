@@ -136,8 +136,6 @@ function send(jsonString) {
     if (publicOrPrivate == "public") {
         if (urlParams.get('profile') != undefined) {
             json.profile = urlParams.get('profile')
-        } else {
-            json.profile = "tijl.leenders"
         }
     }
     console.log("sending:", JSON.stringify(json))
