@@ -1299,6 +1299,10 @@ function generateGoalHTML(id) {
         }
 
     }
+    if (properties.has("subTitle") && properties.get("subTitle")[0] != "") {
+        subTitle += '<br />' + properties.get("subTitle")[0]
+    }
+
 
     let goalSvg = getGoalSvg(status, goalId)
 
