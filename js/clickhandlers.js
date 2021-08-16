@@ -231,12 +231,12 @@ $("#main-promised").on("click", ".goal", function(event) {
                     status = "done"
                     break;
                 case "done":
-                    status = "deleted"
+                    status = "never"
                     break;
                 case "maybe":
                     status = "done"
                     break;
-                case "deleted": //Todo: if goal has duration or due date: set to promised
+                case "never": //Todo: if goal has duration or due date: set to promised
                     status = "maybe"
                     break;
                 default:
