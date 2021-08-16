@@ -6,7 +6,7 @@ $("#main-login").click(function() {
     redirectUserAgentToAuthorizeEndpoint()
 })
 
-$("#main-login").click(function() {
+$("#create-account").click(function() {
     redirectUserAgentToSignupEndpoint()
 })
 
