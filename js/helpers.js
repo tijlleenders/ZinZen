@@ -1224,7 +1224,7 @@ function getGoalSvg(status, id) {
         </svg>'
             break;
 
-        case "deleted":
+        case "never":
             goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">\
       <path stroke="#959595" fill="#959595" d="M9.036 7.976a.75.75 0 00-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 101.06 1.06L12 13.06l2.963 2.964a.75.75 0 001.061-1.06L13.061 12l2.963-2.964a.75.75 0 10-1.06-1.06L12 10.939 9.036 7.976z">\
       </path><path stroke="#959595" fill-rule="evenodd" fill="none" stroke-width="2"\
