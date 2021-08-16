@@ -250,7 +250,8 @@ window.addEventListener("load", () => {
 
 $("#main-promised").sortable({
     appendTo: document.body,
-    delay: 1,
+    delay: 350,
+    distance: 10,
     scroll: true,
     scrollSpeed: 40,
     handle: ".circle-col"
