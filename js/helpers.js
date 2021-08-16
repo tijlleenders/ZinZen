@@ -1411,7 +1411,12 @@ function formatDuration(duration) {
     var result = {}
 
     if (duration == undefined || duration < 0) {
-        throw "can't have negative duration in formatDuration"
+        result.weeks = "0w"
+        result.days = "0d"
+        result.hours = "0h"
+        result.minutes = "0m"
+        result.seconds = "0s"
+        result.short = "no duration"
     }
     duration = Math.abs(duration)
     var weeks = Math.floor(duration / (3600 * 24 * 7))
