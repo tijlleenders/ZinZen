@@ -80,10 +80,6 @@ function openWS(authorizer, stage, WSEndpoint) {
                         $("#breadcrumb").data("goals", item.get("goalsBreadcrumb"))
                         updateBreadcrumbUI()
 
-                        $("#main-promised").sortable("disable")
-                        $("#move-a-goal-button").addClass('disabled')
-                        $("#move-a-goal-button").removeClass('disabled')
-
                         item.get("allSubs").forEach(sub => {
                             let properties = sub.get("properties")
                             properties.set('directParents', sub.get('directParents'))
@@ -256,7 +252,6 @@ $("#main-promised").sortable({
     appendTo: document.body,
     delay: 1,
     scroll: true,
-    scrollSpeed: 40
+    scrollSpeed: 40,
+    handle: ".circle-col"
 });
-
-$("#main-promised").sortable("disable");

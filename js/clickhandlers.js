@@ -364,10 +364,6 @@ function addSomething(title) {
     send(JSON.stringify(upsertGoal))
 }
 
-$("#move-a-goal-button").click(function(e) {
-    $("#main-promised").sortable("enable")
-})
-
 $("#add-a-goal-button").click(function() {
     let title = $("#inputCommand").val()
     if (title.length != 0) {
