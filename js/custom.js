@@ -256,5 +256,7 @@ $("#main-promised").sortable({
     scrollSpeed: 40,
     handle: ".circle-col",
     cursor: "move",
-    scrollSensitivity: 50
+    scrollSensitivity: 50,
+    start: function(event, ui) { console.log("startEvent:", event) },
+    stop: function(event, ui) { console.log("stopEvent:", event) }
 });
