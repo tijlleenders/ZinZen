@@ -254,5 +254,6 @@ $("#main-promised").sortable({
     distance: 10,
     scroll: true,
     scrollSpeed: 40,
-    handle: ".circle-col"
+    handle: ".circle-col",
+    cursor: "move"
 });
