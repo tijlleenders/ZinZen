@@ -249,38 +249,37 @@ $("#main-promised").on("click", ".goal", function(event) {
     // event.stopPropagation();
     console.log(Date.now());
     let nodeId = getNodeId(event)
-    let selectedGoal = nodeId.slice(-36);
+    let selectedGoalId = nodeId.slice(-36);
     if (nodeId != "") {
         if ($("#" + nodeId).hasClass("title") ||
             $("#" + nodeId).hasClass("title-text") ||
             nodeId.substring(0, 8) == "subtext-" ||
             nodeId.substring(0, 12) == "subtext-col-") {
-            goTo(nodeId.slice(-36))
+            goTo(selectedGoalId)
         }
         if (nodeId.substring(0, 11) == "delete-col-" ||
             nodeId.substring(0, 12) == "delete-icon-") {
-            deleteGoal(id)
+            deleteGoal(selectedGoalId)
         }
         if (nodeId.substring(0, 11) == "finish-col-" ||
             nodeId.substring(0, 12) == "finish-icon-") {
-            openModal(selectedGoal, "finish")
+            openModal(selectedGoalId, "finish")
         }
         if (nodeId.substring(0, 17) == "visibilities-col-" ||
             nodeId.substring(0, 18) == "visibilities-icon-") {
-            openModal(selectedGoal, "visibilities")
+            openModal(selectedGoalId, "visibilities")
         }
         if ($("#" + nodeId).hasClass("todo-circle") ||
             $("#" + nodeId).hasClass("circle-col") ||
             nodeId.substring(0, 11) == "circle-col-" ||
             nodeId.substring(0, 11) == "svg-circle-") {
-            changeStatus(nodeId.slice(-36))
+            changeStatus(selectedGoalId)
         }
-
         if ($("#" + nodeId).hasClass("parent-link")) {
             $("#main-promised").empty();
             send(
                 '{"action":"read","readRequestType":"allSubsFor","parentId":"' +
-                selectedGoal +
+                selectedGoalId +
                 '"}'
             );
             if (!mobileAndTabletCheck()) {
@@ -288,43 +287,43 @@ $("#main-promised").on("click", ".goal", function(event) {
             }
         }
         if ($("#" + nodeId).hasClass("collaboration")) {
-            openModal(selectedGoal, "collaboration")
+            openModal(selectedGoalId, "collaboration")
         }
         if ($("#" + nodeId).hasClass("due")) {
-            openModal(selectedGoal, "due")
+            openModal(selectedGoalId, "due")
         }
         if ($("#" + nodeId).hasClass("mood")) {
-            openModal(selectedGoal, "mood")
+            openModal(selectedGoalId, "mood")
         }
         if ($("#" + nodeId).hasClass("connect")) {
-            openModal(selectedGoal, "connect")
+            openModal(selectedGoalId, "connect")
         }
         if ($("#" + nodeId).hasClass("notes")) {
-            openModal(selectedGoal, "notes")
+            openModal(selectedGoalId, "notes")
         }
         if ($("#" + nodeId).hasClass("workflow")) {
-            openModal(selectedGoal, "workflow")
+            openModal(selectedGoalId, "workflow")
         }
         if ($("#" + nodeId).hasClass("image")) {
-            openModal(selectedGoal, "image")
+            openModal(selectedGoalId, "image")
         }
         if ($("#" + nodeId).hasClass("link")) {
-            openModal(selectedGoal, "link")
+            openModal(selectedGoalId, "link")
         }
         if ($("#" + nodeId).hasClass("location")) {
-            openModal(selectedGoal, "location")
+            openModal(selectedGoalId, "location")
         }
         if ($("#" + nodeId).hasClass("budget")) {
-            openModal(selectedGoal, "budget")
+            openModal(selectedGoalId, "budget")
         }
         if ($("#" + nodeId).hasClass("duration")) {
-            openModal(selectedGoal, "duration")
+            openModal(selectedGoalId, "duration")
         }
         if ($("#" + nodeId).hasClass("tags")) {
-            openModal(selectedGoal, "tags")
+            openModal(selectedGoalId, "tags")
         }
         if ($("#" + nodeId).hasClass("mail")) {
-            openModal(selectedGoal, "mail")
+            openModal(selectedGoalId, "mail")
         }
     } else {
         console.log("error in #goals.on(click)!");
