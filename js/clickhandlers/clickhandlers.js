@@ -216,6 +216,21 @@ function changeStatus(id) {
     send(JSON.stringify(messageJson))
 }
 
+function goTo(id) {
+    // todo: zoom in animation
+    $("#title-" + id).removeClass("title-highlight");
+    $("#goal-buttons-row-" + id).removeClass("row-highlight");
+    console.log("title clicked on goal ", id);
+    send(
+        '{"action":"read","readRequestType":"allSubsFor","parentId":"' +
+        id +
+        '"}'
+    );
+    if (!mobileAndTabletCheck()) {
+        $("#inputCommand").focus()
+    }
+}
+
 $("#main-promised").on("click", ".goal", function(event) {
     // event.stopPropagation();
     console.log(Date.now());
@@ -226,18 +241,7 @@ $("#main-promised").on("click", ".goal", function(event) {
             $("#" + nodeId).hasClass("title-text") ||
             nodeId.substring(0, 8) == "subtext-" ||
             nodeId.substring(0, 12) == "subtext-col-") {
-            // todo: zoom in animation
-            $("#title-" + selectedGoal).removeClass("title-highlight");
-            $("#goal-buttons-row-" + selectedGoal).removeClass("row-highlight");
-            console.log("title clicked on goal ", selectedGoal);
-            send(
-                '{"action":"read","readRequestType":"allSubsFor","parentId":"' +
-                selectedGoal +
-                '"}'
-            );
-            if (!mobileAndTabletCheck()) {
-                $("#inputCommand").focus()
-            }
+            goTo(nodeId.slice(-36))
         }
         if (nodeId.substring(0, 11) == "delete-col-" ||
             nodeId.substring(0, 12) == "delete-icon-") {
