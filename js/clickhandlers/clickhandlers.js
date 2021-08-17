@@ -273,7 +273,6 @@ function deleteGoal(id) {
 }
 
 $("#main-promised").on("click", ".goal", function(event) {
-    // event.stopPropagation();
     console.log(Date.now());
     let nodeId = getNodeId(event)
     let selectedGoalId = nodeId.slice(-36);
@@ -296,14 +295,7 @@ $("#main-promised").on("click", ".goal", function(event) {
             nodeId.substring(0, 18) == "visibilities-icon-") {
             openModal(selectedGoalId, "visibilities")
         }
-        if ($("#" + nodeId).hasClass("todo-circle") ||
-            $("#" + nodeId).hasClass("circle-col") ||
-            nodeId.substring(0, 11) == "circle-col-" ||
-            nodeId.substring(0, 11) == "svg-circle-") {
-            changeStatus(selectedGoalId)
-        }
         if ($("#" + nodeId).hasClass("parent-link")) {
-
             goTo(selectedGoalId)
         }
         if ($("#" + nodeId).hasClass("collaboration")) {
