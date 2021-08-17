@@ -176,12 +176,30 @@ function getNodeId(event) {
     return nodeId
 }
 
-// $("#main-promised").on("mousedown", ".circle-col", function(event) {
-//     console.log("event mousedown", event)
-//     let nodeId = getNodeId(event)
-//     console.log("nodeId", nodeId)
-//     changeStatus(nodeId.slice(-36))
-// })
+$("#main-promised").on("mousedown", ".circle-col", function(event) {
+    console.log("event mousedown", event)
+    let nodeId = getNodeId(event)
+    console.log("nodeId", nodeId)
+    startX = parseInt(event.clientX)
+    startY = parseInt(event.clientY)
+    console.log("startX:", startX)
+    console.log("startY:", startY)
+})
+
+$("#main-promised").on("mouseup", ".circle-col", function(event) {
+    console.log("event mouseup", event)
+    let nodeId = getNodeId(event)
+    console.log("nodeId", nodeId)
+    endX = parseInt(event.clientX)
+    endY = parseInt(event.clientY)
+    console.log("endX:", endX)
+    console.log("endY:", endY)
+    if (Math.abs(endX - startX) <= 10 &&
+        Math.abs(endY - startY) <= 10) {
+        console.log("clicked!")
+        changeStatus(nodeId.slice(-36))
+    }
+})
 
 function changeStatus(id) {
     let currentStatus = $("#" + id).data("status")

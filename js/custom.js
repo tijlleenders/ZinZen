@@ -7,6 +7,8 @@ var publicOrPrivate = undefined
 var serviceWorker = null
 var sessionId = uuidv4()
 
+var startX, startY, endX, endY = 0 //for click or swipe or move detection
+
 var myHeaders = new Headers();
 myHeaders.set('Cache-Control', 'no-store');
 var urlParams = new URLSearchParams(window.location.search);
