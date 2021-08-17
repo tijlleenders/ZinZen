@@ -152,9 +152,15 @@ $("#breadcrumb").on("click", ".breadcrumb-button", function(event) {
     )
 })
 
+function toggleEditButtons(id) {
+    $("#goal-buttons-row-" + id).toggleClass('d-none')
+    $("#goal-title-row-" + id).toggleClass('d-none')
+    $("#subtext-row-" + id).toggleClass('d-none')
+}
+
 $("#main-promised").on("contextmenu", ".goal", function(event) {
     let nodeId = getNodeId(event)
-    $("#carousel-item-2-" + nodeId.slice(-36)).toggleClass('active')
+    toggleEditButtons(nodeId.slice(-36))
     return false //returning false blocks context menu
 })
 

@@ -1343,6 +1343,11 @@ function generateGoalHTML(id) {
           </div>
           <div class="col-10">
             ` + parentRowAndColHTML + `
+            <div class="row d-none" id="goal-buttons-row-` + goalId + `">
+              <div class="col d-flex">
+                Edit buttons
+              </div>
+            </div>
             <div class="row" id="goal-title-row-` + goalId + `">
               <div class="col d-flex">
                 <div class="title d-flex icons" id="title-` + goalId + `">              
