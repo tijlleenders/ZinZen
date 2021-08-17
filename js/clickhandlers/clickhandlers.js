@@ -231,6 +231,20 @@ function goTo(id) {
     }
 }
 
+function deleteGoal(id) {
+    let deleteGoal = {
+        action: "command",
+        command: "deleteGoal",
+        goalId: id
+    }
+    send(JSON.stringify(deleteGoal))
+    $("#" + id).removeClass('jello-vertical-animation') //if any
+    $("#" + id).addClass('swirl-out-bck-animation')
+    $("#" + id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+        $("#" + id).remove();
+    });
+}
+
 $("#main-promised").on("click", ".goal", function(event) {
     // event.stopPropagation();
     console.log(Date.now());
@@ -245,17 +259,7 @@ $("#main-promised").on("click", ".goal", function(event) {
         }
         if (nodeId.substring(0, 11) == "delete-col-" ||
             nodeId.substring(0, 12) == "delete-icon-") {
-            let deleteGoal = {
-                action: "command",
-                command: "deleteGoal",
-                goalId: selectedGoal
-            }
-            send(JSON.stringify(deleteGoal))
-            $("#" + selectedGoal).removeClass('jello-vertical-animation') //if any
-            $("#" + selectedGoal).addClass('swirl-out-bck-animation')
-            $("#" + selectedGoal).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-                $(this).remove();
-            });
+            deleteGoal(id)
         }
         if (nodeId.substring(0, 11) == "finish-col-" ||
             nodeId.substring(0, 12) == "finish-icon-") {
