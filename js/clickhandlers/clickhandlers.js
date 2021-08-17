@@ -218,9 +218,7 @@ function changeStatus(id) {
 
 function goTo(id) {
     // todo: zoom in animation
-    $("#title-" + id).removeClass("title-highlight");
-    $("#goal-buttons-row-" + id).removeClass("row-highlight");
-    console.log("title clicked on goal ", id);
+
     send(
         '{"action":"read","readRequestType":"allSubsFor","parentId":"' +
         id +
@@ -276,15 +274,8 @@ $("#main-promised").on("click", ".goal", function(event) {
             changeStatus(selectedGoalId)
         }
         if ($("#" + nodeId).hasClass("parent-link")) {
-            $("#main-promised").empty();
-            send(
-                '{"action":"read","readRequestType":"allSubsFor","parentId":"' +
-                selectedGoalId +
-                '"}'
-            );
-            if (!mobileAndTabletCheck()) {
-                $("#inputCommand").focus()
-            }
+
+            goTo(selectedGoalId)
         }
         if ($("#" + nodeId).hasClass("collaboration")) {
             openModal(selectedGoalId, "collaboration")
