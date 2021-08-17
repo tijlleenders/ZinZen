@@ -260,3 +260,7 @@ $("#main-promised").sortable({
     start: function(event, ui) { console.log("startEvent:", event) },
     stop: function(event, ui) { console.log("stopEvent:", event) }
 });
+
+$(function() {
+    FastClick.attach(document.body);
+});
