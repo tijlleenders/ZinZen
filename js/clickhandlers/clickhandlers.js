@@ -176,6 +176,46 @@ function getNodeId(event) {
     return nodeId
 }
 
+// $("#main-promised").on("mousedown", ".circle-col", function(event) {
+//     console.log("event mousedown", event)
+//     let nodeId = getNodeId(event)
+//     console.log("nodeId", nodeId)
+//     changeStatus(nodeId.slice(-36))
+// })
+
+function changeStatus(id) {
+    let currentStatus = $("#" + id).data("status")
+    let toBeStatus = currentStatus
+    switch (currentStatus) {
+        case "promised":
+            toBeStatus = "done"
+            break;
+        case "done":
+            toBeStatus = "never"
+            break;
+        case "maybe":
+            toBeStatus = "done"
+            break;
+        case "never": //Todo: if goal has duration or due date: set to promised
+            toBeStatus = "maybe"
+            break;
+        default:
+            console.log("error not handling status in click on todo-circle")
+            break;
+    }
+    $("#modal-status").data("status", toBeStatus) //necessary for fast/consistant UI update
+    if (publicOrPrivate == 'public') {
+        $("#subtext-" + id).append('<br />Suggested owner to set status to ' + toBeStatus)
+    }
+    var messageJson = {
+        action: "command",
+        command: "upsertGoal",
+        goalId: id,
+        status: toBeStatus
+    }
+    send(JSON.stringify(messageJson))
+}
+
 $("#main-promised").on("click", ".goal", function(event) {
     // event.stopPropagation();
     console.log(Date.now());
@@ -225,35 +265,7 @@ $("#main-promised").on("click", ".goal", function(event) {
             $("#" + nodeId).hasClass("circle-col") ||
             nodeId.substring(0, 11) == "circle-col-" ||
             nodeId.substring(0, 11) == "svg-circle-") {
-            var status = $(this).data("status")
-            switch (status) {
-                case "promised":
-                    status = "done"
-                    break;
-                case "done":
-                    status = "never"
-                    break;
-                case "maybe":
-                    status = "done"
-                    break;
-                case "never": //Todo: if goal has duration or due date: set to promised
-                    status = "maybe"
-                    break;
-                default:
-                    console.log("error not handling status in click on todo-circle")
-                    break;
-            }
-            $("#modal-status").data("status", status) //necessary for fast/consistant UI update
-            if (publicOrPrivate == 'public') {
-                $("#subtext-" + nodeId.slice(-36)).append('<br />Suggested owner to set status to ' + status)
-            }
-            var messageJson = {
-                action: "command",
-                command: "upsertGoal",
-                goalId: selectedGoal,
-                status: status
-            }
-            send(JSON.stringify(messageJson))
+            changeStatus(nodeId.slice(-36))
         }
 
         if ($("#" + nodeId).hasClass("parent-link")) {
