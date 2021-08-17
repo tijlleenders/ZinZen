@@ -205,6 +205,11 @@ $("#main-promised").on("mouseup", ".circle-col", function(event) {
         console.log("clicked!")
         changeStatus(nodeId.slice(-36))
     }
+    if (Math.abs(endX - startX) > 50 &&
+        Math.abs(endY - startY) <= 30) {
+        console.log("swiped!")
+        toggleEditButtons(nodeId.slice(-36))
+    }
 })
 
 function changeStatus(id) {
