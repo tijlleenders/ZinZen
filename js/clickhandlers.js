@@ -177,7 +177,7 @@ function getNodeId(event) {
 }
 
 $("#main-promised").on("click", ".goal", function(event) {
-    event.stopPropagation();
+    // event.stopPropagation();
     console.log(Date.now());
     let nodeId = getNodeId(event)
     let selectedGoal = nodeId.slice(-36);
