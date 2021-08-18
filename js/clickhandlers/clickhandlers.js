@@ -6,6 +6,11 @@ $("#main-login").click(function() {
     redirectUserAgentToAuthorizeEndpoint()
 })
 
+$("#main-example").click(function() {
+    window.open('https://zinzen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2', '_blank');
+    $("#main-about").click()
+})
+
 $("#create-account").click(function() {
     redirectUserAgentToSignupEndpoint()
 })
