@@ -237,6 +237,12 @@ function changeStatus(id) {
             console.log("error not handling status in click on todo-circle")
             break;
     }
+
+    //fast update before confirmation from backend
+    let tempProps = $("#" + id).data("properties")
+    tempProps.set("status", [toBeStatus])
+    $("#" + id).html(generateGoalHTML(id))
+
     $("#modal-status").data("status", toBeStatus) //necessary for fast/consistant UI update
     if (publicOrPrivate == 'public') {
         $("#subtext-" + id).append('<br />Suggested owner to set status to ' + toBeStatus)
