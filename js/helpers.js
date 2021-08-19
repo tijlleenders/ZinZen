@@ -1460,8 +1460,8 @@ function updateBreadcrumbUI() {
     let top = $("#breadcrumb").data("top")
     let goals = $("#breadcrumb").data("goals")
     let breadcrumbHTML = ''
+    breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumb-me">' + top + '</button>'
     if (goals.length != 0) {
-        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumb-me">' + top + '</button>'
         goals.forEach(goal => {
             breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + goal.id + '">' + goal.properties.title[0].value + '</button>'
         })
