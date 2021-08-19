@@ -1178,7 +1178,7 @@ function generateSimpleGoalHTML(goalId, title, status, tags) {
     <div class="row" id="goal-title-row-' +
         goalId +
         '">\
-      <div class="col nopadding">\
+      <div class="col nopadding text-truncate">\
         <div class="title icons" id="title-' +
         goalId +
         '">\
