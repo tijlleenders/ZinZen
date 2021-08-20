@@ -348,8 +348,8 @@ function setSkeletonHTMLForScheduleConstraints() {
   <div class="row mt-2" id="options-row">
     <div class="col">
       <div class="accordion .accordion-flush" id="schedule-accordion">`
-    bodyHTML += getFinishAccordionItemHTML()
     bodyHTML += getDurationAccordionHTML()
+    bodyHTML += getFinishAccordionItemHTML()
     bodyHTML += `
       </div>
     </div>
