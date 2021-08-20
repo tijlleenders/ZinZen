@@ -243,106 +243,114 @@ function sendProbeRequest() {
     send(JSON.stringify(upsertGoal))
 }
 
+function getFinishAccordionItemHTML() {
+    return `
+<div class="accordion-item" id="collapse-item-finish">
+  <h2 class="accordion-header" id="heading-finish">
+    <button class="accordion-button collapsed" id="accordion-button-finish" type="button" data-bs-toggle="collapse"
+      data-bs-target="#collapse-finish" aria-expanded="false" aria-controls="collapse-finish">
+      <div id="modal-finish">
+        <p class="text-center">No due date</p>
+      </div>
+    </button>
+  </h2>
+  <div id="collapse-finish" class="accordion-collapse collapse" aria-labelledby="heading-finish"
+    data-bs-parent="#schedule-accordion">
+    <div class="accordion-body">
+      <div id="modal-finish-modify" class="subtitles">
+        <button name="quick-set-today-button" id="quick-set-today-button" type="button" class="btn btn-outline-secondary btn-sm">Today</button>
+        <button name="quick-set-tomorrow-button" id="quick-set-tomorrow-button" type="button" class="btn btn-outline-secondary btn-sm">Tomorrow</button>
+        <button name="quick-set-next-week-button" id="quick-set-next-week-button" type="button" class="btn btn-outline-secondary btn-sm">Next week</button>
+        <button name="quick-set-next-month-button" id="quick-set-next-month-button" type="button" class="btn btn-outline-secondary btn-sm">Next month</button>
+        <button name="quick-set-custom-button" id="quick-set-custom-button" type="button" class="btn btn-outline-secondary btn-sm">Custom</button>
+        <div id="due-date-time-picker" class="d-flex justify-content-center"></div>
+      </div>
+    </div>
+  </div>
+</div>`
+}
+
+function getDurationAccordionHTML() {
+    return `
+<div class="accordion-item">
+<h2 class="accordion-header" id="heading-duration">
+  <button class="accordion-button collapsed" id="accordion-button-duration" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-duration"
+    aria-expanded="false" aria-controls="collapse-duration">
+    <div id="modal-duration">
+      <p class="text-center">Reserve 1h</p>
+    </div>
+  </button>
+</h2>
+<div id="collapse-duration" class="accordion-collapse collapse" aria-labelledby="heading-duration"
+  data-bs-parent="#schedule-accordion">
+  <div class="accordion-body">
+    <div id="modal-duration-modify">
+      <table class="table">
+        <tr>
+          <th>
+            <div><button type="button" id="add-week-button" class="btn btn-light ">+</button></div>
+          </th>
+          <th>
+            <div><button type="button" id="add-day-button" class="btn btn-light ">+</button></div>
+          </th>
+          <th>
+            <div><button type="button" id="add-hour-button" class="btn btn-light ">+</button></div>
+          </th>
+          <th>
+            <div><button type="button" id="add-minute-button" class="btn btn-light ">+</button>
+            </div>
+          </th>
+          <th>
+            <div><button type="button" id="add-second-button" class="btn btn-light ">+</button>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <td id="duration-weeks">w</td>
+          <td id="duration-days">d</td>
+          <td id="duration-hours">h</td>
+          <td id="duration-minutes">m</td>
+          <td id="duration-seconds">s</td>
+        </tr>
+        <tr>
+          <td>
+            <div><button type="button" id="remove-week-button" class="btn btn-light ">-</button>
+            </div>
+          </td>
+          <td>
+            <div><button type="button" id="remove-day-button" class="btn btn-light ">-</button>
+            </div>
+          </td>
+          <td>
+            <div><button type="button" id="remove-hour-button" class="btn btn-light ">-</button>
+            </div>
+          </td>
+          <td>
+            <div><button type="button" id="remove-minute-button" class="btn btn-light ">-</button>
+            </div>
+          </td>
+          <td>
+            <div><button type="button" id="remove-second-button" class="btn btn-light ">-</button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+</div>`
+}
+
 function setSkeletonHTMLForScheduleConstraints() {
     let headerHTML = `<h4 class="modal-title">Time options for ...</h4>`
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = `
   <div class="row mt-2" id="options-row">
     <div class="col">
-      <div class="accordion .accordion-flush" id="schedule-accordion">
-
-      <div class="accordion-item" id="collapse-item-finish">
-          <h2 class="accordion-header" id="heading-finish">
-            <button class="accordion-button collapsed" id="accordion-button-finish" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapse-finish" aria-expanded="false" aria-controls="collapse-finish">
-              <div id="modal-finish">
-                <p class="text-center">No due date</p>
-              </div>
-            </button>
-          </h2>
-          <div id="collapse-finish" class="accordion-collapse collapse" aria-labelledby="heading-finish"
-            data-bs-parent="#schedule-accordion">
-            <div class="accordion-body">
-              <div id="modal-finish-modify" class="subtitles">
-                <button name="quick-set-today-button" id="quick-set-today-button" type="button" class="btn btn-outline-secondary btn-sm">Today</button>
-                <button name="quick-set-tomorrow-button" id="quick-set-tomorrow-button" type="button" class="btn btn-outline-secondary btn-sm">Tomorrow</button>
-                <button name="quick-set-next-week-button" id="quick-set-next-week-button" type="button" class="btn btn-outline-secondary btn-sm">Next week</button>
-                <button name="quick-set-next-month-button" id="quick-set-next-month-button" type="button" class="btn btn-outline-secondary btn-sm">Next month</button>
-                <button name="quick-set-custom-button" id="quick-set-custom-button" type="button" class="btn btn-outline-secondary btn-sm">Custom</button>
-                <div id="due-date-time-picker" class="d-flex justify-content-center"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading-duration">
-            <button class="accordion-button collapsed" id="accordion-button-duration" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-duration"
-              aria-expanded="false" aria-controls="collapse-duration">
-              <div id="modal-duration">
-                <p class="text-center">Reserve 1h</p>
-              </div>
-            </button>
-          </h2>
-          <div id="collapse-duration" class="accordion-collapse collapse" aria-labelledby="heading-duration"
-            data-bs-parent="#schedule-accordion">
-            <div class="accordion-body">
-              <div id="modal-duration-modify">
-                <table class="table">
-                  <tr>
-                    <th>
-                      <div><button type="button" id="add-week-button" class="btn btn-light ">+</button></div>
-                    </th>
-                    <th>
-                      <div><button type="button" id="add-day-button" class="btn btn-light ">+</button></div>
-                    </th>
-                    <th>
-                      <div><button type="button" id="add-hour-button" class="btn btn-light ">+</button></div>
-                    </th>
-                    <th>
-                      <div><button type="button" id="add-minute-button" class="btn btn-light ">+</button>
-                      </div>
-                    </th>
-                    <th>
-                      <div><button type="button" id="add-second-button" class="btn btn-light ">+</button>
-                      </div>
-                    </th>
-                  </tr>
-                  <tr>
-                    <td id="duration-weeks">w</td>
-                    <td id="duration-days">d</td>
-                    <td id="duration-hours">h</td>
-                    <td id="duration-minutes">m</td>
-                    <td id="duration-seconds">s</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div><button type="button" id="remove-week-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div><button type="button" id="remove-day-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div><button type="button" id="remove-hour-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div><button type="button" id="remove-minute-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div><button type="button" id="remove-second-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-       
+      <div class="accordion .accordion-flush" id="schedule-accordion">`
+    bodyHTML += getFinishAccordionItemHTML()
+    bodyHTML += getDurationAccordionHTML()
+    bodyHTML += `
       </div>
     </div>
   </div>`
