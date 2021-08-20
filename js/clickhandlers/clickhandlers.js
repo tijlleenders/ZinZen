@@ -300,7 +300,7 @@ $("#main-promised").on("click", ".goal", function(event) {
         }
         if (nodeId.substring(0, 11) == "finish-col-" ||
             nodeId.substring(0, 12) == "finish-icon-") {
-            openModal(selectedGoalId, "finish")
+            openModal(selectedGoalId, "duration")
         }
         if (nodeId.substring(0, 17) == "visibilities-col-" ||
             nodeId.substring(0, 18) == "visibilities-icon-") {

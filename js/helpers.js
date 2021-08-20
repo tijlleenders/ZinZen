@@ -114,6 +114,9 @@ function updateModalUI() {
         case "visibilities":
             updateModalVisibilitiesUI()
             break;
+        case "duration":
+            updateModalScheduleConstraintsUI()
+            break;
         case "finish":
             updateModalScheduleConstraintsUI()
             break;

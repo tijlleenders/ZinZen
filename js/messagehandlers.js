@@ -63,6 +63,7 @@ async function handleIncomingProperties(properties) {
                 break;
 
             case "finish":
+            case "duration":
                 modalScheduleConstraints(properties);
                 break;
 
@@ -80,11 +81,6 @@ async function handleIncomingProperties(properties) {
     }
     $("#" + id).data('properties', properties)
     $("#" + id).html(generateGoalHTML(id))
-
-    $("#carousel-" + id).carousel({
-        touch: true,
-        interval: false
-    });
 }
 
 function handleIncomingProposal(proposal) {
