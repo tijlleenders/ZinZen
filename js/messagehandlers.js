@@ -8,11 +8,17 @@ async function handleIncomingProperties(properties) {
     var id = propIterator.next().value
     var label = propIterator.next().value
 
-    var status = properties.get("status")[0]
-    var createdDT = Date.parse(properties.get("createdDT")[0])
-
     console.log("id:", id)
     console.log("label:", label)
+
+    if (!$('#' + id).length) {
+        console.log("id not yet present, prepending")
+        $("#add-a-goal").empty() //Empties the No lists here
+        let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
+        $("#main-promised").prepend(goalHTML)
+    }
+    $("#" + id).data('properties', properties)
+    $("#" + id).html(generateGoalHTML(id))
 
     if ($("#myModal").data("idx") == id) {
         switch ($("#myModal").data("modalType")) {
@@ -72,15 +78,6 @@ async function handleIncomingProperties(properties) {
 
 
     }
-
-    if (!$('#' + id).length) {
-        console.log("id not yet present, prepending")
-        $("#add-a-goal").empty() //Empties the No lists here
-        let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
-        $("#main-promised").prepend(goalHTML)
-    }
-    $("#" + id).data('properties', properties)
-    $("#" + id).html(generateGoalHTML(id))
 }
 
 function handleIncomingProposal(proposal) {
