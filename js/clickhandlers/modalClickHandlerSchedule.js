@@ -292,72 +292,72 @@ $("#myModal").on("click", "#remove-second-button", function() {
 })
 
 $("#myModal").on("click", ".daytimeDay", function(e) {
-    let daytimePrefArray = $("#modal-daytimePrefs").data("daytimePrefs")
+    let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPref")
     let dayOffset = e.currentTarget.id.split("-")[1]
-    console.log("daytimePrefArray:", daytimePrefArray)
+    console.log("timesOfDaysPrefArray:", timesOfDaysPrefArray)
     console.log("dayOffset:", dayOffset)
     dayOffset = parseInt(dayOffset, 10)
     if (
-        daytimePrefArray[1 + dayOffset] == 1 &&
-        daytimePrefArray[2 + dayOffset] == 1 &&
-        daytimePrefArray[3 + dayOffset] == 1
+        timesOfDaysPrefArray[1 + dayOffset] == 1 &&
+        timesOfDaysPrefArray[2 + dayOffset] == 1 &&
+        timesOfDaysPrefArray[3 + dayOffset] == 1
     ) {
-        daytimePrefArray[0 + dayOffset] = 0
-        daytimePrefArray[1 + dayOffset] = 0
-        daytimePrefArray[2 + dayOffset] = 0
-        daytimePrefArray[3 + dayOffset] = 0
+        timesOfDaysPrefArray[0 + dayOffset] = 0
+        timesOfDaysPrefArray[1 + dayOffset] = 0
+        timesOfDaysPrefArray[2 + dayOffset] = 0
+        timesOfDaysPrefArray[3 + dayOffset] = 0
     } else {
-        daytimePrefArray[0 + dayOffset] = 0
-        daytimePrefArray[1 + dayOffset] = 1
-        daytimePrefArray[2 + dayOffset] = 1
-        daytimePrefArray[3 + dayOffset] = 1
+        timesOfDaysPrefArray[0 + dayOffset] = 0
+        timesOfDaysPrefArray[1 + dayOffset] = 1
+        timesOfDaysPrefArray[2 + dayOffset] = 1
+        timesOfDaysPrefArray[3 + dayOffset] = 1
     }
-    $("#modal-daytimePrefs").data("daytimePrefs", daytimePrefArray)
-    updateDaytimePrefUI()
+    $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPrefArray)
+    updatetimesOfDaysPrefUI()
 })
 
 $("#myModal").on("click", ".daytimeTimeOfDay", function(e) {
-    let daytimePrefArray = $("#modal-daytimePrefs").data("daytimePrefs")
+    let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPref")
     let timeOfDayOffset = e.currentTarget.id.split("-")[1]
-    console.log("daytimePrefArray in click:", daytimePrefArray)
+    console.log("timesOfDaysPrefArray in click:", timesOfDaysPrefArray)
     console.log("timeOfDayOffset:", timeOfDayOffset)
     timeOfDayOffset = parseInt(timeOfDayOffset, 10)
     if (
-        daytimePrefArray[0 + timeOfDayOffset] == 1 &&
-        daytimePrefArray[4 + timeOfDayOffset] == 1 &&
-        daytimePrefArray[8 + timeOfDayOffset] == 1 &&
-        daytimePrefArray[12 + timeOfDayOffset] == 1 &&
-        daytimePrefArray[16 + timeOfDayOffset] == 1 &&
-        daytimePrefArray[20 + timeOfDayOffset] == 1 &&
-        daytimePrefArray[24 + timeOfDayOffset] == 1
+        timesOfDaysPrefArray[0 + timeOfDayOffset] == 1 &&
+        timesOfDaysPrefArray[4 + timeOfDayOffset] == 1 &&
+        timesOfDaysPrefArray[8 + timeOfDayOffset] == 1 &&
+        timesOfDaysPrefArray[12 + timeOfDayOffset] == 1 &&
+        timesOfDaysPrefArray[16 + timeOfDayOffset] == 1 &&
+        timesOfDaysPrefArray[20 + timeOfDayOffset] == 1 &&
+        timesOfDaysPrefArray[24 + timeOfDayOffset] == 1
     ) {
-        daytimePrefArray[0 + timeOfDayOffset] = 0
-        daytimePrefArray[4 + timeOfDayOffset] = 0
-        daytimePrefArray[8 + timeOfDayOffset] = 0
-        daytimePrefArray[12 + timeOfDayOffset] = 0
-        daytimePrefArray[16 + timeOfDayOffset] = 0
-        daytimePrefArray[20 + timeOfDayOffset] = 0
-        daytimePrefArray[24 + timeOfDayOffset] = 0
+        timesOfDaysPrefArray[0 + timeOfDayOffset] = 0
+        timesOfDaysPrefArray[4 + timeOfDayOffset] = 0
+        timesOfDaysPrefArray[8 + timeOfDayOffset] = 0
+        timesOfDaysPrefArray[12 + timeOfDayOffset] = 0
+        timesOfDaysPrefArray[16 + timeOfDayOffset] = 0
+        timesOfDaysPrefArray[20 + timeOfDayOffset] = 0
+        timesOfDaysPrefArray[24 + timeOfDayOffset] = 0
     } else {
-        daytimePrefArray[0 + timeOfDayOffset] = 1
-        daytimePrefArray[4 + timeOfDayOffset] = 1
-        daytimePrefArray[8 + timeOfDayOffset] = 1
-        daytimePrefArray[12 + timeOfDayOffset] = 1
-        daytimePrefArray[16 + timeOfDayOffset] = 1
-        daytimePrefArray[20 + timeOfDayOffset] = 1
-        daytimePrefArray[24 + timeOfDayOffset] = 1
+        timesOfDaysPrefArray[0 + timeOfDayOffset] = 1
+        timesOfDaysPrefArray[4 + timeOfDayOffset] = 1
+        timesOfDaysPrefArray[8 + timeOfDayOffset] = 1
+        timesOfDaysPrefArray[12 + timeOfDayOffset] = 1
+        timesOfDaysPrefArray[16 + timeOfDayOffset] = 1
+        timesOfDaysPrefArray[20 + timeOfDayOffset] = 1
+        timesOfDaysPrefArray[24 + timeOfDayOffset] = 1
     }
-    $("#modal-daytimePrefs").data("daytimePrefs", daytimePrefArray)
-    updateDaytimePrefUI()
+    $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPrefArray)
+    updatetimesOfDaysPrefUI()
 })
 
 $("#myModal").on("click", ".daytime", function(e) {
     let daytimeIndex = e.currentTarget.id.split("-")[1]
     console.log("daytimeIndex:", daytimeIndex)
-    let daytimePrefArray = $("#modal-daytimePrefs").data("daytimePrefs")
-    daytimePrefArray[daytimeIndex] == 0 ? daytimePrefArray[daytimeIndex] = 1 : daytimePrefArray[daytimeIndex] = 0
-    $("#modal-daytimePrefs").data("daytimePrefs", daytimePrefArray)
-    updateDaytimePrefUI()
+    let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPref")
+    timesOfDaysPrefArray[daytimeIndex] == 0 ? timesOfDaysPrefArray[daytimeIndex] = 1 : timesOfDaysPrefArray[daytimeIndex] = 0
+    $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPrefArray)
+    updatetimesOfDaysPrefUI()
 })
 
 $("#myModal").on("click", "#add-min-per-slot-button-area", function(e) { //Todo: Fringe case: minPerSlot should move minPerWeek up if minPerWeek * 24h < minPerSlot

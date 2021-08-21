@@ -578,12 +578,6 @@ function modalMail(properties) {
   </table>')
 }
 
-function modalScheduleOld(properties) {
-    setSkeletonHTMLForSchedule()
-    setDataFieldsForSchedule(properties)
-    updateModalUI()
-}
-
 function modalScheduleConstraints(properties) {
     setSkeletonHTMLForScheduleConstraints()
     setDataFieldsForScheduleConstraints(properties)

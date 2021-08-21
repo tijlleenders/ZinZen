@@ -86,18 +86,6 @@ function updateModalVisibilitiesUI() {
     $("#modal-body").html(bodyHTML)
 }
 
-function updateModalScheduleUI() {
-    updateStatusUI()
-    updateStartUI()
-    updateFinishUI()
-    updateDurationUI()
-    updateDaytimePrefUI() //Todo: from scheduleData
-    updateTimePerSlotUI()
-    updateTimePerDayUI()
-    updateTimePerWeekUI()
-    updateScheduleStatusUI()
-}
-
 function updateModalScheduleConstraintsUI() {
     updateDurationUI()
     updateFinishUI()
@@ -363,7 +351,7 @@ function getTimesOfDaysAccordionItemHTML() {
           <tr>
             <td></td>
             <td>
-              <div id="daytimePrefNight-0" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefNight-0" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
                   width="16" height="16" fill="currentColor" class="bi bi-moon-stars" viewBox="0 0 16 16">
                   <path
                     d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z" />
@@ -372,21 +360,21 @@ function getTimesOfDaysAccordionItemHTML() {
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefMorning-1" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefMorning-1" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
                   <path
                     d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefAfternoon-2" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefAfternoon-2" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
                   <path
                     d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefEvening-3" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefEvening-3" class="daytimeTimeOfDay"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
                   <path
                     d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
@@ -395,10 +383,10 @@ function getTimesOfDaysAccordionItemHTML() {
           </tr>
           <tr>
             <td scope="row">
-              <div id="daytimePrefMon-0" class="daytimeDay">Mon</div>
+              <div id="timesOfDaysPrefMon-0" class="daytimeDay">Mon</div>
             </td>
             <td>
-              <div id="daytimePrefMonNight-0" class="daytime very-transparent"><svg
+              <div id="timesOfDaysPrefMonNight-0" class="daytime very-transparent"><svg
                   xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-moon-stars" viewBox="0 0 16 16">
                   <path
@@ -408,21 +396,21 @@ function getTimesOfDaysAccordionItemHTML() {
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefMonMorning-1" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+              <div id="timesOfDaysPrefMonMorning-1" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
                   height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
                   <path
                     d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefMonAfternoon-2" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefMonAfternoon-2" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
                   <path
                     d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefMonEvening-3" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+              <div id="timesOfDaysPrefMonEvening-3" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
                   height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
                   <path
                     d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
@@ -431,10 +419,10 @@ function getTimesOfDaysAccordionItemHTML() {
           </tr>
           <tr>
             <td scope="row">
-              <div id="daytimePrefTue-4" class="daytimeDay">Tue</div>
+              <div id="timesOfDaysPrefTue-4" class="daytimeDay">Tue</div>
             </td>
             <td>
-              <div id="daytimePrefTueNight-4" class="daytime very-transparent"><svg
+              <div id="timesOfDaysPrefTueNight-4" class="daytime very-transparent"><svg
                   xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-moon-stars" viewBox="0 0 16 16">
                   <path
@@ -444,21 +432,21 @@ function getTimesOfDaysAccordionItemHTML() {
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefTueMorning-5" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+              <div id="timesOfDaysPrefTueMorning-5" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
                   height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
                   <path
                     d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefTueAfternoon-6" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefTueAfternoon-6" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
                   <path
                     d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefTueEvening-7" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+              <div id="timesOfDaysPrefTueEvening-7" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
                   height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
                   <path
                     d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
@@ -467,10 +455,10 @@ function getTimesOfDaysAccordionItemHTML() {
           </tr>
           <tr>
             <td scope="row">
-              <div id="daytimePrefWed-8" class="daytimeDay">Wed</div>
+              <div id="timesOfDaysPrefWed-8" class="daytimeDay">Wed</div>
             </td>
             <td>
-              <div id="daytimePrefWedNight-8" class="daytime very-transparent"><svg
+              <div id="timesOfDaysPrefWedNight-8" class="daytime very-transparent"><svg
                   xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-moon-stars" viewBox="0 0 16 16">
                   <path
@@ -480,21 +468,21 @@ function getTimesOfDaysAccordionItemHTML() {
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefWedMorning-9" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+              <div id="timesOfDaysPrefWedMorning-9" class="daytime"><svg xmlns="http://www.w3.org/2000/svg" width="20"
                   height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
                   <path
                     d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefWedAfternoon-10" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefWedAfternoon-10" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
                   <path
                     d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefWedEvening-11" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefWedEvening-11" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
                   <path
                     d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
@@ -503,10 +491,10 @@ function getTimesOfDaysAccordionItemHTML() {
           </tr>
           <tr>
             <td scope="row">
-              <div id="daytimePrefThu-12" class="daytimeDay">Thu</div>
+              <div id="timesOfDaysPrefThu-12" class="daytimeDay">Thu</div>
             </td>
             <td>
-              <div id="daytimePrefThuNight-12" class="daytime very-transparent"><svg
+              <div id="timesOfDaysPrefThuNight-12" class="daytime very-transparent"><svg
                   xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-moon-stars" viewBox="0 0 16 16">
                   <path
@@ -516,21 +504,21 @@ function getTimesOfDaysAccordionItemHTML() {
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefThuMorning-13" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefThuMorning-13" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
                   <path
                     d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefThuAfternoon-14" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefThuAfternoon-14" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
                   <path
                     d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefThuEvening-15" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefThuEvening-15" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
                   <path
                     d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
@@ -539,10 +527,10 @@ function getTimesOfDaysAccordionItemHTML() {
           </tr>
           <tr>
             <td scope="row">
-              <div id="daytimePrefFri-16" class="daytimeDay">Fri</div>
+              <div id="timesOfDaysPrefFri-16" class="daytimeDay">Fri</div>
             </td>
             <td>
-              <div id="daytimePrefFriNight-16" class="daytime very-transparent"><svg
+              <div id="timesOfDaysPrefFriNight-16" class="daytime very-transparent"><svg
                   xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-moon-stars" viewBox="0 0 16 16">
                   <path
@@ -552,21 +540,21 @@ function getTimesOfDaysAccordionItemHTML() {
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefFriMorning-17" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefFriMorning-17" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
                   <path
                     d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefFriAfternoon-18" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefFriAfternoon-18" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
                   <path
                     d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefFriEvening-19" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefFriEvening-19" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
                   <path
                     d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
@@ -575,10 +563,10 @@ function getTimesOfDaysAccordionItemHTML() {
           </tr>
           <tr>
             <td scope="row">
-              <div id="daytimePrefSat-20" class="daytimeDay">Sat</div>
+              <div id="timesOfDaysPrefat-20" class="daytimeDay">Sat</div>
             </td>
             <td>
-              <div id="daytimePrefSatNight-20" class="daytime very-transparent"><svg
+              <div id="timesOfDaysPrefatNight-20" class="daytime very-transparent"><svg
                   xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-moon-stars" viewBox="0 0 16 16">
                   <path
@@ -588,21 +576,21 @@ function getTimesOfDaysAccordionItemHTML() {
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefSatMorning-21" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefatMorning-21" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
                   <path
                     d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefSatAfternoon-22" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefatAfternoon-22" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
                   <path
                     d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefSatEvening-23" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefatEvening-23" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
                   <path
                     d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
@@ -611,10 +599,10 @@ function getTimesOfDaysAccordionItemHTML() {
           </tr>
           <tr>
             <td scope="row">
-              <div id="daytimePrefSun-24" class="daytimeDay">Sun</div>
+              <div id="timesOfDaysPrefun-24" class="daytimeDay">Sun</div>
             </td>
             <td>
-              <div id="daytimePrefSunNight-24" class="daytime very-transparent"><svg
+              <div id="timesOfDaysPrefunNight-24" class="daytime very-transparent"><svg
                   xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                   class="bi bi-moon-stars" viewBox="0 0 16 16">
                   <path
@@ -624,21 +612,21 @@ function getTimesOfDaysAccordionItemHTML() {
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefSunMorning-25" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefunMorning-25" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunrise" viewBox="0 0 16 16">
                   <path
                     d="M7.646 1.146a.5.5 0 0 1 .708 0l1.5 1.5a.5.5 0 0 1-.708.708L8.5 2.707V4.5a.5.5 0 0 1-1 0V2.707l-.646.647a.5.5 0 1 1-.708-.708l1.5-1.5zM2.343 4.343a.5.5 0 0 1 .707 0l1.414 1.414a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM8 7a3 3 0 0 1 2.599 4.5H5.4A3 3 0 0 1 8 7zm3.71 4.5a4 4 0 1 0-7.418 0H.499a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefSunAfternoon-26" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefunAfternoon-26" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sun" viewBox="0 0 16 16">
                   <path
                     d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
                 </svg></div>
             </td>
             <td>
-              <div id="daytimePrefSunEvening-27" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
+              <div id="timesOfDaysPrefunEvening-27" class="daytime"><svg xmlns="http://www.w3.org/2000/svg"
                   width="20" height="20" fill="currentColor" class="bi bi-sunset-fill" viewBox="0 0 16 16">
                   <path
                     d="M7.646 4.854a.5.5 0 0 0 .708 0l1.5-1.5a.5.5 0 0 0-.708-.708l-.646.647V1.5a.5.5 0 0 0-1 0v1.793l-.646-.647a.5.5 0 1 0-.708.708l1.5 1.5zm-5.303-.51a.5.5 0 0 1 .707 0l1.414 1.413a.5.5 0 0 1-.707.707L2.343 5.05a.5.5 0 0 1 0-.707zm11.314 0a.5.5 0 0 1 0 .706l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zM11.709 11.5a4 4 0 1 0-7.418 0H.5a.5.5 0 0 0 0 1h15a.5.5 0 0 0 0-1h-3.79zM0 10a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 10zm13 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
@@ -1040,39 +1028,8 @@ function getVisibilitesBodyHTML(sharedAnonymously, sharedPublicly, sharedSelecti
     $("#modal-body").html(bodyHTML)
 }
 
-function setDataFieldsForSchedule(properties) {
-    let headerHTML = `<h4 class="modal-title">` + properties.get("title")[0] + `</h4>`
-    $("#modal-header-content").html(headerHTML)
-
-    $("#modal-status").data("status", properties.get("status")[0])
-
-    $("#modal-status").data("scheduledBeginISO", properties.get("scheduledBeginISO"))
-    $("#modal-status").data("scheduledEndISO", properties.get("scheduledEndISO"))
-
-    $("#modal-start").data("start", (new Date(properties.get("start")[0])).toISOString())
-    $("#modal-finish").data("finish", (new Date(properties.get("finish")[0])).toISOString())
-
-    if (properties.has("duration") && properties.get("duration")[0] != "") {
-        var duration = properties.get("duration")[0]
-    } else {
-        console.log("setting standard duration")
-        duration = 3600
-    }
-    $("#modal-duration").data("duration", duration)
-
-    let timesOfDaysPref = JSON.parse("[" + properties.get("timesOfDaysPref")[0] + "]")
-    $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPref)
-
-    $("#modal-budget-per-slot").data("minSize", properties.get("minSize")[0])
-    $("#modal-budget-per-slot").data("maxSize", properties.get("maxSize")[0])
-    $("#modal-budget-per-day").data("minTimesPerDay", properties.get("minTimesPerDay")[0])
-    $("#modal-budget-per-day").data("maxTimesPerDay", properties.get("maxTimesPerDay")[0])
-    $("#modal-budget-per-week").data("minTimesPerWeek", properties.get("minTimesPerWeek")[0])
-    $("#modal-budget-per-week").data("maxTimesPerWeek", properties.get("maxTimesPerWeek")[0])
-    sendProbeRequest()
-}
-
 function setDataFieldsForScheduleConstraints(properties) {
+    console.log("properties in setDataFieldsForScheduleConstraints:", properties)
     let headerHTML = `<h4 class="modal-title">` + properties.get("title")[0] + `</h4>`
     $("#modal-header-content").html(headerHTML)
 
@@ -1629,46 +1586,46 @@ function updateDurationUI() {
     openAccordionAccordingly()
 }
 
-function updateDaytimePrefUI() {
+function updatetimesOfDaysPrefUI() {
 
     let timesOfDaysPref = $("#modal-timesOfDaysPref").data("timesOfDaysPref")
 
-    timesOfDaysPref[0] == 0 ? $("#daytimePrefMonNight-0").addClass("very-transparent") : $("#daytimePrefMonNight-0").removeClass("very-transparent")
-    timesOfDaysPref[1] == 0 ? $("#daytimePrefMonMorning-1").addClass("very-transparent") : $("#daytimePrefMonMorning-1").removeClass("very-transparent")
-    timesOfDaysPref[2] == 0 ? $("#daytimePrefMonAfternoon-2").addClass("very-transparent") : $("#daytimePrefMonAfternoon-2").removeClass("very-transparent")
-    timesOfDaysPref[3] == 0 ? $("#daytimePrefMonEvening-3").addClass("very-transparent") : $("#daytimePrefMonEvening-3").removeClass("very-transparent")
+    timesOfDaysPref[0] == 0 ? $("#timesOfDaysPrefMonNight-0").addClass("very-transparent") : $("#timesOfDaysPrefMonNight-0").removeClass("very-transparent")
+    timesOfDaysPref[1] == 0 ? $("#timesOfDaysPrefMonMorning-1").addClass("very-transparent") : $("#timesOfDaysPrefMonMorning-1").removeClass("very-transparent")
+    timesOfDaysPref[2] == 0 ? $("#timesOfDaysPrefMonAfternoon-2").addClass("very-transparent") : $("#timesOfDaysPrefMonAfternoon-2").removeClass("very-transparent")
+    timesOfDaysPref[3] == 0 ? $("#timesOfDaysPrefMonEvening-3").addClass("very-transparent") : $("#timesOfDaysPrefMonEvening-3").removeClass("very-transparent")
 
-    timesOfDaysPref[4] == 0 ? $("#daytimePrefTueNight-4").addClass("very-transparent") : $("#daytimePrefTueNight-4").removeClass("very-transparent")
-    timesOfDaysPref[5] == 0 ? $("#daytimePrefTueMorning-5").addClass("very-transparent") : $("#daytimePrefTueMorning-5").removeClass("very-transparent")
-    timesOfDaysPref[6] == 0 ? $("#daytimePrefTueAfternoon-6").addClass("very-transparent") : $("#daytimePrefTueAfternoon-6").removeClass("very-transparent")
-    timesOfDaysPref[7] == 0 ? $("#daytimePrefTueEvening-7").addClass("very-transparent") : $("#daytimePrefTueEvening-7").removeClass("very-transparent")
+    timesOfDaysPref[4] == 0 ? $("#timesOfDaysPrefTueNight-4").addClass("very-transparent") : $("#timesOfDaysPrefTueNight-4").removeClass("very-transparent")
+    timesOfDaysPref[5] == 0 ? $("#timesOfDaysPrefTueMorning-5").addClass("very-transparent") : $("#timesOfDaysPrefTueMorning-5").removeClass("very-transparent")
+    timesOfDaysPref[6] == 0 ? $("#timesOfDaysPrefTueAfternoon-6").addClass("very-transparent") : $("#timesOfDaysPrefTueAfternoon-6").removeClass("very-transparent")
+    timesOfDaysPref[7] == 0 ? $("#timesOfDaysPrefTueEvening-7").addClass("very-transparent") : $("#timesOfDaysPrefTueEvening-7").removeClass("very-transparent")
 
-    timesOfDaysPref[8] == 0 ? $("#daytimePrefWedNight-8").addClass("very-transparent") : $("#daytimePrefWedNight-8").removeClass("very-transparent")
-    timesOfDaysPref[9] == 0 ? $("#daytimePrefWedMorning-9").addClass("very-transparent") : $("#daytimePrefWedMorning-9").removeClass("very-transparent")
-    timesOfDaysPref[10] == 0 ? $("#daytimePrefWedAfternoon-10").addClass("very-transparent") : $("#daytimePrefWedAfternoon-10").removeClass("very-transparent")
-    timesOfDaysPref[11] == 0 ? $("#daytimePrefWedEvening-11").addClass("very-transparent") : $("#daytimePrefWedEvening-11").removeClass("very-transparent")
+    timesOfDaysPref[8] == 0 ? $("#timesOfDaysPrefWedNight-8").addClass("very-transparent") : $("#timesOfDaysPrefWedNight-8").removeClass("very-transparent")
+    timesOfDaysPref[9] == 0 ? $("#timesOfDaysPrefWedMorning-9").addClass("very-transparent") : $("#timesOfDaysPrefWedMorning-9").removeClass("very-transparent")
+    timesOfDaysPref[10] == 0 ? $("#timesOfDaysPrefWedAfternoon-10").addClass("very-transparent") : $("#timesOfDaysPrefWedAfternoon-10").removeClass("very-transparent")
+    timesOfDaysPref[11] == 0 ? $("#timesOfDaysPrefWedEvening-11").addClass("very-transparent") : $("#timesOfDaysPrefWedEvening-11").removeClass("very-transparent")
 
-    timesOfDaysPref[12] == 0 ? $("#daytimePrefThuNight-12").addClass("very-transparent") : $("#daytimePrefThuNight-12").removeClass("very-transparent")
-    timesOfDaysPref[13] == 0 ? $("#daytimePrefThuMorning-13").addClass("very-transparent") : $("#daytimePrefThuMorning-13").removeClass("very-transparent")
-    timesOfDaysPref[14] == 0 ? $("#daytimePrefThuAfternoon-14").addClass("very-transparent") : $("#daytimePrefThuAfternoon-14").removeClass("very-transparent")
-    timesOfDaysPref[15] == 0 ? $("#daytimePrefThuEvening-15").addClass("very-transparent") : $("#daytimePrefThuEvening-15").removeClass("very-transparent")
+    timesOfDaysPref[12] == 0 ? $("#timesOfDaysPrefThuNight-12").addClass("very-transparent") : $("#timesOfDaysPrefThuNight-12").removeClass("very-transparent")
+    timesOfDaysPref[13] == 0 ? $("#timesOfDaysPrefThuMorning-13").addClass("very-transparent") : $("#timesOfDaysPrefThuMorning-13").removeClass("very-transparent")
+    timesOfDaysPref[14] == 0 ? $("#timesOfDaysPrefThuAfternoon-14").addClass("very-transparent") : $("#timesOfDaysPrefThuAfternoon-14").removeClass("very-transparent")
+    timesOfDaysPref[15] == 0 ? $("#timesOfDaysPrefThuEvening-15").addClass("very-transparent") : $("#timesOfDaysPrefThuEvening-15").removeClass("very-transparent")
 
-    timesOfDaysPref[16] == 0 ? $("#daytimePrefFriNight-16").addClass("very-transparent") : $("#daytimePrefFriNight-16").removeClass("very-transparent")
-    timesOfDaysPref[17] == 0 ? $("#daytimePrefFriMorning-17").addClass("very-transparent") : $("#daytimePrefFriMorning-17").removeClass("very-transparent")
-    timesOfDaysPref[18] == 0 ? $("#daytimePrefFriAfternoon-18").addClass("very-transparent") : $("#daytimePrefFriAfternoon-18").removeClass("very-transparent")
-    timesOfDaysPref[19] == 0 ? $("#daytimePrefFriEvening-19").addClass("very-transparent") : $("#daytimePrefFriEvening-19").removeClass("very-transparent")
+    timesOfDaysPref[16] == 0 ? $("#timesOfDaysPrefFriNight-16").addClass("very-transparent") : $("#timesOfDaysPrefFriNight-16").removeClass("very-transparent")
+    timesOfDaysPref[17] == 0 ? $("#timesOfDaysPrefFriMorning-17").addClass("very-transparent") : $("#timesOfDaysPrefFriMorning-17").removeClass("very-transparent")
+    timesOfDaysPref[18] == 0 ? $("#timesOfDaysPrefFriAfternoon-18").addClass("very-transparent") : $("#timesOfDaysPrefFriAfternoon-18").removeClass("very-transparent")
+    timesOfDaysPref[19] == 0 ? $("#timesOfDaysPrefFriEvening-19").addClass("very-transparent") : $("#timesOfDaysPrefFriEvening-19").removeClass("very-transparent")
 
-    timesOfDaysPref[20] == 0 ? $("#daytimePrefSatNight-20").addClass("very-transparent") : $("#daytimePrefSatNight-20").removeClass("very-transparent")
-    timesOfDaysPref[21] == 0 ? $("#daytimePrefSatMorning-21").addClass("very-transparent") : $("#daytimePrefSatMorning-21").removeClass("very-transparent")
-    timesOfDaysPref[22] == 0 ? $("#daytimePrefSatAfternoon-22").addClass("very-transparent") : $("#daytimePrefSatAfternoon-22").removeClass("very-transparent")
-    timesOfDaysPref[23] == 0 ? $("#daytimePrefSatEvening-23").addClass("very-transparent") : $("#daytimePrefSatEvening-23").removeClass("very-transparent")
+    timesOfDaysPref[20] == 0 ? $("#timesOfDaysPrefatNight-20").addClass("very-transparent") : $("#timesOfDaysPrefatNight-20").removeClass("very-transparent")
+    timesOfDaysPref[21] == 0 ? $("#timesOfDaysPrefatMorning-21").addClass("very-transparent") : $("#timesOfDaysPrefatMorning-21").removeClass("very-transparent")
+    timesOfDaysPref[22] == 0 ? $("#timesOfDaysPrefatAfternoon-22").addClass("very-transparent") : $("#timesOfDaysPrefatAfternoon-22").removeClass("very-transparent")
+    timesOfDaysPref[23] == 0 ? $("#timesOfDaysPrefatEvening-23").addClass("very-transparent") : $("#timesOfDaysPrefatEvening-23").removeClass("very-transparent")
 
-    timesOfDaysPref[24] == 0 ? $("#daytimePrefSunNight-24").addClass("very-transparent") : $("#daytimePrefSunNight-24").removeClass("very-transparent")
-    timesOfDaysPref[25] == 0 ? $("#daytimePrefSunMorning-25").addClass("very-transparent") : $("#daytimePrefSunMorning-25").removeClass("very-transparent")
-    timesOfDaysPref[26] == 0 ? $("#daytimePrefSunAfternoon-26").addClass("very-transparent") : $("#daytimePrefSunAfternoon-26").removeClass("very-transparent")
-    timesOfDaysPref[27] == 0 ? $("#daytimePrefSunEvening-27").addClass("very-transparent") : $("#daytimePrefSunEvening-27").removeClass("very-transparent")
+    timesOfDaysPref[24] == 0 ? $("#timesOfDaysPrefunNight-24").addClass("very-transparent") : $("#timesOfDaysPrefunNight-24").removeClass("very-transparent")
+    timesOfDaysPref[25] == 0 ? $("#timesOfDaysPrefunMorning-25").addClass("very-transparent") : $("#timesOfDaysPrefunMorning-25").removeClass("very-transparent")
+    timesOfDaysPref[26] == 0 ? $("#timesOfDaysPrefunAfternoon-26").addClass("very-transparent") : $("#timesOfDaysPrefunAfternoon-26").removeClass("very-transparent")
+    timesOfDaysPref[27] == 0 ? $("#timesOfDaysPrefunEvening-27").addClass("very-transparent") : $("#timesOfDaysPrefunEvening-27").removeClass("very-transparent")
 
-    formatDaytimePrefString(timesOfDaysPref)
+    formattimesOfDaysPreftring(timesOfDaysPref)
     sendProbeRequest()
 }
 
@@ -1692,7 +1649,7 @@ function updateTimePerWeekUI() {
     $("#modal-budget-per-week").html('<p class="text-center">' + minTimesPerWeek + '-' + maxTimesPerWeek + ' per week</p>')
 }
 
-function formatDaytimePrefString(timesOfDaysPref) {
+function formattimesOfDaysPreftring(timesOfDaysPref) {
     console.log("timesOfDaysPref:", timesOfDaysPref.toString())
         //Todo: format nicely
     switch (timesOfDaysPref.toString()) {
