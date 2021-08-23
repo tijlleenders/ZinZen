@@ -1269,7 +1269,11 @@ function generateGoalHTML(id) {
         subTitle += '&zwnj;'
         if (finish != "") {
             let localTimeLeft = dayjs().to(new dayjs(finish))
-            subTitle += ' Due ' + localTimeLeft
+            let dueStatus = 'Due'
+            if (status == 'done') {
+                dueStatus = 'Completed'
+            }
+            subTitle += ' ' + dueStatus + ' ' + localTimeLeft
         }
 
     }
