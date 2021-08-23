@@ -1271,7 +1271,7 @@ function generateGoalHTML(id) {
             let localTimeLeft = dayjs().to(new dayjs(finish))
             let dueStatus = 'Due'
             if (status == 'done') {
-                dueStatus = 'Completed'
+                dueStatus = 'Completed, was due'
             }
             subTitle += ' ' + dueStatus + ' ' + localTimeLeft
         }
