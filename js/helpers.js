@@ -1858,7 +1858,6 @@ function submitToAPI(e) {
             // clear form and show a success message
             alert("Thank you so much for your feedback! We will improve.");
             document.getElementById("contact-form").reset();
-            location.reload();
         },
         error: function() {
             // show an error message
