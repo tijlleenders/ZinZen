@@ -31,39 +31,49 @@ function openMainMailModal() {
 function updateModalSettingsUI() {
     $("#modal-header-content").html('<h4 class="modal-title">ZinZen Settings</h4>')
     let settingsHTML = ``
-
+    let userName = settings.get("userName")
     settingsHTML += '\
   <div class="row">\
     <div class="col">\
-    Account<br />'
+    I am ' + userName
     if (settings.get("owner")[0] != undefined &&
         settings.get("owner")[0] != "") {
-        settingsHTML += '<div id="logout"><button name="logout-buttonx" id="logout-buttonx" type="button" class="btn btn-outline-secondary btn-sm">Log out</button></div>'
+        settingsHTML += '<div id="logout"><button name="logout-buttonx" id="logout-buttonx" type="button" class="btn btn-outline-secondary btn-sm m-1">Log out</button></div>'
     } else {
-        settingsHTML += '<div id="login"><button name="login-buttonx" id="login-buttonx" type="button" class="btn btn-outline-secondary btn-sm">Log in</button></div>'
+        settingsHTML += '<div id="login"><button name="login-buttonx" id="login-buttonx" type="button" class="btn btn-outline-secondary btn-sm m-1">Log in</button></div>'
     }
-    settingsHTML += '<div id="about"><button name="about-button" id="about-button" type="button" class="btn btn-outline-secondary btn-sm">About ZinZen</button></div>'
-    settingsHTML += '  <div id="install-app"><button name="install-app-button" id="install-app-button" type="button" class="btn btn-outline-secondary btn-sm">Install app (only on android)</button></div>'
+    settingsHTML += '  <div id="install-app"><button name="install-app-button" id="install-app-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Install app (only on android)</button></div>'
 
-    settingsHTML += '  <div id="allow-notify"><button name="allow-notify-button" id="allow-notify-button" type="button" class="btn btn-outline-secondary btn-sm">Check if notifications allowed</button></div>'
+    settingsHTML += '  <div id="allow-notify"><button name="allow-notify-button" id="allow-notify-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Check if notifications allowed</button></div>'
     settingsHTML += '<div id="allow-notify-message" class="sub-title"></div>'
     settingsHTML += '\
     </div>\
   </div>\
   '
     settingsHTML += `
-  <div class="row">\
-    <div class="col">\
-      <div id="modal-settings-screenmode">\
-        <br />\
-        Screenmode<br />\
-        <button type="button" class="btn btn-outline-secondary btn-sm" name="screenModeDark" id="screen-mode-dark" autocomplete="off">Dark</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm" name="screenModeLight" id="screen-mode-light" autocomplete="off">Light</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm" name="screenModeTimeBased" id="screen-mode-time-based" autocomplete="off">Time-based</button>
-      </div>\
-    </div>\
-  </div>
-  `
+      <div class="row">\
+        <div class="col">\
+          <div id="modal-settings-screenmode">\
+            Screenmode<br />\
+            <button type="button" class="btn btn-outline-secondary btn-sm" name="screenModeDark" id="screen-mode-dark" autocomplete="off">Dark</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" name="screenModeLight" id="screen-mode-light" autocomplete="off">Light</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" name="screenModeTimeBased" id="screen-mode-time-based" autocomplete="off">Time-based</button>
+          </div>\
+        </div>\
+      </div>
+      `
+    settingsHTML += `
+      <div class="row">\
+        <div class="col">\
+          <div id="modal-settings-other">\
+            <br />\
+            Other<br />\
+              <div id="about"><button name="about-button" id="about-button" type="button" class="btn btn-outline-secondary btn-sm m-1">About ZinZen</button></div>
+              <div id="open-source"><button name="open-source-button" id="open-source-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Open source acknowledgements</button></div>
+          </div>\
+        </div>\
+      </div>    
+    `
 
     $("#modal-body").html(settingsHTML)
     if (settings.get("screenMode")[0] == "dark") {
