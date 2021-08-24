@@ -171,8 +171,7 @@ function openModal(id, modalType) {
         default:
             break;
     }
-    updateModalUI()
-    send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}') //will fill the modal upon response
+    send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}') //will fill the modal upon response - if applicable
     $("#myModal").modal("show")
 }
 
@@ -187,7 +186,7 @@ function emptyModal() {
 function updateSettingsUI() {
     console.log("updating settings...")
     updateScreenMode()
-        //updateModalSettingsUI()
+        //Todo updateModalSettingsUI()
 }
 
 function updateScreenMode() {
