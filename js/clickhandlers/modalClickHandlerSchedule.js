@@ -70,19 +70,6 @@ $("#myModal").on("click", "#quick-set-custom-button", function() {
     $("#myModal").data("modalType", "finish")
 });
 
-$("#myModal").on("click", "#schedule-this", function() {
-    console.log("schedule-this clicked")
-    var messageJson = {
-        action: "command",
-        command: "upsertGoal",
-        goalId: $("#myModal").data("idx"),
-        proposal: $("#schedule-status").data("proposal"),
-        scheduleData: getScheduleData()
-    }
-    send(JSON.stringify(messageJson))
-    $("#myModal").data("modalType", "finish")
-});
-
 $("#myModal").on("click", "#delete-schedule", function() {
     console.log("delete clicked")
     $("#modal-status").data("status", "deleted")
@@ -292,7 +279,7 @@ $("#myModal").on("click", "#remove-second-button", function() {
 })
 
 $("#myModal").on("click", ".daytimeDay", function(e) {
-    let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPref")
+    let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray")
     let dayOffset = e.currentTarget.id.split("-")[1]
     console.log("timesOfDaysPrefArray:", timesOfDaysPrefArray)
     console.log("dayOffset:", dayOffset)
@@ -312,12 +299,13 @@ $("#myModal").on("click", ".daytimeDay", function(e) {
         timesOfDaysPrefArray[2 + dayOffset] = 1
         timesOfDaysPrefArray[3 + dayOffset] = 1
     }
-    $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPrefArray)
+    $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray", timesOfDaysPrefArray)
     updatetimesOfDaysPrefUI()
+    sendTimesOfDaysPrefUpdate()
 })
 
 $("#myModal").on("click", ".daytimeTimeOfDay", function(e) {
-    let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPref")
+    let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray")
     let timeOfDayOffset = e.currentTarget.id.split("-")[1]
     console.log("timesOfDaysPrefArray in click:", timesOfDaysPrefArray)
     console.log("timeOfDayOffset:", timeOfDayOffset)
@@ -347,17 +335,19 @@ $("#myModal").on("click", ".daytimeTimeOfDay", function(e) {
         timesOfDaysPrefArray[20 + timeOfDayOffset] = 1
         timesOfDaysPrefArray[24 + timeOfDayOffset] = 1
     }
-    $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPrefArray)
+    $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray", timesOfDaysPrefArray)
     updatetimesOfDaysPrefUI()
+    sendTimesOfDaysPrefUpdate()
 })
 
 $("#myModal").on("click", ".daytime", function(e) {
     let daytimeIndex = e.currentTarget.id.split("-")[1]
     console.log("daytimeIndex:", daytimeIndex)
-    let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPref")
+    let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray")
     timesOfDaysPrefArray[daytimeIndex] == 0 ? timesOfDaysPrefArray[daytimeIndex] = 1 : timesOfDaysPrefArray[daytimeIndex] = 0
-    $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPrefArray)
+    $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray", timesOfDaysPrefArray)
     updatetimesOfDaysPrefUI()
+    sendTimesOfDaysPrefUpdate()
 })
 
 $("#myModal").on("click", "#add-min-per-slot-button-area", function(e) { //Todo: Fringe case: minPerSlot should move minPerWeek up if minPerWeek * 24h < minPerSlot

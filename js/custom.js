@@ -71,10 +71,6 @@ function openWS(authorizer, stage, WSEndpoint) {
                         }
                         break;
 
-                    case "probeResults":
-                        handleIncomingProposal(item.get("schedule"))
-                        break;
-
                     case "allSubs":
                         $("#main-promised").empty()
                         console.log("breadcrumb goals received:", item.get("goalsBreadcrumb"))

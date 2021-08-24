@@ -99,6 +99,7 @@ function updateModalVisibilitiesUI() {
 function updateModalScheduleConstraintsUI() {
     updateDurationUI()
     updateFinishUI()
+    updatetimesOfDaysPrefUI()
 }
 
 function updateModalUI() {
@@ -184,41 +185,16 @@ function emptyModal() {
     $("#modal-footer-content").empty()
     $("#myModal").data("idx", "")
         //Todo: aggregate vars per modal type into named arrays ie schedulePrefs
-    $("#myModal").data("timesOfDaysPref", "")
     $("#modal-start").data("start", "")
     $("#modal-finish").data("finish", "")
     $("#modal-duration").data("duration", "")
-    $("#modal-timesOfDaysPref").data("timesOfDaysPref", "")
+    $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray", "")
     $("#modal-budget-per-slot").data("minSize", "")
     $("#modal-budget-per-slot").data("maxSize", "")
     $("#modal-budget-per-day").data("minTimesPerDay", "")
     $("#modal-budget-per-day").data("maxTimesPerDay", "")
     $("#modal-budget-per-week").data("minTimesPerWeek", "")
     $("#modal-budget-per-week").data("maxTimesPerWeek", "")
-}
-
-function getScheduleData() {
-    let scheduleData = {}
-    scheduleData.id = $("#myModal").data("idx")
-    scheduleData.status = $("#modal-status").data("status")
-    scheduleData.start = $("#modal-start").data("start")
-    if (scheduleData.start == undefined) {
-        scheduleData.start = new Date().toISOString()
-    }
-    scheduleData.finish = $("#modal-finish").data("finish")
-    if (scheduleData.finish == undefined) {
-        scheduleData.finish = new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
-    }
-    scheduleData.duration = $("#modal-duration").data("duration")
-    scheduleData.timesOfDaysPref = $("#modal-timesOfDaysPref").data("timesOfDaysPref").toString()
-    scheduleData.minSize = $("#modal-budget-per-slot").data("minSize")
-    scheduleData.maxSize = $("#modal-budget-per-slot").data("maxSize")
-    scheduleData.minTimesPerDay = $("#modal-budget-per-day").data("minTimesPerDay")
-    scheduleData.maxTimesPerDay = $("#modal-budget-per-day").data("maxTimesPerDay")
-    scheduleData.minTimesPerWeek = $("#modal-budget-per-week").data("minTimesPerWeek")
-    scheduleData.maxTimesPerWeek = $("#modal-budget-per-week").data("maxTimesPerWeek")
-    console.log("scheduleData:", scheduleData)
-    return scheduleData
 }
 
 function updateSettings() {
@@ -233,14 +209,15 @@ function updateScreenMode() {
     }
 }
 
-function sendProbeRequest() {
+function sendTimesOfDaysPrefUpdate() {
+    let goalId = $("#myModal").data("idx")
+    let timesOfDaysPrefString = "" + $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray")
     let upsertGoal = {
         action: "command",
-        command: "probe",
-        scheduleData: getScheduleData()
+        command: "upsertGoal",
+        goalId: goalId,
+        timesOfDaysPref: timesOfDaysPrefString
     }
-    $("#schedule-status").data("status", "probing")
-    updateScheduleStatusUI()
     send(JSON.stringify(upsertGoal))
 }
 
@@ -1060,8 +1037,8 @@ function setDataFieldsForScheduleConstraints(properties) {
     $("#modal-duration").data("duration", duration)
 
     if (properties.has("timesOfDaysPref") && properties.get("timesOfDaysPref")[0] != "") {
-        let timesOfDaysPref = JSON.parse("[" + properties.get("timesOfDaysPref")[0] + "]")
-        $("#modal-timesOfDaysPref").data("timesOfDaysPref", timesOfDaysPref)
+        let timesOfDaysPrefArray = JSON.parse("[" + properties.get("timesOfDaysPref")[0] + "]")
+        $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray", timesOfDaysPrefArray)
     }
 
     if (properties.has("minSize") && properties.get("minSize")[0] != "") {
@@ -1143,7 +1120,7 @@ function startDateInModalChanged(ev) {
         let now = new Date()
         if (Math.abs(now - chosenDateTime) > 1500 || Math.abs(previousDate - chosenDateTime) < 5000) {
             updateStartUI()
-            sendProbeRequest()
+                // sendProbeRequest()
             $("#collapse-start").collapse('hide')
         }
     }
@@ -1602,7 +1579,7 @@ function updateDurationUI() {
 
 function updatetimesOfDaysPrefUI() {
 
-    let timesOfDaysPref = $("#modal-timesOfDaysPref").data("timesOfDaysPref")
+    let timesOfDaysPref = $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray")
 
     timesOfDaysPref[0] == 0 ? $("#timesOfDaysPrefMonNight-0").addClass("very-transparent") : $("#timesOfDaysPrefMonNight-0").removeClass("very-transparent")
     timesOfDaysPref[1] == 0 ? $("#timesOfDaysPrefMonMorning-1").addClass("very-transparent") : $("#timesOfDaysPrefMonMorning-1").removeClass("very-transparent")
@@ -1640,7 +1617,6 @@ function updatetimesOfDaysPrefUI() {
     timesOfDaysPref[27] == 0 ? $("#timesOfDaysPrefunEvening-27").addClass("very-transparent") : $("#timesOfDaysPrefunEvening-27").removeClass("very-transparent")
 
     formattimesOfDaysPreftring(timesOfDaysPref)
-    sendProbeRequest()
 }
 
 function updateTimePerSlotUI() {
