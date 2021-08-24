@@ -28,6 +28,16 @@ function openMainMailModal() {
     $("#myModal").modal("show");
 }
 
+function updateModalSettingsUI() {
+    if (settings.get("screenMode")[0] == "dark") {
+        $("#screen-mode-light").removeClass('active')
+        $("#screen-mode-dark").addClass('active')
+    } else {
+        $("#screen-mode-dark").removeClass('active')
+        $("#screen-mode-light").addClass('active')
+    }
+}
+
 function setSkeletonHTMLForSettings() {
     $("#modal-header-content").html('<h4 class="modal-title">ZinZen Settings</h4>')
     let settingsHTML = ``
@@ -76,11 +86,6 @@ function setSkeletonHTMLForSettings() {
     `
 
     $("#modal-body").html(settingsHTML)
-    if (settings.get("screenMode")[0] == "dark") {
-        $("#screen-mode-dark").addClass('active')
-    } else {
-        $("#screen-mode-light").addClass('active')
-    }
 }
 
 function updateModalVisibilitiesUI() {
@@ -186,7 +191,7 @@ function emptyModal() {
 function updateSettingsUI() {
     console.log("updating settings...")
     updateScreenMode()
-        //Todo updateModalSettingsUI()
+    updateModalSettingsUI()
 }
 
 function updateScreenMode() {
@@ -1418,57 +1423,6 @@ function updateBreadcrumbUI() {
         $("#breadcrumbGoal-" + goals[goals.length - 1].id).addClass('active')
     } else {
         $("#breadcrumb").html(breadcrumbHTML)
-    }
-}
-
-function updateStatusUI() {
-    let status = $("#modal-status").data("status")
-    switch (status) {
-        case "deleted":
-            $("#done-schedule").addClass("semi-transparent")
-            $("#promised-schedule").addClass("semi-transparent")
-            $("#maybe-schedule").addClass("semi-transparent")
-            $("#delete-schedule").removeClass("semi-transparent")
-            $("#done-options-row").addClass("d-none")
-            $("#options-row").addClass("d-none")
-            $("#proposal-row").addClass("d-none")
-            $("#modal-footer-content").html('<button type="button" class="btn btn-secondary" id="delete-this">Delete this!</button>')
-            break;
-
-        case "done":
-            $("#done-schedule").removeClass("semi-transparent")
-            $("#promised-schedule").addClass("semi-transparent")
-            $("#maybe-schedule").addClass("semi-transparent")
-            $("#proposal-row").addClass("d-none")
-            $("#options-row").addClass("d-none")
-            $("#done-options-row").removeClass("d-none")
-            $("#delete-schedule").addClass("semi-transparent")
-            $("#modal-footer-content").html('<button type="button" class="btn btn-secondary" id="complete-this">Complete this!</button>')
-            break;
-
-        case "promised":
-            $("#done-schedule").addClass("semi-transparent")
-            $("#promised-schedule").removeClass("semi-transparent")
-            $("#maybe-schedule").addClass("semi-transparent")
-            $("#proposal-row").removeClass("d-none")
-            $("#options-row").removeClass("d-none")
-            $("#done-options-row").addClass("d-none")
-            $("#delete-schedule").addClass("semi-transparent")
-            $("#modal-footer-content").html('<button type="button" class="btn btn-secondary" id="schedule-this">Schedule this!</button>')
-            break;
-
-        case "maybe":
-            $("#done-schedule").addClass("semi-transparent")
-            $("#promised-schedule").addClass("semi-transparent")
-            $("#maybe-schedule").removeClass("semi-transparent")
-            $("#done-options-row").addClass("d-none")
-            $("#proposal-row").addClass("d-none")
-            $("#delete-schedule").addClass("semi-transparent")
-            $("#modal-footer-content").html('<button type="button" class="btn btn-secondary" id="maybe-this">Maybe this!</button>')
-            break;
-
-        default:
-            throw "couldn't handle status in handleIncomingProperties helper function"
     }
 }
 
