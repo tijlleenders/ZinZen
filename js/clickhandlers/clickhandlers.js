@@ -109,7 +109,7 @@ $("#top-settings").click(function() {
         publicOrPrivate == "public") {
         location.href = "https://ZinZen.me"
     } else {
-        openSettingsModal()
+        openModal("noId", "settings")
             //Todo: if main-promised hasClass d-none set calendar button active else set promised button active
     }
 })

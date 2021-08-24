@@ -69,7 +69,8 @@ async function handleIncomingProperties(properties) {
                 break;
 
             case "schedule":
-                updateModalScheduleConstraints(properties);
+                setDataFieldsForScheduleConstraints(properties)
+                updateModalUI()
                 break;
 
             default:
@@ -89,7 +90,7 @@ function handleIncomingProposal(proposal) {
 
 function handleIncomingSettings(incomingSettings) {
     settings = incomingSettings
-    updateSettings()
+    updateSettingsUI()
 }
 
 function handleIncomingPlay(schedule) {

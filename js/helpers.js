@@ -28,7 +28,7 @@ function openMainMailModal() {
     $("#myModal").modal("show");
 }
 
-function updateModalSettingsUI() {
+function setSkeletonHTMLForSettings() {
     $("#modal-header-content").html('<h4 class="modal-title">ZinZen Settings</h4>')
     let settingsHTML = ``
     let userName = settings.get("userName")
@@ -105,7 +105,7 @@ function updateModalScheduleConstraintsUI() {
 function updateModalUI() {
     switch ($("#myModal").data("modalType")) {
         case "settings":
-            updateModalSettingsUI()
+            updateSettingsUI()
             break;
         case "schedule":
             updateModalScheduleConstraintsUI()
@@ -149,13 +149,6 @@ function updateScheduleStatusUI() {
     }
 }
 
-function openSettingsModal() {
-    emptyModal()
-    $("#myModal").data("modalType", "settings")
-    updateModalUI()
-    $("#myModal").modal("show")
-}
-
 function openModal(id, modalType) {
     if (
         $("#myModal").data("idx") == id &&
@@ -169,14 +162,16 @@ function openModal(id, modalType) {
     $("#myModal").data("idx", id)
 
     switch (modalType) {
-
+        case "settings":
+            setSkeletonHTMLForSettings()
+            break;
         case "schedule":
             setSkeletonHTMLForScheduleConstraints()
             break;
         default:
             break;
     }
-
+    updateModalUI()
     send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}') //will fill the modal upon response
     $("#myModal").modal("show")
 }
@@ -200,10 +195,10 @@ function emptyModal() {
     $("#modal-budget-per-week").data("maxTimesPerWeek", "")
 }
 
-function updateSettings() {
+function updateSettingsUI() {
     console.log("updating settings...")
     updateScreenMode()
-    updateModalSettingsUI()
+        //updateModalSettingsUI()
 }
 
 function updateScreenMode() {
