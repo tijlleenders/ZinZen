@@ -69,7 +69,7 @@ async function handleIncomingProperties(properties) {
                 break;
 
             case "schedule":
-                modalScheduleConstraints(properties);
+                updateModalScheduleConstraints(properties);
                 break;
 
             default:
@@ -578,7 +578,6 @@ function modalMail(properties) {
 }
 
 function modalScheduleConstraints(properties) {
-    setSkeletonHTMLForScheduleConstraints()
     setDataFieldsForScheduleConstraints(properties)
     updateModalUI()
 }

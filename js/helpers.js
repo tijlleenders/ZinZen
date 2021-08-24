@@ -167,6 +167,16 @@ function openModal(id, modalType) {
     emptyModal()
     $("#myModal").data("modalType", modalType)
     $("#myModal").data("idx", id)
+
+    switch (modalType) {
+
+        case "schedule":
+            setSkeletonHTMLForScheduleConstraints()
+            break;
+        default:
+            break;
+    }
+
     send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}') //will fill the modal upon response
     $("#myModal").modal("show")
 }
