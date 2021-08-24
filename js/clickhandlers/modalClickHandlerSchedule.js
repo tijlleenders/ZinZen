@@ -65,29 +65,6 @@ $("#myModal").on("click", "#quick-set-custom-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#delete-schedule", function() {
-    console.log("delete clicked")
-    $("#modal-status").data("status", "deleted")
-    updateStatusUI()
-});
-
-$("#myModal").on("click", "#done-schedule", function() {
-    $("#modal-status").data("status", "done")
-    updateStatusUI()
-});
-
-$("#myModal").on("click", "#promised-schedule", function() {
-    console.log("promised-schedule clicked")
-    $("#modal-status").data("status", "promised")
-    updateStatusUI()
-});
-
-$("#myModal").on("click", "#maybe-schedule", function() {
-    console.log("maybe-schedule clicked")
-    $("#modal-status").data("status", "maybe")
-    updateStatusUI()
-});
-
 $("#myModal").on("click", "#add-week-button", function() {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration += 3600 * 24 * 7
