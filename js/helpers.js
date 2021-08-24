@@ -1375,7 +1375,8 @@ function formatDuration(duration) {
 
     result.short = ""
     if (weeks > 0) {
-        if (days > 0) {
+        if (days > 0 &&
+            weeks == 1) {
             result.short = weeks + "w " + days + "d"
         } else {
             result.short = weeks + "w"
