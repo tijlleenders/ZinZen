@@ -102,7 +102,6 @@ $("#myModal").on("click", "#add-week-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", "#add-day-button", function() {
@@ -119,7 +118,6 @@ $("#myModal").on("click", "#add-day-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", "#add-hour-button", function() {
@@ -136,7 +134,6 @@ $("#myModal").on("click", "#add-hour-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", "#add-minute-button", function() {
@@ -153,7 +150,6 @@ $("#myModal").on("click", "#add-minute-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", "#add-second-button", function() {
@@ -170,7 +166,6 @@ $("#myModal").on("click", "#add-second-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", "#remove-week-button", function() {
@@ -190,7 +185,6 @@ $("#myModal").on("click", "#remove-week-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", "#remove-day-button", function() {
@@ -210,7 +204,6 @@ $("#myModal").on("click", "#remove-day-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", "#remove-hour-button", function() {
@@ -230,7 +223,6 @@ $("#myModal").on("click", "#remove-hour-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", "#remove-minute-button", function() {
@@ -250,7 +242,6 @@ $("#myModal").on("click", "#remove-minute-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", "#remove-second-button", function() {
@@ -270,7 +261,6 @@ $("#myModal").on("click", "#remove-second-button", function() {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
-    $("#myModal").data("modalType", "duration")
 })
 
 $("#myModal").on("click", ".daytimeDay", function(e) {
