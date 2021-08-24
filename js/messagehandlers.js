@@ -68,8 +68,7 @@ async function handleIncomingProperties(properties) {
                 //not implemented dynamically - hardcoded in helpers
                 break;
 
-            case "finish":
-            case "duration":
+            case "schedule":
                 modalScheduleConstraints(properties);
                 break;
 

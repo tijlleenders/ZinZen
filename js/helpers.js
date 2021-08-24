@@ -108,16 +108,10 @@ function updateModalUI() {
             updateModalSettingsUI()
             break;
         case "schedule":
-            updateModalSchedule()
+            updateModalScheduleConstraintsUI()
             break;
         case "visibilities":
             updateModalVisibilitiesUI()
-            break;
-        case "duration":
-            updateModalScheduleConstraintsUI()
-            break;
-        case "finish":
-            updateModalScheduleConstraintsUI()
             break;
         default:
             console.log("modalType to render UI for not recognized")
@@ -173,7 +167,6 @@ function openModal(id, modalType) {
     emptyModal()
     $("#myModal").data("modalType", modalType)
     $("#myModal").data("idx", id)
-    $("#myModal").data("firstCall", true)
     send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}') //will fill the modal upon response
     $("#myModal").modal("show")
 }
@@ -1090,7 +1083,6 @@ function dueDateInModalChanged(ev) {
         console.log("due date selected:", ev.date.toISOString())
         let previousDate = new Date($("#modal-finish").data("finish"))
         $("#modal-finish").data("finish", ev.date.toISOString())
-        $("#myModal").data("firstCall", false)
         let chosenDateTime = new Date(ev.date.toISOString())
         let chosenDateTimeString = ev.date.toISOString()
         let now = new Date()
@@ -1107,7 +1099,6 @@ function dueDateInModalChanged(ev) {
             $("#collapse-finish").collapse('hide')
         }
     }
-    $("#myModal").data("modalType", "finish")
 }
 
 function startDateInModalChanged(ev) {
@@ -1509,7 +1500,7 @@ function updateStartUI() { //Todo: use locale for picker timezone
 
 function updateFinishUI() { //Todo: use locale for picker timezone
     let finishISOString = $("#modal-finish").data("finish")
-    console.log("firstCall:", $("#myModal").data("firstCall"))
+        //Todo: if already instantiated update
     if (finishISOString != undefined) {
         $("#due-date-time-picker").datetimepicker({
             format: 'yyyy-mm-ddThh:ii:ssZ',
@@ -1541,27 +1532,6 @@ function updateFinishUI() { //Todo: use locale for picker timezone
                 $("#quick-set-custom-button").addClass('active')
                 break;
         }
-        openAccordionAccordingly()
-    }
-}
-
-function openAccordionAccordingly() {
-    switch ($("#myModal").data("modalType")) {
-        case "finish":
-            if ($("#myModal").data("firstCall") == true) {
-                $("#accordion-button-finish").click()
-                $("#myModal").data("firstCall", false)
-            }
-            break;
-        case "duration":
-            if (!$("#collapse-duration").hasClass('show')) {
-                $("#accordion-button-duration").click()
-            }
-            $("#myModal").data("firstCall", true)
-            break;
-        default:
-            $("#myModal").data("firstCall", false)
-            break;
     }
 }
 
@@ -1574,7 +1544,6 @@ function updateDurationUI() {
     $("#duration-minutes").html(durationJson.minutes)
     $("#duration-seconds").html(durationJson.seconds)
     $("#modal-duration").html('<p class="text-center">Takes ' + durationJson.short + '</p>')
-    openAccordionAccordingly()
 }
 
 function updatetimesOfDaysPrefUI() {
@@ -1616,7 +1585,7 @@ function updatetimesOfDaysPrefUI() {
     timesOfDaysPref[26] == 0 ? $("#timesOfDaysPrefunAfternoon-26").addClass("very-transparent") : $("#timesOfDaysPrefunAfternoon-26").removeClass("very-transparent")
     timesOfDaysPref[27] == 0 ? $("#timesOfDaysPrefunEvening-27").addClass("very-transparent") : $("#timesOfDaysPrefunEvening-27").removeClass("very-transparent")
 
-    formattimesOfDaysPreftring(timesOfDaysPref)
+    formattimesOfDaysPrefString(timesOfDaysPref)
 }
 
 function updateTimePerSlotUI() {
@@ -1639,7 +1608,7 @@ function updateTimePerWeekUI() {
     $("#modal-budget-per-week").html('<p class="text-center">' + minTimesPerWeek + '-' + maxTimesPerWeek + ' per week</p>')
 }
 
-function formattimesOfDaysPreftring(timesOfDaysPref) {
+function formattimesOfDaysPrefString(timesOfDaysPref) {
     console.log("timesOfDaysPref:", timesOfDaysPref.toString())
         //Todo: format nicely
     switch (timesOfDaysPref.toString()) {

@@ -11,7 +11,6 @@ $("#myModal").on("click", "#quick-set-today-button", function() {
         finish: endOfTodayISO
     }
     send(JSON.stringify(messageJson))
-    $("#myModal").data("modalType", "finish")
 });
 
 $("#myModal").on("click", "#quick-set-tomorrow-button", function() {
@@ -25,7 +24,6 @@ $("#myModal").on("click", "#quick-set-tomorrow-button", function() {
         finish: endOfTomorrowISO
     }
     send(JSON.stringify(messageJson))
-    $("#myModal").data("modalType", "finish")
 });
 
 $("#myModal").on("click", "#quick-set-next-week-button", function() {
@@ -39,7 +37,6 @@ $("#myModal").on("click", "#quick-set-next-week-button", function() {
         finish: endOfNextWeekISO
     }
     send(JSON.stringify(messageJson))
-    $("#myModal").data("modalType", "finish")
 });
 
 $("#myModal").on("click", "#quick-set-next-month-button", function() {
@@ -53,7 +50,6 @@ $("#myModal").on("click", "#quick-set-next-month-button", function() {
         finish: endOfNextMonthISO
     }
     send(JSON.stringify(messageJson))
-    $("#myModal").data("modalType", "finish")
 });
 
 $("#myModal").on("click", "#quick-set-custom-button", function() {
@@ -67,7 +63,6 @@ $("#myModal").on("click", "#quick-set-custom-button", function() {
         finish: endOfTodayISO
     }
     send(JSON.stringify(messageJson))
-    $("#myModal").data("modalType", "finish")
 });
 
 $("#myModal").on("click", "#delete-schedule", function() {

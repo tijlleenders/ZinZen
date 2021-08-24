@@ -300,7 +300,7 @@ $("#main-promised").on("click", ".goal", function(event) {
         }
         if (nodeId.substring(0, 11) == "finish-col-" ||
             nodeId.substring(0, 12) == "finish-icon-") {
-            openModal(selectedGoalId, "duration")
+            openModal(selectedGoalId, "schedule")
         }
         if (nodeId.substring(0, 17) == "visibilities-col-" ||
             nodeId.substring(0, 18) == "visibilities-icon-") {
@@ -313,7 +313,7 @@ $("#main-promised").on("click", ".goal", function(event) {
             openModal(selectedGoalId, "collaboration")
         }
         if ($("#" + nodeId).hasClass("due")) {
-            openModal(selectedGoalId, "due")
+            openModal(selectedGoalId, "schedule")
         }
         if ($("#" + nodeId).hasClass("mood")) {
             openModal(selectedGoalId, "mood")
@@ -340,7 +340,7 @@ $("#main-promised").on("click", ".goal", function(event) {
             openModal(selectedGoalId, "budget")
         }
         if ($("#" + nodeId).hasClass("duration")) {
-            openModal(selectedGoalId, "duration")
+            openModal(selectedGoalId, "schedule")
         }
         if ($("#" + nodeId).hasClass("tags")) {
             openModal(selectedGoalId, "tags")
