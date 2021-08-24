@@ -182,17 +182,6 @@ function emptyModal() {
     $("#modal-body").empty()
     $("#modal-footer-content").empty()
     $("#myModal").data("idx", "")
-        //Todo: aggregate vars per modal type into named arrays ie schedulePrefs
-    $("#modal-start").data("start", "")
-    $("#modal-finish").data("finish", "")
-    $("#modal-duration").data("duration", "")
-    $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray", "")
-    $("#modal-budget-per-slot").data("minSize", "")
-    $("#modal-budget-per-slot").data("maxSize", "")
-    $("#modal-budget-per-day").data("minTimesPerDay", "")
-    $("#modal-budget-per-day").data("maxTimesPerDay", "")
-    $("#modal-budget-per-week").data("minTimesPerWeek", "")
-    $("#modal-budget-per-week").data("maxTimesPerWeek", "")
 }
 
 function updateSettingsUI() {
