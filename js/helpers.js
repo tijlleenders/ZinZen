@@ -1748,9 +1748,11 @@ function submitToAPI(e) {
 
     var desc = $("#description-input").val();
     var email = $("#email-input").val();
+    var updateMe = $("#emailMeCheck").val();
     var data = {
         desc: desc,
-        email: email
+        email: email,
+        updateMe: updateMe
     };
 
     $.ajax({
