@@ -98,15 +98,16 @@ function handleIncomingPlay(schedule) {
     console.log("schedule:", schedule)
     $("#mmain-play").empty()
     let html = ""
-    schedule.forEach((element, index) => {
+    schedule.Items[0].schedule.forEach((element, index) => {
+        console.log("handling element:", element)
         switch (element.label) {
             case "free":
                 break;
             case "slot":
-                let title = schedule[index].title + "   " + (new Date(schedule[index].begin)).toLocaleString() + "   " + formatDuration(schedule[index].duration).short
-                let status = schedule[index].status
-                let id = schedule[index].id
-                let tags = schedule[index].tags
+                let title = "Standard title   xh ym"
+                let status = "promised"
+                let id = element.id
+                let tags = 1
                 html += generateSimpleGoalHTML(id, title, status, tags)
                 break;
             case "person":
