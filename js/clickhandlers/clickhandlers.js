@@ -283,6 +283,14 @@ function deleteGoal(id) {
     });
 }
 
+$("#mmain-play").on("click", ".goal", function(event) {
+    console.log(Date.now());
+    let nodeId = getNodeId(event)
+    let selectedGoalId = nodeId.slice(-36);
+    console.log("Calendar click:", selectedGoalId)
+})
+
+
 $("#main-promised").on("click", ".goal", function(event) {
     console.log(Date.now());
     let nodeId = getNodeId(event)
