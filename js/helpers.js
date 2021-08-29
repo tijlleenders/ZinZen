@@ -1019,8 +1019,8 @@ function setDataFieldsForScheduleConstraints(properties) {
 
     $("#modal-start").data("start", (new Date(properties.get("start")[0])).toISOString())
 
-    if (properties.has("finish") && properties.get("finish")[0] != "") {
-        $("#modal-finish").data("finish", (new Date(properties.get("finish")[0])).toISOString())
+    if (properties.has("finish")) {
+        $("#modal-finish").data("finish", properties.get("finish")[0])
     }
 
     if (properties.has("duration") && properties.get("duration")[0] != "") {
@@ -1460,7 +1460,7 @@ function updateStartUI() { //Todo: use locale for picker timezone
 function updateFinishUI() { //Todo: use locale for picker timezone
     let finishISOString = $("#modal-finish").data("finish")
         //Todo: if already instantiated update
-    if (finishISOString != undefined) {
+    if (finishISOString != undefined && finishISOString != "") {
         $("#due-date-time-picker").datetimepicker({
             format: 'yyyy-mm-ddThh:ii:ssZ',
             initialDate: new Date(finishISOString),
@@ -1511,6 +1511,14 @@ function updateFinishUI() { //Todo: use locale for picker timezone
                 $("#quick-set-custom-button").addClass('active')
                 break;
         }
+    } else { //finishISOString == ""
+        $("#quick-set-today-button").removeClass('active')
+        $("#quick-set-tomorrow-button").removeClass('active')
+        $("#quick-set-next-week-button").removeClass('active')
+        $("#quick-set-next-month-button").removeClass('active')
+        $("#quick-set-custom-button").removeClass('active')
+        $("#due-date-time-picker").datetimepicker('remove')
+        $("#modal-finish").html('<p class="text-center">No due date</p>')
     }
 }
 
