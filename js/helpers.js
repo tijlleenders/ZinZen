@@ -1476,17 +1476,37 @@ function updateFinishUI() { //Todo: use locale for picker timezone
         switch (finishISOString) {
             case now.endOf('day').toISOString():
                 $("#quick-set-today-button").addClass('active')
+                $("#quick-set-tomorrow-button").removeClass('active')
+                $("#quick-set-next-week-button").removeClass('active')
+                $("#quick-set-next-month-button").removeClass('active')
+                $("#quick-set-custom-button").removeClass('active')
                 break;
             case now.add(1, 'day').endOf('day').toISOString():
+                $("#quick-set-today-button").removeClass('active')
                 $("#quick-set-tomorrow-button").addClass('active')
+                $("#quick-set-next-week-button").removeClass('active')
+                $("#quick-set-next-month-button").removeClass('active')
+                $("#quick-set-custom-button").removeClass('active')
                 break;
             case now.add(1, 'week').endOf('week').toISOString():
+                $("#quick-set-today-button").removeClass('active')
+                $("#quick-set-tomorrow-button").removeClass('active')
                 $("#quick-set-next-week-button").addClass('active')
+                $("#quick-set-next-month-button").removeClass('active')
+                $("#quick-set-custom-button").removeClass('active')
                 break;
             case now.add(1, 'month').endOf('month').toISOString():
+                $("#quick-set-today-button").removeClass('active')
+                $("#quick-set-tomorrow-button").removeClass('active')
+                $("#quick-set-next-week-button").removeClass('active')
                 $("#quick-set-next-month-button").addClass('active')
+                $("#quick-set-custom-button").removeClass('active')
                 break;
             default:
+                $("#quick-set-today-button").removeClass('active')
+                $("#quick-set-tomorrow-button").removeClass('active')
+                $("#quick-set-next-week-button").removeClass('active')
+                $("#quick-set-next-month-button").removeClass('active')
                 $("#quick-set-custom-button").addClass('active')
                 break;
         }
