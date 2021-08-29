@@ -104,11 +104,7 @@ function handleIncomingPlay(schedule) {
             case "free":
                 break;
             case "slot":
-                let title = element.title + "   " + (new Date(element.begin)).toLocaleString() + "  duration x y "
-                let status = "promised"
-                let id = element.id
-                let tags = 1
-                html += generateSimpleGoalHTML(id, title, status, tags)
+                html += generateSimpleGoalHTML(element)
                 break;
             case "person":
                 break;

@@ -1115,25 +1115,35 @@ function startDateInModalChanged(ev) {
     }
 }
 
-function generateSimpleGoalHTML(goalId, title, status, tags) {
-    let cardStyle = "card" + tags[0]
-    let goalSvg = getGoalSvg(status)
+function generateSimpleGoalHTML(element) {
+    console.log("inside generateSimpleGoalHTML...")
+    var slotId = element.id
+
+    console.log("element for slotId ", slotId + ":" + element)
+
+    var tag = "1"
+    let cardStyle = "card" + tag
+    let status = "maybe"
+    var title = element.title
+
+    let goalSvg = getGoalSvg(status, "play-" + slotId)
+
     let html = '\
 <div class="row goal card ' + cardStyle + ' shadow-sm mb-4" id=play-"' +
-        goalId +
+        slotId +
         '" data-status="' +
         status +
         '">\
   <div class="col">\
     <div class="row" id="goal-title-row-' +
-        goalId +
+        slotId +
         '">\
       <div class="col nopadding text-truncate">\
         <div class="title icons" id="title-' +
-        goalId +
+        slotId +
         '">\
           <div class="mr-3 todo-circle" id="todo-circle-' +
-        goalId +
+        slotId +
         '">\
             ' + goalSvg + '\
           </div>\
@@ -1199,7 +1209,7 @@ function generateGoalHTML(id) {
 
     var tag = properties.get("tags")[0]
     let cardStyle = "card" + tag
-    $("#" + goalId).addClass(cardStyle)
+    $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let status = properties.get("status")[0]
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
