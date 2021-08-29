@@ -1115,8 +1115,8 @@ function startDateInModalChanged(ev) {
     }
 }
 
-function generateSimpleGoalHTML(element) {
-    console.log("inside generateSimpleGoalHTML...")
+function generateSlotHTML(element) {
+    console.log("inside generateSlotHTML...")
     var slotId = element.id
 
     console.log("element for slotId ", slotId + ":" + element)
@@ -1126,16 +1126,16 @@ function generateSimpleGoalHTML(element) {
     let status = "maybe"
     var title = element.title
 
-    let goalSvg = getGoalSvg(status, "play-" + slotId)
+    let slotSvg = getGoalSvg(status, "play-" + slotId)
 
     let html = '\
-<div class="row goal card ' + cardStyle + ' shadow-sm mb-4" id=play-"' +
+<div class="row slot card ' + cardStyle + ' shadow-sm mb-4" id=play-"' +
         slotId +
         '" data-status="' +
         status +
         '">\
   <div class="col">\
-    <div class="row" id="goal-title-row-' +
+    <div class="row" id="slot-title-row-' +
         slotId +
         '">\
       <div class="col nopadding text-truncate">\
@@ -1145,7 +1145,7 @@ function generateSimpleGoalHTML(element) {
           <div class="mr-3 todo-circle" id="todo-circle-' +
         slotId +
         '">\
-            ' + goalSvg + '\
+            ' + slotSvg + '\
           </div>\
           ' +
         '<div class="mx-2">' + title + '</div>' +

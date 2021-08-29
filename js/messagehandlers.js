@@ -104,7 +104,7 @@ function handleIncomingPlay(schedule) {
             case "free":
                 break;
             case "slot":
-                html += generateSimpleGoalHTML(element)
+                html += generateSlotHTML(element)
                 break;
             case "person":
                 break;
