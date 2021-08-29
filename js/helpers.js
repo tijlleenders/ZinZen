@@ -232,6 +232,7 @@ function getFinishAccordionItemHTML() {
         <button name="quick-set-next-week-button" id="quick-set-next-week-button" type="button" class="btn btn-outline-secondary btn-sm">Next week</button>
         <button name="quick-set-next-month-button" id="quick-set-next-month-button" type="button" class="btn btn-outline-secondary btn-sm">Next month</button>
         <button name="quick-set-custom-button" id="quick-set-custom-button" type="button" class="btn btn-outline-secondary btn-sm">Custom</button>
+        <button name="quick-set-remove-button" id="quick-set-remove-button" type="button" class="btn btn-outline-secondary btn-sm">X</button>
         <div id="due-date-time-picker" class="d-flex justify-content-center"></div>
       </div>
     </div>
