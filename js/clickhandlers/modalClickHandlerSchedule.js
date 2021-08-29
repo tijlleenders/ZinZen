@@ -52,6 +52,17 @@ $("#myModal").on("click", "#quick-set-next-month-button", function() {
     send(JSON.stringify(messageJson))
 });
 
+$("#myModal").on("click", "#quick-set-remove-button", function() {
+    console.log("Finish remove clicked")
+    var messageJson = {
+        action: "command",
+        command: "upsertGoal",
+        goalId: $("#myModal").data("idx"),
+        finish: ""
+    }
+    send(JSON.stringify(messageJson))
+});
+
 $("#myModal").on("click", "#quick-set-custom-button", function() {
     console.log("Finish custom clicked")
     let now = new dayjs()
