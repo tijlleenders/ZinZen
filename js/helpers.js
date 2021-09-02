@@ -1127,21 +1127,22 @@ function generateSlotHTML(element) {
     let cardStyle = "card" + tag
     let status = "maybe"
     var title = element.title
+    var begin = new dayjs.utc(element.begin)
+    let sequenceNumberHTML = ""
+    if (element.scheduledInTotal > 1) {
+        sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
+    }
 
     let slotSvg = getGoalSvg(status, "play-" + slotId)
 
     let html = '\
-<div class="row slot card ' + cardStyle + ' shadow-sm mb-4" id=play-"' +
+<div class="row slot card ' + cardStyle + ' shadow-sm mb-4" id=slot-"' +
         slotId +
         '" data-status="' +
         status +
         '">\
-  <div class="col">\
-    <div class="row" id="slot-title-row-' +
-        slotId +
-        '">\
-      <div class="col nopadding text-truncate">\
-        <div class="title icons" id="title-' +
+        <div class="col nopadding text-truncate">\
+        <div class="icons d-flex flex-row align-items-center" id="title-' +
         slotId +
         '">\
           <div class="mr-3 todo-circle" id="todo-circle-' +
@@ -1150,7 +1151,9 @@ function generateSlotHTML(element) {
             ' + slotSvg + '\
           </div>\
           ' +
+        '<div class="mx-2">' + begin.format('HH:mm') + '</div>' +
         '<div class="mx-2">' + title + '</div>' +
+        '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
         '\
         </div>\
       </div>\
