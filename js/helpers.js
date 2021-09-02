@@ -1129,6 +1129,7 @@ function generateSlotHTML(element) {
     let status = "maybe"
     var title = element.title
     var begin = new dayjs.utc(element.begin)
+    var end = new dayjs.utc(element.end)
     let sequenceNumberHTML = ""
     if (element.scheduledInTotal > 1) {
         sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
@@ -1154,7 +1155,7 @@ function generateSlotHTML(element) {
           ' +
         '<div class="row"><div class="col d-flex flex-column">' +
         '<div class="mx-2 begin-time">' + begin.format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time">15:15</div>' +
+        '<div class="mx-2 end-time">' + end.format('HH:mm') + '</div>' +
         '</div></div>' +
         '<div class="mx-2">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
