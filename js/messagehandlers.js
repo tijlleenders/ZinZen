@@ -100,6 +100,7 @@ function handleIncomingPlay(schedule) {
     let html = ""
     if (schedule.Items[0].lastCalculatedEpochMs < goalsLastModifiedEpochMs) {
         html = "Recalculating..."
+        send('{"action":"schedule"}')
     } else {
         schedule.Items[0].schedule.forEach((element, index) => {
             console.log("handling element:", element)
