@@ -1123,7 +1123,8 @@ function generateSlotHTML(element) {
 
     console.log("element for slotId ", slotId + ":" + element)
 
-    var tag = "1"
+    //Todo: handle case for array of tags
+    var tag = element.tags
     let cardStyle = "card" + tag
     let status = "maybe"
     var title = element.title
@@ -1152,7 +1153,7 @@ function generateSlotHTML(element) {
           </div>\
           ' +
         '<div class="row"><div class="col d-flex flex-column">' +
-        '<div class="mx-2">' + begin.format('HH:mm') + '</div>' +
+        '<div class="mx-2 begin-time">' + begin.format('HH:mm') + '</div>' +
         '<div class="mx-2 end-time">15:15</div>' +
         '</div></div>' +
         '<div class="mx-2">' + title + '</div>' +
