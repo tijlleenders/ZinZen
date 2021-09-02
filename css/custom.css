@@ -246,9 +246,16 @@ body {
     fill: rgb(154, 204, 248);
 }
 
+.begin-time {
+    opacity: 80%;
+    align-content: center;
+    font-size: small;
+}
+
 .end-time {
     opacity: 30%;
     align-content: center;
+    font-size: small;
 }
 
 .title,
