@@ -246,6 +246,11 @@ body {
     fill: rgb(154, 204, 248);
 }
 
+.end-time {
+    opacity: 30%;
+    align-content: center;
+}
+
 .title,
 .title-selected {
     color: var(--menu-foreground);

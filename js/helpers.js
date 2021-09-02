@@ -1136,7 +1136,7 @@ function generateSlotHTML(element) {
     let slotSvg = getGoalSvg(status, "play-" + slotId)
 
     let html = '\
-<div class="row slot card ' + cardStyle + ' shadow-sm mb-4" id=slot-"' +
+<div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id=slot-"' +
         slotId +
         '" data-status="' +
         status +
@@ -1151,7 +1151,10 @@ function generateSlotHTML(element) {
             ' + slotSvg + '\
           </div>\
           ' +
+        '<div class="row"><div class="col d-flex flex-column">' +
         '<div class="mx-2">' + begin.format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time">15:15</div>' +
+        '</div></div>' +
         '<div class="mx-2">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
         '\
