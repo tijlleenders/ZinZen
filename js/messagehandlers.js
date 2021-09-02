@@ -98,7 +98,9 @@ function handleIncomingPlay(schedule) {
     console.log("schedule:", schedule)
     $("#mmain-play").empty()
     let html = ""
-    if (schedule.Items[0].lastCalculatedEpochMs < goalsLastModifiedEpochMs) {
+    if (schedule.Items.length == 0 ||
+        (schedule.Items[0].lastCalculatedEpochMs != undefined &&
+            schedule.Items[0].lastCalculatedEpochMs < goalsLastModifiedEpochMs)) {
         html = "Recalculating..."
         send('{"action":"schedule"}')
     } else {
