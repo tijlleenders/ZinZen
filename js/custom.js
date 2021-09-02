@@ -223,9 +223,6 @@ if (!mobileAndTabletCheck()) {
     })
 }
 
-
-$("#app-version").html(_config.deployVersion)
-
 // Initialize deferredPrompt for use later to show browser install prompt.
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {

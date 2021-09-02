@@ -355,8 +355,8 @@ body {
 
 .app-version {
     color: var(--menu-foreground);
-    opacity: 15%;
-    font-size: x-small;
+    opacity: 50%;
+    font-size: small;
 }
 
 .tag-path:hover {
