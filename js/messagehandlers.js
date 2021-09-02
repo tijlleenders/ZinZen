@@ -98,22 +98,26 @@ function handleIncomingPlay(schedule) {
     console.log("schedule:", schedule)
     $("#mmain-play").empty()
     let html = ""
-    schedule.Items[0].schedule.forEach((element, index) => {
-        console.log("handling element:", element)
-        switch (element.label) {
-            case "free":
-                break;
-            case "slot":
-                html += generateSlotHTML(element)
-                break;
-            case "person":
-                break;
-            case "email":
-                break;
-            default:
-                console.log("element not handled:", element)
-        }
-    });
+    if (schedule.Items[0].lastCalculatedEpochMs < goalsLastModifiedEpochMs) {
+        html = "Recalculating..."
+    } else {
+        schedule.Items[0].schedule.forEach((element, index) => {
+            console.log("handling element:", element)
+            switch (element.label) {
+                case "free":
+                    break;
+                case "slot":
+                    html += generateSlotHTML(element)
+                    break;
+                case "person":
+                    break;
+                case "email":
+                    break;
+                default:
+                    console.log("element not handled:", element)
+            }
+        });
+    }
     $("#mmain-play").html(html)
     console.log("play message handled")
 }

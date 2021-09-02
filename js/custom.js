@@ -6,6 +6,7 @@ var settings = []
 var publicOrPrivate = undefined
 var serviceWorker = null
 var sessionId = uuidv4()
+var goalsLastModifiedEpochMs = 0
 
 var startX, startY, endX, endY = 0 //for click or swipe or move detection
 
@@ -127,6 +128,10 @@ function openWS(authorizer, stage, WSEndpoint) {
 function send(jsonString) {
     let sendId = uuidv4()
     let json = JSON.parse(jsonString)
+    if (json.command == "upsertGoal") {
+        goalsLastModifiedEpochMs = new dayjs.utc().valueOf()
+        $("#mmain-play").html("Recalculating...")
+    }
     json.sendId = sendId
     if (publicOrPrivate == "public") {
         if (urlParams.get('profile') != undefined) {
