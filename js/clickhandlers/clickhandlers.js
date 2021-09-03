@@ -289,10 +289,14 @@ $("#mmain-play").on("click", ".slot", function(event) {
     let selectedSlotId = nodeId.slice(-36);
     console.log("Slot click:", selectedSlotId)
     let goalId = $("#slot-" + selectedSlotId).data("goal-id")
+    let beginISO = $("#slot-" + selectedSlotId).data("begin")
+    let endISO = $("#slot-" + selectedSlotId).data("end")
     let completeSlot = {
         action: "command",
         command: "completeSlot",
-        goalId: goalId
+        goalId: goalId,
+        beginISO: beginISO,
+        endISO: endISO
     }
     send(JSON.stringify(completeSlot))
     $("#slot-title-" + selectedSlotId).addClass("text-decoration-line-through")
