@@ -295,6 +295,7 @@ $("#mmain-play").on("click", ".slot", function(event) {
         goalId: goalId
     }
     send(JSON.stringify(completeSlot))
+    $("#slot-title-" + selectedSlotId).addClass("text-decoration-line-through")
 })
 
 
