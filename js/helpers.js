@@ -1143,8 +1143,7 @@ function generateSlotHTML(element) {
         '" data-status="' +
         status +
         '">\
-        <div class="col nopadding text-truncate">\
-        <div class="icons d-flex flex-row align-items-center" id="title-' +
+        <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="title-' +
         slotId +
         '">\
           <div class="mr-3 todo-circle" id="todo-circle-' +
@@ -1153,15 +1152,14 @@ function generateSlotHTML(element) {
             ' + slotSvg + '\
           </div>\
           ' +
-        '<div class="row"><div class="col d-flex flex-column">' +
-        '<div class="mx-2 begin-time">' + begin.format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time">' + end.format('HH:mm') + '</div>' +
+        '<div class="row"><div class="col d-flex flex-column" id="col-begin-end-' + slotId + '" >' +
+        '<div class="mx-2 begin-time" id="begin-' + slotId + '" >' + begin.format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time" id="end-' + slotId + '" >' + end.format('HH:mm') + '</div>' +
         '</div></div>' +
         '<div class="mx-2">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
         '\
         </div>\
-      </div>\
     </div>\
   </div>\
 </div>'
