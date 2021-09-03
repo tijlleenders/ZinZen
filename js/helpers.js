@@ -1142,7 +1142,9 @@ function generateSlotHTML(element) {
 <div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
         slotId +
         '" data-status="' + status + '"\
-        data-goal-id="' + goalId + '">\
+        data-goal-id="' + goalId + '"\
+        data-begin="' + element.begin + '"\
+        data-end="' + element.end + '">\
         <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="slot-col-' +
         slotId +
         '">\
