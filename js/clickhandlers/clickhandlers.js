@@ -288,6 +288,13 @@ $("#mmain-play").on("click", ".slot", function(event) {
     let nodeId = getNodeId(event)
     let selectedSlotId = nodeId.slice(-36);
     console.log("Slot click:", selectedSlotId)
+    let goalId = $("#slot-" + selectedSlotId).data("goal-id")
+    let completeSlot = {
+        action: "command",
+        command: "completeSlot",
+        goalId: goalId
+    }
+    send(JSON.stringify(completeSlot))
 })
 
 

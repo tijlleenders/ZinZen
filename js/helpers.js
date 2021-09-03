@@ -1127,6 +1127,7 @@ function generateSlotHTML(element) {
     var tag = element.tags
     let cardStyle = "card" + tag
     let status = "maybe"
+    let goalId = element.goalId
     var title = element.title
     var begin = new dayjs.utc(element.begin)
     var end = new dayjs.utc(element.end)
@@ -1140,9 +1141,8 @@ function generateSlotHTML(element) {
     let html = '\
 <div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
         slotId +
-        '" data-status="' +
-        status +
-        '">\
+        '" data-status="' + status + '"\
+        data-goal-id="' + goalId + '">\
         <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="title-' +
         slotId +
         '">\
