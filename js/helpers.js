@@ -1138,7 +1138,7 @@ function generateSlotHTML(element) {
     let slotSvg = getGoalSvg(status, "play-" + slotId)
 
     let html = '\
-<div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id=slot-"' +
+<div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
         slotId +
         '" data-status="' +
         status +
