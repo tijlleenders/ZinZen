@@ -1146,13 +1146,13 @@ function generateSlotHTML(element) {
         <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="title-' +
         slotId +
         '">\
-          <div class="mr-3 todo-circle" id="todo-circle-' +
+          <div class="m-1 todo-circle" id="todo-circle-' +
         slotId +
         '">\
             ' + slotSvg + '\
           </div>\
           ' +
-        '<div class="row"><div class="col d-flex flex-column" id="col-begin-end-' + slotId + '" >' +
+        '<div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + slotId + '" >' +
         '<div class="mx-2 begin-time" id="begin-' + slotId + '" >' + begin.format('HH:mm') + '</div>' +
         '<div class="mx-2 end-time" id="end-' + slotId + '" >' + end.format('HH:mm') + '</div>' +
         '</div></div>' +
