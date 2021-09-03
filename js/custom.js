@@ -96,7 +96,7 @@ function openWS(authorizer, stage, WSEndpoint) {
                         break;
 
                     case "play":
-                        handleIncomingPlay(item.get("schedule"))
+                        handleIncomingPlay(item.get("schedule"), item.get("lastCalculatedEpochMs"))
                         break;
 
                     case "settings":

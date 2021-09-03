@@ -93,18 +93,20 @@ function handleIncomingSettings(incomingSettings) {
     updateSettingsUI()
 }
 
-function handleIncomingPlay(schedule) {
+function handleIncomingPlay(schedule, lastCalculatedEpochMs) {
     console.log("handling play schedule...")
+    console.log("lastCalculatedEpochMs:", lastCalculatedEpochMs)
+    console.log("goalsLastModifiedEpochMs", goalsLastModifiedEpochMs)
     console.log("schedule:", schedule)
     $("#mmain-play").empty()
     let html = ""
-    if (schedule.Items.length == 0 ||
-        (schedule.Items[0].lastCalculatedEpochMs != undefined &&
-            schedule.Items[0].lastCalculatedEpochMs < goalsLastModifiedEpochMs)) {
+    if (schedule.length == 0 ||
+        (lastCalculatedEpochMs != undefined &&
+            lastCalculatedEpochMs < goalsLastModifiedEpochMs)) {
         html = "Recalculating..."
         send('{"action":"schedule"}')
     } else {
-        schedule.Items[0].schedule.forEach((element, index) => {
+        schedule.forEach((element, index) => {
             console.log("handling element:", element)
             switch (element.label) {
                 case "free":
