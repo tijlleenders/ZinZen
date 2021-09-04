@@ -1220,7 +1220,8 @@ function generateGoalHTML(id) {
 
     let directParents = properties.get('directParents')
     let ultimateParents = properties.get('ultimateParents')
-    let subCount = properties.get('subCount')
+    let subCountTodo = properties.get('subCountMaybe') + properties.get('subCountPromised')
+    let subCountTotal = subCountTodo + properties.get('subCountDone')
     let finish = ""
     if (properties.has("finish") && properties.get("finish")[0] != "") {
         finish = properties.get("finish")[0]
@@ -1247,9 +1248,12 @@ function generateGoalHTML(id) {
 
     //Todo: 18 subs (18h 20m)... First due x, last due x
     let subTitle = ''
-    if (subCount > 0) {
-        subTitle += subCount + " sub"
-        if (subCount > 1) {
+    if (subCountTotal > 0) {
+        if (subCountTodo != subCountTotal) {
+            subTitle += subCountTodo + "/"
+        }
+        subTitle += subCountTotal + " sub"
+        if (subCountTotal > 1) {
             subTitle += 's'
         }
     } else {
