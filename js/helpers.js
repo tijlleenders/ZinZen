@@ -1169,11 +1169,11 @@ function generateEffortHTML(element) {
     console.log("element for effortId ", effortId + ":" + element)
 
     //Todo: handle case for array of tags
-    var tag = element.tags
+    var tag = element.goalTags
     let cardStyle = "card" + tag
     let status = "maybe"
     let goalId = element.goalId
-    var title = element.title
+    var title = element.goalTitle
     var begin = new dayjs.utc(element.begin)
     var end = new dayjs.utc(element.end)
     let sequenceNumberHTML = ""
