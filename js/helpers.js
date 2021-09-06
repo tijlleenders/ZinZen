@@ -1162,6 +1162,49 @@ function generateSlotHTML(element) {
     return html
 }
 
+function generateEffortHTML(element) {
+    console.log("inside generateEffortHTML...")
+    var effortId = element.id
+
+    console.log("element for effortId ", effortId + ":" + element)
+
+    //Todo: handle case for array of tags
+    var tag = element.tags
+    let cardStyle = "card" + tag
+    let status = "maybe"
+    let goalId = element.goalId
+    var title = element.title
+    var begin = new dayjs.utc(element.begin)
+    var end = new dayjs.utc(element.end)
+    let sequenceNumberHTML = ""
+    if (element.scheduledInTotal > 1) {
+        sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
+    }
+
+    let html = '\
+<div class="row effort card mb-2 ' + cardStyle + ' shadow-sm" id="effort-' +
+        effortId +
+        '" data-status="' + status + '"\
+      data-goal-id="' + goalId + '"\
+      data-begin="' + element.begin + '"\
+      data-end="' + element.end + '">\
+      <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="effort-col-' +
+        effortId +
+        '">\
+      <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + effortId + '" >' +
+        '<div class="mx-2 begin-time" id="begin-' + effortId + '" >' + begin.format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time" id="end-' + effortId + '" >' + end.format('HH:mm') + '</div>' +
+        '</div></div>' +
+        '<div class="mx-2 text-decoration-line-through" id="effort-title-' + effortId + '">' + title + '</div>' +
+        '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
+        '\
+      </div>\
+  </div>\
+</div>\
+</div>'
+    return html
+}
+
 function getGoalSvg(status, id) {
     let goalSvg
     switch (status) {

@@ -111,6 +111,9 @@ function handleIncomingPlay(schedule, lastCalculatedEpochMs) {
             switch (element.label) {
                 case "free":
                     break;
+                case "effort":
+                    html += generateEffortHTML(element)
+                    break;
                 case "slot":
                     html += generateSlotHTML(element)
                     break;
