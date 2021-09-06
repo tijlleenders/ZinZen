@@ -638,318 +638,318 @@ function setSkeletonHTMLForScheduleConstraints() {
     $("#modal-body").html(bodyHTML)
 }
 
-function setSkeletonHTMLForSchedule() {
-    let headerHTML = `<h4 class="modal-title">schedule</h4>`
-    $("#modal-header-content").html(headerHTML)
-    let bodyHTML = `
-  <div class="row align-text-center mt-2">
-    <div class="col" id="modal-status">    
-      <div class="control-icons semi-transparent mx-1" id="delete-schedule" data-bs-toggle="tooltip"
-          data-bs-placement="bottom" title="" data-bs-original-title="Delete">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
-      <path  d="M9.036 7.976a.75.75 0 00-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 101.06 1.06L12 13.06l2.963 2.964a.75.75 0 001.061-1.06L13.061 12l2.963-2.964a.75.75 0 10-1.06-1.06L12 10.939 9.036 7.976z">
-      </path><path fill-rule="evenodd" fill="none" stroke-width="2"
-      d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
-      </svg>
-      </div>
-      <div class="control-icons semi-transparent mx-1" id="done-schedule" data-bs-toggle="tooltip"
-                data-bs-placement="bottom" title="" data-bs-original-title="Mark as done">
-          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
-          <path stroke-width="1"
-            d="M17.28 9.28a.75.75 0 00-1.06-1.06l-5.97 5.97-2.47-2.47a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l6.5-6.5z" />
-          <path fill-rule="evenodd" fill="none" stroke-width="2"
-            d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
-        </svg>
-      </div>
-      <div class="control-icons semi-transparent mx-1" id="promised-schedule" data-bs-toggle="tooltip"
-      data-bs-placement="bottom" title="" data-bs-original-title="Mark as promised">
-        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
-          <path fill="none" stroke-width="2"
-            d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
-        </svg>
-      </div>
-      <div class="control-icons semi-transparent mx-1" id="maybe-schedule" data-bs-toggle="tooltip"
-      data-bs-placement="bottom" title="" data-bs-original-title="Mark as maybe">
-        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
-          <path fill="none" stroke-width="2" stroke-dasharray="2.47"
-            d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
-        </svg>
-      </div>    
-    </div>  
-  </div>
-  <div class="row mt-2 d-none" id="deleted-options-row">
-    <div class="col">
-      <button type="button" class="btn btn-outline-secondary" id="delete-this">Didn't do - delete!</button>
-    </div>
-  </div>
-  <div class="row mt-2 d-none" id="done-options-row">
-    <div class="col">
-      <div id="time-spent-slider">
-        <label for="time-spent" class="form-label">Time actually spent:</label>
-        <input type="range" class="form-range" id="time-spent"> 
-      </div>
-      <div id="mood-done">
-        How do you feel about achieving this goal?
-      </div>
-    </div>
-  </div>
-  <div class="row mt-2" id="options-row">
-    <div class="col">
-      <div class="accordion .accordion-flush" id="schedule-accordion">
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading-start">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapse-start" aria-expanded="false" aria-controls="collapse-start">
-              <div id="modal-start">
-                <p class="text-center">Starts asap</p>
-              </div>
-            </button>
-          </h2>
-          <div id="collapse-start" class="accordion-collapse collapse" aria-labelledby="heading-start"
-            data-bs-parent="#schedule-accordion">
-            <div class="accordion-body">
-              <div id="modal-start-modify" class="subtitles">
-                <div id="start-date-time-picker" class="d-flex justify-content-center"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading-finish">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapse-finish" aria-expanded="false" aria-controls="collapse-finish">
-              <div id="modal-finish">
-                <p class="text-center">Finishes asap</p>
-              </div>
-            </button>
-          </h2>
-          <div id="collapse-finish" class="accordion-collapse collapse" aria-labelledby="heading-finish"
-            data-bs-parent="#schedule-accordion">
-            <div class="accordion-body">
-              <div id="modal-finish-modify" class="subtitles">
-                <div id="due-date-time-picker" class="d-flex justify-content-center"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading-duration">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapse-duration" aria-expanded="false" aria-controls="collapse-duration">
-              <div id="modal-duration">
-                <p class="text-center">Reserve 1h</p>
-              </div>
-            </button>
-          </h2>
-          <div id="collapse-duration" class="accordion-collapse collapse" aria-labelledby="heading-duration"
-            data-bs-parent="#schedule-accordion">
-            <div class="accordion-body">
-              <div id="modal-duration-modify">
-                <table class="table">
-                  <tr>
-                    <th>
-                      <div><button type="button" id="add-week-button" class="btn btn-light ">+</button></div>
-                    </th>
-                    <th>
-                      <div><button type="button" id="add-day-button" class="btn btn-light ">+</button></div>
-                    </th>
-                    <th>
-                      <div><button type="button" id="add-hour-button" class="btn btn-light ">+</button></div>
-                    </th>
-                    <th>
-                      <div><button type="button" id="add-minute-button" class="btn btn-light ">+</button>
-                      </div>
-                    </th>
-                    <th>
-                      <div><button type="button" id="add-second-button" class="btn btn-light ">+</button>
-                      </div>
-                    </th>
-                  </tr>
-                  <tr>
-                    <td id="duration-weeks">w</td>
-                    <td id="duration-days">d</td>
-                    <td id="duration-hours">h</td>
-                    <td id="duration-minutes">m</td>
-                    <td id="duration-seconds">s</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div><button type="button" id="remove-week-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div><button type="button" id="remove-day-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div><button type="button" id="remove-hour-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div><button type="button" id="remove-minute-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div><button type="button" id="remove-second-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-  
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading-budget-per-slot">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapse-budget-per-slot" aria-expanded="false" aria-controls="collapse-budget-per-slot">
-              <div id="modal-budget-per-slot">
-                <p class="text-center">30m-1h per slot</p>
-              </div>
-            </button>
-          </h2>
-          <div id="collapse-budget-per-slot" class="accordion-collapse collapse" aria-labelledby="heading-budget-per-slot"
-            data-bs-parent="#schedule-accordion">
-            <div class="accordion-body">
-              <div id="modal-budget-per-slot-modify">
-                <table class="table text-center">
-                  <tr>
-                    <td colspan="2">
-                      Min per slot
-                    </td>
-                    <td colspan="2">
-                      Max per slot
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div id="remove-min-per-slot-button-area"><button type="button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div id="add-min-per-slot-button-area"><button type="button" class="btn btn-light">+</button></div>
-                    </td>
-                    <td>
-                      <div id="remove-max-per-slot-button-area"><button type="button" class="btn btn-light">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div id="add-max-per-slot-button-area"><button type="button" class="btn btn-light">+</button></div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading-budget-per-day">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapse-budget-per-day" aria-expanded="false" aria-controls="collapse-budget-per-day">
-              <div id="modal-budget-per-day">
-                <p class="text-center">0-1 times per day</p>
-              </div>
-            </button>
-          </h2>
-          <div id="collapse-budget-per-day" class="accordion-collapse collapse" aria-labelledby="heading-budget-per-day"
-            data-bs-parent="#schedule-accordion">
-            <div class="accordion-body">
-              <div id="modal-budget-per-day-modify">
-                <table class="table text-center">
-                  <tr>
-                    <td colspan="2">
-                      Min per day
-                    </td>
-                    <td colspan="2">
-                      Max per day
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div id="remove-min-per-day-button-area"><button type="button" id="remove-min-per-day-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div id="add-min-per-day-button-area"><button type="button" id="add-min-per-day-button" class="btn btn-light ">+</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div id="remove-max-per-day-button-area"><button type="button" id="remove-max-per-day-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div id="add-max-per-day-button-area"><button type="button" id="add-max-per-day-button" class="btn btn-light ">+</button>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading-budget-per-week">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapse-budget-per-week" aria-expanded="false" aria-controls="collapse-budget-per-week">
-              <div id="modal-budget-per-week">
-                <p class="text-center">1-5 times per week</p>
-              </div>
-            </button>
-          </h2>
-          <div id="collapse-budget-per-week" class="accordion-collapse collapse" aria-labelledby="heading-budget-per-week"
-            data-bs-parent="#schedule-accordion">
-            <div class="accordion-body">
-              <div id="modal-budget-per-week-modify">
-                <table class="table text-center">
-                  <tr>
-                    <td colspan="2">
-                      Min per week
-                    </td>
-                    <td colspan="2">
-                      Max per week
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div id="remove-min-per-week-button-area"><button type="button" id="remove-min-per-week-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div id="add-min-per-week-button-area"><button type="button" id="add-min-per-week-button" class="btn btn-light ">+</button></div>
-                    </td>
-                    <td>
-                      <div id="remove-max-per-week-button-area"><button type="button" id="remove-max-per-week-button" class="btn btn-light ">-</button>
-                      </div>
-                    </td>
-                    <td>
-                      <div id="add-max-per-week-button-area"><button type="button" id="add-max-per-week-button" class="btn btn-light ">+</button></div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-      </div>
-    </div>
-  </div>
+// function setSkeletonHTMLForSchedule() { // dead code keep for start finish snippets
+//     let headerHTML = `<h4 class="modal-title">schedule</h4>`
+//     $("#modal-header-content").html(headerHTML)
+//     let bodyHTML = `
+//   <div class="row align-text-center mt-2">
+//     <div class="col" id="modal-status">    
+//       <div class="control-icons semi-transparent mx-1" id="delete-schedule" data-bs-toggle="tooltip"
+//           data-bs-placement="bottom" title="" data-bs-original-title="Delete">
+//           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
+//       <path  d="M9.036 7.976a.75.75 0 00-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 101.06 1.06L12 13.06l2.963 2.964a.75.75 0 001.061-1.06L13.061 12l2.963-2.964a.75.75 0 10-1.06-1.06L12 10.939 9.036 7.976z">
+//       </path><path fill-rule="evenodd" fill="none" stroke-width="2"
+//       d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
+//       </svg>
+//       </div>
+//       <div class="control-icons semi-transparent mx-1" id="done-schedule" data-bs-toggle="tooltip"
+//                 data-bs-placement="bottom" title="" data-bs-original-title="Mark as done">
+//           <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+//           <path stroke-width="1"
+//             d="M17.28 9.28a.75.75 0 00-1.06-1.06l-5.97 5.97-2.47-2.47a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l6.5-6.5z" />
+//           <path fill-rule="evenodd" fill="none" stroke-width="2"
+//             d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
+//         </svg>
+//       </div>
+//       <div class="control-icons semi-transparent mx-1" id="promised-schedule" data-bs-toggle="tooltip"
+//       data-bs-placement="bottom" title="" data-bs-original-title="Mark as promised">
+//         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+//           <path fill="none" stroke-width="2"
+//             d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
+//         </svg>
+//       </div>
+//       <div class="control-icons semi-transparent mx-1" id="maybe-schedule" data-bs-toggle="tooltip"
+//       data-bs-placement="bottom" title="" data-bs-original-title="Mark as maybe">
+//         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+//           <path fill="none" stroke-width="2" stroke-dasharray="2.47"
+//             d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1z" />
+//         </svg>
+//       </div>    
+//     </div>  
+//   </div>
+//   <div class="row mt-2 d-none" id="deleted-options-row">
+//     <div class="col">
+//       <button type="button" class="btn btn-outline-secondary" id="delete-this">Didn't do - delete!</button>
+//     </div>
+//   </div>
+//   <div class="row mt-2 d-none" id="done-options-row">
+//     <div class="col">
+//       <div id="time-spent-slider">
+//         <label for="time-spent" class="form-label">Time actually spent:</label>
+//         <input type="range" class="form-range" id="time-spent"> 
+//       </div>
+//       <div id="mood-done">
+//         How do you feel about achieving this goal?
+//       </div>
+//     </div>
+//   </div>
+//   <div class="row mt-2" id="options-row">
+//     <div class="col">
+//       <div class="accordion .accordion-flush" id="schedule-accordion">
+//         <div class="accordion-item">
+//           <h2 class="accordion-header" id="heading-start">
+//             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+//               data-bs-target="#collapse-start" aria-expanded="false" aria-controls="collapse-start">
+//               <div id="modal-start">
+//                 <p class="text-center">Starts asap</p>
+//               </div>
+//             </button>
+//           </h2>
+//           <div id="collapse-start" class="accordion-collapse collapse" aria-labelledby="heading-start"
+//             data-bs-parent="#schedule-accordion">
+//             <div class="accordion-body">
+//               <div id="modal-start-modify" class="subtitles">
+//                 <div id="start-date-time-picker" class="d-flex justify-content-center"></div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//         <div class="accordion-item">
+//           <h2 class="accordion-header" id="heading-finish">
+//             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+//               data-bs-target="#collapse-finish" aria-expanded="false" aria-controls="collapse-finish">
+//               <div id="modal-finish">
+//                 <p class="text-center">Finishes asap</p>
+//               </div>
+//             </button>
+//           </h2>
+//           <div id="collapse-finish" class="accordion-collapse collapse" aria-labelledby="heading-finish"
+//             data-bs-parent="#schedule-accordion">
+//             <div class="accordion-body">
+//               <div id="modal-finish-modify" class="subtitles">
+//                 <div id="due-date-time-picker" class="d-flex justify-content-center"></div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
 
-  <div class="row" id="proposal-row">
-    <div class="col">
-      <hr />
-      <div id="schedule-status">
-        <p class="text-center">No changes yet...</p>
-      </div>
-    </div>
-  </div>`
-    $("#modal-body").html(bodyHTML)
-}
+//         <div class="accordion-item">
+//           <h2 class="accordion-header" id="heading-duration">
+//             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+//               data-bs-target="#collapse-duration" aria-expanded="false" aria-controls="collapse-duration">
+//               <div id="modal-duration">
+//                 <p class="text-center">Reserve 1h</p>
+//               </div>
+//             </button>
+//           </h2>
+//           <div id="collapse-duration" class="accordion-collapse collapse" aria-labelledby="heading-duration"
+//             data-bs-parent="#schedule-accordion">
+//             <div class="accordion-body">
+//               <div id="modal-duration-modify">
+//                 <table class="table">
+//                   <tr>
+//                     <th>
+//                       <div><button type="button" id="add-week-button" class="btn btn-light ">+</button></div>
+//                     </th>
+//                     <th>
+//                       <div><button type="button" id="add-day-button" class="btn btn-light ">+</button></div>
+//                     </th>
+//                     <th>
+//                       <div><button type="button" id="add-hour-button" class="btn btn-light ">+</button></div>
+//                     </th>
+//                     <th>
+//                       <div><button type="button" id="add-minute-button" class="btn btn-light ">+</button>
+//                       </div>
+//                     </th>
+//                     <th>
+//                       <div><button type="button" id="add-second-button" class="btn btn-light ">+</button>
+//                       </div>
+//                     </th>
+//                   </tr>
+//                   <tr>
+//                     <td id="duration-weeks">w</td>
+//                     <td id="duration-days">d</td>
+//                     <td id="duration-hours">h</td>
+//                     <td id="duration-minutes">m</td>
+//                     <td id="duration-seconds">s</td>
+//                   </tr>
+//                   <tr>
+//                     <td>
+//                       <div><button type="button" id="remove-week-button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div><button type="button" id="remove-day-button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div><button type="button" id="remove-hour-button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div><button type="button" id="remove-minute-button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div><button type="button" id="remove-second-button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                   </tr>
+//                 </table>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+
+//         <div class="accordion-item">
+//           <h2 class="accordion-header" id="heading-budget-per-slot">
+//             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+//               data-bs-target="#collapse-budget-per-slot" aria-expanded="false" aria-controls="collapse-budget-per-slot">
+//               <div id="modal-budget-per-slot">
+//                 <p class="text-center">30m-1h per slot</p>
+//               </div>
+//             </button>
+//           </h2>
+//           <div id="collapse-budget-per-slot" class="accordion-collapse collapse" aria-labelledby="heading-budget-per-slot"
+//             data-bs-parent="#schedule-accordion">
+//             <div class="accordion-body">
+//               <div id="modal-budget-per-slot-modify">
+//                 <table class="table text-center">
+//                   <tr>
+//                     <td colspan="2">
+//                       Min per slot
+//                     </td>
+//                     <td colspan="2">
+//                       Max per slot
+//                     </td>
+//                   </tr>
+//                   <tr>
+//                     <td>
+//                       <div id="remove-min-per-slot-button-area"><button type="button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div id="add-min-per-slot-button-area"><button type="button" class="btn btn-light">+</button></div>
+//                     </td>
+//                     <td>
+//                       <div id="remove-max-per-slot-button-area"><button type="button" class="btn btn-light">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div id="add-max-per-slot-button-area"><button type="button" class="btn btn-light">+</button></div>
+//                     </td>
+//                   </tr>
+//                 </table>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         <div class="accordion-item">
+//           <h2 class="accordion-header" id="heading-budget-per-day">
+//             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+//               data-bs-target="#collapse-budget-per-day" aria-expanded="false" aria-controls="collapse-budget-per-day">
+//               <div id="modal-budget-per-day">
+//                 <p class="text-center">0-1 times per day</p>
+//               </div>
+//             </button>
+//           </h2>
+//           <div id="collapse-budget-per-day" class="accordion-collapse collapse" aria-labelledby="heading-budget-per-day"
+//             data-bs-parent="#schedule-accordion">
+//             <div class="accordion-body">
+//               <div id="modal-budget-per-day-modify">
+//                 <table class="table text-center">
+//                   <tr>
+//                     <td colspan="2">
+//                       Min per day
+//                     </td>
+//                     <td colspan="2">
+//                       Max per day
+//                     </td>
+//                   </tr>
+//                   <tr>
+//                     <td>
+//                       <div id="remove-min-per-day-button-area"><button type="button" id="remove-min-per-day-button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div id="add-min-per-day-button-area"><button type="button" id="add-min-per-day-button" class="btn btn-light ">+</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div id="remove-max-per-day-button-area"><button type="button" id="remove-max-per-day-button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div id="add-max-per-day-button-area"><button type="button" id="add-max-per-day-button" class="btn btn-light ">+</button>
+//                       </div>
+//                     </td>
+//                   </tr>
+//                 </table>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//         <div class="accordion-item">
+//           <h2 class="accordion-header" id="heading-budget-per-week">
+//             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+//               data-bs-target="#collapse-budget-per-week" aria-expanded="false" aria-controls="collapse-budget-per-week">
+//               <div id="modal-budget-per-week">
+//                 <p class="text-center">1-5 times per week</p>
+//               </div>
+//             </button>
+//           </h2>
+//           <div id="collapse-budget-per-week" class="accordion-collapse collapse" aria-labelledby="heading-budget-per-week"
+//             data-bs-parent="#schedule-accordion">
+//             <div class="accordion-body">
+//               <div id="modal-budget-per-week-modify">
+//                 <table class="table text-center">
+//                   <tr>
+//                     <td colspan="2">
+//                       Min per week
+//                     </td>
+//                     <td colspan="2">
+//                       Max per week
+//                     </td>
+//                   </tr>
+//                   <tr>
+//                     <td>
+//                       <div id="remove-min-per-week-button-area"><button type="button" id="remove-min-per-week-button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div id="add-min-per-week-button-area"><button type="button" id="add-min-per-week-button" class="btn btn-light ">+</button></div>
+//                     </td>
+//                     <td>
+//                       <div id="remove-max-per-week-button-area"><button type="button" id="remove-max-per-week-button" class="btn btn-light ">-</button>
+//                       </div>
+//                     </td>
+//                     <td>
+//                       <div id="add-max-per-week-button-area"><button type="button" id="add-max-per-week-button" class="btn btn-light ">+</button></div>
+//                     </td>
+//                   </tr>
+//                 </table>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+
+//       </div>
+//     </div>
+//   </div>
+
+//   <div class="row" id="proposal-row">
+//     <div class="col">
+//       <hr />
+//       <div id="schedule-status">
+//         <p class="text-center">No changes yet...</p>
+//       </div>
+//     </div>
+//   </div>`
+//     $("#modal-body").html(bodyHTML)
+// }
 
 function setSkeletonHTMLForVisibilities() {
     let headerHTML = `<h4 class="modal-title">Visibilities</h4>`
