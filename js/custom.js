@@ -134,7 +134,8 @@ function openWS(authorizer, stage, WSEndpoint) {
 function send(jsonString) {
     let sendId = uuidv4()
     let json = JSON.parse(jsonString)
-    if (json.command == "upsertGoal") {
+    if (json.command == "upsertGoal" ||
+        json.command == "deleteGoal") {
         goalsLastModifiedEpochMs = new dayjs.utc().valueOf()
         $("#mmain-play").html("Recalculating...")
     }
