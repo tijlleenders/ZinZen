@@ -91,7 +91,7 @@ function setSkeletonHTMLForSettings() {
             <br />\
             Other<br />\
               <div id="about"><button name="about-button" id="about-button" type="button" class="btn btn-outline-secondary btn-sm m-1">About ZinZen</button></div>
-              <div id="open-source"><button name="open-source-button" id="open-source-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Open source acknowledgements</button></div>
+              <div class="settings-info"><a href="https://zinzen.me/acknowledgements.html" target="_blank">Open source acknowledgements</a></div>
               <div class="text-monospace app-version"> Version: ` + _config.deployVersion + `</div>
           </div>\
         </div>\
