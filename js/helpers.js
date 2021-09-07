@@ -75,6 +75,18 @@ function setSkeletonHTMLForSettings() {
     settingsHTML += `
       <div class="row">\
         <div class="col">\
+          <div id="modal-settings-calendar">\
+            <br />\
+            Calendar<br />\
+              <div class="text-monospace settings-info"> Display timezone: ` + dayjs.tz.guess() + `</div>
+          </div>\
+        </div>\
+      </div>    
+    `
+
+    settingsHTML += `
+      <div class="row">\
+        <div class="col">\
           <div id="modal-settings-other">\
             <br />\
             Other<br />\

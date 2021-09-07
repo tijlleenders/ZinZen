@@ -371,6 +371,12 @@ body {
     font-size: small;
 }
 
+.settings-info {
+    color: var(--menu-foreground);
+    opacity: 50%;
+    font-size: small;
+}
+
 .tag-path:hover {
     stroke: rgb(154, 204, 248);
     stroke-width: 4;
