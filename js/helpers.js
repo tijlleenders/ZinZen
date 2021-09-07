@@ -1149,8 +1149,8 @@ function generateSlotHTML(element) {
         slotId +
         '">\
         <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + slotId + '" >' +
-        '<div class="mx-2 begin-time" id="begin-' + slotId + '" >' + begin.format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time" id="end-' + slotId + '" >' + end.format('HH:mm') + '</div>' +
+        '<div class="mx-2 begin-time" id="begin-' + slotId + '" >' + begin.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time" id="end-' + slotId + '" >' + end.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
         '</div></div>' +
         '<div class="mx-2" id="slot-title-' + slotId + '">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
@@ -1192,8 +1192,8 @@ function generateEffortHTML(element) {
         effortId +
         '">\
       <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + effortId + '" >' +
-        '<div class="mx-2 begin-time" id="begin-' + effortId + '" >' + begin.format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time" id="end-' + effortId + '" >' + end.format('HH:mm') + '</div>' +
+        '<div class="mx-2 begin-time" id="begin-' + effortId + '" >' + begin.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time" id="end-' + effortId + '" >' + end.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
         '</div></div>' +
         '<div class="mx-2 text-decoration-line-through" id="effort-title-' + effortId + '">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
