@@ -877,10 +877,18 @@ function startDateInModalChanged(ev) {
         let previousDate = new Date($("#modal-start").data("start"))
         $("#modal-start").data("start", ev.date.toISOString())
         let chosenDateTime = new Date(ev.date.toISOString())
+        let chosenDateTimeString = ev.date.toISOString()
         let now = new Date()
         if (Math.abs(now - chosenDateTime) > 1500 || Math.abs(previousDate - chosenDateTime) < 5000) {
             updateStartUI()
-                // sendProbeRequest()
+            let goalId = $("#myModal").data("idx")
+            let upsertGoal = {
+                action: "command",
+                command: "upsertGoal",
+                goalId: goalId,
+                start: chosenDateTimeString
+            }
+            send(JSON.stringify(upsertGoal))
             $("#collapse-start").collapse('hide')
         }
     }
@@ -1322,17 +1330,17 @@ function updateFinishUI() { //Todo: use locale for picker timezone
 
 
 function updateStartUI() { //Todo: use locale for picker timezone
-    let startISOString = $("#modal-start").data("finish")
+    let startISOString = $("#modal-start").data("start")
         //Todo: if already instantiated update
     if (startISOString != undefined && startISOString != "") {
-        $("#due-date-time-picker").datetimepicker({
+        $("#start-date-time-picker").datetimepicker({
             format: 'yyyy-mm-ddThh:ii:ssZ',
             initialDate: new Date(startISOString),
             todayHighlight: true,
             todayBtn: "linked"
         }).on('changeDate', function(ev) {
             console.log("changeDate event")
-            dueDateInModalChanged(ev)
+            startDateInModalChanged(ev)
         });
         let localTimeLeft = dayjs().to(new dayjs(startISOString))
         $("#modal-start").html('<p class="text-center">Starts ' + localTimeLeft + "</p>")
@@ -1381,7 +1389,7 @@ function updateStartUI() { //Todo: use locale for picker timezone
         $("#quick-set-start-next-week-button").removeClass('active')
         $("#quick-set-start-next-month-button").removeClass('active')
         $("#quick-set-start-custom-button").removeClass('active')
-        $("#due-date-time-picker").datetimepicker('remove')
+        $("#start-date-time-picker").datetimepicker('remove')
         $("#modal-start").html('<p class="text-center">No start date</p>')
     }
 }
