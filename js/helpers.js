@@ -254,6 +254,30 @@ function getFinishAccordionItemHTML() {
 </div>`
 }
 
+function getStartAccordionItemHTML() {
+    return `
+            <div class="accordion-item" id="collapse-item-start">
+              <h2 class="accordion-header" id="heading-start">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapse-start" aria-expanded="false" aria-controls="collapse-start">
+                  <div id="modal-start">
+                    <p class="text-center">No start date</p>
+                  </div>
+                </button>
+              </h2>
+              <div id="collapse-start" class="accordion-collapse collapse" aria-labelledby="heading-start"
+                data-bs-parent="#schedule-accordion">
+                <div class="accordion-body">
+                  <div id="modal-start-modify" class="subtitles">
+                    <div id="start-date-time-picker" class="d-flex justify-content-center"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  `
+}
+
+
 function getTimeZoneAccordionItemHTML() {
     return `
 <div class="accordion-item" id="collapse-item-time-zone">
@@ -678,6 +702,7 @@ function setSkeletonHTMLForScheduleConstraints() {
     bodyHTML += getDurationAccordionHTML()
     bodyHTML += getTimesOfDaysAccordionItemHTML()
     bodyHTML += getFinishAccordionItemHTML()
+    bodyHTML += getStartAccordionItemHTML()
     bodyHTML += getTimeZoneAccordionItemHTML()
     bodyHTML += `
       </div>
