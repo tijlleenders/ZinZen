@@ -254,6 +254,40 @@ function getFinishAccordionItemHTML() {
 </div>`
 }
 
+function getTimeZoneAccordionItemHTML() {
+    return `
+<div class="accordion-item" id="collapse-item-time-zone">
+<h2 class="accordion-header" id="heading-time-zone">
+  <button class="accordion-button collapsed" id="accordion-button-time-zone" type="button" data-bs-toggle="collapse"
+    data-bs-target="#collapse-time-zone" aria-expanded="false" aria-controls="collapse-time-zone">
+    <div id="modal-time-zone">
+      <p class="text-center">Europe/Amsterdam</p>
+    </div>
+  </button>
+</h2>
+<div id="collapse-time-zone" class="accordion-collapse collapse" aria-labelledby="heading-time-zone"
+  data-bs-parent="#schedule-accordion">
+  <div class="accordion-body">
+    <div id="modal-time-zone-modify" class="subtitles">
+      <p class="subtitles">Time zones. For when you're travelling.<br />
+      'Auto' lets your daily routines follow you.</p>
+      <button name="quick-set-auto-button" id="quick-set-auto-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Auto</button>
+      <button name="quick-set-edt-button" id="quick-set-edt-button" type="button" class="btn btn-outline-secondary btn-sm m-1">EDT</button>
+      <button name="quick-set-est-button" id="quick-set-est-button" type="button" class="btn btn-outline-secondary btn-sm m-1">EST</button>
+      <button name="quick-set-pst-button" id="quick-set-pst-button" type="button" class="btn btn-outline-secondary btn-sm m-1">PST</button>
+      <button name="quick-set-amsterdam-button" id="quick-set-amsterdam-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Amsterdam</button>
+      <button name="quick-set-moscow-button" id="quick-set-moscow-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Moscow</button>
+      <button name="quick-set-beijing-button" id="quick-set-beijing-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Beijing</button>
+      <button name="quick-set-tokyo-button" id="quick-set-tokyo-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Tokyo</button>
+      <button name="quick-set-sydney-button" id="quick-set-sydney-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Sydney</button>
+      <button name="quick-set-time-zone-custom-button" id="quick-set-time-zone-custom-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Custom</button>
+      <p>Work in progress... please <a href="https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate" target="_blank">fund</a> if useful.</p> 
+    </div>
+  </div>
+</div>
+</div>`
+}
+
 function getDurationAccordionHTML() {
     return `
 <div class="accordion-item">
@@ -644,6 +678,7 @@ function setSkeletonHTMLForScheduleConstraints() {
     bodyHTML += getDurationAccordionHTML()
     bodyHTML += getTimesOfDaysAccordionItemHTML()
     bodyHTML += getFinishAccordionItemHTML()
+    bodyHTML += getTimeZoneAccordionItemHTML()
     bodyHTML += `
       </div>
     </div>
