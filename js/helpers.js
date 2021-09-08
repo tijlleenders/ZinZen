@@ -78,7 +78,8 @@ function setSkeletonHTMLForSettings() {
           <div id="modal-settings-calendar">\
             <br />\
             Calendar<br />\
-              <div class="text-monospace settings-info"> Display timezone: ` + dayjs.tz.guess() + `</div>
+              <div class="text-monospace settings-info">Display timezone: ` + dayjs.tz.guess() + `</div>
+              <div class="text-monospace settings-info">Default for scheduling goals: Europe/Amsterdam</div>
           </div>\
         </div>\
       </div>    
