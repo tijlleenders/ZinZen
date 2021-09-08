@@ -118,6 +118,7 @@ function updateModalVisibilitiesUI() {
 function updateModalScheduleConstraintsUI() {
     updateDurationUI()
     updateFinishUI()
+    updateStartUI()
     updatetimesOfDaysPrefUI()
 }
 
@@ -1097,10 +1098,12 @@ function setDataFieldsForScheduleConstraints(properties) {
     $("#modal-status").data("scheduledBeginISO", properties.get("scheduledBeginISO"))
     $("#modal-status").data("scheduledEndISO", properties.get("scheduledEndISO"))
 
-    $("#modal-start").data("start", (new Date(properties.get("start")[0])).toISOString())
-
     if (properties.has("finish")) {
         $("#modal-finish").data("finish", properties.get("finish")[0])
+    }
+
+    if (properties.has("start")) {
+        $("#modal-start").data("start", properties.get("start")[0])
     }
 
     if (properties.has("duration") && properties.get("duration")[0] != "") {
@@ -1565,25 +1568,6 @@ function updateBreadcrumbUI() {
     }
 }
 
-function updateStartUI() { //Todo: use locale for picker timezone
-    let startISOString = $("#modal-start").data("start")
-    $("#start-date-time-picker").datetimepicker({
-        format: 'yyyy-mm-ddThh:ii:ssZ',
-        initialDate: new Date(startISOString),
-        todayHighlight: true,
-        todayBtn: "linked"
-    }).on('changeDate', function(ev) {
-        console.log("changeDate event")
-        startDateInModalChanged(ev)
-    });
-    if (startISOString != "") {
-        let localTimeLeft = dayjs().to(new dayjs(startISOString))
-        $("#modal-start").html('<p class="text-center">Start >= ' + localTimeLeft + "</p>")
-    } else {
-        $("#modal-start").html('<p class="text-center">Starts asap</p>')
-    }
-}
-
 function updateFinishUI() { //Todo: use locale for picker timezone
     let finishISOString = $("#modal-finish").data("finish")
         //Todo: if already instantiated update
@@ -1646,6 +1630,72 @@ function updateFinishUI() { //Todo: use locale for picker timezone
         $("#quick-set-custom-button").removeClass('active')
         $("#due-date-time-picker").datetimepicker('remove')
         $("#modal-finish").html('<p class="text-center">No due date</p>')
+    }
+}
+
+
+function updateStartUI() { //Todo: use locale for picker timezone
+    let startISOString = $("#modal-start").data("finish")
+        //Todo: if already instantiated update
+    if (startISOString != undefined && startISOString != "") {
+        $("#due-date-time-picker").datetimepicker({
+            format: 'yyyy-mm-ddThh:ii:ssZ',
+            initialDate: new Date(startISOString),
+            todayHighlight: true,
+            todayBtn: "linked"
+        }).on('changeDate', function(ev) {
+            console.log("changeDate event")
+            dueDateInModalChanged(ev)
+        });
+        let localTimeLeft = dayjs().to(new dayjs(startISOString))
+        $("#modal-start").html('<p class="text-center">Starts ' + localTimeLeft + "</p>")
+
+        let now = new dayjs()
+        switch (startISOString) {
+            case now.startOf('day').toISOString():
+                $("#quick-set-start-today-button").addClass('active')
+                $("#quick-set-start-tomorrow-button").removeClass('active')
+                $("#quick-set-start-next-week-button").removeClass('active')
+                $("#quick-set-start-next-month-button").removeClass('active')
+                $("#quick-set-start-custom-button").removeClass('active')
+                break;
+            case now.add(1, 'day').startOf('day').toISOString():
+                $("#quick-set-start-today-button").removeClass('active')
+                $("#quick-set-start-tomorrow-button").addClass('active')
+                $("#quick-set-start-next-week-button").removeClass('active')
+                $("#quick-set-start-next-month-button").removeClass('active')
+                $("#quick-set-start-custom-button").removeClass('active')
+                break;
+            case now.add(1, 'week').startOf('week').toISOString():
+                $("#quick-set-start-today-button").removeClass('active')
+                $("#quick-set-start-tomorrow-button").removeClass('active')
+                $("#quick-set-start-next-week-button").addClass('active')
+                $("#quick-set-start-next-month-button").removeClass('active')
+                $("#quick-set-start-custom-button").removeClass('active')
+                break;
+            case now.add(1, 'month').startOf('month').toISOString():
+                $("#quick-set-start-today-button").removeClass('active')
+                $("#quick-set-start-tomorrow-button").removeClass('active')
+                $("#quick-set-start-next-week-button").removeClass('active')
+                $("#quick-set-start-next-month-button").addClass('active')
+                $("#quick-set-start-custom-button").removeClass('active')
+                break;
+            default:
+                $("#quick-set-start-today-button").removeClass('active')
+                $("#quick-set-start-tomorrow-button").removeClass('active')
+                $("#quick-set-start-next-week-button").removeClass('active')
+                $("#quick-set-start-next-month-button").removeClass('active')
+                $("#quick-set-start-custom-button").addClass('active')
+                break;
+        }
+    } else { //startISOString == ""
+        $("#quick-set-start-today-button").removeClass('active')
+        $("#quick-set-start-tomorrow-button").removeClass('active')
+        $("#quick-set-start-next-week-button").removeClass('active')
+        $("#quick-set-start-next-month-button").removeClass('active')
+        $("#quick-set-start-custom-button").removeClass('active')
+        $("#due-date-time-picker").datetimepicker('remove')
+        $("#modal-start").html('<p class="text-center">No start date</p>')
     }
 }
 
