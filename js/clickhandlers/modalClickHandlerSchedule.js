@@ -76,6 +76,84 @@ $("#myModal").on("click", "#quick-set-custom-button", function() {
     send(JSON.stringify(messageJson))
 });
 
+
+$("#myModal").on("click", "#quick-set-start-today-button", function() {
+    console.log("Start today clicked")
+    let now = new dayjs()
+    let startOfTodayISO = now.startOf('day').toISOString()
+    var messageJson = {
+        action: "command",
+        command: "upsertGoal",
+        goalId: $("#myModal").data("idx"),
+        start: startOfTodayISO
+    }
+    send(JSON.stringify(messageJson))
+});
+
+$("#myModal").on("click", "#quick-set-start-tomorrow-button", function() {
+    console.log("Start tomorrow clicked")
+    let now = new dayjs()
+    let endOfTomorrowISO = now.add(1, 'day').startOf('day').toISOString()
+    var messageJson = {
+        action: "command",
+        command: "upsertGoal",
+        goalId: $("#myModal").data("idx"),
+        start: endOfTomorrowISO
+    }
+    send(JSON.stringify(messageJson))
+});
+
+$("#myModal").on("click", "#quick-set-start-next-week-button", function() {
+    console.log("Start next week clicked")
+    let now = new dayjs()
+    let endOfNextWeekISO = now.add(1, 'week').startOf('week').toISOString()
+    var messageJson = {
+        action: "command",
+        command: "upsertGoal",
+        goalId: $("#myModal").data("idx"),
+        start: endOfNextWeekISO
+    }
+    send(JSON.stringify(messageJson))
+});
+
+$("#myModal").on("click", "#quick-set-start-next-month-button", function() {
+    console.log("Start next month clicked")
+    let now = new dayjs()
+    let endOfNextMonthISO = now.add(1, 'month').startOf('month').toISOString()
+    var messageJson = {
+        action: "command",
+        command: "upsertGoal",
+        goalId: $("#myModal").data("idx"),
+        start: endOfNextMonthISO
+    }
+    send(JSON.stringify(messageJson))
+});
+
+$("#myModal").on("click", "#quick-set-start-remove-button", function() {
+    console.log("Start remove clicked")
+    var messageJson = {
+        action: "command",
+        command: "upsertGoal",
+        goalId: $("#myModal").data("idx"),
+        start: ""
+    }
+    send(JSON.stringify(messageJson))
+});
+
+$("#myModal").on("click", "#quick-set-start-custom-button", function() {
+    console.log("Start custom clicked")
+    let now = new dayjs()
+    let startOfTodayISO = now.add(1, 'hour').toISOString()
+    var messageJson = {
+        action: "command",
+        command: "upsertGoal",
+        goalId: $("#myModal").data("idx"),
+        start: startOfTodayISO
+    }
+    send(JSON.stringify(messageJson))
+});
+
+
 $("#myModal").on("click", "#add-week-button", function() {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration += 3600 * 24 * 7
