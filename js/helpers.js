@@ -269,6 +269,12 @@ function getStartAccordionItemHTML() {
                 data-bs-parent="#schedule-accordion">
                 <div class="accordion-body">
                   <div id="modal-start-modify" class="subtitles">
+                  <button name="quick-set-start-today-button" id="quick-set-start-today-button" type="button" class="btn btn-outline-secondary btn-sm">Today</button>
+                  <button name="quick-set-start-tomorrow-button" id="quick-set-start-tomorrow-button" type="button" class="btn btn-outline-secondary btn-sm">Tomorrow</button>
+                  <button name="quick-set-start-next-week-button" id="quick-set-start-next-week-button" type="button" class="btn btn-outline-secondary btn-sm">Next week</button>
+                  <button name="quick-set-start-next-month-button" id="quick-set-start-next-month-button" type="button" class="btn btn-outline-secondary btn-sm">Next month</button>
+                  <button name="quick-set-start-custom-button" id="quick-set-start-custom-button" type="button" class="btn btn-outline-secondary btn-sm">Custom</button>
+                  <button name="quick-set-start-remove-button" id="quick-set-start-remove-button" type="button" class="btn btn-outline-secondary btn-sm">X</button>                  
                     <div id="start-date-time-picker" class="d-flex justify-content-center"></div>
                   </div>
                 </div>
