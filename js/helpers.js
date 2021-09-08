@@ -294,7 +294,7 @@ function getTimeZoneAccordionItemHTML() {
   <div class="accordion-body">
     <div id="modal-time-zone-modify" class="subtitles">
       <p class="subtitles">Time zones. For when you're travelling.<br />
-      'Auto' lets your daily routines follow you.</p>
+      'Auto' makes your daily routines follow you.</p>
       <button name="quick-set-auto-button" id="quick-set-auto-button" type="button" class="btn btn-outline-secondary btn-sm m-1">Auto</button>
       <button name="quick-set-edt-button" id="quick-set-edt-button" type="button" class="btn btn-outline-secondary btn-sm m-1">EDT</button>
       <button name="quick-set-est-button" id="quick-set-est-button" type="button" class="btn btn-outline-secondary btn-sm m-1">EST</button>
