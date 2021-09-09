@@ -135,7 +135,8 @@ function send(jsonString) {
     let sendId = uuidv4()
     let json = JSON.parse(jsonString)
     if (json.command == "upsertGoal" ||
-        json.command == "deleteGoal") {
+        json.command == "deleteGoal" ||
+        json.command == "completeSlot") {
         goalsLastModifiedEpochMs = new dayjs.utc().valueOf()
         $("#mmain-play").html("Recalculating...")
     }
