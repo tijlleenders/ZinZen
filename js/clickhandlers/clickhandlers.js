@@ -298,6 +298,7 @@ $("#mmain-play").on("click", ".slot", function(event) {
         beginISO: beginISO,
         endISO: endISO
     }
+    goalsLastModifiedEpochMs = new dayjs.utc().valueOf()
     send(JSON.stringify(completeSlot))
     $("#slot-title-" + selectedSlotId).addClass("text-decoration-line-through")
 })
