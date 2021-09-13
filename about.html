@@ -1,0 +1,115 @@
+<!doctype html>
+
+<html lang="en" data-theme="light">
+
+<head>
+    <title>ZinZen&reg;</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ZinZen&reg;">
+    <meta name="author" content="Tijl Leenders">
+
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/custom.css" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap-datetimepicker.min.css" />
+
+    <!-- for sortable that works with mouse-->
+    <link rel="stylesheet" href="./css/jquery/jquery-ui.min.css">
+    <link rel="stylesheet" href="./css/jquery/jquery-ui.structure.min.css">
+    <link rel="stylesheet" href="./css/jquery/jquery-ui.theme.min.css">
+
+    <script src="config/config.js"></script>
+
+    <script src="js/userprofile.js"></script>
+</head>
+
+<body class="body" id="page-body">
+
+    <div class="container" id="dream-screen">
+        <div class="row mt-4" id="main-info">
+            <div class="col-12 d-flex justify-content-center">
+                <img src="./img/icons-192.png" alt="ZinZen" width="192" height="192">
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div>
+                    <p class="fs-2">ZinZen</p>
+                </div>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div class="m-1" id="main-example">
+                    <button type="button" class="btn btn-outline-primary btn-lg m-1" id="main-example" href="https://zinzen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2" target="_blank">See example profile</button>
+                </div>
+                <div class="m-1" id="main-login">
+                    <button type="button" class="btn btn-primary btn-lg m-1" id="main-login">Click me to start
+                        app!</button>
+                </div>
+            </div>
+            <div class="col-12 mt-4 d-flex justify-content-center" id="main-info-buttons">
+                <input type="radio" class="btn-check" name="info-options" id="main-about" autocomplete="off" checked>
+                <label class="btn btn-outline-secondary btn-sm mx-1" for="main-about">About</label>
+
+                <input type="radio" class="btn-check" name="info-options" id="main-privacy" autocomplete="off">
+                <label class="btn btn-outline-secondary btn-sm mx-1" for="main-privacy">Privacy</label>
+
+                <input type="radio" class="btn-check" name="info-options" id="main-terms" autocomplete="off">
+                <label class="btn btn-outline-secondary btn-sm mx-1" for="main-terms">Terms</label>
+
+                <input type="radio" class="btn-check" name="info-options" id="main-donate" autocomplete="off">
+                <label class="btn btn-outline-secondary btn-sm mx-1" for="main-donate">Donate</label>
+
+                <input type="radio" class="btn-check" name="info-options" id="main-roadmap" autocomplete="off">
+                <label class="btn btn-outline-secondary btn-sm mx-1" for="main-roadmap">Roadmap</label>
+
+            </div>
+            <div class="col-12 mt-4" id="main-info-about-details">
+                <b>Hi there!</b><br />
+                <br />
+                <b>ZinZen lets you plan your drive - so you can enjoy your life. A purpose planner.</b><br /> Create your best authentic self - with others. But also keep your data private by default!<br /> Individuals, teams and institutions collaborate
+                to self-direct and self-organize on ZinZen.<br />
+                <br />
+                <b>How does ZinZen work?</b><br />
+                <b>1.</b> Create goals for yourself, just like with any other todo-app. Swipe/right-click to edit. Tap/click for sub-goals.<br />
+                <b>2.</b> ZinZen then: <br /> - <i>Helps</i> turn big life goals into simple tasks and habits.<br /> -
+                <i>Plans</i> your calendar automagically.<br /> - <i>Connects</i> you with others on shared or matching goals.
+                <br /> - <i>Encourages and alerts</i> you when promises are at risk.<br /> Ultimately, ZinZen helps you create the future you want, while allowing you to relax and fully enjoy every moment of the present.
+                <br />
+                <br />
+                <b>Who owns ZinZen?</b><br /> ZinZen will be steward-owned. This means a legal enforcement that:<br />
+                <b>1.</b> All decisions are made by the stewards - and the stewards only.<br />
+                <b>2.</b> All decisions must be in the best interests of the company's purpose.<br />
+                <b>Consequences:</b><br /> - ZinZen's decision power can never be sold or inherited.<br /> - All net profits go to making ZinZen better.<br />
+                <b>NB:</b> Investment rounds (crowdfunding or other) are capped.<br />Once a predetermined (fair) % is reached - the round ends.<br />
+                <br />
+                <b>Who develops ZinZen?</b><br /> At the moment I'm a single non-pro developer challenging established companies that have tens to thousands of employees.
+                <br /> Please help ZinZen by giving suggestions, skills and/or money!<br /> The goals I've defined so far can be found on
+                <a href="https://ZinZen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2">my public
+                    ZinZen agenda</a> and you can read about my journey on <a href="https://blog.ZinZen.me">the ZinZen
+                    blog</a>.<br />
+                <br />
+                <b>We love hearing from you!</b><br />Email <a href="mailto:hi@ZinZen.me?subject=ZinZen question or comment">hi@ZinZen.me</a> or
+                <form id="contact-form" method="post">
+                    <textarea id="description-input" rows="3" placeholder="...Please leave a message / request / comment / criticism :)" class="form-control" style="width:100%;"></textarea>From:
+                    <input type="email" style="height:35px;" id="email-input" placeholder="Anonymous" class="form-control" style="width:100%;" />
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="updateMe" id="emailMeCheck">
+                        <label class="form-check-label" for="emailMeCheck">
+                            Update me once per month
+                        </label>
+                    </div>
+                    <div><br /></div>
+                    <button type="button" onClick="submitToAPI(event)" class="btn btn-primary btn-sm m-1">🚀 Send
+                        message 🚀</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type='application/javascript' src="js/jquery/jquery.min.js"></script>
+    <script type='application/javascript' src="js/popper/popper.min.js"></script>
+    <script type='application/javascript' src="js/bootstrap/bootstrap.min.js"></script>
+    <script type='application/javascript' src='js/fastclick/fastclick.js'></script>
+    <script type='application/javascript' src="js/clickhandlers/clickHandlerAbout.js"></script>
+</body>
+
+</html>
