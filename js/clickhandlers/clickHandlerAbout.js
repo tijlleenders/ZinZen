@@ -28,7 +28,38 @@ function submitToAPI(e) {
         },
         error: function() {
             // show an error message
-            alert("Aww... So sorry. Please try emailing. We'd love to hear from you!");
+            alert("Aww... So sorry something went wrong. Please try emailing. We'd love to hear from you!");
         }
     });
 }
+
+$("#main-login").click(function() {
+    redirectUserAgentToAuthorizeEndpoint()
+})
+
+$("#main-example").click(function() {
+    window.open('https://zinzen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2', '_blank');
+    $("#main-about").click()
+})
+
+$("#main-about").click(function() {
+    location.href = "https://ZinZen.me/about.html"
+})
+
+$("#main-privacy").click(function() {
+    location.href = "https://ZinZen.me/privacy.html"
+})
+
+$("#main-terms").click(function() {
+    location.href = "https://ZinZen.me/terms.html"
+})
+
+$("#main-donate").click(function() {
+    window.open('https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate', '_blank');
+    $("#main-about").click()
+})
+
+$("#main-roadmap").click(function() {
+    window.open('https://zinzen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2', '_blank');
+    $("#main-about").click()
+})
