@@ -332,7 +332,7 @@ function getInputHTML() {
     return `
   <div class="">
       <div class="m-1">
-          <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus>
+          <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required>
       </div>
       <div class="m-1">
           <button type="button" class="btn btn-outline-primary" id="add-a-goal-button">Add</button>
