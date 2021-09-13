@@ -97,7 +97,6 @@ function openWS(authorizer, stage, WSEndpoint) {
 
                         if (item.get("allSubs").length == 0) {
                             $("#main-promised").html(`<div id="add-a-goal"><p class="no-lists-yet"><br />No lists here yet...</p></div>`) //Todo use item.get("goalsBreadCrumb") array to customize to parent name
-                            $("#inputCommand").focus()
                         }
                         break;
 
@@ -171,7 +170,6 @@ if (
     console.log('showing profile while logged in: ' + urlParams.get('profile'))
     openWS("publicUser", "public", _config.publicWSEndpoint)
     publicOrPrivate = "public"
-    $("#inputCommand").attr('placeholder', 'Suggest something to add...')
 } else if (
     urlParams.get('profile') != undefined &&
     urlParams.get('code') == undefined
@@ -179,7 +177,6 @@ if (
     console.log('showing profile without being logged in' + urlParams.get('profile'))
     openWS("publicUser", "public", _config.publicWSEndpoint)
     publicOrPrivate = "public"
-    $("#inputCommand").attr('placeholder', 'Suggest something to add...')
 } else if (
     urlParams.get('profile') == undefined &&
     urlParams.get('code') == undefined

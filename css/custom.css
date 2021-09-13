@@ -195,7 +195,6 @@ body {
 .visibilities,
 .mail,
 .image,
-.cancel-command,
 .link {
     float: left;
     display: flex;
@@ -228,7 +227,6 @@ body {
 .visibilities:hover,
 .clear-selected:hover,
 .navigate-back:hover,
-.cancel-command:hover,
 .link:hover,
 .image:hover {
     fill: rgb(154, 204, 248);

@@ -80,28 +80,12 @@ $("#modal-footer-close").click(function() {
     $("#myModal").modal("hide");
 });
 
-$("#commandCancel").click(function() {
-    $("#commandCancel").removeClass("octicon-show");
-    $("#inputCommand").val("")
-});
-
-$("#inputCommand").focus(function() {
-    inputClickCounter = 0
-});
-
-$("#inputCommand").click(function() {
-    console.log("inputClickCounter:", ++inputClickCounter)
-});
-
 function navigateToHome() {
     console.log(Date.now());
     $("#main-promised").empty();
     send(
         '{"action":"read","readRequestType":"allSubsFor","parentId":""}'
     );
-    if (!mobileAndTabletCheck()) {
-        $("#inputCommand").focus()
-    }
 }
 
 $("#top-settings").click(function() {
@@ -123,9 +107,6 @@ $("#top-lists").click(function() {
     send(
         '{"action":"read","readRequestType":"allSubsFor","parentId":""}'
     );
-    if (!mobileAndTabletCheck()) {
-        $("#inputCommand").focus()
-    }
 })
 
 $("#top-calendar").click(function() {
@@ -264,9 +245,6 @@ function goTo(id) {
         id +
         '"}'
     );
-    if (!mobileAndTabletCheck()) {
-        $("#inputCommand").focus()
-    }
 }
 
 function deleteGoal(id) {
@@ -402,47 +380,6 @@ $("#main-promised").on("mouseout", ".goal", function(event) {
     //do something to hover programmatically
 });
 
-function addSomething(title) {
-    let status = "maybe"
-
-    let duration = $("#duration-buttons").data("defaultDuration")
-    if (duration == undefined) {
-        duration = 0
-    }
-
-    let parentId = ""
-    if ($("#breadcrumb").data("goals") != undefined && $("#breadcrumb").data("goals").length != 0) {
-        parentId = ($("#breadcrumb").data("goals"))[$("#breadcrumb").data("goals").length - 1].id
-    }
-
-    let upsertGoal = {
-        action: "command",
-        command: "upsertGoal",
-        title: title,
-        parentId: parentId,
-        status: status,
-        start: (new Date()).toISOString(),
-        duration: duration
-    }
-    send(JSON.stringify(upsertGoal))
-}
-
 $("#add-a-goal-button").click(function() {
-    let title = $("#inputCommand").val()
-    if (title.length != 0) {
-        addSomething(title)
-    }
-
-    $("#inputCommand").val("").focus()
+    console.log("add goal clicked")
 })
-
-$("#inputCommand").on("keyup", function(e) {
-    if (e.which === 13) {
-        if ($(this).val().length == 0) return;
-
-        addSomething($(this).val())
-
-        $(this).removeAttr("disabled")
-        $(this).val("").focus()
-    }
-});
