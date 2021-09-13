@@ -2,7 +2,9 @@
 
 var WS = undefined;
 var received_msg
-var settings = []
+var settings = new Map()
+settings.set("userName", "tijl.leenders")
+settings.set("owner", "")
 var publicOrPrivate = undefined
 var serviceWorker = null
 var sessionId = uuidv4()
