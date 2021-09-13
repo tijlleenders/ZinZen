@@ -170,6 +170,7 @@ function updateScheduleStatusUI() {
 }
 
 function openModal(id, modalType) {
+    console.log("inside openModal...")
     if (
         $("#myModal").data("idx") == id &&
         $("#myModal").hasClass('in') // is it showing?

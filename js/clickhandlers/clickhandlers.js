@@ -89,13 +89,8 @@ function navigateToHome() {
 }
 
 $("#top-settings").click(function() {
-    if (publicOrPrivate == undefined ||
-        publicOrPrivate == "public") {
-        location.href = "https://ZinZen.me"
-    } else {
-        openModal("noId", "settings")
-            //Todo: if main-promised hasClass d-none set calendar button active else set promised button active
-    }
+    openModal("noId", "settings")
+        //Todo: if main-promised hasClass d-none set calendar button active else set promised button active
 })
 
 $("#top-lists").click(function() {

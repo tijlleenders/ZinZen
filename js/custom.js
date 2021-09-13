@@ -7,6 +7,8 @@ var publicOrPrivate = undefined
 var serviceWorker = null
 var sessionId = uuidv4()
 var goalsLastModifiedEpochMs = 0
+var profile = 'tijl.leenders'
+var parentId = 'fcbd9d74-2a52-9336-316c-e044a1c000c2'
 
 var startX, startY, endX, endY = 0 //for click or swipe or move detection
 
@@ -38,10 +40,6 @@ function openWS(authorizer, stage, WSEndpoint) {
             send('{"action":"read","readRequestType":"play"}')
         }, 60000);
         $("#main-promised").empty();
-        let parentId = ""
-        if (urlParams.get("listId") != undefined) {
-            parentId = urlParams.get("listId")
-        }
         send('{"action":"read","readRequestType":"allSubsFor","status":"promised","parentId":"' + parentId + '"}');
         send('{"action":"read","readRequestType":"play"}')
         send('{"action":"read","readRequestType":"settings"}')
@@ -141,8 +139,8 @@ function send(jsonString) {
     }
     json.sendId = sendId
     if (publicOrPrivate == "public") {
-        if (urlParams.get('profile') != undefined) {
-            json.profile = urlParams.get('profile')
+        if (profile != undefined) {
+            json.profile = profile
             json.sessionId = sessionId
         }
     }
@@ -163,61 +161,35 @@ function replyToMail(goalId, messageId, response) {
     );
 }
 
-if (
-    urlParams.get('profile') != undefined &&
-    urlParams.get('code') != undefined
-) {
-    console.log('showing profile while logged in: ' + urlParams.get('profile'))
-    openWS("publicUser", "public", _config.publicWSEndpoint)
-    publicOrPrivate = "public"
-} else if (
-    urlParams.get('profile') != undefined &&
-    urlParams.get('code') == undefined
-) {
-    console.log('showing profile without being logged in' + urlParams.get('profile'))
-    openWS("publicUser", "public", _config.publicWSEndpoint)
-    publicOrPrivate = "public"
-} else if (
-    urlParams.get('profile') == undefined &&
-    urlParams.get('code') == undefined
-) {
-    console.log('showing general info page')
-    $("#main-promised").addClass('d-none')
-    $("#control-part-screen").addClass('d-none')
-    $("#breadcrumb").addClass('d-none')
-    $("#main-info").removeClass('d-none')
-    $("#main-search").addClass('d-none')
-    if (urlParams.get('page') == 'privacy') {
-        $("#main-privacy").click()
-        $("#main-info-privacy-details").removeClass('d-none')
-        $("#main-info-about-details").addClass('d-none')
-        $("#main-info-terms-details").addClass('d-none')
+
+if (urlParams.get('profile') != undefined) {
+    profile = urlParams.get('profile')
+}
+
+if (urlParams.get('code') != undefined) {
+    if (
+        sessionStorage.getItem("pkce_state") != urlParams.get('state')
+    ) { //Could get a valid token without state (only with code) but 
+        console.log("state is stale; logging in again")
+            // Authorization Code Flow with Proof Key Code Exchange (PKCE) is recommended for public clients, such as single-page apps or native mobile apps. 
+        redirectUserAgentToAuthorizeEndpoint()
+    } else {
+        requestToken(urlParams.get('code')).then(
+            tokenReceived => {
+                console.log("Token valid2 - let's go!")
+                openWS(tokenReceived, "prod", _config.privateWSEndpoint)
+                publicOrPrivate = "private"
+            }, error => {
+                urlParams.set('code', null) //to avoid loop with invalid code
+                sessionStorage.clear()
+                console.log("request token failed2:", error)
+                redirectUserAgentToAuthorizeEndpoint()
+            }
+        );
     }
-    if (urlParams.get('page') == 'terms') {
-        $("#main-terms").click()
-        $("#main-info-privacy-details").addClass('d-none')
-        $("#main-info-about-details").addClass('d-none')
-        $("#main-info-terms-details").removeClass('d-none')
-    }
-} else if (
-    sessionStorage.getItem("pkce_state") != urlParams.get('state')
-) { //Could get a valid token without state (only with code) but 
-    console.log("state is stale; logging in again")
-        // Authorization Code Flow with Proof Key Code Exchange (PKCE) is recommended for public clients, such as single-page apps or native mobile apps. 
-    redirectUserAgentToAuthorizeEndpoint()
 } else {
-    requestToken(urlParams.get('code')).then(
-        tokenReceived => {
-            console.log("Token valid2 - let's go!")
-            openWS(tokenReceived, "prod", _config.privateWSEndpoint)
-            publicOrPrivate = "private"
-        }, error => {
-            urlParams.set('code', null) //to avoid loop with invalid code
-            sessionStorage.clear()
-            console.log("request token failed2:", error)
-            redirectUserAgentToAuthorizeEndpoint()
-        }
-    );
+    openWS("publicUser", "public", _config.publicWSEndpoint)
+    publicOrPrivate = "public"
 }
 
 //initialize all tooltips on index.html:
