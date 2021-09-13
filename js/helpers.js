@@ -328,6 +328,19 @@ function getTimeZoneAccordionItemHTML() {
 </div>`
 }
 
+function getInputHTML() {
+    return `
+  <div class="">
+      <div class="mx-1">
+          <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus>
+      </div>
+      <div>
+          <button type="button" class="btn btn-outline-primary" id="add-a-goal-button">Add</button>
+      </div>
+  </div>
+  `
+}
+
 function getDurationAccordionHTML() {
     return `
 <div class="accordion-item">
@@ -734,6 +747,7 @@ function setSkeletonHTMLForAdd() {
 <div class="row mt-2" id="options-row">
   <div class="col">
     <div class="accordion .accordion-flush" id="schedule-accordion">`
+    bodyHTML += getInputHTML()
     bodyHTML += getDurationAccordionHTML()
     bodyHTML += getTimesOfDaysAccordionItemHTML()
     bodyHTML += getFinishAccordionItemHTML()

@@ -145,20 +145,6 @@ body {
     /*not used but just for jQuery.parentsUntil() selector  */
 }
 
-.form-input-custom {
-    width: 50%;
-    padding: 5px;
-    margin: auto;
-    color: var(--menu-foreground);
-    /* background: #121212; */
-}
-
-.input-group>.custom-select:not(:last-child),
-.input-group>.form-control:not(:last-child) {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
 .btn-block-custom {
     display: block;
     margin: auto;
