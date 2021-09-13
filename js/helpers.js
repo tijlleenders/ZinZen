@@ -331,10 +331,10 @@ function getTimeZoneAccordionItemHTML() {
 function getInputHTML() {
     return `
   <div class="">
-      <div class="mx-1">
+      <div class="m-1">
           <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus>
       </div>
-      <div>
+      <div class="m-1">
           <button type="button" class="btn btn-outline-primary" id="add-a-goal-button">Add</button>
       </div>
   </div>
@@ -744,19 +744,27 @@ function setSkeletonHTMLForAdd() {
     let headerHTML = `<h4 class="modal-title">Add a goal</h4>`
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = `
-<div class="row mt-2" id="options-row">
-  <div class="col">
-    <div class="accordion .accordion-flush" id="schedule-accordion">`
+    <div class="row my-2" id="input-row">
+      <div class="col">`
     bodyHTML += getInputHTML()
+    bodyHTML += `
+      </div>
+    </div>
+    `
+    bodyHTML += `    
+    <div class="row mt-2" id="options-row">
+      <div class="col">
+        <div class="accordion .accordion-flush" id="schedule-accordion">`
     bodyHTML += getDurationAccordionHTML()
     bodyHTML += getTimesOfDaysAccordionItemHTML()
     bodyHTML += getFinishAccordionItemHTML()
     bodyHTML += getStartAccordionItemHTML()
     bodyHTML += getTimeZoneAccordionItemHTML()
     bodyHTML += `
+        </div>
+      </div>
     </div>
-  </div>
-</div>`
+    `
     $("#modal-body").html(bodyHTML)
 }
 
