@@ -91,8 +91,11 @@ function setSkeletonHTMLForSettings() {
           <div id="modal-settings-other">\
             <br />\
             Other<br />\
-              <div id="about"><button name="about-button" id="about-button" type="button" class="btn btn-outline-secondary btn-sm m-1">About ZinZen</button></div>
-              <div class="settings-info"><a href="https://zinzen.me/acknowledgements.html" target="_blank">Open source acknowledgements</a></div>
+              <div class="settings-info"><a href="https://ZinZen.me/about.html" target="_blank">About ZinZen</a></div>
+              <div class="settings-info"><a href="https://ZinZen.me/privacy.html" target="_blank">Privacy</a></div>
+              <div class="settings-info"><a href="https://ZinZen.me/terms" target="_blank">Terms</a></div>
+              <div class="settings-info"><a href="https://ZinZen.me/acknowledgements.html" target="_blank">Donate</a></div>
+              <div class="settings-info"><a href="https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate" target="_blank">Open source acknowledgements</a></div>
               <div class="text-monospace app-version"> Version: ` + _config.deployVersion + `</div>
           </div>\
         </div>\

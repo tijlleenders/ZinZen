@@ -22,10 +22,6 @@ $("#myModal").on("click", "#install-app-button", function() {
     tryToInstall()
 });
 
-$("#myModal").on("click", "#about-button", function() {
-    location.href = "https://ZinZen.me"
-});
-
 async function isInstalled() {
     console.log("Checking if app installed...")
     let relatedAppsInstalled = await navigator.getInstalledRelatedApps()
