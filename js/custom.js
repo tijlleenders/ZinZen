@@ -179,6 +179,7 @@ if (urlParams.get('code') != undefined) {
         requestToken(urlParams.get('code')).then(
             tokenReceived => {
                 console.log("Token valid2 - let's go!")
+                parentId = ""
                 openWS(tokenReceived, "prod", _config.privateWSEndpoint)
                 publicOrPrivate = "private"
             }, error => {
