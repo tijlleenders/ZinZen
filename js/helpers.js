@@ -192,10 +192,15 @@ function openModal(id, modalType) {
         case "schedule":
             setSkeletonHTMLForScheduleConstraints()
             break;
+        case "add":
+            setSkeletonHTMLForAdd()
+            break;
         default:
             break;
     }
-    send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}') //will fill the modal upon response - if applicable
+    if (id != "") {
+        send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}') //will fill the modal upon response - if applicable
+    }
     $("#myModal").modal("show")
 }
 
@@ -719,6 +724,25 @@ function setSkeletonHTMLForScheduleConstraints() {
       </div>
     </div>
   </div>`
+    $("#modal-body").html(bodyHTML)
+}
+
+function setSkeletonHTMLForAdd() {
+    let headerHTML = `<h4 class="modal-title">Add a goal</h4>`
+    $("#modal-header-content").html(headerHTML)
+    let bodyHTML = `
+<div class="row mt-2" id="options-row">
+  <div class="col">
+    <div class="accordion .accordion-flush" id="schedule-accordion">`
+    bodyHTML += getDurationAccordionHTML()
+    bodyHTML += getTimesOfDaysAccordionItemHTML()
+    bodyHTML += getFinishAccordionItemHTML()
+    bodyHTML += getStartAccordionItemHTML()
+    bodyHTML += getTimeZoneAccordionItemHTML()
+    bodyHTML += `
+    </div>
+  </div>
+</div>`
     $("#modal-body").html(bodyHTML)
 }
 
