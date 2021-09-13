@@ -252,6 +252,9 @@ $("#main-promised").on("click", ".goal", function(event) {
             nodeId.substring(0, 12) == "subtext-col-") {
             goTo(selectedGoalId)
         }
+        if ($("#" + nodeId).hasClass("parent-link")) {
+            goTo(selectedGoalId)
+        }
         if (nodeId.substring(0, 11) == "delete-col-" ||
             nodeId.substring(0, 12) == "delete-icon-") {
             deleteGoal(selectedGoalId)
@@ -260,51 +263,15 @@ $("#main-promised").on("click", ".goal", function(event) {
             nodeId.substring(0, 12) == "finish-icon-") {
             openModal(selectedGoalId, "schedule")
         }
-        if (nodeId.substring(0, 17) == "visibilities-col-" ||
-            nodeId.substring(0, 18) == "visibilities-icon-") {
-            openModal(selectedGoalId, "visibilities")
-        }
-        if ($("#" + nodeId).hasClass("parent-link")) {
-            goTo(selectedGoalId)
-        }
-        if ($("#" + nodeId).hasClass("collaboration")) {
-            openModal(selectedGoalId, "collaboration")
-        }
         if ($("#" + nodeId).hasClass("due")) {
             openModal(selectedGoalId, "schedule")
-        }
-        if ($("#" + nodeId).hasClass("mood")) {
-            openModal(selectedGoalId, "mood")
-        }
-        if ($("#" + nodeId).hasClass("connect")) {
-            openModal(selectedGoalId, "connect")
-        }
-        if ($("#" + nodeId).hasClass("notes")) {
-            openModal(selectedGoalId, "notes")
-        }
-        if ($("#" + nodeId).hasClass("workflow")) {
-            openModal(selectedGoalId, "workflow")
-        }
-        if ($("#" + nodeId).hasClass("image")) {
-            openModal(selectedGoalId, "image")
-        }
-        if ($("#" + nodeId).hasClass("link")) {
-            openModal(selectedGoalId, "link")
-        }
-        if ($("#" + nodeId).hasClass("location")) {
-            openModal(selectedGoalId, "location")
-        }
-        if ($("#" + nodeId).hasClass("budget")) {
-            openModal(selectedGoalId, "budget")
         }
         if ($("#" + nodeId).hasClass("duration")) {
             openModal(selectedGoalId, "schedule")
         }
-        if ($("#" + nodeId).hasClass("tags")) {
-            openModal(selectedGoalId, "tags")
-        }
-        if ($("#" + nodeId).hasClass("mail")) {
-            openModal(selectedGoalId, "mail")
+        if (nodeId.substring(0, 17) == "visibilities-col-" ||
+            nodeId.substring(0, 18) == "visibilities-icon-") {
+            openModal(selectedGoalId, "visibilities")
         }
     } else {
         console.log("error in #goals.on(click)!");
@@ -340,5 +307,5 @@ $("#main-promised").on("mouseout", ".goal", function(event) {
 });
 
 $("#add-a-goal-button").click(function() {
-    console.log("add goal clicked")
+    openModal("", "add")
 })
