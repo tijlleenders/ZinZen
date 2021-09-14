@@ -131,6 +131,10 @@ function openWS(authorizer, stage, WSEndpoint) {
 }
 
 function send(jsonString) {
+    if (WS.readyState === WebSocket.CLOSED || WS.readyState === WebSocket.CLOSING) {
+        console.log("Detected closed state websocket.")
+        location.reload()
+    }
     let sendId = uuidv4()
     let json = JSON.parse(jsonString)
     if (json.command == "upsertGoal" ||
