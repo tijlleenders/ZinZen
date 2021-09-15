@@ -332,7 +332,7 @@ function getInputHTML() {
     return `
   <div class="">
       <div class="m-1">
-          <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required>
+          <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus>
       </div>
       <div class="m-1">
           <button type="button" class="btn btn-outline-primary" id="add-a-goal-button">Add</button>
@@ -752,15 +752,19 @@ function setSkeletonHTMLForAdd() {
     </div>
     `
     bodyHTML += `    
-    <div class="row mt-2" id="options-row">
+    <div class="row mt-2" id="selected-row">
       <div class="col">
-        <div class="accordion .accordion-flush" id="schedule-accordion">`
-    bodyHTML += getDurationAccordionHTML()
-    bodyHTML += getTimesOfDaysAccordionItemHTML()
-    bodyHTML += getFinishAccordionItemHTML()
-    bodyHTML += getStartAccordionItemHTML()
-    bodyHTML += getTimeZoneAccordionItemHTML()
-    bodyHTML += `
+        <div class="" id="selected-goal-options">
+        Selected goal options:
+        </div>
+      </div>
+    </div>
+    `
+    bodyHTML += `    
+    <div class="row mt-2" id="suggested-row">
+      <div class="col">
+        <div class="" id="suggested-goal-options">
+        Suggested goal options:
         </div>
       </div>
     </div>
