@@ -19,3 +19,28 @@ $("#myModal").on("keyup", "#inputCommand", function(e) {
         $(this).val("").focus()
     }
 });
+
+function addSomething(title) {
+    let status = "maybe"
+
+    let duration = $("#duration-buttons").data("defaultDuration")
+    if (duration == undefined) {
+        duration = 0
+    }
+
+    let parentId = ""
+    if ($("#breadcrumb").data("goals") != undefined && $("#breadcrumb").data("goals").length != 0) {
+        parentId = ($("#breadcrumb").data("goals"))[$("#breadcrumb").data("goals").length - 1].id
+    }
+
+    let upsertGoal = {
+        action: "command",
+        command: "upsertGoal",
+        title: title,
+        parentId: parentId,
+        status: status,
+        start: (new Date()).toISOString(),
+        duration: duration
+    }
+    send(JSON.stringify(upsertGoal))
+}
