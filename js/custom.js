@@ -214,8 +214,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 window.addEventListener("load", () => {
     if ("serviceWorker" in navigator) {
-        const url = "https://zinzen.me"
-        const scope = new URL("/", url)
+        const url = "https://www.zinzen.me"
         serviceWorker = navigator.serviceWorker.register("service-worker.js", { scope: url })
             .then(swReg => {
                 console.log("Service Worker is registered", swReg);
