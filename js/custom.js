@@ -199,14 +199,6 @@ if (urlParams.get('code') != undefined) {
     publicOrPrivate = "public"
 }
 
-//initialize all tooltips on index.html:
-if (!mobileAndTabletCheck()) {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl, { delay: { "show": 500, "hide": 100 } })
-    })
-}
-
 // Initialize deferredPrompt for use later to show browser install prompt.
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
