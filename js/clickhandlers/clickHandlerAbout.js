@@ -63,3 +63,11 @@ $("#main-roadmap").click(function() {
     window.open('https://zinzen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2', '_blank');
     $("#main-about").click()
 })
+
+//initialize all tooltips
+if (!mobileAndTabletCheck()) {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl, { delay: { "show": 500, "hide": 100 } })
+    })
+}
