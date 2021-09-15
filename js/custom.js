@@ -232,8 +232,8 @@ $("#main-promised").sortable({
     handle: ".circle-col",
     cursor: "move",
     scrollSensitivity: 50,
-    start: function(event, ui) { console.log("startEvent:", event) },
-    stop: function(event, ui) { console.log("stopEvent:", event) }
+    start: function(event, ui) { console.log("startCircleEvent:", event) },
+    stop: function(event, ui) { console.log("stopCircleEvent:", event) }
 });
 
 $(function() {
