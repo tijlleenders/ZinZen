@@ -239,3 +239,13 @@ $("#main-promised").sortable({
 $(function() {
     FastClick.attach(document.body);
 });
+
+//disable back button on android
+//https://stackoverflow.com/questions/43329654/android-back-button-on-a-progressive-web-application-closes-de-app
+window.addEventListener('load', function() {
+    window.history.pushState({}, '')
+})
+
+window.addEventListener('popstate', function() {
+    window.history.pushState({}, '')
+})
