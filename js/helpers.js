@@ -764,11 +764,9 @@ function setSkeletonHTMLForAdd() {
     <div class="row mt-2" id="suggested-row">
       <div class="col">
         <div class="" id="suggested-goal-options">
-        Suggested:
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="suggest-share">Share anonymously to help others</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="suggest-call">Call</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="suggest-email">E-mail</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="suggest-meet">Meet</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion" id="suggest-call">Call</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion" id="suggest-email">E-mail</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion" id="suggest-meet">Meet</button>
         </div>
       </div>
     </div>
@@ -777,6 +775,15 @@ function setSkeletonHTMLForAdd() {
     $("#myModal").on('shown.bs.modal', function() {
         $("#inputCommand").focus();
     });
+}
+
+function updateSuggestionsUI() {
+    let randomNumber = Math.random() * 10
+    let newSuggestionsHTML = `
+  Suggested:
+  <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion" id="suggest-share">Button random ` + randomNumber + `</button>
+  `
+    $("#suggested-goal-options").html(newSuggestionsHTML)
 }
 
 function setSkeletonHTMLForVisibilities() {

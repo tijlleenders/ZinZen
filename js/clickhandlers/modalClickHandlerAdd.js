@@ -56,3 +56,7 @@ function addSomething() {
 $("#myModal").on("click", "#add-a-goal-button", function() {
     addSomething()
 })
+
+$("#myModal").on("click", ".suggestion", function() {
+    updateSuggestionsUI()
+})
