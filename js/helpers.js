@@ -777,13 +777,48 @@ function setSkeletonHTMLForAdd() {
     });
 }
 
+function updateInputCommandUI(buttonText) {
+    let current = $("#inputCommand").val()
+    console.log("current:", current)
+    let currentArray = current.split(" ")
+    currentArray.pop()
+    currentArray.push(buttonText)
+        //if it is a command add badge + command to input properties
+    let newInput = currentArray.join(' ')
+    $("#inputCommand").val(newInput + " ")
+    $("#inputCommand").focus()
+}
+
 function updateSuggestionsUI() {
-    let randomNumber = Math.random() * 10
-    let newSuggestionsHTML = `
-  Suggested:
-  <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion" id="suggest-share">Button random ` + randomNumber + `</button>
-  `
-    $("#suggested-goal-options").html(newSuggestionsHTML)
+    let suggestionsHTML = `Suggestions:`
+    let input = $("#inputCommand").val()
+    console.log()
+    switch (input) {
+        case "C":
+        case "c":
+            suggestionsHTML += `<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>`
+            break;
+        case "E":
+        case "e":
+            suggestionsHTML += `<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">E-mail</button>`
+            break;
+        case "M":
+        case "m":
+            suggestionsHTML += `<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Message</button>`
+            break;
+        case "Call ":
+            suggestionsHTML += `<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Mom</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Home</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">The President</button>`
+            break;
+        default:
+            suggestionsHTML += `
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>        
+        `
+    }
+    $("#suggested-goal-options").html(suggestionsHTML)
 }
 
 function setSkeletonHTMLForVisibilities() {
