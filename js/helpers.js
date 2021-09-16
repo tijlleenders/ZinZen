@@ -755,7 +755,7 @@ function setSkeletonHTMLForAdd() {
     <div class="row mt-2" id="selected-row">
       <div class="col">
         <div class="" id="selected-goal-options">
-        Selected goal options:
+        Selected: none
         </div>
       </div>
     </div>
@@ -764,12 +764,19 @@ function setSkeletonHTMLForAdd() {
     <div class="row mt-2" id="suggested-row">
       <div class="col">
         <div class="" id="suggested-goal-options">
-        Suggested goal options:
+        Suggested:
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="suggest-share">Share anonymously to help others</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="suggest-call">Call</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="suggest-email">E-mail</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="suggest-meet">Meet</button>
         </div>
       </div>
     </div>
     `
     $("#modal-body").html(bodyHTML)
+    $("#myModal").on('shown.bs.modal', function() {
+        $("#inputCommand").focus();
+    });
 }
 
 function setSkeletonHTMLForVisibilities() {
