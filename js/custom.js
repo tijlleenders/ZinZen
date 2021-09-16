@@ -32,6 +32,9 @@ function openWS(authorizer, stage, WSEndpoint) {
         return;
     }
 
+    if (WS != undefined) {
+        WS.close(1000)
+    }
     WS = new WebSocket(
         WSEndpoint + "/" + stage + "?Authorizer=" + authorizer
     );
@@ -123,8 +126,9 @@ function openWS(authorizer, stage, WSEndpoint) {
     };
 
     WS.onclose = function() {
-        // websocket is closed.
-        clearInterval(interval)
+        if (interval != undefined) {
+            clearInterval(interval)
+        }
         alert("Connection " + stage + " is closed...");
     };
 
