@@ -20,7 +20,8 @@ $("#myModal").on("keyup", "#inputCommand", function(e) {
     }
 });
 
-function addSomething(title) {
+function addSomething() {
+    let title = $("#inputCommand").val()
     let status = "maybe"
 
     let duration = $("#duration-buttons").data("defaultDuration")
@@ -43,4 +44,15 @@ function addSomething(title) {
         duration: duration
     }
     send(JSON.stringify(upsertGoal))
+    $("#inputCommand").val("")
+    let ellipse = ""
+    if (title.length > 8) {
+        ellipse = "..."
+    }
+    $("#inputCommand").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
+    $("#inputCommand").focus()
 }
+
+$("#myModal").on("click", "#add-a-goal-button", function() {
+    addSomething()
+})
