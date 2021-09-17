@@ -54,6 +54,10 @@ $("#main-terms").click(function() {
     location.href = "https://ZinZen.me/terms.html"
 })
 
+$("#main-contact").click(function() {
+    location.href = "https://ZinZen.me/contact.html"
+})
+
 $("#main-donate").click(function() {
     window.open('https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate', '_blank');
     $("#main-about").click()
