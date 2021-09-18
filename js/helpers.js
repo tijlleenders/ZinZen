@@ -93,6 +93,7 @@ function setSkeletonHTMLForSettings() {
             Other<br />\
               <div class="settings-info"><a href="https://ZinZen.me/about.html" target="_blank">About ZinZen</a></div>
               <div class="settings-info"><a href="https://ZinZen.me/privacy.html" target="_blank">Privacy</a></div>
+              <div class="settings-info"><a href="https://blog.ZinZen.me" target="_blank">Blog</a></div>
               <div class="settings-info"><a href="https://ZinZen.me/terms.html" target="_blank">Terms</a></div>
               <div class="settings-info"><a href="https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate" target="_blank">Donate</a></div>
               <div class="settings-info"><a href="https://ZinZen.me/acknowledgements.html" target="_blank">Open source acknowledgements</a></div>
@@ -764,9 +765,9 @@ function setSkeletonHTMLForAdd() {
     <div class="row mt-2" id="suggested-row">
       <div class="col">
         <div class="" id="suggested-goal-options">
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion" id="suggest-call">Call</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion" id="suggest-email">E-mail</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion" id="suggest-meet">Meet</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Message</button>
         </div>
       </div>
     </div>
@@ -815,7 +816,8 @@ function updateSuggestionsUI() {
         default:
             suggestionsHTML += `
         <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>        
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Message</button>
         `
     }
     $("#suggested-goal-options").html(suggestionsHTML)
