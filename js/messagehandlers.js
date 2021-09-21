@@ -68,6 +68,11 @@ async function handleIncomingProperties(properties) {
                 //not implemented dynamically - hardcoded in helpers
                 break;
 
+            case "add":
+                setDataFieldsForAdd(properties)
+                updateModalUI()
+                break;
+
             case "schedule":
                 setDataFieldsForScheduleConstraints(properties)
                 updateModalUI()

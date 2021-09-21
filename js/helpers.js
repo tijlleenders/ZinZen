@@ -126,6 +126,13 @@ function updateModalScheduleConstraintsUI() {
     updatetimesOfDaysPrefUI()
 }
 
+function updateModalAddUI() {
+    //modal title??
+    updateTitleUI()
+    updateCommandsUI()
+    updateSuggestionsUI()
+}
+
 function updateModalUI() {
     switch ($("#myModal").data("modalType")) {
         case "settings":
@@ -136,6 +143,9 @@ function updateModalUI() {
             break;
         case "visibilities":
             updateModalVisibilitiesUI()
+            break;
+        case "add":
+            updateModalAddUI()
             break;
         default:
             console.log("modalType to render UI for not recognized")
