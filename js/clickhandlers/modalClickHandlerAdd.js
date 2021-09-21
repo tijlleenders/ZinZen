@@ -9,6 +9,8 @@ $("#myModal").on("keyup", "#inputCommand", function(e) {
             goalId: goalId
         }
         // send(JSON.stringify(getSuggestions))
+
+    parseCommand($("#inputCommand").val())
     if (e.which === 13) {
         if ($(this).val().length == 0) return;
 
@@ -58,6 +60,7 @@ $("#myModal").on("click", "#add-a-goal-button", function() {
 })
 
 $("#myModal").on("click", ".suggestion", function(e) {
-    updateInputCommandUI(e.currentTarget.innerText)
+    //do stuff to update current set of commands + change title
+    //use e.currentTarget.innerText for the specific suggestion text
     updateSuggestionsUI()
 })

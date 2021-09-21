@@ -778,18 +778,6 @@ function setSkeletonHTMLForAdd() {
     });
 }
 
-function updateInputCommandUI(buttonText) {
-    let current = $("#inputCommand").val()
-    console.log("current:", current)
-    let currentArray = current.split(" ")
-    currentArray.pop()
-    currentArray.push(buttonText)
-        //if it is a command add badge + command to input properties
-    let newInput = currentArray.join(' ')
-    $("#inputCommand").val(newInput + " ")
-    $("#inputCommand").focus()
-}
-
 function updateSuggestionsUI() {
     let suggestionsHTML = `Suggestions:`
     let input = $("#inputCommand").val()
@@ -1803,7 +1791,7 @@ function parseCommand(command) {
     newCommand.commands = []
     newCommand.suggestedCommands = []
 
-    console.log()
+    console.log("processing command:", command)
     let wordsArray = command.title.split(" ")
     wordsArray.forEach((word, index) => {
         {
