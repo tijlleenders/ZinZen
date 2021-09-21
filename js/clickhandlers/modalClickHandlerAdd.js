@@ -1,6 +1,15 @@
 'use strict'
 
 $("#myModal").on("keyup", "#inputCommand", function(e) {
+    if (e.which === 13) {
+        if ($(this).val().length == 0) return;
+
+        addSomething($(this).val())
+
+        $(this).removeAttr("disabled")
+        $(this).val("").focus()
+    }
+
     let goalId = $("#myModal").data("idx")
     let getSuggestions = {
             action: "read",
@@ -10,16 +19,10 @@ $("#myModal").on("keyup", "#inputCommand", function(e) {
         }
         // send(JSON.stringify(getSuggestions))
 
-    parseCommand($("#inputCommand").val())
-    if (e.which === 13) {
-        if ($(this).val().length == 0) return;
-
-        addSomething($(this).val())
-
-        $(this).removeAttr("disabled")
-        $(this).val("").focus()
-    }
-    updateSuggestionsUI()
+    let inputCommand = $("#inputCommand").data('inputCommand')
+    inputCommand.title = $("#inputCommand").val()
+    $("#inputCommand").data('inputCommand', inputCommand)
+    updateModalAddUI()
 });
 
 function addSomething() {

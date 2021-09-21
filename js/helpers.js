@@ -132,14 +132,14 @@ function updateModalAddUI() {
     let newInputCommand = parseCommand(inputCommand)
     $("#inputCommand").val(newInputCommand.title)
         //when to change modal title??
-    let selectedGoalOptions = `Selected: none`
-    $("#selected-goal-options").html(selectedGoalOptions)
-    let suggestedGoalOptions = `
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Message</button>
-    `
-    $("#suggested-goal-options").html(suggestedGoalOptions)
+    let selectedCommands = `Selected: none`
+    $("#selected-commands").html(selectedCommands)
+
+    let suggestedCommands = `Suggested: `
+    newInputCommand.suggestedCommands.forEach(suggestion => {
+        suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">' + suggestion + '</button>'
+    });
+    $("#suggested-commands").html(suggestedCommands)
 }
 
 function updateModalUI() {
@@ -775,7 +775,7 @@ function setSkeletonHTMLForAdd() {
     bodyHTML += `    
     <div class="row mt-2" id="selected-row">
       <div class="col">
-        <div class="" id="selected-goal-options">
+        <div class="" id="selected-commands">
         </div>
       </div>
     </div>
@@ -783,7 +783,7 @@ function setSkeletonHTMLForAdd() {
     bodyHTML += `    
     <div class="row mt-2" id="suggested-row">
       <div class="col">
-        <div class="" id="suggested-goal-options">
+        <div class="" id="suggested-commands">
         </div>
       </div>
     </div>
