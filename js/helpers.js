@@ -127,30 +127,19 @@ function updateModalScheduleConstraintsUI() {
 }
 
 function updateModalAddUI() {
-    //modal title??
-    updateTitleUI()
-    updateCommandsUI()
-    updateSuggestionsUI()
-    bodyHTML += `    
-    <div class="row mt-2" id="selected-row">
-      <div class="col">
-        <div class="" id="selected-goal-options">
-        Selected: none
-        </div>
-      </div>
-    </div>
-    `
-    bodyHTML += `    
-    <div class="row mt-2" id="suggested-row">
-      <div class="col">
-        <div class="" id="suggested-goal-options">
+    let inputCommand = $("#inputCommand").data('inputCommand')
+    console.log("refreshing for inputCommand:", inputCommand)
+    let newInputCommand = parseCommand(inputCommand)
+    $("#inputCommand").val(newInputCommand.title)
+        //when to change modal title??
+    let selectedGoalOptions = `Selected: none`
+    $("#selected-goal-options").html(selectedGoalOptions)
+    let suggestedGoalOptions = `
         <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>
         <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>
         <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Message</button>
-        </div>
-      </div>
-    </div>
     `
+    $("#suggested-goal-options").html(suggestedGoalOptions)
 }
 
 function updateModalUI() {
@@ -225,6 +214,7 @@ function openModal(id, modalType) {
             break;
         case "add":
             setSkeletonHTMLForAdd()
+            updateModalUI()
             break;
         default:
             break;
@@ -779,6 +769,22 @@ function setSkeletonHTMLForAdd() {
       <div class="col">`
     bodyHTML += getInputHTML()
     bodyHTML += `
+      </div>
+    </div>
+    `
+    bodyHTML += `    
+    <div class="row mt-2" id="selected-row">
+      <div class="col">
+        <div class="" id="selected-goal-options">
+        </div>
+      </div>
+    </div>
+    `
+    bodyHTML += `    
+    <div class="row mt-2" id="suggested-row">
+      <div class="col">
+        <div class="" id="suggested-goal-options">
+        </div>
       </div>
     </div>
     `
