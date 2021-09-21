@@ -131,6 +131,26 @@ function updateModalAddUI() {
     updateTitleUI()
     updateCommandsUI()
     updateSuggestionsUI()
+    bodyHTML += `    
+    <div class="row mt-2" id="selected-row">
+      <div class="col">
+        <div class="" id="selected-goal-options">
+        Selected: none
+        </div>
+      </div>
+    </div>
+    `
+    bodyHTML += `    
+    <div class="row mt-2" id="suggested-row">
+      <div class="col">
+        <div class="" id="suggested-goal-options">
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Message</button>
+        </div>
+      </div>
+    </div>
+    `
 }
 
 function updateModalUI() {
@@ -752,7 +772,7 @@ function setSkeletonHTMLForScheduleConstraints() {
 }
 
 function setSkeletonHTMLForAdd() {
-    let headerHTML = `<h4 class="modal-title">Add a goal</h4>`
+    let headerHTML = `<h4 class="modal-title">Add or search</h4>`
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = `
     <div class="row my-2" id="input-row">
@@ -762,27 +782,13 @@ function setSkeletonHTMLForAdd() {
       </div>
     </div>
     `
-    bodyHTML += `    
-    <div class="row mt-2" id="selected-row">
-      <div class="col">
-        <div class="" id="selected-goal-options">
-        Selected: none
-        </div>
-      </div>
-    </div>
-    `
-    bodyHTML += `    
-    <div class="row mt-2" id="suggested-row">
-      <div class="col">
-        <div class="" id="suggested-goal-options">
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Message</button>
-        </div>
-      </div>
-    </div>
-    `
     $("#modal-body").html(bodyHTML)
+    let inputCommand = {
+        title: "testDefaultCommandOnAdd",
+        commands: [],
+        suggestedCommands: ['WebLink']
+    }
+    $("#inputCommand").data('inputCommand', inputCommand)
     $("#myModal").on('shown.bs.modal', function() {
         $("#inputCommand").focus();
     });
@@ -876,6 +882,12 @@ function getVisibilitesBodyHTML(sharedAnonymously, sharedPublicly, sharedSelecti
   </div>\
   `
     $("#modal-body").html(bodyHTML)
+}
+
+function setDataFieldsForAdd(properties) {
+    console.log("properties in setDataFieldsForAdd:", properties)
+    let headerHTML = `<h4 class="modal-title">` + properties.get("In: " + substring("title")[0], 5) + `</h4>`
+    $("#modal-header-content").html(headerHTML)
 }
 
 function setDataFieldsForScheduleConstraints(properties) {
