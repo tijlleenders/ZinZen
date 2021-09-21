@@ -1757,3 +1757,95 @@ function formattimesOfDaysPrefString(timesOfDaysPref) {
             break;
     }
 }
+
+var commands = [
+    'Email',
+    'WebLink',
+    'PhoneNumber',
+    'Contact',
+    'ShareWith',
+    'SharePublic',
+    'ShareAnonymous',
+    'SuggestTo',
+    'Goto',
+    'GoUp',
+    'CopyTo',
+    'CopyAllTo',
+    'MoveTo',
+    'MoveAllTo',
+    'RepeatsEvery',
+    'Today',
+    'Tomorrow',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+    'This',
+    'Next',
+    'Who',
+    'FinishesOnOrBefore',
+    'StartsAtOrAfter',
+    'Until',
+    'Emotion',
+    'Notes',
+    'WaitFor',
+    'DependsOn',
+    'Language',
+    'https://'
+];
+
+function parseCommand(command) {
+    let newCommand = {}
+    newCommand.title = ""
+    newCommand.commands = []
+    newCommand.suggestedCommands = []
+
+    console.log()
+    let wordsArray = command.title.split(" ")
+    wordsArray.forEach((word, index) => {
+        {
+            console.log("word" + index + ":" + word)
+
+            if (commands.includes(word)) {
+                newCommand.suggestedCommands.push(word)
+            } else {
+                getSuggestedCommandsFor(word, newCommand)
+            }
+        }
+    })
+    newCommand.suggestedCommands = [...new Set(newCommand.suggestedCommands)] //make entries unique
+    console.log("newCommand:", newCommand)
+    return newCommand
+}
+
+function getSuggestedCommandsFor(word, newCommand) {
+    if (word.startsWith('https://')) {
+        newCommand.suggestedCommands = newCommand.suggestedCommands.concat(['WebLink'])
+    } else {
+        newCommand.suggestedCommands = newCommand.suggestedCommands.concat(getPartialCommandMatches(word))
+    }
+    newCommand.title += word
+    return newCommand
+}
+
+function getPartialCommandMatches(word) {
+    let matches = []
+    let matchLength = word.length
+
+    let loopProtection = 0
+    while (matchLength > 0 && loopProtection < 100) {
+        console.log("matching on", word.substr(0, matchLength))
+        let currentLengthMatches = commands.filter(command => command.includes(word.substr(0, matchLength)))
+        if (currentLengthMatches.length > 0) {
+            matches = matches.concat(currentLengthMatches)
+            break
+        }
+        loopProtection++
+        matchLength--
+    }
+    console.log("Matches:", matches)
+    return matches
+}
