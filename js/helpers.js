@@ -800,39 +800,6 @@ function setSkeletonHTMLForAdd() {
     });
 }
 
-function updateSuggestionsUI() {
-    let suggestionsHTML = `Suggestions:`
-    let input = $("#inputCommand").val()
-    console.log()
-    switch (input) {
-        case "C":
-        case "c":
-            suggestionsHTML += `<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>`
-            break;
-        case "E":
-        case "e":
-            suggestionsHTML += `<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">E-mail</button>`
-            break;
-        case "M":
-        case "m":
-            suggestionsHTML += `<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>
-          <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Message</button>`
-            break;
-        case "Call ":
-            suggestionsHTML += `<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Mom</button>
-          <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Home</button>
-          <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">The President</button>`
-            break;
-        default:
-            suggestionsHTML += `
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Call</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Meet</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">Message</button>
-        `
-    }
-    $("#suggested-goal-options").html(suggestionsHTML)
-}
-
 function setSkeletonHTMLForVisibilities() {
     let headerHTML = `<h4 class="modal-title">Visibilities</h4>`
     $("#modal-header-content").html(headerHTML)

@@ -62,5 +62,5 @@ $("#myModal").on("click", "#add-a-goal-button", function() {
 $("#myModal").on("click", ".suggestion", function(e) {
     //do stuff to update current set of commands + change title
     //use e.currentTarget.innerText for the specific suggestion text
-    updateSuggestionsUI()
+    updateModalUI()
 })
