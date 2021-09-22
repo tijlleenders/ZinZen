@@ -328,6 +328,14 @@ $("#main-promised").on("click", ".goal", function(event) {
     let nodeId = getNodeId(event)
     let selectedGoalId = nodeId.slice(-36);
     if (nodeId != "") {
+        console.log("properties:", $("#" + selectedGoalId).data("properties"))
+        if ($("#" + selectedGoalId).data("properties").has("commands")) {
+            console.log("Commands!")
+            if ($("#" + selectedGoalId).data("properties").get('commands')[0] == 'setting') {
+                goToSetting(selectedGoalId)
+            }
+            return
+        }
         if ($("#" + nodeId).hasClass("title") ||
             $("#" + nodeId).hasClass("title-text") ||
             nodeId.substring(0, 8) == "subtext-" ||
