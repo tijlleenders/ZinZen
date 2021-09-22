@@ -128,14 +128,15 @@ $("#top-settings").click(function() {
         handleIncomingProperties(propertiesMap)
     });
 
-    // item.get("allSubs").forEach(sub => {
-    //     let properties = sub.get("properties")
-    //     properties.set('directParents', sub.get('directParents'))
-    //     properties.set('ultimateParents', sub.get('ultimateParents'))
     //     properties.set('subCountMaybe', sub.get('subCountMaybe'))
     //     properties.set('subCountPromised', sub.get('subCountPromised'))
     //     properties.set('subCountDone', sub.get('subCountDone'))
     //     properties.set('subCountNever', sub.get('subCountNever'))
+
+    // item.get("allSubs").forEach(sub => {
+    //     let properties = sub.get("properties")
+    //     properties.set('directParents', sub.get('directParents'))
+    //     properties.set('ultimateParents', sub.get('ultimateParents'))
     //     properties.set('scheduledBeginISO', sub.get('scheduledBeginISO'))
     //     properties.set('scheduledEndISO', sub.get('scheduledEndISO'))
     //     handleIncomingProperties(properties)
