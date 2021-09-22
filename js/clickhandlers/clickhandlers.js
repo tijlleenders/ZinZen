@@ -121,6 +121,12 @@ $("#top-settings").click(function() {
     $("#breadcrumb").data("goals", settingsBreadCrumb)
     updateBreadcrumbUI()
 
+    let propertiesObject = getSettingsPropertiesFor("")
+    console.log(propertiesObject)
+    let propertiesMap = JSON.parse(propertiesObject, reviver)
+    console.log(propertiesMap)
+    handleIncomingProperties(propertiesMap)
+
     // item.get("allSubs").forEach(sub => {
     //     let properties = sub.get("properties")
     //     properties.set('directParents', sub.get('directParents'))
