@@ -1126,6 +1126,10 @@ function generateGoalHTML(id) {
     let status = properties.get("status")[0]
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
 
+    let titleIcon = ""
+    if (properties.has('commands') && properties.get('commands').includes("WebLink")) {
+        titleIcon = "🔗 "
+    }
     let directParents = properties.get('directParents')
     let ultimateParents = properties.get('ultimateParents')
     let subCountDone = parseInt(properties.get('subCountDone'))
@@ -1144,7 +1148,7 @@ function generateGoalHTML(id) {
         visibilities = 'Public'
     }
 
-    var title = properties.get("title")[0]
+    var title = titleIcon + properties.get("title")[0]
     var duration = properties.get("duration")[0]
     let durationString = formatDuration(duration).short
     let durationTransparency = ""
