@@ -3,22 +3,6 @@
 var inputClickCounter = 0;
 
 
-$("#create-account").click(function() {
-    redirectUserAgentToSignupEndpoint()
-})
-
-$("#5m-outlined").click(function() {
-    $("#duration-buttons").data("defaultDuration", 300)
-});
-
-$("#15m-outlined").click(function() {
-    $("#duration-buttons").data("defaultDuration", 900)
-});
-
-$("#1h-outlined").click(function() {
-    $("#duration-buttons").data("defaultDuration", 3600)
-});
-
 $("#collaboration-modal-title").on("click", ".btn", function(event) {
     var emailLine =
         '<li class="list-group-item">' +
@@ -44,14 +28,6 @@ $("#modal-footer-close").click(function() {
     $("#myModal").modal("hide");
 });
 
-function navigateToHome() {
-    console.log(Date.now());
-    $("#main-promised").empty();
-    send(
-        '{"action":"read","readRequestType":"allSubsFor","parentId":""}'
-    );
-}
-
 $("#top-settings").click(function() {
     openModal("noId", "settings")
         //Todo: if main-promised hasClass d-none set calendar button active else set promised button active
@@ -74,11 +50,6 @@ $("#top-calendar").click(function() {
     $("#main-play").removeClass("d-none")
     $("#main-search").addClass("d-none")
     $("#main-promised").addClass("d-none")
-})
-
-$("#promised-img-modal").click(function() {
-    $("#promised-img-modal").removeClass("semi-transparent")
-        //logic
 })
 
 $("#breadcrumb").on("click", ".breadcrumb-button", function(event) {
