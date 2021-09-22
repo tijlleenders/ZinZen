@@ -790,7 +790,7 @@ function setSkeletonHTMLForAdd() {
     `
     $("#modal-body").html(bodyHTML)
     let inputCommand = {
-        title: "testDefaultCommandOnAdd",
+        title: "",
         commands: [],
         suggestedCommands: ['WebLink']
     }
