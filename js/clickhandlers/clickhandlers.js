@@ -322,6 +322,9 @@ $("#main-promised").on("click", ".goal", function(event) {
             if ($("#" + selectedGoalId).data("properties").get('commands')[0] == 'setting') {
                 goToSetting(selectedGoalId)
             }
+            if ($("#" + selectedGoalId).data("properties").get('commands')[0] == 'WebLink') {
+                window.open($("#" + selectedGoalId).data("properties").get('url')[0], '_blank')
+            }
             return
         }
         if ($("#" + nodeId).hasClass("title") ||
