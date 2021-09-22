@@ -33,6 +33,7 @@ $("#top-settings").click(function() {
         //Todo: if main-promised hasClass d-none set calendar button active else set promised button active
     $("#main-promised").empty()
     $("#breadcrumb").data("top", settings.get("username"))
+        //todo: remove unnecessary infor from settingsBreadCrumb
     let settingsBreadCrumb = [{
         "id": "settings-parent",
         "label": "goal",
