@@ -1784,59 +1784,6 @@ var commands = [
     'https://'
 ];
 
-function parseCommand(command) {
-    let newCommand = {}
-    newCommand.title = ""
-    newCommand.commands = []
-    newCommand.suggestedCommands = []
-
-    console.log("processing command:", command)
-    let wordsArray = command.title.split(" ")
-    wordsArray.forEach((word, index) => {
-        {
-            console.log("word" + index + ":" + word)
-
-            if (commands.includes(word)) {
-                newCommand.suggestedCommands.push(word)
-            } else {
-                getSuggestedCommandsFor(word, newCommand)
-            }
-        }
-    })
-    newCommand.suggestedCommands = [...new Set(newCommand.suggestedCommands)] //make entries unique
-    console.log("newCommand:", newCommand)
-    return newCommand
-}
-
-function getSuggestedCommandsFor(word, newCommand) {
-    if (word.startsWith('https://')) {
-        newCommand.suggestedCommands = newCommand.suggestedCommands.concat(['WebLink'])
-    } else {
-        newCommand.suggestedCommands = newCommand.suggestedCommands.concat(getPartialCommandMatches(word))
-    }
-    newCommand.title += word
-    return newCommand
-}
-
-function getPartialCommandMatches(word) {
-    let matches = []
-    let matchLength = word.length
-
-    let loopProtection = 0
-    while (matchLength > 0 && loopProtection < 100) {
-        console.log("matching on", word.substr(0, matchLength))
-        let currentLengthMatches = commands.filter(command => command.includes(word.substr(0, matchLength)))
-        if (currentLengthMatches.length > 0) {
-            matches = matches.concat(currentLengthMatches)
-            break
-        }
-        loopProtection++
-        matchLength--
-    }
-    console.log("Matches:", matches)
-    return matches
-}
-
 function getSettingsPropertiesFor(settingId) {
     //     still missing from hardcoded properties:
     //     directParents
@@ -1855,9 +1802,101 @@ function getSettingsPropertiesFor(settingId) {
     return properties
 }
 
-
-
 function goToSetting(selectedGoalId) {
     console.log("inside goToSetting")
     return
+}
+
+var commands = [
+    'Email',
+    'WebLink',
+    'PhoneNumber',
+    'Contact',
+    'ShareWith',
+    'SharePublic',
+    'ShareAnonymous',
+    'SuggestTo',
+    'Goto',
+    'GoUp',
+    'CopyTo',
+    'CopyAllTo',
+    'MoveTo',
+    'MoveAllTo',
+    'RepeatsEvery',
+    'Today',
+    'Tomorrow',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+    'This',
+    'Next',
+    'Who',
+    'FinishesOnOrBefore',
+    'StartsAtOrAfter',
+    'Until',
+    'Emotion',
+    'Notes',
+    'WaitFor',
+    'DependsOn',
+    'Language',
+    'https://'
+];
+
+function parseCommand(command) {
+    let newCommand = {}
+    newCommand.title = command.title
+    newCommand.commands = command.commands
+    newCommand.suggestedCommands = []
+    newCommand.commandPressed = []
+
+    if (command.title.length > 0 && command.title.substr(command.title.length - 1, 1) == " " && command.commandPressed.length == 0) {
+        // we're at the start of typing a brand new command - or ready for saving
+        // do a best-guess suggestion based on previous commands (if any)
+        return command
+    }
+
+    let wordsArray = command.title.split(" ")
+    let word = wordsArray[wordsArray.length - 1]
+
+    console.log("last word: '" + word + "'")
+    if (commands.includes(word)) {
+        newCommand.suggestedCommands.push(word)
+    } else {
+        getSuggestedCommandsFor(word, newCommand)
+    }
+    newCommand.suggestedCommands = [...new Set(newCommand.suggestedCommands)] //make entries unique
+    return newCommand
+}
+
+function getSuggestedCommandsFor(word, newCommand) {
+    if (word.startsWith('https://')) {
+        newCommand.suggestedCommands = newCommand.suggestedCommands.concat(['WebLink'])
+    } else {
+        newCommand.suggestedCommands = newCommand.suggestedCommands.concat(getPartialCommandMatches(word))
+    }
+    return newCommand
+}
+
+function getPartialCommandMatches(word) {
+    let matches = []
+    let matchLength = word.length
+
+    let loopProtection = 0
+    while (matchLength > 0 && loopProtection < 100) {
+        console.log("matching on", word.substr(0, matchLength))
+        let currentLengthMatches = commands.filter(command => command.includes(word.substr(0, matchLength)))
+        if (currentLengthMatches.length > 0) {
+            //Todo make the matching letters bold with <b></b> - will render correctly in the button
+            matches = matches.concat(currentLengthMatches)
+            break
+        }
+        loopProtection++
+        matchLength--
+    }
+    console.log("Matches:", matches)
+    return matches
 }
