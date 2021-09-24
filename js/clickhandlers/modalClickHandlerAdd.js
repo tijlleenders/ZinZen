@@ -71,7 +71,10 @@ $("#myModal").on("click", ".command-suggestion", function(e) {
 
 $("#myModal").on("click", ".word-suggestion", function(e) {
     //do stuff to update current set of commands + change title
-    //use e.currentTarget.innerText for the specific suggestion text
+    //use e.currentTarget.innerText for the specific suggestion text    
     console.log("handling word-suggestion pressed")
+    let inputCommand = $("#inputCommand").data('inputCommand')
+    inputCommand.wordPressed = [e.currentTarget.innerText]
+    $("#inputCommand").data('inputCommand', inputCommand)
     updateModalUI()
 })

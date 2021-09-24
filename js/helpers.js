@@ -129,10 +129,12 @@ function updateModalScheduleConstraintsUI() {
 function updateModalAddUI() {
     let inputCommand = $("#inputCommand").data('inputCommand')
     console.log("refreshing for inputCommand:", inputCommand)
+
     let newInputCommand = parseCommand(inputCommand)
     console.log("newInputcommand:", newInputCommand)
     $("#inputCommand").data('inputCommand', newInputCommand)
     $("#inputCommand").val(newInputCommand.title)
+    $("#inputCommand").focus()
         //when to change modal title??
 
     let suggestedCommands = `Suggested commands: `
