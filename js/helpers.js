@@ -134,8 +134,6 @@ function updateModalAddUI() {
     $("#inputCommand").data('inputCommand', newInputCommand)
     $("#inputCommand").val(newInputCommand.title)
         //when to change modal title??
-    let selectedCommands = `Selected: none`
-    $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = `Suggested commands: `
     newInputCommand.suggestedCommands.forEach(suggestion => {
@@ -774,18 +772,16 @@ function setSkeletonHTMLForAdd() {
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = `
     <div class="row my-2" id="input-row">
-      <div class="col">`
-    bodyHTML += getInputHTML()
-    bodyHTML += `
-      </div>
-    </div>
-    `
-    bodyHTML += `    
-    <div class="row mt-2" id="selected-row">
+      <div class="col">
+      <div class="row mt-2" id="selected-row">
       <div class="col">
         <div class="" id="selected-commands">
         </div>
       </div>
+    </div>`
+    bodyHTML += getInputHTML()
+    bodyHTML += `
+    </div>
     </div>
     `
     bodyHTML += `    
