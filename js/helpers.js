@@ -130,16 +130,24 @@ function updateModalAddUI() {
     let inputCommand = $("#inputCommand").data('inputCommand')
     console.log("refreshing for inputCommand:", inputCommand)
     let newInputCommand = parseCommand(inputCommand)
+    console.log("newInputcommand:", newInputCommand)
+    $("#inputCommand").data('inputCommand', newInputCommand)
     $("#inputCommand").val(newInputCommand.title)
         //when to change modal title??
     let selectedCommands = `Selected: none`
     $("#selected-commands").html(selectedCommands)
 
-    let suggestedCommands = `Suggested: `
+    let suggestedCommands = `Suggested commands: `
     newInputCommand.suggestedCommands.forEach(suggestion => {
-        suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 suggestion">' + suggestion + '</button>'
+        suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
     });
     $("#suggested-commands").html(suggestedCommands)
+
+    let suggestedWords = `Suggested words: `
+    newInputCommand.suggestedWords.forEach(suggestion => {
+        suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
+    });
+    $("#suggested-words").html(suggestedWords)
 }
 
 function updateModalUI() {
@@ -781,18 +789,29 @@ function setSkeletonHTMLForAdd() {
     </div>
     `
     bodyHTML += `    
-    <div class="row mt-2" id="suggested-row">
+    <div class="row mt-2" id="suggested-commands-row">
       <div class="col">
         <div class="" id="suggested-commands">
         </div>
       </div>
     </div>
     `
+    bodyHTML += `    
+    <div class="row mt-2" id="suggested-words-row">
+      <div class="col">
+        <div class="" id="suggested-words">
+        </div>
+      </div>
+    </div>
+    `
     $("#modal-body").html(bodyHTML)
     let inputCommand = {
-        title: "",
+        title: '',
         commands: [],
-        suggestedCommands: ['WebLink']
+        commandPressed: [],
+        wordPressed: [],
+        suggestedCommands: [],
+        suggestedWords: []
     }
     $("#inputCommand").data('inputCommand', inputCommand)
     $("#myModal").on('shown.bs.modal', function() {
@@ -1807,89 +1826,154 @@ function goToSetting(selectedGoalId) {
     console.log("inside goToSetting")
     return
 }
+let commandDict = {
+    contact: ['Contact'],
+    sharepublic: ['SharePublic'],
+    shareanonymous: ['ShareAnonymous'],
+    goup: ['GoUp'],
+    up: ['GoUp'],
+    today: ['Today'],
+    tomorrow: ['Tomorrow'],
+    monday: ['Monday'],
+    tuesday: ['Tuesday'],
+    wednesday: ['Wednesday'],
+    thursday: ['Thursday'],
+    friday: ['Friday'],
+    saturday: ['Saturday'],
+    who: ['Who'],
+    sharewith: ['ShareWith:'],
+    goto: ['Goto:'],
+    copyto: ['CopyTo:'],
+    copyallto: ['CopyAllTo:'],
+    moveto: ['MoveTo:'],
+    moveallto: ['MoveAllTo:'],
+    repeatsevery: ['RepeatsEvery:'],
+    suggestto: ['SuggestTo:'],
+    this: ['This:'],
+    next: ['Next:'],
+    after: ['After:'],
+    before: ['Before:'],
+    finish: ['Finish:'],
+    start: ['Start:'],
+    emotion: ['Emotion:'],
+    waitfor: ['WaitFor:'],
+    dependson: ['DependsOn:'],
+    language: ['Language:']
+}
 
-var commands = [
-    'Email',
-    'WebLink',
-    'PhoneNumber',
-    'Contact',
-    'ShareWith',
-    'SharePublic',
-    'ShareAnonymous',
-    'SuggestTo',
-    'Goto',
-    'GoUp',
-    'CopyTo',
-    'CopyAllTo',
-    'MoveTo',
-    'MoveAllTo',
-    'RepeatsEvery',
-    'Today',
-    'Tomorrow',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-    'This',
-    'Next',
-    'Who',
-    'FinishesOnOrBefore',
-    'StartsAtOrAfter',
-    'Until',
-    'Emotion',
-    'Notes',
-    'WaitFor',
-    'DependsOn',
-    'Language',
-    'https://'
-];
+let wordDict = {
+    www: ['www.', 'https://www.'],
+    zz: ['ZinZen'],
+    zinzen: ['ZinZen'],
+    'https://': ['https://', 'https://www.']
+}
 
 function parseCommand(command) {
-    let newCommand = {}
-    newCommand.title = command.title
-    newCommand.commands = command.commands
-    newCommand.suggestedCommands = []
-    newCommand.commandPressed = []
+    if (getLastWord(command.title) == "") {
+        return command
+    }
+    command.suggestedCommands = []
+    let word = getLastWord(command.title).toLowerCase()
 
-    if (command.title.length > 0 && command.title.substr(command.title.length - 1, 1) == " " && command.commandPressed.length == 0) {
+    if (command.commandPressed.length > 0) {
+        parseCommandPressed(command)
+        return command
+    }
+
+    if (command.wordPressed.length > 0) {
+        parseWordPressed(command)
+        return command
+    }
+
+    if (isURL(word)) {
+        let existingHTTPSCommands = getLeftMatches('https://', command.commands)
+        if (existingHTTPSCommands.length > 0) {
+            //remove if not equal
+            //else suggest command
+            // command.suggestedCommands.push(getLastWord(command.title)) //not the word as it is lowercased
+        } else {
+            command.suggestedCommands.push(getLastWord(command.title)) //not the word as it is lowercased
+        }
+    }
+    //if word is phone number, suggest command for that phone number unless already (active and same number)
+    //if word is email, suggest command for that email unless already (active and same email)
+
+    if (word.length > 0 && word.substr(word.length - 1, 1) == " ") {
         // we're at the start of typing a brand new command - or ready for saving
         // do a best-guess suggestion based on previous commands (if any)
         return command
     }
 
-    let wordsArray = command.title.split(" ")
-    let word = wordsArray[wordsArray.length - 1]
+    console.log("suggestedCommands before:", command.suggestedCommands)
+    command.suggestedCommands = command.suggestedCommands.concat(getSuggestionsFor(word, commandDict))
+    command.suggestedWords = getSuggestionsFor(word, wordDict)
 
-    console.log("last word: '" + word + "'")
-    if (commands.includes(word)) {
-        newCommand.suggestedCommands.push(word)
-    } else {
-        getSuggestedCommandsFor(word, newCommand)
-    }
-    newCommand.suggestedCommands = [...new Set(newCommand.suggestedCommands)] //make entries unique
-    return newCommand
+    return command
 }
 
-function getSuggestedCommandsFor(word, newCommand) {
-    if (word.startsWith('https://')) {
-        newCommand.suggestedCommands = newCommand.suggestedCommands.concat(['WebLink'])
-    } else {
-        newCommand.suggestedCommands = newCommand.suggestedCommands.concat(getPartialCommandMatches(word))
+function isURL(word) {
+    if (word.length > 8 && (
+            word.substr(0, 8) == "https://" ||
+            word.substr(0, 2) == "www")) {
+        return true
     }
-    return newCommand
+    return false
 }
 
-function getPartialCommandMatches(word) {
+function parseCommandPressed(command) {
+    if (isURL(command.commandPressed[0])) {
+        let existingURLs = getLeftMatches('https://', command.commands)
+        console.log("found existing URLs:", existingURLs)
+        existingURLs.forEach(match => { command.commands.remove(match) })
+        command.commands.push(command.commandPressed[0])
+        command.commandPressed = []
+        command.suggestedCommands = []
+        command.title = command.title.substr(8)
+        if (command.title.substr(command.title.length - 5) == ".html") {
+            command.title = command.title.substr(0, command.title.length - 5)
+        }
+        return
+    }
+    switch (command.commandPressed[0]) {
+        case "dummy":
+            break;
+        default:
+            let errorMessage = "Command " + command.commandPressed[0] + " not found..."
+            throw new Error(errorMessage)
+    }
+
+    return
+}
+
+function parseWordPressed(command) {
+    command.title = command.title.replace(getLastWord(command.title), command.wordPressed)
+    command.wordPressed = []
+}
+
+function getSuggestionsFor(word, dict) {
+    let matchArray = getLeftMatches(word, Object.keys(dict))
+    let result = []
+    if (matchArray.length > 0) {
+        console.log("left matches found:", matchArray)
+        matchArray.forEach(match => {
+            result = result.concat(dict[match])
+        });
+    }
+    return [...new Set(result)] //make items in result array unique
+}
+
+function getLeftMatches(word, wordsArray) {
+    let matches = wordsArray.filter(wordToMatchOn => wordToMatchOn.startsWith(word))
+    return matches
+}
+
+function getPartialMatches(word, wordsArray) {
     let matches = []
     let matchLength = word.length
 
     let loopProtection = 0
     while (matchLength > 0 && loopProtection < 100) {
-        console.log("matching on", word.substr(0, matchLength))
-        let currentLengthMatches = commands.filter(command => command.includes(word.substr(0, matchLength)))
+        let currentLengthMatches = wordsArray.filter(wordInArray => wordInArray.includes(word.substr(0, matchLength)))
         if (currentLengthMatches.length > 0) {
             //Todo make the matching letters bold with <b></b> - will render correctly in the button
             matches = matches.concat(currentLengthMatches)
@@ -1898,6 +1982,17 @@ function getPartialCommandMatches(word) {
         loopProtection++
         matchLength--
     }
-    console.log("Matches:", matches)
     return matches
+}
+
+function getLastWord(title) {
+    let wordsArray = title.split(" ")
+    if (wordsArray[wordsArray.length - 1] == '') {
+        wordsArray.pop()
+    }
+    if (wordsArray.length > 0) {
+        return wordsArray[wordsArray.length - 1]
+    } else {
+        return ''
+    }
 }

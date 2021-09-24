@@ -62,8 +62,16 @@ $("#myModal").on("click", "#add-a-goal-button", function() {
     addSomething()
 })
 
-$("#myModal").on("click", ".suggestion", function(e) {
+$("#myModal").on("click", ".command-suggestion", function(e) {
     //do stuff to update current set of commands + change title
     //use e.currentTarget.innerText for the specific suggestion text
+    console.log("handling command-suggestion pressed")
+    updateModalUI()
+})
+
+$("#myModal").on("click", ".word-suggestion", function(e) {
+    //do stuff to update current set of commands + change title
+    //use e.currentTarget.innerText for the specific suggestion text
+    console.log("handling word-suggestion pressed")
     updateModalUI()
 })
