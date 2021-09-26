@@ -66,6 +66,9 @@ $("#myModal").on("click", ".command-suggestion", function(e) {
     //do stuff to update current set of commands + change title
     //use e.currentTarget.innerText for the specific suggestion text
     console.log("handling command-suggestion pressed")
+    let inputCommand = $("#inputCommand").data('inputCommand')
+    inputCommand.commandPressed = [e.currentTarget.innerText]
+    $("#inputCommand").data('inputCommand', inputCommand)
     updateModalUI()
 })
 
