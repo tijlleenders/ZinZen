@@ -1939,18 +1939,20 @@ function parseCommandPressed(command) {
         existingURLs.forEach(match => { command.commands.splice(command.commands.indexOf(match), 1) })
         beautifyHTTPInTitle(command)
         command.commands.push(command.commandPressed[0])
-        command.commandPressed = []
-        command.suggestedCommands = []
-        return command
     }
     switch (command.commandPressed[0]) {
         case "dummy":
+            break;
+        case "Today":
+            console.log("Adding Today to commands...")
+            command.commands.push(command.commandPressed[0])
             break;
         default:
             let errorMessage = "Command " + command.commandPressed[0] + " not found..."
             throw new Error(errorMessage)
     }
-
+    command.commandPressed = []
+    command.suggestedCommands = []
     return command
 }
 
