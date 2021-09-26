@@ -137,6 +137,12 @@ function updateModalAddUI() {
     $("#inputCommand").focus()
         //when to change modal title??
 
+    let selectedCommands = `Selected: `
+    newInputCommand.commands.forEach(suggestion => {
+        selectedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
+    });
+    $("#selected-commands").html(selectedCommands)
+
     let suggestedCommands = `Suggested commands: `
     newInputCommand.suggestedCommands.forEach(suggestion => {
         suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
