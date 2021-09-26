@@ -1939,6 +1939,7 @@ function parseCommandPressed(command) {
         existingURLs.forEach(match => { command.commands.splice(command.commands.indexOf(match), 1) })
         beautifyHTTPInTitle(command)
         command.commands.push(command.commandPressed[0])
+        command.title += ' '
         command.commandPressed = []
         command.suggestedCommands = []
         return command
