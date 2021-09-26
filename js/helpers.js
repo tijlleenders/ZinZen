@@ -1923,19 +1923,25 @@ function isURL(word) {
     return false
 }
 
+function beautifyHTTPInTitle(command) {
+    let newHTTPWord = command.commandPressed[0]
+    newHTTPWord = newHTTPWord.substr(8)
+    if (newHTTPWord.substr(newHTTPWord.length - 5) == ".html") {
+        newHTTPWord = newHTTPWord.substr(0, newHTTPWord.length - 5)
+    }
+    command.title = command.title.replace(command.commandPressed[0], newHTTPWord)
+}
+
 function parseCommandPressed(command) {
     if (isURL(command.commandPressed[0])) {
         let existingURLs = getLeftMatches('https://', command.commands)
         console.log("found existing URLs:", existingURLs)
         existingURLs.forEach(match => { command.commands.splice(command.commands.indexOf(match), 1) })
+        beautifyHTTPInTitle(command)
         command.commands.push(command.commandPressed[0])
         command.commandPressed = []
         command.suggestedCommands = []
-        command.title = command.title.substr(8)
-        if (command.title.substr(command.title.length - 5) == ".html") {
-            command.title = command.title.substr(0, command.title.length - 5)
-        }
-        return
+        return command
     }
     switch (command.commandPressed[0]) {
         case "dummy":
@@ -1945,7 +1951,7 @@ function parseCommandPressed(command) {
             throw new Error(errorMessage)
     }
 
-    return
+    return command
 }
 
 function parseWordPressed(command) {
