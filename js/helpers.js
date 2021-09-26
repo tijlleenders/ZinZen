@@ -137,9 +137,9 @@ function updateModalAddUI() {
     $("#inputCommand").focus()
         //when to change modal title??
 
-    let selectedCommands = `Selected: `
+    let selectedCommands = ``
     newInputCommand.commands.forEach(command => {
-        selectedCommands += '<span class="badge bg-secondary m-1 command">' + command + '</span>'
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">' + command + '</span>'
     });
     $("#selected-commands").html(selectedCommands)
 

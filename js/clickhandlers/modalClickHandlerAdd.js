@@ -63,8 +63,6 @@ $("#myModal").on("click", "#add-a-goal-button", function() {
 })
 
 $("#myModal").on("click", ".command-suggestion", function(e) {
-    //do stuff to update current set of commands + change title
-    //use e.currentTarget.innerText for the specific suggestion text
     console.log("handling command-suggestion pressed")
     let inputCommand = $("#inputCommand").data('inputCommand')
     inputCommand.commandPressed = [e.currentTarget.innerText]
@@ -73,11 +71,17 @@ $("#myModal").on("click", ".command-suggestion", function(e) {
 })
 
 $("#myModal").on("click", ".word-suggestion", function(e) {
-    //do stuff to update current set of commands + change title
-    //use e.currentTarget.innerText for the specific suggestion text    
     console.log("handling word-suggestion pressed")
     let inputCommand = $("#inputCommand").data('inputCommand')
     inputCommand.wordPressed = [e.currentTarget.innerText]
+    $("#inputCommand").data('inputCommand', inputCommand)
+    updateModalUI()
+})
+
+$("#myModal").on("click", ".selected-command", function(e) {
+    console.log("handling selected-command pressed")
+    let inputCommand = $("#inputCommand").data('inputCommand')
+    inputCommand.commands.splice(inputCommand.commands.indexOf(e.currentTarget.innerText), 1)
     $("#inputCommand").data('inputCommand', inputCommand)
     updateModalUI()
 })
