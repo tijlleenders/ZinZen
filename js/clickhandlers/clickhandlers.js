@@ -149,6 +149,13 @@ $("#top-calendar").click(function() {
     $("#main-promised").addClass("d-none")
 })
 
+$("#top-inbox").click(function() {
+    alert('Inbox from the future coming soon...')
+})
+
+$("#top-explore").click(function() {
+    alert('Crowdsourced machine-learned personal suggestions coming soon...')
+})
 
 
 $("#breadcrumb").on("click", ".breadcrumb-button", function(event) {
