@@ -1947,16 +1947,28 @@ function parseCommandPressed(command) {
         case "dummy":
             break;
         case "Today":
-            console.log("Adding Today to commands...")
+            //save/replace as Date:... ?
+            command.commands.push(command.commandPressed[0])
+            break;
+        case "Tomorrow":
+            //save/replace as Date:... ?
             command.commands.push(command.commandPressed[0])
             break;
         default:
             let errorMessage = "Command " + command.commandPressed[0] + " not found..."
             throw new Error(errorMessage)
     }
+    popLastWordInTitle(command)
     command.commandPressed = []
     command.suggestedCommands = []
     return command
+}
+
+function popLastWordInTitle(command) {
+    let wordArray = command.title.split(' ')
+    wordArray.pop()
+    command.title = wordArray.join(' ')
+    command.title += ' '
 }
 
 function parseWordPressed(command) {
