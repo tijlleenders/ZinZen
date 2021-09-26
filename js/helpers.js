@@ -1923,7 +1923,7 @@ function parseCommandPressed(command) {
     if (isURL(command.commandPressed[0])) {
         let existingURLs = getLeftMatches('https://', command.commands)
         console.log("found existing URLs:", existingURLs)
-        existingURLs.forEach(match => { command.commands.remove(match) })
+        existingURLs.forEach(match => { command.commands.splice(command.commands.indexOf(match), 1) })
         command.commands.push(command.commandPressed[0])
         command.commandPressed = []
         command.suggestedCommands = []
