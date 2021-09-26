@@ -1972,7 +1972,14 @@ function popLastWordInTitle(command) {
 }
 
 function parseWordPressed(command) {
-    command.title = command.title.replace(getLastWord(command.title), command.wordPressed)
+    let wordArray = command.title.split(' ')
+    wordArray.pop()
+    command.title = wordArray.join(' ')
+    command.title += ' ' + command.wordPressed
+    if (command.wordPressed[0] != 'https://' &&
+        command.wordPressed[0] != 'https://www.') {
+        command.title += ' '
+    }
     command.wordPressed = []
 }
 
