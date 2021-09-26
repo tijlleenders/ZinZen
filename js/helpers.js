@@ -1869,7 +1869,10 @@ let wordDict = {
     www: ['www.', 'https://www.'],
     zz: ['ZinZen'],
     zinzen: ['ZinZen'],
-    'https://': ['https://', 'https://www.']
+    'https://': ['https://', 'https://www.'],
+    pepper: ['🌶️'],
+    spice: ['🌶️'],
+    call: ['📞', '📱', '☎️']
 }
 
 function parseCommand(command) {
