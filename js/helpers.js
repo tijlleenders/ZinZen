@@ -1976,7 +1976,10 @@ function parseWordPressed(command) {
     let wordArray = command.title.split(' ')
     wordArray.pop()
     command.title = wordArray.join(' ')
-    command.title += ' ' + command.wordPressed
+    if (wordArray.length > 0) {
+        command.title += ' '
+    }
+    command.title += command.wordPressed
     if (command.wordPressed[0] != 'https://' &&
         command.wordPressed[0] != 'https://www.') {
         command.title += ' '
