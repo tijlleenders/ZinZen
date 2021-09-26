@@ -138,8 +138,8 @@ function updateModalAddUI() {
         //when to change modal title??
 
     let selectedCommands = `Selected: `
-    newInputCommand.commands.forEach(suggestion => {
-        selectedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
+    newInputCommand.commands.forEach(command => {
+        selectedCommands += '<span class="badge bg-secondary">' + command + '</span>'
     });
     $("#selected-commands").html(selectedCommands)
 
@@ -363,18 +363,6 @@ function getTimeZoneAccordionItemHTML() {
 </div>`
 }
 
-function getInputHTML() {
-    return `
-  <div class="">
-      <div class="m-1">
-          <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus>
-      </div>
-      <div class="m-1">
-          <button type="button" class="btn btn-outline-primary" id="add-a-goal-button">Add</button>
-      </div>
-  </div>
-  `
-}
 
 function getDurationAccordionHTML() {
     return `
@@ -781,22 +769,32 @@ function setSkeletonHTMLForAdd() {
     let bodyHTML = `
     <div class="row my-2" id="input-row">
       <div class="col">
-      <div class="row mt-2" id="selected-row">
-      <div class="col">
-        <div class="" id="selected-commands">
-        </div>
-      </div>
-    </div>`
-    bodyHTML += getInputHTML()
+     `
     bodyHTML += `
+    <div class="">
+        <div class="m-1">
+            <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus>
+        </div>
+    </div>
     </div>
     </div>
     `
     bodyHTML += `    
+    <div class="row mt-2" id="selected-row">
+      <div class="col">
+        <div class="" id="selected-commands">
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2" id="add-row">
+      <div class="m-1">
+        <button type="button" class="btn btn-outline-primary" id="add-a-goal-button">Add</button>
+    </div>
+    </div>
     <div class="row mt-2" id="suggested-commands-row">
       <div class="col">
         <div class="" id="suggested-commands">
-        </div>
+        </div>        
       </div>
     </div>
     `
