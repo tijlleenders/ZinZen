@@ -1824,6 +1824,8 @@ function goToSetting(selectedGoalId) {
     console.log("inside goToSetting")
     return
 }
+
+
 let commandDict = {
     contact: ['Contact'],
     sharepublic: ['SharePublic'],
@@ -1870,6 +1872,7 @@ function parseCommand(command) {
     if (getLastWord(command.title) == "") {
         return command
     }
+
     command.suggestedCommands = []
     let word = getLastWord(command.title).toLowerCase()
 
@@ -1884,15 +1887,13 @@ function parseCommand(command) {
     }
 
     if (isURL(word)) {
-        let existingHTTPSCommands = getLeftMatches('https://', command.commands)
-        if (existingHTTPSCommands.length > 0) {
-            //remove if not equal
-            //else suggest command
-            // command.suggestedCommands.push(getLastWord(command.title)) //not the word as it is lowercased
+        if (getLeftMatches('https://', command.commands).includes(getLastWord(command.title))) {
+            //existing command already matches lastWord title so suggest nothing
         } else {
-            command.suggestedCommands.push(getLastWord(command.title)) //not the word as it is lowercased
+            command.suggestedCommands.push(getLastWord(command.title)) // don't use word as lowercased
         }
     }
+
     //if word is phone number, suggest command for that phone number unless already (active and same number)
     //if word is email, suggest command for that email unless already (active and same email)
 
