@@ -139,7 +139,7 @@ function updateModalAddUI() {
 
     let selectedCommands = `Selected: `
     newInputCommand.commands.forEach(command => {
-        selectedCommands += '<span class="badge bg-secondary">' + command + '</span>'
+        selectedCommands += '<span class="badge bg-secondary m-1 command">' + command + '</span>'
     });
     $("#selected-commands").html(selectedCommands)
 
