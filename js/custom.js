@@ -130,11 +130,13 @@ function needToUpdateUI(properties) {
         lists.insert(properties)
     } else {
         console.log("record exists - comparing new vs old")
-            // if (same) {
-            // return false
-            // } else {
-            //update in db and return true
-            // }
+        if (JSON.stringify(existingRecord.updatedDT) === JSON.stringify(properties.updatedDT)) {
+            console.log("Equal")
+            return false
+        } else {
+            console.log("Different")
+            lists.update(properties)
+        }
     }
     return true
 }
