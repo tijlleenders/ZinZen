@@ -324,13 +324,13 @@ $("#main-promised").on("click", ".goal", function(event) {
     let selectedGoalId = nodeId.slice(-36);
     if (nodeId != "") {
         console.log("properties:", $("#" + selectedGoalId).data("properties"))
-        if ($("#" + selectedGoalId).data("properties").has("commands")) {
+        if ($("#" + selectedGoalId).data("properties").commands != undefined) {
             console.log("Commands!")
-            if ($("#" + selectedGoalId).data("properties").get('commands')[0] == 'setting') {
+            if ($("#" + selectedGoalId).data("properties").commands[0] == 'setting') {
                 goToSetting(selectedGoalId)
             }
-            if ($("#" + selectedGoalId).data("properties").get('commands')[0] == 'WebLink') {
-                window.open($("#" + selectedGoalId).data("properties").get('url')[0], '_blank')
+            if ($("#" + selectedGoalId).data("properties").commands[0] == 'WebLink') {
+                window.open($("#" + selectedGoalId).data("properties").url[0], '_blank')
             }
             return
         }
