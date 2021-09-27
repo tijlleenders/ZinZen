@@ -66,30 +66,22 @@ function openWS(authorizer, stage, WSEndpoint) {
                         console.log("case for specificNode")
                         if (item.has("properties")) {
                             let properties = item.get("properties")
-                            if (needToUpdateUI(properties)) {
+                            if (isUpdate(properties)) {
                                 updateUIWith(properties)
-                                $('#' + item.get('id')).addClass('jello-vertical-animation')
                             }
-                            preloadIfNotPresent(properties.directParents)
-                            preloadIfNotPresent(properties.directChildren)
                         }
                         break;
 
                     case "allSubs":
-                        $("#main-promised").empty()
                         console.log("breadcrumb goals received:", item.get("goalsBreadcrumb"))
                         $("#breadcrumb").data("top", item.get("username"))
                         $("#breadcrumb").data("goals", item.get("goalsBreadcrumb"))
                         updateBreadcrumbUI()
-                        console.log("Item:", item)
                         item.get("allSubs").forEach(properties => {
-                            if (needToUpdateUI(properties)) {
+                            if (isUpdate(properties)) {
                                 updateUIWith(properties)
                             }
-                            preloadIfNotPresent(properties.directParents)
-                            preloadIfNotPresent(properties.directChildren)
                         })
-
                         if (item.get("allSubs").length == 0) {
                             $("#main-promised").html(`<div id="add-a-goal"><p class="no-lists-yet"><br />No lists here yet...</p></div>`) //Todo use item.get("goalsBreadCrumb") array to customize to parent name
                         }
@@ -126,39 +118,37 @@ function openWS(authorizer, stage, WSEndpoint) {
 
 }
 
-function needToUpdateUI(properties) {
-    console.log("inside needToUpdateUI...")
+function updateChildrenFor(parent) {
+    parent.directChildren.forEach(childId => {
+        let child = lists.by('id', childId)
+        if (child == undefined) {
+            send(
+                '{"action":"read","readRequestType":"specificNode","nodeId":"' + childId + '"}'
+            );
+        } else {
+            updateUIWith(child)
+        }
+
+    })
+}
+
+function isUpdate(properties) {
+    console.log("inside store...")
     let existingRecord = lists.by('id', properties.id)
     console.log("existingRecord:", existingRecord)
     if (existingRecord == undefined) {
         lists.insert(properties)
+        return true
     } else {
         console.log("record exists - comparing new vs old")
         if (JSON.stringify(existingRecord.updatedDT) === JSON.stringify(properties.updatedDT)) {
             console.log("Equal")
-            if ($("#" + properties.id).length) {
-                return false
-            }
+            return false
         } else {
             console.log("Different")
-            lists.update(properties)
+            return true
         }
     }
-    return true
-}
-
-function preloadIfNotPresent(idArray) {
-    if (idArray.length = 0) {
-        return
-    }
-    idArray.forEach(id => {
-        let existingRecord = lists.by('id', id)
-        console.log("existingRecord:", existingRecord)
-        if (existingRecord == undefined) {
-            console.log("getting update for ", id)
-            send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}')
-        }
-    })
 }
 
 function send(jsonString) {

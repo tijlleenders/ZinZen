@@ -3,13 +3,21 @@
 async function updateUIWith(properties) {
     console.log("handling properties:", properties)
 
+    if (properties.id == parentId) {
+        updateChildrenFor(properties)
+    }
+    if (!properties.directParents.includes(parentId)) {
+        console.log("received list that should not be on screen. Probably child of something on screen that is preloaded")
+        return
+    }
+
     let id = properties.id
 
     if (!$('#' + id).length) {
-        console.log("id not yet present, prepending")
+        console.log("id not yet present, appending")
         $("#add-a-goal").empty() //Empties the No lists here
         let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
-        $("#main-promised").prepend(goalHTML)
+        $("#main-promised").append(goalHTML)
     }
     $("#" + id).data('properties', properties)
     $("#" + id).html(generateGoalHTML(id))

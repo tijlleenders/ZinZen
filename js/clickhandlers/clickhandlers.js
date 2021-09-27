@@ -166,12 +166,7 @@ $("#breadcrumb").on("click", ".breadcrumb-button", function(event) {
     if (parentId == "me") {
         parentId = ""
     }
-    $("main-promised").empty()
-    send(
-        '{"action":"read","readRequestType":"allSubsFor","parentId":"' +
-        parentId +
-        '"}'
-    )
+    goTo(parentId)
 })
 
 function toggleEditButtons(id) {
@@ -275,12 +270,16 @@ function changeStatus(id) {
 
 function goTo(id) {
     // todo: zoom in animation
-
-    send(
-        '{"action":"read","readRequestType":"allSubsFor","parentId":"' +
-        id +
-        '"}'
-    );
+    $("#main-promised").empty()
+    parentId = id
+    let parent = lists.by('id', id)
+    if (parent == undefined) {
+        send(
+            '{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}'
+        );
+    } else {
+        updateChildrenFor(parent)
+    }
 }
 
 function deleteGoal(id) {
