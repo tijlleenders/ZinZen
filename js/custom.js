@@ -132,7 +132,9 @@ function needToUpdateUI(properties) {
         console.log("record exists - comparing new vs old")
         if (JSON.stringify(existingRecord.updatedDT) === JSON.stringify(properties.updatedDT)) {
             console.log("Equal")
-            return false
+            if ($("#" + properties.id).length) {
+                return false
+            }
         } else {
             console.log("Different")
             lists.update(properties)
