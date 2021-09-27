@@ -66,7 +66,7 @@ function openWS(authorizer, stage, WSEndpoint) {
                         console.log("case for specificNode")
                         if (item.has("properties")) {
                             let properties = item.get("properties")
-                            handleIncomingProperties(properties)
+                            updateUIWith(properties)
                             if (isNew) {
                                 $('#' + item.get('id')).addClass('jello-vertical-animation')
                             }
@@ -81,7 +81,16 @@ function openWS(authorizer, stage, WSEndpoint) {
                         updateBreadcrumbUI()
                         console.log("Item:", item)
                         item.get("allSubs").forEach(properties => {
-                            handleIncomingProperties(properties)
+                            // if (needToUpdateUI()) { updateUIWith(properties) }
+                            // let existingRecord = lists.by('id', properties.id)
+                            // if (existingRecord == undefined) {
+                            //   //insert
+                            // } else {
+                            //   //compare
+                            //   //insert if different
+                            //   //
+                            // }
+                            updateUIWith(properties)
                         })
 
                         if (item.get("allSubs").length == 0) {

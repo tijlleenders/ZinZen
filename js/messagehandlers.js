@@ -1,10 +1,7 @@
 'use strict'
 
-async function handleIncomingProperties(properties) {
+async function updateUIWith(properties) {
     console.log("handling properties:", properties)
-
-    //check if in DB
-    //if not equal update DB and UI 
 
     let id = properties.id
 

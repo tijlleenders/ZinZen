@@ -125,7 +125,7 @@ $("#top-settings").click(function() {
     let propertiesArrayString = getSettingsPropertiesFor("")
     let propertiesArray = JSON.parse(propertiesArrayString, reviver)
     propertiesArray.forEach(propertiesMap => {
-        handleIncomingProperties(propertiesMap)
+        updateUIWith(propertiesMap)
     });
 
 })
