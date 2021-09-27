@@ -70,6 +70,8 @@ function openWS(authorizer, stage, WSEndpoint) {
                                 updateUIWith(properties)
                                 $('#' + item.get('id')).addClass('jello-vertical-animation')
                             }
+                            preloadIfNotPresent(properties.directParents)
+                            preloadIfNotPresent(properties.directChildren)
                         }
                         break;
 
@@ -84,6 +86,8 @@ function openWS(authorizer, stage, WSEndpoint) {
                             if (needToUpdateUI(properties)) {
                                 updateUIWith(properties)
                             }
+                            preloadIfNotPresent(properties.directParents)
+                            preloadIfNotPresent(properties.directChildren)
                         })
 
                         if (item.get("allSubs").length == 0) {
@@ -141,6 +145,20 @@ function needToUpdateUI(properties) {
         }
     }
     return true
+}
+
+function preloadIfNotPresent(idArray) {
+    if (idArray.length = 0) {
+        return
+    }
+    idArray.forEach(id => {
+        let existingRecord = lists.by('id', id)
+        console.log("existingRecord:", existingRecord)
+        if (existingRecord == undefined) {
+            console.log("getting update for ", id)
+            send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}')
+        }
+    })
 }
 
 function send(jsonString) {

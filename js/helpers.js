@@ -1150,7 +1150,6 @@ function generateGoalHTML(id) {
         titleIcon = "🔗 "
     }
     let directParents = properties.directParents
-    let ultimateParents = properties.ultimateParents
     let subCountDone = parseInt(properties.subCountDone)
     let subCountTotal = parseInt(properties.subCountMaybe) + parseInt(properties.subCountPromised) + parseInt(properties.subCountDone)
     let finish = ""
@@ -1210,8 +1209,7 @@ function generateGoalHTML(id) {
 
     let parentRowAndColHTML = ''
     if (directParents.length != 0) {
-        let parentTitles = directParents.map(parent => parent.get("title")[0]);
-        let parentIds = directParents.map(parent => parent.values().next().value);
+        console.log("directParents for " + goalId + ":" + directParents)
         parentRowAndColHTML += '<div class="row" id="goal-parents-row-' +
             goalId +
             '">\
@@ -1219,9 +1217,14 @@ function generateGoalHTML(id) {
             goalId +
             '">\
     '
-        if (parentTitles.length > 1) {
-            parentTitles.forEach(function(title, index) {
-                parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentIds[index] + '">' + title + "</div>"
+        if (directParents.length > 1) {
+            directParents.forEach(function(parentId, index) {
+                console.log("getting parent for id:", parentId)
+                let parent = lists.by('id', parentId)
+                console.log("parent:", parent)
+                if (parent != undefined) {
+                    parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title[0] + "</div>"
+                }
             })
         }
         parentRowAndColHTML += '</div></div>'
