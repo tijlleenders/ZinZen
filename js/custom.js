@@ -12,7 +12,9 @@ var goalsLastModifiedEpochMs = 0
 var profile = 'tijl.leenders'
 var parentId = 'fcbd9d74-2a52-9336-316c-e044a1c000c2'
 var repository = new loki('Lists');
-var lists = repository.addCollection('lists')
+var lists = repository.addCollection('lists', {
+    unique: ['id']
+})
 
 var startX, startY, endX, endY = 0 //for click or swipe or move detection
 

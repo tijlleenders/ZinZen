@@ -3,6 +3,9 @@
 async function handleIncomingProperties(properties) {
     console.log("handling properties:", properties)
 
+    //check if in DB
+    //if not equal update DB and UI 
+
     //Todo replace this by map.get(gremlin.process.t.id/label) -- can't figure it out...
     var propIterator = properties.values()
     var id = propIterator.next().value
