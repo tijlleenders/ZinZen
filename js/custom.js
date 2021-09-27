@@ -66,16 +66,6 @@ function openWS(authorizer, stage, WSEndpoint) {
                         console.log("case for specificNode")
                         if (item.has("properties")) {
                             let properties = item.get("properties")
-                            properties.set('id', item.get('id'))
-                            properties.set('directParents', item.get('directParents'))
-                            properties.set('ultimateParents', item.get('ultimateParents'))
-                            properties.set('subCountMaybe', item.get('subCountMaybe'))
-                            properties.set('subCountPromised', item.get('subCountPromised'))
-                            properties.set('subCountDone', item.get('subCountDone'))
-                            properties.set('subCountNever', item.get('subCountNever'))
-                            properties.set('scheduledBeginISO', item.get('scheduledBeginISO'))
-                            properties.set('scheduledEndISO', item.get('scheduledEndISO'))
-                            let isNew = !($('#' + item.get('id')).length)
                             handleIncomingProperties(properties)
                             if (isNew) {
                                 $('#' + item.get('id')).addClass('jello-vertical-animation')
