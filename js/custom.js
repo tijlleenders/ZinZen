@@ -66,8 +66,8 @@ function openWS(authorizer, stage, WSEndpoint) {
                         console.log("case for specificNode")
                         if (item.has("properties")) {
                             let properties = item.get("properties")
-                            updateUIWith(properties)
-                            if (isNew) {
+                            if (needToUpdateUI(properties)) {
+                                updateUIWith(properties)
                                 $('#' + item.get('id')).addClass('jello-vertical-animation')
                             }
                         }
@@ -81,16 +81,9 @@ function openWS(authorizer, stage, WSEndpoint) {
                         updateBreadcrumbUI()
                         console.log("Item:", item)
                         item.get("allSubs").forEach(properties => {
-                            // if (needToUpdateUI()) { updateUIWith(properties) }
-                            // let existingRecord = lists.by('id', properties.id)
-                            // if (existingRecord == undefined) {
-                            //   //insert
-                            // } else {
-                            //   //compare
-                            //   //insert if different
-                            //   //
-                            // }
-                            updateUIWith(properties)
+                            if (needToUpdateUI(properties)) {
+                                updateUIWith(properties)
+                            }
                         })
 
                         if (item.get("allSubs").length == 0) {
@@ -127,6 +120,23 @@ function openWS(authorizer, stage, WSEndpoint) {
         alert("Connection " + stage + " is closed...");
     };
 
+}
+
+function needToUpdateUI(properties) {
+    console.log("inside needToUpdateUI...")
+    let existingRecord = lists.by('id', properties.id)
+    console.log("existingRecord:", existingRecord)
+    if (existingRecord == undefined) {
+        lists.insert(properties)
+    } else {
+        console.log("record exists - comparing new vs old")
+            // if (same) {
+            // return false
+            // } else {
+            //update in db and return true
+            // }
+    }
+    return true
 }
 
 function send(jsonString) {
