@@ -1135,42 +1135,40 @@ function getGoalSvg(status, id) {
 function generateGoalHTML(id) {
     let properties = $("#" + id).data("properties")
 
-    //Todo replace this by map.get(gremlin.process.t.id/label) -- can't figure it out...
-    var propIterator = properties.values()
-    var goalId = propIterator.next().value
-    var label = propIterator.next().value
+    console.log("generatign goal HTML for properties:", properties)
 
-    var tag = properties.get("tags")[0]
+    let goalId = properties.id
+    var tag = properties.tags[0]
     let cardStyle = "card" + tag
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
-    let status = properties.get("status")[0]
+    let status = properties.status[0]
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
 
     let titleIcon = ""
-    if (properties.has('commands') && properties.get('commands').includes("WebLink")) {
+    if (properties.commands != undefined && properties.get('commands').includes("WebLink")) {
         titleIcon = "🔗 "
     }
-    let directParents = properties.get('directParents')
-    let ultimateParents = properties.get('ultimateParents')
-    let subCountDone = parseInt(properties.get('subCountDone'))
-    let subCountTotal = parseInt(properties.get('subCountMaybe')) + parseInt(properties.get('subCountPromised')) + parseInt(properties.get('subCountDone'))
+    let directParents = properties.directParents
+    let ultimateParents = properties.ultimateParents
+    let subCountDone = parseInt(properties.subCountDone)
+    let subCountTotal = parseInt(properties.subCountMaybe) + parseInt(properties.subCountPromised) + parseInt(properties.subCountDone)
     let finish = ""
-    if (properties.has("finish") && properties.get("finish")[0] != "") {
-        finish = properties.get("finish")[0]
+    if (properties.finish && properties.finish[0] != "") {
+        finish = properties.finish[0]
     }
 
     let visibilities = 'Private'
-    if (properties.has("shareAnonymously") && properties.get("shareAnonymously")[0] == "shareAnonymously") {
+    if (properties.shareAnonymously && properties.shareAnonymously[0] == "shareAnonymously") {
         visibilities = 'Anonymous'
     }
 
-    if (properties.has("sharePublicly") && properties.get("sharePublicly")[0] == "sharePublicly") {
+    if (properties.sharePublicly && properties.sharePublicly[0] == "sharePublicly") {
         visibilities = 'Public'
     }
 
-    var title = titleIcon + properties.get("title")[0]
-    var duration = properties.get("duration")[0]
+    var title = titleIcon + properties.title[0]
+    var duration = properties.duration[0]
     let durationString = formatDuration(duration).short
     let durationTransparency = ""
     if (durationString == "0m") {
@@ -1202,8 +1200,8 @@ function generateGoalHTML(id) {
         }
 
     }
-    if (properties.has("subTitle") && properties.get("subTitle")[0] != "") {
-        subTitle += '<br />' + properties.get("subTitle")[0]
+    if (properties.subTitle && properties.subTitle[0] != "") {
+        subTitle += '<br />' + properties.subTitle[0]
     }
 
 
