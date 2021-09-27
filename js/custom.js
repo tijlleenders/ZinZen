@@ -11,6 +11,8 @@ var sessionId = uuidv4()
 var goalsLastModifiedEpochMs = 0
 var profile = 'tijl.leenders'
 var parentId = 'fcbd9d74-2a52-9336-316c-e044a1c000c2'
+var repository = new loki('Lists');
+var lists = repository.addCollection('lists')
 
 var startX, startY, endX, endY = 0 //for click or swipe or move detection
 
@@ -62,6 +64,7 @@ function openWS(authorizer, stage, WSEndpoint) {
                         console.log("case for specificNode")
                         if (item.has("properties")) {
                             let properties = item.get("properties")
+                            properties.set('id', item.get('id'))
                             properties.set('directParents', item.get('directParents'))
                             properties.set('ultimateParents', item.get('ultimateParents'))
                             properties.set('subCountMaybe', item.get('subCountMaybe'))
@@ -87,6 +90,7 @@ function openWS(authorizer, stage, WSEndpoint) {
                         console.log("Item:", item)
                         item.get("allSubs").forEach(sub => {
                             let properties = sub.get("properties")
+                            properties.set('id', sub.get('id'))
                             properties.set('directParents', sub.get('directParents'))
                             properties.set('ultimateParents', sub.get('ultimateParents'))
                             properties.set('subCountMaybe', sub.get('subCountMaybe'))
