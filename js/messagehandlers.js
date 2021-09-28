@@ -14,6 +14,7 @@ async function updateUIWith(properties) {
         return
     }
 
+    preloadChildrenFor(properties)
     let id = properties.id
 
     if (!$('#' + id).length) {

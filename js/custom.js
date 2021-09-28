@@ -103,6 +103,17 @@ function openWS(authorizer, stage, WSEndpoint) {
 
 }
 
+function preloadChildrenFor(parent) {
+    parent.directChildren.forEach(childId => {
+        let child = lists.by('id', childId)
+        if (child == undefined) {
+            send(
+                '{"action":"read","readRequestType":"specificNode","nodeId":"' + childId + '"}'
+            );
+        }
+    })
+}
+
 function updateChildrenFor(parent) {
     parent.directChildren.forEach(childId => {
         let child = lists.by('id', childId)
