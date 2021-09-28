@@ -3,9 +3,11 @@
 async function updateUIWith(properties) {
     console.log("handling properties:", properties)
 
-    if (properties.id == parentId) {
+    if (properties.label == 'person') {
         updateChildrenFor(properties)
+        return
     }
+
     if (!properties.directParents.includes(parentId)) {
         console.log("received list that should not be on screen. Probably child of something on screen that is preloaded")
         return
