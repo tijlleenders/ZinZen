@@ -142,7 +142,7 @@ $("#top-lists").click(function() {
 })
 
 $("#top-calendar").click(function() {
-    send('{"action":"read","readRequestType":"play"}')
+    // send('{"action":"read","readRequestType":"play"}')
     $("#breadcrumb").addClass("d-none")
     $("#main-play").removeClass("d-none")
     $("#main-search").addClass("d-none")
@@ -163,9 +163,6 @@ $("#breadcrumb").on("click", ".breadcrumb-button", function(event) {
     console.log("id:", event.target.id)
     let prefix = event.target.id.split("-")[0]
     let parentId = event.target.id.substring(prefix.length + 1)
-    if (parentId == "me") {
-        parentId = ""
-    }
     goTo(parentId)
 })
 
