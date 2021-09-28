@@ -1381,7 +1381,7 @@ function updateBreadcrumbUI() {
         $("#breadcrumb").html(breadcrumbHTML)
         $("#breadcrumbGoal-" + parent.breadCrumb[parent.breadCrumb.length - 1].id).addClass('active')
     } else {
-        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + parent.id + '">' + parent.name[0] + '</button>'
+        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + parent.id + '">' + parent.name + '</button>'
         $("#breadcrumb").html(breadcrumbHTML)
     }
 }
