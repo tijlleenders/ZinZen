@@ -3,7 +3,7 @@
 async function updateUIWith(properties) {
     console.log("handling properties:", properties)
 
-    if (properties.label == 'person') {
+    if (properties.label == 'person' || properties.id == parentId) {
         updateChildrenFor(properties)
         return
     }

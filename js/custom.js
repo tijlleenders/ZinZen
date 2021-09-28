@@ -10,7 +10,7 @@ var serviceWorker = null
 var sessionId = uuidv4()
 var goalsLastModifiedEpochMs = 0
 var profile = 'tijl.leenders'
-var parentId = 'fcbd9d74-2a52-9336-316c-e044a1c000c2'
+var parentId = '62bd9a59-ee58-20be-59b7-8ddb2f934775'
 var repository = new loki('Lists');
 var lists = repository.addCollection('lists', {
     unique: ['id']
@@ -49,7 +49,7 @@ function openWS(authorizer, stage, WSEndpoint) {
             // send('{"action":"read","readRequestType":"play"}')
         }, 60000);
         $("#main-promised").empty();
-        send('{"action":"read","readRequestType":"allSubsFor","status":"promised","parentId":"' + parentId + '"}');
+        send('{"action":"read","readRequestType":"specificNode","nodeId":"' + parentId + '"}');
         // send('{"action":"read","readRequestType":"play"}')
         send('{"action":"read","readRequestType":"settings"}')
     };
