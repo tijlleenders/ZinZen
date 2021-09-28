@@ -29,104 +29,10 @@ $("#modal-footer-close").click(function() {
 });
 
 $("#top-settings").click(function() {
-    openModal("noId", "settings")
-        //Todo: if main-promised hasClass d-none set calendar button active else set promised button active
-    $("#main-promised").empty()
-    $("#breadcrumb").data("top", settings.get("username"))
-        //todo: remove unnecessary infor from settingsBreadCrumb
-    let settingsBreadCrumb = [{
-        "id": "settings-parent",
-        "label": "goal",
-        "properties": {
-            "duration": [{
-                "id": 193134762,
-                "label": "duration",
-                "value": "0",
-                "key": "duration"
-            }],
-            "owner": [{
-                "id": 1960584223,
-                "label": "owner",
-                "value": "fcbd9a58-bcd1-9ce2-c75a-1ca8282bd260",
-                "key": "owner"
-            }],
-            "createdDT": [{
-                "id": 109973027,
-                "label": "createdDT",
-                "value": "2021-08-11T10:12:32.256Z",
-                "key": "createdDT"
-            }],
-            "statusSort": [{
-                "id": 1051346709,
-                "label": "statusSort",
-                "value": 1,
-                "key": "statusSort"
-            }],
-            "timesOfDaysPref": [{
-                "id": -501317972,
-                "label": "timesOfDaysPref",
-                "value": "0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1",
-                "key": "timesOfDaysPref"
-            }],
-            "start": [{
-                "id": -198465520,
-                "label": "start",
-                "value": "2021-08-11T10:12:04.890Z",
-                "key": "start"
-            }],
-            "timeZone": [{
-                "id": -86468330,
-                "label": "timeZone",
-                "value": "Europe/Amsterdam",
-                "key": "timeZone"
-            }],
-            "updatedDT": [{
-                    "id": 29233606,
-                    "label": "updatedDT",
-                    "value": "2021-08-11T10:12:03.920Z",
-                    "key": "updatedDT"
-                },
-                {
-                    "id": 30101110,
-                    "label": "updatedDT",
-                    "value": "2021-08-11T10:12:32.256Z",
-                    "key": "updatedDT"
-                }
-            ],
-            "title": [{
-                "id": -1808940905,
-                "label": "title",
-                "value": "Settings",
-                "key": "title"
-            }],
-            "sharePublicly": [{
-                "id": 399556518,
-                "label": "sharePublicly",
-                "value": "sharePublicly",
-                "key": "sharePublicly"
-            }],
-            "tags": [{
-                "id": -1919591829,
-                "label": "tags",
-                "value": "4",
-                "key": "tags"
-            }],
-            "status": [{
-                "id": -800784816,
-                "label": "status",
-                "value": "maybe",
-                "key": "status"
-            }]
-        }
-    }]
-    $("#breadcrumb").data("goals", settingsBreadCrumb)
-    updateBreadcrumbUI()
-
-    let propertiesArrayString = getSettingsPropertiesFor("")
-    let propertiesArray = JSON.parse(propertiesArrayString, reviver)
-    propertiesArray.forEach(propertiesMap => {
-        updateUIWith(propertiesMap)
-    });
+    if (parentId != '____________________________settings') {
+        defaultParentId = parentId
+    }
+    goTo('____________________________settings')
 
 })
 
@@ -135,9 +41,7 @@ $("#top-lists").click(function() {
     $("#main-promised").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-search").removeClass("d-none")
-    send(
-        '{"action":"read","readRequestType":"specificNode","nodeId":"' + parentId + '"}'
-    );
+    goTo(defaultParentId)
 })
 
 $("#top-calendar").click(function() {

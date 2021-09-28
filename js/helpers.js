@@ -1146,7 +1146,7 @@ function generateGoalHTML(id) {
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
 
     let titleIcon = ""
-    if (properties.commands != undefined && properties.get('commands').includes("WebLink")) {
+    if (properties.commands != undefined && properties.commands.includes("WebLink")) {
         titleIcon = "🔗 "
     }
     let directParents = properties.directParents
@@ -1832,6 +1832,237 @@ function getSettingsPropertiesFor(settingId) {
     properties += `]`
 
     return properties
+}
+
+function loadSettings() {
+    lists.insert({
+        "id": "____________________________settings",
+        "breadCrumb": [{
+            "id": "____________________________settings",
+            "label": "setting",
+            "title": [
+                "Settings"
+            ]
+        }],
+        "label": "setting",
+        "title": [
+            "Settings"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "maybe",
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": "setting",
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": [],
+        "directChildren": [
+            "_______________________________legal",
+            "_________install-on-phone-or-desktop",
+            "______________________________donate",
+            "________________________________blog",
+            "_______________________________about",
+            "_____________________my-app-settings"
+        ]
+    })
+    lists.insert({
+        "id": "_______________________________legal",
+        "label": "setting",
+        "title": [
+            "Legal"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "maybe",
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": "setting",
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["____________________________settings"],
+        "directChildren": []
+    })
+    lists.insert({
+        "id": "_________install-on-phone-or-desktop",
+        "label": "setting",
+        "title": [
+            "Install on phone or desktop"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "maybe",
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": "setting",
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["____________________________settings"],
+        "directChildren": []
+    })
+    lists.insert({
+        "id": "______________________________donate",
+        "label": "setting",
+        "title": [
+            "Donate"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "maybe",
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": "setting",
+        "url": "https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate",
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["____________________________settings"],
+        "directChildren": []
+    })
+    lists.insert({
+        "id": "________________________________blog",
+        "label": "setting",
+        "title": [
+            "Blog"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "maybe",
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": "setting",
+        "url": "https://blog.ZinZen.me",
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["____________________________settings"],
+        "directChildren": []
+    })
+    lists.insert({
+        "id": "_______________________________about",
+        "label": "setting",
+        "title": [
+            "About"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "maybe",
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": "setting",
+        "url": "https://ZinZen.me/about.html",
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["____________________________settings"],
+        "directChildren": []
+    })
+    lists.insert({
+        "id": "_____________________my-app-settings",
+        "label": "setting",
+        "title": [
+            "My app settings"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "maybe",
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": "setting",
+        "url": "https://ZinZen.me/about.html",
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["____________________________settings"],
+        "directChildren": []
+    })
 }
 
 function goToSetting(selectedGoalId) {

@@ -10,6 +10,7 @@ var serviceWorker = null
 var sessionId = uuidv4()
 var goalsLastModifiedEpochMs = 0
 var profile = 'tijl.leenders'
+var defaultParentId = '62bd9a59-ee58-20be-59b7-8ddb2f934775'
 var parentId = '62bd9a59-ee58-20be-59b7-8ddb2f934775'
 var repository = new loki('Lists');
 var lists = repository.addCollection('lists', {
@@ -238,6 +239,7 @@ window.addEventListener("load", () => {
                 serviceWorker = swReg;
             })
     }
+    loadSettings()
 });
 
 $("#main-promised").sortable({
