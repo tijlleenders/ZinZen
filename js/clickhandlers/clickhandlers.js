@@ -161,8 +161,7 @@ $("#breadcrumb").on("click", ".breadcrumb-button", function(event) {
     event.stopPropagation();
     console.log("id:", event.target.id)
     let prefix = event.target.id.split("-")[0]
-    let parentId = event.target.id.substring(prefix.length + 1)
-    goTo(parentId)
+    goTo(event.target.id.substring(prefix.length + 1))
 })
 
 function toggleEditButtons(id) {
@@ -275,6 +274,7 @@ function goTo(id) {
         );
     } else {
         updateChildrenFor(parent)
+        updateBreadcrumbUI()
     }
 }
 

@@ -5,6 +5,7 @@ async function updateUIWith(properties) {
 
     if (properties.label == 'person' || properties.id == parentId) {
         updateChildrenFor(properties)
+        updateBreadcrumbUI()
         return
     }
 

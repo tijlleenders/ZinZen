@@ -1362,17 +1362,26 @@ function formatDuration(duration) {
 }
 
 function updateBreadcrumbUI() {
-    let top = $("#breadcrumb").data("top")
-    let goals = $("#breadcrumb").data("goals")
+    console.log("inside updateBreadcrumbUI...")
+    let parent = lists.by('id', parentId)
+    console.log("updating breadcrumb for parent:", parent)
     let breadcrumbHTML = ''
-    breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumb-me">' + top + '</button>'
-    if (goals.length != 0) {
-        goals.forEach(goal => {
-            breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + goal.id + '">' + goal.properties.title[0].value + '</button>'
+    if (parent.breadCrumb.length > 0) {
+        if (parent.breadCrumb[0].name == undefined) {
+            parent.breadCrumb.reverse()
+        }
+        console.log("parent breadCrumb:", parent.breadCrumb)
+        parent.breadCrumb.forEach(crumb => {
+            if (crumb.label == "person") {
+                breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.name[0] + '</button>'
+            } else {
+                breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.title[0] + '</button>'
+            }
         })
         $("#breadcrumb").html(breadcrumbHTML)
-        $("#breadcrumbGoal-" + goals[goals.length - 1].id).addClass('active')
+        $("#breadcrumbGoal-" + parent.breadCrumb[parent.breadCrumb.length - 1].id).addClass('active')
     } else {
+        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + parent.id + '">' + parent.name[0] + '</button>'
         $("#breadcrumb").html(breadcrumbHTML)
     }
 }
