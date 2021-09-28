@@ -46,11 +46,11 @@ function openWS(authorizer, stage, WSEndpoint) {
     WS.onopen = function() {
         console.log("websocket opened")
         const interval = setInterval(function() { //TODO: Check if response actually comes in - otherwise re-open websocket
-            send('{"action":"read","readRequestType":"play"}')
+            // send('{"action":"read","readRequestType":"play"}')
         }, 60000);
         $("#main-promised").empty();
         send('{"action":"read","readRequestType":"allSubsFor","status":"promised","parentId":"' + parentId + '"}');
-        send('{"action":"read","readRequestType":"play"}')
+        // send('{"action":"read","readRequestType":"play"}')
         send('{"action":"read","readRequestType":"settings"}')
     };
 
