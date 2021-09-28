@@ -1142,11 +1142,11 @@ function generateGoalHTML(id) {
     let cardStyle = "card" + tag
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
-    let status = properties.status[0]
+    let status = properties.status
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
 
     let titleIcon = ""
-    if (properties.commands != undefined && properties.commands.includes("WebLink")) {
+    if (properties.commands != undefined && properties.commands.includes("url")) {
         titleIcon = "🔗 "
     }
     let directParents = properties.directParents
