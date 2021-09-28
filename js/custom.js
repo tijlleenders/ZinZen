@@ -72,21 +72,6 @@ function openWS(authorizer, stage, WSEndpoint) {
                         }
                         break;
 
-                    case "allSubs":
-                        console.log("breadcrumb goals received:", item.get("goalsBreadcrumb"))
-                        $("#breadcrumb").data("top", item.get("username"))
-                        $("#breadcrumb").data("goals", item.get("goalsBreadcrumb"))
-                        updateBreadcrumbUI()
-                        item.get("allSubs").forEach(properties => {
-                            if (isUpdate(properties)) {
-                                updateUIWith(properties)
-                            }
-                        })
-                        if (item.get("allSubs").length == 0) {
-                            $("#main-promised").html(`<div id="add-a-goal"><p class="no-lists-yet"><br />No lists here yet...</p></div>`) //Todo use item.get("goalsBreadCrumb") array to customize to parent name
-                        }
-                        break;
-
                     case "play":
                         handleIncomingPlay(item.get("schedule"), item.get("lastCalculatedEpochMs"))
                         break;

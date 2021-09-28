@@ -135,9 +135,8 @@ $("#top-lists").click(function() {
     $("#main-promised").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-search").removeClass("d-none")
-    $("#main-promised").empty();
     send(
-        '{"action":"read","readRequestType":"allSubsFor","parentId":""}'
+        '{"action":"read","readRequestType":"specificNode","nodeId":"' + parentId + '"}'
     );
 })
 
