@@ -22,6 +22,14 @@ async function updateUIWith(properties) {
         $("#add-a-goal").empty() //Empties the No lists here
         let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
         $("#main-promised").prepend(goalHTML)
+
+        properties.directParents.forEach(directParentId => {
+            let directParent = lists.by('id', directParentId)
+            if (directParent != undefined) {
+                directParent.directChildren.push(id)
+                lists.update(directParent)
+            }
+        })
     }
     $("#" + id).data('properties', properties)
     $("#" + id).html(generateGoalHTML(id))
