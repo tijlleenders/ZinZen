@@ -254,8 +254,8 @@ function updateSettingsUI() {
 }
 
 function updateScreenMode() {
-    if (document.documentElement.getAttribute("data-theme") != settings.get("screenMode")[0]) {
-        document.documentElement.setAttribute("data-theme", settings.get("screenMode")[0])
+    if (document.documentElement.getAttribute("data-theme") != settings.screenMode[0]) {
+        document.documentElement.setAttribute("data-theme", settings.screenMode[0])
     }
 }
 

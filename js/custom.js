@@ -32,6 +32,7 @@ window.mobileAndTabletCheck = function() {
 };
 
 function openWS(authorizer, stage, WSEndpoint) {
+    console.log("openWS called for stage ", stage)
     if (!("WebSocket" in window)) {
         alert("WebSocket is not supported by your Browser... :(");
         return;
@@ -43,8 +44,10 @@ function openWS(authorizer, stage, WSEndpoint) {
 
     if (stage == "public") {
         publicOrPrivate == "public"
+        console.log("opened in public mode")
     } else {
         publicOrPrivate == "private"
+        console.log("opened in private mode")
     }
 
     WS = new WebSocket(
@@ -57,8 +60,7 @@ function openWS(authorizer, stage, WSEndpoint) {
         const interval = setInterval(function() { //TODO: Check if response actually comes in - otherwise re-open websocket
             // send('{"action":"read","readRequestType":"play"}')
         }, 60000);
-        $("#main-promised").empty();
-        send('{"action":"read","readRequestType":"specificNode","nodeId":"' + parentId + '"}');
+
         // send('{"action":"read","readRequestType":"play"}')
         send('{"action":"read","readRequestType":"settings"}')
 
