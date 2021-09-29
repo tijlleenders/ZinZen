@@ -43,6 +43,7 @@ function addSomething() {
         start: (new Date()).toISOString(),
         duration: duration
     }
+
     send(JSON.stringify(upsertGoal))
     $("#inputCommand").val("")
     let ellipse = ""
@@ -55,6 +56,31 @@ function addSomething() {
 
 $("#myModal").on("click", "#add-a-goal-button", function() {
     addSomething()
+})
+
+$("#myModal").on("click", "#save-a-goal-button", function() {
+    let title = $("#inputCommand").val()
+    console.log("saving ", title)
+    let idToSave = $("#myModal").data('idx')
+    console.log("idx:", idToSave)
+    if (idToSave != undefined) {
+        let props = lists.by('id', idToSave)
+        props.title = [title]
+        lists.update(props)
+        let upsertGoal = {
+            action: "command",
+            command: "upsertGoal",
+            title: title
+        }
+        send(JSON.stringify(upsertGoal))
+        $("#inputCommand").val("")
+        let ellipse = ""
+        if (title.length > 8) {
+            ellipse = "..."
+        }
+        $("#inputCommand").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
+        $("#inputCommand").focus()
+    }
 })
 
 $("#myModal").on("click", ".command-suggestion", function(e) {

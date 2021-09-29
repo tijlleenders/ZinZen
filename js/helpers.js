@@ -219,6 +219,7 @@ function openModal(id, modalType) {
     $("#myModal").data("modalType", modalType)
     $("#myModal").data("idx", id)
 
+    console.log("modalType:", modalType)
     switch (modalType) {
         case "settings":
             setSkeletonHTMLForSettings()
@@ -227,10 +228,11 @@ function openModal(id, modalType) {
             setSkeletonHTMLForScheduleConstraints()
             break;
         case "add":
-            setSkeletonHTMLForAdd()
+            setSkeletonHTMLForAdd(id)
             updateModalUI()
             break;
         default:
+            console.log("modalType " + modalType + " not found")
             break;
     }
     if (id != "") {
@@ -763,7 +765,8 @@ function setSkeletonHTMLForScheduleConstraints() {
     $("#modal-body").html(bodyHTML)
 }
 
-function setSkeletonHTMLForAdd() {
+function setSkeletonHTMLForAdd(id) {
+    console.log("inside setSkeletonHTMLForAdd...")
     let headerHTML = `<h4 class="modal-title">Add or search</h4>`
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = `
@@ -789,7 +792,12 @@ function setSkeletonHTMLForAdd() {
     <div class="row mt-2" id="add-row">
       <div class="m-1">
         <button type="button" class="btn btn-outline-primary" id="add-a-goal-button">Add</button>
-    </div>
+      </div>
+    </div>  
+    <div class="row mt-2 d-none" id="save-row">
+      <div class="m-1">
+        <button type="button" class="btn btn-outline-primary" id="save-a-goal-button">Save</button>
+      </div>    
     </div>
     <div class="row mt-2" id="suggested-commands-row">
       <div class="col">
@@ -815,6 +823,14 @@ function setSkeletonHTMLForAdd() {
         suggestedCommands: [],
         suggestedWords: []
     }
+    let list = lists.by('id', id)
+    console.log("list:", list)
+    if (list != undefined) {
+        inputCommand.title = list.title[0]
+        $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
+        $("#save-row").removeClass('d-none')
+    }
+
     $("#inputCommand").data('inputCommand', inputCommand)
     $("#myModal").on('shown.bs.modal', function() {
         $("#inputCommand").focus();

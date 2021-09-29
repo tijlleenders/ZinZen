@@ -80,7 +80,7 @@ function toggleEditButtons(id) {
 
 $("#main-promised").on("contextmenu", ".goal", function(event) {
     let nodeId = getNodeId(event)
-    toggleEditButtons(nodeId.slice(-36))
+    openModal(nodeId.slice(-36), "add")
     return false //returning false blocks context menu
 })
 
