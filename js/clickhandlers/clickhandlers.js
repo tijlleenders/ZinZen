@@ -55,7 +55,7 @@ $("#top-login").click(function() {
 })
 
 $("#top-inbox").click(function() {
-    alert('Inbox from the future coming soon...')
+    openMainMailModal()
 })
 
 $("#top-explore").click(function() {
