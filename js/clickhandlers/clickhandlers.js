@@ -41,7 +41,7 @@ $("#top-lists").click(function() {
     $("#main-promised").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-search").removeClass("d-none")
-    goTo(defaultParentId)
+    goTo(parentId)
 })
 
 $("#top-calendar").click(function() {
