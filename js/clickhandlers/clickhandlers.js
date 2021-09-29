@@ -52,6 +52,10 @@ $("#top-calendar").click(function() {
     $("#main-promised").addClass("d-none")
 })
 
+$("#top-login").click(function() {
+    redirectUserAgentToAuthorizeEndpoint()
+})
+
 $("#top-inbox").click(function() {
     alert('Inbox from the future coming soon...')
 })
