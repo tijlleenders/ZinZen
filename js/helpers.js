@@ -1904,7 +1904,7 @@ function loadSettings() {
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
-        "directChildren": []
+        "directChildren": ["_____________________________Privacy"]
     })
     lists.insert({
         "id": "_________install-on-phone-or-desktop",
@@ -2059,6 +2059,37 @@ function loadSettings() {
         "directParents": ["____________________________settings"],
         "directChildren": []
     })
+    lists.insert({
+        "id": "_____________________________Privacy",
+        "label": "setting",
+        "title": [
+            "Privacy statement"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "url": ["https://ZinZen.me/privacy.html"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_______________________________legal"],
+        "directChildren": []
+    })
 }
 
 function goToSetting(selectedGoalId) {
@@ -2067,6 +2098,8 @@ function goToSetting(selectedGoalId) {
     console.log("setting:", setting)
     if (setting.url != undefined) {
         window.open(setting.url[0], '_blank')
+    } else {
+        goTo(selectedGoalId)
     }
 }
 
