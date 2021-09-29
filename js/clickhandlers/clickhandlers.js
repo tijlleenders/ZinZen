@@ -125,8 +125,7 @@ $("#main-promised").on("mouseup", ".circle-col", function(event) {
     }
     if (Math.abs(endX - startX) > 50 &&
         Math.abs(endY - startY) <= 30) {
-        console.log("swiped!")
-        toggleEditButtons(nodeId.slice(-36))
+        openModal(nodeId.slice(-36), "add")
     }
 })
 
