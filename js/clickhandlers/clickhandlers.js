@@ -192,7 +192,12 @@ function deleteGoal(id) {
         command: "deleteGoal",
         goalId: id
     }
-    send(JSON.stringify(deleteGoal))
+    send(JSON.stringify(deleteGoal)) //remote remove
+
+    let list = lists.by('id', id)
+    if (list != undefined) {
+        lists.remove(list) //local remove
+    }
     $("#" + id).removeClass('jello-vertical-animation') //if any
     $("#" + id).addClass('swirl-out-bck-animation')
     $("#" + id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
