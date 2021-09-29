@@ -40,12 +40,20 @@ function openWS(authorizer, stage, WSEndpoint) {
     if (WS != undefined) {
         WS.close(1000)
     }
+
+    if (stage == "public") {
+        publicOrPrivate == "public"
+    } else {
+        publicOrPrivate == "private"
+    }
+
     WS = new WebSocket(
         WSEndpoint + "/" + stage + "?Authorizer=" + authorizer
     );
 
     WS.onopen = function() {
         console.log("websocket opened")
+
         const interval = setInterval(function() { //TODO: Check if response actually comes in - otherwise re-open websocket
             // send('{"action":"read","readRequestType":"play"}')
         }, 60000);
@@ -53,6 +61,15 @@ function openWS(authorizer, stage, WSEndpoint) {
         send('{"action":"read","readRequestType":"specificNode","nodeId":"' + parentId + '"}');
         // send('{"action":"read","readRequestType":"play"}')
         send('{"action":"read","readRequestType":"settings"}')
+
+        if (publicOrPrivate == "private") {
+            $("#top-login-label").addClass('d-none')
+            $("#top-inbox-label").removeClass('d-none')
+        } else {
+            $("#top-login-label").removeClass('d-none')
+            $("#top-inbox-label").addClass('d-none')
+        }
+
     };
 
     WS.onmessage = function(evt) {
