@@ -70,7 +70,8 @@ $("#myModal").on("click", "#save-a-goal-button", function() {
         let upsertGoal = {
             action: "command",
             command: "upsertGoal",
-            title: title
+            title: title,
+            goalId: idToSave
         }
         send(JSON.stringify(upsertGoal))
         $("#inputCommand").val("")
