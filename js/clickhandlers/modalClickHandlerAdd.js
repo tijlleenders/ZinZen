@@ -34,11 +34,6 @@ function addSomething() {
         duration = 0
     }
 
-    let parentId = ""
-    if ($("#breadcrumb").data("goals") != undefined && $("#breadcrumb").data("goals").length != 0) {
-        parentId = ($("#breadcrumb").data("goals"))[$("#breadcrumb").data("goals").length - 1].id
-    }
-
     let upsertGoal = {
         action: "command",
         command: "upsertGoal",

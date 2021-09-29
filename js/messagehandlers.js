@@ -18,10 +18,10 @@ async function updateUIWith(properties) {
     let id = properties.id
 
     if (!$('#' + id).length) {
-        console.log("id not yet present, appending")
+        console.log("id not yet present, prepending")
         $("#add-a-goal").empty() //Empties the No lists here
         let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
-        $("#main-promised").append(goalHTML)
+        $("#main-promised").prepend(goalHTML)
     }
     $("#" + id).data('properties', properties)
     $("#" + id).html(generateGoalHTML(id))
