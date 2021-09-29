@@ -111,6 +111,7 @@ function handleIncomingSettings(incomingSettings) {
     $("#main-promised").empty();
     settings = incomingSettings
     parentId = settings.owner[0]
+    defaultParentId = settings.owner[0]
     send('{"action":"read","readRequestType":"specificNode","nodeId":"' + parentId + '"}');
     updateSettingsUI()
 }

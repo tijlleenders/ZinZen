@@ -1904,7 +1904,11 @@ function loadSettings() {
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
-        "directChildren": ["_____________________________Privacy"]
+        "directChildren": [
+            "_____________________________Privacy",
+            "____________________terms-of-service",
+            "________open-source-acknowledgements"
+        ]
     })
     lists.insert({
         "id": "_________install-on-phone-or-desktop",
@@ -2085,6 +2089,68 @@ function loadSettings() {
         ],
         "commands": ["setting"],
         "url": ["https://ZinZen.me/privacy.html"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_______________________________legal"],
+        "directChildren": []
+    })
+    lists.insert({
+        "id": "____________________terms-of-service",
+        "label": "setting",
+        "title": [
+            "Terms of service"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "url": ["https://ZinZen.me/terms.html"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_______________________________legal"],
+        "directChildren": []
+    })
+    lists.insert({
+        "id": "________open-source-acknowledgements",
+        "label": "setting",
+        "title": [
+            "Open source acknowledgements"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "url": ["https://ZinZen.me/acknowledgements.html"],
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["_______________________________legal"],

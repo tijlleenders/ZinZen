@@ -29,19 +29,17 @@ $("#modal-footer-close").click(function() {
 });
 
 $("#top-settings").click(function() {
-    if (parentId != '____________________________settings') {
-        defaultParentId = parentId
-    }
+    $("#breadcrumb").removeClass("d-none")
+    $("#main-play").addClass("d-none")
+    $("#main-promised").removeClass("d-none")
     goTo('____________________________settings')
-
 })
 
 $("#top-lists").click(function() {
     $("#breadcrumb").removeClass("d-none")
-    $("#main-promised").removeClass("d-none")
     $("#main-play").addClass("d-none")
-    $("#main-search").removeClass("d-none")
-    goTo(parentId)
+    $("#main-promised").removeClass("d-none")
+    goTo(defaultParentId)
 })
 
 $("#top-calendar").click(function() {
