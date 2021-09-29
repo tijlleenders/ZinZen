@@ -154,8 +154,9 @@ function changeStatus(id) {
     }
 
     //fast update before confirmation from backend
-    let tempProps = $("#" + id).data("properties")
-    tempProps.set("status", [toBeStatus])
+    let tempProps = lists.by('id', id)
+    tempProps.status = [toBeStatus]
+    lists.update(tempProps)
     $("#" + id).html(generateGoalHTML(id))
 
     $("#modal-status").data("status", toBeStatus) //necessary for fast/consistant UI update
