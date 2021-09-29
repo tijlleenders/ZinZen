@@ -225,7 +225,7 @@ $("#main-promised").on("click", ".goal", function(event) {
         console.log("properties:", $("#" + selectedGoalId).data("properties"))
         if ($("#" + selectedGoalId).data("properties").commands != undefined) {
             console.log("Commands!")
-            if ($("#" + selectedGoalId).data("properties").commands[0] == 'setting') {
+            if ($("#" + selectedGoalId).data("properties").commands.includes('setting')) {
                 goToSetting(selectedGoalId)
             }
             if ($("#" + selectedGoalId).data("properties").commands[0] == 'WebLink') {

@@ -1142,11 +1142,11 @@ function generateGoalHTML(id) {
     let cardStyle = "card" + tag
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
-    let status = properties.status
+    let status = properties.status[0]
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
 
     let titleIcon = ""
-    if (properties.commands != undefined && properties.commands.includes("url")) {
+    if (properties.url != undefined) {
         titleIcon = "🔗 "
     }
     let directParents = properties.directParents
@@ -1834,7 +1834,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": ["maybe"],
         "duration": "0",
         "createdDT": [
             "2021-08-12T15:24:06.702Z"
@@ -1847,7 +1847,7 @@ function loadSettings() {
             "2021-08-12T15:24:03.602Z",
             "2021-08-12T15:24:06.702Z"
         ],
-        "commands": "setting",
+        "commands": ["setting"],
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": [],
@@ -1871,7 +1871,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": ["maybe"],
         "duration": "0",
         "createdDT": [
             "2021-08-12T15:24:06.702Z"
@@ -1884,7 +1884,7 @@ function loadSettings() {
             "2021-08-12T15:24:03.602Z",
             "2021-08-12T15:24:06.702Z"
         ],
-        "commands": "setting",
+        "commands": ["setting"],
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
@@ -1901,7 +1901,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": ["maybe"],
         "duration": "0",
         "createdDT": [
             "2021-08-12T15:24:06.702Z"
@@ -1914,7 +1914,7 @@ function loadSettings() {
             "2021-08-12T15:24:03.602Z",
             "2021-08-12T15:24:06.702Z"
         ],
-        "commands": "setting",
+        "commands": ["setting"],
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
@@ -1931,7 +1931,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": ["maybe"],
         "duration": "0",
         "createdDT": [
             "2021-08-12T15:24:06.702Z"
@@ -1944,8 +1944,8 @@ function loadSettings() {
             "2021-08-12T15:24:03.602Z",
             "2021-08-12T15:24:06.702Z"
         ],
-        "commands": "setting",
-        "url": "https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate",
+        "commands": ["setting"],
+        "url": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
@@ -1962,7 +1962,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": ["maybe"],
         "duration": "0",
         "createdDT": [
             "2021-08-12T15:24:06.702Z"
@@ -1975,8 +1975,8 @@ function loadSettings() {
             "2021-08-12T15:24:03.602Z",
             "2021-08-12T15:24:06.702Z"
         ],
-        "commands": "setting",
-        "url": "https://blog.ZinZen.me",
+        "commands": ["setting"],
+        "url": ["https://blog.ZinZen.me"],
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
@@ -1993,7 +1993,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": ["maybe"],
         "duration": "0",
         "createdDT": [
             "2021-08-12T15:24:06.702Z"
@@ -2006,8 +2006,8 @@ function loadSettings() {
             "2021-08-12T15:24:03.602Z",
             "2021-08-12T15:24:06.702Z"
         ],
-        "commands": "setting",
-        "url": "https://ZinZen.me/about.html",
+        "commands": ["setting"],
+        "url": ["https://ZinZen.me/about.html"],
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
@@ -2024,7 +2024,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": ["maybe"],
         "duration": "0",
         "createdDT": [
             "2021-08-12T15:24:06.702Z"
@@ -2037,8 +2037,7 @@ function loadSettings() {
             "2021-08-12T15:24:03.602Z",
             "2021-08-12T15:24:06.702Z"
         ],
-        "commands": "setting",
-        "url": "https://ZinZen.me/about.html",
+        "commands": ["setting"],
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
@@ -2048,7 +2047,11 @@ function loadSettings() {
 
 function goToSetting(selectedGoalId) {
     console.log("inside goToSetting")
-    return
+    let setting = lists.by('id', selectedGoalId)
+    console.log("setting:", setting)
+    if (setting.url != undefined) {
+        window.open(setting.url[0], '_blank')
+    }
 }
 
 
