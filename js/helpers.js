@@ -101,7 +101,6 @@ function emptyModal() {
 function updateSettingsUI() {
     console.log("updating settings...")
     updateScreenMode()
-    updateModalSettingsUI()
 }
 
 function updateScreenMode() {
