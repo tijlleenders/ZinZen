@@ -540,10 +540,15 @@ function updateBreadcrumbUI() {
         }
         console.log("parent breadCrumb:", parent.breadCrumb)
         parent.breadCrumb.forEach(crumb => {
-            if (crumb.label == "person") {
-                breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.name[0] + '</button>'
-            } else {
-                breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.title[0] + '</button>'
+            switch (crumb.label) {
+                case "person":
+                    breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.name[0] + '</button>'
+                    break;
+                case "settings-root":
+                    breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.title[0] + '</button>'
+                    break;
+                default:
+                    breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.title[0] + '</button>'
             }
         })
         $("#breadcrumb").html(breadcrumbHTML)
@@ -598,12 +603,12 @@ function loadSettings() {
         "id": "____________________________settings",
         "breadCrumb": [{
             "id": "____________________________settings",
-            "label": "setting",
+            "label": "settings-root",
             "title": [
                 "Settings"
             ]
         }],
-        "label": "setting",
+        "label": "settings-root",
         "title": [
             "Settings"
         ],
