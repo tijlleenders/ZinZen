@@ -184,25 +184,6 @@ function goTo(id) {
     }
 }
 
-function deleteGoal(id) {
-    let deleteGoal = {
-        action: "command",
-        command: "deleteGoal",
-        goalId: id
-    }
-    send(JSON.stringify(deleteGoal)) //remote remove
-
-    let list = lists.by('id', id)
-    if (list != undefined) {
-        lists.remove(list) //local remove
-    }
-    $("#" + id).removeClass('jello-vertical-animation') //if any
-    $("#" + id).addClass('swirl-out-bck-animation')
-    $("#" + id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-        $("#" + id).remove();
-    });
-}
-
 $("#mmain-play").on("click", ".slot", function(event) {
     console.log(Date.now());
     let nodeId = getNodeId(event)

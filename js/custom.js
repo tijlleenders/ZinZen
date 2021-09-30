@@ -78,7 +78,7 @@ function openWS(authorizer, stage, WSEndpoint) {
         try {
             // console.log(new Date().toLocaleTimeString("en-US") + " received event of type " + evt.type + ":", evt);
             received_msg = JSON.parse(evt.data, reviver); //made global temporarily for debugging in console
-            // console.log("parsed message:", received_msg)
+            console.log("parsed message:", received_msg)
 
             received_msg.forEach(function(item, index) {
                 switch (item.get("responseType")) {

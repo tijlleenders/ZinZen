@@ -58,6 +58,13 @@ $("#myModal").on("click", "#add-a-goal-button", function() {
     addSomething()
 })
 
+$("#myModal").on("click", "#delete-a-goal-button", function() {
+    console.log("delet clicked")
+    let idToDelete = $("#myModal").data('idx')
+    console.log("idx:", idToDelete)
+    deleteGoal(idToDelete)
+})
+
 $("#myModal").on("click", "#save-a-goal-button", function() {
     let title = $("#inputCommand").val()
     console.log("saving ", title)
@@ -83,6 +90,25 @@ $("#myModal").on("click", "#save-a-goal-button", function() {
         $("#inputCommand").focus()
     }
 })
+
+function deleteGoal(id) {
+    let deleteGoal = {
+        action: "command",
+        command: "deleteGoal",
+        goalId: id
+    }
+    send(JSON.stringify(deleteGoal)) //remote remove
+
+    let list = lists.by('id', id)
+    if (list != undefined) {
+        lists.remove(list) //local remove
+    }
+    $("#" + id).removeClass('jello-vertical-animation') //if any
+    $("#" + id).addClass('swirl-out-bck-animation')
+    $("#" + id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+        $("#" + id).remove();
+    });
+}
 
 $("#myModal").on("click", ".command-suggestion", function(e) {
     console.log("handling command-suggestion pressed")

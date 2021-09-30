@@ -134,14 +134,18 @@ function setSkeletonHTMLForAdd(id) {
       </div>
     </div>
     <div class="row mt-2" id="add-row">
-      <div class="m-1">
+      <div class=" col m-1">
         <button type="button" class="btn btn-outline-primary" id="add-a-goal-button">Add</button>
       </div>
     </div>  
     <div class="row mt-2 d-none" id="save-row">
-      <div class="m-1">
+      <div class="col m-1">
         <button type="button" class="btn btn-outline-primary" id="save-a-goal-button">Save</button>
-      </div>    
+      </div>
+      <div class="col m-1">
+        <button type="button" class="btn btn-outline-primary" id="delete-a-goal-button">Delete</button>
+      </div>
+    </div>    
     </div>
     <div class="row mt-2" id="suggested-commands-row">
       <div class="col">
@@ -173,18 +177,14 @@ function setSkeletonHTMLForAdd(id) {
         inputCommand.title = list.title[0]
         $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
         $("#save-row").removeClass('d-none')
+        let headerHTML = `<h4 class="modal-title">Editing: ` + list.title[0].substring(0, 5) + `...</h4>`
+        $("#modal-header-content").html(headerHTML)
     }
 
     $("#inputCommand").data('inputCommand', inputCommand)
     $("#myModal").on('shown.bs.modal', function() {
         $("#inputCommand").focus();
     });
-}
-
-function setDataFieldsForAdd(properties) {
-    console.log("properties in setDataFieldsForAdd:", properties)
-    let headerHTML = `<h4 class="modal-title">` + properties.get("In: " + substring("title")[0], 5) + `</h4>`
-    $("#modal-header-content").html(headerHTML)
 }
 
 function generateSlotHTML(element) {

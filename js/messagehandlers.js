@@ -83,7 +83,7 @@ async function updateUIWith(properties) {
                 break;
 
             case "add":
-                setDataFieldsForAdd(properties)
+                setSkeletonHTMLForAdd(id)
                 updateModalUI()
                 break;
 
