@@ -26,13 +26,12 @@ $("#myModal").on("keyup", "#inputCommand", function(e) {
 });
 
 function addSomething() {
+    console.log("inside addSomething...")
     let title = $("#inputCommand").val()
+    console.log("title:", title)
     let status = "maybe"
 
-    let duration = $("#duration-buttons").data("defaultDuration")
-    if (duration == undefined) {
-        duration = 0
-    }
+    let duration = 0
 
     let upsertGoal = {
         action: "command",

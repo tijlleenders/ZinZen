@@ -187,7 +187,7 @@ function send(jsonString) {
             json.sessionId = sessionId
         }
     }
-    // console.log("sending:", JSON.stringify(json))
+    console.log("sending:", JSON.stringify(json))
     WS.send(JSON.stringify(json))
 }
 
