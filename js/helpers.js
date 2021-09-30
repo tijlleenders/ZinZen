@@ -320,7 +320,7 @@ function getGoalSvg(status, id) {
 function generateGoalHTML(id) {
     let properties = $("#" + id).data("properties")
 
-    console.log("generatign goal HTML for properties:", properties)
+    // console.log("generating goal HTML for properties:", properties)
 
     let goalId = properties.id
     var tag = properties.tags[0]
@@ -358,8 +358,6 @@ function generateGoalHTML(id) {
     if (durationString == "0m") {
         durationTransparency = "semi-transparent"
     }
-    console.log("duration", duration)
-    console.log("finish", finish)
 
     //Todo: 18 subs (18h 20m)... First due x, last due x
     let subTitle = ''
@@ -394,7 +392,7 @@ function generateGoalHTML(id) {
 
     let parentRowAndColHTML = ''
     if (directParents.length != 0) {
-        console.log("directParents for " + goalId + ":" + directParents)
+        // console.log("directParents for " + goalId + ":" + directParents)
         parentRowAndColHTML += '<div class="row" id="goal-parents-row-' +
             goalId +
             '">\
@@ -404,9 +402,9 @@ function generateGoalHTML(id) {
     '
         if (directParents.length > 1) {
             directParents.forEach(function(parentId, index) {
-                console.log("getting parent for id:", parentId)
+                // console.log("getting parent for id:", parentId)
                 let parent = lists.by('id', parentId)
-                console.log("parent:", parent)
+                    // console.log("parent:", parent)
                 if (parent != undefined) {
                     parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title[0] + "</div>"
                 }
@@ -703,7 +701,11 @@ function loadSettings() {
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
-        "directChildren": []
+        "directChildren": [
+            "_________________install-on-computer",
+            "__________________install-on-android",
+            "___________________install-on-iphone"
+        ]
     })
     lists.insert({
         "id": "______________________________donate",
@@ -921,6 +923,100 @@ function loadSettings() {
         "directParents": ["_______________________________legal"],
         "directChildren": []
     })
+
+    lists.insert({
+        "id": "_________________install-on-computer",
+        "label": "setting",
+        "title": [
+            "Install on computer (Windows, Apple, Linux)"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_________install-on-phone-or-desktop"],
+        "directChildren": []
+    })
+
+    lists.insert({
+        "id": "__________________install-on-android",
+        "label": "setting",
+        "title": [
+            "Install on android (Samsung, Xiaomi, other)"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_________install-on-phone-or-desktop"],
+        "directChildren": []
+    })
+
+    lists.insert({
+        "id": "___________________install-on-iphone",
+        "label": "setting",
+        "title": [
+            "Install on iPhone (Apple)"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_________install-on-phone-or-desktop"],
+        "directChildren": []
+    })
+
 }
 
 function goToSetting(selectedGoalId) {

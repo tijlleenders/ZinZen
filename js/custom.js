@@ -76,9 +76,9 @@ function openWS(authorizer, stage, WSEndpoint) {
 
     WS.onmessage = function(evt) {
         try {
-            console.log(new Date().toLocaleTimeString("en-US") + " received event of type " + evt.type + ":", evt);
+            // console.log(new Date().toLocaleTimeString("en-US") + " received event of type " + evt.type + ":", evt);
             received_msg = JSON.parse(evt.data, reviver); //made global temporarily for debugging in console
-            console.log("parsed message:", received_msg)
+            // console.log("parsed message:", received_msg)
 
             received_msg.forEach(function(item, index) {
                 switch (item.get("responseType")) {
@@ -149,19 +149,19 @@ function updateChildrenFor(parent) {
 }
 
 function isUpdate(properties) {
-    console.log("inside store...")
+    // console.log("inside store...")
     let existingRecord = lists.by('id', properties.id)
-    console.log("existingRecord:", existingRecord)
+        // console.log("existingRecord:", existingRecord)
     if (existingRecord == undefined) {
         lists.insert(properties)
         return true
     } else {
         console.log("record exists - comparing new vs old")
         if (JSON.stringify(existingRecord.updatedDT) === JSON.stringify(properties.updatedDT)) {
-            console.log("Equal")
+            // console.log("Equal")
             return false
         } else {
-            console.log("Different")
+            // console.log("Different")
             return true
         }
     }
@@ -187,7 +187,7 @@ function send(jsonString) {
             json.sessionId = sessionId
         }
     }
-    console.log("sending:", JSON.stringify(json))
+    // console.log("sending:", JSON.stringify(json))
     WS.send(JSON.stringify(json))
 }
 
