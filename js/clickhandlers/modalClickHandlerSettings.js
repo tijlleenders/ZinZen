@@ -5,17 +5,6 @@ $("#myModal").on("click", "#login-buttonx", function() {
     redirectUserAgentToAuthorizeEndpoint()
 });
 
-
-$("#myModal").on("click", "#logout-buttonx", function() {
-    console.log("log out")
-    let redirectURL = "https://auth.zinzen.me/logout?response_type=code&client_id=" + _config.appClientId +
-        "&redirect_uri=" + _config.redirectURI +
-        "&state=" + sessionStorage.getItem("pkce_state") +
-        "&scope=email+openid"
-    sessionStorage.clear()
-    location.href = redirectURL
-})
-
 $("#myModal").on("click", "#install-app-button", function() {
     isInstalled()
     console.log("Trying to install app...")

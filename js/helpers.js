@@ -832,7 +832,12 @@ function loadSettings() {
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
-        "directChildren": []
+        "directChildren": [
+            "_______________________look-and-feel",
+            "_________________________danger-zone",
+            "____________________________language",
+            "_____________________________log-out"
+        ]
     })
     lists.insert({
         "id": "_____________________________Privacy",
@@ -1021,17 +1026,164 @@ function loadSettings() {
         "directChildren": []
     })
 
+    lists.insert({
+        "id": "_______________________look-and-feel",
+        "label": "setting",
+        "title": [
+            "Look and feel"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_____________________my-app-settings"],
+        "directChildren": []
+    })
+
+    lists.insert({
+        "id": "_________________________danger-zone",
+        "label": "setting",
+        "title": [
+            "Danger zone"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "1",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_____________________my-app-settings"],
+        "directChildren": []
+    })
+
+    lists.insert({
+        "id": "____________________________language",
+        "label": "setting",
+        "title": [
+            "Language"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "1",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_____________________my-app-settings"],
+        "directChildren": []
+    })
+
+    lists.insert({
+        "id": "_____________________________log-out",
+        "label": "setting",
+        "title": [
+            "Log out"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "function": ["logOut()"],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z",
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_____________________my-app-settings"],
+        "directChildren": []
+    })
+
 }
 
 function goToSetting(selectedGoalId) {
     console.log("inside goToSetting")
     let setting = lists.by('id', selectedGoalId)
     console.log("setting:", setting)
+    if (setting.function != undefined) {
+        switch (setting.function[0]) {
+            case "logOut()":
+                logOut()
+                return
+                break;
+            default:
+                console.log("function not recognized:", setting.function[0])
+                return
+                break;
+        }
+    }
     if (setting.url != undefined) {
         window.open(setting.url[0], '_blank')
     } else {
         goTo(selectedGoalId)
     }
+}
+
+function logOut() {
+    console.log("log out")
+    let redirectURL = "https://auth.zinzen.me/logout?response_type=code&client_id=" + _config.appClientId +
+        "&redirect_uri=" + _config.redirectURI +
+        "&state=" + sessionStorage.getItem("pkce_state") +
+        "&scope=email+openid"
+    sessionStorage.clear()
+    location.href = redirectURL
 }
 
 
