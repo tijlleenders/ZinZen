@@ -53,7 +53,7 @@ function addSomething() {
     $("#inputCommand").focus()
 }
 
-$("#myModal").on("click", "#add-a-goal-button", function() {
+$("#myModal").on("click", "#modal-add-a-goal-button", function() {
     addSomething()
 })
 
@@ -102,11 +102,13 @@ function deleteGoal(id) {
     if (list != undefined) {
         lists.remove(list) //local remove
     }
+    $("#myModal").modal('hide')
     $("#" + id).removeClass('jello-vertical-animation') //if any
     $("#" + id).addClass('swirl-out-bck-animation')
     $("#" + id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
         $("#" + id).remove();
     });
+
 }
 
 $("#myModal").on("click", ".command-suggestion", function(e) {

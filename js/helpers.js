@@ -135,7 +135,7 @@ function setSkeletonHTMLForAdd(id) {
     </div>
     <div class="row mt-2" id="add-row">
       <div class=" col m-1">
-        <button type="button" class="btn btn-outline-primary" id="add-a-goal-button">Add</button>
+        <button type="button" class="btn btn-outline-primary" id="modal-add-a-goal-button">Add</button>
       </div>
     </div>  
     <div class="row mt-2 d-none" id="save-row">
