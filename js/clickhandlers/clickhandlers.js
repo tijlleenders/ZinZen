@@ -46,7 +46,6 @@ $("#top-calendar").click(function() {
     // send('{"action":"read","readRequestType":"play"}')
     $("#breadcrumb").addClass("d-none")
     $("#main-play").removeClass("d-none")
-    $("#main-search").addClass("d-none")
     $("#main-promised").addClass("d-none")
 })
 
