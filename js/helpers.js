@@ -1258,6 +1258,26 @@ function parseCommand(command) {
         }
     }
 
+    if (!isNaN(word)) {
+        console.log("is int:", word)
+        command.suggestedCommands.push(word + "...")
+        command.suggestedCommands.push('Repeat ' + word + 'x')
+        command.suggestedCommands.push('Takes ' + word + '...')
+    }
+
+    if (word.length > 3) {
+        if (word.substr(word.length - 3) == "...") {
+            console.log('multi command')
+            let preWord = word.substr(0, word.length - 3)
+            console.log("preword:", preWord)
+            if (!isNaN(preWord)) {
+                console.log("preWord is a number")
+                console.log("pre-preWord:", getLastWord(command.title.substr(0, command.title.length - word.length)))
+                command.suggestedCommands = command.suggestedCommands.concat(['days', 'hours', 'minutes', 'months', 'weeks', 'years'])
+            }
+        }
+    }
+
     //if word is phone number, suggest command for that phone number unless already (active and same number)
     //if word is email, suggest command for that email unless already (active and same email)
 
