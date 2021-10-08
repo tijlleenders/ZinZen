@@ -30,7 +30,7 @@ function updateModalAddUI() {
     $("#inputCommand").data('inputCommand', newInputCommand)
     $("#inputCommand").val(newInputCommand.title)
     $("#inputCommand").focus()
-        //when to change modal title??
+    //when to change modal title??
 
     let selectedCommands = ``
     newInputCommand.commands.forEach(command => {
@@ -182,7 +182,7 @@ function setSkeletonHTMLForAdd(id) {
     }
 
     $("#inputCommand").data('inputCommand', inputCommand)
-    $("#myModal").on('shown.bs.modal', function() {
+    $("#myModal").on('shown.bs.modal', function () {
         $("#inputCommand").focus();
     });
 }
@@ -400,10 +400,10 @@ function generateGoalHTML(id) {
             '">\
     '
         if (directParents.length > 1) {
-            directParents.forEach(function(parentId, index) {
+            directParents.forEach(function (parentId, index) {
                 // console.log("getting parent for id:", parentId)
                 let parent = lists.by('id', parentId)
-                    // console.log("parent:", parent)
+                // console.log("parent:", parent)
                 if (parent != undefined) {
                     parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title[0] + "</div>"
                 }
@@ -413,7 +413,7 @@ function generateGoalHTML(id) {
     }
 
     let tagHTML = ''
-        //only set tag icon if top level goal
+    //only set tag icon if top level goal
     if (directParents.length == 0) {
         tagHTML = '\
     <div class="tags mx-1" id="tags-' +
@@ -1296,8 +1296,8 @@ function parseCommand(command) {
 
 function isURL(word) {
     if (word.length > 8 && (
-            word.substr(0, 8) == "https://" ||
-            word.substr(0, 2) == "www")) {
+        word.substr(0, 8) == "https://" ||
+        word.substr(0, 2) == "www")) {
         return true
     }
     return false

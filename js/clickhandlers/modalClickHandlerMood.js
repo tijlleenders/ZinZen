@@ -1,52 +1,52 @@
 'use strict'
 
-$("#unhappy").click(function() {
+$("#unhappy").click(function () {
     console.log("unhappy clicked")
     setMoodsToUnhappy()
-        //find id
-        //send update to api
+    //find id
+    //send update to api
 
     //todo move changes in UI to message handler
     $("#unhappy-svg").removeClass("unhappy-0 unhappy-1 unhappy-2 unhappy-3 unhappy-4 unhappy-5")
     $("#unhappy-svg").addClass("unhappy-1")
 });
 
-$("#happy").click(function() {
+$("#happy").click(function () {
     console.log("happy clicked")
     setMoodsToHappy()
-        //find id
-        //send update to api
+    //find id
+    //send update to api
 
     //todo move changes in UI to message handler
     $("#happy-svg").removeClass("happy-0 happy-1 happy-2 happy-3 happy-4 happy-5")
     $("#happy-svg").addClass("happy-1")
 });
 
-$("#happy").click(function() {
+$("#happy").click(function () {
     console.log("happy clicked")
     setMoodsToHappy()
-        // $("#tag1-path").addClass("tag-selected")
-        // $("#modal-title-tag-path").addClass("tag1")
-        //find id
-        //send update to api
+    // $("#tag1-path").addClass("tag-selected")
+    // $("#modal-title-tag-path").addClass("tag1")
+    //find id
+    //send update to api
 });
 
-$("#unhappy-minus").click(function() {
+$("#unhappy-minus").click(function () {
     console.log("unhappy-minus clicked")
     setMoodsToUnhappy()
-        // $("#tag1-path").addClass("tag-selected")
-        // $("#modal-title-tag-path").addClass("tag1")
-        //find id
-        //send update to api
+    // $("#tag1-path").addClass("tag-selected")
+    // $("#modal-title-tag-path").addClass("tag1")
+    //find id
+    //send update to api
 });
 
-$("#happy-minus").click(function() {
+$("#happy-minus").click(function () {
     console.log("happy-minus clicked")
     setMoodsToHappy()
-        // $("#tag1-path").addClass("tag-selected")
-        // $("#modal-title-tag-path").addClass("tag1")
-        //find id
-        //send update to api
+    // $("#tag1-path").addClass("tag-selected")
+    // $("#modal-title-tag-path").addClass("tag1")
+    //find id
+    //send update to api
 });
 
 // $("#tag1").click(function () {
@@ -118,10 +118,10 @@ function toggleSelectedTag() {
 
 function setMoodsToUnhappy() {
     console.log("moods set to unhappy")
-        //setMoodsToUnhappy options
+    //setMoodsToUnhappy options
 }
 
 function setMoodsToHappy() {
     console.log("moods set to happy")
-        //setMoodsToUnhappy options
+    //setMoodsToUnhappy options
 }

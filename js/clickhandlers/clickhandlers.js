@@ -3,7 +3,7 @@
 var inputClickCounter = 0;
 
 
-$("#collaboration-modal-title").on("click", ".btn", function(event) {
+$("#collaboration-modal-title").on("click", ".btn", function (event) {
     var emailLine =
         '<li class="list-group-item">' +
         $("#collaboration-email-input").val() +
@@ -20,49 +20,49 @@ $("#collaboration-modal-title").on("click", ".btn", function(event) {
     return false;
 });
 
-$("#modal-header-close").click(function() {
+$("#modal-header-close").click(function () {
     $("#myModal").modal("hide");
 });
 
-$("#modal-footer-close").click(function() {
+$("#modal-footer-close").click(function () {
     $("#myModal").modal("hide");
 });
 
-$("#top-settings").click(function() {
+$("#top-settings").click(function () {
     $("#breadcrumb").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
     goTo('____________________________settings')
 })
 
-$("#top-lists").click(function() {
+$("#top-lists").click(function () {
     $("#breadcrumb").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
     goTo(defaultParentId)
 })
 
-$("#top-calendar").click(function() {
+$("#top-calendar").click(function () {
     // send('{"action":"read","readRequestType":"play"}')
     $("#breadcrumb").addClass("d-none")
     $("#main-play").removeClass("d-none")
     $("#main-promised").addClass("d-none")
 })
 
-$("#top-login").click(function() {
+$("#top-login").click(function () {
     redirectUserAgentToAuthorizeEndpoint()
 })
 
-$("#top-inbox").click(function() {
+$("#top-inbox").click(function () {
     openMainMailModal()
 })
 
-$("#top-explore").click(function() {
+$("#top-explore").click(function () {
     alert('Crowdsourced machine-learned personal suggestions coming soon...')
 })
 
 
-$("#breadcrumb").on("click", ".breadcrumb-button", function(event) {
+$("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     event.stopPropagation();
     console.log("id:", event.target.id)
     let prefix = event.target.id.split("-")[0]
@@ -75,7 +75,7 @@ function toggleEditButtons(id) {
     $("#subtext-row-" + id).toggleClass('d-none')
 }
 
-$("#main-promised").on("contextmenu", ".goal", function(event) {
+$("#main-promised").on("contextmenu", ".goal", function (event) {
     let nodeId = getNodeId(event)
     openModal(nodeId.slice(-36), "add")
     return false //returning false blocks context menu
@@ -99,7 +99,7 @@ function getNodeId(event) {
     return nodeId
 }
 
-$("#main-promised").on("mousedown", ".circle-col", function(event) {
+$("#main-promised").on("mousedown", ".circle-col", function (event) {
     console.log("event mousedown", event)
     let nodeId = getNodeId(event)
     console.log("nodeId", nodeId)
@@ -109,7 +109,7 @@ $("#main-promised").on("mousedown", ".circle-col", function(event) {
     console.log("startY:", startY)
 })
 
-$("#main-promised").on("mouseup", ".circle-col", function(event) {
+$("#main-promised").on("mouseup", ".circle-col", function (event) {
     console.log("event mouseup", event)
     let nodeId = getNodeId(event)
     console.log("nodeId", nodeId)
@@ -183,7 +183,7 @@ function goTo(id) {
     }
 }
 
-$("#mmain-play").on("click", ".slot", function(event) {
+$("#mmain-play").on("click", ".slot", function (event) {
     console.log(Date.now());
     let nodeId = getNodeId(event)
     let selectedSlotId = nodeId.slice(-36);
@@ -204,7 +204,7 @@ $("#mmain-play").on("click", ".slot", function(event) {
 })
 
 
-$("#main-promised").on("click", ".goal", function(event) {
+$("#main-promised").on("click", ".goal", function (event) {
     console.log(Date.now());
     let nodeId = getNodeId(event)
     let selectedGoalId = nodeId.slice(-36);
@@ -253,7 +253,7 @@ $("#main-promised").on("click", ".goal", function(event) {
 })
 
 //TODO: keep this? Now only using card:hover
-$("#main-promised").on("mouseover", ".goal", function(event) {
+$("#main-promised").on("mouseover", ".goal", function (event) {
     var target = event.target.id;
     var id = "";
     if (target == "") {
@@ -267,7 +267,7 @@ $("#main-promised").on("mouseover", ".goal", function(event) {
 });
 
 //TODO: keep this? Now only using card:hover
-$("#main-promised").on("mouseout", ".goal", function(event) {
+$("#main-promised").on("mouseout", ".goal", function (event) {
     var target = event.target.id;
     var id = "";
     if (target == "") {
@@ -280,6 +280,6 @@ $("#main-promised").on("mouseout", ".goal", function(event) {
     //do something to hover programmatically
 });
 
-$("#add-a-goal-button").click(function() {
+$("#add-a-goal-button").click(function () {
     openModal("", "add")
 })

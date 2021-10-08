@@ -1,6 +1,6 @@
 'use strict'
 
-$("#myModal").on("click", "#quick-set-today-button", function() {
+$("#myModal").on("click", "#quick-set-today-button", function () {
     console.log("Finish today clicked")
     let now = new dayjs()
     let endOfTodayISO = now.endOf('day').toISOString()
@@ -13,7 +13,7 @@ $("#myModal").on("click", "#quick-set-today-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-tomorrow-button", function() {
+$("#myModal").on("click", "#quick-set-tomorrow-button", function () {
     console.log("Finish tomorrow clicked")
     let now = new dayjs()
     let endOfTomorrowISO = now.add(1, 'day').endOf('day').toISOString()
@@ -26,7 +26,7 @@ $("#myModal").on("click", "#quick-set-tomorrow-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-next-week-button", function() {
+$("#myModal").on("click", "#quick-set-next-week-button", function () {
     console.log("Finish next week clicked")
     let now = new dayjs()
     let endOfNextWeekISO = now.add(1, 'week').endOf('week').toISOString()
@@ -39,7 +39,7 @@ $("#myModal").on("click", "#quick-set-next-week-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-next-month-button", function() {
+$("#myModal").on("click", "#quick-set-next-month-button", function () {
     console.log("Finish next month clicked")
     let now = new dayjs()
     let endOfNextMonthISO = now.add(1, 'month').endOf('month').toISOString()
@@ -52,7 +52,7 @@ $("#myModal").on("click", "#quick-set-next-month-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-remove-button", function() {
+$("#myModal").on("click", "#quick-set-remove-button", function () {
     console.log("Finish remove clicked")
     var messageJson = {
         action: "command",
@@ -63,7 +63,7 @@ $("#myModal").on("click", "#quick-set-remove-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-custom-button", function() {
+$("#myModal").on("click", "#quick-set-custom-button", function () {
     console.log("Finish custom clicked")
     let now = new dayjs()
     let endOfTodayISO = now.add(1, 'hour').toISOString()
@@ -77,7 +77,7 @@ $("#myModal").on("click", "#quick-set-custom-button", function() {
 });
 
 
-$("#myModal").on("click", "#quick-set-start-today-button", function() {
+$("#myModal").on("click", "#quick-set-start-today-button", function () {
     console.log("Start today clicked")
     let now = new dayjs()
     let startOfTodayISO = now.startOf('day').toISOString()
@@ -90,7 +90,7 @@ $("#myModal").on("click", "#quick-set-start-today-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-start-tomorrow-button", function() {
+$("#myModal").on("click", "#quick-set-start-tomorrow-button", function () {
     console.log("Start tomorrow clicked")
     let now = new dayjs()
     let endOfTomorrowISO = now.add(1, 'day').startOf('day').toISOString()
@@ -103,7 +103,7 @@ $("#myModal").on("click", "#quick-set-start-tomorrow-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-start-next-week-button", function() {
+$("#myModal").on("click", "#quick-set-start-next-week-button", function () {
     console.log("Start next week clicked")
     let now = new dayjs()
     let endOfNextWeekISO = now.add(1, 'week').startOf('week').toISOString()
@@ -116,7 +116,7 @@ $("#myModal").on("click", "#quick-set-start-next-week-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-start-next-month-button", function() {
+$("#myModal").on("click", "#quick-set-start-next-month-button", function () {
     console.log("Start next month clicked")
     let now = new dayjs()
     let endOfNextMonthISO = now.add(1, 'month').startOf('month').toISOString()
@@ -129,7 +129,7 @@ $("#myModal").on("click", "#quick-set-start-next-month-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-start-remove-button", function() {
+$("#myModal").on("click", "#quick-set-start-remove-button", function () {
     console.log("Start remove clicked")
     var messageJson = {
         action: "command",
@@ -140,7 +140,7 @@ $("#myModal").on("click", "#quick-set-start-remove-button", function() {
     send(JSON.stringify(messageJson))
 });
 
-$("#myModal").on("click", "#quick-set-start-custom-button", function() {
+$("#myModal").on("click", "#quick-set-start-custom-button", function () {
     console.log("Start custom clicked")
     let now = new dayjs()
     let startOfTodayISO = now.add(1, 'hour').toISOString()
@@ -154,12 +154,12 @@ $("#myModal").on("click", "#quick-set-start-custom-button", function() {
 });
 
 
-$("#myModal").on("click", "#add-week-button", function() {
+$("#myModal").on("click", "#add-week-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration += 3600 * 24 * 7
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -170,12 +170,12 @@ $("#myModal").on("click", "#add-week-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", "#add-day-button", function() {
+$("#myModal").on("click", "#add-day-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration += 3600 * 24
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -186,12 +186,12 @@ $("#myModal").on("click", "#add-day-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", "#add-hour-button", function() {
+$("#myModal").on("click", "#add-hour-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration += 3600
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -202,12 +202,12 @@ $("#myModal").on("click", "#add-hour-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", "#add-minute-button", function() {
+$("#myModal").on("click", "#add-minute-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration += 60
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -218,12 +218,12 @@ $("#myModal").on("click", "#add-minute-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", "#add-second-button", function() {
+$("#myModal").on("click", "#add-second-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration += 1
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -234,7 +234,7 @@ $("#myModal").on("click", "#add-second-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", "#remove-week-button", function() {
+$("#myModal").on("click", "#remove-week-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration -= 3600 * 24 * 7
     if (duration < 0) {
@@ -242,7 +242,7 @@ $("#myModal").on("click", "#remove-week-button", function() {
     }
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -253,7 +253,7 @@ $("#myModal").on("click", "#remove-week-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", "#remove-day-button", function() {
+$("#myModal").on("click", "#remove-day-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration -= 3600 * 24
     if (duration < 0) {
@@ -261,7 +261,7 @@ $("#myModal").on("click", "#remove-day-button", function() {
     }
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -272,7 +272,7 @@ $("#myModal").on("click", "#remove-day-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", "#remove-hour-button", function() {
+$("#myModal").on("click", "#remove-hour-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration -= 3600
     if (duration < 0) {
@@ -280,7 +280,7 @@ $("#myModal").on("click", "#remove-hour-button", function() {
     }
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -291,7 +291,7 @@ $("#myModal").on("click", "#remove-hour-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", "#remove-minute-button", function() {
+$("#myModal").on("click", "#remove-minute-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration -= 60
     if (duration < 0) {
@@ -299,7 +299,7 @@ $("#myModal").on("click", "#remove-minute-button", function() {
     }
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -310,7 +310,7 @@ $("#myModal").on("click", "#remove-minute-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", "#remove-second-button", function() {
+$("#myModal").on("click", "#remove-second-button", function () {
     var duration = parseInt($("#modal-duration").data("duration"), 10)
     duration -= 1
     if (duration < 0) {
@@ -318,7 +318,7 @@ $("#myModal").on("click", "#remove-second-button", function() {
     }
     $("#modal-duration").data("duration", duration)
     updateDurationUI()
-        //Todo: batch all add/remove clicks in a single function
+    //Todo: batch all add/remove clicks in a single function
     let goalId = $("#myModal").data("idx")
     let upsertGoal = {
         action: "command",
@@ -329,7 +329,7 @@ $("#myModal").on("click", "#remove-second-button", function() {
     send(JSON.stringify(upsertGoal))
 })
 
-$("#myModal").on("click", ".daytimeDay", function(e) {
+$("#myModal").on("click", ".daytimeDay", function (e) {
     let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray")
     let dayOffset = e.currentTarget.id.split("-")[1]
     console.log("timesOfDaysPrefArray:", timesOfDaysPrefArray)
@@ -355,7 +355,7 @@ $("#myModal").on("click", ".daytimeDay", function(e) {
     sendTimesOfDaysPrefUpdate()
 })
 
-$("#myModal").on("click", ".daytimeTimeOfDay", function(e) {
+$("#myModal").on("click", ".daytimeTimeOfDay", function (e) {
     let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray")
     let timeOfDayOffset = e.currentTarget.id.split("-")[1]
     console.log("timesOfDaysPrefArray in click:", timesOfDaysPrefArray)
@@ -391,7 +391,7 @@ $("#myModal").on("click", ".daytimeTimeOfDay", function(e) {
     sendTimesOfDaysPrefUpdate()
 })
 
-$("#myModal").on("click", ".daytime", function(e) {
+$("#myModal").on("click", ".daytime", function (e) {
     let daytimeIndex = e.currentTarget.id.split("-")[1]
     console.log("daytimeIndex:", daytimeIndex)
     let timesOfDaysPrefArray = $("#modal-timesOfDaysPref").data("timesOfDaysPrefArray")
@@ -401,7 +401,7 @@ $("#myModal").on("click", ".daytime", function(e) {
     sendTimesOfDaysPrefUpdate()
 })
 
-$("#myModal").on("click", "#add-min-per-slot-button-area", function(e) { //Todo: Fringe case: minPerSlot should move minPerWeek up if minPerWeek * 24h < minPerSlot
+$("#myModal").on("click", "#add-min-per-slot-button-area", function (e) { //Todo: Fringe case: minPerSlot should move minPerWeek up if minPerWeek * 24h < minPerSlot
     console.log("clicked:", e.currentTarget.id)
     let minPerSlot = $("#modal-budget-per-slot").data("minSize")
     minPerSlot += 15 * 60
@@ -415,7 +415,7 @@ $("#myModal").on("click", "#add-min-per-slot-button-area", function(e) { //Todo:
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#remove-min-per-slot-button-area", function(e) {
+$("#myModal").on("click", "#remove-min-per-slot-button-area", function (e) {
     console.log("clicked:", e.currentTarget.id)
     let minPerSlot = $("#modal-budget-per-slot").data("minSize")
     minPerSlot -= 15 * 60
@@ -428,7 +428,7 @@ $("#myModal").on("click", "#remove-min-per-slot-button-area", function(e) {
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#add-max-per-slot-button-area", function(e) { //Todo: Fringe case: maxPerSlot should move maxPerDay down to 1 if maxPerSlot > 24h
+$("#myModal").on("click", "#add-max-per-slot-button-area", function (e) { //Todo: Fringe case: maxPerSlot should move maxPerDay down to 1 if maxPerSlot > 24h
     console.log("clicked:", e.currentTarget.id)
     let maxPerSlot = $("#modal-budget-per-slot").data("maxSize")
     maxPerSlot += 15 * 60
@@ -438,7 +438,7 @@ $("#myModal").on("click", "#add-max-per-slot-button-area", function(e) { //Todo:
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#remove-max-per-slot-button-area", function(e) {
+$("#myModal").on("click", "#remove-max-per-slot-button-area", function (e) {
     console.log("clicked:", e.currentTarget.id)
     let maxPerSlot = $("#modal-budget-per-slot").data("maxSize")
     maxPerSlot -= 15 * 60
@@ -455,7 +455,7 @@ $("#myModal").on("click", "#remove-max-per-slot-button-area", function(e) {
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#add-min-per-day-button-area", function(e) { //Todo: Fringe case: minPerSlot should move minPerWeek up if minPerWeek * 24h < minPerSlot
+$("#myModal").on("click", "#add-min-per-day-button-area", function (e) { //Todo: Fringe case: minPerSlot should move minPerWeek up if minPerWeek * 24h < minPerSlot
     console.log("clicked:", e.currentTarget.id)
     let minTimesPerDay = $("#modal-budget-per-day").data("minTimesPerDay")
     minTimesPerDay += 1
@@ -469,7 +469,7 @@ $("#myModal").on("click", "#add-min-per-day-button-area", function(e) { //Todo: 
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#remove-min-per-day-button-area", function(e) {
+$("#myModal").on("click", "#remove-min-per-day-button-area", function (e) {
     console.log("clicked:", e.currentTarget.id)
     let minTimesPerDay = $("#modal-budget-per-day").data("minTimesPerDay")
     minTimesPerDay -= 1
@@ -481,7 +481,7 @@ $("#myModal").on("click", "#remove-min-per-day-button-area", function(e) {
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#add-max-per-day-button-area", function(e) { //Todo: Fringe case: maxTimesPerDay should move maxPerDay down to 1 if maxTimesPerDay > 24h
+$("#myModal").on("click", "#add-max-per-day-button-area", function (e) { //Todo: Fringe case: maxTimesPerDay should move maxPerDay down to 1 if maxTimesPerDay > 24h
     console.log("clicked:", e.currentTarget.id)
     let maxTimesPerDay = $("#modal-budget-per-day").data("maxTimesPerDay")
     maxTimesPerDay += 1
@@ -490,7 +490,7 @@ $("#myModal").on("click", "#add-max-per-day-button-area", function(e) { //Todo: 
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#remove-max-per-day-button-area", function(e) {
+$("#myModal").on("click", "#remove-max-per-day-button-area", function (e) {
     console.log("clicked:", e.currentTarget.id)
     let maxTimesPerDay = $("#modal-budget-per-day").data("maxTimesPerDay")
     maxTimesPerDay -= 1
@@ -507,7 +507,7 @@ $("#myModal").on("click", "#remove-max-per-day-button-area", function(e) {
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#add-min-per-week-button-area", function(e) {
+$("#myModal").on("click", "#add-min-per-week-button-area", function (e) {
     console.log("clicked:", e.currentTarget.id)
     let minTimesPerWeek = $("#modal-budget-per-week").data("minTimesPerWeek")
     minTimesPerWeek += 1
@@ -521,7 +521,7 @@ $("#myModal").on("click", "#add-min-per-week-button-area", function(e) {
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#remove-min-per-week-button-area", function(e) {
+$("#myModal").on("click", "#remove-min-per-week-button-area", function (e) {
     console.log("clicked:", e.currentTarget.id)
     let minTimesPerWeek = $("#modal-budget-per-week").data("minTimesPerWeek")
     minTimesPerWeek -= 1
@@ -533,7 +533,7 @@ $("#myModal").on("click", "#remove-min-per-week-button-area", function(e) {
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#add-max-per-week-button-area", function(e) { //Todo: Fringe case: maxTimesPerWeek should move maxPerDay down to 1 if maxTimesPerWeek > 24h
+$("#myModal").on("click", "#add-max-per-week-button-area", function (e) { //Todo: Fringe case: maxTimesPerWeek should move maxPerDay down to 1 if maxTimesPerWeek > 24h
     console.log("clicked:", e.currentTarget.id)
     let maxTimesPerWeek = $("#modal-budget-per-week").data("maxTimesPerWeek")
     maxTimesPerWeek += 1
@@ -542,7 +542,7 @@ $("#myModal").on("click", "#add-max-per-week-button-area", function(e) { //Todo:
     sendScheduleRequest()
 })
 
-$("#myModal").on("click", "#remove-max-per-week-button-area", function(e) {
+$("#myModal").on("click", "#remove-max-per-week-button-area", function (e) {
     console.log("clicked:", e.currentTarget.id)
     let maxTimesPerWeek = $("#modal-budget-per-week").data("maxTimesPerWeek")
     maxTimesPerWeek -= 1

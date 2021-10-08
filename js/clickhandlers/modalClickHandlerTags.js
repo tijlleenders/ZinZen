@@ -1,62 +1,62 @@
 'use strict'
 
-$("#tag1").click(function() {
+$("#tag1").click(function () {
     removeSelectedTag()
     $("#tag1-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag1")
-        //find id
-        //send update to api
+    //find id
+    //send update to api
 });
 
-$("#tag2").click(function() {
+$("#tag2").click(function () {
     removeSelectedTag()
     $("#tag2-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag2")
 });
 
-$("#tag3").click(function() {
+$("#tag3").click(function () {
     removeSelectedTag()
     $("#tag3-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag3")
 });
 
-$("#tag4").click(function() {
+$("#tag4").click(function () {
     removeSelectedTag()
     $("#tag4-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag4")
 });
 
-$("#tag5").click(function() {
+$("#tag5").click(function () {
     removeSelectedTag()
     $("#tag5-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag5")
 });
 
-$("#tag6").click(function() {
+$("#tag6").click(function () {
     removeSelectedTag()
     $("#tag6-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag6")
 });
 
-$("#tag7").click(function() {
+$("#tag7").click(function () {
     removeSelectedTag()
     $("#tag7-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag7")
 });
 
-$("#tag8").click(function() {
+$("#tag8").click(function () {
     removeSelectedTag()
     $("#tag8-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag8")
 });
 
-$("#tag9").click(function() {
+$("#tag9").click(function () {
     removeSelectedTag()
     $("#tag9-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag9")
 });
 
-$("#tag10").click(function() {
+$("#tag10").click(function () {
     removeSelectedTag()
     $("#tag10-path").addClass("tag-selected")
     $("#modal-title-tag-path").addClass("tag10")

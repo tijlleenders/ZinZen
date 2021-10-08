@@ -1,161 +1,161 @@
 'use strict'
 
 async function updateUIWith(properties) {
-    // console.log("handling properties:", properties)
+  // console.log("handling properties:", properties)
 
-    if (properties.label == 'person' || properties.id == parentId) {
-        updateChildrenFor(properties)
-        updateBreadcrumbUI()
-        return
+  if (properties.label == 'person' || properties.id == parentId) {
+    updateChildrenFor(properties)
+    updateBreadcrumbUI()
+    return
+  }
+
+  if (!properties.directParents.includes(parentId)) {
+    // console.log("received list that should not be on screen. Probably child of something on screen that is preloaded")
+    return
+  }
+
+  preloadChildrenFor(properties)
+  let id = properties.id
+
+  if (!$('#' + id).length) {
+    // console.log("id not yet present, prepending")
+    $("#add-a-goal").empty() //Empties the No lists here
+    let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
+    $("#main-promised").prepend(goalHTML)
+
+    properties.directParents.forEach(directParentId => {
+      let directParent = lists.by('id', directParentId)
+      if (directParent != undefined) {
+        directParent.directChildren.push(id)
+        lists.update(directParent)
+      }
+    })
+  }
+  $("#" + id).data('properties', properties)
+  $("#" + id).html(generateGoalHTML(id))
+
+  if ($("#myModal").data("idx") == id) {
+    switch ($("#myModal").data("modalType")) {
+
+      case "collaboration":
+        modalCollaboration(properties)
+        break;
+
+      case "mood":
+        modalMood(properties)
+        break;
+
+      case "visibilities":
+        modalVisibilities(properties)
+        break;
+
+      case "notes":
+        modalNotes(properties)
+        break;
+
+      case "workflow":
+        modalWorkflow(properties)
+        break;
+
+      case "image":
+        modalImage(properties)
+        break;
+
+      case "link":
+        modalLink(properties)
+        break;
+
+      case "location":
+        modalLocation(properties)
+        break;
+
+      case "tags":
+        modalTags(properties)
+        break;
+
+      case "mail":
+        modalMail(properties)
+        break;
+
+      case "graph":
+      case "mainMail":
+        //not implemented dynamically - hardcoded in helpers
+        break;
+
+      case "add":
+        setSkeletonHTMLForAdd(id)
+        updateModalUI()
+        break;
+
+      case "schedule":
+        setDataFieldsForScheduleConstraints(properties)
+        updateModalUI()
+        break;
+
+      default:
     }
 
-    if (!properties.directParents.includes(parentId)) {
-        // console.log("received list that should not be on screen. Probably child of something on screen that is preloaded")
-        return
-    }
 
-    preloadChildrenFor(properties)
-    let id = properties.id
-
-    if (!$('#' + id).length) {
-        // console.log("id not yet present, prepending")
-        $("#add-a-goal").empty() //Empties the No lists here
-        let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
-        $("#main-promised").prepend(goalHTML)
-
-        properties.directParents.forEach(directParentId => {
-            let directParent = lists.by('id', directParentId)
-            if (directParent != undefined) {
-                directParent.directChildren.push(id)
-                lists.update(directParent)
-            }
-        })
-    }
-    $("#" + id).data('properties', properties)
-    $("#" + id).html(generateGoalHTML(id))
-
-    if ($("#myModal").data("idx") == id) {
-        switch ($("#myModal").data("modalType")) {
-
-            case "collaboration":
-                modalCollaboration(properties)
-                break;
-
-            case "mood":
-                modalMood(properties)
-                break;
-
-            case "visibilities":
-                modalVisibilities(properties)
-                break;
-
-            case "notes":
-                modalNotes(properties)
-                break;
-
-            case "workflow":
-                modalWorkflow(properties)
-                break;
-
-            case "image":
-                modalImage(properties)
-                break;
-
-            case "link":
-                modalLink(properties)
-                break;
-
-            case "location":
-                modalLocation(properties)
-                break;
-
-            case "tags":
-                modalTags(properties)
-                break;
-
-            case "mail":
-                modalMail(properties)
-                break;
-
-            case "graph":
-            case "mainMail":
-                //not implemented dynamically - hardcoded in helpers
-                break;
-
-            case "add":
-                setSkeletonHTMLForAdd(id)
-                updateModalUI()
-                break;
-
-            case "schedule":
-                setDataFieldsForScheduleConstraints(properties)
-                updateModalUI()
-                break;
-
-            default:
-        }
-
-
-    }
+  }
 }
 
 function handleIncomingProposal(proposal) {
-    console.log("handling proposal...")
-    $("#schedule-status").data("proposal", JSON.stringify(proposal))
-    $("#schedule-status").data("status", "proposal")
-    updateScheduleStatusUI()
-    $("#schedule-this").removeClass("d-none")
+  console.log("handling proposal...")
+  $("#schedule-status").data("proposal", JSON.stringify(proposal))
+  $("#schedule-status").data("status", "proposal")
+  updateScheduleStatusUI()
+  $("#schedule-this").removeClass("d-none")
 }
 
 function handleIncomingSettings(incomingSettings) {
-    $("#main-promised").empty();
-    settings = incomingSettings
-    parentId = settings.owner[0]
-    defaultParentId = settings.owner[0]
-    send('{"action":"read","readRequestType":"specificNode","nodeId":"' + parentId + '"}');
-    updateSettingsUI()
+  $("#main-promised").empty();
+  settings = incomingSettings
+  parentId = settings.owner[0]
+  defaultParentId = settings.owner[0]
+  send('{"action":"read","readRequestType":"specificNode","nodeId":"' + parentId + '"}');
+  updateSettingsUI()
 }
 
 function handleIncomingPlay(schedule, lastCalculatedEpochMs) {
-    console.log("handling play schedule...")
-    console.log("lastCalculatedEpochMs:", lastCalculatedEpochMs)
-    console.log("goalsLastModifiedEpochMs", goalsLastModifiedEpochMs)
-    console.log("schedule:", schedule)
-    $("#mmain-play").empty()
-    let html = ""
-    if (schedule.length == 0 ||
-        (lastCalculatedEpochMs != undefined &&
-            lastCalculatedEpochMs < goalsLastModifiedEpochMs)) {
-        html = "Recalculating..."
-        send('{"action":"schedule"}')
-    } else {
-        schedule.forEach((element, index) => {
-            console.log("handling element:", element)
-            switch (element.label) {
-                case "free":
-                    break;
-                case "effort":
-                    html += generateEffortHTML(element)
-                    break;
-                case "slot":
-                    html += generateSlotHTML(element)
-                    break;
-                case "person":
-                    break;
-                case "email":
-                    break;
-                default:
-                    console.log("element not handled:", element)
-            }
-        });
-    }
-    $("#mmain-play").html(html)
-    console.log("play message handled")
+  console.log("handling play schedule...")
+  console.log("lastCalculatedEpochMs:", lastCalculatedEpochMs)
+  console.log("goalsLastModifiedEpochMs", goalsLastModifiedEpochMs)
+  console.log("schedule:", schedule)
+  $("#mmain-play").empty()
+  let html = ""
+  if (schedule.length == 0 ||
+    (lastCalculatedEpochMs != undefined &&
+      lastCalculatedEpochMs < goalsLastModifiedEpochMs)) {
+    html = "Recalculating..."
+    send('{"action":"schedule"}')
+  } else {
+    schedule.forEach((element, index) => {
+      console.log("handling element:", element)
+      switch (element.label) {
+        case "free":
+          break;
+        case "effort":
+          html += generateEffortHTML(element)
+          break;
+        case "slot":
+          html += generateSlotHTML(element)
+          break;
+        case "person":
+          break;
+        case "email":
+          break;
+        default:
+          console.log("element not handled:", element)
+      }
+    });
+  }
+  $("#mmain-play").html(html)
+  console.log("play message handled")
 }
 
 function modalCollaboration(properties) {
-    $("#modal-header-content").html('<h4 class="modal-title">collaboration</h4>')
-    $("#modal-body").html('\
+  $("#modal-header-content").html('<h4 class="modal-title">collaboration</h4>')
+  $("#modal-body").html('\
 <table class="table table-hover">\
     <thead>\
       <tr>\
@@ -198,12 +198,12 @@ function modalCollaboration(properties) {
       </tr>\
     </tbody>\
   </table>')
-    $("#modal-footer-content").html('Want to work together on goals? Please consider <a\
+  $("#modal-footer-content").html('Want to work together on goals? Please consider <a\
     href="https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate">funding it</a>')
 }
 
 function modalMood(properties) {
-    $("#modal-header-content").html('\
+  $("#modal-header-content").html('\
 <table>\
     <tr>\
       <th>\
@@ -219,7 +219,7 @@ function modalMood(properties) {
       </th>\
     </tr>\
   </table>')
-    $("#modal-body").html('\
+  $("#modal-body").html('\
   <div class="row">\
   <div class="col">\
     <div id="modal-mood">\
@@ -312,14 +312,14 @@ function modalMood(properties) {
 }
 
 function modalVisibilities(properties) {
-    setSkeletonHTMLForVisibilities()
-    setDataFieldsForVisibilities(properties)
-    updateModalUI()
+  setSkeletonHTMLForVisibilities()
+  setDataFieldsForVisibilities(properties)
+  updateModalUI()
 }
 
 function modalNotes(properties) {
-    $("#modal-header-content").html('<h4 class="modal-title">notes</h4>')
-    $("#modal-body").html('\
+  $("#modal-header-content").html('<h4 class="modal-title">notes</h4>')
+  $("#modal-body").html('\
     <div class="row">\
     <div class="col">\
       <div id="modal-notes">\
@@ -341,8 +341,8 @@ function modalNotes(properties) {
 }
 
 function modalWorkflow(properties) {
-    $("#modal-header-content").html('<h4 class="modal-title">workflow</h4>')
-    $("#modal-body").html('\
+  $("#modal-header-content").html('<h4 class="modal-title">workflow</h4>')
+  $("#modal-body").html('\
     <div class="row">\
     <div class="col">\
       <div id="modal-workflow">\
@@ -360,8 +360,8 @@ function modalWorkflow(properties) {
 }
 
 function modalImage(properties) {
-    $("#modal-header-content").html('<h4 class="modal-title">image</h4>')
-    $("#modal-body").html('\
+  $("#modal-header-content").html('<h4 class="modal-title">image</h4>')
+  $("#modal-body").html('\
     <div class="row">\
     <div class="col">\
       <div id="modal-image">\
@@ -388,8 +388,8 @@ function modalImage(properties) {
 }
 
 function modalLink(properties) {
-    $("#modal-header-content").html('<h4 class="modal-title">link</h4>')
-    $("#modal-body").html('\
+  $("#modal-header-content").html('<h4 class="modal-title">link</h4>')
+  $("#modal-body").html('\
     <div class="row">\
     <div class="col">\
       <div id="modal-link">\
@@ -427,8 +427,8 @@ function modalLink(properties) {
 }
 
 function modalLocation(properties) {
-    $("#modal-header-content").html('<h4 class="modal-title">location</h4>')
-    $("#modal-body").html('\
+  $("#modal-header-content").html('<h4 class="modal-title">location</h4>')
+  $("#modal-body").html('\
     <div class="row">\
     <div class="col">\
       <div id="modal-location">\
@@ -454,7 +454,7 @@ function modalLocation(properties) {
 }
 
 function modalTags(properties) {
-    $("#modal-header-content").html('\
+  $("#modal-header-content").html('\
     <table>\
     <tr>\
       <th>\
@@ -470,7 +470,7 @@ function modalTags(properties) {
       </th>\
     </tr>\
   </table>')
-    $("#modal-body").html('\
+  $("#modal-body").html('\
   <div class="row">\
   <div class="col">\
     <div id="modal-tags">\
@@ -576,8 +576,8 @@ function modalTags(properties) {
 }
 
 function modalMail(properties) {
-    $("#modal-header-content").html('<h4 class="modal-title">mail</h4>')
-    $("#modal-body").html('\
+  $("#modal-header-content").html('<h4 class="modal-title">mail</h4>')
+  $("#modal-body").html('\
     <table class="table table-hover">\
     <thead>\
       <tr>\
@@ -611,6 +611,6 @@ function modalMail(properties) {
 }
 
 function modalScheduleConstraints(properties) {
-    setDataFieldsForScheduleConstraints(properties)
-    updateModalUI()
+  setDataFieldsForScheduleConstraints(properties)
+  updateModalUI()
 }

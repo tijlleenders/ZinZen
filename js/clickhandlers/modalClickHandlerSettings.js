@@ -1,11 +1,11 @@
 'use strict'
 
-$("#myModal").on("click", "#login-buttonx", function() {
+$("#myModal").on("click", "#login-buttonx", function () {
     console.log("log in")
     redirectUserAgentToAuthorizeEndpoint()
 });
 
-$("#myModal").on("click", "#install-app-button", function() {
+$("#myModal").on("click", "#install-app-button", function () {
     isInstalled()
     console.log("Trying to install app...")
     tryToInstall()
@@ -17,7 +17,7 @@ async function isInstalled() {
     console.log("installedRelatedApps:", relatedAppsInstalled)
 }
 
-$("#myModal").on("click", "#allow-notify-button", function() {
+$("#myModal").on("click", "#allow-notify-button", function () {
     if (!("Notification" in window)) {
         alert("This browser does not support desktop notification");
         return
@@ -31,7 +31,7 @@ $("#myModal").on("click", "#allow-notify-button", function() {
             break;
 
         default:
-            Notification.requestPermission().then(function(permission) {
+            Notification.requestPermission().then(function (permission) {
                 if (permission === "granted") {
                     $("#allow-notify-button").html('Notification on')
                     $("#allow-notify-button").addClass('active')
@@ -59,7 +59,7 @@ async function tryToInstall() {
     deferredPrompt = null;
 }
 
-$("#myModal").on("click", "#screen-mode-dark", function() {
+$("#myModal").on("click", "#screen-mode-dark", function () {
     let message = {
         action: "command",
         command: "updateSettings",
@@ -68,7 +68,7 @@ $("#myModal").on("click", "#screen-mode-dark", function() {
     send(JSON.stringify(message))
 });
 
-$("#myModal").on("click", "#screen-mode-light", function() {
+$("#myModal").on("click", "#screen-mode-light", function () {
     let message = {
         action: "command",
         command: "updateSettings",
@@ -77,11 +77,11 @@ $("#myModal").on("click", "#screen-mode-light", function() {
     send(JSON.stringify(message))
 });
 
-$("#myModal").on("click", "#screen-mode-time-based", function() {
+$("#myModal").on("click", "#screen-mode-time-based", function () {
     let message = {
-            action: "command",
-            command: "updateSettings",
-            screenMode: "timeBased"
-        }
-        // send(JSON.stringify(message))
+        action: "command",
+        command: "updateSettings",
+        screenMode: "timeBased"
+    }
+    // send(JSON.stringify(message))
 });

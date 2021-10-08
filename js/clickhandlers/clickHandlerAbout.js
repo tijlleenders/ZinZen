@@ -21,49 +21,49 @@ function submitToAPI(e) {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(data),
 
-        success: function() {
+        success: function () {
             // clear form and show a success message
             alert("Thank you so much for your feedback! We will improve.");
             document.getElementById("contact-form").reset();
         },
-        error: function() {
+        error: function () {
             // show an error message
             alert("Aww... So sorry something went wrong. Please try emailing. We'd love to hear from you!");
         }
     });
 }
 
-$("#main-login").click(function() {
+$("#main-login").click(function () {
     redirectUserAgentToAuthorizeEndpoint()
 })
 
-$("#main-example").click(function() {
+$("#main-example").click(function () {
     window.open('https://zinzen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2', '_blank');
     $("#main-about").click()
 })
 
-$("#main-about").click(function() {
+$("#main-about").click(function () {
     location.href = "https://ZinZen.me/about.html"
 })
 
-$("#main-privacy").click(function() {
+$("#main-privacy").click(function () {
     location.href = "https://ZinZen.me/privacy.html"
 })
 
-$("#main-terms").click(function() {
+$("#main-terms").click(function () {
     location.href = "https://ZinZen.me/terms.html"
 })
 
-$("#main-contact").click(function() {
+$("#main-contact").click(function () {
     location.href = "https://ZinZen.me/contact.html"
 })
 
-$("#main-donate").click(function() {
+$("#main-donate").click(function () {
     window.open('https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate', '_blank');
     $("#main-about").click()
 })
 
-$("#main-roadmap").click(function() {
+$("#main-roadmap").click(function () {
     window.open('https://zinzen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2', '_blank');
     $("#main-about").click()
 })
@@ -71,7 +71,7 @@ $("#main-roadmap").click(function() {
 //initialize all tooltips
 if (!mobileAndTabletCheck()) {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl, { delay: { "show": 500, "hide": 100 } })
     })
 }

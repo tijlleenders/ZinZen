@@ -23,7 +23,7 @@ const OFFLINE_URL = "offline.html";
 
 self.addEventListener("install", (event) => {
     event.waitUntil(
-        (async() => {
+        (async () => {
             const cache = await caches.open(CACHE_NAME);
             // Setting {cache: 'reload'} in the new request will ensure that the
             // response isn't fulfilled from the HTTP cache; i.e., it will be from
@@ -37,7 +37,7 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
     event.waitUntil(
-        (async() => {
+        (async () => {
             // Enable navigation preload if it's supported.
             // See https://developers.google.com/web/updates/2017/02/navigation-preload
             if ("navigationPreload" in self.registration) {
@@ -55,7 +55,7 @@ self.addEventListener("fetch", (event) => {
     // for an HTML page.
     if (event.request.mode === "navigate") {
         event.respondWith(
-            (async() => {
+            (async () => {
                 try {
                     // First, try to use the navigation preload response if it's supported.
                     const preloadResponse = await event.preloadResponse;

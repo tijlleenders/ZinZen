@@ -1,6 +1,6 @@
 'use strict'
 
-$("#myModal").on("keyup", "#inputCommand", function(e) {
+$("#myModal").on("keyup", "#inputCommand", function (e) {
     if (e.which === 13) {
         if ($(this).val().length == 0) return;
 
@@ -12,12 +12,12 @@ $("#myModal").on("keyup", "#inputCommand", function(e) {
 
     let goalId = $("#myModal").data("idx")
     let getSuggestions = {
-            action: "read",
-            command: "getSuggestions",
-            input: $("#inputCommand").val(),
-            goalId: goalId
-        }
-        // send(JSON.stringify(getSuggestions))
+        action: "read",
+        command: "getSuggestions",
+        input: $("#inputCommand").val(),
+        goalId: goalId
+    }
+    // send(JSON.stringify(getSuggestions))
 
     let inputCommand = $("#inputCommand").data('inputCommand')
     inputCommand.title = $("#inputCommand").val()
@@ -53,18 +53,18 @@ function addSomething() {
     $("#inputCommand").focus()
 }
 
-$("#myModal").on("click", "#modal-add-a-goal-button", function() {
+$("#myModal").on("click", "#modal-add-a-goal-button", function () {
     addSomething()
 })
 
-$("#myModal").on("click", "#delete-a-goal-button", function() {
+$("#myModal").on("click", "#delete-a-goal-button", function () {
     console.log("delet clicked")
     let idToDelete = $("#myModal").data('idx')
     console.log("idx:", idToDelete)
     deleteGoal(idToDelete)
 })
 
-$("#myModal").on("click", "#save-a-goal-button", function() {
+$("#myModal").on("click", "#save-a-goal-button", function () {
     let title = $("#inputCommand").val()
     console.log("saving ", title)
     let idToSave = $("#myModal").data('idx')
@@ -105,13 +105,13 @@ function deleteGoal(id) {
     $("#myModal").modal('hide')
     $("#" + id).removeClass('jello-vertical-animation') //if any
     $("#" + id).addClass('swirl-out-bck-animation')
-    $("#" + id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+    $("#" + id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
         $("#" + id).remove();
     });
 
 }
 
-$("#myModal").on("click", ".command-suggestion", function(e) {
+$("#myModal").on("click", ".command-suggestion", function (e) {
     console.log("handling command-suggestion pressed")
     let inputCommand = $("#inputCommand").data('inputCommand')
     inputCommand.commandPressed = [e.currentTarget.innerText]
@@ -119,7 +119,7 @@ $("#myModal").on("click", ".command-suggestion", function(e) {
     updateModalUI()
 })
 
-$("#myModal").on("click", ".word-suggestion", function(e) {
+$("#myModal").on("click", ".word-suggestion", function (e) {
     console.log("handling word-suggestion pressed")
     let inputCommand = $("#inputCommand").data('inputCommand')
     inputCommand.wordPressed = [e.currentTarget.innerText]
@@ -127,7 +127,7 @@ $("#myModal").on("click", ".word-suggestion", function(e) {
     updateModalUI()
 })
 
-$("#myModal").on("click", ".selected-command", function(e) {
+$("#myModal").on("click", ".selected-command", function (e) {
     console.log("handling selected-command pressed")
     let inputCommand = $("#inputCommand").data('inputCommand')
     inputCommand.commands.splice(inputCommand.commands.indexOf(e.currentTarget.innerText), 1)

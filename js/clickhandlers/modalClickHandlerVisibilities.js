@@ -1,6 +1,6 @@
 'use strict'
 
-$("#myModal").on("click", "#dont-share-anonymously", function() {
+$("#myModal").on("click", "#dont-share-anonymously", function () {
     console.log("dont-share-anonymously")
     let goalId = $("#myModal").data("idx")
     console.log("id:", goalId)
@@ -14,7 +14,7 @@ $("#myModal").on("click", "#dont-share-anonymously", function() {
     send(JSON.stringify(upsertGoal))
 });
 
-$("#myModal").on("click", "#share-anonymously", function() {
+$("#myModal").on("click", "#share-anonymously", function () {
     console.log("share-anonymously")
     let goalId = $("#myModal").data("idx")
     console.log("id:", goalId)
@@ -28,7 +28,7 @@ $("#myModal").on("click", "#share-anonymously", function() {
     send(JSON.stringify(upsertGoal))
 });
 
-$("#myModal").on("click", "#dont-share-publicly", function() {
+$("#myModal").on("click", "#dont-share-publicly", function () {
     console.log("dont-share-publicly")
     let goalId = $("#myModal").data("idx")
     console.log("id:", goalId)
@@ -42,7 +42,7 @@ $("#myModal").on("click", "#dont-share-publicly", function() {
     send(JSON.stringify(upsertGoal))
 });
 
-$("#myModal").on("click", "#share-publicly", function() {
+$("#myModal").on("click", "#share-publicly", function () {
     console.log("share-publicly")
     let goalId = $("#myModal").data("idx")
     console.log("id:", goalId)
@@ -56,7 +56,7 @@ $("#myModal").on("click", "#share-publicly", function() {
     send(JSON.stringify(upsertGoal))
 });
 
-$("#myModal").on("click", "#dont-share-selectively", function() {
+$("#myModal").on("click", "#dont-share-selectively", function () {
     console.log("dont-share-selectively")
     let goalId = $("#myModal").data("idx")
     console.log("id:", goalId)
@@ -70,7 +70,7 @@ $("#myModal").on("click", "#dont-share-selectively", function() {
     send(JSON.stringify(upsertGoal))
 });
 
-$("#myModal").on("click", "#share-selectively", function() {
+$("#myModal").on("click", "#share-selectively", function () {
     console.log("share-selectively")
     let goalId = $("#myModal").data("idx")
     console.log("id:", goalId)
