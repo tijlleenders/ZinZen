@@ -319,7 +319,7 @@ body {
 
 .sub-title {
   color: var(--menu-foreground);
-  opacity: 35%;
+  opacity: 85%;
   font-size: small;
   height: 20px;
 }
