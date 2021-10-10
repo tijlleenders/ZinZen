@@ -1190,6 +1190,15 @@ function logOut() {
     location.href = redirectURL
 }
 
+function handleCommand(selectedCommand) {
+    let inputCommand = $("#inputCommand").data('inputCommand')
+    console.log("command pressed:", selectedCommand)
+    inputCommand.commands.splice(inputCommand.commands.indexOf(selectedCommand), 1)
+    $("#inputCommand").data('inputCommand', inputCommand)
+    updateModalUI()
+}
+
+
 let commandDict = {
     'daily': ['Daily'],
     'contact': ['Contact'],

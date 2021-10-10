@@ -113,10 +113,7 @@ function deleteGoal(id) {
 
 $("#myModal").on("click", ".command-suggestion", function (e) {
     console.log("handling command-suggestion pressed")
-    let inputCommand = $("#inputCommand").data('inputCommand')
-    inputCommand.commandPressed = [e.currentTarget.innerText]
-    $("#inputCommand").data('inputCommand', inputCommand)
-    updateModalUI()
+    handleCommand(e.currentTarget.innerText)
 })
 
 $("#myModal").on("click", ".word-suggestion", function (e) {
