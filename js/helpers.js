@@ -39,14 +39,18 @@ function updateModalAddUI() {
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = `Suggested commands: `
-    newInputCommand.suggestedCommands.forEach(suggestion => {
-        suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
+    newInputCommand.suggestedCommands.forEach(suggestionSet => {
+        suggestionSet.forEach(suggestion => {
+            suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
+        })
     });
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = `Suggested words: `
-    newInputCommand.suggestedWords.forEach(suggestion => {
-        suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
+    newInputCommand.suggestedWords.forEach(suggestionSet => {
+        suggestionSet.forEach(suggestion => {
+            suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
+        })
     });
     $("#suggested-words").html(suggestedWords)
 }
@@ -1186,40 +1190,44 @@ function logOut() {
     location.href = redirectURL
 }
 
-
 let commandDict = {
-    contact: ['Contact'],
-    sharepublic: ['SharePublic'],
-    shareanonymous: ['ShareAnonymous'],
-    goup: ['GoUp'],
-    up: ['GoUp'],
-    today: ['Today'],
-    tomorrow: ['Tomorrow'],
-    monday: ['Monday'],
-    tuesday: ['Tuesday'],
-    wednesday: ['Wednesday'],
-    thursday: ['Thursday'],
-    friday: ['Friday'],
-    saturday: ['Saturday'],
-    who: ['Who'],
-    sharewith: ['ShareWith:'],
-    goto: ['Goto:'],
-    copyto: ['CopyTo:'],
-    copyallto: ['CopyAllTo:'],
-    moveto: ['MoveTo:'],
-    moveallto: ['MoveAllTo:'],
-    repeatsevery: ['RepeatsEvery:'],
-    suggestto: ['SuggestTo:'],
-    this: ['This:'],
-    next: ['Next:'],
-    after: ['After:'],
-    before: ['Before:'],
-    finish: ['Finish:'],
-    start: ['Start:'],
-    emotion: ['Emotion:'],
-    waitfor: ['WaitFor:'],
-    dependson: ['DependsOn:'],
-    language: ['Language:']
+    'daily': ['Daily'],
+    'contact': ['Contact'],
+    'share public': ['Share public'],
+    'share anonymous': ['Share anonymous'],
+    'go up': ['Go up'],
+    'up': ['Go up'],
+    'today': ['Today'],
+    'tomorrow': ['Tomorrow'],
+
+    'monday': ['Monday'],
+    'tuesday': ['Tuesday'],
+    'wednesday': ['Wednesday'],
+    'thursday': ['Thursday'],
+    'friday': ['Friday'],
+    'saturday': ['Saturday'],
+
+    'wednesdays': ['Wednesdays'],
+
+    'who': ['Who'],
+    'share with': ['Share with'],
+    'go to': ['Go to'],
+    'copy to': ['Copy to'],
+    'copy all to': ['Copy all to'],
+    'move to': ['Move to'],
+    'move all to': ['Move all to'],
+    'repeats every': ['Repeats every'],
+    'suggest to': ['Suggest to'],
+    'this': ['This'],
+    'next': ['Next'],
+    'after': ['After'],
+    'before': ['Before'],
+    'finish': ['Finish'],
+    'start': ['Start'],
+    'emotion': ['Emotion'],
+    'wait for': ['Wait for'],
+    'depends on': ['Depends on'],
+    'language': ['Language']
 }
 
 let wordDict = {
@@ -1233,65 +1241,100 @@ let wordDict = {
 }
 
 function parseCommand(command) {
-    if (getLastWord(command.title) == "") {
-        return command
-    }
-
     command.suggestedCommands = []
-    let word = getLastWord(command.title).toLowerCase()
-
-    if (command.commandPressed.length > 0) {
-        parseCommandPressed(command)
-        return command
-    }
+    command.suggestedWords = []
 
     if (command.wordPressed.length > 0) {
         parseWordPressed(command)
-        return command
     }
 
-    if (isURL(word)) {
-        if (getLeftMatches('https://', command.commands).includes(getLastWord(command.title))) {
-            //existing command already matches lastWord title so suggest nothing
-        } else {
-            command.suggestedCommands.push(getLastWord(command.title)) // don't use word as lowercased
-        }
+    if (command.commandPressed.length > 0) {
+        parseCommandPressed(command)
     }
 
-    if (!isNaN(word)) {
-        console.log("is int:", word)
-        command.suggestedCommands.push(word + "...")
-        command.suggestedCommands.push('Repeat ' + word + 'x')
-        command.suggestedCommands.push('Takes ' + word + '...')
-    }
-
-    if (word.length > 3) {
-        if (word.substr(word.length - 3) == "...") {
-            console.log('multi command')
-            let preWord = word.substr(0, word.length - 3)
-            console.log("preword:", preWord)
-            if (!isNaN(preWord)) {
-                console.log("preWord is a number")
-                console.log("pre-preWord:", getLastWord(command.title.substr(0, command.title.length - word.length)))
-                command.suggestedCommands = command.suggestedCommands.concat(['days', 'hours', 'minutes', 'months', 'weeks', 'years'])
-            }
-        }
-    }
-
-    //if word is phone number, suggest command for that phone number unless already (active and same number)
-    //if word is email, suggest command for that email unless already (active and same email)
-
-    if (word.length > 0 && word.substr(word.length - 1, 1) == " ") {
-        // we're at the start of typing a brand new command - or ready for saving
-        // do a best-guess suggestion based on previous commands (if any)
-        return command
-    }
-
-    console.log("suggestedCommands before:", command.suggestedCommands)
-    command.suggestedCommands = command.suggestedCommands.concat(getSuggestionsFor(word, commandDict))
-    command.suggestedWords = getSuggestionsFor(word, wordDict)
+    addSuggestedCommands(command)
 
     return command
+}
+
+function addSuggestedCommands(command) {
+    let wordsArray = command.title.split(" ")
+    console.log("wordsArray before:", wordsArray)
+
+    let hasTrailingSpace = false
+    if (wordsArray[wordsArray.length - 1] == "") {
+        hasTrailingSpace = true
+    }
+
+    wordsArray.forEach((word, index) => {
+        if (word == '') {
+            wordsArray.splice(index, 1) //remove word from array
+            return
+        }
+    })
+
+
+    wordsArray.forEach((word, index) => { //parse title left to right adding commands/words
+        let commandsToAdd = new Set()
+        console.log("word " + index + ": '" + word + "'")
+
+        //if word is phone number, suggest command for that phone number unless already (active and same number)
+        //if word is email, suggest command for that email unless already (active and same email)
+
+        if (isURL(word)) {
+            if (!command.commands.includes(word)) {
+                commandsToAdd.add(word)
+            }
+        }
+
+        if (word.substr(0, 1) == "@") {
+            if (!isNaN(word.substr(1, 2)) &&
+                word.substr(1, 2) != "") {
+                commandsToAdd.add(word.substr(1, 2) + ":00")
+            }
+        }
+
+        if (isDuration(word) &&
+            index > 1 &&
+            wordsArray[index - 1] != 'flex') {
+            commandsToAdd.add(word)
+        }
+
+        if (word == 'flex') {
+            if (isDuration(wordsArray[index + 1])) {
+                commandsToAdd.add(word + " " + wordsArray[index + 1])
+            }
+        }
+
+        if (!isNaN(word)) {
+            console.log("word is int:", word)
+        }
+
+        commandsToAdd = new Set([...commandsToAdd, ...getSuggestionsFor(word, commandDict)])
+
+        command.suggestedCommands[index] = commandsToAdd
+
+        command.suggestedWords[index] = new Set([...getSuggestionsFor(word, wordDict)])
+    })
+
+    console.log("wordsArray after:", wordsArray)
+
+    command.title = wordsArray.join(" ")
+    if (hasTrailingSpace) {
+        command.title += " "
+    }
+
+    if (wordsArray.length == 0) {
+        // we're at the start of typing a brand new command - or ready for saving
+        // do a best-guess suggestion based on previous commands (if any)
+    }
+
+    //possible that same command gets suggested twice for different words: ie copy to two places
+    //in that case simplest and most probable is that only the command that acts on the first word gets shown/used
+    //to implement this only commands that aren't already present get added
+    //this also avoids having to make the commands unique at the end
+
+    return
 }
 
 function isURL(word) {
@@ -1299,6 +1342,15 @@ function isURL(word) {
         word.substr(0, 8) == "https://" ||
         word.substr(0, 2) == "www")) {
         return true
+    }
+    return false
+}
+
+function isDuration(word) {
+    if (!isNaN(word.substr(0, 1))) {
+        if (word.substr(word.length - 1, 1) == 'h') {
+            return true
+        }
     }
     return false
 }
@@ -1324,6 +1376,9 @@ function parseCommandPressed(command) {
         command.suggestedCommands = []
         return command
     }
+
+
+
     switch (command.commandPressed[0]) {
         case "dummy":
             break;
@@ -1368,7 +1423,7 @@ function parseWordPressed(command) {
 }
 
 function getSuggestionsFor(word, dict) {
-    let matchArray = getLeftMatches(word, Object.keys(dict))
+    let matchArray = getLeftMatches(word.toLowerCase(), Object.keys(dict))
     let result = []
     if (matchArray.length > 0) {
         console.log("left matches found:", matchArray)
@@ -1376,11 +1431,11 @@ function getSuggestionsFor(word, dict) {
             result = result.concat(dict[match])
         });
     }
-    return [...new Set(result)] //make items in result array unique
+    return new Set(result) //make items unique
 }
 
 function getLeftMatches(word, wordsArray) {
-    let matches = wordsArray.filter(wordToMatchOn => wordToMatchOn.startsWith(word))
+    let matches = wordsArray.filter(wordToMatchOn => wordToMatchOn.startsWith(word.toLowerCase()))
     return matches
 }
 
@@ -1400,16 +1455,4 @@ function getPartialMatches(word, wordsArray) {
         matchLength--
     }
     return matches
-}
-
-function getLastWord(title) {
-    let wordsArray = title.split(" ")
-    if (wordsArray[wordsArray.length - 1] == '') {
-        wordsArray.pop()
-    }
-    if (wordsArray.length > 0) {
-        return wordsArray[wordsArray.length - 1]
-    } else {
-        return ''
-    }
 }
