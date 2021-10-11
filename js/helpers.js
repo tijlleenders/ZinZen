@@ -170,8 +170,6 @@ function setSkeletonHTMLForAdd(id) {
     let inputCommand = {
         title: '',
         commands: new Set(),
-        commandPressed: [],
-        wordPressed: [],
         suggestedCommands: [],
         suggestedWords: []
     }
