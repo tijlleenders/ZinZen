@@ -452,6 +452,38 @@ function generateGoalHTML(id) {
     return returnHTML
 }
 
+function generateCalendarHTML() {
+    return `
+    <div class="card shadow-sm text-center mb-3 mx-auto">
+    <h5 class="card-header">Today</h5>
+    <div class="card-body">
+        <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar"
+                style="width: 8%; background-color:#16db93 !important;" aria-valuenow="30"
+                aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar"
+                style="width: 15%; background-color:#B9E769 !important;" aria-valuenow="30"
+                aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar"
+                style="width: 20%; background-color:#2C699A !important;" aria-valuenow="30"
+                aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar"
+                style="width: 10%; background-color:#048BA8 !important;" aria-valuenow="30"
+                aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar"
+                style="width: 10%; background-color:#F1C453 !important;" aria-valuenow="30"
+                aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar"
+                style="width: 5%; background-color:#960200 !important;" aria-valuenow="30"
+                aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar bg-success" role="progressbar"
+                style="width: 32%; background-color:#54478C !important;" aria-valuenow="30"
+                aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+</div>`
+}
+
 function reviver(key, value) {
     if (typeof value === 'object' && value !== null) {
         if (value.dataType === 'Map') {
