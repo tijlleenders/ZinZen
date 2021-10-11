@@ -1199,7 +1199,11 @@ function handleCommand(selectedCommand) {
     console.log("command has index ", indexOfCommand)
     let wordsArray = getArrayFromTitle(inputCommand.title)
     console.log("wordsArray:", wordsArray)
-    wordsArray.splice(indexOfCommand, 1)
+    if (selectedCommand.substr(0, 4) == "flex") {
+        wordsArray.splice(indexOfCommand, 2)
+    } else {
+        wordsArray.splice(indexOfCommand, 1)
+    }
     inputCommand.title = wordsArray.join(' ')
     console.log("inputCommand after (not saved):", inputCommand)
     // $("#inputCommand").data('inputCommand', inputCommand)
