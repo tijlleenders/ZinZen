@@ -212,12 +212,15 @@ $("#main-promised").on("click", ".goal", function (event) {
         console.log("properties:", $("#" + selectedGoalId).data("properties"))
         if ($("#" + selectedGoalId).data("properties").commands != undefined) {
             console.log("Commands!")
-            if ($("#" + selectedGoalId).data("properties").commands.has('setting')) {
+            if ($("#" + selectedGoalId).data("properties").commands[0].split(',').includes('setting')) {
                 goToSetting(selectedGoalId)
+                return
             }
-            if ($("#" + selectedGoalId).data("properties").commands.has('WebLink')) {
+            if ($("#" + selectedGoalId).data("properties").commands[0].split(',').includes('WebLink')) {
                 window.open($("#" + selectedGoalId).data("properties").url[0], '_blank')
+                return
             }
+            goTo(selectedGoalId)
             return
         }
         if ($("#" + nodeId).hasClass("title") ||
