@@ -477,6 +477,9 @@ function generateCalendarHTML() {
         </div>
     </div>
 </div>`
+
+    //Todo: make col for slot rows
+    //insert slot rows with generateSlotHTML(element)
     return calendarHTML
 }
 
