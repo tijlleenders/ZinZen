@@ -127,7 +127,7 @@ $("#myModal").on("click", ".word-suggestion", function (e) {
 $("#myModal").on("click", ".selected-command", function (e) {
     console.log("handling selected-command pressed")
     let inputCommand = $("#inputCommand").data('inputCommand')
-    inputCommand.commands.splice(inputCommand.commands.indexOf(e.currentTarget.innerText), 1)
+    inputCommand.commands.delete(e.currentTarget.innerText)
     $("#inputCommand").data('inputCommand', inputCommand)
     updateModalUI()
 })
