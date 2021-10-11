@@ -169,7 +169,7 @@ function setSkeletonHTMLForAdd(id) {
     $("#modal-body").html(bodyHTML)
     let inputCommand = {
         title: '',
-        commands: [],
+        commands: new Set(),
         commandPressed: [],
         wordPressed: [],
         suggestedCommands: [],
@@ -1193,11 +1193,39 @@ function logOut() {
 function handleCommand(selectedCommand) {
     let inputCommand = $("#inputCommand").data('inputCommand')
     console.log("command pressed:", selectedCommand)
-    inputCommand.commands.splice(inputCommand.commands.indexOf(selectedCommand), 1)
-    $("#inputCommand").data('inputCommand', inputCommand)
+    inputCommand.commands.add(selectedCommand)
+    let indexOfCommand = inputCommand.suggestedCommands.findIndex(commandSet => commandSet.has(selectedCommand));
+    console.log("command has index ", indexOfCommand)
+    let wordsArray = getArrayFromTitle(inputCommand.title)
+    console.log("wordsArray:", wordsArray)
+    wordsArray.splice(indexOfCommand, 1)
+    inputCommand.title = wordsArray.join(' ')
+    console.log("inputCommand after (not saved):", inputCommand)
+    // $("#inputCommand").data('inputCommand', inputCommand)
     updateModalUI()
 }
 
+function getArrayFromTitle(title) {
+    let wordsArray = title.split(" ")
+    console.log("wordsArray before:", wordsArray)
+
+    let hasTrailingSpace = false
+    if (wordsArray[wordsArray.length - 1] == "") {
+        hasTrailingSpace = true
+    }
+
+    wordsArray.forEach((word, index) => {
+        if (word == '') {
+            wordsArray.splice(index, 1) //remove word from array
+            return
+        }
+    })
+
+    if (hasTrailingSpace) {
+        wordsArray.push([' '])
+    }
+    return wordsArray
+}
 let commandDict = {
     'daily': ['Daily'],
     'contact': ['Contact'],
@@ -1282,7 +1310,7 @@ function addSuggestedCommands(command) {
         //if word is email, suggest command for that email unless already (active and same email)
 
         if (isURL(word)) {
-            if (!command.commands.includes(word)) {
+            if (!command.commands.has(word)) {
                 commandsToAdd.add(word)
             }
         }
@@ -1353,13 +1381,6 @@ function isDuration(word) {
         }
     }
     return false
-}
-
-function popLastWordInTitle(command) {
-    let wordArray = command.title.split(' ')
-    wordArray.pop()
-    command.title = wordArray.join(' ')
-    command.title += ' '
 }
 
 function getSuggestionsFor(word, dict) {

@@ -212,10 +212,10 @@ $("#main-promised").on("click", ".goal", function (event) {
         console.log("properties:", $("#" + selectedGoalId).data("properties"))
         if ($("#" + selectedGoalId).data("properties").commands != undefined) {
             console.log("Commands!")
-            if ($("#" + selectedGoalId).data("properties").commands.includes('setting')) {
+            if ($("#" + selectedGoalId).data("properties").commands.has('setting')) {
                 goToSetting(selectedGoalId)
             }
-            if ($("#" + selectedGoalId).data("properties").commands[0] == 'WebLink') {
+            if ($("#" + selectedGoalId).data("properties").commands.has('WebLink')) {
                 window.open($("#" + selectedGoalId).data("properties").url[0], '_blank')
             }
             return
