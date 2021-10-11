@@ -44,7 +44,9 @@ $("#top-lists").click(function () {
 
 $("#top-calendar").click(function () {
     // send('{"action":"read","readRequestType":"play"}')
+
     $("#breadcrumb").addClass("d-none")
+    $("#main-play").html(generateCalendarHTML())
     $("#main-play").removeClass("d-none")
     $("#main-promised").addClass("d-none")
 })
