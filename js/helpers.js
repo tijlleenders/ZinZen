@@ -177,7 +177,9 @@ function setSkeletonHTMLForAdd(id) {
     console.log("list:", list)
     if (list != undefined) {
         inputCommand.title = list.title[0]
-        inputCommand.commands = new Set(list.commands[0].split(','))
+        if (list.commands != undefined) {
+            inputCommand.commands = new Set(list.commands[0].split(','))
+        }
         $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
         $("#save-row").removeClass('d-none')
         let headerHTML = `<h4 class="modal-title">Editing: ` + list.title[0].substring(0, 5) + `...</h4>`
