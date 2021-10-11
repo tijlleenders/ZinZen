@@ -455,23 +455,23 @@ function generateGoalHTML(id) {
 function generateCalendarHTML() {
     let calendarHTML = `
     <div class="card shadow-sm text-center mb-3 mx-auto">
-    <h5 class="card-header">Today</h5>
+    <div class="card-header"><h6>Today 6-18h</h6></div>
     <div class="card-body">
         <div class="progress">
     `
     let blocks = [
-        { width: 10, color: "red" },
-        { width: 10, color: "grey" },
-        { width: 10, color: "red" },
-        { width: 10, color: "grey" },
-        { width: 10, color: "red" },
-        { width: 10, color: "grey" },
-        { width: 10, color: "red" },
-        { width: 10, color: "grey" },
-        { width: 10, color: "red" },
-        { width: 10, color: "grey" },
-        { width: 10, color: "red" },
-        { width: 10, color: "grey" },]
+        { width: 10, color: "var(--card2)" },
+        { width: 10, color: "var(--card3)" },
+        { width: 10, color: "var(--card4)" },
+        { width: 10, color: "var(--card5)" },
+        { width: 10, color: "var(--card6)" },
+        { width: 10, color: "var(--card7)" },
+        { width: 10, color: "var(--card7)" },
+        { width: 10, color: "var(--card7)" },
+        { width: 10, color: "var(--card8)" },
+        { width: 10, color: "var(--card9)" },
+        { width: 10, color: "var(--card2)" },
+        { width: 10, color: "var(--card4)" },]
     calendarHTML += generateProgressHTML(blocks)
     calendarHTML += `
         </div>
