@@ -1323,7 +1323,8 @@ function addSuggestedCommands(command) {
         }
 
         if (isDuration(word) &&
-            (index > 0 && wordsArray[index - 1] != 'flex')) {
+            ((index > 0 && wordsArray[index - 1] != 'flex') ||
+                (index == 0))) {
             commandsToSuggest.add(word)
         }
 
