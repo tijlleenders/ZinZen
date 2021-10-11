@@ -30,7 +30,7 @@ function addSomething() {
     let title = $("#inputCommand").val()
     console.log("title:", title)
     let status = "maybe"
-
+    let commands = [...$("#inputCommand").data('inputCommand').commands]
     let duration = 0
 
     let upsertGoal = {
@@ -40,7 +40,8 @@ function addSomething() {
         parentId: parentId,
         status: status,
         start: (new Date()).toISOString(),
-        duration: duration
+        duration: duration,
+        commands: commands
     }
 
     send(JSON.stringify(upsertGoal))
