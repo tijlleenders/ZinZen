@@ -1224,6 +1224,8 @@ function getArrayFromTitle(title) {
     }
     return wordsArray
 }
+
+
 let commandDict = {
     'daily': ['Daily'],
     'contact': ['Contact'],
@@ -1301,7 +1303,7 @@ function addSuggestedCommands(command) {
 
 
     wordsArray.forEach((word, index) => { //parse title left to right adding commands/words
-        let commandsToAdd = new Set()
+        let commandsToSuggest = new Set()
         console.log("word " + index + ": '" + word + "'")
 
         //if word is phone number, suggest command for that phone number unless already (active and same number)
@@ -1309,26 +1311,25 @@ function addSuggestedCommands(command) {
 
         if (isURL(word)) {
             if (!command.commands.has(word)) {
-                commandsToAdd.add(word)
+                commandsToSuggest.add(word)
             }
         }
 
         if (word.substr(0, 1) == "@") {
             if (!isNaN(word.substr(1, 2)) &&
                 word.substr(1, 2) != "") {
-                commandsToAdd.add(word.substr(1, 2) + ":00")
+                commandsToSuggest.add(word.substr(1, 2) + ":00")
             }
         }
 
         if (isDuration(word) &&
-            index > 1 &&
-            wordsArray[index - 1] != 'flex') {
-            commandsToAdd.add(word)
+            (index > 0 && wordsArray[index - 1] != 'flex')) {
+            commandsToSuggest.add(word)
         }
 
         if (word == 'flex') {
             if (isDuration(wordsArray[index + 1])) {
-                commandsToAdd.add(word + " " + wordsArray[index + 1])
+                commandsToSuggest.add(word + " " + wordsArray[index + 1])
             }
         }
 
@@ -1336,9 +1337,9 @@ function addSuggestedCommands(command) {
             console.log("word is int:", word)
         }
 
-        commandsToAdd = new Set([...commandsToAdd, ...getSuggestionsFor(word, commandDict)])
+        commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])
 
-        command.suggestedCommands[index] = commandsToAdd
+        command.suggestedCommands[index] = commandsToSuggest
 
         command.suggestedWords[index] = new Set([...getSuggestionsFor(word, wordDict)])
     })
@@ -1395,23 +1396,5 @@ function getSuggestionsFor(word, dict) {
 
 function getLeftMatches(word, wordsArray) {
     let matches = wordsArray.filter(wordToMatchOn => wordToMatchOn.startsWith(word.toLowerCase()))
-    return matches
-}
-
-function getPartialMatches(word, wordsArray) {
-    let matches = []
-    let matchLength = word.length
-
-    let loopProtection = 0
-    while (matchLength > 0 && loopProtection < 100) {
-        let currentLengthMatches = wordsArray.filter(wordInArray => wordInArray.includes(word.substr(0, matchLength)))
-        if (currentLengthMatches.length > 0) {
-            //Todo make the matching letters bold with <b></b> - will render correctly in the button
-            matches = matches.concat(currentLengthMatches)
-            break
-        }
-        loopProtection++
-        matchLength--
-    }
     return matches
 }
