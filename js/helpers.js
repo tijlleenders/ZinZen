@@ -453,36 +453,43 @@ function generateGoalHTML(id) {
 }
 
 function generateCalendarHTML() {
-    return `
+    let calendarHTML = `
     <div class="card shadow-sm text-center mb-3 mx-auto">
     <h5 class="card-header">Today</h5>
     <div class="card-body">
         <div class="progress">
-            <div class="progress-bar bg-success" role="progressbar"
-                style="width: 8%; background-color:#16db93 !important;" aria-valuenow="30"
-                aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar"
-                style="width: 15%; background-color:#B9E769 !important;" aria-valuenow="30"
-                aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar"
-                style="width: 20%; background-color:#2C699A !important;" aria-valuenow="30"
-                aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar"
-                style="width: 10%; background-color:#048BA8 !important;" aria-valuenow="30"
-                aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar"
-                style="width: 10%; background-color:#F1C453 !important;" aria-valuenow="30"
-                aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar"
-                style="width: 5%; background-color:#960200 !important;" aria-valuenow="30"
-                aria-valuemin="0" aria-valuemax="100"></div>
-            <div class="progress-bar bg-success" role="progressbar"
-                style="width: 32%; background-color:#54478C !important;" aria-valuenow="30"
-                aria-valuemin="0" aria-valuemax="100"></div>
+    `
+    let blocks = [
+        { width: 10, color: "red" },
+        { width: 10, color: "grey" },
+        { width: 10, color: "red" },
+        { width: 10, color: "grey" },
+        { width: 10, color: "red" },
+        { width: 10, color: "grey" },
+        { width: 10, color: "red" },
+        { width: 10, color: "grey" },
+        { width: 10, color: "red" },
+        { width: 10, color: "grey" },
+        { width: 10, color: "red" },
+        { width: 10, color: "grey" },]
+    calendarHTML += generateProgressHTML(blocks)
+    calendarHTML += `
         </div>
     </div>
 </div>`
+    return calendarHTML
 }
+
+function generateProgressHTML(blocks) {
+    let progressHTML = ``
+    blocks.forEach(block => {
+        progressHTML += `<div class="progress-bar bg-success" role="progressbar"
+        style="width: ` + block.width + `%; background-color:` + block.color + ` !important;" aria-valuenow="` + block.width + `"
+        aria-valuemin="0" aria-valuemax="100"></div>`
+    })
+    return progressHTML
+}
+
 
 function reviver(key, value) {
     if (typeof value === 'object' && value !== null) {
