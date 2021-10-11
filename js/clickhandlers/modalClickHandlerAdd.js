@@ -70,15 +70,18 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     console.log("saving ", title)
     let idToSave = $("#myModal").data('idx')
     console.log("idx:", idToSave)
+    let commands = [[...$("#inputCommand").data('inputCommand').commands].join(',')]
     if (idToSave != undefined) {
         let props = lists.by('id', idToSave)
         props.title = [title]
+        props.commands = commands
         lists.update(props)
         let upsertGoal = {
             action: "command",
             command: "upsertGoal",
             title: title,
-            goalId: idToSave
+            goalId: idToSave,
+            commands: commands
         }
         send(JSON.stringify(upsertGoal))
         $("#inputCommand").val("")
