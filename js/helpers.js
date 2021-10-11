@@ -1348,7 +1348,7 @@ function addSuggestedCommands(command) {
     console.log("wordsArray after:", wordsArray)
 
     command.title = wordsArray.join(" ")
-    if (hasTrailingSpace) {
+    if (hasTrailingSpace && wordsArray.length != 0) {
         command.title += " "
     }
 
