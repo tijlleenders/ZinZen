@@ -124,7 +124,7 @@ function setSkeletonHTMLForAdd(id) {
     bodyHTML += `
     <div class="">
         <div class="m-1">
-            <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus>
+            <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus autocomplete="off">
         </div>
     </div>
     </div>
