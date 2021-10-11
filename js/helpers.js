@@ -1198,7 +1198,6 @@ function handleCommand(selectedCommand) {
     updateModalUI()
 }
 
-
 let commandDict = {
     'daily': ['Daily'],
     'contact': ['Contact'],
@@ -1252,14 +1251,6 @@ let wordDict = {
 function parseCommand(command) {
     command.suggestedCommands = []
     command.suggestedWords = []
-
-    if (command.wordPressed.length > 0) {
-        parseWordPressed(command)
-    }
-
-    if (command.commandPressed.length > 0) {
-        parseCommandPressed(command)
-    }
 
     addSuggestedCommands(command)
 
@@ -1364,71 +1355,11 @@ function isDuration(word) {
     return false
 }
 
-function beautifyHTTPInTitle(command) {
-    let newHTTPWord = command.commandPressed[0]
-    newHTTPWord = newHTTPWord.substr(8)
-    if (newHTTPWord.substr(newHTTPWord.length - 5) == ".html") {
-        newHTTPWord = newHTTPWord.substr(0, newHTTPWord.length - 5)
-    }
-    command.title = command.title.replace(command.commandPressed[0], newHTTPWord)
-}
-
-function parseCommandPressed(command) {
-    if (isURL(command.commandPressed[0])) {
-        let existingURLs = getLeftMatches('https://', command.commands)
-        console.log("found existing URLs:", existingURLs)
-        existingURLs.forEach(match => { command.commands.splice(command.commands.indexOf(match), 1) })
-        beautifyHTTPInTitle(command)
-        command.commands.push(command.commandPressed[0])
-        command.title += ' '
-        command.commandPressed = []
-        command.suggestedCommands = []
-        return command
-    }
-
-
-
-    switch (command.commandPressed[0]) {
-        case "dummy":
-            break;
-        case "Today":
-            //save/replace as Date:... ?
-            command.commands.push(command.commandPressed[0])
-            break;
-        case "Tomorrow":
-            //save/replace as Date:... ?
-            command.commands.push(command.commandPressed[0])
-            break;
-        default:
-            let errorMessage = "Command " + command.commandPressed[0] + " not found..."
-            throw new Error(errorMessage)
-    }
-    popLastWordInTitle(command)
-    command.commandPressed = []
-    command.suggestedCommands = []
-    return command
-}
-
 function popLastWordInTitle(command) {
     let wordArray = command.title.split(' ')
     wordArray.pop()
     command.title = wordArray.join(' ')
     command.title += ' '
-}
-
-function parseWordPressed(command) {
-    let wordArray = command.title.split(' ')
-    wordArray.pop()
-    command.title = wordArray.join(' ')
-    if (wordArray.length > 0) {
-        command.title += ' '
-    }
-    command.title += command.wordPressed
-    if (command.wordPressed[0] != 'https://' &&
-        command.wordPressed[0] != 'https://www.') {
-        command.title += ' '
-    }
-    command.wordPressed = []
 }
 
 function getSuggestionsFor(word, dict) {
