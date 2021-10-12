@@ -105,27 +105,27 @@ $("#main-promised").on("mousedown", ".circle-col", function (event) {
     console.log("event mousedown", event)
     let nodeId = getNodeId(event)
     console.log("nodeId", nodeId)
-    startX = parseInt(event.clientX)
-    startY = parseInt(event.clientY)
-    console.log("startX:", startX)
-    console.log("startY:", startY)
+    sortableStartX = parseInt(event.clientX)
+    sortableStartY = parseInt(event.clientY)
+    console.log("sortableStartX:", sortableStartX)
+    console.log("sortableStartY:", sortableStartY)
 })
 
 $("#main-promised").on("mouseup", ".circle-col", function (event) {
     console.log("event mouseup", event)
     let nodeId = getNodeId(event)
     console.log("nodeId", nodeId)
-    endX = parseInt(event.clientX)
-    endY = parseInt(event.clientY)
-    console.log("endX:", endX)
-    console.log("endY:", endY)
-    if (Math.abs(endX - startX) <= 10 &&
-        Math.abs(endY - startY) <= 10) {
+    sortableEndX = parseInt(event.clientX)
+    sortableEndY = parseInt(event.clientY)
+    console.log("sortableEndX:", sortableEndX)
+    console.log("sortableEndY:", sortableEndY)
+    if (Math.abs(sortableEndX - sortableStartX) <= 10 &&
+        Math.abs(sortableEndY - sortableStartY) <= 10) {
         console.log("clicked!")
         changeStatus(nodeId.slice(-36))
     }
-    if (Math.abs(endX - startX) > 50 &&
-        Math.abs(endY - startY) <= 30) {
+    if (Math.abs(sortableEndX - sortableStartX) > 50 &&
+        Math.abs(sortableEndY - sortableStartY) <= 30) {
         openModal(nodeId.slice(-36), "add")
     }
 })

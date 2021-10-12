@@ -17,7 +17,7 @@ var lists = repository.addCollection('lists', {
     unique: ['id']
 })
 
-var startX, startY, endX, endY = 0 //for click or swipe or move detection
+var sortableStartX, sortableStartY, sortableEndX, sortableEndY = 0 //for click or swipe or move detection
 
 var myHeaders = new Headers();
 myHeaders.set('Cache-Control', 'no-store');
