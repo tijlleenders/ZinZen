@@ -969,7 +969,7 @@ function generateCalendarHTML() {
     let slotsForSelectedDay = schedulerJSON.day_schedule_table.filter(slot => slot.dnum == 1)
     console.log("slotsForSelectedDay:", slotsForSelectedDay)
 
-    calendarHTML += generateProgressHTML(slotsForSelectedDay)
+    let calendarHTML = generateProgressHTML(slotsForSelectedDay)
 
     calendarHTML += generateSlotsHTML(slotsForSelectedDay, goalJSON)
 
@@ -977,7 +977,17 @@ function generateCalendarHTML() {
 }
 
 function generateSlotsHTML(slotsForSelectedDay, goalJSON) {
-    return ``
+    let slotsHTML = ``
+
+    for (let hour = 0; hour < 24; hour++) {
+        if (slotsForSelectedDay[hour] != undefined) {
+            console.log("slotsForSelectedDay[hour].id", slotsForSelectedDay[hour].id)
+            console.log("Goal:", goalJSON.goals[slotsForSelectedDay[hour].id])
+            slotsHTML += generateSlotHTML(goalJSON.goals[slotsForSelectedDay[hour].id])
+        }
+    }
+
+    return slotsHTML
 }
 
 function makeWeekBitMap(inputArray) {
@@ -1061,14 +1071,21 @@ function generateProgressHTML(slotsForSelectedDay) {
         { width: 10, color: "var(--card1)" },
         { width: 10, color: "var(--card1)" },
     ]
-    //for 0-23 loop
+
+    let goalJSON = getGoalJSON()
+    for (let hour = 0; hour < 24; hour++) {
+        if (slotsForSelectedDay[hour] != undefined) {
+            console.log("slotsForSelectedDay[hour].id", slotsForSelectedDay[hour].id)
+            console.log("Goal:", goalJSON.goals[slotsForSelectedDay[hour].id])
+        }
+    }
 
     blocks.forEach(block => {
         progressHTML += `<div class="progress-bar bg-success" role="progressbar"
         style="width: ` + block.width + `%; background-color:` + block.color + ` !important;" aria-valuenow="` + block.width + `"
         aria-valuemin="0" aria-valuemax="100"></div>`
     })
-    calendarHTML += `
+    progressHTML += `
                 </div>
             </div>
         </div>
