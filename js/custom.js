@@ -178,7 +178,7 @@ function send(jsonString) {
         json.command == "deleteGoal" ||
         json.command == "completeSlot") {
         goalsLastModifiedEpochMs = new dayjs.utc().valueOf()
-        $("#mmain-play").html("Recalculating...")
+        // $("#mmain-play").html("Recalculating...")
     }
     json.sendId = sendId
     if (publicOrPrivate == "public") {
