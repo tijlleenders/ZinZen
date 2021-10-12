@@ -153,6 +153,9 @@ function isUpdate(properties) {
     let existingRecord = lists.by('id', properties.id)
     // console.log("existingRecord:", existingRecord)
     if (existingRecord == undefined) {
+        if (properties.title != undefined) {
+            properties.lowerTitle = properties.title[0].toLowerCase()
+        }
         lists.insert(properties)
         return true
     } else {
