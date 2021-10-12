@@ -473,74 +473,450 @@ function generateGoalHTML(id) {
 
 function calculateCalendarFor(goalJSON, numberOfDaysToReturn, startingDayISO) {
     let schedulerOutput = {
-        "day_schedule_table": [
-            {
-                "dnum": 1,
-                "hnum": 1,
-                "id": 1,
-                "seq": 4,
-                "tseq": 8,
-                "status": 3
-            }, {
-                "dnum": 1,
-                "hnum": 2,
-                "id": 1,
-                "seq": 5,
-                "tseq": 8,
-                "status": 3
-            }, {
-                "dnum": 1,
-                "hnum": 3,
-                "id": 1,
-                "seq": 6,
-                "tseq": 8,
-                "status": 3
-            }, {
-                "dnum": 1,
-                "hnum": 4,
-                "id": 1,
-                "seq": 7,
-                "tseq": 8,
-                "status": 3
-            }, {
-                "dnum": 1,
-                "hnum": 5,
-                "id": 1,
-                "seq": 8,
-                "tseq": 8,
-                "status": 3
-            }, {
-                "dnum": 1,
-                "hnum": 21,
-                "id": 1,
-                "seq": 1,
-                "tseq": 8,
-                "status": 1
-            }, {
-                "dnum": 1,
-                "hnum": 22,
-                "id": 1,
-                "seq": 2,
-                "tseq": 8,
-                "status": 1
-            }, {
-                "dnum": 1,
-                "hnum": 23,
-                "id": 1,
-                "seq": 3,
-                "tseq": 8,
-                "status": 1
-            }
-        ],
-        "error_table": [
-            {
-                "dnum": 1,
-                "id": 2,
-                "err_id": 1
-            }
-        ]
+        "day_schedule_table": [{
+            "dnum": 1,
+            "hnum": 1,
+            "id": 1,
+            "seq": 4,
+            "tseq": 8,
+            "status": 3
+        }, {
+            "dnum": 1,
+            "hnum": 2,
+            "id": 1,
+            "seq": 5,
+            "tseq": 8,
+            "status": 3
+        }, {
+            "dnum": 1,
+            "hnum": 3,
+            "id": 1,
+            "seq": 6,
+            "tseq": 8,
+            "status": 3
+        }, {
+            "dnum": 1,
+            "hnum": 4,
+            "id": 1,
+            "seq": 7,
+            "tseq": 8,
+            "status": 3
+        }, {
+            "dnum": 1,
+            "hnum": 5,
+            "id": 1,
+            "seq": 8,
+            "tseq": 8,
+            "status": 3
+        }, {
+            "dnum": 1,
+            "hnum": 21,
+            "id": 1,
+            "seq": 1,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 1,
+            "hnum": 22,
+            "id": 1,
+            "seq": 2,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 1,
+            "hnum": 23,
+            "id": 1,
+            "seq": 3,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 2,
+            "hnum": 1,
+            "id": 1,
+            "seq": 4,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 2,
+            "hnum": 2,
+            "id": 1,
+            "seq": 5,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 2,
+            "hnum": 3,
+            "id": 1,
+            "seq": 6,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 2,
+            "hnum": 4,
+            "id": 1,
+            "seq": 7,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 2,
+            "hnum": 5,
+            "id": 1,
+            "seq": 8,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 2,
+            "hnum": 21,
+            "id": 1,
+            "seq": 1,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 2,
+            "hnum": 22,
+            "id": 1,
+            "seq": 2,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 2,
+            "hnum": 23,
+            "id": 1,
+            "seq": 3,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 3,
+            "hnum": 1,
+            "id": 1,
+            "seq": 4,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 3,
+            "hnum": 2,
+            "id": 1,
+            "seq": 5,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 3,
+            "hnum": 3,
+            "id": 1,
+            "seq": 6,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 3,
+            "hnum": 4,
+            "id": 1,
+            "seq": 7,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 3,
+            "hnum": 5,
+            "id": 1,
+            "seq": 8,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 3,
+            "hnum": 21,
+            "id": 1,
+            "seq": 1,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 3,
+            "hnum": 22,
+            "id": 1,
+            "seq": 2,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 3,
+            "hnum": 23,
+            "id": 1,
+            "seq": 3,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 4,
+            "hnum": 1,
+            "id": 1,
+            "seq": 4,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 4,
+            "hnum": 2,
+            "id": 1,
+            "seq": 5,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 4,
+            "hnum": 3,
+            "id": 1,
+            "seq": 6,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 4,
+            "hnum": 4,
+            "id": 1,
+            "seq": 7,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 4,
+            "hnum": 5,
+            "id": 1,
+            "seq": 8,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 4,
+            "hnum": 21,
+            "id": 1,
+            "seq": 1,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 4,
+            "hnum": 22,
+            "id": 1,
+            "seq": 2,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 4,
+            "hnum": 23,
+            "id": 1,
+            "seq": 3,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 5,
+            "hnum": 1,
+            "id": 1,
+            "seq": 4,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 5,
+            "hnum": 2,
+            "id": 1,
+            "seq": 5,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 5,
+            "hnum": 3,
+            "id": 1,
+            "seq": 6,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 5,
+            "hnum": 4,
+            "id": 1,
+            "seq": 7,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 5,
+            "hnum": 5,
+            "id": 1,
+            "seq": 8,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 5,
+            "hnum": 21,
+            "id": 1,
+            "seq": 1,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 5,
+            "hnum": 22,
+            "id": 1,
+            "seq": 2,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 5,
+            "hnum": 23,
+            "id": 1,
+            "seq": 3,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 6,
+            "hnum": 1,
+            "id": 1,
+            "seq": 4,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 6,
+            "hnum": 2,
+            "id": 1,
+            "seq": 5,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 6,
+            "hnum": 3,
+            "id": 1,
+            "seq": 6,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 6,
+            "hnum": 4,
+            "id": 1,
+            "seq": 7,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 6,
+            "hnum": 5,
+            "id": 1,
+            "seq": 8,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 6,
+            "hnum": 21,
+            "id": 1,
+            "seq": 1,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 6,
+            "hnum": 22,
+            "id": 1,
+            "seq": 2,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 6,
+            "hnum": 23,
+            "id": 1,
+            "seq": 3,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 7,
+            "hnum": 1,
+            "id": 1,
+            "seq": 4,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 7,
+            "hnum": 2,
+            "id": 1,
+            "seq": 5,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 7,
+            "hnum": 3,
+            "id": 1,
+            "seq": 6,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 7,
+            "hnum": 4,
+            "id": 1,
+            "seq": 7,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 7,
+            "hnum": 5,
+            "id": 1,
+            "seq": 8,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 7,
+            "hnum": 21,
+            "id": 1,
+            "seq": 1,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 7,
+            "hnum": 22,
+            "id": 1,
+            "seq": 2,
+            "tseq": 8,
+            "status": 1
+        }, {
+            "dnum": 7,
+            "hnum": 23,
+            "id": 1,
+            "seq": 3,
+            "tseq": 8,
+            "status": 1
+        }],
+        "error_table": [{
+            "dnum": 1,
+            "id": 2,
+            "err_id": 1
+        }, {
+            "dnum": 2,
+            "id": 2,
+            "err_id": 1
+        }, {
+            "dnum": 7,
+            "id": 2,
+            "err_id": 1
+        }]
     }
     return schedulerOutput // or store to in-memory db lokijs with handy API?
+}
+
+function getGoalJSON() {
+    let goalJSON = {
+        "goals":
+            [
+                {
+                    "title": "Sleep eight hours daily at 09:00PM (daily)",
+                    "id": "84bddefd-ab71-2fad-bf85-88f11648c81d",
+                    "order": 1,
+                    "owner_id": 123,
+                    "priority": 0,
+                    "start_day": new Date(new Date().setUTCHours(0, 0, 0, 0)).toISOString(),
+                    "finish_day": new Date(new Date(2021, 11, 26, 0, 0, 0).setUTCHours(0, 0, 0, 0)).toISOString(),
+                    "duration_in_sec": 28800,
+                    "start_time_min": 1260,
+                    "finish_time_min": 480,
+                    "allow_split": false,
+                    "week_bitmap": makeWeekBitMap(["Daily"])
+                },
+                {
+                    "title": "Prepare for meeting presetation at 11:00PM (on Mon, Tue & Wed)",
+                    "id": "1abddefb-e19b-0bef-d125-9589f64b7a0a",
+                    "order": 2,
+                    "owner_id": 123,
+                    "priority": 1,
+                    "start_day": new Date(new Date().setUTCHours(0, 0, 0, 0)).toISOString(),
+                    "finish_day": new Date(new Date(2021, 11, 26, 0, 0, 0).setUTCHours(0, 0, 0, 0)).toISOString(),
+                    "duration_in_sec": 3600,
+                    "start_time_min": 1380,
+                    "finish_time_min": 0,
+                    "allow_split": false,
+                    "week_bitmap": makeWeekBitMap(["Mondays", "Tuesdays", "Wednesdays"])
+                }]
+    }
+    return goalJSON
 }
 
 function getGoalJSONForCalendar() {
@@ -576,37 +952,7 @@ function getGoalJSONForCalendar() {
         "$loki": 136
     }
 
-    let goalJSON =
-    {
-        "goals":
-            [
-                {
-                    "title": "Sleep eight hours daily at 09:00PM (daily)",
-                    "id": 1,
-                    "owner_id": 123,
-                    "priority": 0,
-                    "start_day": new Date(new Date().setUTCHours(0, 0, 0, 0)).toISOString(),
-                    "finish_day": new Date(new Date(2021, 11, 26, 0, 0, 0).setUTCHours(0, 0, 0, 0)).toISOString(),
-                    "duration_in_sec": 28800,
-                    "start_time_min": 1260,
-                    "finish_time_min": 480,
-                    "allow_split": false,
-                    "week_bitmap": makeWeekBitMap(["Daily"])
-                },
-                {
-                    "title": "Prepare for meeting presetation at 11:00PM (on Mon, Tue & Wed)",
-                    "id": 2,
-                    "owner_id": 123,
-                    "priority": 1,
-                    "start_day": new Date(new Date().setUTCHours(0, 0, 0, 0)).toISOString(),
-                    "finish_day": new Date(new Date(2021, 11, 26, 0, 0, 0).setUTCHours(0, 0, 0, 0)).toISOString(),
-                    "duration_in_sec": 3600,
-                    "start_time_min": 1380,
-                    "finish_time_min": 0,
-                    "allow_split": false,
-                    "week_bitmap": makeWeekBitMap(["Mondays", "Tuesdays", "Wednesdays"])
-                }]
-    }
+    let goalJSON = getGoalJSON()
 
     goalJSON.goals.forEach(goal => {
         delete goal['title']
@@ -620,11 +966,60 @@ function generateCalendarHTML() {
     let schedulerJSON = calculateCalendarFor(goalJSON, 1, new Date().toISOString())
     console.log("scheduler returned JSON:", schedulerJSON)
 
-    let calendarHTML = `
+    let slotsForSelectedDay = schedulerJSON.day_schedule_table.filter(slot => slot.dnum == 1)
+    console.log("slotsForSelectedDay:", slotsForSelectedDay)
+
+    calendarHTML += generateProgressHTML(slotsForSelectedDay)
+
+    calendarHTML += generateSlotsHTML(slotsForSelectedDay, goalJSON)
+
+    return calendarHTML
+}
+
+function generateSlotsHTML(slotsForSelectedDay, goalJSON) {
+    return ``
+}
+
+function makeWeekBitMap(inputArray) {
+    let result = 0
+    inputArray.forEach(command => {
+        switch (command) {
+            case "Mondays":
+                result += Math.pow(2, 7)
+                break;
+            case "Tuesdays":
+                result += Math.pow(2, 6)
+                break;
+            case "Wednesdays":
+                result += Math.pow(2, 5)
+                break;
+            case "Thursdays":
+                result += Math.pow(2, 4)
+                break;
+            case "Fridays":
+                result += Math.pow(2, 3)
+                break;
+            case "Saturdays":
+                result += Math.pow(2, 2)
+                break;
+            case "Sundays":
+                result += Math.pow(2, 1)
+                break;
+            case "Daily":
+                result += Math.pow(2, 7) + Math.pow(2, 6) + Math.pow(2, 5) + Math.pow(2, 4) + Math.pow(2, 3) + Math.pow(2, 2) + Math.pow(2, 1)
+                break;
+            default:
+        }
+    })
+    return result
+}
+
+function generateProgressHTML(slotsForSelectedDay) {
+    let progressHTML = `
     <div class="card shadow-sm text-center mb-3 mx-auto">
-    <div class="card-header"><h6>Today</div>
-    <div class="card-body">
-        <div class="progress">
+        <div class="card-header"><h6>Today</div>
+            <div class="card-body">
+                <div class="progress">
     `
     let blocks = [
         { width: 10, color: "var(--card1)" },
@@ -666,59 +1061,19 @@ function generateCalendarHTML() {
         { width: 10, color: "var(--card1)" },
         { width: 10, color: "var(--card1)" },
     ]
-    calendarHTML += generateProgressHTML(blocks)
-    calendarHTML += `
-        </div>
-    </div>
-</div>`
+    //for 0-23 loop
 
-    //Todo: make col for slot rows
-    //insert slot rows with generateSlotHTML(element)
-    return calendarHTML
-}
-
-
-function makeWeekBitMap(inputArray) {
-    let result = 0
-    inputArray.forEach(command => {
-        switch (command) {
-            case "Mondays":
-                result += Math.pow(2, 7)
-                break;
-            case "Tuesdays":
-                result += Math.pow(2, 6)
-                break;
-            case "Wednesdays":
-                result += Math.pow(2, 5)
-                break;
-            case "Thursdays":
-                result += Math.pow(2, 4)
-                break;
-            case "Fridays":
-                result += Math.pow(2, 3)
-                break;
-            case "Saturdays":
-                result += Math.pow(2, 2)
-                break;
-            case "Sundays":
-                result += Math.pow(2, 1)
-                break;
-            case "Daily":
-                result += Math.pow(2, 7) + Math.pow(2, 6) + Math.pow(2, 5) + Math.pow(2, 4) + Math.pow(2, 3) + Math.pow(2, 2) + Math.pow(2, 1)
-                break;
-            default:
-        }
-    })
-    return result
-}
-
-function generateProgressHTML(blocks) {
-    let progressHTML = ``
     blocks.forEach(block => {
         progressHTML += `<div class="progress-bar bg-success" role="progressbar"
         style="width: ` + block.width + `%; background-color:` + block.color + ` !important;" aria-valuenow="` + block.width + `"
         aria-valuemin="0" aria-valuemax="100"></div>`
     })
+    calendarHTML += `
+                </div>
+            </div>
+        </div>
+    </div>`
+
     return progressHTML
 }
 
