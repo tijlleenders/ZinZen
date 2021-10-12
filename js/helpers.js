@@ -117,17 +117,14 @@ function setSkeletonHTMLForAdd(id) {
     console.log("inside setSkeletonHTMLForAdd...")
     let headerHTML = `<h4 class="modal-title">Add or search</h4>`
     $("#modal-header-content").html(headerHTML)
-    let bodyHTML = `
+    let bodyHTML = ``
+    bodyHTML += `
     <div class="row my-2" id="input-row">
       <div class="col">
-     `
-    bodyHTML += `
-    <div class="">
         <div class="m-1">
             <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus autocomplete="off">
         </div>
-    </div>
-    </div>
+      </div>
     </div>
     `
     bodyHTML += `    
@@ -452,14 +449,188 @@ function generateGoalHTML(id) {
     return returnHTML
 }
 
+function calculateCalendarFor(goalJSON, numberOfDaysToReturn, startingDayISO) {
+    let schedulerOutput = {
+        "day_schedule_table": [
+            {
+                "dnum": 1,
+                "hnum": 1,
+                "id": 1,
+                "seq": 4,
+                "tseq": 8,
+                "status": 3
+            }, {
+                "dnum": 1,
+                "hnum": 2,
+                "id": 1,
+                "seq": 5,
+                "tseq": 8,
+                "status": 3
+            }, {
+                "dnum": 1,
+                "hnum": 3,
+                "id": 1,
+                "seq": 6,
+                "tseq": 8,
+                "status": 3
+            }, {
+                "dnum": 1,
+                "hnum": 4,
+                "id": 1,
+                "seq": 7,
+                "tseq": 8,
+                "status": 3
+            }, {
+                "dnum": 1,
+                "hnum": 5,
+                "id": 1,
+                "seq": 8,
+                "tseq": 8,
+                "status": 3
+            }, {
+                "dnum": 1,
+                "hnum": 21,
+                "id": 1,
+                "seq": 1,
+                "tseq": 8,
+                "status": 1
+            }, {
+                "dnum": 1,
+                "hnum": 22,
+                "id": 1,
+                "seq": 2,
+                "tseq": 8,
+                "status": 1
+            }, {
+                "dnum": 1,
+                "hnum": 23,
+                "id": 1,
+                "seq": 3,
+                "tseq": 8,
+                "status": 1
+            }
+        ],
+        "error_table": [
+            {
+                "dnum": 1,
+                "id": 2,
+                "err_id": 1
+            }
+        ]
+    }
+    return schedulerOutput // or store to in-memory db lokijs with handy API?
+}
+
+function getGoalJSONForCalendar() {
+    let goalJSONFromDatabase = {
+        "id": "84bddefd-ab71-2fad-bf85-88f11648c81d",
+        "label": "goal",
+        "title": ["74"],
+        "owner": ["32bd8d40-a674-7d71-a510-c019ef1943ec"],
+        "status": ["maybe"],
+        "duration": ["0"],
+        "createdDT": ["2021-09-07T01:59:30.784Z"],
+        "start": ["2021-09-07T01:59:31.447Z"],
+        "tags": ["2"],
+        "updatedDT": ["2021-09-07T01:59:30.784Z"],
+        "timesOfDaysPref": ["0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1"],
+        "statusSort": [1],
+        "timeZone": ["Europe/Amsterdam"],
+        "responseType": "specificNode",
+        "directParents": ["1abddefb-e19b-0bef-d125-9589f64b7a0a"],
+        "directChildren": [],
+        "scheduledBeginISO": "none",
+        "scheduledEndISO": "none",
+        "subCountMaybe": 0,
+        "subCountPromised": 0,
+        "subCountDone": 0,
+        "subCountNever": 0,
+        "breadCrumb": [
+            { "id": "84bddefd-ab71-2fad-bf85-88f11648c81d", "label": "goal", "title": ["74"] },
+            { "id": "1abddefb-e19b-0bef-d125-9589f64b7a0a", "label": "goal", "title": ["test response too big"] },
+            { "id": "32bd8d40-a674-7d71-a510-c019ef1943ec", "label": "person", "name": ["tijl.leenders@gmail.com"] }
+        ],
+        "meta": { "revision": 0, "created": 1634014036776, "version": 0 },
+        "$loki": 136
+    }
+
+    let goalJSON =
+    {
+        "goals":
+            [
+                {
+                    "title": "Sleep eight hours daily at 09:00PM (daily)",
+                    "id": 1,
+                    "owner_id": 123,
+                    "priority": 0,
+                    "start_day": new Date(new Date().setUTCHours(0, 0, 0, 0)).toISOString(),
+                    "finish_day": new Date(new Date(2021, 11, 26, 0, 0, 0).setUTCHours(0, 0, 0, 0)).toISOString(),
+                    "duration_in_sec": 28800,
+                    "start_time_min": 1260,
+                    "finish_time_min": 480,
+                    "allow_split": false,
+                    "week_bitmap": makeWeekBitMap(["Daily"])
+                },
+                {
+                    "title": "Prepare for meeting presetation at 11:00PM (on Mon, Tue & Wed)",
+                    "id": 2,
+                    "owner_id": 123,
+                    "priority": 1,
+                    "start_day": new Date(new Date().setUTCHours(0, 0, 0, 0)).toISOString(),
+                    "finish_day": new Date(new Date(2021, 11, 26, 0, 0, 0).setUTCHours(0, 0, 0, 0)).toISOString(),
+                    "duration_in_sec": 3600,
+                    "start_time_min": 1380,
+                    "finish_time_min": 0,
+                    "allow_split": false,
+                    "week_bitmap": makeWeekBitMap(["Mondays", "Tuesdays", "Wednesdays"])
+                }]
+    }
+
+    goalJSON.goals.forEach(goal => {
+        delete goal['title']
+    })
+
+    return goalJSON
+}
+
 function generateCalendarHTML() {
+    let goalJSON = getGoalJSONForCalendar()
+    let schedulerJSON = calculateCalendarFor(goalJSON, 1, new Date().toISOString())
+    console.log("scheduler returned JSON:", schedulerJSON)
+
     let calendarHTML = `
     <div class="card shadow-sm text-center mb-3 mx-auto">
-    <div class="card-header"><h6>Today 6-18h</h6></div>
+    <div class="card-header"><h6>Today</div>
     <div class="card-body">
         <div class="progress">
     `
     let blocks = [
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card3)" },
+        { width: 10, color: "var(--card4)" },
+        { width: 10, color: "var(--card5)" },
+        { width: 10, color: "var(--card6)" },
+        { width: 10, color: "var(--card5)" },
+
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card4)" },
+        { width: 10, color: "var(--card5)" },
+        { width: 10, color: "var(--card6)" },
+        { width: 10, color: "var(--card7)" },
+        { width: 10, color: "var(--card7)" },
+        { width: 10, color: "var(--card7)" },
+        { width: 10, color: "var(--card8)" },
+        { width: 10, color: "var(--card9)" },
+        { width: 10, color: "var(--card2)" },
+        { width: 10, color: "var(--card4)" },
+
         { width: 10, color: "var(--card2)" },
         { width: 10, color: "var(--card3)" },
         { width: 10, color: "var(--card4)" },
@@ -470,8 +641,9 @@ function generateCalendarHTML() {
         { width: 10, color: "var(--card7)" },
         { width: 10, color: "var(--card8)" },
         { width: 10, color: "var(--card9)" },
-        { width: 10, color: "var(--card2)" },
-        { width: 10, color: "var(--card4)" },]
+        { width: 10, color: "var(--card1)" },
+        { width: 10, color: "var(--card1)" },
+    ]
     calendarHTML += generateProgressHTML(blocks)
     calendarHTML += `
         </div>
@@ -481,6 +653,41 @@ function generateCalendarHTML() {
     //Todo: make col for slot rows
     //insert slot rows with generateSlotHTML(element)
     return calendarHTML
+}
+
+
+function makeWeekBitMap(inputArray) {
+    let result = 0
+    inputArray.forEach(command => {
+        switch (command) {
+            case "Mondays":
+                result += Math.pow(2, 7)
+                break;
+            case "Tuesdays":
+                result += Math.pow(2, 6)
+                break;
+            case "Wednesdays":
+                result += Math.pow(2, 5)
+                break;
+            case "Thursdays":
+                result += Math.pow(2, 4)
+                break;
+            case "Fridays":
+                result += Math.pow(2, 3)
+                break;
+            case "Saturdays":
+                result += Math.pow(2, 2)
+                break;
+            case "Sundays":
+                result += Math.pow(2, 1)
+                break;
+            case "Daily":
+                result += Math.pow(2, 7) + Math.pow(2, 6) + Math.pow(2, 5) + Math.pow(2, 4) + Math.pow(2, 3) + Math.pow(2, 2) + Math.pow(2, 1)
+                break;
+            default:
+        }
+    })
+    return result
 }
 
 function generateProgressHTML(blocks) {
