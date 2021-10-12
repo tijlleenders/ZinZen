@@ -36,8 +36,8 @@ function updateModalAddUI() {
     if (inputCommand.directParents != undefined) {
         inputCommand.directParents.forEach(parent => {
             let parentList = lists.by('id', parent)
-            if (parentList.title != undefined) {
-                parentsHTML += '<span class="badge bg-secondary m-1 selected-parents">' + parentList.title + '</span>'
+            if (parentList.title != undefined && parentList.tags != undefined) {
+                parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parentList.tags[0] + ') !important;" id=modal-parent-' + parentList.id + '>' + parentList.title + '</span>'
             }
         })
     }
