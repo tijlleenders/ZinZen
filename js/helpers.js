@@ -32,6 +32,17 @@ function updateModalAddUI() {
     $("#inputCommand").focus()
     //when to change modal title??
 
+    let parentsHTML = `In: `
+    if (inputCommand.directParents != undefined) {
+        inputCommand.directParents.forEach(parent => {
+            let parentList = lists.by('id', parent)
+            if (parentList.title != undefined) {
+                parentsHTML += '<span class="badge bg-secondary m-1 selected-parents">' + parentList.title + '</span>'
+            }
+        })
+    }
+    $("#selected-parents").html(parentsHTML)
+
     let selectedCommands = ``
     newInputCommand.commands.forEach(command => {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">' + command + '</span>'
@@ -118,6 +129,13 @@ function setSkeletonHTMLForAdd(id) {
     let headerHTML = `<h4 class="modal-title">Add or search</h4>`
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = ``
+    bodyHTML += `    
+    <div class="row mt-2" id="parents-row">
+      <div class="col">
+        <div class="" id="selected-parents">
+        </div>
+      </div>
+    </div>`
     bodyHTML += `
     <div class="row my-2" id="input-row">
       <div class="col">
@@ -166,6 +184,7 @@ function setSkeletonHTMLForAdd(id) {
     $("#modal-body").html(bodyHTML)
     let inputCommand = {
         title: '',
+        directParents: [],
         commands: new Set(),
         suggestedCommands: [],
         suggestedWords: []
@@ -177,9 +196,12 @@ function setSkeletonHTMLForAdd(id) {
         if (list.commands != undefined) {
             inputCommand.commands = new Set(list.commands[0].split(','))
         }
+        if (list.directParents != undefined) {
+            inputCommand.directParents = list.directParents
+        }
         $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
         $("#save-row").removeClass('d-none')
-        let headerHTML = `<h4 class="modal-title">Editing: ` + list.title[0].substring(0, 5) + `...</h4>`
+        let headerHTML = `<h4 class="modal-title">Editing: ` + list.title[0].substring(0, 10) + `...</h4>`
         $("#modal-header-content").html(headerHTML)
     }
 
