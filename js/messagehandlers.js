@@ -11,6 +11,7 @@ async function updateUIWith(properties) {
 
   if (!properties.directParents.includes(parentId)) {
     // console.log("received list that should not be on screen. Probably child of something on screen that is preloaded")
+    preloadChildrenFor(properties)
     return
   }
 
