@@ -1837,7 +1837,6 @@ function getArrayFromTitle(title) {
     return wordsArray
 }
 
-
 let commandDict = {
     'daily': ['Daily'],
     'contact': ['Contact'],
@@ -1875,7 +1874,15 @@ let commandDict = {
     'emotion': ['Emotion'],
     'wait for': ['Wait for'],
     'depends on': ['Depends on'],
-    'language': ['Language']
+    'nl': ['🇳🇱'],
+    'us': ['🇺🇸'],
+    'english': ['🇺🇸'],
+    'gb': ['gb'],
+    'fr': ['🇫🇷'],
+    'cn': ['🇨🇳'],
+    'es': ['🇪🇸'],
+    'de': ['🇩🇪'],
+    'please': ['🥺']
 }
 
 let wordDict = {
