@@ -476,392 +476,392 @@ function calculateCalendarFor(goalJSON, numberOfDaysToReturn, startingDayISO) {
         "day_schedule_table": [{
             "dnum": 1,
             "hnum": 1,
-            "id": 1,
+            "id": 0,
             "seq": 4,
             "tseq": 8,
             "status": 3
         }, {
             "dnum": 1,
             "hnum": 2,
-            "id": 1,
+            "id": 0,
             "seq": 5,
             "tseq": 8,
             "status": 3
         }, {
             "dnum": 1,
             "hnum": 3,
-            "id": 1,
+            "id": 0,
             "seq": 6,
             "tseq": 8,
             "status": 3
         }, {
             "dnum": 1,
             "hnum": 4,
-            "id": 1,
+            "id": 0,
             "seq": 7,
             "tseq": 8,
             "status": 3
         }, {
             "dnum": 1,
             "hnum": 5,
-            "id": 1,
+            "id": 0,
             "seq": 8,
             "tseq": 8,
             "status": 3
         }, {
             "dnum": 1,
             "hnum": 21,
-            "id": 1,
+            "id": 0,
             "seq": 1,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 1,
             "hnum": 22,
-            "id": 1,
+            "id": 0,
             "seq": 2,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 1,
             "hnum": 23,
-            "id": 1,
+            "id": 0,
             "seq": 3,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 2,
             "hnum": 1,
-            "id": 1,
+            "id": 0,
             "seq": 4,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 2,
             "hnum": 2,
-            "id": 1,
+            "id": 0,
             "seq": 5,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 2,
             "hnum": 3,
-            "id": 1,
+            "id": 0,
             "seq": 6,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 2,
             "hnum": 4,
-            "id": 1,
+            "id": 0,
             "seq": 7,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 2,
             "hnum": 5,
-            "id": 1,
+            "id": 0,
             "seq": 8,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 2,
             "hnum": 21,
-            "id": 1,
+            "id": 0,
             "seq": 1,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 2,
             "hnum": 22,
-            "id": 1,
+            "id": 0,
             "seq": 2,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 2,
             "hnum": 23,
-            "id": 1,
+            "id": 0,
             "seq": 3,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 3,
             "hnum": 1,
-            "id": 1,
+            "id": 0,
             "seq": 4,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 3,
             "hnum": 2,
-            "id": 1,
+            "id": 0,
             "seq": 5,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 3,
             "hnum": 3,
-            "id": 1,
+            "id": 0,
             "seq": 6,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 3,
             "hnum": 4,
-            "id": 1,
+            "id": 0,
             "seq": 7,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 3,
             "hnum": 5,
-            "id": 1,
+            "id": 0,
             "seq": 8,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 3,
             "hnum": 21,
-            "id": 1,
+            "id": 0,
             "seq": 1,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 3,
             "hnum": 22,
-            "id": 1,
+            "id": 0,
             "seq": 2,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 3,
             "hnum": 23,
-            "id": 1,
+            "id": 0,
             "seq": 3,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 4,
             "hnum": 1,
-            "id": 1,
+            "id": 0,
             "seq": 4,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 4,
             "hnum": 2,
-            "id": 1,
+            "id": 0,
             "seq": 5,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 4,
             "hnum": 3,
-            "id": 1,
+            "id": 0,
             "seq": 6,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 4,
             "hnum": 4,
-            "id": 1,
+            "id": 0,
             "seq": 7,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 4,
             "hnum": 5,
-            "id": 1,
+            "id": 0,
             "seq": 8,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 4,
             "hnum": 21,
-            "id": 1,
+            "id": 0,
             "seq": 1,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 4,
             "hnum": 22,
-            "id": 1,
+            "id": 0,
             "seq": 2,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 4,
             "hnum": 23,
-            "id": 1,
+            "id": 0,
             "seq": 3,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 5,
             "hnum": 1,
-            "id": 1,
+            "id": 0,
             "seq": 4,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 5,
             "hnum": 2,
-            "id": 1,
+            "id": 0,
             "seq": 5,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 5,
             "hnum": 3,
-            "id": 1,
+            "id": 0,
             "seq": 6,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 5,
             "hnum": 4,
-            "id": 1,
+            "id": 0,
             "seq": 7,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 5,
             "hnum": 5,
-            "id": 1,
+            "id": 0,
             "seq": 8,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 5,
             "hnum": 21,
-            "id": 1,
+            "id": 0,
             "seq": 1,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 5,
             "hnum": 22,
-            "id": 1,
+            "id": 0,
             "seq": 2,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 5,
             "hnum": 23,
-            "id": 1,
+            "id": 0,
             "seq": 3,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 6,
             "hnum": 1,
-            "id": 1,
+            "id": 0,
             "seq": 4,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 6,
             "hnum": 2,
-            "id": 1,
+            "id": 0,
             "seq": 5,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 6,
             "hnum": 3,
-            "id": 1,
+            "id": 0,
             "seq": 6,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 6,
             "hnum": 4,
-            "id": 1,
+            "id": 0,
             "seq": 7,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 6,
             "hnum": 5,
-            "id": 1,
+            "id": 0,
             "seq": 8,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 6,
             "hnum": 21,
-            "id": 1,
+            "id": 0,
             "seq": 1,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 6,
             "hnum": 22,
-            "id": 1,
+            "id": 0,
             "seq": 2,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 6,
             "hnum": 23,
-            "id": 1,
+            "id": 0,
             "seq": 3,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 7,
             "hnum": 1,
-            "id": 1,
+            "id": 0,
             "seq": 4,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 7,
             "hnum": 2,
-            "id": 1,
+            "id": 0,
             "seq": 5,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 7,
             "hnum": 3,
-            "id": 1,
+            "id": 0,
             "seq": 6,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 7,
             "hnum": 4,
-            "id": 1,
+            "id": 0,
             "seq": 7,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 7,
             "hnum": 5,
-            "id": 1,
+            "id": 0,
             "seq": 8,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 7,
             "hnum": 21,
-            "id": 1,
+            "id": 0,
             "seq": 1,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 7,
             "hnum": 22,
-            "id": 1,
+            "id": 0,
             "seq": 2,
             "tseq": 8,
             "status": 1
         }, {
             "dnum": 7,
             "hnum": 23,
-            "id": 1,
+            "id": 0,
             "seq": 3,
             "tseq": 8,
             "status": 1
@@ -971,7 +971,7 @@ function generateCalendarHTML() {
 
     let calendarHTML = generateProgressHTML(slotsForSelectedDay)
 
-    calendarHTML += generateSlotsHTML(slotsForSelectedDay, goalJSON)
+    calendarHTML += generateSlotsHTML(slotsForSelectedDay, getGoalJSON())
 
     return calendarHTML
 }
@@ -1207,44 +1207,6 @@ function updateBreadcrumbUI() {
     }
 }
 
-var commands = [
-    'Email',
-    'WebLink',
-    'PhoneNumber',
-    'Contact',
-    'ShareWith',
-    'SharePublic',
-    'ShareAnonymous',
-    'SuggestTo',
-    'Goto',
-    'GoUp',
-    'CopyTo',
-    'CopyAllTo',
-    'MoveTo',
-    'MoveAllTo',
-    'RepeatsEvery',
-    'Today',
-    'Tomorrow',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-    'This',
-    'Next',
-    'Who',
-    'FinishesOnOrBefore',
-    'StartsAtOrAfter',
-    'Until',
-    'Emotion',
-    'Notes',
-    'WaitFor',
-    'DependsOn',
-    'Language',
-    'https://'
-];
 
 function loadSettings() {
     lists.insert({
