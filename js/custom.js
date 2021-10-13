@@ -19,6 +19,8 @@ var lists = repository.addCollection('lists', {
 
 var sortableStartX, sortableStartY, sortableEndX, sortableEndY = 0 //for click or swipe or move detection
 
+$("#main-quote").html('<center><h1>"What is essential is invisible to the eye."</h1><br />- Antoine de St Exupéry</center> ')
+
 var myHeaders = new Headers();
 myHeaders.set('Cache-Control', 'no-store');
 var urlParams = new URLSearchParams(window.location.search);
