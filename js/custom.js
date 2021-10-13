@@ -19,7 +19,49 @@ var lists = repository.addCollection('lists', {
 
 var sortableStartX, sortableStartY, sortableEndX, sortableEndY = 0 //for click or swipe or move detection
 
-$("#main-quote").html('<center><h1>"What is essential is invisible to the eye."</h1><br />- Antoine de St Exupéry</center> ')
+
+const quotes = [
+    {
+        "quote": "What is essential is invisible to the eye.",
+        "author": "Antoine de St Exupéry"
+    },
+    {
+        "quote": "Promise making and promise keeping are the central issues of ethics.",
+        "author": "Friedrich Nietzsche"
+    },
+    {
+        "quote": "We become what we think.",
+        "author": "Buddha"
+    },
+    {
+        "quote": "Make the days count.",
+        "author": "Muhammad Ali"
+    },
+    {
+        "quote": "You can do anything, but not everything.",
+        "author": "David Allen"
+    },
+    {
+        "quote": "You dont have to see the whole staircase just the first step.",
+        "author": "Martin Luther King"
+    },
+    {
+        "quote": "It isn't normal to know what we want",
+        "author": "Maslow"
+    },
+    {
+        "quote": "Schedule your priorities.",
+        "author": "Stephen Covey"
+    },
+    {
+        "quote": "We are what we repeatedly do.",
+        "author": "Aristotle"
+    }
+]
+const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+$("#main-quote").html('<center><h1>“' + randomQuote.quote + '”</h1><br />- ' + randomQuote.author + '</center> ')
+
 
 var myHeaders = new Headers();
 myHeaders.set('Cache-Control', 'no-store');
