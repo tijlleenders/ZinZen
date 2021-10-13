@@ -26,7 +26,7 @@ const quotes = [
         "author": "Antoine de St Exupéry"
     },
     {
-        "quote": "Promise making and promise keeping are the central issues of ethics.",
+        "quote": "Promises are the central issues of ethics.",
         "author": "Friedrich Nietzsche"
     },
     {
