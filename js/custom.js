@@ -187,7 +187,24 @@ function preloadChildrenFor(parent) {
 }
 
 function updateChildrenFor(parent) {
-    parent.directChildren.forEach(childId => {
+    let children = parent.directChildren
+    if (parent.sortedChildren != undefined) {
+        console.log("Replaced with sortedChildren")
+        children = parent.sortedChildren[0].split(',')
+    } else {
+        throw Error('sortedChildren not found')
+    }
+
+    children.forEach(childId => {
+        if (!$('#' + childId).length) {
+            // console.log("id not yet present, appending placeholderto end")
+            $("#add-a-goal").empty() //Empties the No lists here
+            let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + childId + `"></div>`
+            $("#main-promised").append(goalHTML)
+        }
+    })
+
+    children.forEach(childId => {
         let child = lists.by('id', childId)
         if (child == undefined) {
             send(
