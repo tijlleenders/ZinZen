@@ -192,7 +192,19 @@ function updateChildrenFor(parent) {
         console.log("Replaced with sortedChildren")
         children = parent.sortedChildren[0].split(',')
     } else {
-        throw Error('sortedChildren not found')
+        console.error('sortedChildren not found - adding...')
+        parent.sortedChildren = [parent.directChildren.join(',')]
+        console.log("parent.sortedChildren:", parent.sortedChildren)
+
+        lists.update(parent)
+        var messageJson = {
+            action: "command",
+            command: "upsertGoal",
+            goalId: parentId,
+            sortedChildren: children
+        }
+        console.log("send:", messageJson)
+        send(JSON.stringify(messageJson))
     }
 
     children.forEach(childId => {
