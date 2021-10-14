@@ -60,6 +60,10 @@ const quotes = [
     {
         "quote": "How is it that we're so good at technology, and yet so poor at human cooperation?",
         "author": "Mark Burgess"
+    },
+    {
+        "quote": "Change happens.",
+        "author": "Mark Burgess"
     }
 ]
 const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
