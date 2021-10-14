@@ -109,6 +109,10 @@ $("#main-promised").on("mouseup", ".circle-col", function (event) {
 $("#main-promised").on("sortupdate", function (event, ui) {
     let sortedChildren = $("#main-promised").sortable("toArray").join(',')
     console.log("sortedChildren:", sortedChildren)
+    let tempProps = lists.by('id', parentId)
+    tempProps.sortedChildren = [sortedChildren]
+    lists.update(tempProps)
+
     var messageJson = {
         action: "command",
         command: "upsertGoal",
