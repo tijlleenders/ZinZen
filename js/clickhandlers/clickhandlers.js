@@ -2,24 +2,6 @@
 
 var inputClickCounter = 0;
 
-
-$("#collaboration-modal-title").on("click", ".btn", function (event) {
-    var emailLine =
-        '<li class="list-group-item">' +
-        $("#collaboration-email-input").val() +
-        " - status</li>";
-    $("#collaboration-modal-list").prepend(emailLine);
-    message =
-        '{"action":"command","command":"suggestion.make","goalId":"' +
-        $("#collaboration-modal-goal-id").val() +
-        '","email":"' +
-        $("#collaboration-email-input").val() +
-        '"}';
-    console.log(message);
-    send(message);
-    return false;
-});
-
 $("#modal-header-close").click(function () {
     $("#myModal").modal("hide");
 });
@@ -70,12 +52,6 @@ $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     let prefix = event.target.id.split("-")[0]
     goTo(event.target.id.substring(prefix.length + 1))
 })
-
-function toggleEditButtons(id) {
-    $("#goal-buttons-row-" + id).toggleClass('d-none')
-    $("#goal-title-row-" + id).toggleClass('d-none')
-    $("#subtext-row-" + id).toggleClass('d-none')
-}
 
 $("#main-promised").on("contextmenu", ".goal", function (event) {
     let nodeId = getNodeId(event)
