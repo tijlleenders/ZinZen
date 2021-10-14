@@ -130,6 +130,20 @@ $("#main-promised").on("mouseup", ".circle-col", function (event) {
     }
 })
 
+$("#main-promised").on("sortupdate", function (event, ui) {
+    let sortedChildren = $("#main-promised").sortable("toArray").join(',')
+    console.log("sortedChildren:", sortedChildren)
+    var messageJson = {
+        action: "command",
+        command: "upsertGoal",
+        goalId: parentId,
+        sortedChildren: sortedChildren
+    }
+    console.log("send:", messageJson)
+    send(JSON.stringify(messageJson))
+
+});
+
 function changeStatus(id) {
     let currentStatus = $("#" + id).data("status")
     let toBeStatus = currentStatus

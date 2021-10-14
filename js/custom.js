@@ -324,10 +324,9 @@ $("#main-promised").sortable({
     scrollSpeed: 40,
     handle: ".circle-col",
     cursor: "move",
-    scrollSensitivity: 50,
-    start: function (event, ui) { console.log("startCircleEvent:", event) },
-    stop: function (event, ui) { console.log("stopCircleEvent:", event) }
+    scrollSensitivity: 50
 });
+
 
 $(function () {
     FastClick.attach(document.body);
