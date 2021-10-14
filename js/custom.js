@@ -188,7 +188,7 @@ function preloadChildrenFor(parent) {
 
 function updateChildrenFor(parent) {
     let children = parent.directChildren
-    if (parent.sortedChildren != undefined) {
+    if (parent.sortedChildren != undefined && parent.sortedChildren.length > 0) {
         console.log("Replaced with sortedChildren")
         children = parent.sortedChildren[0].split(',')
     } else {
