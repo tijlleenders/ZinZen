@@ -33,6 +33,15 @@ function addSomething() {
     let commands = [...$("#inputCommand").data('inputCommand').commands]
     let duration = 0
 
+    // Todo: update direct parents locally and remote ; in this case only parentId...
+    // properties.directParents.forEach(directParentId => {
+    //     let directParent = lists.by('id', directParentId)
+    //     if (directParent != undefined) {
+    //       directParent.directChildren.push(id)
+    //       lists.update(directParent)
+    //     }
+    //   })
+
     let upsertGoal = {
         action: "command",
         command: "upsertGoal",
@@ -75,6 +84,16 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
         let props = lists.by('id', idToSave)
         props.title = [title]
         props.commands = commands
+
+        // Todo: update direct parents locally and remote
+        // properties.directParents.forEach(directParentId => {
+        //     let directParent = lists.by('id', directParentId)
+        //     if (directParent != undefined) {
+        //       directParent.directChildren.push(id)
+        //       lists.update(directParent)
+        //     }
+        //   })
+
         lists.update(props)
         let upsertGoal = {
             action: "command",
@@ -101,6 +120,15 @@ function deleteGoal(id) {
         goalId: id
     }
     send(JSON.stringify(deleteGoal)) //remote remove
+
+    // Todo: update direct parents locally and remote
+    // properties.directParents.forEach(directParentId => {
+    //     let directParent = lists.by('id', directParentId)
+    //     if (directParent != undefined) {
+    //       directParent.directChildren.push(id)
+    //       lists.update(directParent)
+    //     }
+    //   })
 
     let list = lists.by('id', id)
     if (list != undefined) {
