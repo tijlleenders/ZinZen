@@ -33,7 +33,7 @@ function addSomething() {
     let commands = [...$("#inputCommand").data('inputCommand').commands]
     let duration = 0
 
-    // Todo: update direct parents locally and remote ; in this case only parentId...
+    // Todo: update direct parents locally and remote ; in this case only parentId... - remote is handled by commandHandler as part of delete transaction
     // properties.directParents.forEach(directParentId => {
     //     let directParent = lists.by('id', directParentId)
     //     if (directParent != undefined) {
@@ -85,7 +85,7 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
         props.title = [title]
         props.commands = commands
 
-        // Todo: update direct parents locally and remote
+        // Todo: update direct parents locally - remote is NOT yet handled by commandHandler as part of delete transaction
         // properties.directParents.forEach(directParentId => {
         //     let directParent = lists.by('id', directParentId)
         //     if (directParent != undefined) {
@@ -121,7 +121,7 @@ function deleteGoal(id) {
     }
     send(JSON.stringify(deleteGoal)) //remote remove
 
-    // Todo: update direct parents locally and remote
+    // Todo: update direct parents locally - remote is handled by commandHandler as part of delete transaction
     // properties.directParents.forEach(directParentId => {
     //     let directParent = lists.by('id', directParentId)
     //     if (directParent != undefined) {
