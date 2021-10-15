@@ -1095,6 +1095,24 @@ function generateProgressHTML(slotsForSelectedDay) {
 }
 
 
+function setScreenModeDark() {
+    let message = {
+        action: "command",
+        command: "updateSettings",
+        screenMode: "dark"
+    }
+    send(JSON.stringify(message))
+};
+
+function setScreenModeLight() {
+    let message = {
+        action: "command",
+        command: "updateSettings",
+        screenMode: "light"
+    }
+    send(JSON.stringify(message))
+};
+
 function reviver(key, value) {
     if (typeof value === 'object' && value !== null) {
         if (value.dataType === 'Map') {
@@ -1664,7 +1682,7 @@ function loadSettings() {
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["_____________________my-app-settings"],
-        "directChildren": []
+        "directChildren": ["_________________________color-theme"]
     })
 
     lists.insert({
@@ -1761,6 +1779,98 @@ function loadSettings() {
         "directChildren": []
     })
 
+    lists.insert({
+        "id": "_________________________color-theme",
+        "label": "setting",
+        "title": [
+            "Color theme"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z"
+        ],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_______________________look-and-feel"],
+        "directChildren": ["__________________________light-mode", "___________________________dark-mode"]
+    })
+
+    lists.insert({
+        "id": "__________________________light-mode",
+        "label": "setting",
+        "title": [
+            "Light mode"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z"
+        ],
+        "function": ["setScreenModeLight()"],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_________________________color-theme"],
+        "directChildren": []
+    })
+
+    lists.insert({
+        "id": "___________________________dark-mode",
+        "label": "setting",
+        "title": [
+            "Dark mode"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "duration": "0",
+        "createdDT": [
+            "2021-08-12T15:24:06.702Z"
+        ],
+        "start": "2021-08-12T15:24:05.136Z",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z"
+        ],
+        "function": ["setScreenModeDark()"],
+        "commands": ["setting"],
+        "statusSort": 1,
+        "timeZone": "Europe/Amsterdam",
+        "directParents": ["_________________________color-theme"],
+        "directChildren": []
+    })
+
 }
 
 function goToSetting(selectedGoalId) {
@@ -1769,6 +1879,14 @@ function goToSetting(selectedGoalId) {
     console.log("setting:", setting)
     if (setting.function != undefined) {
         switch (setting.function[0]) {
+            case "setScreenModeDark()":
+                setScreenModeDark()
+                return
+                break;
+            case "setScreenModeLight()":
+                setScreenModeLight()
+                return
+                break;
             case "logOut()":
                 logOut()
                 return

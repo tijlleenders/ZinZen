@@ -59,29 +59,5 @@ async function tryToInstall() {
     deferredPrompt = null;
 }
 
-$("#myModal").on("click", "#screen-mode-dark", function () {
-    let message = {
-        action: "command",
-        command: "updateSettings",
-        screenMode: "dark"
-    }
-    send(JSON.stringify(message))
-});
 
-$("#myModal").on("click", "#screen-mode-light", function () {
-    let message = {
-        action: "command",
-        command: "updateSettings",
-        screenMode: "light"
-    }
-    send(JSON.stringify(message))
-});
 
-$("#myModal").on("click", "#screen-mode-time-based", function () {
-    let message = {
-        action: "command",
-        command: "updateSettings",
-        screenMode: "timeBased"
-    }
-    // send(JSON.stringify(message))
-});

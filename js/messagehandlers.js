@@ -101,7 +101,6 @@ function handleIncomingProposal(proposal) {
 }
 
 function handleIncomingSettings(incomingSettings) {
-  $("#main-promised").empty();
   settings = incomingSettings
   parentId = settings.owner[0]
   defaultParentId = settings.owner[0]
