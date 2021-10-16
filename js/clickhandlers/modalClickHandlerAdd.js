@@ -33,14 +33,18 @@ function addSomething() {
     let commands = [...$("#inputCommand").data('inputCommand').commands]
     let duration = 0
 
-    // Todo: update direct parents locally and remote ; in this case only parentId... - remote is handled by commandHandler as part of delete transaction
-    // properties.directParents.forEach(directParentId => {
-    //     let directParent = lists.by('id', directParentId)
-    //     if (directParent != undefined) {
-    //       directParent.directChildren.push(id)
-    //       lists.update(directParent)
+
+    // Awww.... if you want to know the added id locally without waiting for remote - remote needs to have duplicate id set or follow local...
+    // Alternative for now is to send back the parent also in array of specificNodes => adapt custom.js onMessage
+    // let directParent = lists.by('id', parentId)
+    // if (directParent != undefined) {
+    //     let sortedChildrenArray = [ ??? ]
+    //     if (directParent.sortedChildren != undefined) {
+    //         sortedChildrenArray = directParent.sortedChildren.split(',')
     //     }
-    //   })
+    //     directParent.sortedChildren = directParent.sortedChildren.concat(sortedChildrenArray)
+    //     lists.update(directParent)
+    // }
 
     let upsertGoal = {
         action: "command",
