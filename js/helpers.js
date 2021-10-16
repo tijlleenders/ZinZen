@@ -375,7 +375,10 @@ function generateGoalHTML(id) {
     }
 
     var title = titleIcon + properties.title[0]
-    var duration = properties.duration[0]
+    let duration = 0
+    if (properties.duration != undefined) {
+        duration = properties.duration[0]
+    }
     let durationString = formatDuration(duration).short
     let durationTransparency = ""
     if (durationString == "0m") {
@@ -1253,14 +1256,7 @@ function loadSettings() {
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": [],
-        "directChildren": [
-            "_______________________________legal",
-            "_________install-on-phone-or-desktop",
-            "______________________________donate",
-            "________________________________blog",
-            "_______________________________about",
-            "_____________________my-app-settings"
-        ]
+        "sortedChildren": ["_____________________my-app-settings,_________install-on-phone-or-desktop,______________________________donate,________________________________blog,_______________________________about,_______________________________legal"]
     })
     lists.insert({
         "id": "_______________________________legal",
@@ -1281,10 +1277,10 @@ function loadSettings() {
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
         "directParents": ["____________________________settings"],
-        "directChildren": [
-            "_____________________________Privacy",
-            "____________________terms-of-service",
-            "________open-source-acknowledgements"
+        "sortedChildren": [
+            "_____________________________Privacy,\
+____________________terms-of-service,\
+________open-source-acknowledgements"
         ]
     })
     lists.insert({
