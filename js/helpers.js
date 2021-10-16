@@ -1246,17 +1246,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1283,17 +1274,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1317,17 +1299,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1351,17 +1324,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "url": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
@@ -1382,17 +1346,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "url": ["https://blog.ZinZen.me"],
@@ -1413,17 +1368,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "url": ["https://ZinZen.me/about.html"],
@@ -1444,17 +1390,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1479,17 +1416,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "url": ["https://ZinZen.me/privacy.html"],
@@ -1510,17 +1438,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "url": ["https://ZinZen.me/terms.html"],
@@ -1541,17 +1460,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "url": ["https://ZinZen.me/acknowledgements.html"],
@@ -1573,17 +1483,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1604,17 +1505,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1635,17 +1527,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1666,17 +1549,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1697,17 +1571,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1728,17 +1593,8 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
         ],
         "commands": ["setting"],
         "statusSort": 1,
@@ -1759,19 +1615,10 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
         ],
         "function": ["logOut()"],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z",
-            "2021-08-12T15:24:06.702Z"
-        ],
         "commands": ["setting"],
         "statusSort": 1,
         "timeZone": "Europe/Amsterdam",
@@ -1791,11 +1638,6 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
         ],
@@ -1821,11 +1663,6 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
         ],
@@ -1852,11 +1689,6 @@ function loadSettings() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": ["maybe"],
-        "duration": "0",
-        "createdDT": [
-            "2021-08-12T15:24:06.702Z"
-        ],
-        "start": "2021-08-12T15:24:05.136Z",
         "tags": [
             "4"
         ],
