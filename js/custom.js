@@ -150,6 +150,7 @@ function openWS(authorizer, stage, WSEndpoint) {
 
                     case "settings":
                         handleIncomingSettings(item.get("settings"))
+                        //Todo include parentId in settings so first loading doesn't need extra round trip
                         break;
 
                     default:
