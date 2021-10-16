@@ -2000,7 +2000,11 @@ let commandDict = {
     'cn': ['🇨🇳'],
     'es': ['🇪🇸'],
     'de': ['🇩🇪'],
-    'please': ['🥺']
+    'please': ['🥺'],
+
+    '-': ["Sad", "Afraid", "Frustrated", "Depressed", "Lonely", "Embarassed", "Stressed", "Demotivated", "Pessimistic"],
+    '+': ["Happy", "Grateful", "Passionate", "Loved", "Proud", "Mindful", "Motivated", "Optimistic"]
+
 }
 
 let wordDict = {
