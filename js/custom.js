@@ -68,7 +68,7 @@ const quotes = [
 ]
 const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
-$("#main-quote").html('<center><h1>“' + randomQuote.quote + '”</h1><br />- ' + randomQuote.author + '</center> ')
+$("#main-quote").html('<center><h1>“' + randomQuote.quote + '”</h1>- ' + randomQuote.author + '</center> ')
 
 
 var myHeaders = new Headers();
