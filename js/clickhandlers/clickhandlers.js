@@ -28,7 +28,7 @@ $("#top-calendar").click(function () {
     // send('{"action":"read","readRequestType":"play"}')
 
     $("#breadcrumb").addClass("d-none")
-    $("#main-play").html(generateCalendarHTML())
+    generateCalendarHTML()
     $("#main-play").removeClass("d-none")
     $("#main-promised").addClass("d-none")
 })

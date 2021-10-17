@@ -972,11 +972,22 @@ function generateCalendarHTML() {
     let slotsForSelectedDay = schedulerJSON.day_schedule_table.filter(slot => slot.dnum == 1)
     console.log("slotsForSelectedDay:", slotsForSelectedDay)
 
-    let calendarHTML = generateProgressHTML(slotsForSelectedDay)
-
+    let calendarHTML = ``
+    calendarHTML += generateProgressHTML(slotsForSelectedDay)
     calendarHTML += generateSlotsHTML(slotsForSelectedDay, getGoalJSON())
 
-    return calendarHTML
+    $("#main-play").html(calendarHTML)
+    $("#datepicker").datepicker({
+        format: 'mm/dd/yyyy',
+        startDate: '-3d'
+    });
+}
+
+function activateCalendarPicker() {
+    $("#progress-card").on("click", "#progress-header", function (event) {
+        console.log("progress-header clicked...")
+
+    })
 }
 
 function generateSlotsHTML(slotsForSelectedDay, goalJSON) {
@@ -1029,10 +1040,14 @@ function makeWeekBitMap(inputArray) {
 
 function generateProgressHTML(slotsForSelectedDay) {
     let progressHTML = `
-    <div class="card shadow-sm text-center mb-3 mx-auto">
-        <div class="card-header"><h6>Today</div>
-            <div class="card-body">
-                <div class="progress">
+    <div class="card shadow-sm text-center mb-3 mx-auto" id="progress-card">
+        <div class="card-header" id="progress-header" data-bs-toggle="collapse" data-bs-target="#datepicker" aria-expanded="false" aria-controls="datepicker">
+            <h6>Today</h6>
+            <div class="collapse" id="datepicker">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="progress">
     `
     let blocks = [
         { width: 10, color: "var(--card1)" },
