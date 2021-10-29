@@ -109,9 +109,9 @@ $("#main-promised").on("mouseup", ".circle-col", function (event) {
 $("#main-promised").on("sortupdate", function (event, ui) {
     let sortedChildren = $("#main-promised").sortable("toArray").join(',')
     console.log("sortedChildren:", sortedChildren)
-    let tempProps = lists.by('id', parentId)
+    let tempProps = goals.by('id', parentId)
     tempProps.sortedChildren = [sortedChildren]
-    lists.update(tempProps)
+    goals.update(tempProps)
 
     var messageJson = {
         action: "command",
@@ -146,9 +146,9 @@ function changeStatus(id) {
     }
 
     //fast update before confirmation from backend
-    let tempProps = lists.by('id', id)
+    let tempProps = goals.by('id', id)
     tempProps.status = [toBeStatus]
-    lists.update(tempProps)
+    goals.update(tempProps)
     $("#" + id).html(generateGoalHTML(id))
 
     $("#modal-status").data("status", toBeStatus) //necessary for fast/consistant UI update
@@ -168,7 +168,7 @@ function goTo(id) {
     // todo: zoom in animation
     $("#main-promised").empty()
     parentId = id
-    let parent = lists.by('id', id)
+    let parent = goals.by('id', id)
     if (parent == undefined) {
         send(
             '{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}'
