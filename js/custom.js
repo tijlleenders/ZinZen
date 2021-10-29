@@ -9,7 +9,7 @@ var goals = repository.addCollection('goals', {
     unique: ['id']
 })
 var relationships = repository.addCollection('relationships', {
-    unique: ['id']
+    indices: ['parent']
 })
 
 
@@ -80,7 +80,8 @@ window.mobileAndTabletCheck = function () {
 };
 
 function updateChildrenFor(parent) {
-    let children = [] //Todo: function to get children from relationships
+    let children = [relationships.by('parent', parent)]
+    console.log("children:", children)
     if (children == undefined) {
         //Todo: show no children info message on screen
     } else {
