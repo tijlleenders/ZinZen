@@ -86,16 +86,8 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
         let props = goals.by('id', idToSave)
         props.title = [title]
         props.commands = commands
+        goals.update(props)
 
-        lists.update(props)
-        let upsertGoal = {
-            action: "command",
-            command: "upsertGoal",
-            title: title,
-            goalId: idToSave,
-            commands: commands
-        }
-        send(JSON.stringify(upsertGoal))
         $("#inputCommand").val("")
         let ellipse = ""
         if (title.length > 8) {
