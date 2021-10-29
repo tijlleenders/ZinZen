@@ -80,18 +80,9 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     console.log("idx:", idToSave)
     let commands = [[...$("#inputCommand").data('inputCommand').commands].join(',')]
     if (idToSave != undefined) {
-        let props = lists.by('id', idToSave)
+        let props = goals.by('id', idToSave)
         props.title = [title]
         props.commands = commands
-
-        // Todo: update direct parents locally - remote is NOT yet handled by commandHandler as part of delete transaction
-        // properties.directParents.forEach(directParentId => {
-        //     let directParent = lists.by('id', directParentId)
-        //     if (directParent != undefined) {
-        //       directParent.directChildren.push(id)
-        //       lists.update(directParent)
-        //     }
-        //   })
 
         lists.update(props)
         let upsertGoal = {
@@ -129,9 +120,9 @@ function deleteGoal(id) {
     //     }
     //   })
 
-    let list = lists.by('id', id)
-    if (list != undefined) {
-        lists.remove(list) //local remove
+    let goal = goals.by('id', id)
+    if (goal != undefined) {
+        goals.remove(goal) //local remove
     }
     $("#myModal").modal('hide')
     $("#" + id).removeClass('jello-vertical-animation') //if any
