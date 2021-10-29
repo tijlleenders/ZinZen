@@ -1716,23 +1716,23 @@ ________open-source-acknowledgements"
 
 }
 
-async function updateUIWith(properties) {
-    // console.log("handling properties:", properties)
+async function updateUIWith(child) {
+    // console.log("handling child:", child)
 
-    if (properties.label == 'person' || properties.id == parentId) {
-        updateChildrenFor(properties)
+    if (child.id == sessionId) {
+        updateChildrenFor(child)
         updateBreadcrumbUI()
         return
     }
 
-    if (!properties.directParents.includes(parentId)) {
+    if (!child.directParents.includes(parentId)) {
         // console.log("received list that should not be on screen. Probably child of something on screen that is preloaded")
-        preloadChildrenFor(properties)
+        preloadChildrenFor(child)
         return
     }
 
-    preloadChildrenFor(properties)
-    let id = properties.id
+    preloadChildrenFor(child)
+    let id = child.id
 
     if (!$('#' + id).length) {
         // console.log("id not yet present, prepending")
@@ -1740,7 +1740,7 @@ async function updateUIWith(properties) {
         let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
         $("#main-promised").prepend(goalHTML)
     }
-    $("#" + id).data('properties', properties)
+    $("#" + id).data('child', child)
     $("#" + id).html(generateGoalHTML(id))
 
     if ($("#myModal").data("idx") == id) {
