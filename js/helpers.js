@@ -344,7 +344,9 @@ function generateGoalHTML(properties) {
     console.log("generating goal HTML for properties:", properties)
 
     let goalId = properties.id
-    var tag = properties.tags[0]
+    console.log("goalId", goalId)
+    console.log("tags", properties.tags)
+    let tag = properties.tags[0]
     let cardStyle = "card" + tag
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
@@ -355,7 +357,7 @@ function generateGoalHTML(properties) {
     if (properties.url != undefined) {
         titleIcon = "🔗 "
     }
-    let directParents = properties.directParents
+    // let directParents = properties.directParents //Todo
     let subCountDone = parseInt(properties.subCountDone)
     let subCountTotal = parseInt(properties.subCountMaybe) + parseInt(properties.subCountPromised) + parseInt(properties.subCountDone)
     let finish = ""
@@ -413,29 +415,29 @@ function generateGoalHTML(properties) {
 
     let goalSvg = getGoalSvg(status, goalId)
 
-
-    let parentRowAndColHTML = ''
-    if (directParents.length != 0) {
-        // console.log("directParents for " + goalId + ":" + directParents)
-        parentRowAndColHTML += '<div class="row" id="goal-parents-row-' +
-            goalId +
-            '">\
-      <div class="col text-end" id="goal-parents-' +
-            goalId +
-            '">\
-    '
-        if (directParents.length > 1) {
-            directParents.forEach(function (parentId, index) {
-                // console.log("getting parent for id:", parentId)
-                let parent = goals.by('id', parentId)
-                // console.log("parent:", parent)
-                if (parent != undefined) {
-                    parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title[0] + "</div>"
-                }
-            })
-        }
-        parentRowAndColHTML += '</div></div>'
-    }
+    //Todo: add directParents from relationships
+    // let parentRowAndColHTML = ''
+    // if (directParents.length != 0) {
+    //     // console.log("directParents for " + goalId + ":" + directParents)
+    //     parentRowAndColHTML += '<div class="row" id="goal-parents-row-' +
+    //         goalId +
+    //         '">\
+    //   <div class="col text-end" id="goal-parents-' +
+    //         goalId +
+    //         '">\
+    // '
+    //     if (directParents.length > 1) {
+    //         directParents.forEach(function (parentId, index) {
+    //             // console.log("getting parent for id:", parentId)
+    //             let parent = goals.by('id', parentId)
+    //             // console.log("parent:", parent)
+    //             if (parent != undefined) {
+    //                 parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title[0] + "</div>"
+    //             }
+    //         })
+    //     }
+    //     parentRowAndColHTML += '</div></div>'
+    // }
 
     let tagHTML = ''
     //only set tag icon if top level goal
@@ -1726,8 +1728,7 @@ async function updateUIWith(child) {
         let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
         $("#main-promised").prepend(goalHTML)
     }
-    $("#" + id).data('child', child)
-    $("#" + id).html(generateGoalHTML(id))
+    $("#" + id).html(generateGoalHTML(child))
 
     if ($("#myModal").data("idx") == id) {
         switch ($("#myModal").data("modalType")) {
