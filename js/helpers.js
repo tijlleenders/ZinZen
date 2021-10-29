@@ -340,10 +340,8 @@ function getGoalSvg(status, id) {
     return goalSvg
 }
 
-function generateGoalHTML(id) {
-    let properties = $("#" + id).data("properties")
-
-    // console.log("generating goal HTML for properties:", properties)
+function generateGoalHTML(properties) {
+    console.log("generating goal HTML for properties:", properties)
 
     let goalId = properties.id
     var tag = properties.tags[0]
