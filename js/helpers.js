@@ -35,7 +35,7 @@ function updateModalAddUI() {
     let parentsHTML = `In: `
     if (inputCommand.directParents != undefined) {
         inputCommand.directParents.forEach(parent => {
-            let parentList = lists.by('id', parent)
+            let parentList = goals.by('id', parent)
             if (parentList.title != undefined && parentList.tags != undefined) {
                 parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parentList.tags[0] + ') !important;" id=modal-parent-' + parentList.id + '>' + parentList.title + '</span>'
             }
@@ -189,19 +189,19 @@ function setSkeletonHTMLForAdd(id) {
         suggestedCommands: [],
         suggestedWords: []
     }
-    let list = lists.by('id', id)
-    console.log("list:", list)
-    if (list != undefined) {
-        inputCommand.title = list.title[0]
-        if (list.commands != undefined) {
-            inputCommand.commands = new Set(list.commands[0].split(','))
+    let goal = goals.by('id', id)
+    console.log("goals:", goal)
+    if (goal != undefined) {
+        inputCommand.title = goal.title[0]
+        if (goal.commands != undefined) {
+            inputCommand.commands = new Set(goal.commands[0].split(','))
         }
-        if (list.directParents != undefined) {
-            inputCommand.directParents = list.directParents
+        if (goal.directParents != undefined) {
+            inputCommand.directParents = goal.directParents
         }
         $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
         $("#save-row").removeClass('d-none')
-        let headerHTML = `<h4 class="modal-title">Editing: ` + list.title[0].substring(0, 10) + `...</h4>`
+        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[0].substring(0, 10) + `...</h4>`
         $("#modal-header-content").html(headerHTML)
     }
 
@@ -429,7 +429,7 @@ function generateGoalHTML(id) {
         if (directParents.length > 1) {
             directParents.forEach(function (parentId, index) {
                 // console.log("getting parent for id:", parentId)
-                let parent = lists.by('id', parentId)
+                let parent = goals.by('id', parentId)
                 // console.log("parent:", parent)
                 if (parent != undefined) {
                     parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title[0] + "</div>"
@@ -1215,7 +1215,7 @@ function formatDuration(duration) {
 
 function updateBreadcrumbUI() {
     console.log("inside updateBreadcrumbUI...")
-    let parent = lists.by('id', parentId)
+    let parent = goals.by('id', parentId)
     console.log("updating breadcrumb for parent:", parent)
     let breadcrumbHTML = ''
     if (parent.breadCrumb.length > 0) {
@@ -1245,7 +1245,7 @@ function updateBreadcrumbUI() {
 
 
 function loadSettings() {
-    lists.insert({
+    goals.insert({
         "id": "____________________________settings",
         "breadCrumb": [{
             "id": "____________________________settings",
@@ -1273,7 +1273,7 @@ function loadSettings() {
         "directParents": [],
         "sortedChildren": ["_____________________my-app-settings,_________install-on-phone-or-desktop,______________________________donate,________________________________blog,_______________________________about,_______________________________legal"]
     })
-    lists.insert({
+    goals.insert({
         "id": "_______________________________legal",
         "label": "setting",
         "title": [
@@ -1298,7 +1298,7 @@ ____________________terms-of-service,\
 ________open-source-acknowledgements"
         ]
     })
-    lists.insert({
+    goals.insert({
         "id": "_________install-on-phone-or-desktop",
         "label": "setting",
         "title": [
@@ -1323,7 +1323,7 @@ ________open-source-acknowledgements"
             "___________________install-on-iphone"
         ]
     })
-    lists.insert({
+    goals.insert({
         "id": "______________________________donate",
         "label": "setting",
         "title": [
@@ -1345,7 +1345,7 @@ ________open-source-acknowledgements"
         "directParents": ["____________________________settings"],
         "directChildren": []
     })
-    lists.insert({
+    goals.insert({
         "id": "________________________________blog",
         "label": "setting",
         "title": [
@@ -1367,7 +1367,7 @@ ________open-source-acknowledgements"
         "directParents": ["____________________________settings"],
         "directChildren": []
     })
-    lists.insert({
+    goals.insert({
         "id": "_______________________________about",
         "label": "setting",
         "title": [
@@ -1389,7 +1389,7 @@ ________open-source-acknowledgements"
         "directParents": ["____________________________settings"],
         "directChildren": []
     })
-    lists.insert({
+    goals.insert({
         "id": "_____________________my-app-settings",
         "label": "setting",
         "title": [
@@ -1415,7 +1415,7 @@ ________open-source-acknowledgements"
             "_____________________________log-out"
         ]
     })
-    lists.insert({
+    goals.insert({
         "id": "_____________________________Privacy",
         "label": "setting",
         "title": [
@@ -1437,7 +1437,7 @@ ________open-source-acknowledgements"
         "directParents": ["_______________________________legal"],
         "directChildren": []
     })
-    lists.insert({
+    goals.insert({
         "id": "____________________terms-of-service",
         "label": "setting",
         "title": [
@@ -1459,7 +1459,7 @@ ________open-source-acknowledgements"
         "directParents": ["_______________________________legal"],
         "directChildren": []
     })
-    lists.insert({
+    goals.insert({
         "id": "________open-source-acknowledgements",
         "label": "setting",
         "title": [
@@ -1482,7 +1482,7 @@ ________open-source-acknowledgements"
         "directChildren": []
     })
 
-    lists.insert({
+    goals.insert({
         "id": "_________________install-on-computer",
         "label": "setting",
         "title": [
@@ -1504,7 +1504,7 @@ ________open-source-acknowledgements"
         "directChildren": []
     })
 
-    lists.insert({
+    goals.insert({
         "id": "__________________install-on-android",
         "label": "setting",
         "title": [
@@ -1526,7 +1526,7 @@ ________open-source-acknowledgements"
         "directChildren": []
     })
 
-    lists.insert({
+    goals.insert({
         "id": "___________________install-on-iphone",
         "label": "setting",
         "title": [
@@ -1548,7 +1548,7 @@ ________open-source-acknowledgements"
         "directChildren": []
     })
 
-    lists.insert({
+    goals.insert({
         "id": "_______________________look-and-feel",
         "label": "setting",
         "title": [
@@ -1570,7 +1570,7 @@ ________open-source-acknowledgements"
         "directChildren": ["_________________________color-theme"]
     })
 
-    lists.insert({
+    goals.insert({
         "id": "_________________________danger-zone",
         "label": "setting",
         "title": [
@@ -1592,7 +1592,7 @@ ________open-source-acknowledgements"
         "directChildren": []
     })
 
-    lists.insert({
+    goals.insert({
         "id": "____________________________language",
         "label": "setting",
         "title": [
@@ -1614,7 +1614,7 @@ ________open-source-acknowledgements"
         "directChildren": []
     })
 
-    lists.insert({
+    goals.insert({
         "id": "_____________________________log-out",
         "label": "setting",
         "title": [
@@ -1637,7 +1637,7 @@ ________open-source-acknowledgements"
         "directChildren": []
     })
 
-    lists.insert({
+    goals.insert({
         "id": "_________________________color-theme",
         "label": "setting",
         "title": [
@@ -1662,7 +1662,7 @@ ________open-source-acknowledgements"
         "directChildren": ["__________________________light-mode", "___________________________dark-mode"]
     })
 
-    lists.insert({
+    goals.insert({
         "id": "__________________________light-mode",
         "label": "setting",
         "title": [
@@ -1688,7 +1688,7 @@ ________open-source-acknowledgements"
         "directChildren": []
     })
 
-    lists.insert({
+    goals.insert({
         "id": "___________________________dark-mode",
         "label": "setting",
         "title": [
@@ -1718,7 +1718,7 @@ ________open-source-acknowledgements"
 
 function goToSetting(selectedGoalId) {
     console.log("inside goToSetting")
-    let setting = lists.by('id', selectedGoalId)
+    let setting = goals.by('id', selectedGoalId)
     console.log("setting:", setting)
     if (setting.function != undefined) {
         switch (setting.function[0]) {
