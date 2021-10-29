@@ -150,37 +150,6 @@ function isUpdate(properties) {
     }
 }
 
-if (urlParams.get('profile') != undefined) {
-    profile = urlParams.get('profile')
-}
-
-if (urlParams.get('code') != undefined) {
-    if (
-        sessionStorage.getItem("pkce_state") != urlParams.get('state')
-    ) { //Could get a valid token without state (only with code) but 
-        console.log("state is stale; logging in again")
-        // Authorization Code Flow with Proof Key Code Exchange (PKCE) is recommended for public clients, such as single-page apps or native mobile apps. 
-        redirectUserAgentToAuthorizeEndpoint()
-    } else {
-        requestToken(urlParams.get('code')).then(
-            tokenReceived => {
-                console.log("Token valid2 - let's go!")
-                parentId = ""
-                openWS(tokenReceived, "prod", _config.privateWSEndpoint)
-                publicOrPrivate = "private"
-            }, error => {
-                urlParams.set('code', null) //to avoid loop with invalid code
-                sessionStorage.clear()
-                console.log("request token failed2:", error)
-                redirectUserAgentToAuthorizeEndpoint()
-            }
-        );
-    }
-} else {
-    openWS("publicUser", "public", _config.publicWSEndpoint)
-    publicOrPrivate = "public"
-}
-
 // Initialize deferredPrompt for use later to show browser install prompt.
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
