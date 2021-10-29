@@ -4,9 +4,13 @@ var settings = new Map()
 var serviceWorker = null
 var sessionId = uuidv4()
 var repository = new loki('Lists');
-var lists = repository.addCollection('lists', {
+var goals = repository.addCollection('goals', {
     unique: ['id']
 })
+var relationships = repository.addCollection('relationships', {
+    unique: ['id']
+})
+
 
 var sortableStartX, sortableStartY, sortableEndX, sortableEndY = 0 //for click or swipe or move detection
 
