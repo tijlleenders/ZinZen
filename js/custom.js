@@ -78,9 +78,7 @@ function preloadChildrenFor(parent) {
     parent.directChildren.forEach(childId => {
         let child = lists.by('id', childId)
         if (child == undefined) {
-            send(
-                '{"action":"read","readRequestType":"specificNode","nodeId":"' + childId + '"}'
-            );
+            //Todo: show on screen no children yet
         }
     })
 }
