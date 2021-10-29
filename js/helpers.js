@@ -1719,19 +1719,6 @@ ________open-source-acknowledgements"
 async function updateUIWith(child) {
     // console.log("handling child:", child)
 
-    if (child.id == sessionId) {
-        updateChildrenFor(child)
-        updateBreadcrumbUI()
-        return
-    }
-
-    if (!child.directParents.includes(parentId)) {
-        // console.log("received list that should not be on screen. Probably child of something on screen that is preloaded")
-        preloadChildrenFor(child)
-        return
-    }
-
-    preloadChildrenFor(child)
     let id = child.id
 
     if (!$('#' + id).length) {
