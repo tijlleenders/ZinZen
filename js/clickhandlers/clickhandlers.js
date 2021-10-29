@@ -170,9 +170,7 @@ function goTo(id) {
     parentId = id
     let parent = goals.by('id', id)
     if (parent == undefined) {
-        send(
-            '{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}'
-        );
+        console.error("can't find parent with id:", id)
     } else {
         updateChildrenFor(parent)
         updateBreadcrumbUI()
