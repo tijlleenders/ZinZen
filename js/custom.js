@@ -150,20 +150,6 @@ function isUpdate(properties) {
     }
 }
 
-function replyToMail(goalId, messageId, response) {
-    console.log("messageId:" + messageId + " and reply:" + response);
-    WS.send(
-        '{"action":"message","command":"message.reply","messageId":"' +
-        messageId +
-        '","reply":"' +
-        response +
-        '","goalId":"' +
-        goalId +
-        '"}'
-    );
-}
-
-
 if (urlParams.get('profile') != undefined) {
     profile = urlParams.get('profile')
 }
