@@ -1717,7 +1717,8 @@ ________open-source-acknowledgements"
 }
 
 async function updateUIWith(child) {
-    // console.log("handling child:", child)
+    console.log("inside updateUIWith(child)...")
+    console.log("handling child:", child)
 
     let id = child.id
 
