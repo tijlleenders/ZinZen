@@ -79,46 +79,15 @@ window.mobileAndTabletCheck = function () {
 };
 
 function updateChildrenFor(parent) {
-    let children = parent.directChildren
-    if (parent.sortedChildren != undefined && parent.sortedChildren.length > 0) {
-        console.log("Replaced with sortedChildren")
-        children = parent.sortedChildren[0].split(',')
+    let children = [] //Todo: function to get children from relationships
+    if (children == undefined) {
+        //Todo: show no children info message on screen
     } else {
-        console.error('sortedChildren not found - adding...')
-        parent.sortedChildren = [parent.directChildren.join(',')]
-        console.log("parent.sortedChildren:", parent.sortedChildren)
-
-        lists.update(parent)
-        var messageJson = {
-            action: "command",
-            command: "upsertGoal",
-            goalId: parentId,
-            sortedChildren: children
-        }
-        console.log("send:", messageJson)
-        send(JSON.stringify(messageJson))
-    }
-
-    children.forEach(childId => {
-        if (!$('#' + childId).length) {
-            // console.log("id not yet present, appending placeholderto end")
-            $("#add-a-goal").empty() //Empties the No lists here
-            let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + childId + `"></div>`
-            $("#main-promised").append(goalHTML)
-        }
-    })
-
-    children.forEach(childId => {
-        let child = lists.by('id', childId)
-        if (child == undefined) {
-            send(
-                '{"action":"read","readRequestType":"specificNode","nodeId":"' + childId + '"}'
-            );
-        } else {
+        children.forEach(childId => {
+            let child = goals.by('id', childId)
             updateUIWith(child)
-        }
-
-    })
+        });
+    }
 }
 
 function isUpdate(properties) {
