@@ -150,30 +150,6 @@ function isUpdate(properties) {
     }
 }
 
-function send(jsonString) {
-    if (WS.readyState === WebSocket.CLOSED || WS.readyState === WebSocket.CLOSING) {
-        console.log("Detected closed state websocket.")
-        location.reload()
-    }
-    let sendId = uuidv4()
-    let json = JSON.parse(jsonString)
-    if (json.command == "upsertGoal" ||
-        json.command == "deleteGoal" ||
-        json.command == "completeSlot") {
-        goalsLastModifiedEpochMs = new dayjs.utc().valueOf()
-        // $("#mmain-play").html("Recalculating...")
-    }
-    json.sendId = sendId
-    if (publicOrPrivate == "public") {
-        if (profile != undefined) {
-            json.profile = profile
-            json.sessionId = sessionId
-        }
-    }
-    console.log("sending:", JSON.stringify(json))
-    WS.send(JSON.stringify(json))
-}
-
 function replyToMail(goalId, messageId, response) {
     console.log("messageId:" + messageId + " and reply:" + response);
     WS.send(
