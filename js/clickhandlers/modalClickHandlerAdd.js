@@ -58,6 +58,9 @@ function addSomething() {
     if (title.length > 8) {
         ellipse = "..."
     }
+
+    updateChildrenFor(parentId)
+
     $("#inputCommand").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
     $("#inputCommand").focus()
 }
