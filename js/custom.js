@@ -79,12 +79,15 @@ window.mobileAndTabletCheck = function () {
 };
 
 function preloadChildrenFor(parent) {
-    parent.directChildren.forEach(childId => {
-        let child = lists.by('id', childId)
-        if (child == undefined) {
-            //Todo: show on screen no children yet
-        }
-    })
+    let children = [] //Todo: function to get children from relationships
+    if (children == undefined) {
+        //Todo: show on screen no children yet
+    } else {
+        children.forEach(childId => {
+            let child = goals.by('id', childId)
+            //Todo: add to screen
+        })
+    }
 }
 
 function updateChildrenFor(parent) {
