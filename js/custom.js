@@ -78,18 +78,6 @@ window.mobileAndTabletCheck = function () {
     return check;
 };
 
-function preloadChildrenFor(parent) {
-    let children = [] //Todo: function to get children from relationships
-    if (children == undefined) {
-        //Todo: show on screen no children yet
-    } else {
-        children.forEach(childId => {
-            let child = goals.by('id', childId)
-            //Todo: add to screen
-        })
-    }
-}
-
 function updateChildrenFor(parent) {
     let children = parent.directChildren
     if (parent.sortedChildren != undefined && parent.sortedChildren.length > 0) {
