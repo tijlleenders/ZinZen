@@ -90,28 +90,6 @@ function updateChildrenFor(parent) {
     }
 }
 
-function isUpdate(properties) {
-    // console.log("inside store...")
-    let existingRecord = lists.by('id', properties.id)
-    // console.log("existingRecord:", existingRecord)
-    if (existingRecord == undefined) {
-        if (properties.title != undefined) {
-            properties.lowerTitle = properties.title[0].toLowerCase()
-        }
-        lists.insert(properties)
-        return true
-    } else {
-        console.log("record exists - comparing new vs old")
-        if (JSON.stringify(existingRecord.updatedDT) === JSON.stringify(properties.updatedDT)) {
-            // console.log("Equal")
-            return false
-        } else {
-            // console.log("Different")
-            return true
-        }
-    }
-}
-
 // Initialize deferredPrompt for use later to show browser install prompt.
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
