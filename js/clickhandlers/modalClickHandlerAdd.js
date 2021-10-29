@@ -33,22 +33,10 @@ function addSomething() {
     let commands = [...$("#inputCommand").data('inputCommand').commands]
     let duration = 0
 
+    let newGoalId = uuidV4()
 
-    // Awww.... if you want to know the added id locally without waiting for remote - remote needs to have duplicate id set or follow local...
-    // Alternative for now is to send back the parent also in array of specificNodes => adapt custom.js onMessage
-    // let directParent = lists.by('id', parentId)
-    // if (directParent != undefined) {
-    //     let sortedChildrenArray = [ ??? ]
-    //     if (directParent.sortedChildren != undefined) {
-    //         sortedChildrenArray = directParent.sortedChildren.split(',')
-    //     }
-    //     directParent.sortedChildren = directParent.sortedChildren.concat(sortedChildrenArray)
-    //     lists.update(directParent)
-    // }
-
-    let upsertGoal = {
-        action: "command",
-        command: "upsertGoal",
+    let newGoal = {
+        id: newGoalId,
         title: title,
         parentId: parentId,
         status: status,
@@ -56,8 +44,15 @@ function addSomething() {
         duration: duration,
         commands: commands
     }
+    goals.insert(newGoal)
 
-    send(JSON.stringify(upsertGoal))
+    let newRelationship = {
+        id: uuidV4(),
+        parent: parentId,
+        child: newGoalId
+    }
+    relationships.insert(newRelationship)
+
     $("#inputCommand").val("")
     let ellipse = ""
     if (title.length > 8) {
