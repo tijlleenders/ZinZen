@@ -12,6 +12,17 @@ var relationships = repository.addCollection('relationships', {
     indices: ['parent']
 })
 
+let newPerson = {
+    id: sessionId,
+    title: 'Me',
+    parentId: '',
+    status: 'maybe',
+    start: (new Date()).toISOString(),
+    duration: 3600 * 24 * 30,
+    commands: ''
+}
+goals.insert(newPerson)
+
 
 var sortableStartX, sortableStartY, sortableEndX, sortableEndY = 0 //for click or swipe or move detection
 
