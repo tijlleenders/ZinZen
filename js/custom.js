@@ -3,6 +3,7 @@
 var settings = new Map()
 var serviceWorker = null
 var sessionId = uuidv4()
+var parentId = sessionId
 var repository = new loki('Lists');
 var goals = repository.addCollection('goals', {
     unique: ['id']
