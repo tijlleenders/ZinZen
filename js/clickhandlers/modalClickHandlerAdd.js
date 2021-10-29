@@ -33,7 +33,7 @@ function addSomething() {
     let commands = [...$("#inputCommand").data('inputCommand').commands]
     let duration = 0
 
-    let newGoalId = uuidV4()
+    let newGoalId = uuidv4()
 
     let newGoal = {
         id: newGoalId,
@@ -47,7 +47,7 @@ function addSomething() {
     goals.insert(newGoal)
 
     let newRelationship = {
-        id: uuidV4(),
+        id: uuidv4(),
         parent: parentId,
         child: newGoalId
     }
