@@ -104,22 +104,6 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
 })
 
 function deleteGoal(id) {
-    let deleteGoal = {
-        action: "command",
-        command: "deleteGoal",
-        goalId: id
-    }
-    send(JSON.stringify(deleteGoal)) //remote remove
-
-    // Todo: update direct parents locally - remote is handled by commandHandler as part of delete transaction
-    // properties.directParents.forEach(directParentId => {
-    //     let directParent = lists.by('id', directParentId)
-    //     if (directParent != undefined) {
-    //       directParent.directChildren.push(id)
-    //       lists.update(directParent)
-    //     }
-    //   })
-
     let goal = goals.by('id', id)
     if (goal != undefined) {
         goals.remove(goal) //local remove
