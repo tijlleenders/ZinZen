@@ -42,7 +42,8 @@ function addSomething() {
         status: status,
         start: (new Date()).toISOString(),
         duration: duration,
-        commands: commands
+        commands: commands,
+        tags: ["1"]
     }
     goals.insert(newGoal)
 
