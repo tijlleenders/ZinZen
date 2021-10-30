@@ -48,7 +48,7 @@ function addSomething() {
     goals.insert(newGoal)
 
     let newRelationship = {
-        id: uudiv4(),
+        id: uuidv4(),
         parent: parentId,
         child: newGoalId
     }
