@@ -9,7 +9,7 @@ var goals = repository.addCollection('goals', {
     unique: ['id']
 })
 var relationships = repository.addCollection('relationships', {
-    indices: ['parent']
+    unique: ['id']
 })
 
 let newPerson = {
@@ -90,15 +90,15 @@ window.mobileAndTabletCheck = function () {
     return check;
 };
 
-function updateChildrenFor(parent) {
-    let relationshipsForParent = [relationships.by('parent', parent)]
+function updateChildrenFor(parentId) {
+    let relationshipsForParent = [relationships.find('parentId', parentId)]
     console.log("relationshipsForParent:", relationshipsForParent)
-    if (relationshipsForParent == undefined) {
+    if (relationshipsForParent[0] == undefined) {
         //Todo: show no children info message on screen
     } else {
         relationshipsForParent.forEach(relationship => {
             console.log("relationship:", relationship)
-            let child = goals.by('id', relationship.child)
+            let child = goals.by('id', relationship.childId)
             updateUIWith(child)
         });
     }
