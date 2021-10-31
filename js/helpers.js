@@ -374,7 +374,7 @@ function generateGoalHTML(properties) {
         visibilities = 'Public'
     }
 
-    var title = titleIcon + properties.title[0]
+    var title = titleIcon + properties.title
     let duration = 0
     if (properties.duration != undefined) {
         duration = properties.duration[0]
