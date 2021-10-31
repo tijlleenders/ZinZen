@@ -21,7 +21,7 @@ $("#top-lists").click(function () {
     $("#breadcrumb").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
-    goTo(defaultParentId)
+    goTo(sessionId)
 })
 
 $("#top-calendar").click(function () {
