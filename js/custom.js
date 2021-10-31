@@ -13,6 +13,7 @@ var relationships = repository.addCollection('relationships', {
 })
 
 let newPerson = {
+    label: 'person',
     id: sessionId,
     title: 'Me',
     parentId: '',

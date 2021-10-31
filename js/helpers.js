@@ -1202,10 +1202,31 @@ function formatDuration(duration) {
     return result
 }
 
+
+function getShortestPathToPersonFor(id) {
+    //getShortestPathToPersonFor returns id + name for ancestor on shortest path to person
+    //stub implementation ; waiting for more knowledge on shortest path graph algorithm
+    let shortestPath = []
+
+    let currentVertex = goals.find({ id: id })[0]
+    shortestPath.push(currentVertex)
+
+    if (currentVertex.label == "person") {
+        return shortestPath
+    } else {
+        let person = goals.find({ label: 'person' })[0]
+        shortestPath.push(person)
+        return shortestPath
+    }
+}
+
+
 function updateBreadcrumbUI() {
     console.log("inside updateBreadcrumbUI...")
-    let parent = goals.by('id', parentId)
+    let parent = goals.find({ id: parentId })[0]
     console.log("updating breadcrumb for parent:", parent)
+    let ancestors = getShortestPathToPersonFor(parent.id)
+
     let breadcrumbHTML = ''
     if (parent.breadCrumb.length > 0) {
         if (parent.breadCrumb[0].name == undefined) {
