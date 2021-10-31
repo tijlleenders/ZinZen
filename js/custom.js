@@ -98,8 +98,8 @@ function updateChildrenFor(parentId) {
     } else {
         relationshipsForParent.forEach(relationship => {
             console.log("relationship:", relationship)
-            let child = goals.find({ 'id': relationship.childId })
-            updateUIWith(child)
+            let childResults = goals.find({ 'id': relationship.childId })
+            updateUIWith(childResults[0])
         });
     }
 }
