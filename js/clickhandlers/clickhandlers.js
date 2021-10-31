@@ -203,15 +203,16 @@ $("#main-promised").on("click", ".goal", function (event) {
     let nodeId = getNodeId(event)
     let selectedGoalId = nodeId.slice(-36);
     if (nodeId != "") {
-        console.log("properties:", $("#" + selectedGoalId).data("properties"))
-        if ($("#" + selectedGoalId).data("properties").commands != undefined) {
+        let properties = goals.find({ id: selectedGoalId })[0]
+        console.log("properties:", properties)
+        if (properties.commands != undefined) {
             console.log("Commands!")
-            if ($("#" + selectedGoalId).data("properties").commands[0].split(',').includes('setting')) {
+            if (properties.commands[0].split(',').includes('setting')) {
                 goToSetting(selectedGoalId)
                 return
             }
-            if ($("#" + selectedGoalId).data("properties").commands[0].split(',').includes('WebLink')) {
-                window.open($("#" + selectedGoalId).data("properties").url[0], '_blank')
+            if (properties.commands[0].split(',').includes('WebLink')) {
+                window.open(properties.url[0], '_blank')
                 return
             }
             goTo(selectedGoalId)
