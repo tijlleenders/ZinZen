@@ -205,7 +205,7 @@ $("#main-promised").on("click", ".goal", function (event) {
     if (nodeId != "") {
         let properties = goals.find({ id: selectedGoalId })[0]
         console.log("properties:", properties)
-        if (properties.commands != undefined) {
+        if (properties.commands != undefined && properties.commands.length != 0) {
             console.log("Commands!")
             if (properties.commands.split(',').includes('setting')) {
                 goToSetting(selectedGoalId)
