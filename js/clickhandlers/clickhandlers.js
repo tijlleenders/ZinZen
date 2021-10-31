@@ -207,11 +207,11 @@ $("#main-promised").on("click", ".goal", function (event) {
         console.log("properties:", properties)
         if (properties.commands != undefined) {
             console.log("Commands!")
-            if (properties.commands[0].split(',').includes('setting')) {
+            if (properties.commands.split(',').includes('setting')) {
                 goToSetting(selectedGoalId)
                 return
             }
-            if (properties.commands[0].split(',').includes('WebLink')) {
+            if (properties.commands.split(',').includes('WebLink')) {
                 window.open(properties.url[0], '_blank')
                 return
             }

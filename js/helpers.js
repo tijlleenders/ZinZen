@@ -194,7 +194,7 @@ function setSkeletonHTMLForAdd(id) {
     if (goal != undefined) {
         inputCommand.title = goal.title[0]
         if (goal.commands != undefined) {
-            inputCommand.commands = new Set(goal.commands[0].split(','))
+            inputCommand.commands = new Set(goal.commands.split(','))
         }
         if (goal.directParents != undefined) {
             inputCommand.directParents = goal.directParents
