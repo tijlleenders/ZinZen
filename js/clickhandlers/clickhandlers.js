@@ -165,14 +165,15 @@ function changeStatus(id) {
 }
 
 function goTo(id) {
+    // console.log("inside goTo... with id", id)
     // todo: zoom in animation
     $("#main-promised").empty()
     parentId = id
-    let parent = goals.by('id', id)
+    let parent = goals.find({ id: parentId })[0]
     if (parent == undefined) {
         console.error("can't find parent with id:", id)
     } else {
-        updateChildrenFor(parent)
+        updateChildrenFor(parent.id)
         updateBreadcrumbUI()
     }
 }
