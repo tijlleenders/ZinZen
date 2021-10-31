@@ -1205,7 +1205,6 @@ function formatDuration(duration) {
 
 function getShortestPathToPersonFor(id) {
     //getShortestPathToPersonFor returns id + name for ancestor on shortest path to person
-    //stub implementation ; waiting for more knowledge on shortest path graph algorithm
     let shortestPath = []
 
     let currentVertex = goals.find({ id: id })[0]
@@ -1214,8 +1213,9 @@ function getShortestPathToPersonFor(id) {
     if (currentVertex.label == "person") {
         return shortestPath
     } else {
+        //Todo: this is a stub implementation just adding person; waiting for more knowledge on shortest path graph algorithm        
         let person = goals.find({ label: 'person' })[0]
-        shortestPath.push(person)
+        shortestPath.unshift(person)
         return shortestPath
     }
 }
@@ -1226,31 +1226,16 @@ function updateBreadcrumbUI() {
     let parent = goals.find({ id: parentId })[0]
     console.log("updating breadcrumb for parent:", parent)
     let ancestors = getShortestPathToPersonFor(parent.id)
+    console.log("ancestors:", ancestors)
 
     let breadcrumbHTML = ''
-    if (parent.breadCrumb.length > 0) {
-        if (parent.breadCrumb[0].name == undefined) {
-            parent.breadCrumb.reverse()
-        }
-        console.log("parent breadCrumb:", parent.breadCrumb)
-        parent.breadCrumb.forEach(crumb => {
-            switch (crumb.label) {
-                case "person":
-                    breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.name[0] + '</button>'
-                    break;
-                case "settings-root":
-                    breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.title[0] + '</button>'
-                    break;
-                default:
-                    breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + crumb.id + '">' + crumb.title[0] + '</button>'
-            }
-        })
-        $("#breadcrumb").html(breadcrumbHTML)
-        $("#breadcrumbGoal-" + parent.breadCrumb[parent.breadCrumb.length - 1].id).addClass('active')
-    } else {
-        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + parent.id + '">' + parent.name + '</button>'
-        $("#breadcrumb").html(breadcrumbHTML)
-    }
+
+    ancestors.forEach(ancestor => {
+        console.log("ancestor:", ancestor)
+        breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + ancestor.id + '">' + ancestor.title + '</button>'
+    })
+    $("#breadcrumb").html(breadcrumbHTML)
+    $("#breadcrumbGoal-" + ancestors[ancestors.length - 1].id).addClass('active')
 }
 
 
