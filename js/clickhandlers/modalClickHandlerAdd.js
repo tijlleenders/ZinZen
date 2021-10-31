@@ -49,8 +49,8 @@ function addSomething() {
 
     let newRelationship = {
         id: uuidv4(),
-        parent: parentId,
-        child: newGoalId
+        parentId: parentId,
+        childId: newGoalId
     }
     relationships.insert(newRelationship)
 
