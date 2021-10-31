@@ -350,7 +350,7 @@ function generateGoalHTML(properties) {
     let cardStyle = "card" + tag
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
-    let status = properties.status[0]
+    let status = properties.status
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
 
     let titleIcon = ""
