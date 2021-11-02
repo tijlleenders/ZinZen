@@ -4,23 +4,49 @@ var settings = new Map()
 var serviceWorker = null
 var sessionId = uuidv4()
 var parentId = sessionId
-var repository = new loki('Lists');
-var goals = repository.addCollection('goals', {
-    unique: ['id']
-})
-var relationships = repository.addCollection('relationships', {})
 
-let newPerson = {
-    label: 'person',
-    id: sessionId,
-    title: 'Me',
-    parentId: '',
-    status: 'maybe',
-    start: (new Date()).toISOString(),
-    duration: 3600 * 24 * 30,
-    commands: ''
+var repository = new loki("ZinZen.db", {
+    autoload: true,
+    autoloadCallback: databaseInitialize,
+    autosave: true,
+    autosaveInterval: 4000
+});
+
+var goals = repository.getCollection('goals')
+var relationships = repository.getCollection('relationships')
+
+function databaseInitialize() {
+    console.log("Inside databaseInitialize...")
+    goals = repository.getCollection('goals')
+    relationships = repository.getCollection('relationships')
+    console.log("goals:", goals)
+    if (goals == null) {
+        goals = repository.addCollection('goals', {
+            unique: ['id']
+        })
+        let newPerson = {
+            label: 'person',
+            id: sessionId,
+            title: 'Me',
+            parentId: '',
+            status: 'maybe',
+            start: (new Date()).toISOString(),
+            duration: 3600 * 24 * 30,
+            commands: ''
+        }
+        goals.insert(newPerson)
+    } else {
+        sessionId = goals.find({ label: 'person' })[0].id
+        console.log("getting sessionId from db:", sessionId)
+        parentId = sessionId
+    }
+    if (relationships == null) {
+        relationships = repository.addCollection('relationships', {})
+        loadSettings()
+    }
+    updateUIChildrenFor(parentId)
 }
-goals.insert(newPerson)
+
 
 
 var sortableStartX, sortableStartY, sortableEndX, sortableEndY = 0 //for click or swipe or move detection
@@ -127,7 +153,6 @@ window.addEventListener("load", () => {
                 serviceWorker = swReg;
             })
     }
-    loadSettings()
 });
 
 $("#main-promised").sortable({
