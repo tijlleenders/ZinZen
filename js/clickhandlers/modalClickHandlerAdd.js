@@ -60,7 +60,7 @@ function addSomething() {
         ellipse = "..."
     }
 
-    updateChildrenFor(parentId)
+    updateUIChildrenFor(parentId)
 
     $("#inputCommand").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
     $("#inputCommand").focus()

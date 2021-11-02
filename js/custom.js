@@ -91,7 +91,7 @@ window.mobileAndTabletCheck = function () {
     return check;
 };
 
-function updateChildrenFor(parentId) {
+function updateUIChildrenFor(parentId) {
     let relationshipsForParent = relationships.find({ 'parentId': parentId })
     console.log("relationshipsForParent:", relationshipsForParent)
     if (relationshipsForParent[0] == undefined) {

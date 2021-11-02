@@ -173,7 +173,7 @@ function goTo(id) {
     if (parent == undefined) {
         console.error("can't find parent with id:", id)
     } else {
-        updateChildrenFor(parent.id)
+        updateUIChildrenFor(parent.id)
         updateBreadcrumbUI()
     }
 }
