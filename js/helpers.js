@@ -1238,6 +1238,10 @@ function updateBreadcrumbUI() {
     $("#breadcrumbGoal-" + ancestors[ancestors.length - 1].id).addClass('active')
 }
 
+function updateSortOrder(sortedChildrenArray) {
+    //Todo: loop through array and add index as priority number attribute to goal/child
+}
+
 
 function loadSettings() {
     goals.insert({
