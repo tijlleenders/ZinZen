@@ -92,13 +92,12 @@ window.mobileAndTabletCheck = function () {
 };
 
 function updateUIChildrenFor(parentId) {
-    let relationshipsForParent = relationships.find({ 'parentId': parentId })
-    console.log("relationshipsForParent:", relationshipsForParent)
+    console.log("inside updateUIChildrenFor...")
+    let relationshipsForParent = relationships.chain().find({ 'parentId': parentId }).simplesort('priority', { desc: true }).limit(33).data()
     if (relationshipsForParent[0] == undefined) {
         //Todo: show no children info message on screen
     } else {
         relationshipsForParent.forEach(relationship => {
-            console.log("relationship:", relationship)
             let childResults = goals.find({ 'id': relationship.childId })
             updateUIWith(childResults[0])
         });
