@@ -1248,9 +1248,7 @@ function loadSettings() {
     goals.insert({
         "id": "____________________________settings",
         "label": "settings-root",
-        "title": [
-            "Settings"
-        ],
+        "title": "Settings",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1268,9 +1266,7 @@ function loadSettings() {
     goals.insert({
         "id": "_____________________my-app-settings",
         "label": "setting",
-        "title": [
-            "My app settings"
-        ],
+        "title": "My app settings",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1286,9 +1282,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________install-on-phone-or-desktop",
         "label": "setting",
-        "title": [
-            "Install on phone or desktop"
-        ],
+        "title": "Install on phone or desktop",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1304,9 +1298,7 @@ function loadSettings() {
     goals.insert({
         "id": "______________________________donate",
         "label": "setting",
-        "title": [
-            "Donate"
-        ],
+        "title": "Donate",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1323,9 +1315,7 @@ function loadSettings() {
     goals.insert({
         "id": "________________________________blog",
         "label": "setting",
-        "title": [
-            "Blog"
-        ],
+        "title": "Blog",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1342,9 +1332,7 @@ function loadSettings() {
     goals.insert({
         "id": "_______________________________about",
         "label": "setting",
-        "title": [
-            "About"
-        ],
+        "title": "About",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1361,9 +1349,7 @@ function loadSettings() {
     goals.insert({
         "id": "_______________________________legal",
         "label": "setting",
-        "title": [
-            "Legal"
-        ],
+        "title": "Legal",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1388,9 +1374,7 @@ function loadSettings() {
     goals.insert({
         "id": "_______________________look-and-feel",
         "label": "setting",
-        "title": [
-            "Look and feel"
-        ],
+        "title": "Look and feel",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1406,9 +1390,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________________________danger-zone",
         "label": "setting",
-        "title": [
-            "Danger zone"
-        ],
+        "title": "Danger zone",
         "owner": "ZinZen",
         "subCountMaybe": "1",
         "subCountPromised": "0",
@@ -1424,9 +1406,7 @@ function loadSettings() {
     goals.insert({
         "id": "____________________________language",
         "label": "setting",
-        "title": [
-            "Language"
-        ],
+        "title": "Language",
         "owner": "ZinZen",
         "subCountMaybe": "1",
         "subCountPromised": "0",
@@ -1442,9 +1422,7 @@ function loadSettings() {
     goals.insert({
         "id": "_____________________________log-out",
         "label": "setting",
-        "title": [
-            "Log out"
-        ],
+        "title": "Log out",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1467,9 +1445,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________________install-on-computer",
         "label": "setting",
-        "title": [
-            "Install on computer (Windows, Apple, Linux)"
-        ],
+        "title": "Install on computer (Windows, Apple, Linux)",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1486,9 +1462,7 @@ function loadSettings() {
     goals.insert({
         "id": "__________________install-on-android",
         "label": "setting",
-        "title": [
-            "Install on android (Samsung, Xiaomi, other)"
-        ],
+        "title": "Install on android (Samsung, Xiaomi, other)",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1505,9 +1479,7 @@ function loadSettings() {
     goals.insert({
         "id": "___________________install-on-iphone",
         "label": "setting",
-        "title": [
-            "Install on iPhone (Apple)"
-        ],
+        "title": "Install on iPhone (Apple)",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1528,9 +1500,7 @@ function loadSettings() {
     goals.insert({
         "id": "_____________________________Privacy",
         "label": "setting",
-        "title": [
-            "Privacy statement"
-        ],
+        "title": "Privacy statement",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1547,9 +1517,7 @@ function loadSettings() {
     goals.insert({
         "id": "____________________terms-of-service",
         "label": "setting",
-        "title": [
-            "Terms of service"
-        ],
+        "title": "Terms of service",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1566,9 +1534,7 @@ function loadSettings() {
     goals.insert({
         "id": "________open-source-acknowledgements",
         "label": "setting",
-        "title": [
-            "Open source acknowledgements"
-        ],
+        "title": "Open source acknowledgements",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1590,9 +1556,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________________________color-theme",
         "label": "setting",
-        "title": [
-            "Color theme"
-        ],
+        "title": "Color theme",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1614,9 +1578,7 @@ function loadSettings() {
     goals.insert({
         "id": "__________________________light-mode",
         "label": "setting",
-        "title": [
-            "Light mode"
-        ],
+        "title": "Light mode",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1637,9 +1599,7 @@ function loadSettings() {
     goals.insert({
         "id": "___________________________dark-mode",
         "label": "setting",
-        "title": [
-            "Dark mode"
-        ],
+        "title": "Dark mode",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
