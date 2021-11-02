@@ -46,14 +46,17 @@ function addSomething() {
         tags: ["1"],
         priority: 1
     }
-    goals.insert(newGoal)
 
     let newRelationship = {
         id: uuidv4(),
         parentId: parentId,
         childId: newGoalId
     }
+
+    //store new state
+    goals.insert(newGoal)
     relationships.insert(newRelationship)
+    updateSortOrder()
 
     $("#inputCommand").val("")
     let ellipse = ""
