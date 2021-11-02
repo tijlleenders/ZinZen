@@ -1098,21 +1098,13 @@ function generateProgressHTML(slotsForSelectedDay) {
 
 
 function setScreenModeDark() {
-    let message = {
-        action: "command",
-        command: "updateSettings",
-        screenMode: "dark"
-    }
-    send(JSON.stringify(message))
+    settings.screenMode = ["dark"]
+    updateScreenMode()
 };
 
 function setScreenModeLight() {
-    let message = {
-        action: "command",
-        command: "updateSettings",
-        screenMode: "light"
-    }
-    send(JSON.stringify(message))
+    settings.screenMode = ["light"]
+    updateScreenMode()
 };
 
 function reviver(key, value) {
