@@ -1238,8 +1238,8 @@ function updateBreadcrumbUI() {
     $("#breadcrumbGoal-" + ancestors[ancestors.length - 1].id).addClass('active')
 }
 
-function updateSortOrder() {
-    console.log("inside updateSortOrder()")
+function updatePriority() {
+    console.log("inside updatePriority()")
     let sortedChildrenArray = $("#main-promised").sortable("toArray")
     sortedChildrenArray.forEach((childId, index) => {
         let relationship = relationships.find({ parentId: parentId, childId: childId })[0]

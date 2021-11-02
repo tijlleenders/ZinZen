@@ -107,7 +107,7 @@ $("#main-promised").on("mouseup", ".circle-col", function (event) {
 })
 
 $("#main-promised").on("sortupdate", function (event, ui) {
-    updateSortOrder()
+    updatePriority()
 });
 
 function changeStatus(id) {

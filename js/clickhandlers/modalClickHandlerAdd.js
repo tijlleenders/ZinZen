@@ -56,7 +56,7 @@ function addSomething() {
     //store new state
     goals.insert(newGoal)
     relationships.insert(newRelationship)
-    updateSortOrder()
+    updatePriority()
 
     $("#inputCommand").val("")
     let ellipse = ""
