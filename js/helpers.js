@@ -1239,9 +1239,13 @@ function updateBreadcrumbUI() {
 }
 
 function updateSortOrder() {
+    console.log("inside updateSortOrder()")
     let sortedChildrenArray = $("#main-promised").sortable("toArray")
-    console.log("sortedChildrenArray:", sortedChildrenArray)
-    //Todo: loop through array and add index as priority number attribute to goal/child
+    sortedChildrenArray.forEach((childId, index) => {
+        let child = goals.find({ id: childId })[0]
+        child.priority = index
+        goals.update(child)
+    })
 }
 
 
