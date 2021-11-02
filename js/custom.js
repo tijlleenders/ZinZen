@@ -8,9 +8,7 @@ var repository = new loki('Lists');
 var goals = repository.addCollection('goals', {
     unique: ['id']
 })
-var relationships = repository.addCollection('relationships', {
-    unique: ['id']
-})
+var relationships = repository.addCollection('relationships', {})
 
 let newPerson = {
     label: 'person',
