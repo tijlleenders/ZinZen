@@ -1205,31 +1205,36 @@ function formatDuration(duration) {
 
 function getShortestPathToPersonFor(id) {
     //getShortestPathToPersonFor returns id + name for ancestor on shortest path to person
+    //Todo: this is a stub implementation assuming non-circularity; waiting for more knowledge on shortest path graph algorithm    
+
+    let currentVertex
     let shortestPath = []
+    let safety = 0
 
-    let currentVertex = goals.find({ id: id })[0]
-    shortestPath.push(currentVertex)
+    do {
+        safety += 1
+        currentVertex = goals.find({ id: id })[0]
+        if (currentVertex == undefined) {
+            throw Error('getShortestPathToPersonFor: getting goal but goal not found for id:', id)
+        }
+        shortestPath.unshift(currentVertex)
+        let relationship = relationships.find({ childId: id })[0]
+        if (relationship != undefined) {
+            id = relationship.parentId
+        }
+    } while (safety < 10 && currentVertex.label != "person")
 
-    if (currentVertex.label == "person") {
-        return shortestPath
-    } else {
-        //Todo: this is a stub implementation just adding person; waiting for more knowledge on shortest path graph algorithm        
-        let person = goals.find({ label: 'person' })[0]
-        shortestPath.unshift(person)
-        return shortestPath
-    }
+    return shortestPath
 }
 
 
 function updateBreadcrumbUI() {
     console.log("inside updateBreadcrumbUI...")
     let parent = goals.find({ id: parentId })[0]
-    console.log("updating breadcrumb for parent:", parent)
-    let ancestors = getShortestPathToPersonFor(parent.id)
-    console.log("ancestors:", ancestors)
-
     let breadcrumbHTML = ''
 
+    let ancestors = getShortestPathToPersonFor(parent.id)
+    console.log("ancestors:", ancestors)
     ancestors.forEach(ancestor => {
         console.log("ancestor:", ancestor)
         breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + ancestor.id + '">' + ancestor.title + '</button>'
