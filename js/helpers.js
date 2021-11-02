@@ -935,11 +935,6 @@ function getGoalJSONForCalendar() {
         "subCountPromised": 0,
         "subCountDone": 0,
         "subCountNever": 0,
-        "breadCrumb": [
-            { "id": "84bddefd-ab71-2fad-bf85-88f11648c81d", "label": "goal", "title": ["74"] },
-            { "id": "1abddefb-e19b-0bef-d125-9589f64b7a0a", "label": "goal", "title": ["test response too big"] },
-            { "id": "32bd8d40-a674-7d71-a510-c019ef1943ec", "label": "person", "name": ["tijl.leenders@gmail.com"] }
-        ],
         "meta": { "revision": 0, "created": 1634014036776, "version": 0 },
         "$loki": 136
     }
@@ -1257,13 +1252,6 @@ function updatePriority() {
 function loadSettings() {
     goals.insert({
         "id": "____________________________settings",
-        "breadCrumb": [{
-            "id": "____________________________settings",
-            "label": "settings-root",
-            "title": [
-                "Settings"
-            ]
-        }],
         "label": "settings-root",
         "title": [
             "Settings"
@@ -1278,10 +1266,7 @@ function loadSettings() {
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": [],
-        "sortedChildren": ["_____________________my-app-settings,_________install-on-phone-or-desktop,______________________________donate,________________________________blog,_______________________________about,_______________________________legal"]
+        "statusSort": 1
     })
     goals.insert({
         "id": "_______________________________legal",
@@ -1299,14 +1284,7 @@ function loadSettings() {
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["____________________________settings"],
-        "sortedChildren": [
-            "_____________________________Privacy,\
-____________________terms-of-service,\
-________open-source-acknowledgements"
-        ]
+        "statusSort": 1
     })
     goals.insert({
         "id": "_________install-on-phone-or-desktop",
@@ -1324,14 +1302,7 @@ ________open-source-acknowledgements"
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["____________________________settings"],
-        "directChildren": [
-            "_________________install-on-computer",
-            "__________________install-on-android",
-            "___________________install-on-iphone"
-        ]
+        "statusSort": 1
     })
     goals.insert({
         "id": "______________________________donate",
@@ -1350,10 +1321,7 @@ ________open-source-acknowledgements"
         ],
         "commands": ["setting"],
         "url": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["____________________________settings"],
-        "directChildren": []
+        "statusSort": 1
     })
     goals.insert({
         "id": "________________________________blog",
@@ -1372,10 +1340,7 @@ ________open-source-acknowledgements"
         ],
         "commands": ["setting"],
         "url": ["https://blog.ZinZen.me"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["____________________________settings"],
-        "directChildren": []
+        "statusSort": 1
     })
     goals.insert({
         "id": "_______________________________about",
@@ -1394,10 +1359,7 @@ ________open-source-acknowledgements"
         ],
         "commands": ["setting"],
         "url": ["https://ZinZen.me/about.html"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["____________________________settings"],
-        "directChildren": []
+        "statusSort": 1
     })
     goals.insert({
         "id": "_____________________my-app-settings",
@@ -1415,15 +1377,7 @@ ________open-source-acknowledgements"
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["____________________________settings"],
-        "directChildren": [
-            "_______________________look-and-feel",
-            "_________________________danger-zone",
-            "____________________________language",
-            "_____________________________log-out"
-        ]
+        "statusSort": 1
     })
     goals.insert({
         "id": "_____________________________Privacy",
@@ -1442,10 +1396,7 @@ ________open-source-acknowledgements"
         ],
         "commands": ["setting"],
         "url": ["https://ZinZen.me/privacy.html"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_______________________________legal"],
-        "directChildren": []
+        "statusSort": 1
     })
     goals.insert({
         "id": "____________________terms-of-service",
@@ -1464,10 +1415,7 @@ ________open-source-acknowledgements"
         ],
         "commands": ["setting"],
         "url": ["https://ZinZen.me/terms.html"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_______________________________legal"],
-        "directChildren": []
+        "statusSort": 1
     })
     goals.insert({
         "id": "________open-source-acknowledgements",
@@ -1486,10 +1434,7 @@ ________open-source-acknowledgements"
         ],
         "commands": ["setting"],
         "url": ["https://ZinZen.me/acknowledgements.html"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_______________________________legal"],
-        "directChildren": []
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1508,10 +1453,7 @@ ________open-source-acknowledgements"
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_________install-on-phone-or-desktop"],
-        "directChildren": []
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1530,10 +1472,7 @@ ________open-source-acknowledgements"
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_________install-on-phone-or-desktop"],
-        "directChildren": []
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1552,10 +1491,7 @@ ________open-source-acknowledgements"
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_________install-on-phone-or-desktop"],
-        "directChildren": []
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1574,10 +1510,7 @@ ________open-source-acknowledgements"
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_____________________my-app-settings"],
-        "directChildren": ["_________________________color-theme"]
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1596,10 +1529,7 @@ ________open-source-acknowledgements"
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_____________________my-app-settings"],
-        "directChildren": []
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1618,10 +1548,7 @@ ________open-source-acknowledgements"
             "4"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_____________________my-app-settings"],
-        "directChildren": []
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1641,10 +1568,7 @@ ________open-source-acknowledgements"
         ],
         "function": ["logOut()"],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_____________________my-app-settings"],
-        "directChildren": []
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1666,10 +1590,7 @@ ________open-source-acknowledgements"
             "2021-08-12T15:24:03.602Z"
         ],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_______________________look-and-feel"],
-        "directChildren": ["__________________________light-mode", "___________________________dark-mode"]
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1692,10 +1613,7 @@ ________open-source-acknowledgements"
         ],
         "function": ["setScreenModeLight()"],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_________________________color-theme"],
-        "directChildren": []
+        "statusSort": 1
     })
 
     goals.insert({
@@ -1718,10 +1636,7 @@ ________open-source-acknowledgements"
         ],
         "function": ["setScreenModeDark()"],
         "commands": ["setting"],
-        "statusSort": 1,
-        "timeZone": "Europe/Amsterdam",
-        "directParents": ["_________________________color-theme"],
-        "directChildren": []
+        "statusSort": 1
     })
 
 }
