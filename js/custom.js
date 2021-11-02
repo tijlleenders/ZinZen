@@ -96,6 +96,9 @@ function updateUIChildrenFor(parentId) {
         //Todo: show no children info message on screen
     } else {
         relationshipsForParent.forEach(relationship => {
+            if (relationship.childId == "____________________________settings") {
+                return; // skip to go to next iteration
+            }
             let childResults = goals.find({ 'id': relationship.childId })
             updateUIWith(childResults[0])
         });
