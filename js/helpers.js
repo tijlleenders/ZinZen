@@ -1242,9 +1242,9 @@ function updateSortOrder() {
     console.log("inside updateSortOrder()")
     let sortedChildrenArray = $("#main-promised").sortable("toArray")
     sortedChildrenArray.forEach((childId, index) => {
-        let child = goals.find({ id: childId })[0]
-        child.priority = index
-        goals.update(child)
+        let relationship = relationships.find({ parentId: parentId, childId: childId })[0]
+        relationship.priority = index
+        relationships.update(relationship)
     })
 }
 
