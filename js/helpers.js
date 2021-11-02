@@ -1265,14 +1265,16 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "statusSort": 1
     })
+    relationships.insert({ parentId: sessionId, childId: "____________________________settings" })
+
     goals.insert({
-        "id": "_______________________________legal",
+        "id": "_____________________my-app-settings",
         "label": "setting",
         "title": [
-            "Legal"
+            "My app settings"
         ],
         "owner": "ZinZen",
         "subCountMaybe": "3",
@@ -1283,7 +1285,7 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "statusSort": 1
     })
     goals.insert({
@@ -1301,7 +1303,7 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "statusSort": 1
     })
     goals.insert({
@@ -1319,7 +1321,7 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "url": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
         "statusSort": 1
     })
@@ -1338,7 +1340,7 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "url": ["https://blog.ZinZen.me"],
         "statusSort": 1
     })
@@ -1357,15 +1359,15 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "url": ["https://ZinZen.me/about.html"],
         "statusSort": 1
     })
     goals.insert({
-        "id": "_____________________my-app-settings",
+        "id": "_______________________________legal",
         "label": "setting",
         "title": [
-            "My app settings"
+            "Legal"
         ],
         "owner": "ZinZen",
         "subCountMaybe": "3",
@@ -1376,14 +1378,77 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
+        "statusSort": 1
+    })
+
+    relationships.insert({ parentId: "____________________________settings", childId: "_____________________my-app-settings", priority: 0 })
+    relationships.insert({ parentId: "____________________________settings", childId: "_________install-on-phone-or-desktop", priority: 1 })
+    relationships.insert({ parentId: "____________________________settings", childId: "______________________________donate", priority: 2 })
+    relationships.insert({ parentId: "____________________________settings", childId: "________________________________blog", priority: 3 })
+    relationships.insert({ parentId: "____________________________settings", childId: "_______________________________about", priority: 4 })
+    relationships.insert({ parentId: "____________________________settings", childId: "_______________________________legal", priority: 5 })
+
+
+    goals.insert({
+        "id": "_______________________look-and-feel",
+        "label": "setting",
+        "title": [
+            "Look and feel"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
         "statusSort": 1
     })
     goals.insert({
-        "id": "_____________________________Privacy",
+        "id": "_________________________danger-zone",
         "label": "setting",
         "title": [
-            "Privacy statement"
+            "Danger zone"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "1",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "____________________________language",
+        "label": "setting",
+        "title": [
+            "Language"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "1",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "_____________________________log-out",
+        "label": "setting",
+        "title": [
+            "Log out"
         ],
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1394,48 +1459,15 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
-        "url": ["https://ZinZen.me/privacy.html"],
+        "function": ["logOut()"],
+        "commands": "setting",
         "statusSort": 1
     })
-    goals.insert({
-        "id": "____________________terms-of-service",
-        "label": "setting",
-        "title": [
-            "Terms of service"
-        ],
-        "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": ["maybe"],
-        "tags": [
-            "4"
-        ],
-        "commands": ["setting"],
-        "url": ["https://ZinZen.me/terms.html"],
-        "statusSort": 1
-    })
-    goals.insert({
-        "id": "________open-source-acknowledgements",
-        "label": "setting",
-        "title": [
-            "Open source acknowledgements"
-        ],
-        "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": ["maybe"],
-        "tags": [
-            "4"
-        ],
-        "commands": ["setting"],
-        "url": ["https://ZinZen.me/acknowledgements.html"],
-        "statusSort": 1
-    })
+
+    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_______________________look-and-feel", priority: 0 })
+    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_________________________danger-zone", priority: 1 })
+    relationships.insert({ parentId: "_____________________my-app-settings", childId: "____________________________language", priority: 2 })
+    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_____________________________log-out", priority: 3 })
 
     goals.insert({
         "id": "_________________install-on-computer",
@@ -1452,7 +1484,7 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "statusSort": 1
     })
 
@@ -1471,7 +1503,7 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "statusSort": 1
     })
 
@@ -1490,72 +1522,19 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "statusSort": 1
     })
 
-    goals.insert({
-        "id": "_______________________look-and-feel",
-        "label": "setting",
-        "title": [
-            "Look and feel"
-        ],
-        "owner": "ZinZen",
-        "subCountMaybe": "3",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": ["maybe"],
-        "tags": [
-            "4"
-        ],
-        "commands": ["setting"],
-        "statusSort": 1
-    })
+    relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "_________________install-on-computer", priority: 0 })
+    relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "__________________install-on-android", priority: 1 })
+    relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "___________________install-on-iphone", priority: 2 })
 
     goals.insert({
-        "id": "_________________________danger-zone",
+        "id": "_____________________________Privacy",
         "label": "setting",
         "title": [
-            "Danger zone"
-        ],
-        "owner": "ZinZen",
-        "subCountMaybe": "1",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": ["maybe"],
-        "tags": [
-            "4"
-        ],
-        "commands": ["setting"],
-        "statusSort": 1
-    })
-
-    goals.insert({
-        "id": "____________________________language",
-        "label": "setting",
-        "title": [
-            "Language"
-        ],
-        "owner": "ZinZen",
-        "subCountMaybe": "1",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": ["maybe"],
-        "tags": [
-            "4"
-        ],
-        "commands": ["setting"],
-        "statusSort": 1
-    })
-
-    goals.insert({
-        "id": "_____________________________log-out",
-        "label": "setting",
-        "title": [
-            "Log out"
+            "Privacy statement"
         ],
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1566,10 +1545,52 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "function": ["logOut()"],
-        "commands": ["setting"],
+        "commands": "setting",
+        "url": ["https://ZinZen.me/privacy.html"],
         "statusSort": 1
     })
+    goals.insert({
+        "id": "____________________terms-of-service",
+        "label": "setting",
+        "title": [
+            "Terms of service"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
+        "url": ["https://ZinZen.me/terms.html"],
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "________open-source-acknowledgements",
+        "label": "setting",
+        "title": [
+            "Open source acknowledgements"
+        ],
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": ["maybe"],
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
+        "url": ["https://ZinZen.me/acknowledgements.html"],
+        "statusSort": 1
+    })
+
+    relationships.insert({ parentId: "_______________________________legal", childId: "_____________________________Privacy", priority: 0 })
+    relationships.insert({ parentId: "_______________________________legal", childId: "____________________terms-of-service", priority: 1 })
+    relationships.insert({ parentId: "_______________________________legal", childId: "________open-source-acknowledgements", priority: 2 })
 
     goals.insert({
         "id": "_________________________color-theme",
@@ -1589,9 +1610,11 @@ function loadSettings() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "commands": ["setting"],
+        "commands": "setting",
         "statusSort": 1
     })
+
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "_________________________color-theme", priority: 0 })
 
     goals.insert({
         "id": "__________________________light-mode",
@@ -1612,7 +1635,7 @@ function loadSettings() {
             "2021-08-12T15:24:03.602Z"
         ],
         "function": ["setScreenModeLight()"],
-        "commands": ["setting"],
+        "commands": "setting",
         "statusSort": 1
     })
 
@@ -1635,11 +1658,14 @@ function loadSettings() {
             "2021-08-12T15:24:03.602Z"
         ],
         "function": ["setScreenModeDark()"],
-        "commands": ["setting"],
+        "commands": "setting",
         "statusSort": 1
     })
 
 }
+
+relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0 })
+relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1 })
 
 async function updateUIWith(child) {
     console.log("inside updateUIWith(child)...")
