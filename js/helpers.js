@@ -1617,10 +1617,10 @@ function loadSettings() {
         "statusSort": 1
     })
 
-}
+    relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0 })
+    relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1 })
 
-relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0 })
-relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1 })
+}
 
 async function updateUIWith(child) {
     console.log("inside updateUIWith(child)...")
