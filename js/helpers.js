@@ -880,7 +880,7 @@ function getGoalJSON() {
         "goals":
             [
                 {
-                    "title": "Sleep eight hours daily at 09:00PM (daily)",
+                    "title": "Sleep eight hours daily at 22:00PM (daily)",
                     "id": "84bddefd-ab71-2fad-bf85-88f11648c81d",
                     "order": 1,
                     "owner_id": 123,
