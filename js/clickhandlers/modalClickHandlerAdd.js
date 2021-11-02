@@ -87,18 +87,23 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     console.log("idx:", idToSave)
     let commands = [...$("#inputCommand").data('inputCommand').commands].join(',')
     if (idToSave != undefined) {
-        let props = goals.by('id', idToSave)
-        props.title = title
-        props.commands = commands
-        goals.update(props)
+        let goal = goals.find({ id: idToSave })[0]
+        if (goal.label == "goal") {
+            goal.title = title
+            goal.commands = commands
+            goals.update(goal)
 
-        $("#inputCommand").val("")
-        let ellipse = ""
-        if (title.length > 8) {
-            ellipse = "..."
+            $("#inputCommand").val("")
+            let ellipse = ""
+            if (title.length > 8) {
+                ellipse = "..."
+            }
+            $("#inputCommand").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
+            $("#inputCommand").focus()
+        } else {
+            $("#inputCommand").attr("placeholder", "Can only edit your own goals. Something else?")
+            $("#inputCommand").focus()
         }
-        $("#inputCommand").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
-        $("#inputCommand").focus()
     }
 })
 
