@@ -43,7 +43,8 @@ function addSomething() {
         start: (new Date()).toISOString(),
         duration: duration,
         commands: commands,
-        tags: ["1"]
+        tags: ["1"],
+        priority: 1
     }
     goals.insert(newGoal)
 
