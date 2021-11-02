@@ -99,9 +99,6 @@ function openModal(id, modalType) {
             console.log("modalType " + modalType + " not found")
             break;
     }
-    if (id != "") {
-        send('{"action":"read","readRequestType":"specificNode","nodeId":"' + id + '"}') //will fill the modal upon response - if applicable
-    }
     $("#myModal").modal("show")
 }
 
@@ -192,8 +189,8 @@ function setSkeletonHTMLForAdd(id) {
     let goal = goals.by('id', id)
     console.log("goals:", goal)
     if (goal != undefined) {
-        inputCommand.title = goal.title[0]
-        if (goal.commands != undefined) {
+        inputCommand.title = goal.title
+        if (goal.commands != undefined && goal.commands.length != 0) {
             inputCommand.commands = new Set(goal.commands.split(','))
         }
         if (goal.directParents != undefined) {
@@ -201,7 +198,7 @@ function setSkeletonHTMLForAdd(id) {
         }
         $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
         $("#save-row").removeClass('d-none')
-        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[0].substring(0, 10) + `...</h4>`
+        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title.substring(0, 10) + `...</h4>`
         $("#modal-header-content").html(headerHTML)
     }
 
@@ -408,8 +405,8 @@ function generateGoalHTML(properties) {
         }
 
     }
-    if (properties.subTitle && properties.subTitle[0] != "") {
-        subTitle += '<br />' + properties.subTitle[0]
+    if (properties.subTitle && properties.subTitle != "") {
+        subTitle += '<br />' + properties.subTitle
     }
 
 
@@ -432,7 +429,7 @@ function generateGoalHTML(properties) {
     //             let parent = goals.by('id', parentId)
     //             // console.log("parent:", parent)
     //             if (parent != undefined) {
-    //                 parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title[0] + "</div>"
+    //                 parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title + "</div>"
     //             }
     //         })
     //     }
