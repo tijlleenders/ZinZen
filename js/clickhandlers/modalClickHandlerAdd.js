@@ -85,10 +85,10 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     console.log("saving ", title)
     let idToSave = $("#myModal").data('idx')
     console.log("idx:", idToSave)
-    let commands = [[...$("#inputCommand").data('inputCommand').commands].join(',')]
+    let commands = [...$("#inputCommand").data('inputCommand').commands].join(',')
     if (idToSave != undefined) {
         let props = goals.by('id', idToSave)
-        props.title = [title]
+        props.title = title
         props.commands = commands
         goals.update(props)
 
