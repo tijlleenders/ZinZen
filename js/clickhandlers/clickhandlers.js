@@ -132,22 +132,10 @@ function changeStatus(id) {
     }
 
     //fast update before confirmation from backend
-    let tempProps = goals.by('id', id)
-    tempProps.status = [toBeStatus]
-    goals.update(tempProps)
-    $("#" + id).html(generateGoalHTML(id))
-
-    $("#modal-status").data("status", toBeStatus) //necessary for fast/consistant UI update
-    if (publicOrPrivate == 'public') {
-        $("#subtext-" + id).append('<br />Suggested owner to set status to ' + toBeStatus)
-    }
-    var messageJson = {
-        action: "command",
-        command: "upsertGoal",
-        goalId: id,
-        status: toBeStatus
-    }
-    send(JSON.stringify(messageJson))
+    let goal = goals.find({ id: id })[0]
+    goal.status = toBeStatus
+    goals.update(goal)
+    $("#" + id).html(generateGoalHTML(goal))
 }
 
 function goTo(id) {
