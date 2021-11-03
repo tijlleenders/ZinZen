@@ -14,6 +14,8 @@ $("#top-settings").click(function () {
     $("#breadcrumb").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
+    $("#main-quote-row").addClass("d-none")
+    $("#main-explore-row").addClass("d-none")
     goTo('____________________________settings')
 })
 
@@ -21,16 +23,17 @@ $("#top-lists").click(function () {
     $("#breadcrumb").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
+    $("#main-explore-row").addClass("d-none")
     goTo(sessionId)
 })
 
 $("#top-calendar").click(function () {
-    // send('{"action":"read","readRequestType":"play"}')
-
     $("#breadcrumb").addClass("d-none")
     generateCalendarHTML()
     $("#main-play").removeClass("d-none")
     $("#main-promised").addClass("d-none")
+    $("#main-quote-row").addClass("d-none")
+    $("#main-explore-row").addClass("d-none")
 })
 
 $("#top-login").click(function () {
@@ -42,7 +45,12 @@ $("#top-inbox").click(function () {
 })
 
 $("#top-explore").click(function () {
-    alert('Crowdsourced machine-learned personal suggestions coming soon...')
+    $("#breadcrumb").addClass("d-none")
+    generateExploreHTML()
+    $("#main-play").addClass("d-none")
+    $("#main-promised").addClass("d-none")
+    $("#main-quote-row").addClass("d-none")
+    $("#main-explore-row").removeClass("d-none")
 })
 
 
