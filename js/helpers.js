@@ -1275,7 +1275,7 @@ function loadSettings() {
     goals.insert({
         "id": "_____________________my-app-settings",
         "label": "setting",
-        "title": "My app settings",
+        "title": "My settings",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
