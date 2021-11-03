@@ -16,7 +16,7 @@ $("#top-settings").click(function () {
     $("#main-promised").removeClass("d-none")
     $("#main-quote-row").addClass("d-none")
     $("#main-explore-row").addClass("d-none")
-    goTo('____________________________settings')
+    goTo("______________________________ZinZen")
 })
 
 $("#top-goals").click(function () {

@@ -1255,9 +1255,9 @@ function updatePriority() {
 
 function loadSettings() {
     goals.insert({
-        "id": "____________________________settings",
+        "id": "______________________________ZinZen",
         "label": "settings-root",
-        "title": "Settings",
+        "title": "ZinZen",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1270,7 +1270,7 @@ function loadSettings() {
         "commands": "setting",
         "statusSort": 1
     })
-    relationships.insert({ parentId: sessionId, childId: "____________________________settings" })
+    relationships.insert({ parentId: '', childId: "______________________________ZinZen" })
 
     goals.insert({
         "id": "_____________________my-app-settings",
@@ -1372,12 +1372,12 @@ function loadSettings() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "____________________________settings", childId: "_____________________my-app-settings", priority: 0 })
-    relationships.insert({ parentId: "____________________________settings", childId: "_________install-on-phone-or-desktop", priority: 1 })
-    relationships.insert({ parentId: "____________________________settings", childId: "______________________________donate", priority: 2 })
-    relationships.insert({ parentId: "____________________________settings", childId: "________________________________blog", priority: 3 })
-    relationships.insert({ parentId: "____________________________settings", childId: "_______________________________about", priority: 4 })
-    relationships.insert({ parentId: "____________________________settings", childId: "_______________________________legal", priority: 5 })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_____________________my-app-settings", priority: 0 })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________install-on-phone-or-desktop", priority: 1 })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "______________________________donate", priority: 2 })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "________________________________blog", priority: 3 })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________________about", priority: 4 })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________________legal", priority: 5 })
 
 
     goals.insert({
