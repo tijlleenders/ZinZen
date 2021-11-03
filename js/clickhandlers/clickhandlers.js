@@ -36,10 +36,6 @@ $("#top-calendar").click(function () {
     $("#main-explore-row").addClass("d-none")
 })
 
-$("#top-login").click(function () {
-    redirectUserAgentToAuthorizeEndpoint()
-})
-
 $("#top-inbox").click(function () {
     openMainMailModal()
 })
