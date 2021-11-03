@@ -980,15 +980,6 @@ function generateCalendarHTML() {
     });
 }
 
-function generateExploreHTML() {
-    console.log("Inside generateExploreHTML...")
-
-    let exploreHTML = `Exploring suggestions...`
-    // exploreHTML += generateSuggestionsHTML(suggestionParent)
-
-    $("#main-explore").html(exploreHTML)
-}
-
 function activateCalendarPicker() {
     $("#progress-card").on("click", "#progress-header", function (event) {
         console.log("progress-header clicked...")
@@ -1646,7 +1637,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________________________suggestions",
         "label": "suggestions-root",
-        "title": "Suggestions",
+        "title": "Explore",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",

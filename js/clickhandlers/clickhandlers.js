@@ -23,7 +23,6 @@ $("#top-goals").click(function () {
     $("#breadcrumb").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
-    $("#main-explore-row").addClass("d-none")
     goTo(sessionId)
 })
 
@@ -33,7 +32,6 @@ $("#top-calendar").click(function () {
     $("#main-play").removeClass("d-none")
     $("#main-promised").addClass("d-none")
     $("#main-quote-row").addClass("d-none")
-    $("#main-explore-row").addClass("d-none")
 })
 
 $("#top-inbox").click(function () {
@@ -42,11 +40,9 @@ $("#top-inbox").click(function () {
 
 $("#top-explore").click(function () {
     $("#breadcrumb").removeClass("d-none")
-    generateExploreHTML()
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
     $("#main-quote-row").addClass("d-none")
-    $("#main-explore-row").removeClass("d-none")
     goTo("_________________________suggestions")
 })
 
