@@ -19,7 +19,7 @@ $("#top-settings").click(function () {
     goTo('____________________________settings')
 })
 
-$("#top-lists").click(function () {
+$("#top-goals").click(function () {
     $("#breadcrumb").removeClass("d-none")
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
