@@ -4,6 +4,8 @@ var settings = new Map()
 var serviceWorker = null
 var sessionId = uuidv4()
 var parentId = sessionId
+var MAX_LEVELS = 10
+var MAX_SUBLISTS = 33
 
 var repository = new loki("ZinZen.db", {
     autoload: true,
@@ -117,7 +119,7 @@ window.mobileAndTabletCheck = function () {
 
 function updateUIChildrenFor(parentId) {
     console.log("inside updateUIChildrenFor...")
-    let relationshipsForParent = relationships.chain().find({ 'parentId': parentId }).simplesort('priority', { desc: true }).limit(33).data()
+    let relationshipsForParent = relationships.chain().find({ 'parentId': parentId }).simplesort('priority', { desc: true }).limit(MAX_SUBLISTS).data()
     if (relationshipsForParent[0] == undefined) {
         //Todo: show no children info message on screen
     } else {

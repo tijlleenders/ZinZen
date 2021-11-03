@@ -74,10 +74,10 @@ $("#myModal").on("click", "#modal-add-a-goal-button", function () {
 })
 
 $("#myModal").on("click", "#delete-a-goal-button", function () {
-    console.log("delet clicked")
+    console.log("delete clicked")
     let idToDelete = $("#myModal").data('idx')
     console.log("idx:", idToDelete)
-    deleteGoal(idToDelete)
+    deleteGoalAndExclusiveDescendants(idToDelete)
 })
 
 $("#myModal").on("click", "#save-a-goal-button", function () {
@@ -107,10 +107,56 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     }
 })
 
-function deleteGoal(id) {
-    let goal = goals.by('id', id)
+function getAllDescendantsFor(id) {
+    let descendants = []
+    descendants[0] = []
+    descendants[0].push(id)
+    for (let level = 0; level < MAX_LEVELS; level++) {
+        descendants[level + 1] = []
+        descendants[level].forEach(id => {
+            let subList = relationships.find({ parentId: id })
+            if (subList != undefined) {
+                subList.forEach(result => {
+                    descendants[level + 1].push(result.childId)
+                })
+            }
+        })
+    }
+    console.log("descendants:", descendants)
+    let result = []
+    for (let level = 0; level < MAX_LEVELS; level++) {
+        result = result.concat(descendants[level])
+    }
+    console.log("result:", result)
+    return result
+}
+
+function deleteIfOrphaned(idList) {
+    console.log("inside deleteIfOrphaned(idList)")
+    console.log("idList:", idList)
+    idList.forEach(id => {
+        let parentsFound = relationships.find({ childId: id })
+        if (parentsFound.length == 0) {
+            console.log("deleting id:", id)
+            goals.findAndRemove({ id: id })
+        }
+    })
+}
+
+function deleteGoalAndExclusiveDescendants(id) {
+    let goal = goals.find({ id: id })[0]
     if (goal != undefined) {
-        goals.remove(goal) //local remove
+        //Todo: need transaction to remove all sub-goals
+        let descendantIds = getAllDescendantsFor(id)
+        descendantIds.forEach(id => {
+            relationships.findAndRemove({ parentId: id })
+        })
+        deleteIfOrphaned(descendantIds)
+        goals.findAndRemove({ id: id })
+        relationships.findAndRemove({ childId: id })
+    } else {
+        console.error("Goal to delete not found for id:", id)
+        return
     }
     $("#myModal").modal('hide')
     $("#" + id).removeClass('jello-vertical-animation') //if any
@@ -118,7 +164,6 @@ function deleteGoal(id) {
     $("#" + id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
         $("#" + id).remove();
     });
-
 }
 
 $("#myModal").on("click", ".command-suggestion", function (e) {

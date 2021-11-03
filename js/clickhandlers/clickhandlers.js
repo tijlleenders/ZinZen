@@ -208,7 +208,7 @@ $("#main-promised").on("click", ".goal", function (event) {
         }
         if (nodeId.substring(0, 11) == "delete-col-" ||
             nodeId.substring(0, 12) == "delete-icon-") {
-            deleteGoal(selectedGoalId)
+            deleteGoalAndExclusiveDescendants(selectedGoalId)
         }
         if (nodeId.substring(0, 11) == "finish-col-" ||
             nodeId.substring(0, 12) == "finish-icon-") {
