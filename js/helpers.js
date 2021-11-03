@@ -331,10 +331,20 @@ function getGoalSvg(status, id) {
             break;
 
         case "setting":
-            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">\
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">\
             <path stroke="#959595" fill="#959595" fill-rule="evenodd" d="M7.875 2.292a.125.125 0 00-.032.018A7.24 7.24 0 004.75 8.25a7.247 7.247 0 003.654 6.297c.57.327.982.955.941 1.682v.002l-.317 6.058a.75.75 0 11-1.498-.078l.317-6.062v-.004c.006-.09-.047-.215-.188-.296A8.747 8.747 0 013.25 8.25a8.74 8.74 0 013.732-7.169 1.547 1.547 0 011.709-.064c.484.292.809.835.809 1.46v4.714a.25.25 0 00.119.213l2.25 1.385c.08.05.182.05.262 0l2.25-1.385a.25.25 0 00.119-.213V2.478c0-.626.325-1.169.81-1.461a1.547 1.547 0 011.708.064 8.74 8.74 0 013.732 7.17 8.747 8.747 0 01-4.41 7.598c-.14.081-.193.206-.188.296v.004l.318 6.062a.75.75 0 11-1.498.078l-.317-6.058v-.002c-.041-.727.37-1.355.94-1.682A7.247 7.247 0 0019.25 8.25a7.24 7.24 0 00-3.093-5.94.125.125 0 00-.032-.018l-.01-.001c-.003 0-.014 0-.031.01-.036.022-.084.079-.084.177V7.19a1.75 1.75 0 01-.833 1.49l-2.25 1.385a1.75 1.75 0 01-1.834 0l-2.25-1.384A1.75 1.75 0 018 7.192V2.477c0-.098-.048-.155-.084-.176a.062.062 0 00-.031-.011l-.01.001z">\
             </path></svg>'
             break;
+
+        case "suggestion":
+            goalSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">\
+            <path stroke="#959595" fill="#959595" d="M10.97 8.265a1.45 1.45 0 00-.487.57.75.75 0 01-1.341-.67c.2-.402.513-.826.997-1.148C10.627 6.69 11.244 6.5 12 6.5c.658 0 1.369.195 1.934.619a2.45 2.45 0 011.004 2.006c0 1.033-.513 1.72-1.027 2.215-.19.183-.399.358-.579.508l-.147.123a4.329 4.329 0 00-.435.409v1.37a.75.75 0 11-1.5 0v-1.473c0-.237.067-.504.247-.736.22-.28.486-.517.718-.714l.183-.153.001-.001c.172-.143.324-.27.47-.412.368-.355.569-.676.569-1.136a.953.953 0 00-.404-.806C12.766 8.118 12.384 8 12 8c-.494 0-.814.121-1.03.265zM13 17a1 1 0 11-2 0 1 1 0 012 0z">\
+            </path>\
+                <path stroke="#959595" fill="#959595" fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z">\
+            </path>\
+            </svg>'
+            break;
+
 
         default:
             console.log("getGoalSvg status not handled.")
@@ -1234,9 +1244,12 @@ function updateBreadcrumbUI() {
 
     let ancestors = getShortestPathToPersonFor(parent.id)
     console.log("ancestors:", ancestors)
-    ancestors.forEach(ancestor => {
+    ancestors.forEach((ancestor, index) => {
         console.log("ancestor:", ancestor)
-        breadcrumbHTML += '><button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + ancestor.id + '">' + ancestor.title + '</button>'
+        if (index != 0) {
+            breadcrumbHTML += '>'
+        }
+        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + ancestor.id + '">' + ancestor.title + '</button>'
     })
     $("#breadcrumb").html(breadcrumbHTML)
     $("#breadcrumbGoal-" + ancestors[ancestors.length - 1].id).addClass('active')
@@ -1297,7 +1310,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "maybe",
         "tags": [
             "4"
         ],
@@ -1313,7 +1326,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "maybe",
         "tags": [
             "4"
         ],
@@ -1330,7 +1343,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "maybe",
         "tags": [
             "4"
         ],
@@ -1347,7 +1360,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "maybe",
         "tags": [
             "4"
         ],
@@ -1364,7 +1377,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "maybe",
         "tags": [
             "4"
         ],
@@ -1437,7 +1450,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "maybe",
         "tags": [
             "4"
         ],
@@ -1515,7 +1528,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "maybe",
         "tags": [
             "4"
         ],
@@ -1532,7 +1545,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "maybe",
         "tags": [
             "4"
         ],
@@ -1549,7 +1562,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "maybe",
         "tags": [
             "4"
         ],
@@ -1657,7 +1670,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "suggestion",
         "tags": [
             "7"
         ],
@@ -1673,7 +1686,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "suggestion",
         "tags": [
             "6"
         ],
@@ -1689,7 +1702,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "suggestion",
         "tags": [
             "5"
         ],
@@ -1705,7 +1718,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "suggestion",
         "tags": [
             "2"
         ],
@@ -1721,7 +1734,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "suggestion",
         "tags": [
             "3"
         ],
@@ -1737,7 +1750,7 @@ function loadSettings() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "suggestion",
         "tags": [
             "4"
         ],
