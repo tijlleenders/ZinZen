@@ -1677,7 +1677,7 @@ function loadSettings() {
         "tags": [
             "6"
         ],
-        "commands": "setting",
+        "commands": "suggestion",
         "statusSort": 1
     })
     goals.insert({
@@ -1693,8 +1693,7 @@ function loadSettings() {
         "tags": [
             "5"
         ],
-        "commands": "setting",
-        "url": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
+        "commands": "suggestion",
         "statusSort": 1
     })
     goals.insert({
@@ -1710,8 +1709,7 @@ function loadSettings() {
         "tags": [
             "2"
         ],
-        "commands": "setting",
-        "url": ["https://blog.ZinZen.me"],
+        "commands": "suggestion",
         "statusSort": 1
     })
     goals.insert({
@@ -1727,8 +1725,7 @@ function loadSettings() {
         "tags": [
             "3"
         ],
-        "commands": "setting",
-        "url": ["https://ZinZen.me/about.html"],
+        "commands": "suggestion",
         "statusSort": 1
     })
     goals.insert({
@@ -1744,7 +1741,7 @@ function loadSettings() {
         "tags": [
             "4"
         ],
-        "commands": "setting",
+        "commands": "suggestion",
         "statusSort": 1
     })
 
