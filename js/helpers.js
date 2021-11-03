@@ -1221,7 +1221,7 @@ function getShortestPathToPersonFor(id) {
         if (relationship != undefined) {
             id = relationship.parentId
         }
-    } while (safety < 10 && !(currentVertex.label == "person" || currentVertex.label == "settings-root"))
+    } while (safety < 10 && !(currentVertex.label == "person" || currentVertex.label == "settings-root" || currentVertex.label == "suggestions-root"))
 
     return shortestPath
 }
@@ -1628,6 +1628,133 @@ function loadSettings() {
 
     relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0 })
     relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1 })
+
+
+    goals.insert({
+        "id": "_________________________suggestions",
+        "label": "suggestions-root",
+        "title": "Suggestions",
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "suggestion",
+        "tags": [
+            "4"
+        ],
+        "commands": "suggestion",
+        "statusSort": 1
+    })
+    relationships.insert({ parentId: '', childId: "_________________________suggestions" })
+
+    goals.insert({
+        "id": "________nature-and-environment-goals",
+        "label": "suggestion",
+        "title": "🌲 Nature and environment goals 🌌",
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "7"
+        ],
+        "commands": "suggestion",
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "_______________mind-and-spirit-goals",
+        "label": "suggestion",
+        "title": "🧘 Mind and spirit goals ☯️",
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "6"
+        ],
+        "commands": "setting",
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "___________growth-and-learning-goals",
+        "label": "suggestion",
+        "title": "🌱 Growth and learning goals 💡",
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "5"
+        ],
+        "commands": "setting",
+        "url": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "________________________career-goals",
+        "label": "suggestion",
+        "title": "🎯 Career goals",
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "2"
+        ],
+        "commands": "setting",
+        "url": ["https://blog.ZinZen.me"],
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "____________health-and-fitness-goals",
+        "label": "suggestion",
+        "title": "💪 Health and fitness goals 🏅 🏆",
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "3"
+        ],
+        "commands": "setting",
+        "url": ["https://ZinZen.me/about.html"],
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "__________________relationship-goals",
+        "label": "suggestion",
+        "title": "🥰 💖 Relationship goals 🧑‍🤝‍🧑",
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
+        "statusSort": 1
+    })
+
+    relationships.insert({ parentId: "_________________________suggestions", childId: "__________________relationship-goals", priority: 0 })
+    relationships.insert({ parentId: "_________________________suggestions", childId: "____________health-and-fitness-goals", priority: 1 })
+    relationships.insert({ parentId: "_________________________suggestions", childId: "_______________mind-and-spirit-goals", priority: 2 })
+    relationships.insert({ parentId: "_________________________suggestions", childId: "________________________career-goals", priority: 3 })
+    relationships.insert({ parentId: "_________________________suggestions", childId: "________nature-and-environment-goals", priority: 4 })
+    relationships.insert({ parentId: "_________________________suggestions", childId: "___________growth-and-learning-goals", priority: 5 })
+
 
 }
 

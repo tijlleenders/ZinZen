@@ -41,12 +41,13 @@ $("#top-inbox").click(function () {
 })
 
 $("#top-explore").click(function () {
-    $("#breadcrumb").addClass("d-none")
+    $("#breadcrumb").removeClass("d-none")
     generateExploreHTML()
     $("#main-play").addClass("d-none")
-    $("#main-promised").addClass("d-none")
+    $("#main-promised").removeClass("d-none")
     $("#main-quote-row").addClass("d-none")
     $("#main-explore-row").removeClass("d-none")
+    goTo("_________________________suggestions")
 })
 
 
