@@ -1389,6 +1389,22 @@ function loadSettings() {
         "label": "setting",
         "title": "Look and feel",
         "owner": "ZinZen",
+        "subCountMaybe": "2",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "_________________import-export-reset",
+        "label": "setting",
+        "title": "Import / Export / Reset my data",
+        "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
         "subCountDone": "0",
@@ -1401,41 +1417,9 @@ function loadSettings() {
         "statusSort": 1
     })
     goals.insert({
-        "id": "_________________________danger-zone",
+        "id": "__________________________sign-up-in",
         "label": "setting",
-        "title": "Danger zone",
-        "owner": "ZinZen",
-        "subCountMaybe": "1",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": "setting",
-        "tags": [
-            "4"
-        ],
-        "commands": "setting",
-        "statusSort": 1
-    })
-    goals.insert({
-        "id": "____________________________language",
-        "label": "setting",
-        "title": "Language",
-        "owner": "ZinZen",
-        "subCountMaybe": "1",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": "setting",
-        "tags": [
-            "4"
-        ],
-        "commands": "setting",
-        "statusSort": 1
-    })
-    goals.insert({
-        "id": "_____________________________log-out",
-        "label": "setting",
-        "title": "Log out",
+        "title": "Sign up / in",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1451,9 +1435,8 @@ function loadSettings() {
     })
 
     relationships.insert({ parentId: "_____________________my-app-settings", childId: "_______________________look-and-feel", priority: 0 })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_________________________danger-zone", priority: 1 })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "____________________________language", priority: 2 })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_____________________________log-out", priority: 3 })
+    relationships.insert({ parentId: "_____________________my-app-settings", childId: "__________________________sign-up-in", priority: 1 })
+    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_________________import-export-reset", priority: 2 })
 
     goals.insert({
         "id": "_________________install-on-computer",
@@ -1571,7 +1554,7 @@ function loadSettings() {
         "label": "setting",
         "title": "Color theme",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
+        "subCountMaybe": "2",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
@@ -1585,8 +1568,25 @@ function loadSettings() {
         "commands": "setting",
         "statusSort": 1
     })
+    goals.insert({
+        "id": "____________________________language",
+        "label": "setting",
+        "title": "Language",
+        "owner": "ZinZen",
+        "subCountMaybe": "2",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
+        "statusSort": 1
+    })
 
     relationships.insert({ parentId: "_______________________look-and-feel", childId: "_________________________color-theme", priority: 0 })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 1 })
 
     goals.insert({
         "id": "__________________________light-mode",
