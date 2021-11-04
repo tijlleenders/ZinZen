@@ -143,6 +143,7 @@ function goTo(id) {
     // console.log("inside goTo... with id", id)
     // todo: zoom in animation
     $("#main-promised").empty()
+    $("#main-quote").addClass('d-none')
     parentId = id
     let parent = goals.find({ id: parentId })[0]
     if (parent == undefined) {
