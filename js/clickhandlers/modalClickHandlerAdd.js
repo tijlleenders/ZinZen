@@ -35,6 +35,15 @@ function addSomething() {
 
     let newGoalId = uuidv4()
 
+    let tags = ["1"]
+    let parent = goals.find({ id: parentId })[0]
+    if (parent.label == "person") {
+        let randomTag = Math.floor(Math.random() * 10) + 1
+        tags = [randomTag.toString()]
+    } else {
+        tags = parent.tags
+    }
+
     let newGoal = {
         id: newGoalId,
         title: title,
@@ -43,7 +52,7 @@ function addSomething() {
         start: (new Date()).toISOString(),
         duration: duration,
         commands: commands,
-        tags: ["1"],
+        tags: tags,
         priority: 1
     }
 
