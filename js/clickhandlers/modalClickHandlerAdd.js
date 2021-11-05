@@ -82,6 +82,11 @@ $("#myModal").on("click", "#modal-add-a-goal-button", function () {
     addSomething()
 })
 
+$("#myModal").on("paste", "#inputCommand", function (e) {
+    var pastedData = e.originalEvent.clipboardData.getData('text');
+    console.log("pastedData:", pastedData)
+});
+
 $("#myModal").on("click", "#delete-a-goal-button", function () {
     console.log("delete clicked")
     let idToDelete = $("#myModal").data('idx')
