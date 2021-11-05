@@ -33,12 +33,8 @@ function submitToAPI(e) {
     });
 }
 
-$("#main-login").click(function () {
-    redirectUserAgentToAuthorizeEndpoint()
-})
-
 $("#main-example").click(function () {
-    window.open('https://zinzen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2', '_blank');
+    window.open('https://zinzen.me/', '_blank');
     $("#main-about").click()
 })
 
@@ -63,8 +59,8 @@ $("#main-donate").click(function () {
     $("#main-about").click()
 })
 
-$("#main-roadmap").click(function () {
-    window.open('https://zinzen.me/?profile=tijl.leenders&listId=fcbd9d74-2a52-9336-316c-e044a1c000c2', '_blank');
+$("#main-blog").click(function () {
+    window.open('https://blog.zinzen.me', '_blank');
     $("#main-about").click()
 })
 
