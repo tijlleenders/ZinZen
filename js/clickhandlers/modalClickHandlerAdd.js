@@ -81,6 +81,10 @@ $("#myModal").on("click", "#modal-add-a-goal-button", function () {
     $("#myModal").modal('hide')
 })
 
+$("#myModal").on("click", "#modal-cancel-button", function () {
+    $("#myModal").modal('hide')
+})
+
 $("#myModal").on("paste", "#inputCommand", function (e) {
     var pastedData = e.originalEvent.clipboardData.getData('text');
     console.log("pastedData:", pastedData)

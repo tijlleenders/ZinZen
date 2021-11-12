@@ -153,11 +153,17 @@ function setSkeletonHTMLForAdd(id) {
       <div class=" col m-1">
         <button type="button" class="btn btn-outline-primary" id="modal-add-a-goal-button">Add</button>
       </div>
+      <div class=" col m-1">
+        <button type="button" class="btn btn-outline-primary" id="modal-cancel-button">Cancel</button>
+      </div>
     </div>  
     <div class="row mt-2 d-none" id="save-row">
       <div class="col m-1">
         <button type="button" class="btn btn-outline-primary" id="save-a-goal-button">Save</button>
       </div>
+      <div class=" col m-1">
+        <button type="button" class="btn btn-outline-primary" id="modal-cancel-button">Cancel</button>
+      </div>      
       <div class="col m-1">
         <button type="button" class="btn btn-outline-primary" id="delete-a-goal-button">Delete</button>
       </div>
