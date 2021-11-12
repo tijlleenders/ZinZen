@@ -5,9 +5,7 @@ $("#myModal").on("keyup", "#inputCommand", function (e) {
         if ($(this).val().length == 0) return;
 
         addSomething($(this).val())
-
-        $(this).removeAttr("disabled")
-        $(this).val("").focus()
+        $("#myModal").modal('hide')
     }
 
     let goalId = $("#myModal").data("idx")
@@ -80,6 +78,7 @@ function addSomething() {
 
 $("#myModal").on("click", "#modal-add-a-goal-button", function () {
     addSomething()
+    $("#myModal").modal('hide')
 })
 
 $("#myModal").on("paste", "#inputCommand", function (e) {
