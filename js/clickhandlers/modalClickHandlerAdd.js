@@ -44,6 +44,7 @@ function addSomething() {
 
     let newGoal = {
         id: newGoalId,
+        label: "goal",
         title: title,
         parentId: parentId,
         status: status,
@@ -109,14 +110,8 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
             goal.title = title
             goal.commands = commands
             goals.update(goal)
-
-            $("#inputCommand").val("")
-            let ellipse = ""
-            if (title.length > 8) {
-                ellipse = "..."
-            }
-            $("#inputCommand").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
-            $("#inputCommand").focus()
+            updateUIChildrenFor(parentId)
+            $("#myModal").modal('hide')
         } else {
             $("#inputCommand").attr("placeholder", "Can only edit your own goals. Something else?")
             $("#inputCommand").focus()
