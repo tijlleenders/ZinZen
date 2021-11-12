@@ -32,7 +32,7 @@ function updateModalAddUI() {
     $("#inputCommand").focus()
     //when to change modal title??
 
-    let parentsHTML = `In: `
+    let parentsHTML = ``
     if (inputCommand.directParents != undefined) {
         inputCommand.directParents.forEach(parent => {
             let parentList = goals.by('id', parent)
