@@ -72,7 +72,7 @@ function updateModalUI() {
             updateModalAddUI()
             break;
         case "moment":
-            $("#modal-header").removeClass('d-none');
+
             break;
         default:
             console.log("modalType to render UI for not recognized")
@@ -130,10 +130,15 @@ function updateScreenMode() {
 
 function setSkeletonHTMLForMoment(id) {
     console.log("inside setSkeletonHTMLForMoment...")
-    let headerHTML = `<h4 class="modal-title ms-3">Hoe voel je je nu?</h4>`
-    $("#modal-header-content").html(headerHTML)
 
-    let bodyHTML = ``
+    let bodyHTML = `
+    <div class="row emo-title-row" id="emo-title-row">
+        <div class="col">
+            <h4 class="">Hoe voel je je nu?</h4>
+        </div>
+    </div>
+    `
+
     bodyHTML += `    
     <div class="row" id="emo-buttons-row">
       <div class="col" id="emo-buttons-col">

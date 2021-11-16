@@ -246,6 +246,9 @@ body {
   transition: color var(--duration) var(--timing);
 }
 
+.emo-title-row {
+  text-align: center;
+}
 .table {
   color: var(--text-color);
 }
