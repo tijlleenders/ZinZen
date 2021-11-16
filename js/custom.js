@@ -22,6 +22,7 @@ function databaseInitialize() {
     console.log("Inside databaseInitialize...")
     goals = repository.getCollection('goals')
     relationships = repository.getCollection('relationships')
+    translations = repository.getCollection('translations')
     console.log("goals:", goals)
     if (goals == null) {
         goals = repository.addCollection('goals', {

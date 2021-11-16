@@ -1816,14 +1816,24 @@ function loadTranslations() {
             "en": "Emotions",
             "nl": "Gevoelens"
         })
-
+    translations.insert(
+        {
+            "en": "Time",
+            "nl": "Tijd"
+        })
+    translations.insert(
+        {
+            "en": "Explore",
+            "nl": "Ontdek"
+        })
 
 }
 
 function changeLanguageTo(lang) {
-
     $("#top-feelings-label").html(translations.find({ "en": "Emotions" })[0][lang])
-
+    $("#top-goals-label").html(translations.find({ "en": "Goals" })[0][lang])
+    $("#top-calendar-label").html(translations.find({ "en": "Time" })[0][lang])
+    $("#top-explore-label").html(translations.find({ "en": "Explore" })[0][lang])
 }
 
 async function updateUIWith(child) {
