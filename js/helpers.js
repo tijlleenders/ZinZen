@@ -436,6 +436,10 @@ function generateGoalHTML(properties) {
     }
 
     var title = titleIcon + properties.title
+    if (properties.title['en'] != undefined) {
+        title = titleIcon + properties.title['en']
+    }
+
     let duration = 0
     if (properties.duration != undefined) {
         duration = properties.duration[0]
@@ -1314,7 +1318,8 @@ function loadSettings() {
         "id": "______________________________ZinZen",
         "label": "settings-root",
         "title": {
-            "en": "ZinZen"
+            "en": "ZinZen",
+            "nl": "ZinZen"
         },
         "owner": "ZinZen",
         "subCountMaybe": "3",
@@ -1333,7 +1338,10 @@ function loadSettings() {
     goals.insert({
         "id": "_____________________my-app-settings",
         "label": "setting",
-        "title": "My settings",
+        "title": {
+            "en": "My settings",
+            "nl": "Mijn instellingen"
+        },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1349,7 +1357,10 @@ function loadSettings() {
     goals.insert({
         "id": "_________install-on-phone-or-desktop",
         "label": "setting",
-        "title": "Install on phone or desktop",
+        "title": {
+            "en": "Install on phone or desktop",
+            "nl": "Installeren op telefoon of computer"
+        },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1365,7 +1376,7 @@ function loadSettings() {
     goals.insert({
         "id": "______________________________donate",
         "label": "setting",
-        "title": "Donate",
+        "title": { "en": "Donate", "nl": "Doneren" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1382,7 +1393,7 @@ function loadSettings() {
     goals.insert({
         "id": "________________________________blog",
         "label": "setting",
-        "title": "Blog",
+        "title": { "en": "Blog", "nl": "Blog" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1399,7 +1410,7 @@ function loadSettings() {
     goals.insert({
         "id": "_______________________________about",
         "label": "setting",
-        "title": "About",
+        "title": { "en": "About us", "nl": "Over ons" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1416,7 +1427,7 @@ function loadSettings() {
     goals.insert({
         "id": "_______________________________legal",
         "label": "setting",
-        "title": "Legal",
+        "title": { "en": "Legal", "nl": "Juridisch" },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1441,7 +1452,7 @@ function loadSettings() {
     goals.insert({
         "id": "_______________________look-and-feel",
         "label": "setting",
-        "title": "Look and feel",
+        "title": { "en": "Look and feel", "nl": "Opmaak" },
         "owner": "ZinZen",
         "subCountMaybe": "2",
         "subCountPromised": "0",
@@ -1457,7 +1468,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________________import-export-reset",
         "label": "setting",
-        "title": "Import / Export / Reset my data",
+        "title": { "en": "Import / Export / Reset my data", "nl": "Import / Export / Vernietig mijn data" },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1473,7 +1484,7 @@ function loadSettings() {
     goals.insert({
         "id": "__________________________sign-up-in",
         "label": "setting",
-        "title": "Sign up / in",
+        "title": { "en": "Sign up / in", "nl": "Lid worden / Aanmelden" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1495,7 +1506,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________________install-on-computer",
         "label": "setting",
-        "title": "Install on computer (Windows, Apple, Linux)",
+        "title": { "en": "Install on computer (Windows, Apple, Linux)", "nl": "Installeer op computer (Windows, Apple, Linux)" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1512,7 +1523,7 @@ function loadSettings() {
     goals.insert({
         "id": "__________________install-on-android",
         "label": "setting",
-        "title": "Install on android (Samsung, Xiaomi, other)",
+        "title": { "en": "Install on android (Samsung, Xiaomi, other)", "": "Instaleer op android (Samsung, Xiaomi, overig)" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1529,7 +1540,7 @@ function loadSettings() {
     goals.insert({
         "id": "___________________install-on-iphone",
         "label": "setting",
-        "title": "Install on iPhone (Apple)",
+        "title": { "en": "Install on iPhone (Apple)", "nl": "Installeer op iPhone (Apple)" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1550,7 +1561,7 @@ function loadSettings() {
     goals.insert({
         "id": "_____________________________Privacy",
         "label": "setting",
-        "title": "Privacy statement",
+        "title": { "en": "Privacy statement", "nl": "Privacy verklaring" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1567,7 +1578,7 @@ function loadSettings() {
     goals.insert({
         "id": "____________________terms-of-service",
         "label": "setting",
-        "title": "Terms of service",
+        "title": { "en": "Terms of service", "nl": "Algemene voorwaarden" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1584,7 +1595,7 @@ function loadSettings() {
     goals.insert({
         "id": "________open-source-acknowledgements",
         "label": "setting",
-        "title": "Open source acknowledgements",
+        "title": { "en": "Open source acknowledgements", "nl": "Open source erkenningen" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1606,7 +1617,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________________________color-theme",
         "label": "setting",
-        "title": "Color theme",
+        "title": { "en": "Color theme", "nl": "Kleuren thema" },
         "owner": "ZinZen",
         "subCountMaybe": "2",
         "subCountPromised": "0",
@@ -1625,7 +1636,7 @@ function loadSettings() {
     goals.insert({
         "id": "____________________________language",
         "label": "setting",
-        "title": "Language",
+        "title": { "en": "Language", "nl": "Taal" },
         "owner": "ZinZen",
         "subCountMaybe": "2",
         "subCountPromised": "0",
@@ -1645,7 +1656,7 @@ function loadSettings() {
     goals.insert({
         "id": "__________________________light-mode",
         "label": "setting",
-        "title": "Light mode",
+        "title": { "en": "Light mode", "nl": "Lichte modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1666,7 +1677,7 @@ function loadSettings() {
     goals.insert({
         "id": "___________________________dark-mode",
         "label": "setting",
-        "title": "Dark mode",
+        "title": { "en": "Dark mode", "nl": "Donkere modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1691,7 +1702,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________________________suggestions",
         "label": "suggestions-root",
-        "title": "Ontdek",
+        "title": { "en": "Explore", "nl": "Ontdek" },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1709,7 +1720,7 @@ function loadSettings() {
     goals.insert({
         "id": "________nature-and-environment-goals",
         "label": "suggestion",
-        "title": "🌲 Natuur en omgeving doelen 🌌",
+        "title": { "en": "🌲 Nature and environment goals 🌌", "nl": "🌲 Natuur en omgeving doelen 🌌" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1725,7 +1736,7 @@ function loadSettings() {
     goals.insert({
         "id": "_______________mind-and-spirit-goals",
         "label": "suggestion",
-        "title": "🧘 Geest en ziel doelen ☯️",
+        "title": { "en": "🧘 Mind and spirit goals ☯️", "nl": "🧘 Geest en ziel doelen ☯️" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1741,7 +1752,7 @@ function loadSettings() {
     goals.insert({
         "id": "___________growth-and-learning-goals",
         "label": "suggestion",
-        "title": "🌱 Persoonlijke groei en leer doelen 💡",
+        "title": { "en": "🌱 Personal growth and learning goals 💡", "nl": "🌱 Persoonlijke groei en leer doelen 💡" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1757,7 +1768,7 @@ function loadSettings() {
     goals.insert({
         "id": "________________________career-goals",
         "label": "suggestion",
-        "title": "🎯 Carrière doelen",
+        "title": { "en": "🎯 Career goals", "nl": "🎯 Carrière doelen" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1773,7 +1784,7 @@ function loadSettings() {
     goals.insert({
         "id": "____________health-and-fitness-goals",
         "label": "suggestion",
-        "title": "💪 Gezondheid en fitness doelen 🏅 🏆",
+        "title": { "en": "💪 Health and fitness goals 🏅 🏆", "nl": "💪 Gezondheid en fitness doelen 🏅 🏆" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1789,7 +1800,7 @@ function loadSettings() {
     goals.insert({
         "id": "__________________relationship-goals",
         "label": "suggestion",
-        "title": "🥰 💖 Relatie doelen 🧑‍🤝‍🧑",
+        "title": { "en": "🥰 💖 Relationship goals 🧑‍🤝‍🧑", "nl": "🥰 💖 Relatie doelen 🧑‍🤝‍🧑" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
