@@ -130,12 +130,7 @@ function updateScreenMode() {
 
 function setSkeletonHTMLForMoment(id) {
     console.log("inside setSkeletonHTMLForMoment...")
-    let headerHTML = `
-    <div class="row" id="emo-header-row">
-        <div class="col" id="emo-header-col">
-            Hoe voel je je nu?
-        </div>
-    </div>`
+    let headerHTML = `<h4 class="modal-title ms-3">Hoe voel je je nu?</h4>`
     $("#modal-header-content").html(headerHTML)
 
     let bodyHTML = ``
