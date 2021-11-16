@@ -941,7 +941,7 @@ function getGoalJSON() {
         "goals":
             [
                 {
-                    "title": "Sleep eight hours daily at 22:00PM",
+                    "title": "Slaap",
                     "id": "84bddefd-ab71-2fad-bf85-88f11648c81d",
                     "order": 1,
                     "owner_id": 123,
@@ -1685,7 +1685,7 @@ function loadSettings() {
     goals.insert({
         "id": "_________________________suggestions",
         "label": "suggestions-root",
-        "title": "Explore",
+        "title": "Ontdek",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1703,7 +1703,7 @@ function loadSettings() {
     goals.insert({
         "id": "________nature-and-environment-goals",
         "label": "suggestion",
-        "title": "🌲 Nature and environment goals 🌌",
+        "title": "🌲 Natuur en omgeving doelen 🌌",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1719,7 +1719,7 @@ function loadSettings() {
     goals.insert({
         "id": "_______________mind-and-spirit-goals",
         "label": "suggestion",
-        "title": "🧘 Mind and spirit goals ☯️",
+        "title": "🧘 Geest en ziel doelen ☯️",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1735,7 +1735,7 @@ function loadSettings() {
     goals.insert({
         "id": "___________growth-and-learning-goals",
         "label": "suggestion",
-        "title": "🌱 Growth and learning goals 💡",
+        "title": "🌱 Persoonlijke groei en leer doelen 💡",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1751,7 +1751,7 @@ function loadSettings() {
     goals.insert({
         "id": "________________________career-goals",
         "label": "suggestion",
-        "title": "🎯 Career goals",
+        "title": "🎯 Carrière doelen",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1767,7 +1767,7 @@ function loadSettings() {
     goals.insert({
         "id": "____________health-and-fitness-goals",
         "label": "suggestion",
-        "title": "💪 Health and fitness goals 🏅 🏆",
+        "title": "💪 Gezondheid en fitness doelen 🏅 🏆",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1783,7 +1783,7 @@ function loadSettings() {
     goals.insert({
         "id": "__________________relationship-goals",
         "label": "suggestion",
-        "title": "🥰 💖 Relationship goals 🧑‍🤝‍🧑",
+        "title": "🥰 💖 Relatie doelen 🧑‍🤝‍🧑",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
