@@ -160,7 +160,7 @@ function setSkeletonHTMLForMoment(id) {
 
 function setSkeletonHTMLForAdd(id) {
     console.log("inside setSkeletonHTMLForAdd...")
-    let headerHTML = `<h4 class="modal-title">Add or search</h4>`
+    let headerHTML = `<h4 class="modal-title ms-3">Add or search</h4>`
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = ``
     bodyHTML += `    
