@@ -258,3 +258,7 @@ $("#main-promised").on("mouseout", ".goal", function (event) {
 $("#add-a-goal-button").click(function () {
     openModal("", "add")
 })
+
+$("#add-a-moment-button").click(function () {
+    openModal("", "moment")
+})
