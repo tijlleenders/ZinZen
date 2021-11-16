@@ -1,6 +1,5 @@
 'use strict';
 
-var settings = new Map()
 var serviceWorker = null
 var sessionId = uuidv4()
 var parentId = sessionId
@@ -17,12 +16,15 @@ var repository = new loki("ZinZen.db", {
 var goals = repository.getCollection('goals')
 var relationships = repository.getCollection('relationships')
 var translations = repository.getCollection('translations')
+var settings = repository.getCollection('settings')
 
 function databaseInitialize() {
     console.log("Inside databaseInitialize...")
     goals = repository.getCollection('goals')
     relationships = repository.getCollection('relationships')
     translations = repository.getCollection('translations')
+    settings = repository.getCollection('settings')
+
     console.log("goals:", goals)
     if (goals == null) {
         goals = repository.addCollection('goals', {
@@ -53,6 +55,10 @@ function databaseInitialize() {
             unique: ['en']
         });
         loadTranslations()
+    }
+    if (settings == null) {
+        settings = repository.addCollection('settings', { unique: ['setting'] })
+        settings.insert({ "setting": "screenMode", "value": "light" })
     }
 
     goTo("_________________________suggestions")

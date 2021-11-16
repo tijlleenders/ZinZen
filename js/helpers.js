@@ -123,8 +123,8 @@ function updateSettingsUI() {
 }
 
 function updateScreenMode() {
-    if (document.documentElement.getAttribute("data-theme") != settings.screenMode[0]) {
-        document.documentElement.setAttribute("data-theme", settings.screenMode[0])
+    if (document.documentElement.getAttribute("data-theme") != settings.find({ "setting": "screenMode" })[0].value) {
+        document.documentElement.setAttribute("data-theme", settings.find({ "setting": "screenMode" })[0].value)
     }
 }
 
@@ -1163,12 +1163,16 @@ function generateProgressHTML(slotsForSelectedDay) {
 
 
 function setScreenModeDark() {
-    settings.screenMode = ["dark"]
+    let screenModeSetting = settings.find({ "setting": "screenMode" })[0]
+    screenModeSetting.value = "dark"
+    settings.update(screenModeSetting)
     updateScreenMode()
 };
 
 function setScreenModeLight() {
-    settings.screenMode = ["light"]
+    let screenModeSetting = settings.find({ "setting": "screenMode" })[0]
+    screenModeSetting.value = "light"
+    settings.update(screenModeSetting)
     updateScreenMode()
 };
 
