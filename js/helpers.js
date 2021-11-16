@@ -169,14 +169,14 @@ function setSkeletonHTMLForAdd(id) {
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = ``
     bodyHTML += `    
-    <div class="row mt-2" id="parents-row">
+    <div class="row" id="parents-row">
       <div class="col">
         <div class="" id="selected-parents">
         </div>
       </div>
     </div>`
     bodyHTML += `
-    <div class="row my-2" id="input-row">
+    <div class="row" id="input-row">
       <div class="col">
         <div class="m-1">
             <input class="form-control" type="text" id="inputCommand" placeholder="Type something..." name="command" required autofocus autocomplete="off">
