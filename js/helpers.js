@@ -71,6 +71,9 @@ function updateModalUI() {
         case "add":
             updateModalAddUI()
             break;
+        case "moment":
+            $("#modal-header").removeClass('d-none');
+            break;
         default:
             console.log("modalType to render UI for not recognized")
     }
@@ -96,7 +99,8 @@ function openModal(id, modalType) {
             updateModalUI()
             break;
         case "moment":
-
+            setSkeletonHTMLForMoment(id)
+            updateModalUI()
             break;
         default:
             console.log("modalType " + modalType + " not found")
@@ -123,6 +127,41 @@ function updateScreenMode() {
         document.documentElement.setAttribute("data-theme", settings.screenMode[0])
     }
 }
+
+function setSkeletonHTMLForMoment(id) {
+    console.log("inside setSkeletonHTMLForMoment...")
+    let headerHTML = `
+    <div class="row" id="emo-header-row">
+        <div class="col" id="emo-header-col">
+            Hoe voel je je nu?
+        </div>
+    </div>`
+    $("#modal-header-content").html(headerHTML)
+
+    let bodyHTML = ``
+    bodyHTML += `    
+    <div class="row" id="emo-buttons-row">
+      <div class="col" id="emo-buttons-col">
+        emo buttons
+      </div>
+    </div>`
+
+    bodyHTML += `
+    <div class="row mt-2 d-none" id="next-row">
+      <div class="col m-1">
+        <button type="button" class="btn btn-outline-primary" id="go-to-mind-button">Next</button>
+      </div>
+      <div class=" col m-1">
+        <button type="button" class="btn btn-outline-primary" id="modal-cancel-button">Cancel</button>
+      </div>      
+    </div>    
+    `
+    $("#modal-body").html(bodyHTML)
+    $("#myModal").on('shown.bs.modal', function () {
+
+    });
+}
+
 
 function setSkeletonHTMLForAdd(id) {
     console.log("inside setSkeletonHTMLForAdd...")

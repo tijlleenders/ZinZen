@@ -129,9 +129,14 @@ body {
 }
 
 .modal-content,
-.modal-header,
 .modal-body,
 .modal-footer {
+  background-color: var(--menu-background);
+  color: var(--menu-foreground);
+}
+
+.modal-header {
+  justify-content: flex-start;
   background-color: var(--menu-background);
   color: var(--menu-foreground);
 }
@@ -292,7 +297,7 @@ body {
 
 .modal-title {
   display: flex;
-  float: right;
+  float: left;
   vertical-align: text-top;
 }
 
