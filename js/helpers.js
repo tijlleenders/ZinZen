@@ -95,6 +95,9 @@ function openModal(id, modalType) {
             setSkeletonHTMLForAdd(id)
             updateModalUI()
             break;
+        case "moment":
+
+            break;
         default:
             console.log("modalType " + modalType + " not found")
             break;
