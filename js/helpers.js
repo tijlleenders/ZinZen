@@ -1288,7 +1288,11 @@ function updateBreadcrumbUI() {
         if (index != 0) {
             breadcrumbHTML += '>'
         }
-        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + ancestor.id + '">' + ancestor.title + '</button>'
+        let title = ancestor.title
+        if (ancestor.title['en'] != undefined) {
+            title = ancestor.title['en']
+        }
+        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + ancestor.id + '">' + title + '</button>'
     })
     $("#breadcrumb").html(breadcrumbHTML)
     $("#breadcrumbGoal-" + ancestors[ancestors.length - 1].id).addClass('active')
@@ -1309,7 +1313,9 @@ function loadSettings() {
     goals.insert({
         "id": "______________________________ZinZen",
         "label": "settings-root",
-        "title": "ZinZen",
+        "title": {
+            "en": "ZinZen"
+        },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
