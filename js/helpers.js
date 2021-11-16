@@ -1803,7 +1803,26 @@ function loadSettings() {
     relationships.insert({ parentId: "_________________________suggestions", childId: "________________________career-goals", priority: 3 })
     relationships.insert({ parentId: "_________________________suggestions", childId: "________nature-and-environment-goals", priority: 4 })
     relationships.insert({ parentId: "_________________________suggestions", childId: "___________growth-and-learning-goals", priority: 5 })
+}
 
+function loadTranslations() {
+    translations.insert(
+        {
+            "en": "Goals",
+            "nl": "Doelen"
+        })
+    translations.insert(
+        {
+            "en": "Emotions",
+            "nl": "Gevoelens"
+        })
+
+
+}
+
+function changeLanguageTo(lang) {
+
+    $("#top-feelings-label").html(translations.find({ "en": "Emotions" })[0][lang])
 
 }
 
