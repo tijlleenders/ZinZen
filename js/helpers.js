@@ -436,8 +436,8 @@ function generateGoalHTML(properties) {
     }
 
     var title = titleIcon + properties.title
-    if (properties.title['en'] != undefined) {
-        title = titleIcon + properties.title['en']
+    if (properties.title[settings.find({ "setting": "language" })[0].value] != undefined) {
+        title = titleIcon + properties.title[settings.find({ "setting": "language" })[0].value]
     }
 
     let duration = 0
@@ -1851,10 +1851,16 @@ function loadTranslations() {
 }
 
 function changeLanguageTo(lang) {
-    $("#top-feelings-label").html(translations.find({ "en": "Emotions" })[0][lang])
-    $("#top-goals-label").html(translations.find({ "en": "Goals" })[0][lang])
-    $("#top-calendar-label").html(translations.find({ "en": "Time" })[0][lang])
-    $("#top-explore-label").html(translations.find({ "en": "Explore" })[0][lang])
+    let languageSetting = settings.find({ "setting": "language" })[0]
+    if (lang == "en" || lang == "nl") {
+        languageSetting.value = lang;
+        settings.update(languageSetting)
+        $("#top-feelings-label").html(translations.find({ "en": "Emotions" })[0][lang])
+        $("#top-goals-label").html(translations.find({ "en": "Goals" })[0][lang])
+        $("#top-calendar-label").html(translations.find({ "en": "Time" })[0][lang])
+        $("#top-explore-label").html(translations.find({ "en": "Explore" })[0][lang])
+        updateUIChildrenFor(parentId)
+    }
 }
 
 async function updateUIWith(child) {

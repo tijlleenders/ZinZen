@@ -59,13 +59,13 @@ function databaseInitialize() {
     if (settings == null) {
         settings = repository.addCollection('settings', { unique: ['setting'] })
         settings.insert({ "setting": "screenMode", "value": "light" })
+        settings.insert({ "setting": "language", "value": "en" })
     }
 
     goTo("_________________________suggestions")
     $("#main-quote").removeClass('d-none')
     $("#main-quote").html('<center><h1>“' + randomQuote.quote + '”</h1>- ' + randomQuote.author + '</center> ')
 
-    changeLanguageTo("en");
 }
 
 var sortableStartX, sortableStartY, sortableEndX, sortableEndY = 0 //for click or swipe or move detection
