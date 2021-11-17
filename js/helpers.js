@@ -1321,7 +1321,7 @@ function updateBreadcrumbUI() {
         if (ancestor.title[settings.find({ "setting": "language" })[0].value] != undefined) {
             title = ancestor.title[settings.find({ "setting": "language" })[0].value]
         }
-        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + ancestor.id + '">' + title + '</button>'
+        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm m-1" id="breadcrumbGoal-' + ancestor.id + '">' + title + '</button>'
     })
     $("#breadcrumb").html(breadcrumbHTML)
     $("#breadcrumbGoal-" + ancestors[ancestors.length - 1].id).addClass('active')
