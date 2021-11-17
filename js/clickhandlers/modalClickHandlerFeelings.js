@@ -7,6 +7,7 @@ $("#myModal").on("click", "#go-to-mind-button", function () {
 
 $("#myModal").on("click", ".feeling", function (e) {
     console.log("feeling pressed:", e.currentTarget.innerText)
+    $("#emotion-" + e.currentTarget.innerText).html(e.currentTarget.innerText + '<span class="badge rounded-pill bg-danger">1<span class="visually-hidden">unread messages</span></span>')
     $("#emotion-" + e.currentTarget.innerText).toggleClass('active')
     $("#emo-title-row").focus()
 })
