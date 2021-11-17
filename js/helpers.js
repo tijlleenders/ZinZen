@@ -137,10 +137,12 @@ function updateScreenMode() {
 function setSkeletonHTMLForMoment(id) {
     console.log("inside setSkeletonHTMLForMoment...")
 
+    let lang = settings.find({ "setting": "language" })[0].value
+
     let bodyHTML = `
     <div class="row emo-title-row" id="emo-title-row">
         <div class="col">
-            <h4 class="">`+ translations.find({ "en": "How do you feel now?" })[0][settings.find({ "setting": "language" })[0].value] + `</h4>
+            <h4 class="">`+ translations.find({ "en": "How do you feel now?" })[0][lang] + `</h4>
         </div>
     </div>
     `
@@ -148,59 +150,74 @@ function setSkeletonHTMLForMoment(id) {
 
     bodyHTML += `    
     <div class="row" id="emo-buttons-enjoyment-row">
-      <div class="col" id="emo-enjoyment-buttons-col">
+        <div class="col text-center mt-3">🤗 `+ translations.find({ "en": "Happy" })[0][lang] + `</div>
+    </div>
+    <div class="row" id="emo-buttons-enjoyment-row">
+      <div class="col text-center m-2" id="emo-enjoyment-buttons-col">
         `
     let enjoymentEmotions = translations.find({ "label": "enjoyment-emotion" })
     enjoymentEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[settings.find({ "setting": "language" })[0].value] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
     </div>`
 
-    bodyHTML += `    
+    bodyHTML += ` 
+    <div class="row" id="emo-buttons-enjoyment-row">
+        <div class="col text-center mt-3">😔 `+ translations.find({ "en": "Sad" })[0][lang] + `</div>
+    </div>   
     <div class="row" id="emo-buttons-sadness-row">
-      <div class="col" id="emo-buttons-sadness-col">
+      <div class="col text-center m-2" id="emo-buttons-sadness-col">
         `
     let sadnessEmotions = translations.find({ "label": "sadness-emotion" })
     sadnessEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[settings.find({ "setting": "language" })[0].value] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
     </div>`
 
-    bodyHTML += `    
-    <div class="row" id="emo-buttons-sadness-row">
-      <div class="col" id="emo-buttons-sadness-col">
+    bodyHTML += `
+    <div class="row" id="emo-buttons-enjoyment-row">
+        <div class="col text-center mt-3">😨 `+ translations.find({ "en": "Afraid" })[0][lang] + `</div>
+    </div>  
+    <div class="row" id="emo-buttons-fear-row">
+      <div class="col text-center m-2" id="emo-buttons-fear-col">
         `
     let fearEmotions = translations.find({ "label": "fear-emotion" })
     fearEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[settings.find({ "setting": "language" })[0].value] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
     </div>`
 
-    bodyHTML += `    
-    <div class="row" id="emo-buttons-sadness-row">
-      <div class="col" id="emo-buttons-sadness-col">
+    bodyHTML += `
+    <div class="row" id="emo-buttons-enjoyment-row">
+        <div class="col text-center mt-3">😤😠 `+ translations.find({ "en": "Angry" })[0][lang] + `</div>
+    </div>      
+    <div class="row" id="emo-buttons-anger-row">
+      <div class="col text-center m-2" id="emo-buttons-anger-col">
         `
     let angerEmotions = translations.find({ "label": "anger-emotion" })
     angerEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[settings.find({ "setting": "language" })[0].value] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
     </div>`
 
-    bodyHTML += `    
-    <div class="row" id="emo-buttons-sadness-row">
-      <div class="col" id="emo-buttons-sadness-col">
+    bodyHTML += `
+    <div class="row" id="emo-buttons-enjoyment-row">
+        <div class="col text-center mt-3">🤢 `+ translations.find({ "en": "Disgusted" })[0][lang] + `</div>
+    </div>          
+    <div class="row" id="emo-button-disgust-row">
+      <div class="col text-center m-2" id="emo-buttons-disgust-col">
         `
     let disgustEmotions = translations.find({ "label": "disgust-emotion" })
     disgustEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[settings.find({ "setting": "language" })[0].value] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
@@ -2063,12 +2080,38 @@ function loadTranslations() {
             "en": "How do you feel now?",
             "nl": "Hoe voel je je nu?"
         })
+    translations.insert(
+        {
+            "en": "Happy",
+            "nl": "Blij"
+        })
+
+    translations.insert(
+        {
+            "en": "Sad",
+            "nl": "Bedroefd"
+        })
+    translations.insert(
+        {
+            "en": "Afraid",
+            "nl": "Bang"
+        })
+    translations.insert(
+        {
+            "en": "Angry",
+            "nl": "Boos"
+        })
+    translations.insert(
+        {
+            "en": "Disgusted",
+            "nl": "Afschuw"
+        })
 
 
     translations.insert(
         {
             "en": "happy",
-            "nl": "geluk",
+            "nl": "gelukkig",
             "label": "enjoyment-emotion"
         })
     translations.insert(
