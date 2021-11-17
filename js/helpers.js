@@ -1172,6 +1172,15 @@ function setLanguageTo(lang) {
     };
 }
 
+function resetRepository() {
+    repository.removeCollection('goals')
+    repository.removeCollection('relationships')
+    repository.removeCollection('settings')
+    repository.removeCollection('translations')
+    repository.saveDatabase()
+    databaseInitialize()
+}
+
 function setScreenModeDark() {
     let screenModeSetting = settings.find({ "setting": "screenMode" })[0]
     screenModeSetting.value = "dark"
@@ -1527,7 +1536,7 @@ function loadGoalsAndRelationship() {
     goals.insert({
         "id": "_________________import-export-reset",
         "label": "setting",
-        "title": { "en": "Import / Export / Reset my data", "nl": "Import / Export / Vernietig mijn data" },
+        "title": { "en": "Import / Export / Destroy all my data", "nl": "Import / Export / Vernietig al mijn data" },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1561,6 +1570,29 @@ function loadGoalsAndRelationship() {
     relationships.insert({ parentId: "_____________________my-app-settings", childId: "_______________________look-and-feel", priority: 0 })
     relationships.insert({ parentId: "_____________________my-app-settings", childId: "__________________________sign-up-in", priority: 1 })
     relationships.insert({ parentId: "_____________________my-app-settings", childId: "_________________import-export-reset", priority: 2 })
+
+    goals.insert({
+        "id": "____________________reset-repository",
+        "label": "setting",
+        "title": { "en": "Destroy all my data now!", "nl": "Vernietig al mijn data nu!" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z"
+        ],
+        "function": ["resetRepository()"],
+        "commands": "setting",
+        "statusSort": 1
+    })
+
+    relationships.insert({ parentId: "_________________import-export-reset", childId: "____________________reset-repository", priority: 0 })
 
     goals.insert({
         "id": "_________________install-on-computer",
@@ -2013,6 +2045,9 @@ function goToSetting(selectedGoalId) {
                 break;
             case "setLanguageTo('nl')":
                 setLanguageTo('nl')
+                break;
+            case "resetRepository()":
+                resetRepository()
                 break;
             default:
                 console.log("function not recognized:", setting.function[0])
