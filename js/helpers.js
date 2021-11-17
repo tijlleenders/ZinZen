@@ -148,12 +148,18 @@ function setSkeletonHTMLForMoment(id) {
     bodyHTML += `    
     <div class="row" id="emo-buttons-row">
       <div class="col" id="emo-buttons-col">
-        emo buttons
+        `
+    let enjoymentEmotions = translations.find({ "label": "enjoyment-emotion" })
+    enjoymentEmotions.forEach(emotion => {
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[settings.find({ "setting": "language" })[0].value] + `</button>`
+    })
+
+    bodyHTML += `
       </div>
     </div>`
 
     bodyHTML += `
-    <div class="row mt-2 d-none" id="next-row">
+    <div class="row mt-2" id="next-row">
       <div class="col m-1">
         <button type="button" class="btn btn-outline-primary" id="go-to-mind-button">Next</button>
       </div>
@@ -2009,6 +2015,285 @@ function loadTranslations() {
             "en": "How do you feel now?",
             "nl": "Hoe voel je je nu?"
         })
+
+
+    translations.insert(
+        {
+            "en": "happy",
+            "nl": "geluk",
+            "label": "enjoyment-emotion"
+        })
+    translations.insert(
+        {
+            "en": "loved",
+            "nl": "geliefd",
+            "label": "enjoyment-emotion"
+        })
+    translations.insert(
+        {
+            "en": "relieved",
+            "nl": "opgelucht",
+            "label": "enjoyment-emotion"
+        })
+    translations.insert(
+        {
+            "en": "content",
+            "nl": "tevreden",
+            "label": "enjoyment-emotion"
+        })
+    translations.insert(
+        {
+            "en": "amused",
+            "nl": "geamuseerd",
+            "label": "enjoyment-emotion"
+        })
+    translations.insert(
+        {
+            "en": "joyful",
+            "nl": "plezierig",
+            "label": "enjoyment-emotion"
+        })
+    translations.insert(
+        {
+            "en": "proud",
+            "nl": "trots",
+            "label": "enjoyment-emotion"
+        })
+    translations.insert(
+        {
+            "en": "excited",
+            "nl": "opgewonden",
+            "label": "enjoyment-emotion"
+        })
+    translations.insert(
+        {
+            "en": "peaceful",
+            "nl": "vredig",
+            "label": "enjoyment-emotion"
+        })
+    translations.insert(
+        {
+            "en": "compassionate",
+            "nl": "meedogend",
+            "label": "enjoyment-emotion"
+        })
+
+    translations.insert(
+        {
+            "en": "hopeless",
+            "nl": "hopeloos",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "lonely",
+            "nl": "eenzaam",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "heartbroken",
+            "nl": "diepbedroefd",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "gloomy",
+            "nl": "somber",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "disappointed",
+            "nl": "teleurgesteld",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "grieved",
+            "nl": "rouwend",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "unhappy",
+            "nl": "ongelukkig",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "lost",
+            "nl": "verloren",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "troubled",
+            "nl": "verontrust",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "resigned",
+            "nl": "neergeslagen",
+            "label": "sadness-emotion"
+        })
+    translations.insert(
+        {
+            "en": "miserable",
+            "nl": "ellendig",
+            "label": "sadness-emotion"
+        })
+
+    translations.insert(
+        {
+            "en": "worried",
+            "nl": "ongerust",
+            "label": "fear-emotion"
+        })
+    translations.insert(
+        {
+            "en": "doubtful",
+            "nl": "twijfelend",
+            "label": "fear-emotion"
+        })
+    translations.insert(
+        {
+            "en": "nervous",
+            "nl": "nerveus",
+            "label": "fear-emotion"
+        })
+    translations.insert(
+        {
+            "en": "anxious",
+            "nl": "gespannen",
+            "label": "fear-emotion"
+        })
+    translations.insert(
+        {
+            "en": "terrified",
+            "nl": "doodsbang",
+            "label": "fear-emotion"
+        })
+    translations.insert(
+        {
+            "en": "panicked",
+            "nl": "paniekerig",
+            "label": "fear-emotion"
+        })
+    translations.insert(
+        {
+            "en": "horrified",
+            "nl": "geschokt",
+            "label": "fear-emotion"
+        })
+    translations.insert(
+        {
+            "en": "desperate",
+            "nl": "wanhopig",
+            "label": "fear-emotion"
+        })
+    translations.insert(
+        {
+            "en": "confused",
+            "nl": "verward",
+            "label": "fear-emotion"
+        })
+    translations.insert(
+        {
+            "en": "stressed",
+            "nl": "gestrest",
+            "label": "fear-emotion"
+        })
+
+
+    translations.insert(
+        {
+            "en": "annoyed",
+            "nl": "geërgerd",
+            "label": "anger-emotion"
+        })
+    translations.insert(
+        {
+            "en": "frustrated",
+            "nl": "gefrustreerd",
+            "label": "anger-emotion"
+        })
+    translations.insert(
+        {
+            "en": "bitter",
+            "nl": "bitter",
+            "label": "anger-emotion"
+        })
+    translations.insert(
+        {
+            "en": "infuriated",
+            "nl": "woedend",
+            "label": "anger-emotion"
+        })
+    translations.insert(
+        {
+            "en": "mad",
+            "nl": "boos",
+            "label": "anger-emotion"
+        })
+    translations.insert(
+        {
+            "en": "vengeful",
+            "nl": "wraakzuchtig",
+            "label": "anger-emotion"
+        })
+    translations.insert(
+        {
+            "en": "insulted",
+            "nl": "beledigd",
+            "label": "anger-emotion"
+        })
+
+
+    translations.insert(
+        {
+            "en": "dislike",
+            "nl": "afkeer",
+            "label": "disgust-emotion"
+        })
+    translations.insert(
+        {
+            "en": "loathing",
+            "nl": "walging",
+            "label": "disgust-emotion"
+        })
+    translations.insert(
+        {
+            "en": "disapproving",
+            "nl": "afkeurend",
+            "label": "disgust-emotion"
+        })
+    translations.insert(
+        {
+            "en": "uncomfortable",
+            "nl": "ongemakkelijk",
+            "label": "disgust-emotion"
+        })
+    translations.insert(
+        {
+            "en": "nauseated",
+            "nl": "misselijk",
+            "label": "disgust-emotion"
+        })
+    translations.insert(
+        {
+            "en": "disturbed",
+            "nl": "verstoord",
+            "label": "disgust-emotion"
+        })
+    translations.insert(
+        {
+            "en": "withdrawal",
+            "nl": "vluchtend",
+            "label": "disgust-emotion"
+        })
+
 }
 
 function updateUILanguage() {
