@@ -1326,6 +1326,17 @@ function loadSettings() {
 function loadGoalsAndRelationship() {
 
     goals.insert({
+        label: 'person',
+        id: sessionId,
+        title: { "en": "Me", "nl": "Ik" },
+        parentId: '',
+        status: 'maybe',
+        start: (new Date()).toISOString(),
+        duration: 3600 * 24 * 30,
+        commands: ''
+    })
+
+    goals.insert({
         "id": "____________________________Feelings",
         "label": "feelings-root",
         "title": {

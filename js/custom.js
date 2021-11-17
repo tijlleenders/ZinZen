@@ -26,30 +26,18 @@ function databaseInitialize() {
     settings = repository.getCollection('settings')
 
     console.log("goals:", goals)
-    if (goals == null) {
+    if (goals == null && relationships == null) {
         goals = repository.addCollection('goals', {
             unique: ['id']
         })
-        let newPerson = {
-            label: 'person',
-            id: sessionId,
-            title: 'Me',
-            parentId: '',
-            status: 'maybe',
-            start: (new Date()).toISOString(),
-            duration: 3600 * 24 * 30,
-            commands: ''
-        }
-        goals.insert(newPerson)
+        relationships = repository.addCollection('relationships', {})
+        loadGoalsAndRelationship()
     } else {
         sessionId = goals.find({ label: 'person' })[0].id
         console.log("getting sessionId from db:", sessionId)
         parentId = sessionId
     }
-    if (relationships == null) {
-        relationships = repository.addCollection('relationships', {})
-        loadGoalsAndRelationship()
-    }
+
     if (translations == null) {
         translations = repository.addCollection('translations', {
             unique: ['en']
