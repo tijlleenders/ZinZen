@@ -1338,7 +1338,7 @@ function updatePriority() {
 }
 
 function lastSettingsUpdate() {
-    return 1637134156266
+    return 1637134156267
 }
 
 function loadSettings() {
