@@ -112,6 +112,7 @@ body {
 
 .card {
   border-radius: 10px;
+  background-image: var(--bs-gradient);
   color: var(--text-color);
   /* background-color: var(--menu-background); */
   flex-direction: row;
