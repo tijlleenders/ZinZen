@@ -49,7 +49,10 @@ function updateModalAddUI() {
     });
     $("#selected-commands").html(selectedCommands)
 
-    let suggestedCommands = `Suggested commands: `
+    let suggestedCommands = ``
+    if (newInputCommand.suggestedCommands.length > 0) {
+        suggestedCommands = `Suggested commands: `
+    }
     newInputCommand.suggestedCommands.forEach(suggestionSet => {
         suggestionSet.forEach(suggestion => {
             suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
@@ -57,7 +60,10 @@ function updateModalAddUI() {
     });
     $("#suggested-commands").html(suggestedCommands)
 
-    let suggestedWords = `Suggested words: `
+    let suggestedWords = ``
+    if (newInputCommand.suggestedWords.length > 0) {
+        suggestedWords = `Suggested words: `
+    }
     newInputCommand.suggestedWords.forEach(suggestionSet => {
         suggestionSet.forEach(suggestion => {
             suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
