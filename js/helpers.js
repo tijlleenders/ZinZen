@@ -1328,7 +1328,11 @@ function updatePriority() {
 function loadSettings() {
     settings = repository.addCollection('settings', { unique: ['setting'] })
     settings.insert({ "setting": "screenMode", "value": "light" })
-    settings.insert({ "setting": "language", "value": "en" })
+    let browserLanguage = navigator.language.substr(0, 2)
+    if (browserLanguage != 'en' || browserLanguage != 'nl') {
+        browserLanguage = 'en'
+    }
+    settings.insert({ "setting": "language", "value": browserLanguage })
 }
 
 
