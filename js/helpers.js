@@ -297,7 +297,7 @@ function setSkeletonHTMLForAdd(id) {
     let goal = goals.by('id', id)
     console.log("goals:", goal)
     if (goal != undefined) {
-        inputCommand.title = goal.title
+        inputCommand.title = goal.title[settings.find({ "setting": "language" })[0].value]
         if (goal.commands != undefined && goal.commands.length != 0) {
             inputCommand.commands = new Set(goal.commands.split(','))
         }
@@ -306,7 +306,7 @@ function setSkeletonHTMLForAdd(id) {
         }
         $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
         $("#save-row").removeClass('d-none')
-        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title.substring(0, 10) + `...</h4>`
+        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[settings.find({ "setting": "language" })[0].value].substring(0, 10) + `...</h4>`
         $("#modal-header-content").html(headerHTML)
     }
 
