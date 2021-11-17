@@ -1741,6 +1741,51 @@ function loadGoalsAndRelationship() {
     relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0 })
     relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1 })
 
+    goals.insert({
+        "id": "_______________________________Dutch",
+        "label": "setting",
+        "title": { "en": "🇳🇱 Dutch", "nl": "🇳🇱 Nederlands" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z"
+        ],
+        "function": ["changeLanguageTo('nl')"],
+        "commands": "setting",
+        "statusSort": 1
+    })
+
+    goals.insert({
+        "id": "_____________________________English",
+        "label": "setting",
+        "title": { "en": "🇺🇸 🇬🇧 English", "nl": "🇺🇸 🇬🇧 Engels" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "4"
+        ],
+        "updatedDT": [
+            "2021-08-12T15:24:03.602Z"
+        ],
+        "function": ["changeLanguageTo('en')"],
+        "commands": "setting",
+        "statusSort": 1
+    })
+
+    relationships.insert({ parentId: "____________________________language", childId: "_____________________________English", priority: 0 })
+    relationships.insert({ parentId: "____________________________language", childId: "_______________________________Dutch", priority: 1 })
+
 
     goals.insert({
         "id": "_________________________suggestions",
@@ -1950,6 +1995,12 @@ function goToSetting(selectedGoalId) {
                 logOut()
                 return
                 break;
+            case "changeLanguageTo('en')":
+                changeLanguageTo('en')
+                break;
+            case "changeLanguageTo('nl')":
+                changeLanguageTo('nl')
+                break;
             default:
                 console.log("function not recognized:", setting.function[0])
                 return
@@ -1959,7 +2010,9 @@ function goToSetting(selectedGoalId) {
     if (setting.url != undefined) {
         window.open(setting.url[0], '_blank')
     } else {
-        goTo(selectedGoalId)
+        if (setting.function == undefined) {
+            goTo(selectedGoalId)
+        }
     }
 }
 
