@@ -1278,7 +1278,7 @@ function getShortestPathToPersonFor(id) {
         if (relationship != undefined) {
             id = relationship.parentId
         }
-    } while (safety < 10 && !(currentVertex.label == "person" || currentVertex.label == "settings-root" || currentVertex.label == "suggestions-root"))
+    } while (safety < 10 && !(currentVertex.label == "person" || currentVertex.label == "settings-root" || currentVertex.label == "suggestions-root" || currentVertex.label == "feelings-root"))
 
     return shortestPath
 }
@@ -1324,9 +1324,9 @@ function loadSettings() {
 
 
 function loadRelationships() {
-    "____________________________Feelings"
+
     goals.insert({
-        "id": "______________________________ZinZen",
+        "id": "____________________________Feelings",
         "label": "feelings-root",
         "title": {
             "en": "Me",
@@ -1344,9 +1344,8 @@ function loadRelationships() {
         "commands": "setting",
         "statusSort": 1
     })
-    relationships.insert({ parentId: '', childId: "______________________________ZinZen" })
+    relationships.insert({ parentId: '', childId: "____________________________Feelings" })
 
-    "____________________________Feelings"
     goals.insert({
         "id": "______________________________ZinZen",
         "label": "settings-root",
