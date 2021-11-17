@@ -7,7 +7,11 @@ $("#myModal").on("click", "#go-to-mind-button", function () {
 
 $("#myModal").on("click", ".feeling", function (e) {
     console.log("feeling pressed:", e.currentTarget.innerText)
-    $("#emotion-" + e.currentTarget.innerText).html(e.currentTarget.innerText + '<span class="badge rounded-pill bg-danger">1<span class="visually-hidden">unread messages</span></span>')
-    $("#emotion-" + e.currentTarget.innerText).toggleClass('active')
+    if ($("#emotion-" + e.currentTarget.innerText).hasClass('feeling-selected')) {
+        $("#emotion-" + e.currentTarget.innerText).removeClass('feeling-selected')
+    } else {
+        $("#emotion-" + e.currentTarget.innerText).addClass('feeling-selected')
+    }
+    // $("#emotion-" + e.currentTarget.innerText).html(e.currentTarget.innerText + '<span class="top-0 badge rounded-pill bg-danger">1<span class="visually-hidden">unread messages</span></span>')
     $("#emo-title-row").focus()
 })

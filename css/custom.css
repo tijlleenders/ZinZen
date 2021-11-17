@@ -147,6 +147,10 @@ body {
   /*not used but just for jQuery.parentsUntil() selector  */
 }
 
+.feeling-selected {
+  background-color: blue !important;
+}
+
 .btn-block-custom {
   display: block;
   margin: auto;
