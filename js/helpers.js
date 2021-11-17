@@ -1168,6 +1168,7 @@ function setLanguageTo(lang) {
         languageSetting.value = lang
         settings.update(languageSetting)
         updateUILanguage()
+        repository.saveDatabase() //better to force for if user refreshes before autosave interval
     };
 }
 
@@ -1176,6 +1177,7 @@ function setScreenModeDark() {
     screenModeSetting.value = "dark"
     settings.update(screenModeSetting)
     updateScreenMode()
+    repository.saveDatabase() //better to force for if user refreshes before autosave interval
 };
 
 function setScreenModeLight() {
@@ -1183,6 +1185,7 @@ function setScreenModeLight() {
     screenModeSetting.value = "light"
     settings.update(screenModeSetting)
     updateScreenMode()
+    repository.saveDatabase() //better to force for if user refreshes before autosave interval
 };
 
 function reviver(key, value) {
