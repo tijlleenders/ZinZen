@@ -1566,7 +1566,7 @@ function loadGoalsAndRelationship() {
     goals.insert({
         "id": "__________________install-on-android",
         "label": "setting",
-        "title": { "en": "Install on android (Samsung, Xiaomi, other)", "": "Instaleer op android (Samsung, Xiaomi, overig)" },
+        "title": { "en": "Install on android (Samsung, Xiaomi, other)", "nl": "Instaleer op android (Samsung, Xiaomi, overig)" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
