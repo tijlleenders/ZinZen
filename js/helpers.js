@@ -134,7 +134,7 @@ function setSkeletonHTMLForMoment(id) {
     let bodyHTML = `
     <div class="row emo-title-row" id="emo-title-row">
         <div class="col">
-            <h4 class="">Hoe voel je je nu?</h4>
+            <h4 class="">`+ translations.find({ "en": "How do you feel now?" })[0][settings.find({ "setting": "language" })[0].value] + `</h4>
         </div>
     </div>
     `
@@ -1973,6 +1973,11 @@ function loadGoalsAndRelationship() {
 }
 
 function loadTranslations() {
+    repository.removeCollection('translations')
+    translations = repository.addCollection('translations', {
+        unique: ['en']
+    });
+
     translations.insert(
         {
             "en": "Goals",
@@ -1993,7 +1998,11 @@ function loadTranslations() {
             "en": "Explore",
             "nl": "Ontdek"
         })
-
+    translations.insert(
+        {
+            "en": "How do you feel now?",
+            "nl": "Hoe voel je je nu?"
+        })
 }
 
 function updateUILanguage() {

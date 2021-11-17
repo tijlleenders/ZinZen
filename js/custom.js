@@ -38,16 +38,11 @@ function databaseInitialize() {
         parentId = sessionId
     }
 
-    if (translations == null) {
-        translations = repository.addCollection('translations', {
-            unique: ['en']
-        });
-        loadTranslations()
-    }
     if (settings == undefined || settings.find({ "setting": "settingsLastUpdate" })[0].value < lastSettingsUpdate()) {
         loadSettings()
     }
 
+    loadTranslations()
     goTo("_________________________suggestions")
     $("#main-quote").removeClass('d-none')
     $("#main-quote").html('<center><h1>“' + randomQuote.quote + '”</h1>- ' + randomQuote.author + '</center> ')
