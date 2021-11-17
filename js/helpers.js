@@ -1297,8 +1297,8 @@ function updateBreadcrumbUI() {
             breadcrumbHTML += '>'
         }
         let title = ancestor.title
-        if (ancestor.title['en'] != undefined) {
-            title = ancestor.title['en']
+        if (ancestor.title[settings.find({ "setting": "language" })[0].value] != undefined) {
+            title = ancestor.title[settings.find({ "setting": "language" })[0].value]
         }
         breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm" id="breadcrumbGoal-' + ancestor.id + '">' + title + '</button>'
     })
