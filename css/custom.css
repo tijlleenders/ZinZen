@@ -362,120 +362,120 @@ body {
 
 .card1 {
   background-color: var(--card1);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card1:hover {
   background-color: var(--card1);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
 
 .card2 {
   background-color: var(--card2);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card2:hover {
   background-color: var(--card2);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
 
 .card3 {
   background-color: var(--card3);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card3:hover {
   background-color: var(--card3);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
 
 .card4 {
   background-color: var(--card4);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card4:hover {
   background-color: var(--card4);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
 
 .card5 {
   background-color: var(--card5);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card5:hover {
   background-color: var(--card5);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
 
 .card6 {
   background-color: var(--card6);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card6:hover {
   background-color: var(--card6);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
 
 .card7 {
   background-color: var(--card7);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card7:hover {
   background-color: var(--card7);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
 
 .card8 {
   background-color: var(--card8);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card8:hover {
   background-color: var(--card8);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
 
 .card9 {
   background-color: var(--card9);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card9:hover {
   background-color: var(--card9);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
 
 .card10 {
   background-color: var(--card10);
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .card10:hover {
   background-color: var(--card10);
-  border-width: 2px;
+  border-width: 1px;
   border-color: var(--editor-selectionHighlightBackground);
   filter: brightness(105%);
 }
