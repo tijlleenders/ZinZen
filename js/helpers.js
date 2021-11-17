@@ -1162,6 +1162,15 @@ function generateProgressHTML(slotsForSelectedDay) {
 }
 
 
+function setLanguageTo(lang) {
+    if (lang == 'en' || lang == 'nl') {
+        let languageSetting = settings.find({ "setting": "language" })[0]
+        languageSetting.value = lang
+        settings.update(languageSetting)
+        updateUILanguage()
+    };
+}
+
 function setScreenModeDark() {
     let screenModeSetting = settings.find({ "setting": "screenMode" })[0]
     screenModeSetting.value = "dark"
@@ -1757,7 +1766,7 @@ function loadGoalsAndRelationship() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["changeLanguageTo('nl')"],
+        "function": ["setLanguageTo('nl')"],
         "commands": "setting",
         "statusSort": 1
     })
@@ -1778,7 +1787,7 @@ function loadGoalsAndRelationship() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["changeLanguageTo('en')"],
+        "function": ["setLanguageTo('en')"],
         "commands": "setting",
         "statusSort": 1
     })
@@ -1918,7 +1927,7 @@ function loadTranslations() {
         })
     translations.insert(
         {
-            "en": "Emotions",
+            "en": "Feelings",
             "nl": "Gevoelens"
         })
     translations.insert(
@@ -1934,18 +1943,15 @@ function loadTranslations() {
 
 }
 
-function changeLanguageTo(lang) {
-    let languageSetting = settings.find({ "setting": "language" })[0]
-    if (lang == "en" || lang == "nl") {
-        languageSetting.value = lang;
-        settings.update(languageSetting)
-        $("#top-feelings-label").html(translations.find({ "en": "Emotions" })[0][lang])
-        $("#top-goals-label").html(translations.find({ "en": "Goals" })[0][lang])
-        $("#top-calendar-label").html(translations.find({ "en": "Time" })[0][lang])
-        $("#top-explore-label").html(translations.find({ "en": "Explore" })[0][lang])
-        updateUIChildrenFor(parentId)
-        updateBreadcrumbUI()
-    }
+function updateUILanguage() {
+    let lang = settings.find({ "setting": "language" })[0].value
+    console.log("language found in settings:", lang)
+    $("#top-feelings-label").html(translations.find({ "en": "Feelings" })[0][lang])
+    $("#top-goals-label").html(translations.find({ "en": "Goals" })[0][lang])
+    $("#top-calendar-label").html(translations.find({ "en": "Time" })[0][lang])
+    $("#top-explore-label").html(translations.find({ "en": "Explore" })[0][lang])
+    updateUIChildrenFor(parentId)
+    updateBreadcrumbUI()
 }
 
 async function updateUIWith(child) {
@@ -1995,11 +2001,11 @@ function goToSetting(selectedGoalId) {
                 logOut()
                 return
                 break;
-            case "changeLanguageTo('en')":
-                changeLanguageTo('en')
+            case "setLanguageTo('en')":
+                setLanguageTo('en')
                 break;
-            case "changeLanguageTo('nl')":
-                changeLanguageTo('nl')
+            case "setLanguageTo('nl')":
+                setLanguageTo('nl')
                 break;
             default:
                 console.log("function not recognized:", setting.function[0])
