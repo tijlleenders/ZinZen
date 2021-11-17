@@ -1316,6 +1316,12 @@ function updatePriority() {
     })
 }
 
+function loadSettings() {
+    settings = repository.addCollection('settings', { unique: ['setting'] })
+    settings.insert({ "setting": "screenMode", "value": "light" })
+    settings.insert({ "setting": "language", "value": "en" })
+}
+
 
 function loadRelationships() {
     "____________________________Feelings"

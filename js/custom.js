@@ -57,9 +57,7 @@ function databaseInitialize() {
         loadTranslations()
     }
     if (settings == null) {
-        settings = repository.addCollection('settings', { unique: ['setting'] })
-        settings.insert({ "setting": "screenMode", "value": "light" })
-        settings.insert({ "setting": "language", "value": "en" })
+        loadSettings()
     }
 
     goTo("_________________________suggestions")
