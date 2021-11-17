@@ -148,7 +148,8 @@ body {
 }
 
 .feeling-selected {
-  background-color: blue !important;
+  background-color: var(--card6) !important;
+  background-image: var(--bs-gradient);
 }
 
 .btn-block-custom {
