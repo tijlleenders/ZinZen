@@ -1337,9 +1337,15 @@ function updatePriority() {
     })
 }
 
+function lastSettingsUpdate() {
+    return 1637134156266
+}
+
 function loadSettings() {
+    repository.removeCollection('settings')
     settings = repository.addCollection('settings', { unique: ['setting'] })
     settings.insert({ "setting": "screenMode", "value": "light" })
+    settings.insert({ "setting": "settingsLastUpdate", "value": lastSettingsUpdate() })
     let browserLanguage = navigator.language.substr(0, 2)
     if (browserLanguage != 'en' && browserLanguage != 'nl') {
         browserLanguage = 'en'
