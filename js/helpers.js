@@ -1343,6 +1343,8 @@ function lastSettingsUpdate() {
 
 function loadSettings() {
     repository.removeCollection('settings')
+    goals.findAndRemove({ "label": "setting" })
+    relationships.findAndRemove({ "label": "setting" })
     settings = repository.addCollection('settings', { unique: ['setting'] })
     settings.insert({ "setting": "screenMode", "value": "light" })
     settings.insert({ "setting": "settingsLastUpdate", "value": lastSettingsUpdate() })
@@ -1353,41 +1355,7 @@ function loadSettings() {
     settings.insert({ "setting": "language", "value": browserLanguage })
 }
 
-
-function loadGoalsAndRelationship() {
-
-    goals.insert({
-        label: 'person',
-        id: sessionId,
-        title: { "en": "Me", "nl": "Ik" },
-        parentId: '',
-        status: 'maybe',
-        start: (new Date()).toISOString(),
-        duration: 3600 * 24 * 30,
-        commands: ''
-    })
-
-    goals.insert({
-        "id": "____________________________Feelings",
-        "label": "feelings-root",
-        "title": {
-            "en": "Me",
-            "nl": "Ik"
-        },
-        "owner": "ZinZen",
-        "subCountMaybe": "3",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": "setting",
-        "tags": [
-            "4"
-        ],
-        "commands": "setting",
-        "statusSort": 1
-    })
-    relationships.insert({ parentId: '', childId: "____________________________Feelings" })
-
+function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "______________________________ZinZen",
         "label": "settings-root",
@@ -1515,12 +1483,12 @@ function loadGoalsAndRelationship() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_____________________my-app-settings", priority: 0 })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________install-on-phone-or-desktop", priority: 1 })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "______________________________donate", priority: 2 })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "________________________________blog", priority: 3 })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________________about", priority: 4 })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________________legal", priority: 5 })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_____________________my-app-settings", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________install-on-phone-or-desktop", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "______________________________donate", priority: 2, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "________________________________blog", priority: 3, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________________about", priority: 4, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________________legal", priority: 5, label: "setting" })
 
 
     goals.insert({
@@ -1573,9 +1541,9 @@ function loadGoalsAndRelationship() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_______________________look-and-feel", priority: 0 })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "__________________________sign-up-in", priority: 1 })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_________________import-export-reset", priority: 2 })
+    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_______________________look-and-feel", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "_____________________my-app-settings", childId: "__________________________sign-up-in", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_________________import-export-reset", priority: 2, label: "setting" })
 
     goals.insert({
         "id": "____________________reset-repository",
@@ -1598,7 +1566,7 @@ function loadGoalsAndRelationship() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_________________import-export-reset", childId: "____________________reset-repository", priority: 0 })
+    relationships.insert({ parentId: "_________________import-export-reset", childId: "____________________reset-repository", priority: 0, label: "setting" })
 
     goals.insert({
         "id": "_________________install-on-computer",
@@ -1651,9 +1619,9 @@ function loadGoalsAndRelationship() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "_________________install-on-computer", priority: 0 })
-    relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "__________________install-on-android", priority: 1 })
-    relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "___________________install-on-iphone", priority: 2 })
+    relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "_________________install-on-computer", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "__________________install-on-android", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "___________________install-on-iphone", priority: 2, label: "setting" })
 
     goals.insert({
         "id": "_____________________________Privacy",
@@ -1707,9 +1675,9 @@ function loadGoalsAndRelationship() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_______________________________legal", childId: "_____________________________Privacy", priority: 0 })
-    relationships.insert({ parentId: "_______________________________legal", childId: "____________________terms-of-service", priority: 1 })
-    relationships.insert({ parentId: "_______________________________legal", childId: "________open-source-acknowledgements", priority: 2 })
+    relationships.insert({ parentId: "_______________________________legal", childId: "_____________________________Privacy", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "_______________________________legal", childId: "____________________terms-of-service", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "_______________________________legal", childId: "________open-source-acknowledgements", priority: 2, label: "setting" })
 
     goals.insert({
         "id": "_________________________color-theme",
@@ -1747,8 +1715,8 @@ function loadGoalsAndRelationship() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_______________________look-and-feel", childId: "_________________________color-theme", priority: 0 })
-    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 1 })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "_________________________color-theme", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 1, label: "setting" })
 
     goals.insert({
         "id": "__________________________light-mode",
@@ -1792,8 +1760,8 @@ function loadGoalsAndRelationship() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0 })
-    relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1 })
+    relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1, label: "setting" })
 
     goals.insert({
         "id": "_______________________________Dutch",
@@ -1837,9 +1805,47 @@ function loadGoalsAndRelationship() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "____________________________language", childId: "_____________________________English", priority: 0 })
-    relationships.insert({ parentId: "____________________________language", childId: "_______________________________Dutch", priority: 1 })
+    relationships.insert({ parentId: "____________________________language", childId: "_____________________________English", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "____________________________language", childId: "_______________________________Dutch", priority: 1, label: "setting" })
 
+}
+
+
+function loadGoalsAndRelationship() {
+
+    goals.insert({
+        label: 'person',
+        id: sessionId,
+        title: { "en": "Me", "nl": "Ik" },
+        parentId: '',
+        status: 'maybe',
+        start: (new Date()).toISOString(),
+        duration: 3600 * 24 * 30,
+        commands: ''
+    })
+
+    goals.insert({
+        "id": "____________________________Feelings",
+        "label": "feelings-root",
+        "title": {
+            "en": "Me",
+            "nl": "Ik"
+        },
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
+        "statusSort": 1
+    })
+    relationships.insert({ parentId: '', childId: "____________________________Feelings" })
+
+    loadSettingGoalsAndRelationships()
 
     goals.insert({
         "id": "_________________________suggestions",

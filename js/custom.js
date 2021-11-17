@@ -44,7 +44,7 @@ function databaseInitialize() {
         });
         loadTranslations()
     }
-    if (settings.find({ "setting": "settingsLastUpdate" })[0] == undefined || settings.find({ "setting": "settingsLastUpdate" })[0].value < lastSettingsUpdate()) {
+    if (settings == undefined || settings.find({ "setting": "settingsLastUpdate" })[0].value < lastSettingsUpdate()) {
         loadSettings()
     }
 
