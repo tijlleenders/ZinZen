@@ -1329,7 +1329,7 @@ function loadSettings() {
     settings = repository.addCollection('settings', { unique: ['setting'] })
     settings.insert({ "setting": "screenMode", "value": "light" })
     let browserLanguage = navigator.language.substr(0, 2)
-    if (browserLanguage != 'en' || browserLanguage != 'nl') {
+    if (browserLanguage != 'en' && browserLanguage != 'nl') {
         browserLanguage = 'en'
     }
     settings.insert({ "setting": "language", "value": browserLanguage })
