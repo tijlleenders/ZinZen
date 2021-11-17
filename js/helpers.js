@@ -50,7 +50,7 @@ function updateModalAddUI() {
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
-    if (newInputCommand.suggestedCommands.length > 0) {
+    if (newInputCommand.suggestedCommands.length > 0 && newInputCommand.suggestedCommands[0].size > 0) {
         suggestedCommands = `Suggested commands: `
     }
     newInputCommand.suggestedCommands.forEach(suggestionSet => {
@@ -61,7 +61,7 @@ function updateModalAddUI() {
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
-    if (newInputCommand.suggestedWords.length > 0) {
+    if (newInputCommand.suggestedWords.length > 0 && newInputCommand.suggestedWords[0].size > 0) {
         suggestedWords = `Suggested words: `
     }
     newInputCommand.suggestedWords.forEach(suggestionSet => {
