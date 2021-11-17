@@ -19,6 +19,15 @@ $("#top-settings").click(function () {
     goTo("______________________________ZinZen")
 })
 
+$("#top-feelings").click(function () {
+    $("#breadcrumb").removeClass("d-none")
+    $("#main-play").addClass("d-none")
+    $("#main-promised").removeClass("d-none")
+    $("#main-quote-row").addClass("d-none")
+    $("#main-explore-row").addClass("d-none")
+    goTo("____________________________Emotions")
+})
+
 $("#top-goals").click(function () {
     $("#breadcrumb").removeClass("d-none")
     $("#main-play").addClass("d-none")
