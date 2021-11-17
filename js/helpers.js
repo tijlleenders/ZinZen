@@ -1317,7 +1317,30 @@ function updatePriority() {
 }
 
 
-function loadSettings() {
+function loadRelationships() {
+    "____________________________Feelings"
+    goals.insert({
+        "id": "______________________________ZinZen",
+        "label": "feelings-root",
+        "title": {
+            "en": "Me",
+            "nl": "Ik"
+        },
+        "owner": "ZinZen",
+        "subCountMaybe": "3",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "tags": [
+            "4"
+        ],
+        "commands": "setting",
+        "statusSort": 1
+    })
+    relationships.insert({ parentId: '', childId: "______________________________ZinZen" })
+
+    "____________________________Feelings"
     goals.insert({
         "id": "______________________________ZinZen",
         "label": "settings-root",
