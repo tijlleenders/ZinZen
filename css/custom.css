@@ -152,6 +152,10 @@ body {
   margin: auto;
 }
 
+.btn {
+  background-image: var(--bs-gradient);
+}
+
 .shaded-bg {
   /* background: #121212; */
   opacity: 0.9;
