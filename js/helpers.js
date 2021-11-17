@@ -1338,11 +1338,12 @@ function updatePriority() {
 }
 
 function lastSettingsUpdate() {
-    return 1637134156267
+    return 1637134156270
 }
 
 function loadSettings() {
     repository.removeCollection('settings')
+    goals.findAndRemove({ "label": "settings-root" })
     goals.findAndRemove({ "label": "setting" })
     relationships.findAndRemove({ "label": "setting" })
     settings = repository.addCollection('settings', { unique: ['setting'] })
@@ -1353,6 +1354,7 @@ function loadSettings() {
         browserLanguage = 'en'
     }
     settings.insert({ "setting": "language", "value": browserLanguage })
+    loadSettingGoalsAndRelationships()
 }
 
 function loadSettingGoalsAndRelationships() {
