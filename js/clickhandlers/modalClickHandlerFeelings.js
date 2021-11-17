@@ -7,11 +7,17 @@ $("#myModal").on("click", "#go-to-mind-button", function () {
 
 $("#myModal").on("click", ".feeling", function (e) {
     console.log("feeling pressed:", e.currentTarget.innerText)
-    if ($("#emotion-" + e.currentTarget.innerText).hasClass('feeling-selected')) {
-        $("#emotion-" + e.currentTarget.innerText).removeClass('feeling-selected')
-    } else {
-        $("#emotion-" + e.currentTarget.innerText).addClass('feeling-selected')
+    let lang = settings.find({ "setting": "language" })[0].value
+    let feelingText = e.currentTarget.innerText
+    if (lang == 'nl') {
+        let translation = translations.find({ "nl": feelingText })[0]
+        feelingText = translation.en
     }
-    // $("#emotion-" + e.currentTarget.innerText).html(e.currentTarget.innerText + '<span class="top-0 badge rounded-pill bg-danger">1<span class="visually-hidden">unread messages</span></span>')
+    if ($("#emotion-" + feelingText).hasClass('feeling-selected')) {
+        $("#emotion-" + feelingText).removeClass('feeling-selected')
+    } else {
+        $("#emotion-" + feelingText).addClass('feeling-selected')
+    }
+    // $("#emotion-" + feelingText).html(feelingText + '<span class="top-0 badge rounded-pill bg-danger">1<span class="visually-hidden">unread messages</span></span>')
     $("#emo-title-row").focus()
 })
