@@ -48,7 +48,7 @@ function databaseInitialize() {
     }
     if (relationships == null) {
         relationships = repository.addCollection('relationships', {})
-        loadRelationships()
+        loadGoalsAndRelationship()
     }
     if (translations == null) {
         translations = repository.addCollection('translations', {

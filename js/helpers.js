@@ -1323,7 +1323,7 @@ function loadSettings() {
 }
 
 
-function loadRelationships() {
+function loadGoalsAndRelationship() {
 
     goals.insert({
         "id": "____________________________Feelings",
