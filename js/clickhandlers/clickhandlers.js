@@ -15,7 +15,6 @@ $("#top-settings").click(function () {
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
     $("#main-quote-row").addClass("d-none")
-    $("#main-explore-row").addClass("d-none")
     goTo("______________________________ZinZen")
 })
 
@@ -24,8 +23,7 @@ $("#top-feelings").click(function () {
     $("#main-play").addClass("d-none")
     $("#main-promised").removeClass("d-none")
     $("#main-quote-row").addClass("d-none")
-    $("#main-explore-row").addClass("d-none")
-    goTo("____________________________Emotions")
+    goTo("____________________________Feelings")
 })
 
 $("#top-goals").click(function () {
