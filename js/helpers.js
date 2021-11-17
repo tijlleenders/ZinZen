@@ -1888,6 +1888,7 @@ function changeLanguageTo(lang) {
         $("#top-calendar-label").html(translations.find({ "en": "Time" })[0][lang])
         $("#top-explore-label").html(translations.find({ "en": "Explore" })[0][lang])
         updateUIChildrenFor(parentId)
+        updateBreadcrumbUI()
     }
 }
 
