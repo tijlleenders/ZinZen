@@ -157,7 +157,7 @@ function setSkeletonHTMLForMoment(id) {
         `
     let enjoymentEmotions = translations.find({ "label": "enjoyment-emotion" })
     enjoymentEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1 feeling" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
@@ -172,7 +172,7 @@ function setSkeletonHTMLForMoment(id) {
         `
     let sadnessEmotions = translations.find({ "label": "sadness-emotion" })
     sadnessEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1 feeling" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
@@ -187,7 +187,7 @@ function setSkeletonHTMLForMoment(id) {
         `
     let fearEmotions = translations.find({ "label": "fear-emotion" })
     fearEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1 feeling" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
@@ -202,7 +202,7 @@ function setSkeletonHTMLForMoment(id) {
         `
     let angerEmotions = translations.find({ "label": "anger-emotion" })
     angerEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1 feeling" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
@@ -217,7 +217,7 @@ function setSkeletonHTMLForMoment(id) {
         `
     let disgustEmotions = translations.find({ "label": "disgust-emotion" })
     disgustEmotions.forEach(emotion => {
-        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
+        bodyHTML += `<button type="button" class="btn btn-outline-secondary m-1 feeling" id="emotion-` + emotion.en + `">` + emotion[lang] + `</button>`
     })
     bodyHTML += `
       </div>
