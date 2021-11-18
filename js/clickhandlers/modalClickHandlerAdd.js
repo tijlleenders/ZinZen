@@ -18,7 +18,7 @@ $("#myModal").on("keyup", "#inputCommand", function (e) {
     // send(JSON.stringify(getSuggestions))
 
     let inputCommand = $("#inputCommand").data('inputCommand')
-    inputCommand.title = $("#inputCommand").val()
+    inputCommand.title[inputCommand.lang] = $("#inputCommand").val()
     $("#inputCommand").data('inputCommand', inputCommand)
     updateModalAddUI()
 });

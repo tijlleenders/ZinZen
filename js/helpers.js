@@ -28,7 +28,7 @@ function updateModalAddUI() {
     let newInputCommand = parseCommand(inputCommand)
     console.log("newInputcommand:", newInputCommand)
     $("#inputCommand").data('inputCommand', newInputCommand)
-    $("#inputCommand").val(newInputCommand.title)
+    $("#inputCommand").val(newInputCommand.title[inputCommand.lang])
     $("#inputCommand").focus()
     //when to change modal title??
 
@@ -323,18 +323,21 @@ function setSkeletonHTMLForAdd(id) {
         directParents: [],
         commands: new Set(),
         suggestedCommands: [],
-        suggestedWords: []
+        suggestedWords: [],
+        lang: ''
     }
     console.log("inputCommand:", inputCommand)
-    let goal = goals.find({ "id": id })
+    let goal = goals.find({ "id": id })[0]
     console.log("goals:", goal)
 
-    if (goal.lenth > 0) {
+    if (goal != undefined) {
         if (goal.title.en != undefined) {
-            lang = 'en'
+            inputCommand.lang = "en"
+            inputCommand.title[lang] = goal.title.en
         }
         if (goal.title.nl != undefined) {
-            lang = 'nl'
+            inputCommand.lang = "nl"
+            inputCommand.title[lang] = goal.title.nl
         }
 
         if (goal.commands != undefined && goal.commands.length != 0) {
@@ -349,6 +352,8 @@ function setSkeletonHTMLForAdd(id) {
         let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[lang].substring(0, 10) + `...</h4>`
         $("#modal-header-content").html(headerHTML)
     }
+
+    inputCommand.lang = lang
 
     $("#inputCommand").data('inputCommand', inputCommand)
     $("#myModal").on('shown.bs.modal', function () {
@@ -2508,14 +2513,14 @@ function handleCommand(selectedCommand) {
     inputCommand.commands.add(selectedCommand)
     let indexOfCommand = inputCommand.suggestedCommands.findIndex(commandSet => commandSet.has(selectedCommand));
     console.log("command has index ", indexOfCommand)
-    let wordsArray = getArrayFromTitle(inputCommand.title)
+    let wordsArray = getArrayFromTitle(inputCommand.title[inputCommand.lang])
     console.log("wordsArray:", wordsArray)
     if (selectedCommand.substr(0, 4) == "flex") {
         wordsArray.splice(indexOfCommand, 2)
     } else {
         wordsArray.splice(indexOfCommand, 1)
     }
-    inputCommand.title = wordsArray.join(' ')
+    inputCommand.title[inputCommand.lang] = wordsArray.join(' ')
     console.log("inputCommand after (not saved):", inputCommand)
     // $("#inputCommand").data('inputCommand', inputCommand)
     updateModalUI()
@@ -2615,7 +2620,8 @@ function parseCommand(command) {
 }
 
 function addSuggestedCommands(command) {
-    let wordsArray = command.title.split(" ")
+    console.log("command.lang:", command.lang)
+    let wordsArray = command.title[command.lang].split(" ")
     console.log("wordsArray before:", wordsArray)
 
     let hasTrailingSpace = false
@@ -2676,9 +2682,9 @@ function addSuggestedCommands(command) {
 
     console.log("wordsArray after:", wordsArray)
 
-    command.title = wordsArray.join(" ")
+    command.title[command.lang] = wordsArray.join(" ")
     if (hasTrailingSpace && wordsArray.length != 0) {
-        command.title += " "
+        command.title[command.lang] += " "
     }
 
     if (wordsArray.length == 0) {
