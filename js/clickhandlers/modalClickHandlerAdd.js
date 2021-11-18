@@ -42,10 +42,18 @@ function addSomething() {
         tags = parent.tags
     }
 
+    var titleObject = {}
+    let lang = settings.find({ "setting": "language" })[0].value
+    if (lang != undefined) {
+        titleObject[lang] = title
+    } else {
+        throw ("can't find language setting")
+    }
+
     let newGoal = {
         id: newGoalId,
         label: "goal",
-        title: title,
+        title: titleObject,
         parentId: parentId,
         status: status,
         start: (new Date()).toISOString(),
