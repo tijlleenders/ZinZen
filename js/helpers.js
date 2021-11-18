@@ -2440,19 +2440,6 @@ async function updateUIWith(child) {
     }
     $("#" + id).html(generateGoalHTML(child))
 
-    if ($("#myModal").data("idx") == id) {
-        switch ($("#myModal").data("modalType")) {
-
-            case "add":
-                setSkeletonHTMLForAdd(id)
-                updateModalUI()
-                break;
-
-            default:
-        }
-
-
-    }
 }
 
 function goToSetting(selectedGoalId) {
