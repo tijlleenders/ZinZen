@@ -540,9 +540,21 @@ function generateGoalHTML(properties) {
         visibilities = 'Public'
     }
 
-    var title = titleIcon + properties.title
-    if (properties.title[settings.find({ "setting": "language" })[0].value] != undefined) {
-        title = titleIcon + properties.title[settings.find({ "setting": "language" })[0].value]
+    let title = titleIcon
+    let lang = settings.find({ "setting": "language" })[0].value
+    if (properties.title[lang] != undefined) {
+        title += properties.title[lang]
+    } else {
+        switch (lang) {
+            case "en":
+                title += properties.title.nl
+                break;
+            case "nl":
+                title += properties.title.en
+                break;
+            default:
+                title += 'title not found...'
+        }
     }
 
     let duration = 0
