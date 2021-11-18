@@ -304,17 +304,39 @@ function setSkeletonHTMLForAdd(id) {
     </div>
     `
     $("#modal-body").html(bodyHTML)
+
+    let titleObject = {}
+    let lang = settings.find({ "setting": "language" })[0].value
+    switch (lang) {
+        case "en":
+            titleObject.en = ''
+            break;
+        case "nl":
+            titleObject.nl = ''
+            break;
+        default:
+            throw ("language " + lang + " not implemented in switch")
+    }
+
     let inputCommand = {
-        title: '',
+        title: titleObject,
         directParents: [],
         commands: new Set(),
         suggestedCommands: [],
         suggestedWords: []
     }
-    let goal = goals.by('id', id)
+    console.log("inputCommand:", inputCommand)
+    let goal = goals.find({ "id": id })
     console.log("goals:", goal)
-    if (goal != undefined) {
-        inputCommand.title = goal.title[settings.find({ "setting": "language" })[0].value]
+
+    if (goal.lenth > 0) {
+        if (goal.title.en != undefined) {
+            lang = 'en'
+        }
+        if (goal.title.nl != undefined) {
+            lang = 'nl'
+        }
+
         if (goal.commands != undefined && goal.commands.length != 0) {
             inputCommand.commands = new Set(goal.commands.split(','))
         }
@@ -323,7 +345,8 @@ function setSkeletonHTMLForAdd(id) {
         }
         $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
         $("#save-row").removeClass('d-none')
-        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[settings.find({ "setting": "language" })[0].value].substring(0, 10) + `...</h4>`
+
+        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[lang].substring(0, 10) + `...</h4>`
         $("#modal-header-content").html(headerHTML)
     }
 
