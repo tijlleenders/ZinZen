@@ -115,13 +115,11 @@ window.mobileAndTabletCheck = function () {
 function updateUIChildrenFor(parentId) {
     console.log("inside updateUIChildrenFor...")
     let relationshipsForParent = relationships.chain().find({ 'parentId': parentId }).simplesort('priority', { desc: true }).limit(MAX_SUBLISTS).data()
+    // Todo: insert add-a-goal/feeling at start of array if parentId has goal/feeling label
     if (relationshipsForParent[0] == undefined) {
         //Todo: show no children info message on screen
     } else {
         relationshipsForParent.forEach(relationship => {
-            if (relationship.childId == "____________________________settings") {
-                return; // skip to go to next iteration
-            }
             let childResults = goals.find({ 'id': relationship.childId })
             updateUIWith(childResults[0])
         });
