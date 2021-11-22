@@ -380,8 +380,6 @@ function generateSlotHTML(element) {
         sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
     }
 
-    let slotSvg = getGoalSvg(status, "play-" + slotId)
-
     let html = '\
 <div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
         slotId +
@@ -487,6 +485,10 @@ function getGoalSvg(status, id) {
             goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">\
             <path stroke="#959595" fill="#959595" fill-rule="evenodd" d="M7.875 2.292a.125.125 0 00-.032.018A7.24 7.24 0 004.75 8.25a7.247 7.247 0 003.654 6.297c.57.327.982.955.941 1.682v.002l-.317 6.058a.75.75 0 11-1.498-.078l.317-6.062v-.004c.006-.09-.047-.215-.188-.296A8.747 8.747 0 013.25 8.25a8.74 8.74 0 013.732-7.169 1.547 1.547 0 011.709-.064c.484.292.809.835.809 1.46v4.714a.25.25 0 00.119.213l2.25 1.385c.08.05.182.05.262 0l2.25-1.385a.25.25 0 00.119-.213V2.478c0-.626.325-1.169.81-1.461a1.547 1.547 0 011.708.064 8.74 8.74 0 013.732 7.17 8.747 8.747 0 01-4.41 7.598c-.14.081-.193.206-.188.296v.004l.318 6.062a.75.75 0 11-1.498.078l-.317-6.058v-.002c-.041-.727.37-1.355.94-1.682A7.247 7.247 0 0019.25 8.25a7.24 7.24 0 00-3.093-5.94.125.125 0 00-.032-.018l-.01-.001c-.003 0-.014 0-.031.01-.036.022-.084.079-.084.177V7.19a1.75 1.75 0 01-.833 1.49l-2.25 1.385a1.75 1.75 0 01-1.834 0l-2.25-1.384A1.75 1.75 0 018 7.192V2.477c0-.098-.048-.155-.084-.176a.062.062 0 00-.031-.011l-.01.001z">\
             </path></svg>'
+            break;
+
+        case "link":
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M15.5 2.25a.75.75 0 01.75-.75h5.5a.75.75 0 01.75.75v5.5a.75.75 0 01-1.5 0V4.06l-6.22 6.22a.75.75 0 11-1.06-1.06L19.94 3h-3.69a.75.75 0 01-.75-.75z"></path><path d="M2.5 4.25c0-.966.784-1.75 1.75-1.75h8.5a.75.75 0 010 1.5h-8.5a.25.25 0 00-.25.25v15.5c0 .138.112.25.25.25h15.5a.25.25 0 00.25-.25v-8.5a.75.75 0 011.5 0v8.5a1.75 1.75 0 01-1.75 1.75H4.25a1.75 1.75 0 01-1.75-1.75V4.25z"></path></svg>'
             break;
 
         case "suggestion":
@@ -1541,13 +1543,13 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
-        "function": "openURL()",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
+        "urls": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
         "statusSort": 1
     })
     goals.insert({
@@ -1559,13 +1561,13 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
-        "function": "openURL()",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://blog.ZinZen.me"],
+        "urls": ["https://blog.ZinZen.me"],
         "statusSort": 1
     })
     goals.insert({
@@ -1577,13 +1579,13 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
-        "function": "openURL()",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/about.html"],
+        "urls": ["https://ZinZen.me/about.html"],
         "statusSort": 1
     })
     goals.insert({
@@ -1752,13 +1754,13 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
-        "function": "openURL()",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/privacy.html"],
+        "urls": ["https://ZinZen.me/privacy.html"],
         "statusSort": 1
     })
     goals.insert({
@@ -1770,13 +1772,13 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
-        "function": "openURL()",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/terms.html"],
+        "urls": ["https://ZinZen.me/terms.html"],
         "statusSort": 1
     })
     goals.insert({
@@ -1788,13 +1790,13 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
-        "function": "openURL()",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/acknowledgements.html"],
+        "urls": ["https://ZinZen.me/acknowledgements.html"],
         "statusSort": 1
     })
 
@@ -2726,6 +2728,12 @@ function addSuggestedCommands(command) {
     //this also avoids having to make the commands unique at the end
 
     return
+}
+
+function openURLs(urls) {
+    urls.forEach(url => {
+        window.open(url, '_blank')
+    })
 }
 
 function isURL(word) {

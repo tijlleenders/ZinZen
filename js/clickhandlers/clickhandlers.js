@@ -107,8 +107,8 @@ function goTo(id) {
                     addAFeeling()
                     return
                     break;
-                case "openURL()":
-                    console.error("need to implement openURL...")
+                case "openURLs()":
+                    openURLs(goal.urls)
                     return
                     break;
                 case "setScreenModeDark()":
@@ -153,6 +153,7 @@ function changeStatus(id) {
     let toBeStatus = goal.status
     switch (currentStatus) {
         case "action":
+        case "link":
             goTo(id)
             break;
         case "promised":
