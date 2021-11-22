@@ -79,6 +79,9 @@ function changeStatus(id) {
     let currentStatus = goal.status
     let toBeStatus = goal.status
     switch (currentStatus) {
+        case "action":
+            goTo(id)
+            break;
         case "promised":
             toBeStatus = "done"
             break;
@@ -104,13 +107,17 @@ function changeStatus(id) {
 function goTo(id) {
     // console.log("inside goTo... with id", id)
     // todo: zoom in animation
-    $("#main-promised").empty()
-    $("#main-quote").addClass('d-none')
-    parentId = id
-    let parent = goals.find({ id: parentId })[0]
+    let parent = goals.find({ id: id })[0]
     if (parent == undefined) {
         console.error("can't find parent with id:", id)
     } else {
+        if (parent.status == "action") {
+            goToSetting(id)
+            return
+        }
+        $("#main-promised").empty()
+        $("#main-quote").addClass('d-none')
+        parentId = id
         updateUIChildrenFor(parent.id)
         updateBreadcrumbUI()
     }
@@ -217,10 +224,10 @@ $("#main-promised").on("mouseout", ".goal", function (event) {
     //do something to hover programmatically
 });
 
-$("#add-a-goal-button").click(function () {
+function addAGoal() {
     openModal("", "add")
-})
+}
 
-$("#add-a-moment-button").click(function () {
+function addAFeeling() {
     openModal("", "moment")
-})
+}

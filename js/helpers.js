@@ -1975,7 +1975,8 @@ function loadPersonalFeelingsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "suggestion",
+        "status": "action",
+        "function": ["addAFeeling()"],
         "tags": [
             "2"
         ],
@@ -1998,7 +1999,7 @@ function loadPersonalGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "suggestion",
+        "status": "maybe",
         "tags": [
             "5"
         ],
@@ -2015,7 +2016,8 @@ function loadPersonalGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "suggestion",
+        "status": "action",
+        "function": ["addAGoal()"],
         "tags": [
             "5"
         ],
@@ -2523,6 +2525,14 @@ function goToSetting(selectedGoalId) {
     console.log("setting:", setting)
     if (setting.function != undefined) {
         switch (setting.function[0]) {
+            case "addAGoal()":
+                addAGoal()
+                return
+                break;
+            case "addAFeeling()":
+                addAFeeling()
+                return
+                break;
             case "setScreenModeDark()":
                 setScreenModeDark()
                 return
