@@ -1641,7 +1641,7 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "__________________________sign-up-in",
-        "label": "setting",
+        "label": "action",
         "title": { "en": "Sign up / in", "nl": "Lid worden / Aanmelden" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1652,7 +1652,7 @@ function loadSettingGoalsAndRelationships() {
         "tags": [
             "4"
         ],
-        "function": ["logOut()"],
+        "function": "logOut()",
         "commands": "setting",
         "statusSort": 1
     })
@@ -1663,7 +1663,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "____________________reset-repository",
-        "label": "setting",
+        "label": "action",
         "title": { "en": "Destroy all my data now!", "nl": "Vernietig al mijn data nu!" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1677,7 +1677,7 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["resetRepository()"],
+        "function": "resetRepository()",
         "commands": "setting",
         "statusSort": 1
     })
@@ -1828,7 +1828,7 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setScreenModeLight()"],
+        "function": "setScreenModeLight()",
         "commands": "setting",
         "statusSort": 1
     })
@@ -1849,7 +1849,7 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setScreenModeDark()"],
+        "function": "setScreenModeDark()",
         "commands": "setting",
         "statusSort": 1
     })
@@ -1861,7 +1861,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "_______________________________Dutch",
-        "label": "setting",
+        "label": "action",
         "title": { "en": "🇳🇱 Dutch", "nl": "🇳🇱 Nederlands" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1875,14 +1875,14 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setLanguageTo('nl')"],
+        "function": "setLanguageTo('nl')",
         "commands": "setting",
         "statusSort": 1
     })
 
     goals.insert({
         "id": "_____________________________English",
-        "label": "setting",
+        "label": "action",
         "title": { "en": "🇺🇸 🇬🇧 English", "nl": "🇺🇸 🇬🇧 Engels" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1896,7 +1896,7 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setLanguageTo('en')"],
+        "function": "setLanguageTo('en')",
         "commands": "setting",
         "statusSort": 1
     })
@@ -1938,7 +1938,7 @@ function loadPersonalTimeAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "function": ["goToCalendar()"],
+        "function": "goToCalendar()",
         "tags": [
             "1"
         ],
@@ -1975,7 +1975,7 @@ function loadPersonalFeelingsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "action",
-        "function": ["addAFeeling()"],
+        "function": "addAFeeling()",
         "tags": [
             "2"
         ],
@@ -2016,7 +2016,7 @@ function loadPersonalGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "action",
-        "function": ["addAGoal()"],
+        "function": "addAGoal()",
         "tags": [
             "5"
         ],

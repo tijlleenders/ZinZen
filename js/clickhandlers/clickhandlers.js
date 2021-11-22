@@ -124,15 +124,17 @@ function goTo(id) {
                     break;
                 case "setLanguageTo('en')":
                     setLanguageTo('en')
+                    return
                     break;
                 case "setLanguageTo('nl')":
                     setLanguageTo('nl')
+                    return
                     break;
                 case "resetRepository()":
                     resetRepository()
                     break;
                 default:
-                    console.log("function not recognized:", setting.function[0])
+                    console.log("function not recognized:", goal.function)
                     return
                     break;
             }
