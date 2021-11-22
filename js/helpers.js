@@ -1944,8 +1944,29 @@ function loadGoalsAndRelationship() {
 
     loadSettingGoalsAndRelationships()
     loadSuggestionsGoalsAndRelationships()
-    loadPersonalGoalsAndRelationships()
+    loadPersonalTimeAndRelationships()
     loadPersonalFeelingsAndRelationships()
+    loadPersonalGoalsAndRelationships()
+}
+
+function loadPersonalTimeAndRelationships() {
+    goals.insert({
+        "id": "________________________________time",
+        "label": "time-root",
+        "title": { "en": "My time", "nl": "Mijn tijd" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "suggestion",
+        "tags": [
+            "1"
+        ],
+        "commands": "",
+        "statusSort": 1
+    })
+    relationships.insert({ parentId: sessionId, childId: "________________________________time" })
 }
 
 function loadPersonalFeelingsAndRelationships() {
@@ -1985,7 +2006,27 @@ function loadPersonalGoalsAndRelationships() {
         "commands": "",
         "statusSort": 1
     })
+
+    goals.insert({
+        "id": "__________________________add-a-goal",
+        "label": "suggestion",
+        "title": { "en": "Add a goal", "nl": "Voeg een doel toe" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "suggestion",
+        "tags": [
+            "5"
+        ],
+        "commands": "suggestion",
+        "statusSort": 1
+    })
+
+
     relationships.insert({ parentId: sessionId, childId: "_______________________________goals" })
+    relationships.insert({ parentId: "_______________________________goals", childId: "__________________________add-a-goal", priority: 0 })
 }
 
 function loadSuggestionsGoalsAndRelationships() {
