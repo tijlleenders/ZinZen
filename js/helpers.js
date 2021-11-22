@@ -1945,6 +1945,27 @@ function loadGoalsAndRelationship() {
     loadSettingGoalsAndRelationships()
     loadSuggestionsGoalsAndRelationships()
     loadPersonalGoalsAndRelationships()
+    loadPersonalFeelingsAndRelationships()
+}
+
+function loadPersonalFeelingsAndRelationships() {
+    goals.insert({
+        "id": "____________________________feelings",
+        "label": "feelings-root",
+        "title": { "en": "My feelings", "nl": "Mijn gevoelens" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "suggestion",
+        "tags": [
+            "2"
+        ],
+        "commands": "",
+        "statusSort": 1
+    })
+    relationships.insert({ parentId: sessionId, childId: "____________________________feelings" })
 }
 
 function loadPersonalGoalsAndRelationships() {
