@@ -2034,7 +2034,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "6"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2050,7 +2050,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "5"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2066,7 +2066,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "2"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2082,7 +2082,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "3"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2098,7 +2098,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "4"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
