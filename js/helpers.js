@@ -1659,7 +1659,8 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
