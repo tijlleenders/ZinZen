@@ -74,6 +74,75 @@ $("#main-promised").on("sortupdate", function (event, ui) {
     updatePriority()
 });
 
+function goTo(id) {
+    // console.log("inside goTo... with id", id)
+    // todo: zoom in animation
+    let parent = goals.find({ id: id })[0]
+    if (parent == undefined) {
+        console.error("can't find parent with id:", id)
+    } else {
+        if (parent.status == "action") {
+            goToSetting(id)
+            return
+        }
+        $("#main-promised").empty()
+        $("#main-quote").addClass('d-none')
+        parentId = id
+        updateUIChildrenFor(parent.id)
+        updateBreadcrumbUI()
+    }
+}
+
+function goToSetting(selectedGoalId) {
+    console.log("inside goToSetting")
+    let setting = goals.by('id', selectedGoalId)
+    console.log("setting:", setting)
+    if (setting.function != undefined) {
+        switch (setting.function[0]) {
+            case "addAGoal()":
+                addAGoal()
+                return
+                break;
+            case "addAFeeling()":
+                addAFeeling()
+                return
+                break;
+            case "setScreenModeDark()":
+                setScreenModeDark()
+                return
+                break;
+            case "setScreenModeLight()":
+                setScreenModeLight()
+                return
+                break;
+            case "logOut()":
+                logOut()
+                return
+                break;
+            case "setLanguageTo('en')":
+                setLanguageTo('en')
+                break;
+            case "setLanguageTo('nl')":
+                setLanguageTo('nl')
+                break;
+            case "resetRepository()":
+                resetRepository()
+                break;
+            default:
+                console.log("function not recognized:", setting.function[0])
+                return
+                break;
+        }
+    }
+    if (setting.url != undefined) {
+        window.open(setting.url[0], '_blank')
+    } else {
+        if (setting.function == undefined) {
+            goTo(selectedGoalId)
+        }
+    }
+}
+
 function changeStatus(id) {
     let goal = goals.find({ id: id })[0]
     let currentStatus = goal.status
@@ -102,25 +171,6 @@ function changeStatus(id) {
     goal.status = toBeStatus
     goals.update(goal)
     $("#" + id).html(generateGoalHTML(goal))
-}
-
-function goTo(id) {
-    // console.log("inside goTo... with id", id)
-    // todo: zoom in animation
-    let parent = goals.find({ id: id })[0]
-    if (parent == undefined) {
-        console.error("can't find parent with id:", id)
-    } else {
-        if (parent.status == "action") {
-            goToSetting(id)
-            return
-        }
-        $("#main-promised").empty()
-        $("#main-quote").addClass('d-none')
-        parentId = id
-        updateUIChildrenFor(parent.id)
-        updateBreadcrumbUI()
-    }
 }
 
 $("#mmain-play").on("click", ".slot", function (event) {

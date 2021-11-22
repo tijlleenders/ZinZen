@@ -2519,56 +2519,6 @@ async function updateUIWith(child) {
 
 }
 
-function goToSetting(selectedGoalId) {
-    console.log("inside goToSetting")
-    let setting = goals.by('id', selectedGoalId)
-    console.log("setting:", setting)
-    if (setting.function != undefined) {
-        switch (setting.function[0]) {
-            case "addAGoal()":
-                addAGoal()
-                return
-                break;
-            case "addAFeeling()":
-                addAFeeling()
-                return
-                break;
-            case "setScreenModeDark()":
-                setScreenModeDark()
-                return
-                break;
-            case "setScreenModeLight()":
-                setScreenModeLight()
-                return
-                break;
-            case "logOut()":
-                logOut()
-                return
-                break;
-            case "setLanguageTo('en')":
-                setLanguageTo('en')
-                break;
-            case "setLanguageTo('nl')":
-                setLanguageTo('nl')
-                break;
-            case "resetRepository()":
-                resetRepository()
-                break;
-            default:
-                console.log("function not recognized:", setting.function[0])
-                return
-                break;
-        }
-    }
-    if (setting.url != undefined) {
-        window.open(setting.url[0], '_blank')
-    } else {
-        if (setting.function == undefined) {
-            goTo(selectedGoalId)
-        }
-    }
-}
-
 function logOut() {
     console.log("log out")
     let redirectURL = "https://auth.zinzen.me/logout?response_type=code&client_id=" + _config.appClientId +
