@@ -154,6 +154,7 @@ function changeStatus(id) {
     switch (currentStatus) {
         case "action":
         case "link":
+        case "add":
             goTo(id)
             break;
         case "promised":
