@@ -1494,7 +1494,6 @@ function loadSettingGoalsAndRelationships() {
         "commands": "setting",
         "statusSort": 1
     })
-    relationships.insert({ parentId: '', childId: "______________________________ZinZen" })
 
     goals.insert({
         "id": "_____________________my-app-settings",
@@ -1602,7 +1601,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_____________________my-app-settings", priority: 0, label: "setting" })
+    relationships.insert({ parentId: sessionId, childId: "______________________________ZinZen", priority: 0, label: "setting" })
     relationships.insert({ parentId: "______________________________ZinZen", childId: "_________install-on-phone-or-desktop", priority: 1, label: "setting" })
     relationships.insert({ parentId: "______________________________ZinZen", childId: "______________________________donate", priority: 2, label: "setting" })
     relationships.insert({ parentId: "______________________________ZinZen", childId: "________________________________blog", priority: 3, label: "setting" })
@@ -1660,9 +1659,9 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_______________________look-and-feel", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "__________________________sign-up-in", priority: 1, label: "setting" })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_________________import-export-reset", priority: 2, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________look-and-feel", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "__________________________sign-up-in", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________________import-export-reset", priority: 2, label: "setting" })
 
     goals.insert({
         "id": "____________________reset-repository",
@@ -1943,27 +1942,6 @@ function loadGoalsAndRelationship() {
         commands: ''
     })
 
-    goals.insert({
-        "id": "____________________________Feelings",
-        "label": "feelings-root",
-        "title": {
-            "en": "Me",
-            "nl": "Ik"
-        },
-        "owner": "ZinZen",
-        "subCountMaybe": "3",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": "setting",
-        "tags": [
-            "4"
-        ],
-        "commands": "setting",
-        "statusSort": 1
-    })
-    relationships.insert({ parentId: '', childId: "____________________________Feelings" })
-
     loadSettingGoalsAndRelationships()
 
     goals.insert({
@@ -1982,7 +1960,7 @@ function loadGoalsAndRelationship() {
         "commands": "suggestion",
         "statusSort": 1
     })
-    relationships.insert({ parentId: '', childId: "_________________________suggestions" })
+    relationships.insert({ parentId: sessionId, childId: "_________________________suggestions" })
 
     goals.insert({
         "id": "________nature-and-environment-goals",
