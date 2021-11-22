@@ -10,50 +10,6 @@ $("#modal-footer-close").click(function () {
     $("#myModal").modal("hide");
 });
 
-$("#top-settings").click(function () {
-    $("#breadcrumb").removeClass("d-none")
-    $("#main-play").addClass("d-none")
-    $("#main-promised").removeClass("d-none")
-    $("#main-quote-row").addClass("d-none")
-    goTo("______________________________ZinZen")
-})
-
-$("#top-feelings").click(function () {
-    $("#breadcrumb").removeClass("d-none")
-    $("#main-play").addClass("d-none")
-    $("#main-promised").removeClass("d-none")
-    $("#main-quote-row").addClass("d-none")
-    goTo("____________________________Feelings")
-})
-
-$("#top-goals").click(function () {
-    $("#breadcrumb").removeClass("d-none")
-    $("#main-play").addClass("d-none")
-    $("#main-promised").removeClass("d-none")
-    goTo(sessionId)
-})
-
-$("#top-calendar").click(function () {
-    $("#breadcrumb").addClass("d-none")
-    generateCalendarHTML()
-    $("#main-play").removeClass("d-none")
-    $("#main-promised").addClass("d-none")
-    $("#main-quote-row").addClass("d-none")
-})
-
-$("#top-inbox").click(function () {
-    openMainMailModal()
-})
-
-$("#top-explore").click(function () {
-    $("#breadcrumb").removeClass("d-none")
-    $("#main-play").addClass("d-none")
-    $("#main-promised").removeClass("d-none")
-    $("#main-quote-row").addClass("d-none")
-    goTo("_________________________suggestions")
-})
-
-
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     event.stopPropagation();
     console.log("id:", event.target.id)
