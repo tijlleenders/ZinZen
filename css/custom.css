@@ -122,13 +122,6 @@ body {
     background-color var(--duration) var(--timing);
 }
 
-.control-part-screen {
-  background: var(--menu-background);
-  --duration: 0.5s;
-  --timing: ease;
-  transition: background-color var(--duration) var(--timing);
-}
-
 .modal-content,
 .modal-body,
 .modal-footer {
