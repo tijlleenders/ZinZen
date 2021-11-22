@@ -43,7 +43,7 @@ function databaseInitialize() {
     }
 
     loadTranslations()
-    goTo(sessionId)
+    goTo(parentId)
     $("#main-quote").removeClass('d-none')
     $("#main-quote").html('<center><h1>“' + randomQuote.quote + '”</h1>- ' + randomQuote.author + '</center> ')
     updateUILanguage()

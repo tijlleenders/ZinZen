@@ -1943,7 +1943,31 @@ function loadGoalsAndRelationship() {
     })
 
     loadSettingGoalsAndRelationships()
+    loadSuggestionsGoalsAndRelationships()
+    loadPersonalGoalsAndRelationships()
+}
 
+function loadPersonalGoalsAndRelationships() {
+    goals.insert({
+        "id": "_______________________________goals",
+        "label": "goals-root",
+        "title": { "en": "My goals", "nl": "Mijn doelen" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "suggestion",
+        "tags": [
+            "5"
+        ],
+        "commands": "",
+        "statusSort": 1
+    })
+    relationships.insert({ parentId: sessionId, childId: "_______________________________goals" })
+}
+
+function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "_________________________suggestions",
         "label": "suggestions-root",
@@ -1955,7 +1979,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "4"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
