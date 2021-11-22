@@ -1952,7 +1952,7 @@ function loadPersonalTimeAndRelationships() {
 function loadPersonalFeelingsAndRelationships() {
     goals.insert({
         "id": "____________________________feelings",
-        "label": "feelings-root",
+        "label": "feeling",
         "title": { "en": "My feelings", "nl": "Mijn gevoelens" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1968,7 +1968,7 @@ function loadPersonalFeelingsAndRelationships() {
     })
     goals.insert({
         "id": "_______________________add-a-feeling",
-        "label": "suggestion",
+        "label": "action",
         "title": { "en": "Add a feeling", "nl": "Voeg een gevoel toe" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1992,7 +1992,7 @@ function loadPersonalFeelingsAndRelationships() {
 function loadPersonalGoalsAndRelationships() {
     goals.insert({
         "id": "_______________________________goals",
-        "label": "goals-root",
+        "label": "goal",
         "title": { "en": "My goals", "nl": "Mijn doelen" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -2009,7 +2009,7 @@ function loadPersonalGoalsAndRelationships() {
 
     goals.insert({
         "id": "__________________________add-a-goal",
-        "label": "suggestion",
+        "label": "action",
         "title": { "en": "Add a goal", "nl": "Voeg een doel toe" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -2033,7 +2033,7 @@ function loadPersonalGoalsAndRelationships() {
 function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "_________________________suggestions",
-        "label": "suggestions-root",
+        "label": "suggestion",
         "title": { "en": "Explore", "nl": "Ontdek" },
         "owner": "ZinZen",
         "subCountMaybe": "3",

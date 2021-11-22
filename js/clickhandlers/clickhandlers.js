@@ -75,71 +75,71 @@ $("#main-promised").on("sortupdate", function (event, ui) {
 });
 
 function goTo(id) {
-    // console.log("inside goTo... with id", id)
+    console.log("inside goTo... with id", id)
     // todo: zoom in animation
-    let parent = goals.find({ id: id })[0]
-    if (parent == undefined) {
-        console.error("can't find parent with id:", id)
-    } else {
-        if (parent.status == "action") {
-            goToSetting(id)
-            return
-        }
-        $("#main-promised").empty()
-        $("#main-quote").addClass('d-none')
-        parentId = id
-        updateUIChildrenFor(parent.id)
-        updateBreadcrumbUI()
+    let goal = goals.find({ id: id })[0]
+    if (goal == undefined) {
+        console.error("can't find goal with id:", id)
+        return
     }
-}
 
-function goToSetting(selectedGoalId) {
-    console.log("inside goToSetting")
-    let setting = goals.by('id', selectedGoalId)
-    console.log("setting:", setting)
-    if (setting.function != undefined) {
-        switch (setting.function[0]) {
-            case "addAGoal()":
-                addAGoal()
-                return
-                break;
-            case "addAFeeling()":
-                addAFeeling()
-                return
-                break;
-            case "setScreenModeDark()":
-                setScreenModeDark()
-                return
-                break;
-            case "setScreenModeLight()":
-                setScreenModeLight()
-                return
-                break;
-            case "logOut()":
-                logOut()
-                return
-                break;
-            case "setLanguageTo('en')":
-                setLanguageTo('en')
-                break;
-            case "setLanguageTo('nl')":
-                setLanguageTo('nl')
-                break;
-            case "resetRepository()":
-                resetRepository()
-                break;
-            default:
-                console.log("function not recognized:", setting.function[0])
-                return
-                break;
-        }
-    }
-    if (setting.url != undefined) {
-        window.open(setting.url[0], '_blank')
-    } else {
-        if (setting.function == undefined) {
-            goTo(selectedGoalId)
-        }
+    switch (goal.label) {
+        case "suggestion":
+        case "person":
+        case "feeling":
+        case "goal":
+            $("#main-promised").empty()
+            $("#main-quote").addClass('d-none')
+            parentId = id
+            updateUIChildrenFor(id)
+            updateBreadcrumbUI()
+            break;
+
+        case "action":
+            switch (goal.function) {
+                case "addAGoal()":
+                    addAGoal()
+                    return
+                    break;
+                case "addAFeeling()":
+                    addAFeeling()
+                    return
+                    break;
+                case "openURL()":
+                    console.error("need to implement openURL...")
+                    return
+                    break;
+                case "setScreenModeDark()":
+                    setScreenModeDark()
+                    return
+                    break;
+                case "setScreenModeLight()":
+                    setScreenModeLight()
+                    return
+                    break;
+                case "logOut()":
+                    logOut()
+                    return
+                    break;
+                case "setLanguageTo('en')":
+                    setLanguageTo('en')
+                    break;
+                case "setLanguageTo('nl')":
+                    setLanguageTo('nl')
+                    break;
+                case "resetRepository()":
+                    resetRepository()
+                    break;
+                default:
+                    console.log("function not recognized:", setting.function[0])
+                    return
+                    break;
+            }
+            return
+            break;
+
+        default:
+            console.error("can't handle goal label:", goal.label)
     }
 }
 
@@ -201,46 +201,7 @@ $("#main-promised").on("click", ".goal", function (event) {
     if (nodeId != "") {
         let properties = goals.find({ id: selectedGoalId })[0]
         console.log("properties:", properties)
-        if (properties.commands != undefined && properties.commands.length != 0) {
-            console.log("Commands!")
-            if (properties.commands.split(',').includes('setting')) {
-                goToSetting(selectedGoalId)
-                return
-            }
-            if (properties.commands.split(',').includes('WebLink')) {
-                window.open(properties.url[0], '_blank')
-                return
-            }
-            goTo(selectedGoalId)
-            return
-        }
-        if ($("#" + nodeId).hasClass("title") ||
-            $("#" + nodeId).hasClass("title-text") ||
-            nodeId.substring(0, 8) == "subtext-" ||
-            nodeId.substring(0, 12) == "subtext-col-") {
-            goTo(selectedGoalId)
-        }
-        if ($("#" + nodeId).hasClass("parent-link")) {
-            goTo(selectedGoalId)
-        }
-        if (nodeId.substring(0, 11) == "delete-col-" ||
-            nodeId.substring(0, 12) == "delete-icon-") {
-            deleteGoalAndExclusiveDescendants(selectedGoalId)
-        }
-        if (nodeId.substring(0, 11) == "finish-col-" ||
-            nodeId.substring(0, 12) == "finish-icon-") {
-            openModal(selectedGoalId, "schedule")
-        }
-        if ($("#" + nodeId).hasClass("due")) {
-            openModal(selectedGoalId, "schedule")
-        }
-        if ($("#" + nodeId).hasClass("duration")) {
-            openModal(selectedGoalId, "schedule")
-        }
-        if (nodeId.substring(0, 17) == "visibilities-col-" ||
-            nodeId.substring(0, 18) == "visibilities-icon-") {
-            openModal(selectedGoalId, "visibilities")
-        }
+        goTo(selectedGoalId)
     } else {
         console.log("error in #goals.on(click)!");
     }
