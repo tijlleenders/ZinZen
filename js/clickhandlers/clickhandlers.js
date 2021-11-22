@@ -75,8 +75,9 @@ $("#main-promised").on("sortupdate", function (event, ui) {
 });
 
 function changeStatus(id) {
-    let currentStatus = $("#" + id).data("status")
-    let toBeStatus = currentStatus
+    let goal = goals.find({ id: id })[0]
+    let currentStatus = goal.status
+    let toBeStatus = goal.status
     switch (currentStatus) {
         case "promised":
             toBeStatus = "done"
@@ -95,8 +96,6 @@ function changeStatus(id) {
             break;
     }
 
-    //fast update before confirmation from backend
-    let goal = goals.find({ id: id })[0]
     goal.status = toBeStatus
     goals.update(goal)
     $("#" + id).html(generateGoalHTML(goal))
