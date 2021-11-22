@@ -1798,25 +1798,6 @@ function loadSettingGoalsAndRelationships() {
     relationships.insert({ parentId: "_______________________________legal", childId: "________open-source-acknowledgements", priority: 2, label: "setting" })
 
     goals.insert({
-        "id": "_________________________color-theme",
-        "label": "setting",
-        "title": { "en": "Color theme", "nl": "Kleuren thema" },
-        "owner": "ZinZen",
-        "subCountMaybe": "2",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": "setting",
-        "tags": [
-            "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z"
-        ],
-        "commands": "setting",
-        "statusSort": 1
-    })
-    goals.insert({
         "id": "____________________________language",
         "label": "setting",
         "title": { "en": "Language", "nl": "Taal" },
@@ -1832,9 +1813,6 @@ function loadSettingGoalsAndRelationships() {
         "commands": "setting",
         "statusSort": 1
     })
-
-    relationships.insert({ parentId: "_______________________look-and-feel", childId: "_________________________color-theme", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 1, label: "setting" })
 
     goals.insert({
         "id": "__________________________light-mode",
@@ -1878,8 +1856,10 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1, label: "setting" })
+
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "__________________________light-mode", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "___________________________dark-mode", priority: 1, label: "setting" })
 
     goals.insert({
         "id": "_______________________________Dutch",
