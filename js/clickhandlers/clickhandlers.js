@@ -148,12 +148,16 @@ function goTo(id) {
 }
 
 function changeStatus(id) {
+    if (relationships.find({ parentId: id })[0] != undefined) {
+        gotTo(id)
+    }
     let goal = goals.find({ id: id })[0]
     let currentStatus = goal.status
     let toBeStatus = goal.status
     switch (currentStatus) {
         case "action":
         case "link":
+        case "setting":
         case "add":
             goTo(id)
             break;
