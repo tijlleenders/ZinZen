@@ -1534,7 +1534,7 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "______________________________donate",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Donate", "nl": "Doneren" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1542,6 +1542,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "maybe",
+        "function": "openURL()",
         "tags": [
             "4"
         ],
@@ -1551,7 +1552,7 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "________________________________blog",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Blog", "nl": "Blog" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1559,6 +1560,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "maybe",
+        "function": "openURL()",
         "tags": [
             "4"
         ],
@@ -1568,7 +1570,7 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "_______________________________about",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "About us", "nl": "Over ons" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1576,6 +1578,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "maybe",
+        "function": "openURL()",
         "tags": [
             "4"
         ],
@@ -1742,7 +1745,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "_____________________________Privacy",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Privacy statement", "nl": "Privacy verklaring" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1750,6 +1753,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "maybe",
+        "function": "openURL()",
         "tags": [
             "4"
         ],
@@ -1759,7 +1763,7 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "____________________terms-of-service",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Terms of service", "nl": "Algemene voorwaarden" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1767,6 +1771,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "maybe",
+        "function": "openURL()",
         "tags": [
             "4"
         ],
@@ -1776,7 +1781,7 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "________open-source-acknowledgements",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Open source acknowledgements", "nl": "Open source erkenningen" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1784,6 +1789,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "maybe",
+        "function": "openURL()",
         "tags": [
             "4"
         ],
