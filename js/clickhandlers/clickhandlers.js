@@ -84,8 +84,9 @@ function goTo(id) {
     }
 
     switch (goal.label) {
-        case "suggestion":
         case "person":
+        case "setting":
+        case "suggestion":
         case "feeling":
         case "goal":
             $("#main-promised").empty()

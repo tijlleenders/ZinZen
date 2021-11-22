@@ -1477,7 +1477,7 @@ function loadSettings() {
 function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "______________________________ZinZen",
-        "label": "settings-root",
+        "label": "setting",
         "title": {
             "en": "ZinZen",
             "nl": "ZinZen"
@@ -1932,7 +1932,7 @@ function loadGoalsAndRelationship() {
 function loadPersonalTimeAndRelationships() {
     goals.insert({
         "id": "________________________________time",
-        "label": "time-root",
+        "label": "action",
         "title": { "en": "My time", "nl": "Mijn tijd" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1940,6 +1940,7 @@ function loadPersonalTimeAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
+        "function": ["goToCalendar()"],
         "tags": [
             "1"
         ],
