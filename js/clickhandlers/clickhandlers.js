@@ -157,6 +157,7 @@ function changeStatus(id) {
     switch (currentStatus) {
         case "action":
         case "link":
+        case "setting":
         case "add":
             goTo(id)
             break;
