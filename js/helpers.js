@@ -1986,7 +1986,26 @@ function loadPersonalFeelingsAndRelationships() {
         "commands": "",
         "statusSort": 1
     })
+    goals.insert({
+        "id": "_______________________add-a-feeling",
+        "label": "suggestion",
+        "title": { "en": "Add a goal", "nl": "Voeg een doel toe" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "suggestion",
+        "tags": [
+            "2"
+        ],
+        "commands": "suggestion",
+        "statusSort": 1
+    })
+
+
     relationships.insert({ parentId: sessionId, childId: "____________________________feelings" })
+    relationships.insert({ parentId: "____________________________feelings", childId: "_______________________add-a-feeling" })
 }
 
 function loadPersonalGoalsAndRelationships() {
