@@ -380,8 +380,6 @@ function generateSlotHTML(element) {
         sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
     }
 
-    let slotSvg = getGoalSvg(status, "play-" + slotId)
-
     let html = '\
 <div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
         slotId +
@@ -451,7 +449,16 @@ function generateEffortHTML(element) {
 
 function getGoalSvg(status, id) {
     let goalSvg
+
+    if (relationships.find({ parentId: id })[0] != undefined) {
+        goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36"><path path stroke="#959595" fill="#959595" fill-rule="evenodd" d="M3.75 4.5a.25.25 0 00-.25.25v14.5c0 .138.112.25.25.25h16.5a.25.25 0 00.25-.25V7.687a.25.25 0 00-.25-.25h-8.471a1.75 1.75 0 01-1.447-.765L8.928 4.61a.25.25 0 00-.208-.11H3.75zM2 4.75C2 3.784 2.784 3 3.75 3h4.971c.58 0 1.12.286 1.447.765l1.404 2.063a.25.25 0 00.207.11h8.471c.966 0 1.75.783 1.75 1.75V19.25A1.75 1.75 0 0120.25 21H3.75A1.75 1.75 0 012 19.25V4.75z"></path></svg>'
+        return goalSvg
+    }
     switch (status) {
+
+        case "add":
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36"><path path stroke="#959595" fill="#959595" d="M12.75 7.75a.75.75 0 00-1.5 0v3.5h-3.5a.75.75 0 000 1.5h3.5v3.5a.75.75 0 001.5 0v-3.5h3.5a.75.75 0 000-1.5h-3.5v-3.5z"></path><path path stroke="#959595" fill="#959595" fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"></path></svg>'
+            break;
         case "done":
             goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">\
         <path stroke="#959595" fill="#959595" stroke-width="1"\
@@ -487,6 +494,10 @@ function getGoalSvg(status, id) {
             goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">\
             <path stroke="#959595" fill="#959595" fill-rule="evenodd" d="M7.875 2.292a.125.125 0 00-.032.018A7.24 7.24 0 004.75 8.25a7.247 7.247 0 003.654 6.297c.57.327.982.955.941 1.682v.002l-.317 6.058a.75.75 0 11-1.498-.078l.317-6.062v-.004c.006-.09-.047-.215-.188-.296A8.747 8.747 0 013.25 8.25a8.74 8.74 0 013.732-7.169 1.547 1.547 0 011.709-.064c.484.292.809.835.809 1.46v4.714a.25.25 0 00.119.213l2.25 1.385c.08.05.182.05.262 0l2.25-1.385a.25.25 0 00.119-.213V2.478c0-.626.325-1.169.81-1.461a1.547 1.547 0 011.708.064 8.74 8.74 0 013.732 7.17 8.747 8.747 0 01-4.41 7.598c-.14.081-.193.206-.188.296v.004l.318 6.062a.75.75 0 11-1.498.078l-.317-6.058v-.002c-.041-.727.37-1.355.94-1.682A7.247 7.247 0 0019.25 8.25a7.24 7.24 0 00-3.093-5.94.125.125 0 00-.032-.018l-.01-.001c-.003 0-.014 0-.031.01-.036.022-.084.079-.084.177V7.19a1.75 1.75 0 01-.833 1.49l-2.25 1.385a1.75 1.75 0 01-1.834 0l-2.25-1.384A1.75 1.75 0 018 7.192V2.477c0-.098-.048-.155-.084-.176a.062.062 0 00-.031-.011l-.01.001z">\
             </path></svg>'
+            break;
+
+        case "link":
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36"><path path stroke="#959595" fill="#959595"  d="M14.78 3.653a3.936 3.936 0 115.567 5.567l-3.627 3.627a3.936 3.936 0 01-5.88-.353.75.75 0 00-1.18.928 5.436 5.436 0 008.12.486l3.628-3.628a5.436 5.436 0 10-7.688-7.688l-3 3a.75.75 0 001.06 1.061l3-3z"></path><path path stroke="#959595" fill="#959595" d="M7.28 11.153a3.936 3.936 0 015.88.353.75.75 0 001.18-.928 5.436 5.436 0 00-8.12-.486L2.592 13.72a5.436 5.436 0 107.688 7.688l3-3a.75.75 0 10-1.06-1.06l-3 3a3.936 3.936 0 01-5.567-5.568l3.627-3.627z"></path></svg>'
             break;
 
         case "suggestion":
@@ -1416,7 +1427,7 @@ function getShortestPathToPersonFor(id) {
         if (relationship != undefined) {
             id = relationship.parentId
         }
-    } while (safety < 10 && !(currentVertex.label == "person" || currentVertex.label == "settings-root" || currentVertex.label == "suggestions-root" || currentVertex.label == "feelings-root"))
+    } while (safety < 10 && !(currentVertex.label == "person"))
 
     return shortestPath
 }
@@ -1460,8 +1471,8 @@ function lastSettingsUpdate() {
 
 function loadSettings() {
     repository.removeCollection('settings')
-    goals.findAndRemove({ "label": "settings-root" })
     goals.findAndRemove({ "label": "setting" })
+    goals.findAndRemove({ "label": "setting-action" })
     relationships.findAndRemove({ "label": "setting" })
     settings = repository.addCollection('settings', { unique: ['setting'] })
     settings.insert({ "setting": "screenMode", "value": "light" })
@@ -1471,13 +1482,12 @@ function loadSettings() {
         browserLanguage = 'en'
     }
     settings.insert({ "setting": "language", "value": browserLanguage })
-    loadSettingGoalsAndRelationships()
 }
 
 function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "______________________________ZinZen",
-        "label": "settings-root",
+        "label": "setting",
         "title": {
             "en": "ZinZen",
             "nl": "ZinZen"
@@ -1494,7 +1504,6 @@ function loadSettingGoalsAndRelationships() {
         "commands": "setting",
         "statusSort": 1
     })
-    relationships.insert({ parentId: '', childId: "______________________________ZinZen" })
 
     goals.insert({
         "id": "_____________________my-app-settings",
@@ -1536,53 +1545,56 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "______________________________donate",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Donate", "nl": "Doneren" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
+        "urls": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
         "statusSort": 1
     })
     goals.insert({
         "id": "________________________________blog",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Blog", "nl": "Blog" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://blog.ZinZen.me"],
+        "urls": ["https://blog.ZinZen.me"],
         "statusSort": 1
     })
     goals.insert({
         "id": "_______________________________about",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "About us", "nl": "Over ons" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/about.html"],
+        "urls": ["https://ZinZen.me/about.html"],
         "statusSort": 1
     })
     goals.insert({
@@ -1602,7 +1614,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_____________________my-app-settings", priority: 0, label: "setting" })
+    relationships.insert({ parentId: sessionId, childId: "______________________________ZinZen", priority: 0, label: "setting" })
     relationships.insert({ parentId: "______________________________ZinZen", childId: "_________install-on-phone-or-desktop", priority: 1, label: "setting" })
     relationships.insert({ parentId: "______________________________ZinZen", childId: "______________________________donate", priority: 2, label: "setting" })
     relationships.insert({ parentId: "______________________________ZinZen", childId: "________________________________blog", priority: 3, label: "setting" })
@@ -1644,29 +1656,30 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "__________________________sign-up-in",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Sign up / in", "nl": "Lid worden / Aanmelden" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
-        "function": ["logOut()"],
+        "function": "logOut()",
         "commands": "setting",
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_______________________look-and-feel", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "__________________________sign-up-in", priority: 1, label: "setting" })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_________________import-export-reset", priority: 2, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________look-and-feel", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "__________________________sign-up-in", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________________import-export-reset", priority: 2, label: "setting" })
 
     goals.insert({
         "id": "____________________reset-repository",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Destroy all my data now!", "nl": "Vernietig al mijn data nu!" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1680,7 +1693,7 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["resetRepository()"],
+        "function": "resetRepository()",
         "commands": "setting",
         "statusSort": 1
     })
@@ -1744,53 +1757,56 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "_____________________________Privacy",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Privacy statement", "nl": "Privacy verklaring" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/privacy.html"],
+        "urls": ["https://ZinZen.me/privacy.html"],
         "statusSort": 1
     })
     goals.insert({
         "id": "____________________terms-of-service",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Terms of service", "nl": "Algemene voorwaarden" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/terms.html"],
+        "urls": ["https://ZinZen.me/terms.html"],
         "statusSort": 1
     })
     goals.insert({
         "id": "________open-source-acknowledgements",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Open source acknowledgements", "nl": "Open source erkenningen" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/acknowledgements.html"],
+        "urls": ["https://ZinZen.me/acknowledgements.html"],
         "statusSort": 1
     })
 
@@ -1798,25 +1814,6 @@ function loadSettingGoalsAndRelationships() {
     relationships.insert({ parentId: "_______________________________legal", childId: "____________________terms-of-service", priority: 1, label: "setting" })
     relationships.insert({ parentId: "_______________________________legal", childId: "________open-source-acknowledgements", priority: 2, label: "setting" })
 
-    goals.insert({
-        "id": "_________________________color-theme",
-        "label": "setting",
-        "title": { "en": "Color theme", "nl": "Kleuren thema" },
-        "owner": "ZinZen",
-        "subCountMaybe": "2",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": "setting",
-        "tags": [
-            "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z"
-        ],
-        "commands": "setting",
-        "statusSort": 1
-    })
     goals.insert({
         "id": "____________________________language",
         "label": "setting",
@@ -1834,12 +1831,9 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_______________________look-and-feel", childId: "_________________________color-theme", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 1, label: "setting" })
-
     goals.insert({
         "id": "__________________________light-mode",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Light mode", "nl": "Lichte modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1853,14 +1847,14 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setScreenModeLight()"],
+        "function": "setScreenModeLight()",
         "commands": "setting",
         "statusSort": 1
     })
 
     goals.insert({
         "id": "___________________________dark-mode",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Dark mode", "nl": "Donkere modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1874,17 +1868,19 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setScreenModeDark()"],
+        "function": "setScreenModeDark()",
         "commands": "setting",
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1, label: "setting" })
+
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 2, label: "setting" })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "__________________________light-mode", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "___________________________dark-mode", priority: 1, label: "setting" })
 
     goals.insert({
         "id": "_______________________________Dutch",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "🇳🇱 Dutch", "nl": "🇳🇱 Nederlands" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1898,14 +1894,14 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setLanguageTo('nl')"],
+        "function": "setLanguageTo('nl')",
         "commands": "setting",
         "statusSort": 1
     })
 
     goals.insert({
         "id": "_____________________________English",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "🇺🇸 🇬🇧 English", "nl": "🇺🇸 🇬🇧 Engels" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1919,18 +1915,17 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setLanguageTo('en')"],
+        "function": "setLanguageTo('en')",
         "commands": "setting",
         "statusSort": 1
     })
 
     relationships.insert({ parentId: "____________________________language", childId: "_____________________________English", priority: 0, label: "setting" })
     relationships.insert({ parentId: "____________________________language", childId: "_______________________________Dutch", priority: 1, label: "setting" })
-
 }
 
 
-function loadGoalsAndRelationship() {
+function loadGoalsAndRelationships() {
 
     goals.insert({
         label: 'person',
@@ -1943,33 +1938,121 @@ function loadGoalsAndRelationship() {
         commands: ''
     })
 
+    loadSettings()
+    loadSettingGoalsAndRelationships()
+    loadSuggestionsGoalsAndRelationships()
+    loadPersonalTimeAndRelationships()
+    loadPersonalFeelingsAndRelationships()
+    loadPersonalGoalsAndRelationships()
+}
+
+function loadPersonalTimeAndRelationships() {
     goals.insert({
-        "id": "____________________________Feelings",
-        "label": "feelings-root",
-        "title": {
-            "en": "Me",
-            "nl": "Ik"
-        },
+        "id": "________________________________time",
+        "label": "setting-action",
+        "title": { "en": "My time", "nl": "Mijn tijd" },
         "owner": "ZinZen",
-        "subCountMaybe": "3",
+        "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "suggestion",
+        "function": "goToCalendar()",
         "tags": [
-            "4"
+            "1"
         ],
-        "commands": "setting",
+        "commands": "",
         "statusSort": 1
     })
-    relationships.insert({ parentId: '', childId: "____________________________Feelings" })
+    relationships.insert({ parentId: sessionId, childId: "________________________________time" })
+}
 
-    loadSettingGoalsAndRelationships()
+function loadPersonalFeelingsAndRelationships() {
+    goals.insert({
+        "id": "____________________________feelings",
+        "label": "feeling",
+        "title": { "en": "My feelings 💖", "nl": "Mijn gevoelens 💖" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "suggestion",
+        "tags": [
+            "2"
+        ],
+        "commands": "",
+        "statusSort": 1
+    })
+    goals.insert({
+        "id": "_______________________add-a-feeling",
+        "label": "action",
+        "title": { "en": "Add a feeling 💖", "nl": "Voeg een gevoel toe 💖" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "add",
+        "function": "addAFeeling()",
+        "tags": [
+            "2"
+        ],
+        "commands": "suggestion",
+        "statusSort": 1
+    })
+
+
+    relationships.insert({ parentId: sessionId, childId: "____________________________feelings" })
+    relationships.insert({ parentId: "____________________________feelings", childId: "_______________________add-a-feeling" })
+}
+
+function loadPersonalGoalsAndRelationships() {
+    goals.insert({
+        "id": "_______________________________goals",
+        "label": "goal",
+        "title": { "en": "My goals 🎯", "nl": "Mijn doelen 🎯" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "maybe",
+        "tags": [
+            "5"
+        ],
+        "commands": "",
+        "statusSort": 1
+    })
 
     goals.insert({
+        "id": "__________________________add-a-goal",
+        "label": "action",
+        "title": { "en": "Add a goal", "nl": "Voeg een doel toe" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "add",
+        "function": "addAGoal()",
+        "tags": [
+            "5"
+        ],
+        "commands": "suggestion",
+        "statusSort": 1
+    })
+
+
+    relationships.insert({ parentId: sessionId, childId: "_______________________________goals" })
+    relationships.insert({ parentId: "_______________________________goals", childId: "__________________________add-a-goal", priority: 0 })
+}
+
+function loadSuggestionsGoalsAndRelationships() {
+    goals.insert({
         "id": "_________________________suggestions",
-        "label": "suggestions-root",
-        "title": { "en": "Explore", "nl": "Ontdek" },
+        "label": "suggestion",
+        "title": { "en": "Explore 🧭", "nl": "Ontdek 🧭" },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1977,12 +2060,12 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "4"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
     })
-    relationships.insert({ parentId: '', childId: "_________________________suggestions" })
+    relationships.insert({ parentId: sessionId, childId: "_________________________suggestions" })
 
     goals.insert({
         "id": "________nature-and-environment-goals",
@@ -2011,7 +2094,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "6"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2027,7 +2110,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "5"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2043,7 +2126,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "2"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2059,7 +2142,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "3"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2075,7 +2158,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "4"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2454,48 +2537,6 @@ async function updateUIWith(child) {
 
 }
 
-function goToSetting(selectedGoalId) {
-    console.log("inside goToSetting")
-    let setting = goals.by('id', selectedGoalId)
-    console.log("setting:", setting)
-    if (setting.function != undefined) {
-        switch (setting.function[0]) {
-            case "setScreenModeDark()":
-                setScreenModeDark()
-                return
-                break;
-            case "setScreenModeLight()":
-                setScreenModeLight()
-                return
-                break;
-            case "logOut()":
-                logOut()
-                return
-                break;
-            case "setLanguageTo('en')":
-                setLanguageTo('en')
-                break;
-            case "setLanguageTo('nl')":
-                setLanguageTo('nl')
-                break;
-            case "resetRepository()":
-                resetRepository()
-                break;
-            default:
-                console.log("function not recognized:", setting.function[0])
-                return
-                break;
-        }
-    }
-    if (setting.url != undefined) {
-        window.open(setting.url[0], '_blank')
-    } else {
-        if (setting.function == undefined) {
-            goTo(selectedGoalId)
-        }
-    }
-}
-
 function logOut() {
     console.log("log out")
     let redirectURL = "https://auth.zinzen.me/logout?response_type=code&client_id=" + _config.appClientId +
@@ -2697,6 +2738,12 @@ function addSuggestedCommands(command) {
     //this also avoids having to make the commands unique at the end
 
     return
+}
+
+function openURLs(urls) {
+    urls.forEach(url => {
+        window.open(url, '_blank')
+    })
 }
 
 function isURL(word) {
