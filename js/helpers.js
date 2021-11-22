@@ -2052,7 +2052,7 @@ function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "_________________________suggestions",
         "label": "suggestion",
-        "title": { "en": "Explore 🧭", "nl": "Ontdek 🧭" },
+        "title": { "en": "🔭 Explore 🧭", "nl": "🔭 Ontdek 🧭" },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
