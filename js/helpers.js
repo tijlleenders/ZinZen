@@ -1416,7 +1416,7 @@ function getShortestPathToPersonFor(id) {
         if (relationship != undefined) {
             id = relationship.parentId
         }
-    } while (safety < 10 && !(currentVertex.label == "person" || currentVertex.label == "settings-root" || currentVertex.label == "suggestions-root" || currentVertex.label == "feelings-root"))
+    } while (safety < 10 && !(currentVertex.label == "person"))
 
     return shortestPath
 }
