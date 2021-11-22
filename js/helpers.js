@@ -1969,7 +1969,7 @@ function loadPersonalFeelingsAndRelationships() {
     goals.insert({
         "id": "_______________________add-a-feeling",
         "label": "suggestion",
-        "title": { "en": "Add a feeling", "nl": "Voeg een feeling toe" },
+        "title": { "en": "Add a feeling", "nl": "Voeg een gevoel toe" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
