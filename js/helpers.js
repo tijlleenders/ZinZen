@@ -1461,6 +1461,7 @@ function lastSettingsUpdate() {
 function loadSettings() {
     repository.removeCollection('settings')
     goals.findAndRemove({ "label": "setting" })
+    goals.findAndRemove({ "label": "setting-action" })
     relationships.findAndRemove({ "label": "setting" })
     settings = repository.addCollection('settings', { unique: ['setting'] })
     settings.insert({ "setting": "screenMode", "value": "light" })
@@ -1641,7 +1642,7 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "__________________________sign-up-in",
-        "label": "action",
+        "label": "setting-action",
         "title": { "en": "Sign up / in", "nl": "Lid worden / Aanmelden" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1663,7 +1664,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "____________________reset-repository",
-        "label": "action",
+        "label": "setting-action",
         "title": { "en": "Destroy all my data now!", "nl": "Vernietig al mijn data nu!" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1814,7 +1815,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "__________________________light-mode",
-        "label": "action",
+        "label": "setting-action",
         "title": { "en": "Light mode", "nl": "Lichte modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1835,7 +1836,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "___________________________dark-mode",
-        "label": "action",
+        "label": "setting-action",
         "title": { "en": "Dark mode", "nl": "Donkere modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1861,7 +1862,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "_______________________________Dutch",
-        "label": "action",
+        "label": "setting-action",
         "title": { "en": "🇳🇱 Dutch", "nl": "🇳🇱 Nederlands" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1882,7 +1883,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "_____________________________English",
-        "label": "action",
+        "label": "setting-action",
         "title": { "en": "🇺🇸 🇬🇧 English", "nl": "🇺🇸 🇬🇧 Engels" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1930,7 +1931,7 @@ function loadGoalsAndRelationships() {
 function loadPersonalTimeAndRelationships() {
     goals.insert({
         "id": "________________________________time",
-        "label": "action",
+        "label": "setting-action",
         "title": { "en": "My time", "nl": "Mijn tijd" },
         "owner": "ZinZen",
         "subCountMaybe": "0",

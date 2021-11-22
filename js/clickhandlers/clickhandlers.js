@@ -96,6 +96,7 @@ function goTo(id) {
             updateBreadcrumbUI()
             break;
 
+        case "setting-action":
         case "action":
             switch (goal.function) {
                 case "addAGoal()":
