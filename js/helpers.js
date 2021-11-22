@@ -1460,7 +1460,6 @@ function lastSettingsUpdate() {
 
 function loadSettings() {
     repository.removeCollection('settings')
-    goals.findAndRemove({ "label": "settings-root" })
     goals.findAndRemove({ "label": "setting" })
     relationships.findAndRemove({ "label": "setting" })
     settings = repository.addCollection('settings', { unique: ['setting'] })
@@ -1471,7 +1470,6 @@ function loadSettings() {
         browserLanguage = 'en'
     }
     settings.insert({ "setting": "language", "value": browserLanguage })
-    loadSettingGoalsAndRelationships()
 }
 
 function loadSettingGoalsAndRelationships() {
@@ -1816,7 +1814,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "__________________________light-mode",
-        "label": "setting",
+        "label": "action",
         "title": { "en": "Light mode", "nl": "Lichte modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1837,7 +1835,7 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "___________________________dark-mode",
-        "label": "setting",
+        "label": "action",
         "title": { "en": "Dark mode", "nl": "Donkere modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1857,7 +1855,7 @@ function loadSettingGoalsAndRelationships() {
     })
 
 
-    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 2, label: "setting" })
     relationships.insert({ parentId: "_______________________look-and-feel", childId: "__________________________light-mode", priority: 0, label: "setting" })
     relationships.insert({ parentId: "_______________________look-and-feel", childId: "___________________________dark-mode", priority: 1, label: "setting" })
 
@@ -1905,11 +1903,10 @@ function loadSettingGoalsAndRelationships() {
 
     relationships.insert({ parentId: "____________________________language", childId: "_____________________________English", priority: 0, label: "setting" })
     relationships.insert({ parentId: "____________________________language", childId: "_______________________________Dutch", priority: 1, label: "setting" })
-
 }
 
 
-function loadGoalsAndRelationship() {
+function loadGoalsAndRelationships() {
 
     goals.insert({
         label: 'person',
@@ -1922,6 +1919,7 @@ function loadGoalsAndRelationship() {
         commands: ''
     })
 
+    loadSettings()
     loadSettingGoalsAndRelationships()
     loadSuggestionsGoalsAndRelationships()
     loadPersonalTimeAndRelationships()

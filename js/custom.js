@@ -31,7 +31,7 @@ function databaseInitialize() {
             unique: ['id']
         })
         relationships = repository.addCollection('relationships', {})
-        loadGoalsAndRelationship()
+        loadGoalsAndRelationships()
     } else {
         sessionId = goals.find({ label: 'person' })[0].id
         console.log("getting sessionId from db:", sessionId)
