@@ -149,7 +149,7 @@ function goTo(id) {
 
 function changeStatus(id) {
     if (relationships.find({ parentId: id })[0] != undefined) {
-        gotTo(id)
+        goTo(id)
     }
     let goal = goals.find({ id: id })[0]
     let currentStatus = goal.status
