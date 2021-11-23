@@ -77,6 +77,14 @@ $("#main-promised").on("sortupdate", function (event, ui) {
 function goTo(id) {
     console.log("inside goTo... with id", id)
     // todo: zoom in animation
+    if (id == "__________________________add-a-goal") {
+        addAGoal()
+        return
+    }
+    if (id == "_______________________add-a-feeling") {
+        addAFeeling()
+        return
+    }
     let goal = goals.find({ id: id })[0]
     if (goal == undefined) {
         console.error("can't find goal with id:", id)
@@ -99,14 +107,6 @@ function goTo(id) {
         case "setting-action":
         case "action":
             switch (goal.function) {
-                case "addAGoal()":
-                    addAGoal()
-                    return
-                    break;
-                case "addAFeeling()":
-                    addAFeeling()
-                    return
-                    break;
                 case "openURLs()":
                     openURLs(goal.urls)
                     return
