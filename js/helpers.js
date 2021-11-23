@@ -530,6 +530,9 @@ function generateGoalHTML(properties) {
     console.log("tags", properties.tags)
     let tag = properties.tags[0]
     let cardStyle = "card" + tag
+    if (goalId == "__________________________add-a-goal" || goalId == "_______________________add-a-feeling") {
+        cardStyle = "card0"
+    }
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let status = properties.status

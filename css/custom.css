@@ -362,6 +362,18 @@ body {
   filter: brightness(95%);
 }
 
+.card0 {
+  background-color: var(--menu-background);
+  border-width: 1px;
+}
+
+.card0:hover {
+  background-color: var(--menu-background);
+  border-width: 1px;
+  border-color: var(--editor-selectionHighlightBackground);
+  filter: brightness(105%);
+}
+
 .card1 {
   background-color: var(--card1);
   border-width: 1px;
