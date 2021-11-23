@@ -618,12 +618,12 @@ function generateGoalHTML(properties) {
     //Todo: add directParents from relationships
 
     let returnHTML = `
-          <div class="col" id="circle-col-` + goalId + `">
+          <div class="col" id="card-inners-` + goalId + `">
             <div class="row" id="icon-and-title-row-` + goalId + `">
-                <div class="col-2 d-flex justify-content-center align-items-end circle-col">
+                <div class="col-2 d-flex justify-content-center align-items-end circle-col" id="circle-col-` + goalId + `">
                     <div class="mr-3 status-icon" id="todo-circle-` + goalId + `">` + goalSvg + `</div>                    
                 </div>
-                <div class="col-10 d-flex">
+                <div class="col-10 d-flex" id="subtext-icon-` + goalId + `">
                     <div class="title d-flex icons" id="title-` + goalId + `">              
                         <div class="me-auto d-inline-block text-truncate title-text" id="title-text-` + goalId + `">` + title + `</div>
                     </div>
