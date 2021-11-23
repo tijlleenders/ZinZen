@@ -1524,7 +1524,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+
         "tags": [
             "4"
         ],
@@ -1594,7 +1594,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+
         "tags": [
             "4"
         ],
@@ -2005,7 +2005,6 @@ function loadPersonalGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
         "tags": [
             "5"
         ],
