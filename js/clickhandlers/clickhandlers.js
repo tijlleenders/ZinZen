@@ -217,34 +217,6 @@ $("#main-promised").on("click", ".goal", function (event) {
     }
 })
 
-//TODO: keep this? Now only using card:hover
-$("#main-promised").on("mouseover", ".goal", function (event) {
-    var target = event.target.id;
-    var id = "";
-    if (target == "") {
-        if ($(event.target).parents(".goal").attr("id").length > 0) {
-            id = $(event.target).parents(".goal").attr("id").slice(-36);
-        }
-    } else {
-        id = target.slice(-36);
-    }
-    //do something to hover programmatically
-});
-
-//TODO: keep this? Now only using card:hover
-$("#main-promised").on("mouseout", ".goal", function (event) {
-    var target = event.target.id;
-    var id = "";
-    if (target == "") {
-        if ($(event.target).parents(".goal").attr("id").length > 0) {
-            id = $(event.target).parents(".goal").attr("id").slice(-36);
-        }
-    } else {
-        id = target.slice(-36);
-    }
-    //do something to hover programmatically
-});
-
 function addAGoal() {
     openModal("", "add")
 }
