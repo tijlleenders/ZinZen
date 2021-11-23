@@ -529,11 +529,6 @@ function generateGoalHTML(properties) {
     console.log("goalId", goalId)
     console.log("tags", properties.tags)
     let tag = properties.tags[0]
-    let cardStyle = "card" + tag
-    if (goalId == "__________________________add-a-goal" || goalId == "_______________________add-a-feeling") {
-        cardStyle = "card0"
-    }
-    $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let status = properties.status
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
@@ -573,6 +568,17 @@ function generateGoalHTML(properties) {
                 title += 'title not found...'
         }
     }
+
+    let cardStyle = "card" + tag
+    if (goalId == "__________________________add-a-goal" || goalId == "_______________________add-a-feeling") {
+        cardStyle = "card0"
+        let parent = goals.find({ id: parentId })[0]
+        console.log("parent for adding title:", parent)
+        if (parent.id != "_______________________________goals" && goalId != "____________________________feelings") {
+            title += ' to ' + parent.title[lang]
+        }
+    }
+    $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let duration = 0
     if (properties.duration != undefined) {
@@ -650,6 +656,7 @@ function generateGoalHTML(properties) {
 
     return returnHTML
 }
+
 
 function calculateCalendarFor(goalJSON, numberOfDaysToReturn, startingDayISO) {
     let schedulerOutput = {
