@@ -115,7 +115,6 @@ window.mobileAndTabletCheck = function () {
 function updateUIChildrenFor(parentId) {
     console.log("inside updateUIChildrenFor...")
     let relationshipsForParent = relationships.chain().find({ 'parentId': parentId }).simplesort('priority', { desc: true }).limit(MAX_SUBLISTS).data()
-    // Todo: insert add-a-goal/feeling at start of array if parentId has goal/feeling label
     let parent = goals.find({ id: parentId })[0]
     let addCard = {}
     if (parent.label == "goal") {
