@@ -1451,13 +1451,11 @@ function updatePriority() {
     console.log("inside updatePriority()")
     let sortedChildrenArray = $("#main-promised").sortable("toArray")
     console.log("sortedChildrenArray", sortedChildrenArray)
-    if (sortedChildrenArray.length > 0
-        && (
-            sortedChildrenArray[0] == "__________________________add-a-goal"
-            || sortedChildrenArray[0] == "_______________________add-a-feeling")
-    ) {
-        sortedChildrenArray.shift()
-    }
+    sortedChildrenArray = sortedChildrenArray.filter(id => (
+        id != "__________________________add-a-goal"
+        && id != "_______________________add-a-feeling")
+    )
+    console.log("sortedChildrenArray", sortedChildrenArray)
     sortedChildrenArray.forEach((childId, index) => {
         let relationship = relationships.find({ parentId: parentId, childId: childId })[0]
         relationship.priority = index
