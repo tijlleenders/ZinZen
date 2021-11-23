@@ -252,11 +252,13 @@ function setSkeletonHTMLForAdd(id) {
         </div>
       </div>
     </div>`
+
+    let lang = settings.find({ "setting": "language" })[0].value
     bodyHTML += `
     <div class="row" id="input-row">
       <div class="col">
         <div class="m-1">
-            <input class="form-control" type="text" id="inputCommand" placeholder="Type een doel..." name="command" required autofocus autocomplete="off">
+            <input class="form-control" type="text" id="inputCommand" placeholder="`+ translations.find({ "en": "Type a goal..." })[0][lang] + `" name="command" required autofocus autocomplete="off">
         </div>
       </div>
     </div>
@@ -306,7 +308,6 @@ function setSkeletonHTMLForAdd(id) {
     $("#modal-body").html(bodyHTML)
 
     let titleObject = {}
-    let lang = settings.find({ "setting": "language" })[0].value
     switch (lang) {
         case "en":
             titleObject.en = ''
@@ -2190,6 +2191,12 @@ function loadTranslations() {
             "en": "How do you feel now?",
             "nl": "Hoe voel je je nu?"
         })
+    translations.insert(
+        {
+            "en": "Type a goal...",
+            "nl": "Type een doel..."
+        })
+
     translations.insert(
         {
             "en": "Happy",
