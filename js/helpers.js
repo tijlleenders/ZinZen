@@ -534,9 +534,7 @@ function generateGoalHTML(properties) {
     if (properties.url != undefined) {
         titleIcon = "🔗 "
     }
-    // let directParents = properties.directParents //Todo
-    let subCountDone = parseInt(properties.subCountDone)
-    let subCountTotal = parseInt(properties.subCountMaybe) + parseInt(properties.subCountPromised) + parseInt(properties.subCountDone)
+
     let finish = ""
     if (properties.finish && properties.finish[0] != "") {
         finish = properties.finish[0]
@@ -578,77 +576,66 @@ function generateGoalHTML(properties) {
         durationTransparency = "semi-transparent"
     }
 
-    //Todo: 18 subs (18h 20m)... First due x, last due x
-    let subTitle = ''
-    if (subCountTotal > 0) {
-        subTitle += subCountDone + "/"
-        subTitle += subCountTotal + " sub"
-        if (subCountTotal > 1) {
-            subTitle += 's'
-        }
-    } else {
-        if (durationString != "0m") {
-            subTitle += durationString
-        }
-        subTitle += '&zwnj;'
-        if (finish != "") {
-            let localTimeLeft = dayjs().to(new dayjs(finish))
-            let dueStatus = 'Due'
-            if (status == 'done') {
-                dueStatus = 'Completed, was due'
+    let subTitleIcon = ''
+    let subCountTotal = 0
+    let subCountMaybeAndPromised = 0
+    let childrenRelations = relationships.find({ parentId: properties.id })
+    console.log("childrenRelations:", childrenRelations)
+    if (childrenRelations != undefined) {
+        subCountTotal = childrenRelations.length
+        childrenRelations.forEach(childRelation => {
+            let child = goals.find({ id: childRelation.childId })[0]
+            console.log("child found for count:", child)
+            switch (child.status) {
+                case "maybe":
+                case "promised":
+                    subCountMaybeAndPromised += 1
+                    break;
+
+                default:
+                    break;
+
             }
-            subTitle += ' ' + dueStatus + ' ' + localTimeLeft
-        }
-
+        })
     }
+    console.log("subCountMaybeAndPromised:", subCountMaybeAndPromised)
+    console.log("subCountTotal:", subCountTotal)
+
+    if (subCountMaybeAndPromised > 0) {
+        subTitleIcon = subCountMaybeAndPromised + " / "
+    }
+    if (subCountTotal > 0) {
+        subTitleIcon += subCountTotal
+    }
+
+    let subTitle = ''
     if (properties.subTitle && properties.subTitle != "") {
-        subTitle += '<br />' + properties.subTitle
+        subTitle += properties.subTitle
     }
-
 
     let goalSvg = getGoalSvg(status, goalId)
 
     //Todo: add directParents from relationships
-    let parentRowAndColHTML = ''
-    // if (directParents.length != 0) {
-    //     // console.log("directParents for " + goalId + ":" + directParents)
-    //     parentRowAndColHTML += '<div class="row" id="goal-parents-row-' +
-    //         goalId +
-    //         '">\
-    //   <div class="col text-end" id="goal-parents-' +
-    //         goalId +
-    //         '">\
-    // '
-    //     if (directParents.length > 1) {
-    //         directParents.forEach(function (parentId, index) {
-    //             // console.log("getting parent for id:", parentId)
-    //             let parent = goals.by('id', parentId)
-    //             // console.log("parent:", parent)
-    //             if (parent != undefined) {
-    //                 parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title + "</div>"
-    //             }
-    //         })
-    //     }
-    //     parentRowAndColHTML += '</div></div>'
-    // }
 
     let returnHTML = `
-          <div class="col-2 circle-col d-flex align-items-center align-text-center" id="circle-col-` + goalId + `">
-            <div class="mr-3 todo-circle" id="todo-circle-` + goalId + `">` + goalSvg + `</div>
-          </div>
-          <div class="col-10">
-            ` + parentRowAndColHTML + `            
-            <div class="row" id="goal-title-row-` + goalId + `">
-              <div class="col d-flex">
-                <div class="title d-flex icons" id="title-` + goalId + `">              
-                  <div class="me-auto d-inline-block text-truncate title-text" id="title-text-` + goalId + `">` + title + `</div>
+          <div class="col" id="card-inners-` + goalId + `">
+            <div class="row" id="icon-and-title-row-` + goalId + `">
+                <div class="col-2 d-flex justify-content-center align-items-end circle-col" id="circle-col-` + goalId + `">
+                    <div class="mr-3 status-icon" id="todo-circle-` + goalId + `">` + goalSvg + `</div>                    
                 </div>
-              </div>
+                <div class="col-10 d-flex" id="subtext-icon-` + goalId + `">
+                    <div class="title d-flex icons" id="title-` + goalId + `">              
+                        <div class="me-auto d-inline-block text-truncate title-text" id="title-text-` + goalId + `">` + title + `</div>
+                    </div>
+              </div>                
             </div>
-            <div class="row" id="subtext-row-` + goalId + `">
-              <div class="col d-flex align-self-center" id="subtext-col-` + goalId + `">
-                <div class="icons sub-title" id="subtext-` + goalId + `">` + subTitle + `</div>
-              </div>
+            <div class="row" id="sub-title-row-` + goalId + `">
+                <div class="col-2 d-flex justify-content-center circle-col" id="subtext-col-` + goalId + `">
+                    <div class="icons sub-title" id="subtext-` + goalId + `">` + subTitleIcon + `</div>
+                </div>
+                <div class="col-10 d-flex" id="subtext-col-` + goalId + `">
+                    <div class="icons sub-title" id="subtext-` + goalId + `">` + subTitle + `</div>
+                </div>            
             </div>
           </div>
       `
