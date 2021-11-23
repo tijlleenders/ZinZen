@@ -128,7 +128,6 @@ function updateUIChildrenFor(parentId) {
             "subCountDone": "0",
             "subCountNever": "0",
             "status": "add",
-            "function": "addAGoal()",
             "tags": [
                 "5"
             ],
@@ -147,7 +146,6 @@ function updateUIChildrenFor(parentId) {
             "subCountDone": "0",
             "subCountNever": "0",
             "status": "add",
-            "function": "addAFeeling()",
             "tags": [
                 "2"
             ],
