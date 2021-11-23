@@ -620,7 +620,7 @@ function generateGoalHTML(properties) {
     let returnHTML = `
           <div class="col" id="circle-col-` + goalId + `">
             <div class="row" id="icon-and-title-row-` + goalId + `">
-                <div class="col-2 d-flex justify-content-center align-items-end">
+                <div class="col-2 d-flex justify-content-center align-items-end circle-col">
                     <div class="mr-3 status-icon" id="todo-circle-` + goalId + `">` + goalSvg + `</div>                    
                 </div>
                 <div class="col-10 d-flex">
@@ -630,7 +630,7 @@ function generateGoalHTML(properties) {
               </div>                
             </div>
             <div class="row" id="sub-title-row-` + goalId + `">
-                <div class="col-2 d-flex justify-content-center" id="subtext-col-` + goalId + `">
+                <div class="col-2 d-flex justify-content-center circle-col" id="subtext-col-` + goalId + `">
                     <div class="icons sub-title" id="subtext-` + goalId + `">` + subTitleIcon + `</div>
                 </div>
                 <div class="col-10 d-flex" id="subtext-col-` + goalId + `">
