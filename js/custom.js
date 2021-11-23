@@ -115,15 +115,57 @@ window.mobileAndTabletCheck = function () {
 function updateUIChildrenFor(parentId) {
     console.log("inside updateUIChildrenFor...")
     let relationshipsForParent = relationships.chain().find({ 'parentId': parentId }).simplesort('priority', { desc: true }).limit(MAX_SUBLISTS).data()
-    // Todo: insert add-a-goal/feeling at start of array if parentId has goal/feeling label
-    if (relationshipsForParent[0] == undefined) {
-        //Todo: show no children info message on screen
-    } else {
-        relationshipsForParent.forEach(relationship => {
-            let childResults = goals.find({ 'id': relationship.childId })
-            updateUIWith(childResults[0])
-        });
+    let parent = goals.find({ id: parentId })[0]
+    let addCard = {}
+    if (parent.label == "goal") {
+        addCard = {
+            "id": "__________________________add-a-goal",
+            "label": "action",
+            "title": { "en": "Add a goal", "nl": "Voeg een doel toe" },
+            "owner": "ZinZen",
+            "subCountMaybe": "0",
+            "subCountPromised": "0",
+            "subCountDone": "0",
+            "subCountNever": "0",
+            "status": "add",
+            "tags": [
+                "5"
+            ],
+            "commands": "suggestion",
+            "statusSort": 1
+        }
     }
+    if (parent.label == "feeling") {
+        addCard = {
+            "id": "_______________________add-a-feeling",
+            "label": "action",
+            "title": { "en": "Add a feeling 💖", "nl": "Voeg een gevoel toe 💖" },
+            "owner": "ZinZen",
+            "subCountMaybe": "0",
+            "subCountPromised": "0",
+            "subCountDone": "0",
+            "subCountNever": "0",
+            "status": "add",
+            "tags": [
+                "2"
+            ],
+            "commands": "suggestion",
+            "statusSort": 1
+        }
+    }
+
+    relationshipsForParent.forEach(relationship => {
+        let childResults = goals.find({ 'id': relationship.childId })
+        updateUIWith(childResults[0])
+    });
+
+    if (addCard.hasOwnProperty('id')) {
+        $("#" + addCard.id).remove()
+        let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + addCard.id + `"></div>`
+        $("#main-promised").prepend(goalHTML)
+        $("#" + addCard.id).html(generateGoalHTML(addCard))
+    }
+
 }
 
 // Initialize deferredPrompt for use later to show browser install prompt.
