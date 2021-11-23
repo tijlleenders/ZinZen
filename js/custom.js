@@ -160,6 +160,7 @@ function updateUIChildrenFor(parentId) {
     });
 
     if (addCard.hasOwnProperty('id')) {
+        $("#" + addCard.id).remove()
         let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + addCard.id + `"></div>`
         $("#main-promised").prepend(goalHTML)
         $("#" + addCard.id).html(generateGoalHTML(addCard))
