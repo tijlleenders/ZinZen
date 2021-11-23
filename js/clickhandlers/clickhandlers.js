@@ -159,6 +159,7 @@ function changeStatus(id) {
         case "link":
         case "setting":
         case "add":
+        case "folder":
             goTo(id)
             break;
         case "promised":
