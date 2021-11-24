@@ -362,6 +362,20 @@ function setSkeletonHTMLForAdd(id) {
     });
 }
 
+function translate(englishText) {
+    let lang = settings.find({ "setting": "language" })[0].value
+    let translation = translations.find({ "en": englishText })
+    if (translation[0] == undefined) {
+        return "No translation..."
+    } else {
+        if (translation[0][lang] == undefined) {
+            return "No tranlation for " + englishText + " for language " + lang + "..."
+        } else {
+            return translation[0][lang]
+        }
+    }
+}
+
 function generateSlotHTML(element) {
     console.log("inside generateSlotHTML...")
     var slotId = element.id
@@ -570,14 +584,6 @@ function generateGoalHTML(properties) {
     }
 
     let cardStyle = "card" + tag
-    if (goalId == "__________________________add-a-goal" || goalId == "_______________________add-a-feeling") {
-        cardStyle = "card0"
-        let parent = goals.find({ id: parentId })[0]
-        console.log("parent for adding title:", parent)
-        if (parent.id != "_______________________________goals" && goalId != "____________________________feelings") {
-            title += ' to ' + parent.title[lang]
-        }
-    }
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let duration = 0
@@ -1460,12 +1466,6 @@ function updateBreadcrumbUI() {
 function updatePriority() {
     console.log("inside updatePriority()")
     let sortedChildrenArray = $("#main-promised").sortable("toArray")
-    console.log("sortedChildrenArray", sortedChildrenArray)
-    sortedChildrenArray = sortedChildrenArray.filter(id => (
-        id != "__________________________add-a-goal"
-        && id != "_______________________add-a-feeling")
-    )
-    console.log("sortedChildrenArray", sortedChildrenArray)
     sortedChildrenArray.forEach((childId, index) => {
         let relationship = relationships.find({ parentId: parentId, childId: childId })[0]
         relationship.priority = index
@@ -2177,7 +2177,42 @@ function loadTranslations() {
             "en": "Type a goal...",
             "nl": "Type een doel..."
         })
-
+    translations.insert(
+        {
+            "en": "Back",
+            "nl": "Terug"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Add",
+            "nl": "Voeg toe"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Copy",
+            "nl": "Kopieer"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Move",
+            "nl": "Verplaats"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Paste",
+            "nl": "Plakken"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Delete",
+            "nl": "Verwijder"
+        }
+    )
     translations.insert(
         {
             "en": "Happy",
@@ -2488,10 +2523,12 @@ function loadTranslations() {
 function updateUILanguage() {
     let lang = settings.find({ "setting": "language" })[0].value
     console.log("language found in settings:", lang)
-    $("#top-feelings-label").html(translations.find({ "en": "Feelings" })[0][lang])
-    $("#top-goals-label").html(translations.find({ "en": "Goals" })[0][lang])
-    $("#top-calendar-label").html(translations.find({ "en": "Time" })[0][lang])
-    $("#top-explore-label").html(translations.find({ "en": "Explore" })[0][lang])
+    $("#backButtonText").html(translate("Back"))
+    $("#addButtonText").html(translate("Add"))
+    $("#copyButtonText").html(translate("Copy"))
+    $("#moveButtonText").html(translate("Move"))
+    $("#pasteButtonText").html(translate("Paste"))
+    $("#deleteButtonText").html(translate("Delete"))
     updateUIChildrenFor(parentId)
     updateBreadcrumbUI()
 }
