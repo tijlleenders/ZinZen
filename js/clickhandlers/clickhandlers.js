@@ -10,6 +10,16 @@ $("#modal-footer-close").click(function () {
     $("#myModal").modal("hide");
 });
 
+$("#addButton").click(function () {
+    let parent = goals.find({ id: parentId })[0]
+    if (parent.label == "goal") {
+        addAGoal()
+    }
+    if (parent.label == "feeling") {
+        addAFeeling()
+    }
+});
+
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     event.stopPropagation();
     console.log("id:", event.target.id)
