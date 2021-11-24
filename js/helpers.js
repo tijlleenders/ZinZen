@@ -1633,7 +1633,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_______________________look-and-feel",
         "label": "setting",
-        "title": { "en": "Look and feel", "nl": "Opmaak" },
+        "title": { "en": "Display and Language", "nl": "Opmaak en Taal" },
         "owner": "ZinZen",
         "subCountMaybe": "2",
         "subCountPromised": "0",
