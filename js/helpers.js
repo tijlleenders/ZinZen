@@ -364,11 +364,16 @@ function setSkeletonHTMLForAdd(id) {
 
 function translate(englishText) {
     let lang = settings.find({ "setting": "language" })[0].value
-    let translation = translations.find({ "en": englishText })[0][lang]
-    if (translation == undefined) {
+    let translation = translations.find({ "en": englishText })
+    if (translation[0] == undefined) {
         return "No translation..."
+    } else {
+        if (translation[0][lang] == undefined) {
+            return "No tranlation for " + englishText + " for language " + lang + "..."
+        } else {
+            return translation[0][lang]
+        }
     }
-    return translation
 }
 
 function generateSlotHTML(element) {
@@ -2497,10 +2502,12 @@ function loadTranslations() {
 function updateUILanguage() {
     let lang = settings.find({ "setting": "language" })[0].value
     console.log("language found in settings:", lang)
-    $("#top-feelings-label").html(translate("Feelings"))
-    $("#top-goals-label").html(translate("Goals"))
-    $("#top-calendar-label").html(translate("Time"))
-    $("#top-explore-label").html(translate("Explore"))
+    $("#backButtonText").html(translate("Back"))
+    $("#addButtonText").html(translate("Add"))
+    $("#copyButtonText").html(translate("Copy"))
+    $("#moveButtonText").html(translate("Move"))
+    $("#pasteButtonText").html(translate("Paste"))
+    $("#deleteButtonText").html(translate("Delete"))
     updateUIChildrenFor(parentId)
     updateBreadcrumbUI()
 }
