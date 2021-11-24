@@ -362,6 +362,15 @@ function setSkeletonHTMLForAdd(id) {
     });
 }
 
+function translate(englishText) {
+    let lang = settings.find({ "setting": "language" })[0].value
+    let translation = translations.find({ "en": englishText })[0][lang]
+    if (translation == undefined) {
+        return "No translation..."
+    }
+    return translation
+}
+
 function generateSlotHTML(element) {
     console.log("inside generateSlotHTML...")
     var slotId = element.id
@@ -2488,10 +2497,10 @@ function loadTranslations() {
 function updateUILanguage() {
     let lang = settings.find({ "setting": "language" })[0].value
     console.log("language found in settings:", lang)
-    $("#top-feelings-label").html(translations.find({ "en": "Feelings" })[0][lang])
-    $("#top-goals-label").html(translations.find({ "en": "Goals" })[0][lang])
-    $("#top-calendar-label").html(translations.find({ "en": "Time" })[0][lang])
-    $("#top-explore-label").html(translations.find({ "en": "Explore" })[0][lang])
+    $("#top-feelings-label").html(translate("Feelings"))
+    $("#top-goals-label").html(translate("Goals"))
+    $("#top-calendar-label").html(translate("Time"))
+    $("#top-explore-label").html(translate("Explore"))
     updateUIChildrenFor(parentId)
     updateBreadcrumbUI()
 }
