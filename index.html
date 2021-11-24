@@ -32,30 +32,26 @@
 <body class="body" id="page-body">
 
     <div class="container" id="dream-screen">
-        <div class="row">
-            <div class="col mb-2" id="breadcrumb">
-            </div>
-        </div>
         <div class="row" id="main-quote-row">
             <div class="col" id="main-quote-col">
                 <div class="mb-2" id="main-quote"></div>
             </div>
         </div>
-        <div class="row" id="main-buttons-row">
-            <div class="col" id="top-button-add-col">
+        <div class="row align-items-center mb-2" id="main-buttons-row">
+            <div class="col m-0 p-0 text-center" id="top-button-add-col">
                 <button type="button" class="btn btn-outline-secondary btn-sm m-1 text-small" id="addButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
                         <path stroke="#959595" fill="#959595" fill-rule="evenodd"
                             d="M11.75 4.5a.75.75 0 01.75.75V11h5.75a.75.75 0 010 1.5H12.5v5.75a.75.75 0 01-1.5 0V12.5H5.25a.75.75 0 010-1.5H11V5.25a.75.75 0 01.75-.75z">
                         </path>
                     </svg>
-                    Add
+                    <div class="sub-title">Add</div>
                 </button>
             </div>
 
-            <div class="col" id="top-button-copy-col">
+            <div class="col m-0 p-0 text-center" id=" top-button-copy-col">
                 <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="copyButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
                         <path stroke="#959595" fill="#959595" fill-rule="evenodd"
                             d="M7.024 3.75c0-.966.784-1.75 1.75-1.75H20.25c.966 0 1.75.784 1.75 1.75v11.498a1.75 1.75 0 01-1.75 1.75H8.774a1.75 1.75 0 01-1.75-1.75V3.75zm1.75-.25a.25.25 0 00-.25.25v11.498c0 .139.112.25.25.25H20.25a.25.25 0 00.25-.25V3.75a.25.25 0 00-.25-.25H8.774z">
                         </path>
@@ -63,26 +59,24 @@
                             d="M1.995 10.749a1.75 1.75 0 011.75-1.751H5.25a.75.75 0 110 1.5H3.745a.25.25 0 00-.25.25L3.5 20.25c0 .138.111.25.25.25h9.5a.25.25 0 00.25-.25v-1.51a.75.75 0 111.5 0v1.51A1.75 1.75 0 0113.25 22h-9.5A1.75 1.75 0 012 20.25l-.005-9.501z">
                         </path>
                     </svg>
-                    Copy
+                    <div class="sub-title">Copy</div>
                 </button>
             </div>
 
-            <div class="col" id="top-button-move-col">
+            <div class="col m-0 p-0 text-center" id=" top-button-move-col">
                 <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="moveButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                            <path stroke="#959595" fill="#959595" fill-rule="evenodd"
-                                d="M8.72 18.78a.75.75 0 001.06 0l6.25-6.25a.75.75 0 000-1.06L9.78 5.22a.75.75 0 00-1.06 1.06L14.44 12l-5.72 5.72a.75.75 0 000 1.06z">
-                            </path>
-                        </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
+                        <path stroke="#959595" fill="#959595" fill-rule="evenodd"
+                            d="M8.72 18.78a.75.75 0 001.06 0l6.25-6.25a.75.75 0 000-1.06L9.78 5.22a.75.75 0 00-1.06 1.06L14.44 12l-5.72 5.72a.75.75 0 000 1.06z">
+                        </path>
                     </svg>
-                    Move
+                    <div class="sub-title">Move</div>
                 </button>
             </div>
 
-            <div class="col" id="top-button-paste-col">
+            <div class="col m-0 p-0 text-center" id=" top-button-paste-col">
                 <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="pasteButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
                         <path stroke="#959595" fill="#959595" fill-rule="evenodd"
                             d="M5.962 2.513a.75.75 0 01-.475.949l-.816.272a.25.25 0 00-.171.237V21.25c0 .138.112.25.25.25h14.5a.25.25 0 00.25-.25V3.97a.25.25 0 00-.17-.236l-.817-.272a.75.75 0 01.474-1.424l.816.273A1.75 1.75 0 0121 3.97v17.28A1.75 1.75 0 0119.25 23H4.75A1.75 1.75 0 013 21.25V3.97a1.75 1.75 0 011.197-1.66l.816-.272a.75.75 0 01.949.475z">
                         </path>
@@ -90,13 +84,13 @@
                             d="M7 1.75C7 .784 7.784 0 8.75 0h6.5C16.216 0 17 .784 17 1.75v1.5A1.75 1.75 0 0115.25 5h-6.5A1.75 1.75 0 017 3.25v-1.5zm1.75-.25a.25.25 0 00-.25.25v1.5c0 .138.112.25.25.25h6.5a.25.25 0 00.25-.25v-1.5a.25.25 0 00-.25-.25h-6.5z">
                         </path>
                     </svg>
-                    Paste
+                    <div class="sub-title">Paste</div>
                 </button>
             </div>
 
-            <div class="col" id="top-button-delete-col">
+            <div class="col m-0 p-0 text-center" id=" top-button-delete-col">
                 <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="deleteButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
                         <path stroke="#959595" fill="#959595" fill-rule="evenodd"
                             d="M16 1.75V3h5.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H8V1.75C8 .784 8.784 0 9.75 0h4.5C15.216 0 16 .784 16 1.75zm-6.5 0a.25.25 0 01.25-.25h4.5a.25.25 0 01.25.25V3h-5V1.75z">
                         </path>
@@ -107,10 +101,14 @@
                             d="M9.206 7.501a.75.75 0 01.793.705l.5 8.5A.75.75 0 119 16.794l-.5-8.5a.75.75 0 01.705-.793zm6.293.793A.75.75 0 1014 8.206l-.5 8.5a.75.75 0 001.498.088l.5-8.5z">
                         </path>
                     </svg>
-                    Delete
+                    <div class="sub-title">Delete</div>
                 </button>
             </div>
 
+        </div>
+        <div class="row">
+            <div class="col mb-2" id="breadcrumb">
+            </div>
         </div>
         <div class="row">
             <div class="col" id="main-promised">
