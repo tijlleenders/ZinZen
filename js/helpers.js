@@ -584,14 +584,6 @@ function generateGoalHTML(properties) {
     }
 
     let cardStyle = "card" + tag
-    if (goalId == "__________________________add-a-goal" || goalId == "_______________________add-a-feeling") {
-        cardStyle = "card0"
-        let parent = goals.find({ id: parentId })[0]
-        console.log("parent for adding title:", parent)
-        if (parent.id != "_______________________________goals" && goalId != "____________________________feelings") {
-            title += ' to ' + parent.title[lang]
-        }
-    }
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let duration = 0
@@ -1474,12 +1466,6 @@ function updateBreadcrumbUI() {
 function updatePriority() {
     console.log("inside updatePriority()")
     let sortedChildrenArray = $("#main-promised").sortable("toArray")
-    console.log("sortedChildrenArray", sortedChildrenArray)
-    sortedChildrenArray = sortedChildrenArray.filter(id => (
-        id != "__________________________add-a-goal"
-        && id != "_______________________add-a-feeling")
-    )
-    console.log("sortedChildrenArray", sortedChildrenArray)
     sortedChildrenArray.forEach((childId, index) => {
         let relationship = relationships.find({ parentId: parentId, childId: childId })[0]
         relationship.priority = index

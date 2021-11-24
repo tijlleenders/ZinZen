@@ -87,14 +87,6 @@ $("#main-promised").on("sortupdate", function (event, ui) {
 function goTo(id) {
     console.log("inside goTo... with id", id)
     // todo: zoom in animation
-    if (id == "__________________________add-a-goal") {
-        addAGoal()
-        return
-    }
-    if (id == "_______________________add-a-feeling") {
-        addAFeeling()
-        return
-    }
     let goal = goals.find({ id: id })[0]
     if (goal == undefined) {
         console.error("can't find goal with id:", id)
