@@ -94,12 +94,20 @@ function goTo(id) {
     }
 
     switch (goal.label) {
-        case "person":
-        case "setting":
-        case "suggestion":
-        case "feeling":
         case "goal":
             $("#main-promised").empty()
+            $("#main-buttons-row").removeClass('d-none')
+            $("#main-quote").addClass('d-none')
+            parentId = id
+            updateUIChildrenFor(id)
+            updateBreadcrumbUI()
+            break;
+        case "suggestion":
+        case "person":
+        case "setting":
+        case "feeling":
+            $("#main-promised").empty()
+            $("#main-buttons-row").addClass('d-none')
             $("#main-quote").addClass('d-none')
             parentId = id
             updateUIChildrenFor(id)
