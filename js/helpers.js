@@ -2191,7 +2191,42 @@ function loadTranslations() {
             "en": "Type a goal...",
             "nl": "Type een doel..."
         })
-
+    translations.insert(
+        {
+            "en": "Back",
+            "nl": "Terug"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Add",
+            "nl": "Voeg toe"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Copy",
+            "nl": "Kopieer"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Move",
+            "nl": "Verplaats"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Paste",
+            "nl": "Plakken"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Delete",
+            "nl": "Verwijder"
+        }
+    )
     translations.insert(
         {
             "en": "Happy",
