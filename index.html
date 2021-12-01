@@ -29,15 +29,6 @@
     <script src="js/userprofile.js"></script>
 
     <script src="zinzen_scheduler.js"></script>
-    <script>
-        wasm_bindgen("./zinzen_scheduler_bg.wasm").then(on_wasm_loaded).catch(console.error);
-        function on_wasm_loaded() {
-            let calendarString = wasm_bindgen.fixed_and_daily_goal_combined()
-            console.log("calendar string:", calendarString)
-            console.log("type:", typeof (calendarString))
-            console.log("cal json:", JSON.parse(calendarString))
-        }
-    </script>
 </head>
 
 <body class="body" id="page-body">
