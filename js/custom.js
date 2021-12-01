@@ -5,6 +5,7 @@ var sessionId = uuidv4()
 var parentId = sessionId
 var MAX_LEVELS = 10
 var MAX_SUBLISTS = 33
+var calendar = {}
 
 var repository = new loki("ZinZen.db", {
     autoload: true,
@@ -177,3 +178,13 @@ window.addEventListener('load', function () {
 window.addEventListener('popstate', function () {
     window.history.pushState({}, '')
 })
+
+function calculateCalendar() {
+    let start = Date.now()
+    wasm_bindgen("./zinzen_scheduler_bg.wasm").then(on_wasm_loaded).catch(console.error);
+    function on_wasm_loaded() {
+        calendar = wasm_bindgen.load_calendar(calendar)
+        let end = Date.now()
+        console.log("load_calendar took:", (end - start) / 1000)
+    }
+}
