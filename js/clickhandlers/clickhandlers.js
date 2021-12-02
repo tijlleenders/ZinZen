@@ -106,6 +106,8 @@ function goTo(id) {
         case "person":
         case "setting":
         case "feeling":
+            $("#main-calendar").addClass('d-none')
+            $("#main-promised").removeClass('d-none')
             $("#main-promised").empty()
             $("#main-buttons-row").addClass('d-none')
             $("#main-quote").addClass('d-none')
@@ -119,6 +121,12 @@ function goTo(id) {
             switch (goal.function) {
                 case "openURLs()":
                     openURLs(goal.urls)
+                    return
+                    break;
+                case "goToCalendar()":
+                    parentId = id
+                    updateBreadcrumbUI()
+                    goToCalendar()
                     return
                     break;
                 case "setScreenModeDark()":
@@ -194,7 +202,7 @@ function changeStatus(id) {
     $("#" + id).html(generateGoalHTML(goal))
 }
 
-$("#mmain-play").on("click", ".slot", function (event) {
+$("#calendarSlots").on("click", ".slot", function (event) {
     console.log(Date.now());
     let nodeId = getNodeId(event)
     let selectedSlotId = nodeId.slice(-36);
