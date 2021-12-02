@@ -685,12 +685,9 @@ function goToCalendar() {
 
 function calculateCalendar() {
     let start = Date.now()
-    wasm_bindgen("./zinzen_scheduler_bg.wasm").then(on_wasm_loaded).catch(console.error);
-    function on_wasm_loaded() {
-        calendar = wasm_bindgen.load_calendar(calendar)
-        let end = Date.now()
-        console.log("load_calendar took:", (end - start) / 1000)
-    }
+    calendar = wasm_bindgen.load_calendar(calendar)
+    let end = Date.now()
+    console.log("load_calendar took:", (end - start) / 1000)
 }
 
 

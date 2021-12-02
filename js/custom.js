@@ -6,6 +6,7 @@ var parentId = sessionId
 var MAX_LEVELS = 10
 var MAX_SUBLISTS = 33
 var calendar = {}
+let wasmModule = wasm_bindgen("./zinzen_scheduler_bg.wasm");
 
 var repository = new loki("ZinZen.db", {
     autoload: true,
