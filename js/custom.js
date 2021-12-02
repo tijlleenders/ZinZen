@@ -6,7 +6,7 @@ var parentId = sessionId
 var MAX_LEVELS = 10
 var MAX_SUBLISTS = 33
 var calendar = { "max_time_units": 720, "time_unit_qualifier": "h", "goals": [], "tasks": [], "slots": [] }
-let wasmModule = wasm_bindgen("./zinzen_scheduler_bg.wasm");
+let wasmModule
 
 var repository = new loki("ZinZen.db", {
     autoload: true,
@@ -145,6 +145,7 @@ window.addEventListener("load", () => {
                 serviceWorker = swReg;
             })
     }
+    wasmModule = wasm_bindgen("./zinzen_scheduler_bg.wasm");
 });
 
 $("#main-promised").sortable({
