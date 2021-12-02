@@ -122,13 +122,6 @@ body {
     background-color var(--duration) var(--timing);
 }
 
-.control-part-screen {
-  background: var(--menu-background);
-  --duration: 0.5s;
-  --timing: ease;
-  transition: background-color var(--duration) var(--timing);
-}
-
 .modal-content,
 .modal-body,
 .modal-footer {
@@ -367,6 +360,18 @@ body {
   stroke: rgb(154, 204, 248);
   stroke-width: 4;
   filter: brightness(95%);
+}
+
+.card0 {
+  background-color: var(--menu-background);
+  border-width: 1px;
+}
+
+.card0:hover {
+  background-color: var(--menu-background);
+  border-width: 1px;
+  border-color: var(--editor-selectionHighlightBackground);
+  filter: brightness(105%);
 }
 
 .card1 {

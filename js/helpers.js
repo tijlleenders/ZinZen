@@ -28,7 +28,7 @@ function updateModalAddUI() {
     let newInputCommand = parseCommand(inputCommand)
     console.log("newInputcommand:", newInputCommand)
     $("#inputCommand").data('inputCommand', newInputCommand)
-    $("#inputCommand").val(newInputCommand.title)
+    $("#inputCommand").val(newInputCommand.title[inputCommand.lang])
     $("#inputCommand").focus()
     //when to change modal title??
 
@@ -252,11 +252,13 @@ function setSkeletonHTMLForAdd(id) {
         </div>
       </div>
     </div>`
+
+    let lang = settings.find({ "setting": "language" })[0].value
     bodyHTML += `
     <div class="row" id="input-row">
       <div class="col">
         <div class="m-1">
-            <input class="form-control" type="text" id="inputCommand" placeholder="Type een doel..." name="command" required autofocus autocomplete="off">
+            <input class="form-control" type="text" id="inputCommand" placeholder="`+ translations.find({ "en": "Type a goal..." })[0][lang] + `" name="command" required autofocus autocomplete="off">
         </div>
       </div>
     </div>
@@ -304,17 +306,41 @@ function setSkeletonHTMLForAdd(id) {
     </div>
     `
     $("#modal-body").html(bodyHTML)
+
+    let titleObject = {}
+    switch (lang) {
+        case "en":
+            titleObject.en = ''
+            break;
+        case "nl":
+            titleObject.nl = ''
+            break;
+        default:
+            throw ("language " + lang + " not implemented in switch")
+    }
+
     let inputCommand = {
-        title: '',
+        title: titleObject,
         directParents: [],
         commands: new Set(),
         suggestedCommands: [],
-        suggestedWords: []
+        suggestedWords: [],
+        lang: ''
     }
-    let goal = goals.by('id', id)
+    console.log("inputCommand:", inputCommand)
+    let goal = goals.find({ "id": id })[0]
     console.log("goals:", goal)
+
     if (goal != undefined) {
-        inputCommand.title = goal.title[settings.find({ "setting": "language" })[0].value]
+        if (goal.title.en != undefined) {
+            inputCommand.lang = "en"
+            inputCommand.title[lang] = goal.title.en
+        }
+        if (goal.title.nl != undefined) {
+            inputCommand.lang = "nl"
+            inputCommand.title[lang] = goal.title.nl
+        }
+
         if (goal.commands != undefined && goal.commands.length != 0) {
             inputCommand.commands = new Set(goal.commands.split(','))
         }
@@ -323,14 +349,31 @@ function setSkeletonHTMLForAdd(id) {
         }
         $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
         $("#save-row").removeClass('d-none')
-        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[settings.find({ "setting": "language" })[0].value].substring(0, 10) + `...</h4>`
+
+        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[lang].substring(0, 10) + `...</h4>`
         $("#modal-header-content").html(headerHTML)
     }
+
+    inputCommand.lang = lang
 
     $("#inputCommand").data('inputCommand', inputCommand)
     $("#myModal").on('shown.bs.modal', function () {
         $("#inputCommand").focus();
     });
+}
+
+function translate(englishText) {
+    let lang = settings.find({ "setting": "language" })[0].value
+    let translation = translations.find({ "en": englishText })
+    if (translation[0] == undefined) {
+        return "No translation..."
+    } else {
+        if (translation[0][lang] == undefined) {
+            return "No tranlation for " + englishText + " for language " + lang + "..."
+        } else {
+            return translation[0][lang]
+        }
+    }
 }
 
 function generateSlotHTML(element) {
@@ -351,8 +394,6 @@ function generateSlotHTML(element) {
     if (element.scheduledInTotal > 1) {
         sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
     }
-
-    let slotSvg = getGoalSvg(status, "play-" + slotId)
 
     let html = '\
 <div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
@@ -423,7 +464,20 @@ function generateEffortHTML(element) {
 
 function getGoalSvg(status, id) {
     let goalSvg
+
+    if (relationships.find({ parentId: id })[0] != undefined || status == "folder") {
+        goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36"><path path stroke="#959595" fill="#959595" fill-rule="evenodd" d="M3.75 4.5a.25.25 0 00-.25.25v14.5c0 .138.112.25.25.25h16.5a.25.25 0 00.25-.25V7.687a.25.25 0 00-.25-.25h-8.471a1.75 1.75 0 01-1.447-.765L8.928 4.61a.25.25 0 00-.208-.11H3.75zM2 4.75C2 3.784 2.784 3 3.75 3h4.971c.58 0 1.12.286 1.447.765l1.404 2.063a.25.25 0 00.207.11h8.471c.966 0 1.75.783 1.75 1.75V19.25A1.75 1.75 0 0120.25 21H3.75A1.75 1.75 0 012 19.25V4.75z"></path></svg>'
+        return goalSvg
+    }
     switch (status) {
+
+        case "none":
+            goalSvg = ''
+            break;
+
+        case "add":
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36"><path path stroke="#959595" fill="#959595" d="M12.75 7.75a.75.75 0 00-1.5 0v3.5h-3.5a.75.75 0 000 1.5h3.5v3.5a.75.75 0 001.5 0v-3.5h3.5a.75.75 0 000-1.5h-3.5v-3.5z"></path><path path stroke="#959595" fill="#959595" fill-rule="evenodd" d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zM2.5 12a9.5 9.5 0 1119 0 9.5 9.5 0 01-19 0z"></path></svg>'
+            break;
         case "done":
             goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">\
         <path stroke="#959595" fill="#959595" stroke-width="1"\
@@ -461,6 +515,10 @@ function getGoalSvg(status, id) {
             </path></svg>'
             break;
 
+        case "link":
+            goalSvg = '<svg id="svg-circle-' + id + '" class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36"><path path stroke="#959595" fill="#959595"  d="M14.78 3.653a3.936 3.936 0 115.567 5.567l-3.627 3.627a3.936 3.936 0 01-5.88-.353.75.75 0 00-1.18.928 5.436 5.436 0 008.12.486l3.628-3.628a5.436 5.436 0 10-7.688-7.688l-3 3a.75.75 0 001.06 1.061l3-3z"></path><path path stroke="#959595" fill="#959595" d="M7.28 11.153a3.936 3.936 0 015.88.353.75.75 0 001.18-.928 5.436 5.436 0 00-8.12-.486L2.592 13.72a5.436 5.436 0 107.688 7.688l3-3a.75.75 0 10-1.06-1.06l-3 3a3.936 3.936 0 01-5.567-5.568l3.627-3.627z"></path></svg>'
+            break;
+
         case "suggestion":
             goalSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">\
             <path stroke="#959595" fill="#959595" d="M10.97 8.265a1.45 1.45 0 00-.487.57.75.75 0 01-1.341-.67c.2-.402.513-.826.997-1.148C10.627 6.69 11.244 6.5 12 6.5c.658 0 1.369.195 1.934.619a2.45 2.45 0 011.004 2.006c0 1.033-.513 1.72-1.027 2.215-.19.183-.399.358-.579.508l-.147.123a4.329 4.329 0 00-.435.409v1.37a.75.75 0 11-1.5 0v-1.473c0-.237.067-.504.247-.736.22-.28.486-.517.718-.714l.183-.153.001-.001c.172-.143.324-.27.47-.412.368-.355.569-.676.569-1.136a.953.953 0 00-.404-.806C12.766 8.118 12.384 8 12 8c-.494 0-.814.121-1.03.265zM13 17a1 1 0 11-2 0 1 1 0 012 0z">\
@@ -485,8 +543,6 @@ function generateGoalHTML(properties) {
     console.log("goalId", goalId)
     console.log("tags", properties.tags)
     let tag = properties.tags[0]
-    let cardStyle = "card" + tag
-    $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let status = properties.status
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
@@ -495,9 +551,7 @@ function generateGoalHTML(properties) {
     if (properties.url != undefined) {
         titleIcon = "🔗 "
     }
-    // let directParents = properties.directParents //Todo
-    let subCountDone = parseInt(properties.subCountDone)
-    let subCountTotal = parseInt(properties.subCountMaybe) + parseInt(properties.subCountPromised) + parseInt(properties.subCountDone)
+
     let finish = ""
     if (properties.finish && properties.finish[0] != "") {
         finish = properties.finish[0]
@@ -512,10 +566,25 @@ function generateGoalHTML(properties) {
         visibilities = 'Public'
     }
 
-    var title = titleIcon + properties.title
-    if (properties.title[settings.find({ "setting": "language" })[0].value] != undefined) {
-        title = titleIcon + properties.title[settings.find({ "setting": "language" })[0].value]
+    let title = titleIcon
+    let lang = settings.find({ "setting": "language" })[0].value
+    if (properties.title[lang] != undefined) {
+        title += properties.title[lang]
+    } else {
+        switch (lang) {
+            case "en":
+                title += properties.title.nl
+                break;
+            case "nl":
+                title += properties.title.en
+                break;
+            default:
+                title += 'title not found...'
+        }
     }
+
+    let cardStyle = "card" + tag
+    $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let duration = 0
     if (properties.duration != undefined) {
@@ -527,83 +596,73 @@ function generateGoalHTML(properties) {
         durationTransparency = "semi-transparent"
     }
 
-    //Todo: 18 subs (18h 20m)... First due x, last due x
-    let subTitle = ''
-    if (subCountTotal > 0) {
-        subTitle += subCountDone + "/"
-        subTitle += subCountTotal + " sub"
-        if (subCountTotal > 1) {
-            subTitle += 's'
-        }
-    } else {
-        if (durationString != "0m") {
-            subTitle += durationString
-        }
-        subTitle += '&zwnj;'
-        if (finish != "") {
-            let localTimeLeft = dayjs().to(new dayjs(finish))
-            let dueStatus = 'Due'
-            if (status == 'done') {
-                dueStatus = 'Completed, was due'
+    let subTitleIcon = ''
+    let subCountTotal = 0
+    let subCountMaybeAndPromised = 0
+    let childrenRelations = relationships.find({ parentId: properties.id })
+    console.log("childrenRelations:", childrenRelations)
+    if (childrenRelations != undefined) {
+        subCountTotal = childrenRelations.length
+        childrenRelations.forEach(childRelation => {
+            let child = goals.find({ id: childRelation.childId })[0]
+            console.log("child found for count:", child)
+            switch (child.status) {
+                case "maybe":
+                case "promised":
+                    subCountMaybeAndPromised += 1
+                    break;
+
+                default:
+                    break;
+
             }
-            subTitle += ' ' + dueStatus + ' ' + localTimeLeft
-        }
-
+        })
     }
+    console.log("subCountMaybeAndPromised:", subCountMaybeAndPromised)
+    console.log("subCountTotal:", subCountTotal)
+
+    if (subCountMaybeAndPromised > 0) {
+        subTitleIcon = subCountMaybeAndPromised + " / "
+    }
+    if (subCountTotal > 0) {
+        subTitleIcon += subCountTotal
+    }
+
+    let subTitle = ''
     if (properties.subTitle && properties.subTitle != "") {
-        subTitle += '<br />' + properties.subTitle
+        subTitle += properties.subTitle
     }
-
 
     let goalSvg = getGoalSvg(status, goalId)
 
     //Todo: add directParents from relationships
-    let parentRowAndColHTML = ''
-    // if (directParents.length != 0) {
-    //     // console.log("directParents for " + goalId + ":" + directParents)
-    //     parentRowAndColHTML += '<div class="row" id="goal-parents-row-' +
-    //         goalId +
-    //         '">\
-    //   <div class="col text-end" id="goal-parents-' +
-    //         goalId +
-    //         '">\
-    // '
-    //     if (directParents.length > 1) {
-    //         directParents.forEach(function (parentId, index) {
-    //             // console.log("getting parent for id:", parentId)
-    //             let parent = goals.by('id', parentId)
-    //             // console.log("parent:", parent)
-    //             if (parent != undefined) {
-    //                 parentRowAndColHTML += '<div class="parent-link" id="parent-link-' + parentId + '">' + parent.title + "</div>"
-    //             }
-    //         })
-    //     }
-    //     parentRowAndColHTML += '</div></div>'
-    // }
 
     let returnHTML = `
-          <div class="col-2 circle-col d-flex align-items-center align-text-center" id="circle-col-` + goalId + `">
-            <div class="mr-3 todo-circle" id="todo-circle-` + goalId + `">` + goalSvg + `</div>
-          </div>
-          <div class="col-10">
-            ` + parentRowAndColHTML + `            
-            <div class="row" id="goal-title-row-` + goalId + `">
-              <div class="col d-flex">
-                <div class="title d-flex icons" id="title-` + goalId + `">              
-                  <div class="me-auto d-inline-block text-truncate title-text" id="title-text-` + goalId + `">` + title + `</div>
+          <div class="col" id="card-inners-` + goalId + `">
+            <div class="row" id="icon-and-title-row-` + goalId + `">
+                <div class="col-2 d-flex justify-content-center align-items-end circle-col" id="circle-col-` + goalId + `">
+                    <div class="mr-3 status-icon" id="todo-circle-` + goalId + `">` + goalSvg + `</div>                    
                 </div>
-              </div>
+                <div class="col-10 d-flex" id="subtext-icon-` + goalId + `">
+                    <div class="title d-flex icons" id="title-` + goalId + `">              
+                        <div class="me-auto d-inline-block text-truncate title-text" id="title-text-` + goalId + `">` + title + `</div>
+                    </div>
+              </div>                
             </div>
-            <div class="row" id="subtext-row-` + goalId + `">
-              <div class="col d-flex align-self-center" id="subtext-col-` + goalId + `">
-                <div class="icons sub-title" id="subtext-` + goalId + `">` + subTitle + `</div>
-              </div>
+            <div class="row" id="sub-title-row-` + goalId + `">
+                <div class="col-2 d-flex justify-content-center circle-col" id="subtext-col-` + goalId + `">
+                    <div class="icons sub-title" id="subtext-` + goalId + `">` + subTitleIcon + `</div>
+                </div>
+                <div class="col-10 d-flex" id="subtext-col-` + goalId + `">
+                    <div class="icons sub-title" id="subtext-` + goalId + `">` + subTitle + `</div>
+                </div>            
             </div>
           </div>
       `
 
     return returnHTML
 }
+
 
 function calculateCalendarFor(goalJSON, numberOfDaysToReturn, startingDayISO) {
     let schedulerOutput = {
@@ -1376,7 +1435,7 @@ function getShortestPathToPersonFor(id) {
         if (relationship != undefined) {
             id = relationship.parentId
         }
-    } while (safety < 10 && !(currentVertex.label == "person" || currentVertex.label == "settings-root" || currentVertex.label == "suggestions-root" || currentVertex.label == "feelings-root"))
+    } while (safety < 10 && !(currentVertex.label == "person"))
 
     return shortestPath
 }
@@ -1415,13 +1474,13 @@ function updatePriority() {
 }
 
 function lastSettingsUpdate() {
-    return 1637134156270
+    return 1637675183133
 }
 
 function loadSettings() {
     repository.removeCollection('settings')
-    goals.findAndRemove({ "label": "settings-root" })
     goals.findAndRemove({ "label": "setting" })
+    goals.findAndRemove({ "label": "setting-action" })
     relationships.findAndRemove({ "label": "setting" })
     settings = repository.addCollection('settings', { unique: ['setting'] })
     settings.insert({ "setting": "screenMode", "value": "light" })
@@ -1431,13 +1490,12 @@ function loadSettings() {
         browserLanguage = 'en'
     }
     settings.insert({ "setting": "language", "value": browserLanguage })
-    loadSettingGoalsAndRelationships()
 }
 
 function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "______________________________ZinZen",
-        "label": "settings-root",
+        "label": "setting",
         "title": {
             "en": "ZinZen",
             "nl": "ZinZen"
@@ -1454,7 +1512,6 @@ function loadSettingGoalsAndRelationships() {
         "commands": "setting",
         "statusSort": 1
     })
-    relationships.insert({ parentId: '', childId: "______________________________ZinZen" })
 
     goals.insert({
         "id": "_____________________my-app-settings",
@@ -1487,7 +1544,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+
         "tags": [
             "4"
         ],
@@ -1496,53 +1553,56 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "______________________________donate",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Donate", "nl": "Doneren" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
+        "urls": ["https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"],
         "statusSort": 1
     })
     goals.insert({
         "id": "________________________________blog",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Blog", "nl": "Blog" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://blog.ZinZen.me"],
+        "urls": ["https://blog.ZinZen.me"],
         "statusSort": 1
     })
     goals.insert({
         "id": "_______________________________about",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "About us", "nl": "Over ons" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/about.html"],
+        "urls": ["https://ZinZen.me/about.html"],
         "statusSort": 1
     })
     goals.insert({
@@ -1554,7 +1614,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+
         "tags": [
             "4"
         ],
@@ -1562,7 +1622,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_____________________my-app-settings", priority: 0, label: "setting" })
+    relationships.insert({ parentId: sessionId, childId: "______________________________ZinZen", priority: 0, label: "setting" })
     relationships.insert({ parentId: "______________________________ZinZen", childId: "_________install-on-phone-or-desktop", priority: 1, label: "setting" })
     relationships.insert({ parentId: "______________________________ZinZen", childId: "______________________________donate", priority: 2, label: "setting" })
     relationships.insert({ parentId: "______________________________ZinZen", childId: "________________________________blog", priority: 3, label: "setting" })
@@ -1573,7 +1633,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_______________________look-and-feel",
         "label": "setting",
-        "title": { "en": "Look and feel", "nl": "Opmaak" },
+        "title": { "en": "Display and Language", "nl": "Opmaak en Taal" },
         "owner": "ZinZen",
         "subCountMaybe": "2",
         "subCountPromised": "0",
@@ -1604,29 +1664,30 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "id": "__________________________sign-up-in",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Sign up / in", "nl": "Lid worden / Aanmelden" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
-        "function": ["logOut()"],
+        "function": "logOut()",
         "commands": "setting",
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_______________________look-and-feel", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "__________________________sign-up-in", priority: 1, label: "setting" })
-    relationships.insert({ parentId: "_____________________my-app-settings", childId: "_________________import-export-reset", priority: 2, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________look-and-feel", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "__________________________sign-up-in", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________________import-export-reset", priority: 2, label: "setting" })
 
     goals.insert({
         "id": "____________________reset-repository",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Destroy all my data now!", "nl": "Vernietig al mijn data nu!" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1640,7 +1701,7 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["resetRepository()"],
+        "function": "resetRepository()",
         "commands": "setting",
         "statusSort": 1
     })
@@ -1704,53 +1765,56 @@ function loadSettingGoalsAndRelationships() {
 
     goals.insert({
         "id": "_____________________________Privacy",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Privacy statement", "nl": "Privacy verklaring" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/privacy.html"],
+        "urls": ["https://ZinZen.me/privacy.html"],
         "statusSort": 1
     })
     goals.insert({
         "id": "____________________terms-of-service",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Terms of service", "nl": "Algemene voorwaarden" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/terms.html"],
+        "urls": ["https://ZinZen.me/terms.html"],
         "statusSort": 1
     })
     goals.insert({
         "id": "________open-source-acknowledgements",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Open source acknowledgements", "nl": "Open source erkenningen" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "maybe",
+        "status": "link",
+        "function": "openURLs()",
         "tags": [
             "4"
         ],
         "commands": "setting",
-        "url": ["https://ZinZen.me/acknowledgements.html"],
+        "urls": ["https://ZinZen.me/acknowledgements.html"],
         "statusSort": 1
     })
 
@@ -1758,25 +1822,6 @@ function loadSettingGoalsAndRelationships() {
     relationships.insert({ parentId: "_______________________________legal", childId: "____________________terms-of-service", priority: 1, label: "setting" })
     relationships.insert({ parentId: "_______________________________legal", childId: "________open-source-acknowledgements", priority: 2, label: "setting" })
 
-    goals.insert({
-        "id": "_________________________color-theme",
-        "label": "setting",
-        "title": { "en": "Color theme", "nl": "Kleuren thema" },
-        "owner": "ZinZen",
-        "subCountMaybe": "2",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-        "status": "setting",
-        "tags": [
-            "4"
-        ],
-        "updatedDT": [
-            "2021-08-12T15:24:03.602Z"
-        ],
-        "commands": "setting",
-        "statusSort": 1
-    })
     goals.insert({
         "id": "____________________________language",
         "label": "setting",
@@ -1794,12 +1839,9 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_______________________look-and-feel", childId: "_________________________color-theme", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 1, label: "setting" })
-
     goals.insert({
         "id": "__________________________light-mode",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Light mode", "nl": "Lichte modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1813,14 +1855,14 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setScreenModeLight()"],
+        "function": "setScreenModeLight()",
         "commands": "setting",
         "statusSort": 1
     })
 
     goals.insert({
         "id": "___________________________dark-mode",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "Dark mode", "nl": "Donkere modus" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1834,17 +1876,19 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setScreenModeDark()"],
+        "function": "setScreenModeDark()",
         "commands": "setting",
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "_________________________color-theme", childId: "__________________________light-mode", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "_________________________color-theme", childId: "___________________________dark-mode", priority: 1, label: "setting" })
+
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "____________________________language", priority: 2, label: "setting" })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "__________________________light-mode", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "_______________________look-and-feel", childId: "___________________________dark-mode", priority: 1, label: "setting" })
 
     goals.insert({
         "id": "_______________________________Dutch",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "🇳🇱 Dutch", "nl": "🇳🇱 Nederlands" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1858,14 +1902,14 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setLanguageTo('nl')"],
+        "function": "setLanguageTo('nl')",
         "commands": "setting",
         "statusSort": 1
     })
 
     goals.insert({
         "id": "_____________________________English",
-        "label": "setting",
+        "label": "setting-action",
         "title": { "en": "🇺🇸 🇬🇧 English", "nl": "🇺🇸 🇬🇧 Engels" },
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1879,18 +1923,17 @@ function loadSettingGoalsAndRelationships() {
         "updatedDT": [
             "2021-08-12T15:24:03.602Z"
         ],
-        "function": ["setLanguageTo('en')"],
+        "function": "setLanguageTo('en')",
         "commands": "setting",
         "statusSort": 1
     })
 
     relationships.insert({ parentId: "____________________________language", childId: "_____________________________English", priority: 0, label: "setting" })
     relationships.insert({ parentId: "____________________________language", childId: "_______________________________Dutch", priority: 1, label: "setting" })
-
 }
 
 
-function loadGoalsAndRelationship() {
+function loadGoalsAndRelationships() {
 
     goals.insert({
         label: 'person',
@@ -1903,33 +1946,82 @@ function loadGoalsAndRelationship() {
         commands: ''
     })
 
+    loadSettings()
+    loadSettingGoalsAndRelationships()
+    loadSuggestionsGoalsAndRelationships()
+    loadPersonalTimeAndRelationships()
+    loadPersonalFeelingsAndRelationships()
+    loadPersonalGoalsAndRelationships()
+}
+
+function loadPersonalTimeAndRelationships() {
     goals.insert({
-        "id": "____________________________Feelings",
-        "label": "feelings-root",
-        "title": {
-            "en": "Me",
-            "nl": "Ik"
-        },
+        "id": "________________________________time",
+        "label": "setting-action",
+        "title": { "en": "My time", "nl": "Mijn tijd" },
         "owner": "ZinZen",
-        "subCountMaybe": "3",
+        "subCountMaybe": "0",
         "subCountPromised": "0",
         "subCountDone": "0",
         "subCountNever": "0",
-        "status": "setting",
+        "status": "suggestion",
+        "function": "goToCalendar()",
         "tags": [
-            "4"
+            "1"
         ],
-        "commands": "setting",
+        "commands": "",
         "statusSort": 1
     })
-    relationships.insert({ parentId: '', childId: "____________________________Feelings" })
+    relationships.insert({ parentId: sessionId, childId: "________________________________time" })
+}
 
-    loadSettingGoalsAndRelationships()
+function loadPersonalFeelingsAndRelationships() {
+    goals.insert({
+        "id": "____________________________feelings",
+        "label": "feeling",
+        "title": { "en": "My feelings 💖", "nl": "Mijn gevoelens 💖" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "suggestion",
+        "tags": [
+            "2"
+        ],
+        "commands": "",
+        "statusSort": 1
+    })
 
+    relationships.insert({ parentId: sessionId, childId: "____________________________feelings" })
+}
+
+function loadPersonalGoalsAndRelationships() {
+    goals.insert({
+        "id": "_______________________________goals",
+        "label": "goal",
+        "title": { "en": "My goals 🎯", "nl": "Mijn doelen 🎯" },
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "folder",
+        "tags": [
+            "5"
+        ],
+        "commands": "",
+        "statusSort": 1
+    })
+
+    relationships.insert({ parentId: sessionId, childId: "_______________________________goals" })
+}
+
+function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "_________________________suggestions",
-        "label": "suggestions-root",
-        "title": { "en": "Explore", "nl": "Ontdek" },
+        "label": "suggestion",
+        "title": { "en": "🔭 Explore 🧭", "nl": "🔭 Ontdek 🧭" },
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1937,12 +2029,12 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "4"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
     })
-    relationships.insert({ parentId: '', childId: "_________________________suggestions" })
+    relationships.insert({ parentId: sessionId, childId: "_________________________suggestions" })
 
     goals.insert({
         "id": "________nature-and-environment-goals",
@@ -1971,7 +2063,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "6"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -1987,7 +2079,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "5"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2003,7 +2095,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "2"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2019,7 +2111,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "3"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2035,7 +2127,7 @@ function loadGoalsAndRelationship() {
         "subCountNever": "0",
         "status": "suggestion",
         "tags": [
-            "4"
+            "7"
         ],
         "commands": "suggestion",
         "statusSort": 1
@@ -2080,6 +2172,47 @@ function loadTranslations() {
             "en": "How do you feel now?",
             "nl": "Hoe voel je je nu?"
         })
+    translations.insert(
+        {
+            "en": "Type a goal...",
+            "nl": "Type een doel..."
+        })
+    translations.insert(
+        {
+            "en": "Back",
+            "nl": "Terug"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Add",
+            "nl": "Voeg toe"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Copy",
+            "nl": "Kopieer"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Move",
+            "nl": "Verplaats"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Paste",
+            "nl": "Plakken"
+        }
+    )
+    translations.insert(
+        {
+            "en": "Delete",
+            "nl": "Verwijder"
+        }
+    )
     translations.insert(
         {
             "en": "Happy",
@@ -2390,10 +2523,12 @@ function loadTranslations() {
 function updateUILanguage() {
     let lang = settings.find({ "setting": "language" })[0].value
     console.log("language found in settings:", lang)
-    $("#top-feelings-label").html(translations.find({ "en": "Feelings" })[0][lang])
-    $("#top-goals-label").html(translations.find({ "en": "Goals" })[0][lang])
-    $("#top-calendar-label").html(translations.find({ "en": "Time" })[0][lang])
-    $("#top-explore-label").html(translations.find({ "en": "Explore" })[0][lang])
+    $("#backButtonText").html(translate("Back"))
+    $("#addButtonText").html(translate("Add"))
+    $("#copyButtonText").html(translate("Copy"))
+    $("#moveButtonText").html(translate("Move"))
+    $("#pasteButtonText").html(translate("Paste"))
+    $("#deleteButtonText").html(translate("Delete"))
     updateUIChildrenFor(parentId)
     updateBreadcrumbUI()
 }
@@ -2405,68 +2540,11 @@ async function updateUIWith(child) {
     let id = child.id
 
     if (!$('#' + id).length) {
-        // console.log("id not yet present, prepending")
-        $("#add-a-goal").empty() //Empties the No lists here
         let goalHTML = `<div class="row goal card shadow-sm mb-2" id="` + id + `"></div>`
         $("#main-promised").prepend(goalHTML)
     }
     $("#" + id).html(generateGoalHTML(child))
 
-    if ($("#myModal").data("idx") == id) {
-        switch ($("#myModal").data("modalType")) {
-
-            case "add":
-                setSkeletonHTMLForAdd(id)
-                updateModalUI()
-                break;
-
-            default:
-        }
-
-
-    }
-}
-
-function goToSetting(selectedGoalId) {
-    console.log("inside goToSetting")
-    let setting = goals.by('id', selectedGoalId)
-    console.log("setting:", setting)
-    if (setting.function != undefined) {
-        switch (setting.function[0]) {
-            case "setScreenModeDark()":
-                setScreenModeDark()
-                return
-                break;
-            case "setScreenModeLight()":
-                setScreenModeLight()
-                return
-                break;
-            case "logOut()":
-                logOut()
-                return
-                break;
-            case "setLanguageTo('en')":
-                setLanguageTo('en')
-                break;
-            case "setLanguageTo('nl')":
-                setLanguageTo('nl')
-                break;
-            case "resetRepository()":
-                resetRepository()
-                break;
-            default:
-                console.log("function not recognized:", setting.function[0])
-                return
-                break;
-        }
-    }
-    if (setting.url != undefined) {
-        window.open(setting.url[0], '_blank')
-    } else {
-        if (setting.function == undefined) {
-            goTo(selectedGoalId)
-        }
-    }
 }
 
 function logOut() {
@@ -2485,14 +2563,14 @@ function handleCommand(selectedCommand) {
     inputCommand.commands.add(selectedCommand)
     let indexOfCommand = inputCommand.suggestedCommands.findIndex(commandSet => commandSet.has(selectedCommand));
     console.log("command has index ", indexOfCommand)
-    let wordsArray = getArrayFromTitle(inputCommand.title)
+    let wordsArray = getArrayFromTitle(inputCommand.title[inputCommand.lang])
     console.log("wordsArray:", wordsArray)
     if (selectedCommand.substr(0, 4) == "flex") {
         wordsArray.splice(indexOfCommand, 2)
     } else {
         wordsArray.splice(indexOfCommand, 1)
     }
-    inputCommand.title = wordsArray.join(' ')
+    inputCommand.title[inputCommand.lang] = wordsArray.join(' ')
     console.log("inputCommand after (not saved):", inputCommand)
     // $("#inputCommand").data('inputCommand', inputCommand)
     updateModalUI()
@@ -2592,7 +2670,8 @@ function parseCommand(command) {
 }
 
 function addSuggestedCommands(command) {
-    let wordsArray = command.title.split(" ")
+    console.log("command.lang:", command.lang)
+    let wordsArray = command.title[command.lang].split(" ")
     console.log("wordsArray before:", wordsArray)
 
     let hasTrailingSpace = false
@@ -2653,9 +2732,9 @@ function addSuggestedCommands(command) {
 
     console.log("wordsArray after:", wordsArray)
 
-    command.title = wordsArray.join(" ")
+    command.title[command.lang] = wordsArray.join(" ")
     if (hasTrailingSpace && wordsArray.length != 0) {
-        command.title += " "
+        command.title[command.lang] += " "
     }
 
     if (wordsArray.length == 0) {
@@ -2669,6 +2748,12 @@ function addSuggestedCommands(command) {
     //this also avoids having to make the commands unique at the end
 
     return
+}
+
+function openURLs(urls) {
+    urls.forEach(url => {
+        window.open(url, '_blank')
+    })
 }
 
 function isURL(word) {

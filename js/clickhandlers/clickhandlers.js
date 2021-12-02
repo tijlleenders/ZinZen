@@ -10,49 +10,15 @@ $("#modal-footer-close").click(function () {
     $("#myModal").modal("hide");
 });
 
-$("#top-settings").click(function () {
-    $("#breadcrumb").removeClass("d-none")
-    $("#main-play").addClass("d-none")
-    $("#main-promised").removeClass("d-none")
-    $("#main-quote-row").addClass("d-none")
-    goTo("______________________________ZinZen")
-})
-
-$("#top-feelings").click(function () {
-    $("#breadcrumb").removeClass("d-none")
-    $("#main-play").addClass("d-none")
-    $("#main-promised").removeClass("d-none")
-    $("#main-quote-row").addClass("d-none")
-    goTo("____________________________Feelings")
-})
-
-$("#top-goals").click(function () {
-    $("#breadcrumb").removeClass("d-none")
-    $("#main-play").addClass("d-none")
-    $("#main-promised").removeClass("d-none")
-    goTo(sessionId)
-})
-
-$("#top-calendar").click(function () {
-    $("#breadcrumb").addClass("d-none")
-    generateCalendarHTML()
-    $("#main-play").removeClass("d-none")
-    $("#main-promised").addClass("d-none")
-    $("#main-quote-row").addClass("d-none")
-})
-
-$("#top-inbox").click(function () {
-    openMainMailModal()
-})
-
-$("#top-explore").click(function () {
-    $("#breadcrumb").removeClass("d-none")
-    $("#main-play").addClass("d-none")
-    $("#main-promised").removeClass("d-none")
-    $("#main-quote-row").addClass("d-none")
-    goTo("_________________________suggestions")
-})
-
+$("#addButton").click(function () {
+    let parent = goals.find({ id: parentId })[0]
+    if (parent.label == "goal") {
+        addAGoal()
+    }
+    if (parent.label == "feeling") {
+        addAFeeling()
+    }
+});
 
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     event.stopPropagation();
@@ -118,10 +84,94 @@ $("#main-promised").on("sortupdate", function (event, ui) {
     updatePriority()
 });
 
+function goTo(id) {
+    console.log("inside goTo... with id", id)
+    // todo: zoom in animation
+    let goal = goals.find({ id: id })[0]
+    if (goal == undefined) {
+        console.error("can't find goal with id:", id)
+        return
+    }
+
+    switch (goal.label) {
+        case "goal":
+            $("#main-promised").empty()
+            $("#main-buttons-row").removeClass('d-none')
+            $("#main-quote").addClass('d-none')
+            parentId = id
+            updateUIChildrenFor(id)
+            updateBreadcrumbUI()
+            break;
+        case "suggestion":
+        case "person":
+        case "setting":
+        case "feeling":
+            $("#main-promised").empty()
+            $("#main-buttons-row").addClass('d-none')
+            $("#main-quote").addClass('d-none')
+            parentId = id
+            updateUIChildrenFor(id)
+            updateBreadcrumbUI()
+            break;
+
+        case "setting-action":
+        case "action":
+            switch (goal.function) {
+                case "openURLs()":
+                    openURLs(goal.urls)
+                    return
+                    break;
+                case "setScreenModeDark()":
+                    setScreenModeDark()
+                    return
+                    break;
+                case "setScreenModeLight()":
+                    setScreenModeLight()
+                    return
+                    break;
+                case "logOut()":
+                    logOut()
+                    return
+                    break;
+                case "setLanguageTo('en')":
+                    setLanguageTo('en')
+                    return
+                    break;
+                case "setLanguageTo('nl')":
+                    setLanguageTo('nl')
+                    return
+                    break;
+                case "resetRepository()":
+                    resetRepository()
+                    break;
+                default:
+                    console.log("function not recognized:", goal.function)
+                    return
+                    break;
+            }
+            return
+            break;
+
+        default:
+            console.error("can't handle goal label:", goal.label)
+    }
+}
+
 function changeStatus(id) {
-    let currentStatus = $("#" + id).data("status")
-    let toBeStatus = currentStatus
+    if (relationships.find({ parentId: id })[0] != undefined) {
+        goTo(id)
+    }
+    let goal = goals.find({ id: id })[0]
+    let currentStatus = goal.status
+    let toBeStatus = goal.status
     switch (currentStatus) {
+        case "action":
+        case "link":
+        case "setting":
+        case "add":
+        case "folder":
+            goTo(id)
+            break;
         case "promised":
             toBeStatus = "done"
             break;
@@ -139,26 +189,9 @@ function changeStatus(id) {
             break;
     }
 
-    //fast update before confirmation from backend
-    let goal = goals.find({ id: id })[0]
     goal.status = toBeStatus
     goals.update(goal)
     $("#" + id).html(generateGoalHTML(goal))
-}
-
-function goTo(id) {
-    // console.log("inside goTo... with id", id)
-    // todo: zoom in animation
-    $("#main-promised").empty()
-    $("#main-quote").addClass('d-none')
-    parentId = id
-    let parent = goals.find({ id: parentId })[0]
-    if (parent == undefined) {
-        console.error("can't find parent with id:", id)
-    } else {
-        updateUIChildrenFor(parent.id)
-        updateBreadcrumbUI()
-    }
 }
 
 $("#mmain-play").on("click", ".slot", function (event) {
@@ -189,83 +222,16 @@ $("#main-promised").on("click", ".goal", function (event) {
     if (nodeId != "") {
         let properties = goals.find({ id: selectedGoalId })[0]
         console.log("properties:", properties)
-        if (properties.commands != undefined && properties.commands.length != 0) {
-            console.log("Commands!")
-            if (properties.commands.split(',').includes('setting')) {
-                goToSetting(selectedGoalId)
-                return
-            }
-            if (properties.commands.split(',').includes('WebLink')) {
-                window.open(properties.url[0], '_blank')
-                return
-            }
-            goTo(selectedGoalId)
-            return
-        }
-        if ($("#" + nodeId).hasClass("title") ||
-            $("#" + nodeId).hasClass("title-text") ||
-            nodeId.substring(0, 8) == "subtext-" ||
-            nodeId.substring(0, 12) == "subtext-col-") {
-            goTo(selectedGoalId)
-        }
-        if ($("#" + nodeId).hasClass("parent-link")) {
-            goTo(selectedGoalId)
-        }
-        if (nodeId.substring(0, 11) == "delete-col-" ||
-            nodeId.substring(0, 12) == "delete-icon-") {
-            deleteGoalAndExclusiveDescendants(selectedGoalId)
-        }
-        if (nodeId.substring(0, 11) == "finish-col-" ||
-            nodeId.substring(0, 12) == "finish-icon-") {
-            openModal(selectedGoalId, "schedule")
-        }
-        if ($("#" + nodeId).hasClass("due")) {
-            openModal(selectedGoalId, "schedule")
-        }
-        if ($("#" + nodeId).hasClass("duration")) {
-            openModal(selectedGoalId, "schedule")
-        }
-        if (nodeId.substring(0, 17) == "visibilities-col-" ||
-            nodeId.substring(0, 18) == "visibilities-icon-") {
-            openModal(selectedGoalId, "visibilities")
-        }
+        goTo(selectedGoalId)
     } else {
         console.log("error in #goals.on(click)!");
     }
 })
 
-//TODO: keep this? Now only using card:hover
-$("#main-promised").on("mouseover", ".goal", function (event) {
-    var target = event.target.id;
-    var id = "";
-    if (target == "") {
-        if ($(event.target).parents(".goal").attr("id").length > 0) {
-            id = $(event.target).parents(".goal").attr("id").slice(-36);
-        }
-    } else {
-        id = target.slice(-36);
-    }
-    //do something to hover programmatically
-});
-
-//TODO: keep this? Now only using card:hover
-$("#main-promised").on("mouseout", ".goal", function (event) {
-    var target = event.target.id;
-    var id = "";
-    if (target == "") {
-        if ($(event.target).parents(".goal").attr("id").length > 0) {
-            id = $(event.target).parents(".goal").attr("id").slice(-36);
-        }
-    } else {
-        id = target.slice(-36);
-    }
-    //do something to hover programmatically
-});
-
-$("#add-a-goal-button").click(function () {
+function addAGoal() {
     openModal("", "add")
-})
+}
 
-$("#add-a-moment-button").click(function () {
+function addAFeeling() {
     openModal("", "moment")
-})
+}

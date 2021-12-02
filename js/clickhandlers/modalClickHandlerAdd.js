@@ -18,7 +18,7 @@ $("#myModal").on("keyup", "#inputCommand", function (e) {
     // send(JSON.stringify(getSuggestions))
 
     let inputCommand = $("#inputCommand").data('inputCommand')
-    inputCommand.title = $("#inputCommand").val()
+    inputCommand.title[inputCommand.lang] = $("#inputCommand").val()
     $("#inputCommand").data('inputCommand', inputCommand)
     updateModalAddUI()
 });
@@ -42,10 +42,18 @@ function addSomething() {
         tags = parent.tags
     }
 
+    var titleObject = {}
+    let lang = settings.find({ "setting": "language" })[0].value
+    if (lang != undefined) {
+        titleObject[lang] = title
+    } else {
+        throw ("can't find language setting")
+    }
+
     let newGoal = {
         id: newGoalId,
         label: "goal",
-        title: title,
+        title: titleObject,
         parentId: parentId,
         status: status,
         start: (new Date()).toISOString(),
@@ -104,10 +112,18 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     let idToSave = $("#myModal").data('idx')
     console.log("idx:", idToSave)
     let commands = [...$("#inputCommand").data('inputCommand').commands].join(',')
+
     if (idToSave != undefined) {
         let goal = goals.find({ id: idToSave })[0]
         if (goal.label == "goal") {
-            goal.title = title
+            let lang = settings.find({ "setting": "language" })[0].value
+            if (lang != undefined) {
+                goal.title[lang] = title
+            } else {
+                console.log("different language than interface language set for title")
+                console.log("using following language to save:", lang)
+                goal.title[lang] = title
+            }
             goal.commands = commands
             goals.update(goal)
             updateUIChildrenFor(parentId)

@@ -32,7 +32,7 @@ function databaseInitialize() {
             unique: ['id']
         })
         relationships = repository.addCollection('relationships', {})
-        loadGoalsAndRelationship()
+        loadGoalsAndRelationships()
     } else {
         sessionId = goals.find({ label: 'person' })[0].id
         console.log("getting sessionId from db:", sessionId)
@@ -44,7 +44,7 @@ function databaseInitialize() {
     }
 
     loadTranslations()
-    goTo("_________________________suggestions")
+    goTo(parentId)
     $("#main-quote").removeClass('d-none')
     $("#main-quote").html('<center><h1>“' + randomQuote.quote + '”</h1>- ' + randomQuote.author + '</center> ')
     updateUILanguage()
@@ -116,17 +116,10 @@ window.mobileAndTabletCheck = function () {
 function updateUIChildrenFor(parentId) {
     console.log("inside updateUIChildrenFor...")
     let relationshipsForParent = relationships.chain().find({ 'parentId': parentId }).simplesort('priority', { desc: true }).limit(MAX_SUBLISTS).data()
-    if (relationshipsForParent[0] == undefined) {
-        //Todo: show no children info message on screen
-    } else {
-        relationshipsForParent.forEach(relationship => {
-            if (relationship.childId == "____________________________settings") {
-                return; // skip to go to next iteration
-            }
-            let childResults = goals.find({ 'id': relationship.childId })
-            updateUIWith(childResults[0])
-        });
-    }
+    relationshipsForParent.forEach(relationship => {
+        let childResults = goals.find({ 'id': relationship.childId })
+        updateUIWith(childResults[0])
+    });
 }
 
 // Initialize deferredPrompt for use later to show browser install prompt.
