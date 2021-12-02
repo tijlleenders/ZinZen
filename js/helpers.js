@@ -685,7 +685,8 @@ function goToCalendar() {
 
 function calculateCalendar() {
     let start = Date.now()
-    calendar = wasm_bindgen.load_calendar(calendar)
+    let calendarOutput = wasm_bindgen.load_calendar(calendar)
+    console.log("calendarOutpu:", calendarOutput)
     let end = Date.now()
     console.log("load_calendar took:", (end - start) / 1000)
 }

@@ -5,7 +5,7 @@ var sessionId = uuidv4()
 var parentId = sessionId
 var MAX_LEVELS = 10
 var MAX_SUBLISTS = 33
-var calendar = {}
+var calendar = { "max_time_units": 720, "time_unit_qualifier": "h", "goals": [], "tasks": [], "slots": [] }
 let wasmModule = wasm_bindgen("./zinzen_scheduler_bg.wasm");
 
 var repository = new loki("ZinZen.db", {
