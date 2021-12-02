@@ -663,6 +663,26 @@ function generateGoalHTML(properties) {
     return returnHTML
 }
 
+function goToCalendar() {
+    calculateCalendar()
+    let calendarHTML = JSON.stringify(calendar)
+    // calendarHTML += generateProgressHTML(slotsForSelectedDay)
+    // calendarHTML += generateSlotsHTML(slotsForSelectedDay, getGoalJSON())
+
+    $("#calendarSlots").html(calendarHTML)
+    $("#main-calendar").removeClass('d-none')
+
+    $("#main-quote").addClass('d-none')
+    $("#main-buttons-row").addClass('d-none')
+    $("#main-promised").addClass('d-none')
+
+    $("#datepicker").datepicker({
+        format: 'mm/dd/yyyy',
+        startDate: '-3d'
+    });
+}
+
+
 function calculateCalendar() {
     let start = Date.now()
     wasm_bindgen("./zinzen_scheduler_bg.wasm").then(on_wasm_loaded).catch(console.error);
@@ -673,17 +693,6 @@ function calculateCalendar() {
     }
 }
 
-function generateCalendarHTML() {
-    let calendarHTML = JSON.stringify(calendar)
-    // calendarHTML += generateProgressHTML(slotsForSelectedDay)
-    // calendarHTML += generateSlotsHTML(slotsForSelectedDay, getGoalJSON())
-
-    $("#main-play").html(calendarHTML)
-    $("#datepicker").datepicker({
-        format: 'mm/dd/yyyy',
-        startDate: '-3d'
-    });
-}
 
 function activateCalendarPicker() {
     $("#progress-card").on("click", "#progress-header", function (event) {
