@@ -328,6 +328,7 @@ function setSkeletonHTMLForAdd(id) {
             id: "",
             label: "goal",
             title: titleObject,
+            status: "maybe",
             directParents: new Set([parentId]),
             suggestedCommands: new Set(),
             suggestedWords: new Set(),
