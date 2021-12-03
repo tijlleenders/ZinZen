@@ -68,8 +68,8 @@ function updateModalAddUI() {
     $("#selected-parents").html(parentsHTML)
 
     let selectedCommands = ``;
-    if (inputGoal.duration != undefined) {
-        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">' + inputGoal.duration + '</span>'
+    if (inputGoal.durationString != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">duration ' + inputGoal.durationString + '</span>'
     }
     $("#selected-commands").html(selectedCommands)
 
