@@ -2139,19 +2139,19 @@ function logOut() {
 function handleCommand(selectedCommand) {
     let inputGoal = $("#inputGoal").data('inputGoal')
     console.log("command pressed:", selectedCommand)
-    inputGoal.commands.add(selectedCommand)
-    let indexOfCommand = inputGoal.suggestedCommands.findIndex(commandSet => commandSet.has(selectedCommand));
-    console.log("command has index ", indexOfCommand)
-    let wordsArray = getArrayFromTitle(inputGoal.title[inputGoal.lang])
-    console.log("wordsArray:", wordsArray)
-    if (selectedCommand.substr(0, 4) == "flex") {
-        wordsArray.splice(indexOfCommand, 2)
-    } else {
-        wordsArray.splice(indexOfCommand, 1)
+    if (selectedCommand.substr(0, 9) == "duration ") {
+        console.log("duration selected")
+        let durationString = selectedCommand.split(" ")[1]
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(durationString, "")
+        inputGoal.durationString = durationString
     }
-    inputGoal.title[inputGoal.lang] = wordsArray.join(' ')
+
+    if (selectedCommand.substr(0, 5) == "flex ") {
+        console.log("flex selected")
+    }
+
     console.log("inputGoal after (not saved):", inputGoal)
-    // $("#inputGoal").data('inputGoal', inputGoal)
+    $("#inputGoal").data('inputGoal', inputGoal)
     updateModalUI()
 }
 
@@ -2222,11 +2222,7 @@ let commandDict = {
     'cn': ['🇨🇳'],
     'es': ['🇪🇸'],
     'de': ['🇩🇪'],
-    'please': ['🥺'],
-
-    '-': ["Sad", "Afraid", "Frustrated", "Depressed", "Lonely", "Embarassed", "Stressed", "Demotivated", "Pessimistic"],
-    '+': ["Happy", "Grateful", "Passionate", "Loved", "Proud", "Mindful", "Motivated", "Optimistic"]
-
+    'please': ['🥺']
 }
 
 let wordDict = {
@@ -2289,7 +2285,10 @@ function addSuggestedCommands(command) {
         if (isDuration(word) &&
             ((index > 0 && wordsArray[index - 1] != 'flex') ||
                 (index == 0))) {
-            commandsToSuggest.add(word)
+            commandsToSuggest.add("duration " + word)
+            commandsToSuggest.add("flex " + word)
+            commandsToSuggest.add("start " + word)
+            commandsToSuggest.add("finish " + word)
         }
 
         if (word == 'flex') {
