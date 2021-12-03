@@ -607,16 +607,6 @@ function generateGoalHTML(properties) {
     let cardStyle = "card" + color
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
-    let duration = 0
-    if (properties.duration != undefined) {
-        duration = properties.duration[0]
-    }
-    let durationString = formatDuration(duration).short
-    let durationTransparency = ""
-    if (durationString == "0m") {
-        durationTransparency = "semi-transparent"
-    }
-
     let subTitleIcon = ''
     let subCountTotal = 0
     let subCountMaybeAndPromised = 0
@@ -652,6 +642,9 @@ function generateGoalHTML(properties) {
     let subTitle = ''
     if (properties.subTitle && properties.subTitle != "") {
         subTitle += properties.subTitle
+    }
+    if (properties.durationString && properties.durationString != "") {
+        subTitle += properties.durationString
     }
 
     let goalSvg = getGoalSvg(status, goalId)
