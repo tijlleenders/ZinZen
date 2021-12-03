@@ -333,13 +333,13 @@ function setSkeletonHTMLForAdd(id) {
             lang: lang,
             start: Date.now()
         }
+    } else {
+        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + goal.title[lang].substring(0, 10) + `...</h4>`
     }
 
+    $("#modal-header-content").html(headerHTML)
     $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
     $("#save-row").removeClass('d-none')
-
-    let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[lang].substring(0, 10) + `...</h4>`
-    $("#modal-header-content").html(headerHTML)
 
     $("#inputGoal").data('inputGoal', goal)
     $("#myModal").on('shown.bs.modal', function () {
@@ -1716,6 +1716,11 @@ function loadTranslations() {
         {
             "en": "Add or search",
             "nl": "Nieuw of zoeken"
+        })
+    translations.insert(
+        {
+            "en": "Edit",
+            "nl": "Wijzig"
         })
     translations.insert(
         {
