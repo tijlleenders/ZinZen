@@ -537,6 +537,9 @@ function generateGoalHTML(properties) {
     console.log("goalId", goalId)
 
     let color = getColorsFor(goalId)[0]
+    if (properties.colors != undefined) {
+        color = properties.colors[0]
+    }
 
     let status = properties.status
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
