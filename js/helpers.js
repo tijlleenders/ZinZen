@@ -699,31 +699,41 @@ function calculateCalendar() {
     let start = Date.now()
     calendar.tasks = []
     calendar.slots = []
-    calendar.goals = [
-        {
-            "id": 1,
-            "title": "goal1",
-            "estimated_duration": 1,
-            "effort_invested": 0,
-            "start": 0,
-            "finish": 24,
-            "start_time": 12,
-            "finish_time": 18,
-            "goal_type": "DAILY"
+    calendar.goals = []
+    let goalsToAdd = goals.where(function (goal) {
+        return goal.durationString != undefined;
+    });
+
+    goalsToAdd.forEach(goal => {
+        console.log("goal:", goal)
+        let estimated_duration = parseInt(goal.durationString.substr(0, 1))
+
+        let goal_for_wasm = {
+            id: goal.$loki,
+            title: goal.title.en,
+            estimated_duration: estimated_duration,
+            effort_invested: 0,
+            start: 0,
+            finish: 48,
+            start_time: 13,
+            finish_time: 18,
+            goal_type: "DAILY"
         }
-    ]
+        calendar.goals.push(goal_for_wasm)
+    })
 
     let end = Date.now()
     console.log("update goals in calendar took:", (end - start) / 1000)
+    console.log("calendarInput:", calendar)
 
     start = Date.now()
-    let calendarOutput = wasm_bindgen.load_calendar(calendar)
+    calendar = wasm_bindgen.load_calendar(calendar)
     end = Date.now()
     console.log("update goals in calendar took:", (end - start) / 1000)
 
 
     start = Date.now()
-    console.log("calendarOutput:", calendarOutput)
+    console.log("calendarOutput:", calendar)
     end = Date.now()
     console.log("printing to console took:", (end - start) / 1000)
 
