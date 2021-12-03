@@ -124,7 +124,6 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
                 console.log("using following language to save:", lang)
                 goal.title[lang] = title
             }
-            goal.commands = commands
             goals.update(goal)
 
         } else {
