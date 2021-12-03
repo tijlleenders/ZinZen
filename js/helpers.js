@@ -60,8 +60,8 @@ function updateModalAddUI() {
 
     let parentsHTML = ``
     getParentsFor(inputGoal.id).forEach(parent => {
-        if (parent.title != undefined && parent.colors != undefined) {
-            parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parent.colors[0] + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title[lang] + '</span>'
+        if (parent.title != undefined) {
+            parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + getColorsFor(inputGoal.id) + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title[lang] + '</span>'
         }
     })
 
