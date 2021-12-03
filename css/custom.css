@@ -161,7 +161,7 @@ body {
   padding: 0px;
 }
 
-.tags {
+.colors {
   float: left;
   display: flex;
   align-items: center;
@@ -356,7 +356,7 @@ body {
   font-size: small;
 }
 
-.tag-path:hover {
+.color-path:hover {
   stroke: rgb(154, 204, 248);
   stroke-width: 4;
   filter: brightness(95%);
@@ -494,67 +494,67 @@ body {
   filter: brightness(105%);
 }
 
-.tag1 {
+.color1 {
   fill: var(--card1);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag2 {
+.color2 {
   fill: var(--card2);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag3 {
+.color3 {
   fill: var(--card3);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag4 {
+.color4 {
   fill: var(--card4);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag5 {
+.color5 {
   fill: var(--card5);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag6 {
+.color6 {
   fill: var(--card6);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag7 {
+.color7 {
   fill: var(--card7);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag8 {
+.color8 {
   fill: var(--card8);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag9 {
+.color9 {
   fill: var(--card9);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag10 {
+.color10 {
   fill: var(--card10);
   stroke: grey;
   stroke-width: 1;
 }
 
-.tag-selected {
+.color-selected {
   stroke-width: 2;
   stroke: black;
 }

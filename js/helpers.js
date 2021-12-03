@@ -36,8 +36,8 @@ function updateModalAddUI() {
     if (inputGoal.directParents != undefined) {
         inputGoal.directParents.forEach(parent => {
             let parentList = goals.by('id', parent)
-            if (parentList.title != undefined && parentList.tags != undefined) {
-                parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parentList.tags[0] + ') !important;" id=modal-parent-' + parentList.id + '>' + parentList.title + '</span>'
+            if (parentList.title != undefined && parentList.colors != undefined) {
+                parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parentList.colors[0] + ') !important;" id=modal-parent-' + parentList.id + '>' + parentList.title + '</span>'
             }
         })
     }
@@ -369,9 +369,9 @@ function generateSlotHTML(element) {
 
     console.log("element for slotId ", slotId + ":" + element)
 
-    //Todo: handle case for array of tags
-    var tag = element.tags
-    let cardStyle = "card" + tag
+    //Todo: handle case for array of colors
+    var color = element.colors
+    let cardStyle = "card" + color
     let status = "maybe"
     let goalId = element.goalId
     var title = element.title
@@ -412,9 +412,9 @@ function generateEffortHTML(element) {
 
     console.log("element for effortId ", effortId + ":" + element)
 
-    //Todo: handle case for array of tags
-    var tag = element.goalTags
-    let cardStyle = "card" + tag
+    //Todo: handle case for array of colors
+    var color = element.goalColors
+    let cardStyle = "card" + color
     let status = "maybe"
     let goalId = element.goalId
     var title = element.goalTitle
@@ -523,13 +523,20 @@ function getGoalSvg(status, id) {
     return goalSvg
 }
 
+function getColorsFor(id) {
+    console.log("getColorsFor(id):", id)
+    let relationshipsForIdAsChild = relationships.find({ childId: id })[0]
+    console.log("relationships found:", relationshipsForIdAsChild)
+    return ["1"]
+}
+
 function generateGoalHTML(properties) {
     console.log("generating goal HTML for properties:", properties)
 
     let goalId = properties.id
     console.log("goalId", goalId)
-    console.log("tags", properties.tags)
-    let tag = properties.tags[0]
+
+    let color = getColorsFor(goalId)[0]
 
     let status = properties.status
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
@@ -570,7 +577,7 @@ function generateGoalHTML(properties) {
         }
     }
 
-    let cardStyle = "card" + tag
+    let cardStyle = "card" + color
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let duration = 0
@@ -1043,7 +1050,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1063,7 +1070,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1082,7 +1089,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
 
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1099,7 +1106,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1117,7 +1124,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1135,7 +1142,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1152,7 +1159,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
 
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1177,7 +1184,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1193,7 +1200,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1210,7 +1217,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "function": "logOut()",
@@ -1232,7 +1239,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1255,7 +1262,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1272,7 +1279,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1289,7 +1296,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1311,7 +1318,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1329,7 +1336,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1347,7 +1354,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1369,7 +1376,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1386,7 +1393,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1407,7 +1414,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1433,7 +1440,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1454,7 +1461,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1503,7 +1510,7 @@ function loadPersonalTimeAndRelationships() {
         "subCountNever": "0",
         "status": "suggestion",
         "function": "goToCalendar()",
-        "tags": [
+        "colors": [
             "1"
         ],
         "commands": "",
@@ -1523,7 +1530,7 @@ function loadPersonalFeelingsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "2"
         ],
         "commands": "",
@@ -1544,7 +1551,7 @@ function loadPersonalGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "folder",
-        "tags": [
+        "colors": [
             "5"
         ],
         "commands": "",
@@ -1565,7 +1572,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1583,7 +1590,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1599,7 +1606,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1615,7 +1622,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1631,7 +1638,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1647,7 +1654,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1663,7 +1670,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
