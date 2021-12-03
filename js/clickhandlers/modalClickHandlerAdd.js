@@ -113,7 +113,7 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     console.log("idx:", idToSave)
     let commands = $("#inputGoal").data('inputGoal').commands
 
-    if (idToSave != undefined) {
+    if (idToSave != "") {
         let goal = goals.find({ id: idToSave })[0]
         if (goal.label == "goal") {
             let lang = settings.find({ "setting": "language" })[0].value

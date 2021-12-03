@@ -322,14 +322,15 @@ function setSkeletonHTMLForAdd(id) {
 
 
     let inputGoal = goals.find({ "id": id })[0]
-    console.log("goal found:", goal)
+
     if (inputGoal == undefined) {
         inputGoal = {
             id: "",
+            label: "goal",
             title: titleObject,
-            directParents: [],
-            suggestedCommands: [],
-            suggestedWords: [],
+            directParents: new Set([parentId]),
+            suggestedCommands: new Set(),
+            suggestedWords: new Set(),
             lang: lang,
             start: Date.now()
         }
@@ -341,10 +342,11 @@ function setSkeletonHTMLForAdd(id) {
     $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
     $("#save-row").removeClass('d-none')
 
-    $("#inputGoal").data('inputGoal', goal)
+    $("#inputGoal").data('inputGoal', inputGoal)
     $("#myModal").on('shown.bs.modal', function () {
         $("#inputGoal").focus();
     });
+    console.log("inputGoal after setSkeleton:", inputGoal)
 }
 
 function translate(englishText) {
