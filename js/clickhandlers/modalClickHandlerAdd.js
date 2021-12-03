@@ -111,7 +111,7 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     console.log("saving ", title)
     let idToSave = $("#myModal").data('idx')
     console.log("idx:", idToSave)
-    let commands = $("#inputGoal").data('inputGoal').commands
+    let goalToSave = $("#inputGoal").data('inputGoal')
 
     if (idToSave != "") {
         let goal = goals.find({ id: idToSave })[0]
@@ -126,13 +126,25 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
             }
             goal.commands = commands
             goals.update(goal)
-            updateUIChildrenFor(parentId)
-            $("#myModal").modal('hide')
+
         } else {
             $("#inputGoal").attr("placeholder", "Can only edit your own goals. Something else?")
             $("#inputGoal").focus()
         }
+    } else {
+        console.log("saving with new id")
+        goalToSave.id = uuidv4()
+        goals.insert(goalToSave)
+        let relationshipToSave = {
+            parentId: parentId,
+            childId: goalToSave.id,
+            priority: 0
+        }
+        relationships.insert(relationshipToSave)
     }
+
+    updateUIChildrenFor(parentId)
+    $("#myModal").modal('hide')
 })
 
 function getAllDescendantsFor(id) {
