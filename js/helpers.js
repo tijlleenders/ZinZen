@@ -20,6 +20,30 @@ function openMainMailModal() {
     $("#myModal").modal("show");
 }
 
+function getParentIdsFor(id) {
+    if (id == "") {
+        return []
+    }
+    let relationshipsForIdAsChild = relationships.find({ childId: id })
+    let result = []
+    relationshipsForIdAsChild.forEach(relationship => {
+        result.push(relationship.parentId)
+    });
+    return result
+}
+
+function getParentsFor(id) {
+    if (id == "") {
+        return goals.find({ id: parentId })
+    }
+    let parentIds = getParentIdsFor(id)
+    let result = []
+    parentIds.forEach(id => {
+        result.push(goals.find({ id: id })[0])
+    });
+    return result
+}
+
 
 function updateModalAddUI() {
     let inputGoal = $("#inputGoal").data('inputGoal')
@@ -32,15 +56,15 @@ function updateModalAddUI() {
     $("#inputGoal").focus()
     //when to change modal title??
 
+    let lang = settings.find({ "setting": "language" })[0].value
+
     let parentsHTML = ``
-    if (inputGoal.directParents != undefined) {
-        inputGoal.directParents.forEach(parent => {
-            let parentList = goals.by('id', parent)
-            if (parentList.title != undefined && parentList.colors != undefined) {
-                parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parentList.colors[0] + ') !important;" id=modal-parent-' + parentList.id + '>' + parentList.title + '</span>'
-            }
-        })
-    }
+    getParentsFor(inputGoal.id).forEach(parent => {
+        if (parent.title != undefined && parent.colors != undefined) {
+            parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parent.colors[0] + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title[lang] + '</span>'
+        }
+    })
+
     $("#selected-parents").html(parentsHTML)
 
     let selectedCommands = ``;
@@ -329,7 +353,6 @@ function setSkeletonHTMLForAdd(id) {
             label: "goal",
             title: titleObject,
             status: "maybe",
-            directParents: new Set([parentId]),
             suggestedCommands: new Set(),
             suggestedWords: new Set(),
             lang: lang,
@@ -632,8 +655,6 @@ function generateGoalHTML(properties) {
     }
 
     let goalSvg = getGoalSvg(status, goalId)
-
-    //Todo: add directParents from relationships
 
     let returnHTML = `
           <div class="col" id="card-inners-` + goalId + `">
