@@ -336,7 +336,7 @@ function setSkeletonHTMLForAdd(id) {
             start: Date.now()
         }
     } else {
-        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + goal.title[lang].substring(0, 10) + `...</h4>`
+        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title[lang].substring(0, 10) + `...</h4>`
     }
 
     $("#modal-header-content").html(headerHTML)
