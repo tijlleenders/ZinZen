@@ -221,7 +221,14 @@ $("#myModal").on("click", ".word-suggestion", function (e) {
 $("#myModal").on("click", ".selected-command", function (e) {
     console.log("handling selected-command pressed")
     let inputGoal = $("#inputGoal").data('inputGoal')
-    inputGoal.commands.delete(e.currentTarget.innerText)
+    let command = e.currentTarget.innerText.split(" ")[0]
+    switch (command) {
+        case "duration":
+            delete inputGoal.durationString
+            break;
+        default:
+            console.error("no handler for command:", command)
+    }
     $("#inputGoal").data('inputGoal', inputGoal)
     updateModalUI()
 })
