@@ -20,40 +20,64 @@ function openMainMailModal() {
     $("#myModal").modal("show");
 }
 
+function getParentIdsFor(id) {
+    if (id == "") {
+        return []
+    }
+    let relationshipsForIdAsChild = relationships.find({ childId: id })
+    let result = []
+    relationshipsForIdAsChild.forEach(relationship => {
+        result.push(relationship.parentId)
+    });
+    return result
+}
+
+function getParentsFor(id) {
+    if (id == "") {
+        return goals.find({ id: parentId })
+    }
+    let parentIds = getParentIdsFor(id)
+    let result = []
+    parentIds.forEach(id => {
+        result.push(goals.find({ id: id })[0])
+    });
+    return result
+}
+
 
 function updateModalAddUI() {
-    let inputCommand = $("#inputCommand").data('inputCommand')
-    console.log("refreshing for inputCommand:", inputCommand)
+    let inputGoal = $("#inputGoal").data('inputGoal')
+    console.log("refreshing for inputGoal:", inputGoal)
 
-    let newInputCommand = parseCommand(inputCommand)
-    console.log("newInputcommand:", newInputCommand)
-    $("#inputCommand").data('inputCommand', newInputCommand)
-    $("#inputCommand").val(newInputCommand.title[inputCommand.lang])
-    $("#inputCommand").focus()
+    let newinputGoal = parseCommand(inputGoal)
+    console.log("newinputGoal:", newinputGoal)
+    $("#inputGoal").data('inputGoal', newinputGoal)
+    $("#inputGoal").val(newinputGoal.title[inputGoal.lang])
+    $("#inputGoal").focus()
     //when to change modal title??
 
+    let lang = settings.find({ "setting": "language" })[0].value
+
     let parentsHTML = ``
-    if (inputCommand.directParents != undefined) {
-        inputCommand.directParents.forEach(parent => {
-            let parentList = goals.by('id', parent)
-            if (parentList.title != undefined && parentList.tags != undefined) {
-                parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parentList.tags[0] + ') !important;" id=modal-parent-' + parentList.id + '>' + parentList.title + '</span>'
-            }
-        })
-    }
+    getParentsFor(inputGoal.id).forEach(parent => {
+        if (parent.title != undefined && parent.colors != undefined) {
+            parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parent.colors[0] + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title[lang] + '</span>'
+        }
+    })
+
     $("#selected-parents").html(parentsHTML)
 
-    let selectedCommands = ``
-    newInputCommand.commands.forEach(command => {
-        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">' + command + '</span>'
-    });
+    let selectedCommands = ``;
+    if (inputGoal.durationString != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">duration ' + inputGoal.durationString + '</span>'
+    }
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
-    if (newInputCommand.suggestedCommands.length > 0 && newInputCommand.suggestedCommands[0].size > 0) {
+    if (newinputGoal.suggestedCommands.length > 0 && newinputGoal.suggestedCommands[0].size > 0) {
         suggestedCommands = `Suggested commands: `
     }
-    newInputCommand.suggestedCommands.forEach(suggestionSet => {
+    newinputGoal.suggestedCommands.forEach(suggestionSet => {
         suggestionSet.forEach(suggestion => {
             suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
         })
@@ -61,10 +85,10 @@ function updateModalAddUI() {
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
-    if (newInputCommand.suggestedWords.length > 0 && newInputCommand.suggestedWords[0].size > 0) {
+    if (newinputGoal.suggestedWords.length > 0 && newinputGoal.suggestedWords[0].size > 0) {
         suggestedWords = `Suggested words: `
     }
-    newInputCommand.suggestedWords.forEach(suggestionSet => {
+    newinputGoal.suggestedWords.forEach(suggestionSet => {
         suggestionSet.forEach(suggestion => {
             suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
         })
@@ -242,7 +266,9 @@ function setSkeletonHTMLForMoment(id) {
 
 function setSkeletonHTMLForAdd(id) {
     console.log("inside setSkeletonHTMLForAdd...")
-    let headerHTML = `<h4 class="modal-title ms-3">Add or search</h4>`
+    let lang = settings.find({ "setting": "language" })[0].value
+
+    let headerHTML = `<h4 class="modal-title ms-3">` + translations.find({ "en": "Add or search" })[0][lang] + `</h4>`
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = ``
     bodyHTML += `    
@@ -253,12 +279,11 @@ function setSkeletonHTMLForAdd(id) {
       </div>
     </div>`
 
-    let lang = settings.find({ "setting": "language" })[0].value
     bodyHTML += `
     <div class="row" id="input-row">
       <div class="col">
         <div class="m-1">
-            <input class="form-control" type="text" id="inputCommand" placeholder="`+ translations.find({ "en": "Type a goal..." })[0][lang] + `" name="command" required autofocus autocomplete="off">
+            <input class="form-control" type="text" id="inputGoal" placeholder="`+ translations.find({ "en": "Type a goal..." })[0][lang] + `" name="command" required autofocus autocomplete="off">
         </div>
       </div>
     </div>
@@ -319,47 +344,33 @@ function setSkeletonHTMLForAdd(id) {
             throw ("language " + lang + " not implemented in switch")
     }
 
-    let inputCommand = {
-        title: titleObject,
-        directParents: [],
-        commands: new Set(),
-        suggestedCommands: [],
-        suggestedWords: [],
-        lang: ''
-    }
-    console.log("inputCommand:", inputCommand)
-    let goal = goals.find({ "id": id })[0]
-    console.log("goals:", goal)
 
-    if (goal != undefined) {
-        if (goal.title.en != undefined) {
-            inputCommand.lang = "en"
-            inputCommand.title[lang] = goal.title.en
-        }
-        if (goal.title.nl != undefined) {
-            inputCommand.lang = "nl"
-            inputCommand.title[lang] = goal.title.nl
-        }
+    let inputGoal = goals.find({ "id": id })[0]
 
-        if (goal.commands != undefined && goal.commands.length != 0) {
-            inputCommand.commands = new Set(goal.commands.split(','))
+    if (inputGoal == undefined) {
+        inputGoal = {
+            id: "",
+            label: "goal",
+            title: titleObject,
+            status: "maybe",
+            suggestedCommands: new Set(),
+            suggestedWords: new Set(),
+            lang: lang,
+            start: Date.now()
         }
-        if (goal.directParents != undefined) {
-            inputCommand.directParents = goal.directParents
-        }
-        $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
-        $("#save-row").removeClass('d-none')
-
-        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[lang].substring(0, 10) + `...</h4>`
-        $("#modal-header-content").html(headerHTML)
+    } else {
+        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title[lang].substring(0, 10) + `...</h4>`
     }
 
-    inputCommand.lang = lang
+    $("#modal-header-content").html(headerHTML)
+    $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
+    $("#save-row").removeClass('d-none')
 
-    $("#inputCommand").data('inputCommand', inputCommand)
+    $("#inputGoal").data('inputGoal', inputGoal)
     $("#myModal").on('shown.bs.modal', function () {
-        $("#inputCommand").focus();
+        $("#inputGoal").focus();
     });
+    console.log("inputGoal after setSkeleton:", inputGoal)
 }
 
 function translate(englishText) {
@@ -382,9 +393,9 @@ function generateSlotHTML(element) {
 
     console.log("element for slotId ", slotId + ":" + element)
 
-    //Todo: handle case for array of tags
-    var tag = element.tags
-    let cardStyle = "card" + tag
+    //Todo: handle case for array of colors
+    var color = element.colors
+    let cardStyle = "card" + color
     let status = "maybe"
     let goalId = element.goalId
     var title = element.title
@@ -425,9 +436,9 @@ function generateEffortHTML(element) {
 
     console.log("element for effortId ", effortId + ":" + element)
 
-    //Todo: handle case for array of tags
-    var tag = element.goalTags
-    let cardStyle = "card" + tag
+    //Todo: handle case for array of colors
+    var color = element.goalColors
+    let cardStyle = "card" + color
     let status = "maybe"
     let goalId = element.goalId
     var title = element.goalTitle
@@ -536,13 +547,23 @@ function getGoalSvg(status, id) {
     return goalSvg
 }
 
+function getColorsFor(id) {
+    console.log("getColorsFor(id):", id)
+    let relationshipsForIdAsChild = relationships.find({ childId: id })[0]
+    console.log("relationships found:", relationshipsForIdAsChild)
+    return ["1"]
+}
+
 function generateGoalHTML(properties) {
     console.log("generating goal HTML for properties:", properties)
 
     let goalId = properties.id
     console.log("goalId", goalId)
-    console.log("tags", properties.tags)
-    let tag = properties.tags[0]
+
+    let color = getColorsFor(goalId)[0]
+    if (properties.colors != undefined) {
+        color = properties.colors[0]
+    }
 
     let status = properties.status
     $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
@@ -583,7 +604,7 @@ function generateGoalHTML(properties) {
         }
     }
 
-    let cardStyle = "card" + tag
+    let cardStyle = "card" + color
     $("#" + goalId).addClass(cardStyle) //Todo: What does this do? remove...?
 
     let duration = 0
@@ -635,8 +656,6 @@ function generateGoalHTML(properties) {
 
     let goalSvg = getGoalSvg(status, goalId)
 
-    //Todo: add directParents from relationships
-
     let returnHTML = `
           <div class="col" id="card-inners-` + goalId + `">
             <div class="row" id="icon-and-title-row-` + goalId + `">
@@ -685,10 +704,36 @@ function goToCalendar() {
 
 function calculateCalendar() {
     let start = Date.now()
-    let calendarOutput = wasm_bindgen.load_calendar(calendar)
-    console.log("calendarOutpu:", calendarOutput)
+    calendar.tasks = []
+    calendar.slots = []
+    calendar.goals = [
+        {
+            "id": 1,
+            "title": "goal1",
+            "estimated_duration": 1,
+            "effort_invested": 0,
+            "start": 0,
+            "finish": 24,
+            "start_time": 12,
+            "finish_time": 18,
+            "goal_type": "DAILY"
+        }
+    ]
+
     let end = Date.now()
-    console.log("load_calendar took:", (end - start) / 1000)
+    console.log("update goals in calendar took:", (end - start) / 1000)
+
+    start = Date.now()
+    let calendarOutput = wasm_bindgen.load_calendar(calendar)
+    end = Date.now()
+    console.log("update goals in calendar took:", (end - start) / 1000)
+
+
+    start = Date.now()
+    console.log("calendarOutput:", calendarOutput)
+    end = Date.now()
+    console.log("printing to console took:", (end - start) / 1000)
+
 }
 
 
@@ -1030,7 +1075,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1050,7 +1095,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1069,7 +1114,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
 
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1086,7 +1131,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1104,7 +1149,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1122,7 +1167,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1139,7 +1184,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
 
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1164,7 +1209,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1180,7 +1225,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1197,7 +1242,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "function": "logOut()",
@@ -1219,7 +1264,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1242,7 +1287,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1259,7 +1304,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1276,7 +1321,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1298,7 +1343,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1316,7 +1361,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1334,7 +1379,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1356,7 +1401,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "commands": "setting",
@@ -1373,7 +1418,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1394,7 +1439,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1420,7 +1465,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1441,7 +1486,7 @@ function loadSettingGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "setting",
-        "tags": [
+        "colors": [
             "4"
         ],
         "updatedDT": [
@@ -1490,7 +1535,7 @@ function loadPersonalTimeAndRelationships() {
         "subCountNever": "0",
         "status": "suggestion",
         "function": "goToCalendar()",
-        "tags": [
+        "colors": [
             "1"
         ],
         "commands": "",
@@ -1510,7 +1555,7 @@ function loadPersonalFeelingsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "2"
         ],
         "commands": "",
@@ -1531,7 +1576,7 @@ function loadPersonalGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "folder",
-        "tags": [
+        "colors": [
             "5"
         ],
         "commands": "",
@@ -1552,7 +1597,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1570,7 +1615,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1586,7 +1631,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1602,7 +1647,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1618,7 +1663,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1634,7 +1679,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1650,7 +1695,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "subCountDone": "0",
         "subCountNever": "0",
         "status": "suggestion",
-        "tags": [
+        "colors": [
             "7"
         ],
         "commands": "suggestion",
@@ -1700,6 +1745,16 @@ function loadTranslations() {
         {
             "en": "Type a goal...",
             "nl": "Type een doel..."
+        })
+    translations.insert(
+        {
+            "en": "Add or search",
+            "nl": "Nieuw of zoeken"
+        })
+    translations.insert(
+        {
+            "en": "Edit",
+            "nl": "Wijzig"
         })
     translations.insert(
         {
@@ -2082,21 +2137,21 @@ function logOut() {
 }
 
 function handleCommand(selectedCommand) {
-    let inputCommand = $("#inputCommand").data('inputCommand')
+    let inputGoal = $("#inputGoal").data('inputGoal')
     console.log("command pressed:", selectedCommand)
-    inputCommand.commands.add(selectedCommand)
-    let indexOfCommand = inputCommand.suggestedCommands.findIndex(commandSet => commandSet.has(selectedCommand));
-    console.log("command has index ", indexOfCommand)
-    let wordsArray = getArrayFromTitle(inputCommand.title[inputCommand.lang])
-    console.log("wordsArray:", wordsArray)
-    if (selectedCommand.substr(0, 4) == "flex") {
-        wordsArray.splice(indexOfCommand, 2)
-    } else {
-        wordsArray.splice(indexOfCommand, 1)
+    if (selectedCommand.substr(0, 9) == "duration ") {
+        console.log("duration selected")
+        let durationString = selectedCommand.split(" ")[1]
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(durationString, "")
+        inputGoal.durationString = durationString
     }
-    inputCommand.title[inputCommand.lang] = wordsArray.join(' ')
-    console.log("inputCommand after (not saved):", inputCommand)
-    // $("#inputCommand").data('inputCommand', inputCommand)
+
+    if (selectedCommand.substr(0, 5) == "flex ") {
+        console.log("flex selected")
+    }
+
+    console.log("inputGoal after (not saved):", inputGoal)
+    $("#inputGoal").data('inputGoal', inputGoal)
     updateModalUI()
 }
 
@@ -2167,11 +2222,7 @@ let commandDict = {
     'cn': ['🇨🇳'],
     'es': ['🇪🇸'],
     'de': ['🇩🇪'],
-    'please': ['🥺'],
-
-    '-': ["Sad", "Afraid", "Frustrated", "Depressed", "Lonely", "Embarassed", "Stressed", "Demotivated", "Pessimistic"],
-    '+': ["Happy", "Grateful", "Passionate", "Loved", "Proud", "Mindful", "Motivated", "Optimistic"]
-
+    'please': ['🥺']
 }
 
 let wordDict = {
@@ -2234,7 +2285,10 @@ function addSuggestedCommands(command) {
         if (isDuration(word) &&
             ((index > 0 && wordsArray[index - 1] != 'flex') ||
                 (index == 0))) {
-            commandsToSuggest.add(word)
+            commandsToSuggest.add("duration " + word)
+            commandsToSuggest.add("flex " + word)
+            commandsToSuggest.add("start " + word)
+            commandsToSuggest.add("finish " + word)
         }
 
         if (word == 'flex') {

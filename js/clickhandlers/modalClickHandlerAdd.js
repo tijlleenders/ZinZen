@@ -1,6 +1,6 @@
 'use strict'
 
-$("#myModal").on("keyup", "#inputCommand", function (e) {
+$("#myModal").on("keyup", "#inputGoal", function (e) {
     if (e.which === 13) {
         if ($(this).val().length == 0) return;
 
@@ -12,34 +12,34 @@ $("#myModal").on("keyup", "#inputCommand", function (e) {
     let getSuggestions = {
         action: "read",
         command: "getSuggestions",
-        input: $("#inputCommand").val(),
+        input: $("#inputGoal").val(),
         goalId: goalId
     }
     // send(JSON.stringify(getSuggestions))
 
-    let inputCommand = $("#inputCommand").data('inputCommand')
-    inputCommand.title[inputCommand.lang] = $("#inputCommand").val()
-    $("#inputCommand").data('inputCommand', inputCommand)
+    let inputGoal = $("#inputGoal").data('inputGoal')
+    inputGoal.title[inputGoal.lang] = $("#inputGoal").val()
+    $("#inputGoal").data('inputGoal', inputGoal)
     updateModalAddUI()
 });
 
 function addSomething() {
     console.log("inside addSomething...")
-    let title = $("#inputCommand").val()
+    let title = $("#inputGoal").val()
     console.log("title:", title)
     let status = "maybe"
-    let commands = [...$("#inputCommand").data('inputCommand').commands]
+    let commands = $("#inputGoal").data('inputGoal').commands
     let duration = 0
 
     let newGoalId = uuidv4()
 
-    let tags = ["1"]
+    let colors = ["1"]
     let parent = goals.find({ id: parentId })[0]
     if (parent.label == "person") {
-        let randomTag = Math.floor(Math.random() * 10) + 1
-        tags = [randomTag.toString()]
+        let randomColor = Math.floor(Math.random() * 10) + 1
+        colors = [randomColor.toString()]
     } else {
-        tags = parent.tags
+        colors = parent.colors
     }
 
     var titleObject = {}
@@ -59,7 +59,7 @@ function addSomething() {
         start: (new Date()).toISOString(),
         duration: duration,
         commands: commands,
-        tags: tags,
+        colors: colors,
         priority: 1
     }
 
@@ -73,7 +73,7 @@ function addSomething() {
     relationships.insert(newRelationship)
     updatePriority()
 
-    $("#inputCommand").val("")
+    $("#inputGoal").val("")
     let ellipse = ""
     if (title.length > 8) {
         ellipse = "..."
@@ -81,8 +81,8 @@ function addSomething() {
 
     updateUIChildrenFor(parentId)
 
-    $("#inputCommand").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
-    $("#inputCommand").focus()
+    $("#inputGoal").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
+    $("#inputGoal").focus()
 }
 
 $("#myModal").on("click", "#modal-add-a-goal-button", function () {
@@ -94,7 +94,7 @@ $("#myModal").on("click", "#modal-cancel-button", function () {
     $("#myModal").modal('hide')
 })
 
-$("#myModal").on("paste", "#inputCommand", function (e) {
+$("#myModal").on("paste", "#inputGoal", function (e) {
     var pastedData = e.originalEvent.clipboardData.getData('text');
     console.log("pastedData:", pastedData)
 });
@@ -107,13 +107,13 @@ $("#myModal").on("click", "#delete-a-goal-button", function () {
 })
 
 $("#myModal").on("click", "#save-a-goal-button", function () {
-    let title = $("#inputCommand").val()
+    let title = $("#inputGoal").val()
     console.log("saving ", title)
     let idToSave = $("#myModal").data('idx')
     console.log("idx:", idToSave)
-    let commands = [...$("#inputCommand").data('inputCommand').commands].join(',')
+    let goalToSave = $("#inputGoal").data('inputGoal')
 
-    if (idToSave != undefined) {
+    if (idToSave != "") {
         let goal = goals.find({ id: idToSave })[0]
         if (goal.label == "goal") {
             let lang = settings.find({ "setting": "language" })[0].value
@@ -124,15 +124,26 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
                 console.log("using following language to save:", lang)
                 goal.title[lang] = title
             }
-            goal.commands = commands
             goals.update(goal)
-            updateUIChildrenFor(parentId)
-            $("#myModal").modal('hide')
+
         } else {
-            $("#inputCommand").attr("placeholder", "Can only edit your own goals. Something else?")
-            $("#inputCommand").focus()
+            $("#inputGoal").attr("placeholder", "Can only edit your own goals. Something else?")
+            $("#inputGoal").focus()
         }
+    } else {
+        console.log("saving with new id")
+        goalToSave.id = uuidv4()
+        goals.insert(goalToSave)
+        let relationshipToSave = {
+            parentId: parentId,
+            childId: goalToSave.id,
+            priority: 0
+        }
+        relationships.insert(relationshipToSave)
     }
+
+    updateUIChildrenFor(parentId)
+    $("#myModal").modal('hide')
 })
 
 function getAllDescendantsFor(id) {
@@ -201,16 +212,23 @@ $("#myModal").on("click", ".command-suggestion", function (e) {
 
 $("#myModal").on("click", ".word-suggestion", function (e) {
     console.log("handling word-suggestion pressed")
-    let inputCommand = $("#inputCommand").data('inputCommand')
-    inputCommand.wordPressed = [e.currentTarget.innerText]
-    $("#inputCommand").data('inputCommand', inputCommand)
+    let inputGoal = $("#inputGoal").data('inputGoal')
+    inputGoal.wordPressed = [e.currentTarget.innerText]
+    $("#inputGoal").data('inputGoal', inputGoal)
     updateModalUI()
 })
 
 $("#myModal").on("click", ".selected-command", function (e) {
     console.log("handling selected-command pressed")
-    let inputCommand = $("#inputCommand").data('inputCommand')
-    inputCommand.commands.delete(e.currentTarget.innerText)
-    $("#inputCommand").data('inputCommand', inputCommand)
+    let inputGoal = $("#inputGoal").data('inputGoal')
+    let command = e.currentTarget.innerText.split(" ")[0]
+    switch (command) {
+        case "duration":
+            delete inputGoal.durationString
+            break;
+        default:
+            console.error("no handler for command:", command)
+    }
+    $("#inputGoal").data('inputGoal', inputGoal)
     updateModalUI()
 })
