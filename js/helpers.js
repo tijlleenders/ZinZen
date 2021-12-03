@@ -22,19 +22,19 @@ function openMainMailModal() {
 
 
 function updateModalAddUI() {
-    let inputCommand = $("#inputCommand").data('inputCommand')
-    console.log("refreshing for inputCommand:", inputCommand)
+    let inputGoal = $("#inputGoal").data('inputGoal')
+    console.log("refreshing for inputGoal:", inputGoal)
 
-    let newInputCommand = parseCommand(inputCommand)
-    console.log("newInputcommand:", newInputCommand)
-    $("#inputCommand").data('inputCommand', newInputCommand)
-    $("#inputCommand").val(newInputCommand.title[inputCommand.lang])
-    $("#inputCommand").focus()
+    let newinputGoal = parseCommand(inputGoal)
+    console.log("newinputGoal:", newinputGoal)
+    $("#inputGoal").data('inputGoal', newinputGoal)
+    $("#inputGoal").val(newinputGoal.title[inputGoal.lang])
+    $("#inputGoal").focus()
     //when to change modal title??
 
     let parentsHTML = ``
-    if (inputCommand.directParents != undefined) {
-        inputCommand.directParents.forEach(parent => {
+    if (inputGoal.directParents != undefined) {
+        inputGoal.directParents.forEach(parent => {
             let parentList = goals.by('id', parent)
             if (parentList.title != undefined && parentList.tags != undefined) {
                 parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + parentList.tags[0] + ') !important;" id=modal-parent-' + parentList.id + '>' + parentList.title + '</span>'
@@ -44,17 +44,16 @@ function updateModalAddUI() {
     $("#selected-parents").html(parentsHTML)
 
     let selectedCommands = ``;
-
-    ([...newInputCommand.commands]).forEach(command => {
-        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">' + command + '</span>'
-    });
+    if (inputGoal.duration != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">' + inputGoal.duration + '</span>'
+    }
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
-    if (newInputCommand.suggestedCommands.length > 0 && newInputCommand.suggestedCommands[0].size > 0) {
+    if (newinputGoal.suggestedCommands.length > 0 && newinputGoal.suggestedCommands[0].size > 0) {
         suggestedCommands = `Suggested commands: `
     }
-    newInputCommand.suggestedCommands.forEach(suggestionSet => {
+    newinputGoal.suggestedCommands.forEach(suggestionSet => {
         suggestionSet.forEach(suggestion => {
             suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
         })
@@ -62,10 +61,10 @@ function updateModalAddUI() {
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
-    if (newInputCommand.suggestedWords.length > 0 && newInputCommand.suggestedWords[0].size > 0) {
+    if (newinputGoal.suggestedWords.length > 0 && newinputGoal.suggestedWords[0].size > 0) {
         suggestedWords = `Suggested words: `
     }
-    newInputCommand.suggestedWords.forEach(suggestionSet => {
+    newinputGoal.suggestedWords.forEach(suggestionSet => {
         suggestionSet.forEach(suggestion => {
             suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
         })
@@ -243,7 +242,9 @@ function setSkeletonHTMLForMoment(id) {
 
 function setSkeletonHTMLForAdd(id) {
     console.log("inside setSkeletonHTMLForAdd...")
-    let headerHTML = `<h4 class="modal-title ms-3">Add or search</h4>`
+    let lang = settings.find({ "setting": "language" })[0].value
+
+    let headerHTML = `<h4 class="modal-title ms-3">` + translations.find({ "en": "Add or search" })[0][lang] + `</h4>`
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = ``
     bodyHTML += `    
@@ -254,12 +255,11 @@ function setSkeletonHTMLForAdd(id) {
       </div>
     </div>`
 
-    let lang = settings.find({ "setting": "language" })[0].value
     bodyHTML += `
     <div class="row" id="input-row">
       <div class="col">
         <div class="m-1">
-            <input class="form-control" type="text" id="inputCommand" placeholder="`+ translations.find({ "en": "Type a goal..." })[0][lang] + `" name="command" required autofocus autocomplete="off">
+            <input class="form-control" type="text" id="inputGoal" placeholder="`+ translations.find({ "en": "Type a goal..." })[0][lang] + `" name="command" required autofocus autocomplete="off">
         </div>
       </div>
     </div>
@@ -320,44 +320,29 @@ function setSkeletonHTMLForAdd(id) {
             throw ("language " + lang + " not implemented in switch")
     }
 
-    let inputCommand = {
+
+    let goal = {
+        id: "",
         title: titleObject,
         directParents: [],
-        commands: new Set(),
         suggestedCommands: [],
         suggestedWords: [],
-        lang: ''
+        lang: lang,
+        start: Date.now()
     }
-    console.log("inputCommand:", inputCommand)
+
     let goal = goals.find({ "id": id })[0]
-    console.log("goals:", goal)
+    console.log("goal found:", goal)
 
-    if (goal != undefined) {
-        if (goal.title.en != undefined) {
-            inputCommand.lang = "en"
-            inputCommand.title[lang] = goal.title.en
-        }
-        if (goal.title.nl != undefined) {
-            inputCommand.lang = "nl"
-            inputCommand.title[lang] = goal.title.nl
-        }
+    $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
+    $("#save-row").removeClass('d-none')
 
-        inputCommand.commands = goal.commands
-        if (goal.directParents != undefined) {
-            inputCommand.directParents = goal.directParents
-        }
-        $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
-        $("#save-row").removeClass('d-none')
+    let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[lang].substring(0, 10) + `...</h4>`
+    $("#modal-header-content").html(headerHTML)
 
-        let headerHTML = `<h4 class="modal-title">Editing: ` + goal.title[lang].substring(0, 10) + `...</h4>`
-        $("#modal-header-content").html(headerHTML)
-    }
-
-    inputCommand.lang = lang
-
-    $("#inputCommand").data('inputCommand', inputCommand)
+    $("#inputGoal").data('inputGoal', goal)
     $("#myModal").on('shown.bs.modal', function () {
-        $("#inputCommand").focus();
+        $("#inputGoal").focus();
     });
 }
 
@@ -1728,6 +1713,11 @@ function loadTranslations() {
         })
     translations.insert(
         {
+            "en": "Add or search",
+            "nl": "Nieuw of zoeken"
+        })
+    translations.insert(
+        {
             "en": "Back",
             "nl": "Terug"
         }
@@ -2107,21 +2097,21 @@ function logOut() {
 }
 
 function handleCommand(selectedCommand) {
-    let inputCommand = $("#inputCommand").data('inputCommand')
+    let inputGoal = $("#inputGoal").data('inputGoal')
     console.log("command pressed:", selectedCommand)
-    inputCommand.commands.add(selectedCommand)
-    let indexOfCommand = inputCommand.suggestedCommands.findIndex(commandSet => commandSet.has(selectedCommand));
+    inputGoal.commands.add(selectedCommand)
+    let indexOfCommand = inputGoal.suggestedCommands.findIndex(commandSet => commandSet.has(selectedCommand));
     console.log("command has index ", indexOfCommand)
-    let wordsArray = getArrayFromTitle(inputCommand.title[inputCommand.lang])
+    let wordsArray = getArrayFromTitle(inputGoal.title[inputGoal.lang])
     console.log("wordsArray:", wordsArray)
     if (selectedCommand.substr(0, 4) == "flex") {
         wordsArray.splice(indexOfCommand, 2)
     } else {
         wordsArray.splice(indexOfCommand, 1)
     }
-    inputCommand.title[inputCommand.lang] = wordsArray.join(' ')
-    console.log("inputCommand after (not saved):", inputCommand)
-    // $("#inputCommand").data('inputCommand', inputCommand)
+    inputGoal.title[inputGoal.lang] = wordsArray.join(' ')
+    console.log("inputGoal after (not saved):", inputGoal)
+    // $("#inputGoal").data('inputGoal', inputGoal)
     updateModalUI()
 }
 
