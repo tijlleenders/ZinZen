@@ -43,8 +43,9 @@ function updateModalAddUI() {
     }
     $("#selected-parents").html(parentsHTML)
 
-    let selectedCommands = ``
-    newInputCommand.commands.forEach(command => {
+    let selectedCommands = ``;
+
+    ([...newInputCommand.commands]).forEach(command => {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">' + command + '</span>'
     });
     $("#selected-commands").html(selectedCommands)
@@ -341,9 +342,7 @@ function setSkeletonHTMLForAdd(id) {
             inputCommand.title[lang] = goal.title.nl
         }
 
-        if (goal.commands != undefined && goal.commands.length != 0) {
-            inputCommand.commands = new Set(goal.commands.split(','))
-        }
+        inputCommand.commands = goal.commands
         if (goal.directParents != undefined) {
             inputCommand.directParents = goal.directParents
         }
@@ -685,10 +684,36 @@ function goToCalendar() {
 
 function calculateCalendar() {
     let start = Date.now()
-    let calendarOutput = wasm_bindgen.load_calendar(calendar)
-    console.log("calendarOutpu:", calendarOutput)
+    calendar.tasks = []
+    calendar.slots = []
+    calendar.goals = [
+        {
+            "id": 1,
+            "title": "goal1",
+            "estimated_duration": 1,
+            "effort_invested": 0,
+            "start": 0,
+            "finish": 24,
+            "start_time": 12,
+            "finish_time": 18,
+            "goal_type": "DAILY"
+        }
+    ]
+
     let end = Date.now()
-    console.log("load_calendar took:", (end - start) / 1000)
+    console.log("update goals in calendar took:", (end - start) / 1000)
+
+    start = Date.now()
+    let calendarOutput = wasm_bindgen.load_calendar(calendar)
+    end = Date.now()
+    console.log("update goals in calendar took:", (end - start) / 1000)
+
+
+    start = Date.now()
+    console.log("calendarOutput:", calendarOutput)
+    end = Date.now()
+    console.log("printing to console took:", (end - start) / 1000)
+
 }
 
 

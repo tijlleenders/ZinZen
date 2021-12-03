@@ -28,7 +28,7 @@ function addSomething() {
     let title = $("#inputCommand").val()
     console.log("title:", title)
     let status = "maybe"
-    let commands = [...$("#inputCommand").data('inputCommand').commands]
+    let commands = $("#inputCommand").data('inputCommand').commands
     let duration = 0
 
     let newGoalId = uuidv4()
@@ -111,7 +111,7 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     console.log("saving ", title)
     let idToSave = $("#myModal").data('idx')
     console.log("idx:", idToSave)
-    let commands = [...$("#inputCommand").data('inputCommand').commands].join(',')
+    let commands = $("#inputCommand").data('inputCommand').commands
 
     if (idToSave != undefined) {
         let goal = goals.find({ id: idToSave })[0]
