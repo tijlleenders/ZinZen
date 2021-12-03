@@ -321,18 +321,19 @@ function setSkeletonHTMLForAdd(id) {
     }
 
 
-    let goal = {
-        id: "",
-        title: titleObject,
-        directParents: [],
-        suggestedCommands: [],
-        suggestedWords: [],
-        lang: lang,
-        start: Date.now()
-    }
-
-    let goal = goals.find({ "id": id })[0]
+    let inputGoal = goals.find({ "id": id })[0]
     console.log("goal found:", goal)
+    if (inputGoal == undefined) {
+        inputGoal = {
+            id: "",
+            title: titleObject,
+            directParents: [],
+            suggestedCommands: [],
+            suggestedWords: [],
+            lang: lang,
+            start: Date.now()
+        }
+    }
 
     $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
     $("#save-row").removeClass('d-none')
