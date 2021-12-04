@@ -678,10 +678,8 @@ function generateGoalHTML(properties) {
 function goToCalendar() {
     calculateCalendar()
     let calendarHTML = JSON.stringify(calendar)
-    // calendarHTML += generateProgressHTML(slotsForSelectedDay)
-    // calendarHTML += generateSlotsHTML(slotsForSelectedDay, getGoalJSON())
 
-    $("#calendarSlots").html(calendarHTML)
+    $("#calendarSlots").html(generateCalendarHTML())
     $("#main-calendar").removeClass('d-none')
 
     $("#main-quote").addClass('d-none')
@@ -740,25 +738,38 @@ function calculateCalendar() {
 }
 
 
+function generateCalendarHTML() {
+    let HTML = ``
+    //Todo: order slots in Rust
+    calendar.slots.forEach(slot => {
+        console.log("slot:", slot)
+
+        let task = calendar.tasks.find(task => { return task.task_id == slot.task_id })
+        console.log("task:", task)
+        slot.duration_to_schedule = task.duration_to_schedule
+        slot.task_status = task.task_status
+
+        let goal = calendar.goals.find(goal => { return goal.id == task.goal_id })
+        console.log("goal:", goal)
+        slot.effort_invested = goal.effort_invested
+        slot.estimated_duration = goal.estimated_duration
+        slot.finish = goal.finish
+        slot.finish_time = goal.finish_time
+        slot.goal_type = goal.goal_type
+        slot.goal_id = goal.id
+        slot.start = goal.start
+        slot.start_time = goal.start_time
+        slot.title = goal.title
+    })
+    console.log(calendar.slots)
+    return HTML
+}
+
 function activateCalendarPicker() {
     $("#progress-card").on("click", "#progress-header", function (event) {
         console.log("progress-header clicked...")
 
     })
-}
-
-function generateSlotsHTML(slotsForSelectedDay, goalJSON) {
-    let slotsHTML = ``
-
-    for (let hour = 0; hour < 24; hour++) {
-        if (slotsForSelectedDay[hour] != undefined) {
-            console.log("slotsForSelectedDay[hour].id", slotsForSelectedDay[hour].id)
-            console.log("Goal:", goalJSON.goals[slotsForSelectedDay[hour].id])
-            slotsHTML += generateSlotHTML(goalJSON.goals[slotsForSelectedDay[hour].id])
-        }
-    }
-
-    return slotsHTML
 }
 
 function makeWeekBitMap(inputArray) {
