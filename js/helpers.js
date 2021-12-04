@@ -677,7 +677,6 @@ function generateGoalHTML(properties) {
 
 function goToCalendar() {
     calculateCalendar()
-    let calendarHTML = JSON.stringify(calendar)
 
     $("#calendarSlots").html(generateCalendarHTML())
     $("#main-calendar").removeClass('d-none')
@@ -701,6 +700,10 @@ function calculateCalendar() {
     let goalsToAdd = goals.where(function (goal) {
         return goal.durationString != undefined;
     });
+
+    if (goalsToAdd.length == 0) {
+        console.log("NO GOALS IN CALENDAR")
+    }
 
     goalsToAdd.forEach(goal => {
         console.log("goal:", goal)
@@ -739,8 +742,11 @@ function calculateCalendar() {
 
 
 function generateCalendarHTML() {
+    console.log("inside generateCalendarHTML()")
     let HTML = ``
     //Todo: order slots in Rust
+
+    let days = []
     calendar.slots.forEach(slot => {
         console.log("slot:", slot)
 
@@ -760,8 +766,28 @@ function generateCalendarHTML() {
         slot.start = goal.start
         slot.start_time = goal.start_time
         slot.title = goal.title
+
+        console.log("calendar.time_unit_qualifier", calendar.time_unit_qualifier)
+        if (calendar.time_unit_qualifier == "h") {
+            let day = Math.floor(slot.begin / 24)
+            if (days[day] == undefined) {
+                days[day] = []
+            }
+            days[day].push(slot)
+            console.log("pushed")
+        }
     })
-    console.log(calendar.slots)
+    console.log(days)
+
+    days.forEach((day, index) => {
+        HTML += "day " + index + "<br />"
+        day.forEach(slot => {
+            HTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + slot.title + " at " + (slot.begin - index * 24) + ":00<br />"
+        })
+    })
+
+    console.log("HTML:", HTML)
+
     return HTML
 }
 
