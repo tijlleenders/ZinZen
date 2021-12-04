@@ -681,7 +681,7 @@ function goToCalendar() {
     // calendarHTML += generateProgressHTML(slotsForSelectedDay)
     // calendarHTML += generateSlotsHTML(slotsForSelectedDay, getGoalJSON())
 
-    $("#calendarSlots").html(calendarHTML)
+    $("#calendarSlots").html(generateCalendarHTML())
     $("#main-calendar").removeClass('d-none')
 
     $("#main-quote").addClass('d-none')
@@ -739,6 +739,14 @@ function calculateCalendar() {
 
 }
 
+
+function generateCalendarHTML() {
+    let HTML = ``
+    calendar.slots.forEach(slot => {
+        HTML += 'a'
+    })
+    return HTML
+}
 
 function activateCalendarPicker() {
     $("#progress-card").on("click", "#progress-header", function (event) {
