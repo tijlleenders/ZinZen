@@ -2236,7 +2236,11 @@ function getArrayFromTitle(title) {
 }
 
 let commandDict = {
-    'daily': ['Daily'],
+    'daily': ['Repeat daily'],
+    'weekly': ['Repeat weekly'],
+    'monthly': ['Repeat monthly'],
+    'yearly': ['Repeat yearly'],
+
     'contact': ['Contact'],
     'share public': ['Share public'],
     'share anonymous': ['Share anonymous'],
