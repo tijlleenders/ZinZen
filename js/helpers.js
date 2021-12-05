@@ -807,8 +807,6 @@ function generateCalendarHTML() {
         })
     })
 
-    console.log("HTML:", HTML)
-
     return HTML
 }
 
