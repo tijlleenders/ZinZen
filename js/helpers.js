@@ -647,7 +647,10 @@ function generateGoalHTML(properties) {
         subTitle += properties.subTitle
     }
     if (properties.durationString && properties.durationString != "") {
-        subTitle += properties.durationString
+        subTitle += properties.durationString + " "
+    }
+    if (properties.repeatString && properties.repeatString != "") {
+        subTitle += properties.repeatString + " "
     }
 
     let goalSvg = getGoalSvg(status, goalId)
@@ -2315,6 +2318,9 @@ function parseCommand(command) {
 }
 
 function addSuggestedCommands(command) {
+    if (command.lang == undefined) {
+        command.lang = settings.find({ "setting": "language" })[0].value
+    }
     console.log("command.lang:", command.lang)
     let wordsArray = command.title[command.lang].split(" ")
     console.log("wordsArray before:", wordsArray)
