@@ -719,6 +719,9 @@ function calculateCalendar() {
             case "monthly":
                 goal_type = "MONTLY"
                 break;
+            case "yearly":
+                goal_type = "YEARLY"
+                break;
             default:
                 goal_type = "FIXED"
                 break;
