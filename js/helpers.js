@@ -71,6 +71,9 @@ function updateModalAddUI() {
     if (inputGoal.durationString != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">duration ' + inputGoal.durationString + '</span>'
     }
+    if (inputGoal.repeatString != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">repeat ' + inputGoal.repeatString + '</span>'
+    }
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
@@ -644,7 +647,10 @@ function generateGoalHTML(properties) {
         subTitle += properties.subTitle
     }
     if (properties.durationString && properties.durationString != "") {
-        subTitle += properties.durationString
+        subTitle += properties.durationString + " "
+    }
+    if (properties.repeatString && properties.repeatString != "") {
+        subTitle += properties.repeatString + " "
     }
 
     let goalSvg = getGoalSvg(status, goalId)
@@ -691,6 +697,18 @@ function goToCalendar() {
     });
 }
 
+function getDurationFromStringIn(stringToParse, timeUnit) {
+    switch (timeUnit) {
+        case "h":
+            if (stringToParse.substr(stringToParse.length - 1, 1) != "h") {
+                console.error("attempting to getDurationFromStringIn:" + stringToParse + " with unit h, but not in h")
+            }
+            return parseInt(stringToParse.substr(0, stringToParse.length - 1))
+            break;
+        default:
+            console.error("timeUnit " + timeUnit + " not handled.")
+    }
+}
 
 function calculateCalendar() {
     let start = Date.now()
@@ -707,7 +725,25 @@ function calculateCalendar() {
 
     goalsToAdd.forEach(goal => {
         console.log("goal:", goal)
-        let estimated_duration = parseInt(goal.durationString.substr(0, 1))
+        let estimated_duration = getDurationFromStringIn(goal.durationString, "h")
+        let goal_type
+        switch (goal.repeatString) {
+            case "daily":
+                goal_type = "DAILY"
+                break;
+            case "weekly":
+                goal_type = "WEEKLY"
+                break;
+            case "monthly":
+                goal_type = "MONTLY"
+                break;
+            case "yearly":
+                goal_type = "YEARLY"
+                break;
+            default:
+                goal_type = "FIXED"
+                break;
+        }
 
         let goal_for_wasm = {
             id: goal.$loki,
@@ -718,7 +754,7 @@ function calculateCalendar() {
             finish: 48,
             start_time: 13,
             finish_time: 18,
-            goal_type: "DAILY"
+            goal_type: goal_type
         }
         calendar.goals.push(goal_for_wasm)
     })
@@ -785,8 +821,6 @@ function generateCalendarHTML() {
             HTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + slot.title + " at " + (slot.begin - index * 24) + ":00<br />"
         })
     })
-
-    console.log("HTML:", HTML)
 
     return HTML
 }
@@ -2186,6 +2220,13 @@ function handleCommand(selectedCommand) {
         inputGoal.durationString = durationString
     }
 
+    if (selectedCommand.substr(0, 7) == "repeat ") {
+        console.log("repeat selected")
+        let repeatString = selectedCommand.split(" ")[1]
+        //Todo: need something to clean up title regardless of number of characters matching full command - store trigger or match dynamic?
+        inputGoal.repeatString = repeatString
+    }
+
     if (selectedCommand.substr(0, 5) == "flex ") {
         console.log("flex selected")
     }
@@ -2218,14 +2259,18 @@ function getArrayFromTitle(title) {
 }
 
 let commandDict = {
-    'daily': ['Daily'],
-    'contact': ['Contact'],
-    'share public': ['Share public'],
-    'share anonymous': ['Share anonymous'],
-    'go up': ['Go up'],
-    'up': ['Go up'],
-    'today': ['Today'],
-    'tomorrow': ['Tomorrow'],
+    'daily': ['repeat daily'],
+    'weekly': ['repeat weekly'],
+    'monthly': ['repeat monthly'],
+    'yearly': ['repeat yearly'],
+
+    'contact': ['contact'],
+    'share public': ['share public'],
+    'share anonymous': ['share anonymous'],
+    'go up': ['go up'],
+    'up': ['go up'],
+    'today': ['today'],
+    'tomorrow': ['tomorrow'],
 
     'monday': ['Monday'],
     'tuesday': ['Tuesday'],
@@ -2236,24 +2281,24 @@ let commandDict = {
 
     'wednesdays': ['Wednesdays'],
 
-    'who': ['Who'],
-    'share with': ['Share with'],
-    'go to': ['Go to'],
-    'copy to': ['Copy to'],
-    'copy all to': ['Copy all to'],
-    'move to': ['Move to'],
-    'move all to': ['Move all to'],
-    'repeats every': ['Repeats every'],
-    'suggest to': ['Suggest to'],
-    'this': ['This'],
-    'next': ['Next'],
-    'after': ['After'],
-    'before': ['Before'],
-    'finish': ['Finish'],
-    'start': ['Start'],
-    'emotion': ['Emotion'],
-    'wait for': ['Wait for'],
-    'depends on': ['Depends on'],
+    'who': ['who'],
+    'share with': ['whare with'],
+    'go to': ['go to'],
+    'copy to': ['copy to'],
+    'copy all to': ['copy all to'],
+    'move to': ['move to'],
+    'move all to': ['move all to'],
+
+    'suggest to': ['suggest to'],
+    'this': ['this'],
+    'next': ['next'],
+    'after': ['after'],
+    'before': ['before'],
+    'finish': ['finish'],
+    'start': ['start'],
+    'emotion': ['emotion'],
+    'wait for': ['wait for'],
+    'depends on': ['depends on'],
     'nl': ['🇳🇱'],
     'us': ['🇺🇸'],
     'english': ['🇺🇸'],
@@ -2285,6 +2330,9 @@ function parseCommand(command) {
 }
 
 function addSuggestedCommands(command) {
+    if (command.lang == undefined) {
+        command.lang = settings.find({ "setting": "language" })[0].value
+    }
     console.log("command.lang:", command.lang)
     let wordsArray = command.title[command.lang].split(" ")
     console.log("wordsArray before:", wordsArray)
@@ -2337,11 +2385,30 @@ function addSuggestedCommands(command) {
             }
         }
 
+        if (word == 'duration') {
+            if (isDuration(wordsArray[index + 1])) {
+                commandsToSuggest.add(word + " " + wordsArray[index + 1])
+            }
+        }
+
+        if (word == 'start') {
+            if (isDuration(wordsArray[index + 1])) {
+                commandsToSuggest.add(word + " " + wordsArray[index + 1])
+            }
+        }
+
+        if (word == 'finish') {
+            if (isDuration(wordsArray[index + 1])) {
+                commandsToSuggest.add(word + " " + wordsArray[index + 1])
+            }
+        }
+
         if (!isNaN(word)) {
             console.log("word is int:", word)
         }
 
         commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])
+        //Todo: filter out any commands that are already selected
 
         command.suggestedCommands[index] = commandsToSuggest
 
