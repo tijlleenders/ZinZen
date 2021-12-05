@@ -2392,6 +2392,7 @@ function addSuggestedCommands(command) {
         }
 
         commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])
+        //Todo: filter out any commands that are already selected
 
         command.suggestedCommands[index] = commandsToSuggest
 
