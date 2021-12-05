@@ -2355,6 +2355,24 @@ function addSuggestedCommands(command) {
             }
         }
 
+        if (word == 'duration') {
+            if (isDuration(wordsArray[index + 1])) {
+                commandsToSuggest.add(word + " " + wordsArray[index + 1])
+            }
+        }
+
+        if (word == 'start') {
+            if (isDuration(wordsArray[index + 1])) {
+                commandsToSuggest.add(word + " " + wordsArray[index + 1])
+            }
+        }
+
+        if (word == 'finish') {
+            if (isDuration(wordsArray[index + 1])) {
+                commandsToSuggest.add(word + " " + wordsArray[index + 1])
+            }
+        }
+
         if (!isNaN(word)) {
             console.log("word is int:", word)
         }
