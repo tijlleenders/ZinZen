@@ -71,6 +71,9 @@ function updateModalAddUI() {
     if (inputGoal.durationString != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">duration ' + inputGoal.durationString + '</span>'
     }
+    if (inputGoal.repeatString != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">repeat ' + inputGoal.repeatString + '</span>'
+    }
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
@@ -709,7 +712,7 @@ function calculateCalendar() {
         console.log("goal:", goal)
         let estimated_duration = parseInt(goal.durationString.substr(0, 1))
         let goal_type
-        switch (goal.repeat) {
+        switch (goal.repeatString) {
             case "daily":
                 goal_type = "DAILY"
                 break;
@@ -2208,7 +2211,7 @@ function handleCommand(selectedCommand) {
         console.log("repeat selected")
         let repeatString = selectedCommand.split(" ")[1]
         //Todo: need something to clean up title regardless of number of characters matching full command - store trigger or match dynamic?
-        inputGoal.reapeatString = repeatString
+        inputGoal.repeatString = repeatString
     }
 
     if (selectedCommand.substr(0, 5) == "flex ") {
