@@ -2204,6 +2204,13 @@ function handleCommand(selectedCommand) {
         inputGoal.durationString = durationString
     }
 
+    if (selectedCommand.substr(0, 7) == "repeat ") {
+        console.log("repeat selected")
+        let repeatString = selectedCommand.split(" ")[1]
+        //Todo: need something to clean up title regardless of number of characters matching full command - store trigger or match dynamic?
+        inputGoal.reapeatString = repeatString
+    }
+
     if (selectedCommand.substr(0, 5) == "flex ") {
         console.log("flex selected")
     }
