@@ -697,6 +697,18 @@ function goToCalendar() {
     });
 }
 
+function getDurationFromStringIn(stringToParse, timeUnit) {
+    switch (timeUnit) {
+        case "h":
+            if (stringToParse.substr(stringToParse.length - 1, 1) != "h") {
+                console.error("attempting to getDurationFromStringIn:" + stringToParse + " with unit h, but not in h")
+            }
+            return parseInt(stringToParse.substr(0, stringToParse.length - 1))
+            break;
+        default:
+            console.error("timeUnit " + timeUnit + " not handled.")
+    }
+}
 
 function calculateCalendar() {
     let start = Date.now()
@@ -713,7 +725,7 @@ function calculateCalendar() {
 
     goalsToAdd.forEach(goal => {
         console.log("goal:", goal)
-        let estimated_duration = parseInt(goal.durationString.substr(0, 1))
+        let estimated_duration = getDurationFromStringIn(goal.durationString, "h")
         let goal_type
         switch (goal.repeatString) {
             case "daily":
