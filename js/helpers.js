@@ -716,7 +716,7 @@ function calculateCalendar() {
     calendar.slots = []
     calendar.goals = []
     let goalsToAdd = goals.where(function (goal) {
-        return goal.durationString != undefined;
+        return (goal.durationString != undefined && (goal.status == "maybe" || goal.status == "promised"));
     });
 
     if (goalsToAdd.length == 0) {
