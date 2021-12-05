@@ -708,6 +708,21 @@ function calculateCalendar() {
     goalsToAdd.forEach(goal => {
         console.log("goal:", goal)
         let estimated_duration = parseInt(goal.durationString.substr(0, 1))
+        let goal_type
+        switch (goal.repeat) {
+            case "daily":
+                goal_type = "DAILY"
+                break;
+            case "weekly":
+                goal_type = "WEEKLY"
+                break;
+            case "monthly":
+                goal_type = "MONTLY"
+                break;
+            default:
+                goal_type = "FIXED"
+                break;
+        }
 
         let goal_for_wasm = {
             id: goal.$loki,
@@ -718,7 +733,7 @@ function calculateCalendar() {
             finish: 48,
             start_time: 13,
             finish_time: 18,
-            goal_type: "DAILY"
+            goal_type: goal_type
         }
         calendar.goals.push(goal_for_wasm)
     })
