@@ -2250,11 +2250,13 @@ function handleCommand(selectedCommand) {
     if (selectedCommand.substr(0, 6) == "start ") {
         console.log("start selected")
         inputGoal.start = [selectedCommand.substr(6, selectedCommand.length - 6)]
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
     }
 
     if (selectedCommand.substr(0, 7) == "finish ") {
         console.log("finish selected")
         inputGoal.finish = [selectedCommand.substr(7, selectedCommand.length - 7)]
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
     }
 
     if (selectedCommand.substr(0, 5) == "flex ") {
