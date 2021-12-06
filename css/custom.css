@@ -335,6 +335,12 @@ body {
   height: 20px;
 }
 
+.top-buttons {
+  color: var(--menu-foreground);
+  opacity: 100%;
+  font-size: large;
+}
+
 .edit-goal {
   color: var(--menu-foreground);
   font-size: small;
