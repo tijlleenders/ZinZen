@@ -26,15 +26,14 @@ $("#backButton").click(function () {
 });
 
 $("#deleteButton").click(function () {
+    //Todo: if no children set parentId to parent of parentId
     if (shake) {
         shake = false
     } else {
         shake = true
     }
     goTo(parentId)
-    //Todo: if no children delete parentId
-    //Todo: else add shake-mode for children
-    // deleteGoalAndExclusiveDescendants(idToDelete)
+    // add handler for click when shake enabled and use deleteGoalAndExclusiveDescendants(idToDelete)
 });
 
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
