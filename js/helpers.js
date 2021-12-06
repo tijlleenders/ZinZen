@@ -74,11 +74,11 @@ function updateModalAddUI() {
     if (inputGoal.repeatString != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">repeat ' + inputGoal.repeatString + '</span>'
     }
-    if (inputGoal.start != undefined) {
-        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">start ' + inputGoal.start + '</span>'
+    if (inputGoal.startStringsArray != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">start ' + inputGoal.startStringsArray + '</span>'
     }
-    if (inputGoal.finish != undefined) {
-        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">finish ' + inputGoal.finish + '</span>'
+    if (inputGoal.finishStringsArray != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">finish ' + inputGoal.finishStringsArray + '</span>'
     }
 
     $("#selected-commands").html(selectedCommands)
@@ -2251,13 +2251,13 @@ function handleCommand(selectedCommand) {
 
     if (selectedCommand.substr(0, 6) == "start ") {
         console.log("start selected")
-        inputGoal.start = [selectedCommand.substr(6, selectedCommand.length - 6)]
+        inputGoal.startStringsArray = [selectedCommand.substr(6, selectedCommand.length - 6)]
         inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
     }
 
     if (selectedCommand.substr(0, 7) == "finish ") {
         console.log("finish selected")
-        inputGoal.finish = [selectedCommand.substr(7, selectedCommand.length - 7)]
+        inputGoal.finishStringsArray = [selectedCommand.substr(7, selectedCommand.length - 7)]
         inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
     }
 

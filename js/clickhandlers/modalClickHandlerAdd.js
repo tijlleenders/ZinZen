@@ -228,10 +228,10 @@ $("#myModal").on("click", ".selected-command", function (e) {
             delete inputGoal.durationString
             break;
         case "start":
-            delete inputGoal.start
+            delete inputGoal.startStringsArray
             break;
         case "finish":
-            delete inputGoal.finish
+            delete inputGoal.finishStringsArray
             break;
         case "repeat":
             delete inputGoal.repeatString
