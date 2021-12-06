@@ -233,6 +233,9 @@ $("#myModal").on("click", ".selected-command", function (e) {
         case "finish":
             delete inputGoal.finish
             break;
+        case "repeat":
+            delete inputGoal.repeatString
+            break;
         default:
             console.error("no handler for command:", command)
     }
