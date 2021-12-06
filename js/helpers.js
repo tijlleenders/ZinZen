@@ -716,7 +716,7 @@ function calculateCalendar() {
     calendar.slots = []
     calendar.goals = []
     let goalsToAdd = goals.where(function (goal) {
-        return goal.durationString != undefined;
+        return (goal.durationString != undefined && (goal.status == "maybe" || goal.status == "promised"));
     });
 
     if (goalsToAdd.length == 0) {
@@ -751,7 +751,7 @@ function calculateCalendar() {
             estimated_duration: estimated_duration,
             effort_invested: 0,
             start: 0,
-            finish: 48,
+            finish: 24,
             start_time: 13,
             finish_time: 18,
             goal_type: goal_type
@@ -781,6 +781,21 @@ function generateCalendarHTML() {
     console.log("inside generateCalendarHTML()")
     let HTML = ``
     //Todo: order slots in Rust
+
+    let impossibleTasks = calendar.tasks.filter(task => { return task.task_status == "IMPOSSIBLE" })
+    console.log("impossibleTasks:", impossibleTasks)
+    let impossibleGoalIds = new (Set)
+    impossibleTasks.forEach(task => {
+        impossibleGoalIds.add(task.goal_id)
+    })
+    console.log("impossible goal ids:", impossibleGoalIds)
+    let impossibleGoals = calendar.goals.filter(goal => {
+        return impossibleGoalIds.has(goal.id)
+    })
+    console.log("impossible goals:", impossibleGoals)
+    impossibleGoals.forEach(goal => {
+        HTML += "! Issue scheduling " + goal.title + " x/y times<br />"
+    })
 
     let days = []
     calendar.slots.forEach(slot => {
@@ -814,6 +829,7 @@ function generateCalendarHTML() {
         }
     })
     console.log(days)
+
 
     days.forEach((day, index) => {
         HTML += "day " + index + "<br />"
@@ -2178,9 +2194,6 @@ function updateUILanguage() {
     console.log("language found in settings:", lang)
     $("#backButtonText").html(translate("Back"))
     $("#addButtonText").html(translate("Add"))
-    $("#copyButtonText").html(translate("Copy"))
-    $("#moveButtonText").html(translate("Move"))
-    $("#pasteButtonText").html(translate("Paste"))
     $("#deleteButtonText").html(translate("Delete"))
     updateUIChildrenFor(parentId)
     updateBreadcrumbUI()
