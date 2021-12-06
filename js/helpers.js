@@ -293,7 +293,7 @@ function setSkeletonHTMLForAdd(id) {
     <div class="row" id="input-row">
       <div class="col">
         <div class="m-1">
-            <input class="form-control" type="text" id="inputGoal" placeholder="`+ translations.find({ "en": "Type a goal..." })[0][lang] + `" name="command" required autofocus autocomplete="off">
+            <input class="form-control" type="text" id="inputGoal" placeholder="`+ translations.find({ "en": "Type a goal and the number of hours..." })[0][lang] + `" name="command" required autofocus autocomplete="off">
         </div>
       </div>
     </div>
@@ -1849,8 +1849,8 @@ function loadTranslations() {
         })
     translations.insert(
         {
-            "en": "Type a goal...",
-            "nl": "Type een doel..."
+            "en": "Type a goal and the number of hours...",
+            "nl": "Type een doel en het aantal uur..."
         })
     translations.insert(
         {
