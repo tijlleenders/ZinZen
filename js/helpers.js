@@ -2240,6 +2240,16 @@ function handleCommand(selectedCommand) {
         inputGoal.repeatString = repeatString
     }
 
+    if (selectedCommand.substr(0, 6) == "start ") {
+        console.log("start selected")
+        inputGoal.start = [selectedCommand.substr(6, selectedCommand.length - 6)]
+    }
+
+    if (selectedCommand.substr(0, 7) == "finish ") {
+        console.log("finish selected")
+        inputGoal.finish = [selectedCommand.substr(7, selectedCommand.length - 7)]
+    }
+
     if (selectedCommand.substr(0, 5) == "flex ") {
         console.log("flex selected")
     }
