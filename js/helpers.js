@@ -752,10 +752,13 @@ function calculateCalendar() {
                 break;
         }
 
-        let start_time = 13
+        let start_time = 0
         if (goal.startStringsArray != undefined) {
-            console.log("found startStringsArray:", goal.startStringsArray + " for goal " + goal.title[goal.lang])
             start_time = parseInt(goal.startStringsArray[0].substr(0, 2))
+        }
+        let finish_time = 23
+        if (goal.finishStringsArray != undefined) {
+            finish_time = parseInt(goal.finishStringsArray[0].substr(0, 2))
         }
 
         let goal_for_wasm = {
@@ -766,7 +769,7 @@ function calculateCalendar() {
             start: 0,
             finish: 24,
             start_time: start_time,
-            finish_time: 18,
+            finish_time: finish_time,
             goal_type: goal_type
         }
         calendar.goals.push(goal_for_wasm)
