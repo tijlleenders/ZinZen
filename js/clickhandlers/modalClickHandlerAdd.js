@@ -79,11 +79,6 @@ function addSomething() {
     if (title.length > 8) {
         ellipse = "..."
     }
-
-    updateUIChildrenFor(parentId)
-
-    $("#inputGoal").attr("placeholder", "Added " + title.substr(0, 8) + ellipse + "! Something else?")
-    $("#inputGoal").focus()
 }
 
 $("#myModal").on("click", "#modal-add-a-goal-button", function () {
@@ -142,8 +137,7 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
         }
         relationships.insert(relationshipToSave)
     }
-
-    updateUIChildrenFor(parentId)
+    goTo(parentId)
     $("#myModal").modal('hide')
 })
 
@@ -186,6 +180,7 @@ function deleteIfOrphaned(idList) {
 function deleteGoalAndExclusiveDescendants(id) {
     let goal = goals.find({ id: id })[0]
     if (goal != undefined) {
+        parentId = getParentIdsFor(id)[0]
         //Todo: need transaction to remove all sub-goals
         let descendantIds = getAllDescendantsFor(id)
         descendantIds.forEach(id => {
@@ -198,6 +193,7 @@ function deleteGoalAndExclusiveDescendants(id) {
         console.error("Goal to delete not found for id:", id)
         return
     }
+    goTo(parentId)
     $("#myModal").modal('hide')
     $("#" + id).removeClass('jello-vertical-animation') //if any
     $("#" + id).addClass('swirl-out-bck-animation')

@@ -2215,8 +2215,7 @@ function updateUILanguage() {
     $("#backButtonText").html(translate("Back"))
     $("#addButtonText").html(translate("Add"))
     $("#deleteButtonText").html(translate("Delete"))
-    updateUIChildrenFor(parentId)
-    updateBreadcrumbUI()
+    goTo(parentId)
 }
 
 async function updateUIWith(child) {

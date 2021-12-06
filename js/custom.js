@@ -173,4 +173,3 @@ window.addEventListener('load', function () {
 window.addEventListener('popstate', function () {
     window.history.pushState({}, '')
 })
-

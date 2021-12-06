@@ -36,6 +36,13 @@ $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     goTo(event.target.id.substring(prefix.length + 1))
 })
 
+$("#breadcrumb").on("click", ".edit-button", function (event) {
+    event.stopPropagation();
+    console.log("id:", event.target.id)
+    let prefix = event.target.id.split("-")[0]
+    openModal(parentId, "add")
+})
+
 $("#main-promised").on("contextmenu", ".goal", function (event) {
     let nodeId = getNodeId(event)
     openModal(nodeId.slice(-36), "add")
