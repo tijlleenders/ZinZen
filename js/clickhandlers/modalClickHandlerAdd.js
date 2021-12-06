@@ -190,6 +190,7 @@ function deleteGoalAndExclusiveDescendants(id) {
     $("#" + id).addClass('swirl-out-bck-animation')
     $("#" + id).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
         $("#" + id).remove();
+        updateUIChildrenFor(parentId)
     });
 }
 
