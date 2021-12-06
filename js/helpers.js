@@ -2388,32 +2388,8 @@ function addSuggestedCommands(command) {
                 (index == 0))) {
             commandsToSuggest.add("duration " + word)
             commandsToSuggest.add("flex " + word)
-            commandsToSuggest.add("start " + word)
-            commandsToSuggest.add("finish " + word)
-        }
-
-        if (word == 'flex') {
-            if (isDuration(wordsArray[index + 1])) {
-                commandsToSuggest.add(word + " " + wordsArray[index + 1])
-            }
-        }
-
-        if (word == 'duration') {
-            if (isDuration(wordsArray[index + 1])) {
-                commandsToSuggest.add(word + " " + wordsArray[index + 1])
-            }
-        }
-
-        if (word == 'start') {
-            if (isDuration(wordsArray[index + 1])) {
-                commandsToSuggest.add(word + " " + wordsArray[index + 1])
-            }
-        }
-
-        if (word == 'finish') {
-            if (isDuration(wordsArray[index + 1])) {
-                commandsToSuggest.add(word + " " + wordsArray[index + 1])
-            }
+            commandsToSuggest.add("start in " + word)
+            commandsToSuggest.add("finish in " + word)
         }
 
         if (!isNaN(word)) {
