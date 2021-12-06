@@ -7,7 +7,7 @@ var MAX_LEVELS = 10
 var MAX_SUBLISTS = 33
 var calendar = { "max_time_units": 720, "time_unit_qualifier": "h", "goals": [], "tasks": [], "slots": [] }
 let wasmModule
-let shake = false
+let deleteMode = false
 
 var repository = new loki("ZinZen.db", {
     autoload: true,

@@ -27,13 +27,13 @@ $("#backButton").click(function () {
 
 $("#deleteButton").click(function () {
     //Todo: if no children set parentId to parent of parentId
-    if (shake) {
-        shake = false
+    if (deleteMode) {
+        deleteMode = false
     } else {
-        shake = true
+        deleteMode = true
     }
     goTo(parentId)
-    // add handler for click when shake enabled and use deleteGoalAndExclusiveDescendants(idToDelete)
+    // add handler for click when deleteMode enabled and use deleteGoalAndExclusiveDescendants(idToDelete)
 });
 
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
