@@ -74,6 +74,13 @@ function updateModalAddUI() {
     if (inputGoal.repeatString != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">repeat ' + inputGoal.repeatString + '</span>'
     }
+    if (inputGoal.startStringsArray != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">start ' + inputGoal.startStringsArray + '</span>'
+    }
+    if (inputGoal.finishStringsArray != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">finish ' + inputGoal.finishStringsArray + '</span>'
+    }
+
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
@@ -745,6 +752,15 @@ function calculateCalendar() {
                 break;
         }
 
+        let start_time = 0
+        if (goal.startStringsArray != undefined) {
+            start_time = parseInt(goal.startStringsArray[0].substr(0, 2))
+        }
+        let finish_time = 23
+        if (goal.finishStringsArray != undefined) {
+            finish_time = parseInt(goal.finishStringsArray[0].substr(0, 2))
+        }
+
         let goal_for_wasm = {
             id: goal.$loki,
             title: goal.title.en,
@@ -752,8 +768,8 @@ function calculateCalendar() {
             effort_invested: 0,
             start: 0,
             finish: 24,
-            start_time: 13,
-            finish_time: 18,
+            start_time: start_time,
+            finish_time: finish_time,
             goal_type: goal_type
         }
         calendar.goals.push(goal_for_wasm)
@@ -2238,6 +2254,20 @@ function handleCommand(selectedCommand) {
         let repeatString = selectedCommand.split(" ")[1]
         //Todo: need something to clean up title regardless of number of characters matching full command - store trigger or match dynamic?
         inputGoal.repeatString = repeatString
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(repeatString, "")
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace("  ", " ")
+    }
+
+    if (selectedCommand.substr(0, 6) == "start ") {
+        console.log("start selected")
+        inputGoal.startStringsArray = [selectedCommand.substr(6, selectedCommand.length - 6)]
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
+    }
+
+    if (selectedCommand.substr(0, 7) == "finish ") {
+        console.log("finish selected")
+        inputGoal.finishStringsArray = [selectedCommand.substr(7, selectedCommand.length - 7)]
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
     }
 
     if (selectedCommand.substr(0, 5) == "flex ") {
@@ -2383,41 +2413,16 @@ function addSuggestedCommands(command) {
             }
         }
 
-        if (isDuration(word) &&
-            ((index > 0 && wordsArray[index - 1] != 'flex') ||
-                (index == 0))) {
+        if (isDuration(word)) {
             commandsToSuggest.add("duration " + word)
             commandsToSuggest.add("flex " + word)
-            commandsToSuggest.add("start " + word)
-            commandsToSuggest.add("finish " + word)
+            commandsToSuggest.add("start in " + word)
+            commandsToSuggest.add("finish in " + word)
         }
 
-        if (word == 'flex') {
-            if (isDuration(wordsArray[index + 1])) {
-                commandsToSuggest.add(word + " " + wordsArray[index + 1])
-            }
-        }
-
-        if (word == 'duration') {
-            if (isDuration(wordsArray[index + 1])) {
-                commandsToSuggest.add(word + " " + wordsArray[index + 1])
-            }
-        }
-
-        if (word == 'start') {
-            if (isDuration(wordsArray[index + 1])) {
-                commandsToSuggest.add(word + " " + wordsArray[index + 1])
-            }
-        }
-
-        if (word == 'finish') {
-            if (isDuration(wordsArray[index + 1])) {
-                commandsToSuggest.add(word + " " + wordsArray[index + 1])
-            }
-        }
-
-        if (!isNaN(word)) {
-            console.log("word is int:", word)
+        if (!isNaN(word) && parseInt(word) < 24 && parseInt(word) >= 0) {
+            commandsToSuggest.add("start " + word + ":00")
+            commandsToSuggest.add("finish " + word + ":00")
         }
 
         commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])

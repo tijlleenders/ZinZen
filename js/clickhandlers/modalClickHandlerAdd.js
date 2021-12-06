@@ -19,6 +19,7 @@ $("#myModal").on("keyup", "#inputGoal", function (e) {
 
     let inputGoal = $("#inputGoal").data('inputGoal')
     inputGoal.title[inputGoal.lang] = $("#inputGoal").val()
+    inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace("  ", " ")
     $("#inputGoal").data('inputGoal', inputGoal)
     updateModalAddUI()
 });
@@ -225,6 +226,15 @@ $("#myModal").on("click", ".selected-command", function (e) {
     switch (command) {
         case "duration":
             delete inputGoal.durationString
+            break;
+        case "start":
+            delete inputGoal.startStringsArray
+            break;
+        case "finish":
+            delete inputGoal.finishStringsArray
+            break;
+        case "repeat":
+            delete inputGoal.repeatString
             break;
         default:
             console.error("no handler for command:", command)
