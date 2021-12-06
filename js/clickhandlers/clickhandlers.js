@@ -32,8 +32,7 @@ $("#deleteButton").click(function () {
     } else {
         deleteMode = true
     }
-    goTo(parentId)
-    // add handler for click when deleteMode enabled and use deleteGoalAndExclusiveDescendants(idToDelete)
+    updateUIChildrenFor(parentId)
 });
 
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
@@ -118,12 +117,18 @@ function goTo(id) {
 
     switch (goal.label) {
         case "goal":
-            $("#main-promised").empty()
-            $("#main-buttons-row").removeClass('d-none')
-            $("#main-quote").addClass('d-none')
-            parentId = id
-            updateUIChildrenFor(id)
-            updateBreadcrumbUI()
+            // add handler for click when deleteMode enabled and use deleteGoalAndExclusiveDescendants(idToDelete)
+            if (deleteMode == false) {
+                $("#main-promised").empty()
+                $("#main-buttons-row").removeClass('d-none')
+                $("#main-quote").addClass('d-none')
+                parentId = id
+                updateUIChildrenFor(id)
+                updateBreadcrumbUI()
+            } else {
+                deleteGoalAndExclusiveDescendants(id)
+            }
+            return
             break;
         case "suggestion":
         case "person":
@@ -137,6 +142,7 @@ function goTo(id) {
             parentId = id
             updateUIChildrenFor(id)
             updateBreadcrumbUI()
+            return
             break;
 
         case "setting-action":
