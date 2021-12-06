@@ -2383,9 +2383,7 @@ function addSuggestedCommands(command) {
             }
         }
 
-        if (isDuration(word) &&
-            ((index > 0 && wordsArray[index - 1] != 'flex') ||
-                (index == 0))) {
+        if (isDuration(word)) {
             commandsToSuggest.add("duration " + word)
             commandsToSuggest.add("flex " + word)
             commandsToSuggest.add("start in " + word)
