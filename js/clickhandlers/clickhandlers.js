@@ -20,6 +20,12 @@ $("#addButton").click(function () {
     }
 });
 
+$("#backButton").click(function () {
+    let ancestors = getShortestPathToPersonFor(parentId)
+    goTo(ancestors[ancestors.length - 2].id)
+});
+
+
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     event.stopPropagation();
     console.log("id:", event.target.id)
