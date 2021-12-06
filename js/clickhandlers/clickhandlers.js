@@ -26,7 +26,12 @@ $("#backButton").click(function () {
 });
 
 $("#deleteButton").click(function () {
-    $("#breadcrumb").prepend("Not implemented yet...<br />")
+    if (shake) {
+        shake = false
+    } else {
+        shake = true
+    }
+    goTo(parentId)
     //Todo: if no children delete parentId
     //Todo: else add shake-mode for children
     // deleteGoalAndExclusiveDescendants(idToDelete)
