@@ -2245,6 +2245,8 @@ function handleCommand(selectedCommand) {
         let repeatString = selectedCommand.split(" ")[1]
         //Todo: need something to clean up title regardless of number of characters matching full command - store trigger or match dynamic?
         inputGoal.repeatString = repeatString
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(repeatString, "")
+        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace("  ", " ")
     }
 
     if (selectedCommand.substr(0, 6) == "start ") {
