@@ -2426,8 +2426,11 @@ function addSuggestedCommands(command) {
         }
 
         if (!isNaN(word) && parseInt(word) < 24 && parseInt(word) >= 0) {
+            commandsToSuggest.add("duration " + word + "h")
             commandsToSuggest.add("start " + word + ":00")
             commandsToSuggest.add("finish " + word + ":00")
+            commandsToSuggest.add("start in " + word + "h")
+            commandsToSuggest.add("finish in " + word + "h")
         }
 
         commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])
