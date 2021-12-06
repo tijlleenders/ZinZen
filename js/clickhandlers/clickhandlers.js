@@ -27,6 +27,9 @@ $("#backButton").click(function () {
 
 $("#deleteButton").click(function () {
     $("#breadcrumb").prepend("Not implemented yet...<br />")
+    //Todo: if no children delete parentId
+    //Todo: else add shake-mode for children
+    // deleteGoalAndExclusiveDescendants(idToDelete)
 });
 
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
