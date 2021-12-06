@@ -27,8 +27,7 @@ $("#backButton").click(function () {
     goTo(ancestors[ancestors.length - 2].id)
 });
 
-$("#deleteButton").click(function () {
-    //Todo: if no children set parentId to parent of parentId
+$("#deleteButtonDiv").on("click", "#deleteButton", function (event) {
     if (deleteMode) {
         deleteMode = false
     } else {
