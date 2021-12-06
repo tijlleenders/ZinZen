@@ -226,6 +226,12 @@ $("#myModal").on("click", ".selected-command", function (e) {
         case "duration":
             delete inputGoal.durationString
             break;
+        case "start":
+            delete inputGoal.start
+            break;
+        case "finish":
+            delete inputGoal.finish
+            break;
         default:
             console.error("no handler for command:", command)
     }
