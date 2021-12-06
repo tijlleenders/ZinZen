@@ -74,6 +74,13 @@ function updateModalAddUI() {
     if (inputGoal.repeatString != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">repeat ' + inputGoal.repeatString + '</span>'
     }
+    if (inputGoal.start != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">start ' + inputGoal.start + '</span>'
+    }
+    if (inputGoal.finish != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">finish ' + inputGoal.finish + '</span>'
+    }
+
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
