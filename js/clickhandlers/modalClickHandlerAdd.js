@@ -95,13 +95,6 @@ $("#myModal").on("paste", "#inputGoal", function (e) {
     console.log("pastedData:", pastedData)
 });
 
-$("#myModal").on("click", "#delete-a-goal-button", function () {
-    console.log("delete clicked")
-    let idToDelete = $("#myModal").data('idx')
-    console.log("idx:", idToDelete)
-    deleteGoalAndExclusiveDescendants(idToDelete)
-})
-
 $("#myModal").on("click", "#save-a-goal-button", function () {
     let title = $("#inputGoal").val()
     console.log("saving ", title)
