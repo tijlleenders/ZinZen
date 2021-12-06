@@ -110,6 +110,14 @@ body {
     background-color var(--duration) var(--timing);
 }
 
+.btn-hidden {
+  opacity: 0%;
+}
+
+.btn-hidden:hover {
+  cursor: default;
+}
+
 .card {
   border-radius: 10px;
   background-image: var(--bs-gradient);

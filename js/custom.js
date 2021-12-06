@@ -7,6 +7,7 @@ var MAX_LEVELS = 10
 var MAX_SUBLISTS = 33
 var calendar = { "max_time_units": 720, "time_unit_qualifier": "h", "goals": [], "tasks": [], "slots": [] }
 let wasmModule
+let deleteMode = false
 
 var repository = new loki("ZinZen.db", {
     autoload: true,
@@ -121,6 +122,19 @@ function updateUIChildrenFor(parentId) {
         let childResults = goals.find({ 'id': relationship.childId })
         updateUIWith(childResults[0])
     });
+    if (relationshipsForParent.length == 0) {
+        $("#deleteButtonDiv").html(`
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 btn-hidden" id="deleteButtonX">
+            <div class="top-buttons" id="deleteButtonText">Delete</div>
+        </button>
+        `)
+    } else {
+        $("#deleteButtonDiv").html(`
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="deleteButton">
+            <div class="top-buttons" id="deleteButtonText">Delete</div>
+        </button>
+        `)
+    }
 }
 
 // Initialize deferredPrompt for use later to show browser install prompt.

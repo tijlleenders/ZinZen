@@ -11,6 +11,7 @@ $("#modal-footer-close").click(function () {
 });
 
 $("#addButton").click(function () {
+    deleteMode = false
     let parent = goals.find({ id: parentId })[0]
     if (parent.label == "goal") {
         addAGoal()
@@ -21,23 +22,31 @@ $("#addButton").click(function () {
 });
 
 $("#backButton").click(function () {
+    deleteMode = false
     let ancestors = getShortestPathToPersonFor(parentId)
     goTo(ancestors[ancestors.length - 2].id)
 });
 
-$("#deleteButton").click(function () {
-    $("#breadcrumb").prepend("Not implemented yet...<br />")
+$("#deleteButtonDiv").on("click", "#deleteButton", function (event) {
+    if (deleteMode) {
+        deleteMode = false
+    } else {
+        deleteMode = true
+    }
+    updateUIChildrenFor(parentId)
 });
 
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     event.stopPropagation();
     console.log("id:", event.target.id)
     let prefix = event.target.id.split("-")[0]
+    deleteMode = false
     goTo(event.target.id.substring(prefix.length + 1))
 })
 
 $("#breadcrumb").on("click", ".edit-button", function (event) {
     event.stopPropagation();
+    deleteMode = false
     console.log("id:", event.target.id)
     let prefix = event.target.id.split("-")[0]
     openModal(parentId, "add")
@@ -111,17 +120,25 @@ function goTo(id) {
 
     switch (goal.label) {
         case "goal":
-            $("#main-promised").empty()
-            $("#main-buttons-row").removeClass('d-none')
-            $("#main-quote").addClass('d-none')
-            parentId = id
-            updateUIChildrenFor(id)
-            updateBreadcrumbUI()
+            if (deleteMode == false) {
+                $("#main-promised").empty()
+                $("#main-buttons-row").removeClass('d-none')
+                $("#main-quote").addClass('d-none')
+                parentId = id
+                updateUIChildrenFor(id)
+                updateBreadcrumbUI()
+            } else {
+                console.log("want to delete:", id)
+                deleteGoalAndExclusiveDescendants(id)
+                console.log("done")
+            }
+            return
             break;
         case "suggestion":
         case "person":
         case "setting":
         case "feeling":
+            deleteMode = false
             $("#main-calendar").addClass('d-none')
             $("#main-promised").removeClass('d-none')
             $("#main-promised").empty()
@@ -130,10 +147,12 @@ function goTo(id) {
             parentId = id
             updateUIChildrenFor(id)
             updateBreadcrumbUI()
+            return
             break;
 
         case "setting-action":
         case "action":
+            deleteMode = false
             switch (goal.function) {
                 case "openURLs()":
                     openURLs(goal.urls)
