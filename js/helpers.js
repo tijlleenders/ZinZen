@@ -2390,8 +2390,9 @@ function addSuggestedCommands(command) {
             commandsToSuggest.add("finish in " + word)
         }
 
-        if (!isNaN(word)) {
-            console.log("word is int:", word)
+        if (!isNaN(word) && parseInt(word) < 24 && parseInt(word) >= 0) {
+            commandsToSuggest.add("start " + word + ":00")
+            commandsToSuggest.add("finish " + word + ":00")
         }
 
         commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])
