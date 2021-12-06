@@ -173,7 +173,6 @@ function deleteIfOrphaned(idList) {
 function deleteGoalAndExclusiveDescendants(id) {
     let goal = goals.find({ id: id })[0]
     if (goal != undefined) {
-        parentId = getParentIdsFor(id)[0]
         //Todo: need transaction to remove all sub-goals
         let descendantIds = getAllDescendantsFor(id)
         descendantIds.forEach(id => {
@@ -186,7 +185,6 @@ function deleteGoalAndExclusiveDescendants(id) {
         console.error("Goal to delete not found for id:", id)
         return
     }
-    goTo(parentId)
     $("#myModal").modal('hide')
     $("#" + id).removeClass('jello-vertical-animation') //if any
     $("#" + id).addClass('swirl-out-bck-animation')

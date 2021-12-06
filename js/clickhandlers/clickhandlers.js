@@ -11,6 +11,7 @@ $("#modal-footer-close").click(function () {
 });
 
 $("#addButton").click(function () {
+    deleteMode = false
     let parent = goals.find({ id: parentId })[0]
     if (parent.label == "goal") {
         addAGoal()
@@ -21,6 +22,7 @@ $("#addButton").click(function () {
 });
 
 $("#backButton").click(function () {
+    deleteMode = false
     let ancestors = getShortestPathToPersonFor(parentId)
     goTo(ancestors[ancestors.length - 2].id)
 });
@@ -39,11 +41,13 @@ $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     event.stopPropagation();
     console.log("id:", event.target.id)
     let prefix = event.target.id.split("-")[0]
+    deleteMode = false
     goTo(event.target.id.substring(prefix.length + 1))
 })
 
 $("#breadcrumb").on("click", ".edit-button", function (event) {
     event.stopPropagation();
+    deleteMode = false
     console.log("id:", event.target.id)
     let prefix = event.target.id.split("-")[0]
     openModal(parentId, "add")
@@ -117,7 +121,6 @@ function goTo(id) {
 
     switch (goal.label) {
         case "goal":
-            // add handler for click when deleteMode enabled and use deleteGoalAndExclusiveDescendants(idToDelete)
             if (deleteMode == false) {
                 $("#main-promised").empty()
                 $("#main-buttons-row").removeClass('d-none')
@@ -126,7 +129,9 @@ function goTo(id) {
                 updateUIChildrenFor(id)
                 updateBreadcrumbUI()
             } else {
+                console.log("want to delete:", id)
                 deleteGoalAndExclusiveDescendants(id)
+                console.log("done")
             }
             return
             break;
@@ -134,6 +139,7 @@ function goTo(id) {
         case "person":
         case "setting":
         case "feeling":
+            deleteMode = false
             $("#main-calendar").addClass('d-none')
             $("#main-promised").removeClass('d-none')
             $("#main-promised").empty()
@@ -147,6 +153,7 @@ function goTo(id) {
 
         case "setting-action":
         case "action":
+            deleteMode = false
             switch (goal.function) {
                 case "openURLs()":
                     openURLs(goal.urls)
