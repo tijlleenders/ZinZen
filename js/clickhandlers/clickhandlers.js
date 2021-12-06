@@ -25,6 +25,9 @@ $("#backButton").click(function () {
     goTo(ancestors[ancestors.length - 2].id)
 });
 
+$("#deleteButton").click(function () {
+    $("#breadcrumb").prepend("Not implemented yet...<br />")
+});
 
 $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     event.stopPropagation();
