@@ -752,6 +752,12 @@ function calculateCalendar() {
                 break;
         }
 
+        let start_time = 13
+        if (goal.startStringsArray != undefined) {
+            console.log("found startStringsArray:", goal.startStringsArray + " for goal " + goal.title[goal.lang])
+            start_time = parseInt(goal.startStringsArray[0].substr(0, 2))
+        }
+
         let goal_for_wasm = {
             id: goal.$loki,
             title: goal.title.en,
@@ -759,7 +765,7 @@ function calculateCalendar() {
             effort_invested: 0,
             start: 0,
             finish: 24,
-            start_time: 13,
+            start_time: start_time,
             finish_time: 18,
             goal_type: goal_type
         }
