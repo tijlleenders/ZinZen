@@ -763,7 +763,6 @@ function calculateCalendar() {
             start: 0,
             finish: calendar.max_time_units,
             start_time: 0,
-            finish_time: 24,
             goal_type: goal_type
         }
 
