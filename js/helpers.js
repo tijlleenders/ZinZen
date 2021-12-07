@@ -135,6 +135,7 @@ function openModal(id, modalType) {
     console.log("modalType:", modalType)
     switch (modalType) {
         case "add":
+            deleteMode = false
             setSkeletonHTMLForAdd(id)
             updateModalUI()
             break;
