@@ -22,7 +22,11 @@ $("#addButton").click(function () {
 });
 
 $("#backButton").click(function () {
-    deleteMode = false
+    if (deleteMode == true) {
+        deleteMode = false
+        updateUIChildrenFor(parentId)
+        return
+    }
     let ancestors = getShortestPathToPersonFor(parentId)
     goTo(ancestors[ancestors.length - 2].id)
 });
