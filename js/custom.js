@@ -135,6 +135,15 @@ function updateUIChildrenFor(parentId) {
         </button>
         `)
     }
+
+    if (deleteMode == true) {
+        console.log("hit")
+        $("#main-notification").removeClass('d-none')
+        $("#main-notification").html("Click / touch any list to delete.")
+    } else {
+        $("#main-notification").html("")
+        $("#main-notification").addClass('d-none')
+    }
 }
 
 // Initialize deferredPrompt for use later to show browser install prompt.
