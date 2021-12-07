@@ -755,26 +755,26 @@ function calculateCalendar() {
                 break;
         }
 
-        let start_time = 0
-        if (goal.startStringsArray != undefined) {
-            start_time = parseInt(goal.startStringsArray[0].substr(0, 2))
-        }
-        let finish_time = 23
-        if (goal.finishStringsArray != undefined) {
-            finish_time = parseInt(goal.finishStringsArray[0].substr(0, 2))
-        }
-
         let goal_for_wasm = {
             id: goal.$loki,
             title: goal.title.en,
             estimated_duration: estimated_duration,
             effort_invested: 0,
             start: 0,
-            finish: 24,
-            start_time: start_time,
-            finish_time: finish_time,
+            finish: calendar.max_time_units,
+            start_time: 0,
+            finish_time: 24,
             goal_type: goal_type
         }
+
+        if (goal.startStringsArray != undefined) {
+            goal_for_wasm.start_time = parseInt(goal.startStringsArray[0].substr(0, 2))
+        }
+
+        if (goal.finishStringsArray != undefined) {
+            goal_for_wasm.finish_time = parseInt(goal.finishStringsArray[0].substr(0, 2))
+        }
+
         calendar.goals.push(goal_for_wasm)
     })
 
