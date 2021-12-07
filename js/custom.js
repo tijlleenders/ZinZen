@@ -123,6 +123,9 @@ function updateUIChildrenFor(parentId) {
         updateUIWith(childResults[0])
     });
     if (relationshipsForParent.length == 0) {
+        deleteMode = false
+        $("#main-notification").empty()
+        $("#main-notification").addClass('d-none')
         $("#deleteButtonDiv").html(`
         <button type="button" class="btn btn-outline-secondary btn-sm m-1 btn-hidden" id="deleteButtonX">
             <div class="top-buttons" id="deleteButtonText">Delete</div>
