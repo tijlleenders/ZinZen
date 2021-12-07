@@ -54,7 +54,7 @@ ZinZen does not want or need to know who you are. You don't require a phone numb
 https://opensource.guide/how-to-contribute/
 ... and read code of conduct and FAQ's.
 
-## ...or sponsor me with coffee!
+## ...or [sponsor me with coffee!](https://github.com/sponsors/tijlleenders)
 <br />
 <br />
 
