@@ -566,7 +566,7 @@ function generateGoalHTML(properties) {
 
     let shakeClass = ""
     if (deleteMode == true) {
-        shakeClass = " shake-little shake-constant "
+        shakeClass = " shake-medium shake-constant "
     }
 
     let goalId = properties.id
