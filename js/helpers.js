@@ -92,6 +92,15 @@ function updateModalAddUI() {
             suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
         })
     });
+
+    $("#calendar-feedback").html("Type number of hours to schedule on calendar.")
+    if (suggestedCommands.search("duration") > -1) {
+        $("#calendar-feedback").html("Click suggested duration command to schedule on calendar.")
+    }
+    if (selectedCommands.search("duration") > -1) {
+        $("#calendar-feedback").html("Scheduled or not scheduled for x / y / z.")
+    }
+
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
