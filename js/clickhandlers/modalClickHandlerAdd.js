@@ -214,15 +214,19 @@ $("#myModal").on("click", ".selected-command", function (e) {
     switch (command) {
         case "duration":
             delete inputGoal.durationString
+            calculateCalendar()
             break;
         case "start":
             delete inputGoal.startStringsArray
+            calculateCalendar()
             break;
         case "finish":
             delete inputGoal.finishStringsArray
+            calculateCalendar()
             break;
         case "repeat":
             delete inputGoal.repeatString
+            calculateCalendar()
             break;
         default:
             console.error("no handler for command:", command)
