@@ -101,6 +101,18 @@ function updateModalAddUI() {
         $("#calendar-feedback").html("Scheduled or not scheduled for x / y / z.")
     }
 
+    calculateCalendar() //Todo: a little overkill to do this on every letter typed
+    let tasks = calendar.tasks.filter(task => {
+        return task.goal_id == inputGoal.$loki
+    })
+    if (tasks.length > 0) {
+        let success = tasks.filter(task => {
+            return task.task_status == "SCHEDULED"
+        })
+        $("#calendar-feedback").html("Scheduled " + success.length + "/" + tasks.length + " ; first on ...")
+    }
+
+
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
