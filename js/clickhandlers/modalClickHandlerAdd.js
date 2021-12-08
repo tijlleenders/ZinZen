@@ -3,10 +3,7 @@
 $("#myModal").on("keyup", "#inputGoal", function (e) {
     if (e.which === 13) {
         if ($(this).val().length == 0) return;
-
-        addSomething($(this).val())
-        updateUIChildrenFor(parentId)
-        $("#myModal").modal('hide')
+        saveGoal()
     }
 
     let goalId = $("#myModal").data("idx")
@@ -25,66 +22,8 @@ $("#myModal").on("keyup", "#inputGoal", function (e) {
     updateModalAddUI()
 });
 
-function addSomething() {
-    console.log("inside addSomething...")
-    let title = $("#inputGoal").val()
-    console.log("title:", title)
-    let status = "maybe"
-    let commands = $("#inputGoal").data('inputGoal').commands
-    let duration = 0
-
-    let newGoalId = uuidv4()
-
-    let colors = ["1"]
-    let parent = goals.find({ id: parentId })[0]
-    if (parent.label == "person") {
-        let randomColor = Math.floor(Math.random() * 10) + 1
-        colors = [randomColor.toString()]
-    } else {
-        colors = parent.colors
-    }
-
-    var titleObject = {}
-    let lang = settings.find({ "setting": "language" })[0].value
-    if (lang != undefined) {
-        titleObject[lang] = title
-    } else {
-        throw ("can't find language setting")
-    }
-
-    let newGoal = {
-        id: newGoalId,
-        label: "goal",
-        title: titleObject,
-        parentId: parentId,
-        status: status,
-        start: (new Date()).toISOString(),
-        duration: duration,
-        commands: commands,
-        colors: colors,
-        priority: 1
-    }
-
-    let newRelationship = {
-        parentId: parentId,
-        childId: newGoalId
-    }
-
-    //store new state
-    goals.insert(newGoal)
-    relationships.insert(newRelationship)
-    updatePriority()
-
-    $("#inputGoal").val("")
-    let ellipse = ""
-    if (title.length > 8) {
-        ellipse = "..."
-    }
-}
-
 $("#myModal").on("click", "#modal-add-a-goal-button", function () {
-    addSomething()
-    $("#myModal").modal('hide')
+    saveGoal()
 })
 
 $("#myModal").on("click", "#modal-cancel-button", function () {
@@ -96,7 +35,7 @@ $("#myModal").on("paste", "#inputGoal", function (e) {
     console.log("pastedData:", pastedData)
 });
 
-$("#myModal").on("click", "#save-a-goal-button", function () {
+function saveGoal() {
     let title = $("#inputGoal").val()
     console.log("saving ", title)
     let idToSave = $("#myModal").data('idx')
@@ -123,6 +62,26 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
     } else {
         console.log("saving with new id")
         goalToSave.id = uuidv4()
+
+        let colors = ["1"]
+        let parent = goals.find({ id: parentId })[0]
+        if (parent.id == "_______________________________goals") {
+            let randomColor = Math.floor(Math.random() * 10) + 1
+            colors = [randomColor.toString()]
+        } else {
+            colors = parent.colors
+        }
+
+        var titleObject = {}
+        let lang = settings.find({ "setting": "language" })[0].value
+        if (lang != undefined) {
+            titleObject[lang] = title
+        } else {
+            throw ("can't find language setting")
+        }
+
+        goalToSave.title = titleObject
+
         goals.insert(goalToSave)
         let relationshipToSave = {
             parentId: parentId,
@@ -130,9 +89,14 @@ $("#myModal").on("click", "#save-a-goal-button", function () {
             priority: 0
         }
         relationships.insert(relationshipToSave)
+        updatePriority()
     }
     goTo(parentId)
     $("#myModal").modal('hide')
+}
+
+$("#myModal").on("click", "#save-a-goal-button", function () {
+    saveGoal()
 })
 
 function getAllDescendantsFor(id) {
