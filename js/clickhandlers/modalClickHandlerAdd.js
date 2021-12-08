@@ -5,6 +5,7 @@ $("#myModal").on("keyup", "#inputGoal", function (e) {
         if ($(this).val().length == 0) return;
 
         addSomething($(this).val())
+        updateUIChildrenFor(parentId)
         $("#myModal").modal('hide')
     }
 
