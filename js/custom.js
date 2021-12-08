@@ -171,7 +171,7 @@ window.addEventListener("load", () => {
                 serviceWorker = swReg;
             })
     }
-    wasmModule = wasm_bindgen("./zinzen_scheduler_bg.wasm");
+    wasmModule = wasm_bindgen("./zinzen_scheduler_bg.wasm")
 });
 
 $("#main-promised").sortable({

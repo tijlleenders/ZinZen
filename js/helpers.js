@@ -92,6 +92,27 @@ function updateModalAddUI() {
             suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
         })
     });
+
+    $("#calendar-feedback").html("Type number of hours to schedule on calendar.")
+    if (suggestedCommands.search("duration") > -1) {
+        $("#calendar-feedback").html("Click suggested duration command to schedule on calendar.")
+    }
+    if (selectedCommands.search("duration") > -1) {
+        $("#calendar-feedback").html("Scheduled or not scheduled for x / y / z.")
+    }
+
+    calculateCalendar() //Todo: a little overkill to do this on every letter typed
+    let tasks = calendar.tasks.filter(task => {
+        return task.goal_id == inputGoal.$loki
+    })
+    if (tasks.length > 0) {
+        let success = tasks.filter(task => {
+            return task.task_status == "SCHEDULED"
+        })
+        $("#calendar-feedback").html("Scheduled " + success.length + "/" + tasks.length + " ; first on ...")
+    }
+
+
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
@@ -306,6 +327,12 @@ function setSkeletonHTMLForAdd(id) {
         </div>
       </div>
     </div>
+    <div class="row mt-2" id="calendar-feedback-row">
+      <div class="col">
+        <div class="" id="calendar-feedback">
+        </div>
+      </div>
+    </div>    
     <div class="row mt-2" id="add-row">
       <div class=" col m-1">
         <button type="button" class="btn btn-outline-primary" id="modal-add-a-goal-button">Add</button>
@@ -2281,7 +2308,7 @@ function handleCommand(selectedCommand) {
 
     console.log("inputGoal after (not saved):", inputGoal)
     $("#inputGoal").data('inputGoal', inputGoal)
-    updateModalUI()
+    updateModalAddUI()
 }
 
 function getArrayFromTitle(title) {
@@ -2425,12 +2452,14 @@ function addSuggestedCommands(command) {
             commandsToSuggest.add("finish in " + word)
         }
 
-        if (!isNaN(word) && parseInt(word) < 24 && parseInt(word) >= 0) {
+        if (!isNaN(word) && parseInt(word) >= 0) {
             commandsToSuggest.add("duration " + word + "h")
-            commandsToSuggest.add("start " + word + ":00")
-            commandsToSuggest.add("finish " + word + ":00")
             commandsToSuggest.add("start in " + word + "h")
             commandsToSuggest.add("finish in " + word + "h")
+        }
+        if (!isNaN(word) && parseInt(word) < 24 && parseInt(word) >= 0) {
+            commandsToSuggest.add("start " + word + ":00")
+            commandsToSuggest.add("finish " + word + ":00")
         }
 
         commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])
