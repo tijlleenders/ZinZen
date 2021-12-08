@@ -2252,6 +2252,7 @@ function handleCommand(selectedCommand) {
         let durationString = selectedCommand.split(" ")[1]
         inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(durationString, "")
         inputGoal.durationString = durationString
+        calculateCalendar()
     }
 
     if (selectedCommand.substr(0, 7) == "repeat ") {
@@ -2261,27 +2262,31 @@ function handleCommand(selectedCommand) {
         inputGoal.repeatString = repeatString
         inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(repeatString, "")
         inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace("  ", " ")
+        calculateCalendar()
     }
 
     if (selectedCommand.substr(0, 6) == "start ") {
         console.log("start selected")
         inputGoal.startStringsArray = [selectedCommand.substr(6, selectedCommand.length - 6)]
         inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
+        calculateCalendar()
     }
 
     if (selectedCommand.substr(0, 7) == "finish ") {
         console.log("finish selected")
         inputGoal.finishStringsArray = [selectedCommand.substr(7, selectedCommand.length - 7)]
         inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
+        calculateCalendar()
     }
 
     if (selectedCommand.substr(0, 5) == "flex ") {
         console.log("flex selected")
+        calculateCalendar()
     }
 
     console.log("inputGoal after (not saved):", inputGoal)
     $("#inputGoal").data('inputGoal', inputGoal)
-    updateModalUI()
+    updateModalAddUI()
 }
 
 function getArrayFromTitle(title) {
