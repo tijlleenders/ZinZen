@@ -171,10 +171,7 @@ window.addEventListener("load", () => {
                 serviceWorker = swReg;
             })
     }
-    wasmModule = wasm_bindgen("./zinzen_scheduler_bg.wasm");
-    if (calendar.tasks.length == 0) {
-        calculateCalendar()
-    }
+    wasmModule = wasm_bindgen("./zinzen_scheduler_bg.wasm")
 });
 
 $("#main-promised").sortable({
