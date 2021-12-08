@@ -81,6 +81,7 @@ function saveGoal() {
         }
 
         goalToSave.title = titleObject
+        goalToSave.colors = colors
 
         goals.insert(goalToSave)
         let relationshipToSave = {
