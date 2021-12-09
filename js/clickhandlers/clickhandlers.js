@@ -44,8 +44,14 @@ $("#breadcrumb").on("click", ".breadcrumb-button", function (event) {
     event.stopPropagation();
     console.log("id:", event.target.id)
     let prefix = event.target.id.split("-")[0]
+    let idClicked = event.target.id.substring(prefix.length + 1)
     deleteMode = false
-    goTo(event.target.id.substring(prefix.length + 1))
+    let parent = goals.find({ id: idClicked })[0]
+    if (idClicked == parentId && parent.label == "goal" && parent.id != "_______________________________goals") {
+        openModal(idClicked, "add")
+        return
+    }
+    goTo(idClicked)
 })
 
 $("#breadcrumb").on("click", ".edit-button", function (event) {
