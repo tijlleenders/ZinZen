@@ -433,12 +433,14 @@ function translate(englishText) {
 
 function generateSlotHTML(element) {
     console.log("inside generateSlotHTML...")
-    var slotId = element.id
+    console.log("slot data:", element)
+
+    var slotId = element.goal_id
 
     console.log("element for slotId ", slotId + ":" + element)
 
     //Todo: handle case for array of colors
-    var color = element.colors
+    var color = element.colors[0]
     let cardStyle = "card" + color
     let status = "maybe"
     let goalId = element.goalId
@@ -873,6 +875,9 @@ function generateCalendarHTML() {
         slot.start = goal.start
         slot.start_time = goal.start_time
         slot.title = goal.title
+
+        let JSGoal = goals.find({ $loki: task.goal_id })[0]
+        slot.colors = JSGoal.colors
 
         console.log("calendar.time_unit_qualifier", calendar.time_unit_qualifier)
         if (calendar.time_unit_qualifier == "h") {
