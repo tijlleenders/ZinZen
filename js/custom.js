@@ -122,7 +122,7 @@ function updateUIChildrenFor(parentId) {
         let childResults = goals.find({ 'id': relationship.childId })
         updateUIWith(childResults[0])
     });
-    if (relationshipsForParent.length == 0) {
+    if (relationshipsForParent.length == 0 || parentId == sessionId) {
         deleteMode = false
         $("#main-notification").empty()
         $("#main-notification").addClass('d-none')
