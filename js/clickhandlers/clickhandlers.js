@@ -126,30 +126,39 @@ function goTo(id) {
         case "goal":
             if (deleteMode == false) {
                 $("#main-promised").empty()
-                $("#main-buttons-row").removeClass('d-none')
                 $("#main-quote").addClass('d-none')
                 parentId = id
-                updateUIChildrenFor(id)
+                updateUIChildrenFor(parentId)
                 updateBreadcrumbUI()
+                updateMainButtonsFor(parentId)
             } else {
-                console.log("want to delete:", id)
                 deleteGoalAndExclusiveDescendants(id)
-                console.log("done")
+                updateMainButtonsFor(parentId)
             }
             return
             break;
-        case "suggestion":
         case "person":
+            deleteMode = false
+            $("#main-calendar").addClass('d-none')
+            $("#main-promised").removeClass('d-none')
+            $("#main-promised").empty()
+            $("#main-quote").addClass('d-none')
+            parentId = id
+            updateUIChildrenFor(parentId)
+            updateBreadcrumbUI()
+            return
+            break;
+        case "suggestion":
         case "setting":
         case "feeling":
             deleteMode = false
             $("#main-calendar").addClass('d-none')
             $("#main-promised").removeClass('d-none')
             $("#main-promised").empty()
-            $("#main-buttons-row").removeClass('d-none')
             $("#main-quote").addClass('d-none')
             parentId = id
-            updateUIChildrenFor(id)
+            updateMainButtonsFor(parentId)
+            updateUIChildrenFor(parentId)
             updateBreadcrumbUI()
             return
             break;

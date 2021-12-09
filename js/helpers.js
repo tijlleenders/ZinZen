@@ -1201,6 +1201,52 @@ function loadSettings() {
     settings.insert({ "setting": "language", "value": browserLanguage })
 }
 
+function updateMainButtonsFor(parentId) {
+    console.log("inside updateMainButtonsfor(id):", parentId)
+    let parent = goals.find({ id: parentId })[0]
+    console.log("parent:", parent)
+
+    switch (parent.label) {
+        case "goal":
+            let relationshipsForParent = relationships.find({ parentId: parentId })
+            if (relationshipsForParent.length == 0) {
+                deleteMode = false
+                $("#main-notification").empty()
+                $("#main-notification").addClass('d-none')
+                $("#deleteButtonDiv").html(`
+                <button type="button" class="btn btn-outline-secondary btn-sm m-1 btn-hidden" id="deleteButtonX">
+                    <div class="top-buttons" id="deleteButtonText">Delete</div>
+                </button>
+                `)
+            } else {
+                $("#deleteButtonDiv").html(`
+                <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="deleteButton">
+                    <div class="top-buttons" id="deleteButtonText">Delete</div>
+                </button>
+                `)
+            }
+
+            if (deleteMode == true) {
+                console.log("hit")
+                $("#main-notification").removeClass('d-none')
+                $("#main-notification").html("Click / touch any list to delete.")
+            } else {
+                $("#main-notification").html("")
+                $("#main-notification").addClass('d-none')
+            }
+
+            $("#main-buttons-row").removeClass('d-none')
+            break;
+        case "person":
+            break;
+        case "feeling":
+        default:
+            $("#main-notification").empty()
+            $("#main-notification").addClass('d-none')
+            $("#main-buttons-row").addClass('d-none')
+    }
+}
+
 function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "______________________________ZinZen",
