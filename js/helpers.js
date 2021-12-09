@@ -303,7 +303,15 @@ function setSkeletonHTMLForAdd(id) {
     let headerHTML = `<h4 class="modal-title ms-3">` + translations.find({ "en": "Add or search" })[0][lang] + `</h4>`
     $("#modal-header-content").html(headerHTML)
     let bodyHTML = ``
-    bodyHTML += `    
+    bodyHTML += `
+    <div class="row mt-2 d-none" id="save-row">
+        <div class=" col m-1">
+            <button type="button" class="btn btn-outline-primary" id="modal-cancel-button">Cancel</button>
+        </div>      
+        <div class="col m-1">
+            <button type="button" class="btn btn-outline-primary" id="save-a-goal-button">Save</button>
+        </div>
+    </div>     
     <div class="row" id="parents-row">
       <div class="col">
         <div class="" id="selected-parents">
@@ -340,15 +348,7 @@ function setSkeletonHTMLForAdd(id) {
       <div class=" col m-1">
         <button type="button" class="btn btn-outline-primary" id="modal-cancel-button">Cancel</button>
       </div>
-    </div>  
-    <div class="row mt-2 d-none" id="save-row">
-      <div class="col m-1">
-        <button type="button" class="btn btn-outline-primary" id="save-a-goal-button">Save</button>
-      </div>
-      <div class=" col m-1">
-        <button type="button" class="btn btn-outline-primary" id="modal-cancel-button">Cancel</button>
-      </div>      
-    </div>    
+    </div>     
     </div>
     <div class="row mt-2" id="suggested-commands-row">
       <div class="col">
