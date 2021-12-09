@@ -58,7 +58,12 @@ $("#breadcrumb").on("click", ".edit-button", function (event) {
 
 $("#main-promised").on("contextmenu", ".goal", function (event) {
     let nodeId = getNodeId(event)
-    goTo(nodeId.slice(-36))
+    $("#main-promised").empty()
+    $("#main-quote").addClass('d-none')
+    parentId = nodeId.slice(-36)
+    updateUIChildrenFor(parentId)
+    updateBreadcrumbUI()
+    updateMainButtonsFor(parentId)
     return false //returning false blocks context menu
 })
 
@@ -125,6 +130,11 @@ function goTo(id) {
     switch (goal.label) {
         case "goal":
             if (deleteMode == false) {
+                let childrenRelations = relationships.find({ parentId: id })
+                if (childrenRelations.length == 0) {
+                    openModal(id, "add")
+                    return
+                }
                 $("#main-promised").empty()
                 $("#main-quote").addClass('d-none')
                 parentId = id
