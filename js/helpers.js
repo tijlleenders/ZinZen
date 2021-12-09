@@ -311,7 +311,7 @@ function setSkeletonHTMLForAdd(id) {
         <div class="col m-1">
             <button type="button" class="btn btn-outline-primary" id="save-a-goal-button">Save</button>
         </div>
-        <div class="col m-1">
+        <div class="col m-1" id="add-sub-button-col">
             <button type="button" class="btn btn-outline-primary" id="add-subgoal-button">Add sub</button>
         </div>
     </div>     
@@ -398,6 +398,12 @@ function setSkeletonHTMLForAdd(id) {
         }
     } else {
         headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title[lang].substring(0, 10) + `...</h4>`
+    }
+
+    if (inputGoal.id == "") {
+        $("#add-sub-button-col").html(`
+        <button type="button" class="btn btn-outline-primary btn-hidden" id="add-subgoal-buttonx">Add sub</button>
+            `)
     }
 
     $("#modal-header-content").html(headerHTML)
