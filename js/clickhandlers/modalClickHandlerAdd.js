@@ -30,6 +30,11 @@ $("#myModal").on("click", "#modal-cancel-button", function () {
     $("#myModal").modal('hide')
 })
 
+$("#myModal").on("click", "#add-subgoal-button", function () {
+    parentId = $("#inputGoal").data('inputGoal').id
+    openModal("", "add")
+})
+
 $("#myModal").on("paste", "#inputGoal", function (e) {
     var pastedData = e.originalEvent.clipboardData.getData('text');
     console.log("pastedData:", pastedData)
@@ -60,8 +65,8 @@ function saveGoal() {
             $("#inputGoal").focus()
         }
     } else {
-        console.log("saving with new id")
         goalToSave.id = uuidv4()
+        console.log("saving with new id:", goalToSave.id)
 
         let colors = ["1"]
         let parent = goals.find({ id: parentId })[0]
@@ -90,6 +95,8 @@ function saveGoal() {
             priority: 0
         }
         relationships.insert(relationshipToSave)
+        $("#main-promised").empty()
+        updateUIChildrenFor(parentId)
         updatePriority()
     }
     goTo(parentId)
