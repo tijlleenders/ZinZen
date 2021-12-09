@@ -137,7 +137,7 @@ function goTo(id) {
         case "goal":
             if (deleteMode == false) {
                 let childrenRelations = relationships.find({ parentId: id })
-                if (childrenRelations.length == 0) {
+                if (childrenRelations.length == 0 && goal.id != "_______________________________goals") {
                     openModal(id, "add")
                     return
                 }
