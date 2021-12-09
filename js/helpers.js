@@ -433,18 +433,20 @@ function translate(englishText) {
 
 function generateSlotHTML(element) {
     console.log("inside generateSlotHTML...")
-    var slotId = element.id
+    console.log("slot data:", element)
+
+    var slotId = element.goal_id
 
     console.log("element for slotId ", slotId + ":" + element)
 
     //Todo: handle case for array of colors
-    var color = element.colors
+    var color = element.colors[0]
     let cardStyle = "card" + color
     let status = "maybe"
     let goalId = element.goalId
     var title = element.title
-    var begin = new dayjs.utc(element.begin)
-    var end = new dayjs.utc(element.end)
+    var begin = (new dayjs).startOf("day").add(element.begin, 'hour')
+    var end = (new dayjs).startOf("day").add(element.end, 'hour')
     let sequenceNumberHTML = ""
     if (element.scheduledInTotal > 1) {
         sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
@@ -874,6 +876,9 @@ function generateCalendarHTML() {
         slot.start_time = goal.start_time
         slot.title = goal.title
 
+        let JSGoal = goals.find({ $loki: task.goal_id })[0]
+        slot.colors = JSGoal.colors
+
         console.log("calendar.time_unit_qualifier", calendar.time_unit_qualifier)
         if (calendar.time_unit_qualifier == "h") {
             let day = Math.floor(slot.begin / 24)
@@ -889,7 +894,7 @@ function generateCalendarHTML() {
     days.forEach((day, index) => {
         HTML += "day " + index + "<br />"
         day.forEach(slot => {
-            HTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + slot.title + " at " + (slot.begin - index * 24) + ":00<br />"
+            HTML += generateSlotHTML(slot)
         })
     })
 
