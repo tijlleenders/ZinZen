@@ -443,8 +443,8 @@ function generateSlotHTML(element) {
     let status = "maybe"
     let goalId = element.goalId
     var title = element.title
-    var begin = new dayjs.utc(element.begin)
-    var end = new dayjs.utc(element.end)
+    var begin = (new dayjs).startOf("day").add(element.begin, 'hour')
+    var end = (new dayjs).startOf("day").add(element.end, 'hour')
     let sequenceNumberHTML = ""
     if (element.scheduledInTotal > 1) {
         sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
@@ -889,7 +889,7 @@ function generateCalendarHTML() {
     days.forEach((day, index) => {
         HTML += "day " + index + "<br />"
         day.forEach(slot => {
-            HTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + slot.title + " at " + (slot.begin - index * 24) + ":00<br />"
+            HTML += generateSlotHTML(slot)
         })
     })
 
