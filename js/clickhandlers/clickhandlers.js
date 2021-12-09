@@ -146,7 +146,7 @@ function goTo(id) {
             $("#main-calendar").addClass('d-none')
             $("#main-promised").removeClass('d-none')
             $("#main-promised").empty()
-            $("#main-buttons-row").addClass('d-none')
+            $("#main-buttons-row").removeClass('d-none')
             $("#main-quote").addClass('d-none')
             parentId = id
             updateUIChildrenFor(id)
