@@ -1240,6 +1240,13 @@ function updateMainButtonsFor(parentId) {
         case "person":
             break;
         case "feeling":
+            $("#deleteButtonDiv").html(`
+            <button type="button" class="btn btn-outline-secondary btn-sm m-1 btn-hidden" id="deleteButtonX">
+                <div class="top-buttons" id="deleteButtonText">Delete</div>
+            </button>
+            `)
+            $("#main-buttons-row").removeClass('d-none')
+            break;
         default:
             $("#main-notification").empty()
             $("#main-notification").addClass('d-none')
