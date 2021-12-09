@@ -842,7 +842,7 @@ function generateCalendarHTML() {
         HTML += "! Issue scheduling " + goal.title + " x/y times<br />"
     })
 
-    calendar.slots.sort((a, b) => { return a.begin - b.begin })
+    calendar.slots.sort((a, b) => { return a.begin - b.begin }) // Could be faster in WASM? For now not noticeable so OK.
 
     let days = []
     calendar.slots.forEach(slot => {
