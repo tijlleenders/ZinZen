@@ -58,7 +58,7 @@ $("#breadcrumb").on("click", ".edit-button", function (event) {
 
 $("#main-promised").on("contextmenu", ".goal", function (event) {
     let nodeId = getNodeId(event)
-    openModal(nodeId.slice(-36), "add")
+    goTo(nodeId.slice(-36))
     return false //returning false blocks context menu
 })
 
