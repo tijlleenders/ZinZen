@@ -156,6 +156,7 @@ function goTo(id) {
             parentId = id
             updateUIChildrenFor(parentId)
             updateBreadcrumbUI()
+            updateMainButtonsFor(parentId)
             return
             break;
         case "suggestion":

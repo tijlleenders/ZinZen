@@ -1238,6 +1238,7 @@ function updateMainButtonsFor(parentId) {
             $("#main-buttons-row").removeClass('d-none')
             break;
         case "person":
+            $("#main-buttons-row").addClass('d-none')
             break;
         case "feeling":
             $("#deleteButtonDiv").html(`
