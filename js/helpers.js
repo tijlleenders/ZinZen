@@ -842,6 +842,8 @@ function generateCalendarHTML() {
         HTML += "! Issue scheduling " + goal.title + " x/y times<br />"
     })
 
+    calendar.slots.sort((a, b) => { return a.begin - b.begin })
+
     let days = []
     calendar.slots.forEach(slot => {
         console.log("slot:", slot)
@@ -874,7 +876,6 @@ function generateCalendarHTML() {
         }
     })
     console.log(days)
-
 
     days.forEach((day, index) => {
         HTML += "day " + index + "<br />"
