@@ -311,6 +311,9 @@ function setSkeletonHTMLForAdd(id) {
         <div class="col m-1">
             <button type="button" class="btn btn-outline-primary" id="save-a-goal-button">Save</button>
         </div>
+        <div class="col m-1">
+            <button type="button" class="btn btn-outline-primary" id="add-subgoal-button">Add sub</button>
+        </div>
     </div>     
     <div class="row" id="parents-row">
       <div class="col">
