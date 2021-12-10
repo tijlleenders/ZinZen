@@ -432,12 +432,12 @@ function translate(englishText) {
 }
 
 function generateSlotHTML(element) {
-    console.log("inside generateSlotHTML...")
-    console.log("slot data:", element)
+    // console.log("inside generateSlotHTML...")
+    // console.log("slot data:", element)
 
     var slotId = element.goal_id
 
-    console.log("element for slotId ", slotId + ":" + element)
+    // console.log("element for slotId ", slotId + ":" + element)
 
     //Todo: handle case for array of colors
     var color = element.colors[0]
@@ -817,20 +817,20 @@ function calculateCalendar() {
 
     let end = Date.now()
     console.log("update goals in calendar took:", (end - start) / 1000)
-    console.log("calendarInput:", calendar)
+    // console.log("calendarInput:", calendar)
 
     start = Date.now()
     calendar = wasm_bindgen.load_calendar(calendar)
     end = Date.now()
-    console.log("update goals in calendar took:", (end - start) / 1000)
+    console.log("load and calculate goals in wasm took:", (end - start) / 1000)
 
 
     start = Date.now()
     //Todo: order slots in Rust
     calendar.slots.sort((a, b) => { return a.begin - b.begin }) // Could be faster in WASM? For now not noticeable so OK.
-    console.log("calendarOutput:", calendar)
+    // console.log("calendarOutput:", calendar)
     end = Date.now()
-    console.log("sorting slots and printing to console took:", (end - start) / 1000)
+    // console.log("sorting slots and printing to console took:", (end - start) / 1000)
 
 }
 
@@ -838,16 +838,16 @@ function calculateCalendar() {
 function generateImpossibleHTML() {
     let HTML = ``
     let impossibleTasks = calendar.tasks.filter(task => { return task.task_status == "IMPOSSIBLE" })
-    console.log("impossibleTasks:", impossibleTasks)
+    // console.log("impossibleTasks:", impossibleTasks)
     let impossibleGoalIds = new (Set)
     impossibleTasks.forEach(task => {
         impossibleGoalIds.add(task.goal_id)
     })
-    console.log("impossible goal ids:", impossibleGoalIds)
+    // console.log("impossible goal ids:", impossibleGoalIds)
     let impossibleGoals = calendar.goals.filter(goal => {
         return impossibleGoalIds.has(goal.id)
     })
-    console.log("impossible goals:", impossibleGoals)
+    // console.log("impossible goals:", impossibleGoals)
     impossibleGoals.forEach(goal => {
         HTML += "! Issue scheduling " + goal.title + " x/y times<br />"
     })
@@ -855,7 +855,7 @@ function generateImpossibleHTML() {
 }
 
 function generateCalendarHTML() {
-    console.log("inside generateCalendarHTML()")
+    // console.log("inside generateCalendarHTML()")
     let HTML = ``
     HTML += generateImpossibleHTML()
     HTML += generateSlotsHTML()
@@ -874,15 +874,15 @@ function generateSlotsHTML() {
     let HTML = ``
     let days = []
     calendar.slots.forEach(slot => {
-        console.log("slot:", slot)
+        // console.log("slot:", slot)
 
         let task = calendar.tasks.find(task => { return task.task_id == slot.task_id })
-        console.log("task:", task)
+        // console.log("task:", task)
         slot.duration_to_schedule = task.duration_to_schedule
         slot.task_status = task.task_status
 
         let goal = calendar.goals.find(goal => { return goal.id == task.goal_id })
-        console.log("goal:", goal)
+        // console.log("goal:", goal)
         slot.effort_invested = goal.effort_invested
         slot.estimated_duration = goal.estimated_duration
         slot.finish = goal.finish
@@ -896,17 +896,15 @@ function generateSlotsHTML() {
         let JSGoal = goals.find({ $loki: task.goal_id })[0]
         slot.colors = JSGoal.colors
 
-        console.log("calendar.time_unit_qualifier", calendar.time_unit_qualifier)
         if (calendar.time_unit_qualifier == "h") {
             let day = Math.floor(slot.begin / 24)
             if (days[day] == undefined) {
                 days[day] = []
             }
             days[day].push(slot)
-            console.log("pushed")
         }
     })
-    console.log(days)
+    // console.log(days)
 
     days.forEach((day, index) => {
         HTML += "day " + index + "<br />"
