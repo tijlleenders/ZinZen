@@ -858,7 +858,20 @@ function generateCalendarHTML() {
     console.log("inside generateCalendarHTML()")
     let HTML = ``
     HTML += generateImpossibleHTML()
+    HTML += generateSlotsHTML()
 
+    return HTML
+}
+
+function activateCalendarPicker() {
+    $("#progress-card").on("click", "#progress-header", function (event) {
+        console.log("progress-header clicked...")
+
+    })
+}
+
+function generateSlotsHTML() {
+    let HTML = ``
     let days = []
     calendar.slots.forEach(slot => {
         console.log("slot:", slot)
@@ -901,15 +914,7 @@ function generateCalendarHTML() {
             HTML += generateSlotHTML(slot)
         })
     })
-
     return HTML
-}
-
-function activateCalendarPicker() {
-    $("#progress-card").on("click", "#progress-header", function (event) {
-        console.log("progress-header clicked...")
-
-    })
 }
 
 function makeWeekBitMap(inputArray) {
