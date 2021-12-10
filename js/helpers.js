@@ -826,9 +826,11 @@ function calculateCalendar() {
 
 
     start = Date.now()
+    //Todo: order slots in Rust
+    calendar.slots.sort((a, b) => { return a.begin - b.begin }) // Could be faster in WASM? For now not noticeable so OK.
     console.log("calendarOutput:", calendar)
     end = Date.now()
-    console.log("printing to console took:", (end - start) / 1000)
+    console.log("sorting slots and printing to console took:", (end - start) / 1000)
 
 }
 
@@ -836,7 +838,6 @@ function calculateCalendar() {
 function generateCalendarHTML() {
     console.log("inside generateCalendarHTML()")
     let HTML = ``
-    //Todo: order slots in Rust
 
     let impossibleTasks = calendar.tasks.filter(task => { return task.task_status == "IMPOSSIBLE" })
     console.log("impossibleTasks:", impossibleTasks)
@@ -852,8 +853,6 @@ function generateCalendarHTML() {
     impossibleGoals.forEach(goal => {
         HTML += "! Issue scheduling " + goal.title + " x/y times<br />"
     })
-
-    calendar.slots.sort((a, b) => { return a.begin - b.begin }) // Could be faster in WASM? For now not noticeable so OK.
 
     let days = []
     calendar.slots.forEach(slot => {
