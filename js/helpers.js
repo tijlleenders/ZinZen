@@ -835,10 +835,8 @@ function calculateCalendar() {
 }
 
 
-function generateCalendarHTML() {
-    console.log("inside generateCalendarHTML()")
+function generateImpossibleHTML() {
     let HTML = ``
-
     let impossibleTasks = calendar.tasks.filter(task => { return task.task_status == "IMPOSSIBLE" })
     console.log("impossibleTasks:", impossibleTasks)
     let impossibleGoalIds = new (Set)
@@ -853,6 +851,13 @@ function generateCalendarHTML() {
     impossibleGoals.forEach(goal => {
         HTML += "! Issue scheduling " + goal.title + " x/y times<br />"
     })
+    return HTML
+}
+
+function generateCalendarHTML() {
+    console.log("inside generateCalendarHTML()")
+    let HTML = ``
+    HTML += generateImpossibleHTML()
 
     let days = []
     calendar.slots.forEach(slot => {
