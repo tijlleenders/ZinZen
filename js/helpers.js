@@ -920,6 +920,7 @@ function schedule() {
     //Todo: exit and show popup if any tasks scheduled for earlier than today
 
     tasks.clear()
+    taskRelations.clear()
     let idsToSchedule = getGoalIdsToSchedule()
 
     let taskId = 0

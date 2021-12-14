@@ -21,6 +21,7 @@ var relationships = repository.getCollection('relationships')
 var translations = repository.getCollection('translations')
 var settings = repository.getCollection('settings')
 var tasks = repository.getCollection('tasks')
+var taskRelations = repository.getCollection('taskRelations')
 
 function databaseInitialize() {
     console.log("Inside databaseInitialize...")
@@ -33,6 +34,10 @@ function databaseInitialize() {
         tasks = repository.addCollection('tasks', {
             unique: ['id']
         })
+    }
+
+    if (taskRelations == null) {
+        taskRelations = repository.addCollection('taskRelations', {})
     }
 
     if (goals == null && relationships == null) {
