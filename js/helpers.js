@@ -915,6 +915,22 @@ function generateSlotsHTML() {
     return HTML
 }
 
+function schedule() {
+    let idsToSchedule = getGoalIdsToSchedule()
+
+    let tasks = []
+    let taskId = 0
+    idsToSchedule.forEach(id => {
+        let goal = goals.find({ id: id })[0]
+        let task = {}
+        task.goalId = goal.id
+        task.id = taskId
+        taskId += 1
+        tasks.push(task)
+    })
+    console.log("tasks to send to scheduler:", tasks)
+}
+
 function getGoalIdsToSchedule() {
     console.log("Inside getGoalIdsToSchedule...")
     let workPackage = {
