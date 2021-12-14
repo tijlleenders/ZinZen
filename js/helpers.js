@@ -930,6 +930,9 @@ function getGoalIdsToSchedule() {
         console.log("workPackage.goalIdsToInvestigate:", workPackage.goalIdsToInvestigate)
         console.log("loop ", loopCounter)
         loopCounter += 1
+        if (loopCounter == MAX_LEVELS) {
+            console.error("max recursion level reached in getGoalIdsToSchedule()")
+        }
         workPackage = filterForDurationAndMaybeStatus(workPackage)
     }
     console.log("final workPackage:", workPackage)
