@@ -950,6 +950,11 @@ function addMainTasks(idsToAdd) {
             task.title = goal.title[goal.lang]
         }
         tasks.insert(task)
+        let taskRelation = {
+            parentId: '',
+            childId: task.id
+        }
+        taskRelations.insert(taskRelation)
     })
 }
 
