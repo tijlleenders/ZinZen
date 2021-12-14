@@ -47,9 +47,9 @@ function databaseInitialize() {
 
     loadTranslations()
     goTo(parentId)
-    $("#main-quote").removeClass('d-none')
     $("#main-quote").html('<center><h1>“' + randomQuote.quote + '”</h1>- ' + randomQuote.author + '</center> ')
     updateUILanguage()
+    $("#main-quote").removeClass('d-none')
 }
 
 var sortableStartX, sortableStartY, sortableEndX, sortableEndY = 0 //for click or swipe or move detection
