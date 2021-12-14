@@ -939,12 +939,15 @@ function getGoalIdsToSchedule() {
 function filterForDurationAndMaybeStatus(workPackage) {
     console.log("Inside filterForDurationAndMaybeStatus...")
     while (workPackage.goalIdsToInvestigate.length != 0) {
-        console.log("getting goal:", workPackage.goalIdsToInvestigate[workPackage.goalIdsToInvestigate.length - 1])
-        let goal = goals.find({ id: workPackage.goalIdsToInvestigate[workPackage.goalIdsToInvestigate.length - 1] })[0]
+        let currentIdUnderInvestigation = workPackage.goalIdsToInvestigate[workPackage.goalIdsToInvestigate.length - 1]
+        console.log("getting goal:", currentIdUnderInvestigation)
+        let goal = goals.find({ id: currentIdUnderInvestigation })[0]
         console.log("found goal:", goal)
         if (goal.status == "maybe" && goal.hasOwnProperty("durationString")) {
             console.log("moving to found:", goal.id)
             workPackage.goalIdsToSchedule.push(goal.id)
+        } else {
+            workPackage.goalIdsToInvestigate.push(...getChildrenIdsFor(currentIdUnderInvestigation))
         }
         workPackage.goalIdsToInvestigate.pop()
     }
