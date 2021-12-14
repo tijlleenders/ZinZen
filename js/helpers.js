@@ -916,9 +916,12 @@ function generateSlotsHTML() {
 }
 
 function schedule() {
+    console.log("inside schedule()...")
+    //Todo: exit and show popup if any tasks scheduled for earlier than today
+
+    tasks.clear()
     let idsToSchedule = getGoalIdsToSchedule()
 
-    let tasks = []
     let taskId = 0
     idsToSchedule.forEach(id => {
         let goal = goals.find({ id: id })[0]
@@ -938,9 +941,10 @@ function schedule() {
         if (goal.hasOwnProperty("after")) {
             task.after = goal.after
         }
-        tasks.push(task)
+        tasks.insert(task)
     })
-    console.log("tasks to send to scheduler:", tasks)
+
+    console.log("tasks to send to scheduler:", tasks.data)
 }
 
 function getGoalIdsToSchedule() {
