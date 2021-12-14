@@ -948,6 +948,8 @@ function filterForDurationAndMaybeStatus(workPackage) {
             console.log("moving to found:", currentIdUnderInvestigation)
             workPackage.goalIdsToSchedule.push(currentIdUnderInvestigation)
         } else {
+            console.log("moving to investigate children - if any:", currentIdUnderInvestigation)
+            console.log("Adding children:", ...getChildrenIdsFor(currentIdUnderInvestigation))
             workPackage.goalIdsToInvestigate.push(...getChildrenIdsFor(currentIdUnderInvestigation))
         }
     }
