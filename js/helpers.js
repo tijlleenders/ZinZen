@@ -921,22 +921,33 @@ function getGoalIdsToSchedule() {
         goalIdsToSchedule: [],
         goalIdsToInvestigate: []
     }
-    workPackage.goalIdsToInvestigate = getChildrenIdsFor("_______________________________goals")
-    console.log("workPackage:", workPackage)
+    workPackage.goalIdsToInvestigate.push(...getChildrenIdsFor("_______________________________goals"))
+    console.log("initial workPackage:", workPackage)
 
     let loopCounter = 0
     while (workPackage.goalIdsToInvestigate.length > 0 && loopCounter < MAX_LEVELS) {
         console.log("workPackage:", workPackage)
+        console.log("workPackage.goalIdsToInvestigate:", workPackage.goalIdsToInvestigate)
         console.log("loop ", loopCounter)
         loopCounter += 1
         workPackage = filterForDurationAndMaybeStatus(workPackage)
     }
-
+    console.log("final workPackage:", workPackage)
     return workPackage.goalIdsToSchedule
 }
 
 function filterForDurationAndMaybeStatus(workPackage) {
     console.log("Inside filterForDurationAndMaybeStatus...")
+    while (workPackage.goalIdsToInvestigate.length != 0) {
+        console.log("getting goal:", workPackage.goalIdsToInvestigate[workPackage.goalIdsToInvestigate.length - 1])
+        let goal = goals.find({ id: workPackage.goalIdsToInvestigate[workPackage.goalIdsToInvestigate.length - 1] })[0]
+        console.log("found goal:", goal)
+        if (goal.status == "maybe" && goal.hasOwnProperty("durationString")) {
+            console.log("moving to found:", goal.id)
+            workPackage.goalIdsToSchedule.push(goal.id)
+        }
+        workPackage.goalIdsToInvestigate.pop()
+    }
     return workPackage
 }
 
