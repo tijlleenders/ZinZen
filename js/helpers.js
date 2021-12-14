@@ -915,6 +915,13 @@ function generateSlotsHTML() {
     return HTML
 }
 
+function getGoalsToSchedule() {
+    console.log("Inside getGoalsToSchedule...")
+    let result = []
+
+    return result
+}
+
 function makeWeekBitMap(inputArray) {
     let result = 0
     inputArray.forEach(command => {
