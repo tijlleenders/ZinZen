@@ -921,9 +921,33 @@ function schedule() {
 
     tasks.clear()
     taskRelations.clear()
-    addMainTasks(getMainIdsToSchedule())
+    let mainIds = getMainIdsToSchedule()
+    console.log("mainIds:", mainIds)
+    addMainTasks(mainIds)
+    addEligibleChildren(mainIds)
 
     console.log("tasks to send to scheduler:", tasks.data)
+}
+
+function addEligibleChildren(mainIds) {
+    console.log("inside addEligibleChildren...")
+    let workPackage = {
+        goalIdsToInvestigate: mainIds
+    }
+    console.log("initial workPackage:", workPackage)
+
+    let loopCounter = 0
+    while (workPackage.goalIdsToInvestigate.length > 0 && loopCounter < MAX_LEVELS) {
+        console.log("workPackage:", workPackage)
+        console.log("workPackage.goalIdsToInvestigate:", workPackage.goalIdsToInvestigate)
+        console.log("loop ", loopCounter)
+        loopCounter += 1
+        if (loopCounter == MAX_LEVELS) {
+            console.error("max recursion level reached in getMainIdsToSchedule()")
+        }
+        // workPackage = filterForDurationAndMaybeStatus(workPackage)
+    }
+    console.log("final workPackage:", workPackage)
 }
 
 function addMainTasks(idsToAdd) {
