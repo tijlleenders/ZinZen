@@ -922,22 +922,35 @@ function getGoalsToSchedule() {
         goalsToInvestigate: []
     }
     workPackage.goalsToInvestigate = getChildrenIdsFor("_______________________________goals")
+    console.log("workPackage:", workPackage)
 
-    while (workPackage.goalsToInvestigate.length > 0) {
+    let loopCounter = 0
+    while (workPackage.goalsToInvestigate.length > 0 && loopCounter < MAX_LEVELS) {
+        console.log("workPackage:", workPackage)
+        console.log("loop ", loopCounter)
+        loopCounter += 1
         workPackage = filterForDurationAndMaybeStatus(workPackage)
     }
 
     return workPackage.goalsToSchedule
 }
 
+function filterForDurationAndMaybeStatus(workPackage) {
+    console.log("Inside filterForDurationAndMaybeStatus...")
+    return workPackage
+}
+
 function getChildrenIdsFor(id) {
+    console.log("Inside getChildrenIdsFor...", id)
     let result = []
     let relationshipsToUse = relationships.where(function (relation) {
         return (relation.parentId == id)
     })
+    console.log("relationshipsToUse:", relationshipsToUse)
     relationshipsToUse.forEach(relationship => {
         result.push(relationship.childId)
     })
+
     return result
 }
 
