@@ -943,7 +943,7 @@ function addEligibleChildren(mainIds) {
         console.log("loop ", loopCounter)
         loopCounter += 1
         if (loopCounter == MAX_LEVELS) {
-            console.error("max recursion level reached in getMainIdsToSchedule()")
+            console.error("max recursion level reached in addEligibleChildren()")
         }
         // workPackage = filterForDurationAndMaybeStatus(workPackage)
     }
