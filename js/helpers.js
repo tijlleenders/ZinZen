@@ -915,24 +915,24 @@ function generateSlotsHTML() {
     return HTML
 }
 
-function getGoalsToSchedule() {
-    console.log("Inside getGoalsToSchedule...")
+function getGoalIdsToSchedule() {
+    console.log("Inside getGoalIdsToSchedule...")
     let workPackage = {
-        goalsToSchedule: [],
-        goalsToInvestigate: []
+        goalIdsToSchedule: [],
+        goalIdsToInvestigate: []
     }
-    workPackage.goalsToInvestigate = getChildrenIdsFor("_______________________________goals")
+    workPackage.goalIdsToInvestigate = getChildrenIdsFor("_______________________________goals")
     console.log("workPackage:", workPackage)
 
     let loopCounter = 0
-    while (workPackage.goalsToInvestigate.length > 0 && loopCounter < MAX_LEVELS) {
+    while (workPackage.goalIdsToInvestigate.length > 0 && loopCounter < MAX_LEVELS) {
         console.log("workPackage:", workPackage)
         console.log("loop ", loopCounter)
         loopCounter += 1
         workPackage = filterForDurationAndMaybeStatus(workPackage)
     }
 
-    return workPackage.goalsToSchedule
+    return workPackage.goalIdsToSchedule
 }
 
 function filterForDurationAndMaybeStatus(workPackage) {
