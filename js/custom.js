@@ -20,6 +20,7 @@ var goals = repository.getCollection('goals')
 var relationships = repository.getCollection('relationships')
 var translations = repository.getCollection('translations')
 var settings = repository.getCollection('settings')
+var tasks = repository.getCollection('tasks')
 
 function databaseInitialize() {
     console.log("Inside databaseInitialize...")
@@ -28,7 +29,12 @@ function databaseInitialize() {
     translations = repository.getCollection('translations')
     settings = repository.getCollection('settings')
 
-    console.log("goals:", goals)
+    if (tasks == null) {
+        tasks = repository.addCollection('tasks', {
+            unique: ['id']
+        })
+    }
+
     if (goals == null && relationships == null) {
         goals = repository.addCollection('goals', {
             unique: ['id']
