@@ -917,11 +917,17 @@ function generateSlotsHTML() {
 
 function getGoalsToSchedule() {
     console.log("Inside getGoalsToSchedule...")
-    let result = []
-    //Avoid recursive function to because of stack limit
-    let listOfIdsToInvestigate = getChildrenIdsFor("_______________________________goals")
-    console.log("listOfIdsToInvestigate", listOfIdsToInvestigate)
-    return result
+    let workPackage = {
+        goalsToSchedule: [],
+        goalsToInvestigate: []
+    }
+    workPackage.goalsToInvestigate = getChildrenIdsFor("_______________________________goals")
+
+    while (workPackage.goalsToInvestigate.length > 0) {
+        workPackage = filterForDurationAndMaybeStatus(workPackage)
+    }
+
+    return workPackage.goalsToSchedule
 }
 
 function getChildrenIdsFor(id) {
