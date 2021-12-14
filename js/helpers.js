@@ -921,10 +921,14 @@ function schedule() {
 
     tasks.clear()
     taskRelations.clear()
-    let idsToSchedule = getGoalIdsToSchedule()
+    addMainTasks(getMainIdsToSchedule())
 
+    console.log("tasks to send to scheduler:", tasks.data)
+}
+
+function addMainTasks(idsToAdd) {
     let taskId = 0
-    idsToSchedule.forEach(id => {
+    idsToAdd.forEach(id => {
         let goal = goals.find({ id: id })[0]
         let task = {}
         task.goalId = goal.id
@@ -944,12 +948,10 @@ function schedule() {
         }
         tasks.insert(task)
     })
-
-    console.log("tasks to send to scheduler:", tasks.data)
 }
 
-function getGoalIdsToSchedule() {
-    console.log("Inside getGoalIdsToSchedule...")
+function getMainIdsToSchedule() {
+    console.log("Inside getMainIdsToSchedule...")
     let workPackage = {
         goalIdsToSchedule: [],
         goalIdsToInvestigate: []
@@ -964,7 +966,7 @@ function getGoalIdsToSchedule() {
         console.log("loop ", loopCounter)
         loopCounter += 1
         if (loopCounter == MAX_LEVELS) {
-            console.error("max recursion level reached in getGoalIdsToSchedule()")
+            console.error("max recursion level reached in getMainIdsToSchedule()")
         }
         workPackage = filterForDurationAndMaybeStatus(workPackage)
     }
