@@ -919,12 +919,12 @@ function getGoalsToSchedule() {
     console.log("Inside getGoalsToSchedule...")
     let result = []
     //Avoid recursive function to because of stack limit
-    let listOfIdsToInvestigate = getChildren("_______________________________goals")
+    let listOfIdsToInvestigate = getChildrenIdsFor("_______________________________goals")
     console.log("listOfIdsToInvestigate", listOfIdsToInvestigate)
     return result
 }
 
-function getChildren(id) {
+function getChildrenIdsFor(id) {
     let result = []
     let relationshipsToUse = relationships.where(function (relation) {
         return (relation.parentId == id)
