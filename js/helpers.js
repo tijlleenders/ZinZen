@@ -921,33 +921,43 @@ function schedule() {
 
     tasks.clear()
     taskRelations.clear()
-    let mainIds = getMainIdsToSchedule()
-    console.log("mainIds:", mainIds)
-    addMainTasks(mainIds)
-    addEligibleChildren(mainIds)
+    addMainTasks(getMainIdsToSchedule())
+    addEligibleChildren()
 
     console.log("tasks to send to scheduler:", tasks.data)
 }
 
 function addEligibleChildren(mainIds) {
     console.log("inside addEligibleChildren...")
+
     let workPackage = {
-        goalIdsToInvestigate: mainIds
+        taskIdsToInvestigate: []
     }
+    let topLevelRelations = taskRelations.find({ parentId: '' })
+    topLevelRelations.forEach(relation => {
+        workPackage.taskIdsToInvestigate.push(relation.childId)
+    })
     console.log("initial workPackage:", workPackage)
 
     let loopCounter = 0
-    while (workPackage.goalIdsToInvestigate.length > 0 && loopCounter < MAX_LEVELS) {
+    while (workPackage.taskIdsToInvestigate.length > 0 && loopCounter < MAX_LEVELS) {
         console.log("workPackage:", workPackage)
-        console.log("workPackage.goalIdsToInvestigate:", workPackage.goalIdsToInvestigate)
+        console.log("workPackage.taskIdsToInvestigate:", workPackage.taskIdsToInvestigate)
         console.log("loop ", loopCounter)
         loopCounter += 1
         if (loopCounter == MAX_LEVELS) {
             console.error("max recursion level reached in addEligibleChildren()")
         }
-        // workPackage = filterForDurationAndMaybeStatus(workPackage)
+        workPackage = addEligibleChildrenFor(workPackage)
     }
     console.log("final workPackage:", workPackage)
+}
+
+function addEligibleChildrenFor(workPackage) {
+    workPackage.taskIdsToInvestigate.forEach(taskId => {
+        console.log("investigating task:", taskId)
+    })
+    return workPackage
 }
 
 function addMainTasks(idsToAdd) {
