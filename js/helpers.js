@@ -918,7 +918,20 @@ function generateSlotsHTML() {
 function getGoalsToSchedule() {
     console.log("Inside getGoalsToSchedule...")
     let result = []
+    //Avoid recursive function to because of stack limit
+    let listOfIdsToInvestigate = getChildren("_______________________________goals")
+    console.log("listOfIdsToInvestigate", listOfIdsToInvestigate)
+    return result
+}
 
+function getChildren(id) {
+    let result = []
+    let relationshipsToUse = relationships.where(function (relation) {
+        return (relation.parentId == id)
+    })
+    relationshipsToUse.forEach(relationship => {
+        result.push(relationship.childId)
+    })
     return result
 }
 
