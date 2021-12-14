@@ -946,6 +946,9 @@ function addMainTasks(idsToAdd) {
         if (goal.hasOwnProperty("after")) {
             task.after = goal.after
         }
+        if (goal.hasOwnProperty("title") && goal.hasOwnProperty("lang")) {
+            task.title = goal.title[goal.lang]
+        }
         tasks.insert(task)
     })
 }
