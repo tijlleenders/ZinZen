@@ -926,6 +926,18 @@ function schedule() {
         task.goalId = goal.id
         task.id = taskId
         taskId += 1
+        if (goal.hasOwnProperty("durationString")) {
+            task.duration = goal.durationString
+        }
+        if (goal.hasOwnProperty("start")) {
+            task.start = goal.start
+        }
+        if (goal.hasOwnProperty("finish")) {
+            task.finish = goal.finish
+        }
+        if (goal.hasOwnProperty("after")) {
+            task.after = goal.after
+        }
         tasks.push(task)
     })
     console.log("tasks to send to scheduler:", tasks)
