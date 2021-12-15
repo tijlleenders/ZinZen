@@ -966,7 +966,7 @@ function schedule() {
     makeTasksFromGoals()
     makeTaskRelationsFromGoalRelations()
     duplicateTasksForRepeat()
-
+    updateTotalDurations()
 
     console.log("tasks to send to scheduler:", tasks.data)
 }
@@ -974,6 +974,12 @@ function schedule() {
 function duplicateTasksForRepeat() {
     console.log("inside duplicateTasksForRepeat()... TODO")
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
+}
+
+function updateTotalDuration() {
+    console.log("inside updateTotalDuration()... TODO")
+    //Todo: working up from leaves, update total duration for parents when < sum(directChildren)
+    return
 }
 
 function makeWeekBitMap(inputArray) {
