@@ -976,8 +976,8 @@ function duplicateTasksForRepeat() {
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
 }
 
-function updateTotalDuration() {
-    console.log("inside updateTotalDuration()... TODO")
+function updateTotalDurations() {
+    console.log("inside updateTotalDurations()... TODO")
     //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
     return
 }
