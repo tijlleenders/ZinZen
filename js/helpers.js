@@ -1094,10 +1094,11 @@ function updateTotalDurations() {
     console.log("inside updateTotalDurations()... TODO")
     //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
     let restart = true
-    let loopCounter = 950
-    while (restart = true && loopCounter < 1000) {
+    let loopCounter = 0
+    while (restart = true && loopCounter < 2) {
         console.log("loop ", loopCounter)
         loopCounter += 1
+        restart = false
         tasks.data.forEach(task => {
             console.log("task", task.$loki)
             let durationChildren = 0
@@ -1108,21 +1109,26 @@ function updateTotalDurations() {
             console.log("total duration children:", durationChildren)
             console.log("total duration task:", task.duration)
             if (task.duration > durationChildren && taskChildren.length != 0) {
+                restart = true
                 console.log("task bigger than children")
                 let template = JSON.parse(JSON.stringify(task))
                 delete template.$loki
                 delete template.meta
+                template.duration = task.duration - durationChildren
+                template.title['en'] += " (auto fill)"
                 console.log("template:", template)
-                // template.duration = task.duration - durationChildren
-                // tasks.insert(template)
-                // let taskRelation = {
-                //     parentId = task.id,
-                //     childId = tasks.maxId
-                // }
-                // taskRelations.insert(taskRelation)
+                tasks.insert(template)
+                let taskRelation = {
+                    parentId: task.$loki,
+                    childId: tasks.maxId
+                }
+                taskRelations.insert(taskRelation)
             }
             if (task.duration < durationChildren && taskChildren.length != 0) {
+                restart = true
                 console.log("children bigger than task")
+                task.duration = durationChildren
+                tasks.update(task)
             }
         })
     }
