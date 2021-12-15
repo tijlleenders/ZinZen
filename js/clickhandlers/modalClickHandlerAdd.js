@@ -87,6 +87,8 @@ function saveGoal() {
 
         goalToSave.title = titleObject
         goalToSave.colors = colors
+        delete goalToSave.suggestedCommands
+        delete goalToSave.suggestedWords
 
         goals.insert(goalToSave)
         let relationshipToSave = {
