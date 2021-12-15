@@ -58,6 +58,9 @@ function saveGoal() {
                 console.log("using following language to save:", lang)
                 goal.title[lang] = title
             }
+            if (goalToSave.hasOwnProperty("repeatString")) {
+                goal.repeatString = goalToSave.repeatString
+            }
             goals.update(goal)
 
         } else {
@@ -87,6 +90,8 @@ function saveGoal() {
 
         goalToSave.title = titleObject
         goalToSave.colors = colors
+        delete goalToSave.suggestedCommands
+        delete goalToSave.suggestedWords
 
         goals.insert(goalToSave)
         let relationshipToSave = {

@@ -5,6 +5,7 @@ var sessionId = uuidv4()
 var parentId = sessionId
 var MAX_LEVELS = 10
 var MAX_SUBLISTS = 33
+let MAX_CALENDAR_DAYS = 30
 var calendar = { "max_time_units": 720, "time_unit_qualifier": "h", "goals": [], "tasks": [], "slots": [] }
 let wasmModule
 let deleteMode = false
@@ -20,6 +21,8 @@ var goals = repository.getCollection('goals')
 var relationships = repository.getCollection('relationships')
 var translations = repository.getCollection('translations')
 var settings = repository.getCollection('settings')
+var tasks = repository.getCollection('tasks')
+var taskRelations = repository.getCollection('taskRelations')
 
 function databaseInitialize() {
     console.log("Inside databaseInitialize...")
@@ -28,7 +31,16 @@ function databaseInitialize() {
     translations = repository.getCollection('translations')
     settings = repository.getCollection('settings')
 
-    console.log("goals:", goals)
+    if (tasks == null) {
+        tasks = repository.addCollection('tasks', {
+            unique: ['id']
+        })
+    }
+
+    if (taskRelations == null) {
+        taskRelations = repository.addCollection('taskRelations', {})
+    }
+
     if (goals == null && relationships == null) {
         goals = repository.addCollection('goals', {
             unique: ['id']

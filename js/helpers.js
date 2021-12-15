@@ -20,7 +20,7 @@ function openMainMailModal() {
     $("#myModal").modal("show");
 }
 
-function getParentIdsFor(id) {
+function getGoalParentIdsFor(id) {
     if (id == "") {
         return []
     }
@@ -32,11 +32,11 @@ function getParentIdsFor(id) {
     return result
 }
 
-function getParentsFor(id) {
+function getGoalParentsFor(id) {
     if (id == "") {
         return goals.find({ id: parentId })
     }
-    let parentIds = getParentIdsFor(id)
+    let parentIds = getGoalParentIdsFor(id)
     let result = []
     parentIds.forEach(id => {
         result.push(goals.find({ id: id })[0])
@@ -44,6 +44,54 @@ function getParentsFor(id) {
     return result
 }
 
+
+function getTaskParentIdsFor(id) {
+    if (id == "") {
+        console.log("error finding task parent ids for empty id")
+    }
+    let relationshipsForIdAsChild = taskRelations.find({ childId: id })
+    let result = []
+    relationshipsForIdAsChild.forEach(relationship => {
+        result.push(relationship.parentId)
+    });
+    return result
+}
+
+function getTaskParentsFor(id) {
+    if (id == "") {
+        console.log("error finding task parents for empty id")
+    }
+    let parentIds = getTaskParentIdsFor(id)
+    let result = []
+    parentIds.forEach(id => {
+        result.push(tasks.find({ $loki: id })[0])
+    });
+    return result
+}
+
+function getTaskChildrenIdsFor(id) {
+    if (id == "") {
+        console.log("error finding task children Ids for empty id")
+    }
+    let relationshipsForIdAsParent = taskRelations.find({ parentId: id })
+    let result = []
+    relationshipsForIdAsParent.forEach(relationship => {
+        result.push(relationship.childId)
+    });
+    return result
+}
+
+function getTaskChildrenFor(id) {
+    if (id == "") {
+        console.log("error finding task children for empty id")
+    }
+    let childrenIds = getTaskChildrenIdsFor(id)
+    let result = []
+    childrenIds.forEach(id => {
+        result.push(tasks.find({ $loki: id })[0])
+    });
+    return result
+}
 
 function updateModalAddUI() {
     let inputGoal = $("#inputGoal").data('inputGoal')
@@ -59,7 +107,7 @@ function updateModalAddUI() {
     let lang = settings.find({ "setting": "language" })[0].value
 
     let parentsHTML = ``
-    getParentsFor(inputGoal.id).forEach(parent => {
+    getGoalParentsFor(inputGoal.id).forEach(parent => {
         if (parent.title != undefined) {
             parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + getColorsFor(inputGoal.id) + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title[lang] + '</span>'
         }
@@ -410,7 +458,7 @@ function setSkeletonHTMLForAdd(id) {
     $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
     $("#save-row").removeClass('d-none')
 
-    $("#inputGoal").data('inputGoal', inputGoal)
+    $("#inputGoal").data('inputGoal', JSON.parse(JSON.stringify(inputGoal))) //!NB otherwise inputGoal becomes a reference to the lokijs goal, and cancel edit is no longer possible
     $("#myModal").on('shown.bs.modal', function () {
         $("#inputGoal").focus();
     });
@@ -913,6 +961,207 @@ function generateSlotsHTML() {
         })
     })
     return HTML
+}
+
+function makeTasksFromGoals() {
+    //Function filters goals for task-eligible goals + adds/copies as tasks with goalId still attached
+    let filteredGoals = goals.where(function (goal) {
+        return (
+            goal.status == "maybe" &&
+            goal.hasOwnProperty("durationString")
+        )
+    })
+    let copyOfFilteredGoals = JSON.parse(JSON.stringify(filteredGoals)) //required as lokijs has clone property set to true by default for ++speed
+
+    console.log("copyOfFilteredGoals:", copyOfFilteredGoals)
+    copyOfFilteredGoals.forEach(filteredGoal => {
+        delete filteredGoal.$loki
+        filteredGoal.goalId = filteredGoal.id
+        delete filteredGoal.id
+        filteredGoal.duration = getDurationFromStringIn(filteredGoal.durationString, "h")
+        delete filteredGoal.durationString
+    })
+    tasks.insert(copyOfFilteredGoals)
+}
+
+function makeTaskRelationsFromGoalRelations() {
+    //for each task, use goalId to find first eligible parent (or root) and add that relationship in taskRelationships
+    let tasksToGetHierarcyFor = tasks.data
+    tasksToGetHierarcyFor.forEach(taskWithoutParent => {
+        let goalId = taskWithoutParent.goalId
+        let relationshipsFoundForGoalId = relationships.find({ childId: goalId })
+        console.log("relationshipsFoundForGoalId:", relationshipsFoundForGoalId)
+        while (relationshipsFoundForGoalId.length > 0) {
+            let relationshipToInvestigate = relationshipsFoundForGoalId.pop()
+            let parentGoal = goals.find({ id: relationshipToInvestigate.parentId })[0]
+            if (parentGoal.id == "_______________________________goals" ||
+                (parentGoal.hasOwnProperty("durationString") && parentGoal.status == "maybe")) {
+                let taskRelationship = {
+                    childId: taskWithoutParent.$loki,
+                    parentId: parentGoal.id
+                }
+                taskRelations.insert(taskRelationship)
+            } else {
+                relationshipsFoundForGoalId.push(...relationships.find({ childId: relationshipToInvestigate.parentId }))
+            }
+        }
+        taskRelations.data.forEach(taskRelation => {
+            console.log("taskRelation:", taskRelation)
+            let parentTask = tasks.find({ goalId: taskRelation.parentId })[0]
+            if (parentTask != undefined) {
+                taskRelation.parentId = parentTask.$loki
+                taskRelations.update(taskRelation)
+            }
+        })
+        console.log("taskRelations:", taskRelations.data)
+    })
+}
+
+function taskOverdue() {
+    let overdue = false
+    goals.data.forEach(goal => {
+        if (goal.hasOwnProperty("slots")) {
+            goal.slots.forEach(slot => {
+                if (slot.begin < dayjs.startOf('day')) {
+                    overdue == true
+                }
+            })
+        }
+    })
+    return overdue
+}
+
+function schedule() {
+    console.log("inside schedule()...")
+
+    if (taskOverdue() == true) {
+        console.log("Decide what to do with overdue tasks first.")
+        return
+    }
+
+    tasks.clear()
+    taskRelations.clear()
+    makeTasksFromGoals()
+    makeTaskRelationsFromGoalRelations()
+    duplicateTasksForRepeat()
+    updateTotalDurations()
+    let tasksToSend = getLeafTasks()
+    console.log("tasks to send to scheduler:", tasksToSend)
+}
+
+function getLeafTasks() {
+    console.log("inside getLeafTasks()...")
+    tasks.data.forEach(task => {
+        let parentRelationFound = taskRelations.find({ parentId: task.$loki })
+        if (parentRelationFound.length == 0) {
+            task.label = "task"
+        }
+    })
+    return tasks.find({ label: "task" })
+}
+
+function duplicateTasksForRepeat() {
+    console.log("inside duplicateTasksForRepeat()... TODO")
+    //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
+    tasks.data.forEach(task => {
+        if (task.hasOwnProperty("repeatString")) {
+            // console.log("attempt duplicating id:", task.$loki + " title:", task.title['en'])
+            switch (task.repeatString) {
+                case "daily":
+                    let dayStarts = getDayStartsFor(task.start, task.finish)
+                    // console.log("dayStarts:", dayStarts)
+                    dayStarts.forEach(dayStart => {
+                        let template = JSON.parse(JSON.stringify(task))
+                        delete template.$loki
+                        delete template.meta
+                        // console.log("template:", template)
+                        let templateParentIds = getTaskParentIdsFor(task.$loki)
+                        // console.log("template parents:", templateParentIds)
+
+                        template.start = dayStart
+                        if (task.hasOwnProperty("finish")) {
+                            template.finish = Math.min(task.finish, dayjs(dayStart).add(1, "day").add(task.duration, "hour").valueOf())
+                        } else {
+                            template.finish = dayjs(dayStart).add(1, "day").add(task.duration, "hour").valueOf()
+                        }
+                        // console.log("inserting task:", template)
+                        tasks.insert(template)
+                        // console.log("task id returned:", tasks.maxId)
+                        templateParentIds.forEach(parentId => {
+                            let taskRelationship = {
+                                parentId: parentId,
+                                childId: tasks.maxId
+                            }
+                            taskRelations.insert(taskRelationship)
+                        })
+                    })
+                    break;
+                default:
+                    console.error("repeat algo not implemented for repeatString:", task.repeatString)
+            }
+        }
+    })
+}
+
+function getDayStartsFor(start, finish) {
+    console.log("inside getDayStartsFor(" + start + ", " + finish + ")")
+    start = Math.max(start, dayjs().startOf("day").valueOf())
+    // console.log("start:", start)
+    let loopCounter = 0
+    let dayStarts = []
+    while (loopCounter < MAX_CALENDAR_DAYS && (finish == undefined || start < finish)) {
+        dayStarts.push(start)
+        // console.log("loopCounter:", loopCounter)
+        loopCounter += 1
+        // console.log("start:", start)
+        start = dayjs(start).startOf('day').add(1, 'day').valueOf()
+    }
+    return dayStarts
+}
+
+function updateTotalDurations() {
+    console.log("inside updateTotalDurations()... TODO")
+    //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
+    let restart = true
+    let loopCounter = 0
+    while (restart = true && loopCounter < 2) {
+        console.log("loop ", loopCounter)
+        loopCounter += 1
+        restart = false
+        tasks.data.forEach(task => {
+            console.log("task", task.$loki)
+            let durationChildren = 0
+            let taskChildren = getTaskChildrenFor(task.$loki)
+            taskChildren.forEach(child => {
+                durationChildren += child.duration
+            })
+            console.log("total duration children:", durationChildren)
+            console.log("total duration task:", task.duration)
+            if (task.duration > durationChildren && taskChildren.length != 0) {
+                restart = true
+                console.log("task bigger than children")
+                let template = JSON.parse(JSON.stringify(task))
+                delete template.$loki
+                delete template.meta
+                template.duration = task.duration - durationChildren
+                template.title['en'] += " (auto fill)"
+                console.log("template:", template)
+                tasks.insert(template)
+                let taskRelation = {
+                    parentId: task.$loki,
+                    childId: tasks.maxId
+                }
+                taskRelations.insert(taskRelation)
+            }
+            if (task.duration < durationChildren && taskChildren.length != 0) {
+                restart = true
+                console.log("children bigger than task")
+                task.duration = durationChildren
+                tasks.update(task)
+            }
+        })
+    }
+    return
 }
 
 function makeWeekBitMap(inputArray) {
