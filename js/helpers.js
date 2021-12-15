@@ -410,7 +410,7 @@ function setSkeletonHTMLForAdd(id) {
     $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
     $("#save-row").removeClass('d-none')
 
-    $("#inputGoal").data('inputGoal', inputGoal)
+    $("#inputGoal").data('inputGoal', JSON.parse(JSON.stringify(inputGoal))) //!NB otherwise inputGoal becomes a reference to the lokijs goal, and cancel edit is no longer possible
     $("#myModal").on('shown.bs.modal', function () {
         $("#inputGoal").focus();
     });
