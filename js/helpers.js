@@ -1100,7 +1100,30 @@ function updateTotalDurations() {
         loopCounter += 1
         tasks.data.forEach(task => {
             console.log("task", task.$loki)
-            console.log("task children:", getTaskChildrenFor(task.$loki))
+            let durationChildren = 0
+            let taskChildren = getTaskChildrenFor(task.$loki)
+            taskChildren.forEach(child => {
+                durationChildren += child.duration
+            })
+            console.log("total duration children:", durationChildren)
+            console.log("total duration task:", task.duration)
+            if (task.duration > durationChildren && taskChildren.length != 0) {
+                console.log("task bigger than children")
+                let template = JSON.parse(JSON.stringify(task))
+                delete template.$loki
+                delete template.meta
+                console.log("template:", template)
+                // template.duration = task.duration - durationChildren
+                // tasks.insert(template)
+                // let taskRelation = {
+                //     parentId = task.id,
+                //     childId = tasks.maxId
+                // }
+                // taskRelations.insert(taskRelation)
+            }
+            if (task.duration < durationChildren && taskChildren.length != 0) {
+                console.log("children bigger than task")
+            }
         })
     }
     return
