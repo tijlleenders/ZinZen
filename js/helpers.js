@@ -1017,9 +1017,17 @@ function makeTaskRelationsFromGoalRelations() {
     })
 }
 
+function taskOverdue() {
+    return true
+}
+
 function schedule() {
     console.log("inside schedule()...")
-    //Todo: exit and show popup if any tasks scheduled for earlier than today
+
+    if (taskOverdue() == true) {
+        console.log("Decide what to do with overdue tasks first.")
+        return
+    }
 
     tasks.clear()
     taskRelations.clear()
