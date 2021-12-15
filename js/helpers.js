@@ -1007,7 +1007,13 @@ function makeTaskRelationsFromGoalRelations() {
         }
         taskRelations.data.forEach(taskRelation => {
             console.log("taskRelation:", taskRelation)
+            let parentTask = tasks.find({ goalId: taskRelation.parentId })[0]
+            if (parentTask != undefined) {
+                taskRelation.parentId = parentTask.$loki
+                taskRelations.update(taskRelation)
+            }
         })
+        console.log("taskRelations:", taskRelations.data)
     })
 }
 
@@ -1090,7 +1096,7 @@ function updateTotalDurations() {
     let restart = true
     let loopCounter = 950
     while (restart = true && loopCounter < 1000) {
-        console.log("loop ", loopCounter)
+        // console.log("loop ", loopCounter)
         loopCounter += 1
         tasks.data.forEach(task => {
             // console.log("task", task.$loki)
