@@ -58,6 +58,9 @@ function saveGoal() {
                 console.log("using following language to save:", lang)
                 goal.title[lang] = title
             }
+            if (goalToSave.hasOwnProperty("repeatString")) {
+                goal.repeatString = goalToSave.repeatString
+            }
             goals.update(goal)
 
         } else {
