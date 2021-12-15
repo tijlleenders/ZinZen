@@ -976,6 +976,22 @@ function schedule() {
 function duplicateTasksForRepeat() {
     console.log("inside duplicateTasksForRepeat()... TODO")
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
+    tasks.data.forEach(task => {
+        if (task.hasOwnProperty("repeatString")) {
+            console.log("attempt duplicating id:", task.$loki + " title:", task.title['en'])
+            switch (task.repeatString) {
+                case "daily":
+                    console.log("TODO implement for daily")
+                    let template = JSON.parse(JSON.stringify(task))
+                    delete template.$loki
+                    delete template.meta
+                    console.log("template:", template)
+                    break;
+                default:
+                    console.error("repeat algo not implemented for repeatString:", task.repeatString)
+            }
+        }
+    })
 }
 
 function updateTotalDurations() {
