@@ -20,7 +20,7 @@ function openMainMailModal() {
     $("#myModal").modal("show");
 }
 
-function getParentIdsFor(id) {
+function getGoalParentIdsFor(id) {
     if (id == "") {
         return []
     }
@@ -36,7 +36,7 @@ function getParentsFor(id) {
     if (id == "") {
         return goals.find({ id: parentId })
     }
-    let parentIds = getParentIdsFor(id)
+    let parentIds = getGoalParentIdsFor(id)
     let result = []
     parentIds.forEach(id => {
         result.push(goals.find({ id: id })[0])
