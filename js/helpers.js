@@ -1029,12 +1029,14 @@ function getDayStartsFor(start, finish) {
     start = Math.max(start, dayjs().startOf("day").valueOf())
     console.log("start:", start)
     let loopCounter = 0
-    while (loopCounter < MAX_CALENDAR_DAYS && (finish != undefined || finish == undefined)) {
+    let dayStarts = []
+    while (loopCounter < MAX_CALENDAR_DAYS && (finish == undefined || start < finish)) {
+        dayStarts.push(start)
         console.log("loopCounter:", loopCounter)
         loopCounter += 1
         console.log("start:", start)
+        start = dayjs(start).startOf('day').add(1, 'day').valueOf()
     }
-    let dayStarts = []
     return dayStarts
 }
 
