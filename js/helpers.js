@@ -915,20 +915,15 @@ function generateSlotsHTML() {
     return HTML
 }
 
-function schedule() {
-    console.log("inside schedule()...")
-    //Todo: exit and show popup if any tasks scheduled for earlier than today
-
-    tasks.clear()
-    taskRelations.clear()
-    //Todo: change approach
+function makeTasksFromGoals() {
+    //Function filters goals for task-eligible goals + adds/copies as tasks with goalId still attached
     let filteredGoals = goals.where(function (goal) {
         return (
             goal.status == "maybe" &&
             goal.hasOwnProperty("durationString")
         )
     })
-    let copyOfFilteredGoals = JSON.parse(JSON.stringify(filteredGoals))
+    let copyOfFilteredGoals = JSON.parse(JSON.stringify(filteredGoals)) //required as lokijs has clone property set to true by default for ++speed
 
     console.log("copyOfFilteredGoals:", copyOfFilteredGoals)
     copyOfFilteredGoals.forEach(filteredGoal => {
@@ -937,6 +932,9 @@ function schedule() {
         delete filteredGoal.id
     })
     tasks.insert(copyOfFilteredGoals)
+}
+
+function makeTaskRelationsFromGoalRelations() {
     //for each task, use goalId to find first eligible parent (or root) and add that relationship in taskRelationships
     let tasksToGetHierarcyFor = tasks.data
     tasksToGetHierarcyFor.forEach(taskWithoutParent => {
@@ -955,6 +953,16 @@ function schedule() {
             }
         }
     })
+}
+
+function schedule() {
+    console.log("inside schedule()...")
+    //Todo: exit and show popup if any tasks scheduled for earlier than today
+
+    tasks.clear()
+    taskRelations.clear()
+    makeTasksFromGoals()
+    makeTaskRelationsFromGoalRelations()
 
     console.log("tasks to send to scheduler:", tasks.data)
 }
