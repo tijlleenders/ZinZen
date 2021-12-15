@@ -922,7 +922,20 @@ function schedule() {
     tasks.clear()
     taskRelations.clear()
     //Todo: change approach
-    //filter goals for task-eligible goals + add as tasks with goalId still attached
+    let filteredGoals = goals.where(function (goal) {
+        return (
+            goal.status == "maybe" &&
+            goal.hasOwnProperty("durationString")
+        )
+    })
+    console.log("filteredGoals:", filteredGoals)
+    filteredGoals.forEach(filteredGoal => {
+        delete filteredGoal.$loki
+        Object.defineProperty(filteredGoal, "goalId",
+            Object.getOwnPropertyDescriptor(filteredGoal, "id"));
+        delete filteredGoal["id"];
+    })
+    tasks.insert(filteredGoals)
     //for each task, use goalId to find first eligible parent (or root) and add that relationship in taskRelationships
 
     console.log("tasks to send to scheduler:", tasks.data)
