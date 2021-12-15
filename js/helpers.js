@@ -1007,15 +1007,31 @@ function duplicateTasksForRepeat() {
             switch (task.repeatString) {
                 case "daily":
                     console.log("TODO implement for daily")
-                    let template = JSON.parse(JSON.stringify(task))
-                    delete template.$loki
-                    delete template.meta
-                    console.log("template:", template)
-                    let templateParents = getTaskParentIdsFor(task.$loki)
-                    console.log("template parents:", templateParents)
                     let dayStarts = getDayStartsFor(task.start, task.finish)
                     console.log("dayStarts:", dayStarts)
-                    // make task for first max(numBoundaries, 30)
+                    dayStarts.forEach(dayStart => {
+                        let template = JSON.parse(JSON.stringify(task))
+                        delete template.$loki
+                        delete template.meta
+                        console.log("template:", template)
+                        let templateParentIds = getTaskParentIdsFor(task.$loki)
+                        console.log("template parents:", templateParentIds)
+
+                        template.start = dayStart
+                        if (task.hasOwnProperty("finish")) {
+                            template.finish = task.finish
+                        }
+                        console.log("inserting task:", template)
+                        tasks.insert(template)
+                        console.log("task id returned:", tasks.maxId)
+                        templateParentIds.forEach(parentId => {
+                            let taskRelationship = {
+                                parentId: parentId,
+                                childId: tasks.maxId
+                            }
+                            taskRelations.insert(taskRelationship)
+                        })
+                    })
                     break;
                 default:
                     console.error("repeat algo not implemented for repeatString:", task.repeatString)
