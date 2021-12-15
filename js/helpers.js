@@ -1013,8 +1013,9 @@ function duplicateTasksForRepeat() {
                     console.log("template:", template)
                     let templateParents = getTaskParentIdsFor(task.$loki)
                     console.log("template parents:", templateParents)
-                    //Todo: find all 24h boundaries between start and finish, make task for first max(numBoundaries, 30)
-                    let dayStartsFound = getDayStartsFor(task.start, task.finish)
+                    let dayStarts = getDayStartsFor(task.start, task.finish)
+                    console.log("dayStarts:", dayStarts)
+                    // make task for first max(numBoundaries, 30)
                     break;
                 default:
                     console.error("repeat algo not implemented for repeatString:", task.repeatString)
@@ -1024,6 +1025,15 @@ function duplicateTasksForRepeat() {
 }
 
 function getDayStartsFor(start, finish) {
+    console.log("inside getDayStartsFor(" + start + ", " + finish + ")")
+    start = Math.max(start, dayjs().startOf("day").valueOf())
+    console.log("start:", start)
+    let loopCounter = 0
+    while (loopCounter < 30 && (finish != undefined || finish == undefined)) {
+        console.log("loopCounter:", loopCounter)
+        loopCounter += 1
+        console.log("start:", start)
+    }
     let dayStarts = []
     return dayStarts
 }
