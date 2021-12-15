@@ -930,6 +930,8 @@ function makeTasksFromGoals() {
         delete filteredGoal.$loki
         filteredGoal.goalId = filteredGoal.id
         delete filteredGoal.id
+        filteredGoal.duration = getDurationFromStringIn(filteredGoal.durationString, "h")
+        delete filteredGoal.durationString
     })
     tasks.insert(copyOfFilteredGoals)
 }
