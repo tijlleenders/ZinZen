@@ -85,9 +85,9 @@ function getTaskChildrenFor(id) {
     if (id == "") {
         console.log("error finding task children for empty id")
     }
-    let parentIds = getTaskParentIdsFor(id)
+    let childrenIds = getTaskChildrenIdsFor(id)
     let result = []
-    parentIds.forEach(id => {
+    childrenIds.forEach(id => {
         result.push(tasks.find({ $loki: id })[0])
     });
     return result
@@ -1096,11 +1096,11 @@ function updateTotalDurations() {
     let restart = true
     let loopCounter = 950
     while (restart = true && loopCounter < 1000) {
-        // console.log("loop ", loopCounter)
+        console.log("loop ", loopCounter)
         loopCounter += 1
         tasks.data.forEach(task => {
-            // console.log("task", task.$loki)
-            // console.log("task children:", getTaskChildrenFor(task.$loki))
+            console.log("task", task.$loki)
+            console.log("task children:", getTaskChildrenFor(task.$loki))
         })
     }
     return
