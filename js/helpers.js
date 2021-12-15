@@ -1029,7 +1029,7 @@ function getDayStartsFor(start, finish) {
     start = Math.max(start, dayjs().startOf("day").valueOf())
     console.log("start:", start)
     let loopCounter = 0
-    while (loopCounter < 30 && (finish != undefined || finish == undefined)) {
+    while (loopCounter < MAX_CALENDAR_DAYS && (finish != undefined || finish == undefined)) {
         console.log("loopCounter:", loopCounter)
         loopCounter += 1
         console.log("start:", start)
