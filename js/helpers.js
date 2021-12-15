@@ -1018,7 +1018,7 @@ function duplicateTasksForRepeat() {
 
                         template.start = dayStart
                         if (task.hasOwnProperty("finish")) {
-                            template.finish = Math.min(task.finish, dayjs(dayStart).add(1, "day").add(task.duration, "hour"))
+                            template.finish = Math.min(task.finish, dayjs(dayStart).add(1, "day").add(task.duration, "hour").valueOf())
                         } else {
                             template.finish = dayjs(dayStart).add(1, "day").add(task.duration, "hour").valueOf()
                         }
