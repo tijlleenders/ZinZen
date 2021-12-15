@@ -969,11 +969,12 @@ function makeTaskRelationsFromGoalRelations() {
         console.log("relationshipsFoundForGoalId:", relationshipsFoundForGoalId)
         while (relationshipsFoundForGoalId.length > 0) {
             let relationshipToInvestigate = relationshipsFoundForGoalId.pop()
-            console.log("relationshipToInvestigate:", relationshipToInvestigate)
-            if (relationshipToInvestigate.parentId == "_______________________________goals") {
+            let parentGoal = goals.find({ id: relationshipToInvestigate.parentId })[0]
+            if (parentGoal.id == "_______________________________goals" ||
+                (parentGoal.hasOwnProperty("durationString") && parentGoal.status == "maybe")) {
                 let taskRelationship = {
                     childId: taskWithoutParent.$loki,
-                    parentId: "_______________________________goals"
+                    parentId: parentGoal.id
                 }
                 taskRelations.insert(taskRelationship)
             } else {
@@ -1011,6 +1012,7 @@ function duplicateTasksForRepeat() {
                     delete template.meta
                     console.log("template:", template)
                     let templateParents = getTaskParentIdsFor(task.$loki)
+                    console.log("template parents:", templateParents)
                     break;
                 default:
                     console.error("repeat algo not implemented for repeatString:", task.repeatString)
