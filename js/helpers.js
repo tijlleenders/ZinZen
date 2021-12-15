@@ -1033,9 +1033,13 @@ function schedule() {
 
 function getLeafTasks() {
     console.log("inside getLeafTasks()...")
-    let result = []
-    //find all tasks that are not a parentId in taskRelations
-    return result
+    tasks.data.forEach(task => {
+        let parentRelationFound = taskRelations.find({ parentId: task.$loki })
+        if (parentRelationFound.length == 0) {
+            task.label = "task"
+        }
+    })
+    return tasks.find({ label: "task" })
 }
 
 function duplicateTasksForRepeat() {
