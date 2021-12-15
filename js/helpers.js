@@ -928,15 +928,33 @@ function schedule() {
             goal.hasOwnProperty("durationString")
         )
     })
-    console.log("filteredGoals:", filteredGoals)
-    filteredGoals.forEach(filteredGoal => {
+    let copyOfFilteredGoals = JSON.parse(JSON.stringify(filteredGoals))
+
+    console.log("copyOfFilteredGoals:", copyOfFilteredGoals)
+    copyOfFilteredGoals.forEach(filteredGoal => {
         delete filteredGoal.$loki
-        Object.defineProperty(filteredGoal, "goalId",
-            Object.getOwnPropertyDescriptor(filteredGoal, "id"));
-        delete filteredGoal["id"];
+        filteredGoal.goalId = filteredGoal.id
+        delete filteredGoal.id
     })
-    tasks.insert(filteredGoals)
+    tasks.insert(copyOfFilteredGoals)
     //for each task, use goalId to find first eligible parent (or root) and add that relationship in taskRelationships
+    let tasksToGetHierarcyFor = tasks.data
+    tasksToGetHierarcyFor.forEach(taskWithoutParent => {
+        let goalId = taskWithoutParent.goalId
+        let relationshipsFoundForGoalId = relationships.find({ childId: goalId })
+        while (relationshipsFoundForGoalId.length > 0) {
+            let relationshipToInvestigate = relationshipsFoundForGoalId.pop()
+            if (relationshipToInvestigate.parentId == "_______________________________goals") {
+                let taskRelationship = {
+                    childId: taskWithoutParent.$loki,
+                    parentId: "_______________________________goals"
+                }
+                taskRelations.insert(taskRelationship)
+            } else {
+                relationshipToInvestigate.push(...relationships.find({ childId: relationshipToInvestigate.parentId }))
+            }
+        }
+    })
 
     console.log("tasks to send to scheduler:", tasks.data)
 }
