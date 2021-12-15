@@ -1027,8 +1027,15 @@ function schedule() {
     makeTaskRelationsFromGoalRelations()
     duplicateTasksForRepeat()
     updateTotalDurations()
+    let tasksToSend = getLeafTasks()
+    console.log("tasks to send to scheduler:", tasksToSend)
+}
 
-    console.log("tasks to send to scheduler:", tasks.data)
+function getLeafTasks() {
+    console.log("inside getLeafTasks()...")
+    let result = []
+    //find all tasks that are not a parentId in taskRelations
+    return result
 }
 
 function duplicateTasksForRepeat() {
