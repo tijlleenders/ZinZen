@@ -1060,6 +1060,12 @@ function getDayStartsFor(start, finish) {
 function updateTotalDurations() {
     console.log("inside updateTotalDurations()... TODO")
     //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
+    let restart = true
+    let loopCounter = 950
+    while (restart = true && loopCounter < 1000) {
+        console.log("loop ", loopCounter)
+        loopCounter += 1
+    }
     return
 }
 
