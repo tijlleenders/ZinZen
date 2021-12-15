@@ -965,8 +965,13 @@ function schedule() {
     taskRelations.clear()
     makeTasksFromGoals()
     makeTaskRelationsFromGoalRelations()
+    duplicateTasksForRepeat()
 
     console.log("tasks to send to scheduler:", tasks.data)
+}
+
+function duplicateTasksForRepeat() {
+    console.log("inside duplicateTasksForRepeat()... TODO")
 }
 
 function makeWeekBitMap(inputArray) {
