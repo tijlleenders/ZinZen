@@ -940,8 +940,10 @@ function makeTaskRelationsFromGoalRelations() {
     tasksToGetHierarcyFor.forEach(taskWithoutParent => {
         let goalId = taskWithoutParent.goalId
         let relationshipsFoundForGoalId = relationships.find({ childId: goalId })
+        console.log("relationshipsFoundForGoalId:", relationshipsFoundForGoalId)
         while (relationshipsFoundForGoalId.length > 0) {
             let relationshipToInvestigate = relationshipsFoundForGoalId.pop()
+            console.log("relationshipToInvestigate:", relationshipToInvestigate)
             if (relationshipToInvestigate.parentId == "_______________________________goals") {
                 let taskRelationship = {
                     childId: taskWithoutParent.$loki,
@@ -949,7 +951,7 @@ function makeTaskRelationsFromGoalRelations() {
                 }
                 taskRelations.insert(taskRelationship)
             } else {
-                relationshipToInvestigate.push(...relationships.find({ childId: relationshipToInvestigate.parentId }))
+                relationshipsFoundForGoalId.push(...relationships.find({ childId: relationshipToInvestigate.parentId }))
             }
         }
     })
