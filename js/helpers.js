@@ -1003,27 +1003,26 @@ function duplicateTasksForRepeat() {
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
     tasks.data.forEach(task => {
         if (task.hasOwnProperty("repeatString")) {
-            console.log("attempt duplicating id:", task.$loki + " title:", task.title['en'])
+            // console.log("attempt duplicating id:", task.$loki + " title:", task.title['en'])
             switch (task.repeatString) {
                 case "daily":
-                    console.log("TODO implement for daily")
                     let dayStarts = getDayStartsFor(task.start, task.finish)
-                    console.log("dayStarts:", dayStarts)
+                    // console.log("dayStarts:", dayStarts)
                     dayStarts.forEach(dayStart => {
                         let template = JSON.parse(JSON.stringify(task))
                         delete template.$loki
                         delete template.meta
-                        console.log("template:", template)
+                        // console.log("template:", template)
                         let templateParentIds = getTaskParentIdsFor(task.$loki)
-                        console.log("template parents:", templateParentIds)
+                        // console.log("template parents:", templateParentIds)
 
                         template.start = dayStart
                         if (task.hasOwnProperty("finish")) {
                             template.finish = task.finish
                         }
-                        console.log("inserting task:", template)
+                        // console.log("inserting task:", template)
                         tasks.insert(template)
-                        console.log("task id returned:", tasks.maxId)
+                        // console.log("task id returned:", tasks.maxId)
                         templateParentIds.forEach(parentId => {
                             let taskRelationship = {
                                 parentId: parentId,
