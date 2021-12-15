@@ -1018,7 +1018,17 @@ function makeTaskRelationsFromGoalRelations() {
 }
 
 function taskOverdue() {
-    return true
+    let overdue = false
+    goals.data.forEach(goal => {
+        if (goal.hasOwnProperty("slots")) {
+            goal.slots.forEach(slot => {
+                if (slot.begin < dayjs.startOf('day')) {
+                    overdue == true
+                }
+            })
+        }
+    })
+    return overdue
 }
 
 function schedule() {
