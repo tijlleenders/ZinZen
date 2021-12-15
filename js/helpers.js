@@ -32,7 +32,7 @@ function getGoalParentIdsFor(id) {
     return result
 }
 
-function getGoalParensFor(id) {
+function getGoalParentsFor(id) {
     if (id == "") {
         return goals.find({ id: parentId })
     }
@@ -47,7 +47,7 @@ function getGoalParensFor(id) {
 
 function getTaskParentIdsFor(id) {
     if (id == "") {
-        return []
+        console.log("error finding task parent ids for empty id")
     }
     let relationshipsForIdAsChild = taskRelations.find({ childId: id })
     let result = []
@@ -59,7 +59,31 @@ function getTaskParentIdsFor(id) {
 
 function getTaskParentsFor(id) {
     if (id == "") {
-        return tasks.find({ $loki: parentId })
+        console.log("error finding task parents for empty id")
+    }
+    let parentIds = getTaskParentIdsFor(id)
+    let result = []
+    parentIds.forEach(id => {
+        result.push(tasks.find({ $loki: id })[0])
+    });
+    return result
+}
+
+function getTaskChildrenIdsFor(id) {
+    if (id == "") {
+        console.log("error finding task children Ids for empty id")
+    }
+    let relationshipsForIdAsParent = taskRelations.find({ parentId: id })
+    let result = []
+    relationshipsForIdAsParent.forEach(relationship => {
+        result.push(relationship.childId)
+    });
+    return result
+}
+
+function getTaskChildrenFor(id) {
+    if (id == "") {
+        console.log("error finding task children for empty id")
     }
     let parentIds = getTaskParentIdsFor(id)
     let result = []
@@ -83,7 +107,7 @@ function updateModalAddUI() {
     let lang = settings.find({ "setting": "language" })[0].value
 
     let parentsHTML = ``
-    getGoalParensFor(inputGoal.id).forEach(parent => {
+    getGoalParentsFor(inputGoal.id).forEach(parent => {
         if (parent.title != undefined) {
             parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + getColorsFor(inputGoal.id) + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title[lang] + '</span>'
         }
@@ -1065,6 +1089,10 @@ function updateTotalDurations() {
     while (restart = true && loopCounter < 1000) {
         console.log("loop ", loopCounter)
         loopCounter += 1
+        tasks.data.forEach(task => {
+            console.log("task", task.$loki)
+            getTaskChildrenFor(task.$loki)
+        })
     }
     return
 }
