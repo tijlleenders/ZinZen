@@ -1005,6 +1005,9 @@ function makeTaskRelationsFromGoalRelations() {
                 relationshipsFoundForGoalId.push(...relationships.find({ childId: relationshipToInvestigate.parentId }))
             }
         }
+        taskRelations.data.forEach(taskRelation => {
+            console.log("taskRelation:", taskRelation)
+        })
     })
 }
 
@@ -1068,14 +1071,14 @@ function duplicateTasksForRepeat() {
 function getDayStartsFor(start, finish) {
     console.log("inside getDayStartsFor(" + start + ", " + finish + ")")
     start = Math.max(start, dayjs().startOf("day").valueOf())
-    console.log("start:", start)
+    // console.log("start:", start)
     let loopCounter = 0
     let dayStarts = []
     while (loopCounter < MAX_CALENDAR_DAYS && (finish == undefined || start < finish)) {
         dayStarts.push(start)
-        console.log("loopCounter:", loopCounter)
+        // console.log("loopCounter:", loopCounter)
         loopCounter += 1
-        console.log("start:", start)
+        // console.log("start:", start)
         start = dayjs(start).startOf('day').add(1, 'day').valueOf()
     }
     return dayStarts
@@ -1090,8 +1093,8 @@ function updateTotalDurations() {
         console.log("loop ", loopCounter)
         loopCounter += 1
         tasks.data.forEach(task => {
-            console.log("task", task.$loki)
-            getTaskChildrenFor(task.$loki)
+            // console.log("task", task.$loki)
+            // console.log("task children:", getTaskChildrenFor(task.$loki))
         })
     }
     return
