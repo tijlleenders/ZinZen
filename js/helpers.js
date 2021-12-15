@@ -32,7 +32,7 @@ function getGoalParentIdsFor(id) {
     return result
 }
 
-function getParentsFor(id) {
+function getGoalParensFor(id) {
     if (id == "") {
         return goals.find({ id: parentId })
     }
@@ -44,6 +44,30 @@ function getParentsFor(id) {
     return result
 }
 
+
+function getTaskParentIdsFor(id) {
+    if (id == "") {
+        return []
+    }
+    let relationshipsForIdAsChild = taskRelations.find({ childId: id })
+    let result = []
+    relationshipsForIdAsChild.forEach(relationship => {
+        result.push(relationship.parentId)
+    });
+    return result
+}
+
+function getTaskParentsFor(id) {
+    if (id == "") {
+        return tasks.find({ $loki: parentId })
+    }
+    let parentIds = getTaskParentIdsFor(id)
+    let result = []
+    parentIds.forEach(id => {
+        result.push(tasks.find({ $loki: id })[0])
+    });
+    return result
+}
 
 function updateModalAddUI() {
     let inputGoal = $("#inputGoal").data('inputGoal')
@@ -59,7 +83,7 @@ function updateModalAddUI() {
     let lang = settings.find({ "setting": "language" })[0].value
 
     let parentsHTML = ``
-    getParentsFor(inputGoal.id).forEach(parent => {
+    getGoalParensFor(inputGoal.id).forEach(parent => {
         if (parent.title != undefined) {
             parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + getColorsFor(inputGoal.id) + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title[lang] + '</span>'
         }
@@ -986,6 +1010,7 @@ function duplicateTasksForRepeat() {
                     delete template.$loki
                     delete template.meta
                     console.log("template:", template)
+                    let templateParents = getTaskParentIdsFor(task.$loki)
                     break;
                 default:
                     console.error("repeat algo not implemented for repeatString:", task.repeatString)
