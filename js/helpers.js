@@ -811,6 +811,20 @@ function calculateCalendar() {
     calendar.tasks = []
     calendar.slots = []
 
+    if (taskOverdue() == true) {
+        console.log("Decide what to do with overdue tasks first.")
+        return
+    }
+
+    tasks.clear()
+    taskRelations.clear()
+    makeTasksFromGoals()
+    makeTaskRelationsFromGoalRelations()
+    duplicateTasksForRepeat()
+    updateTotalDurations()
+    let tasksToSend = getLeafTasks()
+    console.log("tasks to send to scheduler:", tasksToSend)
+
     let end = Date.now()
     console.log("update goals in calendar took:", (end - start) / 1000)
     // console.log("calendarInput:", calendar)
@@ -983,24 +997,6 @@ function taskOverdue() {
         }
     })
     return overdue
-}
-
-function schedule() {
-    console.log("inside schedule()...")
-
-    if (taskOverdue() == true) {
-        console.log("Decide what to do with overdue tasks first.")
-        return
-    }
-
-    tasks.clear()
-    taskRelations.clear()
-    makeTasksFromGoals()
-    makeTaskRelationsFromGoalRelations()
-    duplicateTasksForRepeat()
-    updateTotalDurations()
-    let tasksToSend = getLeafTasks()
-    console.log("tasks to send to scheduler:", tasksToSend)
 }
 
 function getLeafTasks() {
