@@ -823,15 +823,8 @@ function calculateCalendar() {
     duplicateTasksForRepeat()
     updateTotalDurations()
     labelLeafTasks()
-    tasks.find({ label: "task-leaf" }).forEach(task => {
-        let wasm_task = {
-            task_id: task.$loki,
-            duration_to_schedule: task.duration,
-            duration_scheduled: 0,
-            task_status: "UNSCHEDULED"
-        }
-        calendar.tasks.push(wasm_task)
-    })
+    addTasksAndSlotsToCalendar()
+
     console.log("tasks in calendar:", calendar.tasks)
 
     let end = Date.now()
@@ -851,6 +844,32 @@ function calculateCalendar() {
     end = Date.now()
     // console.log("sorting slots and printing to console took:", (end - start) / 1000)
 
+}
+
+function addTasksAndSlotsToCalendar() {
+    tasks.find({ label: "task-leaf" }).forEach(task => {
+        let wasm_task = {
+            task_id: task.$loki,
+            duration_to_schedule: task.duration,
+            duration_scheduled: 0,
+            task_status: "UNSCHEDULED"
+        }
+        calendar.tasks.push(wasm_task)
+        let start = dayjs().startOf('day').valueOf()
+        if (task.hasOwnProperty("start")) {
+            start = Math.max(task.start, start)
+        }
+        let finish = dayjs().startOf('day').add(30, 'day').valueOf()
+        if (task.hasOwnProperty("finish")) {
+            start = Math.min(task.finish, finish)
+        }
+        let wasm_slot = {
+            task_id: task.$loki,
+            begin: dayjs(start),
+            end: dayjs(finish)
+        }
+        calendar.slots.push(wasm_slot)
+    })
 }
 
 
