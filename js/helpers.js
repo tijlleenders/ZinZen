@@ -919,6 +919,12 @@ function makeTasksFromGoals() {
             goal.hasOwnProperty("durationString")
         )
     })
+
+    if (filteredGoals.length == 0) {
+        console.error("NO GOALS IN CALENDAR")
+        return
+    }
+
     let copyOfFilteredGoals = JSON.parse(JSON.stringify(filteredGoals)) //required as lokijs has clone property set to true by default for ++speed
 
     console.log("copyOfFilteredGoals:", copyOfFilteredGoals)
