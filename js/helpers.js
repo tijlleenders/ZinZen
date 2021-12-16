@@ -823,6 +823,14 @@ function calculateCalendar() {
     duplicateTasksForRepeat()
     updateTotalDurations()
     makeLeafTasks()
+    tasks.find({ label: "task" }).forEach(task => {
+        let wasm_task = {
+            task_id: task.$loki,
+            duration_to_schedule: task.duration,
+            duration_scheduled: 0
+        }
+        calendar.tasks.push(wasm_task)
+    })
     console.log("tasks in calendar:", calendar.tasks)
 
     let end = Date.now()
