@@ -826,6 +826,7 @@ function calculateCalendar() {
     addTasksAndSlotsToCalendar()
     filterSlotsForAfter()
 
+    convertSlotsToHoursFromStartOfToday()
     console.log("tasks in calendar:", calendar.tasks)
 
     let end = Date.now()
@@ -845,6 +846,17 @@ function calculateCalendar() {
     end = Date.now()
     // console.log("sorting slots and printing to console took:", (end - start) / 1000)
 
+}
+
+function convertSlotsToHoursFromStartOfToday() {
+    console.log("Inside convertSlotsToHoursFromStartOfToday()...")
+    calendar.slots.forEach(slot => {
+        let startOfToday = dayjs().startOf('day')
+        slot.begin = Math.ceil(dayjs.duration(slot.begin.diff(startOfToday)).asHours())
+        slot.end = Math.ceil(dayjs.duration(slot.end.diff(startOfToday)).asHours())
+        console.log("slot begin:", slot.begin)
+        console.log("slot end:", slot.end)
+    })
 }
 
 function filterSlotsForAfter() {
