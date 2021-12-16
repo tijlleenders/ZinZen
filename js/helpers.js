@@ -822,7 +822,7 @@ function calculateCalendar() {
     makeTaskRelationsFromGoalRelations()
     duplicateTasksForRepeat()
     updateTotalDurations()
-    makeLeafTasks()
+    labelLeafTasks()
     tasks.find({ label: "task-leaf" }).forEach(task => {
         let wasm_task = {
             task_id: task.$loki,
@@ -1009,8 +1009,8 @@ function taskOverdue() {
     return overdue
 }
 
-function makeLeafTasks() {
-    console.log("inside makeLeafTasks()...")
+function labelLeafTasks() {
+    console.log("inside labelLeafTasks()...")
     tasks.data.forEach(task => {
         let parentRelationFound = taskRelations.find({ parentId: task.$loki })
         if (parentRelationFound.length == 0) {
