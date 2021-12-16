@@ -822,8 +822,8 @@ function calculateCalendar() {
     makeTaskRelationsFromGoalRelations()
     duplicateTasksForRepeat()
     updateTotalDurations()
-    let tasksToSend = getLeafTasks()
-    console.log("tasks to send to scheduler:", tasksToSend)
+    makeLeafTasks()
+    console.log("tasks in calendar:", calendar.tasks)
 
     let end = Date.now()
     console.log("update goals in calendar took:", (end - start) / 1000)
@@ -999,15 +999,14 @@ function taskOverdue() {
     return overdue
 }
 
-function getLeafTasks() {
-    console.log("inside getLeafTasks()...")
+function makeLeafTasks() {
+    console.log("inside makeLeafTasks()...")
     tasks.data.forEach(task => {
         let parentRelationFound = taskRelations.find({ parentId: task.$loki })
         if (parentRelationFound.length == 0) {
             task.label = "task"
         }
     })
-    return tasks.find({ label: "task" })
 }
 
 function duplicateTasksForRepeat() {
