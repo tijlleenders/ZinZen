@@ -1164,40 +1164,6 @@ function updateTotalDurations() {
     return
 }
 
-function makeWeekBitMap(inputArray) {
-    let result = 0
-    inputArray.forEach(command => {
-        switch (command) {
-            case "Mondays":
-                result += Math.pow(2, 7)
-                break;
-            case "Tuesdays":
-                result += Math.pow(2, 6)
-                break;
-            case "Wednesdays":
-                result += Math.pow(2, 5)
-                break;
-            case "Thursdays":
-                result += Math.pow(2, 4)
-                break;
-            case "Fridays":
-                result += Math.pow(2, 3)
-                break;
-            case "Saturdays":
-                result += Math.pow(2, 2)
-                break;
-            case "Sundays":
-                result += Math.pow(2, 1)
-                break;
-            case "Daily":
-                result += Math.pow(2, 7) + Math.pow(2, 6) + Math.pow(2, 5) + Math.pow(2, 4) + Math.pow(2, 3) + Math.pow(2, 2) + Math.pow(2, 1)
-                break;
-            default:
-        }
-    })
-    return result
-}
-
 function generateProgressHTML(slotsForSelectedDay) {
     let progressHTML = `
     <div class="card shadow-sm text-center mb-3 mx-auto" id="progress-card">
