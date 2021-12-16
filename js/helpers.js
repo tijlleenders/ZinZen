@@ -823,7 +823,7 @@ function calculateCalendar() {
     duplicateTasksForRepeat()
     updateTotalDurations()
     makeLeafTasks()
-    tasks.find({ label: "task" }).forEach(task => {
+    tasks.find({ label: "task-leaf" }).forEach(task => {
         let wasm_task = {
             task_id: task.$loki,
             duration_to_schedule: task.duration,
@@ -956,6 +956,7 @@ function makeTasksFromGoals() {
         delete filteredGoal.id
         filteredGoal.duration = getDurationFromStringIn(filteredGoal.durationString, "h")
         delete filteredGoal.durationString
+        filteredGoal.label = "task"
     })
     tasks.insert(copyOfFilteredGoals)
 }
@@ -1012,7 +1013,7 @@ function makeLeafTasks() {
     tasks.data.forEach(task => {
         let parentRelationFound = taskRelations.find({ parentId: task.$loki })
         if (parentRelationFound.length == 0) {
-            task.label = "task"
+            task.label = "task-leaf"
         }
     })
 }
