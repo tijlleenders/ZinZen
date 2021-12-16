@@ -881,7 +881,7 @@ function addTasksAndSlotsToCalendar() {
         }
         let finish = dayjs().startOf('day').add(30, 'day').valueOf()
         if (task.hasOwnProperty("finish")) {
-            start = Math.min(task.finish, finish)
+            finish = Math.min(task.finish, finish)
         }
         let wasm_slot = {
             task_id: task.$loki,
