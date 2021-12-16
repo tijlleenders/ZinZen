@@ -827,7 +827,8 @@ function calculateCalendar() {
         let wasm_task = {
             task_id: task.$loki,
             duration_to_schedule: task.duration,
-            duration_scheduled: 0
+            duration_scheduled: 0,
+            task_status: "UNSCHEDULED"
         }
         calendar.tasks.push(wasm_task)
     })
