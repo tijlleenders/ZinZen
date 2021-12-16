@@ -824,6 +824,7 @@ function calculateCalendar() {
     updateTotalDurations()
     labelLeafTasks()
     addTasksAndSlotsToCalendar()
+    filterSlotsForAfter()
 
     console.log("tasks in calendar:", calendar.tasks)
 
@@ -844,6 +845,13 @@ function calculateCalendar() {
     end = Date.now()
     // console.log("sorting slots and printing to console took:", (end - start) / 1000)
 
+}
+
+function filterSlotsForAfter() {
+    console.log("Inside filterSlotsForAfter()...")
+    calendar.slots.forEach(slot => {
+        console.log("found after for slot with task_id:", slot.task_id)
+    })
 }
 
 function addTasksAndSlotsToCalendar() {
