@@ -1011,7 +1011,7 @@ function getLeafTasks() {
 }
 
 function duplicateTasksForRepeat() {
-    console.log("inside duplicateTasksForRepeat()... TODO")
+    console.log("inside duplicateTasksForRepeat()")
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
     tasks.data.forEach(task => {
         if (task.hasOwnProperty("repeatString")) {
@@ -1070,7 +1070,7 @@ function getDayStartsFor(start, finish) {
 }
 
 function updateTotalDurations() {
-    console.log("inside updateTotalDurations()... TODO")
+    console.log("inside updateTotalDurations()")
     //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
     let restart = true
     let loopCounter = 0
