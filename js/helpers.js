@@ -810,58 +810,6 @@ function calculateCalendar() {
     let start = Date.now()
     calendar.tasks = []
     calendar.slots = []
-    calendar.goals = []
-    let goalsToAdd = goals.where(function (goal) {
-        return (goal.durationString != undefined && (goal.status == "maybe" || goal.status == "promised"));
-    });
-
-    if (goalsToAdd.length == 0) {
-        console.log("NO GOALS IN CALENDAR")
-    }
-
-    goalsToAdd.forEach(goal => {
-        console.log("goal:", goal)
-        let estimated_duration = getDurationFromStringIn(goal.durationString, "h")
-        let goal_type
-        switch (goal.repeatString) {
-            case "daily":
-                goal_type = "DAILY"
-                break;
-            case "weekly":
-                goal_type = "WEEKLY"
-                break;
-            case "monthly":
-                goal_type = "MONTLY"
-                break;
-            case "yearly":
-                goal_type = "YEARLY"
-                break;
-            default:
-                goal_type = "FIXED"
-                break;
-        }
-
-        let goal_for_wasm = {
-            id: goal.$loki,
-            title: goal.title.en,
-            estimated_duration: estimated_duration,
-            effort_invested: 0,
-            start: 0,
-            finish: calendar.max_time_units,
-            start_time: 0,
-            goal_type: goal_type
-        }
-
-        if (goal.startStringsArray != undefined) {
-            goal_for_wasm.start_time = parseInt(goal.startStringsArray[0].substr(0, 2))
-        }
-
-        if (goal.finishStringsArray != undefined) {
-            goal_for_wasm.finish_time = parseInt(goal.finishStringsArray[0].substr(0, 2))
-        }
-
-        calendar.goals.push(goal_for_wasm)
-    })
 
     let end = Date.now()
     console.log("update goals in calendar took:", (end - start) / 1000)
