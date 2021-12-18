@@ -480,10 +480,12 @@ function translate(englishText) {
 }
 
 function generateSlotHTML(slot) {
-    console.log("inside generateSlotHTML...")
-    console.log("slot data:", slot)
+    // console.log("inside generateSlotHTML...")
+    // console.log("slot data:", slot)
     let task = tasks.find({ $loki: slot.task_id })[0]
-    console.log("found task:", task)
+    if (task == undefined) {
+        console.error("can't find task for slot:", slot)
+    }
     //Todo: handle case for array of colors
     var color = task.colors[0]
     let cardStyle = "card" + color
@@ -928,7 +930,7 @@ function generateSlotsHTML() {
     let HTML = ``
     let days = []
     calendar.slots.forEach(slot => {
-        console.log("slot:", slot)
+        // console.log("slot:", slot)
         if (calendar.time_unit_qualifier == "h") {
             let day = Math.floor(slot.begin / 24)
             if (days[day] == undefined) {
