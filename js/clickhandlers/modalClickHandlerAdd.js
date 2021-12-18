@@ -80,15 +80,7 @@ function saveGoal() {
             colors = parent.colors
         }
 
-        var titleObject = {}
-        let lang = settings.find({ "setting": "language" })[0].value
-        if (lang != undefined) {
-            titleObject[lang] = title
-        } else {
-            throw ("can't find language setting")
-        }
-
-        goalToSave.title = titleObject
+        goalToSave.title = title
         goalToSave.colors = colors
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords
