@@ -16,8 +16,8 @@ $("#myModal").on("keyup", "#inputGoal", function (e) {
     // send(JSON.stringify(getSuggestions))
 
     let inputGoal = $("#inputGoal").data('inputGoal')
-    inputGoal.title[inputGoal.lang] = $("#inputGoal").val()
-    inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace("  ", " ")
+    inputGoal.title = $("#inputGoal").val()
+    inputGoal.title = inputGoal.title.replace("  ", " ")
     $("#inputGoal").data('inputGoal', inputGoal)
     updateModalAddUI()
 });
@@ -52,11 +52,11 @@ function saveGoal() {
         if (goal.label == "goal") {
             let lang = settings.find({ "setting": "language" })[0].value
             if (lang != undefined) {
-                goal.title[lang] = title
+                goal.title = title
             } else {
                 console.log("different language than interface language set for title")
                 console.log("using following language to save:", lang)
-                goal.title[lang] = title
+                goal.title = title
             }
             if (goalToSave.hasOwnProperty("repeatString")) {
                 goal.repeatString = goalToSave.repeatString
@@ -80,15 +80,7 @@ function saveGoal() {
             colors = parent.colors
         }
 
-        var titleObject = {}
-        let lang = settings.find({ "setting": "language" })[0].value
-        if (lang != undefined) {
-            titleObject[lang] = title
-        } else {
-            throw ("can't find language setting")
-        }
-
-        goalToSave.title = titleObject
+        goalToSave.title = title
         goalToSave.colors = colors
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords
