@@ -418,26 +418,13 @@ function setSkeletonHTMLForAdd(id) {
     `
     $("#modal-body").html(bodyHTML)
 
-    let titleObject = {}
-    switch (lang) {
-        case "en":
-            titleObject.en = ''
-            break;
-        case "nl":
-            titleObject.nl = ''
-            break;
-        default:
-            throw ("language " + lang + " not implemented in switch")
-    }
-
-
     let inputGoal = goals.find({ "id": id })[0]
 
     if (inputGoal == undefined) {
         inputGoal = {
             id: "",
             label: "goal",
-            title: titleObject,
+            title: '',
             status: "maybe",
             suggestedCommands: new Set(),
             suggestedWords: new Set(),
