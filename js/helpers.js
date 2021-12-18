@@ -673,9 +673,14 @@ function generateGoalHTML(properties) {
     }
 
     let title = titleIcon
-    let lang = settings.find({ "setting": "language" })[0].value
-    if (properties.title != undefined) {
+
+    if (properties.title != undefined && properties.owner != "ZinZen") {
         title += properties.title
+    } else {
+        if (properties.title != undefined) {
+            console.log("translating:", properties.title)
+            title += translate(properties.title)
+        }
     }
 
     let cardStyle = "card" + color
@@ -2118,7 +2123,11 @@ function loadTranslations() {
     translations = repository.addCollection('translations', {
         unique: ['en']
     });
-
+    translations.insert(
+        {
+            "en": "My goals 🎯",
+            "nl": "Mijn doelen 🎯"
+        })
     translations.insert(
         {
             "en": "Goals",
