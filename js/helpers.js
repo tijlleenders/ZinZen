@@ -1442,6 +1442,7 @@ function updateMainButtonsFor(parentId) {
 
 function loadSettingGoalsAndRelationships() {
     goals.insert({
+        "lang": "en",
         "id": "______________________________ZinZen",
         "label": "setting",
         "title": "ZinZen",
@@ -1459,6 +1460,7 @@ function loadSettingGoalsAndRelationships() {
     })
 
     goals.insert({
+        "lang": "en",
         "id": "_____________________my-app-settings",
         "label": "setting",
         "title": "My settings",
@@ -1475,6 +1477,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "_________install-on-phone-or-desktop",
         "label": "setting",
         "title": "Install on phone or desktop",
@@ -1491,6 +1494,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "______________________________donate",
         "label": "setting-action",
         "title": "Donate",
@@ -1509,6 +1513,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "________________________________blog",
         "label": "setting-action",
         "title": "Blog",
@@ -1527,6 +1532,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "_______________________________about",
         "label": "setting-action",
         "title": "About us",
@@ -1545,6 +1551,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "_______________________________legal",
         "label": "setting",
         "title": "Legal",
@@ -1570,6 +1577,7 @@ function loadSettingGoalsAndRelationships() {
 
 
     goals.insert({
+        "lang": "en",
         "id": "_______________________look-and-feel",
         "label": "setting",
         "title": "Display and Language",
@@ -1586,6 +1594,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "_________________import-export-reset",
         "label": "setting",
         "title": "Import / Export / Destroy all my data",
@@ -1602,6 +1611,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "__________________________sign-up-in",
         "label": "setting-action",
         "title": "Sign up / in",
@@ -1625,6 +1635,7 @@ function loadSettingGoalsAndRelationships() {
     relationships.insert({ parentId: "______________________________ZinZen", childId: "_________________import-export-reset", priority: 2, label: "setting" })
 
     goals.insert({
+        "lang": "en",
         "id": "____________________reset-repository",
         "label": "setting-action",
         "title": "Destroy all my data now!",
@@ -1648,6 +1659,7 @@ function loadSettingGoalsAndRelationships() {
     relationships.insert({ parentId: "_________________import-export-reset", childId: "____________________reset-repository", priority: 0, label: "setting" })
 
     goals.insert({
+        "lang": "en",
         "id": "_________________install-on-computer",
         "label": "setting",
         "title": "Install on computer (Windows, Apple, Linux)",
@@ -1665,6 +1677,7 @@ function loadSettingGoalsAndRelationships() {
     })
 
     goals.insert({
+        "lang": "en",
         "id": "__________________install-on-android",
         "label": "setting",
         "title": "Install on android (Samsung, Xiaomi, other)",
@@ -1682,6 +1695,7 @@ function loadSettingGoalsAndRelationships() {
     })
 
     goals.insert({
+        "lang": "en",
         "id": "___________________install-on-iphone",
         "label": "setting",
         "title": "Install on iPhone (Apple)",
@@ -1703,6 +1717,7 @@ function loadSettingGoalsAndRelationships() {
     relationships.insert({ parentId: "_________install-on-phone-or-desktop", childId: "___________________install-on-iphone", priority: 2, label: "setting" })
 
     goals.insert({
+        "lang": "en",
         "id": "_____________________________Privacy",
         "label": "setting-action",
         "title": "Privacy statement",
@@ -1721,6 +1736,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "____________________terms-of-service",
         "label": "setting-action",
         "title": "Terms of service",
@@ -1739,6 +1755,7 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "________open-source-acknowledgements",
         "label": "setting-action",
         "title": "Open source acknowledgements",
@@ -1762,6 +1779,7 @@ function loadSettingGoalsAndRelationships() {
     relationships.insert({ parentId: "_______________________________legal", childId: "________open-source-acknowledgements", priority: 2, label: "setting" })
 
     goals.insert({
+        "lang": "en",
         "id": "____________________________language",
         "label": "setting",
         "title": "Language",
@@ -1779,6 +1797,7 @@ function loadSettingGoalsAndRelationships() {
     })
 
     goals.insert({
+        "lang": "en",
         "id": "__________________________light-mode",
         "label": "setting-action",
         "title": "Light mode",
@@ -1800,6 +1819,7 @@ function loadSettingGoalsAndRelationships() {
     })
 
     goals.insert({
+        "lang": "en",
         "id": "___________________________dark-mode",
         "label": "setting-action",
         "title": "Dark mode",
@@ -1826,6 +1846,7 @@ function loadSettingGoalsAndRelationships() {
     relationships.insert({ parentId: "_______________________look-and-feel", childId: "___________________________dark-mode", priority: 1, label: "setting" })
 
     goals.insert({
+        "lang": "en",
         "id": "_______________________________Dutch",
         "label": "setting-action",
         "title": "🇳🇱 Dutch",
@@ -1847,6 +1868,7 @@ function loadSettingGoalsAndRelationships() {
     })
 
     goals.insert({
+        "lang": "en",
         "id": "_____________________________English",
         "label": "setting-action",
         "title": "🇺🇸 🇬🇧 English",
@@ -1875,6 +1897,7 @@ function loadSettingGoalsAndRelationships() {
 function loadGoalsAndRelationships() {
 
     goals.insert({
+        "lang": "en",
         label: 'person',
         id: sessionId,
         title: "Me",
@@ -1895,6 +1918,7 @@ function loadGoalsAndRelationships() {
 
 function loadPersonalTimeAndRelationships() {
     goals.insert({
+        "lang": "en",
         "id": "________________________________time",
         "label": "setting-action",
         "title": "My time",
@@ -1916,6 +1940,7 @@ function loadPersonalTimeAndRelationships() {
 
 function loadPersonalFeelingsAndRelationships() {
     goals.insert({
+        "lang": "en",
         "id": "____________________________feelings",
         "label": "feeling",
         "title": "My feelings 💖",
@@ -1937,6 +1962,7 @@ function loadPersonalFeelingsAndRelationships() {
 
 function loadPersonalGoalsAndRelationships() {
     goals.insert({
+        "lang": "en",
         "id": "_______________________________goals",
         "label": "goal",
         "title": "My goals 🎯",
@@ -1958,6 +1984,7 @@ function loadPersonalGoalsAndRelationships() {
 
 function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
+        "lang": "en",
         "id": "_________________________suggestions",
         "label": "suggestion",
         "title": "🔭 Explore 🧭",
@@ -1976,6 +2003,7 @@ function loadSuggestionsGoalsAndRelationships() {
     relationships.insert({ parentId: sessionId, childId: "_________________________suggestions" })
 
     goals.insert({
+        "lang": "en",
         "id": "________nature-and-environment-goals",
         "label": "suggestion",
         "title": "🌲 Nature and environment goals 🌌",
@@ -1992,6 +2020,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "_______________mind-and-spirit-goals",
         "label": "suggestion",
         "title": "🧘 Mind and spirit goals ☯️",
@@ -2008,6 +2037,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "___________growth-and-learning-goals",
         "label": "suggestion",
         "title": "🌱 Personal growth and learning goals 💡",
@@ -2024,6 +2054,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "________________________career-goals",
         "label": "suggestion",
         "title": "🎯 Career goals",
@@ -2040,6 +2071,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "____________health-and-fitness-goals",
         "label": "suggestion",
         "title": "💪 Health and fitness goals 🏅 🏆",
@@ -2056,6 +2088,7 @@ function loadSuggestionsGoalsAndRelationships() {
         "statusSort": 1
     })
     goals.insert({
+        "lang": "en",
         "id": "__________________relationship-goals",
         "label": "suggestion",
         "title": "🥰 💖 Relationship goals 🧑‍🤝‍🧑",
