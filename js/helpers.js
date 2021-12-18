@@ -1096,32 +1096,32 @@ function getDayStartsFor(start, finish) {
 }
 
 function updateTotalDurations() {
-    console.log("inside updateTotalDurations()")
+    // console.log("inside updateTotalDurations()")
     //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
     let restart = true
     let loopCounter = 0
     while (restart = true && loopCounter < 2) {
-        console.log("loop ", loopCounter)
+        // console.log("loop ", loopCounter)
         loopCounter += 1
         restart = false
         tasks.data.forEach(task => {
-            console.log("task", task.$loki)
+            // console.log("task", task.$loki)
             let durationChildren = 0
             let taskChildren = getTaskChildrenFor(task.$loki)
             taskChildren.forEach(child => {
                 durationChildren += child.duration
             })
-            console.log("total duration children:", durationChildren)
-            console.log("total duration task:", task.duration)
+            // console.log("total duration children:", durationChildren)
+            // console.log("total duration task:", task.duration)
             if (task.duration > durationChildren && taskChildren.length != 0) {
                 restart = true
-                console.log("task bigger than children")
+                // console.log("task bigger than children")
                 let template = JSON.parse(JSON.stringify(task))
                 delete template.$loki
                 delete template.meta
                 template.duration = task.duration - durationChildren
                 template.title['en'] += " (auto fill)"
-                console.log("template:", template)
+                // console.log("template:", template)
                 tasks.insert(template)
                 let taskRelation = {
                     parentId: task.$loki,
@@ -1131,7 +1131,7 @@ function updateTotalDurations() {
             }
             if (task.duration < durationChildren && taskChildren.length != 0) {
                 restart = true
-                console.log("children bigger than task")
+                // console.log("children bigger than task")
                 task.duration = durationChildren
                 tasks.update(task)
             }
