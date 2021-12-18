@@ -852,15 +852,15 @@ function convertSlotsToHoursFromStartOfToday() {
         let startOfToday = dayjs().startOf('day')
         slot.begin = Math.ceil(dayjs.duration(slot.begin.diff(startOfToday)).asHours())
         slot.end = Math.ceil(dayjs.duration(slot.end.diff(startOfToday)).asHours())
-        console.log("slot begin:", slot.begin)
-        console.log("slot end:", slot.end)
+        // console.log("slot begin:", slot.begin)
+        // console.log("slot end:", slot.end)
     })
 }
 
 function filterSlotsForAfter() {
-    console.log("Inside filterSlotsForAfter()...")
+    console.log("Inside filterSlotsForAfter()...TODO")
     calendar.slots.forEach(slot => {
-        console.log("found after for slot with task_id:", slot.task_id)
+        // console.log("found after for slot with task_id:", slot.task_id)
     })
 }
 
