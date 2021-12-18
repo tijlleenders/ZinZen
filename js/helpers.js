@@ -1355,7 +1355,7 @@ function updateBreadcrumbUI() {
         if (ancestor.title != undefined) {
             title = ancestor.title
         }
-        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm m-1" id="breadcrumbGoal-' + ancestor.id + '">' + title + '</button>'
+        breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm m-1" id="breadcrumbGoal-' + ancestor.id + '">' + translate(title) + '</button>'
     })
 
     $("#breadcrumb").html(breadcrumbHTML)
