@@ -1906,6 +1906,7 @@ function loadGoalsAndRelationships() {
         label: 'person',
         id: sessionId,
         title: "Me",
+        owner: "ZinZen",
         parentId: '',
         status: 'maybe',
         start: (new Date()).toISOString(),
@@ -2128,6 +2129,114 @@ function loadTranslations() {
             "en": "My goals 🎯",
             "nl": "Mijn doelen 🎯"
         })
+
+    translations.insert(
+        {
+            "en": "ZinZen",
+            "nl": "ZinZen"
+        })
+
+    translations.insert(
+        {
+            "en": "My settings",
+            "nl": "Mijn instellingen"
+        })
+
+    translations.insert(
+        {
+            "en": "Install on phone or desktop",
+            "nl": "Installeren op telefoon of computer"
+        })
+
+    translations.insert(
+        { "en": "My time", "nl": "Mijn tijd" })
+
+    translations.insert(
+        { "en": "My feelings 💖", "nl": "Mijn gevoelens 💖" })
+
+    translations.insert(
+        { "en": "🔭 Explore 🧭", "nl": "🔭 Ontdek 🧭" })
+
+    translations.insert(
+        { "en": "Donate", "nl": "Doneren" })
+
+    translations.insert(
+        { "en": "Blog", "nl": "Blog" })
+
+    translations.insert(
+        { "en": "About us", "nl": "Over ons" })
+
+    translations.insert(
+        { "en": "Legal", "nl": "Juridisch" })
+
+    translations.insert(
+        { "en": "Display and Language", "nl": "Opmaak en Taal" })
+
+    translations.insert(
+        { "en": "Import / Export / Destroy all my data", "nl": "Import / Export / Vernietig al mijn data" })
+
+    translations.insert(
+        { "en": "Sign up / in", "nl": "Lid worden / Aanmelden" })
+
+    translations.insert(
+        { "en": "Destroy all my data now!", "nl": "Vernietig al mijn data nu!" })
+
+    translations.insert(
+        { "en": "Install on computer (Windows, Apple, Linux)", "nl": "Installeer op computer (Windows, Apple, Linux)" })
+
+    translations.insert(
+        { "en": "Install on android (Samsung, Xiaomi, other)", "nl": "Instaleer op android (Samsung, Xiaomi, overig)" })
+
+    translations.insert(
+        { "en": "Install on iPhone (Apple)", "nl": "Installeer op iPhone (Apple)" })
+
+    translations.insert(
+        { "en": "Privacy statement", "nl": "Privacy verklaring" })
+
+    translations.insert(
+        { "en": "Terms of service", "nl": "Algemene voorwaarden" })
+
+    translations.insert(
+        { "en": "Open source acknowledgements", "nl": "Open source erkenningen" })
+
+    translations.insert(
+        { "en": "Language", "nl": "Taal" })
+
+    translations.insert(
+        { "en": "Light mode", "nl": "Lichte modus" })
+
+    translations.insert(
+        { "en": "Dark mode", "nl": "Donkere modus" })
+
+    translations.insert(
+        { "en": "🇳🇱 Dutch", "nl": "🇳🇱 Nederlands" })
+
+    translations.insert(
+        { "en": "🇺🇸 🇬🇧 English", "nl": "🇺🇸 🇬🇧 Engels" })
+
+    translations.insert({ "en": "Me", "nl": "Ik" })
+
+    translations.insert(
+        { "en": "🌲 Nature and environment goals 🌌", "nl": "🌲 Natuur en omgeving doelen 🌌" })
+
+    translations.insert(
+        { "en": "🧘 Mind and spirit goals ☯️", "nl": "🧘 Geest en ziel doelen ☯️" })
+
+    translations.insert(
+        { "en": "🌱 Personal growth and learning goals 💡", "nl": "🌱 Persoonlijke groei en leer doelen 💡" })
+
+    translations.insert(
+        { "en": "🎯 Career goals", "nl": "🎯 Carrière doelen" })
+
+    translations.insert(
+        { "en": "💪 Health and fitness goals 🏅 🏆", "nl": "💪 Gezondheid en fitness doelen 🏅 🏆" })
+
+    translations.insert(
+        { "en": "🥰 💖 Relationship goals 🧑‍🤝‍🧑", "nl": "🥰 💖 Relatie doelen 🧑‍🤝‍🧑" })
+
+
+
+
     translations.insert(
         {
             "en": "Goals",
