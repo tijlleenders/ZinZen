@@ -1093,6 +1093,7 @@ function duplicateTasksForRepeat() {
                             taskRelations.insert(taskRelationship)
                         })
                     })
+                    tasks.remove(task)
                     break;
                 default:
                     console.error("repeat algo not implemented for repeatString:", task.repeatString)
