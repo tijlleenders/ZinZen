@@ -842,7 +842,7 @@ function calculateCalendar() {
     start = Date.now()
     //Todo: order slots in Rust
     calendar.slots.sort((a, b) => { return a.begin - b.begin }) // Could be faster in WASM? For now not noticeable so OK.
-    // console.log("calendarOutput:", calendar)
+    console.log("calendarOutput:", calendar)
     end = Date.now()
     // console.log("sorting slots and printing to console took:", (end - start) / 1000)
 
