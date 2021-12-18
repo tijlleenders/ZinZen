@@ -676,17 +676,6 @@ function generateGoalHTML(properties) {
     let lang = settings.find({ "setting": "language" })[0].value
     if (properties.title != undefined) {
         title += properties.title
-    } else {
-        switch (lang) {
-            case "en":
-                title += properties.title.nl
-                break;
-            case "nl":
-                title += properties.title.en
-                break;
-            default:
-                title += 'title not found...'
-        }
     }
 
     let cardStyle = "card" + color
@@ -1202,7 +1191,7 @@ function generateProgressHTML(slotsForSelectedDay) {
 }
 
 
-function setLanguageTo(lang) {
+function setLanguageTo(lang) { //TODO: Fix after hardcoding default pre-populated titles to English
     if (lang == 'en' || lang == 'nl') {
         let languageSetting = settings.find({ "setting": "language" })[0]
         languageSetting.value = lang
@@ -1455,10 +1444,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "______________________________ZinZen",
         "label": "setting",
-        "title": {
-            "en": "ZinZen",
-            "nl": "ZinZen"
-        },
+        "title": "ZinZen",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1475,10 +1461,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_____________________my-app-settings",
         "label": "setting",
-        "title": {
-            "en": "My settings",
-            "nl": "Mijn instellingen"
-        },
+        "title": "My settings",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1494,10 +1477,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_________install-on-phone-or-desktop",
         "label": "setting",
-        "title": {
-            "en": "Install on phone or desktop",
-            "nl": "Installeren op telefoon of computer"
-        },
+        "title": "Install on phone or desktop",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1513,7 +1493,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "______________________________donate",
         "label": "setting-action",
-        "title": { "en": "Donate", "nl": "Doneren" },
+        "title": "Donate",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1531,7 +1511,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "________________________________blog",
         "label": "setting-action",
-        "title": { "en": "Blog", "nl": "Blog" },
+        "title": "Blog",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1549,7 +1529,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_______________________________about",
         "label": "setting-action",
-        "title": { "en": "About us", "nl": "Over ons" },
+        "title": "About us",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1567,7 +1547,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_______________________________legal",
         "label": "setting",
-        "title": { "en": "Legal", "nl": "Juridisch" },
+        "title": "Legal",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1592,7 +1572,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_______________________look-and-feel",
         "label": "setting",
-        "title": { "en": "Display and Language", "nl": "Opmaak en Taal" },
+        "title": "Display and Language",
         "owner": "ZinZen",
         "subCountMaybe": "2",
         "subCountPromised": "0",
@@ -1608,7 +1588,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_________________import-export-reset",
         "label": "setting",
-        "title": { "en": "Import / Export / Destroy all my data", "nl": "Import / Export / Vernietig al mijn data" },
+        "title": "Import / Export / Destroy all my data",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1624,7 +1604,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "__________________________sign-up-in",
         "label": "setting-action",
-        "title": { "en": "Sign up / in", "nl": "Lid worden / Aanmelden" },
+        "title": "Sign up / in",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1647,7 +1627,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "____________________reset-repository",
         "label": "setting-action",
-        "title": { "en": "Destroy all my data now!", "nl": "Vernietig al mijn data nu!" },
+        "title": "Destroy all my data now!",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1670,7 +1650,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_________________install-on-computer",
         "label": "setting",
-        "title": { "en": "Install on computer (Windows, Apple, Linux)", "nl": "Installeer op computer (Windows, Apple, Linux)" },
+        "title": "Install on computer (Windows, Apple, Linux)",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1687,7 +1667,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "__________________install-on-android",
         "label": "setting",
-        "title": { "en": "Install on android (Samsung, Xiaomi, other)", "nl": "Instaleer op android (Samsung, Xiaomi, overig)" },
+        "title": "Install on android (Samsung, Xiaomi, other)",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1704,7 +1684,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "___________________install-on-iphone",
         "label": "setting",
-        "title": { "en": "Install on iPhone (Apple)", "nl": "Installeer op iPhone (Apple)" },
+        "title": "Install on iPhone (Apple)",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1725,7 +1705,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_____________________________Privacy",
         "label": "setting-action",
-        "title": { "en": "Privacy statement", "nl": "Privacy verklaring" },
+        "title": "Privacy statement",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1743,7 +1723,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "____________________terms-of-service",
         "label": "setting-action",
-        "title": { "en": "Terms of service", "nl": "Algemene voorwaarden" },
+        "title": "Terms of service",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1761,7 +1741,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "________open-source-acknowledgements",
         "label": "setting-action",
-        "title": { "en": "Open source acknowledgements", "nl": "Open source erkenningen" },
+        "title": "Open source acknowledgements",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1784,7 +1764,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "____________________________language",
         "label": "setting",
-        "title": { "en": "Language", "nl": "Taal" },
+        "title": "Language",
         "owner": "ZinZen",
         "subCountMaybe": "2",
         "subCountPromised": "0",
@@ -1801,7 +1781,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "__________________________light-mode",
         "label": "setting-action",
-        "title": { "en": "Light mode", "nl": "Lichte modus" },
+        "title": "Light mode",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1822,7 +1802,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "___________________________dark-mode",
         "label": "setting-action",
-        "title": { "en": "Dark mode", "nl": "Donkere modus" },
+        "title": "Dark mode",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1848,7 +1828,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_______________________________Dutch",
         "label": "setting-action",
-        "title": { "en": "🇳🇱 Dutch", "nl": "🇳🇱 Nederlands" },
+        "title": "🇳🇱 Dutch",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1869,7 +1849,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "id": "_____________________________English",
         "label": "setting-action",
-        "title": { "en": "🇺🇸 🇬🇧 English", "nl": "🇺🇸 🇬🇧 Engels" },
+        "title": "🇺🇸 🇬🇧 English",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1897,7 +1877,7 @@ function loadGoalsAndRelationships() {
     goals.insert({
         label: 'person',
         id: sessionId,
-        title: { "en": "Me", "nl": "Ik" },
+        title: "Me",
         parentId: '',
         status: 'maybe',
         start: (new Date()).toISOString(),
@@ -1917,7 +1897,7 @@ function loadPersonalTimeAndRelationships() {
     goals.insert({
         "id": "________________________________time",
         "label": "setting-action",
-        "title": { "en": "My time", "nl": "Mijn tijd" },
+        "title": "My time",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1938,7 +1918,7 @@ function loadPersonalFeelingsAndRelationships() {
     goals.insert({
         "id": "____________________________feelings",
         "label": "feeling",
-        "title": { "en": "My feelings 💖", "nl": "Mijn gevoelens 💖" },
+        "title": "My feelings 💖",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1959,7 +1939,7 @@ function loadPersonalGoalsAndRelationships() {
     goals.insert({
         "id": "_______________________________goals",
         "label": "goal",
-        "title": { "en": "My goals 🎯", "nl": "Mijn doelen 🎯" },
+        "title": "My goals 🎯",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -1980,7 +1960,7 @@ function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "_________________________suggestions",
         "label": "suggestion",
-        "title": { "en": "🔭 Explore 🧭", "nl": "🔭 Ontdek 🧭" },
+        "title": "🔭 Explore 🧭",
         "owner": "ZinZen",
         "subCountMaybe": "3",
         "subCountPromised": "0",
@@ -1998,7 +1978,7 @@ function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "________nature-and-environment-goals",
         "label": "suggestion",
-        "title": { "en": "🌲 Nature and environment goals 🌌", "nl": "🌲 Natuur en omgeving doelen 🌌" },
+        "title": "🌲 Nature and environment goals 🌌",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -2014,7 +1994,7 @@ function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "_______________mind-and-spirit-goals",
         "label": "suggestion",
-        "title": { "en": "🧘 Mind and spirit goals ☯️", "nl": "🧘 Geest en ziel doelen ☯️" },
+        "title": "🧘 Mind and spirit goals ☯️",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -2030,7 +2010,7 @@ function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "___________growth-and-learning-goals",
         "label": "suggestion",
-        "title": { "en": "🌱 Personal growth and learning goals 💡", "nl": "🌱 Persoonlijke groei en leer doelen 💡" },
+        "title": "🌱 Personal growth and learning goals 💡",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -2046,7 +2026,7 @@ function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "________________________career-goals",
         "label": "suggestion",
-        "title": { "en": "🎯 Career goals", "nl": "🎯 Carrière doelen" },
+        "title": "🎯 Career goals",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -2062,7 +2042,7 @@ function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "____________health-and-fitness-goals",
         "label": "suggestion",
-        "title": { "en": "💪 Health and fitness goals 🏅 🏆", "nl": "💪 Gezondheid en fitness doelen 🏅 🏆" },
+        "title": "💪 Health and fitness goals 🏅 🏆",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
@@ -2078,7 +2058,7 @@ function loadSuggestionsGoalsAndRelationships() {
     goals.insert({
         "id": "__________________relationship-goals",
         "label": "suggestion",
-        "title": { "en": "🥰 💖 Relationship goals 🧑‍🤝‍🧑", "nl": "🥰 💖 Relatie doelen 🧑‍🤝‍🧑" },
+        "title": "🥰 💖 Relationship goals 🧑‍🤝‍🧑",
         "owner": "ZinZen",
         "subCountMaybe": "0",
         "subCountPromised": "0",
