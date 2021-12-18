@@ -901,9 +901,9 @@ function generateImpossibleHTML() {
         impossibleGoalIds.add(task.goal_id)
     })
     // console.log("impossible goal ids:", impossibleGoalIds)
-    let impossibleGoals = calendar.goals.filter(goal => {
-        return impossibleGoalIds.has(goal.id)
-    })
+    let impossibleGoals = goals.where(function (goal) {
+        return impossibleGoalIds.has(goal.id);
+    });
     // console.log("impossible goals:", impossibleGoals)
     impossibleGoals.forEach(goal => {
         HTML += "! Issue scheduling " + goal.title + " x/y times<br />"
