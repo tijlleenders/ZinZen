@@ -100,7 +100,7 @@ function updateModalAddUI() {
     let newinputGoal = parseCommand(inputGoal)
     console.log("newinputGoal:", newinputGoal)
     $("#inputGoal").data('inputGoal', newinputGoal)
-    $("#inputGoal").val(newinputGoal.title[inputGoal.lang])
+    $("#inputGoal").val(newinputGoal.title)
     $("#inputGoal").focus()
     //when to change modal title??
 
@@ -109,7 +109,7 @@ function updateModalAddUI() {
     let parentsHTML = ``
     getGoalParentsFor(inputGoal.id).forEach(parent => {
         if (parent.title != undefined) {
-            parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + getColorsFor(inputGoal.id) + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title[lang] + '</span>'
+            parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + getColorsFor(inputGoal.id) + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title + '</span>'
         }
     })
 
@@ -445,7 +445,7 @@ function setSkeletonHTMLForAdd(id) {
             start: Date.now()
         }
     } else {
-        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title[lang].substring(0, 10) + `...</h4>`
+        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
     }
 
     if (inputGoal.id == "") {
@@ -491,7 +491,7 @@ function generateSlotHTML(slot) {
     let cardStyle = "card" + color
     let status = "maybe"
     let goalId = task.goalId
-    var title = task.title['en']
+    var title = task.title
     var begin = (new dayjs).startOf("day").add(slot.begin, 'hour')
     var end = (new dayjs).startOf("day").add(slot.end, 'hour')
     let sequenceNumberHTML = ""
@@ -687,8 +687,8 @@ function generateGoalHTML(properties) {
 
     let title = titleIcon
     let lang = settings.find({ "setting": "language" })[0].value
-    if (properties.title[lang] != undefined) {
-        title += properties.title[lang]
+    if (properties.title != undefined) {
+        title += properties.title
     } else {
         switch (lang) {
             case "en":
@@ -1040,7 +1040,7 @@ function duplicateTasksForRepeat() {
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
     tasks.data.forEach(task => {
         if (task.hasOwnProperty("repeatString")) {
-            // console.log("attempt duplicating id:", task.$loki + " title:", task.title['en'])
+            // console.log("attempt duplicating id:", task.$loki + " title:", task.title)
             switch (task.repeatString) {
                 case "daily":
                     let dayStarts = getDayStartsFor(task.start, task.finish)
@@ -1120,7 +1120,7 @@ function updateTotalDurations() {
                 delete template.$loki
                 delete template.meta
                 template.duration = task.duration - durationChildren
-                template.title['en'] += " (auto fill)"
+                template.title += " (auto fill)"
                 // console.log("template:", template)
                 tasks.insert(template)
                 let taskRelation = {
@@ -1371,8 +1371,8 @@ function updateBreadcrumbUI() {
             breadcrumbHTML += '>'
         }
         let title = ancestor.title
-        if (ancestor.title[settings.find({ "setting": "language" })[0].value] != undefined) {
-            title = ancestor.title[settings.find({ "setting": "language" })[0].value]
+        if (ancestor.title != undefined) {
+            title = ancestor.title
         }
         breadcrumbHTML += '<button type="button" class="breadcrumb-button btn btn-outline-secondary btn-sm m-1" id="breadcrumbGoal-' + ancestor.id + '">' + title + '</button>'
     })
@@ -2541,7 +2541,7 @@ function handleCommand(selectedCommand) {
     if (selectedCommand.substr(0, 9) == "duration ") {
         console.log("duration selected")
         let durationString = selectedCommand.split(" ")[1]
-        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(durationString, "")
+        inputGoal.title = inputGoal.title.replace(durationString, "")
         inputGoal.durationString = durationString
     }
 
@@ -2550,20 +2550,20 @@ function handleCommand(selectedCommand) {
         let repeatString = selectedCommand.split(" ")[1]
         //Todo: need something to clean up title regardless of number of characters matching full command - store trigger or match dynamic?
         inputGoal.repeatString = repeatString
-        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(repeatString, "")
-        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace("  ", " ")
+        inputGoal.title = inputGoal.title.replace(repeatString, "")
+        inputGoal.title = inputGoal.title.replace("  ", " ")
     }
 
     if (selectedCommand.substr(0, 6) == "start ") {
         console.log("start selected")
         inputGoal.startStringsArray = [selectedCommand.substr(6, selectedCommand.length - 6)]
-        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
+        inputGoal.title = inputGoal.title.replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
     }
 
     if (selectedCommand.substr(0, 7) == "finish ") {
         console.log("finish selected")
         inputGoal.finishStringsArray = [selectedCommand.substr(7, selectedCommand.length - 7)]
-        inputGoal.title[inputGoal.lang] = inputGoal.title[inputGoal.lang].replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
+        inputGoal.title = inputGoal.title.replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
     }
 
     if (selectedCommand.substr(0, 5) == "flex ") {
@@ -2673,7 +2673,7 @@ function addSuggestedCommands(command) {
         command.lang = settings.find({ "setting": "language" })[0].value
     }
     console.log("command.lang:", command.lang)
-    let wordsArray = command.title[command.lang].split(" ")
+    let wordsArray = command.title.split(" ")
     console.log("wordsArray before:", wordsArray)
 
     let hasTrailingSpace = false
@@ -2736,9 +2736,9 @@ function addSuggestedCommands(command) {
 
     console.log("wordsArray after:", wordsArray)
 
-    command.title[command.lang] = wordsArray.join(" ")
+    command.title = wordsArray.join(" ")
     if (hasTrailingSpace && wordsArray.length != 0) {
-        command.title[command.lang] += " "
+        command.title += " "
     }
 
     if (wordsArray.length == 0) {
