@@ -6,7 +6,7 @@ var parentId = sessionId
 var MAX_LEVELS = 10
 var MAX_SUBLISTS = 33
 let MAX_CALENDAR_DAYS = 30
-var calendar = { "max_time_units": 720, "time_unit_qualifier": "h", "goals": [], "tasks": [], "slots": [] }
+var calendar = { "max_time_units": 720, "time_unit_qualifier": "h", "tasks": [], "slots": [] }
 let wasmModule
 let deleteMode = false
 

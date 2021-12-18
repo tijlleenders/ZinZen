@@ -479,42 +479,41 @@ function translate(englishText) {
     }
 }
 
-function generateSlotHTML(element) {
+function generateSlotHTML(slot) {
     // console.log("inside generateSlotHTML...")
-    // console.log("slot data:", element)
-
-    var slotId = element.goal_id
-
-    // console.log("element for slotId ", slotId + ":" + element)
-
+    // console.log("slot data:", slot)
+    let task = tasks.find({ $loki: slot.task_id })[0]
+    if (task == undefined) {
+        console.error("can't find task for slot:", slot)
+    }
     //Todo: handle case for array of colors
-    var color = element.colors[0]
+    var color = task.colors[0]
     let cardStyle = "card" + color
     let status = "maybe"
-    let goalId = element.goalId
-    var title = element.title
-    var begin = (new dayjs).startOf("day").add(element.begin, 'hour')
-    var end = (new dayjs).startOf("day").add(element.end, 'hour')
+    let goalId = task.goalId
+    var title = task.title['en']
+    var begin = (new dayjs).startOf("day").add(slot.begin, 'hour')
+    var end = (new dayjs).startOf("day").add(slot.end, 'hour')
     let sequenceNumberHTML = ""
-    if (element.scheduledInTotal > 1) {
-        sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
+    if (slot.scheduledInTotal > 1) {
+        sequenceNumberHTML = "(" + slot.scheduledSequenceNumber + "/" + slot.scheduledInTotal + ") "
     }
 
     let html = '\
 <div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
-        slotId +
+        task.$loki +
         '" data-status="' + status + '"\
         data-goal-id="' + goalId + '"\
-        data-begin="' + element.begin + '"\
-        data-end="' + element.end + '">\
+        data-begin="' + slot.begin + '"\
+        data-end="' + slot.end + '">\
         <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="slot-col-' +
-        slotId +
+        task.$loki +
         '">\
-        <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + slotId + '" >' +
-        '<div class="mx-2 begin-time" id="begin-' + slotId + '" >' + begin.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time" id="end-' + slotId + '" >' + end.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
+        <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + task.$loki + '" >' +
+        '<div class="mx-2 begin-time" id="begin-' + task.$loki + '" >' + begin.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time" id="end-' + task.$loki + '" >' + end.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
         '</div></div>' +
-        '<div class="mx-2" id="slot-title-' + slotId + '">' + title + '</div>' +
+        '<div class="mx-2" id="slot-title-' + task.$loki + '">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
         '\
         </div>\
@@ -810,58 +809,24 @@ function calculateCalendar() {
     let start = Date.now()
     calendar.tasks = []
     calendar.slots = []
-    calendar.goals = []
-    let goalsToAdd = goals.where(function (goal) {
-        return (goal.durationString != undefined && (goal.status == "maybe" || goal.status == "promised"));
-    });
 
-    if (goalsToAdd.length == 0) {
-        console.log("NO GOALS IN CALENDAR")
+    if (taskOverdue() == true) {
+        console.log("Decide what to do with overdue tasks first.")
+        return
     }
 
-    goalsToAdd.forEach(goal => {
-        console.log("goal:", goal)
-        let estimated_duration = getDurationFromStringIn(goal.durationString, "h")
-        let goal_type
-        switch (goal.repeatString) {
-            case "daily":
-                goal_type = "DAILY"
-                break;
-            case "weekly":
-                goal_type = "WEEKLY"
-                break;
-            case "monthly":
-                goal_type = "MONTLY"
-                break;
-            case "yearly":
-                goal_type = "YEARLY"
-                break;
-            default:
-                goal_type = "FIXED"
-                break;
-        }
+    tasks.clear()
+    taskRelations.clear()
+    makeTasksFromGoals()
+    makeTaskRelationsFromGoalRelations()
+    duplicateTasksForRepeat()
+    updateTotalDurations()
+    labelLeafTasks()
+    addTasksAndSlotsToCalendar()
+    filterSlotsForAfter()
 
-        let goal_for_wasm = {
-            id: goal.$loki,
-            title: goal.title.en,
-            estimated_duration: estimated_duration,
-            effort_invested: 0,
-            start: 0,
-            finish: calendar.max_time_units,
-            start_time: 0,
-            goal_type: goal_type
-        }
-
-        if (goal.startStringsArray != undefined) {
-            goal_for_wasm.start_time = parseInt(goal.startStringsArray[0].substr(0, 2))
-        }
-
-        if (goal.finishStringsArray != undefined) {
-            goal_for_wasm.finish_time = parseInt(goal.finishStringsArray[0].substr(0, 2))
-        }
-
-        calendar.goals.push(goal_for_wasm)
-    })
+    convertSlotsToHoursFromStartOfToday()
+    console.log("tasks in calendar:", calendar.tasks)
 
     let end = Date.now()
     console.log("update goals in calendar took:", (end - start) / 1000)
@@ -875,11 +840,54 @@ function calculateCalendar() {
 
     start = Date.now()
     //Todo: order slots in Rust
-    calendar.slots.sort((a, b) => { return a.begin - b.begin }) // Could be faster in WASM? For now not noticeable so OK.
-    // console.log("calendarOutput:", calendar)
+    console.log("calendar slots:", calendar.slots)
     end = Date.now()
-    // console.log("sorting slots and printing to console took:", (end - start) / 1000)
+    // console.log("printing calendar slots to console took:", (end - start) / 1000)
 
+}
+
+function convertSlotsToHoursFromStartOfToday() {
+    console.log("Inside convertSlotsToHoursFromStartOfToday()...")
+    calendar.slots.forEach(slot => {
+        let startOfToday = dayjs().startOf('day')
+        slot.begin = Math.ceil(dayjs.duration(slot.begin.diff(startOfToday)).asHours())
+        slot.end = Math.ceil(dayjs.duration(slot.end.diff(startOfToday)).asHours())
+        // console.log("slot begin:", slot.begin)
+        // console.log("slot end:", slot.end)
+    })
+}
+
+function filterSlotsForAfter() {
+    console.log("Inside filterSlotsForAfter()...TODO")
+    calendar.slots.forEach(slot => {
+        // console.log("found after for slot with task_id:", slot.task_id)
+    })
+}
+
+function addTasksAndSlotsToCalendar() {
+    tasks.find({ label: "task-leaf" }).forEach(task => {
+        let wasm_task = {
+            task_id: task.$loki,
+            duration_to_schedule: task.duration,
+            duration_scheduled: 0,
+            task_status: "UNSCHEDULED"
+        }
+        calendar.tasks.push(wasm_task)
+        let start = dayjs().startOf('day').valueOf()
+        if (task.hasOwnProperty("start")) {
+            start = Math.max(task.start, start)
+        }
+        let finish = dayjs().startOf('day').add(30, 'day').valueOf()
+        if (task.hasOwnProperty("finish")) {
+            finish = Math.min(task.finish, finish)
+        }
+        let wasm_slot = {
+            task_id: task.$loki,
+            begin: dayjs(start),
+            end: dayjs(finish)
+        }
+        calendar.slots.push(wasm_slot)
+    })
 }
 
 
@@ -892,9 +900,9 @@ function generateImpossibleHTML() {
         impossibleGoalIds.add(task.goal_id)
     })
     // console.log("impossible goal ids:", impossibleGoalIds)
-    let impossibleGoals = calendar.goals.filter(goal => {
-        return impossibleGoalIds.has(goal.id)
-    })
+    let impossibleGoals = goals.where(function (goal) {
+        return impossibleGoalIds.has(goal.id);
+    });
     // console.log("impossible goals:", impossibleGoals)
     impossibleGoals.forEach(goal => {
         HTML += "! Issue scheduling " + goal.title + " x/y times<br />"
@@ -923,27 +931,6 @@ function generateSlotsHTML() {
     let days = []
     calendar.slots.forEach(slot => {
         // console.log("slot:", slot)
-
-        let task = calendar.tasks.find(task => { return task.task_id == slot.task_id })
-        // console.log("task:", task)
-        slot.duration_to_schedule = task.duration_to_schedule
-        slot.task_status = task.task_status
-
-        let goal = calendar.goals.find(goal => { return goal.id == task.goal_id })
-        // console.log("goal:", goal)
-        slot.effort_invested = goal.effort_invested
-        slot.estimated_duration = goal.estimated_duration
-        slot.finish = goal.finish
-        slot.finish_time = goal.finish_time
-        slot.goal_type = goal.goal_type
-        slot.goal_id = goal.id
-        slot.start = goal.start
-        slot.start_time = goal.start_time
-        slot.title = goal.title
-
-        let JSGoal = goals.find({ $loki: task.goal_id })[0]
-        slot.colors = JSGoal.colors
-
         if (calendar.time_unit_qualifier == "h") {
             let day = Math.floor(slot.begin / 24)
             if (days[day] == undefined) {
@@ -971,6 +958,12 @@ function makeTasksFromGoals() {
             goal.hasOwnProperty("durationString")
         )
     })
+
+    if (filteredGoals.length == 0) {
+        console.error("NO GOALS IN CALENDAR")
+        return
+    }
+
     let copyOfFilteredGoals = JSON.parse(JSON.stringify(filteredGoals)) //required as lokijs has clone property set to true by default for ++speed
 
     console.log("copyOfFilteredGoals:", copyOfFilteredGoals)
@@ -980,6 +973,7 @@ function makeTasksFromGoals() {
         delete filteredGoal.id
         filteredGoal.duration = getDurationFromStringIn(filteredGoal.durationString, "h")
         delete filteredGoal.durationString
+        filteredGoal.label = "task"
     })
     tasks.insert(copyOfFilteredGoals)
 }
@@ -1031,37 +1025,18 @@ function taskOverdue() {
     return overdue
 }
 
-function schedule() {
-    console.log("inside schedule()...")
-
-    if (taskOverdue() == true) {
-        console.log("Decide what to do with overdue tasks first.")
-        return
-    }
-
-    tasks.clear()
-    taskRelations.clear()
-    makeTasksFromGoals()
-    makeTaskRelationsFromGoalRelations()
-    duplicateTasksForRepeat()
-    updateTotalDurations()
-    let tasksToSend = getLeafTasks()
-    console.log("tasks to send to scheduler:", tasksToSend)
-}
-
-function getLeafTasks() {
-    console.log("inside getLeafTasks()...")
+function labelLeafTasks() {
+    console.log("inside labelLeafTasks()...")
     tasks.data.forEach(task => {
         let parentRelationFound = taskRelations.find({ parentId: task.$loki })
         if (parentRelationFound.length == 0) {
-            task.label = "task"
+            task.label = "task-leaf"
         }
     })
-    return tasks.find({ label: "task" })
 }
 
 function duplicateTasksForRepeat() {
-    console.log("inside duplicateTasksForRepeat()... TODO")
+    console.log("inside duplicateTasksForRepeat()")
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
     tasks.data.forEach(task => {
         if (task.hasOwnProperty("repeatString")) {
@@ -1095,6 +1070,7 @@ function duplicateTasksForRepeat() {
                             taskRelations.insert(taskRelationship)
                         })
                     })
+                    tasks.remove(task)
                     break;
                 default:
                     console.error("repeat algo not implemented for repeatString:", task.repeatString)
@@ -1120,32 +1096,32 @@ function getDayStartsFor(start, finish) {
 }
 
 function updateTotalDurations() {
-    console.log("inside updateTotalDurations()... TODO")
+    // console.log("inside updateTotalDurations()")
     //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
     let restart = true
     let loopCounter = 0
     while (restart = true && loopCounter < 2) {
-        console.log("loop ", loopCounter)
+        // console.log("loop ", loopCounter)
         loopCounter += 1
         restart = false
         tasks.data.forEach(task => {
-            console.log("task", task.$loki)
+            // console.log("task", task.$loki)
             let durationChildren = 0
             let taskChildren = getTaskChildrenFor(task.$loki)
             taskChildren.forEach(child => {
                 durationChildren += child.duration
             })
-            console.log("total duration children:", durationChildren)
-            console.log("total duration task:", task.duration)
+            // console.log("total duration children:", durationChildren)
+            // console.log("total duration task:", task.duration)
             if (task.duration > durationChildren && taskChildren.length != 0) {
                 restart = true
-                console.log("task bigger than children")
+                // console.log("task bigger than children")
                 let template = JSON.parse(JSON.stringify(task))
                 delete template.$loki
                 delete template.meta
                 template.duration = task.duration - durationChildren
                 template.title['en'] += " (auto fill)"
-                console.log("template:", template)
+                // console.log("template:", template)
                 tasks.insert(template)
                 let taskRelation = {
                     parentId: task.$loki,
@@ -1155,47 +1131,13 @@ function updateTotalDurations() {
             }
             if (task.duration < durationChildren && taskChildren.length != 0) {
                 restart = true
-                console.log("children bigger than task")
+                // console.log("children bigger than task")
                 task.duration = durationChildren
                 tasks.update(task)
             }
         })
     }
     return
-}
-
-function makeWeekBitMap(inputArray) {
-    let result = 0
-    inputArray.forEach(command => {
-        switch (command) {
-            case "Mondays":
-                result += Math.pow(2, 7)
-                break;
-            case "Tuesdays":
-                result += Math.pow(2, 6)
-                break;
-            case "Wednesdays":
-                result += Math.pow(2, 5)
-                break;
-            case "Thursdays":
-                result += Math.pow(2, 4)
-                break;
-            case "Fridays":
-                result += Math.pow(2, 3)
-                break;
-            case "Saturdays":
-                result += Math.pow(2, 2)
-                break;
-            case "Sundays":
-                result += Math.pow(2, 1)
-                break;
-            case "Daily":
-                result += Math.pow(2, 7) + Math.pow(2, 6) + Math.pow(2, 5) + Math.pow(2, 4) + Math.pow(2, 3) + Math.pow(2, 2) + Math.pow(2, 1)
-                break;
-            default:
-        }
-    })
-    return result
 }
 
 function generateProgressHTML(slotsForSelectedDay) {
