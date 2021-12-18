@@ -479,42 +479,39 @@ function translate(englishText) {
     }
 }
 
-function generateSlotHTML(element) {
-    // console.log("inside generateSlotHTML...")
-    // console.log("slot data:", element)
-
-    var slotId = element.goal_id
-
-    // console.log("element for slotId ", slotId + ":" + element)
-
+function generateSlotHTML(slot) {
+    console.log("inside generateSlotHTML...")
+    console.log("slot data:", slot)
+    let task = tasks.find({ $loki: slot.task_id })[0]
+    console.log("found task:", task)
     //Todo: handle case for array of colors
-    var color = element.colors[0]
+    var color = task.colors[0]
     let cardStyle = "card" + color
     let status = "maybe"
-    let goalId = element.goalId
-    var title = element.title
-    var begin = (new dayjs).startOf("day").add(element.begin, 'hour')
-    var end = (new dayjs).startOf("day").add(element.end, 'hour')
+    let goalId = task.goalId
+    var title = task.title['en']
+    var begin = (new dayjs).startOf("day").add(slot.begin, 'hour')
+    var end = (new dayjs).startOf("day").add(slot.end, 'hour')
     let sequenceNumberHTML = ""
-    if (element.scheduledInTotal > 1) {
-        sequenceNumberHTML = "(" + element.scheduledSequenceNumber + "/" + element.scheduledInTotal + ") "
+    if (slot.scheduledInTotal > 1) {
+        sequenceNumberHTML = "(" + slot.scheduledSequenceNumber + "/" + slot.scheduledInTotal + ") "
     }
 
     let html = '\
 <div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
-        slotId +
+        task.$loki +
         '" data-status="' + status + '"\
         data-goal-id="' + goalId + '"\
-        data-begin="' + element.begin + '"\
-        data-end="' + element.end + '">\
+        data-begin="' + slot.begin + '"\
+        data-end="' + slot.end + '">\
         <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="slot-col-' +
-        slotId +
+        task.$loki +
         '">\
-        <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + slotId + '" >' +
-        '<div class="mx-2 begin-time" id="begin-' + slotId + '" >' + begin.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time" id="end-' + slotId + '" >' + end.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
+        <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + task.$loki + '" >' +
+        '<div class="mx-2 begin-time" id="begin-' + task.$loki + '" >' + begin.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time" id="end-' + task.$loki + '" >' + end.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
         '</div></div>' +
-        '<div class="mx-2" id="slot-title-' + slotId + '">' + title + '</div>' +
+        '<div class="mx-2" id="slot-title-' + task.$loki + '">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
         '\
         </div>\
@@ -931,28 +928,7 @@ function generateSlotsHTML() {
     let HTML = ``
     let days = []
     calendar.slots.forEach(slot => {
-        // console.log("slot:", slot)
-
-        let task = calendar.tasks.find(task => { return task.task_id == slot.task_id })
-        // console.log("task:", task)
-        slot.duration_to_schedule = task.duration_to_schedule
-        slot.task_status = task.task_status
-
-        let goal = calendar.goals.find(goal => { return goal.id == task.goal_id })
-        // console.log("goal:", goal)
-        slot.effort_invested = goal.effort_invested
-        slot.estimated_duration = goal.estimated_duration
-        slot.finish = goal.finish
-        slot.finish_time = goal.finish_time
-        slot.goal_type = goal.goal_type
-        slot.goal_id = goal.id
-        slot.start = goal.start
-        slot.start_time = goal.start_time
-        slot.title = goal.title
-
-        let JSGoal = goals.find({ $loki: task.goal_id })[0]
-        slot.colors = JSGoal.colors
-
+        console.log("slot:", slot)
         if (calendar.time_unit_qualifier == "h") {
             let day = Math.floor(slot.begin / 24)
             if (days[day] == undefined) {
