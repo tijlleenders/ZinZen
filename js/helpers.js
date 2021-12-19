@@ -943,6 +943,9 @@ function makeTasksFromGoals() {
             goal.hasOwnProperty("durationString")
         )
     })
+    if ($("#inputGoal").data("inputGoal").id == "" && $("#inputGoal").data("inputGoal").hasOwnProperty("durationString")) {
+        filteredGoals.push($("#inputGoal").data("inputGoal"))
+    }
 
     if (filteredGoals.length == 0) {
         console.error("NO GOALS IN CALENDAR")
