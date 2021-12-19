@@ -151,9 +151,14 @@ function updateModalAddUI() {
 
     calculateCalendar() //Todo: a little overkill to do this on every letter typed
 
-    let scheduledTaskList = tasks.filter({ goalId: inputGoal.id })
-    if (scheduledTaskList.length > 0) {
-        $("#calendar-feedback").html("Scheduled " + success.length + "/" + tasks.length + " ; first on ...")
+    let tasksForGoal = calendar.tasks.filter(task => {
+        return task.goal_id == inputGoal.id
+    })
+    if (tasks.length > 0) {
+        let success = tasks.filter(task => {
+            return task.task_status == "SCHEDULED"
+        })
+        $("#calendar-feedback").html("Scheduled success.length + / + tasks.length + ; first on ...")
     }
 
 
@@ -803,6 +808,8 @@ function calculateCalendar() {
     filterSlotsForAfter()
 
     convertSlotsToHoursFromStartOfToday()
+    updateTasksWithCalendarResult()
+
     console.log("tasks in calendar:", calendar.tasks)
 
     let end = Date.now()
@@ -821,6 +828,10 @@ function calculateCalendar() {
     end = Date.now()
     // console.log("printing calendar slots to console took:", (end - start) / 1000)
 
+}
+
+function updateTasksWithCalendarResult() {
+    console.log("Inside updateTasksWithCalendarResult() ...TODO")
 }
 
 function convertSlotsToHoursFromStartOfToday() {
@@ -870,7 +881,7 @@ function addTasksAndSlotsToCalendar() {
 
 function generateImpossibleHTML() {
     let HTML = ``
-    let impossibleTasks = calendar.tasks.filter(task => { return task.task_status == "IMPOSSIBLE" })
+    let impossibleTasks = tasks.filter({ task_status: "IMPOSSIBLE" })
     // console.log("impossibleTasks:", impossibleTasks)
     let impossibleGoalIds = new (Set)
     impossibleTasks.forEach(task => {
