@@ -154,6 +154,7 @@ function updateModalAddUI() {
     let tasksForGoal = calendar.tasks.filter(task => {
         return task.goal_id == inputGoal.id
     })
+    console.log("tasksForGoal:", tasksForGoal)
     if (tasks.length > 0) {
         let success = tasks.filter(task => {
             return task.task_status == "SCHEDULED"
@@ -808,7 +809,6 @@ function calculateCalendar() {
     filterSlotsForAfter()
 
     convertSlotsToHoursFromStartOfToday()
-    updateTasksWithCalendarResult()
 
     console.log("tasks in calendar:", calendar.tasks)
 
@@ -828,10 +828,6 @@ function calculateCalendar() {
     end = Date.now()
     // console.log("printing calendar slots to console took:", (end - start) / 1000)
 
-}
-
-function updateTasksWithCalendarResult() {
-    console.log("Inside updateTasksWithCalendarResult() ...TODO")
 }
 
 function convertSlotsToHoursFromStartOfToday() {
