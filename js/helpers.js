@@ -858,7 +858,8 @@ function addTasksAndSlotsToCalendar() {
             task_id: task.$loki,
             duration_to_schedule: task.duration,
             duration_scheduled: 0,
-            task_status: "UNSCHEDULED"
+            task_status: "UNSCHEDULED",
+            goal_id: task.goalId
         }
         calendar.tasks.push(wasm_task)
         let start = dayjs().startOf('day').valueOf()
