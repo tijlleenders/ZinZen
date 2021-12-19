@@ -150,13 +150,9 @@ function updateModalAddUI() {
     }
 
     calculateCalendar() //Todo: a little overkill to do this on every letter typed
-    let tasks = calendar.tasks.filter(task => {
-        return task.goal_id == inputGoal.$loki
-    })
-    if (tasks.length > 0) {
-        let success = tasks.filter(task => {
-            return task.task_status == "SCHEDULED"
-        })
+
+    let scheduledTaskList = tasks.filter({ goalId: inputGoal.id })
+    if (scheduledTaskList.length > 0) {
         $("#calendar-feedback").html("Scheduled " + success.length + "/" + tasks.length + " ; first on ...")
     }
 
@@ -1009,6 +1005,7 @@ function taskOverdue() {
 function labelLeafTasks() {
     console.log("inside labelLeafTasks()...")
     tasks.data.forEach(task => {
+        console.log("task:", task)
         let parentRelationFound = taskRelations.find({ parentId: task.$loki })
         if (parentRelationFound.length == 0) {
             task.label = "task-leaf"
@@ -1086,7 +1083,7 @@ function updateTotalDurations() {
         loopCounter += 1
         restart = false
         tasks.data.forEach(task => {
-            // console.log("task", task.$loki)
+            // console.log("task", task)
             let durationChildren = 0
             let taskChildren = getTaskChildrenFor(task.$loki)
             taskChildren.forEach(child => {
