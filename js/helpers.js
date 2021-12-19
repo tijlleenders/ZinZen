@@ -155,11 +155,18 @@ function updateModalAddUI() {
         return task.goal_id == inputGoal.id
     })
     console.log("tasksForGoal:", tasksForGoal)
-    if (tasks.length > 0) {
-        let success = tasks.filter(task => {
+    if (tasksForGoal.length > 0) {
+        let successList = tasksForGoal.filter(task => {
             return task.task_status == "SCHEDULED"
         })
-        $("#calendar-feedback").html("Scheduled success.length + / + tasks.length + ; first on ...")
+        let slotsForGoal = []
+        successList.forEach(task => {
+            slotsForGoal.push(...calendar.slots.filter(slot => {
+                return slot.task_id = task.task_id
+            }))
+        })
+        console.log("slotsForGoal:", slotsForGoal)
+        $("#calendar-feedback").html("Scheduled " + successList.length + "/" + tasksForGoal.length + "; first on " + slotsForGoal[0].begin)
     }
 
 
