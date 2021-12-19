@@ -885,7 +885,7 @@ function addTasksAndSlotsToCalendar() {
 
 function generateImpossibleHTML() {
     let HTML = ``
-    let impossibleTasks = tasks.filter({ task_status: "IMPOSSIBLE" })
+    let impossibleTasks = calendar.tasks.filter(task => { return task.task_status == "IMPOSSIBLE" })
     // console.log("impossibleTasks:", impossibleTasks)
     let impossibleGoalIds = new (Set)
     impossibleTasks.forEach(task => {
@@ -950,7 +950,7 @@ function makeTasksFromGoals() {
             goal.hasOwnProperty("durationString")
         )
     })
-    if ($("#inputGoal").data("inputGoal").id == "" && $("#inputGoal").data("inputGoal").hasOwnProperty("durationString")) {
+    if ($("#inputGoal").data("inputGoal") != undefined && $("#inputGoal").data("inputGoal").id == "" && $("#inputGoal").data("inputGoal").hasOwnProperty("durationString")) {
         filteredGoals.push($("#inputGoal").data("inputGoal"))
     }
 
