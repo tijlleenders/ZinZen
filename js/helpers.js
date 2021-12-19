@@ -146,7 +146,7 @@ function updateModalAddUI() {
         $("#calendar-feedback").html("Click suggested duration command to schedule on calendar.")
     }
     if (selectedCommands.search("duration") > -1) {
-        $("#calendar-feedback").html("Scheduled or not scheduled for x / y / z.")
+        $("#calendar-feedback").html("Error. This should be scheduled now...")
     }
 
     calculateCalendar() //Todo: a little overkill to do this on every letter typed
