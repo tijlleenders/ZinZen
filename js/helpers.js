@@ -162,7 +162,7 @@ function updateModalAddUI() {
         let slotsForGoal = []
         successList.forEach(task => {
             slotsForGoal.push(...calendar.slots.filter(slot => {
-                return slot.task_id = task.task_id
+                return slot.task_id == task.task_id
             }))
         })
         console.log("slotsForGoal:", slotsForGoal)
