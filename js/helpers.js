@@ -104,8 +104,6 @@ function updateModalAddUI() {
     $("#inputGoal").focus()
     //when to change modal title??
 
-    let lang = settings.find({ "setting": "language" })[0].value
-
     let parentsHTML = ``
     getGoalParentsFor(inputGoal.id).forEach(parent => {
         if (parent.title != undefined) {
