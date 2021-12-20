@@ -177,7 +177,7 @@ function generateScheduleHTMLForTasks(taskList, colors) {
         }))
     })
     console.log("slotsForGoal:", slotsForGoal)
-    HTML += "Scheduled " + successList.length + "/" + taskList.length + "; first on " + slotsForGoal[0].begin
+    HTML += "Scheduled " + successList.length + "/" + taskList.length + "; first " + dayjs(slotsForGoal[0].begin).fromNow()
     slotsForGoal.forEach(slot => {
         HTML += generateSlotHTML(slot, colors, dayjs(slot.begin).format('DD/MM/YYYY'))
     })
