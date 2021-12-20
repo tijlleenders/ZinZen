@@ -109,7 +109,7 @@ function updateModalAddUI() {
     let parentsHTML = ``
     getGoalParentsFor(inputGoal.id).forEach(parent => {
         if (parent.title != undefined) {
-            parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + getColorsFor(inputGoal.id) + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title + '</span>'
+            parentsHTML += '<span class="badge m-1 selected-parents" style="color: var(--foreground-color);background-color: var(--card' + getColorsFor(parent.id) + ') !important;" id=modal-parent-' + parent.id + '>' + parent.title + '</span>'
         }
     })
 
@@ -638,7 +638,12 @@ function getColorsFor(id) {
     console.log("relationships found:", relationshipsForIdAsChild)
     if (relationshipsForIdAsChild == undefined) {
         let parents = goals.find({ id: parentId })
-        return parents[0].colors //TODO: handle case for blending colors of multiple parents
+        if (parentId == "_______________________________goals") {
+            let randomColor = Math.floor(Math.random() * 10) + 1
+            return [randomColor.toString()]
+        } else {
+            return parents[0].colors //TODO: handle case for blending colors of multiple parents
+        }
     }
     return ["1"]
 }

@@ -56,17 +56,6 @@ function saveGoal() {
         goalToSave.id = uuidv4()
         console.log("saving with new id:", goalToSave.id)
 
-        let colors = ["1"]
-        let parent = goals.find({ id: parentId })[0]
-        if (parent.id == "_______________________________goals") {
-            let randomColor = Math.floor(Math.random() * 10) + 1
-            colors = [randomColor.toString()]
-        } else {
-            colors = parent.colors
-        }
-
-        goalToSave.title = title
-        goalToSave.colors = colors
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords
 
