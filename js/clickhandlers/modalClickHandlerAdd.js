@@ -83,7 +83,10 @@ function saveGoal() {
         delete taskRelation.meta
         taskRelations.insert(JSON.parse(JSON.stringify(taskRelation)))
     })
-
+    slots.clear()
+    calendar.slots.forEach(slot => {
+        slots.insert(slot)
+    })
     goTo(parentId)
     $("#myModal").modal('hide')
 }
