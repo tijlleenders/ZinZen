@@ -1069,6 +1069,7 @@ function duplicateTempTasksForRepeat() {
                             tempTaskRelations.insert(taskRelationship)
                         })
                     })
+                    tempTaskRelations.find({ childId: task.$loki }).forEach(relation => { tempTaskRelations.remove(relation) })
                     tempTasks.remove(task)
                     break;
                 default:
