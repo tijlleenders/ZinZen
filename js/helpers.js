@@ -397,6 +397,12 @@ function setSkeletonHTMLForAdd(id) {
         </div>
       </div>
     </div>
+    <div class="row mt-2" id="suggested-commands-row">
+      <div class="col">
+        <div class="" id="suggested-commands">
+        </div>        
+      </div>
+    </div>    
     <div class="row mt-2" id="calendar-feedback-row">
       <div class="col">
         <div class="" id="calendar-feedback">
@@ -411,12 +417,6 @@ function setSkeletonHTMLForAdd(id) {
         <button type="button" class="btn btn-outline-primary" id="modal-cancel-button">Cancel</button>
       </div>
     </div>     
-    </div>
-    <div class="row mt-2" id="suggested-commands-row">
-      <div class="col">
-        <div class="" id="suggested-commands">
-        </div>        
-      </div>
     </div>
     `
     bodyHTML += `    
