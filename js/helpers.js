@@ -942,7 +942,8 @@ function generateSlotsHTML() {
         HTML += "day " + index + "<br />"
         day.forEach(slot => {
             console.log("slot:", slot)
-            HTML += generateSlotHTML(slot)
+            let task = tasks.find({ id: slot.task_id })[0]
+            HTML += generateSlotHTML(slot, task.colors, task.title)
         })
     })
     return HTML
