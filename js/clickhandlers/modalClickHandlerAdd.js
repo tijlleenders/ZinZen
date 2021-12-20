@@ -71,13 +71,13 @@ function saveGoal() {
         updatePriority()
     }
 
-    tasks.clear()
+    tasks.clear() //Copy all since removing collection and then renaming the other one doesn't work
     tempTasks.data.forEach(task => {
         delete task.$loki
         delete task.meta
         tasks.insert(JSON.parse(JSON.stringify(task)))
     })
-    taskRelations.clear()
+    taskRelations.clear() //Copy all since removing collection and then renaming the other one doesn't work
     tempTaskRelations.data.forEach(taskRelation => {
         delete taskRelation.$loki
         delete taskRelation.meta
