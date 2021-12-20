@@ -85,8 +85,6 @@ function saveGoal() {
     })
     slots.clear()
     calendar.slots.forEach(slot => {
-        slot.begin = dayjs(calendar.startEpoch).add(slot.begin, 'hour').valueOf()
-        slot.end = dayjs(calendar.startEpoch).add(slot.end, 'hour').valueOf()
         slots.insert(slot)
     })
     goTo(parentId)

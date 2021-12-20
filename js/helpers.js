@@ -179,7 +179,7 @@ function generateScheduleHTMLForTasks(taskList, colors) {
     console.log("slotsForGoal:", slotsForGoal)
     HTML += "Scheduled " + successList.length + "/" + taskList.length + "; first on " + slotsForGoal[0].begin
     slotsForGoal.forEach(slot => {
-        HTML += generateSlotHTML(slot, colors, slot.begin)
+        HTML += generateSlotHTML(slot, colors, dayjs(slot.begin).format('DD/MM/YYYY'))
     })
     return HTML
 }
@@ -477,14 +477,12 @@ function translate(englishText) {
 }
 
 function generateSlotHTML(slot, colors, title) {
-    // console.log("inside generateSlotHTML...")
+    console.log("inside generateSlotHTML...")
     // console.log("slot data:", slot)
 
     //Todo: handle case for array of colors
     let cardStyle = "card" + colors[0]
     let status = "maybe"
-    var begin = dayjs(slot.begin)
-    var end = dayjs(slot.end)
     let sequenceNumberHTML = ""
     if (slot.scheduledInTotal > 1) {
         sequenceNumberHTML = "(" + slot.scheduledSequenceNumber + "/" + slot.scheduledInTotal + ") "
@@ -500,8 +498,8 @@ function generateSlotHTML(slot, colors, title) {
         slot.task_id +
         '">\
         <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + slot.task_id + '" >' +
-        '<div class="mx-2 begin-time" id="begin-' + slot.task_id + '" >' + begin.format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time" id="end-' + slot.task_id + '" >' + end.format('HH:mm') + '</div>' +
+        '<div class="mx-2 begin-time" id="begin-' + slot.task_id + '" >' + dayjs(slot.begin).format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time" id="end-' + slot.task_id + '" >' + dayjs(slot.end).format('HH:mm') + '</div>' +
         '</div></div>' +
         '<div class="mx-2" id="slot-title-' + slot.task_id + '">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
@@ -827,12 +825,24 @@ function calculateCalendar() {
     console.log("load and calculate goals in wasm took:", (end - start) / 1000)
     calendar.startEpoch = dayjs().startOf('day').valueOf()
 
+    convertTempSlotsToEpoch()
+
     start = Date.now()
     //Todo: order slots in Rust
     console.log("calendar slots:", calendar.slots)
     end = Date.now()
     // console.log("printing calendar slots to console took:", (end - start) / 1000)
 
+}
+
+function convertTempSlotsToEpoch() {
+    console.log("Inside convertTempSlotsToEpoch()...")
+    calendar.slots.forEach(slot => {
+        slot.begin = dayjs(calendar.startEpoch).add(slot.begin, 'hour').valueOf()
+        slot.end = dayjs(calendar.startEpoch).add(slot.end, 'hour').valueOf()
+        // console.log("slot begin:", slot.begin)
+        // console.log("slot end:", slot.end)
+    })
 }
 
 function addIdsToTempTasks() {
