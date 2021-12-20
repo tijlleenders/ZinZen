@@ -632,15 +632,20 @@ function getGoalSvg(status, id) {
 
 function getColorsFor(id) {
     console.log("getColorsFor(id):", id)
-    let relationshipsForIdAsChild = relationships.find({ childId: id })[0]
-    console.log("relationships found:", relationshipsForIdAsChild)
-    if (relationshipsForIdAsChild == undefined) {
-        let parents = goals.find({ id: parentId })
-        if (parentId == "_______________________________goals") {
-            let randomColor = Math.floor(Math.random() * 10) + 1
-            return [randomColor.toString()]
-        } else {
-            return parents[0].colors //TODO: handle case for blending colors of multiple parents
+    let goal = goals.find({ id: id })
+    if (goal.length != 0) {
+        return goal[0].colors
+    } else {
+        let relationshipsForIdAsChild = relationships.find({ childId: id })[0]
+        console.log("relationships found:", relationshipsForIdAsChild)
+        if (relationshipsForIdAsChild == undefined) {
+            let parents = goals.find({ id: parentId })
+            if (parentId == "_______________________________goals") {
+                let randomColor = Math.floor(Math.random() * 10) + 1
+                return [randomColor.toString()]
+            } else {
+                return parents[0].colors //TODO: handle case for blending colors of multiple parents
+            }
         }
     }
     return ["1"]
