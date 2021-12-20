@@ -148,7 +148,7 @@ function updateModalAddUI() {
     })
     console.log("tasksForGoal:", tasksForGoal)
 
-    $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal))
+    $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
 
     $("#suggested-commands").html(suggestedCommands)
 
@@ -164,7 +164,7 @@ function updateModalAddUI() {
     $("#suggested-words").html(suggestedWords)
 }
 
-function generateScheduleHTMLForTasks(taskList) {
+function generateScheduleHTMLForTasks(taskList, colors) {
     if (taskList.length == 0) {
         return 'Type number of hours + "h" to schedule.'
     }
@@ -181,7 +181,7 @@ function generateScheduleHTMLForTasks(taskList) {
     console.log("slotsForGoal:", slotsForGoal)
     HTML += "Scheduled " + successList.length + "/" + taskList.length + "; first on " + slotsForGoal[0].begin
     slotsForGoal.forEach(slot => {
-        HTML += generateSlotHTML(slot)
+        HTML += generateSlotHTML(slot, colors, slot.begin)
     })
     return HTML
 }
@@ -441,7 +441,7 @@ function setSkeletonHTMLForAdd(id) {
             suggestedWords: new Set(),
             lang: lang,
             start: Date.now(),
-            color: getColorsFor("")
+            colors: getColorsFor("")
         }
     } else {
         headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
@@ -478,12 +478,12 @@ function translate(englishText) {
     }
 }
 
-function generateSlotHTML(slot, color, title) {
+function generateSlotHTML(slot, colors, title) {
     // console.log("inside generateSlotHTML...")
     // console.log("slot data:", slot)
 
     //Todo: handle case for array of colors
-    let cardStyle = "card" + color
+    let cardStyle = "card" + colors[0]
     let status = "maybe"
     var begin = (new dayjs).startOf("day").add(slot.begin, 'hour')
     var end = (new dayjs).startOf("day").add(slot.end, 'hour')
@@ -636,6 +636,10 @@ function getColorsFor(id) {
     console.log("getColorsFor(id):", id)
     let relationshipsForIdAsChild = relationships.find({ childId: id })[0]
     console.log("relationships found:", relationshipsForIdAsChild)
+    if (relationshipsForIdAsChild == undefined) {
+        let parents = goals.find({ id: parentId })
+        return parents[0].colors //TODO: handle case for blending colors of multiple parents
+    }
     return ["1"]
 }
 
