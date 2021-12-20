@@ -41,28 +41,13 @@ $("#myModal").on("paste", "#inputGoal", function (e) {
 });
 
 function saveGoal() {
-    let title = $("#inputGoal").val()
-    console.log("saving ", title)
     let idToSave = $("#myModal").data('idx')
     console.log("idx:", idToSave)
     let goalToSave = $("#inputGoal").data('inputGoal')
 
     if (idToSave != "") {
-        let goal = goals.find({ id: idToSave })[0]
-        if (goal.label == "goal") {
-            let lang = settings.find({ "setting": "language" })[0].value
-            if (lang != undefined) {
-                goal.title = title
-            } else {
-                console.log("different language than interface language set for title")
-                console.log("using following language to save:", lang)
-                goal.title = title
-            }
-            if (goalToSave.hasOwnProperty("repeatString")) {
-                goal.repeatString = goalToSave.repeatString
-            }
-            goals.update(goal)
-
+        if (goalToSave.label == "goal" && goalToSave.owner != "ZinZen") {
+            goals.update(goalToSave)
         } else {
             $("#inputGoal").attr("placeholder", "Can only edit your own goals. Something else?")
             $("#inputGoal").focus()
@@ -71,17 +56,6 @@ function saveGoal() {
         goalToSave.id = uuidv4()
         console.log("saving with new id:", goalToSave.id)
 
-        let colors = ["1"]
-        let parent = goals.find({ id: parentId })[0]
-        if (parent.id == "_______________________________goals") {
-            let randomColor = Math.floor(Math.random() * 10) + 1
-            colors = [randomColor.toString()]
-        } else {
-            colors = parent.colors
-        }
-
-        goalToSave.title = title
-        goalToSave.colors = colors
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords
 
@@ -96,6 +70,23 @@ function saveGoal() {
         updateUIChildrenFor(parentId)
         updatePriority()
     }
+
+    tasks.clear() //Copy all since removing collection and then renaming the other one doesn't work
+    tempTasks.data.forEach(task => {
+        delete task.$loki
+        delete task.meta
+        tasks.insert(JSON.parse(JSON.stringify(task)))
+    })
+    taskRelations.clear() //Copy all since removing collection and then renaming the other one doesn't work
+    tempTaskRelations.data.forEach(taskRelation => {
+        delete taskRelation.$loki
+        delete taskRelation.meta
+        taskRelations.insert(JSON.parse(JSON.stringify(taskRelation)))
+    })
+    slots.clear()
+    calendar.slots.forEach(slot => {
+        slots.insert(slot)
+    })
     goTo(parentId)
     $("#myModal").modal('hide')
 }
