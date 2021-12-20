@@ -1016,7 +1016,7 @@ function makeTempTaskRelationsFromGoalRelations() {
 function taskOverdue() {
     let overdue = false
     slots.data.forEach(slot => {
-        if (slot.begin < dayjs.startOf('day')) {
+        if (slot.begin < dayjs().startOf('day')) {
             overdue == true
         }
     })
