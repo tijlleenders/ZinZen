@@ -41,28 +41,13 @@ $("#myModal").on("paste", "#inputGoal", function (e) {
 });
 
 function saveGoal() {
-    let title = $("#inputGoal").val()
-    console.log("saving ", title)
     let idToSave = $("#myModal").data('idx')
     console.log("idx:", idToSave)
     let goalToSave = $("#inputGoal").data('inputGoal')
 
     if (idToSave != "") {
-        let goal = goals.find({ id: idToSave })[0]
-        if (goal.label == "goal") {
-            let lang = settings.find({ "setting": "language" })[0].value
-            if (lang != undefined) {
-                goal.title = title
-            } else {
-                console.log("different language than interface language set for title")
-                console.log("using following language to save:", lang)
-                goal.title = title
-            }
-            if (goalToSave.hasOwnProperty("repeatString")) {
-                goal.repeatString = goalToSave.repeatString
-            }
-            goals.update(goal)
-
+        if (goalToSave.label == "goal" && goalToSave.owner != "ZinZen") {
+            goals.update(goalToSave)
         } else {
             $("#inputGoal").attr("placeholder", "Can only edit your own goals. Something else?")
             $("#inputGoal").focus()
