@@ -23,6 +23,9 @@ var translations = repository.getCollection('translations')
 var settings = repository.getCollection('settings')
 var tasks = repository.getCollection('tasks')
 var taskRelations = repository.getCollection('taskRelations')
+var slots = repository.getCollection('slots')
+var tempTasks = repository.getCollection('tempTasks')
+var tempTaskRelations = repository.getCollection('tempTaskRelations')
 
 function databaseInitialize() {
     console.log("Inside databaseInitialize...")
@@ -30,16 +33,6 @@ function databaseInitialize() {
     relationships = repository.getCollection('relationships')
     translations = repository.getCollection('translations')
     settings = repository.getCollection('settings')
-
-    if (tasks == null) {
-        tasks = repository.addCollection('tasks', {
-            unique: ['id']
-        })
-    }
-
-    if (taskRelations == null) {
-        taskRelations = repository.addCollection('taskRelations', {})
-    }
 
     if (goals == null && relationships == null) {
         goals = repository.addCollection('goals', {
@@ -51,6 +44,30 @@ function databaseInitialize() {
         sessionId = goals.find({ label: 'person' })[0].id
         console.log("getting sessionId from db:", sessionId)
         parentId = sessionId
+    }
+
+    if (tasks == null) {
+        tasks = repository.addCollection('tasks', {
+            unique: ['id']
+        })
+    }
+
+    if (taskRelations == null) {
+        taskRelations = repository.addCollection('taskRelations', {})
+    }
+
+    if (slots == null) {
+        slots = repository.addCollection('slots', {})
+    }
+
+    if (tempTasks == null) {
+        tempTasks = repository.addCollection('tempTasks', {
+            unique: ['id']
+        })
+    }
+
+    if (tempTaskRelations == null) {
+        tempTaskRelations = repository.addCollection('tempTaskRelations', {})
     }
 
     if (settings == undefined || settings.find({ "setting": "settingsLastUpdate" })[0].value < lastSettingsUpdate()) {
