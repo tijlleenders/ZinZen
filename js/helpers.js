@@ -141,34 +141,14 @@ function updateModalAddUI() {
         })
     });
 
-    $("#calendar-feedback").html("Type number of hours to schedule on calendar.")
-    if (suggestedCommands.search("duration") > -1) {
-        $("#calendar-feedback").html("Click suggested duration command to schedule on calendar.")
-    }
-    if (selectedCommands.search("duration") > -1) {
-        $("#calendar-feedback").html("Error. This should be scheduled now...")
-    }
-
     calculateCalendar() //Todo: a little overkill to do this on every letter typed
 
     let tasksForGoal = calendar.tasks.filter(task => {
         return task.goal_id == inputGoal.id
     })
     console.log("tasksForGoal:", tasksForGoal)
-    if (tasksForGoal.length > 0) {
-        let successList = tasksForGoal.filter(task => {
-            return task.task_status == "SCHEDULED"
-        })
-        let slotsForGoal = []
-        successList.forEach(task => {
-            slotsForGoal.push(...calendar.slots.filter(slot => {
-                return slot.task_id == task.task_id
-            }))
-        })
-        console.log("slotsForGoal:", slotsForGoal)
-        $("#calendar-feedback").html("Scheduled " + successList.length + "/" + tasksForGoal.length + "; first on " + slotsForGoal[0].begin)
-    }
 
+    $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal))
 
     $("#suggested-commands").html(suggestedCommands)
 
@@ -182,6 +162,24 @@ function updateModalAddUI() {
         })
     });
     $("#suggested-words").html(suggestedWords)
+}
+
+function generateScheduleHTMLForTasks(taskList) {
+    if (taskList.length == 0) {
+        return 'Type number of hours + "h" to schedule.'
+    }
+    let successList = taskList.filter(task => {
+        return task.task_status == "SCHEDULED"
+    })
+    let slotsForGoal = []
+    successList.forEach(task => {
+        slotsForGoal.push(...calendar.slots.filter(slot => {
+            return slot.task_id == task.task_id
+        }))
+    })
+    console.log("slotsForGoal:", slotsForGoal)
+    $("#calendar-feedback").html("Scheduled " + successList.length + "/" + taskList.length + "; first on " + slotsForGoal[0].begin)
+
 }
 
 function updateModalUI() {
