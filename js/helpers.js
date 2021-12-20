@@ -925,26 +925,15 @@ function activateCalendarPicker() {
 
 function generateSlotsHTML() {
     let HTML = ``
-    let days = []
+    let dayPointer = dayjs().startOf('day')
     slots.data.forEach(slot => {
-        // console.log("slot:", slot)
-        if (calendar.time_unit_qualifier == "h") {
-            let day = Math.floor(slot.begin / 24)
-            if (days[day] == undefined) {
-                days[day] = []
-            }
-            days[day].push(slot)
+        if (slot.begin.startOf('day') != dayPointer) {
+            HTML += 'adding some empty days here - if any'
+            dayPointer = slot.begin.startOf('day')
+            HTML += dayPointer.format('DD/MM/YYYY')
         }
-    })
-    // console.log(days)
-
-    days.forEach((day, index) => {
-        HTML += "day " + index + "<br />"
-        day.forEach(slot => {
-            console.log("slot:", slot)
-            let task = tasks.find({ id: slot.task_id })[0]
-            HTML += generateSlotHTML(slot, task.colors, task.title)
-        })
+        console.log("slot:", slot)
+        HTML += generateSlotHTML(slot, ["0"], "title")
     })
     return HTML
 }
