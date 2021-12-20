@@ -24,6 +24,7 @@ var settings = repository.getCollection('settings')
 var tasks = repository.getCollection('tasks')
 var taskRelations = repository.getCollection('taskRelations')
 var slots = repository.getCollection('slots')
+var tempSlots = repository.getCollection('tempSlots')
 var tempTasks = repository.getCollection('tempTasks')
 var tempTaskRelations = repository.getCollection('tempTaskRelations')
 
@@ -58,6 +59,10 @@ function databaseInitialize() {
 
     if (slots == null) {
         slots = repository.addCollection('slots', {})
+    }
+
+    if (tempSlots == null) {
+        tempSlots = repository.addCollection('tempSlots', {})
     }
 
     if (tempTasks == null) {

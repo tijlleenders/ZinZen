@@ -45,11 +45,11 @@ function getGoalParentsFor(id) {
 }
 
 
-function getTaskParentIdsFor(id) {
+function getTempTaskParentIdsFor(id) {
     if (id == "") {
         console.log("error finding task parent ids for empty id")
     }
-    let relationshipsForIdAsChild = taskRelations.find({ childId: id })
+    let relationshipsForIdAsChild = tempTaskRelations.find({ childId: id })
     let result = []
     relationshipsForIdAsChild.forEach(relationship => {
         result.push(relationship.parentId)
@@ -57,23 +57,23 @@ function getTaskParentIdsFor(id) {
     return result
 }
 
-function getTaskParentsFor(id) {
+function getTempTaskParentsFor(id) {
     if (id == "") {
         console.log("error finding task parents for empty id")
     }
-    let parentIds = getTaskParentIdsFor(id)
+    let parentIds = getTempTaskParentIdsFor(id)
     let result = []
     parentIds.forEach(id => {
-        result.push(tasks.find({ $loki: id })[0])
+        result.push(tempTasks.find({ $loki: id })[0])
     });
     return result
 }
 
-function getTaskChildrenIdsFor(id) {
+function getTempTaskChildrenIdsFor(id) {
     if (id == "") {
         console.log("error finding task children Ids for empty id")
     }
-    let relationshipsForIdAsParent = taskRelations.find({ parentId: id })
+    let relationshipsForIdAsParent = tempTaskRelations.find({ parentId: id })
     let result = []
     relationshipsForIdAsParent.forEach(relationship => {
         result.push(relationship.childId)
@@ -81,14 +81,14 @@ function getTaskChildrenIdsFor(id) {
     return result
 }
 
-function getTaskChildrenFor(id) {
+function getTempTaskChildrenFor(id) {
     if (id == "") {
         console.log("error finding task children for empty id")
     }
-    let childrenIds = getTaskChildrenIdsFor(id)
+    let childrenIds = getTempTaskChildrenIdsFor(id)
     let result = []
     childrenIds.forEach(id => {
-        result.push(tasks.find({ $loki: id })[0])
+        result.push(tempTasks.find({ $loki: id })[0])
     });
     return result
 }
@@ -478,19 +478,13 @@ function translate(englishText) {
     }
 }
 
-function generateSlotHTML(slot) {
+function generateSlotHTML(slot, color, title) {
     // console.log("inside generateSlotHTML...")
     // console.log("slot data:", slot)
-    let task = tasks.find({ $loki: slot.task_id })[0]
-    if (task == undefined) {
-        console.error("can't find task for slot:", slot)
-    }
+
     //Todo: handle case for array of colors
-    var color = task.colors[0]
     let cardStyle = "card" + color
     let status = "maybe"
-    let goalId = task.goalId
-    var title = task.title
     var begin = (new dayjs).startOf("day").add(slot.begin, 'hour')
     var end = (new dayjs).startOf("day").add(slot.end, 'hour')
     let sequenceNumberHTML = ""
@@ -500,19 +494,18 @@ function generateSlotHTML(slot) {
 
     let html = '\
 <div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
-        task.$loki +
+        slot.task_id +
         '" data-status="' + status + '"\
-        data-goal-id="' + goalId + '"\
         data-begin="' + slot.begin + '"\
         data-end="' + slot.end + '">\
         <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="slot-col-' +
-        task.$loki +
+        slot.task_id +
         '">\
-        <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + task.$loki + '" >' +
-        '<div class="mx-2 begin-time" id="begin-' + task.$loki + '" >' + begin.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time" id="end-' + task.$loki + '" >' + end.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
+        <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + slot.task_id + '" >' +
+        '<div class="mx-2 begin-time" id="begin-' + slot.task_id + '" >' + begin.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time" id="end-' + slot.task_id + '" >' + end.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
         '</div></div>' +
-        '<div class="mx-2" id="slot-title-' + task.$loki + '">' + title + '</div>' +
+        '<div class="mx-2" id="slot-title-' + slot.task_id + '">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
         '\
         </div>\
@@ -798,25 +791,27 @@ function getDurationFromStringIn(stringToParse, timeUnit) {
 
 function calculateCalendar() {
     let start = Date.now()
-    calendar.tasks = []
-    calendar.slots = []
 
     if (taskOverdue() == true) {
         console.log("Decide what to do with overdue tasks first.")
         return
     }
 
-    tasks.clear()
-    taskRelations.clear()
-    makeTasksFromGoals()
-    makeTaskRelationsFromGoalRelations()
-    duplicateTasksForRepeat()
-    updateTotalDurations()
-    labelLeafTasks()
-    addTasksAndSlotsToCalendar()
-    filterSlotsForAfter()
+    calendar.tasks = []
+    calendar.slots = []
+    tempSlots.clear()
+    tempTasks.clear()
+    tempTaskRelations.clear()
 
-    convertSlotsToHoursFromStartOfToday()
+    makeTempTasksFromGoals()
+    makeTempTaskRelationsFromGoalRelations()
+    duplicateTempTasksForRepeat()
+    updateTotalTempTaskDurations()
+    labelLeafTempTasks()
+    addTempTasksAndTempSlotsToCalendar()
+    filterTempSlotsForAfter()
+
+    convertTempSlotsToHoursFromStartOfToday()
 
     console.log("tasks in calendar:", calendar.tasks)
 
@@ -838,8 +833,8 @@ function calculateCalendar() {
 
 }
 
-function convertSlotsToHoursFromStartOfToday() {
-    console.log("Inside convertSlotsToHoursFromStartOfToday()...")
+function convertTempSlotsToHoursFromStartOfToday() {
+    console.log("Inside convertTempSlotsToHoursFromStartOfToday()...")
     calendar.slots.forEach(slot => {
         let startOfToday = dayjs().startOf('day')
         slot.begin = Math.ceil(dayjs.duration(slot.begin.diff(startOfToday)).asHours())
@@ -849,15 +844,15 @@ function convertSlotsToHoursFromStartOfToday() {
     })
 }
 
-function filterSlotsForAfter() {
-    console.log("Inside filterSlotsForAfter()...TODO")
+function filterTempSlotsForAfter() {
+    console.log("Inside filterTempSlotsForAfter()...TODO")
     calendar.slots.forEach(slot => {
         // console.log("found after for slot with task_id:", slot.task_id)
     })
 }
 
-function addTasksAndSlotsToCalendar() {
-    tasks.find({ label: "task-leaf" }).forEach(task => {
+function addTempTasksAndTempSlotsToCalendar() {
+    tempTasks.find({ label: "task-leaf" }).forEach(task => {
         let wasm_task = {
             task_id: task.$loki,
             duration_to_schedule: task.duration,
@@ -943,7 +938,7 @@ function generateSlotsHTML() {
     return HTML
 }
 
-function makeTasksFromGoals() {
+function makeTempTasksFromGoals() {
     //Function filters goals for task-eligible goals + adds/copies as tasks with goalId still attached
     let filteredGoals = []
     if ($("#myModal").hasClass('show')) {
@@ -980,12 +975,12 @@ function makeTasksFromGoals() {
         delete filteredGoal.durationString
         filteredGoal.label = "task"
     })
-    tasks.insert(copyOfFilteredGoals)
+    tempTasks.insert(copyOfFilteredGoals)
 }
 
-function makeTaskRelationsFromGoalRelations() {
+function makeTempTaskRelationsFromGoalRelations() {
     //for each task, use goalId to find first eligible parent (or root) and add that relationship in taskRelationships
-    let tasksToGetHierarcyFor = tasks.data
+    let tasksToGetHierarcyFor = tempTasks.data
     tasksToGetHierarcyFor.forEach(taskWithoutParent => {
         let goalId = taskWithoutParent.goalId
         let relationshipsFoundForGoalId = relationships.find({ childId: goalId })
@@ -999,52 +994,48 @@ function makeTaskRelationsFromGoalRelations() {
                     childId: taskWithoutParent.$loki,
                     parentId: parentGoal.id
                 }
-                taskRelations.insert(taskRelationship)
+                tempTaskRelations.insert(taskRelationship)
             } else {
                 relationshipsFoundForGoalId.push(...relationships.find({ childId: relationshipToInvestigate.parentId }))
             }
         }
-        taskRelations.data.forEach(taskRelation => {
+        tempTaskRelations.data.forEach(taskRelation => {
             console.log("taskRelation:", taskRelation)
             let parentTask = tasks.find({ goalId: taskRelation.parentId })[0]
             if (parentTask != undefined) {
                 taskRelation.parentId = parentTask.$loki
-                taskRelations.update(taskRelation)
+                tempTaskRelations.update(taskRelation)
             }
         })
-        console.log("taskRelations:", taskRelations.data)
+        console.log("taskRelations:", tempTaskRelations.data)
     })
 }
 
 function taskOverdue() {
     let overdue = false
-    goals.data.forEach(goal => {
-        if (goal.hasOwnProperty("slots")) {
-            goal.slots.forEach(slot => {
-                if (slot.begin < dayjs.startOf('day')) {
-                    overdue == true
-                }
-            })
+    slots.data.forEach(slot => {
+        if (slot.begin < dayjs.startOf('day')) {
+            overdue == true
         }
     })
     return overdue
 }
 
-function labelLeafTasks() {
-    console.log("inside labelLeafTasks()...")
-    tasks.data.forEach(task => {
+function labelLeafTempTasks() {
+    console.log("inside labelLeafTempTasks()...")
+    tempTasks.data.forEach(task => {
         // console.log("task:", task)
-        let parentRelationFound = taskRelations.find({ parentId: task.$loki })
+        let parentRelationFound = tempTaskRelations.find({ parentId: task.$loki })
         if (parentRelationFound.length == 0) {
             task.label = "task-leaf"
         }
     })
 }
 
-function duplicateTasksForRepeat() {
-    console.log("inside duplicateTasksForRepeat()")
+function duplicateTempTasksForRepeat() {
+    console.log("inside duplicateTempTasksForRepeat()")
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
-    tasks.data.forEach(task => {
+    tempTasks.data.forEach(task => {
         if (task.hasOwnProperty("repeatString")) {
             // console.log("attempt duplicating id:", task.$loki + " title:", task.title)
             switch (task.repeatString) {
@@ -1056,7 +1047,7 @@ function duplicateTasksForRepeat() {
                         delete template.$loki
                         delete template.meta
                         // console.log("template:", template)
-                        let templateParentIds = getTaskParentIdsFor(task.$loki)
+                        let templateParentIds = getTempTaskParentIdsFor(task.$loki)
                         // console.log("template parents:", templateParentIds)
 
                         template.start = dayStart
@@ -1065,18 +1056,18 @@ function duplicateTasksForRepeat() {
                         } else {
                             template.finish = dayjs(dayStart).add(1, "day").add(task.duration, "hour").valueOf()
                         }
-                        // console.log("inserting task:", template)
-                        tasks.insert(template)
-                        // console.log("task id returned:", tasks.maxId)
+                        // console.log("inserting tempTask:", template)
+                        tempTasks.insert(template)
+                        // console.log("task id returned:", tempTasks.maxId)
                         templateParentIds.forEach(parentId => {
                             let taskRelationship = {
                                 parentId: parentId,
-                                childId: tasks.maxId
+                                childId: tempTasks.maxId
                             }
-                            taskRelations.insert(taskRelationship)
+                            tempTaskRelations.insert(taskRelationship)
                         })
                     })
-                    tasks.remove(task)
+                    tempTasks.remove(task)
                     break;
                 default:
                     console.error("repeat algo not implemented for repeatString:", task.repeatString)
@@ -1101,8 +1092,8 @@ function getDayStartsFor(start, finish) {
     return dayStarts
 }
 
-function updateTotalDurations() {
-    // console.log("inside updateTotalDurations()")
+function updateTotalTempTaskDurations() {
+    // console.log("inside updateTotalTempTaskDurations()")
     //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
     let restart = true
     let loopCounter = 0
@@ -1110,10 +1101,10 @@ function updateTotalDurations() {
         // console.log("loop ", loopCounter)
         loopCounter += 1
         restart = false
-        tasks.data.forEach(task => {
+        tempTasks.data.forEach(task => {
             // console.log("task", task)
             let durationChildren = 0
-            let taskChildren = getTaskChildrenFor(task.$loki)
+            let taskChildren = getTempTaskChildrenFor(task.$loki)
             taskChildren.forEach(child => {
                 durationChildren += child.duration
             })
@@ -1128,18 +1119,18 @@ function updateTotalDurations() {
                 template.duration = task.duration - durationChildren
                 template.title += " (auto fill)"
                 // console.log("template:", template)
-                tasks.insert(template)
+                tempTasks.insert(template)
                 let taskRelation = {
                     parentId: task.$loki,
-                    childId: tasks.maxId
+                    childId: tempTasks.maxId
                 }
-                taskRelations.insert(taskRelation)
+                tempTaskRelations.insert(taskRelation)
             }
             if (task.duration < durationChildren && taskChildren.length != 0) {
                 restart = true
                 // console.log("children bigger than task")
                 task.duration = durationChildren
-                tasks.update(task)
+                tempTasks.update(task)
             }
         })
     }
