@@ -440,7 +440,8 @@ function setSkeletonHTMLForAdd(id) {
             suggestedCommands: new Set(),
             suggestedWords: new Set(),
             lang: lang,
-            start: Date.now()
+            start: Date.now(),
+            color: getColorsFor("")
         }
     } else {
         headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
