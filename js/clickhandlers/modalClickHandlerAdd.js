@@ -70,6 +70,20 @@ function saveGoal() {
         updateUIChildrenFor(parentId)
         updatePriority()
     }
+
+    tasks.clear()
+    tempTasks.data.forEach(task => {
+        delete task.$loki
+        delete task.meta
+        tasks.insert(JSON.parse(JSON.stringify(task)))
+    })
+    taskRelations.clear()
+    tempTaskRelations.data.forEach(taskRelation => {
+        delete taskRelation.$loki
+        delete taskRelation.meta
+        taskRelations.insert(JSON.parse(JSON.stringify(taskRelation)))
+    })
+
     goTo(parentId)
     $("#myModal").modal('hide')
 }
