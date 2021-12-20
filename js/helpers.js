@@ -483,8 +483,8 @@ function generateSlotHTML(slot, colors, title) {
     //Todo: handle case for array of colors
     let cardStyle = "card" + colors[0]
     let status = "maybe"
-    var begin = (new dayjs).startOf("day").add(slot.begin, 'hour')
-    var end = (new dayjs).startOf("day").add(slot.end, 'hour')
+    var begin = dayjs(slot.begin)
+    var end = dayjs(slot.end)
     let sequenceNumberHTML = ""
     if (slot.scheduledInTotal > 1) {
         sequenceNumberHTML = "(" + slot.scheduledSequenceNumber + "/" + slot.scheduledInTotal + ") "
@@ -500,8 +500,8 @@ function generateSlotHTML(slot, colors, title) {
         slot.task_id +
         '">\
         <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + slot.task_id + '" >' +
-        '<div class="mx-2 begin-time" id="begin-' + slot.task_id + '" >' + begin.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time" id="end-' + slot.task_id + '" >' + end.tz(dayjs.tz.guess()).format('HH:mm') + '</div>' +
+        '<div class="mx-2 begin-time" id="begin-' + slot.task_id + '" >' + begin.format('HH:mm') + '</div>' +
+        '<div class="mx-2 end-time" id="end-' + slot.task_id + '" >' + end.format('HH:mm') + '</div>' +
         '</div></div>' +
         '<div class="mx-2" id="slot-title-' + slot.task_id + '">' + title + '</div>' +
         '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
@@ -798,7 +798,7 @@ function calculateCalendar() {
         console.log("Decide what to do with overdue tasks first.")
         return
     }
-
+    delete calendar.startEpoch
     calendar.tasks = []
     calendar.slots = []
     tempSlots.clear()
@@ -825,7 +825,7 @@ function calculateCalendar() {
     calendar = wasm_bindgen.load_calendar(calendar)
     end = Date.now()
     console.log("load and calculate goals in wasm took:", (end - start) / 1000)
-
+    calendar.startEpoch = dayjs().startOf('day').valueOf()
 
     start = Date.now()
     //Todo: order slots in Rust
@@ -925,12 +925,12 @@ function activateCalendarPicker() {
 
 function generateSlotsHTML() {
     let HTML = ``
-    let dayPointer = dayjs().startOf('day')
+    let dayPointer = dayjs().startOf('day').valueOf()
     slots.data.forEach(slot => {
-        if (slot.begin.startOf('day') != dayPointer) {
+        if (dayjs(slot.begin).startOf('day').valueOf() != dayPointer) {
             HTML += 'adding some empty days here - if any'
-            dayPointer = slot.begin.startOf('day')
-            HTML += dayPointer.format('DD/MM/YYYY')
+            dayPointer = dayjs(slot.begin).startOf('day').valueOf()
+            HTML += dayjs(dayPointer).format('DD/MM/YYYY')
         }
         console.log("slot:", slot)
         HTML += generateSlotHTML(slot, ["0"], "title")
