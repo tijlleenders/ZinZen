@@ -168,6 +168,7 @@ function generateScheduleHTMLForTasks(taskList) {
     if (taskList.length == 0) {
         return 'Type number of hours + "h" to schedule.'
     }
+    let HTML = ''
     let successList = taskList.filter(task => {
         return task.task_status == "SCHEDULED"
     })
@@ -178,8 +179,11 @@ function generateScheduleHTMLForTasks(taskList) {
         }))
     })
     console.log("slotsForGoal:", slotsForGoal)
-    $("#calendar-feedback").html("Scheduled " + successList.length + "/" + taskList.length + "; first on " + slotsForGoal[0].begin)
-
+    HTML += "Scheduled " + successList.length + "/" + taskList.length + "; first on " + slotsForGoal[0].begin
+    taskList.forEach(slot => {
+        HTML += generateSlotHTML(slot)
+    })
+    return HTML
 }
 
 function updateModalUI() {
