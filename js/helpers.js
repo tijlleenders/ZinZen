@@ -180,7 +180,7 @@ function generateScheduleHTMLForTasks(taskList) {
     })
     console.log("slotsForGoal:", slotsForGoal)
     HTML += "Scheduled " + successList.length + "/" + taskList.length + "; first on " + slotsForGoal[0].begin
-    taskList.forEach(slot => {
+    slotsForGoal.forEach(slot => {
         HTML += generateSlotHTML(slot)
     })
     return HTML
