@@ -812,8 +812,8 @@ function calculateCalendar() {
     labelLeafTempTasks()
     addTempTasksAndTempSlotsToCalendar()
     filterTempSlotsForAfter()
-
     convertTempSlotsToHoursFromStartOfToday()
+    addIdsToTempTasks()
 
     console.log("tasks in calendar:", calendar.tasks)
 
@@ -833,6 +833,13 @@ function calculateCalendar() {
     end = Date.now()
     // console.log("printing calendar slots to console took:", (end - start) / 1000)
 
+}
+
+function addIdsToTempTasks() {
+    console.log("Inside addIdsToTempTasks()...")
+    tempTasks.data.forEach(task => {
+        task.id = task.$loki
+    })
 }
 
 function convertTempSlotsToHoursFromStartOfToday() {
@@ -934,6 +941,7 @@ function generateSlotsHTML() {
     days.forEach((day, index) => {
         HTML += "day " + index + "<br />"
         day.forEach(slot => {
+            console.log("slot:", slot)
             HTML += generateSlotHTML(slot)
         })
     })
