@@ -670,16 +670,6 @@ function generateGoalHTML(properties) {
         titleIcon = "🔗 "
     }
 
-    let finish = ""
-    if (properties.finish && properties.finish[0] != "") {
-        finish = properties.finish[0]
-    }
-
-    let visibilities = 'Private'
-    if (properties.shareAnonymously && properties.shareAnonymously[0] == "shareAnonymously") {
-        visibilities = 'Anonymous'
-    }
-
     if (properties.sharePublicly && properties.sharePublicly[0] == "sharePublicly") {
         visibilities = 'Public'
     }
