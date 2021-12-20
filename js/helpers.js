@@ -769,8 +769,6 @@ function generateGoalHTML(properties) {
 }
 
 function goToCalendar() {
-    calculateCalendar()
-
     $("#calendarSlots").html(generateCalendarHTML())
     $("#main-calendar").removeClass('d-none')
 
@@ -923,7 +921,7 @@ function activateCalendarPicker() {
 function generateSlotsHTML() {
     let HTML = ``
     let days = []
-    calendar.slots.forEach(slot => {
+    slots.data.forEach(slot => {
         // console.log("slot:", slot)
         if (calendar.time_unit_qualifier == "h") {
             let day = Math.floor(slot.begin / 24)
