@@ -851,7 +851,16 @@ function addInputGoalIfNew() {
         tempTasks.insert(taskToInsert)
         console.log("added inputGoal as task in tempTasks:", taskToInsert)
     } else {
-        console.log("did not add inputGoal as new task in tempTasks")
+        console.log("did not add inputGoal as new task in tempTasks - overriding with inputGoal properties")
+        let tempTasksForExistingGoal = tempTasks.find({ goalId: inputGoal.id })
+        tempTasksForExistingGoal.forEach(tempTask => {
+            tempTask.duration = getDurationFromStringIn(inputGoal.durationString, "h")
+            if (inputGoal.hasOwnProperty("repeatString")) {
+                tempTask.repeatString = inputGoal.repeatString
+            }
+            console.log("new tempTask to update with:", tempTask)
+            tempTasks.update(tempTask)
+        })
     }
 }
 
