@@ -921,7 +921,7 @@ function generateCalendarHTML() {
     // console.log("inside generateCalendarHTML()")
     let HTML = ``
     HTML += generateImpossibleHTML()
-    HTML += generateSlotsHTML()
+    HTML += generateCalendarHTML()
 
     return HTML
 }
@@ -933,7 +933,7 @@ function activateCalendarPicker() {
     })
 }
 
-function generateSlotsHTML() {
+function generateCalendarHTML() {
     let HTML = ``
     let dayPointer = dayjs().startOf('day').valueOf()
     slots.data.forEach(slot => {
