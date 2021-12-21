@@ -803,8 +803,11 @@ function calculateCalendar() {
     tempTasks.clear()
     tempTaskRelations.clear()
 
-    makeTempTasksFromGoals()
+    makeTempTasksFromExistingGoals()
     makeTempTaskRelationsFromGoalRelations()
+    console.log("tasks in calendar after make tempTask(Relation)s:", calendar.tasks)
+    console.log("slots in calendar after make tempTask(Relation)s:", calendar.slots)
+    addInputGoalIfNew()
     duplicateTempTasksForRepeat()
     updateTotalTempTaskDurations()
     labelLeafTempTasks()
@@ -814,6 +817,7 @@ function calculateCalendar() {
     addIdsToTempTasks()
 
     console.log("tasks in calendar:", calendar.tasks)
+    console.log("slots in calendar:", calendar.slots)
 
     let end = Date.now()
     console.log("update goals in calendar took:", (end - start) / 1000)
@@ -833,6 +837,20 @@ function calculateCalendar() {
     end = Date.now()
     // console.log("printing calendar slots to console took:", (end - start) / 1000)
 
+}
+
+function addInputGoalIfNew() {
+    console.log("Inside addInputGoalIfNew()...")
+    let inputGoal = $("#inputGoal").data("inputGoal")
+    if (inputGoal.id == "" && inputGoal.hasOwnProperty("durationString")) {
+        inputGoal.duration = getDurationFromStringIn(inputGoal.durationString, "h")
+        delete inputGoal.durationString
+        inputGoal.label = "task"
+        tempTasks.insert(inputGoal)
+        console.log("added inputGoal as task in tempTasks:", inputGoal)
+    } else {
+        console.log("did not add inputGoal as new task in tempTasks")
+    }
 }
 
 function convertTempSlotsToEpoch() {
@@ -948,8 +966,8 @@ function generateCalendarHTML() {
     return HTML
 }
 
-function makeTempTasksFromGoals() {
-    console.log("Inside makeTempTasksFromGoals()...")
+function makeTempTasksFromExistingGoals() {
+    console.log("Inside makeTempTasksFromExistingGoals()...")
     //Function filters goals for task-eligible goals + adds/copies as tasks with goalId still attached
     let filteredGoals = []
 
@@ -961,13 +979,8 @@ function makeTempTasksFromGoals() {
     })
     console.log("filteredGoals:", filteredGoals)
 
-    if ($("#inputGoal").data("inputGoal").id == "" && $("#inputGoal").data("inputGoal").hasOwnProperty("durationString")) {
-        filteredGoals.push($("#inputGoal").data("inputGoal"))
-    }
-    console.log("filteredGoals with newly created that has duration if that's the case:", filteredGoals)
-
     if (filteredGoals.length == 0) {
-        console.error("NO GOALS IN CALENDAR")
+        console.error("NO PRE-EXISTING GOALS")
         return
     }
 
