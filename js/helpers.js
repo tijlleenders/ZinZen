@@ -970,7 +970,7 @@ function generateCalendarHTML() {
     let previousDayPointer = ""
     slots.data.forEach(slot => {
         if (previousDayPointer != dayjs(slot.begin).startOf('day').valueOf()) {
-            HTML += dayjs(slot.begin).startOf('day').format('DD-MM')
+            HTML += '<div class="text-center">' + dayjs(slot.begin).startOf('day').format('DD-MM') + '</div>'
             previousDayPointer = dayjs(slot.begin).startOf('day').valueOf()
         }
         let task = tasks.find({ id: slot.task_id })[0]
