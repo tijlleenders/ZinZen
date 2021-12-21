@@ -1075,13 +1075,14 @@ function labelLeafTempTasks() {
 function duplicateTempTasksForRepeat() {
     console.log("inside duplicateTempTasksForRepeat()")
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
-    console.log("tempTasks before duplicate:", tempTasks.data)
-    tempTasks.data.forEach(task => {
-        console.log("task:", task)
+    console.log("tempTasks before duplicate:", JSON.stringify(tempTasks.data))
+    let tasksToDuplicate = JSON.parse(JSON.stringify(tempTasks.data))
+    tasksToDuplicate.forEach(task => {
+        console.log("task:", JSON.stringify(task))
     })
-    tempTasks.data.forEach(task => {
+    tasksToDuplicate.forEach(task => {
         if (task.hasOwnProperty("repeatString")) {
-            console.log("attempt duplicating id:", task.$loki + " title:", task.title)
+            console.log("attempt duplicating task:", JSON.stringify(task))
             switch (task.repeatString) {
                 case "daily":
                     let dayStarts = getDayStartsFor(task.start, task.finish)
@@ -1100,7 +1101,7 @@ function duplicateTempTasksForRepeat() {
                         } else {
                             template.finish = dayjs(dayStart).add(1, "day").add(task.duration, "hour").valueOf()
                         }
-                        console.log("inserting tempTask:", template)
+                        console.log("inserting tempTask:", JSON.stringify(template))
                         tempTasks.insert(template)
                         console.log("task id returned:", tempTasks.maxId)
                         templateParentIds.forEach(parentId => {
