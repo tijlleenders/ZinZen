@@ -799,7 +799,10 @@ function calculateCalendar() {
     tempSlots.clear()
     tempTasks.clear()
     tempTaskRelations.clear()
-
+    repository.saveDatabase()
+    if (tempTasks.length != 0) {
+        console.error("tempTasks not empty")
+    }
     makeTempTasksFromExistingGoals()
     makeTempTaskRelationsFromGoalRelations()
     console.log("tasks in calendar after make tempTask(Relation)s:", calendar.tasks)
@@ -1066,13 +1069,14 @@ function labelLeafTempTasks() {
 function duplicateTempTasksForRepeat() {
     console.log("inside duplicateTempTasksForRepeat()")
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
+    console.log("tempTasks before duplicate:", tempTasks.data)
     tempTasks.data.forEach(task => {
         if (task.hasOwnProperty("repeatString")) {
-            // console.log("attempt duplicating id:", task.$loki + " title:", task.title)
+            console.log("attempt duplicating id:", task.$loki + " title:", task.title)
             switch (task.repeatString) {
                 case "daily":
                     let dayStarts = getDayStartsFor(task.start, task.finish)
-                    // console.log("dayStarts:", dayStarts)
+                    console.log("dayStarts:", dayStarts)
                     dayStarts.forEach(dayStart => {
                         let template = JSON.parse(JSON.stringify(task))
                         delete template.$loki
@@ -1087,9 +1091,9 @@ function duplicateTempTasksForRepeat() {
                         } else {
                             template.finish = dayjs(dayStart).add(1, "day").add(task.duration, "hour").valueOf()
                         }
-                        // console.log("inserting tempTask:", template)
+                        console.log("inserting tempTask:", template)
                         tempTasks.insert(template)
-                        // console.log("task id returned:", tempTasks.maxId)
+                        console.log("task id returned:", tempTasks.maxId)
                         templateParentIds.forEach(parentId => {
                             let taskRelationship = {
                                 parentId: parentId,
