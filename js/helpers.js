@@ -937,12 +937,10 @@ function generateCalendarHTML() {
     console.log("Inside generateCalendarHTML()...")
     let HTML = ``
     let previousDayPointer = ""
-    let dayPointer = dayjs().startOf('day').valueOf()
     slots.data.forEach(slot => {
-        if (previousDayPointer != dayPointer) {
-            HTML += dayjs(dayPointer).format('DD-MM')
-            previousDayPointer = dayPointer
-            dayPointer = dayjs(slot.begin).startOf('day').valueOf()
+        if (previousDayPointer != dayjs(slot.begin).startOf('day').valueOf()) {
+            HTML += dayjs(slot.begin).startOf('day').format('DD-MM')
+            previousDayPointer = dayjs(slot.begin).startOf('day').valueOf()
         }
         console.log("slot:", slot)
         HTML += generateSlotHTML(slot, ["0"], "title")
