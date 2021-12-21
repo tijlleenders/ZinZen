@@ -799,8 +799,7 @@ function calculateCalendar() {
     tempSlots.clear()
     tempTasks.clear()
     tempTaskRelations.clear()
-    repository.saveDatabase()
-    if (tempTasks.length != 0) {
+    if (tempTasks.data.length != 0) {
         console.error("tempTasks not empty")
     }
     makeTempTasksFromExistingGoals()
