@@ -67,7 +67,7 @@ function saveGoal() {
 
     } else {
         console.log("Updating...")
-        goalToSave = goalToSave[0]
+        goalToSave = inputGoal
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords
 
@@ -77,7 +77,8 @@ function saveGoal() {
             $("#inputGoal").attr("placeholder", "Can only edit your own goals. Something else?")
             $("#inputGoal").focus()
         }
-
+        $("#main-promised").empty()
+        updateUIChildrenFor(parentId)
         //Todo: after upserting goal, remove + re-insert all relations to reflect any possible updates
     }
 
