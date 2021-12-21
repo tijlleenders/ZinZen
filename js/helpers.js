@@ -943,7 +943,15 @@ function generateCalendarHTML() {
             previousDayPointer = dayjs(slot.begin).startOf('day').valueOf()
         }
         console.log("slot:", slot)
-        HTML += generateSlotHTML(slot, ["0"], "title")
+        let task = tasks.find({ $loki: slot.task_id })[0]
+        console.log("task:", task)
+        let colors = ["0"]
+        let title = "titleX"
+        if (task != undefined) { //Todo: remove if slot issue invalid task_id is fixed
+            colors = task.colors
+            title = task.title
+        }
+        HTML += generateSlotHTML(slot, colors, title)
     })
     return HTML
 }
