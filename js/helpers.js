@@ -934,13 +934,15 @@ function activateCalendarPicker() {
 }
 
 function generateCalendarHTML() {
+    console.log("Inside generateCalendarHTML()...")
     let HTML = ``
+    let previousDayPointer = ""
     let dayPointer = dayjs().startOf('day').valueOf()
     slots.data.forEach(slot => {
-        if (dayjs(slot.begin).startOf('day').valueOf() != dayPointer) {
-            HTML += 'adding some empty days here - if any'
+        if (previousDayPointer != dayPointer) {
+            HTML += dayjs(dayPointer).format('DD-MM')
+            previousDayPointer = dayPointer
             dayPointer = dayjs(slot.begin).startOf('day').valueOf()
-            HTML += dayjs(dayPointer).format('DD/MM/YYYY')
         }
         console.log("slot:", slot)
         HTML += generateSlotHTML(slot, ["0"], "title")
