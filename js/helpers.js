@@ -177,7 +177,7 @@ function generateScheduleHTMLForTasks(taskList, colors) {
         }))
     })
     console.log("slotsForGoal:", slotsForGoal)
-    HTML += "Scheduled " + successList.length + "/" + taskList.length + "; first " + dayjs(slotsForGoal[0].begin).fromNow()
+    HTML += "Scheduled " + successList.length + "/" + taskList.length + "; first " + dayjs(slotsForGoal[0].begin).fromNow() //TODO: simplify string if 1/1
     slotsForGoal.forEach(slot => {
         HTML += generateSlotHTML(slot, colors, dayjs(slot.begin).format('DD/MM/YYYY'))
     })
@@ -431,7 +431,7 @@ function setSkeletonHTMLForAdd(id) {
 
     if (inputGoal == undefined) {
         inputGoal = {
-            id: "",
+            id: uuidv4(),
             label: "goal",
             title: '',
             status: "maybe",
@@ -441,14 +441,11 @@ function setSkeletonHTMLForAdd(id) {
             start: Date.now(),
             colors: getColorsFor("")
         }
-    } else {
-        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
-    }
-
-    if (inputGoal.id == "") {
         $("#add-sub-button-col").html(`
         <button type="button" class="btn btn-outline-primary btn-hidden" id="add-subgoal-buttonx">Add sub</button>
             `)
+    } else {
+        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
     }
 
     $("#modal-header-content").html(headerHTML)
@@ -803,8 +800,11 @@ function calculateCalendar() {
     tempTasks.clear()
     tempTaskRelations.clear()
 
-    makeTempTasksFromGoals()
+    makeTempTasksFromExistingGoals()
     makeTempTaskRelationsFromGoalRelations()
+    console.log("tasks in calendar after make tempTask(Relation)s:", calendar.tasks)
+    console.log("slots in calendar after make tempTask(Relation)s:", calendar.slots)
+    addInputGoalIfNew()
     duplicateTempTasksForRepeat()
     updateTotalTempTaskDurations()
     labelLeafTempTasks()
@@ -814,6 +814,7 @@ function calculateCalendar() {
     addIdsToTempTasks()
 
     console.log("tasks in calendar:", calendar.tasks)
+    console.log("slots in calendar:", calendar.slots)
 
     let end = Date.now()
     console.log("update goals in calendar took:", (end - start) / 1000)
@@ -833,6 +834,25 @@ function calculateCalendar() {
     end = Date.now()
     // console.log("printing calendar slots to console took:", (end - start) / 1000)
 
+}
+
+function addInputGoalIfNew() {
+    console.log("Inside addInputGoalIfNew()...")
+    let inputGoal = $("#inputGoal").data("inputGoal")
+    let goalsFoundForInputGoalId = goals.find({ id: inputGoal.id })
+
+    if (goalsFoundForInputGoalId.length == 0 && inputGoal.hasOwnProperty("durationString")) {
+        let taskToInsert = JSON.parse(JSON.stringify(inputGoal))
+        taskToInsert.duration = getDurationFromStringIn(inputGoal.durationString, "h")
+        delete taskToInsert.durationString
+        taskToInsert.label = "task"
+        taskToInsert.goalId = inputGoal.id
+        delete taskToInsert.id
+        tempTasks.insert(taskToInsert)
+        console.log("added inputGoal as task in tempTasks:", taskToInsert)
+    } else {
+        console.log("did not add inputGoal as new task in tempTasks")
+    }
 }
 
 function convertTempSlotsToEpoch() {
@@ -921,7 +941,7 @@ function generateCalendarHTML() {
     // console.log("inside generateCalendarHTML()")
     let HTML = ``
     HTML += generateImpossibleHTML()
-    HTML += generateSlotsHTML()
+    HTML += generateCalendarHTML()
 
     return HTML
 }
@@ -933,44 +953,36 @@ function activateCalendarPicker() {
     })
 }
 
-function generateSlotsHTML() {
+function generateCalendarHTML() {
+    console.log("Inside generateCalendarHTML()...")
     let HTML = ``
-    let dayPointer = dayjs().startOf('day').valueOf()
+    let previousDayPointer = ""
     slots.data.forEach(slot => {
-        if (dayjs(slot.begin).startOf('day').valueOf() != dayPointer) {
-            HTML += 'adding some empty days here - if any'
-            dayPointer = dayjs(slot.begin).startOf('day').valueOf()
-            HTML += dayjs(dayPointer).format('DD/MM/YYYY')
+        if (previousDayPointer != dayjs(slot.begin).startOf('day').valueOf()) {
+            HTML += dayjs(slot.begin).startOf('day').format('DD-MM')
+            previousDayPointer = dayjs(slot.begin).startOf('day').valueOf()
         }
-        console.log("slot:", slot)
-        HTML += generateSlotHTML(slot, ["0"], "title")
+        let task = tasks.find({ id: slot.task_id })[0]
+        HTML += generateSlotHTML(slot, task.colors, task.title)
     })
     return HTML
 }
 
-function makeTempTasksFromGoals() {
+function makeTempTasksFromExistingGoals() {
+    console.log("Inside makeTempTasksFromExistingGoals()...")
     //Function filters goals for task-eligible goals + adds/copies as tasks with goalId still attached
     let filteredGoals = []
-    if ($("#myModal").hasClass('show')) {
-        console.log("scheduling for existing goal under edit")
-        goals.where(function (goal) {
-            goal.id != $("#inputGoal").data("inputGoal").id &&
-                goal.hasOwnProperty("durationString")
-        })
-        if ($("#inputGoal").data("inputGoal").hasOwnProperty("durationString")) {
-            filteredGoals.push($("#inputGoal").data("inputGoal"))
-        }
-    } else {
-        filteredGoals = goals.where(function (goal) {
-            return (
-                goal.status == "maybe" &&
-                goal.hasOwnProperty("durationString")
-            )
-        })
-    }
+
+    filteredGoals = goals.where(function (goal) {
+        return (
+            goal.status == "maybe" &&
+            goal.hasOwnProperty("durationString")
+        )
+    })
+    console.log("filteredGoals:", filteredGoals)
 
     if (filteredGoals.length == 0) {
-        console.error("NO GOALS IN CALENDAR")
+        console.error("NO PRE-EXISTING GOALS")
         return
     }
 
