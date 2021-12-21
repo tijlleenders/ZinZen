@@ -431,7 +431,7 @@ function setSkeletonHTMLForAdd(id) {
 
     if (inputGoal == undefined) {
         inputGoal = {
-            id: "",
+            id: uuidv4(),
             label: "goal",
             title: '',
             status: "maybe",
@@ -441,14 +441,11 @@ function setSkeletonHTMLForAdd(id) {
             start: Date.now(),
             colors: getColorsFor("")
         }
-    } else {
-        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
-    }
-
-    if (inputGoal.id == "") {
         $("#add-sub-button-col").html(`
         <button type="button" class="btn btn-outline-primary btn-hidden" id="add-subgoal-buttonx">Add sub</button>
             `)
+    } else {
+        headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
     }
 
     $("#modal-header-content").html(headerHTML)
@@ -842,10 +839,13 @@ function calculateCalendar() {
 function addInputGoalIfNew() {
     console.log("Inside addInputGoalIfNew()...")
     let inputGoal = $("#inputGoal").data("inputGoal")
-    if (inputGoal.id == "" && inputGoal.hasOwnProperty("durationString")) {
+    let goalsFoundForInputGoalId = goals.find({ id: inputGoal.id })
+
+    if (goalsFoundForInputGoalId.length == 0 && inputGoal.hasOwnProperty("durationString")) {
         inputGoal.duration = getDurationFromStringIn(inputGoal.durationString, "h")
         delete inputGoal.durationString
         inputGoal.label = "task"
+        inputGoal.goalId = inputGoal.id
         tempTasks.insert(inputGoal)
         console.log("added inputGoal as task in tempTasks:", inputGoal)
     } else {

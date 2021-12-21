@@ -41,21 +41,10 @@ $("#myModal").on("paste", "#inputGoal", function (e) {
 });
 
 function saveGoal() {
-    let idToSave = $("#myModal").data('idx')
-    console.log("idx:", idToSave)
-    let goalToSave = $("#inputGoal").data('inputGoal')
-
-    if (idToSave != "") {
-        if (goalToSave.label == "goal" && goalToSave.owner != "ZinZen") {
-            goals.update(goalToSave)
-        } else {
-            $("#inputGoal").attr("placeholder", "Can only edit your own goals. Something else?")
-            $("#inputGoal").focus()
-        }
-    } else {
-        goalToSave.id = uuidv4()
-        console.log("saving with new id:", goalToSave.id)
-
+    let inputGoal = $("#inputGoal").data('inputGoal')
+    let goalToSave = goals.find({ "id": inputGoal.id })
+    if (goalToSave.length == 0) { //insert
+        goalToSave = inputGoal
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords
 
@@ -69,6 +58,20 @@ function saveGoal() {
         $("#main-promised").empty()
         updateUIChildrenFor(parentId)
         updatePriority()
+
+    } else { //update
+        goalToSave = goalToSave[0]
+        delete goalToSave.suggestedCommands
+        delete goalToSave.suggestedWords
+
+        if (goalToSave.label == "goal" && goalToSave.owner != "ZinZen") {
+            goals.update(goalToSave)
+        } else {
+            $("#inputGoal").attr("placeholder", "Can only edit your own goals. Something else?")
+            $("#inputGoal").focus()
+        }
+
+        //Todo: after upserting goal, remove + re-insert all relations to reflect any possible updates
     }
 
     tasks.clear() //Copy all since removing collection and then renaming the other one doesn't work
