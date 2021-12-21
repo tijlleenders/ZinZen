@@ -951,25 +951,22 @@ function generateCalendarHTML() {
 }
 
 function makeTempTasksFromGoals() {
+    console.log("Inside makeTempTasksFromGoals()...")
     //Function filters goals for task-eligible goals + adds/copies as tasks with goalId still attached
     let filteredGoals = []
-    if ($("#myModal").hasClass('show')) {
-        console.log("scheduling for existing goal under edit")
-        goals.where(function (goal) {
-            goal.id != $("#inputGoal").data("inputGoal").id &&
-                goal.hasOwnProperty("durationString")
-        })
-        if ($("#inputGoal").data("inputGoal").hasOwnProperty("durationString")) {
-            filteredGoals.push($("#inputGoal").data("inputGoal"))
-        }
-    } else {
-        filteredGoals = goals.where(function (goal) {
-            return (
-                goal.status == "maybe" &&
-                goal.hasOwnProperty("durationString")
-            )
-        })
+
+    filteredGoals = goals.where(function (goal) {
+        return (
+            goal.status == "maybe" &&
+            goal.hasOwnProperty("durationString")
+        )
+    })
+    console.log("filteredGoals:", filteredGoals)
+
+    if ($("#inputGoal").data("inputGoal").id == "" && $("#inputGoal").data("inputGoal").hasOwnProperty("durationString")) {
+        filteredGoals.push($("#inputGoal").data("inputGoal"))
     }
+    console.log("filteredGoals with newly created that has duration if that's the case:", filteredGoals)
 
     if (filteredGoals.length == 0) {
         console.error("NO GOALS IN CALENDAR")
