@@ -41,10 +41,16 @@ $("#myModal").on("paste", "#inputGoal", function (e) {
 });
 
 function saveGoal() {
+    console.log("Inside saveGoal()...")
     let inputGoal = $("#inputGoal").data('inputGoal')
     let goalToSave = goals.find({ "id": inputGoal.id })
-    if (goalToSave.length == 0) { //insert
+    console.log("List of existing goals with that id:"), goalToSave
+    if (goalToSave.length == 0) {
+        console.log("Inserting...")
         goalToSave = inputGoal
+        goalToSave.label = "goal"
+        delete goalToSave.$loki
+        delete goalToSave.meta
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords
 
@@ -59,7 +65,8 @@ function saveGoal() {
         updateUIChildrenFor(parentId)
         updatePriority()
 
-    } else { //update
+    } else {
+        console.log("Updating...")
         goalToSave = goalToSave[0]
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords

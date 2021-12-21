@@ -842,12 +842,14 @@ function addInputGoalIfNew() {
     let goalsFoundForInputGoalId = goals.find({ id: inputGoal.id })
 
     if (goalsFoundForInputGoalId.length == 0 && inputGoal.hasOwnProperty("durationString")) {
-        inputGoal.duration = getDurationFromStringIn(inputGoal.durationString, "h")
-        delete inputGoal.durationString
-        inputGoal.label = "task"
-        inputGoal.goalId = inputGoal.id
-        tempTasks.insert(inputGoal)
-        console.log("added inputGoal as task in tempTasks:", inputGoal)
+        let taskToInsert = JSON.parse(JSON.stringify(inputGoal))
+        taskToInsert.duration = getDurationFromStringIn(inputGoal.durationString, "h")
+        delete taskToInsert.durationString
+        taskToInsert.label = "task"
+        taskToInsert.goalId = inputGoal.id
+        delete taskToInsert.id
+        tempTasks.insert(taskToInsert)
+        console.log("added inputGoal as task in tempTasks:", taskToInsert)
     } else {
         console.log("did not add inputGoal as new task in tempTasks")
     }
