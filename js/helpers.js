@@ -991,6 +991,9 @@ function makeTempTasksFromExistingGoals() {
         )
     })
     console.log("filteredGoals:", filteredGoals)
+    filteredGoals.forEach(goal => {
+        console.log("goal:", JSON.stringify(goal))
+    })
 
     if (filteredGoals.length == 0) {
         console.error("NO PRE-EXISTING GOALS")
@@ -999,7 +1002,6 @@ function makeTempTasksFromExistingGoals() {
 
     let copyOfFilteredGoals = JSON.parse(JSON.stringify(filteredGoals)) //required as lokijs has clone property set to true by default for ++speed
 
-    console.log("copyOfFilteredGoals:", copyOfFilteredGoals)
     copyOfFilteredGoals.forEach(filteredGoal => {
         delete filteredGoal.$loki
         filteredGoal.goalId = filteredGoal.id
@@ -1007,6 +1009,11 @@ function makeTempTasksFromExistingGoals() {
         filteredGoal.duration = getDurationFromStringIn(filteredGoal.durationString, "h")
         delete filteredGoal.durationString
         filteredGoal.label = "task"
+        delete filteredGoal.meta
+    })
+    console.log("copyOfFilteredGoals to insert in tempTasks:", copyOfFilteredGoals)
+    copyOfFilteredGoals.forEach(goal => {
+        console.log("goal:", JSON.stringify(goal))
     })
     tempTasks.insert(copyOfFilteredGoals)
 }
@@ -1069,6 +1076,9 @@ function duplicateTempTasksForRepeat() {
     console.log("inside duplicateTempTasksForRepeat()")
     //Todo: copy moving from top to bottom (so inner repeats correctly duplicated)
     console.log("tempTasks before duplicate:", tempTasks.data)
+    tempTasks.data.forEach(task => {
+        console.log("task:", task)
+    })
     tempTasks.data.forEach(task => {
         if (task.hasOwnProperty("repeatString")) {
             console.log("attempt duplicating id:", task.$loki + " title:", task.title)
