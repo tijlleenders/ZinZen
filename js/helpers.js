@@ -93,14 +93,11 @@ function getTempTaskChildrenFor(id) {
     return result
 }
 
-function updateModalAddUI() { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
-    let inputGoal = $("#inputGoal").data('inputGoal')
-    console.log("refreshing for inputGoal:", inputGoal)
+function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+    //updateModalAddUI should not have side-effects, only change UI if relevant - not the data
+    console.log("refreshing for inputGoal:", JSON.stringify(inputGoal))
 
-    let newinputGoal = parseInputGoal(inputGoal)
-    console.log("newinputGoal:", newinputGoal)
-    $("#inputGoal").data('inputGoal', newinputGoal)
-    $("#inputGoal").val(newinputGoal.title)
+    $("#inputGoal").val(inputGoal.title)
     $("#inputGoal").focus()
     //when to change modal title??
 
@@ -133,26 +130,26 @@ function updateModalAddUI() { //updateModalUI doesn't know if calendar should re
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
-    if (newinputGoal.suggestedCommands.length > 0 && newinputGoal.suggestedCommands[0].size > 0) {
+    if (inputGoal.hasOwnProperty("suggestedCommands") && inputGoal.suggestedCommands.size > 0) {
         suggestedCommands = `Suggested commands: `
+        inputGoal.suggestedCommands.forEach(suggestionSet => {
+            suggestionSet.forEach(suggestion => {
+                suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
+            })
+        });
     }
-    newinputGoal.suggestedCommands.forEach(suggestionSet => {
-        suggestionSet.forEach(suggestion => {
-            suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
-        })
-    });
 
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
-    if (newinputGoal.suggestedWords.length > 0 && newinputGoal.suggestedWords[0].size > 0) {
+    if (inputGoal.hasOwnProperty("suggestedWords") && inputGoal.suggestedWords.size > 0) {
         suggestedWords = `Suggested words: `
+        inputGoal.suggestedWords.forEach(suggestionSet => {
+            suggestionSet.forEach(suggestion => {
+                suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
+            })
+        });
     }
-    newinputGoal.suggestedWords.forEach(suggestionSet => {
-        suggestionSet.forEach(suggestion => {
-            suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
-        })
-    });
     $("#suggested-words").html(suggestedWords)
 }
 
@@ -181,7 +178,8 @@ function generateScheduleHTMLForTasks(taskList, colors) {
 function updateModalUI() {
     switch ($("#myModal").data("modalType")) {
         case "add":
-            updateModalAddUI()
+            let inputGoal = $("#inputGoal").data('inputGoal')
+            updateModalAddUI(inputGoal)
             break;
         case "moment":
 
@@ -457,7 +455,7 @@ function setSkeletonHTMLForAdd(id) {
     $("#myModal").on('shown.bs.modal', function () {
         $("#inputGoal").focus();
     });
-    console.log("inputGoal after setSkeleton:", inputGoal)
+    console.log("inputGoal after setSkeleton:", JSON.stringify(inputGoal))
 }
 
 function translate(englishText) {
@@ -815,6 +813,7 @@ function calculateCalendar() {
     updateTotalTempTaskDurations()
     labelLeafTempTasks()
     addTempTasksAndTempSlotsToCalendar()
+    filterTempSlotsForAt()
     filterTempSlotsForAfter()
     convertTempSlotsToHoursFromStartOfToday()
     addIdsToTempTasks()
@@ -890,6 +889,13 @@ function convertTempSlotsToHoursFromStartOfToday() {
         slot.end = Math.ceil(dayjs.duration(slot.end.diff(startOfToday)).asHours())
         // console.log("slot begin:", slot.begin)
         // console.log("slot end:", slot.end)
+    })
+}
+
+function filterTempSlotsForAt() {
+    console.log("Inside filterTempSlotsForAfter()...TODO")
+    calendar.slots.forEach(slot => {
+        console.log("found at for slot with task_id:", JSON.stringify(slot))
     })
 }
 
@@ -2752,6 +2758,11 @@ function handleCommand(selectedCommand) { //updateModalUI doesn't know if calend
         calendarAffected = true
     }
 
+    if (selectedCommand.substr(0, 3) == "at ") {
+        console.log("at selected")
+        calendarAffected = true
+    }
+
     console.log("inputGoal after (not saved):", inputGoal)
     $("#inputGoal").data('inputGoal', inputGoal)
     updateModalAddUI() //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
@@ -2903,10 +2914,11 @@ function detectAutoCommands(inputGoal) {
                     parseInt(wordAfter) >= 0 &&
                     parseInt(wordAfter) <= 24 &&
                     parseInt(wordAfter) != inputGoal.at) {
+                    console.log("Adding 'at' command.")
                     inputGoal.at = parseInt(wordAfter)
                     inputGoal.wordsArray.splice(index, 2)
+                    handleCommand('at ')
                 }
-                console.log("inputGoal.wordsArray after splicing:", inputGoal.wordsArray)
             }
         }
     })
@@ -2916,9 +2928,8 @@ function detectAutoCommands(inputGoal) {
 function addSuggestedCommands(inputGoal) {
     let lang = settings.find({ "setting": "language" })[0].value //To use for internationalization
 
-    let wordsArray = inputGoal.wordsArray
-
-    wordsArray.forEach((word, index) => { //parse title left to right adding commands/words
+    console.log("debug inputGoal:", JSON.stringify(inputGoal))
+    inputGoal.wordsArray.forEach((word, index) => { //parse title left to right adding commands/words
         let commandsToSuggest = new Set()
         console.log("word " + index + ": '" + word + "'")
 

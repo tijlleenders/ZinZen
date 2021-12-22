@@ -19,6 +19,9 @@ $("#myModal").on("keyup", "#inputGoal", function (e) {
     inputGoal.title = $("#inputGoal").val()
     inputGoal.title = inputGoal.title.replace("  ", " ")
     $("#inputGoal").data('inputGoal', inputGoal)
+    let newinputGoal = parseInputGoal(inputGoal)
+    console.log("newinputGoal:", newinputGoal)
+    $("#inputGoal").data('inputGoal', newinputGoal)
     updateModalAddUI()
 });
 
