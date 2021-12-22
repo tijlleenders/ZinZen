@@ -2925,6 +2925,7 @@ function detectAutoCommands(inputGoal) {
                     console.log("Adding 'at' command.")
                     inputGoal.at = parseInt(wordAfter)
                     inputGoal.wordsArray.splice(index, 2)
+                    inputGoal.recalculateCalendar = true
                 }
             }
         }
