@@ -185,6 +185,10 @@ $("#myModal").on("click", ".selected-command", function (e) {
     let command = e.currentTarget.innerText.split(" ")[0]
     let calendarAffected = false
     switch (command) {
+        case "at":
+            delete inputGoal.at
+            calendarAffected = true
+            break;
         case "duration":
             delete inputGoal.durationString
             calendarAffected = true
