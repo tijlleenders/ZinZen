@@ -2858,9 +2858,7 @@ function addAutoCommands(inputGoal) {
     return
 }
 
-function addSuggestedCommands(inputGoal) {
-    let lang = settings.find({ "setting": "language" })[0].value //To use for internationalization
-
+function getWordsArrayFromTitle(inputGoal) {
     let wordsArray = inputGoal.title.split(" ")
     console.log("wordsArray before:", wordsArray)
 
@@ -2872,10 +2870,17 @@ function addSuggestedCommands(inputGoal) {
     wordsArray.forEach((word, index) => {
         if (word == '') {
             wordsArray.splice(index, 1) //remove word from array
-            return
+            console.error("Found empty word - this shouldn't happen.")
         }
     })
 
+    return wordsArray
+}
+
+function addSuggestedCommands(inputGoal) {
+    let lang = settings.find({ "setting": "language" })[0].value //To use for internationalization
+
+    let wordsArray = getWordsArrayFromTitle(inputGoal)
 
     wordsArray.forEach((word, index) => { //parse title left to right adding commands/words
         let commandsToSuggest = new Set()
