@@ -2977,7 +2977,7 @@ function addSuggestedCommands(inputGoal) {
 
     console.log("wordsArray after:", inputGoal.wordsArray)
 
-    if (!inputGoal.hasOwnProperty("wordsArray")) {
+    if (inputGoal.wordsArray.length == 0) {
         // we're at the start of typing a brand new command - or ready for saving
         // do a best-guess suggestion based on previous commands (if any)
     }
