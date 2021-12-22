@@ -806,7 +806,7 @@ function calculateCalendar() {
     makeTempTaskRelationsFromGoalRelations()
     console.log("tasks in calendar after make tempTask(Relation)s:", calendar.tasks)
     console.log("slots in calendar after make tempTask(Relation)s:", calendar.slots)
-    addInputGoalIfNew()
+    addOrUpdateInputGoal()
     duplicateTempTasksForRepeat()
     updateTotalTempTaskDurations()
     labelLeafTempTasks()
@@ -838,8 +838,8 @@ function calculateCalendar() {
 
 }
 
-function addInputGoalIfNew() {
-    console.log("Inside addInputGoalIfNew()...")
+function addOrUpdateInputGoal() {
+    console.log("Inside addOrUpdateInputGoal()...")
     let inputGoal = $("#inputGoal").data("inputGoal")
     let goalsFoundForInputGoalId = goals.find({ id: inputGoal.id })
 
@@ -854,15 +854,8 @@ function addInputGoalIfNew() {
         console.log("added inputGoal as task in tempTasks:", taskToInsert)
     } else {
         console.log("did not add inputGoal as new task in tempTasks - overriding with inputGoal properties")
-        let tempTasksForExistingGoal = tempTasks.find({ goalId: inputGoal.id })
-        tempTasksForExistingGoal.forEach(tempTask => {
-            tempTask.duration = getDurationFromStringIn(inputGoal.durationString, "h")
-            if (inputGoal.hasOwnProperty("repeatString")) {
-                tempTask.repeatString = inputGoal.repeatString
-            }
-            console.log("new tempTask to update with:", tempTask)
-            tempTasks.update(tempTask)
-        })
+        tempTasks.findAndRemove({ goalId: inputGoal.id })
+        tempTasks.insert(makeTaskFrom(inputGoal))
     }
 }
 
