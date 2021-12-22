@@ -19,10 +19,10 @@ $("#myModal").on("keyup", "#inputGoal", function (e) {
     inputGoal.title = $("#inputGoal").val()
     inputGoal.title = inputGoal.title.replace("  ", " ")
     $("#inputGoal").data('inputGoal', inputGoal)
-    let newinputGoal = parseInputGoal(inputGoal)
-    console.log("newinputGoal:", newinputGoal)
-    $("#inputGoal").data('inputGoal', newinputGoal)
-    updateModalAddUI()
+    let newInputGoal = parseInputGoal(inputGoal)
+    console.log("newInputGoal:", JSON.stringify(newInputGoal))
+    $("#inputGoal").data('inputGoal', newInputGoal)
+    updateModalAddUI(newInputGoal)
 });
 
 $("#myModal").on("click", "#modal-add-a-goal-button", function () {
@@ -171,7 +171,7 @@ function deleteGoalAndExclusiveDescendants(id) {
 
 $("#myModal").on("click", ".command-suggestion", function (e) {
     console.log("handling command-suggestion pressed")
-    handleCommand(e.currentTarget.innerText) //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+    handleCommandPressed(e.currentTarget.innerText) //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
 })
 
 $("#myModal").on("click", ".word-suggestion", function (e) {

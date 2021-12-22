@@ -2717,55 +2717,55 @@ function logOut() {
     location.href = redirectURL
 }
 
-function handleCommand(selectedCommand) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+function handleCommandPressed(selectedCommand) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
     let calendarAffected = false
-    let inputGoal = $("#inputGoal").data('inputGoal')
-    console.log("command pressed:", selectedCommand)
-    if (selectedCommand.substr(0, 9) == "duration ") {
-        console.log("duration selected")
-        let durationString = selectedCommand.split(" ")[1]
-        inputGoal.title = inputGoal.title.replace(durationString, "")
-        inputGoal.durationString = durationString
-        calendarAffected = true
-    }
+    // let inputGoal = $("#inputGoal").data('inputGoal')
+    // console.log("command pressed:", selectedCommand)
+    // if (selectedCommand.substr(0, 9) == "duration ") {
+    //     console.log("duration selected")
+    //     let durationString = selectedCommand.split(" ")[1]
+    //     inputGoal.title = inputGoal.title.replace(durationString, "")
+    //     inputGoal.durationString = durationString
+    //     calendarAffected = true
+    // }
 
-    if (selectedCommand.substr(0, 7) == "repeat ") {
-        console.log("repeat selected")
-        let repeatString = selectedCommand.split(" ")[1]
-        //Todo: need something to clean up title regardless of number of characters matching full command - store trigger or match dynamic?
-        inputGoal.repeatString = repeatString
-        inputGoal.title = inputGoal.title.replace(repeatString, "")
-        inputGoal.title = inputGoal.title.replace("  ", " ")
-        calendarAffected = true
-    }
+    // if (selectedCommand.substr(0, 7) == "repeat ") {
+    //     console.log("repeat selected")
+    //     let repeatString = selectedCommand.split(" ")[1]
+    //     //Todo: need something to clean up title regardless of number of characters matching full command - store trigger or match dynamic?
+    //     inputGoal.repeatString = repeatString
+    //     inputGoal.title = inputGoal.title.replace(repeatString, "")
+    //     inputGoal.title = inputGoal.title.replace("  ", " ")
+    //     calendarAffected = true
+    // }
 
-    if (selectedCommand.substr(0, 6) == "start ") {
-        console.log("start selected")
-        inputGoal.startStringsArray = [selectedCommand.substr(6, selectedCommand.length - 6)]
-        inputGoal.title = inputGoal.title.replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
-        calendarAffected = true
-    }
+    // if (selectedCommand.substr(0, 6) == "start ") {
+    //     console.log("start selected")
+    //     inputGoal.startStringsArray = [selectedCommand.substr(6, selectedCommand.length - 6)]
+    //     inputGoal.title = inputGoal.title.replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
+    //     calendarAffected = true
+    // }
 
-    if (selectedCommand.substr(0, 7) == "finish ") {
-        console.log("finish selected")
-        inputGoal.finishStringsArray = [selectedCommand.substr(7, selectedCommand.length - 7)]
-        inputGoal.title = inputGoal.title.replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
-        calendarAffected = true
-    }
+    // if (selectedCommand.substr(0, 7) == "finish ") {
+    //     console.log("finish selected")
+    //     inputGoal.finishStringsArray = [selectedCommand.substr(7, selectedCommand.length - 7)]
+    //     inputGoal.title = inputGoal.title.replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
+    //     calendarAffected = true
+    // }
 
-    if (selectedCommand.substr(0, 5) == "flex ") {
-        console.log("flex selected")
-        calendarAffected = true
-    }
+    // if (selectedCommand.substr(0, 5) == "flex ") {
+    //     console.log("flex selected")
+    //     calendarAffected = true
+    // }
 
-    if (selectedCommand.substr(0, 3) == "at ") {
-        console.log("at selected")
-        calendarAffected = true
-    }
+    // if (selectedCommand.substr(0, 3) == "at ") {
+    //     console.log("at selected")
+    //     calendarAffected = true
+    // }
 
-    console.log("inputGoal after (not saved):", inputGoal)
-    $("#inputGoal").data('inputGoal', inputGoal)
-    updateModalAddUI() //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+    // console.log("inputGoal after (not saved):", inputGoal)
+    // $("#inputGoal").data('inputGoal', inputGoal)
+
     if (calendarAffected) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
         calculateCalendar()
         let tasksForGoal = calendar.tasks.filter(task => {
@@ -2866,7 +2866,7 @@ function parseInputGoal(inputGoal) {
     createWordsArrayIn(inputGoal)
 
     detectAutoCommands(inputGoal)
-    addSuggestedCommands(inputGoal)
+    inputGoal = addSuggestedCommands(inputGoal)
 
     destroyWordsArrayIn(inputGoal)
 
@@ -2917,7 +2917,7 @@ function detectAutoCommands(inputGoal) {
                     console.log("Adding 'at' command.")
                     inputGoal.at = parseInt(wordAfter)
                     inputGoal.wordsArray.splice(index, 2)
-                    handleCommand('at ')
+                    // handleCommandPressed('at ')
                 }
             }
         }
@@ -2926,6 +2926,9 @@ function detectAutoCommands(inputGoal) {
 }
 
 function addSuggestedCommands(inputGoal) {
+    console.log("Inside addSuggestedCommands(inputGoal)...")
+
+    console.log("suggest commands inputGoal:", JSON.stringify(inputGoal))
     let lang = settings.find({ "setting": "language" })[0].value //To use for internationalization
 
     console.log("debug inputGoal:", JSON.stringify(inputGoal))
@@ -2986,6 +2989,7 @@ function addSuggestedCommands(inputGoal) {
     //in that case simplest and most probable is that only the command that acts on the first word gets shown/used
     //to implement this only commands that aren't already present get added
     //this also avoids having to make the commands unique at the end
+    return inputGoal
 }
 
 function openURLs(urls) {
