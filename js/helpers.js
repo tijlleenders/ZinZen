@@ -117,6 +117,9 @@ function updateModalAddUI() { //updateModalUI doesn't know if calendar should re
     if (inputGoal.durationString != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">duration ' + inputGoal.durationString + '</span>'
     }
+    if (inputGoal.at != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">at ' + inputGoal.at + '</span>'
+    }
     if (inputGoal.repeatString != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">repeat ' + inputGoal.repeatString + '</span>'
     }
