@@ -130,7 +130,7 @@ function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar 
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
-    if (inputGoal.hasOwnProperty("suggestedCommands") && inputGoal.suggestedCommands.size > 0) {
+    if (inputGoal.hasOwnProperty("suggestedCommands") && inputGoal.suggestedCommands.length > 0) {
         suggestedCommands = `Suggested commands: `
         inputGoal.suggestedCommands.forEach(suggestionSet => {
             suggestionSet.forEach(suggestion => {
@@ -142,7 +142,7 @@ function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar 
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
-    if (inputGoal.hasOwnProperty("suggestedWords") && inputGoal.suggestedWords.size > 0) {
+    if (inputGoal.hasOwnProperty("suggestedWords") && inputGoal.suggestedWords.length > 0) {
         suggestedWords = `Suggested words: `
         inputGoal.suggestedWords.forEach(suggestionSet => {
             suggestionSet.forEach(suggestion => {
@@ -2866,7 +2866,7 @@ function parseInputGoal(inputGoal) {
     createWordsArrayIn(inputGoal)
 
     detectAutoCommands(inputGoal)
-    inputGoal = addSuggestedCommands(inputGoal)
+    addSuggestedCommands(inputGoal)
 
     destroyWordsArrayIn(inputGoal)
 
@@ -2917,7 +2917,6 @@ function detectAutoCommands(inputGoal) {
                     console.log("Adding 'at' command.")
                     inputGoal.at = parseInt(wordAfter)
                     inputGoal.wordsArray.splice(index, 2)
-                    // handleCommandPressed('at ')
                 }
             }
         }
@@ -2928,7 +2927,6 @@ function detectAutoCommands(inputGoal) {
 function addSuggestedCommands(inputGoal) {
     console.log("Inside addSuggestedCommands(inputGoal)...")
 
-    console.log("suggest commands inputGoal:", JSON.stringify(inputGoal))
     let lang = settings.find({ "setting": "language" })[0].value //To use for internationalization
 
     console.log("debug inputGoal:", JSON.stringify(inputGoal))
@@ -2969,16 +2967,14 @@ function addSuggestedCommands(inputGoal) {
             commandsToSuggest.add("finish " + word + ":00")
         }
 
+        console.log("command suggestions for word " + word + ":" + commandsToSuggest)
+        console.log("suggestions", getSuggestionsFor(word, commandDict))
         commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])
         //Todo: filter out any commands that are already selected
 
         inputGoal.suggestedCommands[index] = commandsToSuggest
-
         inputGoal.suggestedWords[index] = new Set([...getSuggestionsFor(word, wordDict)])
-
     })
-
-    console.log("wordsArray after:", inputGoal.wordsArray)
 
     if (inputGoal.wordsArray.length == 0) {
         // we're at the start of typing a brand new command - or ready for saving
@@ -2989,7 +2985,7 @@ function addSuggestedCommands(inputGoal) {
     //in that case simplest and most probable is that only the command that acts on the first word gets shown/used
     //to implement this only commands that aren't already present get added
     //this also avoids having to make the commands unique at the end
-    return inputGoal
+
 }
 
 function openURLs(urls) {
@@ -3017,15 +3013,7 @@ function isDuration(word) {
 }
 
 function getSuggestionsFor(word, dict) {
-    let matchArray = getLeftMatches(word.toLowerCase(), Object.keys(dict))
-    let result = []
-    if (matchArray.length > 0) {
-        console.log("left matches found:", matchArray)
-        matchArray.forEach(match => {
-            result = result.concat(dict[match])
-        });
-    }
-    return new Set(result) //make items unique
+    return getLeftMatches(word.toLowerCase(), Object.keys(dict))
 }
 
 function getLeftMatches(word, wordsArray) {
