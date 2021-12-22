@@ -1000,22 +1000,31 @@ function makeTempTasksFromExistingGoals() {
         return
     }
 
-    let copyOfFilteredGoals = JSON.parse(JSON.stringify(filteredGoals)) //required as lokijs has clone property set to true by default for ++speed
+    let copyOfFilteredGoals = []
 
-    copyOfFilteredGoals.forEach(filteredGoal => {
-        delete filteredGoal.$loki
-        filteredGoal.goalId = filteredGoal.id
-        delete filteredGoal.id
-        filteredGoal.duration = getDurationFromStringIn(filteredGoal.durationString, "h")
-        delete filteredGoal.durationString
-        filteredGoal.label = "task"
-        delete filteredGoal.meta
+    filteredGoals.forEach(filteredGoal => {
+        copyOfFilteredGoals.push(makeTaskFrom(filteredGoal))
     })
+
+    //debug
     console.log("copyOfFilteredGoals to insert in tempTasks:", copyOfFilteredGoals)
     copyOfFilteredGoals.forEach(goal => {
         console.log("goal:", JSON.stringify(goal))
     })
+
     tempTasks.insert(copyOfFilteredGoals)
+}
+
+function makeTaskFrom(goal) {
+    let task = JSON.parse(JSON.stringify(goal)) //required as lokijs has clone property set to true by default for ++speed
+    delete task.$loki
+    task.goalId = task.id
+    delete task.id
+    task.duration = getDurationFromStringIn(task.durationString, "h")
+    delete task.durationString
+    task.label = "task"
+    delete task.meta
+    return task
 }
 
 function makeTempTaskRelationsFromGoalRelations() {
