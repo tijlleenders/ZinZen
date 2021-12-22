@@ -172,6 +172,7 @@ function deleteGoalAndExclusiveDescendants(id) {
 $("#myModal").on("click", ".command-suggestion", function (e) {
     console.log("handling command-suggestion pressed")
     handleCommandPressed(e.currentTarget.innerText) //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+    updateModalAddUI($("#inputGoal").data('inputGoal'))
 })
 
 $("#myModal").on("click", ".word-suggestion", function (e) {
