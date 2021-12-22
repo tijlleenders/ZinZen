@@ -2972,11 +2972,12 @@ function addSuggestedCommands(inputGoal) {
         inputGoal.suggestedCommands[index] = commandsToSuggest
 
         inputGoal.suggestedWords[index] = new Set([...getSuggestionsFor(word, wordDict)])
+
     })
 
-    console.log("wordsArray after:", wordsArray)
+    console.log("wordsArray after:", inputGoal.wordsArray)
 
-    if (wordsArray.length == 0) {
+    if (!inputGoal.hasOwnProperty("wordsArray")) {
         // we're at the start of typing a brand new command - or ready for saving
         // do a best-guess suggestion based on previous commands (if any)
     }
@@ -2985,8 +2986,6 @@ function addSuggestedCommands(inputGoal) {
     //in that case simplest and most probable is that only the command that acts on the first word gets shown/used
     //to implement this only commands that aren't already present get added
     //this also avoids having to make the commands unique at the end
-
-    return
 }
 
 function openURLs(urls) {
