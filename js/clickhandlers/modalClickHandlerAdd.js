@@ -73,6 +73,7 @@ function saveGoal() {
         goalToSave = inputGoal
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords
+        delete goalToSave.recalculateCalendar
 
         if (goalToSave.label == "goal" && goalToSave.owner != "ZinZen") {
             goals.update(goalToSave)
