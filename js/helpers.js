@@ -2846,20 +2846,20 @@ function parseInputGoal(inputGoal) {
     inputGoal.suggestedCommands = []
     inputGoal.suggestedWords = []
     inputGoal.hasTrailingSpace = false
-    addWordsArrayTo(inputGoal)
+    createWordsArrayIn(inputGoal)
 
-    addAutoCommands(inputGoal)
+    detectAutoCommands(inputGoal)
     addSuggestedCommands(inputGoal)
 
-    removeWordsArrayFrom(inputGoal)
+    destroyWordsArrayIn(inputGoal)
 
     return inputGoal
 }
 
-function addWordsArrayTo(inputGoal) {
+function createWordsArrayIn(inputGoal) {
 
     let wordsArray = inputGoal.title.split(" ")
-    console.log("wordsArray before addWordsArrayTo(inputGoal):", wordsArray)
+    console.log("wordsArray before createWordsArrayIn(inputGoal):", wordsArray)
 
     inputGoal.hasTrailingSpace = false
     if (wordsArray[wordsArray.length - 1] == "") {
@@ -2873,10 +2873,10 @@ function addWordsArrayTo(inputGoal) {
     })
 
     inputGoal.wordsArray = wordsArray
-    console.log("wordsArray after addWordsArrayTo(inputGoal):", inputGoal.wordsArray)
+    console.log("wordsArray after createWordsArrayIn(inputGoal):", inputGoal.wordsArray)
 }
 
-function removeWordsArrayFrom(inputGoal) {
+function destroyWordsArrayIn(inputGoal) {
     inputGoal.title = inputGoal.wordsArray.join(" ")
     if (inputGoal.hasTrailingSpace && inputGoal.wordsArray.length != 0) {
         inputGoal.title += " "
@@ -2885,9 +2885,9 @@ function removeWordsArrayFrom(inputGoal) {
     delete inputGoal.wordsArray
 }
 
-function addAutoCommands(inputGoal) {
-    console.log("Inside addAutoCommands(inputGoal)...")
-    inputGoal.wordsArray.forEach(word => {
+function detectAutoCommands(inputGoal) {
+    console.log("Inside detectAutoCommands(inputGoal)...")
+    inputGoal.wordsArray.forEach((word, index) => {
         console.log("word:", word)
         if (word == "at") {
             console.log("found at!")
