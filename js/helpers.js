@@ -2846,17 +2846,18 @@ function parseInputGoal(inputGoal) {
     inputGoal.suggestedCommands = []
     inputGoal.suggestedWords = []
 
+    addAutoCommands(inputGoal)
     addSuggestedCommands(inputGoal)
 
     return inputGoal
 }
 
-function addSuggestedCommands(command) {
-    if (command.lang == undefined) {
-        command.lang = settings.find({ "setting": "language" })[0].value
+function addSuggestedCommands(inputGoal) {
+    if (inputGoal.lang == undefined) {
+        inputGoal.lang = settings.find({ "setting": "language" })[0].value
     }
-    console.log("command.lang:", command.lang)
-    let wordsArray = command.title.split(" ")
+    console.log("inputGoal.lang:", inputGoal.lang)
+    let wordsArray = inputGoal.title.split(" ")
     console.log("wordsArray before:", wordsArray)
 
     let hasTrailingSpace = false
@@ -2880,7 +2881,7 @@ function addSuggestedCommands(command) {
         //if word is email, suggest command for that email unless already (active and same email)
 
         if (isURL(word)) {
-            if (!command.commands.has(word)) {
+            if (!inputGoal.commands.has(word)) {
                 commandsToSuggest.add(word)
             }
         }
@@ -2912,16 +2913,16 @@ function addSuggestedCommands(command) {
         commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])
         //Todo: filter out any commands that are already selected
 
-        command.suggestedCommands[index] = commandsToSuggest
+        inputGoal.suggestedCommands[index] = commandsToSuggest
 
-        command.suggestedWords[index] = new Set([...getSuggestionsFor(word, wordDict)])
+        inputGoal.suggestedWords[index] = new Set([...getSuggestionsFor(word, wordDict)])
     })
 
     console.log("wordsArray after:", wordsArray)
 
-    command.title = wordsArray.join(" ")
+    inputGoal.title = wordsArray.join(" ")
     if (hasTrailingSpace && wordsArray.length != 0) {
-        command.title += " "
+        inputGoal.title += " "
     }
 
     if (wordsArray.length == 0) {
