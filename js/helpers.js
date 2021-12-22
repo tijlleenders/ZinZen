@@ -97,7 +97,7 @@ function updateModalAddUI() { //updateModalUI doesn't know if calendar should re
     let inputGoal = $("#inputGoal").data('inputGoal')
     console.log("refreshing for inputGoal:", inputGoal)
 
-    let newinputGoal = parseCommand(inputGoal)
+    let newinputGoal = parseInputGoal(inputGoal)
     console.log("newinputGoal:", newinputGoal)
     $("#inputGoal").data('inputGoal', newinputGoal)
     $("#inputGoal").val(newinputGoal.title)
@@ -2842,13 +2842,13 @@ let wordDict = {
     call: ['📞', '📱', '☎️']
 }
 
-function parseCommand(command) {
-    command.suggestedCommands = []
-    command.suggestedWords = []
+function parseInputGoal(inputGoal) {
+    inputGoal.suggestedCommands = []
+    inputGoal.suggestedWords = []
 
-    addSuggestedCommands(command)
+    addSuggestedCommands(inputGoal)
 
-    return command
+    return inputGoal
 }
 
 function addSuggestedCommands(command) {
