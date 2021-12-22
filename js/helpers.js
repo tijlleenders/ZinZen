@@ -731,6 +731,9 @@ function generateGoalHTML(properties) {
     if (properties.repeatString && properties.repeatString != "") {
         subTitle += properties.repeatString + " "
     }
+    if (properties.hasOwnProperty("at")) {
+        subTitle += " at " + properties.at
+    }
 
     let goalSvg = getGoalSvg(status, goalId)
 
