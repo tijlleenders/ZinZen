@@ -2852,11 +2852,15 @@ function parseInputGoal(inputGoal) {
     return inputGoal
 }
 
+function addAutoCommands(inputGoal) {
+    console.log("Inside addAutoCommands(inputGoal)...")
+
+    return
+}
+
 function addSuggestedCommands(inputGoal) {
-    if (inputGoal.lang == undefined) {
-        inputGoal.lang = settings.find({ "setting": "language" })[0].value
-    }
-    console.log("inputGoal.lang:", inputGoal.lang)
+    let lang = settings.find({ "setting": "language" })[0].value //To use for internationalization
+
     let wordsArray = inputGoal.title.split(" ")
     console.log("wordsArray before:", wordsArray)
 
