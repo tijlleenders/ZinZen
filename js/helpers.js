@@ -2895,7 +2895,8 @@ function detectAutoCommands(inputGoal) {
                 let wordAfter = inputGoal.wordsArray[index + 1]
                 if (!isNaN(wordAfter) &&
                     parseInt(wordAfter) >= 0 &&
-                    parseInt(wordAfter) <= 24) {
+                    parseInt(wordAfter) <= 24 &&
+                    parseInt(wordAfter != inputGoal.at)) {
                     inputGoal.at = parseInt(wordAfter)
                     inputGoal.wordsArray.splice(index, 2)
                 }
