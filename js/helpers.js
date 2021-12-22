@@ -93,7 +93,7 @@ function getTempTaskChildrenFor(id) {
     return result
 }
 
-function updateModalAddUI() {
+function updateModalAddUI() { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
     let inputGoal = $("#inputGoal").data('inputGoal')
     console.log("refreshing for inputGoal:", inputGoal)
 
@@ -2705,7 +2705,8 @@ function logOut() {
     location.href = redirectURL
 }
 
-function handleCommand(selectedCommand) {
+function handleCommand(selectedCommand) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+    let calendarAffected = false
     let inputGoal = $("#inputGoal").data('inputGoal')
     console.log("command pressed:", selectedCommand)
     if (selectedCommand.substr(0, 9) == "duration ") {
@@ -2713,6 +2714,7 @@ function handleCommand(selectedCommand) {
         let durationString = selectedCommand.split(" ")[1]
         inputGoal.title = inputGoal.title.replace(durationString, "")
         inputGoal.durationString = durationString
+        calendarAffected = true
     }
 
     if (selectedCommand.substr(0, 7) == "repeat ") {
@@ -2722,27 +2724,38 @@ function handleCommand(selectedCommand) {
         inputGoal.repeatString = repeatString
         inputGoal.title = inputGoal.title.replace(repeatString, "")
         inputGoal.title = inputGoal.title.replace("  ", " ")
+        calendarAffected = true
     }
 
     if (selectedCommand.substr(0, 6) == "start ") {
         console.log("start selected")
         inputGoal.startStringsArray = [selectedCommand.substr(6, selectedCommand.length - 6)]
         inputGoal.title = inputGoal.title.replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
+        calendarAffected = true
     }
 
     if (selectedCommand.substr(0, 7) == "finish ") {
         console.log("finish selected")
         inputGoal.finishStringsArray = [selectedCommand.substr(7, selectedCommand.length - 7)]
         inputGoal.title = inputGoal.title.replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
+        calendarAffected = true
     }
 
     if (selectedCommand.substr(0, 5) == "flex ") {
         console.log("flex selected")
+        calendarAffected = true
     }
 
     console.log("inputGoal after (not saved):", inputGoal)
     $("#inputGoal").data('inputGoal', inputGoal)
-    updateModalAddUI()
+    updateModalAddUI() //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+    if (calendarAffected) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+        calculateCalendar()
+        let tasksForGoal = calendar.tasks.filter(task => {
+            return task.goal_id == inputGoal.id
+        })
+        $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
+    }
 }
 
 function getArrayFromTitle(title) {

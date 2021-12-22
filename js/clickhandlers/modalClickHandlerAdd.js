@@ -168,7 +168,7 @@ function deleteGoalAndExclusiveDescendants(id) {
 
 $("#myModal").on("click", ".command-suggestion", function (e) {
     console.log("handling command-suggestion pressed")
-    handleCommand(e.currentTarget.innerText)
+    handleCommand(e.currentTarget.innerText) //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
 })
 
 $("#myModal").on("click", ".word-suggestion", function (e) {
@@ -183,22 +183,34 @@ $("#myModal").on("click", ".selected-command", function (e) {
     console.log("handling selected-command pressed")
     let inputGoal = $("#inputGoal").data('inputGoal')
     let command = e.currentTarget.innerText.split(" ")[0]
+    let calendarAffected = false
     switch (command) {
         case "duration":
             delete inputGoal.durationString
+            calendarAffected = true
             break;
         case "start":
             delete inputGoal.startStringsArray
+            calendarAffected = true
             break;
         case "finish":
             delete inputGoal.finishStringsArray
+            calendarAffected = true
             break;
         case "repeat":
             delete inputGoal.repeatString
+            calendarAffected = true
             break;
         default:
             console.error("no handler for command:", command)
     }
     $("#inputGoal").data('inputGoal', inputGoal)
     updateModalUI()
+    if (calendarAffected) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+        calculateCalendar()
+        let tasksForGoal = calendar.tasks.filter(task => {
+            return task.goal_id == inputGoal.id
+        })
+        $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
+    }
 })
