@@ -2929,6 +2929,7 @@ function detectAutoCommands(inputGoal) {
             }
         }
         if (word == "daily" &&
+            word != inputGoal.repeatString &&
             (inputGoal.hasTrailingSpace ||
                 index + 1 < inputGoal.wordsArray.length)) {
             inputGoal.wordsArray.splice(index, 1)
