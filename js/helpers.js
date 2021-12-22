@@ -2890,7 +2890,17 @@ function detectAutoCommands(inputGoal) {
     inputGoal.wordsArray.forEach((word, index) => {
         console.log("word:", word)
         if (word == "at") {
-            console.log("found at!")
+            if (index + 1 < inputGoal.wordsArray.length && inputGoal.hasTrailingSpace) {
+                console.log("Checking word after 'at'...")
+                let wordAfter = inputGoal.wordsArray[index + 1]
+                if (!isNaN(wordAfter) &&
+                    parseInt(wordAfter) >= 0 &&
+                    parseInt(wordAfter) <= 24) {
+                    inputGoal.at = parseInt(wordAfter)
+                    inputGoal.wordsArray.splice(index, 2)
+                }
+                console.log("inputGoal.wordsArray after splicing:", inputGoal.wordsArray)
+            }
         }
     })
     return
