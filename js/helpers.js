@@ -150,6 +150,14 @@ function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar 
         });
     }
     $("#suggested-words").html(suggestedWords)
+    if (inputGoal.recalculateCalendar == true) {
+        calculateCalendar()
+        inputGoal.recalculateCalendar = false
+        let tasksForGoal = calendar.tasks.filter(task => {
+            return task.goal_id == inputGoal.id
+        })
+        $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
+    }
     $("#inputGoal").focus();
 }
 
@@ -429,13 +437,15 @@ function setSkeletonHTMLForAdd(id) {
             suggestedWords: new Set(),
             lang: lang,
             start: Date.now(),
-            colors: getColorsFor("")
+            colors: getColorsFor(""),
+            recalculateCalendar: false
         }
         $("#add-sub-button-col").html(`
         <button type="button" class="btn btn-outline-primary btn-hidden" id="add-subgoal-buttonx">Add sub</button>
         `)
     } else {
         headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
+        inputGoal.recalculateCalendar = true
     }
 
     $("#inputGoal").data('inputGoal', inputGoal)
@@ -2917,6 +2927,13 @@ function detectAutoCommands(inputGoal) {
                     inputGoal.wordsArray.splice(index, 2)
                 }
             }
+        }
+        if (word == "daily" &&
+            (inputGoal.hasTrailingSpace ||
+                index + 1 < inputGoal.wordsArray.length)) {
+            inputGoal.wordsArray.splice(index, 1)
+            inputGoal.repeatString = "daily"
+            inputGoal.recalculateCalendar = true
         }
     })
     return
