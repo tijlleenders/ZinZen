@@ -803,10 +803,10 @@ function calculateCalendar() {
         console.error("tempTasks not empty")
     }
     makeTempTasksFromExistingGoals()
+    addOrUpdateInputGoal()
     makeTempTaskRelationsFromGoalRelations()
     console.log("tasks in calendar after make tempTask(Relation)s:", calendar.tasks)
     console.log("slots in calendar after make tempTask(Relation)s:", calendar.slots)
-    addOrUpdateInputGoal()
     duplicateTempTasksForRepeat()
     updateTotalTempTaskDurations()
     labelLeafTempTasks()
@@ -841,22 +841,23 @@ function calculateCalendar() {
 function addOrUpdateInputGoal() {
     console.log("Inside addOrUpdateInputGoal()...")
     let inputGoal = $("#inputGoal").data("inputGoal")
-    let goalsFoundForInputGoalId = goals.find({ id: inputGoal.id })
+    tempTasks.findAndRemove({ goalId: inputGoal.id }) //OK if not found for new goal
+    tempTasks.insert(makeTaskFrom(inputGoal))
+}
 
-    if (goalsFoundForInputGoalId.length == 0 && inputGoal.hasOwnProperty("durationString")) {
-        let taskToInsert = JSON.parse(JSON.stringify(inputGoal))
-        taskToInsert.duration = getDurationFromStringIn(inputGoal.durationString, "h")
-        delete taskToInsert.durationString
-        taskToInsert.label = "task"
-        taskToInsert.goalId = inputGoal.id
-        delete taskToInsert.id
-        tempTasks.insert(taskToInsert)
-        console.log("added inputGoal as task in tempTasks:", taskToInsert)
-    } else {
-        console.log("did not add inputGoal as new task in tempTasks - overriding with inputGoal properties")
-        tempTasks.findAndRemove({ goalId: inputGoal.id })
-        tempTasks.insert(makeTaskFrom(inputGoal))
+function makeTaskFrom(goal) {
+    let task = JSON.parse(JSON.stringify(goal)) //required as lokijs has clone property set to true by default for ++speed
+    delete task.$loki
+    delete task.meta
+    if (!task.hasOwnProperty("durationString")) {
+        return []
     }
+    task.duration = getDurationFromStringIn(task.durationString, "h")
+    delete task.durationString
+    task.label = "task"
+    task.goalId = task.id
+    delete task.id
+    return task
 }
 
 function convertTempSlotsToEpoch() {
@@ -1006,18 +1007,6 @@ function makeTempTasksFromExistingGoals() {
     })
 
     tempTasks.insert(copyOfFilteredGoals)
-}
-
-function makeTaskFrom(goal) {
-    let task = JSON.parse(JSON.stringify(goal)) //required as lokijs has clone property set to true by default for ++speed
-    delete task.$loki
-    task.goalId = task.id
-    delete task.id
-    task.duration = getDurationFromStringIn(task.durationString, "h")
-    delete task.durationString
-    task.label = "task"
-    delete task.meta
-    return task
 }
 
 function makeTempTaskRelationsFromGoalRelations() {
