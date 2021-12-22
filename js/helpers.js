@@ -139,15 +139,6 @@ function updateModalAddUI() {
         })
     });
 
-    calculateCalendar() //Todo: a little overkill to do this on every letter typed
-
-    let tasksForGoal = calendar.tasks.filter(task => {
-        return task.goal_id == inputGoal.id
-    })
-    console.log("tasksForGoal:", tasksForGoal)
-
-    $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
-
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
@@ -354,7 +345,7 @@ function setSkeletonHTMLForMoment(id) {
 
 
 function setSkeletonHTMLForAdd(id) {
-    console.log("inside setSkeletonHTMLForAdd...")
+    console.log("inside setSkeletonHTMLForAdd... with id:", id)
     let lang = settings.find({ "setting": "language" })[0].value
 
     let headerHTML = `<h4 class="modal-title ms-3">` + translations.find({ "en": "Add or search" })[0][lang] + `</h4>`
@@ -443,10 +434,17 @@ function setSkeletonHTMLForAdd(id) {
         }
         $("#add-sub-button-col").html(`
         <button type="button" class="btn btn-outline-primary btn-hidden" id="add-subgoal-buttonx">Add sub</button>
-            `)
+        `)
     } else {
         headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
     }
+
+    $("#inputGoal").data('inputGoal', inputGoal)
+    calculateCalendar()
+    let tasksForGoal = calendar.tasks.filter(task => {
+        return task.goal_id == inputGoal.id
+    })
+    $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
 
     $("#modal-header-content").html(headerHTML)
     $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
@@ -840,7 +838,8 @@ function calculateCalendar() {
 
 function addOrUpdateInputGoal() {
     console.log("Inside addOrUpdateInputGoal()...")
-    let inputGoal = $("#inputGoal").data("inputGoal")
+    let inputGoal = $("#inputGoal").data('inputGoal')
+    console.log("inputGoal", inputGoal)
     tempTasks.findAndRemove({ goalId: inputGoal.id }) //OK if not found for new goal
     tempTasks.insert(makeTaskFrom(inputGoal))
 }
