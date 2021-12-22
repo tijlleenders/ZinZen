@@ -2845,42 +2845,61 @@ let wordDict = {
 function parseInputGoal(inputGoal) {
     inputGoal.suggestedCommands = []
     inputGoal.suggestedWords = []
+    inputGoal.hasTrailingSpace = false
+    addWordsArrayTo(inputGoal)
 
     addAutoCommands(inputGoal)
     addSuggestedCommands(inputGoal)
 
+    removeWordsArrayFrom(inputGoal)
+
     return inputGoal
+}
+
+function addWordsArrayTo(inputGoal) {
+
+    let wordsArray = inputGoal.title.split(" ")
+    console.log("wordsArray before addWordsArrayTo(inputGoal):", wordsArray)
+
+    inputGoal.hasTrailingSpace = false
+    if (wordsArray[wordsArray.length - 1] == "") {
+        inputGoal.hasTrailingSpace = true
+    }
+
+    wordsArray.forEach((word, index) => { //remove empty words from array, ie due to trailing space
+        if (word == '') {
+            wordsArray.splice(index, 1)
+        }
+    })
+
+    inputGoal.wordsArray = wordsArray
+    console.log("wordsArray after addWordsArrayTo(inputGoal):", inputGoal.wordsArray)
+}
+
+function removeWordsArrayFrom(inputGoal) {
+    inputGoal.title = inputGoal.wordsArray.join(" ")
+    if (inputGoal.hasTrailingSpace && inputGoal.wordsArray.length != 0) {
+        inputGoal.title += " "
+    }
+    delete inputGoal.hasTrailingSpace
+    delete inputGoal.wordsArray
 }
 
 function addAutoCommands(inputGoal) {
     console.log("Inside addAutoCommands(inputGoal)...")
-
-    return
-}
-
-function getWordsArrayFromTitle(inputGoal) {
-    let wordsArray = inputGoal.title.split(" ")
-    console.log("wordsArray before:", wordsArray)
-
-    let hasTrailingSpace = false
-    if (wordsArray[wordsArray.length - 1] == "") {
-        hasTrailingSpace = true
-    }
-
-    wordsArray.forEach((word, index) => {
-        if (word == '') {
-            wordsArray.splice(index, 1) //remove word from array
-            console.error("Found empty word - this shouldn't happen.")
+    inputGoal.wordsArray.forEach(word => {
+        console.log("word:", word)
+        if (word == "at") {
+            console.log("found at!")
         }
     })
-
-    return wordsArray
+    return
 }
 
 function addSuggestedCommands(inputGoal) {
     let lang = settings.find({ "setting": "language" })[0].value //To use for internationalization
 
-    let wordsArray = getWordsArrayFromTitle(inputGoal)
+    let wordsArray = inputGoal.wordsArray
 
     wordsArray.forEach((word, index) => { //parse title left to right adding commands/words
         let commandsToSuggest = new Set()
@@ -2928,11 +2947,6 @@ function addSuggestedCommands(inputGoal) {
     })
 
     console.log("wordsArray after:", wordsArray)
-
-    inputGoal.title = wordsArray.join(" ")
-    if (hasTrailingSpace && wordsArray.length != 0) {
-        inputGoal.title += " "
-    }
 
     if (wordsArray.length == 0) {
         // we're at the start of typing a brand new command - or ready for saving
