@@ -2935,8 +2935,10 @@ function detectAutoCommands(inputGoal) {
                     console.log("Adding 'at' command.")
                     inputGoal.at = parseInt(wordAfter)
                     inputGoal.wordsArray.splice(index, 2)
+                    if (!inputGoal.hasOwnProperty("durationString")) {
+                        inputGoal.durationString = "1h"
+                    }
                     inputGoal.recalculateCalendar = true
-                    //Todo: auto add duration 1h if no duration present yet
                 }
             }
         }
