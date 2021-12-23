@@ -93,15 +93,11 @@ function getTempTaskChildrenFor(id) {
     return result
 }
 
-function updateModalAddUI() {
-    let inputGoal = $("#inputGoal").data('inputGoal')
-    console.log("refreshing for inputGoal:", inputGoal)
+function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+    //updateModalAddUI should not have side-effects, only change UI if relevant - not the data
+    console.log("refreshing for inputGoal:", JSON.stringify(inputGoal))
 
-    let newinputGoal = parseCommand(inputGoal)
-    console.log("newinputGoal:", newinputGoal)
-    $("#inputGoal").data('inputGoal', newinputGoal)
-    $("#inputGoal").val(newinputGoal.title)
-    $("#inputGoal").focus()
+    $("#inputGoal").val(inputGoal.title)
     //when to change modal title??
 
     let parentsHTML = ``
@@ -117,6 +113,9 @@ function updateModalAddUI() {
     if (inputGoal.durationString != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">duration ' + inputGoal.durationString + '</span>'
     }
+    if (inputGoal.at != undefined) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">at ' + inputGoal.at + '</span>'
+    }
     if (inputGoal.repeatString != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">repeat ' + inputGoal.repeatString + '</span>'
     }
@@ -130,36 +129,36 @@ function updateModalAddUI() {
     $("#selected-commands").html(selectedCommands)
 
     let suggestedCommands = ``
-    if (newinputGoal.suggestedCommands.length > 0 && newinputGoal.suggestedCommands[0].size > 0) {
+    if (inputGoal.hasOwnProperty("suggestedCommands") && inputGoal.suggestedCommands.length > 0) {
         suggestedCommands = `Suggested commands: `
+        inputGoal.suggestedCommands.forEach(suggestionSet => {
+            suggestionSet.forEach(suggestion => {
+                suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
+            })
+        });
     }
-    newinputGoal.suggestedCommands.forEach(suggestionSet => {
-        suggestionSet.forEach(suggestion => {
-            suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
-        })
-    });
-
-    calculateCalendar() //Todo: a little overkill to do this on every letter typed
-
-    let tasksForGoal = calendar.tasks.filter(task => {
-        return task.goal_id == inputGoal.id
-    })
-    console.log("tasksForGoal:", tasksForGoal)
-
-    $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
 
     $("#suggested-commands").html(suggestedCommands)
 
     let suggestedWords = ``
-    if (newinputGoal.suggestedWords.length > 0 && newinputGoal.suggestedWords[0].size > 0) {
+    if (inputGoal.hasOwnProperty("suggestedWords") && inputGoal.suggestedWords.length > 0) {
         suggestedWords = `Suggested words: `
+        inputGoal.suggestedWords.forEach(suggestionSet => {
+            suggestionSet.forEach(suggestion => {
+                suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
+            })
+        });
     }
-    newinputGoal.suggestedWords.forEach(suggestionSet => {
-        suggestionSet.forEach(suggestion => {
-            suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
-        })
-    });
     $("#suggested-words").html(suggestedWords)
+    if (inputGoal.recalculateCalendar == true) {
+        calculateCalendar()
+        inputGoal.recalculateCalendar = false
+        let tasksForGoal = calendar.tasks.filter(task => {
+            return task.goal_id == inputGoal.id
+        })
+        $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
+    }
+    $("#inputGoal").focus();
 }
 
 function generateScheduleHTMLForTasks(taskList, colors) {
@@ -187,7 +186,8 @@ function generateScheduleHTMLForTasks(taskList, colors) {
 function updateModalUI() {
     switch ($("#myModal").data("modalType")) {
         case "add":
-            updateModalAddUI()
+            let inputGoal = $("#inputGoal").data('inputGoal')
+            updateModalAddUI(inputGoal)
             break;
         case "moment":
 
@@ -354,7 +354,7 @@ function setSkeletonHTMLForMoment(id) {
 
 
 function setSkeletonHTMLForAdd(id) {
-    console.log("inside setSkeletonHTMLForAdd...")
+    console.log("inside setSkeletonHTMLForAdd... with id:", id)
     let lang = settings.find({ "setting": "language" })[0].value
 
     let headerHTML = `<h4 class="modal-title ms-3">` + translations.find({ "en": "Add or search" })[0][lang] + `</h4>`
@@ -401,6 +401,12 @@ function setSkeletonHTMLForAdd(id) {
         </div>        
       </div>
     </div>    
+    <div class="row mt-2" id="suggested-words-row">
+      <div class="col">
+        <div class="" id="suggested-words">
+      </div>
+    </div>
+    </div>
     <div class="row mt-2" id="calendar-feedback-row">
       <div class="col">
         <div class="" id="calendar-feedback">
@@ -417,14 +423,6 @@ function setSkeletonHTMLForAdd(id) {
     </div>     
     </div>
     `
-    bodyHTML += `    
-    <div class="row mt-2" id="suggested-words-row">
-      <div class="col">
-        <div class="" id="suggested-words">
-        </div>
-      </div>
-    </div>
-    `
     $("#modal-body").html(bodyHTML)
 
     let inputGoal = goals.find({ "id": id })[0]
@@ -439,14 +437,23 @@ function setSkeletonHTMLForAdd(id) {
             suggestedWords: new Set(),
             lang: lang,
             start: Date.now(),
-            colors: getColorsFor("")
+            colors: getColorsFor(""),
+            recalculateCalendar: false
         }
         $("#add-sub-button-col").html(`
         <button type="button" class="btn btn-outline-primary btn-hidden" id="add-subgoal-buttonx">Add sub</button>
-            `)
+        `)
     } else {
         headerHTML = `<h4 class="modal-title">` + translations.find({ "en": "Edit" })[0][lang] + `: ` + inputGoal.title.substring(0, 10) + `...</h4>`
+        inputGoal.recalculateCalendar = true
     }
+
+    $("#inputGoal").data('inputGoal', inputGoal)
+    calculateCalendar()
+    let tasksForGoal = calendar.tasks.filter(task => {
+        return task.goal_id == inputGoal.id
+    })
+    $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
 
     $("#modal-header-content").html(headerHTML)
     $("#add-row").addClass('d-none') //custom workaround because can't change text of button inside modal somehow
@@ -456,7 +463,7 @@ function setSkeletonHTMLForAdd(id) {
     $("#myModal").on('shown.bs.modal', function () {
         $("#inputGoal").focus();
     });
-    console.log("inputGoal after setSkeleton:", inputGoal)
+    console.log("inputGoal after setSkeleton:", JSON.stringify(inputGoal))
 }
 
 function translate(englishText) {
@@ -730,6 +737,9 @@ function generateGoalHTML(properties) {
     if (properties.repeatString && properties.repeatString != "") {
         subTitle += properties.repeatString + " "
     }
+    if (properties.hasOwnProperty("at")) {
+        subTitle += " at " + properties.at
+    }
 
     let goalSvg = getGoalSvg(status, goalId)
 
@@ -803,15 +813,17 @@ function calculateCalendar() {
         console.error("tempTasks not empty")
     }
     makeTempTasksFromExistingGoals()
+    addOrUpdateInputGoal()
     makeTempTaskRelationsFromGoalRelations()
     console.log("tasks in calendar after make tempTask(Relation)s:", calendar.tasks)
     console.log("slots in calendar after make tempTask(Relation)s:", calendar.slots)
-    addInputGoalIfNew()
     duplicateTempTasksForRepeat()
     updateTotalTempTaskDurations()
     labelLeafTempTasks()
     addTempTasksAndTempSlotsToCalendar()
+    filterTempSlotsForAt()
     filterTempSlotsForAfter()
+
     convertTempSlotsToHoursFromStartOfToday()
     addIdsToTempTasks()
 
@@ -838,32 +850,27 @@ function calculateCalendar() {
 
 }
 
-function addInputGoalIfNew() {
-    console.log("Inside addInputGoalIfNew()...")
-    let inputGoal = $("#inputGoal").data("inputGoal")
-    let goalsFoundForInputGoalId = goals.find({ id: inputGoal.id })
+function addOrUpdateInputGoal() {
+    console.log("Inside addOrUpdateInputGoal()...")
+    let inputGoal = $("#inputGoal").data('inputGoal')
+    console.log("inputGoal", inputGoal)
+    tempTasks.findAndRemove({ goalId: inputGoal.id }) //OK if not found for new goal
+    tempTasks.insert(makeTaskFrom(inputGoal))
+}
 
-    if (goalsFoundForInputGoalId.length == 0 && inputGoal.hasOwnProperty("durationString")) {
-        let taskToInsert = JSON.parse(JSON.stringify(inputGoal))
-        taskToInsert.duration = getDurationFromStringIn(inputGoal.durationString, "h")
-        delete taskToInsert.durationString
-        taskToInsert.label = "task"
-        taskToInsert.goalId = inputGoal.id
-        delete taskToInsert.id
-        tempTasks.insert(taskToInsert)
-        console.log("added inputGoal as task in tempTasks:", taskToInsert)
-    } else {
-        console.log("did not add inputGoal as new task in tempTasks - overriding with inputGoal properties")
-        let tempTasksForExistingGoal = tempTasks.find({ goalId: inputGoal.id })
-        tempTasksForExistingGoal.forEach(tempTask => {
-            tempTask.duration = getDurationFromStringIn(inputGoal.durationString, "h")
-            if (inputGoal.hasOwnProperty("repeatString")) {
-                tempTask.repeatString = inputGoal.repeatString
-            }
-            console.log("new tempTask to update with:", tempTask)
-            tempTasks.update(tempTask)
-        })
+function makeTaskFrom(goal) {
+    let task = JSON.parse(JSON.stringify(goal)) //required as lokijs has clone property set to true by default for ++speed
+    delete task.$loki
+    delete task.meta
+    if (!task.hasOwnProperty("durationString")) {
+        return []
     }
+    task.duration = getDurationFromStringIn(task.durationString, "h")
+    delete task.durationString
+    task.label = "task"
+    task.goalId = task.id
+    delete task.id
+    return task
 }
 
 function convertTempSlotsToEpoch() {
@@ -887,18 +894,105 @@ function convertTempSlotsToHoursFromStartOfToday() {
     console.log("Inside convertTempSlotsToHoursFromStartOfToday()...")
     calendar.slots.forEach(slot => {
         let startOfToday = dayjs().startOf('day')
-        slot.begin = Math.ceil(dayjs.duration(slot.begin.diff(startOfToday)).asHours())
-        slot.end = Math.ceil(dayjs.duration(slot.end.diff(startOfToday)).asHours())
+        slot.begin = Math.ceil(dayjs.duration(dayjs(slot.begin).diff(startOfToday)).asHours())
+        slot.end = Math.ceil(dayjs.duration(dayjs(slot.end).diff(startOfToday)).asHours())
         // console.log("slot begin:", slot.begin)
         // console.log("slot end:", slot.end)
     })
 }
 
-function filterTempSlotsForAfter() {
-    console.log("Inside filterTempSlotsForAfter()...TODO")
+function filterTempSlotsForAt() {
+    console.log("Inside filterTempSlotsForAt()...TODO")
+    let tasksWithAtLookup = {}
+    tempTasks.data
+        .filter(task => task.hasOwnProperty("at"))
+        .forEach(task => {
+            console.log("Found tasks with at:", JSON.stringify(task))
+            tasksWithAtLookup[task.$loki] = {}
+            tasksWithAtLookup[task.$loki].at = task.at
+            tasksWithAtLookup[task.$loki].duration = task.duration
+        })
+
+    let newSlots = []
+    console.log("calendar.slots:", calendar.slots)
     calendar.slots.forEach(slot => {
-        // console.log("found after for slot with task_id:", slot.task_id)
+        console.log("Slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
     })
+    calendar.slots
+        .filter(slot => tasksWithAtLookup.hasOwnProperty(slot.task_id))
+        .forEach(slot => {
+            let at = tasksWithAtLookup[slot.task_id].at
+            let duration = tasksWithAtLookup[slot.task_id].duration
+            console.log("found at " + at + " and duration " + duration + " for slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
+            let startPointer = dayjs(slot.begin)
+            let finish = dayjs(slot.end)
+            let loopProtectionCounter = 0
+
+            while (startPointer <= finish && loopProtectionCounter < 100) {
+                loopProtectionCounter += 1
+                if (startPointer.hour() > at) {
+                    startPointer = startPointer.add(1, 'day').startOf('day').add(at, 'hour')
+                    console.log("moved startpointer till next day's at:", startPointer)
+                } else {
+                    startPointer = startPointer.startOf('day').add(at, 'hour')
+                    console.log("moved startpointer to this day's at:", startPointer)
+                }
+                // FYI: Add separate slot for every startPointer + duration if not > finish
+                if (startPointer.add(duration, 'hour') <= finish) {
+                    newSlots.push({ task_id: slot.task_id, begin: startPointer.valueOf(), end: startPointer.add(duration, 'hour').valueOf() })
+                }
+                startPointer = startPointer.startOf('day').add(1, 'day')
+            }
+        })
+    console.log("newSlots:", JSON.stringify(newSlots))
+    calendar.slots = calendar.slots
+        .filter(slot => !tasksWithAtLookup.hasOwnProperty(slot.task_id))
+    calendar.slots.push(...newSlots)
+}
+
+function filterTempSlotsForAfter() {
+    console.log("Inside filterTempSlotsForAfter()...TOCHECK")
+    let tasksWithAfterLookup = {}
+    tempTasks.data
+        .filter(task => task.hasOwnProperty("after"))
+        .forEach(task => {
+            console.log("Found tasks with after:", JSON.stringify(task))
+            tasksWithAfterLookup[task.$loki] = task.after
+        })
+
+    let newSlots = []
+    console.log("calendar.slots:", calendar.slots)
+    calendar.slots.forEach(slot => {
+        console.log("Slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
+    })
+    calendar.slots
+        .filter(slot => tasksWithAfterLookup.hasOwnProperty(slot.task_id))
+        .forEach(slot => {
+            let after = tasksWithAfterLookup[slot.task_id]
+            console.log("found after " + after + " for slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
+            let startPointer = dayjs(slot.begin)
+            let finish = dayjs(slot.end)
+            let loopProtectionCounter = 0
+
+            while (startPointer <= finish && loopProtectionCounter < 100) {
+                loopProtectionCounter += 1
+                if (startPointer.hour() > after) {
+                    startPointer = startPointer.add(1, 'day').startOf('day').add(after, 'hour')
+                    console.log("moved startpointer till next day's after:", startPointer)
+                } else {
+                    startPointer = startPointer.startOf('day').add(after, 'hour')
+                    console.log("moved startpointer to this day's after:", startPointer)
+                }
+                // FYI: Don't check if startPointer + duration > finish since after implies task has to be finished on the same day
+                newSlots.push({ task_id: slot.task_id, begin: startPointer.valueOf(), end: Math.min(finish.valueOf(), startPointer.startOf('day').add(1, 'day').valueOf()) })
+                startPointer = startPointer.startOf('day').add(1, 'day')
+
+            }
+        })
+    console.log("newSlots:", JSON.stringify(newSlots))
+    calendar.slots = calendar.slots
+        .filter(slot => !tasksWithAfterLookup.hasOwnProperty(slot.task_id))
+    calendar.slots.push(...newSlots)
 }
 
 function addTempTasksAndTempSlotsToCalendar() {
@@ -915,7 +1009,7 @@ function addTempTasksAndTempSlotsToCalendar() {
         if (task.hasOwnProperty("start")) {
             start = Math.max(task.start, start)
         }
-        let finish = dayjs().startOf('day').add(30, 'day').valueOf()
+        let finish = dayjs().startOf('day').add(MAX_CALENDAR_DAYS, 'day').valueOf()
         if (task.hasOwnProperty("finish")) {
             finish = Math.min(task.finish, finish)
         }
@@ -1000,21 +1094,18 @@ function makeTempTasksFromExistingGoals() {
         return
     }
 
-    let copyOfFilteredGoals = JSON.parse(JSON.stringify(filteredGoals)) //required as lokijs has clone property set to true by default for ++speed
+    let copyOfFilteredGoals = []
 
-    copyOfFilteredGoals.forEach(filteredGoal => {
-        delete filteredGoal.$loki
-        filteredGoal.goalId = filteredGoal.id
-        delete filteredGoal.id
-        filteredGoal.duration = getDurationFromStringIn(filteredGoal.durationString, "h")
-        delete filteredGoal.durationString
-        filteredGoal.label = "task"
-        delete filteredGoal.meta
+    filteredGoals.forEach(filteredGoal => {
+        copyOfFilteredGoals.push(makeTaskFrom(filteredGoal))
     })
+
+    //debug
     console.log("copyOfFilteredGoals to insert in tempTasks:", copyOfFilteredGoals)
     copyOfFilteredGoals.forEach(goal => {
         console.log("goal:", JSON.stringify(goal))
     })
+
     tempTasks.insert(copyOfFilteredGoals)
 }
 
@@ -1126,12 +1217,12 @@ function getDayStartsFor(start, finish) {
     console.log("inside getDayStartsFor(" + start + ", " + finish + ")")
     start = Math.max(start, dayjs().startOf("day").valueOf())
     // console.log("start:", start)
-    let loopCounter = 0
+    let loopProtectionCounter = 0
     let dayStarts = []
-    while (loopCounter < MAX_CALENDAR_DAYS && (finish == undefined || start < finish)) {
+    while (loopProtectionCounter < MAX_CALENDAR_DAYS && (finish == undefined || start < finish)) {
         dayStarts.push(start)
-        // console.log("loopCounter:", loopCounter)
-        loopCounter += 1
+        // console.log("loopProtectionCounter:", loopProtectionCounter)
+        loopProtectionCounter += 1
         // console.log("start:", start)
         start = dayjs(start).startOf('day').add(1, 'day').valueOf()
     }
@@ -1142,10 +1233,10 @@ function updateTotalTempTaskDurations() {
     // console.log("inside updateTotalTempTaskDurations()")
     //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
     let restart = true
-    let loopCounter = 0
-    while (restart = true && loopCounter < 2) {
-        // console.log("loop ", loopCounter)
-        loopCounter += 1
+    let loopProtectionCounter = 0
+    while (restart = true && loopProtectionCounter < 2) {
+        // console.log("loop ", loopProtectionCounter)
+        loopProtectionCounter += 1
         restart = false
         tempTasks.data.forEach(task => {
             // console.log("task", task)
@@ -2715,7 +2806,8 @@ function logOut() {
     location.href = redirectURL
 }
 
-function handleCommand(selectedCommand) {
+function handleCommandPressed(selectedCommand) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+    let calendarAffected = false
     let inputGoal = $("#inputGoal").data('inputGoal')
     console.log("command pressed:", selectedCommand)
     if (selectedCommand.substr(0, 9) == "duration ") {
@@ -2723,6 +2815,7 @@ function handleCommand(selectedCommand) {
         let durationString = selectedCommand.split(" ")[1]
         inputGoal.title = inputGoal.title.replace(durationString, "")
         inputGoal.durationString = durationString
+        calendarAffected = true
     }
 
     if (selectedCommand.substr(0, 7) == "repeat ") {
@@ -2732,27 +2825,43 @@ function handleCommand(selectedCommand) {
         inputGoal.repeatString = repeatString
         inputGoal.title = inputGoal.title.replace(repeatString, "")
         inputGoal.title = inputGoal.title.replace("  ", " ")
+        calendarAffected = true
     }
 
     if (selectedCommand.substr(0, 6) == "start ") {
         console.log("start selected")
         inputGoal.startStringsArray = [selectedCommand.substr(6, selectedCommand.length - 6)]
         inputGoal.title = inputGoal.title.replace(selectedCommand.substr(6, selectedCommand.length - 9), "")
+        calendarAffected = true
     }
 
     if (selectedCommand.substr(0, 7) == "finish ") {
         console.log("finish selected")
         inputGoal.finishStringsArray = [selectedCommand.substr(7, selectedCommand.length - 7)]
         inputGoal.title = inputGoal.title.replace(selectedCommand.substr(7, selectedCommand.length - 10), "")
+        calendarAffected = true
     }
 
     if (selectedCommand.substr(0, 5) == "flex ") {
         console.log("flex selected")
+        calendarAffected = true
+    }
+
+    if (selectedCommand.substr(0, 3) == "at ") {
+        console.log("at selected")
+        calendarAffected = true
     }
 
     console.log("inputGoal after (not saved):", inputGoal)
     $("#inputGoal").data('inputGoal', inputGoal)
-    updateModalAddUI()
+
+    if (calendarAffected) { //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+        calculateCalendar()
+        let tasksForGoal = calendar.tasks.filter(task => {
+            return task.goal_id == inputGoal.id
+        })
+        $("#calendar-feedback").html(generateScheduleHTMLForTasks(tasksForGoal, inputGoal.colors))
+    }
 }
 
 function getArrayFromTitle(title) {
@@ -2839,37 +2948,90 @@ let wordDict = {
     call: ['📞', '📱', '☎️']
 }
 
-function parseCommand(command) {
-    command.suggestedCommands = []
-    command.suggestedWords = []
+function parseInputGoal(inputGoal) {
+    inputGoal.suggestedCommands = []
+    inputGoal.suggestedWords = []
+    inputGoal.hasTrailingSpace = false
+    createWordsArrayIn(inputGoal)
 
-    addSuggestedCommands(command)
+    detectAutoCommands(inputGoal)
+    addSuggestedCommands(inputGoal)
 
-    return command
+    destroyWordsArrayIn(inputGoal)
+
+    return inputGoal
 }
 
-function addSuggestedCommands(command) {
-    if (command.lang == undefined) {
-        command.lang = settings.find({ "setting": "language" })[0].value
-    }
-    console.log("command.lang:", command.lang)
-    let wordsArray = command.title.split(" ")
-    console.log("wordsArray before:", wordsArray)
+function createWordsArrayIn(inputGoal) {
 
-    let hasTrailingSpace = false
+    let wordsArray = inputGoal.title.split(" ")
+    console.log("wordsArray before createWordsArrayIn(inputGoal):", wordsArray)
+
+    inputGoal.hasTrailingSpace = false
     if (wordsArray[wordsArray.length - 1] == "") {
-        hasTrailingSpace = true
+        inputGoal.hasTrailingSpace = true
     }
 
-    wordsArray.forEach((word, index) => {
+    wordsArray.forEach((word, index) => { //remove empty words from array, ie due to trailing space
         if (word == '') {
-            wordsArray.splice(index, 1) //remove word from array
-            return
+            wordsArray.splice(index, 1)
         }
     })
 
+    inputGoal.wordsArray = wordsArray
+    console.log("wordsArray after createWordsArrayIn(inputGoal):", inputGoal.wordsArray)
+}
 
-    wordsArray.forEach((word, index) => { //parse title left to right adding commands/words
+function destroyWordsArrayIn(inputGoal) {
+    inputGoal.title = inputGoal.wordsArray.join(" ")
+    if (inputGoal.hasTrailingSpace && inputGoal.wordsArray.length != 0) {
+        inputGoal.title += " "
+    }
+    delete inputGoal.hasTrailingSpace
+    delete inputGoal.wordsArray
+}
+
+function detectAutoCommands(inputGoal) {
+    console.log("Inside detectAutoCommands(inputGoal)...")
+    inputGoal.wordsArray.forEach((word, index) => {
+        console.log("word:", word)
+        if (word == "at") {
+            if (index + 1 < inputGoal.wordsArray.length && inputGoal.hasTrailingSpace) {
+                console.log("Checking word after 'at'...")
+                let wordAfter = inputGoal.wordsArray[index + 1]
+                if (!isNaN(wordAfter) &&
+                    parseInt(wordAfter) >= 0 &&
+                    parseInt(wordAfter) <= 24 &&
+                    parseInt(wordAfter) != inputGoal.at) {
+                    console.log("Adding 'at' command.")
+                    inputGoal.at = parseInt(wordAfter)
+                    inputGoal.wordsArray.splice(index, 2)
+                    if (!inputGoal.hasOwnProperty("durationString")) {
+                        inputGoal.durationString = "1h"
+                    }
+                    inputGoal.recalculateCalendar = true
+                }
+            }
+        }
+        if (word == "daily" &&
+            word != inputGoal.repeatString &&
+            (inputGoal.hasTrailingSpace ||
+                index + 1 < inputGoal.wordsArray.length)) {
+            inputGoal.wordsArray.splice(index, 1)
+            inputGoal.repeatString = "daily"
+            inputGoal.recalculateCalendar = true
+        }
+    })
+    return
+}
+
+function addSuggestedCommands(inputGoal) {
+    console.log("Inside addSuggestedCommands(inputGoal)...")
+
+    let lang = settings.find({ "setting": "language" })[0].value //To use for internationalization
+
+    console.log("debug inputGoal:", JSON.stringify(inputGoal))
+    inputGoal.wordsArray.forEach((word, index) => { //parse title left to right adding commands/words
         let commandsToSuggest = new Set()
         console.log("word " + index + ": '" + word + "'")
 
@@ -2877,7 +3039,7 @@ function addSuggestedCommands(command) {
         //if word is email, suggest command for that email unless already (active and same email)
 
         if (isURL(word)) {
-            if (!command.commands.has(word)) {
+            if (!inputGoal.commands.has(word)) {
                 commandsToSuggest.add(word)
             }
         }
@@ -2906,22 +3068,16 @@ function addSuggestedCommands(command) {
             commandsToSuggest.add("finish " + word + ":00")
         }
 
+        console.log("command suggestions for word " + word + ":" + commandsToSuggest)
+        console.log("suggestions", getSuggestionsFor(word, commandDict))
         commandsToSuggest = new Set([...commandsToSuggest, ...getSuggestionsFor(word, commandDict)])
         //Todo: filter out any commands that are already selected
 
-        command.suggestedCommands[index] = commandsToSuggest
-
-        command.suggestedWords[index] = new Set([...getSuggestionsFor(word, wordDict)])
+        inputGoal.suggestedCommands[index] = commandsToSuggest
+        inputGoal.suggestedWords[index] = new Set([...getSuggestionsFor(word, wordDict)])
     })
 
-    console.log("wordsArray after:", wordsArray)
-
-    command.title = wordsArray.join(" ")
-    if (hasTrailingSpace && wordsArray.length != 0) {
-        command.title += " "
-    }
-
-    if (wordsArray.length == 0) {
+    if (inputGoal.wordsArray.length == 0) {
         // we're at the start of typing a brand new command - or ready for saving
         // do a best-guess suggestion based on previous commands (if any)
     }
@@ -2931,7 +3087,6 @@ function addSuggestedCommands(command) {
     //to implement this only commands that aren't already present get added
     //this also avoids having to make the commands unique at the end
 
-    return
 }
 
 function openURLs(urls) {
@@ -2959,15 +3114,7 @@ function isDuration(word) {
 }
 
 function getSuggestionsFor(word, dict) {
-    let matchArray = getLeftMatches(word.toLowerCase(), Object.keys(dict))
-    let result = []
-    if (matchArray.length > 0) {
-        console.log("left matches found:", matchArray)
-        matchArray.forEach(match => {
-            result = result.concat(dict[match])
-        });
-    }
-    return new Set(result) //make items unique
+    return getLeftMatches(word.toLowerCase(), Object.keys(dict))
 }
 
 function getLeftMatches(word, wordsArray) {

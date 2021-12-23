@@ -19,7 +19,10 @@ $("#myModal").on("keyup", "#inputGoal", function (e) {
     inputGoal.title = $("#inputGoal").val()
     inputGoal.title = inputGoal.title.replace("  ", " ")
     $("#inputGoal").data('inputGoal', inputGoal)
-    updateModalAddUI()
+    let newInputGoal = parseInputGoal(inputGoal)
+    console.log("newInputGoal:", JSON.stringify(newInputGoal))
+    $("#inputGoal").data('inputGoal', newInputGoal)
+    updateModalAddUI(newInputGoal)
 });
 
 $("#myModal").on("click", "#modal-add-a-goal-button", function () {
@@ -70,6 +73,7 @@ function saveGoal() {
         goalToSave = inputGoal
         delete goalToSave.suggestedCommands
         delete goalToSave.suggestedWords
+        delete goalToSave.recalculateCalendar
 
         if (goalToSave.label == "goal" && goalToSave.owner != "ZinZen") {
             goals.update(goalToSave)
@@ -168,7 +172,8 @@ function deleteGoalAndExclusiveDescendants(id) {
 
 $("#myModal").on("click", ".command-suggestion", function (e) {
     console.log("handling command-suggestion pressed")
-    handleCommand(e.currentTarget.innerText)
+    handleCommandPressed(e.currentTarget.innerText) //updateModalUI doesn't know if calendar should recalculate so done in command add/delete function
+    updateModalAddUI($("#inputGoal").data('inputGoal'))
 })
 
 $("#myModal").on("click", ".word-suggestion", function (e) {
@@ -184,21 +189,31 @@ $("#myModal").on("click", ".selected-command", function (e) {
     let inputGoal = $("#inputGoal").data('inputGoal')
     let command = e.currentTarget.innerText.split(" ")[0]
     switch (command) {
+        case "at":
+            delete inputGoal.at
+            inputGoal.recalculateCalendar = true
+            break;
         case "duration":
             delete inputGoal.durationString
+            inputGoal.recalculateCalendar = true
             break;
         case "start":
             delete inputGoal.startStringsArray
+            inputGoal.recalculateCalendar = true
             break;
         case "finish":
             delete inputGoal.finishStringsArray
+            inputGoal.recalculateCalendar = true
             break;
         case "repeat":
             delete inputGoal.repeatString
+            inputGoal.recalculateCalendar = true
             break;
         default:
             console.error("no handler for command:", command)
     }
+
     $("#inputGoal").data('inputGoal', inputGoal)
     updateModalUI()
+
 })

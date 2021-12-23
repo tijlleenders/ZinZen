@@ -5,8 +5,8 @@ var sessionId = uuidv4()
 var parentId = sessionId
 var MAX_LEVELS = 10
 var MAX_SUBLISTS = 33
-let MAX_CALENDAR_DAYS = 30
-var calendar = { "max_time_units": 720, "time_unit_qualifier": "h", "tasks": [], "slots": [], "startEpoch": dayjs().startOf('day').valueOf() }
+let MAX_CALENDAR_DAYS = 3
+var calendar = { "max_time_units": MAX_CALENDAR_DAYS * 24, "time_unit_qualifier": "h", "tasks": [], "slots": [], "startEpoch": dayjs().startOf('day').valueOf() }
 let wasmModule
 let deleteMode = false
 
