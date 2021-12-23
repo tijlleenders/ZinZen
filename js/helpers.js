@@ -902,19 +902,32 @@ function convertTempSlotsToHoursFromStartOfToday() {
 
 function filterTempSlotsForAt() {
     console.log("Inside filterTempSlotsForAt()...TODO")
-    calendar.slots.forEach(slot => {
-        console.log("found at for slot with task_id:", JSON.stringify(slot))
-        //slotsForTask.forEach(
-        //  get start + finish & delete slot
-        //  if startPointer.hours() > at 
-        //    yes => startPointer = start.nextDay + at
-        //    no => startPointer = start.startOf('day') + at
-        //  if startPointer + duration > finish
-        //    yes => nothing possible here, continue to next slot
-        //    no => 
-        //          make slot from startPointer to startPointer + duration
-        //          set startPointer to startPointer + duration
-    })
+    let tasksWithAtLookup = {}
+    tempTasks.data
+        .filter(task => task.hasOwnProperty("at"))
+        .forEach(task => {
+            console.log("Found tasks with at:", JSON.stringify(task))
+            tasksWithAtLookup[task.$loki] = task.at
+        })
+
+    let newSlots = []
+    calendar.slots
+        .filter(slot => tasksWithAtLookup.hasOwnProperty(slot.task_id))
+        .forEach(slot => {
+            let at = tasksWithAtLookup[slot.task_id]
+            console.log("found at " + at + " for slot with task_id:" + slot.task_id)
+            let startPointer = slot.begin
+            let finish = slot.end
+            // if (startPointer.hour() > )
+            //  if startPointer.hours() > at 
+            //    yes => startPointer = start.nextDay + at
+            //    no => startPointer = start.startOf('day') + at
+            //  if startPointer + duration > finish
+            //    yes => nothing possible here, continue to next slot
+            //    no => 
+            //          make slot from startPointer to startPointer + duration
+            //          set startPointer to startPointer + duration
+        })
 }
 
 function filterTempSlotsForAfter() {
