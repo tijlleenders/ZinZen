@@ -823,6 +823,7 @@ function calculateCalendar() {
     addTempTasksAndTempSlotsToCalendar()
     filterTempSlotsForAt()
     filterTempSlotsForAfter()
+
     convertTempSlotsToHoursFromStartOfToday()
     addIdsToTempTasks()
 
@@ -893,8 +894,8 @@ function convertTempSlotsToHoursFromStartOfToday() {
     console.log("Inside convertTempSlotsToHoursFromStartOfToday()...")
     calendar.slots.forEach(slot => {
         let startOfToday = dayjs().startOf('day')
-        slot.begin = Math.ceil(dayjs.duration(slot.begin.diff(startOfToday)).asHours())
-        slot.end = Math.ceil(dayjs.duration(slot.end.diff(startOfToday)).asHours())
+        slot.begin = Math.ceil(dayjs.duration(dayjs(slot.begin).diff(startOfToday)).asHours())
+        slot.end = Math.ceil(dayjs.duration(dayjs(slot.end).diff(startOfToday)).asHours())
         // console.log("slot begin:", slot.begin)
         // console.log("slot end:", slot.end)
     })
@@ -911,23 +912,38 @@ function filterTempSlotsForAt() {
         })
 
     let newSlots = []
+    console.log("calendar.slots:", calendar.slots)
+    calendar.slots.forEach(slot => {
+        console.log("Slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
+    })
     calendar.slots
         .filter(slot => tasksWithAtLookup.hasOwnProperty(slot.task_id))
         .forEach(slot => {
             let at = tasksWithAtLookup[slot.task_id]
-            console.log("found at " + at + " for slot with task_id:" + slot.task_id)
-            let startPointer = slot.begin
-            let finish = slot.end
-            // if (startPointer.hour() > )
-            //  if startPointer.hours() > at 
-            //    yes => startPointer = start.nextDay + at
-            //    no => startPointer = start.startOf('day') + at
-            //  if startPointer + duration > finish
-            //    yes => nothing possible here, continue to next slot
-            //    no => 
-            //          make slot from startPointer to startPointer + duration
-            //          set startPointer to startPointer + duration
+            console.log("found at " + at + " for slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
+            let startPointer = dayjs(slot.begin)
+            let finish = dayjs(slot.end)
+            let loopProtectionCounter = 0
+
+            while (startPointer <= finish && loopProtectionCounter < 100) {
+                loopProtectionCounter += 1
+                if (startPointer.hour() > at) {
+                    startPointer = startPointer.add(1, 'day').startOf('day').add(at, 'hour')
+                    console.log("moved startpointer till next day's at:", startPointer)
+                } else {
+                    startPointer = startPointer.startOf('day').add(at, 'hour')
+                    console.log("moved startpointer to this day's at:", startPointer)
+                }
+                // FYI: Don't check if startPointer + duration > finish since this is the scheduler's concern and duration could be 'sprinkled' over multiple slots
+                newSlots.push({ task_id: slot.task_id, begin: startPointer.valueOf(), end: Math.min(finish.valueOf(), startPointer.startOf('day').add(1, 'day').valueOf()) })
+                startPointer = startPointer.startOf('day').add(1, 'day')
+
+            }
         })
+    console.log("newSlots:", JSON.stringify(newSlots))
+    calendar.slots = calendar.slots
+        .filter(slot => !tasksWithAtLookup.hasOwnProperty(slot.task_id))
+    calendar.slots.push(...newSlots)
 }
 
 function filterTempSlotsForAfter() {
@@ -1159,12 +1175,12 @@ function getDayStartsFor(start, finish) {
     console.log("inside getDayStartsFor(" + start + ", " + finish + ")")
     start = Math.max(start, dayjs().startOf("day").valueOf())
     // console.log("start:", start)
-    let loopCounter = 0
+    let loopProtectionCounter = 0
     let dayStarts = []
-    while (loopCounter < MAX_CALENDAR_DAYS && (finish == undefined || start < finish)) {
+    while (loopProtectionCounter < MAX_CALENDAR_DAYS && (finish == undefined || start < finish)) {
         dayStarts.push(start)
-        // console.log("loopCounter:", loopCounter)
-        loopCounter += 1
+        // console.log("loopProtectionCounter:", loopProtectionCounter)
+        loopProtectionCounter += 1
         // console.log("start:", start)
         start = dayjs(start).startOf('day').add(1, 'day').valueOf()
     }
@@ -1175,10 +1191,10 @@ function updateTotalTempTaskDurations() {
     // console.log("inside updateTotalTempTaskDurations()")
     //Todo: working up from leaves, update total duration for parents if sum(directChildren) > parentDuration, p(add) a filler Task if >
     let restart = true
-    let loopCounter = 0
-    while (restart = true && loopCounter < 2) {
-        // console.log("loop ", loopCounter)
-        loopCounter += 1
+    let loopProtectionCounter = 0
+    while (restart = true && loopProtectionCounter < 2) {
+        // console.log("loop ", loopProtectionCounter)
+        loopProtectionCounter += 1
         restart = false
         tempTasks.data.forEach(task => {
             // console.log("task", task)
