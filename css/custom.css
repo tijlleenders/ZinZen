@@ -19,6 +19,16 @@ html,
   --card8: #04123a;
   --card9: #063728;
   --card10: #47201b;
+  --card1-double-bottom: #534f3f;
+  --card2-double-bottom: #754e2d;
+  --card3-double-bottom: #8b3c44;
+  --card4-double-bottom: #7c3557;
+  --card5-double-bottom: #598579;
+  --card6-double-bottom: #255861;
+  --card7-double-bottom: #66385e;
+  --card8-double-bottom: #08236d;
+  --card9-double-bottom: #0c6d50;
+  --card10-double-bottom: #79372e;
 }
 
 [data-theme="light"] {
@@ -31,15 +41,25 @@ html,
   --editor-selectionHighlightBackground: #add6ff80;
   --editor-inactiveSelectionBackground: #e5ebf1;
   --card1: #f0efeb;
+  --card1-double-bottom: #f0efeb;
   --card2: #fff1e6;
+  --card2-double-bottom: #b6aca4;
   --card3: #fde2e4;
+  --card3-double-bottom: #c4adae;
   --card4: #fad2e1;
+  --card4-double-bottom: #be9eaa;
   --card5: #e2ece9;
+  --card5-double-bottom: #b0b6b4;
   --card6: #bee1e6;
+  --card6-double-bottom: #697b7e;
   --card7: #e2d6e0;
+  --card7-double-bottom: #aaa1a9;
   --card8: #dfe7fd;
+  --card8-double-bottom: #a2a7b4;
   --card9: #dafbf1;
+  --card9-double-bottom: #a3bdb5;
   --card10: #feddd8;
+  --card10-double-bottom: #c2a8a4;
 }
 
 /* ref */
@@ -118,10 +138,13 @@ body {
   cursor: default;
 }
 
+.double-bottom {
+  border-bottom: double !important;
+}
+
 .card {
   border-radius: 10px;
   background-image: var(--bs-gradient);
-  color: var(--text-color);
   /* background-color: var(--menu-background); */
   flex-direction: row;
   --duration: 0.5s;
@@ -391,6 +414,7 @@ body {
 .card1 {
   background-color: var(--card1);
   border-width: 1px;
+  border-bottom-color: var(--card1-double-bottom) !important;
 }
 
 .card1:hover {
@@ -403,6 +427,7 @@ body {
 .card2 {
   background-color: var(--card2);
   border-width: 1px;
+  border-bottom-color: var(--card2-double-bottom) !important;
 }
 
 .card2:hover {
@@ -415,6 +440,7 @@ body {
 .card3 {
   background-color: var(--card3);
   border-width: 1px;
+  border-bottom-color: var(--card3-double-bottom) !important;
 }
 
 .card3:hover {
@@ -427,6 +453,7 @@ body {
 .card4 {
   background-color: var(--card4);
   border-width: 1px;
+  border-bottom-color: var(--card4-double-bottom) !important;
 }
 
 .card4:hover {
@@ -439,6 +466,7 @@ body {
 .card5 {
   background-color: var(--card5);
   border-width: 1px;
+  border-bottom-color: var(--card5-double-bottom) !important;
 }
 
 .card5:hover {
@@ -451,6 +479,7 @@ body {
 .card6 {
   background-color: var(--card6);
   border-width: 1px;
+  border-bottom-color: var(--card6-double-bottom) !important;
 }
 
 .card6:hover {
@@ -463,6 +492,7 @@ body {
 .card7 {
   background-color: var(--card7);
   border-width: 1px;
+  border-bottom-color: var(--card7-double-bottom) !important;
 }
 
 .card7:hover {
@@ -475,6 +505,7 @@ body {
 .card8 {
   background-color: var(--card8);
   border-width: 1px;
+  border-bottom-color: var(--card8-double-bottom) !important;
 }
 
 .card8:hover {
@@ -487,6 +518,7 @@ body {
 .card9 {
   background-color: var(--card9);
   border-width: 1px;
+  border-bottom-color: var(--card9-double-bottom) !important;
 }
 
 .card9:hover {
@@ -499,6 +531,7 @@ body {
 .card10 {
   background-color: var(--card10);
   border-width: 1px;
+  border-bottom-color: var(--card10-double-bottom) !important;
 }
 
 .card10:hover {

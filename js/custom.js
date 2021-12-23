@@ -155,6 +155,9 @@ function updateUIChildrenFor(parentId) {
     relationshipsForParent.forEach(relationship => {
         let childResults = goals.find({ 'id': relationship.childId })
         updateUIWith(childResults[0])
+        if (relationships.find({ parentId: relationship.childId }).length > 0) {
+            $("#" + relationship.childId).addClass("double-bottom")
+        }
     });
 }
 
