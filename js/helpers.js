@@ -908,7 +908,9 @@ function filterTempSlotsForAt() {
         .filter(task => task.hasOwnProperty("at"))
         .forEach(task => {
             console.log("Found tasks with at:", JSON.stringify(task))
-            tasksWithAtLookup[task.$loki] = task.at
+            tasksWithAtLookup[task.$loki] = {}
+            tasksWithAtLookup[task.$loki].at = task.at
+            tasksWithAtLookup[task.$loki].duration = task.duration
         })
 
     let newSlots = []
@@ -919,8 +921,9 @@ function filterTempSlotsForAt() {
     calendar.slots
         .filter(slot => tasksWithAtLookup.hasOwnProperty(slot.task_id))
         .forEach(slot => {
-            let at = tasksWithAtLookup[slot.task_id]
-            console.log("found at " + at + " for slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
+            let at = tasksWithAtLookup[slot.task_id].at
+            let duration = tasksWithAtLookup[slot.task_id].duration
+            console.log("found at " + at + " and duration " + duration + " for slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
             let startPointer = dayjs(slot.begin)
             let finish = dayjs(slot.end)
             let loopProtectionCounter = 0
@@ -934,7 +937,7 @@ function filterTempSlotsForAt() {
                     startPointer = startPointer.startOf('day').add(at, 'hour')
                     console.log("moved startpointer to this day's at:", startPointer)
                 }
-                // FYI: Don't check if startPointer + duration > finish since this is the scheduler's concern and duration could be 'sprinkled' over multiple slots
+                // FYI: Add separate slot for every startPointer + duration if not > finish
                 newSlots.push({ task_id: slot.task_id, begin: startPointer.valueOf(), end: Math.min(finish.valueOf(), startPointer.startOf('day').add(1, 'day').valueOf()) })
                 startPointer = startPointer.startOf('day').add(1, 'day')
 
