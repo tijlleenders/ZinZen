@@ -901,9 +901,19 @@ function convertTempSlotsToHoursFromStartOfToday() {
 }
 
 function filterTempSlotsForAt() {
-    console.log("Inside filterTempSlotsForAfter()...TODO")
+    console.log("Inside filterTempSlotsForAt()...TODO")
     calendar.slots.forEach(slot => {
         console.log("found at for slot with task_id:", JSON.stringify(slot))
+        //slotsForTask.forEach(
+        //  get start + finish & delete slot
+        //  if startPointer.hours() > at 
+        //    yes => startPointer = start.nextDay + at
+        //    no => startPointer = start.startOf('day') + at
+        //  if startPointer + duration > finish
+        //    yes => nothing possible here, continue to next slot
+        //    no => 
+        //          make slot from startPointer to startPointer + duration
+        //          set startPointer to startPointer + duration
     })
 }
 
@@ -2926,6 +2936,7 @@ function detectAutoCommands(inputGoal) {
                     inputGoal.at = parseInt(wordAfter)
                     inputGoal.wordsArray.splice(index, 2)
                     inputGoal.recalculateCalendar = true
+                    //Todo: auto add duration 1h if no duration present yet
                 }
             }
         }
