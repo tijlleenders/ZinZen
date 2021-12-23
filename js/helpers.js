@@ -967,7 +967,7 @@ function addTempTasksAndTempSlotsToCalendar() {
         if (task.hasOwnProperty("start")) {
             start = Math.max(task.start, start)
         }
-        let finish = dayjs().startOf('day').add(30, 'day').valueOf()
+        let finish = dayjs().startOf('day').add(MAX_CALENDAR_DAYS, 'day').valueOf()
         if (task.hasOwnProperty("finish")) {
             finish = Math.min(task.finish, finish)
         }
