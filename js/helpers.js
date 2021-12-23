@@ -947,10 +947,48 @@ function filterTempSlotsForAt() {
 }
 
 function filterTempSlotsForAfter() {
-    console.log("Inside filterTempSlotsForAfter()...TODO")
+    console.log("Inside filterTempSlotsForAfter()...TOCHECK")
+    let tasksWithAfterLookup = {}
+    tempTasks.data
+        .filter(task => task.hasOwnProperty("after"))
+        .forEach(task => {
+            console.log("Found tasks with after:", JSON.stringify(task))
+            tasksWithAfterLookup[task.$loki] = task.after
+        })
+
+    let newSlots = []
+    console.log("calendar.slots:", calendar.slots)
     calendar.slots.forEach(slot => {
-        // console.log("found after for slot with task_id:", slot.task_id)
+        console.log("Slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
     })
+    calendar.slots
+        .filter(slot => tasksWithAfterLookup.hasOwnProperty(slot.task_id))
+        .forEach(slot => {
+            let after = tasksWithAfterLookup[slot.task_id]
+            console.log("found after " + after + " for slot with task_id" + slot.task_id + ", begin " + slot.begin + " and end " + slot.end)
+            let startPointer = dayjs(slot.begin)
+            let finish = dayjs(slot.end)
+            let loopProtectionCounter = 0
+
+            while (startPointer <= finish && loopProtectionCounter < 100) {
+                loopProtectionCounter += 1
+                if (startPointer.hour() > after) {
+                    startPointer = startPointer.add(1, 'day').startOf('day').add(after, 'hour')
+                    console.log("moved startpointer till next day's after:", startPointer)
+                } else {
+                    startPointer = startPointer.startOf('day').add(after, 'hour')
+                    console.log("moved startpointer to this day's after:", startPointer)
+                }
+                // FYI: Don't check if startPointer + duration > finish since after implies task has to be finished on the same day
+                newSlots.push({ task_id: slot.task_id, begin: startPointer.valueOf(), end: Math.min(finish.valueOf(), startPointer.startOf('day').add(1, 'day').valueOf()) })
+                startPointer = startPointer.startOf('day').add(1, 'day')
+
+            }
+        })
+    console.log("newSlots:", JSON.stringify(newSlots))
+    calendar.slots = calendar.slots
+        .filter(slot => !tasksWithAfterLookup.hasOwnProperty(slot.task_id))
+    calendar.slots.push(...newSlots)
 }
 
 function addTempTasksAndTempSlotsToCalendar() {
