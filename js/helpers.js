@@ -938,9 +938,10 @@ function filterTempSlotsForAt() {
                     console.log("moved startpointer to this day's at:", startPointer)
                 }
                 // FYI: Add separate slot for every startPointer + duration if not > finish
-                newSlots.push({ task_id: slot.task_id, begin: startPointer.valueOf(), end: Math.min(finish.valueOf(), startPointer.startOf('day').add(1, 'day').valueOf()) })
+                if (startPointer.add(duration, 'hour') <= finish) {
+                    newSlots.push({ task_id: slot.task_id, begin: startPointer.valueOf(), end: startPointer.add(duration, 'hour').valueOf() })
+                }
                 startPointer = startPointer.startOf('day').add(1, 'day')
-
             }
         })
     console.log("newSlots:", JSON.stringify(newSlots))
