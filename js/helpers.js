@@ -496,18 +496,18 @@ function generateSlotHTML(slot, colors, title) {
     <div class="card slot mb-2 ' + cardStyle + ' shadow-sm" id="slot-' + slot.task_id + '">\
         <div class="card-header collapse" id="slot-header-' + slot.task_id + '">\
             <div class = "row ">\
-                <div class="col nopadding d-flex flex-column align-items-center" id="col-buttons-' + slot.task_id + '" >\
+                <div class="col nopadding d-flex flex-column align-items-center" id="col-done-' + slot.task_id + '" >\
                     Done\
                 </div>\
-                <div class="col nopadding d-flex flex-column align-items-center" id="col-buttons-' + slot.task_id + '" >\
+                <div class="col nopadding d-flex flex-column align-items-center" id="col-push-' + slot.task_id + '" >\
                     Push\
                 </div>\
-                <div class="col nopadding d-flex flex-column align-items-center" id="col-buttons-' + slot.task_id + '" >\
+                <div class="col nopadding d-flex flex-column align-items-center" id="col-pass-' + slot.task_id + '" >\
                     Pass\
                 </div>\
             </div >\
         </div >\
-        <div class="card-body">\
+        <div class="card-body" id="slot-card-body-' + slot.task_id + '">\
             <div class = "row">\
                 <div class="col-2 nopadding d-flex flex-column align-items-center" id="col-begin-end-' + slot.task_id + '" >\
                     <div class="mx-2 begin-time" id = "begin-' + slot.task_id + '" > ' + dayjs(slot.begin).format('HH:mm') + '</div >\
