@@ -126,7 +126,7 @@ function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar 
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">finish ' + inputGoal.finishStringsArray + '</span>'
     }
     if (inputGoal.hasOwnProperty("colors")) {
-        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">color ' + inputGoal.colors[0] + '</span>'
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command" style="color: var(--foreground-color);background-color: var(--card' + inputGoal.colors[0] + ') !important;" >color ' + inputGoal.colors[0] + '</span>'
     }
 
     $("#selected-commands").html(selectedCommands)
