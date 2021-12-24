@@ -211,6 +211,7 @@ $("#myModal").on("click", ".selected-command", function (e) {
             break;
         case "color":
             cycleColor(inputGoal)
+            inputGoal.recalculateCalendar = true //for color chang in slots
             break;
         default:
             console.error("no handler for command:", command)
