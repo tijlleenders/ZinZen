@@ -186,6 +186,21 @@ function generateScheduleHTMLForTasks(taskList, colors) {
     return HTML
 }
 
+function cycleColor(inputGoal) {
+    if (inputGoal.hasOwnProperty("colors")) {
+        if (inputGoal.colors[0] != undefined) {
+            let currentcolor = parseInt(inputGoal.colors[0])
+            let newColor = currentcolor + 1
+            if (newColor == 11) {
+                newColor = 1
+            }
+            inputGoal.colors[0] = newColor.toString()
+            return
+        }
+    }
+    inputGoal.colors = ["1"]
+}
+
 function updateModalUI() {
     switch ($("#myModal").data("modalType")) {
         case "add":
