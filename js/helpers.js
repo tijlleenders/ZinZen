@@ -494,8 +494,8 @@ function generateSlotHTML(slot, colors, title) {
 
     let html = '\
     <div class="card slot mb-2 ' + cardStyle + ' shadow-sm" id="slot-' + slot.task_id + '">\
-        <div class="card-header">\
-            <div class = "row">\
+        <div class="card-header collapse" id="slot-header-' + slot.task_id + '">\
+            <div class = "row ">\
                 <div class="col nopadding d-flex flex-column align-items-center" id="col-buttons-' + slot.task_id + '" >\
                     Done\
                 </div>\
