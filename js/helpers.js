@@ -495,9 +495,7 @@ function generateSlotHTML(slot, colors, title) {
     let html = '\
 <div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
         slot.task_id +
-        '" data-status="' + status + '"\
-        data-begin="' + slot.begin + '"\
-        data-end="' + slot.end + '">\
+        '\
         <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="slot-col-' +
         slot.task_id +
         '">\
