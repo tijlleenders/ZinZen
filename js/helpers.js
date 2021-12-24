@@ -493,25 +493,35 @@ function generateSlotHTML(slot, colors, title) {
     }
 
     let html = '\
-<div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
-        slot.task_id +
-        '" data-status="' + status + '"\
-        data-begin="' + slot.begin + '"\
-        data-end="' + slot.end + '">\
-        <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="slot-col-' +
-        slot.task_id +
-        '">\
-        <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + slot.task_id + '" >' +
-        '<div class="mx-2 begin-time" id="begin-' + slot.task_id + '" >' + dayjs(slot.begin).format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time" id="end-' + slot.task_id + '" >' + dayjs(slot.end).format('HH:mm') + '</div>' +
-        '</div></div>' +
-        '<div class="mx-2" id="slot-title-' + slot.task_id + '">' + title + '</div>' +
-        '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
-        '\
-        </div>\
-    </div>\
-  </div>\
-</div>'
+    <div class="card slot mb-2 ' + cardStyle + ' shadow-sm" id="slot-' + slot.task_id + '">\
+        <div class="card-header collapse" id="slot-header-' + slot.task_id + '">\
+            <div class = "row ">\
+                <div class="col nopadding d-flex flex-column align-items-center icons" id="col-done-' + slot.task_id + '" >\
+                    <svg class="icons" id="slot-svg-done-' + slot.task_id + '" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"></path></svg>\
+                    <div class="sub-title">Done</div>\
+                </div>\
+                <div class="col nopadding d-flex flex-column align-items-center icons" id="col-push-' + slot.task_id + '" >\
+                    <svg  class="icons" id="slot-svg-push-' + slot.task_id + '" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M4.97 13.22a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 10-1.06-1.06l-4.97 4.97V3.75a.75.75 0 00-1.5 0v14.44l-4.97-4.97a.75.75 0 00-1.06 0z"></path></svg>\
+                    <div class="sub-title">Push</div>\
+                </div>\
+                <div class="col nopadding d-flex flex-column align-items-center icons" id="col-pass-' + slot.task_id + '" >\
+                    <svg  class="icons" id="slot-svg-pass-' + slot.task_id + '" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M4.5 12.75a.75.75 0 01.75-.75h13.5a.75.75 0 010 1.5H5.25a.75.75 0 01-.75-.75z"></path></svg>\
+                    <div class="sub-title">Pass</div>\
+                </div>\
+            </div >\
+        </div >\
+        <div class="card-body" id="slot-card-body-' + slot.task_id + '">\
+            <div class = "row">\
+                <div class="col-2 nopadding d-flex flex-column align-items-center" id="col-begin-end-' + slot.task_id + '" >\
+                    <div class="mx-2 begin-time" id = "begin-' + slot.task_id + '" > ' + dayjs(slot.begin).format('HH:mm') + '</div >\
+                    <div class="mx-2 end-time" id="end-' + slot.task_id + '" >' + dayjs(slot.end).format('HH:mm') + '</div>\
+                </div>\
+                <div class="col-10 nopadding d-flex align-items-center" id="col-title-' + slot.task_id + '" >\
+                    <div class="mx-2" id="slot-title-' + slot.task_id + '">' + title + '</div>\
+                </div>\
+            </div>\
+        </div >\
+    </div > '
     return html
 }
 
@@ -670,7 +680,10 @@ function generateGoalHTML(properties) {
     }
 
     let status = properties.status
-    $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
+    let titleStrikeThrough = ""
+    if (status == "never") {
+        titleStrikeThrough = " text-decoration-line-through "
+    }
 
     let titleIcon = ""
     if (properties.url != undefined) {
@@ -750,7 +763,7 @@ function generateGoalHTML(properties) {
                     <div class="mr-3 status-icon`+ shakeClass + `" id="todo-circle-` + goalId + `">` + goalSvg + `</div>                    
                 </div>
                 <div class="col-10 d-flex" id="subtext-icon-` + goalId + `">
-                    <div class="title d-flex icons" id="title-` + goalId + `">              
+                    <div class="title d-flex icons`+ titleStrikeThrough + `" id="title-` + goalId + `">              
                         <div class="me-auto d-inline-block text-truncate title-text`+ shakeClass + `" id="title-text-` + goalId + `">` + title + `</div>
                     </div>
               </div>                
@@ -1039,15 +1052,6 @@ function generateImpossibleHTML() {
     impossibleGoals.forEach(goal => {
         HTML += "! Issue scheduling " + goal.title + " x/y times<br />"
     })
-    return HTML
-}
-
-function generateCalendarHTML() {
-    // console.log("inside generateCalendarHTML()")
-    let HTML = ``
-    HTML += generateImpossibleHTML()
-    HTML += generateCalendarHTML()
-
     return HTML
 }
 
