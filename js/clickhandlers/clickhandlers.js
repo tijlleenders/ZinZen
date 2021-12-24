@@ -272,19 +272,7 @@ $("#calendarSlots").on("click", ".slot", function (event) {
     let nodeId = getNodeId(event)
     let selectedSlotId = nodeId.slice(-36);
     console.log("Slot click:", selectedSlotId)
-    let goalId = $("#slot-" + selectedSlotId).data("goal-id")
-    let beginISO = $("#slot-" + selectedSlotId).data("begin")
-    let endISO = $("#slot-" + selectedSlotId).data("end")
-    let completeSlot = {
-        action: "command",
-        command: "completeSlot",
-        goalId: goalId,
-        beginISO: beginISO,
-        endISO: endISO
-    }
-    goalsLastModifiedEpochMs = new dayjs.utc().valueOf()
-    send(JSON.stringify(completeSlot))
-    $("#slot-title-" + selectedSlotId).addClass("text-decoration-line-through")
+    //Do (un)collapse here
 })
 
 
