@@ -63,7 +63,7 @@ https://opensource.guide/how-to-contribute/
 ... and read code of conduct and FAQ's.
 
 ## ...or [sponsor me with coffee!](https://github.com/sponsors/tijlleenders)
-...or give a suggestion to improve  
+...or [give a suggestion to improve](https://www.zinzen.me/contact.html)  
 ...or talk about ZinZen to someone else  
 
 <br />
