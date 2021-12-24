@@ -493,23 +493,30 @@ function generateSlotHTML(slot, colors, title) {
     }
 
     let html = '\
-<div class="row slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' +
-        slot.task_id +
-        '\
-        <div class="col nopadding text-truncate icons d-flex flex-row align-items-center" id="slot-col-' +
-        slot.task_id +
-        '">\
-        <div class="row nopadding"><div class="col nopadding d-flex flex-column" id="col-begin-end-' + slot.task_id + '" >' +
-        '<div class="mx-2 begin-time" id="begin-' + slot.task_id + '" >' + dayjs(slot.begin).format('HH:mm') + '</div>' +
-        '<div class="mx-2 end-time" id="end-' + slot.task_id + '" >' + dayjs(slot.end).format('HH:mm') + '</div>' +
-        '</div></div>' +
-        '<div class="mx-2" id="slot-title-' + slot.task_id + '">' + title + '</div>' +
-        '<div class="mx-2">' + sequenceNumberHTML + '</div>' +
-        '\
-        </div>\
-    </div>\
-  </div>\
-</div>'
+    <div class="slot card mb-2 ' + cardStyle + ' shadow-sm" id="slot-' + slot.task_id + '">\
+        <div class="card-body nopadding ">\
+            <div class = "row">\
+                <div class="col-2 nopadding d-flex flex-column align-items-center" id="col-begin-end-' + slot.task_id + '" >\
+                    <div class="mx-2 begin-time" id = "begin-' + slot.task_id + '" > ' + dayjs(slot.begin).format('HH:mm') + '</div >\
+                    <div class="mx-2 end-time" id="end-' + slot.task_id + '" >' + dayjs(slot.end).format('HH:mm') + '</div>\
+                </div>\
+                <div class="col-10 nopadding d-flex align-items-center" id="col-title-' + slot.task_id + '" >\
+                    <div class="mx-2" id="slot-title-' + slot.task_id + '">' + title + '</div>\
+                </div>\
+            </div>\
+            <div class="row">\
+                <div class="col nopadding d-flex flex-column align-items-center" id="col-buttons-' + slot.task_id + '" >\
+                    Done\
+                </div>\
+                <div class="col nopadding d-flex flex-column align-items-center" id="col-buttons-' + slot.task_id + '" >\
+                    Push\
+                </div>\
+                <div class="col nopadding d-flex flex-column align-items-center" id="col-buttons-' + slot.task_id + '" >\
+                    Pass\
+                </div>\
+            </div >\
+        </div >\
+    </div > '
     return html
 }
 
