@@ -274,7 +274,7 @@ $("#calendarSlots").on("click", ".slot", function (event) {
     let selectedTaskId = selectedTaskIdParts[selectedTaskIdParts.length - 1]
     console.log("Slot clicked for task_id:", selectedTaskId)
     //Do (un)collapse here
-
+    $("#slot-header-" + selectedTaskId).toggle()
 })
 
 
