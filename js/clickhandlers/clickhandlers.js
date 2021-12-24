@@ -270,7 +270,7 @@ function changeStatus(id) {
 $("#calendarSlots").on("click", ".slot", function (event) {
     console.log(Date.now());
     let nodeId = getNodeId(event)
-    let selectedSlotIdParts = nodeId.split('-')
+    let selectedTaskIdParts = nodeId.split('-')
     let selectedTaskId = selectedTaskIdParts[selectedTaskIdParts.length - 1]
     console.log("Slot clicked for task_id:", selectedTaskId)
     //Do (un)collapse here
