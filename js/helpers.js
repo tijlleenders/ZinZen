@@ -670,7 +670,10 @@ function generateGoalHTML(properties) {
     }
 
     let status = properties.status
-    $("#" + goalId).data("status", status) //Todo: remove if occurences replaced by properties.get("status")[0]
+    let titleStrikeThrough = ""
+    if (status == "never") {
+        titleStrikeThrough = " text-decoration-line-through "
+    }
 
     let titleIcon = ""
     if (properties.url != undefined) {
@@ -750,7 +753,7 @@ function generateGoalHTML(properties) {
                     <div class="mr-3 status-icon`+ shakeClass + `" id="todo-circle-` + goalId + `">` + goalSvg + `</div>                    
                 </div>
                 <div class="col-10 d-flex" id="subtext-icon-` + goalId + `">
-                    <div class="title d-flex icons" id="title-` + goalId + `">              
+                    <div class="title d-flex icons`+ titleStrikeThrough + `" id="title-` + goalId + `">              
                         <div class="me-auto d-inline-block text-truncate title-text`+ shakeClass + `" id="title-text-` + goalId + `">` + title + `</div>
                     </div>
               </div>                
