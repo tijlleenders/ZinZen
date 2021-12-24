@@ -1043,15 +1043,6 @@ function generateImpossibleHTML() {
     return HTML
 }
 
-function generateCalendarHTML() {
-    // console.log("inside generateCalendarHTML()")
-    let HTML = ``
-    HTML += generateImpossibleHTML()
-    HTML += generateCalendarHTML()
-
-    return HTML
-}
-
 function activateCalendarPicker() {
     $("#progress-card").on("click", "#progress-header", function (event) {
         console.log("progress-header clicked...")
