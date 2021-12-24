@@ -271,8 +271,8 @@ $("#calendarSlots").on("click", ".slot", function (event) {
     console.log(Date.now());
     let nodeId = getNodeId(event)
     let selectedSlotIdParts = nodeId.split('-')
-    let selectedSlotId = selectedSlotIdParts[selectedSlotIdParts.length - 1]
-    console.log("Slot click:", selectedSlotId)
+    let selectedTaskId = selectedTaskIdParts[selectedTaskIdParts.length - 1]
+    console.log("Slot clicked for task_id:", selectedTaskId)
     //Do (un)collapse here
 
 })
