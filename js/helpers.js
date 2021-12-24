@@ -125,6 +125,9 @@ function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar 
     if (inputGoal.finishStringsArray != undefined) {
         selectedCommands += '<span class="badge bg-secondary m-1 selected-command">finish ' + inputGoal.finishStringsArray + '</span>'
     }
+    if (inputGoal.hasOwnProperty("colors")) {
+        selectedCommands += '<span class="badge bg-secondary m-1 selected-command">color ' + inputGoal.colors[0] + '</span>'
+    }
 
     $("#selected-commands").html(selectedCommands)
 
@@ -181,6 +184,21 @@ function generateScheduleHTMLForTasks(taskList, colors) {
         HTML += generateSlotHTML(slot, colors, dayjs(slot.begin).format('DD/MM/YYYY'))
     })
     return HTML
+}
+
+function cycleColor(inputGoal) {
+    if (inputGoal.hasOwnProperty("colors")) {
+        if (inputGoal.colors[0] != undefined) {
+            let currentcolor = parseInt(inputGoal.colors[0])
+            let newColor = currentcolor + 1
+            if (newColor == 11) {
+                newColor = 1
+            }
+            inputGoal.colors[0] = newColor.toString()
+            return
+        }
+    }
+    inputGoal.colors = ["1"]
 }
 
 function updateModalUI() {

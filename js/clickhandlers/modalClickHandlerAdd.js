@@ -209,6 +209,10 @@ $("#myModal").on("click", ".selected-command", function (e) {
             delete inputGoal.repeatString
             inputGoal.recalculateCalendar = true
             break;
+        case "color":
+            cycleColor(inputGoal)
+            inputGoal.recalculateCalendar = true //for color chang in slots
+            break;
         default:
             console.error("no handler for command:", command)
     }
