@@ -153,6 +153,17 @@ body {
     background-color var(--duration) var(--timing);
 }
 
+.slot {
+  border-radius: 10px;
+  background-image: var(--bs-gradient);
+  /* background-color: var(--menu-background); */
+  flex-direction: column;
+  --duration: 0.5s;
+  --timing: ease;
+  transition: color var(--duration) var(--timing),
+    background-color var(--duration) var(--timing);
+}
+
 .modal-content,
 .modal-body,
 .modal-footer {
