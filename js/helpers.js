@@ -496,17 +496,17 @@ function generateSlotHTML(slot, colors, title) {
     <div class="card slot mb-2 ' + cardStyle + ' shadow-sm" id="slot-' + slot.task_id + '">\
         <div class="card-header collapse" id="slot-header-' + slot.task_id + '">\
             <div class = "row ">\
-                <div class="col nopadding d-flex flex-column align-items-center" id="col-done-' + slot.task_id + '" >\
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"></path></svg>\
-                    Done\
+                <div class="col nopadding d-flex flex-column align-items-center icons" id="col-done-' + slot.task_id + '" >\
+                    <svg class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M21.03 5.72a.75.75 0 010 1.06l-11.5 11.5a.75.75 0 01-1.072-.012l-5.5-5.75a.75.75 0 111.084-1.036l4.97 5.195L19.97 5.72a.75.75 0 011.06 0z"></path></svg>\
+                    <div class="sub-title">Done</div>\
                 </div>\
-                <div class="col nopadding d-flex flex-column align-items-center" id="col-push-' + slot.task_id + '" >\
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M4.97 13.22a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 10-1.06-1.06l-4.97 4.97V3.75a.75.75 0 00-1.5 0v14.44l-4.97-4.97a.75.75 0 00-1.06 0z"></path></svg>\
-                    Push\
+                <div class="col nopadding d-flex flex-column align-items-center icons" id="col-push-' + slot.task_id + '" >\
+                    <svg  class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M4.97 13.22a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 10-1.06-1.06l-4.97 4.97V3.75a.75.75 0 00-1.5 0v14.44l-4.97-4.97a.75.75 0 00-1.06 0z"></path></svg>\
+                    <div class="sub-title">Push</div>\
                 </div>\
-                <div class="col nopadding d-flex flex-column align-items-center" id="col-pass-' + slot.task_id + '" >\
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M4.5 12.75a.75.75 0 01.75-.75h13.5a.75.75 0 010 1.5H5.25a.75.75 0 01-.75-.75z"></path></svg>\
-                    Pass\
+                <div class="col nopadding d-flex flex-column align-items-center icons" id="col-pass-' + slot.task_id + '" >\
+                    <svg  class="icons" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill-rule="evenodd" d="M4.5 12.75a.75.75 0 01.75-.75h13.5a.75.75 0 010 1.5H5.25a.75.75 0 01-.75-.75z"></path></svg>\
+                    <div class="sub-title">Pass</div>\
                 </div>\
             </div >\
         </div >\
