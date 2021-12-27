@@ -164,16 +164,6 @@ function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar 
     $("#inputGoal").focus();
 }
 
-function showInstallPrompt() {
-    deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    // Optionally, send analytics event with outcome of user choice
-    console.log(`User response to the install prompt: ${outcome}`);
-    // We've used the prompt, and can't use it again, throw it away
-    deferredPrompt = null;
-}
-
 function generateScheduleHTMLForTasks(taskList, colors) {
     if (taskList.length == 0) {
         return 'Type number of hours + "h" to schedule.'
