@@ -1841,7 +1841,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "lang": "en",
         "id": "_________________install-on-computer",
-        "label": "setting",
+        "label": "setting-action",
         "title": "Install on computer (Windows, Apple, Linux)",
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1853,6 +1853,7 @@ function loadSettingGoalsAndRelationships() {
             "4"
         ],
         "commands": "setting",
+        "function": "showInstallPrompt()",
         "statusSort": 1
     })
 
@@ -1878,7 +1879,7 @@ function loadSettingGoalsAndRelationships() {
     goals.insert({
         "lang": "en",
         "id": "___________________install-on-iphone",
-        "label": "setting",
+        "label": "setting-action",
         "title": "Install on iPhone (Apple)",
         "owner": "ZinZen",
         "subCountMaybe": "0",
@@ -1890,6 +1891,7 @@ function loadSettingGoalsAndRelationships() {
             "4"
         ],
         "commands": "setting",
+        "function": "showInstallPrompt()",
         "statusSort": 1
     })
 
