@@ -217,6 +217,9 @@ function goTo(id) {
                 case "resetRepository()":
                     resetRepository()
                     break;
+                case "showInstallPrompt()":
+                    showInstallPrompt();
+                    break;
                 default:
                     console.log("function not recognized:", goal.function)
                     return
