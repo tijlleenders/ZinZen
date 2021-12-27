@@ -1627,10 +1627,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting",
         "title": "ZinZen",
         "owner": "ZinZen",
-        "subCountMaybe": "3",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -1645,10 +1641,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting",
         "title": "My settings",
         "owner": "ZinZen",
-        "subCountMaybe": "3",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -1662,11 +1654,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting",
         "title": "Install on phone or desktop",
         "owner": "ZinZen",
-        "subCountMaybe": "3",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-
         "colors": [
             "4"
         ],
@@ -1679,10 +1666,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Donate",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
         "colors": [
@@ -1698,10 +1681,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Blog",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
         "colors": [
@@ -1717,10 +1696,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting",
         "title": "About ZinZen",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -1734,10 +1709,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "About us",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
         "colors": [
@@ -1753,11 +1724,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting",
         "title": "Legal",
         "owner": "ZinZen",
-        "subCountMaybe": "3",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
-
         "colors": [
             "4"
         ],
@@ -1781,10 +1747,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting",
         "title": "Display and Language",
         "owner": "ZinZen",
-        "subCountMaybe": "2",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -1798,10 +1760,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting",
         "title": "Import / Export / Destroy all my data",
         "owner": "ZinZen",
-        "subCountMaybe": "3",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -1815,10 +1773,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Sign up / in",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
         "colors": [
@@ -1839,10 +1793,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Destroy all my data now!",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -1860,10 +1810,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Import/add goals from a file",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
         "colors": [
@@ -1879,10 +1825,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Export my goals to a file",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
         "colors": [
@@ -1902,10 +1844,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Install on computer (Windows, Apple, Linux)",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -1921,10 +1859,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Install on android (Samsung, Xiaomi, other)",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -1940,10 +1874,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Install on iPhone (Apple)",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -1963,10 +1893,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Privacy statement",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
         "colors": [
@@ -1982,10 +1908,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Terms of service",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
         "colors": [
@@ -2001,10 +1923,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Open source acknowledgements",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "link",
         "function": "openURLs()",
         "colors": [
@@ -2025,10 +1943,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting",
         "title": "Language",
         "owner": "ZinZen",
-        "subCountMaybe": "2",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -2043,10 +1957,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Light mode",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -2065,10 +1975,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "Dark mode",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -2092,10 +1998,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "🇳🇱 Dutch",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -2114,10 +2016,6 @@ function loadSettingGoalsAndRelationships() {
         "label": "setting-action",
         "title": "🇺🇸 🇬🇧 English",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "setting",
         "colors": [
             "4"
@@ -2165,10 +2063,6 @@ function loadPersonalTimeAndRelationships() {
         "label": "setting-action",
         "title": "My time",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "suggestion",
         "function": "goToCalendar()",
         "colors": [
@@ -2187,10 +2081,6 @@ function loadPersonalFeelingsAndRelationships() {
         "label": "feeling",
         "title": "My feelings 💖",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "suggestion",
         "colors": [
             "2"
@@ -2209,10 +2099,6 @@ function loadPersonalGoalsAndRelationships() {
         "label": "goal",
         "title": "My goals 🎯",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "folder",
         "colors": [
             "5"
@@ -2231,10 +2117,6 @@ function loadSuggestionsGoalsAndRelationships() {
         "label": "suggestion",
         "title": "🔭 Explore 🧭",
         "owner": "ZinZen",
-        "subCountMaybe": "3",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "suggestion",
         "colors": [
             "7"
@@ -2250,10 +2132,6 @@ function loadSuggestionsGoalsAndRelationships() {
         "label": "suggestion",
         "title": "🌲 Nature and environment goals 🌌",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "suggestion",
         "colors": [
             "7"
@@ -2267,10 +2145,6 @@ function loadSuggestionsGoalsAndRelationships() {
         "label": "suggestion",
         "title": "🧘 Mind and spirit goals ☯️",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "suggestion",
         "colors": [
             "7"
@@ -2284,10 +2158,6 @@ function loadSuggestionsGoalsAndRelationships() {
         "label": "suggestion",
         "title": "🌱 Personal growth and learning goals 💡",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "suggestion",
         "colors": [
             "7"
@@ -2301,10 +2171,6 @@ function loadSuggestionsGoalsAndRelationships() {
         "label": "suggestion",
         "title": "🎯 Career goals",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "suggestion",
         "colors": [
             "7"
@@ -2318,10 +2184,6 @@ function loadSuggestionsGoalsAndRelationships() {
         "label": "suggestion",
         "title": "💪 Health and fitness goals 🏅 🏆",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "suggestion",
         "colors": [
             "7"
@@ -2335,10 +2197,6 @@ function loadSuggestionsGoalsAndRelationships() {
         "label": "suggestion",
         "title": "🥰 💖 Relationship goals 🧑‍🤝‍🧑",
         "owner": "ZinZen",
-        "subCountMaybe": "0",
-        "subCountPromised": "0",
-        "subCountDone": "0",
-        "subCountNever": "0",
         "status": "suggestion",
         "colors": [
             "7"
