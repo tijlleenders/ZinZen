@@ -52,8 +52,18 @@
 
     <script type='application/javascript'>
         document.querySelector('#import-file').addEventListener('click', () => {
+            console.log("click")
             let selectedFile = document.getElementById('file-selector').files[0];
-            document.getElementById('file-info-preview').innerHTML = selectedFile;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                // The file's text will be printed here
+                let readText = e.target.result
+                document.getElementById('file-info-preview').innerHTML = readText;
+                let dataToLoadJSON = JSON.parse(readText);
+                console.log(dataToLoadJSON);
+            };
+            reader.readAsText(selectedFile);
         });
     </script>
 </body>
