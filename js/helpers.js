@@ -1833,10 +1833,49 @@ function loadSettingGoalsAndRelationships() {
         ],
         "function": "resetRepository()",
         "commands": "setting",
+        "statusSort": 2
+    })
+    goals.insert({
+        "lang": "en",
+        "id": "______________________________Import",
+        "label": "setting-action",
+        "title": "Import/add goals from a file",
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "link",
+        "function": "openURLs()",
+        "colors": [
+            "4"
+        ],
+        "commands": "setting",
+        "urls": ["https://ZinZen.me/import.html"],
         "statusSort": 1
     })
-
-    relationships.insert({ parentId: "_________________import-export-reset", childId: "____________________reset-repository", priority: 0, label: "setting" })
+    goals.insert({
+        "lang": "en",
+        "id": "______________________________Export",
+        "label": "setting-action",
+        "title": "Export my goals to a file",
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "link",
+        "function": "openURLs()",
+        "colors": [
+            "4"
+        ],
+        "commands": "setting",
+        "urls": ["https://ZinZen.me/export.html"],
+        "statusSort": 0
+    })
+    relationships.insert({ parentId: "_________________import-export-reset", childId: "______________________________Import", priority: 0, label: "setting" })
+    relationships.insert({ parentId: "_________________import-export-reset", childId: "______________________________Export", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "_________________import-export-reset", childId: "____________________reset-repository", priority: 2, label: "setting" })
 
     goals.insert({
         "lang": "en",
