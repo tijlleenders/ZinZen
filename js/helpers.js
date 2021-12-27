@@ -1713,6 +1713,23 @@ function loadSettingGoalsAndRelationships() {
     })
     goals.insert({
         "lang": "en",
+        "id": "________________________about-ZinZen",
+        "label": "setting",
+        "title": "About ZinZen",
+        "owner": "ZinZen",
+        "subCountMaybe": "0",
+        "subCountPromised": "0",
+        "subCountDone": "0",
+        "subCountNever": "0",
+        "status": "setting",
+        "colors": [
+            "4"
+        ],
+        "commands": "setting",
+        "statusSort": 1
+    })
+    goals.insert({
+        "lang": "en",
         "id": "_______________________________about",
         "label": "setting-action",
         "title": "About us",
@@ -1749,11 +1766,13 @@ function loadSettingGoalsAndRelationships() {
     })
 
     relationships.insert({ parentId: sessionId, childId: "______________________________ZinZen", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________install-on-phone-or-desktop", priority: 1, label: "setting" })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "______________________________donate", priority: 2, label: "setting" })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "________________________________blog", priority: 3, label: "setting" })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________________about", priority: 4, label: "setting" })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________________legal", priority: 5, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________install-on-phone-or-desktop", priority: 3, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "________________________about-ZinZen", priority: 4, label: "setting" })
+
+    relationships.insert({ parentId: "________________________about-ZinZen", childId: "______________________________donate", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "________________________about-ZinZen", childId: "________________________________blog", priority: 2, label: "setting" })
+    relationships.insert({ parentId: "________________________about-ZinZen", childId: "_______________________________about", priority: 3, label: "setting" })
+    relationships.insert({ parentId: "________________________about-ZinZen", childId: "_______________________________legal", priority: 4, label: "setting" })
 
 
     goals.insert({
@@ -1810,9 +1829,9 @@ function loadSettingGoalsAndRelationships() {
         "statusSort": 1
     })
 
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________look-and-feel", priority: 0, label: "setting" })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "__________________________sign-up-in", priority: 1, label: "setting" })
-    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________________import-export-reset", priority: 2, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_______________________look-and-feel", priority: 1, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "__________________________sign-up-in", priority: 2, label: "setting" })
+    relationships.insert({ parentId: "______________________________ZinZen", childId: "_________________import-export-reset", priority: 5, label: "setting" })
 
     goals.insert({
         "lang": "en",
@@ -2382,6 +2401,9 @@ function loadTranslations() {
 
     translations.insert(
         { "en": "About us", "nl": "Over ons" })
+
+    translations.insert(
+        { "en": "About ZinZen", "nl": "Over ZinZen" })
 
     translations.insert(
         { "en": "Legal", "nl": "Juridisch" })
