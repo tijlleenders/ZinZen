@@ -43,26 +43,16 @@
                     });
                 </script>
             </div>
+            <div class="col-12 mt-4" id="file-info-preview">
+
+            </div>
         </div>
     </div>
 
     <script type='application/javascript'>
-        document.querySelector("#local-storage").innerHTML = window.localStorage.getItem('ZinZen.db');
-        const downloadToFile = (content, filename, contentType) => {
-            const a = document.createElement('a');
-            const file = new Blob([content], { type: contentType });
-
-            a.href = URL.createObjectURL(file);
-            a.download = filename;
-            a.click();
-
-            URL.revokeObjectURL(a.href);
-        };
-
-        document.querySelector('#download-local-storage').addEventListener('click', () => {
-            const textSelection = document.querySelector("#local-storage").innerHTML;
-
-            downloadToFile(textSelection, 'ZinZen-data.txt', 'text/plain');
+        document.querySelector('#import-file').addEventListener('click', () => {
+            let selectedFile = document.getElementById('file-selector').files[0];
+            document.getElementById('file-info-preview').innerHTML = selectedFile;
         });
     </script>
 </body>
