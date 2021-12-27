@@ -26,10 +26,10 @@
     "theme_color": "#3367D6",
     "shortcuts": [
         {
-            "name": "What's today?",
-            "short_name": "ZinZen Today",
-            "description": "Calendar for today",
-            "url": "/today?source=pwa",
+            "name": "ZinZen export",
+            "short_name": "ZinZen export",
+            "description": "Export your data",
+            "url": "/export.html?source=pwa",
             "icons": [
                 {
                     "src": "/img/icons-192.png",
