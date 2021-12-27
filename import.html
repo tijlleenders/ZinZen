@@ -35,6 +35,7 @@
             </div>
             <div class="col-12 mt-4" id="import-form">
                 <input type="file" id="file-selector" accept=".txt">
+                <!--TODO: https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications#using_hidden_file_input_elements_using_the_click_method -->
                 <script>
                     const fileSelector = document.getElementById('file-selector');
                     fileSelector.addEventListener('change', (event) => {
