@@ -75,7 +75,7 @@
                 importGoals.data.forEach(importGoal => {
                     console.log("checking importGoal id", importGoal.id)
                     let matchingGoalFound = goals.find({ id: importGoal.id })
-                    if (matchingGoalFound.length == 0) {
+                    if (matchingGoalFound.length == 0 && importGoal.label == "goal") {
                         console.log("inserting importGoal id", importGoal.id)
                         let importGoalCopy = JSON.parse(JSON.stringify(importGoal))
                         delete importGoalCopy.$loki
