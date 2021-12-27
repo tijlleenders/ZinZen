@@ -2399,6 +2399,12 @@ function loadTranslations() {
         { "en": "Destroy all my data now!", "nl": "Vernietig al mijn data nu!" })
 
     translations.insert(
+        { "en": "Import/add goals from a file", "nl": "Importeer/voeg doelen van bestand toe" })
+
+    translations.insert(
+        { "en": "Export my goals to a file", "nl": "Exporteer mijn doelen naar een bestand" })
+
+    translations.insert(
         { "en": "Install on computer (Windows, Apple, Linux)", "nl": "Installeer op computer (Windows, Apple, Linux)" })
 
     translations.insert(
