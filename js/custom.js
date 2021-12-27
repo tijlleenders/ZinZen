@@ -10,12 +10,13 @@ var calendar = { "max_time_units": MAX_CALENDAR_DAYS * 24, "time_unit_qualifier"
 let wasmModule
 let deleteMode = false
 
-var repository = new loki("ZinZen.db", {
+var repository = new loki("ZinZen.db", { //Todo: use more complicated indexedDB adapter here if synchronous calls to localStorage are taking too long
     autoload: true,
     autoloadCallback: databaseInitialize,
     autosave: true,
     autosaveInterval: 4000
 });
+
 
 var goals = repository.getCollection('goals')
 var relationships = repository.getCollection('relationships')
