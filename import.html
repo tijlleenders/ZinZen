@@ -53,20 +53,51 @@
     <script type='application/javascript' src="js/lokijs/lokijs.min.js"></script>
     <script type='application/javascript'>
         var importDB;
+        var goals;
+        var relationships;
+
         var repository = new loki("ZinZen.db", { //Todo: use more complicated indexedDB adapter here if synchronous calls to localStorage are taking too long
             autoload: true,
-            autosave: false
+            autosave: false,
+            autoloadCallback: dbInitialize
         });
+        function dbInitialize() {
+            goals = repository.getCollection('goals')
+            relationships = repository.getCollection('relationships')
+        }
+
         document.querySelector('#import-file').addEventListener('click', () => {
             console.log("click")
 
             function tryAddingGoals() {
                 console.log("importDB", importDB)
                 let importGoals = importDB.getCollection('goals')
-                console.log("importGoals", importGoals)
-                importGoals.data.forEach(goal => {
-                    console.log("goal id", goal.id)
+                importGoals.data.forEach(importGoal => {
+                    console.log("checking importGoal id", importGoal.id)
+                    let matchingGoalFound = goals.find({ id: importGoal.id })
+                    if (matchingGoalFound.length == 0) {
+                        console.log("inserting importGoal id", importGoal.id)
+                        let importGoalCopy = JSON.parse(JSON.stringify(importGoal))
+                        delete importGoalCopy.$loki
+                        delete importGoalCopy.meta
+                        goals.insert(importGoalCopy)
+                    }
                 })
+
+                let importRelationships = importDB.getCollection('relationships')
+                importRelationships.data.forEach(importRelationship => {
+                    console.log("checking importRelationship:", importRelationship)
+                    let matchingRelationshipFound = relationships.find({ parentId: importRelationship.parentId, childId: importRelationship.childId })
+                    if (matchingRelationshipFound.length == 0) {
+                        console.log("inserting relationship for parentId " + importRelationship.parentId + " and childId " + importRelationship.childId)
+                        let importRelationshipCopy = JSON.parse(JSON.stringify(importRelationship))
+                        delete importRelationshipCopy.$loki
+                        delete importRelationshipCopy.meta
+                        relationships.insert(importRelationshipCopy)
+                    }
+                })
+
+                repository.saveDatabase()
             }
 
             let selectedFile = document.getElementById('file-selector').files[0];
