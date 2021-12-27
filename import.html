@@ -80,6 +80,16 @@
                         let importGoalCopy = JSON.parse(JSON.stringify(importGoal))
                         delete importGoalCopy.$loki
                         delete importGoalCopy.meta
+                        if (importGoalCopy.title.hasOwnProperty("en")) {
+                            let temp = importGoalCopy.title['en']
+                            delete importGoalCopy.title
+                            importGoalCopy.title = temp
+                        }
+                        if (importGoalCopy.title.hasOwnProperty("nl")) {
+                            let temp = importGoalCopy.title['nl']
+                            delete importGoalCopy.title
+                            importGoalCopy.title = temp
+                        }
                         goals.insert(importGoalCopy)
                     }
                 })
