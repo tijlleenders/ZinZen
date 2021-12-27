@@ -195,9 +195,18 @@ window.addEventListener("load", () => {
                         serviceWorker = swReg;
                     }, reason => {
                         console.log("rejected reason:", reason)
+                        const url3 = "http://127.0.0.1:8080"
+                        serviceWorker = navigator.serviceWorker.register("service-worker.js", { scope: url3 })
+                            .then(swReg => {
+                                console.log("Service Worker is registered", swReg);
+                                serviceWorker = swReg;
+                            }, reason => {
+                                console.log("rejected reason:", reason)
+                            });
                     });
             });
-    }
+
+    };
     wasmModule = wasm_bindgen("./zinzen_scheduler_bg.wasm")
 });
 
