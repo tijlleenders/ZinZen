@@ -34,8 +34,15 @@
                         id="download-local-storage-button">Download!</button>
                 </div>
             </div>
-            <div class="col-12 mt-4" id="local-storage">
-
+            <div class="col-12 mt-4" id="import-form">
+                <input type="file" id="file-selector">
+                <script>
+                    const fileSelector = document.getElementById('file-selector');
+                    fileSelector.addEventListener('change', (event) => {
+                        const fileList = event.target.files;
+                        console.log(fileList);
+                    });
+                </script>
             </div>
         </div>
     </div>
