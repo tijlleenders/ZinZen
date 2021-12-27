@@ -1,0 +1,64 @@
+<!doctype html>
+
+<html lang="en" data-theme="light">
+
+<head>
+    <title>ZinZen&reg;</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ZinZen&reg;">
+    <meta name="author" content="Tijl Leenders">
+
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+</head>
+
+<body class="body" id="page-body">
+
+    <div class="container" id="dream-screen">
+        <div class="row mt-4" id="main-info">
+            <div class="col-12 d-flex justify-content-center">
+                <img src="./img/icons-192.png" alt="ZinZen" width="192" height="192">
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div>
+                    <p>
+                    <div class="fs-2 text-center">ZinZen</div>
+                    <div class="fs-6 text-center">Realize dreams together.</div>
+                    </p>
+                </div>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div class="m-1" id="download-local-storage">
+                    <button type="button" class="btn btn-primary btn-lg m-1"
+                        id="download-local-storage-button">Download!</button>
+                </div>
+            </div>
+            <div class="col-12 mt-4" id="local-storage">
+
+            </div>
+        </div>
+    </div>
+
+    <script type='application/javascript'>
+        document.querySelector("#local-storage").innerHTML = window.localStorage.getItem('ZinZen.db');
+        const downloadToFile = (content, filename, contentType) => {
+            const a = document.createElement('a');
+            const file = new Blob([content], { type: contentType });
+
+            a.href = URL.createObjectURL(file);
+            a.download = filename;
+            a.click();
+
+            URL.revokeObjectURL(a.href);
+        };
+
+        document.querySelector('#download-local-storage').addEventListener('click', () => {
+            const textSelection = document.querySelector("#local-storage").innerHTML;
+
+            downloadToFile(textSelection, 'ZinZen-data.txt', 'text/plain');
+        });
+    </script>
+</body>
+
+</html>
