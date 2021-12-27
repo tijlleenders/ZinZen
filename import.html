@@ -57,7 +57,6 @@
 
             const reader = new FileReader();
             reader.onload = function (e) {
-                // The file's text will be printed here
                 let readText = e.target.result
                 document.getElementById('file-info-preview').innerHTML = readText;
                 let dataToLoadJSON = JSON.parse(readText);
