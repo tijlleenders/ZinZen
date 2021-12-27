@@ -228,6 +228,7 @@ window.addEventListener('popstate', function () {
 })
 
 async function showInstallPrompt() {
+    console.log("Inside showInstallPrompt()...")
     deferredPrompt.prompt();
     // Wait for the user to respond to the prompt
     const { outcome } = await deferredPrompt.userChoice;
