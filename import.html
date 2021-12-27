@@ -50,7 +50,12 @@
         </div>
     </div>
 
+    <script type='application/javascript' src="js/lokijs/lokijs.min.js"></script>
     <script type='application/javascript'>
+        var repository = new loki("ZinZen.db", { //Todo: use more complicated indexedDB adapter here if synchronous calls to localStorage are taking too long
+            autoload: true,
+            autosave: false
+        });
         document.querySelector('#import-file').addEventListener('click', () => {
             console.log("click")
             let selectedFile = document.getElementById('file-selector').files[0];
@@ -61,9 +66,16 @@
                 document.getElementById('file-info-preview').innerHTML = readText;
                 let dataToLoadJSON = JSON.parse(readText);
                 console.log(dataToLoadJSON);
+                localStorage.setItem('toImport.db', readText);
+                var importDB = new loki("toImport.db", { //Todo: use more complicated indexedDB adapter here if synchronous calls to localStorage are taking too long
+                    autoload: true,
+                    autosave: false
+                });
+                console.log("importDB", importDB)
             };
             reader.readAsText(selectedFile);
         });
+
     </script>
 </body>
 
