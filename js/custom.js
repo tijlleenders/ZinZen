@@ -18,23 +18,28 @@ var repository = new loki("ZinZen.db", { //Todo: use more complicated indexedDB 
 });
 
 
-var goals = repository.getCollection('goals')
-var relationships = repository.getCollection('relationships')
-var translations = repository.getCollection('translations')
-var settings = repository.getCollection('settings')
-var tasks = repository.getCollection('tasks')
-var taskRelations = repository.getCollection('taskRelations')
-var slots = repository.getCollection('slots')
-var tempSlots = repository.getCollection('tempSlots')
-var tempTasks = repository.getCollection('tempTasks')
-var tempTaskRelations = repository.getCollection('tempTaskRelations')
+var goals
+var relationships
+var translations
+var settings
+var tasks
+var taskRelations
+var slots
+var tempSlots
+var tempTasks
+var tempTaskRelations
 
 function databaseInitialize() {
-    console.log("Inside databaseInitialize...")
     goals = repository.getCollection('goals')
     relationships = repository.getCollection('relationships')
     translations = repository.getCollection('translations')
     settings = repository.getCollection('settings')
+    tasks = repository.getCollection('tasks')
+    taskRelations = repository.getCollection('taskRelations')
+    slots = repository.getCollection('slots')
+    tempSlots = repository.getCollection('tempSlots')
+    tempTasks = repository.getCollection('tempTasks')
+    tempTaskRelations = repository.getCollection('tempTaskRelations')
 
     if (goals == null && relationships == null) {
         goals = repository.addCollection('goals', {
