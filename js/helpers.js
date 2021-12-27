@@ -1871,7 +1871,7 @@ function loadSettingGoalsAndRelationships() {
             "4"
         ],
         "commands": "setting",
-        "function": "showInstallPromt()",
+        "function": "showInstallPrompt()",
         "statusSort": 1
     })
 
