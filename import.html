@@ -52,12 +52,23 @@
 
     <script type='application/javascript' src="js/lokijs/lokijs.min.js"></script>
     <script type='application/javascript'>
+        var importDB;
         var repository = new loki("ZinZen.db", { //Todo: use more complicated indexedDB adapter here if synchronous calls to localStorage are taking too long
             autoload: true,
             autosave: false
         });
         document.querySelector('#import-file').addEventListener('click', () => {
             console.log("click")
+
+            function tryAddingGoals() {
+                console.log("importDB", importDB)
+                let importGoals = importDB.getCollection('goals')
+                console.log("importGoals", importGoals)
+                importGoals.data.forEach(goal => {
+                    console.log("goal id", goal.id)
+                })
+            }
+
             let selectedFile = document.getElementById('file-selector').files[0];
 
             const reader = new FileReader();
@@ -67,11 +78,11 @@
                 let dataToLoadJSON = JSON.parse(readText);
                 console.log(dataToLoadJSON);
                 localStorage.setItem('toImport.db', readText);
-                var importDB = new loki("toImport.db", { //Todo: use more complicated indexedDB adapter here if synchronous calls to localStorage are taking too long
+                importDB = new loki("toImport.db", { //Todo: use more complicated indexedDB adapter here if synchronous calls to localStorage are taking too long
                     autoload: true,
-                    autosave: false
+                    autosave: false,
+                    autoloadCallback: tryAddingGoals
                 });
-                console.log("importDB", importDB)
             };
             reader.readAsText(selectedFile);
         });
