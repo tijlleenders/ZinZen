@@ -135,9 +135,9 @@ function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar 
     if (inputGoal.hasOwnProperty("suggestedCommands") && inputGoal.suggestedCommands.length > 0) {
         suggestedCommands = `Suggested commands: `
         inputGoal.suggestedCommands.forEach(suggestionSet => {
-            suggestionSet.forEach(suggestion => {
+            for (suggestion in Object.entries(suggestionSet)) { //JSON.stringify turns Set into object
                 suggestedCommands += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 command-suggestion">' + suggestion + '</button>'
-            })
+            }
         });
     }
 
@@ -147,9 +147,9 @@ function updateModalAddUI(inputGoal) { //updateModalUI doesn't know if calendar 
     if (inputGoal.hasOwnProperty("suggestedWords") && inputGoal.suggestedWords.length > 0) {
         suggestedWords = `Suggested words: `
         inputGoal.suggestedWords.forEach(suggestionSet => {
-            suggestionSet.forEach(suggestion => {
+            for (suggestion in Object.entries(suggestionSet)) { //JSON.stringify turns Set into object
                 suggestedWords += '<button type="button" class="btn btn-outline-secondary btn-sm m-1 word-suggestion">' + suggestion + '</button>'
-            })
+            }
         });
     }
     $("#suggested-words").html(suggestedWords)
