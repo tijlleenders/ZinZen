@@ -7,7 +7,7 @@ import Right from './Right'
 const Mainbody = () => {
     return (
         <div className="h-100 d-inline-block">
-            <Container fluid className="p1">
+            <Container fluid>
                 <Row >
                 <Col sm={1}></Col>
                     <Col sm ><Left /></Col>

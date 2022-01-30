@@ -3,12 +3,6 @@
   font-family: "Montserrat";
 }
 
-.left-panel-font1{
-  color: #3B6899;
-  font-weight: bolder;
-  font-size: 2em;
-}
-
 html{
   background-color:  #F0E6E1 ;
 }
@@ -23,58 +17,10 @@ body{
   color:#291B5C;
 }
 
-.containerLang{
-  align-items: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.btn-primary {
-  background-color: #AC3B61 !important;
-  color: #FFFFFF !important;
-  font-size: 12em;
-}
-
-.book-icon{
-  max-width: 85%;
-  height: auto;
-}
-
-.p1{
-  max-height: 100%;
+.left-panel-font1{
+  color: #3B6899;
+  font-weight: bolder;
+  font-size: 2em;
 }
 
 .left-panel-font2{
@@ -84,22 +30,31 @@ body{
   font-size: 2em;
 }
 
-.right-panel-font{
-  color: #AC3B61;
-  font-weight: bolder;
-  font-size: 1.2rem;
-  margin-top: 24%;
+.btn-primary {
+  background-color: #AC3B61 !important;
+  color: #FFFFFF !important;
+  font-size: 12em;
+}
+
+.containerLang{
+  align-items: center;
+}
+
+.book-icon{
+  width: 90%;
+  height: auto;
 }
 
 .right-panel{
   justify-content: center;
 }
 
-.lang-btn{
-  color: #FFFFFF !important;
-  font-weight: bolder !important;
-  font-size: 1.2rem !important;
-   width: 300px !important;
+.right-panel-font{
+  color: #AC3B61;
+  font-weight: bolder;
+  font-size: 1.2rem;
+  margin-top: 25%;
+  padding-left: 5%;
 }
 
 .containerLang{
@@ -107,8 +62,28 @@ body{
   flex-direction: column;
   justify-content: center;
 }
-.navbarCont{
-  display: flex !important;
-  justify-content: center !important;
 
+.lang-btn1{
+  color:#000000 !important;
+  font-weight: bolder !important;
+  font-size: 1.2rem !important;
+   width: 300px !important;
+   margin-top: 0.7em;
+   text-align: left !important;
+   padding-left: 8% !important;
+   border-radius: 10px !important;
+}
+.lang-btn2{
+  color: #FFFFFF !important;
+  font-weight: bolder !important;
+  font-size: 1.2rem !important;
+   width: 300px !important;
+   margin-top: 0.7em;
+   text-align: left !important;
+   padding-left: 8% !important;
+   border-radius: 10px !important;
+}
+
+.navbarCont{
+  color:#000000 !important;
 }

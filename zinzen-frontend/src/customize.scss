@@ -1,6 +1,25 @@
 $theme-colors: (
     "primary-base": #F0E6E1,
+    "peach": #EDC7B7,
     "dark-pink": #AC3B61,
+    "grey-base": #BAB2BC,
+    "pale-blue" : #3B6899,
+
+
+
+    
 );
+
+.lang-btn2{
+    color: #FFFFFF ;
+    font-weight: bolder ;
+    font-size: 1.2rem ;
+     width: 300px ;
+     margin-top: 0.7em;
+     text-align: left ;
+     padding-left: 8% ;
+     border-radius: 10px ;
+  }
+  
 
 @import "~bootstrap/scss/bootstrap";
