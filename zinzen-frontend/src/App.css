@@ -84,6 +84,17 @@ body{
    border-radius: 10px !important;
 }
 
+.themechoice{
+  width: 102%;
+}
+.theme-btn1{
+  background-color: #F0E6E1 !important;
+}
+
+.theme-btn2{
+  background-color: #121212 !important;
+}
+
 .navbarCont{
   color:#000000 !important;
 }
