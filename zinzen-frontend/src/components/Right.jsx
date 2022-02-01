@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Languages } from './Languages' 
-import  Themes  from './Themes' 
+import { Languages } from './Languages'
+import Themes from './Themes'
 import { languageSelectionState } from '../store/LanguageSelectionState'
 import { useRecoilState } from 'recoil'
 
 const Right = () => {
-  let languages= [
+  let languages = [
     {
       sno: 1,
       title: "Language 1"
@@ -31,18 +31,18 @@ const Right = () => {
       title: "Language 6"
     }
   ]
-const [isLanguageChosen, setIsLanguageChosen]=useRecoilState(languageSelectionState);
+  const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
   return (
     <div>
-    { !isLanguageChosen && (<div className="right-panel">
-      <h3 className="right-panel-font">Choose your preferred Language.</h3>
-      <Languages languages={languages}/>
-    </div>)}
-    { isLanguageChosen && (<div className="right-panel">
-      <h3 className="right-panel-font">Choose your preferred Theme.</h3>
-      <Themes/>
-    </div>)}
-  </div>)
-  }
+      {!isLanguageChosen && (<div className="right-panel">
+        <h3 className="right-panel-font">Choose your preferred Language.</h3>
+        <Languages languages={languages} />
+      </div>)}
+      {isLanguageChosen && (<div className="right-panel">
+        <h3 className="right-panel-font">Choose your preferred Theme.</h3>
+        <Themes />
+      </div>)}
+    </div>)
+}
 
 export default Right

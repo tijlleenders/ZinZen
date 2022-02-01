@@ -9,7 +9,7 @@ const Mainbody = () => {
         <div className="h-100 d-inline-block">
             <Container fluid>
                 <Row >
-                <Col sm={1}></Col>
+                    <Col sm={1}></Col>
                     <Col sm ><Left /></Col>
                     <Col sm><Middle /></Col>
                     <Col sm><Right /></Col>
