@@ -1,0 +1,30 @@
+name: GitHub Pages Deploy
+
+on:
+  push:
+    branches:
+      - "dev"
+      
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install and build
+        run: echo $pwd
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.2.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build
+
+
