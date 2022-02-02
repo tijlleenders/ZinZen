@@ -1,7 +1,7 @@
 import React from 'react'
 import { LangItem } from './LangItem'
 
-export const Languages = (props) => {
+export const LanguagesList = (props) => {
   return (
     <div className="containerLang">
       {props.languages.map((lang) => {

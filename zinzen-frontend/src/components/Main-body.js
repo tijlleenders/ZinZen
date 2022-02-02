@@ -1,8 +1,8 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import Left from './Left'
-import Middle from './Middle'
-import Right from './Right'
+import TitlePanelLeft from './Title-panel-left'
+import ImageIconPanelMiddle from './ImageIconPanelMiddle'
+import UserChoicePanelRight from './UserChoicePanelRight'
 
 const Mainbody = () => {
     return (
@@ -10,9 +10,9 @@ const Mainbody = () => {
             <Container fluid>
                 <Row >
                     <Col sm={1}></Col>
-                    <Col sm ><Left /></Col>
-                    <Col sm><Middle /></Col>
-                    <Col sm><Right /></Col>
+                    <Col sm ><TitlePanelLeft /></Col>
+                    <Col sm><ImageIconPanelMiddle /></Col>
+                    <Col sm><UserChoicePanelRight /></Col>
                     <Col sm={1}></Col>
                 </Row>
             </Container>

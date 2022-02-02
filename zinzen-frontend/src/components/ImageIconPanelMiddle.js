@@ -1,7 +1,7 @@
 import React from 'react'
 import BookIcon from '../images/bookicon.svg'
 
-const Middle = () => {
+const ImageIconPanelMiddle = () => {
   return (
     <div>
       <br />
@@ -13,4 +13,4 @@ const Middle = () => {
   )
 }
 
-export default Middle
+export default ImageIconPanelMiddle

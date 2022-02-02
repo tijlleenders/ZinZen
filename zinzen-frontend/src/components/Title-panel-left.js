@@ -1,7 +1,7 @@
 import React from 'react'
 import "@fontsource/kristi";
 
-const Left = () => {
+const TitlePanelLeft = () => {
   return (
     <div className="left-panel">
       <h1 className="zinzen-text">ZinZen</h1>
@@ -14,4 +14,4 @@ const Left = () => {
   )
 }
 
-export default Left
+export default TitlePanelLeft

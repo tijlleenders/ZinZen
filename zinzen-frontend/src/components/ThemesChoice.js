@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from 'react-bootstrap';
 import ThemeDark from '../images/DashboardThemeDark.svg'
 import ThemeLight from '../images/DashboardThemeLight.svg'
-const Themes = () => {
+const ThemesChoice = () => {
     return (
         <div>
             <Button variant="primary" size="lg" className="theme-choice-btn">
@@ -17,4 +17,4 @@ const Themes = () => {
     )
 }
 
-export default Themes
+export default ThemesChoice
