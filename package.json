@@ -2,6 +2,8 @@
   "name": "zinzen-frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://tijlleenders.github.io/ZinZen/",
+  
   "dependencies": {
     "@fontsource/kristi": "^4.5.2",
     "@fontsource/montserrat": "^4.5.3",
