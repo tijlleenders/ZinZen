@@ -5,9 +5,15 @@ import { useRecoilState } from 'recoil'
 
 export const LangItem = ({ lang }) => {
     const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
+    const handleClick = (langId) => {
+        setIsLanguageChosen(true);
+        changeLanguage(langId);
+        localStorage.setItem("language", JSON.stringify(langId));
+    }
+       
     return (
         <div className="containerLang">
-            {lang.sno % 4 === 1 ? <Button variant="peach" size="lg" className="lang-btn1" onClick={() => { setIsLanguageChosen(true) }}>
+            {lang.sno % 4 === 1 ? <Button variant="peach" size="lg" className="lang-btn1" onClick={() => { setIsLanguageChosen(true);}}>
                 {lang.title}
             </Button> : lang.sno % 4 === 2 ? <Button variant="dark-pink" size="lg" className="lang-btn1" onClick={() => { setIsLanguageChosen(true) }}>
                 {lang.title}

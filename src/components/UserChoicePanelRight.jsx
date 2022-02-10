@@ -8,27 +8,23 @@ const UserChoicePanelRight = () => {
   let languages = [
     {
       sno: 1,
-      title: "Language 1"
+      title: "English",
+      langId: "en"
     },
     {
       sno: 2,
-      title: "Language 2"
+      title: "French",
+      langId: "fr"
     },
     {
       sno: 3,
-      title: "Language 3"
+      title: "Hindi",
+      langId: "hi"
     },
     {
       sno: 4,
-      title: "Language 4"
-    },
-    {
-      sno: 5,
-      title: "Language 5"
-    },
-    {
-      sno: 6,
-      title: "Language 6"
+      title: "Spanish",
+      langId: "es"
     }
   ]
   const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
