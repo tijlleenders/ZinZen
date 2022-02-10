@@ -1,4 +1,4 @@
-name: reviewdog
+name: ESLint
 on: [push]
 jobs:
   eslint:
