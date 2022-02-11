@@ -9,6 +9,8 @@ export const LangItem = ({ lang }) => {
         setIsLanguageChosen(true);
         //changeLanguage(langId);
         localStorage.setItem("language", JSON.stringify(langId));
+        window.location.reload(false);
+
     }
        
     return (
