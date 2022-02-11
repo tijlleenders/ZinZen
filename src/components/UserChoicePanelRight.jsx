@@ -3,8 +3,11 @@ import { LanguagesList } from './LanguagesList'
 import ThemesChoice from './ThemesChoice'
 import { languageSelectionState } from '../store/LanguageSelectionState'
 import { useRecoilState } from 'recoil'
+import { useTranslation } from "react-i18next";
+import "../translations/i18n"
 
 const UserChoicePanelRight = () => {
+  const { t } = useTranslation();
   let languages = [
     {
       sno: 1,
@@ -35,7 +38,7 @@ const UserChoicePanelRight = () => {
         <LanguagesList languages={languages} />
       </div>) :
         (<div className="right-panel">
-        <h3 className="right-panel-font">Choose your preferred Theme.</h3>
+        <h3 className="right-panel-font">{t("themechoice")}</h3>
         <ThemesChoice />
       </div>)}
     </div>)
