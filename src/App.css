@@ -1,0 +1,158 @@
+/*Main body and App*/
+
+.App {
+    background-color: #F0E6E1;
+    font-family: "Montserrat";
+    font-weight: bolder !important;
+}
+
+html {
+    background-color: #F0E6E1;
+}
+
+body {
+    background-color: #F0E6E1;
+}
+
+
+/*Navbar*/
+
+.nav-link {
+    color: #000000 !important;
+    font-size: 1.2em;
+    margin: 0.3em 1.5em 0 1.5em;
+}
+
+.nav-link:hover {
+    font-size: 1.25em;
+    color: #3B6899 !important;
+}
+
+
+/*Left Panel- ZinZen font, Text, Learn More button customization*/
+
+.zinzen-text {
+    font-family: "Kristi";
+    font-size: 7em;
+    color: #291B5C;
+    margin-top: 0.7em;
+}
+
+.left-panel-font1 {
+    color: #3B6899;
+    font-weight: bolder;
+    font-size: 2em;
+}
+
+.left-panel-font2 {
+    color: #AC3B61;
+    font-style: italic;
+    font-weight: bolder;
+    font-size: 2em;
+}
+
+.btn-primary-learnmore {
+    border-radius: 4px;
+    background-color: #AC3B61 !important;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 1.2em;
+    padding: 0.5em;
+    font-weight: bold;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin-left: 0.2em;
+    margin-top: 0.7em;
+}
+
+.btn-primary-learnmore span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.btn-primary-learnmore span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.btn-primary-learnmore:hover span {
+    padding-right: 25px;
+}
+
+.btn-primary-learnmore:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+
+/*Book Icon*/
+
+.book-icon {
+    width: 90%;
+    height: auto;
+}
+
+
+/*Right Panel-Text, language buttons, theme choice buttons*/
+
+.containerLang {
+    align-items: center;
+}
+
+.right-panel-font {
+    color: #AC3B61;
+    font-weight: bolder;
+    font-size: 1.2rem;
+    margin-top: 25%;
+    padding-left: 5%;
+}
+
+.containerLang {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lang-btn1 {
+    color: #000000 !important;
+    font-weight: bolder !important;
+    font-size: 1.2rem !important;
+    width: 300px !important;
+    margin-top: 0.7em;
+    text-align: left !important;
+    padding-left: 8% !important;
+    border-radius: 10px !important;
+}
+
+.lang-btn2 {
+    color: #FFFFFF !important;
+    font-weight: bolder !important;
+    font-size: 1.2rem !important;
+    width: 300px !important;
+    margin-top: 0.7em;
+    text-align: left !important;
+    padding-left: 8% !important;
+    border-radius: 10px !important;
+}
+
+.themechoice {
+    width: 102%;
+}
+
+.theme-choice-btn {
+    background-color: #F0E6E1 !important;
+    border: none !important;
+}
+
+.theme-choice-btn:hover {
+    background-color: #F0E6E1 !important;
+    border: none !important;
+    padding: 5px 10px !important;
+}
