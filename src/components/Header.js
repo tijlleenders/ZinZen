@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useTranslation } from "react-i18next";
+import "../translations/i18n"
 
 const Header = () => {
-
+    const { t } = useTranslation();
     return (
         <div className="navbar-custom">
             <nav className="navbar-custom navbar navbar-expand-sm navbar-light ">
@@ -15,14 +17,14 @@ const Header = () => {
                         <ul className="navbar-nav">
                             <li></li>
                             <li className="nav-item active">
-                                <a className="nav-link" href="#">Home</a>
+                                <a className="nav-link" href="#">{t("home")}</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="#">Discover</a>
+                                <a className="nav-link" href="#">{t("discover")}</a>
                             </li>
 
                             <li className="nav-item">
-                                <a className="nav-link" href="#">Donate</a>
+                                <a className="nav-link" href="#">{t("donate")}</a>
                             </li>
                         </ul>
                     </div>

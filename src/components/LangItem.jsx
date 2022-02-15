@@ -2,14 +2,18 @@ import React from 'react'
 import { Button, } from 'react-bootstrap'
 import { languageSelectionState } from '../store/LanguageSelectionState'
 import { useRecoilState } from 'recoil'
+import i18n from 'i18next';
 
 export const LangItem = ({ lang }) => {
     const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
     const handleClick = (langId) => {
         setIsLanguageChosen(true);
-        //changeLanguage(langId);
+        i18n.changeLanguage(langId);
         localStorage.setItem("language", JSON.stringify(langId));
+        window.location.reload(false);
+
     }
+
        
     return (
         <div className="containerLang">
