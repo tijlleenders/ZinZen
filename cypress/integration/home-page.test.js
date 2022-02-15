@@ -21,4 +21,5 @@ describe('Basic Tests Home Page', () => {
     it("should display the book icon", () => {
         cy.get('[alt="Book Icon"]').should('be.visible');
     });
+
 })
