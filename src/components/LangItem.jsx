@@ -4,6 +4,9 @@ import { languageSelectionState } from '../store/LanguageSelectionState'
 import { useRecoilState } from 'recoil'
 import i18n from 'i18next';
 
+
+
+
 export const LangItem = ({ lang }) => {
     const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
     const handleClick = (langId) => {
@@ -11,6 +14,7 @@ export const LangItem = ({ lang }) => {
         i18n.changeLanguage(langId);
         localStorage.setItem("language", JSON.stringify(langId));
         window.location.reload(false);
+     
 
     }
 

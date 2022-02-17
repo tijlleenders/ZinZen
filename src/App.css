@@ -156,3 +156,109 @@ body {
     border: none !important;
     padding: 5px 10px !important;
 }
+/*Dashboard*/
+
+.book-icon-dashboard {
+    width: 100%;
+    height: auto;
+    margin-top: 6em;
+}
+
+.dashboard-choice-btn {
+    color: #000000 !important;
+    font-weight: bolder !important;
+    font-size: 1.4rem !important;
+    width: 19em !important;
+    margin-bottom: 1.2em !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+.dashboard-choice-btn1 {
+    color: #000000 !important;
+    font-weight: bolder !important;
+    font-size: 1.4rem !important;
+    width: 19em !important;
+    margin-top: 3em !important;
+    margin-bottom: 1.2em;
+    text-align: center !important;
+    border-radius: 10px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+
+@media only screen and (max-width: 600px){
+    .left-panel-font1 {
+        color: #3B6899;
+        font-weight: bolder;
+        font-size: 7.2vw;
+        padding-left: 1.5em;
+    }
+    
+    .left-panel-font2 {
+        color: #AC3B61;
+        font-style: italic;
+        font-weight: bolder;
+        font-size: 7.2vw;
+        padding-left: 1.5em;
+    }
+
+    .zinzen-text {
+        font-family: "Kristi";
+        font-size: 25vw;
+        color: #291B5C;
+        margin-top: 0.2em;
+        margin-left: 0.4em;
+    }
+
+    .btn-primary-learnmore {
+        border-radius: 4px;
+        background-color: #AC3B61 !important;
+        border: none;
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 5vw;
+        padding: 0.5em;
+        font-weight: bold;
+        transition: all 0.5s;
+        cursor: pointer;
+        margin-left: 5em;
+        
+        margin-top: 0.7em;
+    }
+    
+    .btn-primary-learnmore span {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        transition: 0.5s;
+    }
+    
+    .btn-primary-learnmore span:after {
+        content: '\00bb';
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        right: -20px;
+        transition: 0.5s;
+    }
+    
+    .btn-primary-learnmore:hover span {
+        padding-right: 25px;
+    }
+    
+    .btn-primary-learnmore:hover span:after {
+        opacity: 1;
+        right: 0;
+    }
+    .book-icon {
+        width: 70%;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
