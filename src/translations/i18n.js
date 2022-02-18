@@ -9,6 +9,7 @@ import TRANSLATIONS_EN from "./en/translation.json";
 import TRANSLATIONS_ES from "./es/translation.json";
 import TRANSLATIONS_FR from "./fr/translation.json";
 import TRANSLATIONS_HI from "./hi/translation.json";
+import TRANSLATIONS_NL from "./nl/translation.json";
 
 i18n
   .use(LanguageDetector)
@@ -27,6 +28,9 @@ i18n
       },
       hi: {
         translation: TRANSLATIONS_HI
+      },
+      nl: {
+        translation: TRANSLATIONS_NL
       }
     }
   });
