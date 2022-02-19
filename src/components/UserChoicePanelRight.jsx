@@ -36,7 +36,6 @@ const UserChoicePanelRight = () => {
     }
   ]
   const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
-  {console.log(isLanguageChosen)}
   return (
     <div>
      
