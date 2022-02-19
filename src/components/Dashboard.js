@@ -3,7 +3,9 @@ import ImageDashboard from './ImageDashboard'
 import UserChoiceDashboard from './UserChoiceDashboard'
 import { Container, Row, Col } from 'react-bootstrap'
 
+
 const Dashboard = () => {
+
   return (
     <div>
       <Container fluid>
