@@ -9,7 +9,7 @@ const TitlePanelLeft = () => {
       <h4 className="left-panel-font2"><i>self-actualization</i></h4>
       <h4 className="left-panel-font1">and</h4>
       <h4 className="left-panel-font2"><i>collaboration</i></h4>
-      <button class="btn-primary-learnmore"><span>Learn More!</span></button>
+      <button className="btn-primary-learnmore"><span>Learn More!</span></button>
     </div>
   )
 }
