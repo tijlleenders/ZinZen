@@ -28,12 +28,18 @@ const UserChoicePanelRight = () => {
       sno: 4,
       title: "Spanish",
       langId: "es"
+    },
+    {
+      sno: 5,
+      title: "Dutch",
+      langId: "nl"
     }
   ]
   const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
   return (
     <div>
-      {(isLanguageChosen==="No language chosen.") ? (<div className="right-panel">
+     
+      {(isLanguageChosen==="No language chosen." || isLanguageChosen==="")  ? (<div className="right-panel">
         <h3 className="right-panel-font">Choose your preferred Language.</h3>
         <LanguagesList languages={languages} />
       </div>) :

@@ -10,7 +10,7 @@
         {
             "src": "/img/icons-512.png",
             "type": "image/png",
-            "sizes": "512x512"
+            "sizes": "16x16"
         }
     ],
     "start_url": "/index.html?source=pwa",

@@ -17,10 +17,17 @@ body {
 
 /*Navbar*/
 
-.nav-link {
+.navbar-custom{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.nav-link { 
+
     color: #000000 !important;
     font-size: 1.2em;
-    margin: 0.3em 1.5em 0 1.5em;
+    margin: 0.3em 3.2em 0 1.5em;
 }
 
 .nav-link:hover {
@@ -97,6 +104,7 @@ body {
 .book-icon {
     width: 90%;
     height: auto;
+    margin-top: 5em;
 }
 
 
@@ -155,4 +163,132 @@ body {
     background-color: #F0E6E1 !important;
     border: none !important;
     padding: 5px 10px !important;
+}
+/*Dashboard*/
+
+.book-icon-dashboard {
+    width: 100%;
+    height: auto;
+    margin-top: 6em;
+}
+
+.dashboard-choice-btn {
+    color: #000000 !important;
+    font-weight: bolder !important;
+    font-size: 1.4rem !important;
+    width: 19em !important;
+    margin-bottom: 1.2em !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+.dashboard-choice-btn1 {
+    color: #000000 !important;
+    font-weight: bolder !important;
+    font-size: 1.4rem !important;
+    width: 19em !important;
+    margin-top: 3em !important;
+    margin-bottom: 1.2em;
+    text-align: center !important;
+    border-radius: 10px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+
+@media only screen and (max-width: 600px){
+    .left-panel-font1 {
+        color: #3B6899;
+        font-weight: bolder;
+        font-size: 5.2vw;
+        padding-left: 4em;
+    }
+    
+    .left-panel-font2 {
+        color: #AC3B61;
+        font-style: italic;
+        font-weight: bolder;
+        font-size: 5.2vw;
+        padding-left: 4em;
+    }
+
+    .zinzen-text {
+        font-family: "Kristi";
+        font-size: 20vw;
+        color: #291B5C;
+        margin-top: 0em;
+        margin-left: 1em;
+    }
+
+    .btn-primary-learnmore {
+        display:none;
+    }
+
+    .book-icon {
+        width: 60%;
+        height: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 0em;
+        margin-bottom: 0em;
+    }
+    .book-icon-dashboard{
+        display: none;
+    }
+
+    .right-panel-font {
+        color: #AC3B61;
+        font-weight: bolder;
+        font-size: 1.1em;
+        margin-top: 0.3em;
+    }
+
+    .lang-btn1 {
+        color: #000000 !important;
+        font-weight: bolder !important;
+        font-size: 1.2rem !important;
+        width: 80vw !important;
+        margin-top: 0.7em;
+        text-align: left !important;
+        padding-left: 8% !important;
+        border-radius: 10px !important;
+    }
+    
+    .lang-btn2 {
+        color: #FFFFFF !important;
+        font-weight: bolder !important;
+        font-size: 1.2rem !important;
+        width: 80vw !important;
+        margin-top: 0.7em;
+        text-align: left !important;
+        padding-left: 8% !important;
+        border-radius: 10px !important;
+    }
+
+    .dashboard-choice-btn1 {
+        color: #000000 !important;
+        font-weight: bolder !important;
+        font-size: 1.4rem !important;
+        width: 19em !important;
+        margin-top: 2em !important;
+        margin-bottom: 1.2em;
+        text-align: center !important;
+        border-radius: 10px !important;
+        padding-top: 0.9em !important;
+        padding-bottom: 0.9em !important;
+    }
+    .dashboard-choice-btn {
+        color: #000000 !important;
+        font-weight: bolder !important;
+        font-size: 1.4rem !important;
+        width: 19em !important;
+        margin-bottom: 1.2em !important;
+        text-align: center !important;
+        border-radius: 10px !important;
+        padding-top: 0.9em !important;
+        padding-bottom: 0.9em !important;
+    }
 }
