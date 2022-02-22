@@ -261,4 +261,31 @@ body {
         margin-left: auto;
         margin-right: auto;
     }
+    .book-icon-dashboard{
+        display: none;
+    }
+
+    .dashboard-choice-btn1 {
+        color: #000000 !important;
+        font-weight: bolder !important;
+        font-size: 1.4rem !important;
+        width: 19em !important;
+        margin-top: 3em !important;
+        margin-bottom: 1.2em;
+        text-align: center !important;
+        border-radius: 10px !important;
+        padding-top: 0.9em !important;
+        padding-bottom: 0.9em !important;
+    }
+    .dashboard-choice-btn {
+        color: #000000 !important;
+        font-weight: bolder !important;
+        font-size: 1.4rem !important;
+        width: 19em !important;
+        margin-bottom: 1.2em !important;
+        text-align: center !important;
+        border-radius: 10px !important;
+        padding-top: 0.9em !important;
+        padding-bottom: 0.9em !important;
+    }
 }
