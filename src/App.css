@@ -27,7 +27,7 @@ body {
 
     color: #000000 !important;
     font-size: 1.2em;
-    margin: 0em 3.2em 0 1.5em;
+    margin: 0em 3.2em 0em 1.5em;
 }
 
 .nav-link:hover {
@@ -37,19 +37,18 @@ body {
 
 .zinzen-logo-nav{
     margin-bottom: 1.2em;
-    margin-top: 0.5em;
     width:10%;
     visibility: hidden;
 }
 
 .zinzen-logo-nav-dashboard{
-    margin-bottom: 1.2em;
-    margin-top: 0.5em;
+    margin: 0.5em 0em 1.2em 1em;
     width:10%;
 }
 
 
 /*Left Panel- ZinZen font, Text, Learn More button customization*/
+
 .zinzen-logo{
     margin-top: 5em;
     margin-bottom: 1.2em;
@@ -175,6 +174,8 @@ body {
     border: none !important;
     padding: 5px 10px !important;
 }
+
+
 /*Dashboard*/
 
 .book-icon-dashboard {
@@ -209,18 +210,19 @@ body {
 }
 
 
+/*Media Query for Mobile View*/
+
 @media only screen and (max-width: 600px){
 
+    /*Navbar*/
     .zinzen-logo-nav{
-        margin-bottom: 2em;
-        margin-top: 1em;
+        margin: 1em 0em 2em 0.5em;
         width:25%;
         visibility: visible;
     }
 
     .zinzen-logo-nav-dashboard{
-        margin-bottom: 2em;
-        margin-top: 1em;
+        margin: 1em 0em 2em 0.5em;
         width:25%;
         visibility: visible;
     }
@@ -228,7 +230,7 @@ body {
     .zinzen-logo {
         display:none;
     }
-
+    /*Info panel text*/
     .left-panel-font1 {
         color: #3B6899;
         font-weight: bolder;
@@ -256,6 +258,7 @@ body {
         display:none;
     }
 
+    /*Book Icon*/
     .book-icon {
         width: 60%;
         height: auto;
@@ -269,6 +272,7 @@ body {
         display: none;
     }
 
+    /*User Choice Panel*/
     .right-panel-font {
         color: #AC3B61;
         font-weight: bolder;
@@ -286,7 +290,7 @@ body {
         padding-left: 8% !important;
         border-radius: 10px !important;
     }
-    
+
     .lang-btn2 {
         color: #FFFFFF !important;
         font-weight: bolder !important;
@@ -298,6 +302,7 @@ body {
         border-radius: 10px !important;
     }
 
+    /*Dashboard*/
     .dashboard-choice-btn1 {
         color: #000000 !important;
         font-weight: bolder !important;
@@ -310,6 +315,7 @@ body {
         padding-top: 2em !important;
         padding-bottom: 2em !important;
     }
+
     .dashboard-choice-btn {
         color: #000000 !important;
         font-weight: bolder !important;
@@ -321,4 +327,5 @@ body {
         padding-top: 2em !important;
         padding-bottom: 2em !important;
     }
+
 }
