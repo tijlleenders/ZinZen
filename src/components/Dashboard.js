@@ -9,7 +9,7 @@ const Dashboard = () => {
   return (
     <div>
       <Container fluid>
-        <Row >
+        <Row>
           <Col sm={2}></Col>
           <Col sm={3}><ImageDashboard /></Col>
           <Col sm={1}></Col>

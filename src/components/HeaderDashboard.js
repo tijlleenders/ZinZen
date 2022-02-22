@@ -24,11 +24,7 @@ const HeaderDashboard = () => {
         size={70}
       />
       </Navbar>
-
-     
     </div>
-
-
   )
 }
 
