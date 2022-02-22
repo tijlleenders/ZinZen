@@ -27,7 +27,7 @@ body {
 
     color: #000000 !important;
     font-size: 1.2em;
-    margin: 0.3em 3.2em 0 1.5em;
+    margin: 0em 3.2em 0 1.5em;
 }
 
 .nav-link:hover {
@@ -35,14 +35,25 @@ body {
     color: #3B6899 !important;
 }
 
+.zinzen-logo-nav{
+    margin-bottom: 1.2em;
+    margin-top: 0.5em;
+    width:10%;
+    visibility: hidden;
+}
+
+.zinzen-logo-nav-dashboard{
+    margin-bottom: 1.2em;
+    margin-top: 0.5em;
+    width:10%;
+}
+
 
 /*Left Panel- ZinZen font, Text, Learn More button customization*/
-
-.zinzen-text {
-    font-family: "Kristi";
-    font-size: 7em;
-    color: #291B5C;
-    margin-top: 0.7em;
+.zinzen-logo{
+    margin-top: 5em;
+    margin-bottom: 1.2em;
+    width: 75%;
 }
 
 .left-panel-font1 {
@@ -199,6 +210,25 @@ body {
 
 
 @media only screen and (max-width: 600px){
+
+    .zinzen-logo-nav{
+        margin-bottom: 2em;
+        margin-top: 1em;
+        width:25%;
+        visibility: visible;
+    }
+
+    .zinzen-logo-nav-dashboard{
+        margin-bottom: 2em;
+        margin-top: 1em;
+        width:25%;
+        visibility: visible;
+    }
+
+    .zinzen-logo {
+        display:none;
+    }
+
     .left-panel-font1 {
         color: #3B6899;
         font-weight: bolder;
@@ -232,8 +262,8 @@ body {
         display: block;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 0em;
-        margin-bottom: 0em;
+        margin-top: 0.7em;
+        margin-bottom: 0.7em;
     }
     .book-icon-dashboard{
         display: none;
@@ -243,7 +273,7 @@ body {
         color: #AC3B61;
         font-weight: bolder;
         font-size: 1.1em;
-        margin-top: 0.3em;
+        margin-top: 0.6em;
     }
 
     .lang-btn1 {
