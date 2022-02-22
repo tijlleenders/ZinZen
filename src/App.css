@@ -17,10 +17,17 @@ body {
 
 /*Navbar*/
 
-.nav-link {
+.navbar-custom{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.nav-link { 
+
     color: #000000 !important;
     font-size: 1.2em;
-    margin: 0.3em 1.5em 0 1.5em;
+    margin: 0.3em 3.2em 0 1.5em;
 }
 
 .nav-link:hover {
@@ -97,6 +104,7 @@ body {
 .book-icon {
     width: 90%;
     height: auto;
+    margin-top: 5em;
 }
 
 
@@ -194,75 +202,70 @@ body {
     .left-panel-font1 {
         color: #3B6899;
         font-weight: bolder;
-        font-size: 7.2vw;
-        padding-left: 1.5em;
+        font-size: 5.2vw;
+        padding-left: 4em;
     }
     
     .left-panel-font2 {
         color: #AC3B61;
         font-style: italic;
         font-weight: bolder;
-        font-size: 7.2vw;
-        padding-left: 1.5em;
+        font-size: 5.2vw;
+        padding-left: 4em;
     }
 
     .zinzen-text {
         font-family: "Kristi";
-        font-size: 25vw;
+        font-size: 20vw;
         color: #291B5C;
-        margin-top: 0.2em;
-        margin-left: 0.4em;
+        margin-top: 0em;
+        margin-left: 1em;
     }
 
     .btn-primary-learnmore {
-        border-radius: 4px;
-        background-color: #AC3B61 !important;
-        border: none;
-        color: #FFFFFF;
-        text-align: center;
-        font-size: 5vw;
-        padding: 0.5em;
-        font-weight: bold;
-        transition: all 0.5s;
-        cursor: pointer;
-        margin-left: 5em;
-        
-        margin-top: 0.7em;
+        display:none;
     }
-    
-    .btn-primary-learnmore span {
-        cursor: pointer;
-        display: inline-block;
-        position: relative;
-        transition: 0.5s;
-    }
-    
-    .btn-primary-learnmore span:after {
-        content: '\00bb';
-        position: absolute;
-        opacity: 0;
-        top: 0;
-        right: -20px;
-        transition: 0.5s;
-    }
-    
-    .btn-primary-learnmore:hover span {
-        padding-right: 25px;
-    }
-    
-    .btn-primary-learnmore:hover span:after {
-        opacity: 1;
-        right: 0;
-    }
+
     .book-icon {
-        width: 70%;
+        width: 60%;
         height: auto;
         display: block;
         margin-left: auto;
         margin-right: auto;
+        margin-top: 0em;
+        margin-bottom: 0em;
     }
     .book-icon-dashboard{
         display: none;
+    }
+
+    .right-panel-font {
+        color: #AC3B61;
+        font-weight: bolder;
+        font-size: 1.1em;
+        margin-top: 0.3em;
+    }
+
+    .lang-btn1 {
+        color: #000000 !important;
+        font-weight: bolder !important;
+        font-size: 1.2rem !important;
+        width: 80vw !important;
+        margin-top: 0.7em;
+        text-align: left !important;
+        padding-left: 8% !important;
+        border-radius: 10px !important;
+    }
+    
+    .lang-btn2 {
+        color: #FFFFFF !important;
+        font-weight: bolder !important;
+        font-size: 1.2rem !important;
+        width: 80vw !important;
+        margin-top: 0.7em;
+        text-align: left !important;
+        padding-left: 8% !important;
+        border-radius: 10px !important;
     }
 
     .dashboard-choice-btn1 {
