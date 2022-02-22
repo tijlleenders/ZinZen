@@ -21,7 +21,7 @@ const HeaderDashboard = () => {
         <DarkModeToggle
         onChange={setIsDarkMode}
         checked={isDarkMode}
-        size={60}
+        size={70}
       />
       </Navbar>
 
