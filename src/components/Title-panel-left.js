@@ -1,10 +1,10 @@
 import React from 'react'
-import "@fontsource/kristi";
+import Logo from '../images/logo.svg'
 
 const TitlePanelLeft = () => {
   return (
     <div className="left-panel">
-      <h1 className="zinzen-text">ZinZen</h1>
+      <img src={Logo} alt="ZinZen Logo" className="zinzen-logo" />
       <h4 className="left-panel-font1">a platform for</h4>
       <h4 className="left-panel-font2"><i>self-actualization</i></h4>
       <h4 className="left-panel-font1">and</h4>

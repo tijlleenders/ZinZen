@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {Nav, Navbar} from 'react-bootstrap';
+import Logo from '../images/logo.svg'
 import DarkModeToggle from "react-dark-mode-toggle";
 import { useTranslation } from "react-i18next";
 import "../translations/i18n"
@@ -10,6 +11,7 @@ const HeaderDashboard = () => {
   return (
     <div>
       <Navbar collapseOnSelect expand="lg">
+      <img src={Logo} alt="ZinZen Logo" className="zinzen-logo-nav-dashboard" />
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="navbar-custom">
@@ -21,7 +23,7 @@ const HeaderDashboard = () => {
         <DarkModeToggle
         onChange={setIsDarkMode}
         checked={isDarkMode}
-        size={70}
+        size={60}
       />
       </Navbar>
     </div>
