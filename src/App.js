@@ -1,6 +1,5 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useRecoilState } from 'recoil'
 import { Container, Row } from 'react-bootstrap'
 import Header from './components/Header';
 import Mainbody from './components/Main-body';
@@ -10,12 +9,16 @@ import "@fontsource/montserrat";
 import './customize.scss'
 import { themeSelectionState } from './store/ThemeSelectionState'
 import { languageSelectionState } from './store/LanguageSelectionState'
+import { useRecoilState } from 'recoil'
+import { darkModeState } from './store/DarkModeState'
+
 
 function App() {
+    const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
     const [isThemeChosen, setIsThemeChosen] = useRecoilState(themeSelectionState);
     const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
   return (
-    <div className="App">
+    <div className={darkModeStatus ? "App-dark" : "App-light"}>
       {(isThemeChosen==="No theme chosen.") ?
       (<div>
       <Container fluid >

@@ -1,9 +1,15 @@
 $theme-colors: (
     "primary-base": #F0E6E1,
     "peach": #EDC7B7,
-    "dark-pink": #AC3B61,
+    "pink": #AC3B61,
     "grey-base": #BAB2BC,
     "pale-blue" : #3B6899,
-    "purple" : #8E3379
+    "purple" : #8E3379,
+    "brown": #443027,
+    "dark-brown": #453232,
+    "dark-blue": #2B517B,
+    "dark-pink" : #9C4663,
+    "dark-purple" : #612854
 );
+
 @import "~bootstrap/scss/bootstrap";
