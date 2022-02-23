@@ -1,28 +1,33 @@
 import React from 'react'
 import { Button, } from 'react-bootstrap'
-import { Container, Row, Col } from 'react-bootstrap'
+import { useRecoilState } from 'recoil'
+import { darkModeState } from '../store/DarkModeState'
+import { Container, Row } from 'react-bootstrap'
 import { useTranslation } from "react-i18next";
 import "../translations/i18n"
 
 const UserChoiceDashboard = () => {
   const { t } = useTranslation();
+  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+  console.log(darkModeStatus)
+
   return (
     <div>
       <Container fluid>
         <Row >
-          <Button variant="peach" size="lg" className="dashboard-choice-btn1">{t("mygoals")}</Button>
+          <Button variant={darkModeStatus ? "brown" : "peach"} size="lg" className={darkModeStatus ? "dashboard-choice-dark1" : "dashboard-choice-light1"}>{t("mygoals")}</Button>
         </Row>
         <Row >
-          <Button variant="dark-pink" size="lg" className="dashboard-choice-btn">{t("myfeelings")}</Button>
+          <Button variant={darkModeStatus ? "dark-brown" : "pink"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("myfeelings")}</Button>
         </Row>
         <Row >
-          <Button variant="grey-base" size="lg" className="dashboard-choice-btn">{t("mytime")}</Button>
+          <Button variant={darkModeStatus ? "dark-blue" : "grey-base"}  size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("mytime")}</Button>
         </Row>
         <Row >
-          <Button variant="pale-blue" size="lg" className="dashboard-choice-btn">{t("explore")}</Button>
+          <Button variant={darkModeStatus ? "dark-pink" : "pale-blue"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("explore")}</Button>
         </Row>
         <Row >
-          <Button variant="purple" size="lg" className="dashboard-choice-btn">{t("zinzen")}</Button>
+          <Button variant={darkModeStatus ? "dark-purple" : "purple"}  size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("zinzen")}</Button>
         </Row>
       </Container>
     </div>

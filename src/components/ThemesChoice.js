@@ -10,6 +10,7 @@ const ThemesChoice = () => {
         <div>
             <Button variant="primary" size="lg" className="theme-choice-btn"  onClick={() => { setIsThemeChosen(true);
                                                                                                localStorage.setItem("theme", "light");
+                                                                                               window.location.reload(false);
                                                                                        }}>
             <img src={ThemeLight} alt="Light Theme" className="themechoice" />
             </Button>
@@ -17,6 +18,7 @@ const ThemesChoice = () => {
             <br />
             <Button variant="primary" size="lg" className="theme-choice-btn"  onClick={() => { setIsThemeChosen(true);
                                                                                                localStorage.setItem("theme", "dark");
+                                                                                               window.location.reload(false);
                                                                                        }}>
             <img src={ThemeDark} alt="Dark Theme" className="themechoice" />
             </Button>

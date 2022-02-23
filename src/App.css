@@ -1,17 +1,17 @@
 /*Main body and App*/
 
-.App {
+.App-light {
     background-color: #F0E6E1;
     font-family: "Montserrat";
     font-weight: bolder !important;
+    min-height: 100vh;
 }
 
-html {
-    background-color: #F0E6E1;
-}
-
-body {
-    background-color: #F0E6E1;
+.App-dark {
+    background-color: #121212;
+    font-family: "Montserrat";
+    font-weight: bolder !important;
+    min-height: 100vh;
 }
 
 
@@ -23,14 +23,36 @@ body {
     margin-right: auto;
 }
 
-.nav-link { 
-
+.nav-link-dashboard-light{ 
     color: #000000 !important;
     font-size: 1.2em;
     margin: 0em 3.2em 0em 1.5em;
 }
 
-.nav-link:hover {
+.nav-link-dashboard-light:hover {
+    font-size: 1.25em;
+    color: #3b6899 !important;
+}
+
+
+.nav-link-dashboard-dark{ 
+    color: #d6d6d6 !important;
+    font-size: 1.2em;
+    margin: 0em 3.2em 0em 1.5em;
+}
+
+.nav-link-dashboard-dark:hover {
+    font-size: 1.25em;
+    color: #3b6899 !important;
+}
+
+.nav-link-landing-page{ 
+    color: #000000 !important;
+    font-size: 1.2em;
+    margin: 0em 3.2em 0em 1.5em;
+}
+
+.nav-link-landing-page:hover {
     font-size: 1.25em;
     color: #3B6899 !important;
 }
@@ -46,6 +68,9 @@ body {
     width:10%;
 }
 
+.dark-mode-toggle{
+    margin-bottom: 1.5em;
+}
 
 /*Left Panel- ZinZen font, Text, Learn More button customization*/
 
@@ -184,19 +209,7 @@ body {
     margin-top: 6em;
 }
 
-.dashboard-choice-btn {
-    color: #000000 !important;
-    font-weight: bolder !important;
-    font-size: 1.4rem !important;
-    width: 19em !important;
-    margin-bottom: 1.2em !important;
-    text-align: center !important;
-    border-radius: 10px !important;
-    padding-top: 0.6em !important;
-    padding-bottom: 0.6em !important;
-}
-
-.dashboard-choice-btn1 {
+.dashboard-choice-light1 {
     color: #000000 !important;
     font-weight: bolder !important;
     font-size: 1.4rem !important;
@@ -209,6 +222,42 @@ body {
     padding-bottom: 0.6em !important;
 }
 
+.dashboard-choice-dark1 {
+    color: #ffffff !important;
+    font-weight: bolder !important;
+    font-size: 1.4rem !important;
+    width: 19em !important;
+    margin-top: 3em !important;
+    margin-bottom: 1.2em;
+    text-align: center !important;
+    border-radius: 10px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+.dashboard-choice-light {
+    color: #000000 !important;
+    font-weight: bolder !important;
+    font-size: 1.4rem !important;
+    width: 19em !important;
+    margin-bottom: 1.2em !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+.dashboard-choice-dark {
+    color: #ffffff !important;
+    font-weight: bolder !important;
+    font-size: 1.4rem !important;
+    width: 19em !important;
+    margin-bottom: 1.2em !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
 
 /*Media Query for Mobile View*/
 
