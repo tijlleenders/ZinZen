@@ -1,6 +1,7 @@
 import React from 'react';
 import {Nav, Navbar} from 'react-bootstrap';
-import Logo from '../images/LogoLight.svg'
+import ZinZen from '../images/LogoLight.svg'
+import Logo from '../images/zinzenlogo.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useTranslation } from "react-i18next";
 import "../translations/i18n"
@@ -9,8 +10,9 @@ const Header = () => {
     const { t } = useTranslation();
     return (
             <Navbar collapseOnSelect expand="lg">
-                <img src={Logo} alt="ZinZen Logo" className="zinzen-logo-nav" />
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <img src={Logo} alt="ZinZen Logo Nav" className="zinzen-logo-nav" />
+                <img src={ZinZen} alt="ZinZen Text Logo Nav" className="zinzen-text-logo-nav" />
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" className="nav-collapse"/>
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="navbar-custom">
                         <Nav.Link href="#home" className="nav-link-landing-page">{t("home")}</Nav.Link>

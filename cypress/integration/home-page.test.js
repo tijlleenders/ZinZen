@@ -11,6 +11,7 @@ describe('Basic Tests Home Page', () => {
     it("should have Home Page title", () => {
         cy.visit("/")
         cy.get('[alt="ZinZen Logo"]').should('be.visible');
+        cy.get('[alt="ZinZen Text Logo"]').should('be.visible');
         cy.contains("a platform")
     });
 
