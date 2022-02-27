@@ -18,13 +18,13 @@ const UserChoiceDashboard = () => {
           <Button variant={darkModeStatus ? "brown" : "peach"} size="lg" className={darkModeStatus ? "dashboard-choice-dark1" : "dashboard-choice-light1"}>{t("mygoals")}</Button>
         </Row>
         <Row >
-          <Button variant={darkModeStatus ? "dark-brown" : "pink"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("myfeelings")}</Button>
+          <Button variant={darkModeStatus ? "dark-pink" : "pink"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("myfeelings")}</Button>
         </Row>
         <Row >
-          <Button variant={darkModeStatus ? "dark-blue" : "grey-base"}  size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("mytime")}</Button>
+          <Button variant={darkModeStatus ? "dark-grey" : "grey-base"}  size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("mytime")}</Button>
         </Row>
         <Row >
-          <Button variant={darkModeStatus ? "dark-pink" : "pale-blue"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("explore")}</Button>
+          <Button variant={darkModeStatus ? "dark-blue" : "pale-blue"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("explore")}</Button>
         </Row>
         <Row >
           <Button variant={darkModeStatus ? "dark-purple" : "purple"}  size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("zinzen")}</Button>
