@@ -10,8 +10,8 @@ const Header = () => {
     const { t } = useTranslation();
     return (
             <Navbar collapseOnSelect expand="lg">
-                <img src={Logo} alt="ZinZen Logo Nav" className="zinzen-logo-nav" />
-                <img src={ZinZen} alt="ZinZen Text Logo Nav" className="zinzen-text-logo-nav" />
+                <img src={Logo} alt="Text Nav" className="zinzen-logo-nav" />
+                <img src={ZinZen} alt="Logo Nav" className="zinzen-text-logo-nav" />
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" className="nav-collapse"/>
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="navbar-custom">
