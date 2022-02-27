@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {Nav, Navbar} from 'react-bootstrap';
 import LogoLight from '../images/LogoLight.svg'
 import LogoDark from '../images/LogoDark.svg'
+import Logo from '../images/zinzenlogo.png'
 import { useRecoilState } from 'recoil'
 import { darkModeState } from '../store/DarkModeState'
 import DarkModeToggle from "react-dark-mode-toggle";
@@ -15,12 +16,13 @@ const HeaderDashboard = () => {
   return (
     <div>
       <Navbar collapseOnSelect expand="lg">
+      <img src={Logo} alt="ZinZen Logo" className="zinzen-logo-nav-dashboard" />
       {darkModeStatus ? 
-      <img src={LogoDark} alt="ZinZen Logo" className="zinzen-logo-nav-dashboard" /> :
-      <img src={LogoLight} alt="ZinZen Logo" className="zinzen-logo-nav-dashboard" /> }
+      <img src={LogoDark} alt="ZinZen Text Logo" className="zinzen-text-logo-nav-dashboard" /> :
+      <img src={LogoLight} alt="ZinZen Text Logo" className="zinzen-text-logo-nav-dashboard" /> }
 
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" className="nav-collapse-dashboard"/>
+        <Navbar.Collapse id="responsive-navbar-nav"> 
           <Nav className="navbar-custom">
             <Nav.Link href="#home" className={darkModeStatus ? "nav-link-dashboard-dark" : "nav-link-dashboard-light"}>{t("home")}</Nav.Link>
             <Nav.Link href="#discover" className={darkModeStatus ? "nav-link-dashboard-dark" : "nav-link-dashboard-light"}>{t("discover")}</Nav.Link>
