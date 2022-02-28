@@ -1,10 +1,9 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row } from 'react-bootstrap'
-import Header from './components/Header';
-import Mainbody from './components/Main-body';
-import HeaderDashboard from './components/HeaderDashboard';
-import Dashboard from './components/Dashboard';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+
+import Home1 from './components/Home1';
+import Home from './components/Home';
 import "@fontsource/montserrat";
 import './customize.scss'
 import { themeSelectionState } from './store/ThemeSelectionState'
@@ -18,28 +17,22 @@ function App() {
     const [isThemeChosen, setIsThemeChosen] = useRecoilState(themeSelectionState);
     const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
   return (
+    <BrowserRouter>
+    <Routes>
     <div className={darkModeStatus ? "App-dark" : "App-light"}>
+      {console.log(isThemeChosen)}
       {(isThemeChosen==="No theme chosen.") ?
-      (<div>
-      <Container fluid >
-        <Row >
-          <Header />
-        </Row>
-        <Row >
-          <Mainbody />
-        </Row>
-      </Container>
-      </div>) :
-      (<div>
-        <Container fluid >
-        <Row >
-          <HeaderDashboard />
-        </Row>
-        <Row >
-          <Dashboard />
-        </Row>
-      </Container>
-      </div>)}
-    </div>);
+       (<Route path="/" element={<Home1 />}>
+         
+       </Route>
+      ) :
+      (<Route path="home" element={<Home />}>
+        
+      </Route>
+      )}
+    </div>
+    </Routes>
+    </BrowserRouter>
+    );
 }
 export default App;
