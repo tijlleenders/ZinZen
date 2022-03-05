@@ -1,3 +1,7 @@
 {
-    "baseUrl": "https://tijlleenders.github.io/ZinZen/"
+    "baseUrl": "https://tijlleenders.github.io/ZinZen/",
+    "testFiles": [
+        "home-page.test.js",
+        "dashboard.test.js"
+    ]
 }
