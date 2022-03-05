@@ -24,9 +24,7 @@ describe('Basic Tests Home Page', () => {
     });
     it("user choice panel for language choice should work", () => {
         cy.contains("Choose your preferred Language")
-        cy.contains("Language").click()
     });
 })
-
 
  

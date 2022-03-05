@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import Home1 from './components/Home1';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LandingPage from './components/LandingPage';
 import Home from './components/Home';
 import "@fontsource/montserrat";
 import './customize.scss'
@@ -20,7 +20,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {(isThemeChosen === "No theme chosen.") ?
-            (<Route path="/ZinZen" element={<Home1 />} />)
+            (<Route path="/ZinZen" element={<LandingPage />} />)
             :
             (<Route path="/ZinZen/home" element={<Home />} />)
           }

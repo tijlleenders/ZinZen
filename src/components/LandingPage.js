@@ -3,7 +3,7 @@ import { Container, Row } from 'react-bootstrap'
 import Header from './Header';
 import Mainbody from './Main-body';
 
-const Home1 = () => {
+const LandingPage = () => {
   return (
     <div>
       <div>
@@ -20,4 +20,4 @@ const Home1 = () => {
   )
 }
 
-export default Home1
+export default LandingPage

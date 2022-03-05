@@ -1,7 +1,5 @@
 import React from 'react';
 import {Nav, Navbar} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import Home from './Home';
 import ZinZen from '../images/LogoLight.svg'
 import Logo from '../images/zinzenlogo.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,7 +15,7 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" className="nav-collapse"/>
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="navbar-custom">
-                    <Link to="home" href="#home" className="nav-link-landing-page">{t("home")}</Link>
+                    <Nav.Link to="home" className="nav-link-landing-page">{t("home")}</Nav.Link>
                         <Nav.Link href="#discover" className="nav-link-landing-page">{t("discover")}</Nav.Link>
                         <Nav.Link href="#donate" className="nav-link-landing-page">{t("donate")}</Nav.Link>
                     </Nav>
