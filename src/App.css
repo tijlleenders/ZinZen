@@ -97,12 +97,14 @@
 }
 
 .left-panel-font1 {
+    padding-top: 0.2em;
     color: #3B6899;
     font-weight: bolder;
     font-size: 2em;
 }
 
 .left-panel-font2 {
+    padding-bottom: 0.2em;
     color: #AC3B61;
     font-style: italic;
     font-weight: bolder;

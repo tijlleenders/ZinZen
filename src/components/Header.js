@@ -1,6 +1,6 @@
 import React from 'react';
 import {Nav, Navbar} from 'react-bootstrap';
-import ZinZen from '../images/LogoLight.svg'
+import ZinZen from '../images/LogoLight1.svg'
 import Logo from '../images/zinzenlogo.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useTranslation } from "react-i18next";
