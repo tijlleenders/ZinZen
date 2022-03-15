@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {Nav, Navbar} from 'react-bootstrap';
-import LogoLight from '../images/LogoLight.svg'
-import LogoDark from '../images/LogoDark.svg'
+import LogoLight from '../images/LogoLight1.svg'
+import LogoDark from '../images/LogoDark1.svg'
 import Logo from '../images/zinzenlogo.png'
 import { useRecoilState } from 'recoil'
 import { darkModeState } from '../store/DarkModeState'
