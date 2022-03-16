@@ -9,7 +9,7 @@ const ThemesChoice = () => {
     const [isThemeChosen, setIsThemeChosen] = useRecoilState(themeSelectionState);
     const navigate = useNavigate();
     return (
-        <div>
+        <div className="themerow">
             <Button variant="primary" size="lg" className="theme-choice-btn"  onClick={() => { setIsThemeChosen(true);
                                                                                                localStorage.setItem("theme", "light");
                                                                                                navigate('/ZinZen/home');

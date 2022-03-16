@@ -2,6 +2,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
+import LandingPageThemeChoice from './components/LandingPageThemeChoice';
 import Home from './components/Home';
 import "@fontsource/montserrat";
 import './customize.scss'
@@ -19,10 +20,11 @@ function App() {
     <div className={darkModeStatus ? "App-dark" : "App-light"}>
       <BrowserRouter>
         <Routes>
-          {(isThemeChosen === "No theme chosen.") ?
+          {(isLanguageChosen === "No language chosen.") ?
             (<Route path="/ZinZen" element={<LandingPage />} />)
-            :
-            (<Route path="/ZinZen/home" element={<Home />} />)
+            : (isThemeChosen === "No theme chosen.") ?
+            (<Route path="/ZinZen" element={<LandingPageThemeChoice />} />)
+            : (<Route path="/ZinZen/home" element={<Home />} />)
           }
         </Routes>
       </BrowserRouter>

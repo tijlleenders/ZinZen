@@ -175,6 +175,14 @@
     padding-left: 5%;
 }
 
+.theme-choice-panel-font {
+    color: #AC3B61;
+    font-weight: bolder;
+    margin-top: 5%;
+    font-size: 1.2rem;
+    padding-left: 5%;
+}
+
 .containerLang {
     display: flex;
     flex-direction: column;
@@ -207,9 +215,15 @@
     width: 102%;
 }
 
+.themerow{
+    display: flex;
+  align-items: center;
+}
+
 .theme-choice-btn {
     background-color: #F0E6E1 !important;
     border: none !important;
+    width: 50%;
 }
 
 .theme-choice-btn:hover {
@@ -369,6 +383,24 @@
     }
 
     /*User Choice Panel*/
+    .themerow{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .theme-choice-btn {
+        background-color: #F0E6E1 !important;
+        border: none !important;
+        width: 100%;
+    }
+
+    .theme-choice-btn:hover {
+        background-color: #F0E6E1 !important;
+        border: none !important;
+        padding: 5px 10px !important;
+    }
+
     .right-panel-font {
         color: #AC3B61;
         font-weight: bolder;
