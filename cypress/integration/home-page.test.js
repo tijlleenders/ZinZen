@@ -12,7 +12,9 @@ describe('Basic Tests Home Page', () => {
         cy.visit("/")
         cy.get('[alt="ZinZen Logo"]').should('be.visible');
         cy.get('[alt="ZinZen Text Logo"]').should('be.visible');
-        cy.contains("a platform")
+        cy.contains("Realize");
+        cy.contains("dreams");
+        cy.contains("together");
     });
 
     it("should have Learn More button", () => {

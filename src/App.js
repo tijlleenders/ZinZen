@@ -23,8 +23,8 @@ function App() {
           {(isLanguageChosen === "No language chosen.") ?
             (<Route path="/ZinZen" element={<LandingPage />} />)
             : (isThemeChosen === "No theme chosen.") ?
-            (<Route path="/ZinZen" element={<LandingPageThemeChoice />} />)
-            : (<Route path="/ZinZen/home" element={<Home />} />)
+            (<Route path="/ZinZen/Theme" element={<LandingPageThemeChoice />} />)
+            : (<Route path="/ZinZen/Home" element={<Home />} />)
           }
         </Routes>
       </BrowserRouter>
