@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import {Nav, Navbar} from 'react-bootstrap';
-import LogoLight from '../images/LogoLight1.svg'
-import LogoDark from '../images/LogoDark1.svg'
-import Logo from '../images/zinzenlogo.png'
+import ZinZenTextLight from '../../images/LogoTextLight.svg'
+import ZinZenTextDark from '../../images/LogoTextDark.svg'
+import Logo from '../../images/zinzenlogo.png'
 import { useRecoilState } from 'recoil'
-import { darkModeState } from '../store/DarkModeState'
+import { darkModeState } from '../../store/DarkModeState'
 import DarkModeToggle from "react-dark-mode-toggle";
 import { useTranslation } from "react-i18next";
-import "../translations/i18n"
+import "../../translations/i18n"
 
 const HeaderDashboard = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => false);
@@ -18,8 +18,8 @@ const HeaderDashboard = () => {
       <Navbar collapseOnSelect expand="lg">
       <img src={Logo} alt="ZinZen Logo" className="zinzen-logo-nav-dashboard" />
       {darkModeStatus ? 
-      <img src={LogoDark} alt="ZinZen Text Logo" className="zinzen-text-logo-nav-dashboard" /> :
-      <img src={LogoLight} alt="ZinZen Text Logo" className="zinzen-text-logo-nav-dashboard" /> }
+      <img src={ZinZenTextDark} alt="ZinZen Text Logo" className="zinzen-text-logo-nav-dashboard" /> :
+      <img src={ZinZenTextLight} alt="ZinZen Text Logo" className="zinzen-text-logo-nav-dashboard" /> }
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" className="nav-collapse-dashboard"/>
         <Navbar.Collapse id="responsive-navbar-nav"> 

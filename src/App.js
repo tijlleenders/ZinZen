@@ -1,9 +1,9 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
-import LandingPageThemeChoice from './components/LandingPageThemeChoice';
-import Home from './components/Home';
+import LandingPage from './components/landingpage/LandingPage';
+import LandingPageThemeChoice from './components/themechoicepage/LandingPageThemeChoice';
+import Home from './components/dashboard/Home';
 import "@fontsource/montserrat";
 import './customize.scss'
 import { themeSelectionState } from './store/ThemeSelectionState'

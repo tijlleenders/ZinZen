@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { LanguagesList } from './LanguagesList'
-import { languageSelectionState } from '../store/LanguageSelectionState'
+import { LanguagesList } from '../languagechoices/LanguagesList'
+import { languageSelectionState } from '../../store/LanguageSelectionState'
 import { useRecoilState } from 'recoil'
 import { useTranslation } from "react-i18next";
-import "../translations/i18n"
+import "../../translations/i18n"
 
 const UserChoicePanelRight = () => {
   const { t } = useTranslation();
