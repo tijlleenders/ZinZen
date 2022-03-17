@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, } from 'react-bootstrap'
-import { languageSelectionState } from '../store/LanguageSelectionState'
+import { languageSelectionState } from '../../store/LanguageSelectionState'
 import { useRecoilState } from 'recoil'
 import i18n from 'i18next';
 import { useNavigate } from "react-router-dom";

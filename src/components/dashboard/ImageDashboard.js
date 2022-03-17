@@ -1,5 +1,5 @@
 import React from 'react'
-import BookIcon from '../images/bookicon.svg'
+import BookIcon from '../../images/bookicon.svg'
 
 const ImageDashboard = () => {
   return (

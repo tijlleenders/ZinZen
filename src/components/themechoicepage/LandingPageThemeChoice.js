@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import ThemesChoice from './ThemesChoice'
 import { useRecoilState } from 'recoil'
 import { useTranslation } from "react-i18next";
-import "../translations/i18n"
+import "../../translations/i18n"
 
 
 const LandingPageThemeChoice = () => {

@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import {Nav, Navbar} from 'react-bootstrap';
-import ZinZen from '../images/LogoLight1.svg'
-import Logo from '../images/zinzenlogo.png'
+import ZinZenText from '../../images/LogoTextLight.svg'
+import Logo from '../../images/zinzenlogo.png'
 import { useTranslation } from "react-i18next";
-import "../translations/i18n"
+import "../../translations/i18n"
 
 const HeaderThemeChoice = () => {
     const { t } = useTranslation();
     return (
             <Navbar collapseOnSelect expand="lg">
                 <img src={Logo} alt="Text Nav" className="zinzen-logo-nav-dashboard"  />
-                <img src={ZinZen} alt="Logo Nav"  className="zinzen-text-logo-nav-dashboard" />
+                <img src={ZinZenText} alt="Logo Nav"  className="zinzen-text-logo-nav-dashboard" />
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" className="nav-collapse"/>
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="navbar-custom">

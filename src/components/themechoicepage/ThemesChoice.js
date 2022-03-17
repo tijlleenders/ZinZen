@@ -1,9 +1,9 @@
 import React from 'react'
-import { themeSelectionState } from '../store/ThemeSelectionState'
 import { useRecoilState } from 'recoil'
 import { Button } from 'react-bootstrap';
-import ThemeDark from '../images/DashboardThemeDark.svg'
-import ThemeLight from '../images/DashboardThemeLight.svg'
+import ThemeDark from '../../images/DashboardThemeDark.svg'
+import ThemeLight from '../../images/DashboardThemeLight.svg'
+import { themeSelectionState } from '../../store/ThemeSelectionState'
 import { useNavigate } from "react-router-dom";
 const ThemesChoice = () => {
     const [isThemeChosen, setIsThemeChosen] = useRecoilState(themeSelectionState);

@@ -1,10 +1,10 @@
 import React from 'react'
 import { Button, } from 'react-bootstrap'
 import { useRecoilState } from 'recoil'
-import { darkModeState } from '../store/DarkModeState'
+import { darkModeState } from '../../store/DarkModeState'
 import { Container, Row } from 'react-bootstrap'
 import { useTranslation } from "react-i18next";
-import "../translations/i18n"
+import "../../translations/i18n"
 
 const UserChoiceDashboard = () => {
   const { t } = useTranslation();

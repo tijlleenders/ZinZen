@@ -1,6 +1,6 @@
 import React from 'react'
-import ZinZen from '../images/LogoLight1.svg'
-import Logo from '../images/zinzenlogo.png'
+import ZinZen from '../../images/LogoTextLight.svg'
+import Logo from '../../images/zinzenlogo.png'
 
 const TitlePanelLeft = () => {
   return (
