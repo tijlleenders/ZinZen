@@ -249,7 +249,7 @@
     margin-top: 3em !important;
     margin-bottom: 1.2em;
     text-align: center !important;
-    border-radius: 10px !important;
+    border-radius: 10px 0px 0px 10px !important;
     padding-top: 0.6em !important;
     padding-bottom: 0.6em !important;
 }
@@ -262,7 +262,7 @@
     margin-top: 3em !important;
     margin-bottom: 1.2em;
     text-align: center !important;
-    border-radius: 10px !important;
+    border-radius: 10px 0px 0px 10px !important;
     padding-top: 0.6em !important;
     padding-bottom: 0.6em !important;
 }
@@ -274,7 +274,7 @@
     width: 19em !important;
     margin-bottom: 1.2em !important;
     text-align: center !important;
-    border-radius: 10px !important;
+    border-radius: 10px 0px 0px 10px !important;
     padding-top: 0.6em !important;
     padding-bottom: 0.6em !important;
 }
@@ -286,11 +286,62 @@
     width: 19em !important;
     margin-bottom: 1.2em !important;
     text-align: center !important;
-    border-radius: 10px !important;
+    border-radius: 10px 0px 0px 10px !important;
     padding-top: 0.6em !important;
     padding-bottom: 0.6em !important;
 }
 
+.dashboard-add-btn-light1{
+    font-size: 1.4rem !important;
+    width: 3.5em !important;
+    margin-top: 3em !important;
+    margin-bottom: 1.2em;
+    margin-left: 0.1em;
+    text-align: center !important;
+    border-radius:0 10px 10px 0px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+.dashboard-add-btn-dark1{
+    font-size: 1.4rem !important;
+    width: 3.5em !important;
+    margin-top: 3em !important;
+    margin-bottom: 1.2em;
+    margin-left: 0.1em;
+    text-align: center !important;
+    border-radius:0 10px 10px 0px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+.dashboard-add-btn-light{
+    font-weight: bolder !important;
+    font-size: 1.4rem !important;
+    width: 3.5em !important;
+    margin-bottom: 1.2em !important;
+    margin-left: 0.1em;
+    text-align: center !important;
+    border-radius:0 10px 10px 0px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+.dashboard-add-btn-dark{
+    font-weight: bolder !important;
+    font-size: 1.4rem !important;
+    width: 3.5em !important;
+    margin-bottom: 1.2em !important;
+    margin-left: 0.1em;
+    text-align: center !important;
+    border-radius:0 10px 10px 0px !important;
+    padding-top: 0.6em !important;
+    padding-bottom: 0.6em !important;
+}
+
+.add-icon{
+    width: 2em;
+}
 /*Media Query for Mobile View*/
 
 @media only screen and (max-width: 600px){
@@ -431,29 +482,105 @@
     }
 
     /*Dashboard*/
-    .dashboard-choice-btn1 {
+
+    .dashboard-choice-light1 {
         color: #000000 !important;
         font-weight: bolder !important;
-        font-size: 1.3rem !important;
-        width: 19em !important;
-        margin-top: 2em !important;
-        margin-bottom: 1.5em;
+        font-size: 1.4rem !important;
+        width: 10.2em !important;
+        margin-top: 3em !important;
+        margin-bottom: 1.2em;
         text-align: center !important;
-        border-radius: 10px !important;
-        padding-top: 2em !important;
-        padding-bottom: 2em !important;
+        border-radius: 10px 0px 0px 10px !important;
+        padding-top: 0.6em !important;
+        padding-bottom: 0.6em !important;
+    }
+    
+    .dashboard-choice-dark1 {
+        color: #ffffff !important;
+        font-weight: bolder !important;
+        font-size: 1.4rem !important;
+        width: 10.2em !important;
+        margin-top: 3em !important;
+        margin-bottom: 1.2em;
+        text-align: center !important;
+        border-radius: 10px 0px 0px 10px !important;
+        padding-top: 0.6em !important;
+        padding-bottom: 0.6em !important;
+    }
+    
+    .dashboard-choice-light {
+        color: #000000 !important;
+        font-weight: bolder !important;
+        font-size: 1.4rem !important;
+        width: 10.2em !important;
+        margin-bottom: 1.2em !important;
+        text-align: center !important;
+        border-radius: 10px 0px 0px 10px !important;
+        padding-top: 0.6em !important;
+        padding-bottom: 0.6em !important;
+    }
+    
+    .dashboard-choice-dark {
+        color: #ffffff !important;
+        font-weight: bolder !important;
+        font-size: 1.4rem !important;
+        width: 10.2em !important;
+        margin-bottom: 1.2em !important;
+        text-align: center !important;
+        border-radius: 10px 0px 0px 10px !important;
+        padding-top: 0.6em !important;
+        padding-bottom: 0.6em !important;
     }
 
-    .dashboard-choice-btn {
-        color: #000000 !important;
-        font-weight: bolder !important;
-        font-size: 1.3rem !important;
-        width: 19em !important;
-        margin-bottom: 1.5em !important;
+    .dashboard-add-btn-light1{
+        font-size: 1.4rem !important;
+        width: 2.8em !important;
+        margin-bottom: 1.2em;
+        margin-left: 0.1em;
         text-align: center !important;
-        border-radius: 10px !important;
-        padding-top: 2em !important;
-        padding-bottom: 2em !important;
+        border-radius:0 10px 10px 0px !important;
+        padding-top: 0.6em !important;
+        padding-bottom: 0.6em !important;
+    }
+    
+    .dashboard-add-btn-dark1{
+        font-size: 1.4rem !important;
+        width: 2.8em !important;
+        margin-bottom: 1.2em;
+        margin-left: 0.1em;
+        text-align: center !important;
+        border-radius:0 10px 10px 0px !important;
+        padding-top: 0.6em !important;
+        padding-bottom: 0.6em !important;
+    }
+    
+    .dashboard-add-btn-light{
+        font-weight: bolder !important;
+        font-size: 1.4rem !important;
+        width: 2.8em !important;
+        margin-bottom: 1.2em !important;
+        margin-left: 0.1em;
+        text-align: center !important;
+        border-radius:0 10px 10px 0px !important;
+        padding-top: 0.6em !important;
+        padding-bottom: 0.6em !important;
+    }
+    
+    .dashboard-add-btn-dark{
+        font-weight: bolder !important;
+        font-size: 1.4rem !important;
+        width: 2.8em !important;
+        margin-bottom: 1.2em !important;
+        margin-left: 0.1em;
+        text-align: center !important;
+        border-radius:0 10px 10px 0px !important;
+        padding-top: 0.6em !important;
+        padding-bottom: 0.6em !important;
+    }
+    
+    .add-icon{
+        width: 1.6em;
     }
 
 }
