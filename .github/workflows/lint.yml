@@ -1,9 +1,16 @@
-name: ESLint
 on: [push]
-jobs:
-  eslint:
-    name: runner / eslint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: reviewdog/action-eslint@v1
+
+
+  jobs:
+    eslint:
+      name: runner / eslint
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: reviewdog/action-eslint@v1
+    tsc:
+      runs-on: ubuntu-latest
+      name: Check typescript
+      steps:
+        - uses: actions/checkout@v1
+        - uses: actions/setup-node@v1
