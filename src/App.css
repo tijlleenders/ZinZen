@@ -487,7 +487,7 @@
         color: #000000 !important;
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 10.2em !important;
+        width: 10.3em !important;
         margin-top: 3em !important;
         margin-bottom: 1.2em;
         text-align: center !important;
@@ -500,7 +500,7 @@
         color: #ffffff !important;
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 10.2em !important;
+        width: 10.3em !important;
         margin-top: 3em !important;
         margin-bottom: 1.2em;
         text-align: center !important;
@@ -513,7 +513,7 @@
         color: #000000 !important;
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 10.2em !important;
+        width: 10.3em !important;
         margin-bottom: 1.2em !important;
         text-align: center !important;
         border-radius: 10px 0px 0px 10px !important;
@@ -525,7 +525,7 @@
         color: #ffffff !important;
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 10.2em !important;
+        width: 10.3em !important;
         margin-bottom: 1.2em !important;
         text-align: center !important;
         border-radius: 10px 0px 0px 10px !important;
@@ -535,7 +535,7 @@
 
     .dashboard-add-btn-light1{
         font-size: 1.4rem !important;
-        width: 2.8em !important;
+        width: 2.7em !important;
         margin-bottom: 1.2em;
         margin-left: 0.1em;
         text-align: center !important;
@@ -546,7 +546,7 @@
     
     .dashboard-add-btn-dark1{
         font-size: 1.4rem !important;
-        width: 2.8em !important;
+        width: 2.7em !important;
         margin-bottom: 1.2em;
         margin-left: 0.1em;
         text-align: center !important;
@@ -558,7 +558,7 @@
     .dashboard-add-btn-light{
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 2.8em !important;
+        width: 2.7em !important;
         margin-bottom: 1.2em !important;
         margin-left: 0.1em;
         text-align: center !important;
@@ -570,7 +570,7 @@
     .dashboard-add-btn-dark{
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 2.8em !important;
+        width: 2.7em !important;
         margin-bottom: 1.2em !important;
         margin-left: 0.1em;
         text-align: center !important;
