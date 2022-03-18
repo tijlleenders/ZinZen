@@ -1,6 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { HashRouter, Route } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import LandingPage from './components/landingpage/LandingPage';
 import LandingPageThemeChoice from './components/themechoicepage/LandingPageThemeChoice';
 import Home from './components/dashboard/Home';
@@ -19,12 +19,14 @@ function App() {
   return (
     <div className={darkModeStatus ? "App-dark" : "App-light"}>
       <HashRouter>
+        <Routes>
           {(isLanguageChosen === "No language chosen.") ?
             (<Route path="/ZinZen" component={<LandingPage />} />)
             : (isThemeChosen === "No theme chosen.") ?
             (<Route path="/ZinZen/Theme" component={<LandingPageThemeChoice />} />)
             : (<Route path="/ZinZen/Home" component={<Home />} />)
           }
+        </Routes>
       </HashRouter>
     </div>
   );
