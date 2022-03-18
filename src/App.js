@@ -1,6 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
 import LandingPage from './components/landingpage/LandingPage';
 import LandingPageThemeChoice from './components/themechoicepage/LandingPageThemeChoice';
 import Home from './components/dashboard/Home';
@@ -18,16 +18,14 @@ function App() {
   const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(languageSelectionState);
   return (
     <div className={darkModeStatus ? "App-dark" : "App-light"}>
-      <BrowserRouter basename="ZinZen" >
-        <Routes>
+      <HashRouter>
           {(isLanguageChosen === "No language chosen.") ?
-            (<Route path="/ZinZen" element={<LandingPage />} />)
+            (<Route path="/ZinZen" component={<LandingPage />} />)
             : (isThemeChosen === "No theme chosen.") ?
-            (<Route path="/ZinZen/Theme" element={<LandingPageThemeChoice />} />)
-            : (<Route path="/ZinZen/Home" element={<Home />} />)
+            (<Route path="/ZinZen/Theme" component={<LandingPageThemeChoice />} />)
+            : (<Route path="/ZinZen/Home" component={<Home />} />)
           }
-        </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }
