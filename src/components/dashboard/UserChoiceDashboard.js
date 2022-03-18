@@ -1,14 +1,17 @@
 import React from 'react'
 import { Button, } from 'react-bootstrap'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useRecoilState } from 'recoil'
 import { darkModeState } from '../../store/DarkModeState'
 import { Container, Row } from 'react-bootstrap'
 import { useTranslation } from "react-i18next";
 import AddIconLight from '../../images/AddIconLight.png'
 import AddIconDark from '../../images/AddIconDark.png'
+import { useNavigate } from "react-router-dom";
 import "../../translations/i18n"
 
 const UserChoiceDashboard = () => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   console.log(darkModeStatus)
@@ -23,7 +26,13 @@ const UserChoiceDashboard = () => {
           </Button>
         </Row>
         <Row >
-          <Button variant={darkModeStatus ? "dark-pink" : "pink"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>{t("myfeelings")}</Button>
+          <Button variant={darkModeStatus ? "dark-pink" : "pink"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}
+          onClick={() => { 
+            navigate('/ZinZen/home/MyFeelings');
+            window.location.reload(false);}}
+            >
+              {t("myfeelings")}
+          </Button>
           <Button variant={darkModeStatus ? "dark-pink" : "pink"} className={darkModeStatus ? "dashboard-add-btn-dark" : "dashboard-add-btn-light"}>
             {darkModeStatus ? <img src={AddIconDark} alt="Add Icon" className="add-icon" /> : <img src={AddIconLight} alt="Add Icon" className="add-icon" />}
           </Button>
