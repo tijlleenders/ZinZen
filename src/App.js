@@ -10,6 +10,7 @@ import { themeSelectionState } from './store/ThemeSelectionState'
 import { languageSelectionState } from './store/LanguageSelectionState'
 import { useRecoilState } from 'recoil'
 import { darkModeState } from './store/DarkModeState'
+import MyFeelings from './components/myfeelingspage/MyFeelings';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             (<Route path="/ZinZen/Theme" element={<LandingPageThemeChoice />} />)
             : (<Route path="/ZinZen/Home" element={<Home />} />)
           }
+          <Route path="/ZinZen/Home/MyFeelings" element={<MyFeelings />} />
         </Routes>
       </BrowserRouter>
     </div>

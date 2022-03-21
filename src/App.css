@@ -248,7 +248,7 @@
     width: 19em !important;
     margin-top: 3em !important;
     margin-bottom: 1.2em;
-    text-align: center !important;
+    text-align: left !important;
     border-radius: 10px 0px 0px 10px !important;
     padding-top: 0.6em !important;
     padding-bottom: 0.6em !important;
@@ -261,7 +261,7 @@
     width: 19em !important;
     margin-top: 3em !important;
     margin-bottom: 1.2em;
-    text-align: center !important;
+    text-align: left !important;
     border-radius: 10px 0px 0px 10px !important;
     padding-top: 0.6em !important;
     padding-bottom: 0.6em !important;
@@ -273,7 +273,7 @@
     font-size: 1.4rem !important;
     width: 19em !important;
     margin-bottom: 1.2em !important;
-    text-align: center !important;
+    text-align: left !important;
     border-radius: 10px 0px 0px 10px !important;
     padding-top: 0.6em !important;
     padding-bottom: 0.6em !important;
@@ -285,7 +285,7 @@
     font-size: 1.4rem !important;
     width: 19em !important;
     margin-bottom: 1.2em !important;
-    text-align: center !important;
+    text-align: left !important;
     border-radius: 10px 0px 0px 10px !important;
     padding-top: 0.6em !important;
     padding-bottom: 0.6em !important;
@@ -342,6 +342,45 @@
 .add-icon{
     width: 2em;
 }
+
+/* My Feelings Page*/
+
+.my-feelings-font{
+    padding: 0em 1em 0em 0.8em;
+    font-style: italic;
+    font-weight: bolder;
+}
+
+.feelings-title{
+    font-weight: bolder !important;
+    margin-top: 1em;
+}
+
+.btn-my-feelings {
+    margin-top: 0.5em;
+    margin-right: 0.5em;
+    border: 2px solid #EDC7B7 !important;
+    background-color:  #F0E6E1 !important;
+    color: black !important;
+    padding: 0.5em 1em 0.5em 1em !important;
+    font-weight: bolder !important;
+    font-size: 1.2em !important;
+    cursor: pointer !important;
+  }
+  
+  .btn-feelings {
+    border-color: #EDC7B7 !important;
+    color: #7E7E7E !important;
+    font-weight: bolder !important;
+  }
+  
+  .btn-feelings:hover {
+    background-color: #EDC7B7!important;
+    font-weight: bolder !important;
+    color: white !important;
+  }
+
+
 /*Media Query for Mobile View*/
 
 @media only screen and (max-width: 600px){
@@ -487,10 +526,10 @@
         color: #000000 !important;
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 10.3em !important;
+        width: 70% !important;
         margin-top: 3em !important;
         margin-bottom: 1.2em;
-        text-align: center !important;
+        text-align: left !important;
         border-radius: 10px 0px 0px 10px !important;
         padding-top: 0.6em !important;
         padding-bottom: 0.6em !important;
@@ -500,10 +539,10 @@
         color: #ffffff !important;
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 10.3em !important;
+        width: 70% !important;
         margin-top: 3em !important;
         margin-bottom: 1.2em;
-        text-align: center !important;
+        text-align: left !important;
         border-radius: 10px 0px 0px 10px !important;
         padding-top: 0.6em !important;
         padding-bottom: 0.6em !important;
@@ -513,9 +552,9 @@
         color: #000000 !important;
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 10.3em !important;
+        width: 70% !important;
         margin-bottom: 1.2em !important;
-        text-align: center !important;
+        text-align: left !important;
         border-radius: 10px 0px 0px 10px !important;
         padding-top: 0.6em !important;
         padding-bottom: 0.6em !important;
@@ -525,17 +564,21 @@
         color: #ffffff !important;
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 10.3em !important;
+        width: 70% !important;
         margin-bottom: 1.2em !important;
-        text-align: center !important;
+        text-align: left !important;
         border-radius: 10px 0px 0px 10px !important;
         padding-top: 0.6em !important;
         padding-bottom: 0.6em !important;
     }
 
+    .add-icon{
+        width: 200em;
+    }
+
     .dashboard-add-btn-light1{
         font-size: 1.4rem !important;
-        width: 2.7em !important;
+        width: 25% !important;
         margin-bottom: 1.2em;
         margin-left: 0.1em;
         text-align: center !important;
@@ -546,7 +589,7 @@
     
     .dashboard-add-btn-dark1{
         font-size: 1.4rem !important;
-        width: 2.7em !important;
+        width: 25% !important;
         margin-bottom: 1.2em;
         margin-left: 0.1em;
         text-align: center !important;
@@ -558,7 +601,7 @@
     .dashboard-add-btn-light{
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 2.7em !important;
+        width: 25% !important;
         margin-bottom: 1.2em !important;
         margin-left: 0.1em;
         text-align: center !important;
@@ -570,7 +613,7 @@
     .dashboard-add-btn-dark{
         font-weight: bolder !important;
         font-size: 1.4rem !important;
-        width: 2.7em !important;
+        width: 25% !important;
         margin-bottom: 1.2em !important;
         margin-left: 0.1em;
         text-align: center !important;

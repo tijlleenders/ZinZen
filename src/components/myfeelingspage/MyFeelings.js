@@ -1,5 +1,6 @@
 import React from 'react'
 import Header from '../dashboard/HeaderDashboard'
+import MyFeelingsChoices from './MyFeelingsChoices'
 import { Container, Row, Col } from 'react-bootstrap'
 
 const MyFeelings = () => {
@@ -10,10 +11,9 @@ const MyFeelings = () => {
                     <Header />
                 </Row>
                 <Row >
-                  <Col sm={1}></Col>
                     <Col >
-                    <h3 className="my-feelings-font">ababaa</h3>
-                        <MyFeelingChoices />
+                    <h3 className="my-feelings-font">Hi! How do you feel today?</h3>
+                    <MyFeelingsChoices />
                     </Col>
                     <Col sm={1}></Col>
                 </Row>
