@@ -359,6 +359,7 @@
 .btn-my-feelings {
     margin-top: 0.5em;
     margin-right: 0.5em;
+    margin-left: 0em;
     border: 2px solid #EDC7B7 !important;
     background-color:  #F0E6E1 !important;
     color: black !important;
@@ -367,7 +368,10 @@
     font-size: 1.2em !important;
     cursor: pointer !important;
   }
-  
+.menu-list{
+    display: flex;
+    flex-direction: column;
+}
   .btn-feelings {
     border-color: #EDC7B7 !important;
     color: #7E7E7E !important;
@@ -380,10 +384,12 @@
     color: white !important;
   }
 
-
+.feelings-menu-mobile{
+    display: none;
+}
 /*Media Query for Mobile View*/
 
-@media only screen and (max-width: 600px){
+@media (max-width: 600px){
 
     /*Navbar*/
     .zinzen-logo-nav{
@@ -626,4 +632,22 @@
         width: 1.6em;
     }
 
+    .feelings-menu-desktop{
+        display:none;
+    }
+    .feelings-menu-mobile{
+        display: block;
+    }
+    .feelings-title-mobile{
+        font-weight: bolder;
+        padding-top: 0.5em;
+    }
+    .feelings-title{
+        color:#000000 !important;
+        font-weight: bolder;
+        background-color: #EDC7B7 !important;
+        padding: 1em 1.5em 1em 1.5em !important;
+
+    }
 }
+
