@@ -26,14 +26,15 @@ const UserChoiceDashboard = () => {
           </Button>
         </Row>
         <Row >
-          <Button variant={darkModeStatus ? "dark-pink" : "pink"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}
-          onClick={() => { 
-            navigate('/ZinZen/home/MyFeelings');
-            window.location.reload(false);}}
-            >
-              {t("myfeelings")}
+          <Button variant={darkModeStatus ? "dark-pink" : "pink"} size="lg" className={darkModeStatus ? "dashboard-choice-dark" : "dashboard-choice-light"}>
+            {t("myfeelings")}
           </Button>
-          <Button variant={darkModeStatus ? "dark-pink" : "pink"} className={darkModeStatus ? "dashboard-add-btn-dark" : "dashboard-add-btn-light"}>
+          <Button variant={darkModeStatus ? "dark-pink" : "pink"} className={darkModeStatus ? "dashboard-add-btn-dark" : "dashboard-add-btn-light"}
+            onClick={() => {
+              navigate('/ZinZen/home/MyFeelings');
+              window.location.reload(false);
+            }}
+          >
             {darkModeStatus ? <img src={AddIconDark} alt="Add Icon" className="add-icon" /> : <img src={AddIconLight} alt="Add Icon" className="add-icon" />}
           </Button>
         </Row>
