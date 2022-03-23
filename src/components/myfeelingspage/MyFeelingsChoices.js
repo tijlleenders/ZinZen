@@ -1,23 +1,21 @@
-import React from 'react'
-import FeelingHappy from './FeelingHappy'
-import FeelingExcited from './FeelingExcited'
-import FeelingGratitude from './FeelingGratitude'
-import FeelingSad from './FeelingSad'
-import FeelingAfraid from './FeelingAfraid'
-import FeelingAngry from './FeelingAngry'
+import React from "react";
 
-const MyFeelingsChoices = () => {
+import { FeelingHappy } from "./FeelingHappy";
+import { FeelingExcited } from "./FeelingExcited";
+import { FeelingGratitude } from "./FeelingGratitude";
+import { FeelingSad } from "./FeelingSad";
+import { FeelingAfraid } from "./FeelingAfraid";
+import { FeelingAngry } from "./FeelingAngry";
 
-  return (
-    <div>
-      <FeelingHappy />
-      <FeelingExcited />
-      <FeelingGratitude />
-      <FeelingSad />
-      <FeelingAfraid />
-      <FeelingAngry />
-    </div>
-  )
-}
-
-export default MyFeelingsChoices
+export const MyFeelingsChoices = () => {
+    return (
+        <div>
+            <FeelingHappy />
+            <FeelingExcited />
+            <FeelingGratitude />
+            <FeelingSad />
+            <FeelingAfraid />
+            <FeelingAngry />
+        </div>
+    );
+};

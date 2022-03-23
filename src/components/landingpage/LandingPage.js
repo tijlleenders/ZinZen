@@ -1,23 +1,22 @@
-import React from 'react'
-import { Container, Row } from 'react-bootstrap'
-import Header from './Header';
-import Mainbody from './Main-body';
+import React from "react";
+import { Container, Row } from "react-bootstrap";
 
-const LandingPage = () => {
-  return (
-    <div>
-      <div>
-      <Container fluid >
-        <Row >
-          <Header />
-        </Row>
-        <Row >
-          <Mainbody />
-        </Row>
-      </Container>
-      </div>
-    </div>
-  )
-}
+import { Header } from "./Header";
+import { Mainbody } from "./Main-body";
 
-export default LandingPage
+export const LandingPage = () => {
+    return (
+        <div>
+            <div>
+                <Container fluid>
+                    <Row>
+                        <Header />
+                    </Row>
+                    <Row>
+                        <Mainbody />
+                    </Row>
+                </Container>
+            </div>
+        </div>
+    );
+};

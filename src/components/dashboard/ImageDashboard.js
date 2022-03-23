@@ -1,12 +1,15 @@
-import React from 'react'
-import BookIcon from '../../images/bookicon.svg'
+import React from "react";
 
-const ImageDashboard = () => {
-  return (
-    <div>
-      <img src={BookIcon} alt="Book Icon" className="book-icon-dashboard" />
-    </div>
-  )
-}
+import BookIcon from "../../images/bookicon.svg";
 
-export default ImageDashboard
+export const ImageDashboard = () => {
+    return (
+        <div>
+            <img
+                src={BookIcon}
+                alt="Book Icon"
+                className="book-icon-dashboard"
+            />
+        </div>
+    );
+};
