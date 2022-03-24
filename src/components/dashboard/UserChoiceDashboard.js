@@ -14,7 +14,6 @@ const UserChoiceDashboard = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-  console.log(darkModeStatus)
 
   return (
     <div>

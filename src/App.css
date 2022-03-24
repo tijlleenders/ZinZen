@@ -345,7 +345,14 @@
 
 /* My Feelings Page*/
 
-.my-feelings-font{
+.my-feelings-font-light{
+    padding: 0em 1em 0em 0.8em;
+    font-style: italic;
+    font-weight: bolder;
+}
+
+.my-feelings-font-dark{
+    color:#cecece;
     padding: 0em 1em 0em 0.8em;
     font-style: italic;
     font-weight: bolder;
@@ -356,7 +363,12 @@
     margin-top: 1em;
 }
 
-.btn-my-feelings {
+.menu-list{
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-my-feelings-light {
     margin-top: 0.5em;
     margin-right: 0.5em;
     margin-left: 0em;
@@ -368,18 +380,42 @@
     font-size: 1.2em !important;
     cursor: pointer !important;
   }
-.menu-list{
-    display: flex;
-    flex-direction: column;
-}
-  .btn-feelings {
+
+
+  .btn-feelings-light {
     border-color: #EDC7B7 !important;
     color: #7E7E7E !important;
     font-weight: bolder !important;
   }
-  
-  .btn-feelings:hover {
+
+  .btn-feelings-light:hover {
     background-color: #EDC7B7!important;
+    font-weight: bolder !important;
+    color: white !important;
+  }
+
+  .btn-my-feelings-dark {
+    margin-top: 0.5em;
+    margin-right: 0.5em;
+    margin-left: 0em;
+    border: 2px solid #EDC7B7 !important;
+    background-color:  #121212 !important;
+    color: black !important;
+    padding: 0.5em 1em 0.5em 1em !important;
+    font-weight: bolder !important;
+    font-size: 1.2em !important;
+    cursor: pointer !important;
+  }
+
+
+  .btn-feelings-dark {
+    border-color: #443027 !important;
+    color: #cecece !important;
+    font-weight: bolder !important;
+  }
+
+  .btn-feelings-dark:hover {
+    background-color: #443027!important;
     font-weight: bolder !important;
     color: white !important;
   }
@@ -387,6 +423,7 @@
 .feelings-menu-mobile{
     display: none;
 }
+
 /*Media Query for Mobile View*/
 
 @media (max-width: 600px){
@@ -642,10 +679,18 @@
         font-weight: bolder;
         padding-top: 0.5em;
     }
-    .feelings-title{
+    .feelings-title-light{
         color:#000000 !important;
         font-weight: bolder;
         background-color: #EDC7B7 !important;
+        padding: 1em 1.5em 1em 1.5em !important;
+
+    }
+
+    .feelings-title-dark{
+        color:#ffffff !important;
+        font-weight: bolder;
+        background-color: #443027 !important;
         padding: 1em 1.5em 1em 1.5em !important;
 
     }
