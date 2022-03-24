@@ -3,8 +3,11 @@ import { Container, Row, Col } from "react-bootstrap";
 
 import { HeaderDashboard } from "../dashboard/HeaderDashboard";
 import { MyFeelingsChoices } from "./MyFeelingsChoices";
+import { darkModeState } from '../../store/DarkModeState'
+import { useRecoilValue } from 'recoil'
 
 export const MyFeelings = () => {
+    const darkModeStatus = useRecoilValue(darkModeState);
     return (
         <div>
             <Container fluid>
@@ -13,7 +16,7 @@ export const MyFeelings = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <h3 className="my-feelings-font">
+                        <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
                             Hi! How do you feel today?
                         </h3>
                         <MyFeelingsChoices />
