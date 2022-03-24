@@ -1,12 +1,13 @@
-import React from 'react'
-import { Button, Nav, Navbar, Container} from 'react-bootstrap'
-import { darkModeState } from '../../store/DarkModeState'
-import { useRecoilState } from 'recoil'
+import React from "react";
+import { useRecoilValue } from 'recoil';
+import { Button, Nav, Navbar, Container} from 'react-bootstrap';
 
-const FeelingAngry = () => {
-    const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+import { darkModeState } from '../../store/DarkModeState';
+
+export const FeelingAngry = () => {
+    const darkModeStatus = useRecoilValue(darkModeState);
     return (
-        <div >
+        <div>
             <Container fluid>
                 <div className="feelings-menu-desktop">
                     <Button variant={darkModeStatus ? "brown" : "peach"} size="lg" className="feelings-title">
@@ -65,7 +66,5 @@ const FeelingAngry = () => {
                 </div>
             </Container>
         </div>
-    )
-}
-
-export default FeelingAngry
+    );
+};

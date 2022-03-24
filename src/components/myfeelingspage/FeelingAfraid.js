@@ -1,10 +1,10 @@
-import React from 'react'
-import { Button, Nav, Navbar, Container} from 'react-bootstrap'
-import { darkModeState } from '../../store/DarkModeState'
-import { useRecoilState } from 'recoil'
+import React from "react";
+import { Button, Nav, Navbar, Container} from 'react-bootstrap';
+import { useRecoilValue } from 'recoil';
 
-const FeelingAfraid = () => {
-    const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+import { darkModeState } from '../../store/DarkModeState';
+
+export const FeelingAfraid = () => {
     return (
         <div >
         <Container fluid>
@@ -67,5 +67,3 @@ const FeelingAfraid = () => {
     </div>
     )
 }
-
-export default FeelingAfraid
