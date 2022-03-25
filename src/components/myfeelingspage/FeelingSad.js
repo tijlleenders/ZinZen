@@ -3,7 +3,7 @@ import { Button, Nav, Navbar, Container} from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 
 import { darkModeState } from '../../store/DarkModeState';
-import { useTranslation } from "r1eact-i18next";
+import { useTranslation } from "react-i18next";
 import "../../translations/i18n";
 
 export const FeelingSad = () => {
