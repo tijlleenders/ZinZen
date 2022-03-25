@@ -1,14 +1,13 @@
-import React from 'react'
+import React from "react";
 import { Button, Nav, Navbar, Container} from 'react-bootstrap'
-import { darkModeState } from '../../store/DarkModeState'
-import { useRecoilState } from 'recoil'
-import { useTranslation } from "react-i18next"
-import "../../translations/i18n"
+import { useRecoilValue } from 'recoil';
+import { useTranslation } from "react-i18next";
+import "../../translations/i18n";
 
-const FeelingExcited = () => {
-    const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-    const { t } = useTranslation();
+import { darkModeState } from '../../store/DarkModeState';
 
+export const FeelingExcited = () => {
+    const darkModeStatus = useRecoilValue(darkModeState);
     return (
         <div >
         <Container fluid>
@@ -71,5 +70,3 @@ const FeelingExcited = () => {
     </div>
     )
 }
-
-export default FeelingExcited

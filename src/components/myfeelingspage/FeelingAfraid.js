@@ -1,14 +1,12 @@
-import React from 'react'
-import { Button, Nav, Navbar, Container} from 'react-bootstrap'
-import { darkModeState } from '../../store/DarkModeState'
-import { useRecoilState } from 'recoil'
-import { useTranslation } from "react-i18next"
-import "../../translations/i18n"
+import React from "react";
+import { Button, Nav, Navbar, Container} from 'react-bootstrap';
+import { useRecoilValue } from 'recoil';
+import { useTranslation } from "react-i18next";
+import "../../translations/i18n";
 
-const FeelingAfraid = () => {
-    const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-    const { t } = useTranslation();
+import { darkModeState } from '../../store/DarkModeState';
 
+export const FeelingAfraid = () => {
     return (
         <div >
         <Container fluid>
@@ -71,5 +69,3 @@ const FeelingAfraid = () => {
     </div>
     )
 }
-
-export default FeelingAfraid

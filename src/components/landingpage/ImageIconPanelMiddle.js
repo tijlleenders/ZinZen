@@ -1,12 +1,11 @@
-import React from 'react'
-import BookIcon from '../../images/bookicon.svg'
+import React from "react";
 
-const ImageIconPanelMiddle = () => {
-  return (
-    <div>
-      <img src={BookIcon} alt="Book Icon" className="book-icon" />
-    </div>
-  )
-}
+import BookIcon from "../../images/bookicon.svg";
 
-export default ImageIconPanelMiddle
+export const ImageIconPanelMiddle = () => {
+    return (
+        <div>
+            <img src={BookIcon} alt="Book Icon" className="book-icon" />
+        </div>
+    );
+};

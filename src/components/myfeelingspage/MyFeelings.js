@@ -1,14 +1,15 @@
-import React from 'react'
-import Header from '../dashboard/HeaderDashboard'
-import MyFeelingsChoices from './MyFeelingsChoices'
-import { Container, Row, Col } from 'react-bootstrap'
-import { darkModeState } from '../../store/DarkModeState'
-import { useRecoilState } from 'recoil'
-import { useTranslation } from "react-i18next"
-import "../../translations/i18n"
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { useRecoilValue } from 'recoil';
 
-const MyFeelings = () => {
-  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+import { HeaderDashboard } from "../dashboard/HeaderDashboard";
+import { MyFeelingsChoices } from "./MyFeelingsChoices";
+import { darkModeState } from '../../store/DarkModeState'
+import "../../translations/i18n";
+
+export const MyFeelings = () => {
+  const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
 
   return (
@@ -25,8 +26,6 @@ const MyFeelings = () => {
                     <Col sm={1}></Col>
                 </Row>
             </Container>
-    </div>
-  )
-}
-
-export default MyFeelings
+        </div>
+    );
+};

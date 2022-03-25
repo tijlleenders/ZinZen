@@ -1,17 +1,16 @@
-import React from 'react'
+import React from "react";
 import { Button, Nav, Navbar, Container} from 'react-bootstrap'
 import { darkModeState } from '../../store/DarkModeState'
-import { useRecoilState } from 'recoil'
-import { useTranslation } from "react-i18next"
-import "../../translations/i18n"
+import { useRecoilValue } from 'recoil';
 
-const FeelingGratitude = () => {
-    const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+import { useTranslation } from "react-i18next";
+import "../../translations/i18n";
+
+export const FeelingGratitude = () => {
+    const darkModeStatus = useRecoilValue(darkModeState);
     const { t } = useTranslation();
-
     return (
-
-        <div >
+        <div>
             <Container fluid>
                 <div className="feelings-menu-desktop">
                     <Button variant={darkModeStatus ? "brown" : "peach"} size="lg" className="feelings-title">
@@ -70,7 +69,5 @@ const FeelingGratitude = () => {
                 </div>
             </Container>
         </div>
-    )
-}
-
-export default FeelingGratitude
+    );
+};
