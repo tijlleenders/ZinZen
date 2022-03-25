@@ -69,6 +69,14 @@ https://opensource.guide/how-to-contribute/
 <br />
 <br />
 
+## Frameworks used
+UI : react-bootstrap  
+Testing : Cypress  
+CI/CD : GithubActions (considering Vercel)  
+Internationalization : i18next  
+Progressive Web App : workbox  
+Animations : none
+
 ## Legal stuff
 
 &copy;2020-now ZinZen&reg;  
