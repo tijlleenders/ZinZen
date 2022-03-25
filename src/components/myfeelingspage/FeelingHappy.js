@@ -1,11 +1,8 @@
 import React from "react";
-import { Button, Nav, Navbar, Container} from 'react-bootstrap';
-import { darkModeState } from '../../store/DarkModeState';
-import { useRecoilValue } from 'recoil';
+import { Button, Nav, Navbar, Container} from 'react-bootstrap'
+import { darkModeState } from '../../store/DarkModeState'
+import { useRecoilValue } from 'recoil'
 
-import { useTranslation } from "react-i18next";
-import "../../translations/i18n";
-  
 export const FeelingHappy = () => {
     const darkModeStatus = useRecoilValue(darkModeState);
     return (
@@ -13,54 +10,54 @@ export const FeelingHappy = () => {
             <Container fluid>
                 <div className="feelings-menu-desktop">
                     <Button variant={darkModeStatus ? "brown" : "peach"} size="lg" className="feelings-title">
-                    {t("happy")}
+                        Happy
                         &#128515;
                     </Button>
                     <br />
                     <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                    {t("happy")}
+                        Happy
                     </Button>
                     <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                    {t("loved")}
+                        Loved
                     </Button>
                     <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                    {t("relieved")}
+                        Relieved
                     </Button>
                     <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                    {t("content")}
+                        Content
                     </Button>
                     <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                    {t("peaceful")}
+                        Peaceful
                     </Button>
                     <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                    {t("joyful")}
+                        Joyful
                     </Button>
                 </div>
                 <div className="feelings-menu-mobile">
                     <Navbar collapseOnSelect expand="lg">
                         <Navbar.Toggle className={darkModeStatus ? "feelings-title-dark" : "feelings-title-light"}>
-                            {t("happy")}
+                            Happy
                             &#128515;
                         </Navbar.Toggle>
                         <Navbar.Collapse>
                             <Nav className="navbar-custom">
                                 <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                                    {t("happy")}
+                                    Happy
                                 </Button>
                                 <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                                    {t("loved")}
+                                    Loved
                                 </Button>
                                 <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                                    {t("relieved")}
+                                    Relieved
                                 </Button>
                                 <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                                    {t("content")}
+                                    Content
                                 </Button>
                                 <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                                    {t("peaceful")}
+                                    Peaceful
                                 </Button>
                                 <Button className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"} size="lg">
-                                    {t("joyful")}
+                                    Joyful
                                 </Button>
                             </Nav>
                         </Navbar.Collapse>
