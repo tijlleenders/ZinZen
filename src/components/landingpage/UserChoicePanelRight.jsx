@@ -2,6 +2,7 @@ import React from "react";
 
 import { LanguagesList } from "../languagechoices/LanguagesList";
 import "../../translations/i18n";
+import "./landingpage.scss"
 
 export const UserChoicePanelRight = () => {
     let languages = [

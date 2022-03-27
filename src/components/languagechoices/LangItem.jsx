@@ -5,6 +5,7 @@ import i18n from "i18next";
 import { useNavigate } from "react-router-dom";
 
 import { languageSelectionState } from "../../store/LanguageSelectionState";
+import "./languagechoice.scss"
 
 export const LangItem = ({ lang }) => {
     const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(

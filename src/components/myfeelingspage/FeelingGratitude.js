@@ -5,6 +5,8 @@ import { useRecoilValue } from 'recoil';
 
 import { useTranslation } from "react-i18next";
 import "../../translations/i18n";
+import "./myfeelingspage.scss"
+
 
 export const FeelingGratitude = () => {
     const darkModeStatus = useRecoilValue(darkModeState);
