@@ -16,7 +16,7 @@ export const MyFeelings = () => {
     <div>
       <Container fluid >
                 <Row >
-                    <Header />
+                    <HeaderDashboard />
                 </Row>
                 <Row >
                     <Col >

@@ -7,6 +7,7 @@ import "../../translations/i18n";
 import { darkModeState } from '../../store/DarkModeState';
 
 export const FeelingAngry = () => {
+    const { t } = useTranslation();
     const darkModeStatus = useRecoilValue(darkModeState);
     return (
         <div>

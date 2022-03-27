@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import "../../translations/i18n";
   
 export const FeelingHappy = () => {
+    const { t } = useTranslation();
     const darkModeStatus = useRecoilValue(darkModeState);
     return (
         <div>
