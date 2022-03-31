@@ -5,13 +5,11 @@ import { useTranslation } from "react-i18next";
 import "../../translations/i18n";
 import "./myfeelingspage.scss"
 
-  
 import { darkModeState } from '../../store/DarkModeState';
 
 export const FeelingAngry = () => {
     const { t } = useTranslation();
     const darkModeStatus = useRecoilValue(darkModeState);
-    const { t } = useTranslation();
 
     return (
         <div>

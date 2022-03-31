@@ -11,7 +11,6 @@ import { darkModeState } from '../../store/DarkModeState';
 export const FeelingExcited = () => {
     const { t } = useTranslation();
     const darkModeStatus = useRecoilValue(darkModeState);
-    const { t } = useTranslation();
 
     return (
         <div >
