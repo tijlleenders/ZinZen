@@ -3,6 +3,8 @@ import { Button, Nav, Navbar, Container} from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from "react-i18next";
 import "../../translations/i18n";
+import "./myfeelingspage.scss"
+
 
 import { darkModeState } from '../../store/DarkModeState';
 

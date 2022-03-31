@@ -7,6 +7,7 @@ import { HeaderDashboard } from "../dashboard/HeaderDashboard";
 import { MyFeelingsChoices } from "./MyFeelingsChoices";
 import { darkModeState } from '../../store/DarkModeState'
 import "../../translations/i18n";
+import "./myfeelingspage.scss"
 
 export const MyFeelings = () => {
   const darkModeStatus = useRecoilValue(darkModeState);

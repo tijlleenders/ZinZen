@@ -5,6 +5,7 @@ import ThemeDark from "../../images/DashboardThemeDark.svg";
 import ThemeLight from "../../images/DashboardThemeLight.svg";
 import { themeSelectionState } from "../../store/ThemeSelectionState";
 import { useNavigate } from "react-router-dom";
+import "./themechoice.scss"
 
 export const ThemesChoice = () => {
     const [isThemeChosen, setIsThemeChosen] =

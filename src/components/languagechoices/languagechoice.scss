@@ -1,0 +1,60 @@
+/*Right Panel-Text, language buttons*/
+
+.containerLang {
+    align-items: center;
+}
+
+.containerLang {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lang-btn1 {
+    color: #000000 !important;
+    font-weight: bolder !important;
+    font-size: 1.2rem !important;
+    width: 300px !important;
+    margin-top: 0.7em;
+    text-align: left !important;
+    padding-left: 8% !important;
+    border-radius: 10px !important;
+}
+
+.lang-btn2 {
+    color: #FFFFFF !important;
+    font-weight: bolder !important;
+    font-size: 1.2rem !important;
+    width: 300px !important;
+    margin-top: 0.7em;
+    text-align: left !important;
+    padding-left: 8% !important;
+    border-radius: 10px !important;
+}
+
+/*Media Query for Mobile View*/
+
+@media (max-width: 600px){
+
+    .lang-btn1 {
+        color: #000000 !important;
+        font-weight: bolder !important;
+        font-size: 1.2rem !important;
+        width: 80vw !important;
+        margin-top: 0.7em;
+        text-align: left !important;
+        padding-left: 8% !important;
+        border-radius: 10px !important;
+    }
+
+    .lang-btn2 {
+        color: #FFFFFF !important;
+        font-weight: bolder !important;
+        font-size: 1.2rem !important;
+        width: 80vw !important;
+        margin-top: 0.7em;
+        text-align: left !important;
+        padding-left: 8% !important;
+        border-radius: 10px !important;
+    }
+}

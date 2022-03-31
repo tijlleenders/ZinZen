@@ -9,6 +9,7 @@ import AddIconLight from "../../images/AddIconLight.png";
 import AddIconDark from "../../images/AddIconDark.png";
 import { darkModeState } from "../../store/DarkModeState";
 import "../../translations/i18n";
+import "./dashboard.scss"
 
 export const UserChoiceDashboard = () => {
     const navigate = useNavigate();

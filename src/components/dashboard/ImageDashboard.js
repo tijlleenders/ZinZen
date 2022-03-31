@@ -1,6 +1,7 @@
 import React from "react";
 
 import BookIcon from "../../images/bookicon.svg";
+import "./dashboard.scss"
 
 export const ImageDashboard = () => {
     return (

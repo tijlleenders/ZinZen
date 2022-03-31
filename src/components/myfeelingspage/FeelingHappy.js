@@ -5,10 +5,14 @@ import { useRecoilValue } from 'recoil';
 
 import { useTranslation } from "react-i18next";
 import "../../translations/i18n";
+import "./myfeelingspage.scss"
+
   
 export const FeelingHappy = () => {
     const { t } = useTranslation();
     const darkModeStatus = useRecoilValue(darkModeState);
+    const { t } = useTranslation();
+
     return (
         <div>
             <Container fluid>

@@ -6,23 +6,24 @@ import "../../translations/i18n";
 import ZinZenText from "../../images/LogoTextLight.svg";
 import Logo from "../../images/zinzenlogo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./landingpage.scss"
 
 export const Header = () => {
     const { t } = useTranslation();
     return (
         <Navbar collapseOnSelect expand="lg">
-            <img src={Logo} alt="Text Nav" className="zinzen-logo-nav" />
+            <img src={Logo} alt="Text Nav" className="zinzen-logo-nav-landing-page" />
             <img
                 src={ZinZenText}
                 alt="Logo Nav"
-                className="zinzen-text-logo-nav"
+                className="zinzen-text-logo-nav-landing-page"
             />
             <Navbar.Toggle
                 aria-controls="responsive-navbar-nav"
-                className="nav-collapse"
+                className="nav-collapse-landing-page"
             />
             <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="navbar-custom">
+                <Nav className="navbar-custom-landing-page">
                     <Nav.Link to="home" className="nav-link-landing-page">
                         {t("home")}
                     </Nav.Link>
