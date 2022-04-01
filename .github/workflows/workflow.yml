@@ -2,10 +2,12 @@ name: GitHub Pages Deploy
 
 on:
   pull_request:
-    
-    branches:    
+    paths:
+     - 'src/**' 
+    branches:
       - main
-      
+       
+
 
 jobs:
   build:
