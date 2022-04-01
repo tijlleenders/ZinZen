@@ -20,7 +20,7 @@
 .zinzen-logo-nav-landing-page{
     margin-bottom: 1.2em;
     width:0%;
-    visibility: hidden !important;
+    visibility: hidden;
 }
 
 .zinzen-text-logo-nav-landing-page{
@@ -60,7 +60,7 @@
 
 .btn-primary-learnmore {
     border-radius: 4px;
-    background-color: #AC3B61 !important;
+    background-color: #AC3B61;
     border: none;
     color: #FFFFFF;
     text-align: center;
@@ -137,25 +137,25 @@
 }
 
 .lang-btn1 {
-    color: #000000 !important;
-    font-weight: bolder !important;
-    font-size: 1.2rem !important;
-    width: 300px !important;
+    color: #000000 ;
+    font-weight: bolder ;
+    font-size: 1.2rem ;
+    width: 300px;
     margin-top: 0.7em;
-    text-align: left !important;
-    padding-left: 8% !important;
-    border-radius: 10px !important;
+    text-align: left ;
+    padding-left: 8% ;
+    border-radius: 10px;
 }
 
 .lang-btn2 {
-    color: #FFFFFF !important;
-    font-weight: bolder !important;
-    font-size: 1.2rem !important;
-    width: 300px !important;
+    color: #FFFFFF ;
+    font-weight: bolder;
+    font-size: 1.2rem ;
+    width: 300px ;
     margin-top: 0.7em;
-    text-align: left !important;
-    padding-left: 8% !important;
-    border-radius: 10px !important;
+    text-align: left ;
+    padding-left: 8% ;
+    border-radius: 10px ;
 }
 
 /*Media Query for Mobile View*/
@@ -166,7 +166,7 @@
 
     .zinzen-logo-nav-landing-page{
         width:10%;
-        visibility: visible !important;
+        visibility: visible;
     }
 
     .zinzen-text-logo-nav-landing-page{

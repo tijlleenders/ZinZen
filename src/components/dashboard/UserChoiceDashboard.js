@@ -74,7 +74,7 @@ export const UserChoiceDashboard = () => {
                                 : "dashboard-add-btn-light"
                         }
                         onClick={() => {
-                            navigate("/ZinZen/home/MyFeelings");
+                            navigate("/Home/AddFeelings");
                             window.location.reload(false);
                         }}
                     >

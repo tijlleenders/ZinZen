@@ -20,7 +20,7 @@ export const ThemesChoice = () => {
                 onClick={() => {
                     setIsThemeChosen(true);
                     localStorage.setItem("theme", "light");
-                    navigate("/ZinZen/home");
+                    navigate("/Home");
                     window.location.reload(false);
                 }}
             >
@@ -39,7 +39,7 @@ export const ThemesChoice = () => {
                 onClick={() => {
                     setIsThemeChosen(true);
                     localStorage.setItem("theme", "dark");
-                    navigate("/ZinZen/home");
+                    navigate("/Home");
                     window.location.reload(false);
                 }}
             >

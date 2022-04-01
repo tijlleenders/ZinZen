@@ -16,7 +16,6 @@ export const LangItem = ({ lang }) => {
         setIsLanguageChosen(true);
         i18n.changeLanguage(langId);
         localStorage.setItem("language", JSON.stringify(langId));
-        navigate("/ZinZen/Theme");
         window.location.reload(false);
     };
 

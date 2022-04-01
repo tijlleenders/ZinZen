@@ -24,17 +24,17 @@ export const App = () => {
             <BrowserRouter>
                 <Routes>
                     {isLanguageChosen === "No language chosen." ? (
-                        <Route path="/ZinZen" element={<LandingPage />} />
+                        <Route path="/" element={<LandingPage />} />
                     ) : isThemeChosen === "No theme chosen." ? (
                         <Route
-                            path="/ZinZen/Theme"
+                            path="/"
                             element={<LandingPageThemeChoice />}
                         />
                     ) : (
-                        <Route path="/ZinZen/Home" element={<Home />} />
+                        <Route path="/Home" element={<Home />} />
                     )}
                     <Route
-                        path="/ZinZen/Home/MyFeelings"
+                        path="/Home/AddFeelings"
                         element={<MyFeelings />}
                     />
                 </Routes>
