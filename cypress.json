@@ -1,5 +1,5 @@
 {
-    "baseUrl": "https://tijlleenders.github.io/ZinZen/",
+    "baseUrl": "https://zinzen.vercel.app/",
     "testFiles": [
         "home-page.test.js",
         "dashboard.test.js"
