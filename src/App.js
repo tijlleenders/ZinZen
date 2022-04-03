@@ -9,6 +9,7 @@ import { LandingPage } from "./components/landingpage/LandingPage";
 import { LandingPageThemeChoice } from "./components/themechoicepage/LandingPageThemeChoice";
 import { MyFeelings } from "./components/myfeelingspage/MyFeelings";
 import { Home } from "./components/dashboard/Home";
+import { NotFoundPage } from "./components/404page/NotFoundPage"
 
 import "./customize.scss";
 import "./App.css";
@@ -37,8 +38,12 @@ export const App = () => {
                         path="/Home/AddFeelings"
                         element={<MyFeelings />}
                     />
-                </Routes>
-            </BrowserRouter>
-        </div>
+                    <Route 
+                        path="*" 
+                        element={<NotFoundPage />}
+                    />
+            </Routes>
+        </BrowserRouter>
+        </div >
     );
 };
