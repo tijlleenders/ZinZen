@@ -6,7 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create or Update Project Card
-        uses: peter-evans/create-or-update-project-card@v1
+        uses: peter-evans/create-or-update-project-card@v2
         with:
           token: ${{ secrets.ADD_ISSUE_TO_PROJECT_PAT }}
-          project-name: ZinZen project board
+          project-name: ZinZen_project
+          project-location: tijlleenders/ZinZen
+          column-name: backlog
+
