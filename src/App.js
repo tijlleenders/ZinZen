@@ -32,7 +32,7 @@ export const App = () => {
                             element={<LandingPageThemeChoice />}
                         />
                     ) : (
-                        <Route path="/Home" element={<Home />} />
+                        <><Route path="/Home" element={<Home />} /><Route path="/" element={<Home />} /></>
                     )}
                     <Route
                         path="/Home/AddFeelings"

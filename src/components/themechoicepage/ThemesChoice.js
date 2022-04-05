@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import "./themechoice.scss"
 
 export const ThemesChoice = () => {
-    const [isThemeChosen, setIsThemeChosen] =
+    const [, setIsThemeChosen] =
         useRecoilState(themeSelectionState);
     const navigate = useNavigate();
     return (

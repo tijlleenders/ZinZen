@@ -2,16 +2,14 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilState } from "recoil";
 import i18n from "i18next";
-import { useNavigate } from "react-router-dom";
 
 import { languageSelectionState } from "../../store/LanguageSelectionState";
 import "./languagechoice.scss"
 
 export const LangItem = ({ lang }) => {
-    const [isLanguageChosen, setIsLanguageChosen] = useRecoilState(
+    const [, setIsLanguageChosen] = useRecoilState(
         languageSelectionState
     );
-    const navigate = useNavigate();
     const handleClick = (langId) => {
         setIsLanguageChosen(true);
         i18n.changeLanguage(langId);
