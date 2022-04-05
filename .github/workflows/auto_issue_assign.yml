@@ -9,9 +9,8 @@ jobs:
         uses: peter-evans/create-or-update-project-card@v2
         with:
           token: ${{ secrets.ADD_ISSUE_TO_PROJECT_PAT2 }}
-          project-name: ZinZen_project
+          project-name: 1
           project-location: ${{ github.actor }}
           repository: ${{ github.repository }}
           issue-number: ${{ github.event.issue.number }}
           column-name: Backlog
-
