@@ -12,4 +12,5 @@ jobs:
           project-name: ZinZen_project
           project-location: ${{ github.actor }}
           column-name: backlog
+          issue-number: ${{ github.event.issue.number }}
 
