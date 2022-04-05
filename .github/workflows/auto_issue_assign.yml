@@ -13,5 +13,5 @@ jobs:
           project-location: ${{ github.actor }}
           repository: ${{ github.repository }}
           issue-number: ${{ github.event.issue.number }}
-          column-name: backlog
+          column-name: Backlog
 
