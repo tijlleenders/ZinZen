@@ -8,6 +8,6 @@ jobs:
       - name: Create or Update Project Card
         uses: peter-evans/create-or-update-project-card@v2
         with:
-          project-name: 1
+          project-number: 1
           column-name: Backlog
           issue-number: ${{ github.event.issue.number }}
