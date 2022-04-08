@@ -27,16 +27,22 @@ export const HeaderThemeChoice = () => {
             />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="navbar-custom">
-                    <Nav.Link to="home" className="nav-link-theme-page">
+                    <Nav.Link 
+                        href="https://zinzen.vercel.app" 
+                        className="nav-link-theme-page"
+                    >
                         {t("home")}
                     </Nav.Link>
                     <Nav.Link
-                        href="#discover"
+                        href="https://github.com/tijlleenders/ZinZen"
                         className="nav-link-theme-page"
                     >
                         {t("discover")}
                     </Nav.Link>
-                    <Nav.Link href="#donate" className="nav-link-theme-page">
+                    <Nav.Link 
+                        href="https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"
+                        className="nav-link-theme-page"
+                    >
                         {t("donate")}
                     </Nav.Link>
                 </Nav>

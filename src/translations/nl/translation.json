@@ -1,4 +1,9 @@
-{
+{   "langchoice":"Kies uw voorkeurstaal.",
+    "english":"Engels",
+    "french":"Frans",
+    "hindi":"Hindi",
+    "spanish":"Spaans",
+    "dutch":"Nederlands",
     "themechoice": "Kies je kleurenthema.",
     "home": "Home",
     "discover": "Ontdek",

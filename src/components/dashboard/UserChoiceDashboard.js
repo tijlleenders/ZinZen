@@ -17,7 +17,13 @@ export const UserChoiceDashboard = () => {
     const darkModeStatus = useRecoilValue(darkModeState);
 
     function truncateContent(content, maxLength = 20) {
-        return content.substring(0, maxLength) + '...'
+        let length = content.length;
+        if(length>=maxLength){
+            return content.substring(0, maxLength) + '...'
+        }
+        else{
+            return content
+        }
       }
 
     return (

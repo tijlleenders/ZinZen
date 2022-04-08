@@ -3,39 +3,43 @@ import React from "react";
 import { LanguagesList } from "../languagechoices/LanguagesList";
 import "../../translations/i18n";
 import "./landingpage.scss"
+import { useTranslation } from "react-i18next";
+
 
 export const UserChoicePanelRight = () => {
+    const { t } = useTranslation();
+
     let languages = [
         {
             sno: 1,
-            title: "English",
+            title: t("english"),
             langId: "en",
         },
         {
             sno: 2,
-            title: "French",
+            title: t("french"),
             langId: "fr",
         },
         {
             sno: 3,
-            title: "Hindi",
+            title: t("dutch"),
             langId: "hi",
         },
         {
             sno: 4,
-            title: "Spanish",
+            title: t("hindi"),
             langId: "es",
         },
         {
             sno: 5,
-            title: "Dutch",
+            title: t("spanish"),
             langId: "nl",
         },
     ];
     return (
         <div className="right-panel">
             <h3 className="right-panel-font">
-                Choose your preferred Language.
+            {t("langchoice")}
             </h3>
             <LanguagesList languages={languages} />
         </div>

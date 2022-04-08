@@ -42,7 +42,7 @@ export const HeaderDashboard = () => {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="navbar-custom">
                         <Nav.Link
-                            href="#home"
+                            href="https://zinzen.vercel.app/Home"
                             className={
                                 darkModeStatus
                                     ? "nav-link-dashboard-dark"
@@ -52,7 +52,7 @@ export const HeaderDashboard = () => {
                             {t("home")}
                         </Nav.Link>
                         <Nav.Link
-                            href="#discover"
+                            href="https://github.com/tijlleenders/ZinZen"
                             className={
                                 darkModeStatus
                                     ? "nav-link-dashboard-dark"
@@ -62,7 +62,7 @@ export const HeaderDashboard = () => {
                             {t("discover")}
                         </Nav.Link>
                         <Nav.Link
-                            href="#donate"
+                            href="https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate"
                             className={
                                 darkModeStatus
                                     ? "nav-link-dashboard-dark"
