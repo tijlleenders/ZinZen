@@ -10,8 +10,7 @@ jobs:
         with:
           token: ${{ secrets.ADD_ISSUE_TO_PROJECT_PAT2 }}
           project-location: ${{ github.actor }}          
-          project-number: 1
-          project-name: ZinZen_project
+          project-number: 2
           repository: ${{ github.repository }}
           issue-number: ${{ github.event.issue.number }}
           column-name: Backlog
