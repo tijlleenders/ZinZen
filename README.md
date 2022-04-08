@@ -60,7 +60,8 @@ ZinZen does not want or need to know who you are. You don't require a phone numb
 
 ## How to contribute?
 https://opensource.guide/how-to-contribute/
-... and read code of conduct and FAQ's.
+... and read code of conduct and FAQ's.  
+We plan our work on the [ZinZen project board](https://github.com/users/tijlleenders/projects/2). Have a look!  
 
 ## ...or [sponsor me with coffee!](https://github.com/sponsors/tijlleenders)
 ...or [give a suggestion to improve](https://www.zinzen.me/contact.html)  
