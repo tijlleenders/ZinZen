@@ -1,4 +1,9 @@
-{
+{   "langchoice":"Elija su idioma preferido.",
+    "english":"inglés",
+    "french":"Francés",
+    "hindi":"Hindi",
+    "spanish":"español",
+    "dutch": "Holandés",
     "themechoice": "Elige tu tema preferido.",
     "home": "Casa",
     "discover": "Descubrir",
