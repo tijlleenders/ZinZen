@@ -24,6 +24,6 @@ describe("Basic Tests Home Page", () => {
         cy.get('[alt="Book Icon"]').should("be.visible");
     });
     it("user choice panel for language choice should work", () => {
-        cy.contains("Choose your preferred Language");
+        cy.get('*[class^="right-panel-font"]').should("be.visible");
     });
 });
