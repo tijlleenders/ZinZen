@@ -1,5 +1,4 @@
 import React from 'react'
-import { HeaderDashboard } from "../dashboard/HeaderDashboard";
 import { Container, Row, Button, Col } from "react-bootstrap";
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from "react-router-dom";
@@ -15,7 +14,6 @@ export const NotFoundPage = () => {
         <div>
             <Container fluid >
                 <Row >
-                    <HeaderDashboard />
                 </Row>
                 <Row></Row>
                 <Row></Row>
