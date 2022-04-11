@@ -1,11 +1,5 @@
 /// <reference types="cypress" />
 describe("Basic Tests Home Page", () => {
-    it("nav-bar should work", () => {
-        cy.visit("/");
-        cy.contains("Home");
-        cy.contains("Discover");
-        cy.contains("Donate");
-    });
 
     it("should have Home Page title", () => {
         cy.visit("/");

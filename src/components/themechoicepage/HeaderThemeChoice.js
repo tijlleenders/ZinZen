@@ -18,10 +18,6 @@ export const HeaderThemeChoice = () => {
                 alt="Logo Nav"
                 className="zinzen-text-logo-nav-theme-choice"
             />
-            <Navbar.Toggle
-                aria-controls="responsive-navbar-nav"
-                className="nav-collapse"
-            />
         </Navbar>
     );
 };
