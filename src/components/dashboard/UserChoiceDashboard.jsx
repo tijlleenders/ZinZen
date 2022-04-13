@@ -16,6 +16,16 @@ export const UserChoiceDashboard = () => {
     const { t } = useTranslation();
     const darkModeStatus = useRecoilValue(darkModeState);
 
+    function truncateContent(content, maxLength = 20) {
+        let length = content.length;
+        if(length>=maxLength){
+            return content.substring(0, maxLength) + '...'
+        }
+        else{
+            return content
+        }
+      }
+
     return (
         <div>
             <Container fluid>
@@ -29,7 +39,7 @@ export const UserChoiceDashboard = () => {
                                 : "dashboard-choice-light1"
                         }
                     >
-                        {t("mygoals")}
+                        {truncateContent(t("mygoals"))}
                     </Button>
                     <Button
                         variant={darkModeStatus ? "brown" : "peach"}
@@ -64,7 +74,7 @@ export const UserChoiceDashboard = () => {
                                 : "dashboard-choice-light"
                         }
                     >
-                        {t("myfeelings")}
+                        {truncateContent(t("myfeelings"))}
                     </Button>
                     <Button
                         variant={darkModeStatus ? "dark-pink" : "pink"}
@@ -103,7 +113,7 @@ export const UserChoiceDashboard = () => {
                                 : "dashboard-choice-light"
                         }
                     >
-                        {t("mytime")}
+                        {truncateContent(t("mytime"))}
                     </Button>
                     <Button
                         variant={darkModeStatus ? "dark-grey" : "grey-base"}
@@ -138,7 +148,7 @@ export const UserChoiceDashboard = () => {
                                 : "dashboard-choice-light"
                         }
                     >
-                        {t("explore")}
+                        {truncateContent(t("explore"))}
                     </Button>
                     <Button
                         variant={darkModeStatus ? "dark-blue" : "pale-blue"}
@@ -173,7 +183,7 @@ export const UserChoiceDashboard = () => {
                                 : "dashboard-choice-light"
                         }
                     >
-                        {t("zinzen")}
+                        {truncateContent(t("zinzen"))}
                     </Button>
                     <Button
                         variant={darkModeStatus ? "dark-purple" : "purple"}

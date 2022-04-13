@@ -1,11 +1,5 @@
 /// <reference types="cypress" />
 describe("Basic Tests Home Page", () => {
-    it("nav-bar should work", () => {
-        cy.visit("/");
-        cy.contains("Home");
-        cy.contains("Discover");
-        cy.contains("Donate");
-    });
 
     it("should have Home Page title", () => {
         cy.visit("/");
@@ -24,6 +18,6 @@ describe("Basic Tests Home Page", () => {
         cy.get('[alt="Book Icon"]').should("be.visible");
     });
     it("user choice panel for language choice should work", () => {
-        cy.contains("Choose your preferred Language");
+        cy.get('*[class^="right-panel-font"]').should("be.visible");
     });
 });
