@@ -23,7 +23,7 @@
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.1",
-    "react-dark-mode-toggle": "^0.2.0",
+    "react-dark-mode-toggle": "0.2.0",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.15.4",
     "react-router": "^6.0.0-beta.8",
@@ -50,7 +50,9 @@
   "scripts": {
     "dev": "vite",
     "build": "CI=false && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "react-scripts test",
+    "cypresstest": "cypress run"
   },
   "eslintConfig": {
     "extends": [
