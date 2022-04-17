@@ -23,17 +23,17 @@ export const UserChoicePanelRight = () => {
         {
             sno: 3,
             title: t("dutch"),
-            langId: "hi",
+            langId: "nl",
         },
         {
             sno: 4,
             title: t("hindi"),
-            langId: "es",
+            langId: "hi",
         },
         {
             sno: 5,
             title: t("spanish"),
-            langId: "nl",
+            langId: "es",
         },
     ];
     return (
