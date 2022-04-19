@@ -8,8 +8,13 @@
     }
   },
   "lint-staged": {
-    "src/components/**/*.js": [
+    "src/components/**/*.{js,jsx}": [
+      "prettier --write",
       "eslint --fix",
+      "git add"
+    ],
+    "src/components/**/*.{html,css,less,ejs}": [
+      "prettier --write",
       "git add"
     ]
   },
