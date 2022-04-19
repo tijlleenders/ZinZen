@@ -7,8 +7,17 @@
       "pre-commit": "lint-staged && pretty-quick --staged"
     }
   },
-  "lint-staged":{"*.js": "eslint"},
-
+  "lint-staged": {
+    "src/components/**/*.{js,jsx}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ],
+    "src/components/**/*.{html,css,less,jsx}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
