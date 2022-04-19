@@ -69,7 +69,10 @@
     "build": "CI=false && vite build",
     "preview": "vite preview",
     "test": "react-scripts test",
-    "cypresstest": "cypress run"
+    "cypresstest": "cypress run",
+    "lint": "eslint ./",
+    "lint-fix": "eslint ./ --fix",
+	  "format": "prettier --write \"**/*.{js,jsx,json,md}\""
   },
   "eslintConfig": {
     "extends": [
