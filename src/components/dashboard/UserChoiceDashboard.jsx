@@ -18,13 +18,13 @@ export const UserChoiceDashboard = () => {
 
     function truncateContent(content, maxLength = 20) {
         let length = content.length;
-        if(length>=maxLength){
+        if (length >= maxLength) {
             return content.substring(0, maxLength) + '...'
         }
-        else{
+        else {
             return content
         }
-      }
+    }
 
     return (
         <div>
@@ -181,6 +181,11 @@ export const UserChoiceDashboard = () => {
                             darkModeStatus
                                 ? "dashboard-choice-dark"
                                 : "dashboard-choice-light"
+                        }
+                        onClick={() => {
+                            navigate("/Home/ZinZen");
+                            window.location.reload(false);
+                        }
                         }
                     >
                         {truncateContent(t("zinzen"))}

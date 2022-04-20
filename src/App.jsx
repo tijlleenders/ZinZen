@@ -11,6 +11,7 @@ import { LandingPageThemeChoice } from "./components/themechoicepage/LandingPage
 import { MyFeelings } from "./components/myfeelingspage/MyFeelings";
 import { Home } from "./components/dashboard/Home";
 import { NotFoundPage } from "./components/404page/NotFoundPage"
+import { ZinZenMenu } from "./components/zinzen-menu/ZinZenMenu";
 
 import "./customize.scss";
 import "./App.css";
@@ -38,6 +39,10 @@ export const App = () => {
                     <Route
                         path="/Home/AddFeelings"
                         element={<MyFeelings />}
+                    />
+                    <Route
+                        path="/Home/ZinZen"
+                        element={<ZinZenMenu />}
                     />
                     <Route 
                         path="*" 
