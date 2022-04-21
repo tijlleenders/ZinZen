@@ -4,6 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { ImageDashboard } from "./ImageDashboard";
 import { UserChoiceDashboard } from "./UserChoiceDashboard";
 
+
 export const Dashboard = () => {
     return (
         <div>
