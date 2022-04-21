@@ -4,7 +4,6 @@ import { useRecoilState } from "recoil";
 import DarkModeToggle from "react-dark-mode-toggle";
 import { useNavigate } from "react-router-dom";
 
-
 import { darkModeState } from "../../store/DarkModeState";
 import ZinZenTextLight from "../../images/LogoTextLight.svg";
 import ZinZenTextDark from "../../images/LogoTextDark.svg";
@@ -12,57 +11,47 @@ import Logo from "../../images/zinzenlogo.png";
 import "../../translations/i18n";
 
 export const HeaderDashboard = () => {
-    const navigate = useNavigate();
-    const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-    return (
-        <div>
-            <Navbar collapseOnSelect expand="lg">
-                <img
-                    src={Logo}
-                    alt="ZinZen Logo"
-                    className="zinzen-logo-nav-dashboard"
-                    onClick={() => {
-                        navigate("/Home");
-                        window.location.reload(false);
-                    }
-                    }
-                />
-                {darkModeStatus ? (
-                    <img
-                        src={ZinZenTextDark}
-                        alt="ZinZen Text Logo"
-                        className="zinzen-text-logo-nav-dashboard"
-                        onClick={() => {
-                            navigate("/Home");
-                            window.location.reload(false);
-                        }
-                        }
-                    />
-                ) : (
-                    <img
-                        src={ZinZenTextLight}
-                        alt="ZinZen Text Logo"
-                        className="zinzen-text-logo-nav-dashboard"
-                        onClick={() => {
-                            navigate("/Home");
-                            window.location.reload(false);
-                        }
-                        }
-                    />
-                )}
+  const navigate = useNavigate();
+  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+  return (
+    <div>
+      <Navbar collapseOnSelect expand="lg">
+        <img
+          src={Logo}
+          alt="ZinZen Logo"
+          className="zinzen-logo-nav-dashboard"
+          onClick={() => {
+            navigate("/Home");
+            window.location.reload(false);
+          }}
+        />
+        {darkModeStatus ? (
+          <img
+            src={ZinZenTextDark}
+            alt="ZinZen Text Logo"
+            className="zinzen-text-logo-nav-dashboard"
+            onClick={() => {
+              navigate("/Home");
+              window.location.reload(false);
+            }}
+          />
+        ) : (
+          <img
+            src={ZinZenTextLight}
+            alt="ZinZen Text Logo"
+            className="zinzen-text-logo-nav-dashboard"
+            onClick={() => {
+              navigate("/Home");
+              window.location.reload(false);
+            }}
+          />
+        )}
 
-
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="navbar-custom">
-                    </Nav>
-                </Navbar.Collapse>
-                <DarkModeToggle
-                    onChange={setDarkModeStatus}
-                    checked={darkModeStatus}
-                    size={60}
-                    className="dark-mode-toggle"
-                />
-            </Navbar>
-        </div>
-    );
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="navbar-custom"></Nav>
+        </Navbar.Collapse>
+        <DarkModeToggle onChange={setDarkModeStatus} checked={darkModeStatus} size={60} className="dark-mode-toggle" />
+      </Navbar>
+    </div>
+  );
 };
