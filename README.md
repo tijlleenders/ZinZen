@@ -19,7 +19,7 @@ See ... for some ideas.
 ```
 git clone https://github.com/tijlleenders/ZinZen.git
 cd ZinZen
-http-server -c-1
+npm run dev
 ```
 
 ## ZinZen design principles
