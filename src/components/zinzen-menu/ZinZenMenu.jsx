@@ -12,11 +12,11 @@ export const ZinZenMenu = () => {
                     <HeaderDashboard />
                 </Row>
                 <Row>
-                    <Col sm={4}></Col>
-                    <Col sm={4}>
+                    <Col sm={2}></Col>
+                    <Col>
                         <UserChoiceZinZenMenu />
                     </Col>
-                    <Col sm={4}></Col>
+                    <Col sm={2}></Col>
                 </Row>
             </Container>
         </div>
