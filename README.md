@@ -19,6 +19,7 @@ See ... for some ideas.
 ```
 git clone https://github.com/tijlleenders/ZinZen.git
 cd ZinZen
+npm install
 npm run dev
 ```
 
