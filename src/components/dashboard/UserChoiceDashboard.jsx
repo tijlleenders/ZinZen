@@ -111,7 +111,7 @@ export const UserChoiceDashboard = () => {
                             darkModeStatus
                                 ? "dashboard-choice-dark"
                                 : "dashboard-choice-light"
-                        }
+                                ,"no-add"}
                     >
                         {truncateContent(t("mytime"))}
                     </Button>
@@ -124,7 +124,7 @@ export const UserChoiceDashboard = () => {
                             darkModeStatus
                                 ? "dashboard-choice-dark"
                                 : "dashboard-choice-light"
-                        }
+                        ,"no-add"}
                     >
                         {truncateContent(t("explore"))}
                     </Button>
@@ -137,7 +137,7 @@ export const UserChoiceDashboard = () => {
                             darkModeStatus
                                 ? "dashboard-choice-dark"
                                 : "dashboard-choice-light"
-                        }
+                        ,"no-add"}
                         onClick={() => {
                             navigate("/Home/ZinZen");
                             window.location.reload(false);
