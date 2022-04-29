@@ -29,6 +29,7 @@ export const UserChoiceDashboard = () => {
     return (
         <div>
             <Container fluid>
+
                 <Row>
                     <Button
                         variant={darkModeStatus ? "brown" : "peach"}
@@ -48,9 +49,15 @@ export const UserChoiceDashboard = () => {
                                 ? "dashboard-add-btn-dark1"
                                 : "dashboard-add-btn-light1"
                         }
+
+                        onClick={() => {
+                              navigate("/Home/MyGoals");
+                              window.location.reload(false);
+                        }}
+
                     >
                         {darkModeStatus ? (
-                            <img
+                           <img
                                 src={AddIconDark}
                                 alt="Add Icon"
                                 className="add-icon"
@@ -60,7 +67,9 @@ export const UserChoiceDashboard = () => {
                                 src={AddIconLight}
                                 alt="Add Icon"
                                 className="add-icon"
-                            />
+
+
+                                />
                         )}
                     </Button>
                 </Row>
@@ -76,14 +85,14 @@ export const UserChoiceDashboard = () => {
                     >
                         {truncateContent(t("myfeelings"))}
                     </Button>
-                    <Button
+                     <Button
                         variant={darkModeStatus ? "dark-pink" : "pink"}
                         className={
                             darkModeStatus
                                 ? "dashboard-add-btn-dark"
                                 : "dashboard-add-btn-light"
                         }
-                        onClick={() => {
+                        onClick={() => {;
                             navigate("/Home/AddFeelings");
                             window.location.reload(false);
                         }}
@@ -125,6 +134,10 @@ export const UserChoiceDashboard = () => {
                                 ? "dashboard-choice-dark no-add"
                                 : "dashboard-choice-light no-add"
                         }
+
+                        onClick={() => {
+                            navigate("");
+                            window.location.reload(false);}}
                     >
                         {truncateContent(t("explore"))}
                     </Button>

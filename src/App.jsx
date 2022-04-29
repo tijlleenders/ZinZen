@@ -9,6 +9,7 @@ import { languageSelectionState } from "./store/LanguageSelectionState";
 import { LandingPage } from "./components/landingpage/LandingPage";
 import { LandingPageThemeChoice } from "./components/themechoicepage/LandingPageThemeChoice";
 import { MyFeelings } from "./components/myfeelingspage/MyFeelings";
+import  { TodoList } from "./components/todoList/TodoList";
 import { Home } from "./components/dashboard/Home";
 import { NotFoundPage } from "./components/404page/NotFoundPage"
 import { ZinZenMenu } from "./components/zinzen-menu/ZinZenMenu";
@@ -44,9 +45,13 @@ export const App = () => {
                         path="/Home/ZinZen"
                         element={<ZinZenMenu />}
                     />
-                    <Route 
-                        path="*" 
+                    <Route
+                        path="*"
                         element={<NotFoundPage />}
+                    />
+                    <Route
+                        path="/Home/MyGoals"
+                        element={<TodoList/>}
                     />
             </Routes>
         </BrowserRouter>
