@@ -11,6 +11,6 @@ export const TodoList=()=>{
   return(
     <div>
     <HeaderDashboard/>
-     <h1>My Goal</h1>
+     <h1>Add a Goal</h1> 
      </div>);
 }
