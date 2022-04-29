@@ -115,28 +115,6 @@ export const UserChoiceDashboard = () => {
                     >
                         {truncateContent(t("mytime"))}
                     </Button>
-                    <Button
-                        variant={darkModeStatus ? "dark-grey" : "grey-base"}
-                        className={
-                            darkModeStatus
-                                ? "dashboard-add-btn-dark"
-                                : "dashboard-add-btn-light"
-                        }
-                    >
-                        {darkModeStatus ? (
-                            <img
-                                src={AddIconDark}
-                                alt="Add Icon"
-                                className="add-icon"
-                            />
-                        ) : (
-                            <img
-                                src={AddIconLight}
-                                alt="Add Icon"
-                                className="add-icon"
-                            />
-                        )}
-                    </Button>
                 </Row>
                 <Row>
                     <Button
@@ -149,28 +127,6 @@ export const UserChoiceDashboard = () => {
                         }
                     >
                         {truncateContent(t("explore"))}
-                    </Button>
-                    <Button
-                        variant={darkModeStatus ? "dark-blue" : "pale-blue"}
-                        className={
-                            darkModeStatus
-                                ? "dashboard-add-btn-dark"
-                                : "dashboard-add-btn-light"
-                        }
-                    >
-                        {darkModeStatus ? (
-                            <img
-                                src={AddIconDark}
-                                alt="Add Icon"
-                                className="add-icon"
-                            />
-                        ) : (
-                            <img
-                                src={AddIconLight}
-                                alt="Add Icon"
-                                className="add-icon"
-                            />
-                        )}
                     </Button>
                 </Row>
                 <Row>
@@ -189,28 +145,6 @@ export const UserChoiceDashboard = () => {
                         }
                     >
                         {truncateContent(t("zinzen"))}
-                    </Button>
-                    <Button
-                        variant={darkModeStatus ? "dark-purple" : "purple"}
-                        className={
-                            darkModeStatus
-                                ? "dashboard-add-btn-dark"
-                                : "dashboard-add-btn-light"
-                        }
-                    >
-                        {darkModeStatus ? (
-                            <img
-                                src={AddIconDark}
-                                alt="Add Icon"
-                                className="add-icon"
-                            />
-                        ) : (
-                            <img
-                                src={AddIconLight}
-                                alt="Add Icon"
-                                className="add-icon"
-                            />
-                        )}
                     </Button>
                 </Row>
             </Container>
