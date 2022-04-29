@@ -109,9 +109,9 @@ export const UserChoiceDashboard = () => {
                         size="lg"
                         className={
                             darkModeStatus
-                                ? "dashboard-choice-dark"
-                                : "dashboard-choice-light"
-                        }
+                                ? "dashboard-choice-dark no-add"
+                                : "dashboard-choice-light no-add"
+                                }
                     >
                         {truncateContent(t("mytime"))}
                     </Button>
@@ -122,8 +122,8 @@ export const UserChoiceDashboard = () => {
                         size="lg"
                         className={
                             darkModeStatus
-                                ? "dashboard-choice-dark"
-                                : "dashboard-choice-light"
+                                ? "dashboard-choice-dark no-add"
+                                : "dashboard-choice-light no-add"
                         }
                     >
                         {truncateContent(t("explore"))}
@@ -135,8 +135,8 @@ export const UserChoiceDashboard = () => {
                         size="lg"
                         className={
                             darkModeStatus
-                                ? "dashboard-choice-dark"
-                                : "dashboard-choice-light"
+                                ? "dashboard-choice-dark no-add"
+                                : "dashboard-choice-light no-add"
                         }
                         onClick={() => {
                             navigate("/Home/ZinZen");
