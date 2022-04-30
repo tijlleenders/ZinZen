@@ -34,13 +34,48 @@
 }
 
 .addTaskLight {
-    background-color:peachpuff;
+    background-color:#e9b17a;
     display: flex;
     border: none;
     border-radius:0.5em;
     font-weight: bolder !important;
     font-size: 1.0rem !important;
     width: 95% !important;
+    margin-left: 0.5em;
+    margin-top: 0.5em !important;
+    text-align: left !important;
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
+    padding-left: 0.5em;
+}
+
+
+.addTaskDark-time {
+    background-color:#5f3636;
+    color: #cecece;
+    align-items: center;
+    display: flex;
+    border: none;
+    border-radius: 0.5em;
+    font-weight: bolder !important;
+    font-size: 1.0rem !important;
+    width: 50% !important;
+    margin-left: 0.5em;
+    margin-top: 1em !important;
+    text-align: left !important;
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
+    padding-left: 00.5em;
+}
+
+.addTaskLight-time {
+    background-color:#e9b17a;
+    display: flex;
+    border: none;
+    border-radius:0.5em;
+    font-weight: bolder !important;
+    font-size: 1.0rem !important;
+    width: 50% !important;
     margin-left: 0.5em;
     margin-top: 1em !important;
     text-align: left !important;

@@ -1,5 +1,4 @@
-import React from 'react'
-import { useState } from 'react'
+import React,{useState} from 'react'
 import { Button } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { darkModeState } from '../../store/DarkModeState'
@@ -11,7 +10,8 @@ import AddIconDark from "../../images/AddIconDark.png";
 export const TodoForm=()=> {
     const darkModeStatus = useRecoilValue(darkModeState);
     const {input,setInput}=useState('')
-    const {date}=useState('')
+    const {date,setDate}=useState('')
+
 
   return (
       <form className='todo-form'>
@@ -21,11 +21,13 @@ export const TodoForm=()=> {
        </div>
        <div>
           <input
-           className={darkModeStatus ? "addTaskDark" : "addTaskLight"}
-           type='te' placeholder='Add time' value={date}/>
+           className={darkModeStatus ? "addTaskDark-time" : "addTaskLight-time"}
+           type='date' placeholder='Add time' value={date}/>
         </div>
         <div  className={darkModeStatus ? "myGoalsButton-Dark" : "myGoalsButton-Light"}>
-       <Button variant={darkModeStatus ? "dark-pink" : "pink"} >
+       <Button variant={darkModeStatus ? "dark-pink" : "pink"}
+
+       >
        {darkModeStatus ? (
                            <img
                                 src={AddIconDark}
