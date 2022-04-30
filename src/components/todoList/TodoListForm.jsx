@@ -17,7 +17,6 @@ export const TodoForm=()=> {
       <form className='todo-form'>
        <div>
         <input
-          variant={darkModeStatus ? "brown" : "peach"} className={darkModeStatus ? 'addTask-dark':'addTask-light' }
         type='text' placeholder='Add task' value={input}/>
        </div>
        <div className='addDate'> <input type='date' placeholder='Add time' value={date}/></div>
