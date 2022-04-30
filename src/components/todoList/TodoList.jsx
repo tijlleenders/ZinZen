@@ -18,7 +18,7 @@ export const TodoList=()=>{
     <HeaderDashboard/>
      </Row>
      <Row>
-     <h3 className={darkModeStatus ? "myGoals-font-dark" : "myGoals-font-light"}>{t("myGoalsMessage")}</h3>
+     <h2 className={darkModeStatus ? "myGoals-font-dark" : "myGoals-font-light"}>{t("myGoalsMessage")}</h2>
      </Row>
      <Row>
        <TodoForm/>
