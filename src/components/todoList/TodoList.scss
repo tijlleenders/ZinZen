@@ -17,6 +17,8 @@
 
 .addTaskDark {
     background-color:#5f3636;
+    color: #cecece;
+    align-items: center;
     display: flex;
     border: none;
     border-radius: 0.5em;
@@ -28,6 +30,7 @@
     text-align: left !important;
     padding-top: 0.5em !important;
     padding-bottom: 0.5em !important;
+    padding-left: 00.5em;
 }
 
 .addTaskLight {
@@ -43,13 +46,20 @@
     text-align: left !important;
     padding-top: 0.5em !important;
     padding-bottom: 0.5em !important;
+    padding-left: 0.5em;
 }
 
 .myGoalsButton-Dark{
+    right: 0.8em;
+    position: fixed;
     display: flex;
+   bottom: 0.8em;
 
 }
 
 .myGoalsButton-Light{
-    display: block;
+    right: 0.8em;
+    position: fixed;
+   display: block;
+   bottom: 0.8em;
 }
