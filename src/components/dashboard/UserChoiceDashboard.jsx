@@ -118,17 +118,12 @@ export const UserChoiceDashboard = () => {
                         size="lg"
                         className={
                             darkModeStatus
-                                ? "dashboard-choice-dark"
-                                : "dashboard-choice-light"
-                        }
-
-                                                onClick={() => {
-                              navigate("");
-                              window.location.reload(false);}}
+                                ? "dashboard-choice-dark no-add"
+                                : "dashboard-choice-light no-add"
+                                }
                     >
                         {truncateContent(t("mytime"))}
                     </Button>
-
                 </Row>
                 <Row>
                     <Button
@@ -136,8 +131,8 @@ export const UserChoiceDashboard = () => {
                         size="lg"
                         className={
                             darkModeStatus
-                                ? "dashboard-choice-dark"
-                                : "dashboard-choice-light"
+                                ? "dashboard-choice-dark no-add"
+                                : "dashboard-choice-light no-add"
                         }
 
                         onClick={() => {
@@ -146,7 +141,6 @@ export const UserChoiceDashboard = () => {
                     >
                         {truncateContent(t("explore"))}
                     </Button>
-
                 </Row>
                 <Row>
                     <Button
@@ -154,8 +148,8 @@ export const UserChoiceDashboard = () => {
                         size="lg"
                         className={
                             darkModeStatus
-                                ? "dashboard-choice-dark"
-                                : "dashboard-choice-light"
+                                ? "dashboard-choice-dark no-add"
+                                : "dashboard-choice-light no-add"
                         }
                         onClick={() => {
                             navigate("/Home/ZinZen");
@@ -165,7 +159,6 @@ export const UserChoiceDashboard = () => {
                     >
                         {truncateContent(t("zinzen"))}
                     </Button>
-
                 </Row>
             </Container>
         </div>
