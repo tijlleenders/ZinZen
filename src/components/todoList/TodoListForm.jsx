@@ -15,12 +15,14 @@ export const TodoForm=()=> {
 
   return (
       <form className='todo-form'>
-       <div>
-        <input
+       <div className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
+        <input className={darkModeStatus ? "addMyGoals-dark" : "addMyGoals-light"}
         type='text' placeholder='Add task' value={input}/>
        </div>
-       <div className='addDate'> <input type='date' placeholder='Add time' value={date}/></div>
-       <Button  variant={darkModeStatus ? "dark-pink" : "pink"} >
+       <div className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
+          <input type='date' placeholder='Add time' value={date}/>
+        </div>
+       <Button className='myGoalsButton' variant={darkModeStatus ? "dark-pink" : "pink"} >
        {darkModeStatus ? (
                            <img
                                 src={AddIconDark}

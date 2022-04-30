@@ -1,6 +1,7 @@
 
 .myGoals-font-light{
     padding: 0em 1em 0em 0.8em;
+    margin-left: 0.5em;
     font-style: italic;
     font-weight: bolder;
 }
@@ -14,6 +15,7 @@
 
 
 .addTaskDark {
+    border-color: #ffffff;
     color: #000000;
     font-weight: bolder !important;
     font-size: 1.8rem !important;
@@ -28,6 +30,7 @@
 }
 
 .addTaskLight {
+    border-color: #ffffff;
     color: #ffffff !important;
     font-weight: bolder !important;
     font-size: 1.8rem !important;
