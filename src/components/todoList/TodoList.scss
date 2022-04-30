@@ -2,7 +2,7 @@
 .myGoals-font-light{
     padding: 0em 1em 0em 0.8em;
     margin-left: 0.5em;
-    font-style: italic;
+    font-style: normal;
     font-weight: bolder;
 }
 
@@ -10,31 +10,46 @@
     color:#cecece;
     padding: 0em 1em 0em 0.8em;
     margin-left: 00.5em;
-    font-style: italic;
+    font-style: normal;
     font-weight: bolder;
 }
 
 
 .addTaskDark {
+    background-color:#5f3636;
+    display: flex;
+    border: none;
+    border-radius: 0.5em;
     font-weight: bolder !important;
-    font-size: 1.8rem !important;
-    width: 75% !important;
+    font-size: 1.0rem !important;
+    width: 95% !important;
     margin-left: 0.5em;
-    margin-top: 0em !important;
+    margin-top: 1em !important;
     text-align: left !important;
-    border-radius: 10em 10em !important;
-    padding-top: 0.1em !important;
+    padding-top: 0.5em !important;
     padding-bottom: 0.5em !important;
 }
 
 .addTaskLight {
+    background-color:peachpuff;
+    display: flex;
+    border: none;
+    border-radius:0.5em;
     font-weight: bolder !important;
-    font-size: 1.8rem !important;
-    width: 75% !important;
+    font-size: 1.0rem !important;
+    width: 95% !important;
     margin-left: 0.5em;
-    margin-top: 0em !important;
+    margin-top: 1em !important;
     text-align: left !important;
-    border-radius: 10px 10px !important;
-    padding-top: 0.1em !important;
+    padding-top: 0.5em !important;
     padding-bottom: 0.5em !important;
+}
+
+.myGoalsButton-Dark{
+    display: flex;
+
+}
+
+.myGoalsButton-Light{
+    display: block;
 }
