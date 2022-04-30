@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { darkModeState } from '../../store/DarkModeState'
 import "../../translations/i18n";
 import "./TodoList.scss"
-//import {TodoForm} from './TodoListForm'
+import {TodoForm} from './TodoListForm'
 
 export const TodoList=()=>{
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -19,6 +19,9 @@ export const TodoList=()=>{
      </Row>
      <Row>
      <h3 className={darkModeStatus ? "myGoals-font-dark" : "myGoals-font-light"}>{t("myGoalsMessage")}</h3>
+     </Row>
+     <Row>
+       <TodoForm/>
      </Row>
      </Container>
      </div>
