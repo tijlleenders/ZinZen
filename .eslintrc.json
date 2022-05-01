@@ -20,5 +20,8 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "linebreak-style": 0,
+        "import/prefer-default-export": "off",
+        "no-nested-ternary": "off"
     }
 }
