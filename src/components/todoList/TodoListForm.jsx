@@ -9,24 +9,53 @@ import AddIconDark from "../../images/AddIconDark.png";
 
 export const TodoForm=()=> {
     const darkModeStatus = useRecoilValue(darkModeState);
-    const {input,setInput}=useState('')
-    const {date,setDate}=useState('')
+    const [formInputData, setFormInputData] = useState(
+        {
+        inputGoal:'',
+        inputTime:''
+       }
+    );
+
+    const handleChange=(e)=>{
+        const value = e.target.value;
+       setFormInputData({ ...formInputData,
+        [e.target.name]:value
+        })
+       }
+
+    const handleSubmit=(e)=>{
+        setFormInputData({
+          inputGoal:'',
+          inputTime:''
+          })
+
+    }
 
 
   return (
       <form className='todo-form'>
        <div>
         <input  className={darkModeStatus ? "addTaskDark" : "addTaskLight"}
-        type='text' placeholder='Add task' value={input}/>
+        type='text'
+        name='inputGoal'
+         placeholder='Add task'
+        value={formInputData.inputGoal}
+        onChange={handleChange}
+        />
        </div>
        <div>
           <input
            className={darkModeStatus ? "addTaskDark-time" : "addTaskLight-time"}
-           type='date' placeholder='Add time' value={date}/>
+           type='date'
+           placeholder='Add time'
+           name='inputTime'
+            value={formInputData.inputTime}
+            onChange={handleChange}
+            />
         </div>
         <div  className={darkModeStatus ? "myGoalsButton-Dark" : "myGoalsButton-Light"}>
        <Button variant={darkModeStatus ? "dark-pink" : "pink"}
-
+         onClick={handleSubmit}
        >
        {darkModeStatus ? (
                            <img
