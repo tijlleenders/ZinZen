@@ -20,7 +20,6 @@ export function ThemesChoice() {
           setIsThemeChosen(true);
           localStorage.setItem('theme', 'light');
           navigate('/Home');
-          window.location.reload(false);
         }}
       >
         <img
@@ -39,7 +38,6 @@ export function ThemesChoice() {
           setIsThemeChosen(true);
           localStorage.setItem('theme', 'dark');
           navigate('/Home');
-          window.location.reload(false);
         }}
       >
         <img src={ThemeDark} alt="Dark Theme" className="themechoice" />

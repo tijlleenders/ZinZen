@@ -49,7 +49,6 @@ export function UserChoiceDashboard() {
                         }
             onClick={() => {
               navigate('/Home/MyGoals');
-              window.location.reload(false);
             }}
           >
             {darkModeStatus ? (
@@ -88,7 +87,6 @@ export function UserChoiceDashboard() {
                         }
             onClick={() => {
               navigate('/Home/AddFeelings');
-              window.location.reload(false);
             }}
           >
             {darkModeStatus ? (
@@ -130,7 +128,6 @@ export function UserChoiceDashboard() {
                         }
             onClick={() => {
               navigate('');
-              window.location.reload(false);
             }}
           >
             {truncateContent(t('explore'))}
@@ -147,7 +144,6 @@ export function UserChoiceDashboard() {
                         }
             onClick={() => {
               navigate('/Home/ZinZen');
-              window.location.reload(false);
             }}
           >
             {truncateContent(t('zinzen'))}

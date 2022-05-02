@@ -32,7 +32,6 @@ export function NotFoundPage() {
                 }
               onClick={() => {
                 navigate('/Home');
-                window.location.reload(false);
               }}
             >
               Home

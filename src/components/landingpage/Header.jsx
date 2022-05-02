@@ -19,7 +19,6 @@ export function Header() {
         className="zinzen-logo-nav-landing-page"
         onClick={() => {
           navigate('/');
-          window.location.reload(false);
         }}
       />
       <img

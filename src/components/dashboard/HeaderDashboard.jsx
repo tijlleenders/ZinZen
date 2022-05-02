@@ -28,7 +28,6 @@ export function HeaderDashboard() {
           className="zinzen-logo-nav-dashboard"
           onClick={() => {
             navigate('/Home');
-            window.location.reload(false);
           }}
         />
         {darkModeStatus ? (
@@ -39,7 +38,6 @@ export function HeaderDashboard() {
             className="zinzen-text-logo-nav-dashboard"
             onClick={() => {
               navigate('/Home');
-              window.location.reload(false);
             }}
           />
         ) : (
@@ -50,7 +48,6 @@ export function HeaderDashboard() {
             className="zinzen-text-logo-nav-dashboard"
             onClick={() => {
               navigate('/Home');
-              window.location.reload(false);
             }}
           />
         )}
