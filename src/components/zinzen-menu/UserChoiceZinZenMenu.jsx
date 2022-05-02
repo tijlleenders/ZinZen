@@ -4,12 +4,16 @@ import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 
 import { darkModeState } from '../../store/DarkModeState';
+import { useNavigate } from 'react-router-dom';
+
 import '../../translations/i18n';
 import './zinzenmenu.scss';
 
 export function UserChoiceZinZenMenu() {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
 
   function truncateContent(content, maxLength = 20) {
     const { length } = content;
@@ -56,15 +60,19 @@ export function UserChoiceZinZenMenu() {
           </a>
         </Row>
         <Row>
-          <a href="##">
+          <a>
             <Button
               variant={darkModeStatus ? 'dark-grey' : 'grey-base'}
               size="lg"
               className={
-                                darkModeStatus
-                                  ? 'zinzen-menu-choice-dark'
-                                  : 'zinzen-menu-choice-light'
-                            }
+                  darkModeStatus
+                    ? 'zinzen-menu-choice-dark'
+                    : 'zinzen-menu-choice-light'
+              }
+              onClick={() => {
+                navigate("/Home/ZinZen/Feedback");
+                window.location.reload(false);
+              }}
             >
               {truncateContent(t('feedback'))}
             </Button>

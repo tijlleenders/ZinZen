@@ -1,0 +1,38 @@
+#line-1, #line-4{
+    font-style: italic;
+}
+#line-2,#line-3{
+    font-weight: bold;
+}
+#userRating-btn{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+  .decided {
+    color: coral;
+  }
+  .notDecided {
+    color: #ccc;
+  }
+  .star{
+    font-size: xxx-large;
+  }
+#feedback-textbox{
+    background: rgb(237, 199, 183);
+    border-radius: 4px;
+    height: 200px;
+    width: 100%;
+}
+#feedback-submit-btn{
+  background: #ccc;
+  color: black;
+  font-weight: bold;
+}
+
+@media only screen and (min-width: 768px) {
+    #feedback-container{
+        padding: 2% 30%;
+    }
+  }
