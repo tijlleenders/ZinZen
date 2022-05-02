@@ -14,7 +14,7 @@ A lot of things in life can be managed by making lists (of lists...) with constr
 
 See ... for some ideas.
 
-### [Run the app in my browser](https://ZinZen.me) 
+### Run the app online: [stable version](https://ZinZen.me) or [latest version](https://zinzen.vercel.app/)
 ...or run a pure local copy:
 ```
 git clone https://github.com/tijlleenders/ZinZen.git
