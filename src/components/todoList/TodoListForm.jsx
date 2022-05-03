@@ -9,10 +9,7 @@ import AddIconDark from "../../images/AddIconDark.png";
 
 export const TodoForm=()=> {
     const darkModeStatus = useRecoilValue(darkModeState);
-    const [tableData,setTableData]=useState({
-        inputGoal:'',
-        inputTime:''
-    })
+    const [tableData,setTableData]=useState([] )
     const [formInputData, setFormInputData] = useState(
         {
         inputGoal:'',
@@ -29,9 +26,10 @@ export const TodoForm=()=> {
 
     const handleSubmit=(e)=>{
         e.preventDefault();
-        setTableData({...formInputData,
-        [e.target.name]:e.target.value
-        });
+        if(formInputData.inputGoal!==''){
+            const newData = (data)=>([...data, formInputData])
+            setTableData(newData);
+        }
         setFormInputData({
           inputGoal:'',
           inputTime:''
@@ -62,31 +60,20 @@ export const TodoForm=()=> {
             />
         </div>
 
-        <table className="table">
-            <thead>
-                <tr>
-                    <th>S.N</th>
-                    <th>Full Name</th>
-                    <th>Email Address</th>
-                    <th>Salary</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div>
+
             {
-                tableData.map((data, index)=>{
+                tableData.map((data)=>{
                     return(
-                        <tr key={index}>
-                            <td>{index+1}</td>
-                            <td>{data.fullName}</td>
-                            <td>{data.emailAddress}</td>
-                            <td>{data.salary}</td>
-                        </tr>
+                        <div className={darkModeStatus ? "addTaskDark" : "addTaskLight"}>
+                            <div className='inputGoal'>{data.inputGoal}</div>
+                            <div>{data.inputTime}</div>
+                        </div>
                     )
                 })
             }
-            </tbody>
-        </table>
-    
+
+        </div>
 
         <div  className={darkModeStatus ? "myGoalsButton-Dark" : "myGoalsButton-Light"}>
        <Button variant={darkModeStatus ? "dark-pink" : "pink"}
