@@ -9,13 +9,14 @@ import { darkModeState } from '../../store/DarkModeState';
 
 import './feedbackpage.scss';
 
-export const FeedbackPage = ()=>{
+export const FeedbackPage = () => {
   const [userRating, setUserRating] = useState(0);   
   const [userFeedback, setUserFeedback] = useState("");
   const darkModeStatus = useRecoilValue(darkModeState);
   
   async function submitToAPI(feedback) {
-    var URL = "https://tpzmoaw42e.execute-api.eu-west-1.amazonaws.com/prod/contact";
+    const URL = "https://tpzmoaw42e.execute-api.eu-west-1.amazonaws.com/prod/contact";
+    feedback = `Rating : ${userRating}\n` + feedback; 
     fetch(URL, {
       method: "POST",
       mode: "cors",
@@ -24,8 +25,8 @@ export const FeedbackPage = ()=>{
       },
       body: JSON.stringify(feedback)
     })
-    .then( response => response.json())
-    .then( ()=>{
+    .then(response => response.json())
+    .then(()=>{
       alert("Thank you so much for your feedback! We will improve.");
       setUserFeedback("");
       setUserRating(0);
@@ -40,8 +41,8 @@ export const FeedbackPage = ()=>{
         <Container fluid>
           <HeaderDashboard />
           <div style={{color:`${darkModeStatus ? 'white' : 'black'}`}}>
-            <p id='line-1'> We value your opinion.</p>
-            <h1 id='line-2'> Please rate your experience</h1>
+            <p id='feedback-line-1'> We value your opinion.</p>
+            <h1 id='feedback-line-2'> Please rate your experience</h1>
             <div className='rating'>
               {[...Array(5)].map((star,index) => {
                   index+=1        
@@ -58,9 +59,14 @@ export const FeedbackPage = ()=>{
                   );    
               })}
             </div>
-            <h5 id='line-3'>How can we make your experience better?</h5>
-            <textarea id='feedback-textbox' value={userFeedback} onChange={(e)=>{setUserFeedback(e.target.value);}} placeholder='Type your feedback here...'/>
-            <p id='line-4'>Your feedback is anonymous. If you want a reply, please leave an email or a phone number.</p>
+            <h5 id='feedback-line-3'>How can we make your experience better?</h5>
+            <textarea 
+              id='feedback-textbox' 
+              value={userFeedback} 
+              onChange={(e)=>{setUserFeedback(e.target.value);}} 
+              placeholder='Type your feedback here...'
+            />
+            <p id='feedback-line-4'>Your feedback is anonymous. If you want a reply, please leave an email or a phone number.</p>
             <Button id="feedback-submit-btn" onClick={()=>{submitToAPI(userFeedback)}}>Submit</Button>
           </div>
         </Container>

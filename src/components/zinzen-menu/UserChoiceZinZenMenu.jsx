@@ -2,9 +2,9 @@ import React from 'react';
 import { Container, Row, Button } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { darkModeState } from '../../store/DarkModeState';
-import { useNavigate } from 'react-router-dom';
 
 import '../../translations/i18n';
 import './zinzenmenu.scss';
@@ -13,7 +13,6 @@ export function UserChoiceZinZenMenu() {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
   const navigate = useNavigate();
-
 
   function truncateContent(content, maxLength = 20) {
     const { length } = content;
