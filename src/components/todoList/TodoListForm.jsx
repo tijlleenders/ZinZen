@@ -9,6 +9,10 @@ import AddIconDark from "../../images/AddIconDark.png";
 
 export const TodoForm=()=> {
     const darkModeStatus = useRecoilValue(darkModeState);
+    const [tableData,setTableData]=useState({
+        inputGoal:'',
+        inputTime:''
+    })
     const [formInputData, setFormInputData] = useState(
         {
         inputGoal:'',
@@ -24,6 +28,10 @@ export const TodoForm=()=> {
        }
 
     const handleSubmit=(e)=>{
+        e.preventDefault();
+        setTableData({...formInputData,
+        [e.target.name]:e.target.value
+        });
         setFormInputData({
           inputGoal:'',
           inputTime:''
@@ -33,7 +41,7 @@ export const TodoForm=()=> {
 
 
   return (
-      <form className='todo-form'>
+      <form className='todo-form' onSubmit={handleSubmit}>
        <div>
         <input  className={darkModeStatus ? "addTaskDark" : "addTaskLight"}
         type='text'
@@ -53,10 +61,38 @@ export const TodoForm=()=> {
             onChange={handleChange}
             />
         </div>
+
+        <table className="table">
+            <thead>
+                <tr>
+                    <th>S.N</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+            {
+                tableData.map((data, index)=>{
+                    return(
+                        <tr key={index}>
+                            <td>{index+1}</td>
+                            <td>{data.fullName}</td>
+                            <td>{data.emailAddress}</td>
+                            <td>{data.salary}</td>
+                        </tr>
+                    )
+                })
+            }
+            </tbody>
+        </table>
+    
+
         <div  className={darkModeStatus ? "myGoalsButton-Dark" : "myGoalsButton-Light"}>
        <Button variant={darkModeStatus ? "dark-pink" : "pink"}
          onClick={handleSubmit}
        >
+
        {darkModeStatus ? (
                            <img
                                 src={AddIconDark}
