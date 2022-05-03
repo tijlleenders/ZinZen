@@ -1,13 +1,23 @@
+* {
+    padding: 0;
+    margin: 0;
+}
 
-.myGoals-font-light{
+body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
+}
+
+.myGoals-font-light {
     padding: 0em 1em 0em 0.8em;
     margin-left: 0.5em;
     font-style: normal;
     font-weight: bolder;
 }
 
-.myGoals-font-dark{
-    color:#cecece;
+.myGoals-font-dark {
+    color: #cecece;
     padding: 0em 1em 0em 0.8em;
     margin-left: 00.5em;
     font-style: normal;
@@ -16,9 +26,11 @@
 
 
 .addTaskDark {
-    background-color:#5f3636;
+    background-color: #5f3636;
     color: #cecece;
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     border: none;
     border-radius: 0.5em;
     font-weight: bolder !important;
@@ -33,10 +45,12 @@
 }
 
 .addTaskLight {
-    background-color:#e9b17a;
+    background-color: #e9b17a;
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     border: none;
-    border-radius:0.5em;
+    border-radius: 0.5em;
     font-weight: bolder !important;
     font-size: 1.0rem !important;
     width: 95% !important;
@@ -50,7 +64,7 @@
 
 
 .addTaskDark-time {
-    background-color:#5f3636;
+    background-color: #5f3636;
     color: #cecece;
     display: flex;
     border: none;
@@ -67,10 +81,10 @@
 }
 
 .addTaskLight-time {
-    background-color:#e9b17a;
+    background-color: #e9b17a;
     display: flex;
     border: none;
-    border-radius:0.5em;
+    border-radius: 0.5em;
     font-weight: bolder !important;
     font-size: 1.0rem !important;
     width: 50% !important;
@@ -82,17 +96,28 @@
     padding-left: 0.5em;
 }
 
-.myGoalsButton-Dark{
+.myGoalsButton-Dark {
     right: 0.8em;
     position: fixed;
     display: flex;
-   bottom: 0.8em;
+    bottom: 0.8em;
 
 }
 
-.myGoalsButton-Light{
+.myGoalsButton-Light {
     right: 0.8em;
     position: fixed;
-   display: block;
-   bottom: 0.8em;
+    display: block;
+    bottom: 0.8em;
+}
+
+
+.inputGoal{
+    padding-left: 0.5em;
+    width: 100%;
+}
+
+
+.inputTime{
+    padding-left: 00.5em;
 }
