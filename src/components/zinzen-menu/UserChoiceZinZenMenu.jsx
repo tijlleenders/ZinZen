@@ -59,7 +59,7 @@ export function UserChoiceZinZenMenu() {
           </a>
         </Row>
         <Row>
-          <a>
+          <a href="##">
             <Button
               variant={darkModeStatus ? 'dark-grey' : 'grey-base'}
               size="lg"
@@ -69,7 +69,7 @@ export function UserChoiceZinZenMenu() {
                     : 'zinzen-menu-choice-light'
               }
               onClick={() => {
-                navigate("/Home/ZinZen/Feedback");
+                navigate('/Home/ZinZen/Feedback');
                 window.location.reload(false);
               }}
             >
