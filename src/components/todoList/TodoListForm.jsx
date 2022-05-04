@@ -6,7 +6,6 @@ import "./TodoList.scss";
 import AddIconLight from "../../images/AddIconLight.png";
 import AddIconDark from "../../images/AddIconDark.png";
 
-
 export const TodoForm = () => {
     const darkModeStatus = useRecoilValue(darkModeState);
     const [tableData, setTableData] = useState([])
@@ -38,13 +37,10 @@ export const TodoForm = () => {
         e.preventDefault();
     }
 
-
       const deleteTodo=(e)=>{
           setTableData([])
           e.preventDefault
       }
-
-
 
     return (
         <form className='todo-form' onSubmit={handleSubmit}>
@@ -74,7 +70,7 @@ export const TodoForm = () => {
                         return (
                             <div className={darkModeStatus ? "addTaskDark" : "addTaskLight"}>
                                 <div className='inputTime'>{data.inputTime}</div>
-                                <div className='deleteTodo' onClick={deleteTodo}></div>
+                                <div className={darkModeStatus ? "deleteTodo" : "deleteTodo-Light"} onClick={deleteTodo}></div>
                                 <div className='inputGoal'>{data.inputGoal}</div>
                             </div>
                         )
