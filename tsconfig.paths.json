@@ -6,7 +6,9 @@
             "@pages/*": ["src/pages/*"],
             "@src/*": ["src/*"],
             "@shared": ["src/shared/*"],
-            "@store": ["src/store/*"]
+            "@store": ["src/store/*"],
+            "@assets": ["src/assets/*"],
+            "@consts": ["src/constants/*"]
         }
     }
 }
