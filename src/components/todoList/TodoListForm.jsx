@@ -39,6 +39,13 @@ export const TodoForm = () => {
     }
 
 
+      const deleteTodo=(e)=>{
+          setTableData([])
+          e.preventDefault
+      }
+
+
+
     return (
         <form className='todo-form' onSubmit={handleSubmit}>
             <div>
@@ -67,6 +74,7 @@ export const TodoForm = () => {
                         return (
                             <div className={darkModeStatus ? "addTaskDark" : "addTaskLight"}>
                                 <div className='inputTime'>{data.inputTime}</div>
+                                <div className='deleteTodo' onClick={deleteTodo}></div>
                                 <div className='inputGoal'>{data.inputGoal}</div>
                             </div>
                         )

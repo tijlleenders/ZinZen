@@ -120,4 +120,17 @@ body {
 
 .inputTime{
     padding-left: 00.5em;
+    display: inline-block;
+}
+
+
+.deleteTodo{
+    display: inline-block;
+    position: fixed;
+    right: 2.8em;
+    background-color: rgb(255, 0, 230);
+    border-radius: 50%;
+    text-align: justify;
+    width: 1rem;
+    height: 1rem;
 }
