@@ -13,6 +13,7 @@ import { TodoList } from './components/todoList/TodoList';
 import { Home } from './components/dashboard/Home';
 import { NotFoundPage } from './components/404page/NotFoundPage';
 import { ZinZenMenu } from './components/zinzen-menu/ZinZenMenu';
+import { FeedbackPage } from './components/feedbackpage/FeedbackPage';
 
 import './customize.scss';
 import './App.css';
@@ -47,6 +48,10 @@ export function App() {
           <Route
             path="/Home/ZinZen"
             element={<ZinZenMenu />}
+          />
+          <Route
+            path="/Home/ZinZen/Feedback"
+            element={<FeedbackPage />}
           />
           <Route
             path="*"
