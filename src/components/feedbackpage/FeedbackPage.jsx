@@ -7,7 +7,7 @@ import { darkModeState } from '../../store/DarkModeState';
 import './feedbackpage.scss';
 
 export function FeedbackPage() {
-  const [userRating, setUserRating] = useState(0);
+  const [userRating, setUserRating] = useState(5);
   const [userFeedback, setUserFeedback] = useState('');
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -41,15 +41,15 @@ export function FeedbackPage() {
           <p id="feedback-line-1"> We value your opinion.</p>
           <h1 id="feedback-line-2"> Please rate your experience</h1>
           <div className="rating">
-            {[...Array(5)].map((star, index) => {
+            {[...Array(5).keys()].map((index) => {
               const idx = index + 1;
               return (
                 <button
                   id="userRating-btn"
                   type="button"
                   key={idx}
-                  className={index <= userRating ? 'decided' : 'notDecided'}
-                  onClick={() => setUserRating(idx)}
+                  className={idx <= userRating ? 'decided' : 'notDecided'}
+                  onClick={() => { setUserRating(idx); }}
                 >
                   <span className="star">&#9733;</span>
                 </button>
