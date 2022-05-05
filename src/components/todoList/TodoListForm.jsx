@@ -13,14 +13,18 @@ export const TodoForm = () => {
     const [formInputData, setFormInputData] = useState(
         {
             inputGoal: '',
-            inputTime: ''
+            inputTime: '',
+            id:''
         }
     );
 
     const handleChange = (e) => {
         const value = e.target.value;
+        const id = Date.now();
+
         setFormInputData({
             ...formInputData,
+            id,
             [e.target.name]: value
         })
     }
@@ -34,9 +38,12 @@ export const TodoForm = () => {
             inputGoal: '',
             inputTime: ''
         })
-
         e.preventDefault();
     }
+
+   const removeItem=()=>{
+    setTableData([]);
+   }
 
     return (
         <form className='todo-form' onSubmit={handleSubmit}>
@@ -62,12 +69,10 @@ export const TodoForm = () => {
 
             <div className='inputs'>
                 {
-                    tableData.map((data,index) => {
-                        const removeItem=(index)=>{
-                        console.log(index)}
+                    tableData.map((data) => {
                         return (
-                            <div key={index} className={darkModeStatus ? "addtask-dark" : "addtask-light"}>
-                                <div className='input-time'>{data.inputTime}</div>
+                            <di className={darkModeStatus ? "addtask-dark" : "addtask-light"}>
+                                <div className='input-time'>{data.id}</div>
                                 <div className={darkModeStatus ? "deletetodo-dark" : "deletetodo-light"} onClick={removeItem}></div>
                                 <div className='input-goal'>{data.inputGoal}</div>
                             </div>
