@@ -70,7 +70,6 @@ export function UserChoiceZinZenMenu() {
               }
               onClick={() => {
                 navigate('/Home/ZinZen/Feedback');
-                window.location.reload(false);
               }}
             >
               {truncateContent(t('feedback'))}
