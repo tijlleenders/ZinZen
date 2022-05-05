@@ -3,8 +3,8 @@ import { Button } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { darkModeState } from '../../store/DarkModeState'
 import "./TodoList.scss";
-import AddIconLight from "../../images/AddIconLight.png";
-import AddIconDark from "../../images/AddIconDark.png";
+import AddIconLight from "../../assets/images/AddIconLight.png";
+import AddIconDark   from "../../assets/images/AddIconDark.png";
 
 export const TodoForm = () => {
     const darkModeStatus = useRecoilValue(darkModeState);
@@ -37,15 +37,10 @@ export const TodoForm = () => {
         e.preventDefault();
     }
 
-      const deleteTodo=(e)=>{
-          setTableData([])
-          e.preventDefault
-      }
-
     return (
         <form className='todo-form' onSubmit={handleSubmit}>
             <div>
-                <input className={darkModeStatus ? "addTaskDark" : "addTaskLight"}
+                <input className={darkModeStatus ? "addtask-dark" : "addtask-light"}
                     type='text'
                     name='inputGoal'
                     placeholder='What do you want to achieve today?'
@@ -55,7 +50,7 @@ export const TodoForm = () => {
             </div>
             <div>
                 <input
-                    className={darkModeStatus ? "addTaskDark-time" : "addTaskLight-time"}
+                    className={darkModeStatus ? "addtaskdark-time" : "addtasklight-time"}
                     type='date'
                     placeholder='Add time'
                     name='inputTime'
@@ -66,11 +61,12 @@ export const TodoForm = () => {
 
             <div className='inputs'>
                 {
-                    tableData.map((data) => {
+                    tableData.map((data,index) => {
+                
                         return (
-                            <div className={darkModeStatus ? "addTaskDark" : "addTaskLight"}>
+                            <div key={index} className={darkModeStatus ? "addtask-dark" : "addtask-light"}>
                                 <div className='inputTime'>{data.inputTime}</div>
-                                <div className={darkModeStatus ? "deleteTodo" : "deleteTodo-Light"} onClick={deleteTodo}></div>
+                                <div className={darkModeStatus ? "deletetodo-dark" : "deletetodo-light"} onClick={removeItem}></div>
                                 <div className='inputGoal'>{data.inputGoal}</div>
                             </div>
                         )
@@ -79,7 +75,7 @@ export const TodoForm = () => {
 
             </div>
 
-            <div className={darkModeStatus ? "myGoalsButton-Dark" : "myGoalsButton-Light"}>
+            <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
                 <Button variant={darkModeStatus ? "dark-pink" : "pink"} onClick={handleSubmit}>
                     <img src={darkModeStatus ? AddIconDark : AddIconLight} alt="Add Icon" className="add-icon" />
                 </Button>
