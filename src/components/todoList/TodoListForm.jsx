@@ -66,9 +66,9 @@ export const TodoForm = () => {
                         console.log(index)}
                         return (
                             <div key={index} className={darkModeStatus ? "addtask-dark" : "addtask-light"}>
-                                <div className='inputTime'>{data.inputTime}</div>
+                                <div className='input-time'>{data.inputTime}</div>
                                 <div className={darkModeStatus ? "deletetodo-dark" : "deletetodo-light"} onClick={removeItem}></div>
-                                <div className='inputGoal'>{data.inputGoal}</div>
+                                <div className='input-goal'>{data.inputGoal}</div>
                             </div>
                         )
                     })
