@@ -1,9 +1,9 @@
 import React from 'react'
 import { Container, Row } from "react-bootstrap";
-
-import { HeaderDashboard } from "../dashboard/HeaderDashboard";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from 'recoil';
+
+import { HeaderDashboard } from "../dashboard/HeaderDashboard";
 import { darkModeState } from '../../store/DarkModeState'
 import "../../translations/i18n";
 import "./TodoList.scss"
@@ -27,5 +27,5 @@ export const TodoList = () => {
       </Container>
     </div>
   );
-  
+
 }
