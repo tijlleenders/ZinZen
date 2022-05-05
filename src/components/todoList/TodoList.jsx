@@ -1,5 +1,6 @@
 import React from 'react'
 import { Container, Row } from "react-bootstrap";
+
 import { HeaderDashboard } from "../dashboard/HeaderDashboard";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from 'recoil';
@@ -18,7 +19,7 @@ export const TodoList = () => {
           <HeaderDashboard />
         </Row>
         <Row>
-          <h2 className={darkModeStatus ? "myGoals-font-dark" : "myGoals-font-light"}>{t("myGoalsMessage")}</h2>
+          <h2 className={darkModeStatus ? "mygoals-font-dark" : "mygoals-font-light"}>{t("myGoalsMessage")}</h2>
         </Row>
         <Row>
           <TodoForm />

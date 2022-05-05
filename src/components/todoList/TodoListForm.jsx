@@ -62,7 +62,8 @@ export const TodoForm = () => {
             <div className='inputs'>
                 {
                     tableData.map((data,index) => {
-                
+                        const removeItem=(index)=>{
+                        console.log(index)}
                         return (
                             <div key={index} className={darkModeStatus ? "addtask-dark" : "addtask-light"}>
                                 <div className='inputTime'>{data.inputTime}</div>
