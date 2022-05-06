@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 
 import { HeaderDashboard } from '../dashboard/HeaderDashboard';
-import { MyFeelingsChoices } from './MyFeelingsChoices';
+import { AddFeelingsChoices } from './AddFeelingsChoices';
 import { darkModeState } from '../../store/DarkModeState';
 import '../../translations/i18n';
-import './myfeelingspage.scss';
+import './AddFeelingsPage.scss';
 
-export function MyFeelings() {
+export function AddFeelings() {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
 
@@ -22,7 +22,7 @@ export function MyFeelings() {
         <Row>
           <Col>
             <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>{t('feelingsmessage')}</h3>
-            <MyFeelingsChoices />
+            <AddFeelingsChoices />
           </Col>
           <Col sm={1} />
         </Row>
