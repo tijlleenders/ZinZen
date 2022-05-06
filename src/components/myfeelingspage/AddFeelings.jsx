@@ -3,10 +3,11 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 
-import { HeaderDashboard } from '../dashboard/HeaderDashboard';
+import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
 import { AddFeelingsChoices } from './AddFeelingsChoices';
-import { darkModeState } from '../../store/DarkModeState';
-import '../../translations/i18n';
+import { darkModeState } from '@store';
+
+import '@translations/i18n';
 import './AddFeelingsPage.scss';
 
 export function AddFeelings() {

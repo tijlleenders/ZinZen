@@ -4,9 +4,9 @@ import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { darkModeState } from '../../store/DarkModeState';
+import { darkModeState } from '@store';
 
-import '../../translations/i18n';
+import '@translations/i18n';
 import './zinzenmenu.scss';
 
 export function UserChoiceZinZenMenu() {

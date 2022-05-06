@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-import { HeaderDashboard } from '../dashboard/HeaderDashboard';
+import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
 import { UserChoiceZinZenMenu } from './UserChoiceZinZenMenu';
 
 export function ZinZenMenu() {

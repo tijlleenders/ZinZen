@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
-import { HeaderDashboard } from '../dashboard/HeaderDashboard';
-import { darkModeState } from '../../store/DarkModeState';
+
+import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
+import { darkModeState } from '@store';
 
 import './feedbackpage.scss';
 

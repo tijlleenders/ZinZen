@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-import '../../translations/i18n';
+import '@translations/i18n';
 import ZinZenText from '@assets/images/LogoTextLight.svg';
 import Logo from '@assets/images/zinzenlogo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';

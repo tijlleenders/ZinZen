@@ -7,9 +7,9 @@ import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 
 // import { addFeeling } from '@api/FeelingsAPI';
-import { darkModeState } from '../../store/DarkModeState';
+import { darkModeState } from '@store';
 
-import '../../translations/i18n';
+import '@translations/i18n';
 import './AddFeelingsPage.scss';
 
 export function ShowFeelingTemplate({ feelingCategory, feelingsListObject }) {

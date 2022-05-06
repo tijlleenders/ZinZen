@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { HeaderDashboard } from '../dashboard/HeaderDashboard';
-import '../../translations/i18n';
+import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
+
+import '@translations/i18n';
 
 export function TodoList() {
   return (
