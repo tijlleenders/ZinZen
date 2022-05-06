@@ -45,19 +45,18 @@ export function ShowFeelingTemplate({ feelingCategory, feelingsListObject }) {
             </Navbar.Toggle>
             <Navbar.Collapse>
               <Nav className="navbar-custom">
-                {feelingsListObject && Object.keys(feelingsListObject).map((feelingObject) => (
+                {feelingsListObject && Object.keys(feelingsListObject).map(((feelingObject) => (
                   <Button
                     key={feelingsListObject[feelingObject].feelingContent}
                     className={
-                      darkModeStatus
-                        ? 'btn-my-feelings-dark btn-feelings-dark'
-                        : 'btn-my-feelings-light btn-feelings-light'
-                    }
+                darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'btn-my-feelings-light btn-feelings-light'
+              }
                     size="lg"
+                    onClick={() => console.log('TODO: Add remove feeling function')}
                   >
                     {t(feelingsListObject[feelingObject].feelingContent)}
                   </Button>
-                ))}
+                )))}
               </Nav>
             </Navbar.Collapse>
           </Navbar>

@@ -55,6 +55,7 @@ export function FeelingTemplate({ feelingCategory, feelingsList }) {
                         : 'btn-my-feelings-light btn-feelings-light'
                     }
                     size="lg"
+                    onClick={() => addFeeling(feelingName, feelingCategory)}
                   >
                     {t(feelingName)}
                   </Button>
