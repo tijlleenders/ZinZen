@@ -11,7 +11,8 @@
             "@consts": ["src/constants/*"],
             "@models": ["src/models/*"],
             "@api": ["src/api/*"],
-            "@utils": ["src/utils/*"]
+            "@utils": ["src/utils/*"],
+            "@translations": ["src/translations/*"]
         }
     }
 }

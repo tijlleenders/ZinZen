@@ -1,8 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { LanguagesList } from '../languagechoices/LanguagesList';
-import '../../translations/i18n';
+import { LanguagesList } from '@components/languagechoices/LanguagesList';
+
+import '@translations/i18n';
 import './landingpage.scss';
 
 export function UserChoicePanelRight() {

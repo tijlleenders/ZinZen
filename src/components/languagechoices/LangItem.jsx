@@ -4,7 +4,8 @@ import { Button } from 'react-bootstrap';
 import { useRecoilState } from 'recoil';
 import i18n from 'i18next';
 
-import { languageSelectionState } from '../../store/LanguageSelectionState';
+import { languageSelectionState } from '@store';
+
 import './languagechoice.scss';
 
 export function LangItem({ lang }) {

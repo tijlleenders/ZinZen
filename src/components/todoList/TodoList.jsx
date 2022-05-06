@@ -3,11 +3,12 @@ import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from 'recoil';
 
-import { HeaderDashboard } from "../dashboard/HeaderDashboard";
-import { darkModeState } from '../../store/DarkModeState'
-import "../../translations/i18n";
-import "./TodoList.scss"
+import { HeaderDashboard } from "@components/dashboard/HeaderDashboard";
+import { darkModeState } from '@store'
 import { TodoForm } from './TodoListForm'
+
+import "@translations/i18n";
+import "./TodoList.scss"
 
 export const TodoList = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -27,5 +28,4 @@ export const TodoList = () => {
       </Container>
     </div>
   );
-
 }

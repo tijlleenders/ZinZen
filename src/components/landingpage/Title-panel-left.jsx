@@ -1,4 +1,5 @@
 import React from 'react';
+
 import ZinZen from '@assets/images/LogoTextLight.svg';
 import Logo from '@assets/images/zinzenlogo.png';
 import './landingpage.scss';

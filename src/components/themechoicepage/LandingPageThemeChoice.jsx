@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ThemesChoice } from './ThemesChoice';
 import { HeaderThemeChoice } from './HeaderThemeChoice';
+
 import '../../translations/i18n';
 import './themechoice.scss';
 

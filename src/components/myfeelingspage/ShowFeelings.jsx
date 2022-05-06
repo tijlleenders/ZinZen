@@ -5,8 +5,8 @@ import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 
 import { getAllFeelings } from '@api/FeelingsAPI';
-import { darkModeState } from '../../store/DarkModeState';
-import { HeaderDashboard } from '../dashboard/HeaderDashboard';
+import { darkModeState } from '@store';
+import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
 import { ShowFeelingTemplate } from './ShowFeelingTemplate';
 
 import './AddFeelingsPage.scss';

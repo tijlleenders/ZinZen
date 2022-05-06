@@ -7,8 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 import AddIconLight from '@assets/images/AddIconLight.png';
 import AddIconDark from '@assets/images/AddIconDark.png';
-import { darkModeState } from '../../store/DarkModeState';
-import '../../translations/i18n';
+import { darkModeState } from '@store';
+
+import '@translations/i18n';
 import './dashboard.scss';
 
 export function UserChoiceDashboard() {
