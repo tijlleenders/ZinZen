@@ -3,7 +3,7 @@ import React from 'react';
 import { feelingsList, feelingsCategories } from '@consts/FeelingsList';
 import { FeelingTemplate } from './FeelingTemplate';
 
-export function MyFeelingsChoices() {
+export function AddFeelingsChoices() {
   return (
     <div>
       {feelingsCategories.map((feelingCategory) => (

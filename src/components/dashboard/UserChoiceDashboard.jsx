@@ -75,6 +75,9 @@ export function UserChoiceDashboard() {
                               ? 'dashboard-choice-dark'
                               : 'dashboard-choice-light'
                         }
+            onClick={() => {
+              navigate('/Home/MyFeelings');
+            }}
           >
             {truncateContent(t('myfeelings'))}
           </Button>
