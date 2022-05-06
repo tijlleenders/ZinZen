@@ -68,9 +68,9 @@ export function UserChoiceZinZenMenu() {
                     ? 'zinzen-menu-choice-dark'
                     : 'zinzen-menu-choice-light'
               }
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 navigate('/Home/ZinZen/Feedback');
-                window.location.reload(false);
               }}
             >
               {truncateContent(t('feedback'))}
