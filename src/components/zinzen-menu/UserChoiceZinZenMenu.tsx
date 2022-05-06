@@ -14,7 +14,7 @@ export function UserChoiceZinZenMenu() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  function truncateContent(content, maxLength = 20) {
+  function truncateContent(content : string, maxLength = 20) {
     const { length } = content;
     if (length >= maxLength) {
       return `${content.substring(0, maxLength)}...`;

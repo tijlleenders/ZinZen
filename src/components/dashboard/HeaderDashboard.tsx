@@ -15,8 +15,11 @@ export function HeaderDashboard() {
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const toggleTheme = () => {
     setDarkModeStatus(!darkModeStatus);
-    // eslint-disable-next-line no-unused-expressions
-    darkModeStatus ? localStorage.setItem('theme', 'light') : localStorage.setItem('theme', 'dark');
+    if (darkModeStatus) {
+      localStorage.setItem('theme', 'light');
+    } else {
+      localStorage.setItem('theme', 'dark');
+    }
   };
   return (
     <div>

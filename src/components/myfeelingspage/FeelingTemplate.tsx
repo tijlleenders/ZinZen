@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import {
   Button, Nav, Navbar, Container,
@@ -10,7 +9,8 @@ import { darkModeState } from '../../store/DarkModeState';
 import '../../translations/i18n';
 import './myfeelingspage.scss';
 
-export function FeelingTemplate({ feelingCategory, feelingsList }) {
+export function FeelingTemplate({ feelingCategory, feelingsList } :
+  { feelingCategory : string, feelingsList : string[]}) {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
 

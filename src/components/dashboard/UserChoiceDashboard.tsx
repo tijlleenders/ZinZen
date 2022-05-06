@@ -16,12 +16,12 @@ export function UserChoiceDashboard() {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
 
-  function truncateContent(content, maxLength = 20) {
+  function truncateContent(content:String, maxLength = 20) {
     const { length } = content;
     if (length >= maxLength) {
       return `${content.substring(0, maxLength)}...`;
     }
-    return content;
+    return content as String;
   }
 
   return (

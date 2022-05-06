@@ -9024,10 +9024,10 @@
   dependencies:
     "picomatch" "^2.2.1"
 
-"recoil@^0.6.1":
-  "integrity" "sha512-J7oT3LZl2vpyFClgSUpOQjpykz84VSX/NJE/PavAtR8n7Z+whEdVBPUtwc2TEWjONeL/lJmiac2XQ+qEOQA52Q=="
-  "resolved" "https://registry.npmjs.org/recoil/-/recoil-0.6.1.tgz"
-  "version" "0.6.1"
+"recoil@^0.7.1":
+  "integrity" "sha512-OT4pI7FOUHcIoRtjsL5Lqq+lFFzQfir4MIbUkqyJ3nqv3WfBP1pHepyurqTsK5gw+T+I2R8+uOD28yH+Lg5o4g=="
+  "resolved" "https://registry.npmjs.org/recoil/-/recoil-0.7.2.tgz"
+  "version" "0.7.2"
   dependencies:
     "hamt_plus" "1.0.2"
 
