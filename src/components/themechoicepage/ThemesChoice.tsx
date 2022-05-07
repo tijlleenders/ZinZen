@@ -3,8 +3,7 @@ import { useRecoilState } from 'recoil';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-import { themeSelectionState } from '@store';
-import { darkModeState } from '@store';
+import { themeSelectionState, darkModeState } from '@store';
 
 import ThemeDark from '@assets/images/DashboardThemeDark.svg';
 import ThemeLight from '@assets/images/DashboardThemeLight.svg';

@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 
+import AddIconLight from '@assets/images/AddIconLight.png'
+import AddIconDark from '@assets/images/AddIconDark.png';
 import { darkModeState } from '@store';
+
 import './TodoList.scss';
-import AddIconLight from '../../assets/images/AddIconLight.png';
-import AddIconDark from '../../assets/images/AddIconDark.png';
 
 export function TodoForm() {
   const darkModeStatus = useRecoilValue(darkModeState);
