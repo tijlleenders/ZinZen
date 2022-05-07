@@ -11,7 +11,7 @@ import { LandingPageThemeChoice } from './pages/LandingPageThemeChoice';
 import { AddFeelings } from './pages/AddFeelings';
 import { TodoList } from './pages/TodoList';
 import { Home } from './pages/Home';
-import { NotFoundPage } from './components/404page/NotFoundPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 import { ZinZenMenu } from './pages/ZinZenMenu';
 import { FeedbackPage } from './pages/FeedbackPage';
 import { ShowFeelings } from './components/myfeelingspage/ShowFeelings';
