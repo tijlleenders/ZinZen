@@ -4,13 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 
 import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
-<<<<<<< HEAD:src/components/myfeelingspage/AddFeelings.tsx
 import { darkModeState } from '@store';
 import { AddFeelingsChoices } from './AddFeelingsChoices';
-=======
-import { AddFeelingsChoices } from './AddFeelingsChoices';
-import { darkModeState } from '@store';
->>>>>>> main:src/components/myfeelingspage/AddFeelings.jsx
 
 import '@translations/i18n';
 import './AddFeelingsPage.scss';
