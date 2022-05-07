@@ -4,9 +4,9 @@ import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { darkModeState } from '../../store/DarkModeState';
+import { darkModeState } from '@store';
 
-import '../../translations/i18n';
+import '@translations/i18n';
 import './zinzenmenu.scss';
 
 export function UserChoiceZinZenMenu() {
@@ -68,9 +68,9 @@ export function UserChoiceZinZenMenu() {
                     ? 'zinzen-menu-choice-dark'
                     : 'zinzen-menu-choice-light'
               }
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 navigate('/Home/ZinZen/Feedback');
-                window.location.reload(false);
               }}
             >
               {truncateContent(t('feedback'))}

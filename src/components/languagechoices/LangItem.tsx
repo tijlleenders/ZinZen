@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { useRecoilState } from 'recoil';
 import i18n from 'i18next';
 
-import { ILanguage } from 'Interfaces/ILanguage';
-import { languageSelectionState } from '../../store/LanguageSelectionState';
+import { ILanguage } from '@src/interfaces/ILanguage';
+import { languageSelectionState } from '@store';
+
 import './languagechoice.scss';
 
 export function LangItem({ lang } : {lang:ILanguage}) {
@@ -17,6 +19,7 @@ export function LangItem({ lang } : {lang:ILanguage}) {
     i18n.changeLanguage(langId);
     localStorage.setItem('language', JSON.stringify(langId));
   };
+
   return (
     <div className="containerLang">
       {remainder === 1 ? (

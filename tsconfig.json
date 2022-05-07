@@ -27,18 +27,23 @@
     "module": "commonjs",                                /* Specify what module code is generated. */
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */
     "moduleResolution": "node",                       /* Specify how TypeScript looks up a file from a given module specifier. */
-    "baseUrl": "src",                                  /* Specify the base directory to resolve non-relative module names. */
+    "baseUrl": "./",
     "paths": {
-        "@components/*": ["components/*"],
-        "@pages/*": ["pages/*"],
-        "@shared": ["shared/*"],
-        "@store": ["store/*"],
-        "@assets/*": ["assets/*"],
-        "@consts": ["constants/*"]
-    },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
+        "@components/*": ["src/components/*"],
+        "@pages/*": ["src/pages/*"],
+        "@src/*": ["src/*"],
+        "@shared": ["src/shared/*"],
+        "@store": ["src/store"],
+        "@assets": ["src/assets"],
+        "@consts": ["src/constants/*"],
+        "@models": ["src/models"],
+        "@api": ["src/api/*"],
+        "@utils": ["src/utils"],
+        "@translations": ["src/translations/*"],
+    },
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like `./node_modules/@types`. */
-    // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
+    "types": ["react/next", "react-dom/next"],         /* Specify type package names to be included without being referenced in a source file. */
     // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
     "resolveJsonModule": true,                        /* Enable importing .json files */
     // "noResolve": true,                                /* Disallow `import`s, `require`s or `<reference>`s from expanding the number of files TypeScript should add to a project. */
@@ -90,7 +95,7 @@
     // "noImplicitThis": true,                           /* Enable error reporting when `this` is given the type `any`. */
     // "useUnknownInCatchVariables": true,               /* Type catch clause variables as 'unknown' instead of 'any'. */
     // "alwaysStrict": true,                             /* Ensure 'use strict' is always emitted. */
-    "noUnusedLocals": false,                           /* Enable error reporting when a local variables aren't read. */
+    "noUnusedLocals": true,                           /* Enable error reporting when a local variables aren't read. */
     // "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read */
     // "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
     "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */

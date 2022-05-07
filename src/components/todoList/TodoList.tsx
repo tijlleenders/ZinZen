@@ -1,13 +1,31 @@
 import React from 'react';
+import { Container, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useRecoilValue } from 'recoil';
 
-import { HeaderDashboard } from '../dashboard/HeaderDashboard';
-import '../../translations/i18n';
+import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
+import { darkModeState } from '@store';
+import { TodoForm } from './TodoListForm';
+
+import '@translations/i18n';
+import './TodoList.scss';
 
 export function TodoList() {
+  const darkModeStatus = useRecoilValue(darkModeState);
+  const { t } = useTranslation();
   return (
     <div>
-      <HeaderDashboard />
-      <h1>Add a Goal</h1>
+      <Container fluid>
+        <Row>
+          <HeaderDashboard />
+        </Row>
+        <Row>
+          <h2 className={darkModeStatus ? 'mygoals-font-dark' : 'mygoals-font-light'}>{t('myGoalsMessage')}</h2>
+        </Row>
+        <Row>
+          <TodoForm />
+        </Row>
+      </Container>
     </div>
   );
 }

@@ -3,13 +3,14 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 
-import { HeaderDashboard } from '../dashboard/HeaderDashboard';
-import { MyFeelingsChoices } from './MyFeelingsChoices';
-import { darkModeState } from '../../store/DarkModeState';
-import '../../translations/i18n';
-import './myfeelingspage.scss';
+import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
+import { darkModeState } from '@store';
+import { AddFeelingsChoices } from './AddFeelingsChoices';
 
-export function MyFeelings() {
+import '@translations/i18n';
+import './AddFeelingsPage.scss';
+
+export function AddFeelings() {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
 
@@ -22,7 +23,7 @@ export function MyFeelings() {
         <Row>
           <Col>
             <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>{t('feelingsmessage')}</h3>
-            <MyFeelingsChoices />
+            <AddFeelingsChoices />
           </Col>
           <Col sm={1} />
         </Row>

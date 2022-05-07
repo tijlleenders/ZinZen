@@ -8,7 +8,11 @@
             "@shared": ["src/shared/*"],
             "@store": ["src/store/*"],
             "@assets": ["src/assets/*"],
-            "@consts": ["src/constants/*"]
+            "@consts": ["src/constants/*"],
+            "@models": ["src/models/*"],
+            "@api": ["src/api/*"],
+            "@utils": ["src/utils/*"],
+            "@translations": ["src/translations/*"]
         }
     }
 }

@@ -8,12 +8,13 @@ import { languageSelectionState } from './store/LanguageSelectionState';
 
 import { LandingPage } from './components/landingpage/LandingPage';
 import { LandingPageThemeChoice } from './components/themechoicepage/LandingPageThemeChoice';
-import { MyFeelings } from './components/myfeelingspage/MyFeelings';
+import { AddFeelings } from './components/myfeelingspage/AddFeelings';
 import { TodoList } from './components/todoList/TodoList';
 import { Home } from './components/dashboard/Home';
 import { NotFoundPage } from './components/404page/NotFoundPage';
 import { ZinZenMenu } from './components/zinzen-menu/ZinZenMenu';
 import { FeedbackPage } from './components/feedbackpage/FeedbackPage';
+import { ShowFeelings } from './components/myfeelingspage/ShowFeelings';
 
 import './customize.scss';
 import './App.css';
@@ -43,7 +44,7 @@ export function App() {
           )}
           <Route
             path="/Home/AddFeelings"
-            element={<MyFeelings />}
+            element={<AddFeelings />}
           />
           <Route
             path="/Home/ZinZen"
@@ -60,6 +61,10 @@ export function App() {
           <Route
             path="/Home/MyGoals"
             element={<TodoList />}
+          />
+          <Route
+            path="/Home/MyFeelings"
+            element={<ShowFeelings />}
           />
         </Routes>
       </BrowserRouter>

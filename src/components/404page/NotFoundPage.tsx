@@ -4,7 +4,8 @@ import {
 } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { darkModeState } from '../../store/DarkModeState';
+
+import { darkModeState } from '@store';
 
 import './errorPage.scss';
 
@@ -37,7 +38,6 @@ export function NotFoundPage() {
               Home
             </Button>
           </Col>
-
         </Row>
       </Container>
     </div>

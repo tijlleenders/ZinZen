@@ -14,6 +14,7 @@
     "explore": "Explore",
     "zinzen": "ZinZen",
     "feelingsmessage": "Hi! How do you feel today?",
+    "myGoalsMessage" :"Add a Goal!",
     "happy":"Happy",
     "loved":"Loved",
     "relieved":"Relieved",
@@ -54,5 +55,6 @@
     "mad":"Mad",
     "insulted":"Insulted",
     "feedback":"Feedback",
-    "blog":"Blog"
+    "blog":"Blog",
+    "showfeelingsmessage": "My Feelings"
 }

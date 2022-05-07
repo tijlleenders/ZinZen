@@ -4,11 +4,12 @@ import { useRecoilState } from 'recoil';
 import DarkModeToggle from 'react-dark-mode-toggle';
 import { useNavigate } from 'react-router-dom';
 
+import { darkModeState } from '@store';
+
 import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
 import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
 import Logo from '@assets/images/zinzenlogo.png';
-import { darkModeState } from '../../store/DarkModeState';
-import '../../translations/i18n';
+import '@translations/i18n';
 
 export function HeaderDashboard() {
   const navigate = useNavigate();

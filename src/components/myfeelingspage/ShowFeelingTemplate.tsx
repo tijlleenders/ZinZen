@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import {
   Button, Nav, Navbar, Container,
@@ -5,17 +6,15 @@ import {
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 
-import { addFeeling } from '@api/FeelingsAPI';
+// import { addFeeling } from '@api/FeelingsAPI';
 import { darkModeState } from '@store';
 
 import '@translations/i18n';
 import './AddFeelingsPage.scss';
 
-export function FeelingTemplate({ feelingCategory, feelingsList } :
-  { feelingCategory : string, feelingsList : string[]}) {
+export function ShowFeelingTemplate({ feelingCategory, feelingsListObject }) {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-
   return (
     <div>
       <Container fluid>
@@ -25,18 +24,18 @@ export function FeelingTemplate({ feelingCategory, feelingsList } :
             &#128515;
           </Button>
           <br />
-          {feelingsList.map((feelingName) => (
+          {feelingsListObject && Object.keys(feelingsListObject).map(((feelingObject) => (
             <Button
-              key={feelingName}
+              key={feelingsListObject[feelingObject].feelingContent}
               className={
                 darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'btn-my-feelings-light btn-feelings-light'
               }
               size="lg"
-              onClick={() => addFeeling(feelingName, feelingCategory)}
+              onClick={() => console.log('TODO: Add remove feeling function')}
             >
-              {t(feelingName)}
+              {t(feelingsListObject[feelingObject].feelingContent)}
             </Button>
-          ))}
+          )))}
         </div>
         <div className="feelings-menu-mobile">
           <Navbar collapseOnSelect expand="lg">
@@ -46,20 +45,18 @@ export function FeelingTemplate({ feelingCategory, feelingsList } :
             </Navbar.Toggle>
             <Navbar.Collapse>
               <Nav className="navbar-custom">
-                {feelingsList.map((feelingName) => (
+                {feelingsListObject && Object.keys(feelingsListObject).map(((feelingObject) => (
                   <Button
-                    key={feelingName}
+                    key={feelingsListObject[feelingObject].feelingContent}
                     className={
-                      darkModeStatus
-                        ? 'btn-my-feelings-dark btn-feelings-dark'
-                        : 'btn-my-feelings-light btn-feelings-light'
-                    }
+                darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'btn-my-feelings-light btn-feelings-light'
+              }
                     size="lg"
-                    onClick={() => addFeeling(feelingName, feelingCategory)}
+                    onClick={() => console.log('TODO: Add remove feeling function')}
                   >
-                    {t(feelingName)}
+                    {t(feelingsListObject[feelingObject].feelingContent)}
                   </Button>
-                ))}
+                )))}
               </Nav>
             </Navbar.Collapse>
           </Navbar>

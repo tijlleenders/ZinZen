@@ -7,8 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 import AddIconLight from '@assets/images/AddIconLight.png';
 import AddIconDark from '@assets/images/AddIconDark.png';
-import { darkModeState } from '../../store/DarkModeState';
-import '../../translations/i18n';
+import { darkModeState } from '@store';
+
+import '@translations/i18n';
 import './dashboard.scss';
 
 export function UserChoiceDashboard() {
@@ -16,12 +17,12 @@ export function UserChoiceDashboard() {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
 
-  function truncateContent(content:String, maxLength = 20) {
+  function truncateContent(content: string, maxLength = 20) {
     const { length } = content;
     if (length >= maxLength) {
       return `${content.substring(0, maxLength)}...`;
     }
-    return content as String;
+    return content;
   }
 
   return (
@@ -75,6 +76,9 @@ export function UserChoiceDashboard() {
                               ? 'dashboard-choice-dark'
                               : 'dashboard-choice-light'
                         }
+            onClick={() => {
+              navigate('/Home/MyFeelings');
+            }}
           >
             {truncateContent(t('myfeelings'))}
           </Button>

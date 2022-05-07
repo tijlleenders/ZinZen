@@ -3,6 +3,20 @@
         "browser": true,
         "es2021": true
     },
+    "settings": {
+        "import/core-modules": ["@expo/vector-icons"],
+         "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+         "import/parsers": {
+           "@typescript-eslint/parser": [".ts", ".tsx"]
+         },
+         "import/resolver": {
+           "typescript": {},
+           "node": {
+             "extensions": [".js", ".jsx", ".ts", ".tsx"],
+             "moduleDirectory": ["node_modules", "src/"]
+            }
+         }
+    },
     "extends": [
         "plugin:react/recommended",
         "airbnb"
@@ -13,15 +27,17 @@
             "jsx": true
         },
         "ecmaVersion": "latest",
-        "sourceType": "module"
+        "sourceType": "module",
+        "project": "./tsconfig.json",
+        "tsconfigRootDir": "./"
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "import"
     ],
     "rules": {
         "linebreak-style": 0,
-        "import/prefer-default-export": "off",
         "import/extensions": [
             "error",
             "ignorePackages",
@@ -32,20 +48,14 @@
               "tsx": "never"
             }
         ],
+        "import/prefer-default-export": "off",
         "jsx-a11y/label-has-associated-control": [ "error", {
             "required": {
               "some": [ "nesting", "id"  ]
             }
         }],
         "no-nested-ternary": "off",
+        "no-console": "off",
         "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }]
-    },
-    "settings": {
-        "import/resolver": {
-          "node": {
-            "extensions": [".js", ".jsx", ".ts", ".tsx"],
-            "moduleDirectory": ["node_modules", "src/"]
-          }
-        }
     }
 }
