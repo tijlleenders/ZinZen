@@ -19,25 +19,25 @@ export function TodoForm() {
     },
   );
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     const { value } = e.target;
-    const id = Date.now();
 
     setFormInputData({
       ...formInputData,
-      id,
+      id:Date.now().toString(),
       [e.target.name]: value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     if (formInputData.inputGoal) {
-      const newData = (data) => ([...data, formInputData]);
+      const newData = (data:any) => ([...data, formInputData]);
       setTableData(newData);
     }
     setFormInputData({
       inputGoal: '',
       inputTime: '',
+      id:''
     });
     e.preventDefault();
   };
@@ -71,7 +71,7 @@ export function TodoForm() {
 
       <div className="inputs">
         {
-                    tableData.map((data) => (
+                    tableData.map((data:any) => (
                       <div className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}>
                         <div className="input-time">{data.inputTime}</div>
                         <div className={darkModeStatus ? 'deletetodo-dark' : 'deletetodo-light'} onClick={removeItem} />
