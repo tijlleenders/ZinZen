@@ -6,14 +6,14 @@ import { darkModeState } from './store/DarkModeState';
 import { themeSelectionState } from './store/ThemeSelectionState';
 import { languageSelectionState } from './store/LanguageSelectionState';
 
-import { LandingPage } from './components/landingpage/LandingPage';
-import { LandingPageThemeChoice } from './components/themechoicepage/LandingPageThemeChoice';
-import { AddFeelings } from './components/myfeelingspage/AddFeelings';
-import { TodoList } from './components/todoList/TodoList';
-import { Home } from './components/dashboard/Home';
+import { LandingPage } from './pages/LandingPage';
+import { LandingPageThemeChoice } from './pages/LandingPageThemeChoice';
+import { AddFeelings } from './pages/AddFeelings';
+import { TodoList } from './pages/TodoList';
+import { Home } from './pages/Home';
 import { NotFoundPage } from './components/404page/NotFoundPage';
-import { ZinZenMenu } from './components/zinzen-menu/ZinZenMenu';
-import { FeedbackPage } from './components/feedbackpage/FeedbackPage';
+import { ZinZenMenu } from './pages/ZinZenMenu';
+import { FeedbackPage } from './pages/FeedbackPage';
 import { ShowFeelings } from './components/myfeelingspage/ShowFeelings';
 
 import './customize.scss';
