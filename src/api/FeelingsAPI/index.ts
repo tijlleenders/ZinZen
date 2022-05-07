@@ -1,11 +1,11 @@
-import { getJustDate } from '@utils';
-import { db } from '@models/index';
+import { db } from '@models';
+import { getJustDate } from '@src/utils';
 
 export const resetDatabase = () => db.transaction('rw', db.feelingItems, async () => {
   await Promise.all(db.tables.map((table) => table.clear()));
 });
 
-export const addFeeling = (feelingName, feelingCategory) => {
+export const addFeeling = (feelingName : string, feelingCategory : string) => {
   const currentDate = getJustDate(new Date());
   db.transaction('rw', db.feelingsCollection, async () => {
     await db
@@ -26,6 +26,7 @@ export const removeFeeling = (feelingId) => {
 
 export const getAllFeelings = async () => {
   const allFeelings = await db.feelingsCollection.toArray();
+  console.log(allFeelings);
   return allFeelings;
 };
 

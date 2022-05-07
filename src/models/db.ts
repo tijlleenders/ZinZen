@@ -1,6 +1,5 @@
 import Dexie, { Table } from 'dexie';
-// @ts-ignore
-import { FeelingItem } from './FeelingItem.ts';
+import { FeelingItem } from './FeelingItem';
 
 export class FeelingsDB extends Dexie {
   feelingsCollection!: Table<FeelingItem, number>;

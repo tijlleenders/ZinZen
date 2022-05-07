@@ -1,19 +1,18 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 
 import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
-import { AddFeelingsChoices } from './AddFeelingsChoices';
 import { darkModeState } from '@store';
+import { TodoForm } from './TodoListForm';
 
 import '@translations/i18n';
-import './AddFeelingsPage.scss';
+import './TodoList.scss';
 
-export function AddFeelings() {
+export function TodoList() {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
-
   return (
     <div>
       <Container fluid>
@@ -21,11 +20,10 @@ export function AddFeelings() {
           <HeaderDashboard />
         </Row>
         <Row>
-          <Col>
-            <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>{t('feelingsmessage')}</h3>
-            <AddFeelingsChoices />
-          </Col>
-          <Col sm={1} />
+          <h2 className={darkModeStatus ? 'mygoals-font-dark' : 'mygoals-font-light'}>{t('myGoalsMessage')}</h2>
+        </Row>
+        <Row>
+          <TodoForm />
         </Row>
       </Container>
     </div>

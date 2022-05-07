@@ -12,8 +12,9 @@
          "import/resolver": {
            "typescript": {},
            "node": {
-             "extensions": [".js", ".jsx", ".ts", ".tsx"]
-           }
+             "extensions": [".js", ".jsx", ".ts", ".tsx"],
+             "moduleDirectory": ["node_modules", "src/"]
+            }
          }
     },
     "extends": [
@@ -37,8 +38,24 @@
     ],
     "rules": {
         "linebreak-style": 0,
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+              "js": "never",
+              "jsx": "never",
+              "ts": "never",
+              "tsx": "never"
+            }
+        ],
         "import/prefer-default-export": "off",
+        "jsx-a11y/label-has-associated-control": [ "error", {
+            "required": {
+              "some": [ "nesting", "id"  ]
+            }
+        }],
         "no-nested-ternary": "off",
-        "no-console": "off"
+        "no-console": "off",
+        "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }]
     }
 }

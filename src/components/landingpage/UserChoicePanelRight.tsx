@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ILanguage } from '@src/interfaces';
 import { LanguagesList } from '@components/languagechoices/LanguagesList';
 
 import '@translations/i18n';
@@ -9,7 +10,7 @@ import './landingpage.scss';
 export function UserChoicePanelRight() {
   const { t } = useTranslation();
 
-  const languages = [
+  const languages : ILanguage[] = [
     {
       sno: 1,
       title: t('english'),

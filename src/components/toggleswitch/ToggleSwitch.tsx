@@ -1,10 +1,8 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable react/prop-types */
 import React from 'react';
 
 import './ToggleSwitch.css';
 
-export function ToggleSwitch({ label }) {
+export function ToggleSwitch({ label } : { label : string }) {
   return (
     <div className="container">
       {label}

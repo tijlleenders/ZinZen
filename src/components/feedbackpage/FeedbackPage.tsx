@@ -12,7 +12,7 @@ export function FeedbackPage() {
   const [userFeedback, setUserFeedback] = useState('');
   const darkModeStatus = useRecoilValue(darkModeState);
 
-  async function submitToAPI(feedback) {
+  async function submitToAPI(feedback: string) {
     const URL = 'https://tpzmoaw42e.execute-api.eu-west-1.amazonaws.com/prod/contact';
     const updatedFeedback = `Rating : ${userRating}\n${feedback}`;
     fetch(URL, {

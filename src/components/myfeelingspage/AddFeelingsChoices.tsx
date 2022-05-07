@@ -6,7 +6,7 @@ import { FeelingTemplate } from './FeelingTemplate';
 export function AddFeelingsChoices() {
   return (
     <div>
-      {feelingsCategories.map((feelingCategory) => (
+      {feelingsCategories.map((feelingCategory : string) => (
         <FeelingTemplate
           key={feelingCategory}
           feelingCategory={feelingCategory}

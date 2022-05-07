@@ -3,4 +3,4 @@ export const formatDate = () => {
   return newDate;
 };
 
-export const getJustDate = (fullDate) => new Date(fullDate.toDateString());
+export const getJustDate = (fullDate : Date) => new Date(fullDate.toDateString());
