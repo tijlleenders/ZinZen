@@ -4,6 +4,6 @@ export interface ILanguage {
     langId: string;
 }
 
-export interface ILanguageListProps{
+export interface ILanguageListProps {
     languages: ILanguage[];
 }
