@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ILanguage } from '@src/interfaces';
-import { LanguagesList } from '@components/languagechoices/LanguagesList';
+import { LanguagesList } from '@pages/LanguagesList';
 
 import '@translations/i18n';
 import './landingpage.scss';
