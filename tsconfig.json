@@ -40,6 +40,7 @@
         "@api": ["src/api/*"],
         "@utils": ["src/utils"],
         "@translations": ["src/translations/*"],
+        "@pages": ["src/pages/*"],
     },
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like `./node_modules/@types`. */
