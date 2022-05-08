@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ILanguageListProps } from '@src/interfaces';
-import { LangItem } from '../components/languagechoices/LangItem';
+import { LangItem } from '@components/languagechoices/LangItem';
 
 export function LanguagesList(props : ILanguageListProps) {
   const { languages } = props;

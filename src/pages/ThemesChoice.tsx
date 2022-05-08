@@ -7,7 +7,7 @@ import { themeSelectionState, darkModeState } from '@store';
 
 import ThemeDark from '@assets/images/DashboardThemeDark.svg';
 import ThemeLight from '@assets/images/DashboardThemeLight.svg';
-import '../components/themechoicepage/themechoice.scss';
+import '@components/themechoicepage/themechoice.scss';
 
 export function ThemesChoice() {
   const [, setIsThemeChosen] = useRecoilState(themeSelectionState);

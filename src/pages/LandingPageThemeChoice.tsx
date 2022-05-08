@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { ThemesChoice } from './ThemesChoice';
 import { HeaderThemeChoice } from '../components/themechoicepage/HeaderThemeChoice';
 
-import '../translations/i18n';
-import '../components/themechoicepage/themechoice.scss';
+import '@translations/i18n';
+import '@components/themechoicepage/themechoice.scss';
 
 export function LandingPageThemeChoice() {
   const { t } = useTranslation();
