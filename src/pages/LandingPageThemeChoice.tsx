@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 import { ThemesChoice } from './ThemesChoice';
-import { HeaderThemeChoice } from '../components/themechoicepage/HeaderThemeChoice';
+import { HeaderThemeChoice } from '@components/themechoicepage/HeaderThemeChoice';
 
 import '@translations/i18n';
 import '@components/themechoicepage/themechoice.scss';
@@ -29,4 +29,5 @@ export function LandingPageThemeChoice() {
       </Container>
     </div>
   );
+  
 }
