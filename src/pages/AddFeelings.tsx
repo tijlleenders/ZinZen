@@ -5,10 +5,10 @@ import { useRecoilValue } from 'recoil';
 
 import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
 import { darkModeState } from '@store';
-import { AddFeelingsChoices } from '../components/myfeelingspage/AddFeelingsChoices';
+import { AddFeelingsChoices } from '@/components/myfeelingspage/AddFeelingsChoices';
 
 import '@translations/i18n';
-import '../components/myfeelingspage/AddFeelingsPage.scss';
+import '@/components/myfeelingspage/AddFeelingsPage.scss';
 
 export function AddFeelings() {
   const darkModeStatus = useRecoilValue(darkModeState);
