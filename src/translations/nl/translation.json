@@ -55,6 +55,10 @@
     "mad":"Mad",
     "insulted":"beledigd",
     "feedback":"Feedback",
+    "opinion":"Wij stellen uw mening op prijs.",
+    "rate":"Beoordeel alstublieft uw ervaring",
+    "experience":"Hoe kunnen we uw ervaring verbeteren?",
+    "anonymousFeedback":"Uw feedback is anoniem. Als u een antwoord wilt, laat dan een e-mail of een telefoonnummer achter.",
     "blog":"Blog",
     "showfeelingsmessage": "mijn gevoelens"
 }

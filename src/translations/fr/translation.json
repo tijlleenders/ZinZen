@@ -55,6 +55,10 @@
     "mad":"Fou",
     "insulted":"Insulté",
     "feedback":"Retour",
+    "opinion":"Nous tenons compte de votre point de vue.",
+    "rate":"Veuillez évaluer votre expérience",
+    "experience":"Comment pouvons-nous améliorer votre expérience?",
+    "anonymousFeedback":"Vos commentaires sont anonymes. Si vous souhaitez une réponse, veuillez laisser un e-mail ou un numéro de téléphone.",
     "blog":"Blog",
     "showfeelingsmessage": "mes sentiments"
 }

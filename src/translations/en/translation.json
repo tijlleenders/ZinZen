@@ -55,6 +55,10 @@
     "mad":"Mad",
     "insulted":"Insulted",
     "feedback":"Feedback",
+    "opinion":" We value your opinion.",
+    "rate":"Please rate your experience",
+    "experience":"How can we make your experience better?",
+    "anonymousFeedback":"Your feedback is anonymous. If you want a reply, please leave an email or a phone number.",
     "blog":"Blog",
     "showfeelingsmessage": "My Feelings"
 }
