@@ -10,6 +10,7 @@ import TRANSLATIONS_ES from './es/translation.json';
 import TRANSLATIONS_FR from './fr/translation.json';
 import TRANSLATIONS_HI from './hi/translation.json';
 import TRANSLATIONS_NL from './nl/translation.json';
+import TRANSLATIONS_DE from './de/translation.json';
 
 i18n
   .use(LanguageDetector)
@@ -33,6 +34,9 @@ i18n
       },
       nl: {
         translation: TRANSLATIONS_NL,
+      },
+      de: {
+        translation: TRANSLATIONS_DE,
       },
     },
   });
