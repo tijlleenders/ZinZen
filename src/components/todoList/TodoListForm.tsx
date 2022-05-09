@@ -61,7 +61,7 @@ export function TodoForm() {
       <div>
         <input
           className={darkModeStatus ? 'addtaskdark-time' : 'addtasklight-time'}
-          type="date"
+          type="text"
           placeholder="Add time"
           name="inputTime"
           value={formInputData.inputTime}
