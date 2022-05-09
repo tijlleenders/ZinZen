@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
-import { ThemesChoice } from './ThemesChoice';
+import { ThemesChoice } from '@components/themechoicepage/ThemesChoice';
 import { HeaderThemeChoice } from '@components/themechoicepage/HeaderThemeChoice';
 
 import '@translations/i18n';
@@ -29,5 +29,5 @@ export function LandingPageThemeChoice() {
       </Container>
     </div>
   );
-  
+
 }
