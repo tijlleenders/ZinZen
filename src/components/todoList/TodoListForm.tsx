@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
+import { useTranslation } from 'react-i18next';
 
 import AddIconLight from '@assets/images/AddIconLight.png'
 import AddIconDark from '@assets/images/AddIconDark.png';
 import { darkModeState } from '@store';
 
+import '@translations/i18n';
 import './TodoList.scss';
 
 export function TodoForm() {
   const darkModeStatus = useRecoilValue(darkModeState);
+  const { t } = useTranslation();
   const [tableData, setTableData] = useState([]);
   const [formInputData, setFormInputData] = useState(
     {
@@ -53,7 +56,7 @@ export function TodoForm() {
           className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}
           type="text"
           name="inputGoal"
-          placeholder="What do you want to achieve today?"
+          placeholder={t('addGoalPlaceholder')}
           value={formInputData.inputGoal}
           onChange={handleChange}
         />
@@ -62,7 +65,7 @@ export function TodoForm() {
         <input
           className={darkModeStatus ? 'addtaskdark-time' : 'addtasklight-time'}
           type="text"
-          placeholder="Add time"
+          placeholder={t('addTimePlaceholder')}
           name="inputTime"
           value={formInputData.inputTime}
           onChange={handleChange}
