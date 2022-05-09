@@ -65,7 +65,7 @@ export function FeedbackPage() {
             id="feedback-textbox"
             value={userFeedback}
             onChange={(e) => { setUserFeedback(e.target.value); }}
-            placeholder="Type your feedback here..."
+            placeholder={t('feedbackPlaceholder')}
           />
           <p id="feedback-line-4">{t("anonymousFeedback")}</p>
           <Button id="feedback-submit-btn" onClick={() => { submitToAPI(userFeedback); }}>  {t('submit')}</Button>
