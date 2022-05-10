@@ -41,6 +41,6 @@ export function NotFoundPage() {
         </Row>
       </Container>
     </div>
-
   );
+  
 }
