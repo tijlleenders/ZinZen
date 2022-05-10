@@ -62,40 +62,6 @@ body {
     padding-left: 0.5em;
 }
 
-
-.addtaskdark-time {
-    background-color: #5f3636;
-    color: #cecece;
-    display: flex;
-    border: none;
-    border-radius: 0.5em;
-    font-weight: bolder !important;
-    font-size: 1.0rem !important;
-    width: 20% !important;
-    margin-left: 0.5em;
-    margin-top: 0.5em !important;
-    text-align: left !important;
-    padding-top: 0.2em !important;
-    padding-bottom: 0.2em !important;
-    padding-left: 0.5em;
-}
-
-.addtasklight-time {
-    background-color: #e9b17a;
-    display: flex;
-    border: none;
-    border-radius: 0.5em;
-    font-weight: bolder !important;
-    font-size: 1.0rem !important;
-    width: 20% !important;
-    margin-left: 0.5em;
-    margin-top: 0.5em !important;
-    text-align: left !important;
-    padding-top: 0.2em !important;
-    padding-bottom: 0.2em !important;
-    padding-left: 0.5em;
-}
-
 .mygoalsbutton-dark {
     margin-left: 0.5em;
     padding-top: 1em;
@@ -111,16 +77,6 @@ body {
     padding-left: 0.5em;
     width: 93%;
 }
-
-.time{
-    display: inline-flex;
-}
-
-.input-time{
-    padding-left: 00.5em;
-    display: inline-block;
-}
-
 
 .deletetodo-dark{
     position: absolute;
