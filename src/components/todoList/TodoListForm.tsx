@@ -17,18 +17,15 @@ export function TodoForm() {
   const [formInputData, setFormInputData] = useState(
     {
       inputGoal: '',
-      inputTime: '',
       id: '',
     },
   );
 
   const handleChange = (e) => {
     const { value } = e.target;
-    const id = Date.now();
 
     setFormInputData({
       ...formInputData,
-      id,
       [e.target.name]: value,
     });
   };
@@ -40,7 +37,6 @@ export function TodoForm() {
     }
     setFormInputData({
       inputGoal: '',
-      inputTime: '',
     });
     e.preventDefault();
   };
@@ -61,42 +57,21 @@ export function TodoForm() {
           onChange={handleChange}
         />
       </div>
-      <div className="time">
-        <input
-          className={darkModeStatus ? 'addtaskdark-time' : 'addtasklight-time'}
-          type="text"
-          placeholder={t('addTimePlaceholder')}
-          name="inputTime"
-          value={formInputData.inputTime}
-          onChange={handleChange}
-        />
-          <input
-          className={darkModeStatus ? 'addtaskdark-time' : 'addtasklight-time'}
-          type="text"
-          placeholder={t('addTimePlaceholder')}
-          name="inputTime"
-          value={formInputData.inputTime}
-          onChange={handleChange}
-        />
+      <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
+        <Button variant={darkModeStatus ? 'dark-pink' : 'pink'} onClick={handleSubmit}>
+         Add Task
+        </Button>
       </div>
-
       <div className="inputs">
         {
                     tableData.map((data) => (
                       <div className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}>
-                        <div className="input-time">{data.inputTime}</div>
                         <div className={darkModeStatus ? 'deletetodo-dark' : 'deletetodo-light'} onClick={removeItem} />
                         <div className="input-goal">{data.inputGoal}</div>
                       </div>
                     ))
                 }
 
-      </div>
-
-      <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
-        <Button variant={darkModeStatus ? 'dark-pink' : 'pink'} onClick={handleSubmit}>
-         Add Task
-        </Button>
       </div>
 
     </form>
