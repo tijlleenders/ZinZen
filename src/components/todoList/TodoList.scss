@@ -71,12 +71,12 @@ body {
     border-radius: 0.5em;
     font-weight: bolder !important;
     font-size: 1.0rem !important;
-    width: 50% !important;
+    width: 20% !important;
     margin-left: 0.5em;
-    margin-top: 1em !important;
+    margin-top: 0.5em !important;
     text-align: left !important;
-    padding-top: 0.5em !important;
-    padding-bottom: 0.5em !important;
+    padding-top: 0.2em !important;
+    padding-bottom: 0.2em !important;
     padding-left: 0.5em;
 }
 
@@ -87,28 +87,23 @@ body {
     border-radius: 0.5em;
     font-weight: bolder !important;
     font-size: 1.0rem !important;
-    width: 50% !important;
+    width: 20% !important;
     margin-left: 0.5em;
-    margin-top: 1em !important;
+    margin-top: 0.5em !important;
     text-align: left !important;
-    padding-top: 0.5em !important;
-    padding-bottom: 0.5em !important;
+    padding-top: 0.2em !important;
+    padding-bottom: 0.2em !important;
     padding-left: 0.5em;
 }
 
 .mygoalsbutton-dark {
-    right: 0.8em;
-    position: fixed;
-    display: flex;
-    bottom: 0.8em;
-
+    margin-left: 0.5em;
+    padding-top: 1em;
 }
 
 .mygoalsbutton-light {
-    right: 0.8em;
-    position: fixed;
-    display: block;
-    bottom: 0.8em;
+    margin-left: 0.5em;
+    padding-top: 1em;
 }
 
 
@@ -117,6 +112,9 @@ body {
     width: 93%;
 }
 
+.time{
+    display: inline-flex;
+}
 
 .input-time{
     padding-left: 00.5em;
@@ -140,5 +138,5 @@ body {
     border-radius: 50%;
     width: 1rem;
     height: 1rem;
-    
+
 }

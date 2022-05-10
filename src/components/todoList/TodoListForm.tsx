@@ -61,8 +61,16 @@ export function TodoForm() {
           onChange={handleChange}
         />
       </div>
-      <div>
+      <div className="time">
         <input
+          className={darkModeStatus ? 'addtaskdark-time' : 'addtasklight-time'}
+          type="text"
+          placeholder={t('addTimePlaceholder')}
+          name="inputTime"
+          value={formInputData.inputTime}
+          onChange={handleChange}
+        />
+          <input
           className={darkModeStatus ? 'addtaskdark-time' : 'addtasklight-time'}
           type="text"
           placeholder={t('addTimePlaceholder')}
@@ -87,7 +95,7 @@ export function TodoForm() {
 
       <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
         <Button variant={darkModeStatus ? 'dark-pink' : 'pink'} onClick={handleSubmit}>
-          <img src={darkModeStatus ? AddIconDark : AddIconLight} alt="Add Icon" className="add-icon" />
+         Add Task
         </Button>
       </div>
 
