@@ -91,9 +91,9 @@ export function TodoForm() {
 
       <div className="inputs">
         {
-                    tableData.map((data) => (
+                    tableData.map((data,index) => (
                       <div
-                      style={{backgroundColor: colors[selectedColourIndex]}}
+                      style={{backgroundColor: colors[index%4]}}
                       className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}>
                         <div className={darkModeStatus ? 'deletetodo-dark' : 'deletetodo-light'} onClick={removeItem} />
                         <div className="input-goal">{data.inputGoal}</div>
