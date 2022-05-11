@@ -54,8 +54,10 @@ export function TodoForm() {
     const newColorIndex = selectedColorIndex + 1;
     if (colors[newColorIndex])
         setColorIndex(newColorIndex);
+     //   console.log(newColorIndex);
     else
         setColorIndex(0);
+
 }
 
   return (
@@ -80,7 +82,7 @@ export function TodoForm() {
         </Button>
       <div className='color-button'>
         <Button
-         style={{backgroundColor: colors[selectedColourIndex]}}
+         style={{backgroundColor: colors[selectedColorIndex]}}
          onClick={changeColor} >
          Change color
         </Button>
