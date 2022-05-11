@@ -14,7 +14,7 @@ export function TodoForm() {
   const darkModeStatus = useRecoilValue(darkModeState);
   const colors = ["green", "red", "orange"];
   const { t } = useTranslation();
-  const [selectedColourIndex, setColourIndex] = useState(0);
+  const [selectedColorIndex, setColorIndex] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [formInputData, setFormInputData] = useState(
     {
@@ -51,11 +51,11 @@ export function TodoForm() {
   };
 
   const changeColor = () => {
-    const newColourIndex = selectedColourIndex + 1;
-    if (colors[newColourIndex])
-        setColourIndex(newColourIndex);
+    const newColorIndex = selectedColorIndex + 1;
+    if (colors[newColorIndex])
+        setColorIndex(newColorIndex);
     else
-        setColourIndex(0);
+        setColorIndex(0);
 }
 
   return (
@@ -73,7 +73,7 @@ export function TodoForm() {
       </div>
       <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
         <Button
-        variant={darkModeStatus ? 'dark-pink' : 'pink'}
+        variant={darkModeStatus ? 'dark-pink' : 'pale-blue'}
         onClick={handleSubmit}
         className='addtask-button'>
          Add Task
