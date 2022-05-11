@@ -62,7 +62,7 @@ export function TodoForm() {
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
         <input
-         style={{backgroundColor: colors[selectedColourIndex]}}
+         style={{backgroundColor: colors[selectedColorIndex]}}
           className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}
           type="text"
           name="inputGoal"
