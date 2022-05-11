@@ -12,23 +12,24 @@ import './TodoList.scss';
 
 export function TodoForm() {
   const darkModeStatus = useRecoilValue(darkModeState);
+  const colors = ["green", "red", "orange"];
   const { t } = useTranslation();
+  const [selectedColourIndex, setColourIndex] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [formInputData, setFormInputData] = useState(
     {
       inputGoal: '',
-      inputTime: '',
-      id: '',
+      id:0,
     },
   );
 
   const handleChange = (e) => {
     const { value } = e.target;
-    const id = Date.now();
+    const idNum = Date.now();
 
     setFormInputData({
       ...formInputData,
-      id,
+      id:idNum,
       [e.target.name]: value,
     });
   };
@@ -40,7 +41,7 @@ export function TodoForm() {
     }
     setFormInputData({
       inputGoal: '',
-      inputTime: '',
+      id:0,
     });
     e.preventDefault();
   };
@@ -49,10 +50,19 @@ export function TodoForm() {
     setTableData([]);
   };
 
+  const changeColor = () => {
+    const newColourIndex = selectedColourIndex + 1;
+    if (colors[newColourIndex])
+        setColourIndex(newColourIndex);
+    else
+        setColourIndex(0);
+}
+
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
         <input
+         style={{backgroundColor: colors[selectedColourIndex]}}
           className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}
           type="text"
           name="inputGoal"
@@ -65,15 +75,17 @@ export function TodoForm() {
         <Button variant={darkModeStatus ? 'dark-pink' : 'pink'} onClick={handleSubmit}>
          Add Task
         </Button>
-        <Button>
+        <Button onClick={changeColor} >
          Change color
-        </Button>
+      </Button>
       </div>
+
       <div className="inputs">
         {
                     tableData.map((data) => (
-                      <div className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}>
-                        <div className="input-time">{data.inputTime}</div>
+                      <div
+                      style={{backgroundColor: colors[selectedColourIndex]}}
+                      className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}>
                         <div className={darkModeStatus ? 'deletetodo-dark' : 'deletetodo-light'} onClick={removeItem} />
                         <div className="input-goal">{data.inputGoal}</div>
                       </div>
