@@ -72,12 +72,15 @@ export function TodoForm() {
         />
       </div>
       <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
-        <Button variant={darkModeStatus ? 'dark-pink' : 'pink'} onClick={handleSubmit}>
+        <Button
+        variant={darkModeStatus ? 'dark-pink' : 'pink'}
+        onClick={handleSubmit}
+        className='addtask-button'>
          Add Task
         </Button>
       <div className='color-button'>
         <Button
-         variant={darkModeStatus ? 'dark-pink' : 'pink'}
+         style={{backgroundColor: colors[selectedColourIndex]}}
          onClick={changeColor} >
          Change color
         </Button>
