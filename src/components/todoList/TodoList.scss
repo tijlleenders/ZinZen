@@ -65,11 +65,14 @@ body {
 .mygoalsbutton-dark {
     margin-left: 0.5em;
     padding-top: 1em;
+    display: inline-flex;
+
 }
 
 .mygoalsbutton-light {
     margin-left: 0.5em;
     padding-top: 1em;
+    display: inline-flex;
 }
 
 
@@ -97,11 +100,7 @@ body {
 
 }
 
-.green{
-
-    background-color: #06e706e6
-}
-
-.red{
-    background-color: red;
+.color-button{
+   padding-left: 00.5em;
+   border-radius: 50%;
 }
