@@ -75,7 +75,7 @@ export function TodoForm() {
       </div>
       <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
         <Button
-        variant={darkModeStatus ? 'dark-pink' : 'pale-blue'}
+        variant={darkModeStatus ? 'pink' : 'peach'}
         onClick={handleSubmit}
         className='addtask-button'>
          Add Task
