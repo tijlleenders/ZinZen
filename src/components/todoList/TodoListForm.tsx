@@ -54,7 +54,6 @@ export function TodoForm() {
     const newColorIndex = selectedColorIndex + 1;
     if (colors[newColorIndex])
         setColorIndex(newColorIndex);
-     //   console.log(newColorIndex);
     else
         setColorIndex(0);
 
