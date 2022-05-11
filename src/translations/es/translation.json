@@ -56,6 +56,13 @@
     "mad":"Enojado",
     "insulted":"Insultado",
     "feedback":"Comentario",
+    "opinion":"Valoramos su opinión.",
+    "rate":"Por favor califique su experiencia",
+    "feedbackPlaceholder":"Escriba aquí sus comentarios...",
+    "experience":"¿Cómo podemos mejorar su experiencia?",
+    "submit":"Entregar",
+    "anonymousFeedback":"Tus comentarios son anónimos. Si desea una respuesta, por favor deje un correo electrónico o un número de teléfono.",
     "blog":"Blog",
     "showfeelingsmessage": "Mis sentimientos"
+ 
 }
