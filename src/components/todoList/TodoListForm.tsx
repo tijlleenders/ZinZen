@@ -42,12 +42,7 @@ export function TodoForm() {
     }
     setFormInputData({
       inputGoal: '',
-<<<<<<< HEAD
-      inputTime: '',
-      id:0
-=======
       id:0,
->>>>>>> main
     });
     e.preventDefault();
   };
@@ -96,16 +91,10 @@ export function TodoForm() {
 
       <div className="inputs">
         {
-<<<<<<< HEAD
-                    tableData.map((data:any) => (
-                      <div className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}>
-                        <div className="input-time">{data.inputTime}</div>
-=======
                     tableData.map((data,index) => (
                       <div
                       style={darkModeStatus ? {backgroundColor: darkcolors[index%5]}:{backgroundColor: lightcolors[index%5]}}
                       className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}>
->>>>>>> main
                         <div className={darkModeStatus ? 'deletetodo-dark' : 'deletetodo-light'} onClick={removeItem} />
                         <div className="input-goal">{data.inputGoal}</div>
                       </div>
