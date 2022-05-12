@@ -6,7 +6,7 @@ enum Repeat{
 export interface GoalItem{
     id?: number;
     title: string;
-    duration: string;
+    duration: Number;
     repeat: Repeat | string;
     start: Date;
     finish: Date;
