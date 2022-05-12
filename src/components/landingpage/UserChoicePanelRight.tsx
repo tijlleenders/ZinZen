@@ -43,8 +43,8 @@ export function UserChoicePanelRight() {
     },
     {
       sno: 7,
-      title: t('portuguese/Brazil'),
-      langId: 'pt-br',
+      title: t('portuguese'),
+      langId: 'pt',
     },
   ];
   return (
