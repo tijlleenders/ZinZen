@@ -41,6 +41,11 @@ export function UserChoicePanelRight() {
       title: t('german'),
       langId: 'de',
     },
+    {
+      sno: 7,
+      title: t('portuguese/Brazil'),
+      langId: 'pt-br',
+    },
   ];
   return (
     <div className="right-panel">
