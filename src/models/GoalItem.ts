@@ -1,4 +1,4 @@
-enum Repeat{
+export enum Repeat{
     'Once',
     'Daily'
 }
@@ -10,6 +10,5 @@ export interface GoalItem{
     repeat: Repeat | string;
     start: Date;
     finish: Date;
-    at: Date;
     createdAt: Date;
 }
