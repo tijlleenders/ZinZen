@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
 import { darkModeState } from '@store';
 
-import '@components/feedbackpage/feedbackpage.scss';
+import './feedbackpage.scss';
 
 export function FeedbackPage() {
   const [userRating, setUserRating] = useState(5);
@@ -70,5 +70,5 @@ export function FeedbackPage() {
       </Container>
     </div>
   );
-  
+
 }
