@@ -3,8 +3,6 @@ import { Button } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 
-import AddIconLight from '@assets/images/AddIconLight.png'
-import AddIconDark from '@assets/images/AddIconDark.png';
 import { darkModeState } from '@store';
 
 import '@translations/i18n';
