@@ -1,4 +1,5 @@
-import { db } from '@models';
+import { db, GoalItem } from '@models';
+import { getJustDate } from '@src/utils';
 
 export const resetDatabase = () => db.transaction('rw', db.goalItems, async () => {
   await Promise.all(db.tables.map((table) => table.clear()));
@@ -10,17 +11,19 @@ export const addGoal = (goalDetails :{
   repeat: string,
   start: Date,
   finish: Date,
-  createdAt: Date}) => {
+  at: Date}) => {
+  const currentDate = getJustDate(new Date());
+  const goals : GoalItem = { ...goalDetails, createdAt: currentDate };
   db.transaction('rw', db.goalsCollection, async () => {
     await db
       .goalsCollection
-      .add(goalDetails);
+      .add(goals);
   }).catch((e) => {
     console.log(e.stack || e);
   });
 };
 
-export const removeFeeling = (goalId) => {
+export const removeGoal = (goalId) => {
   db.transaction('rw', db.goalsCollection, async () => {
     await db.goalsCollection.delete(goalId);
   }).catch((e) => {
@@ -30,7 +33,6 @@ export const removeFeeling = (goalId) => {
 
 export const getAllGoals = async () => {
   const allGoals = await db.goalsCollection.toArray();
-  console.log(allGoals);
   return allGoals;
 };
 
