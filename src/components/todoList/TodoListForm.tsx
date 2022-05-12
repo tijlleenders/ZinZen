@@ -15,7 +15,7 @@ export function TodoForm() {
     {
       inputGoal: '',
       inputTime: '',
-      id: '',
+      id: 0,
     },
   );
 
@@ -24,7 +24,7 @@ export function TodoForm() {
 
     setFormInputData({
       ...formInputData,
-      id:Date.now().toString(),
+      id:Date.now(),
       [e.target.name]: value,
     });
   };
@@ -37,7 +37,7 @@ export function TodoForm() {
     setFormInputData({
       inputGoal: '',
       inputTime: '',
-      id:''
+      id:0
     });
     e.preventDefault();
   };
