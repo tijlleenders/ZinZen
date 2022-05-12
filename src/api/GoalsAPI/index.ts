@@ -11,7 +11,7 @@ export const addGoal = (goalDetails :{
   repeat: Repeat | string,
   start: Date,
   finish: Date,
-  at: Date}) => {
+  createdAt: Date}) => {
   const currentDate = getJustDate(new Date());
   const goals : GoalItem = { ...goalDetails, createdAt: currentDate };
   db.transaction('rw', db.goalsCollection, async () => {
