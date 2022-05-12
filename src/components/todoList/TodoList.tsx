@@ -22,8 +22,8 @@ export function TodoList() {
         <Row>
           <h2 className={darkModeStatus ? 'mygoals-font-dark' : 'mygoals-font-light'}>{t('myGoalsMessage')}</h2>
            <div className={darkModeStatus ? 'goalsubtext-font-dark' : 'goalsubtext-font-light'}>
-               <p>{t("goalsubtext")}</p>
-               <p> {t("format")}</p>
+               <p>{t("goalsubtext")}
+               <br></br> {t("format")}</p>
             </div>
         </Row>
         <Row>
