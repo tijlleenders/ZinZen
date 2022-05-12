@@ -1,4 +1,4 @@
-import { db, GoalItem } from '@models';
+import { db, GoalItem, Repeat } from '@models';
 import { getJustDate } from '@src/utils';
 
 export const resetDatabase = () => db.transaction('rw', db.goalItems, async () => {
@@ -7,8 +7,8 @@ export const resetDatabase = () => db.transaction('rw', db.goalItems, async () =
 
 export const addGoal = (goalDetails :{
   title: string,
-  duration: string,
-  repeat: string,
+  duration: Number,
+  repeat: Repeat | string,
   start: Date,
   finish: Date,
   at: Date}) => {
