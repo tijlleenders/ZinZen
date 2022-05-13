@@ -1,7 +1,8 @@
 name: ESLint
 on:
   push:
-  pull_request: [opened, edited, ready_for_review]
+  pull_request:
+    types: [opened, edited, ready_for_review]
 
 jobs:
   eslint:
