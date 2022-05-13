@@ -1,5 +1,8 @@
 name: ESLint
-on: [push]
+on:
+  push:
+  pull_request: [opened, edited, ready_for_review]
+
 jobs:
   eslint:
     name: runner / eslint

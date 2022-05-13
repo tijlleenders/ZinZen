@@ -1,5 +1,8 @@
 name: Cypress
-on: [push]
+on:
+  push:
+  pull_request: [opened, edited, ready_for_review]
+
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
