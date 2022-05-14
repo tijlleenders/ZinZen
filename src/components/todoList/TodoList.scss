@@ -76,16 +76,26 @@ body {
     padding-left: 0.5em;
 }
 
+.suggestion{
+    display: flex;
+    margin-left: 5em;
+    margin-top: 00.5em;
+    font-size: small;
+    border-radius: 20px;
+    padding: 0.5;
+
+}
+
 .mygoalsbutton-dark {
     margin-left: 0.5em;
-    padding-top: 1em;
+    padding-top: 0.5em;
     display: inline-flex;
 
 }
 
 .mygoalsbutton-light {
     margin-left: 0.5em;
-    padding-top: 1em;
+    padding-top: 0.5em;
     display: inline-flex;
 }
 
@@ -114,9 +124,16 @@ body {
 
 }
 
+.changeColor{
+  margin-top: 1em;
+   margin-left: 00.5em;
+}
+
 .color-button{
+  border: none;
    padding-left: 00.5em;
-   border-radius: 50%;
+   padding-right: 0.5em; ;
+   border-radius: 20px;
 }
 
 .addtask-button{
