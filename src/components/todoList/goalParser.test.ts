@@ -1,17 +1,9 @@
-
-const goalObject="jkhsjkdfhjkdh daily"
-
-
-function getGoalObject(){
-
-}
+function getGoalObject(){}
 
 describe('getGoalObject function',()=>{
-      it('should return daily',()=>{
-       // const fun=goalObject.indexOf('daily')!==-1
-       // }
-        const expected="daily";
+      it('should return repetition suggestion : daily',()=>{
 
+        const expected="daily";
         expect(getGoalObject()).toBe(expected);
       })
     })
