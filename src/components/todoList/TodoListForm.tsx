@@ -18,7 +18,6 @@ export function TodoForm() {
   const { t } = useTranslation();
   const [selectedColorIndex, setColorIndex] = useState(0);
   const [tableData, setTableData] = useState([]);
-  const [suggestion, setSuggestion]=useState();
   const [formInputData, setFormInputData] = useState(
     {
       inputGoal: '',
@@ -35,7 +34,6 @@ export function TodoForm() {
       id:idNum,
       [e.target.name]: value,
     });
-     if(formInputData.inputGoal.indexOf("dail")!==-1){setSuggestion("daily")}else{setSuggestion()};
   };
 
   const submitForm=(e)=>{
@@ -47,7 +45,6 @@ export function TodoForm() {
       const newData = (data) => ([...data, formInputData]);
       setTableData(newData);
     }
-    setSuggestion()
     setFormInputData({
       inputGoal: '',
       id:0,
@@ -80,12 +77,6 @@ export function TodoForm() {
           value={formInputData.inputGoal}
           onChange={handleChange}
         />
-      </div>
-      <div>
-      <button
-       className='suggestion'>
-         {suggestion}
-      </button>
       </div>
       <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
         <Button
