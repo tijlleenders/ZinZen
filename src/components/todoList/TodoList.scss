@@ -25,6 +25,20 @@ body {
 }
 
 
+.goalsubtext-font-dark{
+    color:  #cecece;;
+    margin-left: 0.5em;
+    font-style: italic;
+    padding-bottom: 0em;
+}
+
+.goalsubtext-font-light{
+    color: #000;
+    margin-left: 0.5em;
+    font-style: italic;
+    padding-bottom: 0em;
+}
+
 .addtask-dark {
     background-color: #5f3636;
     color: #cecece;
@@ -62,53 +76,17 @@ body {
     padding-left: 0.5em;
 }
 
-
-.addtaskdark-time {
-    background-color: #5f3636;
-    color: #cecece;
-    display: flex;
-    border: none;
-    border-radius: 0.5em;
-    font-weight: bolder !important;
-    font-size: 1.0rem !important;
-    width: 50% !important;
-    margin-left: 0.5em;
-    margin-top: 1em !important;
-    text-align: left !important;
-    padding-top: 0.5em !important;
-    padding-bottom: 0.5em !important;
-    padding-left: 0.5em;
-}
-
-.addtasklight-time {
-    background-color: #e9b17a;
-    display: flex;
-    border: none;
-    border-radius: 0.5em;
-    font-weight: bolder !important;
-    font-size: 1.0rem !important;
-    width: 50% !important;
-    margin-left: 0.5em;
-    margin-top: 1em !important;
-    text-align: left !important;
-    padding-top: 0.5em !important;
-    padding-bottom: 0.5em !important;
-    padding-left: 0.5em;
-}
-
 .mygoalsbutton-dark {
-    right: 0.8em;
-    position: fixed;
-    display: flex;
-    bottom: 0.8em;
+    margin-left: 0.5em;
+    padding-top: 1em;
+    display: inline-flex;
 
 }
 
 .mygoalsbutton-light {
-    right: 0.8em;
-    position: fixed;
-    display: block;
-    bottom: 0.8em;
+    margin-left: 0.5em;
+    padding-top: 1em;
+    display: inline-flex;
 }
 
 
@@ -116,13 +94,6 @@ body {
     padding-left: 0.5em;
     width: 93%;
 }
-
-
-.input-time{
-    padding-left: 00.5em;
-    display: inline-block;
-}
-
 
 .deletetodo-dark{
     position: absolute;
@@ -140,5 +111,14 @@ body {
     border-radius: 50%;
     width: 1rem;
     height: 1rem;
-    
+
+}
+
+.color-button{
+   padding-left: 00.5em;
+   border-radius: 50%;
+}
+
+.addtask-button{
+    color: #5b37ed;
 }
