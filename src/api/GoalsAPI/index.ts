@@ -1,5 +1,6 @@
-import { db, GoalItem, Repeat } from '@models';
+import { db } from '@models';
 import { getJustDate } from '@src/utils';
+import { GoalItem, Repeat } from '@src/models/GoalItem';
 
 export const resetDatabase = () => db.transaction('rw', db.goalItems, async () => {
   await Promise.all(db.tables.map((table) => table.clear()));
