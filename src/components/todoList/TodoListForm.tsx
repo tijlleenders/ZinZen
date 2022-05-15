@@ -60,7 +60,7 @@ export function TodoForm() {
 }
 
   return (
-    <form className="todo-form" onSubmit={submitForm}>
+    <form className="todo-form" onSubmit={handleSubmit}>
       <div>
         <input
           style={darkModeStatus ? {backgroundColor : darkcolors[selectedColorIndex]} : {backgroundColor: lightcolors[selectedColorIndex]}}
