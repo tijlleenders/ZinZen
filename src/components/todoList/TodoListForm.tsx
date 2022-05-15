@@ -3,8 +3,6 @@ import { Button } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 
-import AddIconLight from '@assets/images/AddIconLight.png'
-import AddIconDark from '@assets/images/AddIconDark.png';
 import { darkModeState } from '@store';
 
 import '@translations/i18n';
@@ -20,29 +18,29 @@ export function TodoForm() {
   const [formInputData, setFormInputData] = useState(
     {
       inputGoal: '',
-      id:0,
+      id:'',
     },
   );
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     const { value } = e.target;
-    const idNum = Date.now();
+    const idNum = crypto.randomUUID();
 
     setFormInputData({
       ...formInputData,
-      id:idNum,
+      id: idNum,
       [e.target.name]: value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     if (formInputData.inputGoal) {
-      const newData = (data) => ([...data, formInputData]);
+      const newData = (data:any) => ([...data, formInputData]);
       setTableData(newData);
     }
     setFormInputData({
       inputGoal: '',
-      id:0,
+      id:'',
     });
     e.preventDefault();
   };
@@ -64,7 +62,7 @@ export function TodoForm() {
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
         <input
-          style={darkModeStatus ? {backgroundColor: darkcolors[selectedColorIndex]}:{backgroundColor: lightcolors[selectedColorIndex]}}
+          style={darkModeStatus ? {backgroundColor : darkcolors[selectedColorIndex]} : {backgroundColor: lightcolors[selectedColorIndex]}}
           className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}
           type="text"
           name="inputGoal"
@@ -82,7 +80,7 @@ export function TodoForm() {
         </Button>
       <div className='color-button'>
         <Button
-         style={darkModeStatus ? {backgroundColor: darkcolors[selectedColorIndex]}:{backgroundColor: lightcolors[selectedColorIndex]}}
+         style={darkModeStatus ? {backgroundColor : darkcolors[selectedColorIndex]} : {backgroundColor : lightcolors[selectedColorIndex]}}
          onClick={changeColor} >
          Change color
         </Button>
@@ -93,15 +91,15 @@ export function TodoForm() {
         {
                     tableData.map((data,index) => (
                       <div
-                      style={darkModeStatus ? {backgroundColor: darkcolors[index%5]}:{backgroundColor: lightcolors[index%5]}}
+                      style={darkModeStatus ? {backgroundColor : darkcolors[index%5]} : {backgroundColor : lightcolors[index%5]}}
                       className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}>
                         <div className={darkModeStatus ? 'deletetodo-dark' : 'deletetodo-light'} onClick={removeItem} />
                         <div className="input-goal">{data.inputGoal}</div>
                       </div>
                     ))
                 }
-
       </div>
     </form>
   );
+
 }
