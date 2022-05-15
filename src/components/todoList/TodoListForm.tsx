@@ -7,6 +7,7 @@ import { darkModeState } from '@store';
 
 import '@translations/i18n';
 import './TodoList.scss';
+import { off } from 'process';
 
 export function TodoForm() {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -59,7 +60,7 @@ export function TodoForm() {
 }
 
   return (
-    <form className="todo-form" onSubmit={handleSubmit}>
+    <form className="todo-form" onSubmit={submitForm}>
       <div>
         <input
           style={darkModeStatus ? {backgroundColor : darkcolors[selectedColorIndex]} : {backgroundColor: lightcolors[selectedColorIndex]}}
@@ -78,12 +79,13 @@ export function TodoForm() {
         className='addtask-button'>
          Add Task
         </Button>
-      <div className='color-button'>
-        <Button
-         style={darkModeStatus ? {backgroundColor : darkcolors[selectedColorIndex]} : {backgroundColor : lightcolors[selectedColorIndex]}}
+      <div className='changeColor'>
+        <button
+        className='color-button'
+         style={darkModeStatus ? {backgroundColor: darkcolors[selectedColorIndex]}:{backgroundColor: lightcolors[selectedColorIndex]}}
          onClick={changeColor} >
          Change color
-        </Button>
+        </button>
       </div>
       </div>
 
@@ -91,7 +93,8 @@ export function TodoForm() {
         {
                     tableData.map((data,index) => (
                       <div
-                      style={darkModeStatus ? {backgroundColor : darkcolors[index%5]} : {backgroundColor : lightcolors[index%5]}}
+                      key={index}
+                      style={darkModeStatus ? {backgroundColor: darkcolors[index%5]}:{backgroundColor: lightcolors[index%5]}}
                       className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}>
                         <div className={darkModeStatus ? 'deletetodo-dark' : 'deletetodo-light'} onClick={removeItem} />
                         <div className="input-goal">{data.inputGoal}</div>
