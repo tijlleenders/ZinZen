@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
 import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
-import { UserChoiceZinZenMenu } from './UserChoiceZinZenMenu';
+import { UserChoiceZinZenMenu } from '@components/zinzen-menu/UserChoiceZinZenMenu';
 
 export function ZinZenMenu() {
   return (
@@ -21,4 +21,5 @@ export function ZinZenMenu() {
       </Container>
     </div>
   );
+  
 }

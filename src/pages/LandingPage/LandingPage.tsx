@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Row } from 'react-bootstrap';
 
-import { Header } from './Header';
-import { Mainbody } from './Main-body';
+import { Header } from '@components/landingpage/Header';
+import { Mainbody } from '@components/landingpage/Main-body';
 
 export function LandingPage() {
   return (
@@ -19,4 +19,5 @@ export function LandingPage() {
       </div>
     </div>
   );
+  
 }

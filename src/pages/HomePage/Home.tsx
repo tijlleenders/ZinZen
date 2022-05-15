@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Row } from 'react-bootstrap';
 
-import { HeaderDashboard } from './HeaderDashboard';
-import { Dashboard } from './Dashboard';
+import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
+import { Dashboard } from '@components/dashboard/Dashboard';
 
 export function Home() {
   return (
@@ -17,4 +17,5 @@ export function Home() {
       </Container>
     </div>
   );
+  
 }

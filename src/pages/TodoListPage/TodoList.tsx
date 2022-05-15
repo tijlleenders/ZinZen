@@ -5,10 +5,10 @@ import { useRecoilValue } from 'recoil';
 
 import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
 import { darkModeState } from '@store';
-import { TodoForm } from './TodoListForm';
+import { TodoForm } from '@components/todoList/TodoListForm';
 
 import '@translations/i18n';
-import './TodoList.scss';
+import '@components/todoList/TodoList.scss';
 
 export function TodoList() {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -32,4 +32,5 @@ export function TodoList() {
       </Container>
     </div>
   );
+  
 }
