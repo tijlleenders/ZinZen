@@ -18,13 +18,13 @@ export function TodoForm() {
   const [formInputData, setFormInputData] = useState(
     {
       inputGoal: '',
-      id:0,
+      id:'',
     },
   );
 
   const handleChange = (e:any) => {
     const { value } = e.target;
-    const idNum = Date.now();
+    const idNum = crypto.randomUUID();
 
     setFormInputData({
       ...formInputData,
@@ -40,7 +40,7 @@ export function TodoForm() {
     }
     setFormInputData({
       inputGoal: '',
-      id:0,
+      id:'',
     });
     e.preventDefault();
   };
@@ -98,8 +98,8 @@ export function TodoForm() {
                       </div>
                     ))
                 }
-
       </div>
     </form>
   );
+
 }
