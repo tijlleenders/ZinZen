@@ -15,6 +15,7 @@ import { NotFoundPage } from '@pages/NotFoundPage/NotFoundPage';
 import { ZinZenMenu } from '@pages/ZinZenMenuPage/ZinZenMenu';
 import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
 import { ShowFeelings } from '@components/myfeelingspage/ShowFeelings';
+import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
 
 import './customize.scss';
 import './App.css';
@@ -45,6 +46,10 @@ export function App() {
           <Route
             path="/Home/AddFeelings"
             element={<AddFeelings />}
+          />
+          <Route
+            path="/Home/Explore"
+            element={<ExplorePage />}
           />
           <Route
             path="/Home/ZinZen"

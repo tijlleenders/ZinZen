@@ -131,7 +131,7 @@ export function UserChoiceDashboard() {
                               : 'dashboard-choice-light no-add'
                         }
             onClick={() => {
-              navigate('');
+              navigate('/Home/Explore');
             }}
           >
             {truncateContent(t('explore'))}
