@@ -28,8 +28,8 @@ export function ShowFeelings() {
         }
         return dates;
       }, {});
-      Object.keys(feelingsByDates).map((date) => (
-        console.log(feelingsByDates[date])));
+      // Object.keys(feelingsByDates).map((date) => (
+      //   console.log(feelingsByDates[date])));
       setFeelingsList(feelingsByDates);
     };
     getData();

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { addFeeling } from '@api/FeelingsAPI';
 import { darkModeState } from '@store';
+import { feelingsEmojis } from '@consts/FeelingsList';
 
 import '@translations/i18n';
 import './AddFeelingsPage.scss';
@@ -22,7 +23,7 @@ export function FeelingTemplate({ feelingCategory, feelingsList } :
         <div className="feelings-menu-desktop">
           <Button variant={darkModeStatus ? 'brown' : 'peach'} size="lg" className="feelings-title">
             {t(feelingCategory)}
-            &#128515;
+            {feelingsEmojis[feelingCategory]}
           </Button>
           <br />
           {feelingsList.map((feelingName) => (
@@ -42,7 +43,7 @@ export function FeelingTemplate({ feelingCategory, feelingsList } :
           <Navbar collapseOnSelect expand="lg">
             <Navbar.Toggle className={darkModeStatus ? 'feelings-title-dark' : 'feelings-title-light'}>
               {t(feelingCategory)}
-              &#128515;
+              {feelingsEmojis[feelingCategory]}
             </Navbar.Toggle>
             <Navbar.Collapse>
               <Nav className="navbar-custom">
