@@ -43,7 +43,7 @@ export function FeelingTemplate({ feelingCategory, feelingsList } :
           <Navbar collapseOnSelect expand="lg">
             <Navbar.Toggle className={darkModeStatus ? 'feelings-title-dark' : 'feelings-title-light'}>
               {t(feelingCategory)}
-              &#128515;
+              {feelingsEmojis[feelingCategory]}
             </Navbar.Toggle>
             <Navbar.Collapse>
               <Nav className="navbar-custom">
