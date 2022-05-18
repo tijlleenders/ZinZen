@@ -67,6 +67,11 @@
     "submit":"Soumettre",
     "anonymousFeedback":"Vos commentaires sont anonymes. Si vous souhaitez une réponse, veuillez laisser un e-mail ou un numéro de téléphone.",
     "blog":"Blog",
-    "showfeelingsmessage": "mes sentiments"
- 
+    "showfeelingsmessage": "mes sentiments",
+    "healthGoals":"Objectifs de santé et de forme physique",
+    "relationshipGoals":"Objectifs relationnels",
+    "spiritualGoals":"Objectifs de l'esprit et de l'esprit",
+    "careerGoals":"Objectifs de carrière",
+    "environmentGoals":"Objectifs Nature et Environnement",
+    "personalGrowthGoals":"Développement personnel et objectifs d'apprentissage"
 }
