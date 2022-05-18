@@ -95,6 +95,18 @@ body {
     width: 93%;
 }
 
+.suggestion{
+    display: block;
+    font-size: small;
+    border-radius: 2em;
+    margin-top: 0.5em;
+    margin-left: 5em;
+}
+
+.blank{
+    display: none;
+}
+
 .deletetodo-dark{
     position: absolute;
     right:2.0em;
