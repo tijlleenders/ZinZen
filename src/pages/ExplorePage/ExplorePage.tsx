@@ -18,12 +18,12 @@ import './explorepage.scss';
 export function ExplorePage() {
   const darkModeStatus = useRecoilValue(darkModeState);
   const goals:any = [
-    { goalName: 'Health and Fitness Goals', goalImage: Health },
-    { goalName: 'Relationship Goals', goalImage: Relationship },
-    { goalName: 'Mind and Spirit Goals', goalImage: MindAndSpirit },
-    { goalName: 'Career Goals', goalImage: Career },
-    { goalName: 'Nature and Environment Goals', goalImage: Nature },
-    { goalName: 'Personal Growth and Learning Goals', goalImage: PersonalGrowth }];
+    { goalName: 'healthGoals', goalImage: Health },
+    { goalName: 'relationshipGoals', goalImage: Relationship },
+    { goalName: 'spiritualGoals', goalImage: MindAndSpirit },
+    { goalName: 'careerGoals', goalImage: Career },
+    { goalName: 'environmentGoals', goalImage: Nature },
+    { goalName: 'personalGrowthGoals', goalImage: PersonalGrowth }];
   const { t } = useTranslation();
 
   return (
