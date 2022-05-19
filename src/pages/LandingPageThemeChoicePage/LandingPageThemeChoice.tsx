@@ -2,13 +2,13 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
-import { ThemesChoice } from '@components/themechoicepage/ThemesChoice';
-import { HeaderThemeChoice } from '@components/themechoicepage/HeaderThemeChoice';
+import { ThemeChoice } from '@components/ThemeChoice/ThemeChoice';
+import { HeaderThemeChoice } from '@components/ThemeChoice/HeaderThemeChoice';
 
 import '@translations/i18n';
-import '@components/themechoicepage/themechoice.scss';
+import '@components/ThemeChoice/ThemeChoice.scss';
 
-export function LandingPageThemeChoice() {
+export const LandingPageThemeChoice = () => {
   const { t } = useTranslation();
   return (
     <div>
@@ -22,12 +22,11 @@ export function LandingPageThemeChoice() {
             <h3 className="theme-choice-panel-font">
               {t('themechoice')}
             </h3>
-            <ThemesChoice />
+            <ThemeChoice />
           </Col>
           <Col sm={1} />
         </Row>
       </Container>
     </div>
   );
-
-}
+};
