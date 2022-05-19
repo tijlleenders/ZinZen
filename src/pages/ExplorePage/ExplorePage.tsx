@@ -9,13 +9,12 @@ import MindAndSpirit from '@assets/images/mind-spirit-goals.jpg';
 import Nature from '@assets/images/nature-environment-goals.jpg';
 import PersonalGrowth from '@assets/images/personalGrowth-goals.jpg';
 import Relationship from '@assets/images/relationship-goals.jpg';
-import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
 import { darkModeState } from '@src/store';
 
 import '@translations/i18n';
 import './explorepage.scss';
 
-export function ExplorePage() {
+export const ExplorePage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const goals:any = [
     { goalName: 'healthGoals', goalImage: Health },
@@ -29,7 +28,6 @@ export function ExplorePage() {
   return (
     <div id={`explore-container-${darkModeStatus ? 'dark' : 'light'}`}>
       <Container fluid>
-        <HeaderDashboard />
         <div id="goals-container">
           {goals.map((goal:any) => (
             <div className="goal-row">
@@ -44,4 +42,4 @@ export function ExplorePage() {
       </Container>
     </div>
   );
-}
+};

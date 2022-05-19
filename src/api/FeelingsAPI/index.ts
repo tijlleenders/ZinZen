@@ -40,7 +40,6 @@ export const addFeeling = async (feelingName : string, feelingCategory : string)
   const currentDateFeelings = await getFeelingsOnDate(currentDate);
   const checkFeelings = (feeling) => feeling.content === feelingName;
   if (currentDateFeelings.some(checkFeelings)) { return; }
-  console.log(getFeelingsOnDate(currentDate));
   db.transaction('rw', db.feelingsCollection, async () => {
     await db
       .feelingsCollection
