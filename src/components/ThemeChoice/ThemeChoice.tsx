@@ -9,7 +9,7 @@ import ThemeDark from '@assets/images/DashboardThemeDark.svg';
 import ThemeLight from '@assets/images/DashboardThemeLight.svg';
 import '@components/themechoicepage/themechoice.scss';
 
-export function ThemesChoice() {
+export const ThemeChoice = () => {
   const [, setIsThemeChosen] = useRecoilState(themeSelectionState);
   const [, setDarkModeStatus] = useRecoilState(darkModeState);
   const navigate = useNavigate();
@@ -48,4 +48,4 @@ export function ThemesChoice() {
       </Button>
     </div>
   );
-}
+};

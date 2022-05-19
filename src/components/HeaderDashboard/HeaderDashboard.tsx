@@ -11,7 +11,7 @@ import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
 import Logo from '@assets/images/zinzenlogo.png';
 import '@translations/i18n';
 
-export function HeaderDashboard() {
+export const HeaderDashboard = () => {
   const navigate = useNavigate();
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const toggleTheme = () => {
@@ -68,4 +68,4 @@ export function HeaderDashboard() {
       </Navbar>
     </div>
   );
-}
+};

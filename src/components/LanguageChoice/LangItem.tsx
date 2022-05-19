@@ -2,21 +2,24 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { useRecoilState } from 'recoil';
 import i18n from 'i18next';
+import { useNavigate } from 'react-router-dom';
 
-import { ILanguage } from '@src/interfaces/ILanguage';
+import { ILanguage } from '@src/Interfaces/ILanguage';
 import { languageSelectionState } from '@store';
 
-import './languagechoice.scss';
+import './LanguageChoice.scss';
 
-export function LangItem({ lang } : {lang:ILanguage}) {
+export const LangItem = ({ lang }: { lang: ILanguage }) => {
+  const navigate = useNavigate();
   const [, setIsLanguageChosen] = useRecoilState(
     languageSelectionState,
   );
   const remainder : Number = Number(lang.sno) % 4;
   const handleClick = (langId : string) => {
-    setIsLanguageChosen(true);
+    setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
     localStorage.setItem('language', JSON.stringify(langId));
+    navigate('/');
   };
 
   return (
@@ -68,4 +71,4 @@ export function LangItem({ lang } : {lang:ILanguage}) {
       )}
     </div>
   );
-}
+};

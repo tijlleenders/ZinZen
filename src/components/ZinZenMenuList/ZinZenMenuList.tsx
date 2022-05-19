@@ -5,22 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { darkModeState } from '@store';
+import { truncateContent } from '@utils';
 
 import '@translations/i18n';
-import './zinzenmenu.scss';
+import './ZinZenMenuList.scss';
 
-export function UserChoiceZinZenMenu() {
+export const ZinZenMenuList = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  function truncateContent(content : string, maxLength = 20) {
-    const { length } = content;
-    if (length >= maxLength) {
-      return `${content.substring(0, maxLength)}...`;
-    }
-    return content;
-  }
 
   return (
     <div>
@@ -30,29 +23,18 @@ export function UserChoiceZinZenMenu() {
             <Button
               variant={darkModeStatus ? 'brown' : 'peach'}
               size="lg"
-              className={
-                                darkModeStatus
-                                  ? 'zinzen-menu-choice-dark1'
-                                  : 'zinzen-menu-choice-light1'
-                            }
+              className={darkModeStatus ? 'zinzen-menu-choice-dark1' : 'zinzen-menu-choice-light1'}
             >
               {truncateContent(t('discover'))}
-
             </Button>
           </a>
-
         </Row>
         <Row>
-
           <a href="https://www.gofundme.com/f/deliver-purpose-with-an-app-for-keeping-promises/donate">
             <Button
               variant={darkModeStatus ? 'dark-pink' : 'pink'}
               size="lg"
-              className={
-                                darkModeStatus
-                                  ? 'zinzen-menu-choice-dark'
-                                  : 'zinzen-menu-choice-light'
-                            }
+              className={darkModeStatus ? 'zinzen-menu-choice-dark' : 'zinzen-menu-choice-light'}
             >
               {truncateContent(t('donate'))}
             </Button>
@@ -63,11 +45,7 @@ export function UserChoiceZinZenMenu() {
             <Button
               variant={darkModeStatus ? 'dark-grey' : 'grey-base'}
               size="lg"
-              className={
-                  darkModeStatus
-                    ? 'zinzen-menu-choice-dark'
-                    : 'zinzen-menu-choice-light'
-              }
+              className={darkModeStatus ? 'zinzen-menu-choice-dark' : 'zinzen-menu-choice-light'}
               onClick={(e) => {
                 e.preventDefault();
                 navigate('/Home/ZinZen/Feedback');
@@ -82,11 +60,7 @@ export function UserChoiceZinZenMenu() {
             <Button
               variant={darkModeStatus ? 'dark-blue' : 'pale-blue'}
               size="lg"
-              className={
-                            darkModeStatus
-                              ? 'zinzen-menu-choice-dark'
-                              : 'zinzen-menu-choice-light'
-                        }
+              className={darkModeStatus ? 'zinzen-menu-choice-dark' : 'zinzen-menu-choice-light'}
             >
               {truncateContent(t('blog'))}
             </Button>
@@ -95,4 +69,4 @@ export function UserChoiceZinZenMenu() {
       </Container>
     </div>
   );
-}
+};

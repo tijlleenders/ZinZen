@@ -6,9 +6,9 @@ import '@translations/i18n';
 import ZinZenText from '@assets/images/LogoTextLight.svg';
 import Logo from '@assets/images/zinzenlogo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './landingpage.scss';
+import './LandingComponents.scss';
 
-export function Header() {
+export const MobileHeader = () => {
   const navigate = useNavigate();
   return (
     <Navbar collapseOnSelect expand="lg">
@@ -28,4 +28,4 @@ export function Header() {
       />
     </Navbar>
   );
-}
+};

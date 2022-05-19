@@ -8,62 +8,39 @@ import { useNavigate } from 'react-router-dom';
 import AddIconLight from '@assets/images/AddIconLight.png';
 import AddIconDark from '@assets/images/AddIconDark.png';
 import { darkModeState } from '@store';
+import { truncateContent } from '@utils';
 
 import '@translations/i18n';
-import './dashboard.scss';
+import './DashboardUserChoicePanel.scss';
+import '@pages/Dashboard/Dashboard.scss';
 
-export function UserChoiceDashboard() {
+export const DashboardUserChoicePanel = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
 
-  function truncateContent(content: string, maxLength = 20) {
-    const { length } = content;
-    if (length >= maxLength) {
-      return `${content.substring(0, maxLength)}...`;
-    }
-    return content;
-  }
-
   return (
     <div>
       <Container fluid>
-
         <Row>
           <Button
             variant={darkModeStatus ? 'brown' : 'peach'}
             size="lg"
-            className={
-                            darkModeStatus
-                              ? 'dashboard-choice-dark1'
-                              : 'dashboard-choice-light1'
-                        }
+            className={darkModeStatus ? 'dashboard-choice-dark1' : 'dashboard-choice-light1'}
           >
             {truncateContent(t('mygoals'))}
           </Button>
           <Button
             variant={darkModeStatus ? 'brown' : 'peach'}
-            className={
-                            darkModeStatus
-                              ? 'dashboard-add-btn-dark1'
-                              : 'dashboard-add-btn-light1'
-                        }
+            className={darkModeStatus ? 'dashboard-add-btn-dark1' : 'dashboard-add-btn-light1'}
             onClick={() => {
               navigate('/Home/MyGoals');
             }}
           >
             {darkModeStatus ? (
-              <img
-                src={AddIconDark}
-                alt="Add Icon"
-                className="add-icon"
-              />
+              <img src={AddIconDark} alt="Add Icon" className="add-icon" />
             ) : (
-              <img
-                src={AddIconLight}
-                alt="Add Icon"
-                className="add-icon"
-              />
+              <img src={AddIconLight} alt="Add Icon" className="add-icon" />
             )}
           </Button>
         </Row>
@@ -71,11 +48,7 @@ export function UserChoiceDashboard() {
           <Button
             variant={darkModeStatus ? 'dark-pink' : 'pink'}
             size="lg"
-            className={
-                            darkModeStatus
-                              ? 'dashboard-choice-dark'
-                              : 'dashboard-choice-light'
-                        }
+            className={darkModeStatus ? 'dashboard-choice-dark' : 'dashboard-choice-light'}
             onClick={() => {
               navigate('/Home/MyFeelings');
             }}
@@ -84,27 +57,15 @@ export function UserChoiceDashboard() {
           </Button>
           <Button
             variant={darkModeStatus ? 'dark-pink' : 'pink'}
-            className={
-                            darkModeStatus
-                              ? 'dashboard-add-btn-dark'
-                              : 'dashboard-add-btn-light'
-                        }
+            className={darkModeStatus ? 'dashboard-add-btn-dark' : 'dashboard-add-btn-light'}
             onClick={() => {
               navigate('/Home/AddFeelings');
             }}
           >
             {darkModeStatus ? (
-              <img
-                src={AddIconDark}
-                alt="Add Icon"
-                className="add-icon"
-              />
+              <img src={AddIconDark} alt="Add Icon" className="add-icon" />
             ) : (
-              <img
-                src={AddIconLight}
-                alt="Add Icon"
-                className="add-icon"
-              />
+              <img src={AddIconLight} alt="Add Icon" className="add-icon" />
             )}
           </Button>
         </Row>
@@ -112,11 +73,7 @@ export function UserChoiceDashboard() {
           <Button
             variant={darkModeStatus ? 'dark-grey' : 'grey-base'}
             size="lg"
-            className={
-                            darkModeStatus
-                              ? 'dashboard-choice-dark no-add'
-                              : 'dashboard-choice-light no-add'
-                                }
+            className={darkModeStatus ? 'dashboard-choice-dark no-add' : 'dashboard-choice-light no-add'}
           >
             {truncateContent(t('mytime'))}
           </Button>
@@ -125,11 +82,7 @@ export function UserChoiceDashboard() {
           <Button
             variant={darkModeStatus ? 'dark-blue' : 'pale-blue'}
             size="lg"
-            className={
-                            darkModeStatus
-                              ? 'dashboard-choice-dark no-add'
-                              : 'dashboard-choice-light no-add'
-                        }
+            className={darkModeStatus ? 'dashboard-choice-dark no-add' : 'dashboard-choice-light no-add'}
             onClick={() => {
               navigate('/Home/Explore');
             }}
@@ -141,11 +94,7 @@ export function UserChoiceDashboard() {
           <Button
             variant={darkModeStatus ? 'dark-purple' : 'purple'}
             size="lg"
-            className={
-                            darkModeStatus
-                              ? 'dashboard-choice-dark no-add'
-                              : 'dashboard-choice-light no-add'
-                        }
+            className={darkModeStatus ? 'dashboard-choice-dark no-add' : 'dashboard-choice-light no-add'}
             onClick={() => {
               navigate('/Home/ZinZen');
             }}
@@ -156,4 +105,4 @@ export function UserChoiceDashboard() {
       </Container>
     </div>
   );
-}
+};

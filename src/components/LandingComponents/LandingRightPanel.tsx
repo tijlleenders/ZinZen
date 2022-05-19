@@ -1,13 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ILanguage } from '@src/interfaces';
-import { LanguagesList } from '@components/languagechoices/LanguagesList';
+import { ILanguage } from '@src/Interfaces';
+import { LanguagesList } from '@components/LanguageChoice/LanguagesList';
 
 import '@translations/i18n';
-import './landingpage.scss';
+import './LandingComponents.scss';
 
-export function UserChoicePanelRight() {
+export const LandingRightPanel = () => {
   const { t } = useTranslation();
 
   const languages : ILanguage[] = [
@@ -50,4 +50,4 @@ export function UserChoicePanelRight() {
       <LanguagesList languages={languages} />
     </div>
   );
-}
+};
