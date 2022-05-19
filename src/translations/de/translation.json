@@ -57,5 +57,11 @@
     "insulted":"Beleidigt",
     "feedback":"Feedback",
     "blog":"Blog",
-    "showfeelingsmessage": "Meine Gefühle"
+    "showfeelingsmessage": "Meine Gefühle",
+    "healthGoals":"Gesundheits- und Fitnessziele",
+    "relationshipGoals":"Beziehungsziele",
+    "spiritualGoals":"Geistige und geistige Ziele",
+    "careerGoals":"Karriereziele",
+    "environmentGoals":"Natur- und Umweltziele",
+    "personalGrowthGoals":"Persönliches Wachstum und Lernziele"
 }
