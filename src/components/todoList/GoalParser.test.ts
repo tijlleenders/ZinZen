@@ -3,7 +3,10 @@ const goalObject = ({
   lang: 'en',
   color: '#fff',
 });
-   const newData = (data) =>[...data, goalObject];
+const newData = (data) =>[...data, goalObject];
+const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
+const label = /1[0-9]|2[0-4]|[0-9]/;
+const matchGoal = goalObject.title.match(label);
 
 function getGoalObject() {
   if (goalObject.title.indexOf('daily') !== -1) {
@@ -17,7 +20,17 @@ function getGoalObject() {
   });
 }
 
-function timeSuuggestion() {}
+function timeSuuggestion() { if (goalObject.title.search(tracker) !== -1) {
+  return ({
+    newData,
+    suggestion: { duration: `${matchGoal} hours` },
+  });
+}
+
+return ({
+  newData,
+});
+}
 
 describe('getGoalObject function', () => {
   it('should return repetition suggestion : daily', () => {
@@ -41,10 +54,6 @@ describe('getGoalObject function', () => {
 describe('getTime function', () => {
   it('should return duration suggestion: num', () => {
     function time() {
-      const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
-      const label = /1[0-9]|2[0-4]|[0-9]/;
-      const matchGoal = goalObject.title.match(label);
-
       if (goalObject.title.search(tracker) !== -1) {
         return ({
           newData,
