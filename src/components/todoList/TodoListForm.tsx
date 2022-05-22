@@ -54,6 +54,15 @@ export function TodoForm() {
     }
     return '';
   }
+  function duration() {
+    const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
+    const label = /1[0-9]|2[0-4]|[0-9]/;
+    const matchGoal = formInputData.inputGoal.match(label);
+    if (formInputData.inputGoal.search(tracker) !== -1) {
+      return `${matchGoal} hours`;
+    }
+    return '';
+  }
   const changeColor = () => {
     const newColorIndex = selectedColorIndex + 1;
     if (darkcolors[newColorIndex]) { setColorIndex(newColorIndex); } else { setColorIndex(0); }
@@ -74,11 +83,18 @@ export function TodoForm() {
           onChange={handleChange}
         />
       </div>
+      <div className="duration">
+      <button
+        className={duration() !== '' ? 'duration' : 'blank'}
+      >
+        {duration()}
+      </button>
       <button
         className={suggestion() === 'daily' ? 'suggestion' : 'blank'}
       >
         {suggestion()}
       </button>
+      </div>
       <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
         <Button
           variant={darkModeStatus ? 'pink' : 'peach'}
