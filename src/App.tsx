@@ -2,10 +2,6 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
-import { darkModeState } from './store/DarkModeState';
-import { themeSelectionState } from './store/ThemeSelectionState';
-import { languageSelectionState } from './store/LanguageSelectionState';
-
 import { LandingPage } from '@pages/LandingPage/LandingPage';
 import { LandingPageThemeChoice } from '@pages/ThemeChoicePage/LandingPageThemeChoice';
 import { AddFeelings } from '@pages/AddFeelingsPage/AddFeelings';
@@ -16,6 +12,10 @@ import { ZinZenMenu } from '@pages/ZinZenMenuPage/ZinZenMenu';
 import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
 import { ShowFeelings } from '@components/myfeelingspage/ShowFeelings';
 import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
+
+import { languageSelectionState } from './store/LanguageSelectionState';
+import { themeSelectionState } from './store/ThemeSelectionState';
+import { darkModeState } from './store/DarkModeState';
 
 import './customize.scss';
 import './App.css';
