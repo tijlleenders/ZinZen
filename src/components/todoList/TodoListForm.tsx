@@ -53,11 +53,10 @@ export function TodoForm() {
   const changeColor = () => {
     const newColorIndex = selectedColorIndex + 1;
     if (darkcolors[newColorIndex])
-        setColorIndex(newColorIndex);
+        {setColorIndex(newColorIndex);}
     else
-        setColorIndex(0);
-
-}
+    {setColorIndex(0);}
+};
 
   return (
     <form className="todo-form" onSubmit={submitForm}>
