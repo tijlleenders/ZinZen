@@ -10,7 +10,7 @@ import './GoalsComponents.scss';
 
 export const GoalsForm = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const darkcolors = ['#443027', ' #9C4663', '#646464', '#2B517B', ' #612854'];
+  const darkrooms = ['#443027', ' #9C4663', '#646464', '#2B517B', ' #612854'];
   const lightcolors = [' #EDC7B7', '#AC3B61', ' #BAB2BC', ' #3B6899', ' #8E3379'];
   const { t } = useTranslation();
   const [selectedColorIndex, setColorIndex] = useState(0);
@@ -63,7 +63,7 @@ export const GoalsForm = () => {
   }
   const changeColor = () => {
     const newColorIndex = selectedColorIndex + 1;
-    if (darkcolors[newColorIndex]) setColorIndex(newColorIndex);
+    if (darkrooms[newColorIndex]) setColorIndex(newColorIndex);
     else setColorIndex(0);
   };
 
@@ -73,7 +73,7 @@ export const GoalsForm = () => {
         <input
           style={
             darkModeStatus
-              ? { backgroundColor: darkcolors[selectedColorIndex] }
+              ? { backgroundColor: darkrooms[selectedColorIndex] }
               : { backgroundColor: lightcolors[selectedColorIndex] }
           }
           className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}
@@ -85,16 +85,30 @@ export const GoalsForm = () => {
         />
       </div>
       <div className="duration">
-      <button
-        className={duration() !== '' ? 'duration' : 'blank'}
-      >
-        {duration()}
-      </button>
-      <button
-        className={suggestion() === 'daily' ? 'suggestion' : 'blank'}
-      >
-        {suggestion()}
-      </button>
+        <button
+          style={
+        darkModeStatus
+          ? { backgroundColor: darkrooms[selectedColorIndex] }
+          : { backgroundColor: lightcolors[selectedColorIndex] }
+      }
+          className={duration() !== ''
+            ? 'duration'
+            : 'blank'}
+        >
+          {duration()}
+        </button>
+        <button
+          style={
+           darkModeStatus
+             ? { backgroundColor: darkrooms[selectedColorIndex] }
+             : { backgroundColor: lightcolors[selectedColorIndex] }
+                }
+          className={suggestion() === 'daily'
+            ? 'suggestion'
+            : 'blank'}
+        >
+          {suggestion()}
+        </button>
       </div>
       <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
         <Button variant={darkModeStatus ? 'pink' : 'peach'} onClick={handleSubmit} className="addtask-button">
@@ -106,7 +120,7 @@ export const GoalsForm = () => {
             className="color-button"
             style={
               darkModeStatus
-                ? { backgroundColor: darkcolors[selectedColorIndex] }
+                ? { backgroundColor: darkrooms[selectedColorIndex] }
                 : { backgroundColor: lightcolors[selectedColorIndex] }
             }
             onClick={changeColor}
@@ -122,7 +136,7 @@ export const GoalsForm = () => {
             key={index}
             style={
               darkModeStatus
-                ? { backgroundColor: darkcolors[index % 5] }
+                ? { backgroundColor: darkrooms[index % 5] }
                 : { backgroundColor: lightcolors[index % 5] }
             }
             className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}
