@@ -20,7 +20,7 @@ function getGoalObject() {
   });
 }
 
-function timeSuuggestion() { if (goalObject.title.search(tracker) !== -1) {
+function timeSuggestion() { if (goalObject.title.search(tracker) !== -1) {
   return ({
     newData,
     suggestion: { duration: `${matchGoal} hours` },
@@ -66,6 +66,6 @@ describe('getTime function', () => {
       });
     }
     const a = time();
-    expect(timeSuuggestion()).toEqual(a);
+    expect(timeSuggestion()).toEqual(a);
   });
 });
