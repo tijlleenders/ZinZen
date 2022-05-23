@@ -46,7 +46,6 @@ export const GoalsForm = () => {
   const removeItem = () => {
     setTableData([]);
   };
-<<<<<<< HEAD:src/components/todoList/TodoListForm.tsx
   function suggestion() {
     if (formInputData.inputGoal.indexOf('daily') !== -1) {
       return 'daily';
@@ -62,9 +61,6 @@ export const GoalsForm = () => {
     }
     return '';
   }
-=======
-
->>>>>>> a65de9e832de5bbcfd7f09c49d326515a99cb251:src/components/GoalsComponents/GoalsForm.tsx
   const changeColor = () => {
     const newColorIndex = selectedColorIndex + 1;
     if (darkcolors[newColorIndex]) setColorIndex(newColorIndex);
@@ -88,7 +84,6 @@ export const GoalsForm = () => {
           onChange={handleChange}
         />
       </div>
-<<<<<<< HEAD:src/components/todoList/TodoListForm.tsx
       <div className="duration">
       <button
         className={duration() !== '' ? 'duration' : 'blank'}
@@ -101,8 +96,6 @@ export const GoalsForm = () => {
         {suggestion()}
       </button>
       </div>
-=======
->>>>>>> a65de9e832de5bbcfd7f09c49d326515a99cb251:src/components/GoalsComponents/GoalsForm.tsx
       <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
         <Button variant={darkModeStatus ? 'pink' : 'peach'} onClick={handleSubmit} className="addtask-button">
           Add Task

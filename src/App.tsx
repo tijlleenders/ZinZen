@@ -3,11 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { Container, Row } from 'react-bootstrap';
 
-<<<<<<< HEAD
-=======
 import { darkModeState, themeSelectionState, languageSelectionState } from '@store';
 
->>>>>>> a65de9e832de5bbcfd7f09c49d326515a99cb251
 import { LandingPage } from '@pages/LandingPage/LandingPage';
 import { LandingPageThemeChoice } from '@pages/LandingPageThemeChoicePage/LandingPageThemeChoice';
 import { AddFeelingsPage } from '@pages/AddFeelingsPage/AddFeelingsPage';
@@ -19,13 +16,7 @@ import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
 import { ShowFeelingsPage } from '@pages/ShowFeelingsPage/ShowFeelingsPage';
 import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
 
-<<<<<<< HEAD
-import { languageSelectionState } from './store/LanguageSelectionState';
-import { themeSelectionState } from './store/ThemeSelectionState';
-import { darkModeState } from './store/DarkModeState';
-=======
 import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
->>>>>>> a65de9e832de5bbcfd7f09c49d326515a99cb251
 
 import './customize.scss';
 import './App.scss';
