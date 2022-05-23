@@ -98,6 +98,8 @@ body {
 .suggestion{
     display: flex;
     font-size: small;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
     border-radius: 2em;
     margin-top: 0.5em;
     margin-left: 1.5em;
@@ -107,7 +109,9 @@ body {
 .duration{
     display: flex;
     font-size: small;
-    border-radius: 2em;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    border-radius: 1.5em;
     margin-top: 0.5em;
     margin-left: 2em;
     border: none;
