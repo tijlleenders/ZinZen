@@ -9,27 +9,25 @@ import MindAndSpirit from '@assets/images/mind-spirit-goals.jpg';
 import Nature from '@assets/images/nature-environment-goals.jpg';
 import PersonalGrowth from '@assets/images/personalGrowth-goals.jpg';
 import Relationship from '@assets/images/relationship-goals.jpg';
-import { HeaderDashboard } from '@components/dashboard/HeaderDashboard';
 import { darkModeState } from '@src/store';
 
 import '@translations/i18n';
 import './explorepage.scss';
 
-export function ExplorePage() {
+export const ExplorePage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const goals:any = [
-    { goalName: 'Health and Fitness Goals', goalImage: Health },
-    { goalName: 'Relationship Goals', goalImage: Relationship },
-    { goalName: 'Mind and Spirit Goals', goalImage: MindAndSpirit },
-    { goalName: 'Career Goals', goalImage: Career },
-    { goalName: 'Nature and Environment Goals', goalImage: Nature },
-    { goalName: 'Personal Growth and Learning Goals', goalImage: PersonalGrowth }];
+    { goalName: 'healthGoals', goalImage: Health },
+    { goalName: 'relationshipGoals', goalImage: Relationship },
+    { goalName: 'spiritualGoals', goalImage: MindAndSpirit },
+    { goalName: 'careerGoals', goalImage: Career },
+    { goalName: 'environmentGoals', goalImage: Nature },
+    { goalName: 'personalGrowthGoals', goalImage: PersonalGrowth }];
   const { t } = useTranslation();
 
   return (
     <div id={`explore-container-${darkModeStatus ? 'dark' : 'light'}`}>
       <Container fluid>
-        <HeaderDashboard />
         <div id="goals-container">
           {goals.map((goal:any) => (
             <div className="goal-row">
@@ -44,4 +42,4 @@ export function ExplorePage() {
       </Container>
     </div>
   );
-}
+};

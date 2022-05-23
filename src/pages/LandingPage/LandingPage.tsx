@@ -1,23 +1,19 @@
 import React from 'react';
 import { Container, Row } from 'react-bootstrap';
 
-import { Header } from '@components/landingpage/Header';
-import { Mainbody } from '@components/landingpage/Main-body';
+import { LandingContainer } from '@components/LandingComponents/LandingContainer';
+import { MobileHeader } from '@components/LandingComponents/MobileHeader';
+import '@components/LandingComponents/LandingComponents.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './LandingPage.scss';
 
-export function LandingPage() {
-  return (
-    <div>
-      <div>
-        <Container fluid>
-          <Row>
-            <Header />
-          </Row>
-          <Row>
-            <Mainbody />
-          </Row>
-        </Container>
-      </div>
-    </div>
-  );
-  
-}
+export const LandingPage = () => (
+  <Container fluid className="landing-page__container">
+    <Row>
+      <MobileHeader />
+    </Row>
+    <Row>
+      <LandingContainer />
+    </Row>
+  </Container>
+);

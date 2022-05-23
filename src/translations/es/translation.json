@@ -67,6 +67,11 @@
     "submit":"Entregar",
     "anonymousFeedback":"Tus comentarios son anónimos. Si desea una respuesta, por favor deje un correo electrónico o un número de teléfono.",
     "blog":"Blog",
-    "showfeelingsmessage": "Mis sentimientos"
- 
+    "showfeelingsmessage": "Mis sentimientos",
+    "healthGoals":"Objetivos de salud y estado físico",
+    "relationshipGoals":"Metas de la relación",
+    "spiritualGoals":"Metas de mente y espíritu",
+    "careerGoals":"Objetivos profesionales",
+    "environmentGoals":"Objetivos de Naturaleza y Medio Ambiente",
+    "personalGrowthGoals":"Crecimiento personal y metas de aprendizaje"
 }
