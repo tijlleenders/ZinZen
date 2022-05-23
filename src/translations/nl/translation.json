@@ -67,6 +67,11 @@
     "submit":"Indienen",
     "anonymousFeedback":"Uw feedback is anoniem. Als u een antwoord wilt, laat dan een e-mail of een telefoonnummer achter.",
     "blog":"Blog",
-    "showfeelingsmessage": "mijn gevoelens"
- 
+    "showfeelingsmessage": "mijn gevoelens",
+    "healthGoals":"Gezondheids- en fitnessdoelen",
+    "relationshipGoals":"Relatie doelen",
+    "spiritualGoals":"Geest en geest doelen",
+    "careerGoals":"Carrièredoelen",
+    "environmentGoals":"Natuur- en Milieu Doelen",
+    "personalGrowthGoals":"Persoonlijke groei en leerdoelen"
 }

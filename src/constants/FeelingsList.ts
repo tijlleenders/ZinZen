@@ -1,5 +1,14 @@
 export const feelingsCategories = ['happy', 'excited', 'gratitude', 'sad', 'afraid', 'angry'];
 
+export const feelingsEmojis = {
+  happy: '😊',
+  excited: '😃',
+  gratitude: '😇',
+  sad: '😔',
+  afraid: '😨',
+  angry: '😠',
+};
+
 export const feelingsList = {
   happy: ['happy', 'loved', 'relieved', 'content', 'peaceful', 'joyful'],
   excited: ['excited', 'amused', 'Top of the world', 'proud', 'compassionate', 'cheerful'],

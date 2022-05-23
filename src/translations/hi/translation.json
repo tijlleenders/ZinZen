@@ -67,6 +67,11 @@
     "submit":"प्रस्तुत",
     "anonymousFeedback":"आपकी प्रतिक्रिया गुमनाम है। यदि आप उत्तर चाहते हैं, तो कृपया एक ईमेल या एक फ़ोन नंबर छोड़ दें।",
     "blog":"ब्लॉग",
-    "showfeelingsmessage": "मेरी भावनाएं"
- 
+    "showfeelingsmessage": "मेरी भावनाएं",
+    "healthGoals":"आरोग्य और स्वस्थता लक्ष्य",
+    "relationshipGoals":"संबंध लक्ष्य",
+    "spiritualGoals":"मन और आत्मा लक्ष्य",
+    "careerGoals":"कैरियर के लक्ष्य",
+    "environmentGoals":"प्रकृति और पर्यावरण लक्ष्य",
+    "personalGrowthGoals":"व्यक्तिगत विकास और सीखने के लक्ष्य"
 }

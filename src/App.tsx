@@ -1,51 +1,62 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
+import { Container, Row } from 'react-bootstrap';
 
-import { darkModeState } from './store/DarkModeState';
-import { themeSelectionState } from './store/ThemeSelectionState';
-import { languageSelectionState } from './store/LanguageSelectionState';
+import { darkModeState, themeSelectionState, languageSelectionState } from '@store';
 
 import { LandingPage } from '@pages/LandingPage/LandingPage';
-import { LandingPageThemeChoice } from '@pages/ThemeChoicePage/LandingPageThemeChoice';
-import { AddFeelings } from '@pages/AddFeelingsPage/AddFeelings';
-import { TodoList } from '@pages/TodoListPage/TodoList';
-import { Home } from '@pages/HomePage/Home';
+import { LandingPageThemeChoice } from '@pages/LandingPageThemeChoicePage/LandingPageThemeChoice';
+import { AddFeelingsPage } from '@pages/AddFeelingsPage/AddFeelingsPage';
+import { GoalsPage } from '@pages/GoalsPage/GoalsPage';
+import { HomePage } from '@pages/HomePage/HomePage';
 import { NotFoundPage } from '@pages/NotFoundPage/NotFoundPage';
-import { ZinZenMenu } from '@pages/ZinZenMenuPage/ZinZenMenu';
+import { ZinZenMenuPage } from '@pages/ZinZenMenuPage/ZinZenMenuPage';
 import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
-import { ShowFeelings } from '@components/myfeelingspage/ShowFeelings';
+import { ShowFeelingsPage } from '@pages/ShowFeelingsPage/ShowFeelingsPage';
 import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
 
+import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
+
 import './customize.scss';
-import './App.css';
+import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fontsource/montserrat';
 
-export function App() {
-  const darkModeStatus = useRecoilValue(darkModeState);
-  const isThemeChosen = useRecoilValue(themeSelectionState);
-  const isLanguageChosen = useRecoilValue(languageSelectionState);
+export const App = () => {
+  const darkModeEnabled = useRecoilValue(darkModeState);
+  const theme = useRecoilValue(themeSelectionState);
+  const isThemeChosen = theme !== 'No theme chosen.';
+  const language = useRecoilValue(languageSelectionState);
+  const isLanguageChosen = language !== 'No language chosen.';
   return (
-    <div className={darkModeStatus ? 'App-dark' : 'App-light'}>
+    <div className={darkModeEnabled ? 'App-dark' : 'App-light'}>
+      {/* @ts-ignore */}
       <BrowserRouter>
+        {(isLanguageChosen && isThemeChosen) && (
+        <Container fluid>
+          <Row>
+            <HeaderDashboard />
+          </Row>
+        </Container>
+        )}
         <Routes>
-          {isLanguageChosen === 'No language chosen.' ? (
+          {!isLanguageChosen ? (
             <Route path="/" element={<LandingPage />} />
-          ) : isThemeChosen === 'No theme chosen.' ? (
+          ) : !isThemeChosen ? (
             <Route
               path="/"
               element={<LandingPageThemeChoice />}
             />
           ) : (
             <>
-              <Route path="/Home" element={<Home />} />
-              <Route path="/" element={<Home />} />
+              <Route path="/Home" element={<HomePage />} />
+              <Route path="/" element={<HomePage />} />
             </>
           )}
           <Route
             path="/Home/AddFeelings"
-            element={<AddFeelings />}
+            element={<AddFeelingsPage />}
           />
           <Route
             path="/Home/Explore"
@@ -53,26 +64,26 @@ export function App() {
           />
           <Route
             path="/Home/ZinZen"
-            element={<ZinZenMenu />}
+            element={<ZinZenMenuPage />}
           />
           <Route
             path="/Home/ZinZen/Feedback"
             element={<FeedbackPage />}
           />
           <Route
-            path="*"
-            element={<NotFoundPage />}
-          />
-          <Route
             path="/Home/MyGoals"
-            element={<TodoList />}
+            element={<GoalsPage />}
           />
           <Route
             path="/Home/MyFeelings"
-            element={<ShowFeelings />}
+            element={<ShowFeelingsPage />}
+          />
+          <Route
+            path="*"
+            element={<NotFoundPage />}
           />
         </Routes>
       </BrowserRouter>
     </div>
   );
-}
+};

@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { darkModeState } from '@store';
 
-import '@components/404page/errorPage.scss';
+import './NotFoundPage.scss';
 
-export function NotFoundPage() {
+export const NotFoundPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const navigate = useNavigate();
 
@@ -42,5 +42,4 @@ export function NotFoundPage() {
       </Container>
     </div>
   );
-  
-}
+};
