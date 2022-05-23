@@ -96,12 +96,27 @@ body {
 }
 
 .suggestion{
-    display: block;
+    display: flex;
     font-size: small;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
     border-radius: 2em;
     margin-top: 0.5em;
-    margin-left: 5em;
+    margin-left: 1.5em;
+    border: none;
 }
+
+.duration{
+    display: flex;
+    font-size: small;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    border-radius: 1.5em;
+    margin-top: 0.5em;
+    margin-left: 2em;
+    border: none;
+}
+
 
 .blank{
     display: none;
