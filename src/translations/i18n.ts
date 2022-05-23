@@ -51,4 +51,6 @@ i18n.init({
   },
 });
 
-export { i18n };
+const languagesAvailable = ['de', 'en', 'es', 'fr', 'hi', 'nl'];
+
+export { i18n, languagesAvailable };

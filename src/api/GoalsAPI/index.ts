@@ -2,7 +2,7 @@ import { db } from '@models';
 import { getJustDate } from '@src/utils';
 import { GoalItem, Repeat } from '@src/models/GoalItem';
 
-export const resetDatabase = () => db.transaction('rw', db.goalItems, async () => {
+export const resetDatabase = () => db.transaction('rw', db.goalsCollection, async () => {
   await Promise.all(db.tables.map((table) => table.clear()));
 });
 

@@ -67,6 +67,11 @@
     "submit":"submit",
     "anonymousFeedback":"Your feedback is anonymous. If you want a reply, please leave an email or a phone number.",
     "blog":"Blog",
-    "showfeelingsmessage": "My Feelings"
- 
+    "showfeelingsmessage":"My Feelings",
+    "healthGoals":"Health and Fitness Goals",
+    "relationshipGoals":"Relationship Goals",
+    "spiritualGoals":"Mind and Spirit Goals",
+    "careerGoals":"Career Goals",
+    "environmentGoals":"Nature and Environment Goals",
+    "personalGrowthGoals":"Personal Growth and Learning Goals"
 }

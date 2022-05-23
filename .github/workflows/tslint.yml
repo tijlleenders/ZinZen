@@ -1,9 +1,13 @@
 name: TSLint
-on: [push]
+on:
+  push:
+  pull_request:
+    types: [opened, edited, ready_for_review]
 
 jobs:
   tsc:
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name
     name: Check typescript
     steps:
       - uses: actions/checkout@v1
