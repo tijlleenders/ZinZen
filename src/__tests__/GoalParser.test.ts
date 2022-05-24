@@ -66,8 +66,6 @@ describe('getTime function', () => {
         newData,
       });
     }
-    const a = time();
-
-    expect(timeSuggestion()).toEqual(a);
+    expect(timeSuggestion()).toEqual(time());
   });
 });
