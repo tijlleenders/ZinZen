@@ -24,7 +24,7 @@ export const HeaderDashboard = () => {
     }
   };
   return (
-    <div className="positioning">
+    <div className={darkModeStatus ? 'positioning-dark' : 'positioning-light'}>
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"

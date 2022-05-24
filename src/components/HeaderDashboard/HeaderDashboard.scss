@@ -1,6 +1,13 @@
-.positioning{
+.positioning-light{
     height: 5em;
-    background-color: #cecece;
+    background-color:  #F0E6E1;
+    position: fixed;
+    z-index: 100;
+}
+
+.positioning-dark{
+    height: 5em;
+    background-color: #121212;
     position: fixed;
     z-index: 100;
 }
