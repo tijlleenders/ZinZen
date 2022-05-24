@@ -48,8 +48,7 @@ describe('getGoalObject function', () => {
         newData,
       });
     }
-    const e = fun();
-    expect(getGoalObject()).toEqual(e);
+    expect(getGoalObject()).toEqual(fun());
   });
 });
 
@@ -68,7 +67,6 @@ describe('getTime function', () => {
         newData,
       });
     }
-    const a = time();
-    expect(timeSuggestion()).toEqual(a);
+    expect(timeSuggestion()).toEqual(time());
   });
 });
