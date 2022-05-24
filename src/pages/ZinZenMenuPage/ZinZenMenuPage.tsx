@@ -5,7 +5,7 @@ import { ZinZenMenuList } from '@components/ZinZenMenuList/ZinZenMenuList';
 
 export const ZinZenMenuPage = () => (
   <Container fluid>
-    <Row>
+    <Row className="position">
       <Col sm={2} />
       <Col>
         <ZinZenMenuList />
