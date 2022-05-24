@@ -48,8 +48,7 @@ describe('getGoalObject function', () => {
         newData,
       });
     }
-    const e = fun();
-    expect(getGoalObject()).toEqual(e);
+    expect(getGoalObject()).toEqual(fun());
   });
 });
 
