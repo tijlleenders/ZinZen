@@ -24,6 +24,10 @@ body {
     font-weight: bolder;
 }
 
+.position{
+    padding-top: 5em;
+    position: inherit;
+}
 
 .goalsubtext-font-dark{
     color:  #cecece;;
@@ -123,8 +127,8 @@ body {
 }
 
 .deletetodo-dark{
-    position: absolute;
-    right:2.0em;
+    position: inherit;
+    margin-left: 96%;
     background-color: #ff00e6;
     border-radius: 50%;
     width: 1rem;
@@ -132,8 +136,8 @@ body {
 }
 
 .deletetodo-light{
-    position: absolute;
-    right:2.0em;
+    position: inherit;
+    margin-left: 96%;
     background-color: #5b37ed;
     border-radius: 50%;
     width: 1rem;

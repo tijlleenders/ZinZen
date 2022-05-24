@@ -20,7 +20,7 @@ export const DashboardUserChoicePanel = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
-    <div>
+    <div className="slide">
       <Container fluid>
         <Row>
           <Button
