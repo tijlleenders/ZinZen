@@ -27,7 +27,7 @@ export const ExplorePage = () => {
 
   return (
     <div id={`explore-container-${darkModeStatus ? 'dark' : 'light'}`}>
-      <Container fluid className="slide">
+      <Container fluid className="slide ">
         <div id="goals-container">
           {goals.map((goal:any) => (
             <div className="goal-row">
