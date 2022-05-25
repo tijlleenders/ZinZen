@@ -14,7 +14,7 @@ export const GoalsPage = () => {
   const { t } = useTranslation();
   return (
     <Container fluid>
-      <Row className="position">
+      <Row className="slide">
         <h2 className={darkModeStatus ? 'mygoals-font-dark' : 'mygoals-font-light'}>{t('myGoalsMessage')}</h2>
         <div className={darkModeStatus ? 'goalsubtext-font-dark' : 'goalsubtext-font-light'}>
           <p>
