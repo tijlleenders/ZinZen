@@ -6,10 +6,8 @@ import { LangItem } from '@components/LanguageChoice/LangItem';
 export const LanguagesList = (props : ILanguageListProps) => {
   const { languages } = props;
   return (
-    <div className="position">
-      <div className="containerLang">
-        {languages.map((lang: ILanguage) => <LangItem key={lang.sno} lang={lang} />)}
-      </div>
+    <div className="containerLang">
+      {languages.map((lang: ILanguage) => <LangItem key={lang.sno} lang={lang} />)}
     </div>
   );
 };
