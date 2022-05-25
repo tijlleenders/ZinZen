@@ -31,7 +31,7 @@ export const ShowFeelingsPage = () => {
     getData();
   }, []);
   return (
-    <Container fluid>
+    <Container fluid className="slide">
       <Row>
         <Col>
           <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>{t('showfeelingsmessage')}</h3>
