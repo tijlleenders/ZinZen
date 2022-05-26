@@ -10,6 +10,7 @@ import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
 import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
 import Logo from '@assets/images/zinzenlogo.png';
 import '@translations/i18n';
+import './HeaderDashboard.scss';
 
 export const HeaderDashboard = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const HeaderDashboard = () => {
     }
   };
   return (
-    <div>
+    <div className={darkModeStatus ? 'positioning-dark' : 'positioning-light'}>
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"

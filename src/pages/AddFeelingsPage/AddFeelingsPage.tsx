@@ -14,7 +14,7 @@ export const AddFeelingsPage = () => {
   const { t } = useTranslation();
 
   return (
-    <Container fluid>
+    <Container fluid className="slide">
       <Row>
         <Col>
           <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>
