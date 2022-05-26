@@ -55,10 +55,11 @@ export const GoalsForm = () => {
   function duration() {
     const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
     const label = /\d+/g;
-    const parseGoal = parseInt(formInputData.inputGoal.match(label));
+    const checkGoal= parseInt(formInputData.inputGoal.match(tracker));
+    const parseGoal = parseInt(formInputData.inputGoal.match(tracker)) <= 24;
     const matchGoal = parseInt(formInputData.inputGoal.match(label)) <= 24;
-    if (formInputData.inputGoal.search(tracker) !== -1 && matchGoal) {
-      return `${parseGoal} hours`;
+    if (formInputData.inputGoal.search(tracker) !== -1 && matchGoal && parseGoal) {
+      return `${checkGoal} hours`;
     }
     return '';
   }
