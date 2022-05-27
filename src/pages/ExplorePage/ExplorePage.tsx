@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +11,7 @@ import PersonalGrowth from '@assets/images/personalGrowth-goals.jpg';
 import Relationship from '@assets/images/relationship-goals.jpg';
 import { darkModeState } from '@src/store';
 
+import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 import '@translations/i18n';
 import './explorepage.scss';
 
@@ -27,6 +28,11 @@ export const ExplorePage = () => {
 
   return (
     <div id={`explore-container-${darkModeStatus ? 'dark' : 'light'}`}>
+      <Container fluid>
+        <Row>
+          <HeaderDashboard />
+        </Row>
+      </Container>
       <Container fluid className="slide ">
         <div id="goals-container">
           {goals.map((goal:any) => (

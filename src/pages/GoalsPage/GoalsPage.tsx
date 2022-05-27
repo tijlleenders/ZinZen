@@ -5,29 +5,38 @@ import { useRecoilValue } from 'recoil';
 
 import { darkModeState } from '@store';
 import { GoalsForm } from '@components/GoalsComponents/GoalsForm';
+import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 
 import '@translations/i18n';
 import '@components/GoalsComponents/GoalsComponents.scss';
+import React from 'react';
 
 export const GoalsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
   return (
-    <Container fluid>
-      <Row className="position">
-        <h2 className={darkModeStatus ? 'mygoals-font-dark' : 'mygoals-font-light'}>{t('myGoalsMessage')}</h2>
-        <div className={darkModeStatus ? 'goalsubtext-font-dark' : 'goalsubtext-font-light'}>
-          <p>
-            {t('goalsubtext')}
-            <br />
-            {' '}
-            {t('format')}
-          </p>
-        </div>
-      </Row>
-      <Row>
-        <GoalsForm />
-      </Row>
-    </Container>
+    <div>
+      <Container fluid>
+        <Row>
+          <HeaderDashboard />
+        </Row>
+      </Container>
+      <Container fluid>
+        <Row className="position">
+          <h2 className={darkModeStatus ? 'mygoals-font-dark' : 'mygoals-font-light'}>{t('myGoalsMessage')}</h2>
+          <div className={darkModeStatus ? 'goalsubtext-font-dark' : 'goalsubtext-font-light'}>
+            <p>
+              {t('goalsubtext')}
+              <br />
+              {' '}
+              {t('format')}
+            </p>
+          </div>
+        </Row>
+        <Row>
+          <GoalsForm />
+        </Row>
+      </Container>
+    </div>
   );
 };

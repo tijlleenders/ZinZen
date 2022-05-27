@@ -16,7 +16,7 @@ import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
 import { ShowFeelingsPage } from '@pages/ShowFeelingsPage/ShowFeelingsPage';
 import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
 
-import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
+import { MainHeaderDashboard } from '@components/HeaderDashboard/MainHeaderDashboard';
 
 import './customize.scss';
 import './App.scss';
@@ -36,7 +36,7 @@ export const App = () => {
         {(isLanguageChosen && isThemeChosen) && (
         <Container fluid>
           <Row>
-            <HeaderDashboard />
+            <MainHeaderDashboard />
           </Row>
         </Container>
         )}

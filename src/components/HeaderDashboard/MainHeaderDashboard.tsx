@@ -12,7 +12,7 @@ import Logo from '@assets/images/zinzenlogo.png';
 import '@translations/i18n';
 import './HeaderDashboard.scss';
 
-export const HeaderDashboard = () => {
+export const MainHeaderDashboard = () => {
   const navigate = useNavigate();
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const toggleTheme = () => {
@@ -56,6 +56,16 @@ export const HeaderDashboard = () => {
             }}
           />
         )}
+
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="navbar-custom" />
+        </Navbar.Collapse>
+        <DarkModeToggle
+          onChange={toggleTheme}
+          checked={darkModeStatus}
+          size={60}
+          className="dark-mode-toggle"
+        />
       </Navbar>
     </div>
   );

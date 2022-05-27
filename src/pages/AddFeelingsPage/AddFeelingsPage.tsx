@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 
+import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 import { darkModeState } from '@store';
 import { AddFeelingsChoices } from './AddFeelingsChoices';
 
@@ -14,6 +15,12 @@ export const AddFeelingsPage = () => {
   const { t } = useTranslation();
 
   return (
+  <div>
+    <Container fluid>
+        <Row>
+          <HeaderDashboard />
+        </Row>
+      </Container>
     <Container fluid className="slide">
       <Row>
         <Col>
@@ -25,5 +32,6 @@ export const AddFeelingsPage = () => {
         <Col sm={1} />
       </Row>
     </Container>
+  </div>
   );
 };
