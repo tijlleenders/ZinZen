@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 
 import { getAllFeelings } from '@api/FeelingsAPI';
+import { IFeelingItem } from '@models';
 import { darkModeState } from '@store';
 import { ShowFeelingTemplate } from './ShowFeelingTemplate';
 
@@ -18,10 +19,13 @@ export const ShowFeelingsPage = () => {
   useEffect(() => {
     const getData = async () => {
       const allFeelings = await getAllFeelings();
-      const feelingsByDates = allFeelings.reduce((dates, feeling) => {
+      const feelingsByDates = allFeelings.reduce((dates: Date[], feeling: IFeelingItem) => {
+        // @ts-ignore
         if (dates[feeling.date]) {
+          // @ts-ignore
           dates[feeling.date].push(feeling);
         } else {
+          // @ts-ignore
           dates[feeling.date] = [feeling];
         }
         return dates;
@@ -48,7 +52,6 @@ export const ShowFeelingsPage = () => {
               </h3>
               <ShowFeelingTemplate
                 key={feelingsList[date]}
-                feelingCategory="Test"
                 feelingsListObject={feelingsList[date]}
               />
             </div>

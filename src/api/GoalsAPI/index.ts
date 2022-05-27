@@ -24,7 +24,7 @@ export const addGoal = (goalDetails :{
   });
 };
 
-export const removeGoal = (goalId) => {
+export const removeGoal = (goalId: number) => {
   db.transaction('rw', db.goalsCollection, async () => {
     await db.goalsCollection.delete(goalId);
   }).catch((e) => {
@@ -37,7 +37,7 @@ export const getAllGoals = async () => {
   return allGoals;
 };
 
-export const getGoalsOnDate = async (date) => {
+export const getGoalsOnDate = async (date: Date) => {
   db.transaction('rw', db.goalsCollection, async () => {
     const goalsList = await db.goalsCollection.where('start').equals(date);
     return goalsList;
