@@ -8,7 +8,6 @@ import { darkModeState } from '@store';
 
 import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
 import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
-import Logo from '@assets/images/zinzenlogo.png';
 import '@translations/i18n';
 import './HeaderDashboard.scss';
 

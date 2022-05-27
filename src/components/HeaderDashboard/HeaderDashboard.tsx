@@ -1,7 +1,6 @@
 import React from 'react';
-import { Nav, Navbar } from 'react-bootstrap';
-import { useRecoilState } from 'recoil';
-import DarkModeToggle from 'react-dark-mode-toggle';
+import { Navbar } from 'react-bootstrap';
+import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
 import { darkModeState } from '@store';
@@ -14,15 +13,7 @@ import './HeaderDashboard.scss';
 
 export const HeaderDashboard = () => {
   const navigate = useNavigate();
-  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-  const toggleTheme = () => {
-    setDarkModeStatus(!darkModeStatus);
-    if (darkModeStatus) {
-      localStorage.setItem('theme', 'light');
-    } else {
-      localStorage.setItem('theme', 'dark');
-    }
-  };
+  const darkModeStatus = useRecoilValue(darkModeState);
   return (
     <div className={darkModeStatus ? 'positioning-dark' : 'positioning-light'}>
       <Navbar collapseOnSelect expand="lg">
