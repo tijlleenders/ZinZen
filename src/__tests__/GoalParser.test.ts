@@ -6,8 +6,8 @@ const goalObject = ({
 
 const newData = (data) =>[...data, goalObject];
 const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
-const label = /1[0-9]|2[0-4]|[0-9]/;
-const matchGoal = goalObject.title.match(label);
+const checkGoal = parseInt(goalObject.title.match(tracker));
+const parseGoal = parseInt(goalObject.title.match(tracker)) <= 24;
 
 function getGoalObject() {
   if (goalObject.title.indexOf('daily') !== -1) {
@@ -22,10 +22,10 @@ function getGoalObject() {
 }
 
 
-function timeSuggestion() { if (goalObject.title.search(tracker) !== -1) {
+function timeSuggestion() { if (goalObject.title.search(tracker) !== -1 && parseGoal) {
   return ({
     newData,
-    suggestion: { duration: `${matchGoal} hours` },
+    suggestion: { duration: `${checkGoal} hours` },
   });
 }
 
@@ -55,11 +55,10 @@ describe('getGoalObject function', () => {
 describe('getTime function', () => {
   it('should return duration suggestion: num', () => {
     function time() {
-
-      if (goalObject.title.search(tracker) !== -1) {
+      if (goalObject.title.search(tracker) !== -1 && parseGoal) {
         return ({
           newData,
-          suggestion: { duration: `${matchGoal} hours` },
+          suggestion: { duration: `${checkGoal} hours` },
         });
       }
 
