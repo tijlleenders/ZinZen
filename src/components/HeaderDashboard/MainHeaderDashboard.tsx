@@ -26,15 +26,6 @@ export const MainHeaderDashboard = () => {
   return (
     <div className={darkModeStatus ? 'positioning-dark' : 'positioning-light'}>
       <Navbar collapseOnSelect expand="lg">
-        <img
-          role="presentation"
-          src={Logo}
-          alt="ZinZen Logo"
-          className="zinzen-logo-nav-dashboard"
-          onClick={() => {
-            navigate('/Home');
-          }}
-        />
         {darkModeStatus ? (
           <img
             role="presentation"
