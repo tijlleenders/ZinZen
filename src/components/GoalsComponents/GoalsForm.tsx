@@ -10,7 +10,7 @@ import './GoalsComponents.scss';
 
 export const GoalsForm = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const darkrooms = ['#443027', ' #9C4663', '#646464', '#2B517B', ' #612854'];
+  const darkrooms = ['#443027', '#9C4663', '#646464', '#2B517B', ' #612854'];
   const lightcolors = [' #EDC7B7', '#AC3B61', ' #BAB2BC', ' #3B6899', ' #8E3379'];
   const { t } = useTranslation();
   const [selectedColorIndex, setColorIndex] = useState(0);
