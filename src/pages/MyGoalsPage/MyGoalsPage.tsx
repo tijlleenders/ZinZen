@@ -19,28 +19,28 @@ export const MyGoalsPage = () => {
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   let debounceTimeout : ReturnType<typeof setTimeout>;
 
-  // async function dummyCall() {
-  //   const dummyData = ['shopping karni hai',
-  //     'sabji lekr kaun ayega',
-  //     'padosi ke ghar se aam leke ane hai',
-  //     'shopping karni hai',
-  //     'sabji lekr kaun ayega',
-  //     'padosi ke ghar se aam leke ane hai',
-  //     'sabji lekr kaun ayega',
-  //     'padosi ke ghar se aam leke ane hai',
-  //     'shopping karni hai',
-  //     'sabji lekr kaun ayega',
-  //     'padosi ke ghar se aam leke ane hai',
-  //   ];
-  //   dummyData.map((goal:string) => (addGoal({
-  //     title: goal,
-  //     duration: 2,
-  //     sublist: ['abc', 'xyz'],
-  //     repeat: 'Daily',
-  //     start: null,
-  //     finish: null,
-  //   })));
-  // }
+  async function populateDummyGoals() {
+    const dummyData = ['shopping karni hai',
+      'sabji lekr kaun ayega',
+      'padosi ke ghar se aam leke ane hai',
+      'shopping karni hai',
+      'sabji lekr kaun ayega',
+      'padosi ke ghar se aam leke ane hai',
+      'sabji lekr kaun ayega',
+      'padosi ke ghar se aam leke ane hai',
+      'shopping karni hai',
+      'sabji lekr kaun ayega',
+      'padosi ke ghar se aam leke ane hai',
+    ];
+    dummyData.map((goal:string) => (addGoal({
+      title: goal,
+      duration: 2,
+      sublist: ['abc', 'xyz'],
+      repeat: 'Daily',
+      start: null,
+      finish: null,
+    })));
+  }
   async function updateUserGoals(goal:GoalItem, index:number) {
     if (allowEdit[0] === index && allowEdit[1] !== goal.title) {
       await updateGoal(goal.id, { title: allowEdit[1] });
