@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { Container } from 'react-bootstrap';
 import {
   PlusLg, Trash3Fill, PencilSquare, CheckLg, Search,
 } from 'react-bootstrap-icons';
 import { useRecoilValue } from 'recoil';
 
 import addIcon from '@assets/images/GoalsAddIcon.svg';
-import { darkModeState } from '@src/store';
-import { Button, Container } from 'react-bootstrap';
-
-import './MyGoalsPage.scss';
 import {
   addGoal, getAllGoals, removeGoal, updateGoal,
 } from '@src/api/GoalsAPI';
 import { GoalItem } from '@src/models/GoalItem';
 
+import './MyGoalsPage.scss';
+
 export const MyGoalsPage = () => {
   const [allowEdit, setAllowEdit] = useState([-1, '']);
   const [showOptionsOfGoalIndex, setShowOptionsOfGoalIndex] = useState(-1);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
-  const darkModeStatus = useRecoilValue(darkModeState);
-
   let debounceTimeout : ReturnType<typeof setTimeout>;
 
   // async function dummyCall() {
@@ -44,7 +41,6 @@ export const MyGoalsPage = () => {
   //     finish: null,
   //   })));
   // }
-
   async function updateUserGoals(goal:GoalItem, index:number) {
     if (allowEdit[0] === index && allowEdit[1] !== goal.title) {
       await updateGoal(goal.id, { title: allowEdit[1] });
@@ -121,7 +117,6 @@ export const MyGoalsPage = () => {
               </div>
             ))
           }
-
           <img id="addGoal-btn" src={addIcon} alt="add-goal" />
         </div>
       </Container>

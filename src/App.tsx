@@ -15,6 +15,7 @@ import { ZinZenMenuPage } from '@pages/ZinZenMenuPage/ZinZenMenuPage';
 import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
 import { ShowFeelingsPage } from '@pages/ShowFeelingsPage/ShowFeelingsPage';
 import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
+import { MyGoalsPage } from '@pages/MyGoalsPage/MyGoalsPage';
 
 import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 
@@ -22,7 +23,6 @@ import './customize.scss';
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fontsource/montserrat';
-import { MyGoalsPage } from '@pages/MyGoalsPage/MyGoalsPage';
 
 export const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);

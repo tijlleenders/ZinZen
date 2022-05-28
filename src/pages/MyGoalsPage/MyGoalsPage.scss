@@ -21,27 +21,28 @@
 #myGoals-list {
     margin: 2% 2% 0% 2%;
     height: 418px;
-  overflow-y: auto;
+    overflow-y: auto;
 }
     #myGoals-list::-webkit-scrollbar {
         display: none;
     }
 
-.interactables{
+.interactables {
     display: flex;
     justify-content: space-around;
     padding-top: 1.5%;
 }
-  .interactables > svg {
-      font-size: 22px;
-  }
-.user-goal{
+    .interactables > svg {
+        font-size: 22px;
+    }
+
+.user-goal { 
     border: 1px solid;
     border-radius: 10px;
-    width: 100%;
-    text-align: left;
     margin-top: 10%;
     padding: 1.5% 4%;
+    text-align: left;
+    width: 100%;
 }
     .user-goal:first-child {
         margin: 0;
@@ -50,9 +51,9 @@
 #addGoal-btn {
     position: absolute;
     bottom: 0;
-    right: 0;
-    margin-right: 5%;
     margin-bottom: 7%;
+    margin-right: 5%;
+    right: 0;
 }
 
 .goal-title {
@@ -67,10 +68,11 @@
     #addGoal-btn{
         position: absolute;
         bottom: 0;
-        right: 0;
-        margin-right: 39%;
         margin-bottom: 5%;
+        margin-right: 39%;
+        right: 0;
     }
+
     #myGoals-container{
         padding: 0% 38% 0% 38%;
     }
