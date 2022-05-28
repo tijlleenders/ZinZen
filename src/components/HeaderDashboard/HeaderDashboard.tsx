@@ -7,7 +7,7 @@ import { darkModeState } from '@store';
 
 import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
 import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
-import Logo from '@assets/images/zinzenlogo.png';
+import Logo from '@src/assets/images/BackArrow.svg';
 import '@translations/i18n';
 import './HeaderDashboard.scss';
 
@@ -21,7 +21,7 @@ export const HeaderDashboard = () => {
           role="presentation"
           src={Logo}
           alt="ZinZen Logo"
-          className="zinzen-logo-nav-dashboard"
+          className="back-arrow-nav-dashboard"
           onClick={() => {
             navigate('/Home');
           }}

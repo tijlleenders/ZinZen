@@ -28,14 +28,8 @@
     color: #3b6899 !important;
 }
 
-.zinzen-logo-nav-dashboard{
-    width:4%;
-}
-
-.zinzen-logo-nav-dashboard:hover{
-    width:4%;
-    cursor: pointer;
-}
+.back-arrow-nav-dashboard{
+    width: 4%;}
 
 .zinzen-text-logo-nav-dashboard{
     position: absolute;
@@ -182,7 +176,7 @@
         margin-bottom: 1em;
     }
 
-    .zinzen-logo-nav-dashboard{
+    .back-arrow-nav-dashboard{
         margin-bottom: 2.5em;
         width:10%;
         visibility: visible;
