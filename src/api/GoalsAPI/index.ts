@@ -9,10 +9,11 @@ export const resetDatabase = () => db.transaction('rw', db.goalsCollection, asyn
 export const addGoal = (goalDetails :{
   title: string,
   duration: Number,
+  sublist: string[] | null,
   repeat: Repeat | string,
-  start: Date,
-  finish: Date,
-  createdAt: Date}) => {
+  start: Date | null,
+  finish: Date | null
+  }) => {
   const currentDate = getJustDate(new Date());
   const goals : GoalItem = { ...goalDetails, createdAt: currentDate };
   db.transaction('rw', db.goalsCollection, async () => {
@@ -24,7 +25,7 @@ export const addGoal = (goalDetails :{
   });
 };
 
-export const removeGoal = (goalId) => {
+export const removeGoal = (goalId: number) => {
   db.transaction('rw', db.goalsCollection, async () => {
     await db.goalsCollection.delete(goalId);
   }).catch((e) => {
@@ -41,6 +42,14 @@ export const getGoalsOnDate = async (date) => {
   db.transaction('rw', db.goalsCollection, async () => {
     const goalsList = await db.goalsCollection.where('start').equals(date);
     return goalsList;
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const updateGoal = async (id: number, changes: object) => {
+  db.transaction('rw', db.goalsCollection, async () => {
+    await db.goalsCollection.update(id, changes).then((updated) => updated);
   }).catch((e) => {
     console.log(e.stack || e);
   });

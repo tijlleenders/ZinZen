@@ -27,6 +27,9 @@ export const DashboardUserChoicePanel = () => {
             variant={darkModeStatus ? 'brown' : 'peach'}
             size="lg"
             className={darkModeStatus ? 'dashboard-choice-dark1' : 'dashboard-choice-light1'}
+            onClick={() => {
+              navigate('/Home/MyGoals');
+            }}
           >
             {truncateContent(t('mygoals'))}
           </Button>

@@ -22,6 +22,7 @@ import './customize.scss';
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fontsource/montserrat';
+import { MyGoalsPage } from '@pages/MyGoalsPage/MyGoalsPage';
 
 export const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -72,7 +73,7 @@ export const App = () => {
           />
           <Route
             path="/Home/MyGoals"
-            element={<GoalsPage />}
+            element={<MyGoalsPage />}
           />
           <Route
             path="/Home/MyFeelings"

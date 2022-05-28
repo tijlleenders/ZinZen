@@ -1,0 +1,77 @@
+#goal-searchBar {
+    background-color: rgba(237, 199, 183, 0.4);
+    border: 1px solid;
+    border-radius: 10px;
+    color: #EDC7B7;
+    font-family: 'Montserrat';
+    font-weight: bolder;
+    margin-left: 2%;
+    margin-bottom: 3.5%;
+    padding-left: 0.5em;
+    width: 96%; 
+}
+
+#myGoals_title {
+    margin: 2% 2% 5% 2%;
+    font-family: 'Montserrat';
+    font-weight: bolder;
+    font-size: 1.5em;
+}
+
+#myGoals-list {
+    margin: 2% 2% 0% 2%;
+    height: 418px;
+  overflow-y: auto;
+}
+    #myGoals-list::-webkit-scrollbar {
+        display: none;
+    }
+
+.interactables{
+    display: flex;
+    justify-content: space-around;
+    padding-top: 1.5%;
+}
+  .interactables > svg {
+      font-size: 22px;
+  }
+.user-goal{
+    border: 1px solid;
+    border-radius: 10px;
+    width: 100%;
+    text-align: left;
+    margin-top: 10%;
+    padding: 1.5% 4%;
+}
+    .user-goal:first-child {
+        margin: 0;
+    }
+
+#addGoal-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 5%;
+    margin-bottom: 7%;
+}
+
+.goal-title {
+    border: none;
+    background: transparent;
+    font-family: Montserrat;
+    font-weight: bold;
+    font-size: 1.3em;
+    text-align: left;
+}
+@media only screen and (min-width: 768px) {
+    #addGoal-btn{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin-right: 39%;
+        margin-bottom: 5%;
+    }
+    #myGoals-container{
+        padding: 0% 38% 0% 38%;
+    }
+}
