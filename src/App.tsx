@@ -33,13 +33,7 @@ export const App = () => {
     <div className={darkModeEnabled ? 'App-dark' : 'App-light'}>
       {/* @ts-ignore */}
       <BrowserRouter>
-        {(isLanguageChosen && isThemeChosen) && (
-        <Container fluid>
-          <Row>
-            <MainHeaderDashboard />
-          </Row>
-        </Container>
-        )}
+        {(isLanguageChosen && isThemeChosen)}
         <Routes>
           {!isLanguageChosen ? (
             <Route path="/" element={<LandingPage />} />

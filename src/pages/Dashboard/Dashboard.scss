@@ -6,7 +6,7 @@
     margin-right: auto;
 }
 
-.nav-link-dashboard-light{ 
+.nav-link-dashboard-light{
     color: #000000 !important;
     font-size: 1.2em;
     margin: 0em 3.2em 0em 1.5em;
@@ -17,7 +17,7 @@
     color: #3b6899 !important;
 }
 
-.nav-link-dashboard-dark{ 
+.nav-link-dashboard-dark{
     color: #d6d6d6 !important;
     font-size: 1.2em;
     margin: 0em 3.2em 0em 1.5em;
@@ -38,12 +38,15 @@
 }
 
 .zinzen-text-logo-nav-dashboard{
-    margin: 0.7em 0em 1.2em 1em;
+    position: absolute;
+    align-items: center;
+    margin: 0.7em 0em 1.2em 10em;
     width:10%;
     cursor: pointer;
 }
 
 .dark-mode-toggle{
+    margin: 0.7em 0em 1.2em 22.5em;
     margin-bottom: 1.6em;
 }
 
@@ -208,23 +211,23 @@
         display: none;
     }
 
-    
+
     /*Dashboard*/
     .dashboard-choice-light1 {
         width: 70% !important;
         height: 65px !important;
     }
-    
+
     .dashboard-choice-dark1 {
         width: 70% !important;
         height: 65px !important;
     }
-    
+
     .dashboard-choice-light {
         width: 70% !important;
         height: 65px !important;
     }
-    
+
     .dashboard-choice-dark {
         width: 70% !important;
         height: 65px !important;
@@ -240,7 +243,7 @@
         padding-top: 0.6em !important;
         padding-bottom: 0.6em !important;
     }
-    
+
     .dashboard-add-btn-dark1{
         font-size: 1.4rem !important;
         width: 25% !important;
@@ -251,7 +254,7 @@
         padding-top: 0.6em !important;
         padding-bottom: 0.6em !important;
     }
-    
+
     .dashboard-add-btn-light{
         font-weight: bolder !important;
         font-size: 1.4rem !important;
@@ -263,7 +266,7 @@
         padding-top: 0.6em !important;
         padding-bottom: 0.6em !important;
     }
-    
+
     .dashboard-add-btn-dark{
         font-weight: bolder !important;
         font-size: 1.4rem !important;
@@ -275,7 +278,7 @@
         padding-top: 0.6em !important;
         padding-bottom: 0.6em !important;
     }
-    
+
     .add-icon{
         width: 1.6em;
     }
