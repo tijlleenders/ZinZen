@@ -77,6 +77,7 @@ export const MyGoalsPage = () => {
 
   useEffect(() => {
     (async () => {
+      await populateDummyGoals();
       const goals:GoalItem[] = await getAllGoals();
       console.log(goals);
       setUserGoals(goals);
