@@ -7,7 +7,7 @@ import {
 import addIcon from '@assets/images/GoalsAddIcon.svg';
 import {
   addGoal, getAllGoals, removeGoal, updateGoal,
-} from '@src/api/GoalsAPI';
+} from '@api/GoalsAPI';
 import { GoalItem } from '@src/models/GoalItem';
 
 import './MyGoalsPage.scss';
