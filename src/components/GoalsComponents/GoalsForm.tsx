@@ -33,7 +33,7 @@ export const GoalsForm = () => {
 
   const handleSubmit = (e: any) => {
     if (formInputData.inputGoal) {
-      const newData = (data: any) => [...data, formInputData];
+      const newData = (data:[]) => [...data, formInputData];
       setTableData(newData);
     }
     setFormInputData({
@@ -54,8 +54,8 @@ export const GoalsForm = () => {
   }
   function duration() {
     const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
-    const checkGoal = parseInt(formInputData.inputGoal.match(tracker));
-    const parseGoal = parseInt(formInputData.inputGoal.match(tracker)) <= 24;
+    const checkGoal = parseInt(formInputData.inputGoal.match(tracker), 10);
+    const parseGoal = parseInt(formInputData.inputGoal.match(tracker), 10) <= 24;
     if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
       return `${checkGoal} hours`;
     }
@@ -133,7 +133,7 @@ export const GoalsForm = () => {
       <div className="inputs">
         {tableData.map((data, index) => (
           <div
-            key={index}
+            key={crypto.randomUUID()}
             style={
               darkModeStatus
                 ? { backgroundColor: darkrooms[index % 5] }
