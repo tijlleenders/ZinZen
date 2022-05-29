@@ -15,8 +15,7 @@ import { ZinZenMenuPage } from '@pages/ZinZenMenuPage/ZinZenMenuPage';
 import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
 import { ShowFeelingsPage } from '@pages/ShowFeelingsPage/ShowFeelingsPage';
 import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
-
-import { MainHeaderDashboard } from '@components/HeaderDashboard/MainHeaderDashboard';
+import { MyGoalsPage } from '@pages/MyGoalsPage/MyGoalsPage';
 
 import './customize.scss';
 import './App.scss';
@@ -65,8 +64,12 @@ export const App = () => {
             element={<FeedbackPage />}
           />
           <Route
-            path="/Home/MyGoals"
+            path="/Home/AddGoals"
             element={<GoalsPage />}
+          />
+          <Route
+            path="/Home/MyGoals"
+            element={<MyGoalsPage />}
           />
           <Route
             path="/Home/MyFeelings"
