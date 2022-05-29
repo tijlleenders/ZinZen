@@ -1,6 +1,7 @@
-#myGoals-container{
+#myGoals-container {
     margin-top: 30%;
 }
+
 #goal-searchBar {
     background-color: rgba(237, 199, 183, 0.4);
     border: 1px solid;
@@ -14,8 +15,6 @@
     margin-bottom: 3.5%;
     padding-left: 0.5em;
     width: 94%; 
-
-
 }
 
 #myGoals_title {
@@ -55,6 +54,7 @@
     text-align: left;
     width: 100%;
 }
+
     .user-goal:first-child {
         margin: 0;
     }
@@ -75,8 +75,9 @@
     font-size: 1.3em;
     text-align: left;
 }
+
 @media only screen and (min-width: 600px) {
-    #addGoal-btn{
+    #addGoal-btn {
         position: absolute;
         bottom: 0;
         margin-bottom: 5%;
@@ -84,12 +85,12 @@
         right: 0;
     }
 
-    #myGoals-container{
+    #myGoals-container {
         margin: 0% 5%;
         margin-top: 12%;
     }
     
-    #myGoals-list{
+    #myGoals-list {
         height: 50%;
         width: 85%;
         margin: 0%;
@@ -105,18 +106,21 @@
 }
 
 @media only screen and (min-width: 1080px) {
-    #myGoals-container{
+    #myGoals-container {
         margin: 0% 30%;
         margin-top: 8%;
     }
-    #goal-searchBar{
+    
+    #goal-searchBar {
         margin: 0%;
         width: 100%;
         border-radius: 7px;
     }
-    #myGoals_title{
+
+    #myGoals_title {
         margin: 3% 0% 3% 0%;
     }
+
     #addGoal-btn {
         position: absolute;
         bottom: 0;
@@ -124,11 +128,10 @@
         margin-right: 31%;
         right: 0;
     }
+
     #myGoals-list {
         height: 48%;
         width: 38.5%;
         margin: 0%;
     }
-    
-    
 }
