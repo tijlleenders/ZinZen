@@ -1,14 +1,21 @@
+#myGoals-container{
+    margin-top: 30%;
+}
 #goal-searchBar {
     background-color: rgba(237, 199, 183, 0.4);
     border: 1px solid;
     border-radius: 10px;
-    color: #EDC7B7;
+    color: #504E4E;
+    font-size: 1.4em;
     font-family: 'Montserrat';
     font-weight: bolder;
+    height: 50px;
     margin-left: 2%;
     margin-bottom: 3.5%;
     padding-left: 0.5em;
-    width: 96%; 
+    width: 94%; 
+
+
 }
 
 #myGoals_title {
@@ -22,6 +29,9 @@
     margin: 2% 2% 0% 2%;
     height: 418px;
     overflow-y: auto;
+    position: fixed;
+    height: 50%;
+    width: 90%;
 }
     #myGoals-list::-webkit-scrollbar {
         display: none;
@@ -39,8 +49,8 @@
 .user-goal { 
     border: 1px solid;
     border-radius: 10px;
-    margin-top: 10%;
-    padding: 1.5% 4%;
+    margin-top: 4%;
+    padding: 2.5% 4%;
     text-align: left;
     width: 100%;
 }
@@ -64,16 +74,60 @@
     font-size: 1.3em;
     text-align: left;
 }
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 600px) {
     #addGoal-btn{
         position: absolute;
         bottom: 0;
         margin-bottom: 5%;
-        margin-right: 39%;
+        margin-right: 8%;
         right: 0;
     }
 
     #myGoals-container{
-        padding: 0% 38% 0% 38%;
+        margin: 0% 5%;
+        margin-top: 12%;
     }
+    
+    #myGoals-list{
+        height: 50%;
+        width: 85%;
+        margin: 0%;
+    }
+    #myGoals_title {
+        margin: 5% 0% 5% 0%;
+    }
+    #goal-searchBar {
+        margin: 0%;
+        width: 97%;
+        border-radius: 7px;
+    }
+}
+
+@media only screen and (min-width: 1080px) {
+    #myGoals-container{
+        margin: 0% 30%;
+        margin-top: 8%;
+    }
+    #goal-searchBar{
+        margin: 0%;
+        width: 100%;
+        border-radius: 7px;
+    }
+    #myGoals_title{
+        margin: 3% 0% 3% 0%;
+    }
+    #addGoal-btn {
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 1%;
+        margin-right: 31%;
+        right: 0;
+    }
+    #myGoals-list {
+        height: 48%;
+        width: 38.5%;
+        margin: 0%;
+    }
+    
+    
 }

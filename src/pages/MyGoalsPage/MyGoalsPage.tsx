@@ -118,8 +118,9 @@ export const MyGoalsPage = () => {
               </div>
             ))
           }
-          <img id="addGoal-btn" src={addIcon} alt="add-goal" />
         </div>
+        <img id="addGoal-btn" src={addIcon} alt="add-goal" />
+
       </Container>
     </div>
   );
