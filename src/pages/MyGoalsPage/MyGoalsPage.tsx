@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Button} from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 //import {
 // PlusLg, Trash3Fill, PencilSquare, CheckLg,
 //} from 'react-bootstrap-icons';
@@ -15,6 +16,7 @@ import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 
 export const MyGoalsPage = () => {
   const [tapCount, setTapCount] = useState([-1, 0]);
+  const navigate = useNavigate();
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   let debounceTimeout : ReturnType<typeof setTimeout>;
 
@@ -117,7 +119,12 @@ export const MyGoalsPage = () => {
             ))
           }
         </div>
-        <img id="addGoal-btn" src={addIcon} alt="add-goal" />
+        <Button>
+        <img id="addGoal-btn" src={addIcon} alt="add-goal"
+         onClick={() => {
+              navigate('/Home/AddGoals');
+            }}/>
+            </Button>
 
       </Container>
     </div>
