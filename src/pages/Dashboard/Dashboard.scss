@@ -28,17 +28,23 @@
     color: #3b6899 !important;
 }
 
-.zinzen-text-logo-nav-dashboard{
+.back-arrow-nav-dashboard{
     position: absolute;
-    align-items: center;
-    margin: 0.7em 0em 1.2em 10em;
+    height: 50%;
+    margin:0.7em 0em 1.2em 0em;
+    visibility: visible;
+    cursor: pointer;
+}
+
+.zinzen-text-logo-nav-dashboard{
+    margin: 0.7em 5em 2em 10em;
     width:10%;
     cursor: pointer;
 }
 
 .dark-mode-toggle{
-    margin: 0.7em 0em 1.2em 22.5em;
-    margin-bottom: 1.6em;
+    position: fixed;
+    margin-left: 80em;
 }
 
 /*Dashboard*/
@@ -173,7 +179,7 @@
         margin-bottom: 1em;
     }
 
-    .back-arrow-nav-dashboard{
+   .back-arrow-nav-dashboard{
         margin-bottom: 2.5em;
         width:10%;
         visibility: visible;
@@ -193,6 +199,7 @@
     }
 
     .dark-mode-toggle{
+        margin-left: 80%;
         margin-bottom: 2.7em;
     }
 
