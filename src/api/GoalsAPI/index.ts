@@ -38,7 +38,7 @@ export const getAllGoals = async () => {
   return allGoals;
 };
 
-export const getGoalsOnDate = async (date) => {
+export const getGoalsOnDate = async (date: Date) => {
   db.transaction('rw', db.goalsCollection, async () => {
     const goalsList = await db.goalsCollection.where('start').equals(date);
     return goalsList;

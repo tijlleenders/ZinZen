@@ -43,8 +43,8 @@ export const ShowFeelingTemplate: React.FC<IShowFeelingTemplateProp> = ({ feelin
           <Nav className="navbar-custom">
             {feelingsListObject && Object.keys(feelingsListObject).map(((feelingObject) => (
               <Button
-                key={feelingsListObject[feelingObject].content + 
-                  feelingsListObject[feelingObject].date}
+                key={feelingsListObject[feelingObject].content
+                  + feelingsListObject[feelingObject].date}
                 className={
                 darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'btn-my-feelings-light btn-feelings-light'
               }

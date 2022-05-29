@@ -9,7 +9,7 @@ export const AddFeelingsChoices = () => (
       <FeelingTemplate
         key={feelingCategory}
         feelingCategory={feelingCategory}
-        feelingsList={feelingsList[feelingCategory]}
+        feelingsList={feelingsList[feelingCategory as keyof typeof feelingsList]}
       />
     ))}
   </div>
