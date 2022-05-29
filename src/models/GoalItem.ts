@@ -7,8 +7,9 @@ export interface GoalItem{
     id?: number;
     title: string;
     duration: Number;
+    sublist: string[] | null;
     repeat: Repeat | string;
-    start: Date;
-    finish: Date;
+    start: Date | null;
+    finish: Date | null;
     createdAt: Date;
 }
