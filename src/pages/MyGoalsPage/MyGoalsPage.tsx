@@ -94,7 +94,6 @@ export const MyGoalsPage = () => {
             userGoals?.map((goal:GoalItem, index) => (
               <div
                 key={`task-${index}`}
-                style={{ backgroundColor: `#${(0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6)}` }}
                 className="user-goal"
                 onClickCapture={() => { setShowOptionsOfGoalIndex(index); }}
                 onBlur={() => { setShowOptionsOfGoalIndex(-1); }}
