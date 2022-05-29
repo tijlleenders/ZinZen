@@ -9,6 +9,7 @@ import { ShowFeelingTemplate } from './ShowFeelingTemplate';
 
 import './ShowFeelingsPage.scss';
 import './ShowFeelings.scss';
+import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 
 export const ShowFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -31,31 +32,38 @@ export const ShowFeelingsPage = () => {
     getData();
   }, []);
   return (
-    <Container fluid className="slide">
-      <Row>
-        <Col>
-          <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>{t('showfeelingsmessage')}</h3>
-          {feelingsList !== null && Object.keys(feelingsList).map((date) => (
-            <div
-              key={feelingsList[date]}
-              className="show-feelings__list-category"
-            >
-              <h3 className={darkModeStatus
-                ? 'my-feelings-font-dark'
-                : 'my-feelings-font-light'}
-              >
-                {new Date(date).toDateString()}
-              </h3>
-              <ShowFeelingTemplate
+    <div>
+      <Container fluid>
+        <Row>
+          <HeaderDashboard />
+        </Row>
+      </Container>
+      <Container fluid className="slide">
+        <Row>
+          <Col>
+            <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>{t('showfeelingsmessage')}</h3>
+            {feelingsList !== null && Object.keys(feelingsList).map((date) => (
+              <div
                 key={feelingsList[date]}
-                feelingCategory="Test"
-                feelingsListObject={feelingsList[date]}
-              />
-            </div>
-          ))}
-        </Col>
-        <Col sm={1} />
-      </Row>
-    </Container>
+                className="show-feelings__list-category"
+              >
+                <h3 className={darkModeStatus
+                  ? 'my-feelings-font-dark'
+                  : 'my-feelings-font-light'}
+                >
+                  {new Date(date).toDateString()}
+                </h3>
+                <ShowFeelingTemplate
+                  key={feelingsList[date]}
+                  feelingCategory="Test"
+                  feelingsListObject={feelingsList[date]}
+                />
+              </div>
+            ))}
+          </Col>
+          <Col sm={1} />
+        </Row>
+      </Container>
+    </div>
   );
 };
