@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 
 import { getAllFeelings } from '@api/FeelingsAPI';
 import { darkModeState } from '@store';
+import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 import { ShowFeelingTemplate } from './ShowFeelingTemplate';
 
 import './ShowFeelingsPage.scss';
 import './ShowFeelings.scss';
-import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 
 export const ShowFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
