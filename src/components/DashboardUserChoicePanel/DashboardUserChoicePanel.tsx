@@ -27,6 +27,9 @@ export const DashboardUserChoicePanel = () => {
             variant={darkModeStatus ? 'brown' : 'peach'}
             size="lg"
             className={darkModeStatus ? 'dashboard-choice-dark1' : 'dashboard-choice-light1'}
+            onClick={() => {
+              navigate('/Home/MyGoals');
+            }}
           >
             {truncateContent(t('mygoals'))}
           </Button>
@@ -34,7 +37,7 @@ export const DashboardUserChoicePanel = () => {
             variant={darkModeStatus ? 'brown' : 'peach'}
             className={darkModeStatus ? 'dashboard-add-btn-dark1' : 'dashboard-add-btn-light1'}
             onClick={() => {
-              navigate('/Home/MyGoals');
+              navigate('/Home/AddGoals');
             }}
           >
             {darkModeStatus ? (

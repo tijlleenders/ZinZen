@@ -15,23 +15,23 @@ export const AddFeelingsPage = () => {
   const { t } = useTranslation();
 
   return (
-  <div>
-    <Container fluid>
+    <div>
+      <Container fluid>
         <Row>
           <HeaderDashboard />
         </Row>
       </Container>
-    <Container fluid className="slide">
-      <Row>
-        <Col>
-          <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>
-            {t('feelingsmessage')}
-          </h3>
-          <AddFeelingsChoices />
-        </Col>
-        <Col sm={1} />
-      </Row>
-    </Container>
-  </div>
+      <Container fluid className="slide">
+        <Row>
+          <Col>
+            <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>
+              {t('feelingsmessage')}
+            </h3>
+            <AddFeelingsChoices />
+          </Col>
+          <Col sm={1} />
+        </Row>
+      </Container>
+    </div>
   );
 };

@@ -41,6 +41,11 @@ export const LandingRightPanel = () => {
       title: t('german'),
       langId: 'de',
     },
+    {
+      sno: 7,
+      title: t('portuguese'),
+      langId: 'pt',
+    },
   ];
   return (
     <div className="right-panel">
