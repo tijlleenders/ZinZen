@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Button} from 'react-bootstrap';
+import { Container, Row, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-//import {
-// PlusLg, Trash3Fill, PencilSquare, CheckLg,
-//} from 'react-bootstrap-icons';
+import {
+ PlusLg, Trash3Fill, PencilSquare, CheckLg,
+} from 'react-bootstrap-icons';
 
 import addIcon from '@assets/images/GoalsAddIcon.svg';
 import {
@@ -84,15 +84,15 @@ export const MyGoalsPage = () => {
           <HeaderDashboard />
         </Row>
       </Container>
-    <div id="myGoals-container" onClickCapture={() => setTapCount([-1, 0])}>
-      <Container fluid>
-        <input id="goal-searchBar" onClickCapture={() => setTapCount([-1, 0])} placeholder="Search" onChange={(e) => debounceSearch(e)} />
-        <h1 id="myGoals_title" onClickCapture={() => setTapCount([-1, 0])}>My Goals</h1>
-        <div id="myGoals-list">
-          {
+      <div id="myGoals-container" onClickCapture={() => setTapCount([-1, 0])}>
+        <Container fluid>
+          <input id="goal-searchBar" onClickCapture={() => setTapCount([-1, 0])} placeholder="Search" onChange={(e) => debounceSearch(e)} />
+          <h1 id="myGoals_title" onClickCapture={() => setTapCount([-1, 0])}>My Goals</h1>
+          <div id="myGoals-list">
+            {
             userGoals?.map((goal:GoalItem, index) => (
               <div
-                key={`task-${index}`}
+                key={`task-${index + 1}`}
                 className="user-goal"
                 onClickCapture={() => { setTapCount([index, tapCount[1] + 1]); }}
               >
@@ -118,16 +118,21 @@ export const MyGoalsPage = () => {
               </div>
             ))
           }
-        </div>
-        <Button>
-        <img id="addGoal-btn" src={addIcon} alt="add-goal"
-         onClick={() => {
+          </div>
+          <Button
+            onClick={() => {
               navigate('/Home/AddGoals');
-            }}/>
-            </Button>
+            }}
+          >
+            <img
+              id="addGoal-btn"
+              src={addIcon}
+              alt="add-goal"
+            />
+          </Button>
 
-      </Container>
+        </Container>
+      </div>
     </div>
-  </div>
   );
 };
