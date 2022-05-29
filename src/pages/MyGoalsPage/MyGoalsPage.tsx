@@ -33,7 +33,7 @@ export const MyGoalsPage = () => {
   }
   async function updateUserGoals(goal:GoalItem, index:number) {
     const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
-    if (tapCount[0] === index && updatedTitle !== goal.title) {
+    if ( updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
       await updateGoal(goal.id, { title: updatedTitle });
       const goals:GoalItem[] = await getAllGoals();
       setUserGoals(goals);
