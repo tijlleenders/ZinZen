@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import React, { useState } from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';

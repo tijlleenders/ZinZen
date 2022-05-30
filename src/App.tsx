@@ -8,7 +8,6 @@ import { darkModeState, themeSelectionState, languageSelectionState } from '@sto
 import { LandingPage } from '@pages/LandingPage/LandingPage';
 import { LandingPageThemeChoice } from '@pages/LandingPageThemeChoicePage/LandingPageThemeChoice';
 import { AddFeelingsPage } from '@pages/AddFeelingsPage/AddFeelingsPage';
-import { GoalsPage } from '@pages/GoalsPage/GoalsPage';
 import { HomePage } from '@pages/HomePage/HomePage';
 import { NotFoundPage } from '@pages/NotFoundPage/NotFoundPage';
 import { ZinZenMenuPage } from '@pages/ZinZenMenuPage/ZinZenMenuPage';
