@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ILanguageListProps, ILanguage } from '@src/Interfaces/ILanguageListProps';
+import { ILanguageListProps, ILanguage } from '@src/Interfaces/ILanguage';
 import { LangItem } from '@components/LanguageChoice/LangItem';
 
 export const LanguagesList = (props : ILanguageListProps) => {
