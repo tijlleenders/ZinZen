@@ -8,17 +8,21 @@ import { useTranslation } from 'react-i18next';
 
 import { darkModeState } from '@store';
 import { IFeelingItem } from '@models';
+import { removeFeeling } from '@api/FeelingsAPI';
 
 import '@translations/i18n';
 import './ShowFeelingsPage.scss';
 
 interface IProps {
   feelingsListObject: IFeelingItem[],
+  setFeelingsListObject: (newFeelingsList: IFeelingItem[]) => void,
+  currentFeelingsList: IFeelingItem[],
 }
 
-export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject }) => {
+export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject, setFeelingsListObject, currentFeelingsList }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
+  console.log(currentFeelingsList);
   return (
     <div>
       <Container fluid>
@@ -31,7 +35,15 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject }) =>
                 darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'btn-my-feelings-light btn-feelings-light'
               }
                 size="lg"
-                onClick={() => console.log('TODO: Add remove feeling function')}
+                onClick={() => {
+                  removeFeeling(feelingsListObject[Number(feelingId)].id);
+                  let newFeelingsList = currentFeelingsList;
+                  const feelingDate = feelingsListObject[Number(feelingId)].date;
+                  newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
+                    feelingsOnDate => feelingsOnDate.id !== feelingsListObject[Number(feelingId)].id
+                  );
+                  setFeelingsListObject(newFeelingsList);
+                }}
               >
                 {t(feelingsListObject[Number(feelingId)].content)}
               </Button>
@@ -48,7 +60,7 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject }) =>
                 darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'btn-my-feelings-light btn-feelings-light'
               }
                   size="lg"
-                  onClick={() => console.log('TODO: Add remove feeling function')}
+                  onClick={() => removeFeeling(feelingsListObject[Number(feelingId)].id)}
                 >
                   {t(feelingsListObject[Number(feelingId)].content)}
                 </Button>

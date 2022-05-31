@@ -14,7 +14,7 @@ import './ShowFeelings.scss';
 export const ShowFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
-  const [feelingsList, setFeelingsList] = useState(null);
+  const [feelingsList, setFeelingsList] = useState<IFeelingItem[]>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -34,6 +34,11 @@ export const ShowFeelingsPage = () => {
     };
     getData();
   }, []);
+
+  const handleFeelingsListChange = (newFeelingsList) => {
+    setFeelingsList(newFeelingsList);
+  }
+  console.log(feelingsList);
   return (
     <Container fluid>
       <Row>
@@ -53,6 +58,8 @@ export const ShowFeelingsPage = () => {
               <ShowFeelingTemplate
                 key={feelingsList[date]}
                 feelingsListObject={feelingsList[date]}
+                setFeelingsListObject={handleFeelingsListChange}
+                currentFeelingsList={feelingsList}
               />
             </div>
           ))}
