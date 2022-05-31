@@ -22,7 +22,6 @@ interface IProps {
 export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject, setFeelingsListObject, currentFeelingsList }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-  console.log(currentFeelingsList);
   return (
     <div>
       <Container fluid>

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Health from '@assets/images/health-fitness-goals.jpg';
 import Career from '@assets/images/career-goals.jpg';
 import MindAndSpirit from '@assets/images/mind-spirit-goals.jpg';
-import Nature from '@assets/images/nature-environment-goals.jpg';
+import Nature from '@assets/images/nature-environment-goals.jpeg';
 import PersonalGrowth from '@assets/images/personalGrowth-goals.jpg';
 import Relationship from '@assets/images/relationship-goals.jpg';
 import { darkModeState } from '@src/store';
@@ -27,7 +27,7 @@ export const ExplorePage = () => {
 
   return (
     <div id={`explore-container-${darkModeStatus ? 'dark' : 'light'}`}>
-      <Container fluid>
+      <Container fluid className="slide ">
         <div id="goals-container">
           {goals.map((goal:any) => (
             <div className="goal-row">

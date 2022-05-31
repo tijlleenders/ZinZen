@@ -8,13 +8,13 @@ import { darkModeState, themeSelectionState, languageSelectionState } from '@sto
 import { LandingPage } from '@pages/LandingPage/LandingPage';
 import { LandingPageThemeChoice } from '@pages/LandingPageThemeChoicePage/LandingPageThemeChoice';
 import { AddFeelingsPage } from '@pages/AddFeelingsPage/AddFeelingsPage';
-import { GoalsPage } from '@pages/GoalsPage/GoalsPage';
 import { HomePage } from '@pages/HomePage/HomePage';
 import { NotFoundPage } from '@pages/NotFoundPage/NotFoundPage';
 import { ZinZenMenuPage } from '@pages/ZinZenMenuPage/ZinZenMenuPage';
 import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
 import { ShowFeelingsPage } from '@pages/ShowFeelingsPage/ShowFeelingsPage';
 import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
+import { MyGoalsPage } from '@pages/MyGoalsPage/MyGoalsPage';
 
 import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 
@@ -72,7 +72,7 @@ export const App = () => {
           />
           <Route
             path="/Home/MyGoals"
-            element={<GoalsPage />}
+            element={<MyGoalsPage />}
           />
           <Route
             path="/Home/MyFeelings"

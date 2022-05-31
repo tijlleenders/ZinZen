@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { feelingsList, feelingsCategories } from '@src/constants/FeelingsList';
+import { feelingsList, feelingsCategories } from '@consts/FeelingsList';
 import { FeelingTemplate } from './AddFeelingTemplate';
 
 export const AddFeelingsChoices = () => (
@@ -9,7 +9,7 @@ export const AddFeelingsChoices = () => (
       <FeelingTemplate
         key={feelingCategory}
         feelingCategory={feelingCategory}
-        feelingsList={feelingsList[feelingCategory]}
+        feelingsList={feelingsList[feelingCategory as keyof typeof feelingsList]}
       />
     ))}
   </div>

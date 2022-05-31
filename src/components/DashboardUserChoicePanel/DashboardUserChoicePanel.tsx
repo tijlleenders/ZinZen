@@ -20,13 +20,16 @@ export const DashboardUserChoicePanel = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
-    <div>
+    <div className="slide">
       <Container fluid>
         <Row>
           <Button
             variant={darkModeStatus ? 'brown' : 'peach'}
             size="lg"
             className={darkModeStatus ? 'dashboard-choice-dark1' : 'dashboard-choice-light1'}
+            onClick={() => {
+              navigate('/Home/MyGoals');
+            }}
           >
             {truncateContent(t('mygoals'))}
           </Button>
