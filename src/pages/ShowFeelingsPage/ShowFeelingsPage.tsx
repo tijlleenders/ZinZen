@@ -7,6 +7,7 @@ import { getAllFeelings } from '@api/FeelingsAPI';
 import { IFeelingItem } from '@models';
 import { darkModeState } from '@store';
 import { ShowFeelingTemplate } from './ShowFeelingTemplate';
+import { feelingListType } from '@src/global';
 
 import './ShowFeelingsPage.scss';
 import './ShowFeelings.scss';
@@ -14,12 +15,12 @@ import './ShowFeelings.scss';
 export const ShowFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
-  const [feelingsList, setFeelingsList] = useState<IFeelingItem[]>(null);
-
+  const [feelingsList, setFeelingsList] = useState<feelingListType[]>([]);
   useEffect(() => {
     const getData = async () => {
       const allFeelings = await getAllFeelings();
-      const feelingsByDates = allFeelings.reduce((dates: Date[], feeling: IFeelingItem) => {
+      // @ts-ignore
+      const feelingsByDates: feelingListType[] = allFeelings.reduce((dates: Date[], feeling: IFeelingItem) => {
         // @ts-ignore
         if (dates[feeling.date]) {
           // @ts-ignore
@@ -35,9 +36,6 @@ export const ShowFeelingsPage = () => {
     getData();
   }, []);
 
-  const handleFeelingsListChange = (newFeelingsList) => {
-    setFeelingsList(newFeelingsList);
-  }
   return (
     <Container fluid className="slide">
       <Row>
@@ -57,7 +55,7 @@ export const ShowFeelingsPage = () => {
               <ShowFeelingTemplate
                 key={feelingsList[date]}
                 feelingsListObject={feelingsList[date]}
-                setFeelingsListObject={handleFeelingsListChange}
+                setFeelingsListObject={{ feelingsList, setFeelingsList }}
                 currentFeelingsList={feelingsList}
               />
             </div>

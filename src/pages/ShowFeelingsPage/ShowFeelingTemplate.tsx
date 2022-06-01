@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import * as React from 'react';
+import React from 'react';
 import {
   Button, Nav, Container,
 } from 'react-bootstrap';
@@ -9,14 +9,20 @@ import { useTranslation } from 'react-i18next';
 import { darkModeState } from '@store';
 import { IFeelingItem } from '@models';
 import { removeFeeling } from '@api/FeelingsAPI';
+import { feelingListType } from '@src/global';
 
 import '@translations/i18n';
 import './ShowFeelingsPage.scss';
 
+interface ISetFeelingsListObject {
+  feelingsList: feelingListType[],
+  setFeelingsList: React.Dispatch<React.SetStateAction<feelingListType[]>>
+}
+
 interface IProps {
   feelingsListObject: IFeelingItem[],
-  setFeelingsListObject: (newFeelingsList: IFeelingItem[]) => void,
-  currentFeelingsList: IFeelingItem[],
+  setFeelingsListObject: ISetFeelingsListObject,
+  currentFeelingsList: feelingListType[],
 }
 
 export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject, setFeelingsListObject, currentFeelingsList }) => {
@@ -35,13 +41,18 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject, setF
               }
                 size="lg"
                 onClick={() => {
-                  removeFeeling(feelingsListObject[Number(feelingId)].id);
-                  let newFeelingsList = currentFeelingsList;
+                  const numFeelingId = feelingsListObject[Number(feelingId)].id;
+                  if (numFeelingId !== undefined)
+                    removeFeeling(numFeelingId);
+                  else
+                    console.log("Attempting to remove feeling not in the database");
+
+                    let newFeelingsList = currentFeelingsList;
                   const feelingDate = feelingsListObject[Number(feelingId)].date;
                   newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
-                    feelingsOnDate => feelingsOnDate.id !== feelingsListObject[Number(feelingId)].id
+                    (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId
                   );
-                  setFeelingsListObject(newFeelingsList);
+                  setFeelingsListObject.setFeelingsList({...newFeelingsList});
                 }}
               >
                 {t(feelingsListObject[Number(feelingId)].content)}
@@ -59,7 +70,13 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject, setF
                 darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'btn-my-feelings-light btn-feelings-light'
               }
                   size="lg"
-                  onClick={() => removeFeeling(feelingsListObject[Number(feelingId)].id)}
+                  onClick={() => {
+                    const numFeelingsId = feelingsListObject[Number(feelingId)].id;
+                    if(numFeelingsId !== undefined)
+                      removeFeeling(numFeelingsId);
+                    else
+                      console.log("Attempting to remove feeling not in the database");
+                  }}
                 >
                   {t(feelingsListObject[Number(feelingId)].content)}
                 </Button>
