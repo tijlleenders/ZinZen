@@ -3,17 +3,17 @@
     "name": "ZinZen: Deliver purpose",
     "icons": [
         {
-            "src": "/img/icons-192.png",
+            "src": "/assets/icons/zinzenlogo-192x192.png",
             "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "/img/icons-512.png",
+            "src": "/assets/icons/zinzenlogo-512X512.png",
             "type": "image/png",
-            "sizes": "16x16"
+            "sizes": "512x512"
         }
     ],
-    "start_url": "/index.html?source=pwa",
+    "start_url": "/",
     "background_color": "#3367D6",
     "display": "standalone",
     "scope": "/",
