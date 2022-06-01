@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals';
-import { languagesAvailable } from 'src/translations/i18n';
+import { languagesAvailable } from '../translations/i18n';
 
 describe('Theme Chosen', () => {
   test('check chosen theme', () => {
