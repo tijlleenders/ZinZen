@@ -71,7 +71,7 @@
     "dev": "vite",
     "build": "CI=false && vite build",
     "preview": "vite preview",
-    "test": "react-scripts test",
+    "test": "jest --verbose ./src/__tests__",
     "cypresstest": "cypress run",
     "lint": "eslint ./",
     "lint-fix": "eslint ./ --fix",
