@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { RecoilRoot } from 'recoil';
 
 import { App } from './App';
-import serviceWorker from '../serviceWorker';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import './index.scss';
 
@@ -16,4 +16,4 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-serviceWorker.register();
+serviceWorkerRegistration.register();
