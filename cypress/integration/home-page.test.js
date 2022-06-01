@@ -6,7 +6,7 @@ describe('Basic Tests Home Page', () => {
     cy.get('[alt="ZinZen Text Logo"]').should('be.visible');
     cy.contains('Realize');
     cy.contains('dreams');
-    cy.contains('together');
+    cy.contains('togethers');
   });
 
   it('should have Learn More button', () => {
