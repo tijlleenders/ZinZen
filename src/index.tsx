@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { RecoilRoot } from 'recoil';
 
 import { App } from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import './index.scss';
 
@@ -15,5 +14,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root'),
 );
-
-serviceWorkerRegistration.register();
