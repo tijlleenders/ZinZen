@@ -16,7 +16,11 @@
     <script type="module" src="./src/index.tsx"></script>  
     <script>
       if( 'serviceWorker' in navigator){
-        navigator.serviceWorker.register('./service-worker.js');
+        navigator.serviceWorker.register('%PUBLIC_URL%/service-worker.js').then(response => {
+          console.log('Service Worker registered.')
+        }).catch(error => {
+          console.error(error);
+        })
       }
     </script>
   </body>
