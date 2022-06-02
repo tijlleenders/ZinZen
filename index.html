@@ -15,8 +15,8 @@
     <div id="root"></div>
     <script type="module" src="./src/index.tsx"></script>  
     <script>
-      if( 'serviceWorker' in navigator){
-        navigator.serviceWorker.register('%PUBLIC_URL%/service-worker.js').then(response => {
+      if( 'serviceWorker' in navigator && process.env.NODE_ENV === 'production'){
+        navigator.serviceWorker.register('./service-worker.js').then(response => {
           console.log('Service Worker registered.')
         }).catch(error => {
           console.error(error);
