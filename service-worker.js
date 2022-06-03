@@ -30,7 +30,7 @@ self.addEventListener('fetch', e => {
       caches
       .open(CacheName)
       .then(cache => {
-        cache.put(e.request, resClone);
+        cache.put(e.request, );
       });
       return res;
     }).catch(err => caches.match(e.request).then(res => res))
