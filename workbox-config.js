@@ -1,11 +1,9 @@
 module.exports = {
-	globDirectory: 'src/',
+	globDirectory: './',
 	globPatterns: [
-		'**/*.{ts,scss,tsx,png,svg,jpg,jpeg,json}'
+		'**/*.{png,ico,svg,json,js,html,ts,scss,tsx,jpg,jpeg,lock}'
 	],
-	swDest: 'src/sw.js',
-	//ignoreURLParametersMatching: [
-	//	/^utm_/,
-	//	/^fbclid$/
-//	]
+	swDest: 'sw.js',
+	swSrc: 'src-sw.js',
+	"injectionPoint": "injectionPoint"
 };
