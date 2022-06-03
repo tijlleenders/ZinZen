@@ -47,7 +47,7 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject, setF
                   else
                     console.log("Attempting to remove feeling not in the database");
 
-                    let newFeelingsList = currentFeelingsList;
+                  let newFeelingsList = currentFeelingsList;
                   const feelingDate = feelingsListObject[Number(feelingId)].date;
                   newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
                     (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId
@@ -71,11 +71,17 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({ feelingsListObject, setF
               }
                   size="lg"
                   onClick={() => {
-                    const numFeelingsId = feelingsListObject[Number(feelingId)].id;
-                    if(numFeelingsId !== undefined)
-                      removeFeeling(numFeelingsId);
+                    const numFeelingId = feelingsListObject[Number(feelingId)].id;
+                    if(numFeelingId !== undefined)
+                      removeFeeling(numFeelingId);
                     else
                       console.log("Attempting to remove feeling not in the database");
+                    let newFeelingsList = currentFeelingsList;
+                    const feelingDate = feelingsListObject[Number(feelingId)].date;
+                    newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
+                      (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId
+                    );
+                    setFeelingsListObject.setFeelingsList({...newFeelingsList});
                   }}
                 >
                   {t(feelingsListObject[Number(feelingId)].content)}
