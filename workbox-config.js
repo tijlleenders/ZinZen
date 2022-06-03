@@ -4,8 +4,8 @@ module.exports = {
 		'**/*.{ts,scss,tsx,png,svg,jpg,jpeg,json}'
 	],
 	swDest: 'src/sw.js',
-	ignoreURLParametersMatching: [
-		/^utm_/,
-		/^fbclid$/
-	]
+	//ignoreURLParametersMatching: [
+	//	/^utm_/,
+	//	/^fbclid$/
+//	]
 };
