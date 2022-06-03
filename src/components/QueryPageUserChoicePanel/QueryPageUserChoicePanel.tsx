@@ -6,42 +6,47 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { darkModeState } from '@store';
-import { truncateContent } from '@utils';
 
 import '@translations/i18n';
+import './QueryPageUserChoicePanel.scss';
 
-export const queryUserChoicePanel = () => {
-    const navigate = useNavigate();
-    const { t } = useTranslation();
-    const darkModeStatus = useRecoilValue(darkModeState);
-  
-    return (
-      <div className="slide">
-        <Container fluid>
-          <Row>
-            <Button
-              variant={darkModeStatus ? 'brown' : 'peach'}
-              size="lg"
-              className={darkModeStatus ? 'query-choice-dark1' : 'query-choice-light1'}
-              onClick={() => {
-                navigate('/ZinZenFAQ');
-              }}
-            >
-              {truncateContent(t('mygoals'))}
-            </Button>
-            <Button
-              variant={darkModeStatus ? 'brown' : 'peach'}
-              size="lg"
-              className={darkModeStatus ? 'query-choice-dark1' : 'query-choice-light1'}
-              onClick={() => {
-                navigate('/Home');
-              }}
-            >
-              {truncateContent(t('myfeelings'))}
-            </Button>
-          </Row>
-        </Container>
+export const QueryPageUserChoicePanel = () => {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const darkModeStatus = useRecoilValue(darkModeState);
+
+  return (
+    <div className="slide">
+      <Container fluid>
+        <Row>
+          <h4 className="left-panel-font1-query">Realize dreams</h4>
+          <h4 className="left-panel-font2-query">
+            <i>together</i>
+          </h4>
+        </Row>
+        <Row>
+          <Button
+            variant={darkModeStatus ? 'brown' : 'peach'}
+            size="lg"
+            className={darkModeStatus ? 'query-choice-dark1' : 'query-choice-light1'}
+            onClick={() => {
+              navigate('/ZinZenFAQ');
+            }}
+          >
+            {t('ihavequestions')}
+          </Button>
+          <Button
+            variant={darkModeStatus ? 'brown' : 'peach'}
+            size="lg"
+            className={darkModeStatus ? 'query-choice-dark' : 'query-choice-light'}
+            onClick={() => {
+              navigate('/Home');
+            }}
+          >
+            {t('ialreadyknowZinZen')}
+          </Button>
+        </Row>
+      </Container>
     </div>
-     );
-    };
-    
+  );
+};
