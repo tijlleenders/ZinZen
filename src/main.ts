@@ -1,5 +1,5 @@
-export default class Reg {
-    constructor() {
+//export default class Reg {
+  //  constructor() {
       if ("serviceWorker" in navigator && process.env.NODE_ENV === 'production') {
         navigator.serviceWorker
           .register("sw.js")
@@ -7,7 +7,7 @@ export default class Reg {
             console.log("Service Worker Registered");
           });
       }
-    }
-  }
+   // }
+ // }
 
-  new Reg();
+ // new Reg();
