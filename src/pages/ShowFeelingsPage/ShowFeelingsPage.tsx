@@ -41,6 +41,17 @@ export const ShowFeelingsPage = () => {
   }, []);
   const dateArr = Object.keys(feelingsList).map((date) => {return date});
   const dateRangeArr = getDates(new Date(dateArr[0]), new Date());
+  useEffect(() => {
+      let timer1 = setTimeout(() => {
+        if(feelingsList.length === 0)
+          navigate('/Home/AddFeelings', {
+            state: {feelingDate: new Date()}
+          });
+      }, 500);
+    return () => {
+      clearTimeout(timer1);
+    };
+  },[]);
 
   return (
     <Container fluid className="slide show-feelings__container">
