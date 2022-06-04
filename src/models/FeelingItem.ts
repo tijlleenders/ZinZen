@@ -3,4 +3,5 @@ export interface FeelingItem {
     content: string;
     category: string;
     date: Date;
-}
+    note?: string;
+};
