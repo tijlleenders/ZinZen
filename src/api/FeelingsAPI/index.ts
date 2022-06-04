@@ -1,6 +1,15 @@
 import { db, IFeelingItem } from '@models';
 import { getJustDate } from '@src/utils';
 
+export const getFeeling = async (feelingId: number) => {
+  db.transaction('rw', db.feelingsCollection, async () => {
+    const feeling = await db.feelingsCollection.get(feelingId);
+    return feeling;
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
 export const resetDatabase = () => db.transaction('rw', db.feelingsCollection, async () => {
   await Promise.all(db.tables.map((table) => table.clear()));
 });
@@ -35,15 +44,36 @@ export const getFeelingsBetweenDates = async (startDate: Date, endDate: Date) =>
   });
 };
 
-export const addFeeling = async (feelingName : string, feelingCategory : string) => {
-  const currentDate = getJustDate(new Date());
-  const currentDateFeelings = await getFeelingsOnDate(currentDate);
+export const addFeeling = async (feelingName: string, feelingCategory: string, feelingDate: Date) => {
+  // const currentDate = getJustDate(new Date());
+  const feelingDateFormatted = getJustDate(feelingDate);
+  const currentDateFeelings = await getFeelingsOnDate(feelingDate);
   const checkFeelings = (feeling: IFeelingItem) => feeling.content === feelingName;
   if (currentDateFeelings.some(checkFeelings)) { return; }
   db.transaction('rw', db.feelingsCollection, async () => {
     await db
       .feelingsCollection
-      .add({ content: feelingName, date: currentDate, category: feelingCategory });
+      .add({ content: feelingName, date: feelingDateFormatted, category: feelingCategory });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const addFeelingNote = async(feelingId: number, InputNote: string) => {
+  const feeling = await db.feelingsCollection.get(feelingId);
+  const updatedFeeling = {...feeling, note: InputNote};
+  db.transaction('rw', db.feelingsCollection, async () => {
+    await db.feelingsCollection.put(updatedFeeling);
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const removeFeelingNote = async(feelingId: number) => {
+  let feeling = await db.feelingsCollection.get(feelingId);
+  delete feeling?.note;
+  db.transaction('rw', db.feelingsCollection, async () => {
+    await db.feelingsCollection.put(feeling!);
   }).catch((e) => {
     console.log(e.stack || e);
   });
