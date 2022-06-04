@@ -1,4 +1,4 @@
-export default class Reg {
+export function register() {
     constructor() {
       if ("serviceWorker" in navigator && process.env.NODE_ENV === 'production') {
         navigator.serviceWorker
@@ -9,5 +9,3 @@ export default class Reg {
       }
     }
   }
-
-  new Reg();
