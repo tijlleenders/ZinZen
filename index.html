@@ -15,7 +15,7 @@
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
     <script >
-      if ('serviceWorker' in navigator){
+      if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production'){
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('tijilleendeers/ZinZen/sw.js')
         } )
