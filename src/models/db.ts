@@ -10,7 +10,7 @@ export class FeelingsDB extends Dexie {
   constructor() {
     super('FeelingsDB');
     this.version(1).stores({
-      feelingsCollection: '++id, content, category, date',
+      feelingsCollection: '++id, content, category, date, note',
       goalsCollection: '++id, title, duration, sublist, repeat, start, finish, createdAt',
     });
   }

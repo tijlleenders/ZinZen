@@ -3,4 +3,5 @@ export interface IFeelingItem {
     content: string;
     category: string;
     date: Date;
-}
+    note?: string;
+};
