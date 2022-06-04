@@ -1,79 +1,77 @@
 /* My Feelings Page*/
 
 .my-feelings-font-light{
-    padding: 0em 1em 0em 0.8em;
-    font-style: italic;
-    font-weight: bolder;
+  padding: 0em 1em 0em 0.8em;
+  font-style: italic;
+  font-weight: bolder;
 }
 
 .my-feelings-font-dark{
-    color:#cecece;
-    padding: 0em 1em 0em 0.8em;
-    font-style: italic;
-    font-weight: bolder;
+  color:#cecece;
+  padding: 0em 1em 0em 0.8em;
+  font-style: italic;
+  font-weight: bolder;
 }
 
 .feelings-title{
-    font-weight: bolder !important;
-    margin-top: 1em;
+  font-weight: bolder !important;
+  margin-top: 1em;
 }
 
 .menu-list{
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
-.btn-my-feelings-light {
-    margin-top: 0.5em;
-    margin-right: 0.5em;
-    margin-left: 0em;
-    border: 2px solid #EDC7B7 !important;
-    background-color:  #F0E6E1 !important;
-    color: black !important;
-    padding: 0.5em 1em 0.5em 1em !important;
-    font-weight: bolder !important;
-    font-size: 1.2em !important;
-    cursor: pointer !important;
-  }
+.show-btn-my-feelings-light {
+  margin-top: 0.5em;
+  margin-right: 0.5em;
+  margin-left: 0em;
+  border: 2px solid #EDC7B7 !important;
+  background-color:  #EDC7B7 !important;
+  color: black !important;
+  padding: 0.5em 1em 0.5em 1em !important;
+  font-weight: bolder !important;
+  font-size: 1.2em !important;
+  cursor: pointer !important;
+  width: 270px;
+  text-align: left !important;
+  align-items: left;
+}
 
+.btn-feelings-light:hover {
+  background-color: #EDC7B7!important;
+  font-weight: bolder !important;
+  color: white !important;
+}
 
-  .btn-feelings-light {
-    border-color: #EDC7B7 !important;
-    color: #7E7E7E !important;
-    font-weight: bolder !important;
-  }
+.btn-my-feelings-dark {
+  margin-top: 0.5em;
+  margin-right: 0.5em;
+  margin-left: 0em;
+  border: 2px solid #EDC7B7 !important;
+  background-color:  #121212 !important;
+  color: black !important;
+  padding: 0.5em 1em 0.5em 1em !important;
+  font-weight: bolder !important;
+  font-size: 1.2em !important;
+  cursor: pointer !important;
+  width: 270px;
+  text-align: left !important;
+  align-items: left;
+}
 
-  .btn-feelings-light:hover {
-    background-color: #EDC7B7!important;
-    font-weight: bolder !important;
-    color: white !important;
-  }
+.btn-feelings-dark {
+  border-color: #443027 !important;
+  color: #cecece !important;
+  font-weight: bolder !important;
+}
 
-  .btn-my-feelings-dark {
-    margin-top: 0.5em;
-    margin-right: 0.5em;
-    margin-left: 0em;
-    border: 2px solid #EDC7B7 !important;
-    background-color:  #121212 !important;
-    color: black !important;
-    padding: 0.5em 1em 0.5em 1em !important;
-    font-weight: bolder !important;
-    font-size: 1.2em !important;
-    cursor: pointer !important;
-  }
-
-
-  .btn-feelings-dark {
-    border-color: #443027 !important;
-    color: #cecece !important;
-    font-weight: bolder !important;
-  }
-
-  .btn-feelings-dark:hover {
-    background-color: #443027!important;
-    font-weight: bolder !important;
-    color: white !important;
-  }
+.btn-feelings-dark:hover {
+  background-color: #443027!important;
+  font-weight: bolder !important;
+  color: white !important;
+}
 
 .feelings-menu-mobile{
     display: none;
@@ -82,29 +80,64 @@
 /*Media Query for Mobile View*/
 
 @media (max-width: 600px){
+  .feelings-menu-desktop{
+      display:none;
+  }
+  .feelings-menu-mobile{
+      display: block;
+  }
+  .feelings-title-mobile{
+      font-weight: bolder;
+      padding-top: 0.5em;
+  }
+  .feelings-title-light{
+      color:#000000 !important;
+      font-weight: bolder;
+      background-color: #EDC7B7 !important;
+      padding: 1em 1.5em 1em 1.5em !important;
+  }
+  .feelings-title-dark{
+      color:#ffffff !important;
+      font-weight: bolder;
+      background-color: #443027 !important;
+      padding: 1em 1.5em 1em 1.5em !important;
+  }
+}
 
-    .feelings-menu-desktop{
-        display:none;
-    }
-    .feelings-menu-mobile{
-        display: block;
-    }
-    .feelings-title-mobile{
-        font-weight: bolder;
-        padding-top: 0.5em;
-    }
-    .feelings-title-light{
-        color:#000000 !important;
-        font-weight: bolder;
-        background-color: #EDC7B7 !important;
-        padding: 1em 1.5em 1em 1.5em !important;
-    }
+.show-feelings {
+  &__container {
+    margin: 30px 0 0 0;
+    padding-bottom: 30px;
+  }
+}
 
-    .feelings-title-dark{
-        color:#ffffff !important;
-        font-weight: bolder;
-        background-color: #443027 !important;
-        padding: 1em 1.5em 1em 1.5em !important;
+.btn-my-feelings__text {
+  margin-left: 10px;
+}
 
-    }
+.show-feelings__options > * {
+  margin: 10px 10px 0 0;
+}
+
+.show-feelings__note-input {
+  background-color: #EDC7B7 !important;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  font-weight: bold;
+}
+
+.show-feelings__modal-button {
+  background-color: #AC3B61 !important;
+  color: white !important;
+}
+
+.show-feeling__note-textarea {
+  background-color: #EDC7B7 !important;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  font-weight: bold;
 }
