@@ -1,6 +1,6 @@
 export default class Reg {
   constructor() {
-    if ('serviceWorker' in navigator) {
+    if ('production' !== process.env.NODE_ENV) {
       navigator.serviceWorker
         .register('sw.js', { scope: '/' })
         .then(() => {
