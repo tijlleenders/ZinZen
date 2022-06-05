@@ -21,7 +21,7 @@ export const HeaderDashboard = () => {
         <img
           role="presentation"
           src={ArrowIcon}
-          alt="Back Arrow"
+          alt="Back arrow"
           className="back-arrow-nav-dashboard"
           onClick={() => {
             navigate('/Home');

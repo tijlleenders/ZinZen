@@ -46,6 +46,7 @@ export const FeedbackPage = () => {
         </Row>
       </Container>
       <Container fluid>
+        <Row className="position">
         <div style={{ color: `${darkModeStatus ? 'white' : 'black'}` }}>
           <p id="feedback-line-1">{t('opinion')}</p>
           <h1 id="feedback-line-2">
@@ -81,6 +82,7 @@ export const FeedbackPage = () => {
             {t('submit')}
           </Button>
         </div>
+        </Row>
       </Container>
     </div>
   );
