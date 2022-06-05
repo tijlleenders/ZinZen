@@ -7,10 +7,10 @@ import { useNavigate } from 'react-router';
 import { getAllFeelings } from '@api/FeelingsAPI';
 import { IFeelingItem } from '@models';
 import { darkModeState } from '@store';
-import { ShowFeelingTemplate } from './ShowFeelingTemplate';
 import { feelingListType } from '@src/global';
 import { getDates } from '@utils';
 import addIcon from '@assets/images/GoalsAddIcon.svg';
+import { ShowFeelingTemplate } from './ShowFeelingTemplate';
 
 import './ShowFeelingsPage.scss';
 import './ShowFeelings.scss';
@@ -24,34 +24,44 @@ export const ShowFeelingsPage = () => {
     const getData = async () => {
       const allFeelings = await getAllFeelings();
       // @ts-ignore
-      const feelingsByDates: feelingListType[] = allFeelings.reduce((dates: Date[], feeling: IFeelingItem) => {
+      const feelingsByDates: feelingListType[] = allFeelings
+        .reduce((dates: Date[], feeling: IFeelingItem) => {
         // @ts-ignore
-        if (dates[feeling.date]) {
-          // @ts-ignore
-          dates[feeling.date].push(feeling);
-        } else {
-          // @ts-ignore
-          dates[feeling.date] = [feeling];
-        }
-        return dates;
-      }, {});
+          if (dates[feeling.date]) {
+            // @ts-ignore
+            dates[feeling.date].push(feeling);
+          } else {
+            // @ts-ignore
+            dates[feeling.date] = [feeling];
+          }
+          return dates;
+        }, {});
       setFeelingsList(feelingsByDates);
     };
     getData();
   }, []);
-  const dateArr = Object.keys(feelingsList).map((date) => {return date});
+  const dateArr = Object.keys(feelingsList).map((date) => date);
   const dateRangeArr = getDates(new Date(dateArr[0]), new Date());
   useEffect(() => {
-      let timer1 = setTimeout(() => {
-        if(feelingsList.length === 0)
+    async function getFeelings() {
+      // Highly inefficient way to achive this, will replace this with a boolean function of
+      // "Is Feelings Collection empty?" later
+      const feelingsArr = await getAllFeelings();
+      return feelingsArr;
+    }
+    getFeelings().then((feelingsArr) => {
+      const timer1 = setTimeout(() => {
+        if (feelingsArr.length === 0) {
           navigate('/Home/AddFeelings', {
-            state: {feelingDate: new Date()}
+            state: { feelingDate: new Date() },
           });
+        }
       }, 500);
-    return () => {
-      clearTimeout(timer1);
-    };
-  },[]);
+      return () => {
+        clearTimeout(timer1);
+      };
+    });
+  }, []);
 
   return (
     <Container fluid className="slide show-feelings__container">
@@ -68,9 +78,16 @@ export const ShowFeelingsPage = () => {
                 : 'my-feelings-font-light'}
               >
                 <span
+                  role="button"
+                  tabIndex={0}
                   onClick={() => {
                     navigate('/Home/AddFeelings', {
-                      state: {feelingDate: new Date(date)}
+                      state: { feelingDate: new Date(date) },
+                    });
+                  }}
+                  onKeyDown={() => {
+                    navigate('/Home/AddFeelings', {
+                      state: { feelingDate: new Date(date) },
                     });
                   }}
                   style={{ cursor: 'pointer' }}
@@ -79,24 +96,34 @@ export const ShowFeelingsPage = () => {
                 </span>
               </h3>
               {feelingsList[date]
-                ? <ShowFeelingTemplate
-                  key={date}
-                  feelingsListObject={feelingsList[date]}
-                  setFeelingsListObject={{ feelingsList, setFeelingsList }}
-                  currentFeelingsList={feelingsList}
-                />
-                : <img
+                ? (
+                  <ShowFeelingTemplate
+                    key={date}
+                    feelingsListObject={feelingsList[date]}
+                    setFeelingsListObject={{ feelingsList, setFeelingsList }}
+                    currentFeelingsList={feelingsList}
+                  />
+                )
+                : (
+                  <input
+                    type="image"
+                    tabIndex={0}
                     key={date}
                     src={addIcon}
                     alt="add-goal"
-                    style={{margin: '5px 0 0 30px', height: '30px', width: '30px'}}
+                    style={{ margin: '5px 0 0 30px', height: '30px', width: '30px' }}
                     onClick={() => {
                       navigate('/Home/AddFeelings', {
-                        state: {feelingDate: new Date(date)}
+                        state: { feelingDate: new Date(date) },
+                      });
+                    }}
+                    onKeyDown={() => {
+                      navigate('/Home/AddFeelings', {
+                        state: { feelingDate: new Date(date) },
                       });
                     }}
                   />
-              }
+                )}
             </div>
           ))}
         </Col>
