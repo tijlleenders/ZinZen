@@ -52,6 +52,7 @@
     "sass": "^1.50.0",
     "vite": "^2.9.1",
     "web-vitals": "^0.2.4",
+    "workbox": "^0.0.0",
     "workbox-background-sync": "^5.1.4",
     "workbox-broadcast-update": "^5.1.4",
     "workbox-cacheable-response": "^5.1.4",
@@ -116,6 +117,7 @@
     "pretty-quick": "^3.1.3",
     "tslint": "^6.1.3",
     "typescript": "^4.6.4",
+    "vite-plugin-pwa": "^0.12.0",
     "workbox-cli": "^6.5.3"
   }
 }
