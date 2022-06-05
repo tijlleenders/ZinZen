@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
