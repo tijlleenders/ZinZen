@@ -37,9 +37,25 @@
 }
 
 .zinzen-text-logo-nav-dashboard{
-    margin: 0.7em 5em 2em 10em;
+    margin-left: 40%;
     width:10%;
     cursor: pointer;
+}
+
+.zinzen-logo-nav-dashboard-main{
+    align-content: flex-start;
+    position: absolute;
+   display: flex;
+    margin-top: 0.5em;
+     height: 90%;
+}
+
+.zinzen-logo-nav-dashboard{
+    position: absolute;
+    margin-left: 90%;
+    margin-top: 0.5em;
+    width: 15%;
+     height: 90%;
 }
 
 .dark-mode-toggle{
@@ -192,6 +208,18 @@
         width:25%;
         visibility: visible;
         cursor:pointer;
+    }
+
+    .zinzen-logo-nav-dashboard-main{
+        position: absolute;
+        margin-bottom: 2.7em;
+        width: 10%;
+    }
+
+    .zinzen-logo-nav-dashboard{
+        margin-left: 90%;
+        margin-bottom: 2.7em;
+        width: 10%;
     }
 
     .nav-collapse-dashboard{

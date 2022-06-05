@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
@@ -49,11 +49,15 @@ export const HeaderDashboard = () => {
             }}
           />
         )}
+
+<Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="navbar-custom" />
+        </Navbar.Collapse>
         <img
           role="presentation"
           src={logo}
           alt="Zinzen Logo"
-          className="dark-mode-toggle"
+          className="zinzen-logo-nav-dashboard"
           onClick={() => {
             navigate('/Home');
           }}

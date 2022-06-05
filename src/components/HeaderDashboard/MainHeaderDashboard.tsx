@@ -30,7 +30,7 @@ export const MainHeaderDashboard = () => {
           role="presentation"
           src={logo}
           alt="Zinzen Logo"
-          className="back-arrow-nav-dashboard"
+          className="zinzen-logo-nav-dashboard-main"
           onClick={() => {
             navigate('/Home');
           }}
