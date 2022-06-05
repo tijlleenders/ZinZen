@@ -1,13 +1,6 @@
-export default class Reg {
-  constructor() {
-    if ('production' !== process.env.NODE_ENV) {
-      navigator.serviceWorker
-        .register('sw.js', { scope: '/' })
-        .then(() => {
-          console.log('Service Worker Registered');
-        });
-    }
-  }
-}
+import { registerSW } from 'virtual:pwa-register'
 
-new Reg();
+if ('serviceWorker' in navigator) {
+  //&& !/localhost/.test(window.location)) {
+  registerSW();
+}

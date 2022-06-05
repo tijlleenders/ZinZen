@@ -57,8 +57,14 @@ export default defineConfig({
         ],
         theme_color: "#3367D6",
         description: "ZinZen for purpose"
-    }
-
+    },
+    workbox: {
+      globDirectory: './',
+      globPatterns: [
+      '**/*.{png,ico,svg,md,json,js,html,txt,ts,scss,tsx,jpg,jpeg,lock}'
+    ],
+    swDest: 'sw.js',
+      },
     }),
   ],
 });
