@@ -8,8 +8,7 @@ import { darkModeState } from '@store';
 import logo from '@assets/images/logo.svg';
 import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
 import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
-import lightBackArrow from '@src/assets/images/lightBackArrow.svg';
-import darkBackArrow from '@src/assets/images/darkBackArrow.svg';
+import ArrowIcon from '@assets/images/ArrowIcon.svg';
 import '@translations/i18n';
 import './HeaderDashboard.scss';
 
@@ -21,7 +20,7 @@ export const HeaderDashboard = () => {
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"
-          src={darkModeStatus ? lightBackArrow : darkBackArrow}
+          src={darkModeStatus ? ArrowIcon : ArrowIcon}
           alt="Back Arrow"
           className="back-arrow-nav-dashboard"
           onClick={() => {
