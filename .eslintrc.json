@@ -22,6 +22,9 @@
         "plugin:react/recommended",
         "airbnb"
     ],
+    "globals": {
+        "cy":true
+    },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {

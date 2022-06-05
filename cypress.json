@@ -1,7 +1,4 @@
 {
     "baseUrl": "https://zinzen.vercel.app/",
-    "testFiles": [
-        "home-page.test.js",
-        "dashboard.test.js"
-    ]
+    "testFiles": "**/*.spec.ts"
 }

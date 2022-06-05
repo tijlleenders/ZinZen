@@ -67,6 +67,7 @@
     "yui-lint": "^0.2.0"
   },
   "scripts": {
+    "cy": "cypress",
     "dev": "vite",
     "build": "CI=false && vite build",
     "preview": "vite preview",
