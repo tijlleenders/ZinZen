@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { darkModeState } from '@store';
 
+import logo from '@assets/images/logo.svg';
 import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
 import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
 import '@translations/i18n';
@@ -25,6 +26,15 @@ export const MainHeaderDashboard = () => {
   return (
     <div className={darkModeStatus ? 'positioning-dark' : 'positioning-light'}>
       <Navbar collapseOnSelect expand="lg">
+        <img
+          role="presentation"
+          src={logo}
+          alt="Zinzen Logo"
+          className="back-arrow-nav-dashboard"
+          onClick={() => {
+            navigate('/Home');
+          }}
+        />
         {darkModeStatus ? (
           <img
             role="presentation"

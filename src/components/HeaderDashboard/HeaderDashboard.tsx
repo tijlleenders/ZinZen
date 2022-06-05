@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { darkModeState } from '@store';
 
+import logo from '@assets/images/logo.svg';
 import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
 import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
 import lightBackArrow from '@src/assets/images/lightBackArrow.svg';
@@ -48,6 +49,15 @@ export const HeaderDashboard = () => {
             }}
           />
         )}
+         <img
+          role="presentation"
+          src={logo}
+          alt="Zinzen Logo"
+          className="dark-mode-toggle"
+          onClick={() => {
+            navigate('/Home');
+          }}
+          />
       </Navbar>
     </div>
   );
