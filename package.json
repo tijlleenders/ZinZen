@@ -27,7 +27,6 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "@types/jest": "^27.5.0",
     "@types/node": "^17.0.31",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.3",
@@ -71,7 +70,7 @@
     "dev": "vite",
     "build": "CI=false && vite build",
     "preview": "vite preview",
-    "test": "react-scripts test",
+    "test": "jest --verbose ./src/__tests__",
     "cypresstest": "cypress run",
     "lint": "eslint ./",
     "lint-fix": "eslint ./ --fix",
@@ -96,6 +95,8 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.17.12",
+    "@types/jest": "^27.5.1",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "cypress": "9.4.1",
