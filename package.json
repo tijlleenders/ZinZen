@@ -74,6 +74,7 @@
     "test": "jest --verbose ./src/__tests__",
     "cypresstest": "cypress run",
     "lint": "eslint ./",
+    "serve": "vite preview",
     "lint-fix": "eslint ./ --fix",
     "format": "prettier --write src/components/**/*.{html,css,less,ejs}"
   },
