@@ -1,13 +1,13 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-import { HeaderQueryPage } from '@components/QueryPageUserChoicePanel/HeaderQueryPage';
+import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 import { QueryPageUserChoicePanel } from '@components/QueryPageUserChoicePanel/QueryPageUserChoicePanel';
 
 export const QueryPage = () => (
   <Container fluid>
     <Row>
-      <HeaderQueryPage />
+      <HeaderDashboard />
     </Row>
     <Row>
       <Col sm={1} />
