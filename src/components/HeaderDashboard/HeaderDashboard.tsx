@@ -48,10 +48,6 @@ export const HeaderDashboard = () => {
             }}
           />
         )}
-
-<Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="navbar-custom" />
-        </Navbar.Collapse>
         <img
           role="presentation"
           src={logo}
