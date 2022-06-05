@@ -30,7 +30,7 @@
 
 .back-arrow-nav-dashboard{
     position: absolute;
-    
+   padding-right: 5px;
     height: 80%;
     margin:0.7em 0em 1.2em 0em;
     visibility: visible;
@@ -198,7 +198,8 @@
 
    .back-arrow-nav-dashboard{
         margin-bottom: 2.5em;
-        width:10%;
+        padding: 0.5em;
+        width:15%;
         visibility: visible;
         cursor: pointer;
     }
