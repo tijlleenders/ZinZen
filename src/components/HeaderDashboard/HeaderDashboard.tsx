@@ -20,7 +20,7 @@ export const HeaderDashboard = () => {
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"
-          src={darkModeStatus ? ArrowIcon : ArrowIcon}
+          src={ArrowIcon}
           alt="Back Arrow"
           className="back-arrow-nav-dashboard"
           onClick={() => {
