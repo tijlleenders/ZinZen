@@ -49,7 +49,7 @@ export const HeaderDashboard = () => {
             }}
           />
         )}
-         <img
+        <img
           role="presentation"
           src={logo}
           alt="Zinzen Logo"
@@ -57,7 +57,7 @@ export const HeaderDashboard = () => {
           onClick={() => {
             navigate('/Home');
           }}
-          />
+        />
       </Navbar>
     </div>
   );
