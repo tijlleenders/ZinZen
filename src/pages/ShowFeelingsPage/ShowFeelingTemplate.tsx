@@ -166,12 +166,13 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                 </Button>
               )),
             )}
-            <Modal show={showInputModal} onHide={handleInputClose} centered>
+            <Modal show={showInputModal} onHide={handleInputClose} centered autoFocus={false}>
               <Modal.Header closeButton>
                 <Modal.Title><i>Want to tell more about it?</i></Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <input
+                  autoFocus
                   type="text"
                   placeholder="Add a reason"
                   className="show-feelings__note-input"
