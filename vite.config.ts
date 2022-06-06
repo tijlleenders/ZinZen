@@ -26,6 +26,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.js',
       manifest: {
         short_name: 'ZinZen',
         name: 'ZinZen: Deliver purpose',
@@ -92,7 +94,8 @@ export default defineConfig({
           },
         ],
       },
-      injectManifest: {},
+      injectManifest: {
+      },
     }),
   ],
 });
