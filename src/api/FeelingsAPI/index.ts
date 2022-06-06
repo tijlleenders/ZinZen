@@ -59,18 +59,19 @@ export const addFeeling = async (feelingName: string, feelingCategory: string, f
   });
 };
 
-export const addFeelingNote = async(feelingId: number, InputNote: string) => {
+export const addFeelingNote = async (feelingId: number, InputNote: string) => {
   const feeling = await db.feelingsCollection.get(feelingId);
-  const updatedFeeling = {...feeling, note: InputNote};
+  const updatedFeeling = { ...feeling, note: InputNote };
   db.transaction('rw', db.feelingsCollection, async () => {
     await db.feelingsCollection.put(updatedFeeling);
   }).catch((e) => {
     console.log(e.stack || e);
   });
+  return getAllFeelings();
 };
 
-export const removeFeelingNote = async(feelingId: number) => {
-  let feeling = await db.feelingsCollection.get(feelingId);
+export const removeFeelingNote = async (feelingId: number) => {
+  const feeling = await db.feelingsCollection.get(feelingId);
   delete feeling?.note;
   db.transaction('rw', db.feelingsCollection, async () => {
     await db.feelingsCollection.put(feeling!);

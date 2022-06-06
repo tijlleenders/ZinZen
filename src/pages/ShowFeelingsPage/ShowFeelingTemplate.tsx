@@ -183,8 +183,23 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                 <Button
                   variant="primary"
                   onClick={() => {
-                    addFeelingNote(selectedFeeling!, noteValue);
-                    setFeelingsListObject.setFeelingsList(currentFeelingsList);
+                    addFeelingNote(selectedFeeling!, noteValue)
+                      .then((newFeelingsList) => {
+                        // @ts-ignore
+                        const feelingsByDates: feelingListType[] = newFeelingsList
+                          .reduce((dates: Date[], feeling: IFeelingItem) => {
+                          // @ts-ignore
+                            if (dates[feeling.date]) {
+                              // @ts-ignore
+                              dates[feeling.date].push(feeling);
+                            } else {
+                              // @ts-ignore
+                              dates[feeling.date] = [feeling];
+                            }
+                            return dates;
+                          }, {});
+                        setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
+                      });
                     setNoteValue('');
                     handleInputClose();
                   }}
