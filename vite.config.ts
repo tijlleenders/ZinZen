@@ -24,11 +24,74 @@ export default defineConfig({
   },
   plugins: [
     VitePWA({
+      registerType: 'autoUpdate',
       manifest: {
-        // content of manifest
+        'short_name': 'ZinZen',
+        name: 'ZinZen: Deliver purpose',
+        icons: [
+          {
+            src: '/img/icons-192.png',
+            type: 'image/png',
+            sizes: '192x192',
+          },
+          {
+            src: '/img/icons-512.png',
+            type: 'image/png',
+            sizes: '16x16',
+          },
+        ],
+        start_url: '/index.html?source=pwa',
+        background_color: '#3367D6',
+        display: 'standalone',
+        scope: '/',
+        related_applications: [
+          {
+            platform: 'webapp',
+            url: 'https://zinzen.me/manifest.webmanifest',
+          },
+        ],
+        theme_color: '#3367D6',
+        shortcuts: [
+          {
+            name: 'ZinZen export',
+            short_name: 'ZinZen export',
+            description: 'Export your data',
+            url: '/export.html?source=pwa',
+            icons: [
+              {
+                src: '/img/icons-192.png',
+                sizes: '192x192',
+              },
+            ],
+          },
+          {
+            name: "What's this week?",
+            short_name: 'ZinZen This week',
+            description: 'Calendar for the week',
+            url: '/tomorrow?source=pwa',
+            icons: [
+              {
+                src: '/img/icons-192.png',
+                sizes: '192x192',
+              },
+            ],
+          },
+        ],
+        description: 'ZinZen for purpose',
+        screenshots: [
+          {
+            src: '/img/screenshot1.jpg',
+            type: 'image/png',
+            sizes: '540x720',
+          },
+          {
+            src: '/img/screenshot2.jpg',
+            type: 'image/jpg',
+            sizes: '540x720',
+          },
+        ],
       },
       workbox: {
-        // workbox options for generateSW
       },
     }),
   ],
