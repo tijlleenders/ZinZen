@@ -1,6 +1,7 @@
 import path from 'path';
 import { Alias, defineConfig } from 'vite';
 
+import { VitePWA } from 'vite-plugin-pwa'
 import * as tsconfig from './tsconfig.paths.json';
 
 function readAliasFromTsConfig(): Alias[] {
@@ -21,4 +22,14 @@ export default defineConfig({
   resolve: {
     alias: readAliasFromTsConfig(),
   },
+  plugins: [
+    VitePWA({
+      manifest: {
+        // content of manifest
+      },
+      workbox: {
+        // workbox options for generateSW
+      },
+    }),
+  ],
 });
