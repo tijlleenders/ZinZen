@@ -22,7 +22,7 @@ export const ThemeChoice = () => {
         onClick={() => {
           setIsThemeChosen(true);
           localStorage.setItem('theme', 'light');
-          navigate('/Home');
+          navigate('/QueryZinZen');
         }}
       >
         <img
@@ -40,7 +40,7 @@ export const ThemeChoice = () => {
         onClick={() => {
           setIsThemeChosen(true);
           localStorage.setItem('theme', 'dark');
-          navigate('/Home');
+          navigate('/QueryZinZen');
           setDarkModeStatus(true);
         }}
       >
