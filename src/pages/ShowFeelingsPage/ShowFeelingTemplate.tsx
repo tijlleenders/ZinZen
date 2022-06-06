@@ -182,7 +182,7 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
               <Modal.Footer>
                 <Button
                   variant="primary"
-                  onClick={() => {
+                  onClick={async () => {
                     addFeelingNote(selectedFeeling!, noteValue)
                       .then((newFeelingsList) => {
                         // @ts-ignore
@@ -216,9 +216,22 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
               <Modal.Footer>
                 <Button
                   variant="primary"
-                  onClick={() => {
-                    removeFeelingNote(selectedFeeling!);
-                    setFeelingsListObject.setFeelingsList({ ...currentFeelingsList });
+                  onClick={async () => {
+                    const newFeelingsList = await removeFeelingNote(selectedFeeling!);
+                    // @ts-ignore
+                    const feelingsByDates: feelingListType[] = newFeelingsList
+                      .reduce((dates: Date[], feeling: IFeelingItem) => {
+                      // @ts-ignore
+                        if (dates[feeling.date]) {
+                          // @ts-ignore
+                          dates[feeling.date].push(feeling);
+                        } else {
+                          // @ts-ignore
+                          dates[feeling.date] = [feeling];
+                        }
+                        return dates;
+                      }, {});
+                    setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
                     handleNotesClose();
                   }}
                   className="show-feelings__modal-button"

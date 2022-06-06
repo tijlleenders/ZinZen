@@ -44,7 +44,11 @@ export const getFeelingsBetweenDates = async (startDate: Date, endDate: Date) =>
   });
 };
 
-export const addFeeling = async (feelingName: string, feelingCategory: string, feelingDate: Date) => {
+export const addFeeling = async (
+  feelingName: string,
+  feelingCategory: string,
+  feelingDate: Date,
+) => {
   // const currentDate = getJustDate(new Date());
   const feelingDateFormatted = getJustDate(feelingDate);
   const currentDateFeelings = await getFeelingsOnDate(feelingDate);
@@ -62,20 +66,25 @@ export const addFeeling = async (feelingName: string, feelingCategory: string, f
 export const addFeelingNote = async (feelingId: number, InputNote: string) => {
   const feeling = await db.feelingsCollection.get(feelingId);
   const updatedFeeling = { ...feeling, note: InputNote };
-  db.transaction('rw', db.feelingsCollection, async () => {
+  let updatedFeelingsList;
+  await db.transaction('rw', db.feelingsCollection, async () => {
     await db.feelingsCollection.put(updatedFeeling);
+    updatedFeelingsList = await getAllFeelings();
   }).catch((e) => {
     console.log(e.stack || e);
   });
-  return getAllFeelings();
+  return updatedFeelingsList;
 };
 
 export const removeFeelingNote = async (feelingId: number) => {
   const feeling = await db.feelingsCollection.get(feelingId);
   delete feeling?.note;
-  db.transaction('rw', db.feelingsCollection, async () => {
+  let updatedFeelingsList;
+  await db.transaction('rw', db.feelingsCollection, async () => {
     await db.feelingsCollection.put(feeling!);
+    updatedFeelingsList = await getAllFeelings();
   }).catch((e) => {
     console.log(e.stack || e);
   });
+  return updatedFeelingsList;
 };
