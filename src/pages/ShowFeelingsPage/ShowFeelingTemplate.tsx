@@ -50,15 +50,11 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
   const handleFeelingsNoteModify = async () => {
     addFeelingNote(selectedFeeling!, noteValue)
       .then((newFeelingsList) => {
-        // @ts-ignore
-        const feelingsByDates: feelingListType[] = newFeelingsList
+        const feelingsByDates: feelingListType[] = newFeelingsList!
           .reduce((dates: Date[], feeling: IFeelingItem) => {
-          // @ts-ignore
             if (dates[feeling.date]) {
-              // @ts-ignore
               dates[feeling.date].push(feeling);
             } else {
-              // @ts-ignore
               dates[feeling.date] = [feeling];
             }
             return dates;
@@ -114,10 +110,9 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                       if (feelingsListObject[Number(feelingId)]?.note) {
                         setSelectedFeelingNote(feelingsListObject[Number(feelingId)]?.note!);
                       }
-                      // eslint-disable-next-line no-unused-expressions
-                      feelingsListObject[Number(feelingId)]?.note
-                        ? handleNotesShow()
-                        : handleInputShow();
+                      if (feelingsListObject[Number(feelingId)]?.note) {
+                        handleNotesShow();
+                      } else { handleInputShow(); }
                     }}
                     size={20}
                   />
@@ -251,15 +246,11 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                   variant="primary"
                   onClick={async () => {
                     const newFeelingsList = await removeFeelingNote(selectedFeeling!);
-                    // @ts-ignore
-                    const feelingsByDates: feelingListType[] = newFeelingsList
+                    const feelingsByDates: feelingListType[] = newFeelingsList!
                       .reduce((dates: Date[], feeling: IFeelingItem) => {
-                      // @ts-ignore
                         if (dates[feeling.date]) {
-                          // @ts-ignore
                           dates[feeling.date].push(feeling);
                         } else {
-                          // @ts-ignore
                           dates[feeling.date] = [feeling];
                         }
                         return dates;

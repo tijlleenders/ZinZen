@@ -23,15 +23,11 @@ export const ShowFeelingsPage = () => {
   useEffect(() => {
     const getData = async () => {
       const allFeelings = await getAllFeelings();
-      // @ts-ignore
       const feelingsByDates: feelingListType[] = allFeelings
         .reduce((dates: Date[], feeling: IFeelingItem) => {
-        // @ts-ignore
           if (dates[feeling.date]) {
-            // @ts-ignore
             dates[feeling.date].push(feeling);
           } else {
-            // @ts-ignore
             dates[feeling.date] = [feeling];
           }
           return dates;
