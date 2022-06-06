@@ -15,6 +15,8 @@ import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
 import { ShowFeelingsPage } from '@pages/ShowFeelingsPage/ShowFeelingsPage';
 import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
 import { MyGoalsPage } from '@pages/MyGoalsPage/MyGoalsPage';
+import { QueryPage } from '@pages/QueryPage/QueryPage';
+import { FAQPage } from '@pages/FAQPage/FAQPage';
 
 import './customize.scss';
 import './App.scss';
@@ -77,6 +79,14 @@ export const App = () => {
           <Route
             path="*"
             element={<NotFoundPage />}
+          />
+           <Route
+            path="/QueryZinZen"
+            element={<QueryPage />}
+          />
+           <Route
+            path="/ZinZenFAQ"
+            element={<FAQPage />}
           />
         </Routes>
       </BrowserRouter>

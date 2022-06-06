@@ -25,6 +25,16 @@
     "globals": {
         "cy":true
     },
+    "overrides": [
+        {
+          "files": [
+            "**/*.test.tsx"
+          ],
+          "env": {
+            "jest": true
+          }
+        }
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
