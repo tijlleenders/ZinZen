@@ -141,3 +141,23 @@
   padding: 8px;
   font-weight: bold;
 }
+
+.notes-modal-dark .modal-content{
+  background-color: #121212;
+  border: 3px solid #3A2A22 !important;
+}
+
+.notes-modal-light .modal-content {
+  background-color: #F0E6E1;
+}
+
+.note-modal-title {
+  &-dark {
+    color: white;
+    font-style: italic;
+  }
+  &-light {
+    color: black;
+    font-style: italic;
+  }
+}

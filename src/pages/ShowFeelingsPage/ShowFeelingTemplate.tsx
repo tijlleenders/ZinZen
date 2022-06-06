@@ -185,9 +185,22 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                 </Button>
               )),
             )}
-            <Modal show={showInputModal} onHide={handleInputClose} centered autoFocus={false}>
+            <Modal
+              show={showInputModal}
+              onHide={handleInputClose}
+              centered
+              autoFocus={false}
+              className={
+                darkModeStatus ? 'notes-modal-dark' : 'notes-modal-light'
+              }
+            >
               <Modal.Header closeButton>
-                <Modal.Title><i>Want to tell more about it?</i></Modal.Title>
+                <Modal.Title className={
+                darkModeStatus ? 'note-modal-title-dark' : 'note-modal-title-light'
+                }
+                >
+                  Want to tell more about it?
+                </Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <input
@@ -222,7 +235,14 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                 </Button>
               </Modal.Footer>
             </Modal>
-            <Modal show={showNotesModal} onHide={handleNotesClose} centered>
+            <Modal
+              show={showNotesModal}
+              onHide={handleNotesClose}
+              centered
+              className={
+                darkModeStatus ? 'notes-modal-dark' : 'notes-modal-light'
+              }
+            >
               <Modal.Body>
                 <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />
               </Modal.Body>
