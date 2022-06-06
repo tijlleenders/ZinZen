@@ -47,6 +47,25 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
   const handleInputShow = () => setShowInputModal(true);
   const handleNotesClose = () => setShowNotesModal(false);
   const handleNotesShow = () => setShowNotesModal(true);
+  const handleFeelingsNoteModify = async () => {
+    addFeelingNote(selectedFeeling!, noteValue)
+      .then((newFeelingsList) => {
+        // @ts-ignore
+        const feelingsByDates: feelingListType[] = newFeelingsList
+          .reduce((dates: Date[], feeling: IFeelingItem) => {
+          // @ts-ignore
+            if (dates[feeling.date]) {
+              // @ts-ignore
+              dates[feeling.date].push(feeling);
+            } else {
+              // @ts-ignore
+              dates[feeling.date] = [feeling];
+            }
+            return dates;
+          }, {});
+        setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
+      });
+  };
 
   return (
     <div>
@@ -178,29 +197,22 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                   className="show-feelings__note-input"
                   value={noteValue}
                   onChange={(e) => { setNoteValue(e.target.value); }}
+                  // Admittedly not the best way to do this but suffices for now
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleFeelingsNoteModify();
+                      setNoteValue('');
+                      handleInputClose();
+                    }
+                  }}
                 />
               </Modal.Body>
               <Modal.Footer>
                 <Button
                   variant="primary"
-                  onClick={async () => {
-                    addFeelingNote(selectedFeeling!, noteValue)
-                      .then((newFeelingsList) => {
-                        // @ts-ignore
-                        const feelingsByDates: feelingListType[] = newFeelingsList
-                          .reduce((dates: Date[], feeling: IFeelingItem) => {
-                          // @ts-ignore
-                            if (dates[feeling.date]) {
-                              // @ts-ignore
-                              dates[feeling.date].push(feeling);
-                            } else {
-                              // @ts-ignore
-                              dates[feeling.date] = [feeling];
-                            }
-                            return dates;
-                          }, {});
-                        setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
-                      });
+                  type="submit"
+                  onClick={() => {
+                    handleFeelingsNoteModify();
                     setNoteValue('');
                     handleInputClose();
                   }}
