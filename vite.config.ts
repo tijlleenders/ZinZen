@@ -25,8 +25,9 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
+      strategies: 'injectManifest',
       manifest: {
-        'short_name': 'ZinZen',
+        short_name: 'ZinZen',
         name: 'ZinZen: Deliver purpose',
         icons: [
           {
@@ -91,8 +92,7 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
-      },
+      injectManifest: {},
     }),
   ],
 });
