@@ -33,14 +33,33 @@ export default defineConfig({
         name: 'ZinZen: Deliver purpose',
         icons: [
           {
-            src: '/img/icons-192.png',
-            type: 'image/png',
-            sizes: '192x192',
+            src: 'favicon.ico',
+            sizes: '64x64 32x32 24x24 16x16',
+            type: 'image/x-icon',
           },
           {
-            src: '/img/icons-512.png',
+            src: 'assets/icons/manifest-icon-192.maskable.png',
+            sizes: '192x192',
             type: 'image/png',
-            sizes: '16x16',
+            purpose: 'any',
+          },
+          {
+            src: 'assets/icons/manifest-icon-192.maskable.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+          {
+            src: 'assets/icons/manifest-icon-512.maskable.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any',
+          },
+          {
+            src: 'assets/icons/manifest-icon-512.maskable.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
           },
         ],
         start_url: '/index.html?source=pwa',
