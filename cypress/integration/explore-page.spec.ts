@@ -43,4 +43,8 @@ describe('DashboardUserChoice Test', () => {
   it('Should have Mind and Spirit Goals Card', () => {
     cy.contains('Mind and Spirit Goals');
   });
+
+  it('Add Goal btn should be there', () => {
+    cy.get('.addGoal-btn').should('have.length', 6);
+  });
 });
