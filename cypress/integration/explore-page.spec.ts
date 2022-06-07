@@ -47,4 +47,8 @@ describe('DashboardUserChoice Test', () => {
   it('Add Goal btn should be there', () => {
     cy.get('.addGoal-btn').should('have.length', 6);
   });
+
+  it('Display Goal Images in their respective cards', () => {
+    cy.get('.goal-img').should('have.length', 6).should('be.visible');
+  });
 });
