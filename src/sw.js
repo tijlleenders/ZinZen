@@ -12,6 +12,8 @@ const cacheAssets = [
   '/Home/Explore',
   '/Home/ZinZen',
   '/Home/ZinZen/Feedback',
+  '/QueryZinZen',
+  '/ZinZenFAQ',
 ];
 
 self.addEventListener('install', e => {
