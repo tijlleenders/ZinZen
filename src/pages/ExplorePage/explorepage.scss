@@ -1,9 +1,11 @@
 #explore-container-light {
-    background-color: #E5E5E5;
+    background-color: #F0E6E1;
+    margin-top: 3%;
 }
 
 #explore-container-dark {
     background-color: #131313;
+    margin-top: 3%;
 }
 
 #goals-container {
@@ -35,7 +37,7 @@
 }
 
 .goal-title {
-    text-align: center;
+    text-align: center !important;
     color: black;
     font-weight: bold;
     font-size: x-large;
@@ -72,7 +74,7 @@
     }
 
     .goal-title {
-        text-align: center;
+        text-align: center !important;
         color: black;
         font-weight: bold;
         font-size: x-large;
