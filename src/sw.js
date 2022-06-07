@@ -1,5 +1,6 @@
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 
+const cacheName1 = 'v1';
 const cacheName = 'v2';
 
 const cacheAssets = [
@@ -15,7 +16,7 @@ const cacheAssets = [
   '/ZinZenFAQ',
 ];
 
-self.addEventListener('activate', e => {
+self.addEventListener('install', e => {
   e.waitUntil(
     caches
       .open(cacheName)
@@ -31,7 +32,7 @@ self.addEventListener('fetch', e => {
     .then(res => {
       const resClone = res.clone();
       caches
-        .open(cacheName)
+        .open(cacheName1)
         .then(cache => {
           cache.put(e.request, resClone);
         });
