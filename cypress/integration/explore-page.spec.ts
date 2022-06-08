@@ -1,4 +1,4 @@
-describe('DashboardUserChoice Test', () => {
+describe('ExplorePage Test', () => {
   it('Explore page should have Backgorund color rgb(240, 230, 225)', () => {
     cy.visit('/');
     cy.get('.lang-btn1').contains('English').click();
