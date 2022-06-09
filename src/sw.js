@@ -27,17 +27,19 @@ self.addEventListener('install', e => {
   );
 });
 
-self.addEventListener('fetch', e => {
-  e.respondWith(fetch(e.request)
-    .then(res => {
-      const resClone = res.clone();
-      caches
-        .open(cacheName1)
-        .then(cache => {
-          cache.put(e.request, resClone);
-        });
-      return res;
-    }).catch(err => caches.match(e.request).then(res => res)));
+self.addEventListener('fetch', (e) => {
+  if (e.request.mode === 'navigate') {
+    e.respondWith(caches.open(cacheName1).then((cache) => {
+      return fetch(e.request.url).then((fetchedResponse) => {
+        cache.put(e.request, fetchedResponse.clone());
+        return fetchedResponse;
+      }).catch(() => {
+        return cache.match(e.request.url);
+      });
+    }));
+  } else {
+    return 'error';
+  }
 });
 
 cleanupOutdatedCaches();
