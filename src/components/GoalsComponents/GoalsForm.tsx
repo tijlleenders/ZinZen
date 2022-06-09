@@ -86,6 +86,7 @@ export const GoalsForm = () => {
       </div>
       <div className="duration">
         <button
+          type="button"
           style={
         darkModeStatus
           ? { backgroundColor: darkrooms[selectedColorIndex] }
@@ -98,6 +99,7 @@ export const GoalsForm = () => {
           {duration()}
         </button>
         <button
+          type="button"
           style={
            darkModeStatus
              ? { backgroundColor: darkrooms[selectedColorIndex] }

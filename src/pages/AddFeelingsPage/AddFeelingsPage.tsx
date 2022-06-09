@@ -16,7 +16,9 @@ export const AddFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
   const location = useLocation();
-  const date = location?.state?.feelingDate !== undefined ? getJustDate(location?.state?.feelingDate) : getJustDate(new Date());
+  const date = location?.state?.feelingDate !== undefined
+    ? getJustDate(location?.state?.feelingDate)
+    : getJustDate(new Date());
   return (
 
     <div>

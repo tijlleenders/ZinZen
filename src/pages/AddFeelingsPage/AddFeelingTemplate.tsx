@@ -40,7 +40,7 @@ export const FeelingTemplate = ({ feelingCategory, feelingsList, feelingDate } :
               onClick={() => {
                 console.log(feelingDate);
                 addFeeling(feelingName, feelingCategory, feelingDate);
-                setTimeout(function(){
+                setTimeout(() => {
                   navigate('/Home/MyFeelings')
                 }, 100);
               }}
@@ -69,7 +69,7 @@ export const FeelingTemplate = ({ feelingCategory, feelingsList, feelingDate } :
                     onClick={() => {
                       console.log(feelingDate);
                       addFeeling(feelingName, feelingCategory, feelingDate);
-                      setTimeout(function(){
+                      setTimeout(() => {
                         navigate('/Home/MyFeelings')
                       }, 100);
                     }}
