@@ -4,6 +4,7 @@ import {
 } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 
 import { addFeeling } from '@api/FeelingsAPI';
 import { darkModeState } from '@store';
@@ -12,10 +13,11 @@ import { feelingsEmojis } from '@consts/FeelingsList';
 import '@translations/i18n';
 import './AddFeelingsPage.scss';
 
-export const FeelingTemplate = ({ feelingCategory, feelingsList } :
-  { feelingCategory : string, feelingsList : string[]}) => {
+export const FeelingTemplate = ({ feelingCategory, feelingsList, feelingDate } :
+  { feelingCategory: string, feelingsList: string[], feelingDate: Date }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -30,10 +32,18 @@ export const FeelingTemplate = ({ feelingCategory, feelingsList } :
             <Button
               key={feelingName}
               className={
-                darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'btn-my-feelings-light btn-feelings-light'
+                darkModeStatus
+                  ? 'btn-my-feelings-dark btn-feelings-dark'
+                  : 'btn-my-feelings-light btn-feelings-light'
               }
               size="lg"
-              onClick={() => addFeeling(feelingName, feelingCategory)}
+              onClick={() => {
+                console.log(feelingDate);
+                addFeeling(feelingName, feelingCategory, feelingDate);
+                setTimeout(function(){
+                  navigate('/Home/MyFeelings')
+                }, 100);
+              }}
             >
               {t(feelingName)}
             </Button>
@@ -56,7 +66,13 @@ export const FeelingTemplate = ({ feelingCategory, feelingsList } :
                         : 'btn-my-feelings-light btn-feelings-light'
                     }
                     size="lg"
-                    onClick={() => addFeeling(feelingName, feelingCategory)}
+                    onClick={() => {
+                      console.log(feelingDate);
+                      addFeeling(feelingName, feelingCategory, feelingDate);
+                      setTimeout(function(){
+                        navigate('/Home/MyFeelings')
+                      }, 100);
+                    }}
                   >
                     {t(feelingName)}
                   </Button>
