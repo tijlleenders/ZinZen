@@ -12,7 +12,8 @@
             "@models": ["src/models/*"],
             "@api": ["src/api/*"],
             "@utils": ["src/utils/*"],
-            "@translations": ["src/translations/*"]
+            "@translations": ["src/translations/*"],
+            "@interface": ["src/Interfaces/*"]
         }
     }
 }
