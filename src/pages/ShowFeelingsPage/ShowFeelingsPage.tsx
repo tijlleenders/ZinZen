@@ -63,12 +63,12 @@ export const ShowFeelingsPage = () => {
   }, []);
 
   return (
-    <div>
+    <Container fluid className="slide show-feelings__container">
       <Container fluid>
         <Row>
           <HeaderDashboard />
         </Row>
-    <Container fluid className="slide show-feelings__container">
+      </Container>
       <Row>
         <Col>
           <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>{t('showfeelingsmessage')}</h3>

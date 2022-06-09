@@ -14,6 +14,7 @@ import { ZinZenMenuPage } from '@pages/ZinZenMenuPage/ZinZenMenuPage';
 import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
 import { ShowFeelingsPage } from '@pages/ShowFeelingsPage/ShowFeelingsPage';
 import { ExplorePage } from '@pages/ExplorePage/ExplorePage';
+import { GoalsPage } from '@pages/GoalsPage/GoalsPage';
 import { MyGoalsPage } from '@pages/MyGoalsPage/MyGoalsPage';
 import { QueryPage } from '@pages/QueryPage/QueryPage';
 import { FAQPage } from '@pages/FAQPage/FAQPage';

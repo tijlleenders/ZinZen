@@ -9,7 +9,6 @@ import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 
 import '@translations/i18n';
 import '@components/GoalsComponents/GoalsComponents.scss';
-import React from 'react';
 
 export const GoalsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);

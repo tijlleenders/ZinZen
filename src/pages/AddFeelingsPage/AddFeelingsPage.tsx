@@ -25,16 +25,17 @@ export const AddFeelingsPage = () => {
           <HeaderDashboard />
         </Row>
       </Container>
-    <Container fluid className="slide add-feelings__container">
-      <Row>
-        <Col>
-          <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>
-            {date.getTime() === getJustDate(new Date()).getTime() ? t('feelingsmessage') : `${t('feelingsMessagePast')} ${date.toDateString()}`}
-          </h3>
-          <AddFeelingsChoices date={date} />
-        </Col>
-        <Col sm={1} />
-      </Row>
-    </Container>
+      <Container fluid className="slide add-feelings__container">
+        <Row>
+          <Col>
+            <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>
+              {date.getTime() === getJustDate(new Date()).getTime() ? t('feelingsmessage') : `${t('feelingsMessagePast')} ${date.toDateString()}`}
+            </h3>
+            <AddFeelingsChoices date={date} />
+          </Col>
+          <Col sm={1} />
+        </Row>
+      </Container>
+    </div>
   );
 };
