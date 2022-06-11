@@ -105,7 +105,7 @@ export const GoalsForm = () => {
              ? { backgroundColor: darkrooms[selectedColorIndex] }
              : { backgroundColor: lightcolors[selectedColorIndex] }
                 }
-          className={suggestion() === `daily`
+          className={suggestion() === 'daily'
             ? 'suggestion'
             : 'blank'}
         >
