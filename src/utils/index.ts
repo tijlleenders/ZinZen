@@ -1,4 +1,4 @@
-/*export const formatDate = () => {
+export const formatDate = () => {
   const newDate = new Date();
   return newDate;
 };
@@ -12,19 +12,19 @@ export const truncateContent = (content: string, maxLength = 20) => {
   }
   return content;
 };
+
 Date.prototype.addDays = function(days: number) {
-  const date = new Date(this.valueOf());
+  var date = new Date(this.valueOf());
   date.setDate(date.getDate() + days);
   return date;
 }
 
 export const getDates = (startDate: Date, stopDate: Date) => {
-  const dateArray = new Array();
-  let currentDate = startDate;
+  var dateArray = new Array();
+  var currentDate = startDate;
   while (currentDate <= stopDate) {
-    dateArray.push(new Date(currentDate));
-    currentDate = currentDate.addDays(1);
+      dateArray.push(new zDate (currentDate));
+      currentDate = currentDate.addDays(1);
   }
   return dateArray;
 };
-*/
