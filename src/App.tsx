@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { Container, Row } from 'react-bootstrap';
 
 import { darkModeState, themeSelectionState, languageSelectionState } from '@store';
 
@@ -32,7 +31,6 @@ export const App = () => {
   const isLanguageChosen = language !== 'No language chosen.';
   return (
     <div className={darkModeEnabled ? 'App-dark' : 'App-light'}>
-      {/* @ts-ignore */}
       <BrowserRouter>
         {(isLanguageChosen && isThemeChosen)}
         <Routes>
@@ -81,11 +79,11 @@ export const App = () => {
             path="*"
             element={<NotFoundPage />}
           />
-           <Route
+          <Route
             path="/QueryZinZen"
             element={<QueryPage />}
           />
-           <Route
+          <Route
             path="/ZinZenFAQ"
             element={<FAQPage />}
           />
