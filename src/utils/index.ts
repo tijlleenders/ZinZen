@@ -12,12 +12,11 @@ export const truncateContent = (content: string, maxLength = 20) => {
   }
   return content;
 };
-
-Date.prototype.addDays = function(days: number) {
-  var date = new Date(this.valueOf());
+/*Date.prototype.addDays = function(days: number) {
+  const date = new Date(this.valueOf());
   date.setDate(date.getDate() + days);
   return date;
-}
+}*/
 
 export const getDates = (startDate: Date, stopDate: Date) => {
   const dateArray = new Array();
