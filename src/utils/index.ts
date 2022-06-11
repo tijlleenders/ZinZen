@@ -20,11 +20,11 @@ Date.prototype.addDays = function(days: number) {
 }
 
 export const getDates = (startDate: Date, stopDate: Date) => {
-  var dateArray = new Array();
-  var currentDate = startDate;
+  const dateArray = new Array();
+  let currentDate = startDate;
   while (currentDate <= stopDate) {
-      dateArray.push(new Date (currentDate));
-      currentDate = currentDate.addDays(1);
+    dateArray.push(new Date(currentDate));
+    currentDate = currentDate.addDays(1);
   }
   return dateArray;
 };
