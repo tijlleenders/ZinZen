@@ -17,6 +17,11 @@ describe('DashboardUserChoice Test', () => {
       .should('include', 'AddFeelings')
       .go('back');
   });
+  it('Should have ZinZen button working', () => {
+    cy.contains('ZinZen').should('have.class', 'dashboard-choice-light').click().location('pathname')
+      .should('include', 'ZinZen')
+      .go('back');
+  });
 
   it('Should have My Goals button working', () => {
     cy.contains('My Goals').should('have.class', 'dashboard-choice-light1').click().location('pathname')
@@ -40,9 +45,4 @@ describe('DashboardUserChoice Test', () => {
       .go('back');
   });
 
-  it('Should have ZinZen button working', () => {
-    cy.contains('ZinZen').should('have.class', 'dashboard-choice-light').click().location('pathname')
-      .should('include', 'ZinZen')
-      .go('back');
-  });
 });
