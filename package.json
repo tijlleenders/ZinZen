@@ -72,6 +72,7 @@
     "cy": "cypress",
     "dev": "vite",
     "build": "CI=false && vite build",
+    "https-preview": "serve dist",
     "preview": "vite preview",
     "test": "jest --verbose ./src/__tests__",
     "cypresstest": "cypress run",
@@ -121,12 +122,12 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
-    "https-server": "^0.1.2",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
     "lint-staged": "^12.3.8",
     "prettier": "2.6.2",
     "pretty-quick": "^3.1.3",
+    "serve": "^13.0.2",
     "tslint": "^6.1.3",
     "typescript": "^4.7.3"
   }
