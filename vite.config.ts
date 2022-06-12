@@ -37,6 +37,10 @@ export default defineConfig({
   // },
   plugins: [
     VitePWA({
+      workbox: {
+        cleanupOutdatedCaches: true,
+        ignoreURLParametersMatching: []
+      },
       registerType: 'autoUpdate',
       strategies: 'injectManifest',
       srcDir: 'src/service-worker',
