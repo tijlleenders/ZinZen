@@ -40,11 +40,9 @@ describe('Feedback Page', () => {
     );
     const button = getByText('submit');
     fireEvent.click(button);
-    act(async () => render(
-      <RecoilRoot>
-        <FeedbackPage />
-      </RecoilRoot>,
-    ));
+    await act(async () => render(<RecoilRoot>
+      <FeedbackPage />
+    </RecoilRoot>));
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(global.alert).toHaveBeenCalledTimes(1);
