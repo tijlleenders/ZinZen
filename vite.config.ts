@@ -22,19 +22,6 @@ export default defineConfig({
   resolve: {
     alias: readAliasFromTsConfig(),
   },
-  // build: {
-  //   rollupOptions: 
-  //     {
-  //     input: {
-  //       'index': './index.html',
-  //       'service-worker': './src/service-worker/service-worker.ts'
-  //     },
-  //     output: {
-  //       dir: 'assets/[name].[hash].js',
-  //       file: '[name].js',
-  //     },
-  //   },
-  // },
   plugins: [
     VitePWA({
       workbox: {
