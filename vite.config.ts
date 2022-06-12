@@ -25,7 +25,7 @@ export default defineConfig({
   plugins: [
     VitePWA({
       workbox: {
-        cleanupOutdatedCaches: true,
+        cleanupOutdatedCaches: true,  //default is true but added to make it explicit
         ignoreURLParametersMatching: []
       },
       registerType: 'autoUpdate',
