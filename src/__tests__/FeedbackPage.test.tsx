@@ -6,9 +6,9 @@ import {
 
 import * as api from '@api/FeedbackAPI';
 import { FeedbackPage } from '@pages/FeedbackPage/FeedbackPage';
+import { expect } from '@jest/globals';
 
 global.alert = jest.fn();
-
 global.fetch = jest.fn(() => {
   Promise.resolve({
     json: () => Promise.resolve({
@@ -24,12 +24,12 @@ beforeEach(() => {
 
 describe('Feedback Page', () => {
   it('submitFeedback API success flow', async () => {
-    const res = await api.submitFeedback();
+    const res = await api.submitFeedback('this is a jest call');
     expect(res.status).toEqual('success');
   });
   it('submitFeedback API failure flow', async () => {
     fetch.mockImplementationOnce(() => Promise.reject(new Error('Api error')));
-    const res = await api.submitFeedback();
+    const res = await api.submitFeedback('this is a jest call');
     expect(res.status).toEqual('error');
   });
   it('Feedback Page success flow  ', async () => {
