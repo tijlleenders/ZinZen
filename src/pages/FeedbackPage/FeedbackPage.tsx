@@ -1,9 +1,11 @@
+/* eslint-disable no-alert */
 import React, { useState } from 'react';
 import { Container, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 
 import { darkModeState } from '@store';
+import { submitFeedback } from '@src/api/FeedbackAPI';
 
 import '@translations/i18n';
 import './feedbackpage.scss';
@@ -14,31 +16,22 @@ export const FeedbackPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   async function submitToAPI(feedback: string) {
-    const URL = 'https://tpzmoaw42e.execute-api.eu-west-1.amazonaws.com/prod/contact';
     const updatedFeedback = `Rating : ${userRating}\n${feedback}`;
-    fetch(URL, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedFeedback),
-    })
-      .then((response) => response.json())
-      .then(() => {
-        alert('Thank you so much for your feedback! We will improve.');
-        setUserFeedback('');
-        setUserRating(0);
-      })
-      .catch(() => {
-        alert("Aww... So sorry something went wrong. Please try emailing. We'd love to hear from you!");
-      });
+    const res = await submitFeedback(updatedFeedback);
+    if (res.status === 'success') {
+      alert(res.message);
+      setUserFeedback('');
+      setUserRating(0);
+    } else {
+      alert(res.message);
+    }
   }
   const { t } = useTranslation();
 
   return (
     <div id="feedback-container">
       <Container fluid>
+        {userRating === 0 ? <h1>hello</h1> : null}
         <div style={{ color: `${darkModeStatus ? 'white' : 'black'}` }}>
           <p id="feedback-line-1">{t('opinion')}</p>
           <h1 id="feedback-line-2">
