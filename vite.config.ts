@@ -21,4 +21,16 @@ export default defineConfig({
   resolve: {
     alias: readAliasFromTsConfig(),
   },
+  build: {
+    rollupOptions: {
+      input: {
+        'index': './index.html',
+        'service-worker': './src/service-worker/service-worker.ts',
+      },
+      output: {
+        entryFileNames: assetInfo =>
+          assetInfo.name === 'service-worker' ? '[name].js' : 'assets/[name].[hash].js',
+      },
+    },
+  }
 });
