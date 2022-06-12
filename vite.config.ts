@@ -1,5 +1,6 @@
 import path from 'path';
 import { Alias, defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 import * as tsconfig from './tsconfig.paths.json';
 
@@ -21,16 +22,20 @@ export default defineConfig({
   resolve: {
     alias: readAliasFromTsConfig(),
   },
-  build: {
-    rollupOptions: {
-      input: {
-        'index': './index.html',
-        'service-worker': './src/service-worker/service-worker.ts',
-      },
-      output: {
-        entryFileNames: assetInfo =>
-          assetInfo.name === 'service-worker' ? '[name].js' : 'assets/[name].[hash].js',
-      },
-    },
-  }
-});
+  // build: {
+  //   rollupOptions: 
+  //     {
+  //     input: {
+  //       'index': './index.html',
+  //       'service-worker': './src/service-worker/service-worker.ts'
+  //     },
+  //     output: {
+  //       dir: 'assets/[name].[hash].js',
+  //       file: '[name].js',
+  //     },
+  //   },
+  // },
+  plugins: [
+    VitePWA({})
+  ]
+  });
