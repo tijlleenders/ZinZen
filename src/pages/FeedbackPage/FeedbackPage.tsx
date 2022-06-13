@@ -1,12 +1,13 @@
 /* eslint-disable no-alert */
 import React, { useState } from 'react';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 
 import { darkModeState } from '@store';
 import { submitFeedback } from '@src/api/FeedbackAPI';
 
+import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 import '@translations/i18n';
 import './feedbackpage.scss';
 
@@ -30,6 +31,11 @@ export const FeedbackPage = () => {
 
   return (
     <div id="feedback-container">
+      <Container>
+        <Row>
+          <HeaderDashboard />
+        </Row>
+      </Container>
       <Container fluid>
         {userRating === 0 ? <h1>hello</h1> : null}
         <div style={{ color: `${darkModeStatus ? 'white' : 'black'}` }}>
