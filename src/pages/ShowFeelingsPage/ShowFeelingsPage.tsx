@@ -7,12 +7,9 @@ import { useNavigate } from 'react-router';
 import { getAllFeelings } from '@api/FeelingsAPI';
 import { IFeelingItem } from '@models';
 import { darkModeState } from '@store';
-
-import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 import { feelingListType } from '@src/global';
 import { getDates } from '@utils';
 import addIcon from '@assets/images/GoalsAddIcon.svg';
-
 import { ShowFeelingTemplate } from './ShowFeelingTemplate';
 
 import './ShowFeelingsPage.scss';
@@ -64,11 +61,6 @@ export const ShowFeelingsPage = () => {
 
   return (
     <Container fluid className="slide show-feelings__container">
-      <Container fluid>
-        <Row>
-          <HeaderDashboard />
-        </Row>
-      </Container>
       <Row>
         <Col>
           <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>{t('showfeelingsmessage')}</h3>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Button, Nav, Navbar, Container,
+  Button, Nav, Navbar, Container
 } from 'react-bootstrap';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
@@ -70,7 +70,7 @@ export const FeelingTemplate = ({ feelingCategory, feelingsList, feelingDate } :
                       console.log(feelingDate);
                       addFeeling(feelingName, feelingCategory, feelingDate);
                       setTimeout(() => {
-                        navigate('/Home/MyFeelings')
+                        navigate('/Home/MyFeelings');
                       }, 100);
                     }}
                   >
