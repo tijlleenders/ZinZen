@@ -62,20 +62,20 @@ export const FeedbackPage = () => {
               })}
             </div>
             <h5 id="feedback-line-3">{t('experience')}</h5>
-          <textarea
-            id="feedback-textbox"
-            value={userFeedback}
-            onChange={(e) => { setUserFeedback(e.target.value); }}
-            placeholder={t('feedbackPlaceholder')}
-          />
-          <p id="feedback-line-4">{t('anonymousFeedback')}</p>
-          <Button id="feedback-submit-btn" onClick={() => { submitToAPI(userFeedback); }}>
-            {' '}
-            {t('submit')}
-          </Button>
-        </div>
-      </Container>
-    </div>
+            <textarea
+              id="feedback-textbox"
+              value={userFeedback}
+              onChange={(e) => { setUserFeedback(e.target.value); }}
+              placeholder={t('feedbackPlaceholder')}
+            />
+            <p id="feedback-line-4">{t('anonymousFeedback')}</p>
+            <Button id="feedback-submit-btn" onClick={() => { submitToAPI(userFeedback); }}>
+              {' '}
+              {t('submit')}
+            </Button>
+          </div>
+        </Container>
+      </div>
     </div>
   );
 };
