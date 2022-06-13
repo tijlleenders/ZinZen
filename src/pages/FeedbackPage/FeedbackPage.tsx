@@ -1,13 +1,12 @@
 /* eslint-disable no-alert */
 import React, { useState } from 'react';
-import { Container, Button, Row } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue } from 'recoil';
 
 import { darkModeState } from '@store';
 import { submitFeedback } from '@src/api/FeedbackAPI';
 
-import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 import '@translations/i18n';
 import './feedbackpage.scss';
 
@@ -32,12 +31,6 @@ export const FeedbackPage = () => {
   return (
     <div id="feedback-container">
       <Container fluid>
-        <Row>
-          <HeaderDashboard />
-        </Row>
-      </Container>
-      <Container fluid>
-     
         {userRating === 0 ? <h1>hello</h1> : null}
         <div style={{ color: `${darkModeStatus ? 'white' : 'black'}` }}>
           <p id="feedback-line-1">{t('opinion')}</p>
@@ -61,7 +54,19 @@ export const FeedbackPage = () => {
               );
             })}
           </div>
-        </Row>
+          <h5 id="feedback-line-3">{t('experience')}</h5>
+          <textarea
+            id="feedback-textbox"
+            value={userFeedback}
+            onChange={(e) => { setUserFeedback(e.target.value); }}
+            placeholder={t('feedbackPlaceholder')}
+          />
+          <p id="feedback-line-4">{t('anonymousFeedback')}</p>
+          <Button id="feedback-submit-btn" onClick={() => { submitToAPI(userFeedback); }}>
+            {' '}
+            {t('submit')}
+          </Button>
+        </div>
       </Container>
     </div>
   );

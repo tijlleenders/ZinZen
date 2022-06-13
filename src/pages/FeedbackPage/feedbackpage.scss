@@ -41,6 +41,14 @@
   font-weight: bold;
 }
 
+@media only screen and (min-width: 760px) {
+  #feedback-container {
+      padding: 2% 30%;
+      margin-top: 7.5%;
+  }
+
+}
+
 @media only screen and (min-width: 1280px) {
     #feedback-container {
         padding: 2% 30%;
