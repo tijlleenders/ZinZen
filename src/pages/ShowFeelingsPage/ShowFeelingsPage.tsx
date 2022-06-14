@@ -20,6 +20,7 @@ export const ShowFeelingsPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [feelingsList, setFeelingsList] = useState<feelingListType[]>([]);
+  const [selectedFeeling, setSelectedFeeling] = useState<number>();
   useEffect(() => {
     const getData = async () => {
       const allFeelings = await getAllFeelings();
@@ -98,6 +99,7 @@ export const ShowFeelingsPage = () => {
                     feelingsListObject={feelingsList[date]}
                     setFeelingsListObject={{ feelingsList, setFeelingsList }}
                     currentFeelingsList={feelingsList}
+                    handleFocus={{ selectedFeeling, setSelectedFeeling }}
                   />
                 )
                 : (

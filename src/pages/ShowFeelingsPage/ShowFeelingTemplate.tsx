@@ -22,24 +22,27 @@ interface ISetFeelingsListObject {
   feelingsList: feelingListType[],
   setFeelingsList: React.Dispatch<React.SetStateAction<feelingListType[]>>
 }
-
+interface ISetSelectedFeeling {
+  selectedFeeling: number,
+  setSelectedFeeling: React.Dispatch<React.SetStateAction<number>>
+}
 interface IProps {
   feelingsListObject: IFeelingItem[],
   setFeelingsListObject: ISetFeelingsListObject,
   currentFeelingsList: feelingListType[],
+  handleFocus: ISetSelectedFeeling
 }
 
 export const ShowFeelingTemplate: React.FC<IProps> = ({
   feelingsListObject,
   setFeelingsListObject,
   currentFeelingsList,
+  handleFocus,
 }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showInputModal, setShowInputModal] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
-  const [showOptions, setShowOptions] = useState(false);
-  const [selectedFeeling, setSelectedFeeling] = useState<number>();
   const [selectedFeelingNote, setSelectedFeelingNote] = useState('');
   const [noteValue, setNoteValue] = useState('');
 
@@ -63,6 +66,11 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
       });
   };
 
+  const handleFeelingClick = (id:number) => {
+    console.log(id);
+    handleFocus.setSelectedFeeling(handleFocus.selectedFeeling === id ? -1 : id);
+  };
+
   return (
     <div>
       <Container fluid>
@@ -71,58 +79,58 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
             .map(((feelingId: string) => (
               <Button
                 key={feelingsListObject[Number(feelingId)].content
-                    + feelingsListObject[Number(feelingId)].date}
+                  + feelingsListObject[Number(feelingId)].date}
                 className={
                     darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'show-btn-my-feelings-light'
-                  }
-                onClick={() => {
-                  setShowOptions(!showOptions);
-                  setSelectedFeeling(feelingsListObject[Number(feelingId)].id);
-                }}
+                }
+                onClick={() => { handleFeelingClick(feelingsListObject[Number(feelingId)].id); }}
                 size="lg"
               >
                 <div className="btn-my-feelings_container">
                   <div>
-                    {feelingsEmojis[feelingsListObject[Number(feelingId)].category]} 
+                    {feelingsEmojis[feelingsListObject[Number(feelingId)].category]}
                     <span className="btn-my-feelings__text">
                       {t(feelingsListObject[Number(feelingId)].content)}
                     </span>
                   </div>
                   <div>
-                    { (showOptions && 
-                    (selectedFeeling === feelingsListObject[Number(feelingId)].id))
-                      ? <ChevronDown />
-                      : <ChevronRight />}
+                    <div>
+                      {
+                        handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id
+                          ? <ChevronDown />
+                          : <ChevronRight />
+                      }
+                    </div>
                   </div>
                 </div>
                 {feelingsListObject[Number(feelingId)]?.note && (<span className="btn-my-feelings__note">...</span>)}
-                {showOptions && (selectedFeeling === feelingsListObject[Number(feelingId)].id) && (
-                <div className="show-feelings__options">
-                  <TrashFill
-                    onClick={() => {
-                      const numFeelingId = feelingsListObject[Number(feelingId)].id;
-                      if (numFeelingId !== undefined) { removeFeeling(numFeelingId); } else { console.log('Attempting to remove feeling not in the database'); }
-                      const newFeelingsList = currentFeelingsList;
-                      const feelingDate = feelingsListObject[Number(feelingId)].date;
-                      newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
-                        (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId,
-                      );
-                      setFeelingsListObject.setFeelingsList({ ...newFeelingsList });
-                    }}
-                    size={20}
-                  />
-                  <Journal
-                    onClick={() => {
-                      if (feelingsListObject[Number(feelingId)]?.note) {
-                        setSelectedFeelingNote(feelingsListObject[Number(feelingId)]?.note!);
-                      }
-                      if (feelingsListObject[Number(feelingId)]?.note) {
-                        handleNotesShow();
-                      } else { handleInputShow(); }
-                    }}
-                    size={20}
-                  />
-                </div>
+                {handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id && (
+                  <div className="show-feelings__options">
+                    <TrashFill
+                      onClick={() => {
+                        const numFeelingId = feelingsListObject[Number(feelingId)].id;
+                        if (numFeelingId !== undefined) { removeFeeling(numFeelingId); } else { console.log('Attempting to remove feeling not in the database'); }
+                        const newFeelingsList = currentFeelingsList;
+                        const feelingDate = feelingsListObject[Number(feelingId)].date;
+                        newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
+                          (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId,
+                        );
+                        setFeelingsListObject.setFeelingsList({ ...newFeelingsList });
+                      }}
+                      size={20}
+                    />
+                    <Journal
+                      onClick={() => {
+                        if (feelingsListObject[Number(feelingId)]?.note) {
+                          setSelectedFeelingNote(feelingsListObject[Number(feelingId)]?.note!);
+                        }
+                        if (feelingsListObject[Number(feelingId)]?.note) {
+                          handleNotesShow();
+                        } else { handleInputShow(); }
+                      }}
+                      size={20}
+                    />
+                  </div>
                 )}
               </Button>
             )))}
@@ -137,24 +145,19 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                   className={
                     darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'show-btn-my-feelings-light'
                   }
-                  onClick={() => {
-                    setShowOptions(!showOptions);
-                    setSelectedFeeling(feelingsListObject[Number(feelingId)].id);
-                  }}
+                  onClick={() => { handleFeelingClick(feelingsListObject[Number(feelingId)].id); }}
                   size="lg"
                 >
                   {feelingsEmojis[feelingsListObject[Number(feelingId)].category]}
                   <span className="btn-my-feelings__text">{t(feelingsListObject[Number(feelingId)].content)}</span>
                   <i>
-                    { (showOptions
-                      && (selectedFeeling === feelingsListObject[Number(feelingId)].id))
+                    { handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id
                       ? <ChevronDown />
                       : <ChevronRight />}
                   </i>
                   <br />
                   {feelingsListObject[Number(feelingId)]?.note && (<span className="btn-my-feelings__note">...</span>)}
-                  {showOptions
-                  && (selectedFeeling === feelingsListObject[Number(feelingId)].id) && (
+                  { handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id && (
                     <div className="show-feelings__options">
                       <TrashFill
                         onClick={() => {
