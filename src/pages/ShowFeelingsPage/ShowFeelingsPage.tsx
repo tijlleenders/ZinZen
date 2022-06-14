@@ -38,7 +38,7 @@ export const ShowFeelingsPage = () => {
     getData();
   }, []);
   const dateArr = Object.keys(feelingsList).map((date) => date);
-  const dateRangeArr = getDates(new Date(dateArr[0]), new Date());
+  const dateRangeArr = getDates(new Date(dateArr[0]), new Date()).reverse();
   useEffect(() => {
     async function getFeelings() {
       // Highly inefficient way to achive this, will replace this with a boolean function of
