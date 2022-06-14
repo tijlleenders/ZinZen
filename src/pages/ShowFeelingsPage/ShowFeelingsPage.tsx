@@ -20,6 +20,7 @@ export const ShowFeelingsPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [feelingsList, setFeelingsList] = useState<feelingListType[]>([]);
+  const [selectedFeeling, setSelectedFeeling] = useState<number>();
   useEffect(() => {
     const getData = async () => {
       const allFeelings = await getAllFeelings();
@@ -37,7 +38,7 @@ export const ShowFeelingsPage = () => {
     getData();
   }, []);
   const dateArr = Object.keys(feelingsList).map((date) => date);
-  const dateRangeArr = getDates(new Date(dateArr[0]), new Date());
+  const dateRangeArr = getDates(new Date(dateArr[0]), new Date()).reverse();
   useEffect(() => {
     async function getFeelings() {
       // Highly inefficient way to achive this, will replace this with a boolean function of
@@ -98,6 +99,7 @@ export const ShowFeelingsPage = () => {
                     feelingsListObject={feelingsList[date]}
                     setFeelingsListObject={{ feelingsList, setFeelingsList }}
                     currentFeelingsList={feelingsList}
+                    handleFocus={{ selectedFeeling, setSelectedFeeling }}
                   />
                 )
                 : (

@@ -23,6 +23,11 @@
   flex-direction: column;
 }
 
+.btn-my-feelings_container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .show-btn-my-feelings-light {
   margin-top: 0.5em;
   margin-right: 0.5em;
@@ -30,7 +35,7 @@
   border: 2px solid #EDC7B7 !important;
   background-color:  #EDC7B7 !important;
   color: black !important;
-  padding: 0.5em 1em 0.5em 1em !important;
+  padding: 0.5em 1em 0.5em 0.5em !important;
   font-weight: bolder !important;
   font-size: 1.2em !important;
   cursor: pointer !important;
@@ -52,7 +57,7 @@
   border: 2px solid #EDC7B7 !important;
   background-color:  #121212 !important;
   color: black !important;
-  padding: 0.5em 1em 0.5em 1em !important;
+  padding: 0.5em 1em 0.5em 0.5em !important;
   font-weight: bolder !important;
   font-size: 1.2em !important;
   cursor: pointer !important;
@@ -115,9 +120,14 @@
   margin-left: 10px;
 }
 
-.show-feelings__options > * {
-  margin: 10px 10px 0 0;
+.show-feelings__options {
+  display: flex;
+  justify-content: space-around;
 }
+
+  .show-feelings__options > * {
+    margin: 10px 10px 0 0;
+  }
 
 .show-feelings__note-input {
   background-color: #EDC7B7 !important;
