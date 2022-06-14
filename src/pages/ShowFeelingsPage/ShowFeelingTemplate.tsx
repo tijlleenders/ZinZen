@@ -81,14 +81,20 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                 }}
                 size="lg"
               >
-                {feelingsEmojis[feelingsListObject[Number(feelingId)].category]}
-                <span className="btn-my-feelings__text">{t(feelingsListObject[Number(feelingId)].content)}</span>
-                <i>
-                  { (showOptions && (selectedFeeling === feelingsListObject[Number(feelingId)].id))
-                    ? <ChevronDown />
-                    : <ChevronRight />}
-                </i>
-                <br />
+                <div className="btn-my-feelings_container">
+                  <div>
+                    {feelingsEmojis[feelingsListObject[Number(feelingId)].category]} 
+                    <span className="btn-my-feelings__text">
+                      {t(feelingsListObject[Number(feelingId)].content)}
+                    </span>
+                  </div>
+                  <div>
+                    { (showOptions && 
+                    (selectedFeeling === feelingsListObject[Number(feelingId)].id))
+                      ? <ChevronDown />
+                      : <ChevronRight />}
+                  </div>
+                </div>
                 {feelingsListObject[Number(feelingId)]?.note && (<span className="btn-my-feelings__note">...</span>)}
                 {showOptions && (selectedFeeling === feelingsListObject[Number(feelingId)].id) && (
                 <div className="show-feelings__options">
