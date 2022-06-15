@@ -51,7 +51,7 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
   const handleNotesClose = () => setShowNotesModal(false);
   const handleNotesShow = () => setShowNotesModal(true);
   const handleFeelingsNoteModify = async () => {
-    addFeelingNote(selectedFeeling!, noteValue)
+    addFeelingNote(handleFocus.selectedFeeling!, noteValue)
       .then((newFeelingsList) => {
         const feelingsByDates: feelingListType[] = newFeelingsList!
           .reduce((dates: Date[], feeling: IFeelingItem) => {
@@ -83,10 +83,12 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                 className={
                     darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'show-btn-my-feelings-light'
                 }
-                onClick={() => { handleFeelingClick(feelingsListObject[Number(feelingId)].id); }}
                 size="lg"
               >
-                <div className="btn-my-feelings_container">
+                <div
+                  className="btn-my-feelings_container"
+                  onClick={() => { handleFeelingClick(feelingsListObject[Number(feelingId)].id); }}
+                >
                   <div>
                     {feelingsEmojis[feelingsListObject[Number(feelingId)].category]}
                     <span className="btn-my-feelings__text">
@@ -103,7 +105,14 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                     </div>
                   </div>
                 </div>
-                {feelingsListObject[Number(feelingId)]?.note && (<span className="btn-my-feelings__note">...</span>)}
+                {feelingsListObject[Number(feelingId)]?.note && (
+                  <span
+                    className="btn-my-feelings__note"
+                    onClick={() => { handleFeelingClick(feelingsListObject[Number(feelingId)].id); }}
+                  >
+                    ...
+                  </span>
+                )}
                 {handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id && (
                   <div className="show-feelings__options">
                     <TrashFill
@@ -254,7 +263,7 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                 <Button
                   variant="primary"
                   onClick={async () => {
-                    const newFeelingsList = await removeFeelingNote(selectedFeeling!);
+                    const newFeelingsList = await removeFeelingNote(handleFocus.selectedFeeling!);
                     const feelingsByDates: feelingListType[] = newFeelingsList!
                       .reduce((dates: Date[], feeling: IFeelingItem) => {
                         if (dates[feeling.date]) {
