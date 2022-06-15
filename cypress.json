@@ -1,4 +1,5 @@
 {
     "baseUrl": "https://zinzen.vercel.app/",
-    "testFiles": "**/*.spec.ts"
+    "testFiles": "**/*.spec.ts",
+    "chromeWebSecurity": false 
 }
