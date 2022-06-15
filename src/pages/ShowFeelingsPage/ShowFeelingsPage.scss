@@ -78,37 +78,16 @@
   color: white !important;
 }
 
-.feelings-menu-mobile{
-    display: none;
+.btn-my-feelings__note {
+  display: block;
+  width: 240px;
+  overflow: hidden;
+  font-style: italic;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 0.8em;
+  margin: 2.5% 0%;
 }
-
-/*Media Query for Mobile View*/
-
-@media (max-width: 600px){
-  .feelings-menu-desktop{
-      display:none;
-  }
-  .feelings-menu-mobile{
-      display: block;
-  }
-  .feelings-title-mobile{
-      font-weight: bolder;
-      padding-top: 0.5em;
-  }
-  .feelings-title-light{
-      color:#000000 !important;
-      font-weight: bolder;
-      background-color: #EDC7B7 !important;
-      padding: 1em 1.5em 1em 1.5em !important;
-  }
-  .feelings-title-dark{
-      color:#ffffff !important;
-      font-weight: bolder;
-      background-color: #443027 !important;
-      padding: 1em 1.5em 1em 1.5em !important;
-  }
-}
-
 .show-feelings {
   &__container {
     margin: 30px 0 0 0;
