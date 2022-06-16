@@ -1,76 +1,79 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true,
-        "jest": true
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "settings": {
+    "import/core-modules": ["@expo/vector-icons"],
+    "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
     },
-    "settings": {
-        "import/core-modules": ["@expo/vector-icons"],
-         "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
-         "import/parsers": {
-           "@typescript-eslint/parser": [".ts", ".tsx"]
-         },
-         "import/resolver": {
-           "typescript": {},
-           "node": {
-             "extensions": [".js", ".jsx", ".ts", ".tsx"],
-             "moduleDirectory": ["node_modules", "src/"]
-            }
-         }
-    },
-    "extends": [
-        "plugin:react/recommended",
-        "airbnb"
-    ],
-    "globals": {
-        "cy":true
-    },
-    "overrides": [
-        {
-          "files": [
-            "**/*.test.tsx"
-          ],
-          "env": {
-            "jest": true
-          }
-        }
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": "latest",
-        "sourceType": "module",
-        "project": "./tsconfig.json",
-        "tsconfigRootDir": "./"
-    },
-    "plugins": [
-        "react",
-        "@typescript-eslint",
-        "import"
-    ],
-    "rules": {
-        "linebreak-style": 0,
-        "import/extensions": [
-            "error",
-            "ignorePackages",
-            {
-              "js": "never",
-              "jsx": "never",
-              "ts": "never",
-              "tsx": "never"
-            }
-        ],
-        "import/prefer-default-export": "off",
-        "jsx-a11y/label-has-associated-control": [ "error", {
-            "required": {
-              "some": [ "nesting", "id"  ]
-            }
-        }],
-        "no-nested-ternary": "off",
-        "no-console": "off",
-        "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }],
-        "react/function-component-definition": [2, { "namedComponents": "arrow-function" }]
+    "import/resolver": {
+      "typescript": {},
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "src/"]
+      }
     }
+  },
+  "extends": ["plugin:react/recommended", "airbnb"],
+  "globals": {
+    "cy": true
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.tsx"],
+      "env": {
+        "jest": true
+      }
+    }
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
+  },
+  "plugins": ["react", "@typescript-eslint", "import"],
+  "rules": {
+    "quotes": [2, "double", { "avoidEscape": true }],
+    "implicit-arrow-linebreak": "off",
+    "function-paren-newline": "off",
+    "comma-dangle": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "operator-linebreak": "off",
+    "object-curly-newline": "off",
+    "no-underscore-dangle": "off",
+    "max-len": "off",
+    "linebreak-style": 0,
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "required": {
+          "some": ["nesting", "id"]
+        }
+      }
+    ],
+    "no-nested-ternary": "off",
+    "no-console": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }],
+    "react/function-component-definition": [2, { "namedComponents": "arrow-function" }]
+  }
 }
