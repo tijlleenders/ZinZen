@@ -1,10 +1,5 @@
-import { darkModeState, darkModeStateToggle } from './DarkModeState';
-import { themeSelectionState } from './ThemeSelectionState';
-import { languageSelectionState } from './LanguageSelectionState';
+import { darkModeState, darkModeStateToggle } from "./DarkModeState";
+import { themeSelectionState } from "./ThemeSelectionState";
+import { languageSelectionState } from "./LanguageSelectionState";
 
-export {
-  darkModeState,
-  darkModeStateToggle,
-  themeSelectionState,
-  languageSelectionState,
-};
+export { darkModeState, darkModeStateToggle, themeSelectionState, languageSelectionState };

@@ -1,18 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import './ToggleSwitch.scss';
+import "./ToggleSwitch.scss";
 
-export const ToggleSwitch = ({ label } : { label : string }) => (
+export const ToggleSwitch = ({ label }: { label: string }) => (
   <div className="container">
-    {label}
-    {' '}
+    {label}{" "}
     <div className="toggle-switch">
-      <input
-        type="checkbox"
-        className="checkbox"
-        name={label}
-        id={label}
-      />
+      <input type="checkbox" className="checkbox" name={label} id={label} />
       <label className="label" htmlFor={label}>
         <span className="inner" />
         <span className="switch" />

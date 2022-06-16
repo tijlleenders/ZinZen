@@ -1,12 +1,14 @@
-import React from 'react';
-import { Navbar } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+// @ts-nocheck
 
-import '@translations/i18n';
-import ZinZenText from '@assets/images/LogoTextLight.svg';
-import Logo from '@assets/images/zinzenlogo.png';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './FAQPageUserPanel.scss';
+import React from "react";
+import { Navbar } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+
+import "@translations/i18n";
+import ZinZenText from "@assets/images/LogoTextLight.svg";
+import Logo from "@assets/images/zinzenlogo.png";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./FAQPageUserPanel.scss";
 
 export const HeaderFAQPage = () => {
   const navigate = useNavigate();
@@ -18,14 +20,10 @@ export const HeaderFAQPage = () => {
         alt="Text Nav"
         className="zinzen-logo-nav-landing-page-query"
         onClick={() => {
-          navigate('/');
+          navigate("/");
         }}
       />
-      <img
-        src={ZinZenText}
-        alt="Logo Nav"
-        className="zinzen-text-logo-nav-landing-page-query"
-      />
+      <img src={ZinZenText} alt="Logo Nav" className="zinzen-text-logo-nav-landing-page-query" />
     </Navbar>
   );
 };

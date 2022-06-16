@@ -1,14 +1,14 @@
-import React from 'react';
-import { Button, Container, Row } from 'react-bootstrap';
-import { useRecoilValue } from 'recoil';
+import React from "react";
+import { Button, Container, Row } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
 
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import { darkModeState } from '@store';
+import { darkModeState } from "@store";
 
-import '@translations/i18n';
-import './QueryPageUserChoicePanel.scss';
+import "@translations/i18n";
+import "./QueryPageUserChoicePanel.scss";
 
 export const QueryPageUserChoicePanel = () => {
   const navigate = useNavigate();
@@ -26,24 +26,24 @@ export const QueryPageUserChoicePanel = () => {
         </Row>
         <Row>
           <Button
-            variant={darkModeStatus ? 'brown' : 'peach'}
+            variant={darkModeStatus ? "brown" : "peach"}
             size="lg"
-            className={darkModeStatus ? 'query-choice-dark1' : 'query-choice-light1'}
+            className={darkModeStatus ? "query-choice-dark1" : "query-choice-light1"}
             onClick={() => {
-              navigate('/ZinZenFAQ');
+              navigate("/ZinZenFAQ");
             }}
           >
-            {t('ihavequestions')}
+            {t("ihavequestions")}
           </Button>
           <Button
-            variant={darkModeStatus ? 'brown' : 'peach'}
+            variant={darkModeStatus ? "brown" : "peach"}
             size="lg"
-            className={darkModeStatus ? 'query-choice-dark' : 'query-choice-light'}
+            className={darkModeStatus ? "query-choice-dark" : "query-choice-light"}
             onClick={() => {
-              navigate('/Home');
+              navigate("/Home");
             }}
           >
-            {t('ialreadyknowZinZen')}
+            {t("ialreadyknowZinZen")}
           </Button>
         </Row>
       </Container>

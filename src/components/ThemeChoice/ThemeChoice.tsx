@@ -1,13 +1,14 @@
-import React from 'react';
-import { useRecoilState } from 'recoil';
-import { Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+// @ts-nocheck
+import React from "react";
+import { useRecoilState } from "recoil";
+import { Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-import { themeSelectionState, darkModeState } from '@store';
+import { themeSelectionState, darkModeState } from "@store";
 
-import ThemeDark from '@assets/images/DashboardThemeDark.svg';
-import ThemeLight from '@assets/images/DashboardThemeLight.svg';
-import './ThemeChoice.scss';
+import ThemeDark from "@assets/images/DashboardThemeDark.svg";
+import ThemeLight from "@assets/images/DashboardThemeLight.svg";
+import "./ThemeChoice.scss";
 
 export const ThemeChoice = () => {
   const [, setIsThemeChosen] = useRecoilState(themeSelectionState);
@@ -21,15 +22,11 @@ export const ThemeChoice = () => {
         className="theme-choice-btn"
         onClick={() => {
           setIsThemeChosen(true);
-          localStorage.setItem('theme', 'light');
-          navigate('/QueryZinZen');
+          localStorage.setItem("theme", "light");
+          navigate("/QueryZinZen");
         }}
       >
-        <img
-          src={ThemeLight}
-          alt="Light Theme"
-          className="themechoice"
-        />
+        <img src={ThemeLight} alt="Light Theme" className="themechoice" />
       </Button>
       <br />
       <br />
@@ -39,8 +36,8 @@ export const ThemeChoice = () => {
         className="theme-choice-btn"
         onClick={() => {
           setIsThemeChosen(true);
-          localStorage.setItem('theme', 'dark');
-          navigate('/QueryZinZen');
+          localStorage.setItem("theme", "dark");
+          navigate("/QueryZinZen");
           setDarkModeStatus(true);
         }}
       >

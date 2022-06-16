@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
-import { useRecoilValue } from 'recoil';
-import { useTranslation } from 'react-i18next';
+// @ts-nocheck
 
-import { darkModeState } from '@store';
+import React, { useState } from "react";
+import { Button } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
 
-import '@translations/i18n';
-import './GoalsComponents.scss';
+import { darkModeState } from "@store";
+
+import "@translations/i18n";
+import "./GoalsComponents.scss";
 
 export const GoalsForm = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const darkrooms = ['#443027', '#9C4663', '#646464', '#2B517B', ' #612854'];
-  const lightcolors = [' #EDC7B7', '#AC3B61', ' #BAB2BC', ' #3B6899', ' #8E3379'];
+  const darkrooms = ["#443027", "#9C4663", "#646464", "#2B517B", " #612854"];
+  const lightcolors = [" #EDC7B7", "#AC3B61", " #BAB2BC", " #3B6899", " #8E3379"];
   const { t } = useTranslation();
   const [selectedColorIndex, setColorIndex] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [formInputData, setFormInputData] = useState({
-    inputGoal: '',
-    id: '',
+    inputGoal: "",
+    id: "",
   });
 
   const handleChange = (e: any) => {
@@ -33,12 +35,12 @@ export const GoalsForm = () => {
 
   const handleSubmit = (e: any) => {
     if (formInputData.inputGoal) {
-      const newData = (data:[]) => [...data, formInputData];
+      const newData = (data: []) => [...data, formInputData];
       setTableData(newData);
     }
     setFormInputData({
-      inputGoal: '',
-      id: '',
+      inputGoal: "",
+      id: "",
     });
     e.preventDefault();
   };
@@ -47,10 +49,10 @@ export const GoalsForm = () => {
     setTableData([]);
   };
   function suggestion() {
-    if (formInputData.inputGoal.indexOf('daily') !== -1) {
-      return 'daily';
+    if (formInputData.inputGoal.indexOf("daily") !== -1) {
+      return "daily";
     }
-    return '';
+    return "";
   }
   function duration() {
     const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
@@ -59,7 +61,7 @@ export const GoalsForm = () => {
     if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
       return `${checkGoal} hours`;
     }
-    return '';
+    return "";
   }
   const changeColor = () => {
     const newColorIndex = selectedColorIndex + 1;
@@ -76,42 +78,40 @@ export const GoalsForm = () => {
               ? { backgroundColor: darkrooms[selectedColorIndex] }
               : { backgroundColor: lightcolors[selectedColorIndex] }
           }
-          className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}
+          className={darkModeStatus ? "addtask-dark" : "addtask-light"}
           type="text"
           name="inputGoal"
-          placeholder={t('addGoalPlaceholder')}
+          placeholder={t("addGoalPlaceholder")}
           value={formInputData.inputGoal}
           onChange={handleChange}
         />
       </div>
       <div className="duration">
         <button
+          type="button"
           style={
-        darkModeStatus
-          ? { backgroundColor: darkrooms[selectedColorIndex] }
-          : { backgroundColor: lightcolors[selectedColorIndex] }
-      }
-          className={duration() !== ''
-            ? 'duration'
-            : 'blank'}
+            darkModeStatus
+              ? { backgroundColor: darkrooms[selectedColorIndex] }
+              : { backgroundColor: lightcolors[selectedColorIndex] }
+          }
+          className={duration() !== "" ? "duration" : "blank"}
         >
           {duration()}
         </button>
         <button
+          type="button"
           style={
-           darkModeStatus
-             ? { backgroundColor: darkrooms[selectedColorIndex] }
-             : { backgroundColor: lightcolors[selectedColorIndex] }
-                }
-          className={suggestion() === 'daily'
-            ? 'suggestion'
-            : 'blank'}
+            darkModeStatus
+              ? { backgroundColor: darkrooms[selectedColorIndex] }
+              : { backgroundColor: lightcolors[selectedColorIndex] }
+          }
+          className={suggestion() === "daily" ? "suggestion" : "blank"}
         >
           {suggestion()}
         </button>
       </div>
-      <div className={darkModeStatus ? 'mygoalsbutton-dark' : 'mygoalsbutton-light'}>
-        <Button variant={darkModeStatus ? 'pink' : 'peach'} onClick={handleSubmit} className="addtask-button">
+      <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
+        <Button variant={darkModeStatus ? "pink" : "peach"} onClick={handleSubmit} className="addtask-button">
           Add Task
         </Button>
         <div className="changeColor">
@@ -135,18 +135,14 @@ export const GoalsForm = () => {
           <div
             key={crypto.randomUUID()}
             style={
-              darkModeStatus
-                ? { backgroundColor: darkrooms[index % 5] }
-                : { backgroundColor: lightcolors[index % 5] }
+              darkModeStatus ? { backgroundColor: darkrooms[index % 5] } : { backgroundColor: lightcolors[index % 5] }
             }
-            className={darkModeStatus ? 'addtask-dark' : 'addtask-light'}
+            className={darkModeStatus ? "addtask-dark" : "addtask-light"}
           >
             <div
               role="button"
               tabIndex={0}
-              className={darkModeStatus
-                ? 'deletetodo-dark'
-                : 'deletetodo-light'}
+              className={darkModeStatus ? "deletetodo-dark" : "deletetodo-light"}
               aria-label="Remove Item"
               onClick={removeItem}
               onKeyDown={removeItem}

@@ -1,8 +1,8 @@
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
-import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
-import { QueryPageUserChoicePanel } from '@components/QueryPageUserChoicePanel/QueryPageUserChoicePanel';
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { QueryPageUserChoicePanel } from "@components/QueryPageUserChoicePanel/QueryPageUserChoicePanel";
 
 export const QueryPage = () => (
   <Container fluid>

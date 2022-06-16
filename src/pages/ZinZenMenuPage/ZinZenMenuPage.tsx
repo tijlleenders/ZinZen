@@ -1,7 +1,7 @@
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
-import { ZinZenMenuList } from '@components/ZinZenMenuList/ZinZenMenuList';
+import { ZinZenMenuList } from "@components/ZinZenMenuList/ZinZenMenuList";
 
 export const ZinZenMenuPage = () => (
   <Container fluid>

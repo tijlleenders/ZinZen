@@ -1,7 +1,8 @@
-import React from 'react';
+// @ts-nocheck
+import React from "react";
 
-import BookIcon from '@assets/images/bookicon.svg';
-import './LandingComponents.scss';
+import BookIcon from "@assets/images/bookicon.svg";
+import "./LandingComponents.scss";
 
 export const LandingMiddlePanel = () => (
   <div>
