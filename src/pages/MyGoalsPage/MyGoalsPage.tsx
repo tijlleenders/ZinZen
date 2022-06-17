@@ -5,10 +5,10 @@ import { PlusLg, Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
 import { addGoal, getAllGoals, removeGoal, updateGoal } from "@api/GoalsAPI";
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { GoalItem } from "@src/models/GoalItem";
 
-import './MyGoalsPage.scss';
-import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
+import "./MyGoalsPage.scss";
 
 export const MyGoalsPage = () => {
   const [tapCount, setTapCount] = useState([-1, 0]);
