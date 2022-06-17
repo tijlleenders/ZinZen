@@ -1,18 +1,16 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { PlusLg, Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
 import { addGoal, getAllGoals, removeGoal, updateGoal } from "@api/GoalsAPI";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { GoalItem } from "@src/models/GoalItem";
 
 import "./MyGoalsPage.scss";
 
 export const MyGoalsPage = () => {
   const [tapCount, setTapCount] = useState([-1, 0]);
-  const navigate = useNavigate();
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
@@ -69,12 +67,7 @@ export const MyGoalsPage = () => {
   }, []);
 
   return (
-    <div>
-      <Container>
-        <Row>
-          <HeaderDashboard />
-        </Row>
-      </Container>
+    <div id="myGoals-container" onClickCapture={() => setTapCount([-1, 0])}>
       <Container fluid>
         <input
           id="goal-searchBar"
