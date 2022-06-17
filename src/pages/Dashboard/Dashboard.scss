@@ -6,10 +6,10 @@
   margin-right: auto;
 }
 
-.nav-link-dashboard-light {
-  color: #000000 !important;
-  font-size: 1.2em;
-  margin: 0em 3.2em 0em 1.5em;
+.nav-link-dashboard-light{
+    color: #000000 !important;
+    font-size: 1.2em;
+    margin: 0em 3.2em 0em 1.5em;
 }
 
 .nav-link-dashboard-light:hover {
@@ -17,10 +17,10 @@
   color: #3b6899 !important;
 }
 
-.nav-link-dashboard-dark {
-  color: #d6d6d6 !important;
-  font-size: 1.2em;
-  margin: 0em 3.2em 0em 1.5em;
+.nav-link-dashboard-dark{
+    color: #d6d6d6 !important;
+    font-size: 1.2em;
+    margin: 0em 3.2em 0em 1.5em;
 }
 
 .nav-link-dashboard-dark:hover {
@@ -28,23 +28,40 @@
   color: #3b6899 !important;
 }
 
-.zinzen-logo-nav-dashboard {
-  width: 4%;
+.back-arrow-nav-dashboard{
+    position: absolute;
+   padding-right: 5px;
+    height: 80%;
+    margin:0.7em 0em 1.2em 0em;
+    visibility: visible;
+    cursor: pointer;
 }
 
-.zinzen-logo-nav-dashboard:hover {
-  width: 4%;
-  cursor: pointer;
+.zinzen-text-logo-nav-dashboard{
+    margin-left: 40%;
+    width:10%;
+    cursor: pointer;
 }
 
-.zinzen-text-logo-nav-dashboard {
-  margin: 0.7em 0em 1.2em 1em;
-  width: 10%;
-  cursor: pointer;
+.zinzen-logo-nav-dashboard-main{
+    align-content: flex-start;
+    position: absolute;
+   display: flex;
+    margin-top: 0.5em;
+     height: 90%;
 }
 
-.dark-mode-toggle {
-  margin-bottom: 1.6em;
+.zinzen-logo-nav-dashboard{
+    position: absolute;
+    margin-left: 90%;
+    margin-top: 0.5em;
+    width: 15%;
+     height: 90%;
+}
+
+.dark-mode-toggle{
+    position: fixed;
+    margin-left: 80em;
 }
 
 /*Dashboard*/
@@ -183,23 +200,38 @@
     cursor: pointer;
   }
 
-  .zinzen-text-logo-nav-dashboard {
-    margin-right: 5em;
-    margin-bottom: 3em;
-    width: 25%;
-    visibility: visible;
-    cursor: pointer;
-  }
+   .back-arrow-nav-dashboard{
+        margin-bottom: 2.5em;
+        padding: 0.5em;
+        width:15%;
+        visibility: visible;
+        cursor: pointer;
+    }
 
   .nav-collapse-dashboard {
     margin-bottom: 2em;
   }
 
-  .dark-mode-toggle {
-    margin-bottom: 2.7em;
-  }
+    .zinzen-logo-nav-dashboard-main{
+        position: absolute;
+        margin-bottom: 2.7em;
+        width: 10%;
+    }
 
-  /* Image Dashboard*/
+    .zinzen-logo-nav-dashboard{
+        margin-left: 90%;
+        margin-bottom: 2.7em;
+        width: 10%;
+    }
+
+    .nav-collapse-dashboard{
+        margin-bottom: 2em;
+    }
+
+    .dark-mode-toggle{
+        margin-left: 80%;
+        margin-bottom: 2.7em;
+    }
 
   .book-icon-dashboard {
     display: none;

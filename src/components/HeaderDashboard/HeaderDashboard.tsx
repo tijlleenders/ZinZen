@@ -1,37 +1,29 @@
 // @ts-nocheck
 import React from "react";
-import { Nav, Navbar } from "react-bootstrap";
-import { useRecoilState } from "recoil";
-import DarkModeToggle from "react-dark-mode-toggle";
+import { Navbar } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
 
+import logo from "@assets/images/logo.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
-import Logo from "@assets/images/zinzenlogo.png";
+import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
 
 export const HeaderDashboard = () => {
   const navigate = useNavigate();
-  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-  const toggleTheme = () => {
-    setDarkModeStatus(!darkModeStatus);
-    if (darkModeStatus) {
-      localStorage.setItem("theme", "light");
-    } else {
-      localStorage.setItem("theme", "dark");
-    }
-  };
+  const darkModeStatus = useRecoilValue(darkModeState);
   return (
     <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"
-          src={Logo}
-          alt="ZinZen Logo"
-          className="zinzen-logo-nav-dashboard"
+          src={ArrowIcon}
+          alt="Back arrow"
+          className="back-arrow-nav-dashboard"
           onClick={() => {
             navigate("/Home");
           }}
@@ -57,11 +49,15 @@ export const HeaderDashboard = () => {
             }}
           />
         )}
-
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="navbar-custom" />
-        </Navbar.Collapse>
-        <DarkModeToggle onChange={toggleTheme} checked={darkModeStatus} size={60} className="dark-mode-toggle" />
+        <img
+          role="presentation"
+          src={logo}
+          alt="Zinzen Logo"
+          className="zinzen-logo-nav-dashboard"
+          onClick={() => {
+            navigate("/Home");
+          }}
+        />
       </Navbar>
     </div>
   );

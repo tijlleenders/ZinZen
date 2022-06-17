@@ -39,7 +39,7 @@ export const DashboardUserChoicePanel = () => {
             variant={darkModeStatus ? "brown" : "peach"}
             className={darkModeStatus ? "dashboard-add-btn-dark1" : "dashboard-add-btn-light1"}
             onClick={() => {
-              navigate("/Home/MyGoals");
+              navigate("/Home/AddGoals");
             }}
           >
             {darkModeStatus ? (
