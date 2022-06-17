@@ -1,11 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { RecoilRoot } from 'recoil';
-import * as serviceWorkerRegistration from './service-worker/serviceWorkerRegistration';
+import React from "react";
+import ReactDOM from "react-dom";
+import { RecoilRoot } from "recoil";
+import * as serviceWorkerRegistration from "./service-worker/serviceWorkerRegistration";
 
-import { App } from './App';
+import App from "./App";
 
-import './index.scss';
+import "./index.scss";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,7 +13,7 @@ ReactDOM.render(
       <App />
     </RecoilRoot>
   </React.StrictMode>,
-  document.getElementById('root'),
+  document.getElementById("root")
 );
 
 serviceWorkerRegistration.register();

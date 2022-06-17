@@ -1,22 +1,23 @@
-import React from 'react';
-import { Navbar } from 'react-bootstrap';
-import { useRecoilValue } from 'recoil';
-import { useNavigate } from 'react-router-dom';
+// @ts-nocheck
+import React from "react";
+import { Navbar } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
 
-import { darkModeState } from '@store';
+import { darkModeState } from "@store";
 
-import logo from '@assets/images/logo.svg';
-import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
-import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
-import ArrowIcon from '@assets/images/ArrowIcon.svg';
-import '@translations/i18n';
-import './HeaderDashboard.scss';
+import logo from "@assets/images/logo.svg";
+import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
+import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
+import ArrowIcon from "@assets/images/ArrowIcon.svg";
+import "@translations/i18n";
+import "./HeaderDashboard.scss";
 
 export const HeaderDashboard = () => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
-    <div className={darkModeStatus ? 'positioning-dark' : 'positioning-light'}>
+    <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"
@@ -24,7 +25,7 @@ export const HeaderDashboard = () => {
           alt="Back arrow"
           className="back-arrow-nav-dashboard"
           onClick={() => {
-            navigate('/Home');
+            navigate("/Home");
           }}
         />
         {darkModeStatus ? (
@@ -34,7 +35,7 @@ export const HeaderDashboard = () => {
             alt="ZinZen Text Logo"
             className="zinzen-text-logo-nav-dashboard"
             onClick={() => {
-              navigate('/Home');
+              navigate("/Home");
             }}
           />
         ) : (
@@ -44,7 +45,7 @@ export const HeaderDashboard = () => {
             alt="ZinZen Text Logo"
             className="zinzen-text-logo-nav-dashboard"
             onClick={() => {
-              navigate('/Home');
+              navigate("/Home");
             }}
           />
         )}
@@ -54,7 +55,7 @@ export const HeaderDashboard = () => {
           alt="Zinzen Logo"
           className="zinzen-logo-nav-dashboard"
           onClick={() => {
-            navigate('/Home');
+            navigate("/Home");
           }}
         />
       </Navbar>

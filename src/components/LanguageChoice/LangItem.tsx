@@ -1,25 +1,23 @@
-import React from 'react';
-import { Button } from 'react-bootstrap';
-import { useRecoilState } from 'recoil';
-import i18n from 'i18next';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Button } from "react-bootstrap";
+import { useRecoilState } from "recoil";
+import i18n from "i18next";
+import { useNavigate } from "react-router-dom";
 
-import { ILanguage } from '@src/Interfaces/ILanguage';
-import { languageSelectionState } from '@store';
+import { ILanguage } from "@src/Interfaces/ILanguage";
+import { languageSelectionState } from "@store";
 
-import './LanguageChoice.scss';
+import "./LanguageChoice.scss";
 
 export const LangItem = ({ lang }: { lang: ILanguage }) => {
   const navigate = useNavigate();
-  const [, setIsLanguageChosen] = useRecoilState(
-    languageSelectionState,
-  );
-  const remainder : Number = Number(lang.sno) % 4;
-  const handleClick = (langId : string) => {
+  const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
+  const remainder: Number = Number(lang.sno) % 4;
+  const handleClick = (langId: string) => {
     setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
-    localStorage.setItem('language', JSON.stringify(langId));
-    navigate('/');
+    localStorage.setItem("language", JSON.stringify(langId));
+    navigate("/");
   };
 
   return (

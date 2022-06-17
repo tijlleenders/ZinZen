@@ -1,9 +1,9 @@
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
-import { DashboardImagePanel } from '@components/DasboardImagePanel/DashboardImagePanel';
-import { DashboardUserChoicePanel } from '@components/DashboardUserChoicePanel/DashboardUserChoicePanel';
-import { MainHeaderDashboard } from '@components/HeaderDashboard/MainHeaderDashboard';
+import { DashboardImagePanel } from "@components/DasboardImagePanel/DashboardImagePanel";
+import { DashboardUserChoicePanel } from "@components/DashboardUserChoicePanel/DashboardUserChoicePanel";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 export const Dashboard = () => (
   <div>

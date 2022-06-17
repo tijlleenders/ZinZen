@@ -1,13 +1,11 @@
-import React from 'react';
-import {
-  Container, Row, Button, Col,
-} from 'react-bootstrap';
-import { useRecoilValue } from 'recoil';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Container, Row, Button, Col } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
 
-import { darkModeState } from '@store';
+import { darkModeState } from "@store";
 
-import './NotFoundPage.scss';
+import "./NotFoundPage.scss";
 
 export const NotFoundPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -24,15 +22,11 @@ export const NotFoundPage = () => {
           <h3 className="error-text">Page Not Found</h3>
           <Col sm={1}>
             <Button
-              variant={darkModeStatus ? 'dark-pink' : 'pink'}
+              variant={darkModeStatus ? "dark-pink" : "pink"}
               size="lg"
-              className={
-                    darkModeStatus
-                      ? 'error-btn-dark'
-                      : 'error-btn-light'
-                }
+              className={darkModeStatus ? "error-btn-dark" : "error-btn-light"}
               onClick={() => {
-                navigate('/Home');
+                navigate("/Home");
               }}
             >
               Home

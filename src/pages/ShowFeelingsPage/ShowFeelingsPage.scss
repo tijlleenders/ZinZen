@@ -1,24 +1,24 @@
 /* My Feelings Page*/
 
-.my-feelings-font-light{
+.my-feelings-font-light {
   padding: 0em 1em 0em 0.8em;
   font-style: italic;
   font-weight: bolder;
 }
 
-.my-feelings-font-dark{
-  color:#cecece;
+.my-feelings-font-dark {
+  color: #cecece;
   padding: 0em 1em 0em 0.8em;
   font-style: italic;
   font-weight: bolder;
 }
 
-.feelings-title{
+.feelings-title {
   font-weight: bolder !important;
   margin-top: 1em;
 }
 
-.menu-list{
+.menu-list {
   display: flex;
   flex-direction: column;
 }
@@ -32,8 +32,8 @@
   margin-top: 0.5em;
   margin-right: 0.5em;
   margin-left: 0em;
-  border: 2px solid #EDC7B7 !important;
-  background-color:  #EDC7B7 !important;
+  border: 2px solid #edc7b7 !important;
+  background-color: #edc7b7 !important;
   color: black !important;
   padding: 0.5em 1em 0.5em 0.5em !important;
   font-weight: bolder !important;
@@ -45,7 +45,7 @@
 }
 
 .btn-feelings-light:hover {
-  background-color: #EDC7B7!important;
+  background-color: #edc7b7 !important;
   font-weight: bolder !important;
   color: white !important;
 }
@@ -54,8 +54,8 @@
   margin-top: 0.5em;
   margin-right: 0.5em;
   margin-left: 0em;
-  border: 2px solid #EDC7B7 !important;
-  background-color:  #121212 !important;
+  border: 2px solid #edc7b7 !important;
+  background-color: #121212 !important;
   color: black !important;
   padding: 0.5em 1em 0.5em 0.5em !important;
   font-weight: bolder !important;
@@ -73,7 +73,7 @@
 }
 
 .btn-feelings-dark:hover {
-  background-color: #443027!important;
+  background-color: #443027 !important;
   font-weight: bolder !important;
   color: white !important;
 }
@@ -104,12 +104,12 @@
   justify-content: space-around;
 }
 
-  .show-feelings__options > * {
-    margin: 10px 10px 0 0;
-  }
+.show-feelings__options > * {
+  margin: 10px 10px 0 0;
+}
 
 .show-feelings__note-input {
-  background-color: #EDC7B7 !important;
+  background-color: #edc7b7 !important;
   outline: none;
   border: none;
   border-radius: 8px;
@@ -118,12 +118,12 @@
 }
 
 .show-feelings__modal-button {
-  background-color: #AC3B61 !important;
+  background-color: #ac3b61 !important;
   color: white !important;
 }
 
 .show-feeling__note-textarea {
-  background-color: #EDC7B7 !important;
+  background-color: #edc7b7 !important;
   outline: none;
   border: none;
   border-radius: 8px;
@@ -131,13 +131,13 @@
   font-weight: bold;
 }
 
-.notes-modal-dark .modal-content{
+.notes-modal-dark .modal-content {
   background-color: #121212;
-  border: 3px solid #3A2A22 !important;
+  border: 3px solid #3a2a22 !important;
 }
 
 .notes-modal-light .modal-content {
-  background-color: #F0E6E1;
+  background-color: #f0e6e1;
 }
 
 .note-modal-title {

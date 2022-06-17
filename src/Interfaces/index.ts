@@ -1,6 +1,3 @@
-import { ILanguage, ILanguageListProps } from './ILanguage';
+import { ILanguage, ILanguageListProps } from "./ILanguage";
 
-export {
-  ILanguage,
-  ILanguageListProps,
-};
+export { ILanguage, ILanguageListProps };

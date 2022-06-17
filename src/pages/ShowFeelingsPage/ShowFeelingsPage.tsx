@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { useRecoilValue } from 'recoil';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+// @ts-nocheck
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
-import { getAllFeelings } from '@api/FeelingsAPI';
-import { IFeelingItem } from '@models';
-import { darkModeState } from '@store';
-import { feelingListType } from '@src/global';
-import { getDates } from '@utils';
-import addIcon from '@assets/images/GoalsAddIcon.svg';
-import { ShowFeelingTemplate } from './ShowFeelingTemplate';
+import { getAllFeelings } from "@api/FeelingsAPI";
+import { IFeelingItem } from "@models";
+import { darkModeState } from "@store";
+import { feelingListType } from "@src/global";
+import { getDates } from "@utils";
+import addIcon from "@assets/images/GoalsAddIcon.svg";
+import { ShowFeelingTemplate } from "./ShowFeelingTemplate";
 
-import './ShowFeelingsPage.scss';
-import './ShowFeelings.scss';
+import "./ShowFeelingsPage.scss";
+import "./ShowFeelings.scss";
 
 export const ShowFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -24,15 +25,15 @@ export const ShowFeelingsPage = () => {
   useEffect(() => {
     const getData = async () => {
       const allFeelings = await getAllFeelings();
-      const feelingsByDates: feelingListType[] = allFeelings
-        .reduce((dates: Date[], feeling: IFeelingItem) => {
-          if (dates[feeling.date]) {
-            dates[feeling.date].push(feeling);
-          } else {
-            dates[feeling.date] = [feeling];
-          }
-          return dates;
-        }, {});
+      const feelingsByDates: feelingListType[] = allFeelings.reduce((dates: Date[], feeling: IFeelingItem) => {
+        if (dates[feeling.date]) {
+          dates[feeling.date].push(feeling);
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          dates[feeling.date] = [feeling];
+        }
+        return dates;
+      }, {});
       setFeelingsList(feelingsByDates);
     };
     getData();
@@ -49,7 +50,7 @@ export const ShowFeelingsPage = () => {
     getFeelings().then((feelingsArr) => {
       const timer1 = setTimeout(() => {
         if (feelingsArr.length === 0) {
-          navigate('/Home/AddFeelings', {
+          navigate("/Home/AddFeelings", {
             state: { feelingDate: new Date() },
           });
         }
@@ -64,36 +65,34 @@ export const ShowFeelingsPage = () => {
     <Container fluid className="slide show-feelings__container">
       <Row>
         <Col>
-          <h3 className={darkModeStatus ? 'my-feelings-font-dark' : 'my-feelings-font-light'}>{t('showfeelingsmessage')}</h3>
-          {feelingsList !== null && dateRangeArr.map((date) => (
-            <div
-              key={date}
-              className="show-feelings__list-category"
-            >
-              <h3 className={darkModeStatus
-                ? 'my-feelings-font-dark'
-                : 'my-feelings-font-light'}
-              >
-                <span
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => {
-                    navigate('/Home/AddFeelings', {
-                      state: { feelingDate: new Date(date) },
-                    });
-                  }}
-                  onKeyDown={() => {
-                    navigate('/Home/AddFeelings', {
-                      state: { feelingDate: new Date(date) },
-                    });
-                  }}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {new Date(date).toDateString() === new Date().toDateString() ? 'Today' : new Date(date).toDateString()}
-                </span>
-              </h3>
-              {feelingsList[date]
-                ? (
+          <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
+            {t("showfeelingsmessage")}
+          </h3>
+          {feelingsList !== null &&
+            dateRangeArr.map((date) => (
+              <div key={date} className="show-feelings__list-category">
+                <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => {
+                      navigate("/Home/AddFeelings", {
+                        state: { feelingDate: new Date(date) },
+                      });
+                    }}
+                    onKeyDown={() => {
+                      navigate("/Home/AddFeelings", {
+                        state: { feelingDate: new Date(date) },
+                      });
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {new Date(date).toDateString() === new Date().toDateString()
+                      ? "Today"
+                      : new Date(date).toDateString()}
+                  </span>
+                </h3>
+                {feelingsList[date] ? (
                   <ShowFeelingTemplate
                     key={date}
                     feelingsListObject={feelingsList[date]}
@@ -101,29 +100,28 @@ export const ShowFeelingsPage = () => {
                     currentFeelingsList={feelingsList}
                     handleFocus={{ selectedFeeling, setSelectedFeeling }}
                   />
-                )
-                : (
+                ) : (
                   <input
                     type="image"
                     tabIndex={0}
                     key={date}
                     src={addIcon}
                     alt="add-goal"
-                    style={{ margin: '5px 0 0 30px', height: '30px', width: '30px' }}
+                    style={{ margin: "5px 0 0 30px", height: "30px", width: "30px" }}
                     onClick={() => {
-                      navigate('/Home/AddFeelings', {
+                      navigate("/Home/AddFeelings", {
                         state: { feelingDate: new Date(date) },
                       });
                     }}
                     onKeyDown={() => {
-                      navigate('/Home/AddFeelings', {
+                      navigate("/Home/AddFeelings", {
                         state: { feelingDate: new Date(date) },
                       });
                     }}
                   />
                 )}
-            </div>
-          ))}
+              </div>
+            ))}
         </Col>
       </Row>
     </Container>

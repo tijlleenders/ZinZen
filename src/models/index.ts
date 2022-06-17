@@ -1,7 +1,4 @@
-import { db } from './db';
-import type { IFeelingItem } from './FeelingItem';
+import { db } from "./db";
+import type { IFeelingItem } from "./FeelingItem";
 
-export {
-  db,
-  IFeelingItem,
-};
+export { db, IFeelingItem };

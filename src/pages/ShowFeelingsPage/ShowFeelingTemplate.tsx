@@ -1,36 +1,33 @@
+// @ts-nocheck
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
-import {
-  Button, Nav, Container, Modal,
-} from 'react-bootstrap';
-import { useRecoilValue } from 'recoil';
-import { useTranslation } from 'react-i18next';
-import {
-  ChevronDown, ChevronRight, TrashFill, Journal,
-} from 'react-bootstrap-icons';
+import React, { useState } from "react";
+import { Button, Container, Modal } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
+import { ChevronDown, ChevronRight, TrashFill, Journal } from "react-bootstrap-icons";
 
-import { darkModeState } from '@store';
-import { IFeelingItem } from '@models';
-import { removeFeeling, addFeelingNote, removeFeelingNote } from '@api/FeelingsAPI';
-import { feelingListType } from '@src/global';
-import { feelingsEmojis, feelingsList } from '@consts/FeelingsList';
+import { darkModeState } from "@store";
+import { IFeelingItem } from "@models";
+import { removeFeeling, addFeelingNote, removeFeelingNote } from "@api/FeelingsAPI";
+import { feelingListType } from "@src/global";
+import { feelingsEmojis } from "@consts/FeelingsList";
 
-import '@translations/i18n';
-import './ShowFeelingsPage.scss';
+import "@translations/i18n";
+import "./ShowFeelingsPage.scss";
 
 interface ISetFeelingsListObject {
-  feelingsList: feelingListType[],
-  setFeelingsList: React.Dispatch<React.SetStateAction<feelingListType[]>>
+  feelingsList: feelingListType[];
+  setFeelingsList: React.Dispatch<React.SetStateAction<feelingListType[]>>;
 }
 interface ISetSelectedFeeling {
-  selectedFeeling: number,
-  setSelectedFeeling: React.Dispatch<React.SetStateAction<number>>
+  selectedFeeling: number;
+  setSelectedFeeling: React.Dispatch<React.SetStateAction<number>>;
 }
 interface IProps {
-  feelingsListObject: IFeelingItem[],
-  setFeelingsListObject: ISetFeelingsListObject,
-  currentFeelingsList: feelingListType[],
-  handleFocus: ISetSelectedFeeling
+  feelingsListObject: IFeelingItem[];
+  setFeelingsListObject: ISetFeelingsListObject;
+  currentFeelingsList: feelingListType[];
+  handleFocus: ISetSelectedFeeling;
 }
 
 export const ShowFeelingTemplate: React.FC<IProps> = ({
@@ -43,30 +40,29 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showInputModal, setShowInputModal] = useState(false);
   const [showNotesModal, setShowNotesModal] = useState(false);
-  const [selectedFeelingNote, setSelectedFeelingNote] = useState('');
-  const [noteValue, setNoteValue] = useState('');
+  const [selectedFeelingNote, setSelectedFeelingNote] = useState("");
+  const [noteValue, setNoteValue] = useState("");
 
   const handleInputClose = () => setShowInputModal(false);
   const handleInputShow = () => setShowInputModal(true);
   const handleNotesClose = () => setShowNotesModal(false);
   const handleNotesShow = () => setShowNotesModal(true);
   const handleFeelingsNoteModify = async () => {
-    addFeelingNote(handleFocus.selectedFeeling!, noteValue)
-      .then((newFeelingsList) => {
-        const feelingsByDates: feelingListType[] = newFeelingsList!
-          .reduce((dates: Date[], feeling: IFeelingItem) => {
-            if (dates[feeling.date]) {
-              dates[feeling.date].push(feeling);
-            } else {
-              dates[feeling.date] = [feeling];
-            }
-            return dates;
-          }, {});
-        setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
-      });
+    addFeelingNote(handleFocus.selectedFeeling!, noteValue).then((newFeelingsList) => {
+      const feelingsByDates: feelingListType[] = newFeelingsList!.reduce((dates: Date[], feeling: IFeelingItem) => {
+        if (dates[feeling.date]) {
+          dates[feeling.date].push(feeling);
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          dates[feeling.date] = [feeling];
+        }
+        return dates;
+      }, {});
+      setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
+    });
   };
 
-  const handleFeelingClick = (id:number) => {
+  const handleFeelingClick = (id: number) => {
     handleFocus.setSelectedFeeling(handleFocus.selectedFeeling === id ? -1 : id);
   };
 
@@ -74,44 +70,45 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
     <div>
       <Container fluid>
         <div>
-          {feelingsListObject && Object.keys(feelingsListObject)
-            .map(((feelingId: string) => (
+          {feelingsListObject &&
+            Object.keys(feelingsListObject).map((feelingId: string) => (
               <Button
-                key={feelingsListObject[Number(feelingId)].content
-                    + feelingsListObject[Number(feelingId)].date}
-                className={
-                      darkModeStatus ? 'btn-my-feelings-dark btn-feelings-dark' : 'show-btn-my-feelings-light'
-                  }
+                key={feelingsListObject[Number(feelingId)].content + feelingsListObject[Number(feelingId)].date}
+                className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "show-btn-my-feelings-light"}
                 size="lg"
               >
                 <div
                   className="btn-my-feelings_container"
-                  onClick={() => { handleFeelingClick(feelingsListObject[Number(feelingId)].id); }}
+                  aria-hidden="true"
+                  onClick={() => {
+                    handleFeelingClick(feelingsListObject[Number(feelingId)].id);
+                  }}
                 >
                   <div>
                     {feelingsEmojis[feelingsListObject[Number(feelingId)].category]}
-                    <span className="btn-my-feelings__text">
-                      {t(feelingsListObject[Number(feelingId)].content)}
-                    </span>
+                    <span className="btn-my-feelings__text">{t(feelingsListObject[Number(feelingId)].content)}</span>
                   </div>
                   <div>
                     <div>
-                      {
-                          handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id
-                            ? <ChevronDown />
-                            : <ChevronRight />
-                        }
+                      {handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id ? (
+                        <ChevronDown />
+                      ) : (
+                        <ChevronRight />
+                      )}
                     </div>
                   </div>
                 </div>
                 {feelingsListObject[Number(feelingId)]?.note && (
                   <span
+                    aria-hidden="true"
                     className="btn-my-feelings__note"
-                    onClick={() => { handleFeelingClick(feelingsListObject[Number(feelingId)].id); }}
+                    onClick={() => {
+                      handleFeelingClick(feelingsListObject[Number(feelingId)].id);
+                    }}
                   >
-                    { handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id
+                    {handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id
                       ? `${feelingsListObject[Number(feelingId)].note}`
-                      : '...'}
+                      : "..."}
                   </span>
                 )}
                 {handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id && (
@@ -119,11 +116,15 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                     <TrashFill
                       onClick={() => {
                         const numFeelingId = feelingsListObject[Number(feelingId)].id;
-                        if (numFeelingId !== undefined) { removeFeeling(numFeelingId); } else { console.log('Attempting to remove feeling not in the database'); }
+                        if (numFeelingId !== undefined) {
+                          removeFeeling(numFeelingId);
+                        } else {
+                          console.log("Attempting to remove feeling not in the database");
+                        }
                         const newFeelingsList = currentFeelingsList;
                         const feelingDate = feelingsListObject[Number(feelingId)].date;
                         newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
-                          (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId,
+                          (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId
                         );
                         setFeelingsListObject.setFeelingsList({ ...newFeelingsList });
                       }}
@@ -136,14 +137,15 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                         }
                         if (feelingsListObject[Number(feelingId)]?.note) {
                           handleNotesShow();
-                        } else { handleInputShow(); }
+                        } else {
+                          handleInputShow();
+                        }
                       }}
                       size={20}
                     />
                   </div>
                 )}
               </Button>
-            )
             ))}
         </div>
         <Modal
@@ -151,31 +153,29 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
           onHide={handleInputClose}
           centered
           autoFocus={false}
-          className={
-                darkModeStatus ? 'notes-modal-dark' : 'notes-modal-light'
-              }
+          className={darkModeStatus ? "notes-modal-dark" : "notes-modal-light"}
         >
           <Modal.Header closeButton>
-            <Modal.Title className={
-                darkModeStatus ? 'note-modal-title-dark' : 'note-modal-title-light'
-                }
-            >
+            <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
               Want to tell more about it?
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <input
+              // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus
               type="text"
               placeholder="Add a reason"
               className="show-feelings__note-input"
               value={noteValue}
-              onChange={(e) => { setNoteValue(e.target.value); }}
-                  // Admittedly not the best way to do this but suffices for now
+              onChange={(e) => {
+                setNoteValue(e.target.value);
+              }}
+              // Admittedly not the best way to do this but suffices for now
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === "Enter") {
                   handleFeelingsNoteModify();
-                  setNoteValue('');
+                  setNoteValue("");
                   handleInputClose();
                 }
               }}
@@ -187,7 +187,7 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
               type="submit"
               onClick={() => {
                 handleFeelingsNoteModify();
-                setNoteValue('');
+                setNoteValue("");
                 handleInputClose();
               }}
               className="show-feelings__modal-button"
@@ -200,9 +200,7 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
           show={showNotesModal}
           onHide={handleNotesClose}
           centered
-          className={
-                darkModeStatus ? 'notes-modal-dark' : 'notes-modal-light'
-              }
+          className={darkModeStatus ? "notes-modal-dark" : "notes-modal-light"}
         >
           <Modal.Body>
             <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />
@@ -212,15 +210,18 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
               variant="primary"
               onClick={async () => {
                 const newFeelingsList = await removeFeelingNote(handleFocus.selectedFeeling!);
-                const feelingsByDates: feelingListType[] = newFeelingsList!
-                  .reduce((dates: Date[], feeling: IFeelingItem) => {
+                const feelingsByDates: feelingListType[] = newFeelingsList!.reduce(
+                  (dates: Date[], feeling: IFeelingItem) => {
                     if (dates[feeling.date]) {
                       dates[feeling.date].push(feeling);
                     } else {
+                      // eslint-disable-next-line no-param-reassign
                       dates[feeling.date] = [feeling];
                     }
                     return dates;
-                  }, {});
+                  },
+                  {}
+                );
                 setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
                 handleNotesClose();
               }}
@@ -228,11 +229,7 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
             >
               Delete
             </Button>
-            <Button
-              variant="primary"
-              onClick={handleNotesClose}
-              className="show-feelings__modal-button"
-            >
+            <Button variant="primary" onClick={handleNotesClose} className="show-feelings__modal-button">
               Done
             </Button>
           </Modal.Footer>

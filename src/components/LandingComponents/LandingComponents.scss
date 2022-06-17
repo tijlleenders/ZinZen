@@ -1,222 +1,219 @@
 /*Navbar*/
 
-.navbar-custom-landing-page{
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
+.navbar-custom-landing-page {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.nav-link-landing-page{ 
-    color: #000000 !important;
-    font-size: 1.2em;
-    margin: 0em 3.2em 0em 1.5em;
+.nav-link-landing-page {
+  color: #000000 !important;
+  font-size: 1.2em;
+  margin: 0em 3.2em 0em 1.5em;
 }
 
 .nav-link-landing-page:hover {
-    font-size: 1.25em;
-    color: #3B6899 !important;
+  font-size: 1.25em;
+  color: #3b6899 !important;
 }
 
-.zinzen-logo-nav-landing-page{
-    margin-bottom: 1.2em;
-    width:0%;
-    visibility: hidden;
+.zinzen-logo-nav-landing-page {
+  margin-bottom: 1.2em;
+  width: 0%;
+  visibility: hidden;
 }
 
-.zinzen-text-logo-nav-landing-page{
-    margin-bottom: 1.2em;
-    width:10%;
-    visibility: hidden;
+.zinzen-text-logo-nav-landing-page {
+  margin-bottom: 1.2em;
+  width: 10%;
+  visibility: hidden;
 }
 
 /*Left Panel- ZinZen font, Text, Learn More button customization*/
 
-.zinzen-logo-landing-page{
-    display: block;
-    margin-left: 20%;
-    width: 30%;
+.zinzen-logo-landing-page {
+  display: block;
+  margin-left: 20%;
+  width: 30%;
 }
 
-.zinzen-text-logo-landing-page{
-    margin-top: 1.5em;
-    margin-bottom: 1.2em;
-    width: 75%;
+.zinzen-text-logo-landing-page {
+  margin-top: 1.5em;
+  margin-bottom: 1.2em;
+  width: 75%;
 }
 
 .left-panel-font1 {
-    padding-top: 0.2em;
-    color: #3B6899;
-    font-weight: bolder;
-    font-size: 2em;
+  padding-top: 0.2em;
+  color: #3b6899;
+  font-weight: bolder;
+  font-size: 2em;
 }
 
 .left-panel-font2 {
-    padding-bottom: 0.2em;
-    color: #AC3B61;
-    font-style: italic;
-    font-weight: bolder;
-    font-size: 2em;
+  padding-bottom: 0.2em;
+  color: #ac3b61;
+  font-style: italic;
+  font-weight: bolder;
+  font-size: 2em;
 }
 
 .btn-primary-learnmore {
-    border-radius: 4px;
-    background-color: #AC3B61;
-    border: none;
-    color: #FFFFFF;
-    text-align: center;
-    font-size: 1.2em;
-    padding: 0.5em;
-    font-weight: bold;
-    transition: all 0.5s;
-    cursor: pointer;
-    margin-left: 0.2em;
-    margin-top: 0.7em;
+  border-radius: 4px;
+  background-color: #ac3b61;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 1.2em;
+  padding: 0.5em;
+  font-weight: bold;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin-left: 0.2em;
+  margin-top: 0.7em;
 }
 
 .btn-primary-learnmore span {
-    cursor: pointer;
-    display: inline-block;
-    position: relative;
-    transition: 0.5s;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
 }
 
 .btn-primary-learnmore span:after {
-    content: '\00bb';
-    position: absolute;
-    opacity: 0;
-    top: 0;
-    right: -20px;
-    transition: 0.5s;
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
 }
 
 .btn-primary-learnmore:hover span {
-    padding-right: 25px;
+  padding-right: 25px;
 }
 
 .btn-primary-learnmore:hover span:after {
-    opacity: 1;
-    right: 0;
+  opacity: 1;
+  right: 0;
 }
-
 
 /*Book Icon*/
 
 .book-icon-landing-page {
-    width: 90%;
-    height: auto;
-    margin-top: 5em;
+  width: 90%;
+  height: auto;
+  margin-top: 5em;
 }
-
 
 /*Right Panel-Text, language buttons, theme choice buttons*/
 
 .containerLang {
-    align-items: center;
+  align-items: center;
 }
 
 .right-panel-font {
-    color: #AC3B61;
-    font-weight: bolder;
-    font-size: 1.2rem;
-    margin-top: 25%;
-    padding-left: 5%;
+  color: #ac3b61;
+  font-weight: bolder;
+  font-size: 1.2rem;
+  margin-top: 25%;
+  padding-left: 5%;
 }
 
 .theme-choice-panel-font {
-    color: #AC3B61;
-    font-weight: bolder;
-    margin-top: 5%;
-    font-size: 1.2rem;
-    padding-left: 5%;
+  color: #ac3b61;
+  font-weight: bolder;
+  margin-top: 5%;
+  font-size: 1.2rem;
+  padding-left: 5%;
 }
 
 .containerLang {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .lang-btn1 {
-    color: #000000 ;
-    font-weight: bolder ;
-    font-size: 1.2rem ;
-    width: 300px;
-    margin-top: 0.7em;
-    text-align: left ;
-    padding-left: 8% ;
-    border-radius: 10px;
+  color: #000000;
+  font-weight: bolder;
+  font-size: 1.2rem;
+  width: 300px;
+  margin-top: 0.7em;
+  text-align: left;
+  padding-left: 8%;
+  border-radius: 10px;
 }
 
 .lang-btn2 {
-    color: #FFFFFF ;
-    font-weight: bolder;
-    font-size: 1.2rem ;
-    width: 300px ;
-    margin-top: 0.7em;
-    text-align: left ;
-    padding-left: 8% ;
-    border-radius: 10px ;
+  color: #ffffff;
+  font-weight: bolder;
+  font-size: 1.2rem;
+  width: 300px;
+  margin-top: 0.7em;
+  text-align: left;
+  padding-left: 8%;
+  border-radius: 10px;
 }
 
 /*Media Query for Mobile View*/
 
-@media (max-width: 600px){
+@media (max-width: 600px) {
+  /*Navbar*/
 
-    /*Navbar*/
+  .zinzen-logo-nav-landing-page {
+    width: 10%;
+    visibility: visible;
+  }
 
-    .zinzen-logo-nav-landing-page{
-        width:10%;
-        visibility: visible;
-    }
+  .zinzen-text-logo-nav-landing-page {
+    margin-right: 10em;
+    width: 25%;
+    visibility: visible;
+  }
 
-    .zinzen-text-logo-nav-landing-page{
-        margin-right: 10em;
-        width:25%;
-        visibility: visible;
-    }
+  .nav-collapse-landing-page {
+    margin-bottom: 1em;
+  }
 
-    .nav-collapse-landing-page{
-        margin-bottom: 1em;
-    }
+  .zinzen-text-logo-landing-page {
+    display: none;
+  }
 
-    .zinzen-text-logo-landing-page {
-        display:none;
-    }
+  .zinzen-logo-landing-page {
+    display: none;
+  }
 
-    .zinzen-logo-landing-page {
-        display:none;
-    }
+  /*Info panel text*/
 
-    /*Info panel text*/
+  .left-panel-font1 {
+    color: #3b6899;
+    font-weight: bolder;
+    font-size: 5.2vw;
+    padding-left: 4em;
+  }
 
-    .left-panel-font1 {
-        color: #3B6899;
-        font-weight: bolder;
-        font-size: 5.2vw;
-        padding-left: 4em;
-    }
-    
-    .left-panel-font2 {
-        color: #AC3B61;
-        font-style: italic;
-        font-weight: bolder;
-        font-size: 5.2vw;
-        padding-left: 4em;
-    }
+  .left-panel-font2 {
+    color: #ac3b61;
+    font-style: italic;
+    font-weight: bolder;
+    font-size: 5.2vw;
+    padding-left: 4em;
+  }
 
-    .btn-primary-learnmore {
-        display:none;
-    }
+  .btn-primary-learnmore {
+    display: none;
+  }
 
-    /*Book Icon*/
+  /*Book Icon*/
 
-    .book-icon-landing-page {
-        width: 60%;
-        height: auto;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 0.7em;
-        margin-bottom: 0.7em;
-    }
+  .book-icon-landing-page {
+    width: 60%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
+  }
 }

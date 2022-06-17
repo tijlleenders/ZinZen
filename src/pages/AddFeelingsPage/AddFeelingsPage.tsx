@@ -1,16 +1,17 @@
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useRecoilValue } from 'recoil';
-import { useLocation } from 'react-router-dom';
+// @ts-nocheck
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { useRecoilValue } from "recoil";
+import { useLocation } from "react-router-dom";
 
 import { getJustDate } from '@utils';
 import { darkModeState } from '@store';
 import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
 import { AddFeelingsChoices } from './AddFeelingsChoices';
 
-import '@translations/i18n';
-import './AddFeelingsPage.scss';
+import "@translations/i18n";
+import "./AddFeelingsPage.scss";
 
 export const AddFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);

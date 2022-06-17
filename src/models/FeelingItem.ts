@@ -1,7 +1,7 @@
 export interface IFeelingItem {
-    id?: number;
-    content: string;
-    category: string;
-    date: Date;
-    note?: string;
-};
+  id?: number;
+  content: string;
+  category: string;
+  date: Date;
+  note?: string;
+}
