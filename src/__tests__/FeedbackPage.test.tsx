@@ -6,7 +6,6 @@ import { act, fireEvent, render } from "@testing-library/react";
 import * as api from "@api/FeedbackAPI";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { expect } from "@jest/globals";
-import { BrowserRouter } from "react-router-dom";
 
 global.alert = jest.fn();
 global.fetch = jest.fn(() => {
@@ -35,21 +34,19 @@ describe("Feedback Page", () => {
   });
   it("Feedback Page success flow  ", async () => {
     const { findAllByText, getByText } = render(
-      <BrowserRouter>
-        <RecoilRoot>
-          <FeedbackPage />
-        </RecoilRoot>
-      </BrowserRouter>,
+      <RecoilRoot>
+        <FeedbackPage />
+      </RecoilRoot>
     );
     const button = getByText("submit");
     fireEvent.click(button);
-    await act(async () => render(
-      <BrowserRouter>
+    await act(async () =>
+      render(
         <RecoilRoot>
           <FeedbackPage />
         </RecoilRoot>
-      </BrowserRouter>,
-    ));
+      )
+    );
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(global.alert).toHaveBeenCalledTimes(1);
@@ -61,11 +58,9 @@ describe("Feedback Page", () => {
     fetch.mockImplementationOnce(() => Promise.reject(new Error("Api error")));
 
     const { findAllByText, getByText } = render(
-      <BrowserRouter>
-        <RecoilRoot>
-          <FeedbackPage />
-        </RecoilRoot>
-      </BrowserRouter>,
+      <RecoilRoot>
+        <FeedbackPage />
+      </RecoilRoot>
     );
     const button = getByText("submit");
     fireEvent.click(button);
