@@ -1,26 +1,26 @@
 /* eslint-disable no-alert */
-import React, { useState } from 'react';
-import { Container, Button } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useRecoilValue } from 'recoil';
+import React, { useState } from "react";
+import { Container, Button } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { useRecoilValue } from "recoil";
 
-import { darkModeState } from '@store';
-import { submitFeedback } from '@src/api/FeedbackAPI';
+import { darkModeState } from "@store";
+import { submitFeedback } from "@src/api/FeedbackAPI";
 
-import '@translations/i18n';
-import './feedbackpage.scss';
+import "@translations/i18n";
+import "./feedbackpage.scss";
 
 export const FeedbackPage = () => {
   const [userRating, setUserRating] = useState(5);
-  const [userFeedback, setUserFeedback] = useState('');
+  const [userFeedback, setUserFeedback] = useState("");
   const darkModeStatus = useRecoilValue(darkModeState);
 
   async function submitToAPI(feedback: string) {
     const updatedFeedback = `Rating : ${userRating}\n${feedback}`;
     const res = await submitFeedback(updatedFeedback);
-    if (res.status === 'success') {
+    if (res.status === "success") {
       alert(res.message);
-      setUserFeedback('');
+      setUserFeedback("");
       setUserRating(0);
     } else {
       alert(res.message);
@@ -32,12 +32,9 @@ export const FeedbackPage = () => {
     <div id="feedback-container">
       <Container fluid>
         {userRating === 0 ? <h1>hello</h1> : null}
-        <div style={{ color: `${darkModeStatus ? 'white' : 'black'}` }}>
-          <p id="feedback-line-1">{t('opinion')}</p>
-          <h1 id="feedback-line-2">
-            {' '}
-            {t('rate')}
-          </h1>
+        <div style={{ color: `${darkModeStatus ? "white" : "black"}` }}>
+          <p id="feedback-line-1">{t("opinion")}</p>
+          <h1 id="feedback-line-2"> {t("rate")}</h1>
           <div className="rating">
             {[...Array(5).keys()].map((index) => {
               const idx = index + 1;
@@ -46,25 +43,34 @@ export const FeedbackPage = () => {
                   id="userRating-btn"
                   type="button"
                   key={idx}
-                  className={idx <= userRating ? 'decided' : 'notDecided'}
-                  onClick={() => { setUserRating(idx); }}
+                  className={idx <= userRating ? "decided" : "notDecided"}
+                  onClick={() => {
+                    setUserRating(idx);
+                  }}
                 >
                   <span className="star">&#9733;</span>
                 </button>
               );
             })}
           </div>
-          <h5 id="feedback-line-3">{t('experience')}</h5>
+          <h5 id="feedback-line-3">{t("experience")}</h5>
           <textarea
             id="feedback-textbox"
             value={userFeedback}
-            onChange={(e) => { setUserFeedback(e.target.value); }}
-            placeholder={t('feedbackPlaceholder')}
+            onChange={(e) => {
+              setUserFeedback(e.target.value);
+            }}
+            placeholder={t("feedbackPlaceholder")}
           />
-          <p id="feedback-line-4">{t('anonymousFeedback')}</p>
-          <Button id="feedback-submit-btn" onClick={() => { submitToAPI(userFeedback); }}>
-            {' '}
-            {t('submit')}
+          <p id="feedback-line-4">{t("anonymousFeedback")}</p>
+          <Button
+            id="feedback-submit-btn"
+            onClick={() => {
+              submitToAPI(userFeedback);
+            }}
+          >
+            {" "}
+            {t("submit")}
           </Button>
         </div>
       </Container>

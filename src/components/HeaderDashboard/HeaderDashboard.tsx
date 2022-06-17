@@ -1,16 +1,17 @@
-import React from 'react';
-import { Nav, Navbar } from 'react-bootstrap';
-import { useRecoilState } from 'recoil';
-import DarkModeToggle from 'react-dark-mode-toggle';
-import { useNavigate } from 'react-router-dom';
+// @ts-nocheck
+import React from "react";
+import { Nav, Navbar } from "react-bootstrap";
+import { useRecoilState } from "recoil";
+import DarkModeToggle from "react-dark-mode-toggle";
+import { useNavigate } from "react-router-dom";
 
-import { darkModeState } from '@store';
+import { darkModeState } from "@store";
 
-import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
-import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
-import Logo from '@assets/images/zinzenlogo.png';
-import '@translations/i18n';
-import './HeaderDashboard.scss';
+import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
+import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
+import Logo from "@assets/images/zinzenlogo.png";
+import "@translations/i18n";
+import "./HeaderDashboard.scss";
 
 export const HeaderDashboard = () => {
   const navigate = useNavigate();
@@ -18,13 +19,13 @@ export const HeaderDashboard = () => {
   const toggleTheme = () => {
     setDarkModeStatus(!darkModeStatus);
     if (darkModeStatus) {
-      localStorage.setItem('theme', 'light');
+      localStorage.setItem("theme", "light");
     } else {
-      localStorage.setItem('theme', 'dark');
+      localStorage.setItem("theme", "dark");
     }
   };
   return (
-    <div className={darkModeStatus ? 'positioning-dark' : 'positioning-light'}>
+    <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"
@@ -32,7 +33,7 @@ export const HeaderDashboard = () => {
           alt="ZinZen Logo"
           className="zinzen-logo-nav-dashboard"
           onClick={() => {
-            navigate('/Home');
+            navigate("/Home");
           }}
         />
         {darkModeStatus ? (
@@ -42,7 +43,7 @@ export const HeaderDashboard = () => {
             alt="ZinZen Text Logo"
             className="zinzen-text-logo-nav-dashboard"
             onClick={() => {
-              navigate('/Home');
+              navigate("/Home");
             }}
           />
         ) : (
@@ -52,7 +53,7 @@ export const HeaderDashboard = () => {
             alt="ZinZen Text Logo"
             className="zinzen-text-logo-nav-dashboard"
             onClick={() => {
-              navigate('/Home');
+              navigate("/Home");
             }}
           />
         )}
@@ -60,12 +61,7 @@ export const HeaderDashboard = () => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="navbar-custom" />
         </Navbar.Collapse>
-        <DarkModeToggle
-          onChange={toggleTheme}
-          checked={darkModeStatus}
-          size={60}
-          className="dark-mode-toggle"
-        />
+        <DarkModeToggle onChange={toggleTheme} checked={darkModeStatus} size={60} className="dark-mode-toggle" />
       </Navbar>
     </div>
   );

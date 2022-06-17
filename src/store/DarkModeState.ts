@@ -1,12 +1,12 @@
-import { atom, selector } from 'recoil';
+import { atom, selector } from "recoil";
 
 export const darkModeState = atom({
-  key: 'darkModeState',
-  default: localStorage.getItem('theme') === 'dark',
+  key: "darkModeState",
+  default: localStorage.getItem("theme") === "dark",
 });
 
 export const darkModeStateToggle = selector({
-  key: 'darkModeStateToggle',
+  key: "darkModeStateToggle",
   get: ({ get }) => {
     get(darkModeState);
   },

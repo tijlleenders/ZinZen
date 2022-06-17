@@ -1,6 +1,6 @@
-import Dexie, { Table } from 'dexie';
-import { IFeelingItem } from './FeelingItem';
-import { GoalItem } from './GoalItem';
+import Dexie, { Table } from "dexie";
+import { IFeelingItem } from "./FeelingItem";
+import { GoalItem } from "./GoalItem";
 
 export class FeelingsDB extends Dexie {
   feelingsCollection!: Table<IFeelingItem, number>;
@@ -8,10 +8,10 @@ export class FeelingsDB extends Dexie {
   goalsCollection!: Table<GoalItem, number>;
 
   constructor() {
-    super('FeelingsDB');
+    super("FeelingsDB");
     this.version(1).stores({
-      feelingsCollection: '++id, content, category, date, note',
-      goalsCollection: '++id, title, duration, sublist, repeat, start, finish, createdAt',
+      feelingsCollection: "++id, content, category, date, note",
+      goalsCollection: "++id, title, duration, sublist, repeat, start, finish, createdAt",
     });
   }
 }

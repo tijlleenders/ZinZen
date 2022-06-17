@@ -1,94 +1,93 @@
 #explore-container-light {
-    background-color: #F0E6E1;
-    margin-top: 3%;
+  background-color: #f0e6e1;
+  margin-top: 3%;
 }
 
 #explore-container-dark {
-    background-color: #131313;
-    margin-top: 3%;
+  background-color: #131313;
+  margin-top: 3%;
 }
 
 #goals-container {
-    padding: 0% 35%;
-    padding-bottom: 10%;
+  padding: 0% 35%;
+  padding-bottom: 10%;
 }
 
 .goal-row {
-    margin-top: 15%;
-    background-color: #EDC7B7;
-    border-radius: 28px;
-    text-align: center;
+  margin-top: 15%;
+  background-color: #edc7b7;
+  border-radius: 28px;
+  text-align: center;
 }
 
-    .goal-row:first-child {
-        margin: 0;
-    }
+.goal-row:first-child {
+  margin: 0;
+}
 
 .goal-card {
-    padding: 1% 1% 0% 1%;
-    border: 1px solid #EDC7B7;
-    border-radius: 28px;
+  padding: 1% 1% 0% 1%;
+  border: 1px solid #edc7b7;
+  border-radius: 28px;
 }
 
 .goal-img {
-    border: 1px solid #EDC7B7;
-    border-radius: 28px;
-    width: 100%;
+  border: 1px solid #edc7b7;
+  border-radius: 28px;
+  width: 100%;
 }
 
 .goal-title {
+  text-align: center !important;
+  color: black;
+  font-weight: bold;
+  font-size: x-large;
+}
+
+.addGoal-btn {
+  background-color: #ac3b61 !important;
+  color: white !important;
+  font-weight: bolder;
+  font-size: 2.2em;
+  border-radius: 50%;
+  position: relative;
+  top: 20px;
+  margin: 0% 45% !important;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+  #goals-container {
+    padding: 0;
+    padding-bottom: 10%;
+  }
+  .goal-card {
+    padding: 1% 1% 0% 1%;
+    border: 1px solid #edc7b7;
+    border-radius: 28px;
+  }
+
+  .goal-img {
+    border: 1px solid #edc7b7;
+    border-radius: 28px;
+    width: 100%;
+  }
+
+  .goal-title {
     text-align: center !important;
     color: black;
     font-weight: bold;
     font-size: x-large;
-}
+  }
 
-.addGoal-btn {
-    background-color: #AC3B61 !important;
+  .addGoal-btn {
+    background-color: #ac3b61 !important;
     color: white !important;
     font-weight: bolder;
     font-size: 2.2em;
     border-radius: 50%;
     position: relative;
     top: 20px;
-    margin: 0% 45% !important;
+    margin: 0% 43% !important;
     cursor: pointer;
-}
-
-
-@media only screen and (max-width: 768px) {
-    #goals-container {
-        padding: 0;
-        padding-bottom: 10%;
-    }
-    .goal-card {
-        padding: 1% 1% 0% 1%;
-        border: 1px solid #EDC7B7;
-        border-radius: 28px;
-    }
-
-    .goal-img {
-        border: 1px solid #EDC7B7;
-        border-radius: 28px;
-        width: 100%;
-    }
-
-    .goal-title {
-        text-align: center !important;
-        color: black;
-        font-weight: bold;
-        font-size: x-large;
-    }
-
-    .addGoal-btn {
-        background-color: #AC3B61 !important;
-        color: white !important;
-        font-weight: bolder;
-        font-size: 2.2em;
-        border-radius: 50%;
-        position: relative;
-        top: 20px;
-        margin: 0% 43% !important;
-        cursor: pointer;
-    }
+  }
 }

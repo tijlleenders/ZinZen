@@ -1,9 +1,9 @@
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
-import { LandingLeftPanel } from './LandingLeftPanel';
-import { LandingMiddlePanel } from './LandingMiddlePanel';
-import { LandingRightPanel } from './LandingRightPanel';
+import { LandingLeftPanel } from "./LandingLeftPanel";
+import { LandingMiddlePanel } from "./LandingMiddlePanel";
+import { LandingRightPanel } from "./LandingRightPanel";
 
 export const LandingContainer = () => (
   <div className="h-100 d-inline-block">

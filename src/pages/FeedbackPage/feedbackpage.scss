@@ -1,38 +1,40 @@
 #feedback-container {
   margin-top: 25%;
 }
-#feedback-line-1, #feedback-line-4 {
-    font-style: italic;
+#feedback-line-1,
+#feedback-line-4 {
+  font-style: italic;
 }
 
-#feedback-line-2, #feedback-line-3 {
-    font-weight: bold;
+#feedback-line-2,
+#feedback-line-3 {
+  font-weight: bold;
 }
 
 #userRating-btn {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    cursor: pointer;
-  }
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
 
-  .decided {
-    color: coral;
-  }
+.decided {
+  color: coral;
+}
 
-  .notDecided {
-    color: #ccc;
-  }
+.notDecided {
+  color: #ccc;
+}
 
-  .star {
-    font-size: xxx-large;
-  }
+.star {
+  font-size: xxx-large;
+}
 
 #feedback-textbox {
-    background: rgb(237, 199, 183);
-    border-radius: 4px;
-    height: 200px;
-    width: 100%;
+  background: rgb(237, 199, 183);
+  border-radius: 4px;
+  height: 200px;
+  width: 100%;
 }
 
 #feedback-submit-btn {
@@ -43,17 +45,14 @@
 
 @media only screen and (min-width: 760px) {
   #feedback-container {
-      padding: 2% 30%;
-      margin-top: 7.5%;
+    padding: 2% 30%;
+    margin-top: 7.5%;
   }
-
 }
 
 @media only screen and (min-width: 1280px) {
-    #feedback-container {
-        padding: 2% 30%;
-        margin-top: 4.5%;
-    }
-
+  #feedback-container {
+    padding: 2% 30%;
+    margin-top: 4.5%;
   }
-  
+}

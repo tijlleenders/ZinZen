@@ -1,20 +1,26 @@
-import React from 'react';
-import {
-  Button, Nav, Navbar, Container,
-} from 'react-bootstrap';
-import { useRecoilValue } from 'recoil';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+// @ts-nocheck
+import React from "react";
+import { Button, Nav, Navbar, Container } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
-import { addFeeling } from '@api/FeelingsAPI';
-import { darkModeState } from '@store';
-import { feelingsEmojis } from '@consts/FeelingsList';
+import { addFeeling } from "@api/FeelingsAPI";
+import { darkModeState } from "@store";
+import { feelingsEmojis } from "@consts/FeelingsList";
 
-import '@translations/i18n';
-import './AddFeelingsPage.scss';
+import "@translations/i18n";
+import "./AddFeelingsPage.scss";
 
-export const FeelingTemplate = ({ feelingCategory, feelingsList, feelingDate } :
-  { feelingCategory: string, feelingsList: string[], feelingDate: Date }) => {
+export const FeelingTemplate = ({
+  feelingCategory,
+  feelingsList,
+  feelingDate,
+}: {
+  feelingCategory: string;
+  feelingsList: string[];
+  feelingDate: Date;
+}) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const navigate = useNavigate();
@@ -23,7 +29,7 @@ export const FeelingTemplate = ({ feelingCategory, feelingsList, feelingDate } :
     <div>
       <Container fluid>
         <div className="feelings-menu-desktop">
-          <Button variant={darkModeStatus ? 'brown' : 'peach'} size="lg" className="feelings-title">
+          <Button variant={darkModeStatus ? "brown" : "peach"} size="lg" className="feelings-title">
             {t(feelingCategory)}
             {feelingsEmojis[feelingCategory]}
           </Button>
@@ -32,16 +38,14 @@ export const FeelingTemplate = ({ feelingCategory, feelingsList, feelingDate } :
             <Button
               key={feelingName}
               className={
-                darkModeStatus
-                  ? 'btn-my-feelings-dark btn-feelings-dark'
-                  : 'btn-my-feelings-light btn-feelings-light'
+                darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "btn-my-feelings-light btn-feelings-light"
               }
               size="lg"
               onClick={() => {
                 console.log(feelingDate);
                 addFeeling(feelingName, feelingCategory, feelingDate);
-                setTimeout(function(){
-                  navigate('/Home/MyFeelings')
+                setTimeout(() => {
+                  navigate("/Home/MyFeelings");
                 }, 100);
               }}
             >
@@ -51,7 +55,7 @@ export const FeelingTemplate = ({ feelingCategory, feelingsList, feelingDate } :
         </div>
         <div className="feelings-menu-mobile">
           <Navbar collapseOnSelect expand="lg">
-            <Navbar.Toggle className={darkModeStatus ? 'feelings-title-dark' : 'feelings-title-light'}>
+            <Navbar.Toggle className={darkModeStatus ? "feelings-title-dark" : "feelings-title-light"}>
               {t(feelingCategory)}
               {feelingsEmojis[feelingCategory]}
             </Navbar.Toggle>
@@ -62,15 +66,15 @@ export const FeelingTemplate = ({ feelingCategory, feelingsList, feelingDate } :
                     key={feelingName}
                     className={
                       darkModeStatus
-                        ? 'btn-my-feelings-dark btn-feelings-dark'
-                        : 'btn-my-feelings-light btn-feelings-light'
+                        ? "btn-my-feelings-dark btn-feelings-dark"
+                        : "btn-my-feelings-light btn-feelings-light"
                     }
                     size="lg"
                     onClick={() => {
                       console.log(feelingDate);
                       addFeeling(feelingName, feelingCategory, feelingDate);
-                      setTimeout(function(){
-                        navigate('/Home/MyFeelings')
+                      setTimeout(() => {
+                        navigate("/Home/MyFeelings");
                       }, 100);
                     }}
                   >
