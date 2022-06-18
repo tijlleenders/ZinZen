@@ -14,19 +14,14 @@ export const truncateContent = (content: string, maxLength = 20) => {
   return content;
 };
 
-// eslint-disable-next-line no-extend-native
-Date.prototype.addDays = (days: number) => {
-  const date = new Date(this.valueOf());
-  date.setDate(date.getDate() + days);
-  return date;
-};
-
 export const getDates = (startDate: Date, stopDate: Date) => {
   const dateArray = [];
-  let currentDate = startDate;
+  console.log(startDate, stopDate);
+  const currentDate: Date = startDate;
+  console.log(currentDate, typeof (currentDate));
   while (currentDate <= stopDate) {
     dateArray.push(new Date(currentDate));
-    currentDate = currentDate.addDays(1);
+    currentDate.setDate(currentDate.getDate() + 1);
   }
   return dateArray;
 };
