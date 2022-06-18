@@ -5,7 +5,5 @@ export default defineConfig({
     baseUrl: "http://localhost:3000", // "https://zinzen.vercel.app/",
     chromeWebSecurity: false,
     specPattern: "**/*.spec.ts",
-
-  }
-  ,
+  },
 });

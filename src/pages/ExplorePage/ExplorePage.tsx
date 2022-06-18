@@ -30,13 +30,13 @@ export const ExplorePage = () => {
   return (
     <div id={`explore-container-${darkModeStatus ? "dark" : "light"}`}>
       <Container fluid className="slide">
-        <div id="goals-container">
+        <div id="explore-goals-container">
           {goals.map((goal: any) => (
-            <div className="goal-row">
-              <div className="goal-card">
-                <img className="goal-img" alt="my-goals" src={goal.goalImage} />
-                <div className="goal-title">{t(goal.goalName)}</div>
-                <h1 className="addGoal-btn">+</h1>
+            <div className="explore-goal-row">
+              <div className="explore-goal-card">
+                <img className="explore-goal-img" alt="my-goals" src={goal.goalImage} />
+                <div className="explore-goal-title">{t(goal.goalName)}</div>
+                <h1 className="explore-addGoal-btn">+</h1>
               </div>
             </div>
           ))}

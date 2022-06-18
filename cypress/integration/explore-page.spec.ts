@@ -9,15 +9,15 @@ describe("ExplorePage Test", () => {
   });
 
   it("Goal Card Should have Backgorund color rgb(237, 199, 183)", () => {
-    cy.get(".goal-row").invoke("css", "background-color").should("equal", "rgb(237, 199, 183)");
+    cy.get(".explore-goal-row").invoke("css", "background-color").should("equal", "rgb(237, 199, 183)");
   });
 
   it("Font color of Goal Title should be black", () => {
-    cy.get(".goal-title").invoke("css", "color").should("equal", "rgb(0, 0, 0)");
+    cy.get(".explore-goal-title").invoke("css", "color").should("equal", "rgb(0, 0, 0)");
   });
 
   it("Should have Goal title in center of card", () => {
-    cy.get(".goal-title").invoke("css", "text-align").should("equal", "center");
+    cy.get(".explore-goal-title").invoke("css", "text-align").should("equal", "center");
   });
 
   it("Should have Health and Fitness Goals Card", () => {
@@ -45,10 +45,10 @@ describe("ExplorePage Test", () => {
   });
 
   it("Add Goal btn should be there", () => {
-    cy.get(".addGoal-btn").should("have.length", 6);
+    cy.get(".explore-addGoal-btn").should("have.length", 6);
   });
 
   it("Display Goal Images in their respective cards", () => {
-    cy.get(".goal-img").should("have.length", 6).should("be.visible");
+    cy.get(".explore-goal-img").should("have.length", 6).should("be.visible");
   });
 });
