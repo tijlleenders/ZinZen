@@ -13,11 +13,12 @@ describe("DashboardUserChoice Test", () => {
     // cy.get('.add-icon').eq(0).click().location('pathname')
     // .should('include', 'MyGoals')
     // .go('back');
-    cy.get(".add-icon").eq(1).click().location("pathname").should("include", "AddFeelings").go("back");
+    cy.get(".add-icon").eq(1).click().location("pathname")
+      .should("include", "AddFeelings")
+      .go("back");
   });
   it("Should have ZinZen button working", () => {
     cy.contains("ZinZen")
-      .should("have.class", "dashboard-choice-light")
       .click()
       .location("pathname")
       .should("include", "ZinZen")
@@ -26,7 +27,6 @@ describe("DashboardUserChoice Test", () => {
 
   it("Should have ZinZen button working", () => {
     cy.contains("ZinZen")
-      .should("have.class", "dashboard-choice-light")
       .click()
       .location("pathname")
       .should("include", "ZinZen")
@@ -35,32 +35,29 @@ describe("DashboardUserChoice Test", () => {
 
   it("Should have My Goals button working", () => {
     cy.contains("My Goals")
-      .should("have.class", "dashboard-choice-light1")
       .click()
       .location("pathname")
       .should("include", "MyGoals")
       .go("back");
   });
 
-  it("Should have My Feelings button working", () => {
-    cy.contains("My Feelings")
-      .should("have.class", "dashboard-choice-light")
-      .click()
-      .location("pathname")
-      .should("include", "MyFeelings")
-      .go("back");
-  });
-
   it("Should have My Time button", () => {
-    cy.contains("My Time").should("have.class", "dashboard-choice-light");
+    cy.contains("My Time");
   });
 
   it("Should have Explore button working", () => {
     cy.contains("Explore")
-      .should("have.class", "dashboard-choice-light")
       .click()
       .location("pathname")
       .should("include", "Explore")
+      .go("back");
+  });
+
+  it("Should have My Feelings button working", () => {
+    cy.contains("My Feelings")
+      .click()
+      .location("pathname")
+      .should("include", "MyFeelings")
       .go("back");
   });
 });
