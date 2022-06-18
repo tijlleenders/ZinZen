@@ -16,9 +16,7 @@ export const truncateContent = (content: string, maxLength = 20) => {
 
 export const getDates = (startDate: Date, stopDate: Date) => {
   const dateArray = [];
-  console.log(startDate, stopDate);
   const currentDate: Date = startDate;
-  console.log(currentDate, typeof (currentDate));
   while (currentDate <= stopDate) {
     dateArray.push(new Date(currentDate));
     currentDate.setDate(currentDate.getDate() + 1);

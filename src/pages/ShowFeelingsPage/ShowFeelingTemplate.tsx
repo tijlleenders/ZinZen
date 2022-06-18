@@ -66,87 +66,84 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
     handleFocus.setSelectedFeeling(handleFocus.selectedFeeling === id ? -1 : id);
   };
 
+  const handleJournalClick = (id: number) => {
+    if (feelingsListObject[id]?.note) setSelectedFeelingNote(feelingsListObject[id]?.note!);
+    if (feelingsListObject[id]?.note) handleNotesShow();
+    else handleInputShow();
+  };
+
+  const handleTrashClick = (id: number) => {
+    const numFeelingId = feelingsListObject[id].id;
+    if (numFeelingId) { removeFeeling(numFeelingId); } else { console.log("Attempting to remove feeling not in the database"); }
+    const newFeelingsList = currentFeelingsList;
+    const feelingDate = feelingsListObject[id].date;
+    newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
+      (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId
+    );
+    setFeelingsListObject.setFeelingsList({ ...newFeelingsList });
+  };
   return (
     <div>
       <Container fluid>
         <div>
           {feelingsListObject &&
-            Object.keys(feelingsListObject).map((feelingId: string) => (
-              <Button
-                key={feelingsListObject[Number(feelingId)].content + feelingsListObject[Number(feelingId)].date}
-                className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "show-btn-my-feelings-light"}
-                size="lg"
-              >
-                <div
-                  className="btn-my-feelings_container"
-                  aria-hidden="true"
-                  onClick={() => {
-                    handleFeelingClick(feelingsListObject[Number(feelingId)].id);
-                  }}
+            Object.keys(feelingsListObject).map((ID: string) => {
+              const feelingId = Number(ID);
+              return (
+                <Button
+                  key={feelingsListObject[feelingId].content + feelingsListObject[feelingId].date}
+                  className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "show-btn-my-feelings-light"}
+                  size="lg"
                 >
-                  <div>
-                    {feelingsEmojis[feelingsListObject[Number(feelingId)].category]}
-                    <span className="btn-my-feelings__text">{t(feelingsListObject[Number(feelingId)].content)}</span>
-                  </div>
-                  <div>
+                  <div
+                    className="btn-my-feelings_container"
+                    aria-hidden="true"
+                    onClick={() => {
+                      handleFeelingClick(feelingsListObject[feelingId].id);
+                    }}
+                  >
                     <div>
-                      {handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id ? (
-                        <ChevronDown />
-                      ) : (
-                        <ChevronRight />
-                      )}
+                      {feelingsEmojis[feelingsListObject[feelingId].category]}
+                      <span className="btn-my-feelings__text">{t(feelingsListObject[feelingId].content)}</span>
+                    </div>
+                    <div>
+                      <div>
+                        {handleFocus.selectedFeeling === feelingsListObject[feelingId].id ? (
+                          <ChevronDown />
+                        ) : (
+                          <ChevronRight />
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-                {feelingsListObject[Number(feelingId)]?.note && (
+                  {feelingsListObject[feelingId]?.note && (
                   <span
                     aria-hidden="true"
                     className="btn-my-feelings__note"
                     onClick={() => {
-                      handleFeelingClick(feelingsListObject[Number(feelingId)].id);
+                      handleFeelingClick(feelingsListObject[feelingId].id);
                     }}
                   >
-                    {handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id
-                      ? `${feelingsListObject[Number(feelingId)].note}`
+                    {handleFocus.selectedFeeling === feelingsListObject[feelingId].id
+                      ? `${feelingsListObject[feelingId].note}`
                       : "..."}
                   </span>
-                )}
-                {handleFocus.selectedFeeling === feelingsListObject[Number(feelingId)].id && (
+                  )}
+                  {handleFocus.selectedFeeling === feelingsListObject[feelingId].id && (
                   <div className="show-feelings__options">
                     <TrashFill
-                      onClick={() => {
-                        const numFeelingId = feelingsListObject[Number(feelingId)].id;
-                        if (numFeelingId !== undefined) {
-                          removeFeeling(numFeelingId);
-                        } else {
-                          console.log("Attempting to remove feeling not in the database");
-                        }
-                        const newFeelingsList = currentFeelingsList;
-                        const feelingDate = feelingsListObject[Number(feelingId)].date;
-                        newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
-                          (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId
-                        );
-                        setFeelingsListObject.setFeelingsList({ ...newFeelingsList });
-                      }}
+                      onClick={() => handleTrashClick(feelingId)}
                       size={20}
                     />
                     <Journal
-                      onClick={() => {
-                        if (feelingsListObject[Number(feelingId)]?.note) {
-                          setSelectedFeelingNote(feelingsListObject[Number(feelingId)]?.note!);
-                        }
-                        if (feelingsListObject[Number(feelingId)]?.note) {
-                          handleNotesShow();
-                        } else {
-                          handleInputShow();
-                        }
-                      }}
+                      onClick={() => handleJournalClick(feelingId)}
                       size={20}
                     />
                   </div>
-                )}
-              </Button>
-            ))}
+                  )}
+                </Button>
+              );
+            })}
         </div>
         <Modal
           show={showInputModal}
