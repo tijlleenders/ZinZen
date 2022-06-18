@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { Navbar } from "react-bootstrap";
+import { Container, Navbar, Row } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +17,8 @@ export const HeaderDashboard = () => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
-    <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
+    <Container fluid className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
+      <Row>
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"
@@ -59,6 +60,7 @@ export const HeaderDashboard = () => {
           }}
         />
       </Navbar>
-    </div>
+      </Row>
+    </Container>
   );
 };

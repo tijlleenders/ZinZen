@@ -1,16 +1,16 @@
-import React from 'react';
-import { Nav, Navbar } from 'react-bootstrap';
-import { useRecoilState } from 'recoil';
-import DarkModeToggle from 'react-dark-mode-toggle';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Nav, Navbar } from "react-bootstrap";
+import { useRecoilState } from "recoil";
+import DarkModeToggle from "react-dark-mode-toggle";
+import { useNavigate } from "react-router-dom";
 
-import { darkModeState } from '@store';
+import { darkModeState } from "@store";
 
-import logo from '@assets/images/logo.svg';
-import ZinZenTextLight from '@assets/images/LogoTextLight.svg';
-import ZinZenTextDark from '@assets/images/LogoTextDark.svg';
-import '@translations/i18n';
-import './HeaderDashboard.scss';
+import logo from "@assets/images/logo.svg";
+import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
+import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
+import "@translations/i18n";
+import "./HeaderDashboard.scss";
 
 export const MainHeaderDashboard = () => {
   const navigate = useNavigate();
