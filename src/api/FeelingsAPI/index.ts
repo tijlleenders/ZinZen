@@ -28,6 +28,11 @@ export const getAllFeelings = async () => {
   return allFeelings;
 };
 
+export const isCollectionEmpty = async () => {
+  const feelingsCount = await db.feelingsCollection.count();
+  return feelingsCount === 0;
+};
+
 export const getFeelingsOnDate = async (date: Date) => {
   let feelingsList: IFeelingItem[] = [];
   await db

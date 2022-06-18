@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { getAllFeelings } from "@api/FeelingsAPI";
+import { getAllFeelings, isCollectionEmpty } from "@api/FeelingsAPI";
 import { IFeelingItem } from "@models";
 import { darkModeState } from "@store";
 import { feelingListType } from "@src/global";
@@ -41,15 +41,13 @@ export const ShowFeelingsPage = () => {
   const dateArr = Object.keys(feelingsList).map((date) => date);
   const dateRangeArr = getDates(new Date(dateArr[0]), new Date()).reverse();
   useEffect(() => {
-    async function getFeelings() {
-      // Highly inefficient way to achive this, will replace this with a boolean function of
-      // "Is Feelings Collection empty?" later
-      const feelingsArr = await getAllFeelings();
-      return feelingsArr;
+    async function checkCollection() {
+      const result = await isCollectionEmpty();
+      return result;
     }
-    getFeelings().then((feelingsArr) => {
+    checkCollection().then((result) => {
       const timer1 = setTimeout(() => {
-        if (feelingsArr.length === 0) {
+        if (result) {
           navigate("/Home/AddFeelings", {
             state: { feelingDate: new Date() },
           });
@@ -92,7 +90,7 @@ export const ShowFeelingsPage = () => {
                       : new Date(date).toDateString()}
                   </span>
                 </h3>
-                {feelingsList[date] ? (
+                {feelingsList[date] && feelingsList[date].length > 0 ? (
                   <ShowFeelingTemplate
                     key={date}
                     feelingsListObject={feelingsList[date]}
