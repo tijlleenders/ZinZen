@@ -6,10 +6,10 @@
   margin-right: auto;
 }
 
-.nav-link-dashboard-light{
-    color: #000000 !important;
-    font-size: 1.2em;
-    margin: 0em 3.2em 0em 1.5em;
+.nav-link-dashboard-light {
+  color: #000000 !important;
+  font-size: 1.2em;
+  margin: 0em 3.2em 0em 1.5em;
 }
 
 .nav-link-dashboard-light:hover {
@@ -17,10 +17,10 @@
   color: #3b6899 !important;
 }
 
-.nav-link-dashboard-dark{
-    color: #d6d6d6 !important;
-    font-size: 1.2em;
-    margin: 0em 3.2em 0em 1.5em;
+.nav-link-dashboard-dark {
+  color: #d6d6d6 !important;
+  font-size: 1.2em;
+  margin: 0em 3.2em 0em 1.5em;
 }
 
 .nav-link-dashboard-dark:hover {
@@ -52,17 +52,8 @@
      height: 90%;
 }
 
-.zinzen-logo-nav-dashboard{
-    position: absolute;
-    margin-left: 90%;
-    margin-top: 0.5em;
-    width: 15%;
-     height: 90%;
-}
-
-.dark-mode-toggle{
-    position: fixed;
-    margin-left: 80em;
+.dark-mode-toggle {
+  margin-bottom: 1.6em;
 }
 
 /*Dashboard*/
@@ -196,12 +187,11 @@
 
   .zinzen-logo-nav-dashboard {
     position: absolute;
-    margin-top: 4em;
     width: 10%;
     visibility: visible;
     cursor: pointer;
-    margin-left: 85%;
-    margin-bottom: 6em;
+    margin-left:23.5em;
+    margin-bottom: 1.7em;
   }
 
 
@@ -235,8 +225,9 @@
     }
 
     .dark-mode-toggle{
+      position: absolute;
       margin-top: 2.5em;
-        margin-left: 82%;
+        margin-left: 86%;
         margin-bottom: 5em;
     }
 

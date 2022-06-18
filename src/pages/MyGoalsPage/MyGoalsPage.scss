@@ -3,18 +3,18 @@
 }
 
 #goal-searchBar {
-    background-color: rgba(237, 199, 183, 0.4);
-    border: none;
-    border-radius: 10px;
-    color: #504E4E;
-    font-size: 1.4em;
-    font-family: 'Montserrat';
-    font-weight: bolder;
-    height: 50px;
-    margin-left: 2%;
-    margin-bottom: 3.5%;
-    padding-left: 0.5em;
-    width: 94%;
+  background-color: rgba(237, 199, 183, 0.4);
+  border: none;
+  border-radius: 10px;
+  color: #504e4e;
+  font-size: 1.4em;
+  font-family: "Montserrat";
+  font-weight: bolder;
+  height: 50px;
+  margin-left: 2%;
+  margin-bottom: 3.5%;
+  padding-left: 0.5em;
+  width: 94%;
 }
 
 #myGoals_title {
@@ -72,7 +72,8 @@
   font-family: Montserrat;
   font-weight: bold;
   font-size: 1.3em;
-  text-align: left;
+  text-align: left !important;
+  cursor: pointer;
 }
 
 @media only screen and (min-width: 600px) {
