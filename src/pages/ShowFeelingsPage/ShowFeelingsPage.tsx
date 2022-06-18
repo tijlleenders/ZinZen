@@ -90,7 +90,7 @@ export const ShowFeelingsPage = () => {
                       : new Date(date).toDateString()}
                   </span>
                 </h3>
-                {feelingsList[date] ? (
+                {feelingsList[date] && feelingsList[date].length > 0 ? (
                   <ShowFeelingTemplate
                     key={date}
                     feelingsListObject={feelingsList[date]}
