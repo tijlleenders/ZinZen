@@ -7,7 +7,7 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { addFeeling } from "@api/FeelingsAPI";
+import { addFeeling, addFeelingWithNote } from "@api/FeelingsAPI";
 import { darkModeState } from "@store";
 import { feelingsEmojis } from "@consts/FeelingsList";
 
@@ -28,9 +28,18 @@ export const FeelingTemplate = ({
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const [showFeelingModal, setShowFeelingModal] = useState(false);
+  const [feelingNote, setFeelingNote] = useState("");
+  const [selectedFeeling, setSelectedFeeling] = useState(feelingCategory);
 
-  const addThisFeeling = (feelingName: string) => {
-    addFeeling(feelingName, feelingCategory, feelingDate);
+  const addThisFeeling = () => {
+    console.log(feelingCategory);
+    if (feelingNote && feelingNote !== "") {
+      console.log(selectedFeeling, feelingCategory, feelingDate, feelingNote);
+      addFeelingWithNote(selectedFeeling, feelingCategory, feelingDate, feelingNote);
+    } else {
+      console.log(selectedFeeling, feelingCategory, feelingDate);
+      addFeeling(selectedFeeling, feelingCategory, feelingDate);
+    }
     setTimeout(() => {
       navigate("/Home/MyFeelings");
     }, 100);
@@ -69,7 +78,7 @@ export const FeelingTemplate = ({
               <button
                 type="button"
                 className="feelings-name"
-                onClick={() => addThisFeeling(feelingCategory)}
+                onClick={() => addThisFeeling()}
               >
                 {t(feelingCategory)}
                 {feelingsEmojis[feelingCategory]}
@@ -102,20 +111,30 @@ export const FeelingTemplate = ({
               {feelingsList.map((feeling) => (
                 <button
                   type="button"
-                  className="feelingOption-name"
+                  className={`feelingOption-name feelingOption-${selectedFeeling === feeling ? "selected" : ""}`}
                   key={`feelingOption-${feeling}`}
-                  onClick={() => addThisFeeling(feeling)}
+                  onClick={() => { setSelectedFeeling(feeling); }}
                 >
                   {t(feeling)}
                 </button>
               ))}
             </div>
+            <input
+              type="text"
+              placeholder="I feel..."
+              id="myfeelings-note-input"
+              value={feelingNote}
+              onChange={(e) => {
+                setFeelingNote(e.target.value);
+              }}
+            />
           </Modal.Body>
           <Modal.Footer>
             <Button
               variant="primary"
               type="submit"
               onClick={() => {
+                addThisFeeling();
                 setShowFeelingModal(false);
               }}
               className="show-feelings__modal-button"

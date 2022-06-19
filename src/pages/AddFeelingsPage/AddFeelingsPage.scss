@@ -105,6 +105,17 @@
     text-align: left;
     background: transparent;
     border: none;
+    font-weight: bolder;
+  }
+  #myfeelings-note-input{
+    background-color: #edc7b7 !important;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    font-weight: bold;
+    margin-top: 8%;
+    width:95%;
   }
   .feelings-title-mobile {
     font-weight: bolder;
@@ -165,10 +176,14 @@
     border-radius: 10px;
     color: #454545;
     font-size: 1.025rem;
-    font-weight: 500;
-    margin-right: 4.5%;
+    font-weight: bolder;
+    margin-right: 2.5%;
     margin-top: 3%;    
     padding: 1.5% 5%;
+  }
+
+  .feelingOption-selected{
+    background: #EDC7B7;
   }
 }
 

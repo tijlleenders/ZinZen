@@ -3,7 +3,7 @@ import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { getJustDate } from "@utils";
 import { darkModeState } from "@store";
@@ -15,6 +15,7 @@ import "./AddFeelingsPage.scss";
 export const AddFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const location = useLocation();
   const date =
     location?.state?.feelingDate !== undefined ? getJustDate(location?.state?.feelingDate) : getJustDate(new Date());
@@ -31,7 +32,11 @@ export const AddFeelingsPage = () => {
         </Col>
         <Col sm={1} />
       </Row>
-      <Button id="myFeelings-redirect-btn">View My Feelings</Button>
+      <Button
+        id="myFeelings-redirect-btn"
+        onClick={() => navigate("/Home/MyFeelings")}
+      >View My Feelings
+      </Button>
     </Container>
   );
 };
