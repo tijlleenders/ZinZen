@@ -1,14 +1,14 @@
-import React from 'react';
-import { Container, Row } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useRecoilValue } from 'recoil';
+import React from "react";
+import { Container, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { useRecoilValue } from "recoil";
 
-import { darkModeState } from '@store';
-import { GoalsForm } from '@components/GoalsComponents/GoalsForm';
-import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
+import { darkModeState } from "@store";
+import { GoalsForm } from "@components/GoalsComponents/GoalsForm";
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 
-import '@translations/i18n';
-import '@components/GoalsComponents/GoalsComponents.scss';
+import "@translations/i18n";
+import "@components/GoalsComponents/GoalsComponents.scss";
 
 export const GoalsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -22,13 +22,13 @@ export const GoalsPage = () => {
       </Container>
       <Container fluid>
         <Row className="position">
-          <h2 className={darkModeStatus ? 'mygoals-font-dark' : 'mygoals-font-light'}>{t('myGoalsMessage')}</h2>
-          <div className={darkModeStatus ? 'goalsubtext-font-dark' : 'goalsubtext-font-light'}>
+          <h2 className={darkModeStatus ? "mygoals-font-dark" : "mygoals-font-light"}>{t("myGoalsMessage")}</h2>
+          <div className={darkModeStatus ? "goalsubtext-font-dark" : "goalsubtext-font-light"}>
             <p>
-              {t('goalsubtext')}
+              {t("goalsubtext")}
               <br />
-              {' '}
-              {t('format')}
+              {" "}
+              {t("format")}
             </p>
           </div>
         </Row>

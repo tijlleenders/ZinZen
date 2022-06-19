@@ -18,13 +18,13 @@ export const MainHeaderDashboard = () => {
   const toggleTheme = () => {
     setDarkModeStatus(!darkModeStatus);
     if (darkModeStatus) {
-      localStorage.setItem('theme', 'light');
+      localStorage.setItem("theme", "light");
     } else {
-      localStorage.setItem('theme', 'dark');
+      localStorage.setItem("theme", "dark");
     }
   };
   return (
-    <div className={darkModeStatus ? 'positioning-dark' : 'positioning-light'}>
+    <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"
@@ -32,7 +32,7 @@ export const MainHeaderDashboard = () => {
           alt="Zinzen Logo"
           className="zinzen-logo-nav-dashboard-main"
           onClick={() => {
-            navigate('/Home');
+            navigate("/Home");
           }}
         />
         {darkModeStatus ? (
@@ -42,7 +42,7 @@ export const MainHeaderDashboard = () => {
             alt="ZinZen Text Logo"
             className="zinzen-text-logo-nav-dashboard-main"
             onClick={() => {
-              navigate('/Home');
+              navigate("/Home");
             }}
           />
         ) : (
@@ -52,7 +52,7 @@ export const MainHeaderDashboard = () => {
             alt="ZinZen Text Logo"
             className="zinzen-text-logo-nav-dashboard-main"
             onClick={() => {
-              navigate('/Home');
+              navigate("/Home");
             }}
           />
         )}
