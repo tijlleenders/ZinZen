@@ -5,10 +5,10 @@ import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 import { useLocation } from "react-router-dom";
 
-import { getJustDate } from '@utils';
-import { darkModeState } from '@store';
-import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
-import { AddFeelingsChoices } from './AddFeelingsChoices';
+import { getJustDate } from "@utils";
+import { darkModeState } from "@store";
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { AddFeelingsChoices } from "./AddFeelingsChoices";
 
 import "@translations/i18n";
 import "./AddFeelingsPage.scss";
