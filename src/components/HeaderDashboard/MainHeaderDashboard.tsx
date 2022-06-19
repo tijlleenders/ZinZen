@@ -40,7 +40,7 @@ export const MainHeaderDashboard = () => {
             role="presentation"
             src={ZinZenTextDark}
             alt="ZinZen Text Logo"
-            className="zinzen-text-logo-nav-dashboard"
+            className="zinzen-text-logo-nav-dashboard-main"
             onClick={() => {
               navigate('/Home');
             }}
@@ -50,7 +50,7 @@ export const MainHeaderDashboard = () => {
             role="presentation"
             src={ZinZenTextLight}
             alt="ZinZen Text Logo"
-            className="zinzen-text-logo-nav-dashboard"
+            className="zinzen-text-logo-nav-dashboard-main"
             onClick={() => {
               navigate('/Home');
             }}

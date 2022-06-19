@@ -29,28 +29,51 @@
 }
 
 .back-arrow-nav-dashboard{
-    position: absolute;
-   padding-right: 5px;
-    height: 80%;
-    margin-top: 2.5em;
+    position: fixed;
+    height: 50px;
+    margin-left: 0em;
+    margin-top: 3.5em;
     visibility: visible;
     cursor: pointer;
 }
 
 .zinzen-text-logo-nav-dashboard{
-  margin-top: 0.25em;
-    margin-left: 40%;
-    width:25%;
+  position: absolute;
     cursor: pointer;
+    margin-top: 5.2em;
+    padding-top: 0.5em;
+    margin-bottom: 2.7em;
+      margin-left: 42%;
+      width:10%;
+      cursor: pointer;
+}
+
+.zinzen-text-logo-nav-dashboard-main{
+  position: absolute;
+    cursor: pointer;
+    margin-top: 2.5em;
+    margin-bottom: 2.7em;
+      margin-left: 42%;
+      width:10%;
+      cursor: pointer;
 }
 
 .zinzen-logo-nav-dashboard-main{
-    align-content: flex-start;
     position: absolute;
-   display: flex;
-    margin-top: 2.5em;
-     height: 90%;
+    height: 80%;
+    cursor: pointer;
 }
+
+.zinzen-logo-nav-dashboard{
+ position: absolute;
+  display: flex;
+  margin-top: 3em;
+  margin-left: 92%;
+ height: 50px;
+  width: 10%;
+  cursor: pointer;
+}
+
 
 .dark-mode-toggle {
   margin-bottom: 1.6em;
@@ -187,16 +210,25 @@
 
   .zinzen-logo-nav-dashboard {
     position: absolute;
+    height: 100px;
     width: 10%;
     visibility: visible;
     cursor: pointer;
     margin-left:23.5em;
-    margin-bottom: 1.7em;
+    margin-top: 2.5em;
   }
 
 
 .zinzen-text-logo-nav-dashboard{
-  margin-top: 0.25em;
+  margin-top: 5em;
+  margin-bottom: 2.7em;
+    margin-left: 38%;
+    width:25%;
+    cursor: pointer;
+}
+
+.zinzen-text-logo-nav-dashboard-main{
+  margin-top: 5em;
   margin-bottom: 2.7em;
     margin-left: 38%;
     width:25%;
@@ -204,10 +236,13 @@
 }
 
    .back-arrow-nav-dashboard{
-    width: 12%;
-        margin-bottom: 5em;
-        visibility: visible;
-        cursor: pointer;
+    position: absolute;
+    width: 10%;
+    height: 100px;
+    margin-left: 0.5em;
+    margin-top: 2.5em;
+    visibility: visible;
+    cursor: pointer;
     }
 
   .nav-collapse-dashboard {
@@ -216,7 +251,8 @@
 
     .zinzen-logo-nav-dashboard-main{
         position: absolute;
-        margin-bottom: 5em;
+        height: 100px;
+        margin-top: 2.5em;
         width: 10%;
     }
 
@@ -226,9 +262,8 @@
 
     .dark-mode-toggle{
       position: absolute;
-      margin-top: 2.5em;
+      margin-top: 3.5em;
         margin-left: 86%;
-        margin-bottom: 5em;
     }
 
   .book-icon-dashboard {
