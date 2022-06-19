@@ -77,6 +77,19 @@
   display: none;
 }
 
+#myFeelings-redirect-btn{
+  background: #AC3B61;
+  border-radius: 7px;
+  color: #000000;
+  position: absolute;
+  font-weight: bolder;
+  font-size: larger;
+  bottom: 0;
+  right: 0;
+  margin-right: 5%;
+  margin-bottom: 5%;
+}
+
 /*Media Query for Mobile View*/
 
 @media (max-width: 600px) {

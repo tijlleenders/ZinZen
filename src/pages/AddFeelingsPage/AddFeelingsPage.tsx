@@ -31,6 +31,7 @@ export const AddFeelingsPage = () => {
         </Col>
         <Col sm={1} />
       </Row>
+      <Button id="myFeelings-redirect-btn">View My Feelings</Button>
     </Container>
   );
 };
