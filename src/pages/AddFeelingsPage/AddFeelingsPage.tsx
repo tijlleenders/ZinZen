@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 import { useLocation } from "react-router-dom";

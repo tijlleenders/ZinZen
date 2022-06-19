@@ -1,6 +1,8 @@
 // @ts-nocheck
 import React from "react";
-import { Button, Nav, Navbar, Container } from "react-bootstrap";
+import { Button, Navbar, Container } from "react-bootstrap";
+import { ChevronRight } from "react-bootstrap-icons";
+
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -55,34 +57,15 @@ export const FeelingTemplate = ({
         </div>
         <div className="feelings-menu-mobile">
           <Navbar collapseOnSelect expand="lg">
-            <Navbar.Toggle className={darkModeStatus ? "feelings-title-dark" : "feelings-title-light"}>
-              {t(feelingCategory)}
-              {feelingsEmojis[feelingCategory]}
-            </Navbar.Toggle>
-            <Navbar.Collapse>
-              <Nav className="navbar-custom">
-                {feelingsList.map((feelingName) => (
-                  <Button
-                    key={feelingName}
-                    className={
-                      darkModeStatus
-                        ? "btn-my-feelings-dark btn-feelings-dark"
-                        : "btn-my-feelings-light btn-feelings-light"
-                    }
-                    size="lg"
-                    onClick={() => {
-                      console.log(feelingDate);
-                      addFeeling(feelingName, feelingCategory, feelingDate);
-                      setTimeout(() => {
-                        navigate("/Home/MyFeelings");
-                      }, 100);
-                    }}
-                  >
-                    {t(feelingName)}
-                  </Button>
-                ))}
-              </Nav>
-            </Navbar.Collapse>
+            <div className={darkModeStatus ? "feelings-title-dark" : "feelings-title-light"}>
+              <div className="feelings-name">
+                {t(feelingCategory)}
+                {feelingsEmojis[feelingCategory]}
+              </div>
+              <div className="feelings-expand-btw">
+                <div><ChevronRight /></div>
+              </div>
+            </div>
           </Navbar>
         </div>
       </Container>

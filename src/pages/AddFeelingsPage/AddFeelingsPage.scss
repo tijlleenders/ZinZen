@@ -1,14 +1,14 @@
 /* My Feelings Page*/
 
 .my-feelings-font-light {
-  padding: 0em 1em 0em 0.8em;
+  padding: 0em 0em 0em 1em !important;
   font-style: italic;
   font-weight: bolder;
 }
 
 .my-feelings-font-dark {
   color: #cecece;
-  padding: 0em 1em 0em 0.8em;
+  padding: 0em 0em 0em 1em !important;
   font-style: italic;
   font-weight: bolder;
 }
@@ -86,22 +86,47 @@
   .feelings-menu-mobile {
     display: block;
   }
+  .feelings-name {
+    padding: 0.3em 0em 0.3em 0.5em !important;
+  }
   .feelings-title-mobile {
     font-weight: bolder;
     padding-top: 0.5em;
   }
+  .feelings-expand-btw{
+    border-left: 2px solid #EDC7B7;
+    padding: 1.5% 5%;
+  }
+  .feeling-mobile{
+    display: flex;
+    background-color: #f0e6e1 !important;
+  }
   .feelings-title-light {
+    border: 2px solid #EDC7B7;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
     color: #000000 !important;
     font-weight: bolder;
-    background-color: #edc7b7 !important;
-    padding: 1em 1.5em 1em 1.5em !important;
+    background-color: #f0e6e1 !important;
+    font-size: 1.5em;
+    // padding: 1em 1.5em 1em 1.5em !important;
+    width: 100%;
+    text-align: left !important;
   }
 
   .feelings-title-dark {
+    border: 2px solid #EDC7B7;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
     color: #ffffff !important;
     font-weight: bolder;
     background-color: #443027 !important;
-    padding: 1em 1.5em 1em 1.5em !important;
+    font-size: 1.5em;
+    // padding: 1em 1.5em 1em 1.5em !important;
+    width: 100%;
+    text-align: left !important;
   }
 }
 
