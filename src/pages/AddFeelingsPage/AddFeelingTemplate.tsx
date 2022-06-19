@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from "react";
-import { Button, Navbar, Container } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Navbar, Container, Modal } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
 
 import { useRecoilValue } from "recoil";
@@ -24,9 +24,17 @@ export const FeelingTemplate = ({
   feelingDate: Date;
 }) => {
   const { t } = useTranslation();
-  const darkModeStatus = useRecoilValue(darkModeState);
   const navigate = useNavigate();
+  const darkModeStatus = useRecoilValue(darkModeState);
 
+  const [showFeelingModal, setShowFeelingModal] = useState(false);
+
+  const addThisFeeling = (feelingName: string) => {
+    addFeeling(feelingName, feelingCategory, feelingDate);
+    setTimeout(() => {
+      navigate("/Home/MyFeelings");
+    }, 100);
+  };
   return (
     <div>
       <Container fluid>
@@ -58,16 +66,64 @@ export const FeelingTemplate = ({
         <div className="feelings-menu-mobile">
           <Navbar collapseOnSelect expand="lg">
             <div className={darkModeStatus ? "feelings-title-dark" : "feelings-title-light"}>
-              <div className="feelings-name">
+              <button
+                type="button"
+                className="feelings-name"
+                onClick={() => addThisFeeling(feelingCategory)}
+              >
                 {t(feelingCategory)}
                 {feelingsEmojis[feelingCategory]}
-              </div>
-              <div className="feelings-expand-btw">
+              </button>
+              <button
+                className="feelings-expand-btw"
+                type="button"
+                onClick={() => { setShowFeelingModal(true); }}
+              >
                 <div><ChevronRight /></div>
-              </div>
+              </button>
             </div>
           </Navbar>
         </div>
+        <Modal
+          show={showFeelingModal}
+          onHide={() => setShowFeelingModal(false)}
+          centered
+          autoFocus={false}
+          className={darkModeStatus ? "notes-modal-dark" : "notes-modal-light"}
+        >
+          <Modal.Header closeButton id="feeling-modal-header">
+            <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
+              {`You feel ${t(feelingCategory)}`}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body id="feeling-modal-body">
+            <h2 id="feeling-reason-ques">Can you be more specific?</h2>
+            <div id="feelingOptions">
+              {feelingsList.map((feeling) => (
+                <button
+                  type="button"
+                  className="feelingOption-name"
+                  key={`feelingOption-${feeling}`}
+                  onClick={() => addThisFeeling(feeling)}
+                >
+                  {t(feeling)}
+                </button>
+              ))}
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={() => {
+                setShowFeelingModal(false);
+              }}
+              className="show-feelings__modal-button"
+            >
+              Done
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     </div>
   );
