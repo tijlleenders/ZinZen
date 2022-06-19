@@ -99,7 +99,7 @@
   .feelings-menu-mobile {
     display: block;
   }
-  .feelings-name {
+  .feelings-name-light, .feelings-name-dark {
     padding: 0.3em 0em 0.3em 0.5em !important;
     width: 100%;
     text-align: left;
@@ -107,6 +107,7 @@
     border: none;
     font-weight: bolder;
   }
+
   #myfeelings-note-input{
     background-color: #edc7b7 !important;
     outline: none;
@@ -121,7 +122,7 @@
     font-weight: bolder;
     padding-top: 0.5em;
   }
-  .feelings-expand-btw{
+  .feelings-expand-btw-light, .feelings-expand-btw-dark{
     background: transparent;
     border: none;
     border-left: 2px solid #EDC7B7;
@@ -185,6 +186,11 @@
   .feelingOption-selected{
     background: #EDC7B7;
   }
+
+  .feelings-name-dark, .feelings-expand-btw-dark > div{
+    color: #cecece;
+  }
+
 }
 
 .add-feelings {
