@@ -15,6 +15,7 @@ import { ShowFeelingTemplate } from "./ShowFeelingTemplate";
 
 import "./ShowFeelingsPage.scss";
 import "./ShowFeelings.scss";
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 
 export const ShowFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -60,6 +61,12 @@ export const ShowFeelingsPage = () => {
   }, []);
 
   return (
+    <div>
+      <Container fluid>
+        <Row>
+          <HeaderDashboard />
+        </Row>
+      </Container>
     <Container fluid className="slide show-feelings__container">
       <Row>
         <Col>
@@ -123,5 +130,6 @@ export const ShowFeelingsPage = () => {
         </Col>
       </Row>
     </Container>
+    </div>
   );
 };

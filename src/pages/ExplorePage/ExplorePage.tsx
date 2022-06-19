@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { Container } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 import Health from "@assets/images/health-fitness-goals.jpg";
@@ -10,14 +9,12 @@ import MindAndSpirit from "@assets/images/mind-spirit-goals.jpg";
 import Nature from "@assets/images/nature-environment-goals.jpeg";
 import PersonalGrowth from "@assets/images/personalGrowth-goals.jpg";
 import Relationship from "@assets/images/relationship-goals.jpg";
-import { darkModeState } from "@src/store";
 
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import "@translations/i18n";
 import "./explorepage.scss";
 
 export const ExplorePage = () => {
-  const darkModeStatus = useRecoilValue(darkModeState);
   const goals: any = [
     { goalName: "healthGoals", goalImage: Health },
     { goalName: "relationshipGoals", goalImage: Relationship },
@@ -29,7 +26,7 @@ export const ExplorePage = () => {
   const { t } = useTranslation();
 
   return (
-    <div id={`explore-container-${darkModeStatus ? 'dark' : 'light'}`}>
+    <div>
       <Container fluid>
         <Row>
           <HeaderDashboard />
@@ -41,7 +38,8 @@ export const ExplorePage = () => {
             <div className="explore-goal-row">
               <div className="explore-goal-card">
                 <img className="explore-goal-img" alt="my-goals" src={goal.goalImage} />
-                <div className="explore-goal-title">{t(goal.goalName)}</div>
+                <div className="explore-goal-title">{t(goal.goalName)}
+                </div>
                 <h1 className="explore-addGoal-btn">+</h1>
               </div>
             </div>

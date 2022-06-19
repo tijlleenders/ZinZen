@@ -7,12 +7,11 @@ import addIcon from "@assets/images/GoalsAddIcon.svg";
 import { addGoal, getAllGoals, removeGoal, updateGoal } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 
-import './MyGoalsPage.scss';
-import { HeaderDashboard } from '@components/HeaderDashboard/HeaderDashboard';
+import "./MyGoalsPage.scss";
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 
 export const MyGoalsPage = () => {
   const [tapCount, setTapCount] = useState([-1, 0]);
-  const navigate = useNavigate();
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
@@ -70,12 +69,12 @@ export const MyGoalsPage = () => {
 
   return (
     <div>
-      <Container>
+      <Container fluid>
         <Row>
           <HeaderDashboard />
         </Row>
       </Container>
-      <Container fluid>
+      <Container fluid className="slide">
         <input
           id="goal-searchBar"
           onClickCapture={() => setTapCount([-1, 0])}
