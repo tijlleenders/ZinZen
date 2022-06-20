@@ -74,53 +74,55 @@ export const MyGoalsPage = () => {
           <HeaderDashboard />
         </Row>
       </Container>
-      <Container fluid className="slide">
-        <input
-          id="goal-searchBar"
-          onClickCapture={() => setTapCount([-1, 0])}
-          placeholder="Search"
-          onChange={(e) => debounceSearch(e)}
-        />
-        <h1 id="myGoals_title" onClickCapture={() => setTapCount([-1, 0])}>
-          My Goals
-        </h1>
-        <div id="myGoals-list">
-          {userGoals?.map((goal: GoalItem, index) => (
-            <div
-              key={String(`task-${index}`)}
-              className="user-goal"
-              onClickCapture={() => {
-                setTapCount([index, tapCount[1] + 1]);
-              }}
-            >
+      <div id="myGoals-container" onClickCapture={() => setTapCount([-1, 0])}>
+        <Container fluid>
+          <input
+            id="goal-searchBar"
+            onClickCapture={() => setTapCount([-1, 0])}
+            placeholder="Search"
+            onChange={(e) => debounceSearch(e)}
+          />
+          <h1 id="myGoals_title" onClickCapture={() => setTapCount([-1, 0])}>
+            My Goals
+          </h1>
+          <div id="myGoals-list">
+            {userGoals?.map((goal: GoalItem, index) => (
               <div
-                className="goal-title"
-                contentEditable={tapCount[0] === index && tapCount[1] >= 1}
-                onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
-                onBlur={() => {
-                  updateUserGoals(goal, index);
+                key={String(`task-${index}`)}
+                className="user-goal"
+                onClickCapture={() => {
+                  setTapCount([index, tapCount[1] + 1]);
                 }}
-                suppressContentEditableWarning
               >
-                {goal.title}
-              </div>
-              {tapCount[0] === index && tapCount[1] > 0 ? (
-                <div className="interactables">
-                  <PlusLg />
-                  <Trash3Fill
-                    onClick={() => {
-                      removeUserGoal(goal.id);
-                    }}
-                  />
-                  <PencilSquare />
-                  <CheckLg />
+                <div
+                  className="goal-title"
+                  contentEditable={tapCount[0] === index && tapCount[1] >= 1}
+                  onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
+                  onBlur={() => {
+                    updateUserGoals(goal, index);
+                  }}
+                  suppressContentEditableWarning
+                >
+                  {goal.title}
                 </div>
-              ) : null}
-            </div>
-          ))}
-        </div>
-        <img id="addGoal-btn" src={addIcon} alt="add-goal" />
-      </Container>
+                {tapCount[0] === index && tapCount[1] > 0 ? (
+                  <div className="interactables">
+                    <PlusLg />
+                    <Trash3Fill
+                      onClick={() => {
+                        removeUserGoal(goal.id);
+                      }}
+                    />
+                    <PencilSquare />
+                    <CheckLg />
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </div>
+          <img id="addGoal-btn" src={addIcon} alt="add-goal" />
+        </Container>
+      </div>
     </div>
   );
 };
