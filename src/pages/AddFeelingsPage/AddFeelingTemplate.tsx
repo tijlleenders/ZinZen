@@ -78,14 +78,14 @@ export const FeelingTemplate = ({
             <div className={darkModeStatus ? "feelings-title-dark" : "feelings-title-light"}>
               <button
                 type="button"
-                className={`feelings-name-${darkModeStatus ? 'dark' : 'light'}`}
+                className={`feelings-name-${darkModeStatus ? "dark" : "light"}`}
                 onClick={() => addThisFeeling()}
               >
+                {feelingsEmojis[feelingCategory]}&nbsp;&nbsp;
                 {t(feelingCategory)}
-                {feelingsEmojis[feelingCategory]}
               </button>
               <button
-                className={`feelings-expand-btw-${darkModeStatus ? 'dark' : 'light'}`}
+                className={`feelings-expand-btw-${darkModeStatus ? "dark" : "light"}`}
                 type="button"
                 onClick={() => { setShowFeelingModal(true); }}
               >
