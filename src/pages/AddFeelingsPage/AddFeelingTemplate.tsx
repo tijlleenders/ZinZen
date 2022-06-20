@@ -121,7 +121,7 @@ export const FeelingTemplate = ({
             </div>
             <input
               type="text"
-              placeholder="I feel..."
+              placeholder="Add note..."
               id="myfeelings-note-input"
               value={feelingNote}
               onChange={(e) => {
