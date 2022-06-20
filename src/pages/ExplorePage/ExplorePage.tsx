@@ -2,6 +2,7 @@
 import React from "react";
 import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import { useRecoilValue } from "recoil";
 
 import Health from "@assets/images/health-fitness-goals.jpg";
 import Career from "@assets/images/career-goals.jpg";
@@ -24,7 +25,7 @@ export const ExplorePage = () => {
     { goalName: "environmentGoals", goalImage: Nature },
     { goalName: "personalGrowthGoals", goalImage: PersonalGrowth },
   ];
-  const darkModeStatus = darkModeState();
+  const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
 
   return (
