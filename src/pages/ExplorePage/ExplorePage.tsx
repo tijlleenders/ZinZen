@@ -29,26 +29,28 @@ export const ExplorePage = () => {
   const { t } = useTranslation();
 
   return (
-    <div id={`explore-container-${darkModeStatus ? "dark" : "light"}`}>
+    <div>
       <Container fluid>
         <Row>
           <HeaderDashboard />
         </Row>
       </Container>
-      <Container fluid className="slide ">
-        <div id="goals-container">
-          {goals.map((goal: any) => (
-            <div className="explore-goal-row">
-              <div className="explore-goal-card">
-                <img className="explore-goal-img" alt="my-goals" src={goal.goalImage} />
-                <div className="explore-goal-title">{t(goal.goalName)}
+      <div id={`explore-container-${darkModeStatus ? "dark" : "light"}`}>
+        <Container fluid className="slide ">
+          <div id="goals-container">
+            {goals.map((goal: any) => (
+              <div className="explore-goal-row">
+                <div className="explore-goal-card">
+                  <img className="explore-goal-img" alt="my-goals" src={goal.goalImage} />
+                  <div className="explore-goal-title">{t(goal.goalName)}
+                  </div>
+                  <h1 className="explore-addGoal-btn">+</h1>
                 </div>
-                <h1 className="explore-addGoal-btn">+</h1>
               </div>
-            </div>
-          ))}
-        </div>
-      </Container>
+            ))}
+          </div>
+        </Container>
+      </div>
     </div>
   );
 };
