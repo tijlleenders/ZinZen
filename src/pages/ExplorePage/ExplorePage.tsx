@@ -13,6 +13,7 @@ import Relationship from "@assets/images/relationship-goals.jpg";
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import "@translations/i18n";
 import "./explorepage.scss";
+import { darkModeState } from "@src/store";
 
 export const ExplorePage = () => {
   const goals: any = [
@@ -23,10 +24,11 @@ export const ExplorePage = () => {
     { goalName: "environmentGoals", goalImage: Nature },
     { goalName: "personalGrowthGoals", goalImage: PersonalGrowth },
   ];
+  const darkModeStatus = darkModeState();
   const { t } = useTranslation();
 
   return (
-    <div>
+    <div id={`explore-container-${darkModeStatus ? "dark" : "light"}`}>
       <Container fluid>
         <Row>
           <HeaderDashboard />
