@@ -23,17 +23,23 @@ export const AddFeelingsPage = () => {
     <Container fluid className="slide add-feelings__container">
       <Row>
         <Col>
-          <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
-            {date.getTime() === getJustDate(new Date()).getTime()
-              ? t("feelingsmessage")
-              : `${t("feelingsMessagePast")} ${date.toDateString()}`}
-          </h3>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
+              {date.getTime() === getJustDate(new Date()).getTime()
+                ? t("feelingsmessage")
+                : `${t("feelingsMessagePast")} ${date.toDateString()}`}
+            </h3>
+            <Button
+              id="myFeelings-redirect-btn-desktop"
+              onClick={() => navigate("/Home/MyFeelings")}
+            >View My Feelings
+            </Button>
+          </div>
           <AddFeelingsChoices date={date} />
         </Col>
-        <Col sm={1} />
       </Row>
       <Button
-        id="myFeelings-redirect-btn"
+        id="myFeelings-redirect-btn-mobile"
         onClick={() => navigate("/Home/MyFeelings")}
       >View My Feelings
       </Button>

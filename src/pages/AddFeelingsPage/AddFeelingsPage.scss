@@ -77,22 +77,37 @@
   display: none;
 }
 
-#myFeelings-redirect-btn{
+#myFeelings-redirect-btn-desktop{
   background: #AC3B61;
   border-radius: 7px;
   color: #000000;
-  position: absolute;
   font-weight: bolder;
   font-size: larger;
-  bottom: 0;
-  right: 0;
-  margin-right: 5%;
-  margin-bottom: 5%;
+}
+
+#myFeelings-redirect-btn-mobile{
+  display: none;
 }
 
 /*Media Query for Mobile View*/
 
 @media (max-width: 600px) {
+  #myFeelings-redirect-btn-desktop{
+    display: none;
+  }
+  #myFeelings-redirect-btn-mobile{
+    display: block;
+    background: #AC3B61;
+    border-radius: 7px;
+    color: #000000;
+    position: absolute;
+    font-weight: bolder;
+    font-size: larger;
+    bottom: 0;
+    right: 0;
+    margin-right: 5%;
+    margin-bottom: 5%;
+  }  
   .feelings-menu-desktop {
     display: none;
   }
