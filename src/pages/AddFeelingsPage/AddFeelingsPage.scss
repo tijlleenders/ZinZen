@@ -1,14 +1,14 @@
 /* My Feelings Page*/
 
 .my-feelings-font-light {
-  padding: 0em 1em 0em 0.8em;
+  padding: 0em 0em 0em 1em !important;
   font-style: italic;
   font-weight: bolder;
 }
 
 .my-feelings-font-dark {
   color: #cecece;
-  padding: 0em 1em 0em 0.8em;
+  padding: 0em 0em 0em 1em !important;
   font-style: italic;
   font-weight: bolder;
 }
@@ -77,32 +77,135 @@
   display: none;
 }
 
+#myFeelings-redirect-btn-desktop{
+  background: #AC3B61;
+  border-radius: 7px;
+  color: #000000;
+  font-weight: bolder;
+  font-size: larger;
+}
+
+#myFeelings-redirect-btn-mobile{
+  display: none;
+}
+
 /*Media Query for Mobile View*/
 
 @media (max-width: 600px) {
+  #myFeelings-redirect-btn-desktop{
+    display: none;
+  }
+  #myFeelings-redirect-btn-mobile{
+    display: block;
+    background: #AC3B61;
+    border-radius: 7px;
+    color: #000000;
+    position: absolute;
+    font-weight: bolder;
+    font-size: larger;
+    bottom: 0;
+    right: 0;
+    margin-right: 5%;
+    margin-bottom: 5%;
+  }  
   .feelings-menu-desktop {
     display: none;
   }
   .feelings-menu-mobile {
     display: block;
   }
+  .feelings-name-light, .feelings-name-dark {
+    padding: 0.3em 0em 0.3em 0.5em !important;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    font-weight: bolder;
+  }
+
+  #myfeelings-note-input{
+    background-color: #edc7b7 !important;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    font-weight: bold;
+    margin-top: 8%;
+    width:95%;
+  }
   .feelings-title-mobile {
     font-weight: bolder;
     padding-top: 0.5em;
   }
+  .feelings-expand-btw-light, .feelings-expand-btw-dark{
+    background: transparent;
+    border: none;
+    border-left: 2px solid #EDC7B7;
+    padding: 1.5% 5%;
+  }
+  .feeling-mobile{
+    display: flex;
+    background-color: #f0e6e1 !important;
+  }
+  #feeling-modal-header{
+    padding: 1rem 1rem 0rem 1rem !important;
+  }
+  #feeling-modal-body{
+    padding: 0rem 1rem 1rem 1rem !important;
+  }
   .feelings-title-light {
+    border: 2px solid #EDC7B7;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
     color: #000000 !important;
     font-weight: bolder;
-    background-color: #edc7b7 !important;
-    padding: 1em 1.5em 1em 1.5em !important;
+    background-color: #f0e6e1 !important;
+    font-size: 1.5em;
+    // padding: 1em 1.5em 1em 1.5em !important;
+    width: 100%;
+    text-align: left !important;
   }
 
   .feelings-title-dark {
+    border: 2px solid #EDC7B7;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
     color: #ffffff !important;
     font-weight: bolder;
     background-color: #443027 !important;
-    padding: 1em 1.5em 1em 1.5em !important;
+    font-size: 1.5em;
+    // padding: 1em 1.5em 1em 1.5em !important;
+    width: 100%;
+    text-align: left !important;
   }
+
+  #feeling-reason-ques{
+    color: #454545;
+    font-style: italic;
+  }
+
+  .feelingOption-name{
+    background: transparent;
+    border: 2px solid #EDC7B7;
+    border-radius: 10px;
+    color: #454545;
+    font-size: 1.025rem;
+    font-weight: bolder;
+    margin-right: 2.5%;
+    margin-top: 3%;    
+    padding: 1.5% 5%;
+  }
+
+  .feelingOption-selected{
+    background: #EDC7B7;
+  }
+
+  .feelings-name-dark, .feelings-expand-btw-dark > div{
+    color: #cecece;
+  }
+
 }
 
 .add-feelings {

@@ -52,6 +52,24 @@ export const getFeelingsBetweenDates = async (startDate: Date, endDate: Date) =>
   });
 };
 
+export const addFeelingWithNote = async (feelingName: string, feelingCategory: string, feelingDate: Date, feelingNote: string) => {
+  // const currentDate = getJustDate(new Date());
+  const feelingDateFormatted = getJustDate(feelingDate);
+  const currentDateFeelings = await getFeelingsOnDate(feelingDate);
+  const checkFeelings = (feeling: IFeelingItem) => feeling.content === feelingName;
+  if (currentDateFeelings.some(checkFeelings)) {
+    return;
+  }
+  db.transaction("rw", db.feelingsCollection, async () => {
+    await db.feelingsCollection.add({ content: feelingName,
+      date: feelingDateFormatted,
+      category: feelingCategory,
+      note: feelingNote });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
 export const addFeeling = async (feelingName: string, feelingCategory: string, feelingDate: Date) => {
   // const currentDate = getJustDate(new Date());
   const feelingDateFormatted = getJustDate(feelingDate);
