@@ -28,18 +28,19 @@ export const FeelingTemplate = ({
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const [showFeelingModal, setShowFeelingModal] = useState(false);
-  const [feelingNote, setFeelingNote] = useState("");
+  // const [feelingNote, setFeelingNote] = useState("");
   const [selectedFeeling, setSelectedFeeling] = useState(feelingCategory);
 
   const addThisFeeling = () => {
-    console.log(feelingCategory);
-    if (feelingNote && feelingNote !== "") {
-      console.log(selectedFeeling, feelingCategory, feelingDate, feelingNote);
-      addFeelingWithNote(selectedFeeling, feelingCategory, feelingDate, feelingNote);
-    } else {
-      console.log(selectedFeeling, feelingCategory, feelingDate);
-      addFeeling(selectedFeeling, feelingCategory, feelingDate);
-    }
+    // console.log(feelingCategory);
+    // if (feelingNote && feelingNote !== "") {
+    //   console.log(selectedFeeling, feelingCategory, feelingDate, feelingNote);
+    //   addFeelingWithNote(selectedFeeling, feelingCategory, feelingDate, feelingNote);
+    // } else {
+    //   console.log(selectedFeeling, feelingCategory, feelingDate);
+    //   addFeeling(selectedFeeling, feelingCategory, feelingDate);
+    // }
+    addFeeling(selectedFeeling, feelingCategory, feelingDate);
     setTimeout(() => {
       navigate("/Home/MyFeelings");
     }, 100);
@@ -121,11 +122,10 @@ export const FeelingTemplate = ({
             </div>
             <input
               type="text"
-              placeholder="Add note..."
+              placeholder="I Feel..."
               id="myfeelings-note-input"
-              value={feelingNote}
               onChange={(e) => {
-                setFeelingNote(e.target.value);
+                setSelectedFeeling(e.target.value);
               }}
             />
           </Modal.Body>
