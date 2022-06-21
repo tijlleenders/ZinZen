@@ -10,11 +10,6 @@ import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashb
 
 export const LandingPage = () => (
   <div>
-    <Container fluid>
-      <Row>
-        <MainHeaderDashboard />
-      </Row>
-    </Container>
     <Container fluid className="landing-page__container">
       <Row>
         <MobileHeader />

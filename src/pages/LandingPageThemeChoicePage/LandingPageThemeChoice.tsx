@@ -13,11 +13,6 @@ export const LandingPageThemeChoice = () => {
   const { t } = useTranslation();
   return (
     <div>
-      <Container>
-        <Row>
-          <MainHeaderDashboard />
-        </Row>
-      </Container>
       <Container fluid>
         <Row>
           <HeaderThemeChoice />
