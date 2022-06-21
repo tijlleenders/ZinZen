@@ -23,7 +23,7 @@ export const AddFeelingsPage = () => {
     : getJustDate(new Date());
   return (
     <div>
-      <Container>
+      <Container fluid>
         <Row>
           <HeaderDashboard />
         </Row>
