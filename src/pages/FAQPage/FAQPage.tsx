@@ -7,7 +7,7 @@ import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashb
 
 export const FAQPage = () => (
   <div>
-    <Container>
+    <Container fluid>
       <Row>
         <MainHeaderDashboard />
       </Row>
