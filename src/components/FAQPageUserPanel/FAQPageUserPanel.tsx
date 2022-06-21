@@ -9,6 +9,7 @@ import { darkModeState } from "@store";
 
 import "@translations/i18n";
 import "./FAQPageUserPanel.scss";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 export const FAQPageUserPanel = () => {
   const navigate = useNavigate();
@@ -16,6 +17,12 @@ export const FAQPageUserPanel = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
+    <div>
+      <Container>
+        <Row>
+          <MainHeaderDashboard />
+        </Row>
+      </Container>
     <div className="slide">
       <Container fluid>
         <Row>
@@ -67,6 +74,7 @@ export const FAQPageUserPanel = () => {
           </Button>
         </Row>
       </Container>
+    </div>
     </div>
   );
 };

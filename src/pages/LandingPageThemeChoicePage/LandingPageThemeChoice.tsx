@@ -7,11 +7,17 @@ import { HeaderThemeChoice } from "@components/ThemeChoice/HeaderThemeChoice";
 
 import "@translations/i18n";
 import "@components/ThemeChoice/ThemeChoice.scss";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 export const LandingPageThemeChoice = () => {
   const { t } = useTranslation();
   return (
     <div>
+      <Container>
+        <Row>
+          <MainHeaderDashboard />
+        </Row>
+      </Container>
       <Container fluid>
         <Row>
           <HeaderThemeChoice />
