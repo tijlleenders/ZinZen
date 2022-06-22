@@ -32,7 +32,11 @@ export const getAllGoals = async () => {
 
 export const getActiveGoals = async () => {
   const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(0).toArray();
-  console.log(activeGoals);
+  return activeGoals;
+};
+
+export const getAllArchivedGoals = async () => {
+  const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(1).toArray();
   return activeGoals;
 };
 
@@ -57,6 +61,16 @@ export const archiveGoal = async (id: number, updatedGoal: object) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(id, updatedGoal);
   });
+};
+
+export const isCollectionEmpty = async () => {
+  const goalsCount = await db.goalsCollection.count();
+  if (goalsCount === 0) {
+    return true;
+  }
+  const allGoals = await getAllGoals();
+  const archivedGoals = await getAllArchivedGoals();
+  return allGoals.length === archivedGoals.length;
 };
 
 export const createGoal = (
