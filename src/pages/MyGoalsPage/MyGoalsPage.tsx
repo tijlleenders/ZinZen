@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Container } from "react-bootstrap";
 import { PlusLg, Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
 import { archiveGoal, getActiveGoals, removeGoal, updateGoal } from "@api/GoalsAPI";
@@ -10,6 +11,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import "./MyGoalsPage.scss";
 
 export const MyGoalsPage = () => {
+  const navigate = useNavigate();
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [userUpdatingTitle, setUserUpdatingTitle] = useState(false);
@@ -131,7 +133,18 @@ export const MyGoalsPage = () => {
             </div>
           ))}
         </div>
-        <img id="addGoal-btn" src={addIcon} alt="add-goal" />
+        <button
+          type="button"
+          onClick={() => {
+            navigate("/Home/AddGoals");
+          }}
+        >
+          <img
+            id="addGoal-btn"
+            src={addIcon}
+            alt="add-goal"
+          />
+        </button>
       </Container>
     </div>
   );

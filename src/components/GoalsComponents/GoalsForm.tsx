@@ -10,13 +10,17 @@ import { darkModeState } from "@store";
 import "@translations/i18n";
 import "./GoalsComponents.scss";
 
-export const GoalsForm = () => {
+export const GoalsForm = (
+  { selectedColorIndex }:{ selectedColorIndex: number }
+) => {
+  const { t } = useTranslation();
+  const [tableData, setTableData] = useState([]);
+  // const [selectedColorIndex, setColorIndex] = useState(0);
+
   const darkModeStatus = useRecoilValue(darkModeState);
   const darkrooms = ["#443027", "#9C4663", "#646464", "#2B517B", " #612854"];
   const lightcolors = [" #EDC7B7", "#AC3B61", " #BAB2BC", " #3B6899", " #8E3379"];
-  const { t } = useTranslation();
-  const [selectedColorIndex, setColorIndex] = useState(0);
-  const [tableData, setTableData] = useState([]);
+
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
@@ -68,16 +72,15 @@ export const GoalsForm = () => {
     if (darkrooms[newColorIndex]) setColorIndex(newColorIndex);
     else setColorIndex(0);
   };
-
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
         <input
-          style={
-            darkModeStatus
-              ? { backgroundColor: darkrooms[selectedColorIndex] }
-              : { backgroundColor: lightcolors[selectedColorIndex] }
-          }
+          // style={
+          //   darkModeStatus
+          //     ? { backgroundColor: darkrooms[selectedColorIndex] }
+          //     : { backgroundColor: lightcolors[selectedColorIndex] }
+          // }
           className={darkModeStatus ? "addtask-dark" : "addtask-light"}
           type="text"
           name="inputGoal"
@@ -86,7 +89,7 @@ export const GoalsForm = () => {
           onChange={handleChange}
         />
       </div>
-      <div className="duration">
+      <div className="tags">
         <button
           type="button"
           style={
@@ -111,25 +114,18 @@ export const GoalsForm = () => {
         </button>
       </div>
       <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
-        <Button variant={darkModeStatus ? "pink" : "peach"} onClick={handleSubmit} className="addtask-button">
-          Add Task
+        <Button
+          onClick={handleSubmit}
+          className="addtask-button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: darkrooms[selectedColorIndex] }
+              : { backgroundColor: lightcolors[selectedColorIndex] }
+          }
+        >
+          Add Goal
         </Button>
-        <div className="changeColor">
-          <button
-            type="button"
-            className="color-button"
-            style={
-              darkModeStatus
-                ? { backgroundColor: darkrooms[selectedColorIndex] }
-                : { backgroundColor: lightcolors[selectedColorIndex] }
-            }
-            onClick={changeColor}
-          >
-            Change color
-          </button>
-        </div>
       </div>
-
       <div className="inputs">
         {tableData.map((data, index) => (
           <div
