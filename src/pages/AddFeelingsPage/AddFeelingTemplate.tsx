@@ -7,7 +7,7 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { addFeeling, addFeelingWithNote } from "@api/FeelingsAPI";
+import { addFeeling } from "@api/FeelingsAPI";
 import { darkModeState } from "@store";
 import { feelingsEmojis } from "@consts/FeelingsList";
 
@@ -62,7 +62,6 @@ export const FeelingTemplate = ({
               }
               size="lg"
               onClick={() => {
-                console.log(feelingDate);
                 addFeeling(feelingName, feelingCategory, feelingDate);
                 setTimeout(() => {
                   navigate("/Home/MyFeelings");
@@ -87,9 +86,13 @@ export const FeelingTemplate = ({
               <button
                 className={`feelings-expand-btw-${darkModeStatus ? "dark" : "light"}`}
                 type="button"
-                onClick={() => { setShowFeelingModal(true); }}
+                onClick={() => {
+                  setShowFeelingModal(true);
+                }}
               >
-                <div><ChevronRight /></div>
+                <div>
+                  <ChevronRight />
+                </div>
               </button>
             </div>
           </Navbar>
@@ -114,7 +117,9 @@ export const FeelingTemplate = ({
                   type="button"
                   className={`feelingOption-name feelingOption-${selectedFeeling === feeling ? "selected" : ""}`}
                   key={`feelingOption-${feeling}`}
-                  onClick={() => { setSelectedFeeling(feeling); }}
+                  onClick={() => {
+                    setSelectedFeeling(feeling);
+                  }}
                 >
                   {t(feeling)}
                 </button>

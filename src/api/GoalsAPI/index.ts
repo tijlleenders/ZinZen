@@ -1,20 +1,13 @@
 import { db } from "@models";
 import { getJustDate } from "@src/utils";
-import { GoalItem, Repeat } from "@src/models/GoalItem";
+import { GoalItem } from "@src/models/GoalItem";
 
 export const resetDatabase = () =>
   db.transaction("rw", db.goalsCollection, async () => {
     await Promise.all(db.tables.map((table) => table.clear()));
   });
 
-export const addGoal = (goalDetails: {
-  title: string;
-  duration: Number;
-  sublist: string[] | null;
-  repeat: Repeat | string;
-  start: Date | null;
-  finish: Date | null;
-}) => {
+export const addGoal = (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
   const goals: GoalItem = { ...goalDetails, createdAt: currentDate };
   db.transaction("rw", db.goalsCollection, async () => {
@@ -37,6 +30,12 @@ export const getAllGoals = async () => {
   return allGoals;
 };
 
+export const getActiveGoals = async () => {
+  const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(0).toArray();
+  console.log(activeGoals);
+  return activeGoals;
+};
+
 export const getGoalsOnDate = async (date: Date) => {
   db.transaction("rw", db.goalsCollection, async () => {
     const goalsList = await db.goalsCollection.where("start").equals(date);
@@ -52,4 +51,30 @@ export const updateGoal = async (id: number, changes: object) => {
   }).catch((e) => {
     console.log(e.stack || e);
   });
+};
+
+export const archiveGoal = async (id: number, updatedGoal: object) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.update(id, updatedGoal);
+  });
+};
+
+export const createGoal = (
+  goalTitle: string,
+  goalRepeats: boolean,
+  goalDuration: Number,
+  goalStart: Date | null,
+  goalFinish: Date | null,
+  goalStatus: 0 | 1
+) => {
+  const newGoal: GoalItem = {
+    title: goalTitle,
+    repeat: goalRepeats ? "Daily" : "Once",
+    createdAt: new Date(),
+    duration: goalDuration,
+    start: goalStart,
+    finish: goalFinish,
+    status: goalStatus,
+  };
+  return newGoal;
 };
