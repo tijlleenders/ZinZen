@@ -54,8 +54,28 @@ export const updateGoal = async (id: number, changes: object) => {
   });
 };
 
-export const archiveGoal = async (id: number, updatedFeeling: object) => {
+export const archiveGoal = async (id: number, updatedGoal: object) => {
   db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.update(id, updatedFeeling);
+    await db.goalsCollection.update(id, updatedGoal);
   });
+};
+
+export const createGoal = (
+  goalTitle: string,
+  goalRepeats: boolean,
+  goalDuration: Number,
+  goalStart: Date | null,
+  goalFinish: Date | null,
+  goalStatus: 0 | 1
+) => {
+  const newGoal: GoalItem = {
+    title: goalTitle,
+    repeat: goalRepeats ? "Daily" : "Once",
+    createdAt: new Date(),
+    duration: goalDuration,
+    start: goalStart,
+    finish: goalFinish,
+    status: goalStatus,
+  };
+  return newGoal;
 };

@@ -17,18 +17,11 @@ export const MyGoalsPage = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
   // async function populateDummyGoals() {
-  //   const dummyData = ["shopping karni hai", "sabji lekr kaun ayega", "padosi ke ghar se aam leke ane hai"];
-  //   dummyData.map((goal: string) =>
-  //     addGoal({
-  //       title: goal,
-  //       duration: 2,
-  //       sublist: dummyData,
-  //       repeat: "Daily",
-  //       start: null,
-  //       finish: null,
-  //       status: 0,
-  //     })
-  //   );
+  //   const goal1 = createGoal("Goal1", false, 2, null, null, 0);
+  //   const goal2 = createGoal("Goal2", true, 1, null, null, 0);
+  //   const goal3 = createGoal("Goal3", true, 2, null, null, 0);
+  //   const dummyData = [goal1, goal2, goal3];
+  //   dummyData.map((goal: string) => addGoal(goal));
   // }
 
   async function updateUserGoals(goal: GoalItem, index: number) {
