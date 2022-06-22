@@ -18,8 +18,7 @@ body {
 
 .mygoals-font-dark {
   color: #cecece;
-  padding: 0em 1em 0em 0.8em;
-  margin-left: 00.5em;
+  margin-left: 0.3em;
   font-style: normal;
   font-weight: bolder;
 }
@@ -65,7 +64,7 @@ body {
 }
 
 .addtask-light {
-  background-color: #EDC7B7;
+  background-color: #edc7b7;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -99,7 +98,6 @@ body {
   width: 93%;
 }
 
-
 .tags {
   display: flex;
   font-size: small;
@@ -110,7 +108,8 @@ body {
   border: none;
 }
 
-.suggestion, .duration {
+.suggestion,
+.duration {
   padding: 1% 3.5%;
   border: none;
   border-radius: 7px;
@@ -141,7 +140,7 @@ body {
   height: 1rem;
 }
 
-#changeColor-btn{
+#changeColor-btn {
   width: 6.2em;
   position: absolute;
   right: 0;
@@ -167,7 +166,7 @@ body {
 }
 
 @media (max-width: 350px) {
-  #changeColor-btn{ 
+  #changeColor-btn {
     width: 2.7em;
     position: absolute;
     right: 0;
@@ -178,7 +177,7 @@ body {
   }
 }
 @media (min-width: 950px) {
-  #changeColor-btn{
+  #changeColor-btn {
     width: 6.2em;
     position: absolute;
     right: 0;
@@ -187,8 +186,7 @@ body {
     padding: 0.8em;
     border-radius: 10px;
   }
-  #addGoals-container{
+  #addGoals-container {
     padding: 0% 17%;
   }
-
 }
