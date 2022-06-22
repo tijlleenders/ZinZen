@@ -10,10 +10,10 @@ body {
 }
 
 .mygoals-font-light {
-  padding: 0em 1em 0em 0.8em;
-  margin-left: 0.5em;
+  margin-left: 0.3em;
   font-style: normal;
   font-weight: bolder;
+  text-align: left;
 }
 
 .mygoals-font-dark {
@@ -25,9 +25,9 @@ body {
 }
 
 .position {
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
-  padding-top: 5em;
+  padding-top: 6em;
   position: inherit;
 }
 
@@ -39,7 +39,7 @@ body {
 }
 
 .goalsubtext-font-light {
-  color: #000;
+  color: #686868;
   margin-left: 0.5em;
   font-style: italic;
   padding-bottom: 0em;
@@ -65,7 +65,7 @@ body {
 }
 
 .addtask-light {
-  background-color: #e9b17a;
+  background-color: #EDC7B7;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -90,7 +90,7 @@ body {
 
 .mygoalsbutton-light {
   margin-left: 0.5em;
-  padding-top: 0.5em;
+  padding-top: 2em;
   display: inline-flex;
 }
 
@@ -99,26 +99,24 @@ body {
   width: 93%;
 }
 
-.suggestion {
+
+.tags {
   display: flex;
   font-size: small;
-  padding-left: 0.2em;
   padding-right: 0.2em;
-  border-radius: 2em;
-  margin-top: 0.5em;
-  margin-left: 1.5em;
+  border-radius: 1.5em;
+  margin-top: 1em;
+  margin-left: 0.5em;
   border: none;
 }
 
-.duration {
-  display: flex;
-  font-size: small;
-  padding-left: 0.2em;
-  padding-right: 0.2em;
-  border-radius: 1.5em;
-  margin-top: 0.5em;
-  margin-left: 2em;
+.suggestion, .duration {
+  padding: 1% 3.5%;
   border: none;
+  border-radius: 7px;
+  margin-right: 2%;
+  font-size: small;
+  font-weight: bolder;
 }
 
 .blank {
@@ -143,9 +141,14 @@ body {
   height: 1rem;
 }
 
-.changeColor {
-  margin-top: 1em;
-  margin-left: 00.5em;
+#changeColor-btn{
+  width: 6.2em;
+  position: absolute;
+  right: 0;
+  margin-right: 7%;
+  border: none;
+  padding: 0.8em;
+  border-radius: 10px;
 }
 
 .color-button {
@@ -156,5 +159,36 @@ body {
 }
 
 .addtask-button {
-  color: #5b37ed;
+  color: black !important;
+  // background: #AC3B61 !important;
+  border-radius: 10px !important;
+  font-size: x-large !important;
+  font-weight: bolder !important;
+}
+
+@media (max-width: 350px) {
+  #changeColor-btn{ 
+    width: 2.7em;
+    position: absolute;
+    right: 0;
+    margin-right: 7%;
+    border: none;
+    padding: 0.3em;
+    border-radius: 10px;
+  }
+}
+@media (min-width: 950px) {
+  #changeColor-btn{
+    width: 6.2em;
+    position: absolute;
+    right: 0;
+    margin-right: 19.5%;
+    border: none;
+    padding: 0.8em;
+    border-radius: 10px;
+  }
+  #addGoals-container{
+    padding: 0% 17%;
+  }
+
 }
