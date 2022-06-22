@@ -123,7 +123,7 @@ export const GoalsForm = (
               : { backgroundColor: lightcolors[selectedColorIndex] }
           }
         >
-          Add Task
+          Add Goal
         </Button>
       </div>
       <div className="inputs">
