@@ -7,7 +7,7 @@ export const resetDatabase = () =>
     await Promise.all(db.tables.map((table) => table.clear()));
   });
 
-export const addGoal = (goalDetails: GoalItem) => {
+export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
   const goals: GoalItem = { ...goalDetails, createdAt: currentDate };
   db.transaction("rw", db.goalsCollection, async () => {
@@ -70,7 +70,6 @@ export const createGoal = (
   const newGoal: GoalItem = {
     title: goalTitle,
     repeat: goalRepeats ? "Daily" : "Once",
-    createdAt: new Date(),
     duration: goalDuration,
     start: goalStart,
     finish: goalFinish,
