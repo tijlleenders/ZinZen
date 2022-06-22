@@ -46,7 +46,6 @@ export const getGoalsOnDate = async (date: Date) => {
 };
 
 export const updateGoal = async (id: number, changes: object) => {
-  console.log(changes);
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(id, changes).then((updated) => updated);
   }).catch((e) => {
