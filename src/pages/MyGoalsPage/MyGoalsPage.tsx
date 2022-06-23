@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Container } from "react-bootstrap";
-import { PlusLg, Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
+import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
@@ -122,9 +122,15 @@ export const MyGoalsPage = () => {
                   updateUserGoals(goal, index);
                 }}
                 suppressContentEditableWarning
-                style={{ cursor: userUpdatingTitle ? "unset" : "default" }}
+                style={{
+                  cursor: userUpdatingTitle ? "unset" : "default",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
               >
                 {goal.title}
+                <ChevronRight style={{ cursor: "pointer" }} onClick={() => navigate(`/Home/MyGoals/${goal.id}`)} />
               </div>
               {tapCount[0] === index && tapCount[1] > 0 ? (
                 <div className="interactables">
