@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Row, Button, Col } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
@@ -39,9 +39,7 @@ export const AddGoalsPage = () => {
             <div className={darkModeStatus ? "goalsubtext-font-dark" : "goalsubtext-font-light"}>
               <p>
                 {t("goalsubtext")}
-                <br />
-                {" "}
-                {t("format")}
+                <br /> {t("format")}
               </p>
             </div>
           </div>
@@ -49,12 +47,13 @@ export const AddGoalsPage = () => {
             id="changeColor-btn"
             type="button"
             style={
-                darkModeStatus
-                  ? { backgroundColor: darkrooms[selectedColorIndex] }
-                  : { backgroundColor: lightcolors[selectedColorIndex] }
-              }
+              darkModeStatus
+                ? { backgroundColor: darkrooms[selectedColorIndex] }
+                : { backgroundColor: lightcolors[selectedColorIndex] }
+            }
             onClick={changeColor}
-          ><img src={paintBrush} alt="change-color" />
+          >
+            <img src={paintBrush} alt="change-color" />
           </button>
         </Row>
         <Row>

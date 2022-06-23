@@ -5,7 +5,7 @@ import { PlusLg, Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons
 import { useNavigate } from "react-router-dom";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
-import { archiveGoal, getActiveGoals, removeGoal, updateGoal } from "@api/GoalsAPI";
+import { archiveGoal, getActiveGoals, removeGoal, updateGoal, isCollectionEmpty } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 
 import "./MyGoalsPage.scss";
@@ -61,6 +61,25 @@ export const MyGoalsPage = () => {
       search(value);
     }, 300);
   }
+
+  useEffect(() => {
+    async function checkCollection() {
+      const result = await isCollectionEmpty();
+      return result;
+    }
+    checkCollection().then((result) => {
+      const timer1 = setTimeout(() => {
+        if (result) {
+          navigate("/Home/AddGoals", {
+            state: { feelingDate: new Date() },
+          });
+        }
+      }, 500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    });
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -139,11 +158,7 @@ export const MyGoalsPage = () => {
             navigate("/Home/AddGoals");
           }}
         >
-          <img
-            id="addGoal-btn"
-            src={addIcon}
-            alt="add-goal"
-          />
+          <img id="addGoal-btn" src={addIcon} alt="add-goal" />
         </button>
       </Container>
     </div>

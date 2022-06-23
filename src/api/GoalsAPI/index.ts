@@ -7,7 +7,7 @@ export const resetDatabase = () =>
     await Promise.all(db.tables.map((table) => table.clear()));
   });
 
-export const addGoal = (goalDetails: GoalItem) => {
+export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
   const goals: GoalItem = { ...goalDetails, createdAt: currentDate };
   db.transaction("rw", db.goalsCollection, async () => {
@@ -32,7 +32,11 @@ export const getAllGoals = async () => {
 
 export const getActiveGoals = async () => {
   const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(0).toArray();
-  console.log(activeGoals);
+  return activeGoals;
+};
+
+export const getAllArchivedGoals = async () => {
+  const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(1).toArray();
   return activeGoals;
 };
 
@@ -59,6 +63,16 @@ export const archiveGoal = async (id: number, updatedGoal: object) => {
   });
 };
 
+export const isCollectionEmpty = async () => {
+  const goalsCount = await db.goalsCollection.count();
+  if (goalsCount === 0) {
+    return true;
+  }
+  const allGoals = await getAllGoals();
+  const archivedGoals = await getAllArchivedGoals();
+  return allGoals.length === archivedGoals.length;
+};
+
 export const createGoal = (
   goalTitle: string,
   goalRepeats: boolean,
@@ -70,7 +84,6 @@ export const createGoal = (
   const newGoal: GoalItem = {
     title: goalTitle,
     repeat: goalRepeats ? "Daily" : "Once",
-    createdAt: new Date(),
     duration: goalDuration,
     start: goalStart,
     finish: goalFinish,
