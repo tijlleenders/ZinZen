@@ -1,5 +1,4 @@
-// @ts-nocheck
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Container } from "react-bootstrap";
 import { PlusLg, Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
@@ -30,14 +29,14 @@ export const MyGoalsPage = () => {
     const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
     if (updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
       if (updatedTitle.length === 0) return;
-      await updateGoal(goal.id, { title: updatedTitle });
+      await updateGoal(Number(goal.id), { title: updatedTitle });
       const goals: GoalItem[] = await getActiveGoals();
       setUserGoals(goals);
     }
   }
   async function archiveUserGoal(goal: GoalItem) {
     const updatedGoalStatus = { status: 1 };
-    await archiveGoal(goal.id, updatedGoalStatus);
+    await archiveGoal(Number(goal.id), updatedGoalStatus);
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   }
@@ -50,7 +49,7 @@ export const MyGoalsPage = () => {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
   }
-  function debounceSearch(event) {
+  function debounceSearch(event: ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
 
     if (debounceTimeout) {
@@ -129,13 +128,13 @@ export const MyGoalsPage = () => {
                   <Trash3Fill
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      removeUserGoal(goal.id);
+                      removeUserGoal(Number(goal.id));
                     }}
                   />
                   <PencilSquare
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      titleRef.current?.focus();
+                      if (titleRef.current) (titleRef.current as HTMLElement).focus();
                       setUserUpdatingTitle(!userUpdatingTitle);
                     }}
                   />
