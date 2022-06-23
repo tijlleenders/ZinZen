@@ -74,6 +74,10 @@ export const GoalsForm = ({ selectedColorIndex }: { selectedColorIndex: number }
       setError("Enter goal's frequency as 'daily' or 'once'!");
       return;
     }
+    if (goalTitle.length === 1) {
+      setError("Enter a goal title! (P.S. the problem could also be with the sequence of goal-duration-frequency)");
+      return;
+    }
     const newGoal = createGoal(goalTitle, goalFrequency === "daily", Number(goalDuration.split(" ")[0]), null, null, 0);
     await addGoal(newGoal);
     setFormInputData({
