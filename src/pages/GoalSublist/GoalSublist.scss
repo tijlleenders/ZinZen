@@ -1,0 +1,28 @@
+.breadcrumb-item + .breadcrumb-item::before {
+  content: var(--bs-breadcrumb-divider, ">") !important;
+}
+
+.sublist-container {
+  margin-top: 8% !important;
+}
+
+.sublist-container-dark {
+  margin-top: 100px;
+  padding: 20px;
+  color: white;
+}
+
+.breadcrumb li a {
+  color: black;
+  text-decoration: none;
+  background-color: #edc7b7;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.sublist-title {
+  margin-left: -10px;
+  text-transform: capitalize;
+  font-style: italic;
+  font-size: 25px !important;
+}

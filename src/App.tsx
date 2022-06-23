@@ -25,6 +25,7 @@ import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
 import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
+import { GoalSublist } from "@pages/GoalSublist/GoalSublist";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -34,7 +35,6 @@ const App = () => {
   const isLanguageChosen = language !== "No language chosen.";
   return (
     <div className={darkModeEnabled ? "App-dark" : "App-light"}>
-      {/* @ts-ignore */}
       <BrowserRouter>
         {isLanguageChosen && isThemeChosen && (
           <Container fluid>
@@ -60,6 +60,7 @@ const App = () => {
           <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
+          <Route path="/Home/MyGoals/:id" element={<GoalSublist />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
