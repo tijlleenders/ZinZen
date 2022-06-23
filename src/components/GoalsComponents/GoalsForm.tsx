@@ -22,6 +22,7 @@ export const GoalsForm = ({ selectedColorIndex }: { selectedColorIndex: number }
     id: "",
   });
   const [goalTitle, setGoalTitle] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -59,7 +60,21 @@ export const GoalsForm = ({ selectedColorIndex }: { selectedColorIndex: number }
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const newGoal = createGoal(goalTitle, suggestion() === "daily", Number(duration().split(" ")[0]), null, null, 0);
+    const goalFrequency = suggestion();
+    const goalDuration = duration();
+    if (goalTitle.length === 0) {
+      setError("Enter a goal title! (P.S. Enter the duration of the goal to get rid of this message)");
+      return;
+    }
+    if (goalDuration.length === 0) {
+      setError("Enter the duration of the goal!");
+      return;
+    }
+    if (goalFrequency.length === 0) {
+      setError("Enter goal's frequency as 'daily' or 'once'!");
+      return;
+    }
+    const newGoal = createGoal(goalTitle, goalFrequency === "daily", Number(goalDuration.split(" ")[0]), null, null, 0);
     await addGoal(newGoal);
     setFormInputData({
       inputGoal: "",
@@ -120,6 +135,7 @@ export const GoalsForm = ({ selectedColorIndex }: { selectedColorIndex: number }
           Add Goal
         </Button>
       </div>
+      <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
     </form>
   );
 };

@@ -82,7 +82,7 @@ export const MyGoalsPage = () => {
         clearTimeout(timer1);
       };
     });
-  }, []);
+  }, [userGoals]);
 
   useEffect(() => {
     (async () => {
