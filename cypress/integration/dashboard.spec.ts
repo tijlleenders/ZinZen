@@ -54,10 +54,10 @@ describe("DashboardUserChoice Test", () => {
   });
 
   it("Should have My Feelings button working", () => {
-    cy.contains("My Feelings")
-      .click()
-      .location("pathname")
-      .should("include", "MyFeelings")
+    cy.contains("My Feelings").click();
+    cy.wait(500);
+    cy.location("pathname")
+      .should("include", "AddFeelings")
       .go("back");
   });
 });
