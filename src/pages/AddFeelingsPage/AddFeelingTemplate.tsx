@@ -110,6 +110,14 @@ export const FeelingTemplate = ({
           </Modal.Header>
           <Modal.Body id="feeling-modal-body">
             <h2 id="feeling-reason-ques">Can you be more specific?</h2>
+            <input
+              type="text"
+              placeholder="I Feel..."
+              id="myfeelings-custom-feeling-input"
+              onChange={(e) => {
+                setSelectedFeeling(e.target.value);
+              }}
+            />
             <div id="feelingOptions">
               {feelingsList.map((feeling) => (
                 <button
@@ -124,14 +132,6 @@ export const FeelingTemplate = ({
                 </button>
               ))}
             </div>
-            <input
-              type="text"
-              placeholder="I Feel..."
-              id="myfeelings-custom-feeling-input"
-              onChange={(e) => {
-                setSelectedFeeling(e.target.value);
-              }}
-            />
             <input
               type="text"
               placeholder="Add Note"
