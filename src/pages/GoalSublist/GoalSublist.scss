@@ -3,7 +3,8 @@
 }
 
 .sublist-container {
-  margin-top: 8% !important;
+  margin-top: 100px;
+  padding: 20px;
 }
 
 .sublist-container-dark {
@@ -25,4 +26,26 @@
   text-transform: capitalize;
   font-style: italic;
   font-size: 25px !important;
+  cursor: default;
+}
+
+.sublist-list-container {
+  margin-top: 40px;
+  width: 600px;
+  color: black;
+}
+
+.sublist-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .sublist-list-container {
+    margin-top: 40px;
+    width: 300px;
+    color: black;
+  }
 }

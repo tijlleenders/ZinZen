@@ -132,7 +132,10 @@ export const MyGoalsPage = () => {
               </div>
               {tapCount[0] === index && tapCount[1] > 0 ? (
                 <div className="interactables">
-                  <PlusLg style={{ cursor: "pointer" }} />
+                  <PlusLg
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate("/Home/AddGoals", { state: { goalId: goal.id } })}
+                  />
                   <Trash3Fill
                     style={{ cursor: "pointer" }}
                     onClick={() => {
