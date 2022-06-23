@@ -1,5 +1,5 @@
 import { Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -21,8 +21,6 @@ export const GoalSublist: React.FC = () => {
   const titleRef = useRef(null);
   const navigate = useNavigate();
   const param = useParams();
-
-  let debounceTimeout: ReturnType<typeof setTimeout>;
 
   useEffect(() => {
     getGoal(Number(param.id)).then((parent) => setParentGoal(parent));
@@ -61,44 +59,18 @@ export const GoalSublist: React.FC = () => {
       getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
-  const search = async (text: string) => {
-    getChildrenGoals(Number(param.id)).then((goals) => {
-      setChildrenGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
-    });
-  };
-  const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
-    }
-    debounceTimeout = setTimeout(() => {
-      search(value);
-    }, 300);
-  };
 
   return (
     <div>
-      <Container style={{ position: "fixed" }}>
-        <HeaderDashboard />
-      </Container>
+      <HeaderDashboard />
       <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
-        <Breadcrumb>
-          <Breadcrumb.Item className="breadcrumb-box" href="/Home/MyGoals/">
-            My Goals
-          </Breadcrumb.Item>
-          <Breadcrumb.Item className="breadcrumb-box" href="#">
-            {parentGoal?.title}
-          </Breadcrumb.Item>
+        <Breadcrumb style={{ marginTop: "80px" }}>
+          <Breadcrumb.Item href="/Home/MyGoals/">My Goals</Breadcrumb.Item>
+          <Breadcrumb.Item href="#">{parentGoal?.title}</Breadcrumb.Item>
         </Breadcrumb>
         <div className="sublist-content">
           <div className="sublist-title">{parentGoal?.title}</div>
           <Container fluid className="sublist-list-container">
-            <input
-              id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
-              onClickCapture={() => setTapCount([-1, 0])}
-              placeholder="Search"
-              onChange={(e) => debounceSearch(e)}
-            />
             {childrenGoals?.map((goal: GoalItem, index) => (
               <div
                 key={String(`goal-${index}`)}

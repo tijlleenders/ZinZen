@@ -3,12 +3,10 @@
 }
 
 .sublist-container {
-  margin-top: 100px;
   padding: 20px;
 }
 
 .sublist-container-dark {
-  margin-top: 100px;
   padding: 20px;
   color: white;
 }
@@ -36,6 +34,7 @@
 }
 
 .sublist-content {
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -45,7 +44,7 @@
 @media only screen and (max-width: 600px) {
   .sublist-list-container {
     margin-top: 40px;
-    width: 300px;
+    width: 90%;
     color: black;
   }
 }

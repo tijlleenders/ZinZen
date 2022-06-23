@@ -92,9 +92,18 @@ export const MyGoalsPage = () => {
   }, []);
 
   return (
-    <div id="myGoals-container" onClickCapture={() => setTapCount([-1, 0])}>
-      <Container fluid>
-        <HeaderDashboard />
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <HeaderDashboard />
+      <div
+        onClickCapture={() => setTapCount([-1, 0])}
+        style={{
+          marginTop: "100px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+        className="my-goals-content"
+      >
         <input
           id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
           onClickCapture={() => setTapCount([-1, 0])}
@@ -104,7 +113,7 @@ export const MyGoalsPage = () => {
         <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
           My Goals
         </h1>
-        <div id="myGoals-list">
+        <div>
           {userGoals?.map((goal: GoalItem, index) => (
             <div
               key={String(`task-${index}`)}
@@ -173,7 +182,7 @@ export const MyGoalsPage = () => {
           alt="add-goal"
           aria-hidden
         />
-      </Container>
+      </div>
     </div>
   );
 };
