@@ -55,7 +55,7 @@ describe("DashboardUserChoice Test", () => {
 
   it("Should have My Feelings button working", () => {
     cy.contains("My Feelings").click();
-    cy.wait(500);
+    cy.wait(10000);
     cy.location("pathname")
       .should("include", "AddFeelings")
       .go("back");

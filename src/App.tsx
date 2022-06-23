@@ -1,8 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Container, Row } from "react-bootstrap";
-
 import { darkModeState, themeSelectionState, languageSelectionState } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
@@ -14,11 +12,10 @@ import { ZinZenMenuPage } from "@pages/ZinZenMenuPage/ZinZenMenuPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import { ExplorePage } from "@pages/ExplorePage/ExplorePage";
+import { GoalsPage } from "@pages/GoalsPage/GoalsPage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
-
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 
 import "./customize.scss";
 import "./App.scss";
@@ -34,15 +31,8 @@ const App = () => {
   const isLanguageChosen = language !== "No language chosen.";
   return (
     <div className={darkModeEnabled ? "App-dark" : "App-light"}>
-      {/* @ts-ignore */}
       <BrowserRouter>
-        {isLanguageChosen && isThemeChosen && (
-          <Container fluid>
-            <Row>
-              <HeaderDashboard />
-            </Row>
-          </Container>
-        )}
+        {(isLanguageChosen && isThemeChosen)}
         <Routes>
           {!isLanguageChosen ? (
             <Route path="/" element={<LandingPage />} />
@@ -60,6 +50,7 @@ const App = () => {
           <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
+          <Route path="/Home/AddGoals" element={<GoalsPage />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />

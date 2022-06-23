@@ -6,6 +6,7 @@ import { act, fireEvent, render } from "@testing-library/react";
 import * as api from "@api/FeedbackAPI";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { expect } from "@jest/globals";
+import { BrowserRouter } from "react-router-dom";
 
 global.alert = jest.fn();
 global.fetch = jest.fn(() => {
@@ -35,7 +36,9 @@ describe("Feedback Page", () => {
   it("Feedback Page success flow  ", async () => {
     const { findAllByText, getByText } = render(
       <RecoilRoot>
-        <FeedbackPage />
+        <BrowserRouter>
+          <FeedbackPage />
+        </BrowserRouter>
       </RecoilRoot>
     );
     const button = getByText("submit");
@@ -43,7 +46,9 @@ describe("Feedback Page", () => {
     await act(async () =>
       render(
         <RecoilRoot>
-          <FeedbackPage />
+          <BrowserRouter>
+            <FeedbackPage />
+          </BrowserRouter>
         </RecoilRoot>
       )
     );
@@ -59,7 +64,9 @@ describe("Feedback Page", () => {
 
     const { findAllByText, getByText } = render(
       <RecoilRoot>
-        <FeedbackPage />
+        <BrowserRouter>
+          <FeedbackPage />
+        </BrowserRouter>
       </RecoilRoot>
     );
     const button = getByText("submit");
