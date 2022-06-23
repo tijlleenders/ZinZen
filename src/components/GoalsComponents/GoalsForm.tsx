@@ -63,7 +63,7 @@ export const GoalsForm = ({ selectedColorIndex }: { selectedColorIndex: number }
     const goalFrequency = suggestion();
     const goalDuration = duration();
     if (goalTitle.length === 0) {
-      setError("Enter a goal title! (P.S. Enter the duration of the goal to get rid of this message)");
+      setError("Enter a goal title! (P.S. Enter the duration of the goal and hit enter to get rid of this message)");
       return;
     }
     if (goalDuration.length === 0) {
