@@ -29,8 +29,9 @@
 }
 
 .back-arrow-nav-dashboard{
-    position: fixed;
-    height: 50px;
+    position: absolute;
+    width: 5%;
+    cursor: pointer;
     margin-left: 0em;
     margin-top: 3.5em;
     visibility: visible;
@@ -214,8 +215,8 @@
     width: 10%;
     visibility: visible;
     cursor: pointer;
-    margin-left:23.5em;
     margin-top: 3em;
+    margin-left:90%;
   }
 
 

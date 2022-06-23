@@ -1,5 +1,6 @@
 .positioning-light {
   height: 5em;
+  display: block;
   width: 100%;
   background-color: #f0e6e1;
   position: fixed;
@@ -8,6 +9,7 @@
 
 .positioning-dark {
   height: 5em;
+  display: block;
   width: 100%;
   background-color: #121212;
   position: fixed;
