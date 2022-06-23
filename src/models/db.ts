@@ -8,10 +8,10 @@ export class FeelingsDB extends Dexie {
   goalsCollection!: Table<GoalItem, number>;
 
   constructor() {
-    super("FeelingsDB");
+    super("ZinZenDB");
     this.version(1).stores({
       feelingsCollection: "++id, content, category, date, note",
-      goalsCollection: "++id, title, duration, sublist, repeat, start, finish, createdAt",
+      goalsCollection: "++id, title, duration, sublist, repeat, start, finish, createdAt, status, parentGoalId",
     });
   }
 }

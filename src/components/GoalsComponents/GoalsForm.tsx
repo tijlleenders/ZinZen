@@ -9,18 +9,21 @@ import { darkModeState } from "@store";
 
 import "@translations/i18n";
 import "./GoalsComponents.scss";
+import { addGoal, createGoal } from "@src/api/GoalsAPI";
+import { useNavigate } from "react-router";
 
-export const GoalsForm = () => {
+export const GoalsForm = ({ selectedColorIndex }: { selectedColorIndex: number }) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const darkrooms = ["#443027", "#9C4663", "#646464", "#2B517B", " #612854"];
   const lightcolors = [" #EDC7B7", "#AC3B61", " #BAB2BC", " #3B6899", " #8E3379"];
-  const { t } = useTranslation();
-  const [selectedColorIndex, setColorIndex] = useState(0);
-  const [tableData, setTableData] = useState([]);
+
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
   });
+  const [goalTitle, setGoalTitle] = useState("");
 
   const handleChange = (e: any) => {
     const { value } = e.target;
@@ -33,24 +36,12 @@ export const GoalsForm = () => {
     });
   };
 
-  const handleSubmit = (e: any) => {
-    if (formInputData.inputGoal) {
-      const newData = (data: []) => [...data, formInputData];
-      setTableData(newData);
-    }
-    setFormInputData({
-      inputGoal: "",
-      id: "",
-    });
-    e.preventDefault();
-  };
-
-  const removeItem = () => {
-    setTableData([]);
-  };
   function suggestion() {
     if (formInputData.inputGoal.indexOf("daily") !== -1) {
       return "daily";
+    }
+    if (formInputData.inputGoal.indexOf("once") !== -1) {
+      return "once";
     }
     return "";
   }
@@ -59,25 +50,33 @@ export const GoalsForm = () => {
     const checkGoal = parseInt(formInputData.inputGoal.match(tracker), 10);
     const parseGoal = parseInt(formInputData.inputGoal.match(tracker), 10) <= 24;
     if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
+      if (goalTitle.length === 0) {
+        const titleEndIndex = formInputData.inputGoal.search(tracker);
+        setGoalTitle(formInputData.inputGoal.slice(0, titleEndIndex - 1));
+      }
       return `${checkGoal} hours`;
     }
     return "";
   }
-  const changeColor = () => {
-    const newColorIndex = selectedColorIndex + 1;
-    if (darkrooms[newColorIndex]) setColorIndex(newColorIndex);
-    else setColorIndex(0);
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const newGoal = createGoal(goalTitle, suggestion() === "daily", Number(duration().split(" ")[0]), null, null, 0);
+    await addGoal(newGoal);
+    setFormInputData({
+      inputGoal: "",
+      id: "",
+    });
+    setGoalTitle("");
+    setTimeout(() => {
+      navigate("/Home/MyGoals");
+    }, 100);
   };
 
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
         <input
-          style={
-            darkModeStatus
-              ? { backgroundColor: darkrooms[selectedColorIndex] }
-              : { backgroundColor: lightcolors[selectedColorIndex] }
-          }
           className={darkModeStatus ? "addtask-dark" : "addtask-light"}
           type="text"
           name="inputGoal"
@@ -86,7 +85,7 @@ export const GoalsForm = () => {
           onChange={handleChange}
         />
       </div>
-      <div className="duration">
+      <div className="tags">
         <button
           type="button"
           style={
@@ -105,51 +104,23 @@ export const GoalsForm = () => {
               ? { backgroundColor: darkrooms[selectedColorIndex] }
               : { backgroundColor: lightcolors[selectedColorIndex] }
           }
-          className={suggestion() === "daily" ? "suggestion" : "blank"}
+          className={suggestion() === "once" || suggestion() === "daily" ? "suggestion" : "blank"}
         >
           {suggestion()}
         </button>
       </div>
       <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
-        <Button variant={darkModeStatus ? "pink" : "peach"} onClick={handleSubmit} className="addtask-button">
-          Add Task
+        <Button
+          onClick={handleSubmit}
+          className="addtask-button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: darkrooms[selectedColorIndex] }
+              : { backgroundColor: lightcolors[selectedColorIndex] }
+          }
+        >
+          Add Goal
         </Button>
-        <div className="changeColor">
-          <button
-            type="button"
-            className="color-button"
-            style={
-              darkModeStatus
-                ? { backgroundColor: darkrooms[selectedColorIndex] }
-                : { backgroundColor: lightcolors[selectedColorIndex] }
-            }
-            onClick={changeColor}
-          >
-            Change color
-          </button>
-        </div>
-      </div>
-
-      <div className="inputs">
-        {tableData.map((data, index) => (
-          <div
-            key={crypto.randomUUID()}
-            style={
-              darkModeStatus ? { backgroundColor: darkrooms[index % 5] } : { backgroundColor: lightcolors[index % 5] }
-            }
-            className={darkModeStatus ? "addtask-dark" : "addtask-light"}
-          >
-            <div
-              role="button"
-              tabIndex={0}
-              className={darkModeStatus ? "deletetodo-dark" : "deletetodo-light"}
-              aria-label="Remove Item"
-              onClick={removeItem}
-              onKeyDown={removeItem}
-            />
-            <div className="input-goal">{data.inputGoal}</div>
-          </div>
-        ))}
       </div>
     </form>
   );
