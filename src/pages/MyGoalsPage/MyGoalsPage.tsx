@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Container } from "react-bootstrap";
 import { PlusLg, Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
 import { archiveGoal, getActiveGoals, removeGoal, updateGoal, isCollectionEmpty } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { darkModeState } from "@src/store";
 
 import "./MyGoalsPage.scss";
-import { useRecoilValue } from "recoil";
-import { darkModeState } from "@src/store";
 
 export const MyGoalsPage = () => {
   const navigate = useNavigate();
