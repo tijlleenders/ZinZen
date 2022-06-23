@@ -1,12 +1,13 @@
-// @ts-nocheck
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Container } from "react-bootstrap";
 import { PlusLg, Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
 import { archiveGoal, getActiveGoals, removeGoal, updateGoal, isCollectionEmpty } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { darkModeState } from "@src/store";
 
 import "./MyGoalsPage.scss";
 
@@ -16,6 +17,8 @@ export const MyGoalsPage = () => {
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [userUpdatingTitle, setUserUpdatingTitle] = useState(false);
   const titleRef = useRef(null);
+  const darkModeStatus = useRecoilValue(darkModeState);
+
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
   // async function populateDummyGoals() {
@@ -30,14 +33,14 @@ export const MyGoalsPage = () => {
     const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
     if (updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
       if (updatedTitle.length === 0) return;
-      await updateGoal(goal.id, { title: updatedTitle });
+      await updateGoal(Number(goal.id), { title: updatedTitle });
       const goals: GoalItem[] = await getActiveGoals();
       setUserGoals(goals);
     }
   }
   async function archiveUserGoal(goal: GoalItem) {
     const updatedGoalStatus = { status: 1 };
-    await archiveGoal(goal.id, updatedGoalStatus);
+    await archiveGoal(Number(goal.id), updatedGoalStatus);
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   }
@@ -50,7 +53,7 @@ export const MyGoalsPage = () => {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
   }
-  function debounceSearch(event) {
+  function debounceSearch(event: ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
 
     if (debounceTimeout) {
@@ -79,7 +82,7 @@ export const MyGoalsPage = () => {
         clearTimeout(timer1);
       };
     });
-  }, []);
+  }, [userGoals]);
 
   useEffect(() => {
     (async () => {
@@ -93,12 +96,12 @@ export const MyGoalsPage = () => {
     <div id="myGoals-container" onClickCapture={() => setTapCount([-1, 0])}>
       <Container fluid>
         <input
-          id="goal-searchBar"
+          id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
           onClickCapture={() => setTapCount([-1, 0])}
           placeholder="Search"
           onChange={(e) => debounceSearch(e)}
         />
-        <h1 id="myGoals_title" onClickCapture={() => setTapCount([-1, 0])}>
+        <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
           My Goals
         </h1>
         <div id="myGoals-list">
@@ -129,13 +132,13 @@ export const MyGoalsPage = () => {
                   <Trash3Fill
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      removeUserGoal(goal.id);
+                      removeUserGoal(Number(goal.id));
                     }}
                   />
                   <PencilSquare
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      titleRef.current?.focus();
+                      if (titleRef.current) (titleRef.current as HTMLElement).focus();
                       setUserUpdatingTitle(!userUpdatingTitle);
                     }}
                   />
@@ -152,14 +155,15 @@ export const MyGoalsPage = () => {
             </div>
           ))}
         </div>
-        <button
-          type="button"
+        <img
           onClick={() => {
             navigate("/Home/AddGoals");
           }}
-        >
-          <img id="addGoal-btn" src={addIcon} alt="add-goal" />
-        </button>
+          id="addGoal-btn"
+          src={addIcon}
+          alt="add-goal"
+          aria-hidden
+        />
       </Container>
     </div>
   );
