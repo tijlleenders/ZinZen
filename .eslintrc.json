@@ -18,7 +18,14 @@
       }
     }
   },
-  "extends": ["plugin:react/recommended", "airbnb"],
+  "extends": [
+    "airbnb",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "globals": {
     "cy": true
   },
