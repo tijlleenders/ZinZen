@@ -12,7 +12,6 @@ import { ZinZenMenuPage } from "@pages/ZinZenMenuPage/ZinZenMenuPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import { ExplorePage } from "@pages/ExplorePage/ExplorePage";
-import { GoalsPage } from "@pages/GoalsPage/GoalsPage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
@@ -50,7 +49,7 @@ const App = () => {
           <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
-          <Route path="/Home/AddGoals" element={<GoalsPage />} />
+          <Route path="/Home/AddGoals" element={<AddGoalsPage />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
