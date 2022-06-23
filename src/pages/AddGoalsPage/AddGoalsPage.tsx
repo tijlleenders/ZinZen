@@ -32,7 +32,9 @@ export const AddGoalsPage: React.FC = () => {
     if (locationState) {
       setParentGoalId(locationState.goalId);
     } else setParentGoalId(-1);
-    if (parentGoalId !== -1) getGoal(parentGoalId!).then((parentGoal) => setParentGoalTitle(parentGoal.title));
+    if (parentGoalId !== -1 && parentGoalId !== undefined) {
+      getGoal(parentGoalId!).then((parentGoal) => setParentGoalTitle(parentGoal.title));
+    }
   }, [parentGoalId]);
 
   const changeColor = () => {
