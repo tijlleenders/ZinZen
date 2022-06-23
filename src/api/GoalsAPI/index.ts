@@ -76,10 +76,11 @@ export const isCollectionEmpty = async () => {
 export const createGoal = (
   goalTitle: string,
   goalRepeats: boolean,
-  goalDuration: Number,
+  goalDuration: number,
   goalStart: Date | null,
   goalFinish: Date | null,
-  goalStatus: 0 | 1
+  goalStatus: 0 | 1,
+  parentGoalId?: number
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
@@ -88,6 +89,7 @@ export const createGoal = (
     start: goalStart,
     finish: goalFinish,
     status: goalStatus,
+    parentGoalId,
   };
   return newGoal;
 };

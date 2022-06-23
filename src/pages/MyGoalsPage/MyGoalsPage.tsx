@@ -55,11 +55,9 @@ export const MyGoalsPage = () => {
   }
   function debounceSearch(event: ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
-
     if (debounceTimeout) {
       clearTimeout(debounceTimeout);
     }
-
     debounceTimeout = setTimeout(() => {
       search(value);
     }, 300);
