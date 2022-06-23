@@ -36,9 +36,10 @@ describe("DashboardUserChoice Test", () => {
   it("Should have My Goals button working", () => {
     cy.contains("My Goals")
       .click()
+      .wait(10000)
       .location("pathname")
-      .should("include", "MyGoals")
-      .go("back");
+      .should("include", "AddGoals");
+    cy.get('[alt="Back arrow"]').click();
   });
 
   it("Should have My Time button", () => {
@@ -54,10 +55,11 @@ describe("DashboardUserChoice Test", () => {
   });
 
   it("Should have My Feelings button working", () => {
-    cy.contains("My Feelings").click();
-    cy.wait(10000);
-    cy.location("pathname")
-      .should("include", "AddFeelings")
-      .go("back");
+    cy.contains("My Feelings")
+      .click()
+      .wait(10000)
+      .location("pathname")
+      .should("include", "AddFeelings");
+    cy.get('[alt="Back arrow"]').click();
   });
 });
