@@ -122,8 +122,7 @@
     border: none;
     font-weight: bolder;
   }
-
-  #myfeelings-note-input{
+  #myfeelings-custom-feeling-input, #myfeelings-note-input{
     background-color: #edc7b7 !important;
     outline: none;
     border: none;
@@ -132,6 +131,10 @@
     font-weight: bold;
     margin-top: 8%;
     width:95%;
+  }
+  #myfeelings-note-input{
+    height: 3.2em;
+    margin-top: 5%;
   }
   .feelings-title-mobile {
     font-weight: bolder;
