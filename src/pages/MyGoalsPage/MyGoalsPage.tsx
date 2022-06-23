@@ -8,6 +8,8 @@ import { archiveGoal, getActiveGoals, removeGoal, updateGoal, isCollectionEmpty 
 import { GoalItem } from "@src/models/GoalItem";
 
 import "./MyGoalsPage.scss";
+import { useRecoilValue } from "recoil";
+import { darkModeState } from "@src/store";
 
 export const MyGoalsPage = () => {
   const navigate = useNavigate();
@@ -15,6 +17,8 @@ export const MyGoalsPage = () => {
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [userUpdatingTitle, setUserUpdatingTitle] = useState(false);
   const titleRef = useRef(null);
+  const darkModeStatus = useRecoilValue(darkModeState);
+
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
   // async function populateDummyGoals() {
@@ -92,12 +96,12 @@ export const MyGoalsPage = () => {
     <div id="myGoals-container" onClickCapture={() => setTapCount([-1, 0])}>
       <Container fluid>
         <input
-          id="goal-searchBar"
+          id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
           onClickCapture={() => setTapCount([-1, 0])}
           placeholder="Search"
           onChange={(e) => debounceSearch(e)}
         />
-        <h1 id="myGoals_title" onClickCapture={() => setTapCount([-1, 0])}>
+        <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
           My Goals
         </h1>
         <div id="myGoals-list">
@@ -151,14 +155,15 @@ export const MyGoalsPage = () => {
             </div>
           ))}
         </div>
-        <button
-          type="button"
+        <img
           onClick={() => {
             navigate("/Home/AddGoals");
           }}
-        >
-          <img id="addGoal-btn" src={addIcon} alt="add-goal" />
-        </button>
+          id="addGoal-btn"
+          src={addIcon}
+          alt="add-goal"
+          aria-hidden
+        />
       </Container>
     </div>
   );

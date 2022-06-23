@@ -17,7 +17,30 @@
   width: 94%;
 }
 
+#goal-searchBar-dark {
+  background-color: rgba(237, 199, 183, 0.4);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 1.4em;
+  font-family: "Montserrat";
+  font-weight: bolder;
+  height: 50px;
+  margin-left: 2%;
+  margin-bottom: 3.5%;
+  padding-left: 0.5em;
+  width: 94%;
+}
+
 #myGoals_title {
+  margin: 2% 2% 5% 2%;
+  font-family: "Montserrat";
+  font-weight: bolder;
+  font-size: 1.5em;
+}
+
+#myGoals_title-dark {
+  color: white;
   margin: 2% 2% 5% 2%;
   font-family: "Montserrat";
   font-weight: bolder;
