@@ -58,6 +58,8 @@
     "object-curly-newline": "off",
     "no-underscore-dangle": "off",
     "max-len": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
     "linebreak-style": 0,
     "import/extensions": [
       "error",
