@@ -122,16 +122,19 @@
     border: none;
     font-weight: bolder;
   }
-
-  #myfeelings-note-input{
+  #myfeelings-custom-feeling-input, #myfeelings-note-input{
     background-color: #edc7b7 !important;
     outline: none;
     border: none;
     border-radius: 8px;
     padding: 8px;
     font-weight: bold;
-    margin-top: 8%;
+    margin-top: 3%;
     width:95%;
+  }
+  #myfeelings-note-input{
+    height: 3.2em;
+    margin-top: 5%;
   }
   .feelings-title-mobile {
     font-weight: bolder;
@@ -196,6 +199,10 @@
     margin-right: 2.5%;
     margin-top: 3%;    
     padding: 1.5% 5%;
+  }
+
+  #feelingOptions{
+    margin-top: 2%;
   }
 
   .feelingOption-selected{

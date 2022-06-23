@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -8,6 +8,7 @@ import addIcon from "@assets/images/GoalsAddIcon.svg";
 import { archiveGoal, getActiveGoals, removeGoal, updateGoal, isCollectionEmpty } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 
 import "./MyGoalsPage.scss";
 
@@ -93,6 +94,7 @@ export const MyGoalsPage = () => {
   return (
     <div id="myGoals-container" onClickCapture={() => setTapCount([-1, 0])}>
       <Container fluid>
+        <HeaderDashboard />
         <input
           id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
           onClickCapture={() => setTapCount([-1, 0])}

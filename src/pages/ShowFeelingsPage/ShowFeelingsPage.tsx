@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { getAllFeelings, isCollectionEmpty } from "@api/FeelingsAPI";
 import { IFeelingItem } from "@models";
 import { darkModeState } from "@store";
@@ -60,13 +61,19 @@ export const ShowFeelingsPage = () => {
   }, []);
 
   return (
-    <Container fluid className="slide show-feelings__container">
-      <Row>
-        <Col>
-          <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
-            {t("showfeelingsmessage")}
-          </h3>
-          {feelingsList !== null &&
+    <div>
+      <Container fluid>
+        <Row>
+          <HeaderDashboard />
+        </Row>
+      </Container>
+      <Container fluid className="slide show-feelings__container">
+        <Row>
+          <Col>
+            <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
+              {t("showfeelingsmessage")}
+            </h3>
+            {feelingsList !== null &&
             dateRangeArr.map((date) => (
               <div key={date} className="show-feelings__list-category">
                 <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
@@ -120,8 +127,9 @@ export const ShowFeelingsPage = () => {
                 )}
               </div>
             ))}
-        </Col>
-      </Row>
-    </Container>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };

@@ -1,8 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Container, Row } from "react-bootstrap";
-
 import { darkModeState, themeSelectionState, languageSelectionState } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
@@ -17,8 +15,6 @@ import { ExplorePage } from "@pages/ExplorePage/ExplorePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
-
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 
 import "./customize.scss";
 import "./App.scss";
@@ -36,13 +32,7 @@ const App = () => {
   return (
     <div className={darkModeEnabled ? "App-dark" : "App-light"}>
       <BrowserRouter>
-        {isLanguageChosen && isThemeChosen && (
-          <Container fluid>
-            <Row>
-              <HeaderDashboard />
-            </Row>
-          </Container>
-        )}
+        {isLanguageChosen && isThemeChosen}
         <Routes>
           {!isLanguageChosen ? (
             <Route path="/" element={<LandingPage />} />

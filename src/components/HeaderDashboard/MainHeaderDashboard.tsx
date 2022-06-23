@@ -1,7 +1,7 @@
-// @ts-nocheck
 import React from "react";
-import { Navbar, Nav } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { Nav, Navbar } from "react-bootstrap";
+import { useRecoilState } from "recoil";
+import DarkModeToggle from "react-dark-mode-toggle";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
@@ -9,21 +9,28 @@ import { darkModeState } from "@store";
 import logo from "@assets/images/logo.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
-import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
 
-export const HeaderDashboard = () => {
+export const MainHeaderDashboard = () => {
   const navigate = useNavigate();
-  const darkModeStatus = useRecoilValue(darkModeState);
+  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+  const toggleTheme = () => {
+    setDarkModeStatus(!darkModeStatus);
+    if (darkModeStatus) {
+      localStorage.setItem("theme", "light");
+    } else {
+      localStorage.setItem("theme", "dark");
+    }
+  };
   return (
     <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
       <Navbar collapseOnSelect expand="lg">
         <img
           role="presentation"
-          src={ArrowIcon}
-          alt="Back arrow"
-          className="back-arrow-nav-dashboard"
+          src={logo}
+          alt="Zinzen Logo"
+          className="zinzen-logo-nav-dashboard-main"
           onClick={() => {
             navigate("/Home");
           }}
@@ -33,7 +40,7 @@ export const HeaderDashboard = () => {
             role="presentation"
             src={ZinZenTextDark}
             alt="ZinZen Text Logo"
-            className="zinzen-text-logo-nav-dashboard"
+            className="zinzen-text-logo-nav-dashboard-main"
             onClick={() => {
               navigate("/Home");
             }}
@@ -43,23 +50,21 @@ export const HeaderDashboard = () => {
             role="presentation"
             src={ZinZenTextLight}
             alt="ZinZen Text Logo"
-            className="zinzen-text-logo-nav-dashboard"
+            className="zinzen-text-logo-nav-dashboard-main"
             onClick={() => {
               navigate("/Home");
             }}
           />
         )}
+
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="navbar-custom" />
         </Navbar.Collapse>
-        <img
-          role="presentation"
-          src={logo}
-          alt="Zinzen Logo"
-          className="zinzen-logo-nav-dashboard"
-          onClick={() => {
-            navigate("/Home");
-          }}
+        <DarkModeToggle
+          onChange={toggleTheme}
+          checked={darkModeStatus}
+          size={60}
+          className="dark-mode-toggle"
         />
       </Navbar>
     </div>
