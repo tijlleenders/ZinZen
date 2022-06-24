@@ -1,0 +1,50 @@
+.breadcrumb-item + .breadcrumb-item::before {
+  content: var(--bs-breadcrumb-divider, ">") !important;
+}
+
+.sublist-container {
+  padding: 20px;
+}
+
+.sublist-container-dark {
+  padding: 20px;
+  color: white;
+}
+
+.breadcrumb li a {
+  color: black;
+  text-decoration: none;
+  background-color: #edc7b7;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.sublist-title {
+  margin-left: -10px;
+  text-transform: capitalize;
+  font-style: italic;
+  font-size: 25px !important;
+  cursor: default;
+}
+
+.sublist-list-container {
+  margin-top: 40px;
+  width: 600px;
+  color: black;
+}
+
+.sublist-content {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+  .sublist-list-container {
+    margin-top: 40px;
+    width: 90%;
+    color: black;
+  }
+}

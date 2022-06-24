@@ -15,12 +15,13 @@ import { ExplorePage } from "@pages/ExplorePage/ExplorePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
+import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
+import { GoalSublist } from "@pages/GoalSublist/GoalSublist";
 
 import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
-import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -31,7 +32,7 @@ const App = () => {
   return (
     <div className={darkModeEnabled ? "App-dark" : "App-light"}>
       <BrowserRouter>
-        {(isLanguageChosen && isThemeChosen)}
+        {isLanguageChosen && isThemeChosen}
         <Routes>
           {!isLanguageChosen ? (
             <Route path="/" element={<LandingPage />} />
@@ -49,7 +50,7 @@ const App = () => {
           <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
-          <Route path="/Home/AddGoals" element={<AddGoalsPage />} />
+          <Route path="/Home/MyGoals/:id" element={<GoalSublist />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />

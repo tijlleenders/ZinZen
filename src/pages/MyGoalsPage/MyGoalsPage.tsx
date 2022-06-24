@@ -1,7 +1,5 @@
-// @ts-nocheck
-import React, { useState, useEffect, useRef } from "react";
-import { Container, Row } from "react-bootstrap";
-import { PlusLg, Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
+import React, { useState, useEffect, useRef, ChangeEvent } from "react";
+import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
@@ -9,9 +7,9 @@ import addIcon from "@assets/images/GoalsAddIcon.svg";
 import { archiveGoal, getActiveGoals, removeGoal, updateGoal, isCollectionEmpty } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 
 import "./MyGoalsPage.scss";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 
 export const MyGoalsPage = () => {
   const navigate = useNavigate();
@@ -57,11 +55,9 @@ export const MyGoalsPage = () => {
   }
   function debounceSearch(event: ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
-
     if (debounceTimeout) {
       clearTimeout(debounceTimeout);
     }
-
     debounceTimeout = setTimeout(() => {
       search(value);
     }, 300);
@@ -95,13 +91,18 @@ export const MyGoalsPage = () => {
   }, []);
 
   return (
-    <div>
-      <Container fluid>
-        <Row>
-          <HeaderDashboard />
-        </Row>
-      </Container>
-      <Container fluid>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <HeaderDashboard />
+      <div
+        onClickCapture={() => setTapCount([-1, 0])}
+        style={{
+          marginTop: "100px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+        className="my-goals-content"
+      >
         <input
           id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
           onClickCapture={() => setTapCount([-1, 0])}
@@ -111,7 +112,7 @@ export const MyGoalsPage = () => {
         <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
           My Goals
         </h1>
-        <div id="myGoals-list">
+        <div>
           {userGoals?.map((goal: GoalItem, index) => (
             <div
               key={String(`task-${index}`)}
@@ -129,13 +130,22 @@ export const MyGoalsPage = () => {
                   updateUserGoals(goal, index);
                 }}
                 suppressContentEditableWarning
-                style={{ cursor: userUpdatingTitle ? "unset" : "default" }}
+                style={{
+                  cursor: userUpdatingTitle ? "unset" : "default",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
               >
                 {goal.title}
+                <ChevronRight style={{ cursor: "pointer" }} onClick={() => navigate(`/Home/MyGoals/${goal.id}`)} />
               </div>
               {tapCount[0] === index && tapCount[1] > 0 ? (
                 <div className="interactables">
-                  <PlusLg style={{ cursor: "pointer" }} />
+                  <PlusLg
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate("/Home/AddGoals", { state: { goalId: goal.id } })}
+                  />
                   <Trash3Fill
                     style={{ cursor: "pointer" }}
                     onClick={() => {
@@ -171,78 +181,6 @@ export const MyGoalsPage = () => {
           alt="add-goal"
           aria-hidden
         />
-      </Container>
-      <div id="myGoals-container" onClickCapture={() => setTapCount([-1, 0])}>
-        <Container fluid>
-          <input
-            id="goal-searchBar"
-            onClickCapture={() => setTapCount([-1, 0])}
-            placeholder="Search"
-            onChange={(e) => debounceSearch(e)}
-          />
-          <h1 id="myGoals_title" onClickCapture={() => setTapCount([-1, 0])}>
-            My Goals
-          </h1>
-          <div id="myGoals-list">
-            {userGoals?.map((goal: GoalItem, index) => (
-              <div
-                key={String(`task-${index}`)}
-                className="user-goal"
-                onClickCapture={() => {
-                  setTapCount([index, tapCount[1] + 1]);
-                }}
-              >
-                <div
-                  className="goal-title"
-                  contentEditable={userUpdatingTitle && tapCount[0] === index && tapCount[1] >= 1}
-                  onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
-                  ref={titleRef}
-                  onBlur={() => {
-                    updateUserGoals(goal, index);
-                  }}
-                  suppressContentEditableWarning
-                  style={{ cursor: userUpdatingTitle ? "unset" : "default" }}
-                >
-                  {goal.title}
-                </div>
-                {tapCount[0] === index && tapCount[1] > 0 ? (
-                  <div className="interactables">
-                    <PlusLg style={{ cursor: "pointer" }} />
-                    <Trash3Fill
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        removeUserGoal(goal.id);
-                      }}
-                    />
-                    <PencilSquare
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        titleRef.current?.focus();
-                        setUserUpdatingTitle(!userUpdatingTitle);
-                      }}
-                    />
-                    <CheckLg
-                      onClick={async () => {
-                        archiveUserGoal(goal);
-                        const updatedGoalsList = await getActiveGoals();
-                        setUserGoals(updatedGoalsList);
-                      }}
-                      style={{ cursor: "Pointer" }}
-                    />
-                  </div>
-                ) : null}
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              navigate("/Home/AddGoals");
-            }}
-          >
-            <img id="addGoal-btn" src={addIcon} alt="add-goal" />
-          </button>
-        </Container>
       </div>
     </div>
   );

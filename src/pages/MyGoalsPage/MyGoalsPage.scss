@@ -1,7 +1,3 @@
-#myGoals-container {
-  margin-top: 30%;
-}
-
 #goal-searchBar {
   background-color: rgba(237, 199, 183, 0.4);
   border: none;
@@ -14,7 +10,6 @@
   margin-left: 2%;
   margin-bottom: 3.5%;
   padding-left: 0.5em;
-  width: 94%;
 }
 
 #goal-searchBar-dark {
@@ -29,7 +24,6 @@
   margin-left: 2%;
   margin-bottom: 3.5%;
   padding-left: 0.5em;
-  width: 94%;
 }
 
 #myGoals_title {
@@ -51,9 +45,7 @@
   margin: 2% 2% 0% 2%;
   height: 418px;
   overflow-y: auto;
-  position: fixed;
   height: 50%;
-  width: 90%;
 }
 #myGoals-list::-webkit-scrollbar {
   display: none;
@@ -74,7 +66,6 @@
   margin-top: 4%;
   padding: 2.5% 4%;
   text-align: left;
-  width: 100%;
 }
 
 .user-goal:first-child {
@@ -99,63 +90,14 @@
   text-align: left !important;
   cursor: pointer;
 }
-
-@media only screen and (min-width: 600px) {
-  #addGoal-btn {
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 5%;
-    margin-right: 8%;
-    right: 0;
-  }
-
-  #myGoals-container {
-    margin: 0% 5%;
-    margin-top: 12%;
-  }
-
-  #myGoals-list {
-    height: 50%;
-    width: 85%;
-    margin: 0%;
-  }
-  #myGoals_title {
-    margin: 5% 0% 5% 0%;
-  }
-  #goal-searchBar {
-    margin: 0%;
-    width: 97%;
-    border-radius: 7px;
+@media (min-width: 1281px) {
+  .my-goals-content {
+    width: 40%;
   }
 }
 
-@media only screen and (min-width: 1080px) {
-  #myGoals-container {
-    margin: 0% 30%;
-    margin-top: 8%;
-  }
-
-  #goal-searchBar {
-    margin: 0%;
-    width: 100%;
-    border-radius: 7px;
-  }
-
-  #myGoals_title {
-    margin: 3% 0% 3% 0%;
-  }
-
-  #addGoal-btn {
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 1%;
-    margin-right: 31%;
-    right: 0;
-  }
-
-  #myGoals-list {
-    height: 48%;
-    width: 38.5%;
-    margin: 0%;
+@media (max-width: 480px) {
+  .my-goals-content {
+    width: 90%;
   }
 }

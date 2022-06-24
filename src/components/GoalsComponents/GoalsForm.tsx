@@ -2,15 +2,20 @@ import React, { ChangeEvent, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
+import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 
 import "@translations/i18n";
 import "./GoalsComponents.scss";
-import { addGoal, createGoal } from "@src/api/GoalsAPI";
-import { useNavigate } from "react-router";
 
-export const GoalsForm = ({ selectedColorIndex }: { selectedColorIndex: number }) => {
+interface GoalsFormProps {
+  selectedColorIndex: number;
+  parentGoalId?: number | -1;
+}
+
+export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parentGoalId }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -78,15 +83,28 @@ export const GoalsForm = ({ selectedColorIndex }: { selectedColorIndex: number }
       setError("Enter a goal title! (P.S. the problem could also be with the sequence of goal-duration-frequency)");
       return;
     }
-    const newGoal = createGoal(goalTitle, goalFrequency === "daily", Number(goalDuration.split(" ")[0]), null, null, 0);
-    await addGoal(newGoal);
+    const newGoal = createGoal(
+      goalTitle,
+      goalFrequency === "daily",
+      Number(goalDuration.split(" ")[0]),
+      null,
+      null,
+      0,
+      parentGoalId!
+    );
+    const newGoalId = await addGoal(newGoal);
+    if (parentGoalId) {
+      const parentGoal = await getGoal(parentGoalId);
+      const newSublist = (parentGoal && parentGoal.sublist) ? [...parentGoal.sublist, newGoalId] : [newGoalId];
+      await updateGoal(parentGoalId, { sublist: newSublist });
+    }
     setFormInputData({
       inputGoal: "",
       id: "",
     });
     setGoalTitle("");
     setTimeout(() => {
-      navigate("/Home/MyGoals");
+      navigate(parentGoalId === -1 ? "/Home/MyGoals" : `/Home/MyGoals/${parentGoalId}`);
     }, 100);
   };
 
@@ -142,4 +160,8 @@ export const GoalsForm = ({ selectedColorIndex }: { selectedColorIndex: number }
       <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
     </form>
   );
+};
+
+GoalsForm.defaultProps = {
+  parentGoalId: -1,
 };

@@ -10,19 +10,33 @@ export const resetDatabase = () =>
 export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
   const goals: GoalItem = { ...goalDetails, createdAt: currentDate };
-  db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.add(goals);
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
+  let newGoalId;
+  await db
+    .transaction("rw", db.goalsCollection, async () => {
+      newGoalId = await db.goalsCollection.add(goals);
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+  return newGoalId;
 };
 
-export const removeGoal = (goalId: number) => {
+export const removeGoal = async (goalId: number) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.delete(goalId);
   }).catch((e) => {
     console.log(e.stack || e);
   });
+};
+
+export const getGoal = async (goalId: number) => {
+  const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
+  return goal[0];
+};
+
+export const getChildrenGoals = async (parentGoalId: number) => {
+  const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).toArray();
+  return childrenGoals;
 };
 
 export const getAllGoals = async () => {
@@ -32,7 +46,9 @@ export const getAllGoals = async () => {
 
 export const getActiveGoals = async () => {
   const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(0).toArray();
-  return activeGoals;
+  // Filter and return only parent goals
+  const activeParentGoals = activeGoals.filter((goal: GoalItem) => goal.parentGoalId === -1);
+  return activeParentGoals;
 };
 
 export const getAllArchivedGoals = async () => {
@@ -76,10 +92,11 @@ export const isCollectionEmpty = async () => {
 export const createGoal = (
   goalTitle: string,
   goalRepeats: boolean,
-  goalDuration: Number,
+  goalDuration: number,
   goalStart: Date | null,
   goalFinish: Date | null,
-  goalStatus: 0 | 1
+  goalStatus: 0 | 1,
+  parentGoalId: number | -1
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
@@ -88,6 +105,7 @@ export const createGoal = (
     start: goalStart,
     finish: goalFinish,
     status: goalStatus,
+    parentGoalId,
   };
   return newGoal;
 };
