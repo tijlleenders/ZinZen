@@ -11,6 +11,7 @@ import {
   updateGoal,
   isCollectionEmpty,
   removeChildrenGoals,
+  archiveChildrenGoals,
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -46,6 +47,7 @@ export const MyGoalsPage = () => {
     }
   }
   async function archiveUserGoal(goal: GoalItem) {
+    await archiveChildrenGoals(Number(goal.id));
     await archiveGoal(Number(goal.id));
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);

@@ -115,3 +115,8 @@ export const removeChildrenGoals = async (parentGoalId: number) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
   childrenGoals.map((goal: GoalItem) => removeGoal(Number(goal.id)));
 };
+
+export const archiveChildrenGoals = async (parentGoalId: number) => {
+  const childrenGoals = await getChildrenGoals(parentGoalId);
+  childrenGoals.map((goal: GoalItem) => archiveGoal(Number(goal.id)));
+};
