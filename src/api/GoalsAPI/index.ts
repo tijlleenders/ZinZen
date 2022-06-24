@@ -73,9 +73,10 @@ export const updateGoal = async (id: number, changes: object) => {
   });
 };
 
-export const archiveGoal = async (id: number, updatedGoal: object) => {
+export const archiveGoal = async (id: number) => {
+  const updatedGoalStatus = { status: 1 };
   db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.update(id, updatedGoal);
+    await db.goalsCollection.update(id, updatedGoalStatus);
   });
 };
 
@@ -108,4 +109,9 @@ export const createGoal = (
     parentGoalId,
   };
   return newGoal;
+};
+
+export const removeChildrenGoals = async (parentGoalId: number) => {
+  const childrenGoals = await getChildrenGoals(parentGoalId);
+  childrenGoals.map((goal: GoalItem) => removeGoal(Number(goal.id)));
 };

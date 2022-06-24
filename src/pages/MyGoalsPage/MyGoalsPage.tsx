@@ -4,7 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
-import { archiveGoal, getActiveGoals, removeGoal, updateGoal, isCollectionEmpty } from "@api/GoalsAPI";
+import {
+  archiveGoal,
+  getActiveGoals,
+  removeGoal,
+  updateGoal,
+  isCollectionEmpty,
+  removeChildrenGoals,
+} from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
@@ -39,12 +46,12 @@ export const MyGoalsPage = () => {
     }
   }
   async function archiveUserGoal(goal: GoalItem) {
-    const updatedGoalStatus = { status: 1 };
-    await archiveGoal(Number(goal.id), updatedGoalStatus);
+    await archiveGoal(Number(goal.id));
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   }
   async function removeUserGoal(id: number) {
+    await removeChildrenGoals(id);
     await removeGoal(id);
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
