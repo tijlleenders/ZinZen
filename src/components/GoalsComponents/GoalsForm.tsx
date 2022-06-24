@@ -2,13 +2,13 @@ import React, { ChangeEvent, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
+import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 
 import "@translations/i18n";
 import "./GoalsComponents.scss";
-import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
-import { useNavigate } from "react-router";
 
 interface GoalsFormProps {
   selectedColorIndex: number;
@@ -95,7 +95,7 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
       const parentGoal = await getGoal(parentGoalId);
-      const newSublist = parentGoal?.sublist === undefined ? [newGoalId] : [...parentGoal?.sublist, newGoalId];
+      const newSublist = (parentGoal && parentGoal.sublist) ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(parentGoalId, { sublist: newSublist });
     }
     setFormInputData({
