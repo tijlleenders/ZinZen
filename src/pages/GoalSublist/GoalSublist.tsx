@@ -68,62 +68,64 @@ export const GoalSublist: React.FC = () => {
           <Breadcrumb.Item href="/Home/MyGoals/">My Goals</Breadcrumb.Item>
           <Breadcrumb.Item href="#">{parentGoal?.title}</Breadcrumb.Item>
         </Breadcrumb>
-        <div className="sublist-content">
-          <div className="sublist-title">{parentGoal?.title}</div>
-          <Container fluid className="sublist-list-container">
-            {childrenGoals?.map((goal: GoalItem, index) => (
-              <div
-                key={String(`goal-${index}`)}
-                className="user-goal"
-                onClickCapture={() => {
-                  setTapCount([index, tapCount[1] + 1]);
-                }}
-              >
+        <div className="sublist-content-container">
+          <div className="sublist-content">
+            <div className="sublist-title">{parentGoal?.title}</div>
+            <Container fluid className="sublist-list-container">
+              {childrenGoals?.map((goal: GoalItem, index) => (
                 <div
-                  className="goal-title"
-                  contentEditable={userUpdatingTitle && tapCount[0] === index && tapCount[1] >= 1}
-                  onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
-                  ref={titleRef}
-                  onBlur={() => {
-                    updateUserGoals(goal, index);
-                  }}
-                  suppressContentEditableWarning
-                  style={{
-                    cursor: userUpdatingTitle ? "unset" : "default",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                  key={String(`goal-${index}`)}
+                  className="user-goal"
+                  onClickCapture={() => {
+                    setTapCount([index, tapCount[1] + 1]);
                   }}
                 >
-                  {goal.title}
-                </div>
-                {tapCount[0] === index && tapCount[1] > 0 ? (
-                  <div className="interactables">
-                    <Trash3Fill
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        removeChildrenGoal(Number(goal.id));
-                      }}
-                    />
-                    <PencilSquare
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        if (titleRef.current) (titleRef.current as HTMLElement).focus();
-                        setUserUpdatingTitle(!userUpdatingTitle);
-                      }}
-                    />
-                    <CheckLg
-                      onClick={async () => {
-                        archiveUserGoal(goal);
-                        getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
-                      }}
-                      style={{ cursor: "Pointer" }}
-                    />
+                  <div
+                    className="goal-title"
+                    contentEditable={userUpdatingTitle && tapCount[0] === index && tapCount[1] >= 1}
+                    onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
+                    ref={titleRef}
+                    onBlur={() => {
+                      updateUserGoals(goal, index);
+                    }}
+                    suppressContentEditableWarning
+                    style={{
+                      cursor: userUpdatingTitle ? "unset" : "default",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {goal.title}
                   </div>
-                ) : null}
-              </div>
-            ))}
-          </Container>
+                  {tapCount[0] === index && tapCount[1] > 0 ? (
+                    <div className="interactables">
+                      <Trash3Fill
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          removeChildrenGoal(Number(goal.id));
+                        }}
+                      />
+                      <PencilSquare
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          if (titleRef.current) (titleRef.current as HTMLElement).focus();
+                          setUserUpdatingTitle(!userUpdatingTitle);
+                        }}
+                      />
+                      <CheckLg
+                        onClick={async () => {
+                          archiveUserGoal(goal);
+                          getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+                        }}
+                        style={{ cursor: "Pointer" }}
+                      />
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </Container>
+          </div>
         </div>
         <img
           onClick={() => {
