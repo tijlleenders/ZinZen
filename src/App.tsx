@@ -15,13 +15,13 @@ import { ExplorePage } from "@pages/ExplorePage/ExplorePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
+import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
+import { GoalSublist } from "@pages/GoalSublist/GoalSublist";
 
 import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
-import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
-import { GoalSublist } from "@pages/GoalSublist/GoalSublist";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);

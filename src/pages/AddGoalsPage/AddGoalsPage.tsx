@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
+import { useLocation } from "react-router";
 
 import { darkModeState } from "@store";
 import { GoalsForm } from "@components/GoalsComponents/GoalsForm";
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { getGoal } from "@src/api/GoalsAPI";
 import paintBrush from "@assets/images/paintBrush.svg";
 
 import "@translations/i18n";
 import "@components/GoalsComponents/GoalsComponents.scss";
-import { getGoal } from "@src/api/GoalsAPI";
-import { useLocation } from "react-router";
 
 interface locationProps {
   goalId: number;

@@ -4,13 +4,13 @@ import { Breadcrumb, Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
+import addIcon from "@assets/images/GoalsAddIcon.svg";
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { archiveGoal, getChildrenGoals, getGoal, removeGoal, updateGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 
-import addIcon from "@assets/images/GoalsAddIcon.svg";
 import "./GoalSublist.scss";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 
 export const GoalSublist: React.FC = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
