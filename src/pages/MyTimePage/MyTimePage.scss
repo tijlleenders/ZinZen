@@ -1,0 +1,37 @@
+.MyTime_container {
+    margin: 0vh 3vh;
+    margin-top: 10vh;
+    padding: 4% 4%;
+}
+
+#MyTime_days_container {
+    margin-top: 3vh;
+}
+
+#MyTime_title{
+    font-size: xx-large;
+    font-weight: bolder;
+}
+
+.MyTime_day {
+    background: #EDC7B7 70%;
+    margin-top: 3vh;
+    padding: 2% 4% 3% 4%;
+    border-radius: 7px;
+}
+
+.MyTime_dayTitle{
+    font-size: larger;
+    font-weight: bolder;
+}
+
+.MyTime_colorPalette {
+    display: flex;
+}
+    .MyTime_colorPalette:first-child{
+        border-radius: 2px 0px 0px 2px;
+    }
+    .MyTime_colorPalette:last-child{
+        border-radius: 0px 2px 2px 0px;
+    }
+
