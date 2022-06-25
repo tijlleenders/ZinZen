@@ -2,6 +2,7 @@ import React from "react";
 
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { Container, Row } from "react-bootstrap";
+import { ChevronRight } from "react-bootstrap-icons";
 
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router";
@@ -22,7 +23,19 @@ export const MyTimePage = () => {
 
   const getDayComponent = (day: string) => (
     <div className="MyTime_day">
-      <h3 className="MyTime_dayTitle">{day}</h3>
+      <div className="MyTime_navRow">
+        <h3 className="MyTime_dayTitle">
+          {day}
+        </h3>
+        <button
+          className="MyTime-expand-btw"
+          type="button"
+        >
+          <div>
+            <ChevronRight />
+          </div>
+        </button>
+      </div>
       <div className="MyTime_colorPalette">
         {[...Array(10).keys()].map((i) => (
           <div

@@ -20,9 +20,23 @@
     border-radius: 7px;
 }
 
+.MyTime_navRow{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.5em;
+}
+
 .MyTime_dayTitle{
     font-size: larger;
     font-weight: bolder;
+    margin: 0;
+}
+
+.MyTime-expand-btw {
+    background: transparent;
+    border: none;
+    border-left: 2px solid #EDC7B7;
+    padding: 0% 5%;
 }
 
 .MyTime_colorPalette {
