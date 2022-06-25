@@ -4,18 +4,9 @@ import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { Container, Row } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
 
-import { useRecoilValue } from "recoil";
-import { useNavigate } from "react-router";
-import { useTranslation } from "react-i18next";
-
-import { darkModeState } from "@src/store";
-
 import "./MyTimePage.scss";
 
 export const MyTimePage = () => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const darkModeStatus = useRecoilValue(darkModeState);
   const today = new Date();
   today.setDate(today.getDate() + 1);
 
