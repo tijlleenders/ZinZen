@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { Container, Row } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
+
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { createDummyGoals } from "@src/utils";
+import { getActiveGoals } from "@src/api/GoalsAPI";
+import { GoalItem } from "@src/models/GoalItem";
 
 import "./MyTimePage.scss";
 
@@ -41,6 +45,14 @@ export const MyTimePage = () => {
       </div>
     </div>
   );
+
+  useEffect(() => {
+    (async () => {
+      const goals: GoalItem[] = await getActiveGoals();
+      if (goals.length === 0) { await createDummyGoals(); }
+    })();
+  }, []);
+
   return (
     <div>
       <Container fluid>
