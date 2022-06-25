@@ -4,8 +4,7 @@ import { Container, Row } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
 
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
-import { createDummyGoals } from "@src/utils";
-import { getActiveGoals } from "@src/api/GoalsAPI";
+import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 
 import "./MyTimePage.scss";
@@ -48,6 +47,24 @@ export const MyTimePage = () => {
 
   useEffect(() => {
     (async () => {
+      const random = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min;
+      const createDummyGoals = async () => {
+        console.log("wait");
+        const dummyNames: string[] = ["Walk", "Gym", "Study", "Shopping", "Nap", "Code Reviews", "Algo Practice"];
+        dummyNames.map(async (goalName: string) => {
+          const dummyGoal = createGoal(
+            goalName,
+            true,
+            random(1, 4),
+            null,
+            null,
+            0,
+            -1
+          );
+          const id = await addGoal(dummyGoal);
+          return id;
+        });
+      };
       const goals: GoalItem[] = await getActiveGoals();
       if (goals.length === 0) { await createDummyGoals(); }
     })();
