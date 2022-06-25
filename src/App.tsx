@@ -17,6 +17,7 @@ import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
 import { GoalSublist } from "@pages/GoalSublist/GoalSublist";
+import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 
 import "./customize.scss";
 import "./App.scss";
@@ -52,6 +53,7 @@ const App = () => {
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
           <Route path="/Home/MyGoals/:id" element={<GoalSublist />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
+          <Route path="/Home/MyTime" element={<MyTimePage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />

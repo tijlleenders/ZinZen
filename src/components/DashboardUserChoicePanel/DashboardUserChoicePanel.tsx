@@ -78,6 +78,9 @@ export const DashboardUserChoicePanel = () => {
           <Button
             variant={darkModeStatus ? "dark-grey" : "grey-base"}
             size="lg"
+            onClick={() => {
+              navigate("/Home/MyTime");
+            }}
             className={darkModeStatus ? "dashboard-choice-dark no-add" : "dashboard-choice-light no-add"}
           >
             {truncateContent(t("mytime"))}
