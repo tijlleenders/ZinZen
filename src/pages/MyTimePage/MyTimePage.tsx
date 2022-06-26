@@ -11,6 +11,8 @@ import "./MyTimePage.scss";
 
 export const MyTimePage = () => {
   const [tmpTasks, setTmpTasks] = useState<GoalItem[]>([]);
+  const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
+  const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const today = new Date();
   today.setDate(today.getDate() + 1);
 
@@ -18,6 +20,7 @@ export const MyTimePage = () => {
 
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
+    console.log(goalOfMaxDuration, maxDurationOfUnplanned);
     return (
       <div key={`day-${day}`} className="MyTime_day">
         <div className="MyTime_navRow">
@@ -41,7 +44,7 @@ export const MyTimePage = () => {
               <div
                 key={`task-${task.id}`}
                 style={{
-                  width: `${task.duration * 4.15}%`, // "10%",
+                  width: `${task.duration * 4.17}%`, // "10%",
                   height: "10px",
                   backgroundColor: `${task.title === "Unplaned" ? "gray" : darkrooms[colorIndex]}`
                 }}
@@ -56,15 +59,16 @@ export const MyTimePage = () => {
 
   useEffect(() => {
     (async () => {
-      const random = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min;
+      // const random = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min;
       const createDummyGoals = async () => {
         console.log("wait");
         const dummyNames: string[] = ["Unplaned", "Gym", "Study", "Unplaned", "Shopping", "Code Reviews", "Unplaned", "Algo Practice"];
-        dummyNames.map(async (goalName: string) => {
+        const dummyDurations : number[] = [4, 3, 1, 2, 3, 2, 6, 3];
+        dummyNames.map(async (goalName, index) => {
           const dummyGoal = createGoal(
             goalName,
             true,
-            goalName === "Unplaned" ? random(2, 5) : random(1, 3),
+            dummyDurations[index],
             null,
             null,
             0,
@@ -74,12 +78,27 @@ export const MyTimePage = () => {
           return id;
         });
       };
-      let goals: GoalItem[] = await getActiveGoals();
-      if (goals.length === 0) {
+      const getTasks = async () => {
+        const goals: GoalItem[] = await getActiveGoals();
+        let GMD = 0;
+        let MDU = 0;
+        goals.map((goal) => {
+          if (goal.title === "Unplaned" && MDU < goal.duration) {
+            MDU = goal.duration;
+          } else if (GMD < goal.duration) GMD = goal.duration;
+          return null;
+        });
+        setGoalOfMaxDuration(GMD);
+        setMaxDurationOfUnplanned(MDU);
+        return goals;
+      };
+      let tasks: GoalItem[] = await getActiveGoals();
+      if (tasks.length === 0) {
         await createDummyGoals();
-        goals = await getActiveGoals();
       }
-      setTmpTasks([...goals]);
+      tasks = await getTasks();
+
+      setTmpTasks([...tasks]);
     })();
   }, []);
 
