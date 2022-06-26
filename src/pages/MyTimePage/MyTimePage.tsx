@@ -43,7 +43,7 @@ export const MyTimePage = () => {
                 style={{
                   width: `${task.duration * 4.15}%`, // "10%",
                   height: "10px",
-                  backgroundColor: `${darkrooms[colorIndex]}`
+                  backgroundColor: `${task.title === "Unplaned" ? "gray" : darkrooms[colorIndex]}`
                 }}
               />
             );
@@ -59,12 +59,12 @@ export const MyTimePage = () => {
       const random = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min;
       const createDummyGoals = async () => {
         console.log("wait");
-        const dummyNames: string[] = ["Walk", "Gym", "Study", "Shopping", "Nap", "Code Reviews", "Algo Practice"];
+        const dummyNames: string[] = ["Unplaned", "Gym", "Study", "Unplaned", "Shopping", "Code Reviews", "Unplaned", "Algo Practice"];
         dummyNames.map(async (goalName: string) => {
           const dummyGoal = createGoal(
             goalName,
             true,
-            random(1, 4),
+            goalName === "Unplaned" ? random(2, 5) : random(1, 3),
             null,
             null,
             0,
