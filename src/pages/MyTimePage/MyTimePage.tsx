@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
@@ -15,6 +16,7 @@ export const MyTimePage = () => {
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
+  const [showTasks, setShowTasks] = useState(false);
   const today = new Date();
   today.setDate(today.getDate() + 1);
 
@@ -40,6 +42,15 @@ export const MyTimePage = () => {
       }}
     />
   );
+  const displayTasks = () => (
+    <div>
+      {tmpTasks.map((task) => (
+        <h3>
+          {`${task.title} ${task.start?.toLocaleTimeString()} - ${task.finish?.toLocaleTimeString()}`}
+        </h3>
+      ))}
+    </div>
+  );
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
     return (
@@ -49,6 +60,9 @@ export const MyTimePage = () => {
           <button
             className="MyTime-expand-btw"
             type="button"
+            onClick={() => {
+              setShowTasks(!showTasks);
+            }}
           >
             <div> <ChevronRight /> </div>
           </button>
@@ -138,7 +152,7 @@ export const MyTimePage = () => {
         setUnplannedIndices([...unplannedInd]);
         setGoalOfMaxDuration(GMD);
         setMaxDurationOfUnplanned(MDU);
-        console.log(unplannedInd)
+        console.log(unplannedInd);
         return goals;
       };
       let tasks: GoalItem[] = await getActiveGoals();
@@ -162,6 +176,9 @@ export const MyTimePage = () => {
         <h1 id="MyTime_title">My Time</h1>
         <div id="MyTime_days_container">
           {getDayComponent("Today")}
+          {
+          showTasks ? displayTasks() : null
+          }
           {getDayComponent("Tomorrow")}
           {
             [...Array(5).keys()].map(() => {
