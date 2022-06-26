@@ -73,11 +73,9 @@
 }
 
 #addGoal-btn {
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 7%;
-  margin-right: 5%;
-  right: 0;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
   cursor: pointer;
 }
 
