@@ -17,12 +17,15 @@ export const MyTimePage = () => {
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [showTasks, setShowTasks] = useState(false);
+  const [toggle, setToggle] = useState(false);
+
   const today = new Date();
   today.setDate(today.getDate() + 1);
 
   const darkrooms = ["#443027", "#9C4663", "#2B517B", "#612854"];
 
   const getColorWidth = (unplanned: boolean, duration: number) => {
+    if (toggle) return (duration * 4.17);
     let colorWidth = 0;
     if (unplanned && duration > goalOfMaxDuration) {
       colorWidth = (goalOfMaxDuration + 1) * 4.17;
@@ -173,7 +176,10 @@ export const MyTimePage = () => {
         </Row>
       </Container>
       <div className="slide MyTime_container">
-        <h1 id="MyTime_title">My Time</h1>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <h1 id="MyTime_title">My Time</h1>
+          <button style={{ fontSize: "1.52rem", background: "transparent" }} type="button" onClick={() => setToggle(!toggle)}>Normalize</button>
+        </div>
         <div id="MyTime_days_container">
           {getDayComponent("Today")}
           {
