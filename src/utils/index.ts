@@ -23,3 +23,9 @@ export const getDates = (startDate: Date, stopDate: Date) => {
   }
   return dateArray;
 };
+
+export const getDiffInHours = (date1 : Date, date2: Date) => {
+  let diff = date1.getTime() - date2.getTime();
+  diff = Math.round(Math.abs(diff / 36e5));
+  return diff;
+};
