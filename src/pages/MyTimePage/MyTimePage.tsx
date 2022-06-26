@@ -38,13 +38,13 @@ export const MyTimePage = () => {
         </div>
         <div className="MyTime_colorPalette">
           {tmpTasks.map((task) => {
-            console.log(task);
+            const colorWidth = task.duration * 4.17;
             colorIndex = (colorIndex === darkrooms.length - 1) ? 0 : colorIndex + 1;
             return (
               <div
                 key={`task-${task.id}`}
                 style={{
-                  width: `${task.duration * 4.17}%`, // "10%",
+                  width: `${colorWidth}%`, // "10%",
                   height: "10px",
                   backgroundColor: `${task.title === "Unplaned" ? "gray" : darkrooms[colorIndex]}`
                 }}
@@ -61,7 +61,6 @@ export const MyTimePage = () => {
     (async () => {
       // const random = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min;
       const createDummyGoals = async () => {
-        console.log("wait");
         const dummyNames: string[] = ["Unplaned", "Gym", "Study", "Unplaned", "Shopping", "Code Reviews", "Unplaned", "Algo Practice"];
         const dummyDurations : number[] = [4, 3, 1, 2, 3, 2, 6, 3];
         dummyNames.map(async (goalName, index) => {
