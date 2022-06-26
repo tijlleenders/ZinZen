@@ -25,7 +25,7 @@ export const MyTimePage = () => {
   const darkrooms = ["#443027", "#9C4663", "#2B517B", "#612854"];
 
   const getColorWidth = (unplanned: boolean, duration: number) => {
-    if (toggle) return (duration * 4.17);
+    if (!toggle) return (duration * 4.17);
     let colorWidth = 0;
     if (unplanned && duration > goalOfMaxDuration) {
       colorWidth = (goalOfMaxDuration + 1) * 4.17;
@@ -75,25 +75,25 @@ export const MyTimePage = () => {
             const colorWidth = getColorWidth(false, task.duration);
             colorIndex = (colorIndex === darkrooms.length - 1) ? 0 : colorIndex + 1;
             if (unplannedIndices.includes(index)) {
-              const unpColorWidth = getColorWidth(true, unplannedDurations[index]);
-              return index === 0 ? (
-                <>
-                  {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
-                  {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
-                </>
-              )
-                : (
+              // console.log("y", index);
+              const unpColorWidth = getColorWidth(true, unplannedDurations[unplannedIndices.indexOf(index)]);
+              if (index === 0) {
+                return (
                   <>
-                    {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
                     {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
+                    {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
                   </>
                 );
+              }
+              return (
+                <>
+                  {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
+                  {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
+                </>
+              );
             }
             return (getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex]));
           })}
-          {unplannedIndices.slice(-1)[0] + 1 === tmpTasks.length ?
-            getColorComponent(`U-${day}-${-1}`, getColorWidth(true, unplannedDurations.slice(-1)[0]), "lightgray")
-            : null}
         </div>
       </div>
     );
@@ -115,7 +115,7 @@ export const MyTimePage = () => {
             start = end;
             return null;
           }
-          console.log("added");
+          // console.log("added");
           const dummyGoal = createGoal(
             goalName,
             true,
@@ -139,23 +139,24 @@ export const MyTimePage = () => {
         const unplannedInd :number[] = [];
         const unplannedDur :number[] = [];
         goals.map((goal, index) => {
-          console.log(prev, goal.start);
+          // console.log(prev, goal.start);
           const diff = getDiffInHours(goal.start ? goal.start : new Date(), prev);
-          console.log(index, diff);
+          // console.log(index, diff);
           prev = new Date(goal.finish ? goal.finish : new Date());
           if (diff > 0) {
-            unplannedInd.push(index);
+            unplannedInd.push(index - 1);
             unplannedDur.push(diff);
             MDU = MDU < diff ? diff : MDU;
           }
           if (GMD < goal.duration) GMD = goal.duration;
           return null;
         });
+        unplannedInd[0] = unplannedInd[0] === -1 ? 0 : unplannedInd[0];
         setUnplannedDurations([...unplannedDur]);
         setUnplannedIndices([...unplannedInd]);
         setGoalOfMaxDuration(GMD);
         setMaxDurationOfUnplanned(MDU);
-        console.log(unplannedInd);
+        console.log(unplannedInd,unplannedDur);
         return goals;
       };
       let tasks: GoalItem[] = await getActiveGoals();
@@ -178,7 +179,9 @@ export const MyTimePage = () => {
       <div className="slide MyTime_container">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h1 id="MyTime_title">My Time</h1>
-          <button style={{ fontSize: "1.52rem", background: "transparent" }} type="button" onClick={() => setToggle(!toggle)}>Normalize</button>
+          <button style={{ fontSize: "1.52rem", background: "transparent", padding: "0% 2%" }} type="button" onClick={() => setToggle(!toggle)}>
+            {`Normalize ${toggle ? "on" : "off"}`}
+          </button>
         </div>
         <div id="MyTime_days_container">
           {getDayComponent("Today")}
