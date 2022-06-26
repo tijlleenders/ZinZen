@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { Container, Row } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
 
@@ -8,54 +7,76 @@ import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 
 import "./MyTimePage.scss";
+import { getDiffInHours } from "@src/utils";
 
 export const MyTimePage = () => {
   const [tmpTasks, setTmpTasks] = useState<GoalItem[]>([]);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
+  const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
+  const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const today = new Date();
   today.setDate(today.getDate() + 1);
 
   const darkrooms = ["#443027", "#9C4663", "#2B517B", "#612854"];
 
+  const getColorWidth = (unplanned: boolean, duration: number) => {
+    let colorWidth = 0;
+    if (unplanned && duration > goalOfMaxDuration) {
+      colorWidth = (goalOfMaxDuration + 1) * 4.17;
+    } else {
+      colorWidth = (duration * 4.17) + (maxDurationOfUnplanned - 1 - goalOfMaxDuration) * 4.17;
+    }
+    return colorWidth;
+  };
+
+  const getColorComponent = (id: number|undefined|string, colorWidth:number, color: string) => (
+    <div
+      key={`task-${id}`}
+      style={{
+        width: `${colorWidth}%`, // "10%",
+        height: "10px",
+        backgroundColor: `${color}`
+      }}
+    />
+  );
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
     return (
       <div key={`day-${day}`} className="MyTime_day">
         <div className="MyTime_navRow">
-          <h3 className="MyTime_dayTitle">
-            {day}
-          </h3>
+          <h3 className="MyTime_dayTitle"> {day} </h3>
           <button
             className="MyTime-expand-btw"
             type="button"
           >
-            <div>
-              <ChevronRight />
-            </div>
+            <div> <ChevronRight /> </div>
           </button>
         </div>
         <div className="MyTime_colorPalette">
-          {tmpTasks.map((task) => {
-            let colorWidth = 0;
+          {tmpTasks.map((task, index) => {
+            const colorWidth = getColorWidth(false, task.duration);
             colorIndex = (colorIndex === darkrooms.length - 1) ? 0 : colorIndex + 1;
-            if (task.title === "Unplaned" && task.duration > goalOfMaxDuration) {
-              colorWidth = (goalOfMaxDuration + 1) * 4.17;
-            } else {
-              colorWidth = (task.duration * 4.17) + (maxDurationOfUnplanned - 1 - goalOfMaxDuration) * 4.17;
+            if (unplannedIndices.includes(index)) {
+              const unpColorWidth = getColorWidth(true, unplannedDurations[index]);
+              return index === 0 ? (
+                <>
+                  {getColorComponent(`U-${day}-${index}`, unpColorWidth, "gray")}
+                  {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
+                </>
+              )
+                : (
+                  <>
+                    {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
+                    {getColorComponent(`U-${day}-${index}`, unpColorWidth, "gray")}
+                  </>
+                );
             }
-            return (
-              <div
-                key={`task-${task.id}`}
-                style={{
-                  width: `${colorWidth}%`, // "10%",
-                  height: "10px",
-                  backgroundColor: `${task.title === "Unplaned" ? "gray" : darkrooms[colorIndex]}`
-                }}
-              />
-            );
-          }
-          )}
+            return (getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex]));
+          })}
+          {unplannedIndices.slice(-1)[0] + 1 === tmpTasks.length ?
+            getColorComponent(`U-${day}-${-1}`, getColorWidth(true, unplannedDurations.slice(-1)[0]), "gray")
+            : null}
         </div>
       </div>
     );
@@ -65,34 +86,59 @@ export const MyTimePage = () => {
     (async () => {
       // const random = (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min;
       const createDummyGoals = async () => {
-        const dummyNames: string[] = ["Unplaned", "Gym", "Study", "Unplaned", "Shopping", "Code Reviews", "Unplaned", "Algo Practice"];
+        let start = 0;
+        let end = 0;
+
+        const dummyNames: string[] = ["Unplanned", "Gym", "Study", "Unplanned", "Shopping", "Code Reviews", "Unplanned", "Algo Practice"];
+        // const dummyNames: string[] = ["Gym", "Study", "Shopping", "Code Reviews", "Algo Practice"];
         const dummyDurations : number[] = [4, 3, 1, 2, 3, 2, 6, 3];
         dummyNames.map(async (goalName, index) => {
+          end = start + dummyDurations[index];
+          if (goalName === "Unplanned") {
+            start = end;
+            return null;
+          }
+          console.log("added");
           const dummyGoal = createGoal(
             goalName,
             true,
             dummyDurations[index],
-            null,
-            null,
+            new Date(new Date().setHours(start, 0, 0)),
+            new Date(new Date().setHours(end, 0, 0)),
             0,
             -1
           );
+          start = end;
           const id = await addGoal(dummyGoal);
           return id;
         });
       };
       const getTasks = async () => {
         const goals: GoalItem[] = await getActiveGoals();
-        let GMD = 0;
-        let MDU = 0;
-        goals.map((goal) => {
-          if (goal.title === "Unplaned" && MDU < goal.duration) {
-            MDU = goal.duration;
-          } else if (GMD < goal.duration) GMD = goal.duration;
+        let GMD = goals[0].duration;
+        let MDU = goals[0].duration;
+        let prev = new Date(goals[0].finish ? goals[0].finish : new Date());
+        prev = new Date(prev.setHours(0));
+        const unplannedInd :number[] = [];
+        const unplannedDur :number[] = [];
+        goals.map((goal, index) => {
+          console.log(prev, goal.start);
+          const diff = getDiffInHours(goal.start ? goal.start : new Date(), prev);
+          console.log(index, diff);
+          prev = new Date(goal.finish ? goal.finish : new Date());
+          if (diff > 0) {
+            unplannedInd.push(index);
+            unplannedDur.push(diff);
+            MDU = MDU < diff ? diff : MDU;
+          }
+          if (GMD < goal.duration) GMD = goal.duration;
           return null;
         });
+        setUnplannedDurations([...unplannedDur]);
+        setUnplannedIndices([...unplannedInd]);
         setGoalOfMaxDuration(GMD);
         setMaxDurationOfUnplanned(MDU);
+        console.log(unplannedInd)
         return goals;
       };
       let tasks: GoalItem[] = await getActiveGoals();
