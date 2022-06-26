@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Container, Row } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
@@ -10,40 +10,49 @@ import { GoalItem } from "@src/models/GoalItem";
 import "./MyTimePage.scss";
 
 export const MyTimePage = () => {
+  const [tmpTasks, setTmpTasks] = useState<GoalItem[]>([]);
   const today = new Date();
   today.setDate(today.getDate() + 1);
 
-  const darkrooms = ["#443027", "#9C4663", "#646464", "#2B517B", " #612854"];
+  const darkrooms = ["#443027", "#9C4663", "#2B517B", "#612854"];
 
-  const getDayComponent = (day: string) => (
-    <div className="MyTime_day">
-      <div className="MyTime_navRow">
-        <h3 className="MyTime_dayTitle">
-          {day}
-        </h3>
-        <button
-          className="MyTime-expand-btw"
-          type="button"
-        >
-          <div>
-            <ChevronRight />
-          </div>
-        </button>
+  const getDayComponent = (day: string) => {
+    let colorIndex = -1;
+    return (
+      <div key={`day-${day}`} className="MyTime_day">
+        <div className="MyTime_navRow">
+          <h3 className="MyTime_dayTitle">
+            {day}
+          </h3>
+          <button
+            className="MyTime-expand-btw"
+            type="button"
+          >
+            <div>
+              <ChevronRight />
+            </div>
+          </button>
+        </div>
+        <div className="MyTime_colorPalette">
+          {tmpTasks.map((task) => {
+            console.log(task);
+            colorIndex = (colorIndex === darkrooms.length - 1) ? 0 : colorIndex + 1;
+            return (
+              <div
+                key={`task-${task.id}`}
+                style={{
+                  width: `${task.duration * 4.15}%`, // "10%",
+                  height: "10px",
+                  backgroundColor: `${darkrooms[colorIndex]}`
+                }}
+              />
+            );
+          }
+          )}
+        </div>
       </div>
-      <div className="MyTime_colorPalette">
-        {[...Array(10).keys()].map((i) => (
-          <div
-            key={`task-${i}`}
-            style={{
-              width: "10%",
-              height: "10px",
-              backgroundColor: `${darkrooms[Math.floor(Math.random() * darkrooms.length)]}`
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
+    );
+  };
 
   useEffect(() => {
     (async () => {
@@ -65,8 +74,12 @@ export const MyTimePage = () => {
           return id;
         });
       };
-      const goals: GoalItem[] = await getActiveGoals();
-      if (goals.length === 0) { await createDummyGoals(); }
+      let goals: GoalItem[] = await getActiveGoals();
+      if (goals.length === 0) {
+        await createDummyGoals();
+        goals = await getActiveGoals();
+      }
+      setTmpTasks([...goals]);
     })();
   }, []);
 
