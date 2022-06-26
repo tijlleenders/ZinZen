@@ -117,6 +117,7 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           name="inputGoal"
           placeholder={t("addGoalPlaceholder")}
           value={formInputData.inputGoal}
+          autoFocus
           onChange={handleChange}
         />
       </div>
