@@ -61,21 +61,21 @@ export const MyTimePage = () => {
               const unpColorWidth = getColorWidth(true, unplannedDurations[index]);
               return index === 0 ? (
                 <>
-                  {getColorComponent(`U-${day}-${index}`, unpColorWidth, "gray")}
+                  {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
                   {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
                 </>
               )
                 : (
                   <>
                     {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
-                    {getColorComponent(`U-${day}-${index}`, unpColorWidth, "gray")}
+                    {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
                   </>
                 );
             }
             return (getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex]));
           })}
           {unplannedIndices.slice(-1)[0] + 1 === tmpTasks.length ?
-            getColorComponent(`U-${day}-${-1}`, getColorWidth(true, unplannedDurations.slice(-1)[0]), "gray")
+            getColorComponent(`U-${day}-${-1}`, getColorWidth(true, unplannedDurations.slice(-1)[0]), "lightgray")
             : null}
         </div>
       </div>
