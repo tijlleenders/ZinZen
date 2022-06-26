@@ -20,7 +20,6 @@ export const MyTimePage = () => {
 
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
-    console.log(goalOfMaxDuration, maxDurationOfUnplanned);
     return (
       <div key={`day-${day}`} className="MyTime_day">
         <div className="MyTime_navRow">
@@ -38,8 +37,13 @@ export const MyTimePage = () => {
         </div>
         <div className="MyTime_colorPalette">
           {tmpTasks.map((task) => {
-            const colorWidth = task.duration * 4.17;
+            let colorWidth = 0;
             colorIndex = (colorIndex === darkrooms.length - 1) ? 0 : colorIndex + 1;
+            if (task.title === "Unplaned" && task.duration > goalOfMaxDuration) {
+              colorWidth = (goalOfMaxDuration + 1) * 4.17;
+            } else {
+              colorWidth = (task.duration * 4.17) + (maxDurationOfUnplanned - 1 - goalOfMaxDuration) * 4.17;
+            }
             return (
               <div
                 key={`task-${task.id}`}
