@@ -1,0 +1,65 @@
+#MTL-display {
+  padding: 0% 8%;
+  padding-top: 1em;
+  display: flex;
+  background-color: #EDC7B7;
+}
+
+.MTL-task {
+  // display: flex;
+  // justify-content: left;
+}
+
+  // .MTL-task {
+  //   width: 100%;
+  // }
+
+.MTL-circle {
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.MTL-startTime {
+  width: 80px;
+  margin-top: 1.5px;
+}
+
+.MTL-taskTtitle {
+  width: 18vh;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-top: 1.5px;
+}
+
+.bar{
+    border-left: 0px solid #BC9D90;
+    position: relative;
+    height: 30px;
+}
+
+.vbar{
+  border-left: 1px solid #BC9D90;
+  left: 48%;
+  position: relative;
+  height: 30px;
+}
+  .vbar:last-child{
+    display: none;
+  }
+
+#MTL-circles {
+  display: flex;
+  flex-direction: column;
+}
+#MTL-titles {
+  display: flex;
+  flex-direction: column;
+}
+#MTL-times {
+  display: flex;
+  flex-direction: column;
+}
