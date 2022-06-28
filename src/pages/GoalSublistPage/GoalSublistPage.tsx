@@ -64,8 +64,14 @@ export const GoalSublist: React.FC = () => {
       <HeaderDashboard />
       <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
         <Breadcrumb style={{ marginTop: "80px" }}>
-          <Breadcrumb.Item href="/Home/MyGoals/">My Goals</Breadcrumb.Item>
-          <Breadcrumb.Item href="#">{parentGoal?.title}</Breadcrumb.Item>
+          <Breadcrumb.Item href="/Home/MyGoals/">
+            <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="#">
+            <span style={{ backgroundColor: parentGoal?.goalColor, borderRadius: "8px", padding: "5px" }}>
+              {parentGoal?.title}
+            </span>
+          </Breadcrumb.Item>
         </Breadcrumb>
         <div className="sublist-content-container">
           <div className="sublist-content">
@@ -75,6 +81,7 @@ export const GoalSublist: React.FC = () => {
                 <div
                   key={String(`goal-${index}`)}
                   className="user-goal"
+                  style={{ backgroundColor: goal.goalColor }}
                   onClickCapture={() => {
                     setTapCount([index, tapCount[1] + 1]);
                   }}
