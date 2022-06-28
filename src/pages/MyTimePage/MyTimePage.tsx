@@ -16,7 +16,7 @@ export const MyTimePage = () => {
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
-  const [showTasks, setShowTasks] = useState(false);
+  const [showTasks, setShowTasks] = useState("");
   const [toggle, setToggle] = useState(true);
 
   const today = new Date();
@@ -58,13 +58,13 @@ export const MyTimePage = () => {
             className="MyTime-expand-btw"
             type="button"
             onClick={() => {
-              setShowTasks(!showTasks);
+              setShowTasks(day);
             }}
           >
             <div> <ChevronRight /> </div>
           </button>
         </div>
-        {showTasks ? getTimeline() :
+        {showTasks === day ? getTimeline() :
           (
             <div className="MyTime_colorPalette">
               {tmpTasks.map((task, index) => {
