@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
@@ -39,7 +39,6 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
       [e.target.name]: value,
     });
   };
-
   function suggestion() {
     if (formInputData.inputGoal.indexOf("daily") !== -1) {
       return "daily";
@@ -54,44 +53,32 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
     const checkGoal = parseInt(String(formInputData.inputGoal.match(tracker)), 10);
     const parseGoal = parseInt(String(formInputData.inputGoal.match(tracker)), 10) <= 24;
     if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
-      if (goalTitle.length === 0) {
-        const titleEndIndex = formInputData.inputGoal.search(tracker);
-        setGoalTitle(formInputData.inputGoal.slice(0, titleEndIndex - 1));
-      }
       return `${checkGoal} hours`;
     }
     return "";
   }
 
+  useEffect(() => {
+    setGoalTitle(formInputData.inputGoal.slice(0));
+  }, [formInputData.inputGoal]);
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const goalFrequency = suggestion();
-    const goalDuration = duration();
+    const goalFrequency = suggestion() === "" ? null : suggestion() === "daily";
+    const goalDuration = duration() === "" ? null : Number(duration().split("")[0]);
     if (goalTitle.length === 0) {
-      setError("Enter a goal title! (P.S. Enter the duration of the goal and hit enter to get rid of this message)");
-      return;
-    }
-    if (goalDuration.length === 0) {
-      setError("Enter the duration of the goal!");
-      return;
-    }
-    if (goalFrequency.length === 0) {
-      setError("Enter goal's frequency as 'daily' or 'once'!");
-      return;
-    }
-    if (goalTitle.length === 1) {
-      setError("Enter a goal title! (P.S. the problem could also be with the sequence of goal-duration-frequency)");
+      setError("Enter a goal title!");
       return;
     }
     const newGoal = createGoal(
       goalTitle,
-      goalFrequency === "daily",
-      Number(goalDuration.split(" ")[0]),
+      goalFrequency,
+      goalDuration,
       null,
       null,
       0,
       parentGoalId!,
-      darkModeStatus ? darkColors[selectedColorIndex] : lightColors[selectedColorIndex]
+      darkModeStatus ? darkColors[selectedColorIndex] : lightColors[selectedColorIndex] // goalColor
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
@@ -108,6 +95,12 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
       navigate(parentGoalId === -1 ? "/Home/MyGoals" : `/Home/MyGoals/${parentGoalId}`);
     }, 100);
   };
+
+  useEffect(() => {
+    const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
+    const titleEndIndex = formInputData.inputGoal.search(tracker);
+    if (titleEndIndex !== -1) setGoalTitle(formInputData.inputGoal.slice(0, titleEndIndex - 1));
+  }, [handleSubmit]);
 
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
