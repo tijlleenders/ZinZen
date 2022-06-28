@@ -10,7 +10,7 @@ import { archiveGoal, getChildrenGoals, getGoal, removeGoal, updateGoal } from "
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 
-import "./GoalSublist.scss";
+import "./GoalSublistPage.scss";
 
 export const GoalSublist: React.FC = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -31,8 +31,7 @@ export const GoalSublist: React.FC = () => {
   }, [parentGoal]);
 
   const archiveUserGoal = async (goal: GoalItem) => {
-    const updatedGoalStatus = { status: 1 };
-    await archiveGoal(Number(goal.id), updatedGoalStatus);
+    await archiveGoal(Number(goal.id));
     getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   };
   const removeChildrenGoal = async (goalId: number) => {
