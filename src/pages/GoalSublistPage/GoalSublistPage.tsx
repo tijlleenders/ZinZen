@@ -10,7 +10,7 @@ import { archiveGoal, getChildrenGoals, getGoal, removeGoal, updateGoal } from "
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 
-import "./GoalSublist.scss";
+import "./GoalSublistPage.scss";
 
 export const GoalSublist: React.FC = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -31,8 +31,7 @@ export const GoalSublist: React.FC = () => {
   }, [parentGoal]);
 
   const archiveUserGoal = async (goal: GoalItem) => {
-    const updatedGoalStatus = { status: 1 };
-    await archiveGoal(Number(goal.id), updatedGoalStatus);
+    await archiveGoal(Number(goal.id));
     getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   };
   const removeChildrenGoal = async (goalId: number) => {
@@ -65,8 +64,14 @@ export const GoalSublist: React.FC = () => {
       <HeaderDashboard />
       <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
         <Breadcrumb style={{ marginTop: "80px" }}>
-          <Breadcrumb.Item href="/Home/MyGoals/">My Goals</Breadcrumb.Item>
-          <Breadcrumb.Item href="#">{parentGoal?.title}</Breadcrumb.Item>
+          <Breadcrumb.Item href="/Home/MyGoals/">
+            <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="#">
+            <span style={{ backgroundColor: parentGoal?.goalColor, borderRadius: "8px", padding: "5px" }}>
+              {parentGoal?.title}
+            </span>
+          </Breadcrumb.Item>
         </Breadcrumb>
         <div className="sublist-content-container">
           <div className="sublist-content">
@@ -76,6 +81,7 @@ export const GoalSublist: React.FC = () => {
                 <div
                   key={String(`goal-${index}`)}
                   className="user-goal"
+                  style={{ backgroundColor: goal.goalColor }}
                   onClickCapture={() => {
                     setTapCount([index, tapCount[1] + 1]);
                   }}

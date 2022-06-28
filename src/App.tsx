@@ -16,7 +16,7 @@ import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
-import { GoalSublist } from "@pages/GoalSublist/GoalSublist";
+import { GoalSublist } from "@pages/GoalSublistPage/GoalSublistPage";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 
 import "./customize.scss";
