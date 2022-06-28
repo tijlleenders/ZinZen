@@ -97,7 +97,8 @@ export const createGoal = (
   goalStart: Date | null,
   goalFinish: Date | null,
   goalStatus: 0 | 1,
-  parentGoalId: number | -1
+  parentGoalId: number | -1,
+  goalColor: string
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
@@ -107,6 +108,7 @@ export const createGoal = (
     finish: goalFinish,
     status: goalStatus,
     parentGoalId,
+    goalColor,
   };
   return newGoal;
 };

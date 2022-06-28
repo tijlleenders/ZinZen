@@ -25,7 +25,7 @@ export const AddGoalsPage: React.FC = () => {
   const [selectedColorIndex, setColorIndex] = useState(0);
   const [parentGoalId, setParentGoalId] = useState<number | -1>();
   const [parentGoalTitle, setParentGoalTitle] = useState("");
-  const darkrooms = ["#443027", "#9C4663", "#646464", "#2B517B", " #612854"];
+  const darkrooms = ["#EDC7B7", "#9C4663", "#646464", "#2B517B", " #612854"];
   const lightcolors = [" #EDC7B7", "#AC3B61", " #BAB2BC", " #3B6899", " #8E3379"];
 
   useEffect(() => {

@@ -9,4 +9,5 @@ export interface GoalItem {
   createdAt?: Date;
   status: 0 | 1; // 0 = active, 1 = archived
   parentGoalId: number | -1;
+  goalColor?: string;
 }
