@@ -76,18 +76,18 @@ export const MyTimePage = () => {
                     return (
                       <>
                         {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
-                        {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
+                        {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : darkrooms[0])}
                       </>
                     );
                   }
                   return (
                     <>
-                      {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
+                      {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : darkrooms[0])}
                       {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
                     </>
                   );
                 }
-                return (getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex]));
+                return (getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : darkrooms[0]));
               })}
             </div>
           )}
@@ -100,7 +100,7 @@ export const MyTimePage = () => {
       const createDummyGoals = async () => {
         let start = 0;
         let end = 0;
-
+        let tmpColor = 0;
         const dummyNames: string[] = ["Unplanned", "Gym", "Study", "Unplanned", "Shopping", "Code Reviews", "Unplanned", "Algo Practice"];
         const dummyDurations : number[] = [4, 3, 1, 2, 3, 2, 6, 3];
         dummyNames.map(async (goalName, index) => {
@@ -116,8 +116,11 @@ export const MyTimePage = () => {
             new Date(new Date().setHours(start, 0, 0)),
             new Date(new Date().setHours(end, 0, 0)),
             0,
-            -1
+            -1,
+            darkrooms[tmpColor]
           );
+          tmpColor = tmpColor === darkrooms.length - 1 ? 0 : tmpColor + 1;
+
           start = end;
           const id = await addGoal(dummyGoal);
           return id;
