@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
-import { ChevronRight } from "react-bootstrap-icons";
+import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
@@ -8,6 +8,7 @@ import { GoalItem } from "@src/models/GoalItem";
 
 import "./MyTimePage.scss";
 import { getDiffInHours } from "@src/utils";
+import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 
 export const MyTimePage = () => {
   const [tmpTasks, setTmpTasks] = useState<GoalItem[]>([]);
@@ -15,8 +16,9 @@ export const MyTimePage = () => {
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
-  const [showTasks, setShowTasks] = useState(false);
-  const [toggle, setToggle] = useState(false);
+  const [showTasks, setShowTasks] = useState("");
+  // const [toggle, setToggle] = useState(true);
+  const toggle = true;
 
   const today = new Date();
   today.setDate(today.getDate() + 1);
@@ -44,14 +46,8 @@ export const MyTimePage = () => {
       }}
     />
   );
-  const displayTasks = () => (
-    <div>
-      {tmpTasks.map((task) => (
-        <h3>
-          {`${task.title} ${task.start?.toLocaleTimeString()} - ${task.finish?.toLocaleTimeString()}`}
-        </h3>
-      ))}
-    </div>
+  const getTimeline = () => (
+    <MyTimeline myTasks={tmpTasks} />
   );
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
@@ -63,36 +59,39 @@ export const MyTimePage = () => {
             className="MyTime-expand-btw"
             type="button"
             onClick={() => {
-              setShowTasks(!showTasks);
+              setShowTasks(showTasks === day ? "" : day);
             }}
           >
-            <div> <ChevronRight /> </div>
+            <div> { showTasks === day ? <ChevronDown /> : <ChevronRight /> } </div>
           </button>
         </div>
-        <div className="MyTime_colorPalette">
-          {tmpTasks.map((task, index) => {
-            const colorWidth = getColorWidth(false, task.duration);
-            colorIndex = (colorIndex === darkrooms.length - 1) ? 0 : colorIndex + 1;
-            if (unplannedIndices.includes(index)) {
-              const unpColorWidth = getColorWidth(true, unplannedDurations[unplannedIndices.indexOf(index)]);
-              if (index === 0) {
-                return (
-                  <>
-                    {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
-                    {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
-                  </>
-                );
-              }
-              return (
-                <>
-                  {getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex])}
-                  {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
-                </>
-              );
-            }
-            return (getColorComponent(`task-${day}-${task.id}`, colorWidth, darkrooms[colorIndex]));
-          })}
-        </div>
+        {showTasks === day ? getTimeline() :
+          (
+            <div className="MyTime_colorPalette">
+              {tmpTasks.map((task, index) => {
+                const colorWidth = getColorWidth(false, task.duration);
+                colorIndex = (colorIndex === darkrooms.length - 1) ? 0 : colorIndex + 1;
+                if (unplannedIndices.includes(index)) {
+                  const unpColorWidth = getColorWidth(true, unplannedDurations[unplannedIndices.indexOf(index)]);
+                  if (index === 0) {
+                    return (
+                      <>
+                        {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
+                        {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : darkrooms[0])}
+                      </>
+                    );
+                  }
+                  return (
+                    <>
+                      {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : darkrooms[0])}
+                      {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
+                    </>
+                  );
+                }
+                return (getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : darkrooms[0]));
+              })}
+            </div>
+          )}
       </div>
     );
   };
@@ -102,7 +101,7 @@ export const MyTimePage = () => {
       const createDummyGoals = async () => {
         let start = 0;
         let end = 0;
-
+        let tmpColor = 0;
         const dummyNames: string[] = ["Unplanned", "Gym", "Study", "Unplanned", "Shopping", "Code Reviews", "Unplanned", "Algo Practice"];
         const dummyDurations : number[] = [4, 3, 1, 2, 3, 2, 6, 3];
         dummyNames.map(async (goalName, index) => {
@@ -118,8 +117,11 @@ export const MyTimePage = () => {
             new Date(new Date().setHours(start, 0, 0)),
             new Date(new Date().setHours(end, 0, 0)),
             0,
-            -1
+            -1,
+            darkrooms[tmpColor]
           );
+          tmpColor = tmpColor === darkrooms.length - 1 ? 0 : tmpColor + 1;
+
           start = end;
           const id = await addGoal(dummyGoal);
           return id;
@@ -171,15 +173,12 @@ export const MyTimePage = () => {
       <div className="slide MyTime_container">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h1 id="MyTime_title">My Time</h1>
-          <button style={{ fontSize: "1.52rem", background: "transparent", padding: "0% 2%" }} type="button" onClick={() => setToggle(!toggle)}>
+          {/* <button style={{ fontSize: "1.52rem", background: "transparent", padding: "0% 2%" }} type="button" onClick={() => setToggle(!toggle)}>
             {`Normalize ${toggle ? "on" : "off"}`}
-          </button>
+          </button> */}
         </div>
         <div id="MyTime_days_container">
           {getDayComponent("Today")}
-          {
-          showTasks ? displayTasks() : null
-          }
           {getDayComponent("Tomorrow")}
           {
             [...Array(5).keys()].map(() => {
