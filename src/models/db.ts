@@ -11,7 +11,8 @@ export class FeelingsDB extends Dexie {
     super("ZinZenDB");
     this.version(1).stores({
       feelingsCollection: "++id, content, category, date, note",
-      goalsCollection: "++id, title, duration, sublist, repeat, start, finish, createdAt, status, parentGoalId",
+      goalsCollection:
+        "++id, title, duration, sublist, repeat, start, finish, createdAt, status, parentGoalId, goalColor",
     });
   }
 }

@@ -19,8 +19,8 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
   const { t } = useTranslation();
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const darkrooms = ["#443027", "#9C4663", "#646464", "#2B517B", " #612854"];
-  const lightcolors = [" #EDC7B7", "#AC3B61", " #BAB2BC", " #3B6899", " #8E3379"];
+  const darkColors = ["#EDC7B7", "#9C4663", "#646464", "#2B517B", " #612854"];
+  const lightColors = [" #EDC7B7", "#AC3B61", " #BAB2BC", " #3B6899", " #8E3379"];
 
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
@@ -90,12 +90,13 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
       null,
       null,
       0,
-      parentGoalId!
+      parentGoalId!,
+      darkModeStatus ? darkColors[selectedColorIndex] : lightColors[selectedColorIndex]
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
       const parentGoal = await getGoal(parentGoalId);
-      const newSublist = (parentGoal && parentGoal.sublist) ? [...parentGoal.sublist, newGoalId] : [newGoalId];
+      const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(parentGoalId, { sublist: newSublist });
     }
     setFormInputData({
@@ -117,6 +118,8 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           name="inputGoal"
           placeholder={t("addGoalPlaceholder")}
           value={formInputData.inputGoal}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
           onChange={handleChange}
         />
       </div>
@@ -125,8 +128,8 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           type="button"
           style={
             darkModeStatus
-              ? { backgroundColor: darkrooms[selectedColorIndex] }
-              : { backgroundColor: lightcolors[selectedColorIndex] }
+              ? { backgroundColor: darkColors[selectedColorIndex] }
+              : { backgroundColor: lightColors[selectedColorIndex] }
           }
           className={duration() !== "" ? "duration" : "blank"}
         >
@@ -136,8 +139,8 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           type="button"
           style={
             darkModeStatus
-              ? { backgroundColor: darkrooms[selectedColorIndex] }
-              : { backgroundColor: lightcolors[selectedColorIndex] }
+              ? { backgroundColor: darkColors[selectedColorIndex] }
+              : { backgroundColor: lightColors[selectedColorIndex] }
           }
           className={suggestion() === "once" || suggestion() === "daily" ? "suggestion" : "blank"}
         >
@@ -150,8 +153,8 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           className="addtask-button"
           style={
             darkModeStatus
-              ? { backgroundColor: darkrooms[selectedColorIndex] }
-              : { backgroundColor: lightcolors[selectedColorIndex] }
+              ? { backgroundColor: darkColors[selectedColorIndex] }
+              : { backgroundColor: lightColors[selectedColorIndex] }
           }
         >
           Add Goal
