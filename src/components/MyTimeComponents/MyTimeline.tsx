@@ -23,7 +23,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
     <div id="MTL-circles">
       {myTasks.map((task: GoalItem) => (
         <>
-          <span className="MTL-circle" style={{backgroundColor: `${task.goalColor}`}}/>
+          <span className="MTL-circle" style={{ backgroundColor: `${task.goalColor}` }} />
           <div className="vbar" />
         </>
 

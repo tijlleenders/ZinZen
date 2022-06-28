@@ -17,7 +17,8 @@ export const MyTimePage = () => {
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [showTasks, setShowTasks] = useState("");
-  const [toggle, setToggle] = useState(true);
+  // const [toggle, setToggle] = useState(true);
+  const toggle = true;
 
   const today = new Date();
   today.setDate(today.getDate() + 1);
