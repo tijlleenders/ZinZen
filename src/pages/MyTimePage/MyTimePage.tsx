@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
-import { ChevronRight } from "react-bootstrap-icons";
+import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
@@ -58,10 +58,10 @@ export const MyTimePage = () => {
             className="MyTime-expand-btw"
             type="button"
             onClick={() => {
-              setShowTasks(day);
+              setShowTasks(showTasks === day ? "" : day);
             }}
           >
-            <div> <ChevronRight /> </div>
+            <div> { showTasks === day ? <ChevronDown /> : <ChevronRight /> } </div>
           </button>
         </div>
         {showTasks === day ? getTimeline() :
