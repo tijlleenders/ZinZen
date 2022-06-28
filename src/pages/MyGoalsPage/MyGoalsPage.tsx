@@ -129,6 +129,7 @@ export const MyGoalsPage = () => {
               onClickCapture={() => {
                 setTapCount([index, tapCount[1] + 1]);
               }}
+              style={{ backgroundColor: goal.goalColor }}
             >
               <div
                 className="goal-title"
