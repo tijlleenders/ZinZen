@@ -1,8 +1,13 @@
-#MTL-display {
+#MTL-display, #MTL-display-withOption {
   padding: 0% 8%;
   padding-top: 1em;
   display: flex;
+  flex-direction: row;
   background-color: #EDC7B7;
+}
+
+#MTL-display-withOption {
+  flex-direction: column;
 }
 
 .MTL-task {
@@ -27,11 +32,15 @@
 }
 
 .MTL-taskTtitle {
-  width: 25vw;
+  width: 28vw;
   overflow: hidden;
   white-space: nowrap;
+  border: none;
   text-overflow: ellipsis;
   margin-top: 1.5px;
+  background: none;
+  font-weight: bolder;
+  text-align: left;
 }
 
 .bar{
@@ -46,9 +55,6 @@
   position: relative;
   height: 30px;
 }
-  .vbar:last-child{
-    display: none;
-  }
 
 #MTL-circles {
   display: flex;
@@ -61,4 +67,36 @@
 #MTL-times {
   display: flex;
   flex-direction: column;
+}
+
+.MTL-options_container {
+  width: max-content;
+}
+
+.MTL-options-task {
+  border: 1px solid;
+  border-bottom: 0;
+  display: flex;
+  padding: 1.5vh 8vh;
+}
+
+.MTL-options-task > .MTL-circle {
+  border: 2px solid;
+}
+
+.MTL-options-title {
+  margin-left: 2vw;
+}
+
+.MTL-options > button {
+  background: transparent;
+  border: 1px solid;
+  border-right: 0px;
+  padding: 0.5vw 2vw;
+  font-size: medium;
+  font-weight: bolder;
+}
+
+.MTL-options:last-child {
+  border-right: 1px solid;
 }

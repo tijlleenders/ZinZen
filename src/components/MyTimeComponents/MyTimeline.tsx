@@ -1,14 +1,15 @@
 /* eslint-disable react/jsx-key */
-import React from "react";
+import React, { useState } from "react";
 
 import { GoalItem } from "@src/models/GoalItem";
 
 import "./MyTimeline.scss";
 
 export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
-  const getTimeComponents = () => (
+  const [displayOptionsIndex, setDisplayOptionsIndex] = useState(-1);
+  const getTimeComponents = (tasks: GoalItem[]) => (
     <div id="MTL-times">
-      {myTasks.map((task: GoalItem) => {
+      {tasks.map((task: GoalItem) => {
         const time = task.start?.toLocaleTimeString();
         return (
           <>
@@ -19,32 +20,62 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
       })}
     </div>
   );
-  const getCircleComponents = () => (
+  const getCircleComponents = (tasks: GoalItem[]) => (
     <div id="MTL-circles">
-      {myTasks.map((task: GoalItem) => (
+      {tasks.map((task: GoalItem) => (
         <>
-          <span className="MTL-circle" style={{backgroundColor: `${task.goalColor}`}}/>
+          <span className="MTL-circle" style={{ backgroundColor: `${task.goalColor}` }} />
           <div className="vbar" />
         </>
 
       ))}
     </div>
   );
-  const getTitleComponents = () => (
+  const getTitleComponents = (tasks: GoalItem[]) => (
     <div id="MTL-titles">
-      {myTasks.map((task: GoalItem) => (
+      {tasks.map((task: GoalItem, index: number) => (
         <>
-          <span className="MTL-taskTtitle">{task.title}</span>
+          <button
+            type="button"
+            className="MTL-taskTtitle"
+            onClick={() => setDisplayOptionsIndex(index)}
+          >
+            {task.title}
+          </button>
           <div className="bar" />
         </>
       ))}
     </div>
   );
+  const showOptions = (task: GoalItem, index: number) => (
+    <div className="MTL-options_container">
+      <div className="MTL-options-task">
+        <div className="MTL-circle" style={{ backgroundColor: "transparent" }} />
+        <div className="MTL-options-title">{task.title}</div>
+      </div>
+      <div className="MTL-options">
+        <button type="button"> Forgot</button>
+        <button type="button"> Reschedule</button>
+        <button type="button"> Done</button>
+      </div>
+    </div>
+  );
+  const renderTimeline = (start: number, end: number = myTasks.length) => (
+    <>
+      <div>{getTimeComponents(myTasks.slice(start, end))}</div>
+      <div>{getCircleComponents(myTasks.slice(start, end))}</div>
+      <div style={{ paddingLeft: "1vh" }}>{getTitleComponents(myTasks.slice(start, end))}</div>
+    </>
+  );
   return (
-    <div id="MTL-display">
-      <div>{getTimeComponents()}</div>
-      <div>{getCircleComponents()}</div>
-      <div style={{ paddingLeft: "1vh" }}>{getTitleComponents()}</div>
+    <div id={`MTL-display${displayOptionsIndex !== -1 ? "-withOption" : ""}`}>
+      {displayOptionsIndex !== -1 ? (
+        <>
+          <div style={{ display: "flex" }}>{renderTimeline(0, displayOptionsIndex)}</div>
+          {showOptions(myTasks[displayOptionsIndex], displayOptionsIndex)}
+          <div style={{ display: "flex" }}>{renderTimeline(displayOptionsIndex + 1)}</div>
+        </>
+      ) : renderTimeline(0, myTasks.length)}
     </div>
   );
 };
