@@ -10,15 +10,6 @@
   flex-direction: column;
 }
 
-.MTL-task {
-  // display: flex;
-  // justify-content: left;
-}
-
-  // .MTL-task {
-  //   width: 100%;
-  // }
-
 .MTL-circle {
   height: 25px;
   width: 25px;
@@ -76,8 +67,10 @@
 .MTL-options-task {
   border: 1px solid;
   border-bottom: 0;
+  border-radius: 7px 7px 0px 0px;
   display: flex;
-  padding: 1.5vh 8vh;
+  padding: 1.5vh 0vh;
+  padding-left: 1.5vw;
 }
 
 .MTL-options-task > .MTL-circle {
@@ -85,7 +78,7 @@
 }
 
 .MTL-options-title {
-  margin-left: 2vw;
+  margin-left: 1vw;
 }
 
 .MTL-options > button {
@@ -96,7 +89,11 @@
   font-size: medium;
   font-weight: bolder;
 }
+  .MTL-options > button:first-child {
+    border-radius: 0px 0px 0px 7px;
+  }
 
-.MTL-options:last-child {
-  border-right: 1px solid;
-}
+  .MTL-options > button:last-child {
+    border-right: 1px solid;
+    border-radius: 0px 0px 7px 0px;
+  }

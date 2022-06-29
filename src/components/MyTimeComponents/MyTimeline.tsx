@@ -7,8 +7,17 @@ import "./MyTimeline.scss";
 
 export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState(-1);
-  const getTimeComponents = (tasks: GoalItem[]) => (
+  const [showGoal, setShowGoal] = useState<number>(-1);
+  const getBreakingPoint = (GoalID:number) => {
+    for (let i = 0; i < myTasks.length; i += 1) {
+      if (myTasks[i].id === GoalID) {
+        setDisplayOptionsIndex(i);
+      }
+    }
+  };
+  const getTimeComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
     <div id="MTL-times">
+      {vbarUp && <div className="bar" />}
       {tasks.map((task: GoalItem) => {
         const time = task.start?.toLocaleTimeString();
         return (
@@ -20,25 +29,32 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
       })}
     </div>
   );
-  const getCircleComponents = (tasks: GoalItem[]) => (
+  const getCircleComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
     <div id="MTL-circles">
-      {tasks.map((task: GoalItem) => (
+      {vbarUp && <div className="vbar" />}
+      {tasks.map((task: GoalItem, index: number) => (
         <>
           <span className="MTL-circle" style={{ backgroundColor: `${task.goalColor}` }} />
-          <div className="vbar" />
+          <div
+            style={{ display: `${(vbarUp && tasks.length - 1 === index) || (index === myTasks.length - 1) ? "none" : "block"}` }}
+            className="vbar"
+          />
         </>
-
       ))}
     </div>
   );
-  const getTitleComponents = (tasks: GoalItem[]) => (
+  const getTitleComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
     <div id="MTL-titles">
+      {vbarUp && <div className="bar" />}
       {tasks.map((task: GoalItem, index: number) => (
         <>
           <button
             type="button"
             className="MTL-taskTtitle"
-            onClick={() => setDisplayOptionsIndex(index)}
+            onClick={() => {
+              setShowGoal(task.id ? task.id : -1);
+              getBreakingPoint(task.id ? task.id : -1);
+            }}
           >
             {task.title}
           </button>
@@ -47,7 +63,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
       ))}
     </div>
   );
-  const showOptions = (task: GoalItem, index: number) => (
+  const showOptions = (task: GoalItem) => (
     <div className="MTL-options_container">
       <div className="MTL-options-task">
         <div className="MTL-circle" style={{ backgroundColor: "transparent" }} />
@@ -60,22 +76,23 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
       </div>
     </div>
   );
-  const renderTimeline = (start: number, end: number = myTasks.length) => (
+  const renderTimeline = (vbarUp: boolean, start: number, end: number = myTasks.length) => (
     <>
-      <div>{getTimeComponents(myTasks.slice(start, end))}</div>
-      <div>{getCircleComponents(myTasks.slice(start, end))}</div>
-      <div style={{ paddingLeft: "1vh" }}>{getTitleComponents(myTasks.slice(start, end))}</div>
+      <div>{getTimeComponents(vbarUp, myTasks.slice(start, end))}</div>
+      <div>{getCircleComponents(vbarUp, myTasks.slice(start, end))}</div>
+      <div style={{ paddingLeft: "1vh" }}>{getTitleComponents(vbarUp, myTasks.slice(start, end))}</div>
     </>
   );
+  console.log("index", displayOptionsIndex);
   return (
     <div id={`MTL-display${displayOptionsIndex !== -1 ? "-withOption" : ""}`}>
       {displayOptionsIndex !== -1 ? (
         <>
-          <div style={{ display: "flex" }}>{renderTimeline(0, displayOptionsIndex)}</div>
-          {showOptions(myTasks[displayOptionsIndex], displayOptionsIndex)}
-          <div style={{ display: "flex" }}>{renderTimeline(displayOptionsIndex + 1)}</div>
+          <div style={{ display: "flex" }}>{renderTimeline(false, 0, displayOptionsIndex)}</div>
+          {showOptions(myTasks[displayOptionsIndex])}
+          { displayOptionsIndex + 1 < myTasks.length && <div style={{ display: "flex" }}>{renderTimeline(true, displayOptionsIndex + 1)}</div>}
         </>
-      ) : renderTimeline(0, myTasks.length)}
+      ) : renderTimeline(false, 0, myTasks.length)}
     </div>
   );
 };
