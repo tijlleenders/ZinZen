@@ -147,20 +147,21 @@ export const MyGoalsPage = () => {
                 <div className="interactables">
                   <PlusLg
                     style={{ cursor: "pointer" }}
-                    onClick={() => navigate("/Home/AddGoals", { state: { goalId: goal.id } })}
+                    onClickCapture={() => navigate("/Home/AddGoals", { state: { goalId: goal.id } })}
                   />
                   <Trash3Fill
                     style={{ cursor: "pointer" }}
-                    onClick={() => {
+                    onClickCapture={(e) => {
+                      e.stopPropagation();
                       removeUserGoal(Number(goal.id));
                     }}
                   />
                   <PencilSquare
                     style={{ cursor: "pointer" }}
-                    onClick={() => navigate("/Home/AddGoals", { state: { editingGoal: true, goalId: goal.id } })}
+                    onClickCapture={() => navigate("/Home/AddGoals", { state: { editingGoal: true, goalId: goal.id } })}
                   />
                   <CheckLg
-                    onClick={async () => {
+                    onClickCapture={async () => {
                       archiveUserGoal(goal);
                       const updatedGoalsList = await getActiveGoals();
                       setUserGoals(updatedGoalsList);
