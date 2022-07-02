@@ -16,7 +16,7 @@ export const MyTimePage = () => {
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
-  const [showTasks, setShowTasks] = useState("");
+  const [showTasks, setShowTasks] = useState<string[]>([]);
   const toggle = true;
 
   const today = new Date();
@@ -24,6 +24,11 @@ export const MyTimePage = () => {
 
   const darkrooms = ["#443027", "#9C4663", "#2B517B", "#612854"];
 
+  const handleShowTasks = (dayName: string) => {
+    if (showTasks.includes(dayName)) {
+      setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
+    } else { setShowTasks([...showTasks, dayName]); }
+  };
   const getColorWidth = (unplanned: boolean, duration: number) => {
     if (!toggle) return (duration * 4.17);
     let colorWidth = 0;
@@ -52,19 +57,22 @@ export const MyTimePage = () => {
     let colorIndex = -1;
     return (
       <div key={`day-${day}`} className="MyTime_day">
-        <div className="MyTime_navRow">
+        <button
+          type="button"
+          className="MyTime_navRow"
+          onClick={() => {
+            handleShowTasks(day);
+          }}
+        >
           <h3 className="MyTime_dayTitle"> {day} </h3>
           <button
             className="MyTime-expand-btw"
             type="button"
-            onClick={() => {
-              setShowTasks(showTasks === day ? "" : day);
-            }}
           >
-            <div> { showTasks === day ? <ChevronDown /> : <ChevronRight /> } </div>
+            <div> { showTasks.includes(day) ? <ChevronDown /> : <ChevronRight /> } </div>
           </button>
-        </div>
-        {showTasks === day ? getTimeline() :
+        </button>
+        {showTasks.includes(day) ? getTimeline() :
           (
             <div className="MyTime_colorPalette">
               {tmpTasks.map((task, index) => {
@@ -170,14 +178,13 @@ export const MyTimePage = () => {
         </Row>
       </Container>
       <div className="slide MyTime_container">
-        <h1 id="MyTime_title">My Time</h1>
         <div id="MyTime_days_container">
-          {getDayComponent("Today")}
+          {getDayComponent(`My ${today.toDateString()}`)}
           {getDayComponent("Tomorrow")}
           {
             [...Array(5).keys()].map(() => {
               today.setDate(today.getDate() + 1);
-              return getDayComponent(`${today.toDateString()}`);
+              return getDayComponent(`${today.toLocaleDateString("en-us", { weekday: "long" })}`);
             })
           }
         </div>
