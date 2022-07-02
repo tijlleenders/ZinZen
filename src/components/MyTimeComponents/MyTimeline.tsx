@@ -7,7 +7,6 @@ import "./MyTimeline.scss";
 
 export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState(-1);
-  const [showGoal, setShowGoal] = useState<number>(-1);
   const getBreakingPoint = (GoalID:number) => {
     for (let i = 0; i < myTasks.length; i += 1) {
       if (myTasks[i].id === GoalID) {
@@ -16,7 +15,6 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
     }
   };
   const handleDisplayOptions = (task: GoalItem) => {
-    setShowGoal(task.id ? task.id : -1);
     getBreakingPoint(task.id ? task.id : -1);
   };
   const getTimeComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
@@ -62,7 +60,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const getTitleComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
     <div id="MTL-titles">
       {vbarUp && <div className="bar" />}
-      {tasks.map((task: GoalItem, index: number) => (
+      {tasks.map((task: GoalItem) => (
         <>
           <button
             type="button"
