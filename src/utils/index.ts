@@ -4,6 +4,8 @@ export const formatDate = () => {
   return newDate;
 };
 
+export const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 export const getJustDate = (fullDate: Date) => new Date(fullDate.toDateString());
 
 export const truncateContent = (content: string, maxLength = 20) => {

@@ -6,7 +6,7 @@ import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
-import { getDiffInHours } from "@src/utils";
+import { getDiffInHours, weekday } from "@src/utils";
 
 import "./MyTimePage.scss";
 
@@ -180,7 +180,7 @@ export const MyTimePage = () => {
           {
             [...Array(5).keys()].map(() => {
               today.setDate(today.getDate() + 1);
-              return getDayComponent(`${today.toDateString()}`);
+              return getDayComponent(`${weekday[today.getDay()]}`);
             })
           }
         </div>
