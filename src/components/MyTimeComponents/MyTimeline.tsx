@@ -81,7 +81,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
         <div className="MTL-options-title">{task.title}</div>
       </div>
       <div className="MTL-options">
-        <button type="button"> Forgot</button>
+        <button type="button"> Forget</button>
         <button type="button"> Reschedule</button>
         <button type="button"> Done</button>
       </div>
