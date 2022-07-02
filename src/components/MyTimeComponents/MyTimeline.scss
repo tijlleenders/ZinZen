@@ -62,6 +62,7 @@
 
 .MTL-options_container {
   width: max-content;
+  font-size: 75% !important;
 }
 
 .MTL-options-task {
@@ -86,7 +87,6 @@
   border: 1px solid;
   border-right: 0px;
   padding: 0.5vw 2vw;
-  font-size: medium;
   font-weight: bolder;
 }
   .MTL-options > button:first-child {
