@@ -92,8 +92,8 @@ export const isCollectionEmpty = async () => {
 
 export const createGoal = (
   goalTitle: string,
-  goalRepeats: boolean,
-  goalDuration: number,
+  goalRepeats: boolean | null,
+  goalDuration: number | null,
   goalStart: Date | null,
   goalFinish: Date | null,
   goalStatus: 0 | 1,
@@ -102,7 +102,7 @@ export const createGoal = (
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
-    repeat: goalRepeats ? "Daily" : "Once",
+    repeat: goalRepeats === null ? null : goalRepeats ? "Daily" : "Once",
     duration: goalDuration,
     start: goalStart,
     finish: goalFinish,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight } from "react-bootstrap-icons";
+import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
@@ -8,7 +8,6 @@ import {
   archiveGoal,
   getActiveGoals,
   removeGoal,
-  updateGoal,
   isCollectionEmpty,
   removeChildrenGoals,
   archiveChildrenGoals,
@@ -23,7 +22,6 @@ export const MyGoalsPage = () => {
   const navigate = useNavigate();
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
-  const [userUpdatingTitle, setUserUpdatingTitle] = useState(false);
   const titleRef = useRef(null);
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -37,15 +35,6 @@ export const MyGoalsPage = () => {
   //   dummyData.map((goal: string) => addGoal(goal));
   // }
 
-  async function updateUserGoals(goal: GoalItem, index: number) {
-    const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
-    if (updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
-      if (updatedTitle.length === 0) return;
-      await updateGoal(Number(goal.id), { title: updatedTitle });
-      const goals: GoalItem[] = await getActiveGoals();
-      setUserGoals(goals);
-    }
-  }
   async function archiveUserGoal(goal: GoalItem) {
     await archiveChildrenGoals(Number(goal.id));
     await archiveGoal(Number(goal.id));
@@ -124,53 +113,55 @@ export const MyGoalsPage = () => {
         <div>
           {userGoals?.map((goal: GoalItem, index) => (
             <div
+              aria-hidden
               key={String(`task-${index}`)}
               className="user-goal"
-              onClickCapture={() => {
-                setTapCount([index, tapCount[1] + 1]);
-              }}
-              style={{ backgroundColor: goal.goalColor }}
+              onClick={() => navigate(`/Home/MyGoals/${goal.id}`)}
+              style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
             >
               <div
+                aria-hidden
                 className="goal-title"
-                contentEditable={userUpdatingTitle && tapCount[0] === index && tapCount[1] >= 1}
-                onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
                 ref={titleRef}
-                onBlur={() => {
-                  updateUserGoals(goal, index);
-                }}
                 suppressContentEditableWarning
                 style={{
-                  cursor: userUpdatingTitle ? "unset" : "default",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                 }}
               >
                 {goal.title}
-                <ChevronRight style={{ cursor: "pointer" }} onClick={() => navigate(`/Home/MyGoals/${goal.id}`)} />
+                {tapCount[0] === index && tapCount[1] > 0 ? (
+                  <ChevronDown fontSize="30px" />
+                ) : (
+                  <ChevronRight
+                    fontSize="30px"
+                    onClickCapture={(e) => {
+                      e.stopPropagation();
+                      setTapCount([index, tapCount[1] + 1]);
+                    }}
+                  />
+                )}
               </div>
               {tapCount[0] === index && tapCount[1] > 0 ? (
                 <div className="interactables">
                   <PlusLg
                     style={{ cursor: "pointer" }}
-                    onClick={() => navigate("/Home/AddGoals", { state: { goalId: goal.id } })}
+                    onClickCapture={() => navigate("/Home/AddGoals", { state: { goalId: goal.id } })}
                   />
                   <Trash3Fill
                     style={{ cursor: "pointer" }}
-                    onClick={() => {
+                    onClickCapture={(e) => {
+                      e.stopPropagation();
                       removeUserGoal(Number(goal.id));
                     }}
                   />
                   <PencilSquare
                     style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      if (titleRef.current) (titleRef.current as HTMLElement).focus();
-                      setUserUpdatingTitle(!userUpdatingTitle);
-                    }}
+                    onClickCapture={() => navigate("/Home/AddGoals", { state: { editingGoal: true, goalId: goal.id } })}
                   />
                   <CheckLg
-                    onClick={async () => {
+                    onClickCapture={async () => {
                       archiveUserGoal(goal);
                       const updatedGoalsList = await getActiveGoals();
                       setUserGoals(updatedGoalsList);
