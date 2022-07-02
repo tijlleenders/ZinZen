@@ -16,7 +16,7 @@ export const MyTimePage = () => {
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
-  const [showTasks, setShowTasks] = useState("");
+  const [showTasks, setShowTasks] = useState<string[]>([]);
   const toggle = true;
 
   const today = new Date();
@@ -24,6 +24,11 @@ export const MyTimePage = () => {
 
   const darkrooms = ["#443027", "#9C4663", "#2B517B", "#612854"];
 
+  const handleShowTasks = (dayName: string) => {
+    if (showTasks.includes(dayName)) {
+      setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
+    } else { setShowTasks([...showTasks, dayName]); }
+  };
   const getColorWidth = (unplanned: boolean, duration: number) => {
     if (!toggle) return (duration * 4.17);
     let colorWidth = 0;
@@ -56,7 +61,7 @@ export const MyTimePage = () => {
           type="button"
           className="MyTime_navRow"
           onClick={() => {
-            setShowTasks(showTasks === day ? "" : day);
+            handleShowTasks(day);
           }}
         >
           <h3 className="MyTime_dayTitle"> {day} </h3>
@@ -64,10 +69,10 @@ export const MyTimePage = () => {
             className="MyTime-expand-btw"
             type="button"
           >
-            <div> { showTasks === day ? <ChevronDown /> : <ChevronRight /> } </div>
+            <div> { showTasks.includes(day) ? <ChevronDown /> : <ChevronRight /> } </div>
           </button>
         </button>
-        {showTasks === day ? getTimeline() :
+        {showTasks.includes(day) ? getTimeline() :
           (
             <div className="MyTime_colorPalette">
               {tmpTasks.map((task, index) => {
