@@ -15,6 +15,10 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
       }
     }
   };
+  const handleDisplayOptions = (task: GoalItem) => {
+    setShowGoal(task.id ? task.id : -1);
+    getBreakingPoint(task.id ? task.id : -1);
+  };
   const getTimeComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
     <div id="MTL-times">
       {vbarUp && <div className="bar" />}
@@ -22,7 +26,13 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
         const time = task.start?.toLocaleTimeString();
         return (
           <>
-            <span className="MTL-startTime"> {time?.slice(0, -6)} {time?.slice(-2)}</span>
+            <button
+              type="button"
+              onClick={() => handleDisplayOptions(task)}
+              className="MTL-startTime"
+            >
+              {time?.slice(0, -6)} {time?.slice(-2)}
+            </button>
             <div className="bar" />
           </>
         );
@@ -34,7 +44,13 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
       {vbarUp && <div className="vbar" />}
       {tasks.map((task: GoalItem, index: number) => (
         <>
-          <span className="MTL-circle" style={{ backgroundColor: `${task.goalColor}` }} />
+          <button
+            type="button"
+            className="MTL-circle"
+            style={{ backgroundColor: `${task.goalColor}` }}
+            onClick={() => handleDisplayOptions(task)}
+          >.
+          </button>
           <div
             style={{ display: `${(vbarUp && tasks.length - 1 === index) || (index === myTasks.length - 1) ? "none" : "block"}` }}
             className="vbar"
@@ -51,10 +67,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
           <button
             type="button"
             className="MTL-taskTtitle"
-            onClick={() => {
-              setShowGoal(task.id ? task.id : -1);
-              getBreakingPoint(task.id ? task.id : -1);
-            }}
+            onClick={() => handleDisplayOptions(task)}
           >
             {task.title}
           </button>
@@ -66,7 +79,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const showOptions = (task: GoalItem) => (
     <div className="MTL-options_container">
       <div className="MTL-options-task">
-        <div className="MTL-circle" style={{ backgroundColor: "transparent" }} />
+        <div className="MTL-circle" style={{ backgroundColor: "transparent", color: task.goalColor }} />
         <div className="MTL-options-title">{task.title}</div>
       </div>
       <div className="MTL-options">

@@ -20,6 +20,9 @@
 .MTL-startTime {
   width: 80px;
   margin-top: 1.5px;
+  border: none;
+  background-color: transparent;
+  font-weight: bolder;
 }
 
 .MTL-taskTtitle {
@@ -51,10 +54,17 @@
   display: flex;
   flex-direction: column;
 }
+
+.MTL-circle {
+  border: none;
+  color: transparent;
+}
+
 #MTL-titles {
   display: flex;
   flex-direction: column;
 }
+
 #MTL-times {
   display: flex;
   flex-direction: column;
