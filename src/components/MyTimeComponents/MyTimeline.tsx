@@ -8,11 +8,7 @@ import "./MyTimeline.scss";
 export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState(-1);
   const getBreakingPoint = (GoalID:number) => {
-    for (let i = 0; i < myTasks.length; i += 1) {
-      if (myTasks[i].id === GoalID) {
-        setDisplayOptionsIndex(i);
-      }
-    }
+    setDisplayOptionsIndex(myTasks.findIndex(task => task.id === GoalID));
   };
   const handleDisplayOptions = (task: GoalItem) => {
     getBreakingPoint(task.id ? task.id : -1);
@@ -94,7 +90,6 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
       <div style={{ paddingLeft: "1vh" }}>{getTitleComponents(vbarUp, myTasks.slice(start, end))}</div>
     </>
   );
-  console.log("index", displayOptionsIndex);
   return (
     <div id={`MTL-display${displayOptionsIndex !== -1 ? "-withOption" : ""}`}>
       {displayOptionsIndex !== -1 ? (
