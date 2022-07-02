@@ -39,7 +39,7 @@ describe("DashboardUserChoice Test", () => {
       .wait(10000)
       .location("pathname")
       .should("include", "AddGoals");
-    cy.get('[alt="Back arrow"]').click();
+    cy.get('[alt="Zinzen Logo"]').click();
   });
 
   it("Should have My Time button", () => {
@@ -60,6 +60,6 @@ describe("DashboardUserChoice Test", () => {
       .wait(10000)
       .location("pathname")
       .should("include", "AddFeelings");
-    cy.get('[alt="Back arrow"]').click();
+    cy.get('[alt="Zinzen Logo"]').click();
   });
 });

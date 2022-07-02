@@ -25,7 +25,7 @@ export const HeaderDashboard = () => {
           alt="Back arrow"
           className="back-arrow-nav-dashboard"
           onClick={() => {
-            navigate("/Home");
+            navigate(-1);
           }}
         />
         {darkModeStatus ? (
