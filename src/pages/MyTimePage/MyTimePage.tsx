@@ -178,9 +178,9 @@ export const MyTimePage = () => {
         </Row>
       </Container>
       <div className="slide MyTime_container">
-        <h1 id="MyTime_title">My Time</h1>
+        {/* <h1 id="MyTime_title">My Time</h1> */}
         <div id="MyTime_days_container">
-          {getDayComponent("Today")}
+          {getDayComponent(`My ${today.toDateString()}`)}
           {getDayComponent("Tomorrow")}
           {
             [...Array(5).keys()].map(() => {
