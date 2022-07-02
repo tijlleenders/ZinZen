@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
+import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
+import { getDiffInHours } from "@src/utils";
 
 import "./MyTimePage.scss";
-import { getDiffInHours } from "@src/utils";
-import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 
 export const MyTimePage = () => {
   const [tmpTasks, setTmpTasks] = useState<GoalItem[]>([]);
@@ -17,7 +17,6 @@ export const MyTimePage = () => {
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [showTasks, setShowTasks] = useState("");
-  // const [toggle, setToggle] = useState(true);
   const toggle = true;
 
   const today = new Date();
@@ -171,12 +170,7 @@ export const MyTimePage = () => {
         </Row>
       </Container>
       <div className="slide MyTime_container">
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h1 id="MyTime_title">My Time</h1>
-          {/* <button style={{ fontSize: "1.52rem", background: "transparent", padding: "0% 2%" }} type="button" onClick={() => setToggle(!toggle)}>
-            {`Normalize ${toggle ? "on" : "off"}`}
-          </button> */}
-        </div>
+        <h1 id="MyTime_title">My Time</h1>
         <div id="MyTime_days_container">
           {getDayComponent("Today")}
           {getDayComponent("Tomorrow")}
