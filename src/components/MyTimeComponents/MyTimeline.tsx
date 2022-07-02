@@ -73,7 +73,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const showOptions = (task: GoalItem) => (
     <div className="MTL-options_container">
       <div className="MTL-options-task">
-        <div className="MTL-circle" style={{ backgroundColor: "transparent", color: task.goalColor }} />
+        <div className="MTL-circle" style={{ color: task.goalColor }} />
         <div className="MTL-options-title">{task.title}</div>
       </div>
       <div className="MTL-options">
