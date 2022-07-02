@@ -52,18 +52,21 @@ export const MyTimePage = () => {
     let colorIndex = -1;
     return (
       <div key={`day-${day}`} className="MyTime_day">
-        <div className="MyTime_navRow">
+        <button
+          type="button"
+          className="MyTime_navRow"
+          onClick={() => {
+            setShowTasks(showTasks === day ? "" : day);
+          }}
+        >
           <h3 className="MyTime_dayTitle"> {day} </h3>
           <button
             className="MyTime-expand-btw"
             type="button"
-            onClick={() => {
-              setShowTasks(showTasks === day ? "" : day);
-            }}
           >
             <div> { showTasks === day ? <ChevronDown /> : <ChevronRight /> } </div>
           </button>
-        </div>
+        </button>
         {showTasks === day ? getTimeline() :
           (
             <div className="MyTime_colorPalette">
