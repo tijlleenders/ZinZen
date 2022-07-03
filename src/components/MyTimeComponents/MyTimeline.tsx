@@ -26,8 +26,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
               onClick={() => handleDisplayOptions(task)}
               className="MTL-startTime"
             >
-              {`${Math.floor(hrs / 10) === 0 ? 0 : ""}${hrs}:`}
-              {`${Math.floor(mins / 10) === 0 ? 0 : ""}${mins}`}
+              {task.start?.toTimeString().slice(0, 5)};
             </button>
             <div className="bar" />
           </>
