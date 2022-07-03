@@ -8,7 +8,7 @@ import "./MyTimeline.scss";
 export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState(-1);
   const getBreakingPoint = (GoalID:number) => {
-    setDisplayOptionsIndex(myTasks.findIndex(task => task.id === GoalID));
+    setDisplayOptionsIndex(myTasks.findIndex((task) => task.id === GoalID));
   };
   const handleDisplayOptions = (task: GoalItem) => {
     getBreakingPoint(task.id ? task.id : -1);
@@ -17,7 +17,8 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
     <div id="MTL-times">
       {vbarUp && <div className="bar" />}
       {tasks.map((task: GoalItem) => {
-        const time = task.start?.toLocaleTimeString();
+        const hrs = task.start?.getHours() || 0;
+        const mins = task.start?.getMinutes() || 0;
         return (
           <>
             <button
@@ -25,7 +26,8 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
               onClick={() => handleDisplayOptions(task)}
               className="MTL-startTime"
             >
-              {time?.slice(0, -6)} {time?.slice(-2)}
+              {`${Math.floor(hrs / 10) === 0 ? 0 : ""}${hrs}:`}
+              {`${Math.floor(mins / 10) === 0 ? 0 : ""}${mins}`}
             </button>
             <div className="bar" />
           </>
