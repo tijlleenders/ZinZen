@@ -16,22 +16,18 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const getTimeComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
     <div id="MTL-times">
       {vbarUp && <div className="bar" />}
-      {tasks.map((task: GoalItem) => {
-        const hrs = task.start?.getHours() || 0;
-        const mins = task.start?.getMinutes() || 0;
-        return (
-          <>
-            <button
-              type="button"
-              onClick={() => handleDisplayOptions(task)}
-              className="MTL-startTime"
-            >
-              {task.start?.toTimeString().slice(0, 5)};
-            </button>
-            <div className="bar" />
-          </>
-        );
-      })}
+      {tasks.map((task: GoalItem) => (
+        <>
+          <button
+            type="button"
+            onClick={() => handleDisplayOptions(task)}
+            className="MTL-startTime"
+          >
+            {task.start?.toTimeString().slice(0, 5)}
+          </button>
+          <div className="bar" />
+        </>
+      ))}
     </div>
   );
   const getCircleComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
