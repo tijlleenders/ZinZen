@@ -8,7 +8,7 @@ import "./MyTimeline.scss";
 export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState(-1);
   const getBreakingPoint = (GoalID:number) => {
-    setDisplayOptionsIndex(myTasks.findIndex(task => task.id === GoalID));
+    setDisplayOptionsIndex(myTasks.findIndex((task) => task.id === GoalID));
   };
   const handleDisplayOptions = (task: GoalItem) => {
     getBreakingPoint(task.id ? task.id : -1);
@@ -16,21 +16,18 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   const getTimeComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
     <div id="MTL-times">
       {vbarUp && <div className="bar" />}
-      {tasks.map((task: GoalItem) => {
-        const time = task.start?.toLocaleTimeString();
-        return (
-          <>
-            <button
-              type="button"
-              onClick={() => handleDisplayOptions(task)}
-              className="MTL-startTime"
-            >
-              {time?.slice(0, -6)} {time?.slice(-2)}
-            </button>
-            <div className="bar" />
-          </>
-        );
-      })}
+      {tasks.map((task: GoalItem) => (
+        <>
+          <button
+            type="button"
+            onClick={() => handleDisplayOptions(task)}
+            className="MTL-startTime"
+          >
+            {task.start?.toTimeString().slice(0, 5)}
+          </button>
+          <div className="bar" />
+        </>
+      ))}
     </div>
   );
   const getCircleComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
