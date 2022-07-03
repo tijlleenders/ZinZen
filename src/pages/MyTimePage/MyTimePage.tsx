@@ -11,16 +11,14 @@ import { getDiffInHours } from "@src/utils";
 import "./MyTimePage.scss";
 
 export const MyTimePage = () => {
+  const today = new Date();
   const [tmpTasks, setTmpTasks] = useState<GoalItem[]>([]);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
-  const [showTasks, setShowTasks] = useState<string[]>([]);
+  const [showTasks, setShowTasks] = useState<string[]>([`My ${today.toDateString()}`]);
   const toggle = true;
-
-  const today = new Date();
-  today.setDate(today.getDate() + 1);
 
   const darkrooms = ["#443027", "#9C4663", "#2B517B", "#612854"];
 
