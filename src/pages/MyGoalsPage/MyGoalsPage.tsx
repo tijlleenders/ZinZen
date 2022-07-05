@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown } from "react-bootstrap-icons";
+import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown, ShareFill, PersonFill, PeopleFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { Modal } from "react-bootstrap";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
 import {
@@ -22,6 +23,7 @@ export const MyGoalsPage = () => {
   const navigate = useNavigate();
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
+  const [showShareModal, setShowShareModal] = useState(true);
   const titleRef = useRef(null);
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -165,6 +167,13 @@ export const MyGoalsPage = () => {
                       removeUserGoal(Number(goal.id));
                     }}
                   />
+                  <ShareFill
+                    style={{ cursor: "pointer" }}
+                    onClickCapture={(e) => {
+                      e.stopPropagation();
+                      setShowShareModal(true);
+                    }}
+                  />
                   <PencilSquare
                     style={{ cursor: "pointer" }}
                     onClickCapture={() => navigate("/Home/AddGoals", { state: { editingGoal: true, goalId: goal.id } })}
@@ -192,6 +201,34 @@ export const MyGoalsPage = () => {
           aria-hidden
         />
       </div>
+      <Modal
+        id="share-modal"
+        show={showShareModal}
+        onHide={() => setShowShareModal(false)}
+        centered
+        autoFocus={false}
+      >
+        <Modal.Body id="share-modal-body">
+          <button type="button" className="shareOptions-btn">
+            <div className="share-Options">
+              <PersonFill />
+              <p className="shareOption-name">Share Anonymously</p>
+            </div>
+          </button>
+          <button type="button" className="shareOptions-btn">
+            <div className="share-Options">
+              <PeopleFill />
+              <p className="shareOption-name">Public</p>
+            </div>
+          </button>
+          <button type="button" className="shareOptions-btn">
+            <div className="share-Options">
+              <PersonFill />
+              <p className="shareOption-name">Share with</p>
+            </div>
+          </button>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
