@@ -23,7 +23,7 @@ export const MyGoalsPage = () => {
   const navigate = useNavigate();
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
-  const [showShareModal, setShowShareModal] = useState(true);
+  const [showShareModal, setShowShareModal] = useState(false);
   const titleRef = useRef(null);
   const darkModeStatus = useRecoilValue(darkModeState);
 
