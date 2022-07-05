@@ -209,7 +209,7 @@ export const MyGoalsPage = () => {
           <button type="button" className="shareOptions-btn">
             <div className="share-Options">
               <PeopleFill />
-              <p className="shareOption-name">Public</p>
+              <p className="shareOption-name">Share Public</p>
             </div>
           </button>
           <button type="button" className="shareOptions-btn">
