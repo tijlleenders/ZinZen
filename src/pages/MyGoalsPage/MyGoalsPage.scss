@@ -57,10 +57,12 @@
   padding-top: 1.5%;
 }
 .interactables > svg {
+  display: block;
   font-size: 22px;
 }
 
 .user-goal {
+  word-break:break-all;
   background-color: #edc7b7;
   border-radius: 10px;
   margin-top: 4%;
