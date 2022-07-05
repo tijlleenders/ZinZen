@@ -87,6 +87,58 @@
   font-size: 1.3em;
   text-align: left !important;
 }
+
+#share-modal {
+  margin: 0;
+}
+  #share-modal > .modal-content {
+    position: absolute;
+    bottom: 0;
+    background: rgba(253, 230, 220, 0.8);
+    border-radius: 25px;
+  }
+
+#share-modal-body {
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.shareOptions-btn {
+  border-radius: 10px;
+  border: none;
+  padding: 2% 2%;
+  margin-top: 4%;
+}
+
+  .shareOptions-btn:nth-child(1) {
+    background: #AC3B61;
+  }
+  .shareOptions-btn:nth-child(2) {
+    background: #3B6899;
+  }
+  .shareOptions-btn:nth-child(3) {
+    background: #BAB2BC;
+  }
+
+.share-Options {
+  display: flex;
+  justify-content: left;
+}
+  .share-Options > svg {
+    background-color: #EDC7B7;
+    border: 1px solid;
+    border-radius: 50%;
+    font-size: 2.5em;
+  }
+
+.shareOption-name {
+  margin: 0;
+  margin-left: 3%;
+  padding-top: 2.5%;
+  font-weight: 600;
+}
+
 @media (min-width: 1281px) {
   .my-goals-content {
     width: 40%;
