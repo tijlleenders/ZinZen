@@ -107,7 +107,7 @@ export const DashboardUserChoicePanel = () => {
               navigate("/Home/ZinZen");
             }}
           >
-            {truncateContent(t("zinzen"))}
+            {truncateContent(t("ZinZen®"))}
           </Button>
         </Row>
       </Container>
