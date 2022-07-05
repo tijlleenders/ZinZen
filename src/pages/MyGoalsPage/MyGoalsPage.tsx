@@ -120,37 +120,28 @@ export const MyGoalsPage = () => {
               style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
             >
               <div
+                aria-hidden
+                className="goal-title"
+                ref={titleRef}
+                suppressContentEditableWarning
                 style={{
                   display: "flex",
-
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                <div
-                  aria-hidden
-                  className="goal-title"
-                  ref={titleRef}
-                  suppressContentEditableWarning
-                  style={{
-                    justifyContent: "space-between",
-                    alignItems: "left",
-                    width: "100%",
-                  }}
-                >
-                  {goal.title}
-                </div>
-                <div>
-                  {tapCount[0] === index && tapCount[1] > 0 ? (
-                    <ChevronDown fontSize="30px" />
-                  ) : (
-                    <ChevronRight
-                      fontSize="30px"
-                      onClickCapture={(e) => {
-                        e.stopPropagation();
-                        setTapCount([index, tapCount[1] + 1]);
-                      }}
-                    />
-                  )}
-                </div>
+                {goal.title}
+                {tapCount[0] === index && tapCount[1] > 0 ? (
+                  <ChevronDown fontSize="30px" />
+                ) : (
+                  <ChevronRight
+                    fontSize="30px"
+                    onClickCapture={(e) => {
+                      e.stopPropagation();
+                      setTapCount([index, tapCount[1] + 1]);
+                    }}
+                  />
+                )}
               </div>
               {tapCount[0] === index && tapCount[1] > 0 ? (
                 <div className="interactables">
