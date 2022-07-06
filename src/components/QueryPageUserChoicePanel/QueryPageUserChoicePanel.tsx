@@ -43,7 +43,12 @@ export const QueryPageUserChoicePanel = () => {
               navigate("/Home");
             }}
           >
-            {t("ialreadyknowZinZen")}
+            <div style={{ display: "flex" }}>
+              {t("ialreadyknowZinZen")}
+              <div style={{ fontSize: "small" }}>
+                ®
+              </div>
+            </div>
           </Button>
         </Row>
       </Container>
