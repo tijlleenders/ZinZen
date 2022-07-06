@@ -20,6 +20,7 @@ export const DashboardUserChoicePanel = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const c = "®";
 
   return (
     <div className="slide">
@@ -107,7 +108,14 @@ export const DashboardUserChoicePanel = () => {
               navigate("/Home/ZinZen");
             }}
           >
-            {truncateContent(t("ZinZen®"))}
+            <div style={{ display: "flex" }}>
+              <div>
+                ZinZen
+              </div>
+              <div style={{ fontSize: "small" }}>
+                ®
+              </div>
+            </div>
           </Button>
         </Row>
       </Container>
