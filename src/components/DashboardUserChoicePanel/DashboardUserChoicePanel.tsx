@@ -107,7 +107,14 @@ export const DashboardUserChoicePanel = () => {
               navigate("/Home/ZinZen");
             }}
           >
-            {truncateContent(t("zinzen"))}
+            <div style={{ display: "flex" }}>
+              <div>
+                ZinZen
+              </div>
+              <div style={{ fontSize: "small" }}>
+                ®
+              </div>
+            </div>
           </Button>
         </Row>
       </Container>
