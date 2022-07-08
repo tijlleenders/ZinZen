@@ -44,7 +44,7 @@ Also see our overall guiding principle: [Be good.](https://blog.zinzen.me/2021/1
 
 ### Easy
 
-- E.1 One person in a team/family/group can use ZinZen as their primary todo-tool without negatively affecting the others, even if they use a different tool.
+- E.1 One person in a team/family/group can use ZinZen® as their primary todo-tool without negatively affecting the others, even if they use a different tool.
 - E.2 No tutorials up-front, but as-you-go: when buttons/actions are first used a quick explanation is shown and connected preferences can be set after using the feature a few times (not on first use).
 - E.3 Fast touch/click feedback (<100ms) so cause-effect connection between user action and interface response is clear. Offline-first makes this easy.
 - E.4 Undo button always present (and clickable as much as possible) so users are not afraid to make mistakes. Redo not implemented as it complicates user understanding and backend.
@@ -62,7 +62,7 @@ Also see our overall guiding principle: [Be good.](https://blog.zinzen.me/2021/1
 - SS2. Favor simplicity over complexity in the user interface as well as in the code base.
 - SS3. End-to-end encryption (TLS + encrypted storage sufficient pfor current features (single user), if necessary implement an open source end-to-end encryption protocol (ie signal protocol) at a later time).
 - SS4. Privacy by design and by default.
-  ZinZen® does not want or need to know who you are. You don't require a phone number or email to register. Even better: you don't even have to register at all if you prefer because you can use the app purely offline or sync with your own servers instead of the official ZinZen® servers (To make this possible whilst guaranteeing negative user experience, the quality of your own servers is monitored by the app so you will get a suggestion to switch to ZinZen servers if your own private servers negatively affect performance). This resolves the concern some other open source app maintainers have about allowing you to use your own private servers (ie Signal chat app).
+  ZinZen® does not want or need to know who you are. You don't require a phone number or email to register. Even better: you don't even have to register at all if you prefer because you can use the app purely offline or sync with your own servers instead of the official ZinZen® servers (To make this possible whilst guaranteeing negative user experience, the quality of your own servers is monitored by the app so you will get a suggestion to switch to ZinZen® servers if your own private servers negatively affect performance). This resolves the concern some other open source app maintainers have about allowing you to use your own private servers (ie Signal chat app).
 - SS5. If you want to help improve ZinZen® you can turn on pseudonimized user statistics. This option is turned off by default.
 - SS6. No ads as these introduce security risks (and negatively affect user experience).
 
@@ -91,9 +91,9 @@ Animations : none
 
 ## Legal stuff
 
-&copy;2020-now ZinZen®&reg;
+&copy;2020-now ZinZen®;
 
 This code is licensed under AGPLv3 but this license does not implicitly grant permission to use the trade names, trademarks, service marks, or product names of the licensor, except as required for reasonable and customary use in describing the origin of the Work and the content of the notice/attribution file.
 
 ZinZen® supports an open and collaborative process.
-Registering the ZinZen trademark is a tool to protect the ZinZen identity and the quality perception of the ZinZen® projects.
+Registering the ZinZen® trademark is a tool to protect the ZinZen® identity and the quality perception of the ZinZen® projects.
