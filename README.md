@@ -84,7 +84,7 @@ We plan our work on the [ZinZen® project board](https://github.com/users/tijlle
 
 UI : react-bootstrap
 Testing : Cypress
-CI/CD : GithubActions (considering Vercel)
+CI/CD : GithubActions and Vercel
 Internationalization : i18next
 Progressive Web App : workbox
 Animations : none
