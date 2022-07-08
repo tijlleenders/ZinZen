@@ -3,7 +3,7 @@ describe("ExplorePage Test", () => {
     cy.visit("/");
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
-    cy.contains("I already know ZinZen").click();
+    cy.contains("Skip Intro").click();
     cy.contains("Explore").click();
     cy.get("#explore-container-light").invoke("css", "background-color").should("equal", "rgb(240, 230, 225)");
   });

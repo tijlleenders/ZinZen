@@ -3,7 +3,7 @@ describe("ZinZen-page Test", () => {
     cy.visit("/");
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
-    cy.contains("I already know ZinZen").click();
+    cy.contains("Skip Intro").click();
     cy.contains("ZinZen").click();
     cy.contains("Browse the code").parent().should("have.attr", "href", "https://github.com/tijlleenders/ZinZen");
   });
