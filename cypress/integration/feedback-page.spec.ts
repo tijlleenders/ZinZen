@@ -3,7 +3,7 @@ describe("FeedbackPage Tests", () => {
     cy.visit("/");
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
-    cy.contains("I already know ZinZen").click();
+    cy.contains("Skip Intro").click();
     cy.contains("ZinZen").click();
     cy.contains("Feedback").click();
     cy.contains("We value your opinion.");
