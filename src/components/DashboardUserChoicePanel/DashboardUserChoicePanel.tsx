@@ -20,7 +20,6 @@ export const DashboardUserChoicePanel = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const c = "®";
 
   return (
     <div className="slide">
