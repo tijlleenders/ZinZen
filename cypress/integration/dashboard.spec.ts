@@ -3,7 +3,8 @@ describe("DashboardUserChoice Test", () => {
     cy.visit("/");
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
-    cy.contains("Skip Intro").click();
+    cy.get(".zinzen-text-logo-nav-dashboard").click();
+    cy.get(".zinzen-logo-nav-dashboard").click();
     cy.get(".dashboard-choice-light1").should("have.length", 1);
     cy.get(".dashboard-choice-light").should("have.length", 4);
   });
