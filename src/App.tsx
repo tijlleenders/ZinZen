@@ -42,7 +42,7 @@ const App = () => {
           ) : (
             <>
               <Route path="/" element={<MyTimePage />} />
-              <Route path="/Home/MyTime" element={<MyTimePage/>}/>
+              <Route path="/Home/MyTime" element={<MyTimePage />} />
             </>
           )}
           <Route path="/Home/AddFeelings" element={<AddFeelingsPage />} />
