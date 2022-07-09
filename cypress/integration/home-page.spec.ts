@@ -25,4 +25,11 @@ describe("Basic Tests Home Page", () => {
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
   });
+
+  it("Default entry page should be MyTime", () => {
+    cy.contains("Skip Intro")
+      .click()
+      .location("pathname")
+      .should("include", "MyTime");
+  });
 });
