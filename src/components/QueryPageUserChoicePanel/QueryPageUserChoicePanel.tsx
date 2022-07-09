@@ -40,7 +40,7 @@ export const QueryPageUserChoicePanel = () => {
             size="lg"
             className={darkModeStatus ? "query-choice-dark" : "query-choice-light"}
             onClick={() => {
-              navigate("/Home");
+              navigate("/Home/MyTime");
             }}
           >
             {t("ialreadyknowZinZen")}

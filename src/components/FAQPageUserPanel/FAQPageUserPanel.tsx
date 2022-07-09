@@ -60,7 +60,7 @@ export const FAQPageUserPanel = () => {
             size="lg"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
-              navigate("/Home");
+              navigate("/Home/MyTime");
             }}
           >
             {t("ihavenomorequestions")}
