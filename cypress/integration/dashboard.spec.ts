@@ -4,6 +4,7 @@ describe("DashboardUserChoice Test", () => {
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();
+    cy.get('[alt="Zinzen Logo"]').click();
     cy.get(".dashboard-choice-light1").should("have.length", 1);
     cy.get(".dashboard-choice-light").should("have.length", 4);
   });
@@ -25,20 +26,12 @@ describe("DashboardUserChoice Test", () => {
       .go("back");
   });
 
-  it("Should have ZinZen button working", () => {
-    cy.contains("ZinZen")
-      .click()
-      .location("pathname")
-      .should("include", "ZinZen")
-      .go("back");
-  });
-
   it("Should have My Goals button working", () => {
     cy.contains("My Goals")
       .click()
       .wait(10000)
       .location("pathname")
-      .should("include", "AddGoals");
+      .should("include", "MyGoals");
     cy.get('[alt="Zinzen Logo"]').click();
   });
 

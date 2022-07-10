@@ -41,8 +41,8 @@ const App = () => {
             <Route path="/" element={<LandingPageThemeChoice />} />
           ) : (
             <>
-              <Route path="/Home" element={<HomePage />} />
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<MyTimePage />} />
+              <Route path="/Home/MyTime" element={<MyTimePage />} />
             </>
           )}
           <Route path="/Home/AddFeelings" element={<AddFeelingsPage />} />
@@ -51,9 +51,10 @@ const App = () => {
           <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
+          <Route path="/Home" element={<HomePage />} />
           <Route path="/Home/MyGoals/:id" element={<GoalSublist />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
-          <Route path="/Home/MyTime" element={<MyTimePage />} />
+
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />
