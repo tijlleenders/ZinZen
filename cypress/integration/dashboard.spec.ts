@@ -50,9 +50,8 @@ describe("DashboardUserChoice Test", () => {
   it("Should have My Feelings button working", () => {
     cy.contains("My Feelings")
       .click()
-      .wait(10000)
       .location("pathname")
-      .should("include", "AddFeelings");
+      .should("include", "MyFeelings");
     cy.get('[alt="Zinzen Logo"]').click();
   });
 });
