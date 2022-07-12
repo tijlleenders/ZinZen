@@ -63,13 +63,13 @@ export const MyGoalsPage = () => {
     }, 300);
   }
 
-  // useEffect(() => {
-  //   (async () => {
-  //     // await populateDummyGoals();
-  //     const goals: GoalItem[] = await getActiveGoals();
-  //     setUserGoals(goals);
-  //   })();
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      // await populateDummyGoals();
+      const goals: GoalItem[] = await getActiveGoals();
+      setUserGoals(goals);
+    })();
+  }, []);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
