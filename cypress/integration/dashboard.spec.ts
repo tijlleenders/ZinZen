@@ -29,7 +29,6 @@ describe("DashboardUserChoice Test", () => {
   it("Should have My Goals button working", () => {
     cy.contains("My Goals")
       .click()
-      .wait(10000)
       .location("pathname")
       .should("include", "MyGoals");
     cy.get('[alt="Zinzen Logo"]').click();
