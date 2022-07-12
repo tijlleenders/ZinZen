@@ -41,25 +41,7 @@ export const ShowFeelingsPage = () => {
   }, []);
   const dateArr = Object.keys(feelingsList).map((date) => date);
   const dateRangeArr = getDates(new Date(dateArr[0]), new Date()).reverse();
-  useEffect(() => {
-    async function checkCollection() {
-      const result = await isCollectionEmpty();
-      return result;
-    }
-    checkCollection().then((result) => {
-      const timer1 = setTimeout(() => {
-        if (result) {
-          navigate("/Home/AddFeelings", {
-            state: { feelingDate: new Date() },
-          });
-        }
-      }, 500);
-      return () => {
-        clearTimeout(timer1);
-      };
-    });
-  }, []);
-
+  if (dateRangeArr.length === 0) { dateRangeArr.push(new Date()); }
   return (
     <div>
       <Container fluid>
