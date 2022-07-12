@@ -64,25 +64,6 @@ export const MyGoalsPage = () => {
   }
 
   useEffect(() => {
-    async function checkCollection() {
-      const result = await isCollectionEmpty();
-      return result;
-    }
-    checkCollection().then((result) => {
-      const timer1 = setTimeout(() => {
-        if (result) {
-          navigate("/Home/AddGoals", {
-            state: { feelingDate: new Date() },
-          });
-        }
-      }, 500);
-      return () => {
-        clearTimeout(timer1);
-      };
-    });
-  }, [userGoals]);
-
-  useEffect(() => {
     (async () => {
       // await populateDummyGoals();
       const goals: GoalItem[] = await getActiveGoals();
