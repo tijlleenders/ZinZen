@@ -48,6 +48,13 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
     }
     return "";
   }
+  function urlDetection() {
+    const detector = /([\w+]+:\/\/)?([\w\d-]+\.)*[\w-]+[.:]\w+([/?=&#.]?[\w-]+)*\/?/gm;
+    if (formInputData.inputGoal.search(detector) !== -1) {
+      return "Link";
+    }
+    return "";
+  }
   function duration() {
     const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
     const checkGoal = parseInt(String(formInputData.inputGoal.match(tracker)), 10);
@@ -127,6 +134,17 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           className={duration() !== "" ? "duration" : "blank"}
         >
           {duration()}
+        </button>
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: darkColors[selectedColorIndex] }
+              : { backgroundColor: lightColors[selectedColorIndex] }
+          }
+          className={urlDetection() !== "" ? "duration" : "blank"}
+        >
+          {urlDetection()}
         </button>
         <button
           type="button"
