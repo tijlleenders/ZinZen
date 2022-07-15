@@ -1,5 +1,5 @@
 const goalObject = {
-  title: "Attend ZinZen online meeting ://meet.google.com/evb-vozr-ico",
+  title: "Attend ZinZen online meeting https://meet.google.com/evb-vozr-ico",
   lang: "en",
   color: "#fff",
 };
