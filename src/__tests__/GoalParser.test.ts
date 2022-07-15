@@ -77,7 +77,7 @@ describe("getTime function", () => {
     expect(timeSuggestion()).toEqual(time());
   });
 });
-function urlDetection() { /*
+function urlDetection() {
   if (goalUrl.title.search(urlDetector) !== -1) {
     return {
       urlData,
@@ -87,7 +87,7 @@ function urlDetection() { /*
 
   return {
     urlData,
-  }; */
+  };
 }
 describe("getUrl function", () => {
   it("should return link : Link", () => {
