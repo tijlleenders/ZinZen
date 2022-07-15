@@ -49,7 +49,7 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
     return "";
   }
   function urlDetection() {
-    const detector = /([\w+]+:\/\/)?([\w\d-]+\.)*[\w-]+[.:]\w+([/?=&#.]?[\w-]+)*\/?/gm;
+    const detector = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\\/~+#-]*[\w@?^=%&\\/~+#-])/;
     if (formInputData.inputGoal.search(detector) !== -1) {
       return "Link";
     }
