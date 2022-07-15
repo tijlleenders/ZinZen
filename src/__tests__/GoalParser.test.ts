@@ -79,10 +79,7 @@ describe("getTime function", () => {
 });
 function urlDetection() {
   if (goalUrl.title.search(urlDetector) !== -1) {
-    return {
-      urlData,
-      suggestion: { Link: "Link" },
-    };
+    return "Link";
   }
 
   return {
@@ -91,18 +88,7 @@ function urlDetection() {
 }
 describe("getUrl function", () => {
   it("should return link : Link", () => {
-    function urlTest() {
-      if (goalUrl.title.search(urlDetector) !== -1) {
-        return {
-          urlData,
-          suggestion: { Link: "Link" },
-        };
-      }
-
-      return {
-        urlData,
-      };
-    }
-    expect(urlDetection()).toEqual(urlTest());
+    const a = "Link";
+    expect(urlDetection()).toEqual(a);
   });
 });
