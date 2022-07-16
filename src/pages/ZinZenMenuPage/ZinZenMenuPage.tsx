@@ -8,7 +8,7 @@ export const ZinZenMenuPage = () => (
   <div>
     <Container fluid>
       <Row>
-        <HeaderDashboard />
+        <HeaderDashboard to={-1} />
       </Row>
     </Container>
     <Container fluid>

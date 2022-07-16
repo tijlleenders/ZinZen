@@ -170,7 +170,7 @@ export const MyTimePage = () => {
     <div>
       <Container fluid>
         <Row>
-          <HeaderDashboard />
+          <HeaderDashboard to={-1} />
         </Row>
       </Container>
       <div className="slide MyTime_container">
