@@ -6,7 +6,7 @@ import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
-import { getDiffInHours } from "@src/utils";
+import { colorPallete, getDiffInHours } from "@src/utils";
 
 import "./MyTimePage.scss";
 
@@ -19,8 +19,6 @@ export const MyTimePage = () => {
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [showTasks, setShowTasks] = useState<string[]>([`My ${today.toDateString()}`]);
   const toggle = true;
-
-  const darkrooms = ["#443027", "#9C4663", "#2B517B", "#612854"];
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
@@ -75,25 +73,25 @@ export const MyTimePage = () => {
             <div className="MyTime_colorPalette">
               {tmpTasks.map((task, index) => {
                 const colorWidth = getColorWidth(false, task.duration);
-                colorIndex = (colorIndex === darkrooms.length - 1) ? 0 : colorIndex + 1;
+                colorIndex = (colorIndex === colorPallete.length - 1) ? 0 : colorIndex + 1;
                 if (unplannedIndices.includes(index)) {
                   const unpColorWidth = getColorWidth(true, unplannedDurations[unplannedIndices.indexOf(index)]);
                   if (index === 0) {
                     return (
                       <>
                         {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
-                        {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : darkrooms[0])}
+                        {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
                       </>
                     );
                   }
                   return (
                     <>
-                      {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : darkrooms[0])}
+                      {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
                       {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
                     </>
                   );
                 }
-                return (getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : darkrooms[0]));
+                return (getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0]));
               })}
             </div>
           )}
@@ -123,9 +121,9 @@ export const MyTimePage = () => {
             new Date(new Date().setHours(end, 0, 0)),
             0,
             -1,
-            darkrooms[tmpColor]
+            colorPallete[tmpColor]
           );
-          tmpColor = tmpColor === darkrooms.length - 1 ? 0 : tmpColor + 1;
+          tmpColor = tmpColor === colorPallete.length - 1 ? 0 : tmpColor + 1;
 
           start = end;
           const id = await addGoal(dummyGoal);

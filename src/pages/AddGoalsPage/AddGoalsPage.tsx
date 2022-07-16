@@ -8,6 +8,7 @@ import { darkModeState } from "@store";
 import { GoalsForm } from "@components/GoalsComponents/GoalsForm";
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { getGoal } from "@src/api/GoalsAPI";
+import { colorPallete } from "@src/utils";
 import paintBrush from "@assets/images/paintBrush.svg";
 
 import "@translations/i18n";
@@ -25,9 +26,7 @@ export const AddGoalsPage: React.FC = () => {
   const [selectedColorIndex, setColorIndex] = useState(0);
   const [parentGoalId, setParentGoalId] = useState<number | -1>();
   const [parentGoalTitle, setParentGoalTitle] = useState("");
-  const darkrooms = ["#EDC7B7", "#9C4663", "#646464", "#2B517B", " #612854"];
-  const lightcolors = [" #EDC7B7", "#AC3B61", " #BAB2BC", " #3B6899", " #8E3379"];
-
+  
   useEffect(() => {
     if (locationState) {
       setParentGoalId(locationState.goalId);
@@ -39,7 +38,7 @@ export const AddGoalsPage: React.FC = () => {
 
   const changeColor = () => {
     const newColorIndex = selectedColorIndex + 1;
-    if (darkrooms[newColorIndex]) setColorIndex(newColorIndex);
+    if (colorPallete[newColorIndex]) setColorIndex(newColorIndex);
     else setColorIndex(0);
   };
 
@@ -74,8 +73,8 @@ export const AddGoalsPage: React.FC = () => {
             type="button"
             style={
               darkModeStatus
-                ? { backgroundColor: darkrooms[selectedColorIndex] }
-                : { backgroundColor: lightcolors[selectedColorIndex] }
+                ? { backgroundColor: colorPallete[selectedColorIndex] }
+                : { backgroundColor: colorPallete[selectedColorIndex] }
             }
             onClick={changeColor}
           >
