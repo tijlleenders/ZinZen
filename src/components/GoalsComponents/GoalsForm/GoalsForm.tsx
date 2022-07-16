@@ -98,7 +98,7 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
     });
     setGoalTitle("");
     setTimeout(() => {
-      navigate(parentGoalId === -1 ? "/Home/MyGoals" : `/Home/MyGoals/${parentGoalId}`);
+      navigate("/Home/MyGoals", { state: { id: parentGoalId } });
     }, 100);
   };
 

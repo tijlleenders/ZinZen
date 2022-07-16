@@ -12,7 +12,12 @@ import { darkModeState } from "@src/store";
 
 import "./GoalSublistPage.scss";
 
-export const GoalSublist: React.FC = () => {
+interface IProps {
+  goalID: number,
+  parentID: number
+}
+
+export const GoalSublist: React.FC<IProps> = ({ goalID, parentID }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
@@ -20,19 +25,19 @@ export const GoalSublist: React.FC = () => {
   const [tapCount, setTapCount] = useState([-1, 0]);
   const titleRef = useRef(null);
   const navigate = useNavigate();
-  const param = useParams();
+  // const param = useParams();
 
   useEffect(() => {
-    getGoal(Number(param.id)).then((parent) => setParentGoal(parent));
-  }, [param]);
+    getGoal(Number(goalID)).then((parent) => setParentGoal(parent));
+  }, [goalID]);
 
   useEffect(() => {
-    getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+    getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   }, [parentGoal]);
 
   const archiveUserGoal = async (goal: GoalItem) => {
     await archiveGoal(Number(goal.id));
-    getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+    getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   };
   const removeChildrenGoal = async (goalId: number) => {
     if (parentGoal?.sublist) {
@@ -47,7 +52,7 @@ export const GoalSublist: React.FC = () => {
       // update parentGoal with new parentGoal.sublist
       await updateGoal(Number(parentGoal.id), { sublist: parentGoalSublist });
       // getChildrenGoals again
-      getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+      getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
   const updateUserGoals = async (goal: GoalItem, index: number) => {
@@ -55,13 +60,14 @@ export const GoalSublist: React.FC = () => {
     if (updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
       if (updatedTitle.length === 0) return;
       await updateGoal(Number(goal.id), { title: updatedTitle });
-      getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+      getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
 
   return (
     <div>
-      <HeaderDashboard />
+      <HeaderDashboard to={parentID === -1 ? 0 : parentID} />
+
       <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
         <Breadcrumb style={{ marginTop: "80px" }}>
           <Breadcrumb.Item href="/Home/MyGoals/">
@@ -122,7 +128,7 @@ export const GoalSublist: React.FC = () => {
                       <CheckLg
                         onClick={async () => {
                           archiveUserGoal(goal);
-                          getChildrenGoals(Number(param.id)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+                          getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
                         }}
                         style={{ cursor: "Pointer" }}
                       />

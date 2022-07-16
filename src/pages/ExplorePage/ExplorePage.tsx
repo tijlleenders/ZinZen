@@ -32,7 +32,7 @@ export const ExplorePage = () => {
     <div>
       <Container fluid>
         <Row>
-          <HeaderDashboard />
+          <HeaderDashboard to={-1} />
         </Row>
       </Container>
       <div id={`explore-container-${darkModeStatus ? "dark" : "light"}`}>
