@@ -13,7 +13,7 @@ import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
 
-export const HeaderDashboard = () => {
+export const HeaderDashboard = ({ to } : { to: number }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
@@ -25,7 +25,8 @@ export const HeaderDashboard = () => {
           alt="Back arrow"
           className="back-arrow-nav-dashboard"
           onClick={() => {
-            navigate(-1);
+            if (to !== -1) navigate("/Home/MyGoals", { state: { id: to }, replace: true });
+            else navigate(-1);
           }}
         />
         {darkModeStatus ? (

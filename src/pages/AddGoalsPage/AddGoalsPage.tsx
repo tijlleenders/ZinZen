@@ -5,20 +5,16 @@ import { useRecoilValue } from "recoil";
 import { useLocation } from "react-router";
 
 import { darkModeState } from "@store";
-import { GoalsForm } from "@components/GoalsComponents/GoalsForm";
+import { GoalsForm } from "@components/GoalsComponents/GoalsForm/GoalsForm";
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { getGoal } from "@src/api/GoalsAPI";
 import { colorPallete } from "@src/utils";
 import paintBrush from "@assets/images/paintBrush.svg";
 
 import "@translations/i18n";
-import "@components/GoalsComponents/GoalsComponents.scss";
+import "@components/GoalsComponents/GoalsForm/GoalsComponents.scss";
 
-interface locationProps {
-  goalId: number;
-}
-
-export const AddGoalsPage: React.FC = () => {
+export const AddGoalsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
   const locationState = useLocation().state as locationProps;
@@ -46,7 +42,7 @@ export const AddGoalsPage: React.FC = () => {
     <div>
       <Container fluid>
         <Row>
-          <HeaderDashboard />
+          <HeaderDashboard to={-1} />
         </Row>
       </Container>
       <Container fluid id="addGoals-container">
