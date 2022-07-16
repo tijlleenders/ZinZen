@@ -88,7 +88,6 @@ function urlDetection() {
 }
 describe("getUrl function", () => {
   it("should return link : Link", () => {
-    const a = "Link";
-    expect(urlDetection()).toEqual(a);
+    expect(urlDetection()).toEqual("Link");
   });
 });
