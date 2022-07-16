@@ -116,7 +116,8 @@ export const MyGoalsPage = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    width: "100%"
+                    width: "100%",
+                    color: "white"
                   }}
                 >
                   {goal.title}

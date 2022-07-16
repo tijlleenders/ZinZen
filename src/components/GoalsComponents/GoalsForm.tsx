@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 
 import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
+import { colorPallete } from "@src/utils";
 
 import "@translations/i18n";
 import "./GoalsComponents.scss";
@@ -19,8 +20,6 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
   const { t } = useTranslation();
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const darkColors = ["#EDC7B7", "#9C4663", "#646464", "#2B517B", " #612854"];
-  const lightColors = [" #EDC7B7", "#AC3B61", " #BAB2BC", " #3B6899", " #8E3379"];
 
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
@@ -78,7 +77,7 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
       null,
       0,
       parentGoalId!,
-      darkModeStatus ? darkColors[selectedColorIndex] : lightColors[selectedColorIndex] // goalColor
+      darkModeStatus ? colorPallete[selectedColorIndex] : colorPallete[selectedColorIndex] // goalColor
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
@@ -121,8 +120,8 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           type="button"
           style={
             darkModeStatus
-              ? { backgroundColor: darkColors[selectedColorIndex] }
-              : { backgroundColor: lightColors[selectedColorIndex] }
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
           }
           className={duration() !== "" ? "duration" : "blank"}
         >
@@ -132,8 +131,8 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           type="button"
           style={
             darkModeStatus
-              ? { backgroundColor: darkColors[selectedColorIndex] }
-              : { backgroundColor: lightColors[selectedColorIndex] }
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
           }
           className={suggestion() === "once" || suggestion() === "daily" ? "suggestion" : "blank"}
         >
@@ -146,8 +145,8 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           className="addtask-button"
           style={
             darkModeStatus
-              ? { backgroundColor: darkColors[selectedColorIndex] }
-              : { backgroundColor: lightColors[selectedColorIndex] }
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
           }
         >
           Add Goal
