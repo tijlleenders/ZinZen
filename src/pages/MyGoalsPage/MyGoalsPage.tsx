@@ -16,7 +16,7 @@ import {
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
-import { GoalSublist } from "@pages/GoalSublistPage/GoalSublistPage";
+import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 
 import "./MyGoalsPage.scss";
 
