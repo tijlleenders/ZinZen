@@ -4,8 +4,15 @@ const goalObject = {
   lang: "en",
   color: "#fff",
 };
+const goalUrl = {
+  title: "Attend ZinZen online meeting https://meet.google.com/evb-vozr-ico",
+  lang: "en",
+  color: "#fff",
+};
 
 const newData = (data) => [...data, goalObject];
+const urlData = (data) => [...data, goalUrl];
+const urlDetector = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\\/~+#-]*[\w@?^=%&\\/~+#-])/;
 const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
 const checkGoal = parseInt(goalObject.title.match(tracker), 10);
 const parseGoal = parseInt(goalObject.title.match(tracker), 10) <= 24;
@@ -68,5 +75,19 @@ describe("getTime function", () => {
       };
     }
     expect(timeSuggestion()).toEqual(time());
+  });
+});
+function urlDetection() {
+  if (goalUrl.title.search(urlDetector) !== -1) {
+    return "Link";
+  }
+
+  return {
+    urlData,
+  };
+}
+describe("getUrl function", () => {
+  it("should return link : Link", () => {
+    expect(urlDetection()).toEqual("Link");
   });
 });
