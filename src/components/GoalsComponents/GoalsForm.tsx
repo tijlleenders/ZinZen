@@ -20,7 +20,7 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
   const { t } = useTranslation();
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
-  
+
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",

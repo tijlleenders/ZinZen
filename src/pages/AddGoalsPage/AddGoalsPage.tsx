@@ -26,7 +26,7 @@ export const AddGoalsPage: React.FC = () => {
   const [selectedColorIndex, setColorIndex] = useState(0);
   const [parentGoalId, setParentGoalId] = useState<number | -1>();
   const [parentGoalTitle, setParentGoalTitle] = useState("");
-  
+
   useEffect(() => {
     if (locationState) {
       setParentGoalId(locationState.goalId);
