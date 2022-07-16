@@ -149,8 +149,8 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
           type="button"
           style={
             darkModeStatus
-              ? { backgroundColor: darkColors[selectedColorIndex] }
-              : { backgroundColor: lightColors[selectedColorIndex] }
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
           }
           className={suggestion() === "once" || suggestion() === "daily" ? "suggestion" : "blank"}
         >
