@@ -22,9 +22,11 @@ export const MyTimePage = () => {
   const toggle = true;
   const [API, setAPI] = useState(undefined as any);
 
-  loadAPI("https://github.com/tijlleenders/ZinZen-scheduler/raw/main/ts/scheduler.wasm").then(setAPI);
+  if (API === undefined) {
+    loadAPI("https://raw.githubusercontent.com/tijlleenders/ZinZen-scheduler/main/ts/scheduler.wasm").then(setAPI);
+  }`
 
-  // if (API === undefined) { /** render loading component */ } else { /** use API to hydrate component */ };
+  console.log(API);`
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
