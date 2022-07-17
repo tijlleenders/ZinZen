@@ -218,5 +218,5 @@ export const MyGoalsPage = () => {
       </div>
     )
     :
-    <GoalSublist goalID={selectedGoalId} parentID={parentGoalId} />;
+      <GoalSublist goalID={selectedGoalId} parentID={parentGoalId} />;
 };
