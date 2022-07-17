@@ -3,7 +3,7 @@ import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown, S
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Modal } from "react-bootstrap";
-
+import { loadAPI } from "ZinZen-scheduler/ts/api";
 import addIcon from "@assets/images/GoalsAddIcon.svg";
 import {
   archiveGoal,
@@ -65,6 +65,11 @@ export const MyGoalsPage = () => {
       search(value);
     }, 300);
   }
+
+  const [API, setAPI] = useState(undefined as any);
+  loadAPI("https://github.com/tijlleenders/ZinZen-scheduler/raw/main/ts/scheduler.wasm").then(setAPI);
+
+  // if (API === undefined) { /** render loading component */ } else { /** use API to hydrate component */ };
 
   useEffect(() => {
     (async () => {
@@ -219,5 +224,5 @@ export const MyGoalsPage = () => {
       </div>
     )
     :
-      <GoalSublist goalID={selectedGoalId} parentID={parentGoalId} />;
+    <GoalSublist goalID={selectedGoalId} parentID={parentGoalId} />;
 };
