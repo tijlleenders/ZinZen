@@ -3,7 +3,7 @@ import { Container, Row } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 
 import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
 import { colorPallete, getDiffInHours } from "@src/utils";
@@ -170,7 +170,7 @@ export const MyTimePage = () => {
     <div>
       <Container fluid>
         <Row>
-          <HeaderDashboard to={-1} />
+          <MainHeaderDashboard />
         </Row>
       </Container>
       <div className="slide MyTime_container">
