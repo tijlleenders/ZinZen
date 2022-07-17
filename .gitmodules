@@ -1,0 +1,3 @@
+[submodule "ZinZen-scheduler"]
+	path = ZinZen-scheduler
+	url = https://github.com/tijlleenders/ZinZen-scheduler
