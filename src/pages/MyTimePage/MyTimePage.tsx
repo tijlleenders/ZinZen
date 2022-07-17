@@ -6,6 +6,7 @@ import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
+import { loadAPI } from "@src/ts/api";
 import { colorPallete, getDiffInHours } from "@src/utils";
 
 import "./MyTimePage.scss";
@@ -19,6 +20,11 @@ export const MyTimePage = () => {
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [showTasks, setShowTasks] = useState<string[]>([`My ${today.toDateString()}`]);
   const toggle = true;
+  const [API, setAPI] = useState(undefined as any);
+
+  loadAPI("https://github.com/tijlleenders/ZinZen-scheduler/raw/main/ts/scheduler.wasm").then(setAPI);
+
+  // if (API === undefined) { /** render loading component */ } else { /** use API to hydrate component */ };
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
