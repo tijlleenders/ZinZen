@@ -187,33 +187,36 @@ export async function loadAPI(path: string): Promise<API> {
   // Build instance
   let _wasmMemory: WebAssembly.Memory;
   let _ipcStart: number;
+  const data = await fetch(path).then((dt) => dt.arrayBuffer());
 
-  const { instance } = await WebAssembly.instantiateStreaming(fetch(path), {
-    env: {
-      console_log(isString: boolean, ipcOffset: number) {
-        if (isString) {
-          const readResult = new Uint8Array(_wasmMemory.buffer, _ipcStart, ipcOffset);
-          const decoder = new TextDecoder();
-          const string = decoder.decode(readResult);
+  const { instance } = await WebAssembly.instantiate(
+    data,
+    {
+      env: {
+        console_log(isString: boolean, ipcOffset: number) {
+          if (isString) {
+            const readResult = new Uint8Array(_wasmMemory.buffer, _ipcStart, ipcOffset);
+            const decoder = new TextDecoder();
+            const string = decoder.decode(readResult);
 
-          console.log(string);
-        } else {
-          const readResult = new Uint8Array(_wasmMemory.buffer, _ipcStart, ipcOffset);
-          console.log(readResult);
+            console.log(string);
+          } else {
+            const readResult = new Uint8Array(_wasmMemory.buffer, _ipcStart, ipcOffset);
+            console.log(readResult);
+          }
+        },
+        exit(errorCode: number, ipcOffset: number) {
+          if (errorCode !== 0) {
+            const readResult = new Uint8Array(_wasmMemory.buffer, _ipcStart, ipcOffset);
+            const decoder = new TextDecoder();
+
+            console.error(`[WASM_ERROR; ErrorCode:${errorCode}] ${decoder.decode(readResult)}`);
+          } else {
+            console.info("Webassembly has prematurely finished execution, without errors");
+          }
         }
       },
-      exit(errorCode: number, ipcOffset: number) {
-        if (errorCode !== 0) {
-          const readResult = new Uint8Array(_wasmMemory.buffer, _ipcStart, ipcOffset);
-          const decoder = new TextDecoder();
-
-          console.error(`[WASM_ERROR; ErrorCode:${errorCode}] ${decoder.decode(readResult)}`);
-        } else {
-          console.info("Webassembly has prematurely finished execution, without errors");
-        }
-      }
-    },
-  });
+    });
 
   // Build API
   _wasmMemory = instance.exports.memory as WebAssembly.Memory;
