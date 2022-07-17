@@ -24,9 +24,7 @@ export const MyTimePage = () => {
 
   if (API === undefined) {
     loadAPI("https://raw.githubusercontent.com/tijlleenders/ZinZen-scheduler/main/ts/scheduler.wasm").then(setAPI);
-  }`
-
-  console.log(API);`
+  }console.log(API);
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
