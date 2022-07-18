@@ -12,11 +12,11 @@ import { ZinZenMenuPage } from "@pages/ZinZenMenuPage/ZinZenMenuPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import { ExplorePage } from "@pages/ExplorePage/ExplorePage";
-import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
+import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 
 import "./customize.scss";
 import "./App.scss";
