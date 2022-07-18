@@ -6,7 +6,7 @@ import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
-import { loadAPI } from "https://raw.githubusercontent.com/tijlleenders/ZinZen-scheduler/main/ts/api";
+import { loadAPI } from "https://github.com/tijlleenders/ZinZen-scheduler/blob/main/ts/api";
 import { colorPallete, getDiffInHours } from "@src/utils";
 
 import "./MyTimePage.scss";
