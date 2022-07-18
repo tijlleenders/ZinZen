@@ -1,4 +1,4 @@
-import { Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
+import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown, ShareFill, PersonFill, PeopleFill } from "react-bootstrap-icons";
 import React, { useEffect, useRef, useState } from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
@@ -34,6 +34,7 @@ export const GoalSublist: React.FC<IProps> = ({ goalID, subGoalHistory, addInHis
 
   useEffect(() => {
     getGoal(Number(goalID)).then((parent) => setParentGoal(parent));
+    setTapCount([-1, 0]);
   }, [goalID]);
 
   useEffect(() => {
@@ -91,31 +92,52 @@ export const GoalSublist: React.FC<IProps> = ({ goalID, subGoalHistory, addInHis
           <Container fluid className="sublist-list-container">
             {childrenGoals?.map((goal: GoalItem, index) => (
               <div
+                aria-hidden
                 key={String(`goal-${index}`)}
                 className="user-goal"
-                style={{ backgroundColor: goal.goalColor }}
-                onClickCapture={() => {
-                  addInHistory(goal);
-                  // setTapCount([index, tapCount[1] + 1]);
-                }}
+                style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
               >
                 <div
-                  className="goal-title"
-                  contentEditable={userUpdatingTitle && tapCount[0] === index && tapCount[1] >= 1}
-                  onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
-                  ref={titleRef}
-                  onBlur={() => {
-                    updateUserGoals(goal, index);
-                  }}
-                  suppressContentEditableWarning
                   style={{
-                    cursor: userUpdatingTitle ? "unset" : "default",
                     display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
                   }}
                 >
-                  {goal.title}
+                  <div
+                    aria-hidden
+                    className="goal-title"
+                    suppressContentEditableWarning
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "100%",
+                      color: "white"
+                    }}
+                    onClick={() => {
+                      addInHistory(goal);
+                    }}
+                  >
+                    {goal.title}
+                  </div>
+                  <div>
+                    {tapCount[0] === index && tapCount[1] > 0 ? (
+                      <ChevronDown
+                        onClickCapture={(e) => {
+                          e.stopPropagation();
+                          setTapCount([-1, 0]);
+                        }}
+                        fontSize="30px"
+                      />
+                    ) : (
+                      <ChevronRight
+                        fontSize="30px"
+                        onClickCapture={(e) => {
+                          e.stopPropagation();
+                          setTapCount([index, tapCount[1] + 1]);
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
                 {tapCount[0] === index && tapCount[1] > 0 ? (
                   <div className="interactables">
