@@ -124,9 +124,6 @@ export const MyGoalsPage = () => {
                     aria-hidden
                     key={String(`task-${index}`)}
                     className="user-goal"
-                    onClick={() => {
-                      addInHistory(goal);
-                    }}
                     style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
                   >
                     <div
@@ -137,7 +134,6 @@ export const MyGoalsPage = () => {
                       <div
                         aria-hidden
                         className="goal-title"
-                        ref={titleRef}
                         suppressContentEditableWarning
                         style={{
                           display: "flex",
@@ -146,6 +142,10 @@ export const MyGoalsPage = () => {
                           width: "100%",
                           color: "white"
                         }}
+                        onClick={() => {
+                          addInHistory(goal);
+                        }}
+
                       >
                         {goal.title}
                       </div>
