@@ -14,19 +14,17 @@ import paintBrush from "@assets/images/paintBrush.svg";
 import "@translations/i18n";
 import "@components/GoalsComponents/GoalsForm/GoalsComponents.scss";
 
-export const AddGoal = () => {
+export const AddGoal = ({ goalId, setShowAddGoals }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
-  const locationState = useLocation().state as locationProps;
+  // const locationState = useLocation().state as locationProps;
 
   const [selectedColorIndex, setColorIndex] = useState(0);
   const [parentGoalId, setParentGoalId] = useState<number | -1>();
   const [parentGoalTitle, setParentGoalTitle] = useState("");
 
   useEffect(() => {
-    if (locationState) {
-      setParentGoalId(locationState.goalId);
-    } else setParentGoalId(-1);
+    setParentGoalId(goalId || -1);
     if (parentGoalId !== -1 && parentGoalId !== undefined) {
       getGoal(parentGoalId!).then((parentGoal) => setParentGoalTitle(parentGoal.title));
     }
@@ -39,48 +37,41 @@ export const AddGoal = () => {
   };
 
   return (
-    <div>
-      <Container fluid>
-        <Row>
-          <HeaderDashboard to={-1} />
-        </Row>
-      </Container>
-      <Container fluid id="addGoals-container">
-        <Row className="position">
-          <div>
-            <h2 className={darkModeStatus ? "mygoals-font-dark" : "mygoals-font-light"}>{t("myGoalsMessage")}</h2>
-            <div className={darkModeStatus ? "goalsubtext-font-dark" : "goalsubtext-font-light"}>
-              <p style={{ fontStyle: "normal" }}>
-                {parentGoalId !== -1 ? (
-                  <>
-                    for sublist <span style={{ color: "#BA0880" }}>{parentGoalTitle}</span>
-                  </>
-                ) : (
-                  ""
-                )}
-                <br />
-                {t("goalsubtext")}
-                <br /> {t("format")}
-              </p>
-            </div>
+    <Container fluid id="addGoals-container">
+      <Row className="position">
+        <div>
+          <h2 className={darkModeStatus ? "mygoals-font-dark" : "mygoals-font-light"}>{t("myGoalsMessage")}</h2>
+          <div className={darkModeStatus ? "goalsubtext-font-dark" : "goalsubtext-font-light"}>
+            <p style={{ fontStyle: "normal" }}>
+              {parentGoalId !== -1 ? (
+                <>
+                  for sublist <span style={{ color: "#BA0880" }}>{parentGoalTitle}</span>
+                </>
+              ) : (
+                ""
+              )}
+              <br />
+              {t("goalsubtext")}
+              <br /> {t("format")}
+            </p>
           </div>
-          <button
-            id="changeColor-btn"
-            type="button"
-            style={
+        </div>
+        <button
+          id="changeColor-btn"
+          type="button"
+          style={
               darkModeStatus
                 ? { backgroundColor: colorPallete[selectedColorIndex] }
                 : { backgroundColor: colorPallete[selectedColorIndex] }
             }
-            onClick={changeColor}
-          >
-            <img src={paintBrush} alt="change-color" />
-          </button>
-        </Row>
-        <Row>
-          <GoalsForm selectedColorIndex={selectedColorIndex} parentGoalId={parentGoalId} />
-        </Row>
-      </Container>
-    </div>
+          onClick={changeColor}
+        >
+          <img src={paintBrush} alt="change-color" />
+        </button>
+      </Row>
+      <Row>
+        <GoalsForm goalId={goalId} setShowAddGoals={setShowAddGoals} selectedColorIndex={selectedColorIndex} parentGoalId={parentGoalId} />
+      </Row>
+    </Container>
   );
 };
