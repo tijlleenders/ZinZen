@@ -12,12 +12,17 @@ import { darkModeState } from "@src/store";
 
 import "./GoalSublistPage.scss";
 
+interface ISubGoalHistoryProps {
+  goalID: number,
+  goalColor: string,
+  goalTitle: string
+}
 interface IProps {
   goalID: number,
-  parentID: number
+  subGoalHistory: ISubGoalHistoryProps[],
 }
 
-export const GoalSublist: React.FC<IProps> = ({ goalID, parentID }) => {
+export const GoalSublist: React.FC<IProps> = ({ goalID, subGoalHistory, addInHistory }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
@@ -65,90 +70,91 @@ export const GoalSublist: React.FC<IProps> = ({ goalID, parentID }) => {
   };
 
   return (
-    <div>
-      <HeaderDashboard to={parentID === -1 ? 0 : parentID} />
-
-      <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
-        <Breadcrumb style={{ marginTop: "80px" }}>
-          <Breadcrumb.Item href="/Home/MyGoals/">
-            <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item href="#">
-            <span style={{ backgroundColor: parentGoal?.goalColor, borderRadius: "8px", padding: "5px" }}>
-              {parentGoal?.title}
-            </span>
-          </Breadcrumb.Item>
-        </Breadcrumb>
-        <div className="sublist-content-container">
-          <div className="sublist-content">
-            <div className="sublist-title">{parentGoal?.title}</div>
-            <Container fluid className="sublist-list-container">
-              {childrenGoals?.map((goal: GoalItem, index) => (
+    <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
+      <Breadcrumb style={{ marginTop: "80px" }}>
+        <Breadcrumb.Item href="/Home/MyGoals/">
+          <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
+        </Breadcrumb.Item>
+        {
+          subGoalHistory.map((item) => (
+            <Breadcrumb.Item href="#" key={`history-${item.goalID}-${item.goalTitle}.`}>
+              <span style={{ backgroundColor: item.goalColor, borderRadius: "8px", padding: "5px" }}>
+                {item.goalTitle }
+              </span>
+            </Breadcrumb.Item>
+          ))
+        }
+      </Breadcrumb>
+      <div className="sublist-content-container">
+        <div className="sublist-content">
+          <div className="sublist-title">{parentGoal?.title}</div>
+          <Container fluid className="sublist-list-container">
+            {childrenGoals?.map((goal: GoalItem, index) => (
+              <div
+                key={String(`goal-${index}`)}
+                className="user-goal"
+                style={{ backgroundColor: goal.goalColor }}
+                onClickCapture={() => {
+                  addInHistory(goal);
+                  // setTapCount([index, tapCount[1] + 1]);
+                }}
+              >
                 <div
-                  key={String(`goal-${index}`)}
-                  className="user-goal"
-                  style={{ backgroundColor: goal.goalColor }}
-                  onClickCapture={() => {
-                    setTapCount([index, tapCount[1] + 1]);
+                  className="goal-title"
+                  contentEditable={userUpdatingTitle && tapCount[0] === index && tapCount[1] >= 1}
+                  onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
+                  ref={titleRef}
+                  onBlur={() => {
+                    updateUserGoals(goal, index);
+                  }}
+                  suppressContentEditableWarning
+                  style={{
+                    cursor: userUpdatingTitle ? "unset" : "default",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  <div
-                    className="goal-title"
-                    contentEditable={userUpdatingTitle && tapCount[0] === index && tapCount[1] >= 1}
-                    onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
-                    ref={titleRef}
-                    onBlur={() => {
-                      updateUserGoals(goal, index);
-                    }}
-                    suppressContentEditableWarning
-                    style={{
-                      cursor: userUpdatingTitle ? "unset" : "default",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    {goal.title}
-                  </div>
-                  {tapCount[0] === index && tapCount[1] > 0 ? (
-                    <div className="interactables">
-                      <Trash3Fill
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          removeChildrenGoal(Number(goal.id));
-                        }}
-                      />
-                      <PencilSquare
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          if (titleRef.current) (titleRef.current as HTMLElement).focus();
-                          setUserUpdatingTitle(!userUpdatingTitle);
-                        }}
-                      />
-                      <CheckLg
-                        onClick={async () => {
-                          archiveUserGoal(goal);
-                          getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
-                        }}
-                        style={{ cursor: "Pointer" }}
-                      />
-                    </div>
-                  ) : null}
+                  {goal.title}
                 </div>
-              ))}
-            </Container>
-          </div>
+                {tapCount[0] === index && tapCount[1] > 0 ? (
+                  <div className="interactables">
+                    <Trash3Fill
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        removeChildrenGoal(Number(goal.id));
+                      }}
+                    />
+                    <PencilSquare
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        if (titleRef.current) (titleRef.current as HTMLElement).focus();
+                        setUserUpdatingTitle(!userUpdatingTitle);
+                      }}
+                    />
+                    <CheckLg
+                      onClick={async () => {
+                        archiveUserGoal(goal);
+                        getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+                      }}
+                      style={{ cursor: "Pointer" }}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </Container>
         </div>
-        <img
-          onClick={() => {
-            navigate("/Home/AddGoals", { state: { goalId: parentGoal?.id } });
-          }}
-          id="addGoal-btn"
-          src={addIcon}
-          alt="add-goal"
-          aria-hidden
-        />
       </div>
+      <img
+        onClick={() => {
+          navigate("/Home/AddGoals", { state: { goalId: parentGoal?.id } });
+        }}
+        id="addGoal-btn"
+        src={addIcon}
+        alt="add-goal"
+        aria-hidden
+      />
     </div>
   );
 };
