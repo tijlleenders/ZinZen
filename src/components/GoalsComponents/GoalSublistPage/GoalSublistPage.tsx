@@ -143,7 +143,12 @@ export const GoalSublist: React.FC<IProps> = ({ goalID, subGoalHistory, addInHis
                   <div className="interactables">
                     <PlusLg
                       style={{ cursor: "pointer" }}
-                      onClickCapture={() => navigate("/Home/AddGoals", { state: { goalId: goal.id } })}
+                      onClickCapture={() => {
+                        setShowAddGoals({
+                          open: true,
+                          goalId: goal?.id
+                        });
+                      }}
                     />
                     <Trash3Fill
                       style={{ cursor: "pointer" }}
