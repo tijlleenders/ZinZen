@@ -22,7 +22,7 @@ interface IProps {
   subGoalHistory: ISubGoalHistoryProps[],
 }
 
-export const GoalSublist: React.FC<IProps> = ({ goalID, subGoalHistory, addInHistory }) => {
+export const GoalSublist: React.FC<IProps> = ({ goalID, subGoalHistory, addInHistory, setShowAddGoals }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
@@ -141,6 +141,10 @@ export const GoalSublist: React.FC<IProps> = ({ goalID, subGoalHistory, addInHis
                 </div>
                 {tapCount[0] === index && tapCount[1] > 0 ? (
                   <div className="interactables">
+                    <PlusLg
+                      style={{ cursor: "pointer" }}
+                      onClickCapture={() => navigate("/Home/AddGoals", { state: { goalId: goal.id } })}
+                    />
                     <Trash3Fill
                       style={{ cursor: "pointer" }}
                       onClick={() => {
@@ -170,7 +174,10 @@ export const GoalSublist: React.FC<IProps> = ({ goalID, subGoalHistory, addInHis
       </div>
       <img
         onClick={() => {
-          navigate("/Home/AddGoals", { state: { goalId: parentGoal?.id } });
+          setShowAddGoals({
+            open: true,
+            goalId: parentGoal?.id
+          });
         }}
         id="addGoal-btn"
         src={addIcon}

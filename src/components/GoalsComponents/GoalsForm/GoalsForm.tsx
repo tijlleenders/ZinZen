@@ -16,7 +16,7 @@ interface GoalsFormProps {
   parentGoalId?: number | -1;
 }
 
-export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parentGoalId }) => {
+export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -97,9 +97,10 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
       id: "",
     });
     setGoalTitle("");
-    setTimeout(() => {
-      navigate("/Home/MyGoals", { state: { id: parentGoalId } });
-    }, 100);
+    setShowAddGoals({open: false, id: goalId})
+    // setTimeout(() => {
+    //   navigate("/Home/MyGoals", { state: { id: parentGoalId } });
+    // }, 100);
   };
 
   useEffect(() => {

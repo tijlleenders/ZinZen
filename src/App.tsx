@@ -14,7 +14,7 @@ import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import { ExplorePage } from "@pages/ExplorePage/ExplorePage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
-import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
+// import { AddGoalsPage } from "@pages/AddGoalsPage/AddGoalsPage";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 
@@ -45,7 +45,7 @@ const App = () => {
             </>
           )}
           <Route path="/Home/AddFeelings" element={<AddFeelingsPage />} />
-          <Route path="/Home/AddGoals" element={<AddGoalsPage />} />
+          {/* <Route path="/Home/AddGoals" element={<AddGoalsPage />} /> */}
           <Route path="/Home/Explore" element={<ExplorePage />} />
           <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
