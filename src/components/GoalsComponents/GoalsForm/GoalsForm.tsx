@@ -2,25 +2,29 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 
 import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 
 import "@translations/i18n";
-import "./GoalsComponents.scss";
+import "./GoalsForm.scss";
+import { useNavigate } from "react-router";
 
 interface GoalsFormProps {
-  selectedColorIndex: number;
-  parentGoalId?: number | -1;
+  goalId: number | undefined,
+  setShowAddGoals: React.Dispatch<React.SetStateAction<{
+    open: boolean;
+    goalId: number;
+  }>>,
+  selectedColorIndex: number,
+  parentGoalId?: number | -1,
 }
 
-export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parentGoalId }) => {
+export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
-
+  const navigate = useNavigate();
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
@@ -97,9 +101,9 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ selectedColorIndex, parent
       id: "",
     });
     setGoalTitle("");
-    setTimeout(() => {
-      navigate("/Home/MyGoals", { state: { id: parentGoalId } });
-    }, 100);
+    const typeOfPage = window.location.href.split("/").slice(-1)[0];
+    setShowAddGoals({ open: false, id: goalId || -1 });
+    if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
 
   useEffect(() => {

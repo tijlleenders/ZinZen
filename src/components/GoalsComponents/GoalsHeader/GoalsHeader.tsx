@@ -10,10 +10,14 @@ import logo from "@assets/images/logo.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
-import "@translations/i18n";
-import "./HeaderDashboard.scss";
 
-export const HeaderDashboard = () => {
+import "@translations/i18n";
+import "@components/HeaderDashboard/HeaderDashboard.scss";
+
+interface GoalsHeaderProps {
+  popFromHistory: () => void
+}
+export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ popFromHistory }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
@@ -25,7 +29,7 @@ export const HeaderDashboard = () => {
           alt="Back arrow"
           className="back-arrow-nav-dashboard"
           onClick={() => {
-            navigate(-1);
+            popFromHistory();
           }}
         />
         {darkModeStatus ? (

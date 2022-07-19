@@ -41,7 +41,7 @@ export const FeelingTemplate = ({
       addFeeling(selectedFeeling, feelingCategory, feelingDate);
     }
     setTimeout(() => {
-      navigate("/Home/MyFeelings");
+      navigate("/Home/MyFeelings", { replace: true });
     }, 100);
   };
   return (
@@ -63,7 +63,7 @@ export const FeelingTemplate = ({
               onClick={() => {
                 addFeeling(feelingName, feelingCategory, feelingDate);
                 setTimeout(() => {
-                  navigate("/Home/MyFeelings");
+                  navigate("/Home/MyFeelings", { replace: true });
                 }, 100);
               }}
             >

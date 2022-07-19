@@ -1,34 +1,43 @@
-import { Trash3Fill, PencilSquare, CheckLg } from "react-bootstrap-icons";
+import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown } from "react-bootstrap-icons";
 import React, { useEffect, useRef, useState } from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
-import { archiveGoal, getChildrenGoals, getGoal, removeGoal, updateGoal } from "@src/api/GoalsAPI";
+import { archiveGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, updateGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 
 import "./GoalSublistPage.scss";
 
-interface IProps {
+interface ISubGoalHistoryProps {
   goalID: number,
-  parentID: number
+  goalColor: string,
+  goalTitle: string
+}
+interface GoalSublistProps {
+  goalID: number,
+  subGoalHistory: ISubGoalHistoryProps[],
+  addInHistory: (goal: GoalItem) => void,
+  setShowAddGoals: React.Dispatch<React.SetStateAction<{
+    open: boolean;
+    goalId: number;
+  }>>
+  resetHistory: () => void,
+  popFromHistory: (index?: number) => void
 }
 
-export const GoalSublist: React.FC<IProps> = ({ goalID, parentID }) => {
+export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory, addInHistory, resetHistory, popFromHistory, setShowAddGoals }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
   const [userUpdatingTitle, setUserUpdatingTitle] = useState(false);
   const [tapCount, setTapCount] = useState([-1, 0]);
   const titleRef = useRef(null);
-  const navigate = useNavigate();
-  // const param = useParams();
 
   useEffect(() => {
     getGoal(Number(goalID)).then((parent) => setParentGoal(parent));
+    setTapCount([-1, 0]);
   }, [goalID]);
 
   useEffect(() => {
@@ -41,6 +50,8 @@ export const GoalSublist: React.FC<IProps> = ({ goalID, parentID }) => {
   };
   const removeChildrenGoal = async (goalId: number) => {
     if (parentGoal?.sublist) {
+      // delete subgoals of this goal
+      removeChildrenGoals(goalId);
       // removeGoal(goalId)
       await removeGoal(goalId);
       // remove childGoalId from parentGoal.sublist
@@ -65,90 +76,127 @@ export const GoalSublist: React.FC<IProps> = ({ goalID, parentID }) => {
   };
 
   return (
-    <div>
-      <HeaderDashboard to={parentID === -1 ? 0 : parentID} />
-
-      <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
-        <Breadcrumb style={{ marginTop: "80px" }}>
-          <Breadcrumb.Item href="/Home/MyGoals/">
-            <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item href="#">
-            <span style={{ backgroundColor: parentGoal?.goalColor, borderRadius: "8px", padding: "5px" }}>
-              {parentGoal?.title}
-            </span>
-          </Breadcrumb.Item>
-        </Breadcrumb>
-        <div className="sublist-content-container">
-          <div className="sublist-content">
-            <div className="sublist-title">{parentGoal?.title}</div>
-            <Container fluid className="sublist-list-container">
-              {childrenGoals?.map((goal: GoalItem, index) => (
+    <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
+      <Breadcrumb style={{ marginTop: "80px" }}>
+        <Breadcrumb.Item onClick={() => { resetHistory(); }}>
+          <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
+        </Breadcrumb.Item>
+        {
+          subGoalHistory.map((item, index) => (
+            <Breadcrumb.Item
+              key={`history-${item.goalID}-${item.goalTitle}.`}
+              onClick={() => popFromHistory(index)}
+            >
+              <span style={{ backgroundColor: item.goalColor, borderRadius: "8px", padding: "5px" }}>
+                {item.goalTitle }
+              </span>
+            </Breadcrumb.Item>
+          ))
+        }
+      </Breadcrumb>
+      <div className="sublist-content-container">
+        <div className="sublist-content">
+          <div className="sublist-title">{parentGoal?.title}</div>
+          <Container fluid className="sublist-list-container">
+            {childrenGoals?.map((goal: GoalItem, index) => (
+              <div
+                aria-hidden
+                key={String(`goal-${index}`)}
+                className="user-goal"
+                style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
+              >
                 <div
-                  key={String(`goal-${index}`)}
-                  className="user-goal"
-                  style={{ backgroundColor: goal.goalColor }}
-                  onClickCapture={() => {
-                    setTapCount([index, tapCount[1] + 1]);
+                  style={{
+                    display: "flex",
                   }}
                 >
                   <div
+                    aria-hidden
                     className="goal-title"
-                    contentEditable={userUpdatingTitle && tapCount[0] === index && tapCount[1] >= 1}
-                    onClickCapture={() => setTapCount([index, tapCount[1] + 1])}
-                    ref={titleRef}
-                    onBlur={() => {
-                      updateUserGoals(goal, index);
-                    }}
                     suppressContentEditableWarning
                     style={{
-                      cursor: userUpdatingTitle ? "unset" : "default",
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
+                      width: "100%",
+                      color: "white"
+                    }}
+                    onClick={() => {
+                      addInHistory(goal);
                     }}
                   >
                     {goal.title}
                   </div>
-                  {tapCount[0] === index && tapCount[1] > 0 ? (
-                    <div className="interactables">
-                      <Trash3Fill
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          removeChildrenGoal(Number(goal.id));
+                  <div>
+                    {tapCount[0] === index && tapCount[1] > 0 ? (
+                      <ChevronDown
+                        onClickCapture={(e) => {
+                          e.stopPropagation();
+                          setTapCount([-1, 0]);
+                        }}
+                        fontSize="30px"
+                      />
+                    ) : (
+                      <ChevronRight
+                        fontSize="30px"
+                        onClickCapture={(e) => {
+                          e.stopPropagation();
+                          setTapCount([index, tapCount[1] + 1]);
                         }}
                       />
-                      <PencilSquare
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          if (titleRef.current) (titleRef.current as HTMLElement).focus();
-                          setUserUpdatingTitle(!userUpdatingTitle);
-                        }}
-                      />
-                      <CheckLg
-                        onClick={async () => {
-                          archiveUserGoal(goal);
-                          getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
-                        }}
-                        style={{ cursor: "Pointer" }}
-                      />
-                    </div>
-                  ) : null}
+                    )}
+                  </div>
                 </div>
-              ))}
-            </Container>
-          </div>
+                {tapCount[0] === index && tapCount[1] > 0 ? (
+                  <div className="interactables">
+                    <PlusLg
+                      style={{ cursor: "pointer" }}
+                      onClickCapture={() => {
+                        setShowAddGoals({
+                          open: true,
+                          goalId: goal?.id
+                        });
+                      }}
+                    />
+                    <Trash3Fill
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        removeChildrenGoal(Number(goal.id));
+                      }}
+                    />
+                    <PencilSquare
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        if (titleRef.current) (titleRef.current as HTMLElement).focus();
+                        setUserUpdatingTitle(!userUpdatingTitle);
+                      }}
+                    />
+                    <CheckLg
+                      onClick={async () => {
+                        archiveUserGoal(goal);
+                        getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+                      }}
+                      style={{ cursor: "Pointer" }}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </Container>
         </div>
-        <img
-          onClick={() => {
-            navigate("/Home/AddGoals", { state: { goalId: parentGoal?.id } });
-          }}
-          id="addGoal-btn"
-          src={addIcon}
-          alt="add-goal"
-          aria-hidden
-        />
       </div>
+      <img
+        onClick={() => {
+          setShowAddGoals({
+            open: true,
+            goalId: parentGoal?.id
+          });
+        }}
+        id="addGoal-btn"
+        src={addIcon}
+        alt="add-goal"
+        aria-hidden
+      />
     </div>
   );
 };
