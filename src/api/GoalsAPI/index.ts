@@ -115,7 +115,11 @@ export const createGoal = (
 
 export const removeChildrenGoals = async (parentGoalId: number) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
-  childrenGoals.map((goal: GoalItem) => removeGoal(Number(goal.id)));
+  if (childrenGoals.length === 0) { return; }
+  childrenGoals.forEach((goal) => {
+    removeChildrenGoals(Number(goal.id));
+    removeGoal(Number(goal.id));
+  });
 };
 
 export const archiveChildrenGoals = async (parentGoalId: number) => {
