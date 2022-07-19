@@ -10,8 +10,9 @@ import logo from "@assets/images/logo.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
+
 import "@translations/i18n";
-import "../../HeaderDashboard/HeaderDashboard.scss";
+import "@components/HeaderDashboard/HeaderDashboard.scss";
 
 interface GoalsHeaderProps {
   popFromHistory: () => void

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown, ShareFill, PersonFill, PeopleFill } from "react-bootstrap-icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Modal } from "react-bootstrap";
 import addIcon from "@assets/images/GoalsAddIcon.svg";
@@ -8,13 +8,11 @@ import {
   archiveGoal,
   getActiveGoals,
   removeGoal,
-  isCollectionEmpty,
   removeChildrenGoals,
   archiveChildrenGoals,
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
 import { AddGoal } from "@components/GoalsComponents/AddGoal/AddGoal";
@@ -29,13 +27,11 @@ interface ISubGoalHistoryProps {
 
 export const MyGoalsPage = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(false);
   const [selectedGoalId, setSelectedGoalId] = useState(-1);
   const [subGoalHistory, setSubGoalHistory] = useState<ISubGoalHistoryProps[]>([]);
-  const titleRef = useRef(null);
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showAddGoals, setShowAddGoals] = useState<{open: boolean, goalId: number}>({ open: false, goalId: -1 });
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -98,7 +94,6 @@ export const MyGoalsPage = () => {
   useEffect(() => {
     (async () => {
       // await populateDummyGoals();
-      // setSelectedGoalId(state ? state.id || -1 : -1);
       const goals: GoalItem[] = await getActiveGoals();
       setUserGoals(goals);
     })();
@@ -115,12 +110,6 @@ export const MyGoalsPage = () => {
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <div
                   onClickCapture={() => setTapCount([-1, 0])}
-                  style={{
-                    marginTop: "100px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
                   className="my-goals-content"
                 >
                   <input
@@ -149,13 +138,6 @@ export const MyGoalsPage = () => {
                             aria-hidden
                             className="goal-title"
                             suppressContentEditableWarning
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              width: "100%",
-                              color: "white"
-                            }}
                             onClick={() => {
                               addInHistory(goal);
                             }}
