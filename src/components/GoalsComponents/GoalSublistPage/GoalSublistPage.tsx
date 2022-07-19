@@ -17,12 +17,17 @@ interface ISubGoalHistoryProps {
   goalColor: string,
   goalTitle: string
 }
-interface IProps {
+interface GoalSublistProps {
   goalID: number,
   subGoalHistory: ISubGoalHistoryProps[],
+  addInHistory: (goal: GoalItem) => void,
+  setShowAddGoals: React.Dispatch<React.SetStateAction<{
+    open: boolean;
+    goalId: number;
+  }>>
 }
 
-export const GoalSublist: React.FC<IProps> = ({ goalID, subGoalHistory, addInHistory, setShowAddGoals }) => {
+export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory, addInHistory, setShowAddGoals }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);

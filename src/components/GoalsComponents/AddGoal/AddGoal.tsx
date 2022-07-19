@@ -14,7 +14,15 @@ import paintBrush from "@assets/images/paintBrush.svg";
 import "@translations/i18n";
 import "@components/GoalsComponents/GoalsForm/GoalsComponents.scss";
 
-export const AddGoal = ({ goalId, setShowAddGoals }) => {
+interface AddGoalProps {
+  goalId: number,
+  setShowAddGoals: React.Dispatch<React.SetStateAction<{
+    open: boolean;
+    goalId: number;
+    }>>
+}
+
+export const AddGoal: React.FC<AddGoalProps> = ({ goalId, setShowAddGoals }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
   // const locationState = useLocation().state as locationProps;

@@ -13,7 +13,10 @@ import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import "@translations/i18n";
 import "../../HeaderDashboard/HeaderDashboard.scss";
 
-export const GoalsHeader = ({ popFromHistory }) => {
+interface GoalsHeaderProps {
+  popFromHistory: () => void
+}
+export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ popFromHistory }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
