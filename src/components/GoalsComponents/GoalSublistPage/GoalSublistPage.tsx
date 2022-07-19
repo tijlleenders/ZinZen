@@ -4,7 +4,7 @@ import { Breadcrumb, Container } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
-import { archiveGoal, getChildrenGoals, getGoal, removeGoal, updateGoal } from "@src/api/GoalsAPI";
+import { archiveGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, updateGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 
@@ -48,6 +48,8 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
   };
   const removeChildrenGoal = async (goalId: number) => {
     if (parentGoal?.sublist) {
+      // delete subgoals of this goal
+      removeChildrenGoals(goalId);
       // removeGoal(goalId)
       await removeGoal(goalId);
       // remove childGoalId from parentGoal.sublist
