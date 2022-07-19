@@ -46,7 +46,7 @@ export const ShowFeelingsPage = () => {
     <div>
       <Container fluid>
         <Row>
-          <HeaderDashboard to={-1} />
+          <HeaderDashboard />
         </Row>
       </Container>
       <Container fluid className="slide show-feelings__container">

@@ -33,7 +33,7 @@ export const FeedbackPage = () => {
     <div>
       <Container fluid>
         <Row>
-          <HeaderDashboard to={-1} />
+          <HeaderDashboard />
         </Row>
       </Container>
       <div id="feedback-container">

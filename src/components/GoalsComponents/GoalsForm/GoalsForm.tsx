@@ -9,13 +9,14 @@ import { colorPallete } from "@src/utils";
 
 import "@translations/i18n";
 import "./GoalsForm.scss";
+import { useNavigate } from "react-router";
 
 interface GoalsFormProps {
-  goalId: number
+  goalId: number | undefined,
   setShowAddGoals: React.Dispatch<React.SetStateAction<{
     open: boolean;
     goalId: number;
-  }>>
+  }>> | undefined,
   selectedColorIndex: number,
   parentGoalId?: number | -1,
 }
@@ -23,7 +24,7 @@ interface GoalsFormProps {
 export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-
+  const navigate = useNavigate();
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
@@ -100,7 +101,7 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, s
       id: "",
     });
     setGoalTitle("");
-    setShowAddGoals({ open: false, id: goalId || -1 });
+    if (setShowAddGoals) { setShowAddGoals({ open: false, id: goalId || -1 }); } else { navigate("/Home/MyGoals", { replace: true }); }
   };
 
   useEffect(() => {

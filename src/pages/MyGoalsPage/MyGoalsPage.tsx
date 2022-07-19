@@ -35,6 +35,7 @@ export const MyGoalsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showAddGoals, setShowAddGoals] = useState<{open: boolean, goalId: number}>({ open: false, goalId: -1 });
   let debounceTimeout: ReturnType<typeof setTimeout>;
+  const typeOfPage = window.location.href.split("/").slice(-1)[0];
 
   // async function populateDummyGoals() {
   //   const goal1 = createGoal("Goal1", false, 2, null, null, 0);
@@ -53,7 +54,7 @@ export const MyGoalsPage = () => {
   };
   const popFromHistory = () => {
     if (showAddGoals.open) {
-      setShowAddGoals({ open: false, goalId: -1 });
+      if (typeOfPage === "AddGoals") { navigate(-1); } else { setShowAddGoals({ open: false, goalId: -1 }); }
     } else {
       if (selectedGoalId === -1) {
         navigate(-1);
@@ -93,9 +94,13 @@ export const MyGoalsPage = () => {
 
   useEffect(() => {
     (async () => {
-      // await populateDummyGoals();
-      const goals: GoalItem[] = await getActiveGoals();
-      setUserGoals(goals);
+      if (typeOfPage === "AddGoals") {
+        setShowAddGoals({ open: true, goalId: -1 });
+      } else {
+        // await populateDummyGoals();
+        const goals: GoalItem[] = await getActiveGoals();
+        setUserGoals(goals);
+      }
     })();
   }, [selectedGoalId]);
   return (
