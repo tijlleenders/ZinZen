@@ -94,14 +94,21 @@ export const MyGoalsPage = () => {
   }
 
   useEffect(() => {
-    (async () => {
-      if (typeOfPage === "AddGoals") {
-        setShowAddGoals({ open: true, goalId: -1 });
-      } else {
+      (async () => {
         // await populateDummyGoals();
         const goals: GoalItem[] = await getActiveGoals();
         setUserGoals(goals);
-      }
+      })();
+    }, [showAddGoals]);
+    
+  useEffect(() => {
+    (async () => {
+      if (typeOfPage === "AddGoals") {
+        setShowAddGoals({ open: true, goalId: -1 });
+      } 
+      // await populateDummyGoals();
+      const goals: GoalItem[] = await getActiveGoals();
+      setUserGoals(goals);
     })();
   }, [selectedGoalId]);
   return (
