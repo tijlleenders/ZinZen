@@ -16,7 +16,7 @@ interface GoalsFormProps {
   setShowAddGoals: React.Dispatch<React.SetStateAction<{
     open: boolean;
     goalId: number;
-  }>> | undefined,
+  }>>,
   selectedColorIndex: number,
   parentGoalId?: number | -1,
 }
@@ -101,7 +101,9 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, s
       id: "",
     });
     setGoalTitle("");
-    if (setShowAddGoals) { setShowAddGoals({ open: false, id: goalId || -1 }); } else { navigate("/Home/MyGoals", { replace: true }); }
+    const typeOfPage = window.location.href.split("/").slice(-1)[0];
+    setShowAddGoals({ open: false, id: goalId || -1 });
+    if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
 
   useEffect(() => {
