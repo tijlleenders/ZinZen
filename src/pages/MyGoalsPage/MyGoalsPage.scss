@@ -81,12 +81,17 @@
 }
 
 .goal-title {
+  align-items: center;
   border: none;
   background: transparent;
-  font-family: Montserrat;
+  color: white;
+  display: flex;
+  font-family: "Montserrat";
   font-weight: bold;
   font-size: 1.3em;
+  justify-content: space-between;
   text-align: left !important;
+  width: 100%;
 }
 
 #share-modal {
@@ -138,6 +143,12 @@
   margin-left: 3%;
   padding-top: 2.5%;
   font-weight: 600;
+}
+.my-goals-content {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 @media (min-width: 1281px) {

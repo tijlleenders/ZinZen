@@ -1,11 +1,9 @@
-import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown, ShareFill, PersonFill, PeopleFill } from "react-bootstrap-icons";
+import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown } from "react-bootstrap-icons";
 import React, { useEffect, useRef, useState } from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { archiveGoal, getChildrenGoals, getGoal, removeGoal, updateGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -34,8 +32,6 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
   const [userUpdatingTitle, setUserUpdatingTitle] = useState(false);
   const [tapCount, setTapCount] = useState([-1, 0]);
   const titleRef = useRef(null);
-  const navigate = useNavigate();
-  // const param = useParams();
 
   useEffect(() => {
     getGoal(Number(goalID)).then((parent) => setParentGoal(parent));

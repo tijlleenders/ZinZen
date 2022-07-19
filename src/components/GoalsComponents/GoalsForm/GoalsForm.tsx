@@ -2,14 +2,13 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 
 import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 
 import "@translations/i18n";
-import "./GoalsComponents.scss";
+import "./GoalsForm.scss";
 
 interface GoalsFormProps {
   goalId: number
@@ -23,7 +22,6 @@ interface GoalsFormProps {
 
 export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const [formInputData, setFormInputData] = useState({
@@ -102,10 +100,7 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, s
       id: "",
     });
     setGoalTitle("");
-    setShowAddGoals({open: false, id: goalId})
-    // setTimeout(() => {
-    //   navigate("/Home/MyGoals", { state: { id: parentGoalId } });
-    // }, 100);
+    setShowAddGoals({ open: false, id: goalId || -1 });
   };
 
   useEffect(() => {

@@ -2,17 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
-import { useLocation } from "react-router";
 
 import { darkModeState } from "@store";
 import { GoalsForm } from "@components/GoalsComponents/GoalsForm/GoalsForm";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import { getGoal } from "@src/api/GoalsAPI";
 import { colorPallete } from "@src/utils";
 import paintBrush from "@assets/images/paintBrush.svg";
 
 import "@translations/i18n";
-import "@components/GoalsComponents/GoalsForm/GoalsComponents.scss";
+import "@components/GoalsComponents/GoalsForm/GoalsForm.scss";
 
 interface AddGoalProps {
   goalId: number,
