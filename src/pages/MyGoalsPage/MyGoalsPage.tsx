@@ -45,6 +45,10 @@ export const MyGoalsPage = () => {
   //   const dummyData = [goal1, goal2, goal3];
   //   dummyData.map((goal: string) => addGoal(goal));
   // }
+  const resetHistory = () => {
+    setSubGoalHistory([]);
+    setSelectedGoalId(-1);
+  };
   const addInHistory = (goal: GoalItem) => {
     setSubGoalHistory([...subGoalHistory, ({
       goalID: goal.id || -1,
@@ -53,18 +57,24 @@ export const MyGoalsPage = () => {
     })]);
     setSelectedGoalId(goal.id || -1);
   };
-  const popFromHistory = () => {
+  const popFromHistory = (index = -1) => {
     if (showAddGoals.open) {
       if (typeOfPage === "AddGoals") { navigate(-1); } else { setShowAddGoals({ open: false, goalId: -1 }); }
     } else {
       if (selectedGoalId === -1) {
         navigate(-1);
       }
-      subGoalHistory.pop();
-      setSubGoalHistory(subGoalHistory);
-      if (subGoalHistory.length === 0) {
+      let tmpHistory = [...subGoalHistory];
+      if (index === -1) {
+        tmpHistory.pop();
+      } else { tmpHistory = tmpHistory.slice(0, index + 1); }
+      setSubGoalHistory([...tmpHistory]);
+
+      if (tmpHistory.length === 0) {
         setSelectedGoalId(-1);
-      } else { setSelectedGoalId(subGoalHistory.slice(-1)[0].goalID); }
+      } else {
+        setSelectedGoalId(tmpHistory.slice(-1)[0].goalID);
+      }
     }
   };
   async function archiveUserGoal(goal: GoalItem) {
@@ -262,6 +272,8 @@ export const MyGoalsPage = () => {
                 goalID={selectedGoalId}
                 subGoalHistory={subGoalHistory}
                 addInHistory={addInHistory}
+                resetHistory={resetHistory}
+                popFromHistory={popFromHistory}
                 setShowAddGoals={setShowAddGoals}
               />
             )
