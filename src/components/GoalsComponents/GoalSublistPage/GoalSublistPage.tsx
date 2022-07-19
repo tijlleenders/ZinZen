@@ -23,9 +23,11 @@ interface GoalSublistProps {
     open: boolean;
     goalId: number;
   }>>
+  resetHistory: () => void,
+  popFromHistory: (index?: number) => void
 }
 
-export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory, addInHistory, setShowAddGoals }) => {
+export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory, addInHistory, resetHistory, popFromHistory, setShowAddGoals }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
@@ -76,12 +78,15 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
   return (
     <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
       <Breadcrumb style={{ marginTop: "80px" }}>
-        <Breadcrumb.Item href="/Home/MyGoals/">
+        <Breadcrumb.Item onClick={() => { resetHistory(); }}>
           <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
         </Breadcrumb.Item>
         {
-          subGoalHistory.map((item) => (
-            <Breadcrumb.Item href="#" key={`history-${item.goalID}-${item.goalTitle}.`}>
+          subGoalHistory.map((item, index) => (
+            <Breadcrumb.Item
+              key={`history-${item.goalID}-${item.goalTitle}.`}
+              onClick={() => popFromHistory(index)}
+            >
               <span style={{ backgroundColor: item.goalColor, borderRadius: "8px", padding: "5px" }}>
                 {item.goalTitle }
               </span>
