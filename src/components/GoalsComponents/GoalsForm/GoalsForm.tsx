@@ -12,8 +12,13 @@ import "@translations/i18n";
 import "./GoalsComponents.scss";
 
 interface GoalsFormProps {
-  selectedColorIndex: number;
-  parentGoalId?: number | -1;
+  goalId: number
+  setShowAddGoals: React.Dispatch<React.SetStateAction<{
+    open: boolean;
+    goalId: number;
+  }>>
+  selectedColorIndex: number,
+  parentGoalId?: number | -1,
 }
 
 export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
