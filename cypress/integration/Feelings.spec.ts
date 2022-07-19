@@ -40,7 +40,7 @@ describe("Desktop Mode Tests", () => {
   it("Should Display note on MyFeelings page", () => {
     cy.get(".show-feelings__note-input").type("This is test note");
     cy.contains("Done").click({ force: true });
-    cy.get(".btn-my-feelings__note").should("have.text", "This is test note");
+    cy.get(".btn-my-feelings__note").contains("This is test note");
   });
 
   it("Should be able to Delete note on MyFeelings page", () => {
