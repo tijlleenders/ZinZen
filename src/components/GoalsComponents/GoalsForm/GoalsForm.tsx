@@ -42,8 +42,10 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, s
       [e.target.name]: value,
     });
   };
+  const freqRegex = /[D|d]+aily|AILY/;
+  const freq = formInputData.inputGoal.match(freqRegex);
   function suggestion() {
-    if (formInputData.inputGoal.indexOf("daily") !== -1) {
+    if (formInputData.inputGoal.indexOf(`${freq}`) !== -1) {
       return "daily";
     }
     if (formInputData.inputGoal.indexOf("once") !== -1) {
@@ -59,7 +61,7 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, s
     return "";
   }
   function duration() {
-    const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
+    const tracker = /(1[0-9]|2[0-4]|[1-9])+(H|h)/;
     const checkGoal = parseInt(String(formInputData.inputGoal.match(tracker)), 10);
     const parseGoal = parseInt(String(formInputData.inputGoal.match(tracker)), 10) <= 24;
     if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
