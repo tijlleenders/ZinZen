@@ -23,17 +23,19 @@ interface GoalSublistProps {
     open: boolean;
     goalId: number;
   }>>
+  setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
+    open: boolean;
+    goalId: number;
+  }>>,
   resetHistory: () => void,
   popFromHistory: (index?: number) => void
 }
 
-export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory, addInHistory, resetHistory, popFromHistory, setShowAddGoals }) => {
+export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory, addInHistory, resetHistory, popFromHistory, setShowAddGoals, setShowUpdateGoal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
-  const [userUpdatingTitle, setUserUpdatingTitle] = useState(false);
   const [tapCount, setTapCount] = useState([-1, 0]);
-  const titleRef = useRef(null);
 
   useEffect(() => {
     getGoal(Number(goalID)).then((parent) => setParentGoal(parent));
@@ -167,8 +169,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                     <PencilSquare
                       style={{ cursor: "pointer" }}
                       onClick={() => {
-                        if (titleRef.current) (titleRef.current as HTMLElement).focus();
-                        setUserUpdatingTitle(!userUpdatingTitle);
+                        setShowUpdateGoal({ open: true, goalId: goal?.id });
                       }}
                     />
                     <CheckLg

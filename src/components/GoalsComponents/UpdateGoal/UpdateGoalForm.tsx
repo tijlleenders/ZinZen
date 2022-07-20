@@ -3,28 +3,25 @@ import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
-import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 
 import "@translations/i18n";
-import "./GoalsForm.scss";
-import { useNavigate } from "react-router";
+import "./UpdateGoalForm.scss";
 
-interface GoalsFormProps {
+interface UpdateGoalFormProps {
   goalId: number | undefined,
-  setShowAddGoals: React.Dispatch<React.SetStateAction<{
+  selectedColorIndex: number,
+  setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
     open: boolean;
     goalId: number;
-  }>>,
-  selectedColorIndex: number,
-  parentGoalId?: number | -1,
+  }>>
 }
 
-export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
+export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selectedColorIndex, setShowUpdateGoal }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const navigate = useNavigate();
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
@@ -70,42 +67,22 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, s
     return "";
   }
 
-  useEffect(() => {
-    setGoalTitle(formInputData.inputGoal.slice(0));
-  }, [formInputData.inputGoal]);
-
-  const handleSubmit = async (e: React.SyntheticEvent) => {
+  const handleSubmit =
+  async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const goalFrequency = suggestion() === "" ? null : suggestion() === "daily";
+    const goalFrequency = suggestion();
     const goalDuration = duration() === "" ? null : Number(duration().split("")[0]);
     if (goalTitle.length === 0) {
       setError("Enter a goal title!");
       return;
     }
-    const newGoal = createGoal(
-      goalTitle,
-      goalFrequency,
-      goalDuration,
-      null,
-      null,
-      0,
-      parentGoalId!,
-      darkModeStatus ? colorPallete[selectedColorIndex] : colorPallete[selectedColorIndex] // goalColor
-    );
-    const newGoalId = await addGoal(newGoal);
-    if (parentGoalId) {
-      const parentGoal = await getGoal(parentGoalId);
-      const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
-      await updateGoal(parentGoalId, { sublist: newSublist });
-    }
+    await updateGoal(goalId, { title: goalTitle, duration: goalDuration, repeat: goalFrequency === "" ? null : goalFrequency });
     setFormInputData({
       inputGoal: "",
       id: "",
     });
     setGoalTitle("");
-    const typeOfPage = window.location.href.split("/").slice(-1)[0];
-    setShowAddGoals({ open: false, id: goalId || -1 });
-    if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
+    setShowUpdateGoal({ open: false, id: -1 });
   };
 
   useEffect(() => {
@@ -114,6 +91,17 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, s
     if (titleEndIndex !== -1) setGoalTitle(formInputData.inputGoal.slice(0, titleEndIndex - 1));
   }, [handleSubmit]);
 
+  useEffect(() => {
+    getGoal(goalId).then((goal) => {
+      setFormInputData({ id: crypto.randomUUID(),
+        inputGoal: `${goal.title} ${goal.duration}hours ${goal.repeat}`
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    setGoalTitle(formInputData.inputGoal.slice(0));
+  }, [formInputData.inputGoal]);
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
@@ -173,14 +161,10 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, s
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
         >
-          Add Goal
+          Update Goal
         </Button>
       </div>
       <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
     </form>
   );
-};
-
-GoalsForm.defaultProps = {
-  parentGoalId: -1,
 };

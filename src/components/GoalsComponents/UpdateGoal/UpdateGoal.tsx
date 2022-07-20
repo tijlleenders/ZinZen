@@ -1,38 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
 import paintBrush from "@assets/images/paintBrush.svg";
 import { darkModeState } from "@store";
-import { getGoal } from "@src/api/GoalsAPI";
 import { colorPallete } from "@src/utils";
-import { AddGoalForm } from "./AddGoalForm";
+import { UpdateGoalForm } from "./UpdateGoalForm";
 
 import "@translations/i18n";
-import "./AddGoalForm.scss";
+import "./UpdateGoalForm.scss";
 
-interface AddGoalProps {
+interface UpdateGoalProps {
   goalId: number,
-  setShowAddGoals: React.Dispatch<React.SetStateAction<{
+  setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
     open: boolean;
     goalId: number;
-    }>>
+  }>>
 }
 
-export const AddGoal: React.FC<AddGoalProps> = ({ goalId, setShowAddGoals }) => {
+export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoal }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [selectedColorIndex, setColorIndex] = useState(0);
-  const [parentGoalId, setParentGoalId] = useState<number | -1>();
-  const [parentGoalTitle, setParentGoalTitle] = useState("");
-
-  useEffect(() => {
-    setParentGoalId(goalId || -1);
-    if (parentGoalId !== -1 && parentGoalId !== undefined) {
-      getGoal(parentGoalId!).then((parentGoal) => setParentGoalTitle(parentGoal.title));
-    }
-  }, [parentGoalId]);
 
   const changeColor = () => {
     const newColorIndex = selectedColorIndex + 1;
@@ -44,17 +34,9 @@ export const AddGoal: React.FC<AddGoalProps> = ({ goalId, setShowAddGoals }) => 
     <Container fluid id="addGoals-container">
       <Row className="position">
         <div>
-          <h2 className={darkModeStatus ? "mygoals-font-dark" : "mygoals-font-light"}>{t("myGoalsMessage")}</h2>
+          <h2 className={darkModeStatus ? "mygoals-font-dark" : "mygoals-font-light"}>Update Goal</h2>
           <div className={darkModeStatus ? "goalsubtext-font-dark" : "goalsubtext-font-light"}>
             <p style={{ fontStyle: "normal" }}>
-              {parentGoalId !== -1 ? (
-                <>
-                  for sublist <span style={{ color: "#BA0880" }}>{parentGoalTitle}</span>
-                </>
-              ) : (
-                ""
-              )}
-              <br />
               {t("goalsubtext")}
               <br /> {t("format")}
             </p>
@@ -74,7 +56,7 @@ export const AddGoal: React.FC<AddGoalProps> = ({ goalId, setShowAddGoals }) => 
         </button>
       </Row>
       <Row>
-        <AddGoalForm goalId={goalId} setShowAddGoals={setShowAddGoals} selectedColorIndex={selectedColorIndex} parentGoalId={parentGoalId} />
+        <UpdateGoalForm goalId={goalId} setShowUpdateGoal={setShowUpdateGoal} selectedColorIndex={selectedColorIndex} />
       </Row>
     </Container>
   );
