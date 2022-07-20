@@ -2,7 +2,6 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 
 import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
