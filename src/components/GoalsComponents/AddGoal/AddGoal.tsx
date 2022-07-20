@@ -3,11 +3,11 @@ import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
+import paintBrush from "@assets/images/paintBrush.svg";
 import { darkModeState } from "@store";
 import { getGoal } from "@src/api/GoalsAPI";
 import { colorPallete } from "@src/utils";
 import { AddGoalForm } from "./AddGoalForm";
-import paintBrush from "@assets/images/paintBrush.svg";
 
 import "@translations/i18n";
 import "./AddGoalForm.scss";
@@ -21,10 +21,8 @@ interface AddGoalProps {
 }
 
 export const AddGoal: React.FC<AddGoalProps> = ({ goalId, setShowAddGoals }) => {
-  const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
-  // const locationState = useLocation().state as locationProps;
-
+  const darkModeStatus = useRecoilValue(darkModeState);
   const [selectedColorIndex, setColorIndex] = useState(0);
   const [parentGoalId, setParentGoalId] = useState<number | -1>();
   const [parentGoalTitle, setParentGoalTitle] = useState("");

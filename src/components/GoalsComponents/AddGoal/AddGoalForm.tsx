@@ -23,8 +23,8 @@ interface AddGoalFormProps {
 
 export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
   const { t } = useTranslation();
-  const darkModeStatus = useRecoilValue(darkModeState);
   const navigate = useNavigate();
+  const darkModeStatus = useRecoilValue(darkModeState);
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
