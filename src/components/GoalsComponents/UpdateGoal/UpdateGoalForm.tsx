@@ -13,10 +13,6 @@ import "./UpdateGoalForm.scss";
 
 interface UpdateGoalFormProps {
   goalId: number | undefined,
-  setShowAddGoals: React.Dispatch<React.SetStateAction<{
-    open: boolean;
-    goalId: number;
-  }>>,
   selectedColorIndex: number,
   setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
     open: boolean;
@@ -24,7 +20,7 @@ interface UpdateGoalFormProps {
   }>>
 }
 
-export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, setShowUpdateGoal }) => {
+export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selectedColorIndex, setShowUpdateGoal }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const navigate = useNavigate();

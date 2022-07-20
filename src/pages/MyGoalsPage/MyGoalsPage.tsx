@@ -60,7 +60,9 @@ export const MyGoalsPage = () => {
     setSelectedGoalId(goal.id || -1);
   };
   const popFromHistory = (index = -1) => {
-    if (showAddGoals.open) {
+    if (showUpdateGoal.open) {
+      setShowUpdateGoal({ open: false, goalId: -1 });
+    } else if (showAddGoals.open) {
       if (typeOfPage === "AddGoals") { navigate(-1); } else { setShowAddGoals({ open: false, goalId: -1 }); }
     } else {
       if (selectedGoalId === -1) {
@@ -111,7 +113,7 @@ export const MyGoalsPage = () => {
       const goals: GoalItem[] = await getActiveGoals();
       setUserGoals(goals);
     })();
-  }, [showAddGoals]);
+  }, [showAddGoals, showUpdateGoal]);
 
   useEffect(() => {
     (async () => {
@@ -177,12 +179,12 @@ export const MyGoalsPage = () => {
                                 <ChevronDown fontSize="30px" />
                               ) : (
                                 <ChevronRight
-                                fontSize="30px"
-                                onClickCapture={(e) => {
-                                  e.stopPropagation();
-                                  setTapCount([index, tapCount[1] + 1]);
-                                }}
-                              />
+                                  fontSize="30px"
+                                  onClickCapture={(e) => {
+                                    e.stopPropagation();
+                                    setTapCount([index, tapCount[1] + 1]);
+                                  }}
+                                />
                               )}
                             </div>
                           </div>
@@ -213,7 +215,10 @@ export const MyGoalsPage = () => {
                               />
                               <PencilSquare
                                 style={{ cursor: "pointer" }}
-                                onClickCapture={() => navigate("/Home/AddGoals", { state: { editingGoal: true, goalId: goal.id } })}
+                                onClickCapture={() => {
+                                  console.log("clicked");
+                                  setShowUpdateGoal({ open: true, goalId: goal?.id });
+                                }}
                               />
                               <CheckLg
                                 onClickCapture={async () => {
