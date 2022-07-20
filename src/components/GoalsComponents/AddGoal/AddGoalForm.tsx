@@ -8,20 +8,20 @@ import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 
 import "@translations/i18n";
-import "./GoalsForm.scss";
+import "./AddGoalForm.scss";
 import { useNavigate } from "react-router";
 
-interface GoalsFormProps {
+interface AddGoalFormProps {
   goalId: number | undefined,
   setShowAddGoals: React.Dispatch<React.SetStateAction<{
     open: boolean;
     goalId: number;
   }>>,
   selectedColorIndex: number,
-  parentGoalId?: number | -1,
+  parentGoalId: number | -1,
 }
 
-export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
+export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const navigate = useNavigate();
@@ -179,8 +179,4 @@ export const GoalsForm: React.FC<GoalsFormProps> = ({ goalId, setShowAddGoals, s
       <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
     </form>
   );
-};
-
-GoalsForm.defaultProps = {
-  parentGoalId: -1,
 };
