@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
 import paintBrush from "@assets/images/paintBrush.svg";
 import { darkModeState } from "@store";
-import { getGoal } from "@src/api/GoalsAPI";
 import { colorPallete } from "@src/utils";
 import { UpdateGoalForm } from "./UpdateGoalForm";
 
@@ -17,13 +16,12 @@ interface UpdateGoalProps {
   setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
     open: boolean;
     goalId: number;
-    }>>
+  }>>
 }
 
 export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoal }) => {
-  const darkModeStatus = useRecoilValue(darkModeState);
   const { t } = useTranslation();
-
+  const darkModeStatus = useRecoilValue(darkModeState);
   const [selectedColorIndex, setColorIndex] = useState(0);
 
   const changeColor = () => {

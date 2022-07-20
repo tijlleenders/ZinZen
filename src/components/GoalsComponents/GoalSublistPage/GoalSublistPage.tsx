@@ -35,9 +35,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
   const darkModeStatus = useRecoilValue(darkModeState);
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
-  const [userUpdatingTitle, setUserUpdatingTitle] = useState(false);
   const [tapCount, setTapCount] = useState([-1, 0]);
-  const titleRef = useRef(null);
 
   useEffect(() => {
     getGoal(Number(goalID)).then((parent) => setParentGoal(parent));

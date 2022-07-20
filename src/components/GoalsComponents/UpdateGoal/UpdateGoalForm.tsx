@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 
@@ -23,7 +23,6 @@ interface UpdateGoalFormProps {
 export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selectedColorIndex, setShowUpdateGoal }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const navigate = useNavigate();
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
