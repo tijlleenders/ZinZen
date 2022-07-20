@@ -4,13 +4,13 @@ import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState } from "@store";
-import { GoalsForm } from "@components/GoalsComponents/GoalsForm/GoalsForm";
 import { getGoal } from "@src/api/GoalsAPI";
 import { colorPallete } from "@src/utils";
+import { AddGoalForm } from "./AddGoalForm";
 import paintBrush from "@assets/images/paintBrush.svg";
 
 import "@translations/i18n";
-import "@components/GoalsComponents/GoalsForm/GoalsForm.scss";
+import "./AddGoalForm.scss";
 
 interface AddGoalProps {
   goalId: number,
@@ -76,7 +76,7 @@ export const AddGoal: React.FC<AddGoalProps> = ({ goalId, setShowAddGoals }) => 
         </button>
       </Row>
       <Row>
-        <GoalsForm goalId={goalId} setShowAddGoals={setShowAddGoals} selectedColorIndex={selectedColorIndex} parentGoalId={parentGoalId} />
+        <AddGoalForm goalId={goalId} setShowAddGoals={setShowAddGoals} selectedColorIndex={selectedColorIndex} parentGoalId={parentGoalId} />
       </Row>
     </Container>
   );

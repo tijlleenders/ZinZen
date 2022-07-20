@@ -18,6 +18,7 @@ import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader
 import { AddGoal } from "@components/GoalsComponents/AddGoal/AddGoal";
 
 import "./MyGoalsPage.scss";
+import { UpdateGoal } from "@components/GoalsComponents/UpdateGoal/UpdateGoal";
 
 interface ISubGoalHistoryProps {
   goalID: number,
@@ -34,6 +35,7 @@ export const MyGoalsPage = () => {
   const [subGoalHistory, setSubGoalHistory] = useState<ISubGoalHistoryProps[]>([]);
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showAddGoals, setShowAddGoals] = useState<{open: boolean, goalId: number}>({ open: false, goalId: -1 });
+  const [showUpdateGoal, setShowUpdateGoal] = useState<{open: boolean, goalId: number}>({ open: false, goalId: -1 });
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const typeOfPage = window.location.href.split("/").slice(-1)[0];
 
@@ -127,155 +129,159 @@ export const MyGoalsPage = () => {
         showAddGoals.open ?
           <AddGoal goalId={showAddGoals.goalId} setShowAddGoals={setShowAddGoals} />
           :
-          selectedGoalId === -1 ?
-            (
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <div
-                  onClickCapture={() => setTapCount([-1, 0])}
-                  className="my-goals-content"
-                >
-                  <input
-                    id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
+          showUpdateGoal.open ?
+            <UpdateGoal goalId={showUpdateGoal.goalId} setShowUpdateGoal={setShowUpdateGoal} />
+            :
+            selectedGoalId === -1 ?
+              (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <div
                     onClickCapture={() => setTapCount([-1, 0])}
-                    placeholder="Search"
-                    onChange={(e) => debounceSearch(e)}
-                  />
-                  <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
-                    My Goals
-                  </h1>
-                  <div>
-                    {userGoals?.map((goal: GoalItem, index) => (
-                      <div
-                        aria-hidden
-                        key={String(`task-${index}`)}
-                        className="user-goal"
-                        style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
-                      >
+                    className="my-goals-content"
+                  >
+                    <input
+                      id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
+                      onClickCapture={() => setTapCount([-1, 0])}
+                      placeholder="Search"
+                      onChange={(e) => debounceSearch(e)}
+                    />
+                    <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
+                      My Goals
+                    </h1>
+                    <div>
+                      {userGoals?.map((goal: GoalItem, index) => (
                         <div
-                          style={{
-                            display: "flex",
-                          }}
+                          aria-hidden
+                          key={String(`task-${index}`)}
+                          className="user-goal"
+                          style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
                         >
                           <div
-                            aria-hidden
-                            className="goal-title"
-                            suppressContentEditableWarning
-                            onClick={() => {
-                              addInHistory(goal);
+                            style={{
+                              display: "flex",
                             }}
                           >
-                            {goal.title}
-                          </div>
-                          <div>
-                            {tapCount[0] === index && tapCount[1] > 0 ? (
-                              <ChevronDown fontSize="30px" />
-                            ) : (
-                              <ChevronRight
+                            <div
+                              aria-hidden
+                              className="goal-title"
+                              suppressContentEditableWarning
+                              onClick={() => {
+                                addInHistory(goal);
+                              }}
+                            >
+                              {goal.title}
+                            </div>
+                            <div>
+                              {tapCount[0] === index && tapCount[1] > 0 ? (
+                                <ChevronDown fontSize="30px" />
+                              ) : (
+                                <ChevronRight
                                 fontSize="30px"
                                 onClickCapture={(e) => {
                                   e.stopPropagation();
                                   setTapCount([index, tapCount[1] + 1]);
                                 }}
                               />
-                            )}
+                              )}
+                            </div>
                           </div>
+                          {tapCount[0] === index && tapCount[1] > 0 ? (
+                            <div className="interactables">
+                              <PlusLg
+                                style={{ cursor: "pointer" }}
+                                onClickCapture={() => {
+                                  setShowAddGoals({
+                                    open: true,
+                                    goalId: goal?.id
+                                  });
+                                }}
+                              />
+                              <Trash3Fill
+                                style={{ cursor: "pointer" }}
+                                onClickCapture={(e) => {
+                                  e.stopPropagation();
+                                  removeUserGoal(Number(goal.id));
+                                }}
+                              />
+                              <ShareFill
+                                style={{ cursor: "pointer" }}
+                                onClickCapture={(e) => {
+                                  e.stopPropagation();
+                                  setShowShareModal(true);
+                                }}
+                              />
+                              <PencilSquare
+                                style={{ cursor: "pointer" }}
+                                onClickCapture={() => navigate("/Home/AddGoals", { state: { editingGoal: true, goalId: goal.id } })}
+                              />
+                              <CheckLg
+                                onClickCapture={async () => {
+                                  archiveUserGoal(goal);
+                                  const updatedGoalsList = await getActiveGoals();
+                                  setUserGoals(updatedGoalsList);
+                                }}
+                                style={{ cursor: "Pointer" }}
+                              />
+                            </div>
+                          ) : null}
                         </div>
-                        {tapCount[0] === index && tapCount[1] > 0 ? (
-                          <div className="interactables">
-                            <PlusLg
-                              style={{ cursor: "pointer" }}
-                              onClickCapture={() => {
-                                setShowAddGoals({
-                                  open: true,
-                                  goalId: goal?.id
-                                });
-                              }}
-                            />
-                            <Trash3Fill
-                              style={{ cursor: "pointer" }}
-                              onClickCapture={(e) => {
-                                e.stopPropagation();
-                                removeUserGoal(Number(goal.id));
-                              }}
-                            />
-                            <ShareFill
-                              style={{ cursor: "pointer" }}
-                              onClickCapture={(e) => {
-                                e.stopPropagation();
-                                setShowShareModal(true);
-                              }}
-                            />
-                            <PencilSquare
-                              style={{ cursor: "pointer" }}
-                              onClickCapture={() => navigate("/Home/AddGoals", { state: { editingGoal: true, goalId: goal.id } })}
-                            />
-                            <CheckLg
-                              onClickCapture={async () => {
-                                archiveUserGoal(goal);
-                                const updatedGoalsList = await getActiveGoals();
-                                setUserGoals(updatedGoalsList);
-                              }}
-                              style={{ cursor: "Pointer" }}
-                            />
-                          </div>
-                        ) : null}
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                    <img
+                      onClick={() => {
+                        setShowAddGoals({
+                          open: true,
+                          goalId: -1
+                        });
+                      }}
+                      id="addGoal-btn"
+                      src={addIcon}
+                      alt="add-goal"
+                      aria-hidden
+                    />
                   </div>
-                  <img
-                    onClick={() => {
-                      setShowAddGoals({
-                        open: true,
-                        goalId: -1
-                      });
-                    }}
-                    id="addGoal-btn"
-                    src={addIcon}
-                    alt="add-goal"
-                    aria-hidden
-                  />
+                  <Modal
+                    id="share-modal"
+                    show={showShareModal}
+                    onHide={() => setShowShareModal(false)}
+                    centered
+                    autoFocus={false}
+                  >
+                    <Modal.Body id="share-modal-body">
+                      <button type="button" className="shareOptions-btn">
+                        <div className="share-Options">
+                          <PersonFill />
+                          <p className="shareOption-name">Share Anonymously</p>
+                        </div>
+                      </button>
+                      <button type="button" className="shareOptions-btn">
+                        <div className="share-Options">
+                          <PeopleFill />
+                          <p className="shareOption-name">Share Public</p>
+                        </div>
+                      </button>
+                      <button type="button" className="shareOptions-btn">
+                        <div className="share-Options">
+                          <PersonFill />
+                          <p className="shareOption-name">Share with</p>
+                        </div>
+                      </button>
+                    </Modal.Body>
+                  </Modal>
                 </div>
-                <Modal
-                  id="share-modal"
-                  show={showShareModal}
-                  onHide={() => setShowShareModal(false)}
-                  centered
-                  autoFocus={false}
-                >
-                  <Modal.Body id="share-modal-body">
-                    <button type="button" className="shareOptions-btn">
-                      <div className="share-Options">
-                        <PersonFill />
-                        <p className="shareOption-name">Share Anonymously</p>
-                      </div>
-                    </button>
-                    <button type="button" className="shareOptions-btn">
-                      <div className="share-Options">
-                        <PeopleFill />
-                        <p className="shareOption-name">Share Public</p>
-                      </div>
-                    </button>
-                    <button type="button" className="shareOptions-btn">
-                      <div className="share-Options">
-                        <PersonFill />
-                        <p className="shareOption-name">Share with</p>
-                      </div>
-                    </button>
-                  </Modal.Body>
-                </Modal>
-              </div>
-            )
-            :
-            (
-              <GoalSublist
-                goalID={selectedGoalId}
-                subGoalHistory={subGoalHistory}
-                addInHistory={addInHistory}
-                resetHistory={resetHistory}
-                popFromHistory={popFromHistory}
-                setShowAddGoals={setShowAddGoals}
-              />
-            )
+              )
+              :
+              (
+                <GoalSublist
+                  goalID={selectedGoalId}
+                  subGoalHistory={subGoalHistory}
+                  addInHistory={addInHistory}
+                  resetHistory={resetHistory}
+                  popFromHistory={popFromHistory}
+                  setShowAddGoals={setShowAddGoals}
+                  setShowUpdateGoal={setShowUpdateGoal}
+                />
+              )
       }
     </>
   );
