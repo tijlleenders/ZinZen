@@ -129,22 +129,19 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                   >
                     {goal.title}
                   </div>
-                  <div>
+                  <div
+                    style={{ paddingLeft: "5%" }}
+                    onClickCapture={() => {
+                      if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
+                    }}
+                  >
                     {tapCount[0] === index && tapCount[1] > 0 ? (
                       <ChevronDown
-                        onClickCapture={(e) => {
-                          e.stopPropagation();
-                          setTapCount([-1, 0]);
-                        }}
                         fontSize="30px"
                       />
                     ) : (
                       <ChevronRight
                         fontSize="30px"
-                        onClickCapture={(e) => {
-                          e.stopPropagation();
-                          setTapCount([index, tapCount[1] + 1]);
-                        }}
                       />
                     )}
                   </div>
