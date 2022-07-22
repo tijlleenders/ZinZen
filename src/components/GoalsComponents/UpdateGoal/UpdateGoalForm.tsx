@@ -94,7 +94,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   useEffect(() => {
     getGoal(goalId).then((goal) => {
       setFormInputData({ id: crypto.randomUUID(),
-        inputGoal: `${goal.title} ${goal.duration}hours ${goal.repeat}`
+        inputGoal: `${goal.title} ${goal.duration ? `${goal.duration}hours` : ""} ${goal.repeat ? `${goal.repeat}` : ""}`
       });
     });
   }, []);
