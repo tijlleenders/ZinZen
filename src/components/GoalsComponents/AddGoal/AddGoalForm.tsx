@@ -44,14 +44,19 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   };
   const daily = /daily/i;
   const once = /once/i;
+  const weekly = /weekly/i;
   const freqDaily = formInputData.inputGoal.match(daily);
   const freqOnce = formInputData.inputGoal.match(once);
+  const freqWeekly = formInputData.inputGoal.match(weekly);
   function suggestion() {
     if (formInputData.inputGoal.indexOf(`${freqDaily}`) !== -1) {
       return "daily";
     }
-    if (formInputData.inputGoal.indexOf(`${freqOnce}`) !== -1) {
-      return "once";
+    if (formInputData.inputGoal.indexOf(`${freqDaily}`) !== -1) {
+      return "daily";
+    }
+    if (formInputData.inputGoal.indexOf(`${freqWeekly}`) !== -1) {
+      return "weekly";
     }
     return "";
   }
@@ -160,7 +165,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={suggestion() === "once" || suggestion() === "daily" ? "suggestion" : "blank"}
+          className={suggestion() === "once" || suggestion() === "daily" || suggestion() === "weekly" ? "suggestion" : "blank"}
         >
           {suggestion()}
         </button>
