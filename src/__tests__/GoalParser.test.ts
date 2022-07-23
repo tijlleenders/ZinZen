@@ -12,10 +12,10 @@ const goalUrl = {
 
 const newData = (data) => [...data, goalObject];
 const urlData = (data) => [...data, goalUrl];
-const freqRegex = /[D|d]+aily|AILY/;
+const freqRegex = /daily/i;
 const freq = goalObject.title.match(freqRegex);
 const urlDetector = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\\/~+#-]*[\w@?^=%&\\/~+#-])/;
-const tracker = /(1[0-9]|2[0-4]|[1-9])+(H|h)/;
+const tracker = /(1[0-9]|2[0-4]|[1-9])+h/i;
 const checkGoal = parseInt(goalObject.title.match(tracker), 10);
 const parseGoal = parseInt(goalObject.title.match(tracker), 10) <= 24;
 
