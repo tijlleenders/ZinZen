@@ -52,8 +52,8 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     if (formInputData.inputGoal.indexOf(`${freqDaily}`) !== -1) {
       return "daily";
     }
-    if (formInputData.inputGoal.indexOf(`${freqDaily}`) !== -1) {
-      return "daily";
+    if (formInputData.inputGoal.indexOf(`${freqOnce}`) !== -1) {
+      return "once";
     }
     if (formInputData.inputGoal.indexOf(`${freqWeekly}`) !== -1) {
       return "weekly";
