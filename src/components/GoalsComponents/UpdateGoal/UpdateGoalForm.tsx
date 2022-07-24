@@ -40,15 +40,15 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     });
   };
   const lowercaseInput = formInputData.inputGoal.toLowerCase();
-  const dailyRegex = /daily/;
-  const onceRegex = /once/;
-  const dailyFreq = lowercaseInput.match(dailyRegex);
-  const onceFreq = lowercaseInput.match(onceRegex);
+  const daily = /daily/;
+  const once = /once/;
+  const freqDaily = lowercaseInput.match(daily);
+  const freqOnce = lowercaseInput.match(once);
   function suggestion() {
-    if (lowercaseInput.indexOf(`${dailyFreq}`) !== -1) {
+    if (lowercaseInput.indexOf(`${freqDaily}`) !== -1) {
       return "daily";
     }
-    if (lowercaseInput.indexOf(`${onceFreq}`) !== -1) {
+    if (lowercaseInput.indexOf(`${freqOnce}`) !== -1) {
       return "once";
     }
     return "";
