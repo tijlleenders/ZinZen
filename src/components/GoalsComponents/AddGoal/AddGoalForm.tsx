@@ -42,20 +42,21 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
       [e.target.name]: value,
     });
   };
-  const daily = /daily/i;
-  const once = /once/i;
-  const weekly = /weekly/i;
-  const freqDaily = formInputData.inputGoal.match(daily);
-  const freqOnce = formInputData.inputGoal.match(once);
-  const freqWeekly = formInputData.inputGoal.match(weekly);
+  const daily = /daily/;
+  const once = /once/;
+  const weekly = /weekly/;
+  const lowercaseInput = formInputData.inputGoal.toLowerCase();
+  const freqDaily = lowercaseInput.match(daily);
+  const freqOnce = lowercaseInput.match(once);
+  const freqWeekly = lowercaseInput.match(weekly);
   function suggestion() {
-    if (formInputData.inputGoal.indexOf(`${freqDaily}`) !== -1) {
+    if (lowercaseInput.indexOf(`${freqDaily}`) !== -1) {
       return "daily";
     }
-    if (formInputData.inputGoal.indexOf(`${freqOnce}`) !== -1) {
+    if (lowercaseInput.indexOf(`${freqOnce}`) !== -1) {
       return "once";
     }
-    if (formInputData.inputGoal.indexOf(`${freqWeekly}`) !== -1) {
+    if (lowercaseInput.indexOf(`${freqWeekly}`) !== -1) {
       return "weekly";
     }
     return "";
