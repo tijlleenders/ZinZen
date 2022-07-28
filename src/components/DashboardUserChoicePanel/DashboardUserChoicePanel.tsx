@@ -16,6 +16,8 @@ import "@translations/i18n";
 import "./DashboardUserChoicePanel.scss";
 import "@pages/Dashboard/Dashboard.scss";
 
+import init from  "../../../../ZinZen-scheduler/pkg";
+
 export const DashboardUserChoicePanel = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -25,6 +27,13 @@ export const DashboardUserChoicePanel = () => {
     <div className="slide">
       <Container fluid>
         <Row>
+          <Button onClick={ () =>           
+            (async function () {
+                scheduler = await init();
+                console.log(scheduler);
+            })()}>
+            click me
+          </Button>
           <Button
             variant={darkModeStatus ? "brown" : "peach"}
             size="lg"
