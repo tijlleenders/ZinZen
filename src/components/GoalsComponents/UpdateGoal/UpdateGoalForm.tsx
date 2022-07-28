@@ -39,17 +39,22 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       [e.target.name]: value,
     });
   };
-  const lowercaseInput = formInputData.inputGoal.toLowerCase();
   const daily = /daily/;
   const once = /once/;
+  const weekly = /weekly/;
+  const lowercaseInput = formInputData.inputGoal.toLowerCase();
   const freqDaily = lowercaseInput.match(daily);
   const freqOnce = lowercaseInput.match(once);
+  const freqWeekly = lowercaseInput.match(weekly);
   function suggestion() {
     if (lowercaseInput.indexOf(`${freqDaily}`) !== -1) {
       return "daily";
     }
     if (lowercaseInput.indexOf(`${freqOnce}`) !== -1) {
       return "once";
+    }
+    if (lowercaseInput.indexOf(`${freqWeekly}`) !== -1) {
+      return "weekly";
     }
     return "";
   }
@@ -62,8 +67,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   }
   function duration() {
     const tracker = /(1[0-9]|2[0-4]|[1-9])+h/i;
-    const checkGoal = parseInt(String(formInputData.inputGoal.match(tracker)), 10);
-    const parseGoal = parseInt(String(formInputData.inputGoal.match(tracker)), 10) <= 24;
+    const checkGoal = parseInt(String(lowercaseInput.match(tracker)), 10);
+    const parseGoal = parseInt(String(lowercaseInput.match(tracker)), 10) <= 24;
     if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
       return `${checkGoal} hours`;
     }
@@ -105,6 +110,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   useEffect(() => {
     setGoalTitle(formInputData.inputGoal.slice(0));
   }, [formInputData.inputGoal]);
+
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
@@ -149,7 +155,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={suggestion() === "once" || suggestion() === "daily" ? "suggestion" : "blank"}
+          className={suggestion() === "once" || suggestion() === "daily" || suggestion() === "weekly" ? "suggestion" : "blank"}
         >
           {suggestion()}
         </button>
