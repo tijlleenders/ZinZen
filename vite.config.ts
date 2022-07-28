@@ -2,6 +2,7 @@ import path from "path";
 import { Alias, defineConfig } from "vite";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { VitePWA } from "vite-plugin-pwa";
+import ViteRustPlugin from 'vite-rust-plugin';
 
 import * as tsconfig from "./tsconfig.paths.json";
 
@@ -21,6 +22,7 @@ export default defineConfig({
   resolve: {
     alias: readAliasFromTsConfig(),
   },
+  base: './',
   plugins: [
     VitePWA({
       workbox: {
@@ -67,5 +69,9 @@ export default defineConfig({
       },
       injectManifest: {},
     }),
+    new ViteRustPlugin({
+      crateDir: '../ZinZen-scheduler',
+      extraArgs: '--no-typescript',
+  }),
   ],
 });
