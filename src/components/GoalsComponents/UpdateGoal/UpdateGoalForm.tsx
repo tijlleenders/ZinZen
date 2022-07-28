@@ -79,7 +79,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       setError("Enter a goal title!");
       return;
     }
-    await updateGoal(goalId, { title: goalTitle, duration: goalDuration, repeat: goalFrequency === "" ? null : goalFrequency });
+    await updateGoal(goalId, { title: goalTitle, goalColor: colorPallete[selectedColorIndex], duration: goalDuration, repeat: goalFrequency === "" ? null : goalFrequency });
     setFormInputData({
       inputGoal: "",
       id: "",

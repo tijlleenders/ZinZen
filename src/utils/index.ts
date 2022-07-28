@@ -31,7 +31,8 @@ export const getDiffInHours = (date1 : Date, date2: Date) => {
 };
 
 export const colorPallete = [
-  "#64993B", "#3B6899", "#B27D4D", "#B24D4D", "#384731",
-  "#595959", "#AB4B2D", "#4F4DB2", "#4DB2A0", "#B2A24D",
-  "#671D1D", "#475B42", "#733D3D", "#8E3379", "#AC3B61"
+  "#595959", "#B2A24D", "#384731", "#475B42", "#64993B",
+  "#4DB2A0", "#3B6899", "#4F4DB2",
+  "#733D3D", "#B27D4D", "#AB4B2D", "#B24D4D", "#671D1D",
+  "#8E3379", "#AC3B61",
 ];
