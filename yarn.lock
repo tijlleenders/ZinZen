@@ -4255,6 +4255,11 @@
   "resolved" "https://registry.npmjs.org/check-types/-/check-types-11.1.2.tgz"
   "version" "11.1.2"
 
+"child_process@^1.0.2":
+  "integrity" "sha512-Wmza/JzL0SiWz7kl6MhIKT5ceIlnFPJX+lwUGj7Clhy5MMldsSoJR0+uvRzOS5Kv45Mq7t1PoE8TsOA9bzvb6g=="
+  "resolved" "https://registry.npmjs.org/child_process/-/child_process-1.0.2.tgz"
+  "version" "1.0.2"
+
 "chokidar@^3.4.2", "chokidar@^3.5.3", "chokidar@>=3.0.0 <4.0.0":
   "integrity" "sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw=="
   "resolved" "https://registry.npmjs.org/chokidar/-/chokidar-3.5.3.tgz"
@@ -5434,9 +5439,9 @@
     "is-date-object" "^1.0.1"
     "is-symbol" "^1.0.2"
 
-"esbuild-windows-64@0.14.36":
-  "integrity" "sha512-+p4MuRZekVChAeueT1Y9LGkxrT5x7YYJxYE8ZOTcEfeUUN43vktSn6hUNsvxzzATrSgq5QqRdllkVBxWZg7KqQ=="
-  "resolved" "https://registry.npmjs.org/esbuild-windows-64/-/esbuild-windows-64-0.14.36.tgz"
+"esbuild-linux-64@0.14.36":
+  "integrity" "sha512-vFVFS5ve7PuwlfgoWNyRccGDi2QTNkQo/2k5U5ttVD0jRFaMlc8UQee708fOZA6zTCDy5RWsT5MJw3sl2X6KDg=="
+  "resolved" "https://registry.npmjs.org/esbuild-linux-64/-/esbuild-linux-64-0.14.36.tgz"
   "version" "0.14.36"
 
 "esbuild@^0.14.27":
@@ -11964,6 +11969,15 @@
     "rollup" "^2.70.2"
     "workbox-build" "^6.5.3"
     "workbox-window" "^6.5.3"
+
+"vite-rust-plugin@^1.0.5":
+  "integrity" "sha512-V/baXfeJwluA4PDBjcrPi9TQHRJdxKx3y5mJpUsFuGI1itRvX4wd3syFKUExU07l4JI4G51ThR/nZr14l6KQ1g=="
+  "resolved" "https://registry.npmjs.org/vite-rust-plugin/-/vite-rust-plugin-1.0.5.tgz"
+  "version" "1.0.5"
+  dependencies:
+    "chalk" "^2.4.1"
+    "child_process" "^1.0.2"
+    "watchpack" "^2.3.1"
 
 "vite@^2.0.0", "vite@^2.9.1":
   "integrity" "sha512-dvMN64X2YEQgSXF1lYabKXw3BbN6e+BL67+P3Vy4MacnY+UzT1AfkHiioFSi9+uiDUiaDy7Ax/LQqivk6orilg=="
