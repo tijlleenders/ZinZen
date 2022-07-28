@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
@@ -6,6 +6,7 @@ import { useRecoilValue } from "recoil";
 import paintBrush from "@assets/images/paintBrush.svg";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
+import { getGoal } from "@src/api/GoalsAPI";
 import { UpdateGoalForm } from "./UpdateGoalForm";
 
 import "@translations/i18n";
@@ -29,6 +30,14 @@ export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoa
     if (colorPallete[newColorIndex]) setColorIndex(newColorIndex);
     else setColorIndex(0);
   };
+
+  useEffect(() => {
+    const getGoalColor = async () => {
+      const goal = await getGoal(Number(goalId));
+      setColorIndex(colorPallete.indexOf(goal.goalColor));
+    };
+    getGoalColor();
+  }, []);
 
   return (
     <Container fluid id="addGoals-container">
