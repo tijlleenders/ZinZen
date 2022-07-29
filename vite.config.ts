@@ -69,9 +69,9 @@ export default defineConfig({
       },
       injectManifest: {},
     }),
-    new ViteRustPlugin({
-      crateDir: '../ZinZen-scheduler',
-      extraArgs: '--no-typescript',
-  }),
+  //   new ViteRustPlugin({
+  //     crateDir: '../ZinZen-scheduler',
+  //     extraArgs: '--no-typescript',
+  // }),
   ],
 });
