@@ -16,7 +16,7 @@ import "@translations/i18n";
 import "./DashboardUserChoicePanel.scss";
 import "@pages/Dashboard/Dashboard.scss";
 
-import init from  "../../../../ZinZen-scheduler/pkg";
+import init from  "../../../pkg";
 
 export const DashboardUserChoicePanel = () => {
   const navigate = useNavigate();
