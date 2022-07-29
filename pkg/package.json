@@ -10,10 +10,12 @@
   "files": [
     "index_bg.wasm",
     "index.js",
+    "index.d.ts",
     "LICENSE.md"
   ],
   "module": "index.js",
   "homepage": "https://github.com/tijlleenders/ZinZen-scheduler/wiki",
+  "types": "index.d.ts",
   "sideEffects": false,
   "keywords": [
     "zinzen",
