@@ -8,14 +8,14 @@
     "url": "https://github.com/tijlleenders/ZinZen-scheduler"
   },
   "files": [
-    "index_bg.wasm",
-    "index.js",
-    "index.d.ts",
+    "schedule_bg.wasm",
+    "schedule.js",
+    "schedule.d.ts",
     "LICENSE.md"
   ],
-  "module": "index.js",
+  "module": "schedule.js",
   "homepage": "https://github.com/tijlleenders/ZinZen-scheduler/wiki",
-  "types": "index.d.ts",
+  "types": "schedule.d.ts",
   "sideEffects": false,
   "keywords": [
     "zinzen",
