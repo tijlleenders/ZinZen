@@ -6,7 +6,9 @@ import { useTranslation } from "react-i18next";
 import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
+import { languagesFullForms } from "@translations/i18n";
 
+// eslint-disable-next-line import/no-duplicates
 import "@translations/i18n";
 import "./UpdateGoalForm.scss";
 
@@ -28,6 +30,9 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   });
   const [goalTitle, setGoalTitle] = useState("");
   const [error, setError] = useState("");
+
+  const lang = localStorage.getItem("language")?.slice(1, -1);
+  const languageTag = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -110,7 +115,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   useEffect(() => {
     setGoalTitle(formInputData.inputGoal.slice(0));
   }, [formInputData.inputGoal]);
-
+  console.log(lang);
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
@@ -126,6 +131,17 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
         />
       </div>
       <div className="tags">
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+          className="language"
+        >
+          {languageTag}
+        </button>
         <button
           type="button"
           style={

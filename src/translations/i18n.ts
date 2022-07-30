@@ -56,5 +56,12 @@ i18n.init({
 });
 
 const languagesAvailable = ["de", "en", "es", "fr", "hi", "nl"];
-
-export { i18n, languagesAvailable };
+const languagesFullForms = {
+  de: "German",
+  en: "English",
+  es: "Spanish",
+  fr: "French",
+  hi: "Hindi",
+  nl: "Dutch"
+};
+export { i18n, languagesAvailable, languagesFullForms };

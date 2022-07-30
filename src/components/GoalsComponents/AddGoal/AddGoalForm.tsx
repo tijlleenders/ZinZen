@@ -2,14 +2,16 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
+import { languagesFullForms } from "@translations/i18n";
 
+// eslint-disable-next-line import/no-duplicates
 import "@translations/i18n";
 import "./AddGoalForm.scss";
-import { useNavigate } from "react-router";
 
 interface AddGoalFormProps {
   goalId: number | undefined,
@@ -31,6 +33,9 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   });
   const [goalTitle, setGoalTitle] = useState("");
   const [error, setError] = useState("");
+
+  const lang = localStorage.getItem("language")?.slice(1, -1);
+  const languageTag = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -137,6 +142,17 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
         />
       </div>
       <div className="tags">
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+          className="language"
+        >
+          {languageTag}
+        </button>
         <button
           type="button"
           style={
