@@ -1,3 +1,4 @@
+/* eslint-disable import/no-duplicates */
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
@@ -9,7 +10,6 @@ import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 import { languagesFullForms } from "@translations/i18n";
 
-// eslint-disable-next-line import/no-duplicates
 import "@translations/i18n";
 import "./AddGoalForm.scss";
 
