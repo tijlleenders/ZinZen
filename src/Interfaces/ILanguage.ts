@@ -1,5 +1,5 @@
 export interface ILanguage {
-  sno: Number;
+  sno: number;
   title: string;
   langId: string;
 }
