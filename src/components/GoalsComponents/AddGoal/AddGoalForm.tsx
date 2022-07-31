@@ -35,7 +35,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   const [error, setError] = useState("");
 
   const lang = localStorage.getItem("language")?.slice(1, -1);
-  const languageTag = lang ? languagesFullForms[lang] : languagesFullForms.en;
+  const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -103,7 +103,8 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
       null,
       0,
       parentGoalId!,
-      darkModeStatus ? colorPallete[selectedColorIndex] : colorPallete[selectedColorIndex] // goalColor
+      darkModeStatus ? colorPallete[selectedColorIndex] : colorPallete[selectedColorIndex], // goalColor
+      goalLang
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
@@ -151,7 +152,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
           }
           className="language"
         >
-          {languageTag}
+          {goalLang}
         </button>
         <button
           type="button"
