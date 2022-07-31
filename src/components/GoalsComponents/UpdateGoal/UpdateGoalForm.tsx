@@ -28,6 +28,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   });
   const [goalTitle, setGoalTitle] = useState("");
   const [error, setError] = useState("");
+  const [goalLang, setGoalLang] = useState("english");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -104,13 +105,13 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       setFormInputData({ id: crypto.randomUUID(),
         inputGoal: `${goal.title} ${goal.duration ? `${goal.duration}hours` : ""} ${goal.repeat ? `${goal.repeat}` : ""}`
       });
+      if (goal.language) setGoalLang(goal.language);
     });
   }, []);
 
   useEffect(() => {
     setGoalTitle(formInputData.inputGoal.slice(0));
   }, [formInputData.inputGoal]);
-
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
@@ -126,6 +127,17 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
         />
       </div>
       <div className="tags">
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+          className="language"
+        >
+          {goalLang}
+        </button>
         <button
           type="button"
           style={

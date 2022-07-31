@@ -98,10 +98,12 @@ export const createGoal = (
   goalFinish: Date | null,
   goalStatus: 0 | 1,
   parentGoalId: number | -1,
-  goalColor: string
+  goalColor: string,
+  goalLang: string
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
+    language: goalLang,
     repeat: goalRepeats === null ? null : goalRepeats ? "Daily" : "Once",
     duration: goalDuration,
     start: goalStart,
