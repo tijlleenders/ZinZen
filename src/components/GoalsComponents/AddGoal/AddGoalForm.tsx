@@ -27,15 +27,65 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   const { t } = useTranslation();
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const [error, setError] = useState("");
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
   });
   const [goalTitle, setGoalTitle] = useState("");
-  const [error, setError] = useState("");
+  const [goalDuration, setGoalDuration] = useState<null | number>(null);
+  const [goalRepeats, setGoalRepeats] = useState<"Once" | "Daily" | "Weekly" | null>(null);
+  const [goalLink, setGoalLink] = useState<string | null>(null);
+
+  const daily = /daily/;
+  const once = /once/;
+  const weekly = /weekly/;
 
   const lang = localStorage.getItem("language")?.slice(1, -1);
   const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
+
+  const lowercaseInput = formInputData.inputGoal.toLowerCase();
+
+  function handleGoalRepeat() {
+    const freqDaily = lowercaseInput.match(daily);
+    const freqOnce = lowercaseInput.match(once);
+    const freqWeekly = lowercaseInput.match(weekly);
+    if (lowercaseInput.indexOf(`${freqDaily}`) !== -1) {
+      if (goalRepeats !== "Daily") { setGoalRepeats("Daily"); }
+      return;
+    }
+    if (lowercaseInput.indexOf(`${freqOnce}`) !== -1) {
+      if (goalRepeats !== "Once") { setGoalRepeats("Once"); }
+      return;
+    }
+    if (lowercaseInput.indexOf(`${freqWeekly}`) !== -1) {
+      if (goalRepeats !== "Weekly") { setGoalRepeats("Weekly"); }
+      return;
+    }
+    setGoalRepeats(null);
+  }
+  function handleGoalLink() {
+    const detector = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\\/~+#-]*[\w@?^=%&\\/~+#-])/;
+    const linkIndex = formInputData.inputGoal.search(detector);
+    if (linkIndex !== -1) {
+      const link = formInputData.inputGoal.slice(linkIndex).split(" ")[0];
+      if (goalLink !== link) { setGoalLink(link); }
+      return;
+    }
+    setGoalLink(null);
+  }
+  function handleGoalDuration() {
+    const tracker = /(1[0-9]|2[0-4]|[1-9])+h/i;
+    const checkGoalHr = parseInt(String(lowercaseInput.match(tracker)), 10);
+    if (checkGoalHr === goalDuration) { return; }
+
+    const parseGoal = parseInt(String(lowercaseInput.match(tracker)), 10) <= 24;
+    if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
+      setGoalDuration(checkGoalHr);
+      return;
+    }
+    setGoalDuration(null);
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -47,64 +97,31 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
       [e.target.name]: value,
     });
   };
-  const daily = /daily/;
-  const once = /once/;
-  const weekly = /weekly/;
-  const lowercaseInput = formInputData.inputGoal.toLowerCase();
-  const freqDaily = lowercaseInput.match(daily);
-  const freqOnce = lowercaseInput.match(once);
-  const freqWeekly = lowercaseInput.match(weekly);
-  function suggestion() {
-    if (lowercaseInput.indexOf(`${freqDaily}`) !== -1) {
-      return "daily";
-    }
-    if (lowercaseInput.indexOf(`${freqOnce}`) !== -1) {
-      return "once";
-    }
-    if (lowercaseInput.indexOf(`${freqWeekly}`) !== -1) {
-      return "weekly";
-    }
-    return "";
-  }
-  function urlDetection() {
-    const detector = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\\/~+#-]*[\w@?^=%&\\/~+#-])/;
-    if (formInputData.inputGoal.search(detector) !== -1) {
-      return "Link";
-    }
-    return "";
-  }
-  function duration() {
-    const tracker = /(1[0-9]|2[0-4]|[1-9])+h/i;
-    const checkGoal = parseInt(String(lowercaseInput.match(tracker)), 10);
-    const parseGoal = parseInt(String(lowercaseInput.match(tracker)), 10) <= 24;
-    if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
-      return `${checkGoal} hours`;
-    }
-    return "";
-  }
 
   useEffect(() => {
     setGoalTitle(formInputData.inputGoal.slice(0));
+    handleGoalDuration();
+    handleGoalLink();
+    handleGoalRepeat();
   }, [formInputData.inputGoal]);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const goalFrequency = suggestion() === "" ? null : suggestion() === "daily";
-    const goalDuration = duration() === "" ? null : Number(duration().split("")[0]);
     if (goalTitle.length === 0) {
       setError("Enter a goal title!");
       return;
     }
     const newGoal = createGoal(
       goalTitle,
-      goalFrequency,
+      goalRepeats,
       goalDuration,
       null,
       null,
       0,
       parentGoalId!,
-      darkModeStatus ? colorPallete[selectedColorIndex] : colorPallete[selectedColorIndex], // goalColor
-      goalLang
+      colorPallete[selectedColorIndex], // goalColor
+      goalLang,
+      goalLink
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
@@ -161,9 +178,9 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={duration() !== "" ? "duration" : "blank"}
+          className={goalDuration ? "form-tag" : "blank"}
         >
-          {duration()}
+          {`${goalDuration} hours`}
         </button>
         <button
           type="button"
@@ -172,9 +189,9 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={urlDetection() !== "" ? "duration" : "blank"}
+          className={goalRepeats ? "form-tag" : "blank"}
         >
-          {urlDetection()}
+          {goalRepeats}
         </button>
         <button
           type="button"
@@ -183,9 +200,9 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={suggestion() === "once" || suggestion() === "daily" || suggestion() === "weekly" ? "suggestion" : "blank"}
+          className={goalLink ? "form-tag" : "blank"}
         >
-          {suggestion()}
+          URL
         </button>
       </div>
       <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
