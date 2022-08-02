@@ -65,7 +65,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     setGoalRepeats(null);
   }
   function handleGoalLink() {
-    const detector = /(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm;
+    const detector = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])|(www)([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/i;
     const linkIndex = formInputData.inputGoal.search(detector);
     if (linkIndex !== -1) {
       const link = formInputData.inputGoal.slice(linkIndex).split(" ")[0];
