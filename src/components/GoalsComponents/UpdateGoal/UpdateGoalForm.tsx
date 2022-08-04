@@ -1,48 +1,41 @@
-/* eslint-disable import/no-duplicates */
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 
-import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
-import { languagesFullForms } from "@translations/i18n";
 
 import "@translations/i18n";
-import "./AddGoalForm.scss";
+import "./UpdateGoalForm.scss";
 
-interface AddGoalFormProps {
+interface UpdateGoalFormProps {
   goalId: number | undefined,
-  setShowAddGoals: React.Dispatch<React.SetStateAction<{
+  selectedColorIndex: number,
+  setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
     open: boolean;
     goalId: number;
-  }>>,
-  selectedColorIndex: number,
-  parentGoalId: number | -1,
+  }>>
 }
 
-export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
+export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selectedColorIndex, setShowUpdateGoal }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [error, setError] = useState("");
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
   });
+  const [error, setError] = useState("");
   const [goalTitle, setGoalTitle] = useState("");
   const [goalDuration, setGoalDuration] = useState<null | number>(null);
   const [goalRepeats, setGoalRepeats] = useState<"Once" | "Daily" | "Weekly" | null>(null);
   const [goalLink, setGoalLink] = useState<string | null>(null);
+  const [goalLang, setGoalLang] = useState("english");
 
   const daily = /daily/;
   const once = /once/;
   const weekly = /weekly/;
-
-  const lang = localStorage.getItem("language")?.slice(1, -1);
-  const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
   const lowercaseInput = formInputData.inputGoal.toLowerCase();
 
@@ -97,6 +90,39 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     });
   };
 
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (goalTitle.length === 0) {
+      setError("Enter a goal title!");
+      return;
+    }
+    await updateGoal(goalId,
+      { title: goalTitle,
+        goalColor: colorPallete[selectedColorIndex],
+        duration: goalDuration,
+        repeat: goalRepeats,
+        link: goalLink
+      });
+    setFormInputData({
+      inputGoal: "",
+      id: "",
+    });
+    setGoalTitle("");
+    setShowUpdateGoal({ open: false, id: -1 });
+  };
+
+  useEffect(() => {
+    getGoal(goalId).then((goal) => {
+      setFormInputData({ id: crypto.randomUUID(),
+        inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${goal.link ? ` ${goal.link}` : ""}`
+      });
+      setGoalDuration(goal.duration);
+      setGoalRepeats(goal.repeat);
+      setGoalLink(goal.link);
+      if (goal.language) setGoalLang(goal.language);
+    });
+  }, []);
+
   useEffect(() => {
     const durIndx = handleGoalDuration();
     const linkIndx = handleGoalLink();
@@ -113,40 +139,6 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     }
     setGoalTitle(formInputData.inputGoal.slice(0, tmpTitleEnd));
   }, [formInputData.inputGoal]);
-
-  const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    if (goalTitle.length === 0) {
-      setError("Enter a goal title!");
-      return;
-    }
-    const newGoal = createGoal(
-      goalTitle,
-      goalRepeats,
-      goalDuration,
-      null,
-      null,
-      0,
-      parentGoalId!,
-      colorPallete[selectedColorIndex], // goalColor
-      goalLang,
-      goalLink
-    );
-    const newGoalId = await addGoal(newGoal);
-    if (parentGoalId) {
-      const parentGoal = await getGoal(parentGoalId);
-      const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
-      await updateGoal(parentGoalId, { sublist: newSublist });
-    }
-    setFormInputData({
-      inputGoal: "",
-      id: "",
-    });
-    setGoalTitle("");
-    const typeOfPage = window.location.href.split("/").slice(-1)[0];
-    setShowAddGoals({ open: false, id: goalId || -1 });
-    if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
-  };
 
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
@@ -218,7 +210,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
         >
-          Add Goal
+          Update Goal
         </Button>
       </div>
       <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
