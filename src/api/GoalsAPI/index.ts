@@ -92,25 +92,27 @@ export const isCollectionEmpty = async () => {
 
 export const createGoal = (
   goalTitle: string,
-  goalRepeats: boolean | null,
+  goalRepeats: "Once" | "Daily" | "Weekly" | null,
   goalDuration: number | null,
   goalStart: Date | null,
   goalFinish: Date | null,
   goalStatus: 0 | 1,
   parentGoalId: number | -1,
   goalColor: string,
-  goalLang: string
+  goalLang: string,
+  link: string | null
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
     language: goalLang,
-    repeat: goalRepeats === null ? null : goalRepeats ? "Daily" : "Once",
+    repeat: goalRepeats,
     duration: goalDuration,
     start: goalStart,
     finish: goalFinish,
     status: goalStatus,
     parentGoalId,
     goalColor,
+    link
   };
   return newGoal;
 };

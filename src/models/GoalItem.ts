@@ -11,4 +11,5 @@ export interface GoalItem {
   parentGoalId: number | -1; // -1 = no parent
   goalColor?: string;
   language: string;
+  link: string | null;
 }
