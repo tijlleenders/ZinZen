@@ -1,83 +1,89 @@
+/* eslint-disable import/no-duplicates */
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
-import { getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
+import { languagesFullForms } from "@translations/i18n";
 
 import "@translations/i18n";
-import "./UpdateGoalForm.scss";
+import "./AddGoalForm.scss";
 
-interface UpdateGoalFormProps {
+interface AddGoalFormProps {
   goalId: number | undefined,
-  selectedColorIndex: number,
-  setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
+  setShowAddGoals: React.Dispatch<React.SetStateAction<{
     open: boolean;
     goalId: number;
-  }>>
+  }>>,
+  selectedColorIndex: number,
+  parentGoalId: number | -1,
 }
 
-export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selectedColorIndex, setShowUpdateGoal }) => {
+export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const [error, setError] = useState("");
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
   });
-  const [error, setError] = useState("");
   const [goalTitle, setGoalTitle] = useState("");
   const [goalDuration, setGoalDuration] = useState<null | number>(null);
   const [goalRepeats, setGoalRepeats] = useState<"Once" | "Daily" | "Weekly" | null>(null);
   const [goalLink, setGoalLink] = useState<string | null>(null);
-  const [goalLang, setGoalLang] = useState("english");
 
   const daily = /daily/;
   const once = /once/;
   const weekly = /weekly/;
 
+  const lang = localStorage.getItem("language")?.slice(1, -1);
+  const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
+
   const lowercaseInput = formInputData.inputGoal.toLowerCase();
 
   function handleGoalRepeat() {
-    const freqDaily = lowercaseInput.match(daily);
-    const freqOnce = lowercaseInput.match(once);
-    const freqWeekly = lowercaseInput.match(weekly);
-    if (lowercaseInput.indexOf(`${freqDaily}`) !== -1) {
-      if (goalRepeats !== "Daily") { setGoalRepeats("Daily"); }
-      return;
-    }
-    if (lowercaseInput.indexOf(`${freqOnce}`) !== -1) {
-      if (goalRepeats !== "Once") { setGoalRepeats("Once"); }
-      return;
-    }
-    if (lowercaseInput.indexOf(`${freqWeekly}`) !== -1) {
-      if (goalRepeats !== "Weekly") { setGoalRepeats("Weekly"); }
-      return;
-    }
-    setGoalRepeats(null);
+    if (!lowercaseInput) { setGoalRepeats(null); return -1; }
+    const freqDailyIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(daily));
+    const freqOnceIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(once));
+    const freqWeeklyIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(weekly));
+    const tempIndex = Math.max(freqDailyIndex, freqOnceIndex, freqWeeklyIndex);
+    if (tempIndex === -1) { setGoalRepeats(null); } else if (tempIndex === freqDailyIndex) setGoalRepeats("Daily");
+    else if (tempIndex === freqOnceIndex) setGoalRepeats("Once");
+    else if (tempIndex === freqWeeklyIndex) setGoalRepeats("Weekly");
+    return tempIndex - 1;
   }
   function handleGoalLink() {
     const detector = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])|(www)([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/i;
     const linkIndex = formInputData.inputGoal.search(detector);
     if (linkIndex !== -1) {
       const link = formInputData.inputGoal.slice(linkIndex).split(" ")[0];
-      if (goalLink !== link) { setGoalLink(link); }
-      return;
-    }
-    setGoalLink(null);
+      setGoalLink(link);
+    } else setGoalLink(null);
+    return linkIndex - 1;
   }
   function handleGoalDuration() {
     const tracker = /(1[0-9]|2[0-4]|[1-9])+h/i;
-    const checkGoalHr = parseInt(String(lowercaseInput.match(tracker)), 10);
-    if (checkGoalHr === goalDuration) { return; }
-
-    const parseGoal = parseInt(String(lowercaseInput.match(tracker)), 10) <= 24;
-    if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
-      setGoalDuration(checkGoalHr);
-      return;
+    const reverseInputArr = lowercaseInput.split(" ");
+    let lastIndex = -1;
+    let tmpSum = 0;
+    for (let i = 0; i < reverseInputArr.length; i += 1) {
+      const reverseInput = reverseInputArr[i];
+      const checkGoalHr = parseInt(String(reverseInput.match(tracker)), 10);
+      const parseGoal = parseInt(String(reverseInput.match(tracker)), 10) <= 24;
+      const tempIndex = reverseInput.search(tracker);
+      if (tempIndex !== -1 && parseGoal) {
+        setGoalDuration(checkGoalHr);
+        lastIndex += tmpSum;
+      }
+      tmpSum += reverseInput.length + 1;
     }
-    setGoalDuration(null);
+    if (lastIndex < 0) { setGoalDuration(null); }
+    return lastIndex;
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -91,52 +97,56 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     });
   };
 
-  const handleSubmit =
-  async (e: React.SyntheticEvent) => {
+  useEffect(() => {
+    const durIndx = handleGoalDuration();
+    const linkIndx = handleGoalLink();
+    const repeatIndx = handleGoalRepeat();
+    let tmpTitleEnd = formInputData.inputGoal.length;
+    if (durIndx > 0) {
+      tmpTitleEnd = durIndx > tmpTitleEnd ? tmpTitleEnd : durIndx;
+    }
+    if (linkIndx > 0) {
+      tmpTitleEnd = linkIndx > tmpTitleEnd ? tmpTitleEnd : linkIndx;
+    }
+    if (repeatIndx > 0) {
+      tmpTitleEnd = repeatIndx > tmpTitleEnd ? tmpTitleEnd : repeatIndx;
+    }
+    setGoalTitle(formInputData.inputGoal.slice(0, tmpTitleEnd));
+  }, [formInputData.inputGoal]);
+
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (goalTitle.length === 0) {
       setError("Enter a goal title!");
       return;
     }
-    await updateGoal(goalId,
-      { title: goalTitle,
-        goalColor: colorPallete[selectedColorIndex],
-        duration: goalDuration,
-        repeat: goalRepeats,
-        link: goalLink
-      });
+    const newGoal = createGoal(
+      goalTitle,
+      goalRepeats,
+      goalDuration,
+      null,
+      null,
+      0,
+      parentGoalId!,
+      colorPallete[selectedColorIndex], // goalColor
+      goalLang,
+      goalLink
+    );
+    const newGoalId = await addGoal(newGoal);
+    if (parentGoalId) {
+      const parentGoal = await getGoal(parentGoalId);
+      const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
+      await updateGoal(parentGoalId, { sublist: newSublist });
+    }
     setFormInputData({
       inputGoal: "",
       id: "",
     });
     setGoalTitle("");
-    setShowUpdateGoal({ open: false, id: -1 });
+    const typeOfPage = window.location.href.split("/").slice(-1)[0];
+    setShowAddGoals({ open: false, id: goalId || -1 });
+    if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
-
-  useEffect(() => {
-    const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
-    const titleEndIndex = formInputData.inputGoal.search(tracker);
-    if (titleEndIndex !== -1) setGoalTitle(formInputData.inputGoal.slice(0, titleEndIndex - 1));
-  }, [handleSubmit]);
-
-  useEffect(() => {
-    getGoal(goalId).then((goal) => {
-      setFormInputData({ id: crypto.randomUUID(),
-        inputGoal: `${goal.title} ${goal.duration ? `${goal.duration}hours` : ""} ${goal.repeat ? `${goal.repeat}` : ""} ${goal.link ? `${goal.link}` : ""}`
-      });
-      setGoalDuration(goal.duration);
-      setGoalRepeats(goal.repeat);
-      setGoalLink(goal.link);
-      if (goal.language) setGoalLang(goal.language);
-    });
-  }, []);
-
-  useEffect(() => {
-    setGoalTitle(formInputData.inputGoal.slice(0));
-    handleGoalDuration();
-    handleGoalLink();
-    handleGoalRepeat();
-  }, [formInputData.inputGoal]);
 
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
@@ -208,7 +218,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
         >
-          Update Goal
+          Add Goal
         </Button>
       </div>
       <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
