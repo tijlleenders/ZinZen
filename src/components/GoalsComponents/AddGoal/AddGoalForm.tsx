@@ -47,44 +47,43 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   const lowercaseInput = formInputData.inputGoal.toLowerCase();
 
   function handleGoalRepeat() {
-    const freqDaily = lowercaseInput.match(daily);
-    const freqOnce = lowercaseInput.match(once);
-    const freqWeekly = lowercaseInput.match(weekly);
-    if (lowercaseInput.indexOf(`${freqDaily}`) !== -1) {
-      if (goalRepeats !== "Daily") { setGoalRepeats("Daily"); }
-      return;
-    }
-    if (lowercaseInput.indexOf(`${freqOnce}`) !== -1) {
-      if (goalRepeats !== "Once") { setGoalRepeats("Once"); }
-      return;
-    }
-    if (lowercaseInput.indexOf(`${freqWeekly}`) !== -1) {
-      if (goalRepeats !== "Weekly") { setGoalRepeats("Weekly"); }
-      return;
-    }
-    setGoalRepeats(null);
+    if (!lowercaseInput) { setGoalRepeats(null); return -1; }
+    const freqDailyIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(daily));
+    const freqOnceIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(once));
+    const freqWeeklyIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(weekly));
+    const tempIndex = Math.max(freqDailyIndex, freqOnceIndex, freqWeeklyIndex);
+    if (tempIndex === -1) { setGoalRepeats(null); } else if (tempIndex === freqDailyIndex) setGoalRepeats("Daily");
+    else if (tempIndex === freqOnceIndex) setGoalRepeats("Once");
+    else if (tempIndex === freqWeeklyIndex) setGoalRepeats("Weekly");
+    return tempIndex - 1;
   }
   function handleGoalLink() {
     const detector = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])|(www)([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/i;
     const linkIndex = formInputData.inputGoal.search(detector);
     if (linkIndex !== -1) {
       const link = formInputData.inputGoal.slice(linkIndex).split(" ")[0];
-      if (goalLink !== link) { setGoalLink(link); }
-      return;
-    }
-    setGoalLink(null);
+      setGoalLink(link);
+    } else setGoalLink(null);
+    return linkIndex - 1;
   }
   function handleGoalDuration() {
     const tracker = /(1[0-9]|2[0-4]|[1-9])+h/i;
-    const checkGoalHr = parseInt(String(lowercaseInput.match(tracker)), 10);
-    if (checkGoalHr === goalDuration) { return; }
-
-    const parseGoal = parseInt(String(lowercaseInput.match(tracker)), 10) <= 24;
-    if (formInputData.inputGoal.search(tracker) !== -1 && parseGoal) {
-      setGoalDuration(checkGoalHr);
-      return;
+    const reverseInputArr = lowercaseInput.split(" ");
+    let lastIndex = -1;
+    let tmpSum = 0;
+    for (let i = 0; i < reverseInputArr.length; i += 1) {
+      const reverseInput = reverseInputArr[i];
+      const checkGoalHr = parseInt(String(reverseInput.match(tracker)), 10);
+      const parseGoal = parseInt(String(reverseInput.match(tracker)), 10) <= 24;
+      const tempIndex = reverseInput.search(tracker);
+      if (tempIndex !== -1 && parseGoal) {
+        setGoalDuration(checkGoalHr);
+        lastIndex += tmpSum;
+      }
+      tmpSum += reverseInput.length + 1;
     }
-    setGoalDuration(null);
+    if (lastIndex < 0) { setGoalDuration(null); }
+    return lastIndex;
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -99,10 +98,20 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   };
 
   useEffect(() => {
-    setGoalTitle(formInputData.inputGoal.slice(0));
-    handleGoalDuration();
-    handleGoalLink();
-    handleGoalRepeat();
+    const durIndx = handleGoalDuration();
+    const linkIndx = handleGoalLink();
+    const repeatIndx = handleGoalRepeat();
+    let tmpTitleEnd = formInputData.inputGoal.length;
+    if (durIndx > 0) {
+      tmpTitleEnd = durIndx > tmpTitleEnd ? tmpTitleEnd : durIndx;
+    }
+    if (linkIndx > 0) {
+      tmpTitleEnd = linkIndx > tmpTitleEnd ? tmpTitleEnd : linkIndx;
+    }
+    if (repeatIndx > 0) {
+      tmpTitleEnd = repeatIndx > tmpTitleEnd ? tmpTitleEnd : repeatIndx;
+    }
+    setGoalTitle(formInputData.inputGoal.slice(0, tmpTitleEnd));
   }, [formInputData.inputGoal]);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -138,12 +147,6 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     setShowAddGoals({ open: false, id: goalId || -1 });
     if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
-
-  useEffect(() => {
-    const tracker = /(1[0-9]|2[0-4]|[1-9])+(h)/;
-    const titleEndIndex = formInputData.inputGoal.search(tracker);
-    if (titleEndIndex !== -1) setGoalTitle(formInputData.inputGoal.slice(0, titleEndIndex - 1));
-  }, [handleSubmit]);
 
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
