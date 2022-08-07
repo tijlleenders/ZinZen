@@ -89,11 +89,19 @@
   font-family: "Montserrat";
   font-weight: bold;
   font-size: 1.3em;
-  justify-content: space-between;
+  // justify-content: space-between;
   text-align: left !important;
   width: 100%;
 }
 
+.goal-link {
+  // width: 100%;
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-weight: bold;
+  font-size: 1em;
+}
 #share-modal {
   margin: 0;
 }
