@@ -116,18 +116,12 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                     aria-hidden
                     className="goal-title"
                     suppressContentEditableWarning
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      width: "100%",
-                      color: "white"
-                    }}
                     onClick={() => {
                       addInHistory(goal);
                     }}
                   >
-                    {goal.title}
+                    <div>{goal.title}</div>&nbsp;
+                    { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
                   </div>
                   <div
                     style={{ paddingLeft: "5%" }}
