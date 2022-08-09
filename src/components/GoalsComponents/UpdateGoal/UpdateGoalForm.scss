@@ -148,12 +148,13 @@
     font-size: x-large !important;
     font-weight: bolder !important;
     color: white;
+    display: flex;
     border-style: none;
     padding: 00.3em;
     position: absolute;
     border-radius: 10px;
     margin-left: 60%;
-    margin-top: -6.5em;
+    margin-top: -8.0em;
   }
 
   #changeColor-btn {
@@ -221,7 +222,7 @@
   }
   @media (min-width: 950px) {
     #changeColor-btn {
-      width: 6.2em;
+      width: 6.0em;
       position: absolute;
       right: 0;
       margin-right: 40%;
@@ -238,6 +239,8 @@
       position: absolute;
       border-radius: 10px;
       margin-left: 60%;
+      display: flex;
+      margin-top: -15.2%;
     }
   
     #addGoals-container {
