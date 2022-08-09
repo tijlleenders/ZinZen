@@ -12,7 +12,7 @@
   "discover": "Browse the code",
   "donate": "Donate",
   "mygoals": "My Goals",
-  "goalsubtext": "Add your task in format-",
+  "goalsubtext": "Format:",
   "format": "task + duration + frequency",
   "addGoalPlaceholder": "Type your goal + 1h + daily",
   "addTimePlaceholder": "Add time",
