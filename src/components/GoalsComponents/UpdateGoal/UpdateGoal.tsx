@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row } from "react-bootstrap";
+import { Container, Row, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
@@ -42,8 +42,24 @@ export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoa
   return (
     <Container fluid id="addGoals-container">
       <Row className="position">
+        <div
+          className="alignment-div"
+        >
+          <button
+            id="changeColor-btn"
+            type="button"
+            style={
+              darkModeStatus
+                ? { backgroundColor: colorPallete[selectedColorIndex] }
+                : { backgroundColor: colorPallete[selectedColorIndex] }
+            }
+            onClick={changeColor}
+          >
+            <img src={paintBrush} alt="change-color" />
+          </button>
+        </div>
+
         <div>
-          <h2 className={darkModeStatus ? "mygoals-font-dark" : "mygoals-font-light"}>Update Goal</h2>
           <div className={darkModeStatus ? "goalsubtext-font-dark" : "goalsubtext-font-light"}>
             <p style={{ fontStyle: "normal" }}>
               {t("goalsubtext")}
@@ -51,18 +67,6 @@ export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoa
             </p>
           </div>
         </div>
-        <button
-          id="changeColor-btn"
-          type="button"
-          style={
-              darkModeStatus
-                ? { backgroundColor: colorPallete[selectedColorIndex] }
-                : { backgroundColor: colorPallete[selectedColorIndex] }
-            }
-          onClick={changeColor}
-        >
-          <img src={paintBrush} alt="change-color" />
-        </button>
       </Row>
       <Row>
         <UpdateGoalForm goalId={goalId} setShowUpdateGoal={setShowUpdateGoal} selectedColorIndex={selectedColorIndex} />
