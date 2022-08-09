@@ -89,7 +89,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       [e.target.name]: value,
     });
   };
-
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (goalTitle.length === 0) {
@@ -97,7 +96,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       return;
     }
     await updateGoal(goalId,
-      { title: goalTitle,
+      {
+        title: goalTitle,
         goalColor: colorPallete[selectedColorIndex],
         duration: goalDuration,
         repeat: goalRepeats,
@@ -113,7 +113,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
 
   useEffect(() => {
     getGoal(goalId).then((goal) => {
-      setFormInputData({ id: crypto.randomUUID(),
+      setFormInputData({
+        id: crypto.randomUUID(),
         inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${goal.link ? ` ${goal.link}` : ""}`
       });
       setGoalDuration(goal.duration);
@@ -178,6 +179,19 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
           {`${goalDuration} hours`}
         </button>
         <button
+          id="updateTask-button"
+          className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}
+          type="button"
+          onClick={handleSubmit}
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+        >
+          Update Goal
+        </button>
+        <button
           type="button"
           style={
             darkModeStatus
@@ -199,19 +213,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
         >
           URL
         </button>
-      </div>
-      <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
-        <Button
-          onClick={handleSubmit}
-          className="addtask-button"
-          style={
-            darkModeStatus
-              ? { backgroundColor: colorPallete[selectedColorIndex] }
-              : { backgroundColor: colorPallete[selectedColorIndex] }
-          }
-        >
-          Update Goal
-        </Button>
       </div>
       <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
     </form>
