@@ -61,7 +61,7 @@ export const AddGoal: React.FC<AddGoalProps> = ({ goalId, setShowAddGoals }) => 
           </div>
         </div>
         <button
-          id="changeColor-btn"
+          id="changeColor-btn1"
           type="button"
           style={
               darkModeStatus
