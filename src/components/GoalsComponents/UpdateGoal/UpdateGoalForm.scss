@@ -40,8 +40,13 @@
   .goalsubtext-font-light {
     color: #686868;
     margin-left: 0.5em;
+    margin-top: 2em;
     font-style: italic;
     padding-bottom: 0em;
+  }
+
+  .alignment-div{
+  position: absolute;  
   }
   
   .addtask-dark {
@@ -139,11 +144,22 @@
     height: 1rem;
   }
   
+  #updateTask-button{
+    font-size: x-large !important;
+    font-weight: bolder !important;
+    color: white;
+    border-style: none;
+    padding: 00.3em;
+    position: absolute;
+    border-radius: 10px;
+    margin-left: 60%;
+    margin-top: -6.5em;
+  }
+
   #changeColor-btn {
     width: 6.2em;
     position: absolute;
-    right: 0;
-    margin-right: 7%;
+    margin-right: 40%;
     border: none;
     padding: 0.8em;
     border-radius: 10px;
@@ -166,25 +182,62 @@
   
   @media (max-width: 350px) {
     #changeColor-btn {
-      width: 2.7em;
+      width: 5em;
+      height: 3em;
       position: absolute;
       right: 0;
-      margin-right: 7%;
+      margin-right: 60%;
       border: none;
-      padding: 0.3em;
       border-radius: 10px;
     }
+    #updateTask-button{
+      font-size: x-large !important;
+      font-weight: bolder !important;
+      color: white;
+      border-style: none;
+      padding: 00.3em;
+      position: absolute;
+      border-radius: 10px;
+      margin-left: 41%;
+    }
+    .goalsubtext-font-dark {
+      color: #cecece;
+      margin-left: 0.5em;
+      margin-top: 4em;
+      font-style: italic;
+      padding-bottom: 0em;
+    }
+    
+    .goalsubtext-font-light {
+      color: #686868;
+      margin-left: 0.5em;
+      margin-top: 4em;
+      font-style: italic;
+      padding-bottom: 0em;
+    }
+  
   }
   @media (min-width: 950px) {
     #changeColor-btn {
       width: 6.2em;
       position: absolute;
       right: 0;
-      margin-right: 19.5%;
+      margin-right: 40%;
       border: none;
-      padding: 0.8em;
+      padding: 0.6em;
       border-radius: 10px;
     }
+    #updateTask-button{
+      font-size: x-large !important;
+      font-weight: bolder !important;
+      color: white;
+      border-style: none;
+      padding: 00.3em;
+      position: absolute;
+      border-radius: 10px;
+      margin-left: 60%;
+    }
+  
     #addGoals-container {
       padding: 0% 17%;
     }
