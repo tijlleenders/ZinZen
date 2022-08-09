@@ -49,7 +49,7 @@
   .alignment-div{
   position: absolute;  
   }
-  
+  border
   .addtask-dark {
     background-color: #5f3636;
     color: #cecece;
@@ -159,8 +159,10 @@
 
   #changeColor-btn {
     width: 6.2em;
+    height: 3.2em;
     position: absolute;
     margin-right: 40%;
+    right: 0em;
     border: none;
     padding: 0.8em;
     border-radius: 10px;
