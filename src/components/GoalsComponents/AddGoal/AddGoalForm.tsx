@@ -57,15 +57,15 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     const onlyEndIndex = lowercaseInput.search(onlyEnd);
     if (bothIndex !== -1) {
       const temp = lowercaseInput.slice(bothIndex + 1).split(" ")[0].split("-");
-      return { start: Number(temp[0]), end: Number(temp[1]) };
+      return { index: bothIndex, start: Number(temp[0]), end: Number(temp[1]) };
     }
     if (onlyStartIndex !== -1) {
-      return { start: Number(lowercaseInput.slice(onlyStartIndex + 1).split(" ")[1].split("@")[1]), end: null };
+      return { index: onlyStartIndex, start: Number(lowercaseInput.slice(onlyStartIndex + 1).split(" ")[1].split("@")[1]), end: null };
     }
     if (onlyEndIndex !== -1) {
-      return { start: null, end: Number(lowercaseInput.slice(onlyEndIndex + 1).split(" ")[1].split("@")[1]) };
+      return { index: onlyEndIndex, start: null, end: Number(lowercaseInput.slice(onlyEndIndex + 1).split(" ")[1].split("@")[1]) };
     }
-    return { start: null, end: null };
+    return { index: -1, start: null, end: null };
   }
   function handleGoalRepeat() {
     if (!lowercaseInput) { setGoalRepeats(null); return -1; }
@@ -132,6 +132,9 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     }
     if (linkIndx > 0) {
       tmpTitleEnd = linkIndx > tmpTitleEnd ? tmpTitleEnd : linkIndx;
+    }
+    if (goalTiming.index > 0) {
+      tmpTitleEnd = goalTiming.index > tmpTitleEnd ? tmpTitleEnd : goalTiming.index;
     }
     if (repeatIndx > 0) {
       tmpTitleEnd = repeatIndx > tmpTitleEnd ? tmpTitleEnd : repeatIndx;
