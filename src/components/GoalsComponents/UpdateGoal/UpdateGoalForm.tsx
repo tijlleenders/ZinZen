@@ -32,6 +32,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   const [goalRepeats, setGoalRepeats] = useState<"Once" | "Daily" | "Weekly" | null>(null);
   const [goalLink, setGoalLink] = useState<string | null>(null);
   const [goalLang, setGoalLang] = useState("english");
+  const [goalStart, setGoalStart] = useState<number|null>(null);
+  const [goalDeadline, setGoalDeadline] = useState<number|null>(null);
 
   const daily = /daily/;
   const once = /once/;
@@ -39,6 +41,25 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
 
   const lowercaseInput = formInputData.inputGoal.toLowerCase();
 
+  function handleTiming() {
+    const onlyStart = /\sstart\s@(\d{2}|\d{1})/i;
+    const onlyEnd = /\sbefore\s@(\d{2}|\d{1})/i;
+    const bothTimings = /\s(\d{2}|\d{1})-(\d{2}|\d{1})/i;
+    const bothIndex = lowercaseInput.search(bothTimings);
+    const onlyStartIndex = lowercaseInput.search(onlyStart);
+    const onlyEndIndex = lowercaseInput.search(onlyEnd);
+    if (bothIndex !== -1) {
+      const temp = lowercaseInput.slice(bothIndex + 1).split(" ")[0].split("-");
+      return { index: bothIndex, start: Number(temp[0]), end: Number(temp[1]) };
+    }
+    if (onlyStartIndex !== -1) {
+      return { index: onlyStartIndex, start: Number(lowercaseInput.slice(onlyStartIndex + 1).split(" ")[1].split("@")[1]), end: null };
+    }
+    if (onlyEndIndex !== -1) {
+      return { index: onlyEndIndex, start: null, end: Number(lowercaseInput.slice(onlyEndIndex + 1).split(" ")[1].split("@")[1]) };
+    }
+    return { index: -1, start: null, end: null };
+  }
   function handleGoalRepeat() {
     if (!lowercaseInput) { setGoalRepeats(null); return -1; }
     const freqDailyIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(daily));
@@ -101,7 +122,9 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
         goalColor: colorPallete[selectedColorIndex],
         duration: goalDuration,
         repeat: goalRepeats,
-        link: goalLink
+        link: goalLink,
+        start: goalStart ? new Date(new Date(new Date().setHours(goalStart)).setMinutes(0)) : null,
+        finish: goalDeadline ? new Date(new Date(new Date().setHours(goalDeadline)).setMinutes(0)) : null,
       });
     setFormInputData({
       inputGoal: "",
@@ -113,12 +136,22 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
 
   useEffect(() => {
     getGoal(goalId).then((goal) => {
+      let tmpTiming = "";
+      if (goal.start && goal.finish) {
+        tmpTiming = ` ${goal.start.getHours()}-${goal.finish.getHours()}`;
+      } else if (goal.start) {
+        tmpTiming = ` start @${goal.start.getHours()}`;
+      } else if (goal.finish) {
+        tmpTiming = ` before @${goal.finish.getHours()}`;
+      }
       setFormInputData({ id: crypto.randomUUID(),
-        inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${goal.link ? ` ${goal.link}` : ""}`
+        inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`
       });
       setGoalDuration(goal.duration);
       setGoalRepeats(goal.repeat);
       setGoalLink(goal.link);
+      setGoalStart(goal.start ? goal.start.getHours() : null);
+      setGoalDeadline(goal.finish ? goal.finish.getHours() : null);
       if (goal.language) setGoalLang(goal.language);
     });
   }, []);
@@ -127,9 +160,16 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     const durIndx = handleGoalDuration();
     const linkIndx = handleGoalLink();
     const repeatIndx = handleGoalRepeat();
+    const goalTiming = handleTiming();
+    setGoalStart(goalTiming.start);
+    setGoalDeadline(goalTiming.end);
+
     let tmpTitleEnd = formInputData.inputGoal.length;
     if (durIndx > 0) {
       tmpTitleEnd = durIndx > tmpTitleEnd ? tmpTitleEnd : durIndx;
+    }
+    if (goalTiming.index > 0) {
+      tmpTitleEnd = goalTiming.index > tmpTitleEnd ? tmpTitleEnd : goalTiming.index;
     }
     if (linkIndx > 0) {
       tmpTitleEnd = linkIndx > tmpTitleEnd ? tmpTitleEnd : linkIndx;
@@ -165,6 +205,28 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
           className="language"
         >
           {goalLang}
+        </button>
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+          className={goalStart ? "form-tag" : "blank"}
+        >
+          {`Start ${goalStart}:00`}
+        </button>
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+          className={goalDeadline ? "form-tag" : "blank"}
+        >
+          {`Deadline ${goalDeadline}:00`}
         </button>
         <button
           type="button"
