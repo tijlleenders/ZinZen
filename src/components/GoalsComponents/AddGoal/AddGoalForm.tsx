@@ -36,6 +36,8 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   const [goalDuration, setGoalDuration] = useState<null | number>(null);
   const [goalRepeats, setGoalRepeats] = useState<"Once" | "Daily" | "Weekly" | null>(null);
   const [goalLink, setGoalLink] = useState<string | null>(null);
+  const [goalStart, setGoalStart] = useState<number|null>(null);
+  const [goalDeadline, setGoalDeadline] = useState<number|null>(null);
 
   const daily = /daily/;
   const once = /once/;
@@ -46,6 +48,25 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
 
   const lowercaseInput = formInputData.inputGoal.toLowerCase();
 
+  function handleTiming() {
+    const onlyStart = /\sstart\s@(\d{2}|\d{1})/i;
+    const onlyEnd = /\sbefore\s@(\d{2}|\d{1})/i;
+    const bothTimings = /\s(\d{2}|\d{1})-(\d{2}|\d{1})/i;
+    const bothIndex = lowercaseInput.search(bothTimings);
+    const onlyStartIndex = lowercaseInput.search(onlyStart);
+    const onlyEndIndex = lowercaseInput.search(onlyEnd);
+    if (bothIndex !== -1) {
+      const temp = lowercaseInput.slice(bothIndex + 1).split(" ")[0].split("-");
+      return { start: Number(temp[0]), end: Number(temp[1]) };
+    }
+    if (onlyStartIndex !== -1) {
+      return { start: Number(lowercaseInput.slice(onlyStartIndex + 1).split(" ")[1].split("@")[1]), end: null };
+    }
+    if (onlyEndIndex !== -1) {
+      return { start: null, end: Number(lowercaseInput.slice(onlyEndIndex + 1).split(" ")[1].split("@")[1]) };
+    }
+    return { start: null, end: null };
+  }
   function handleGoalRepeat() {
     if (!lowercaseInput) { setGoalRepeats(null); return -1; }
     const freqDailyIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(daily));
@@ -101,6 +122,10 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     const durIndx = handleGoalDuration();
     const linkIndx = handleGoalLink();
     const repeatIndx = handleGoalRepeat();
+    const goalTiming = handleTiming();
+    setGoalStart(goalTiming.start);
+    setGoalDeadline(goalTiming.end);
+
     let tmpTitleEnd = formInputData.inputGoal.length;
     if (durIndx > 0) {
       tmpTitleEnd = durIndx > tmpTitleEnd ? tmpTitleEnd : durIndx;
@@ -124,8 +149,8 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
       goalTitle,
       goalRepeats,
       goalDuration,
-      null,
-      null,
+      goalStart ? new Date(new Date(new Date().setHours(goalStart)).setMinutes(0)) : null,
+      goalDeadline ? new Date(new Date(new Date().setHours(goalDeadline)).setMinutes(0)) : null,
       0,
       parentGoalId!,
       colorPallete[selectedColorIndex], // goalColor
@@ -173,6 +198,28 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
           className="language"
         >
           {goalLang}
+        </button>
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+          className={goalStart ? "form-tag" : "blank"}
+        >
+          {`Start ${goalStart}:00`}
+        </button>
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+          className={goalDeadline ? "form-tag" : "blank"}
+        >
+          {`Deadline ${goalDeadline}:00`}
         </button>
         <button
           type="button"
