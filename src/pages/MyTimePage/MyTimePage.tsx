@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable import/no-relative-packages */
+// @ts-nocheck
 import React, { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
@@ -7,6 +10,9 @@ import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashb
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
 import { colorPallete, getDiffInHours } from "@src/utils";
+import { ISchedulerInputGoal } from "@src/Interfaces/ISchedulerInputGoal";
+
+import init, { schedule } from "../../../pkg/scheduler";
 
 import "./MyTimePage.scss";
 
@@ -99,70 +105,96 @@ export const MyTimePage = () => {
     );
   };
 
+  const getTasks = async () => {
+    const goals: GoalItem[] = await getActiveGoals();
+    let GMD = goals[0].duration;
+    let MDU = goals[0].duration;
+    let prev = new Date(goals[0].finish ? goals[0].finish : new Date());
+    prev = new Date(prev.setHours(0));
+    const unplannedInd :number[] = [];
+    const unplannedDur :number[] = [];
+    goals.map((goal, index) => {
+      const diff = getDiffInHours(goal.start ? goal.start : new Date(), prev);
+      prev = new Date(goal.finish ? goal.finish : new Date());
+      if (diff > 0) {
+        unplannedInd.push(index - 1);
+        unplannedDur.push(diff);
+        MDU = MDU < diff ? diff : MDU;
+      }
+      if (GMD < goal.duration) GMD = goal.duration;
+      return null;
+    });
+    unplannedInd[0] = unplannedInd[0] === -1 ? 0 : unplannedInd[0];
+    setUnplannedDurations([...unplannedDur]);
+    setUnplannedIndices([...unplannedInd]);
+    setGoalOfMaxDuration(GMD);
+    setMaxDurationOfUnplanned(MDU);
+    return goals;
+  };
+
+  const createDummyGoals = async () => {
+    const dummyTitles = ["Shopping", "Dentist", "Exercise"];
+    const dummyDates = [[10, 13], [10, 11], [10, 18]];
+    [...Array(3).keys()].forEach(async (ele) => {
+      const dummyGoal = createGoal(
+        dummyTitles[ele],
+        "Daily",
+        1,
+        new Date(new Date().setHours(dummyDates[ele][0], 0, 0)),
+        new Date(new Date().setHours(dummyDates[ele][1], 0, 0)),
+        0,
+        -1,
+        "#B2A24D",
+        "English",
+        null
+      );
+      const id = await addGoal(dummyGoal);
+      return id;
+    });
+  };
+
+  const createInputGoals = (goals: GoalItem[]) => {
+    const arr : ISchedulerInputGoal[] = [];
+    goals.forEach((element) => {
+      arr.push({
+        id: element.id,
+        title: element.title,
+        duration: element.duration,
+        start: element.start.toISOString().split(".")[0],
+        deadline: element.finish.toISOString().split(".")[0]
+      });
+    });
+    console.log(arr);
+    return arr;
+  };
   useEffect(() => {
     (async () => {
-      const createDummyGoals = async () => {
-        let start = 0;
-        let end = 0;
-        let tmpColor = 0;
-        const dummyNames: string[] = ["Unplanned", "Gym", "Study", "Unplanned", "Shopping", "Code Reviews", "Unplanned", "Algo Practice"];
-        const dummyDurations : number[] = [4, 3, 1, 2, 3, 2, 6, 3];
-        dummyNames.map(async (goalName, index) => {
-          end = start + dummyDurations[index];
-          if (goalName === "Unplanned") {
-            start = end;
-            return null;
-          }
-          const dummyGoal = createGoal(
-            goalName,
-            true,
-            dummyDurations[index],
-            new Date(new Date().setHours(start, 0, 0)),
-            new Date(new Date().setHours(end, 0, 0)),
-            0,
-            -1,
-            colorPallete[tmpColor]
-          );
-          tmpColor = tmpColor === colorPallete.length - 1 ? 0 : tmpColor + 1;
+      // get goals
+      let activeGoals: GoalItem[] = await getActiveGoals();
+      // if goals doesn't exist create dummy goals
+      if (activeGoals.length === 0) { await createDummyGoals(); }
 
-          start = end;
-          const id = await addGoal(dummyGoal);
-          return id;
-        });
-      };
-      const getTasks = async () => {
-        const goals: GoalItem[] = await getActiveGoals();
-        let GMD = goals[0].duration;
-        let MDU = goals[0].duration;
-        let prev = new Date(goals[0].finish ? goals[0].finish : new Date());
-        prev = new Date(prev.setHours(0));
-        const unplannedInd :number[] = [];
-        const unplannedDur :number[] = [];
-        goals.map((goal, index) => {
-          const diff = getDiffInHours(goal.start ? goal.start : new Date(), prev);
-          prev = new Date(goal.finish ? goal.finish : new Date());
-          if (diff > 0) {
-            unplannedInd.push(index - 1);
-            unplannedDur.push(diff);
-            MDU = MDU < diff ? diff : MDU;
-          }
-          if (GMD < goal.duration) GMD = goal.duration;
-          return null;
-        });
-        unplannedInd[0] = unplannedInd[0] === -1 ? 0 : unplannedInd[0];
-        setUnplannedDurations([...unplannedDur]);
-        setUnplannedIndices([...unplannedInd]);
-        setGoalOfMaxDuration(GMD);
-        setMaxDurationOfUnplanned(MDU);
-        return goals;
-      };
-      let tasks: GoalItem[] = await getActiveGoals();
-      if (tasks.length === 0) {
-        await createDummyGoals();
-      }
-      tasks = await getTasks();
-
-      setTmpTasks([...tasks]);
+      activeGoals = await getTasks();
+      console.log(activeGoals);
+      const scheduler = await init();
+      const schedulerOutput = schedule({
+        startDate: "2022-08-11",
+        endDate: "2022-08-12",
+        goals: createInputGoals(activeGoals)
+      });
+      const slotTaskMap = {};
+      schedulerOutput.tasks.forEach((ele) => {
+        slotTaskMap[ele.id] = ele.goal_id;
+      });
+      schedulerOutput.slots.sort((a: { start: number }, b: { start: number }) => a.start - b.start);
+      schedulerOutput.slots.forEach((element) => {
+        const tmpId = slotTaskMap[element.task_id];
+        const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === tmpId);
+        const poppedGoal = activeGoals.splice(ind, 1)[0];
+        activeGoals = [...activeGoals, poppedGoal];
+      });
+      setTmpTasks([...activeGoals]);
+      console.log(schedulerOutput);
     })();
   }, []);
 
