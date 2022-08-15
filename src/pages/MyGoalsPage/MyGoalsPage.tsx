@@ -11,6 +11,8 @@ import {
   removeGoal,
   removeChildrenGoals,
   archiveChildrenGoals,
+  shareGoal,
+  getGoal,
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -47,6 +49,24 @@ export const MyGoalsPage = () => {
   //   const dummyData = [goal1, goal2, goal3];
   //   dummyData.map((goal: string) => addGoal(goal));
   // }
+  const shareMyGoal = async (goal: GoalItem) => {
+    const shareableGoal = {
+      method: "shareGoal",
+      parentTitle: "root",
+      goal: {
+        title: goal.title,
+        duration: goal.duration,
+        repeat: goal.repeat,
+        start: goal.start,
+        finish: goal.finish,
+        createdAt: goal.createdAt,
+        goalColor: goal.goalColor,
+        language: goal.language,
+        link: goal.link
+      }
+    };
+    shareGoal(shareableGoal);
+  };
   const resetHistory = () => {
     setSubGoalHistory([]);
     setSelectedGoalId(-1);
@@ -230,7 +250,42 @@ export const MyGoalsPage = () => {
                               />
                             </div>
                           ) : null}
+                          <Modal
+                            id="share-modal"
+                            show={showShareModal}
+                            onHide={() => setShowShareModal(false)}
+                            centered
+                            autoFocus={false}
+                          >
+                            <Modal.Body id="share-modal-body">
+                              <button
+                                onClick={async () => {
+                                  await shareMyGoal(goal);
+                                }}
+                                type="button"
+                                className="shareOptions-btn"
+                              >
+                                <div className="share-Options">
+                                  <PersonFill />
+                                  <p className="shareOption-name">Share Anonymously</p>
+                                </div>
+                              </button>
+                              <button type="button" className="shareOptions-btn">
+                                <div className="share-Options">
+                                  <PeopleFill />
+                                  <p className="shareOption-name">Share Public</p>
+                                </div>
+                              </button>
+                              <button type="button" className="shareOptions-btn">
+                                <div className="share-Options">
+                                  <PersonFill />
+                                  <p className="shareOption-name">Share with</p>
+                                </div>
+                              </button>
+                            </Modal.Body>
+                          </Modal>
                         </div>
+
                       ))}
                     </div>
                     <img
@@ -246,34 +301,6 @@ export const MyGoalsPage = () => {
                       aria-hidden
                     />
                   </div>
-                  <Modal
-                    id="share-modal"
-                    show={showShareModal}
-                    onHide={() => setShowShareModal(false)}
-                    centered
-                    autoFocus={false}
-                  >
-                    <Modal.Body id="share-modal-body">
-                      <button type="button" className="shareOptions-btn">
-                        <div className="share-Options">
-                          <PersonFill />
-                          <p className="shareOption-name">Share Anonymously</p>
-                        </div>
-                      </button>
-                      <button type="button" className="shareOptions-btn">
-                        <div className="share-Options">
-                          <PeopleFill />
-                          <p className="shareOption-name">Share Public</p>
-                        </div>
-                      </button>
-                      <button type="button" className="shareOptions-btn">
-                        <div className="share-Options">
-                          <PersonFill />
-                          <p className="shareOption-name">Share with</p>
-                        </div>
-                      </button>
-                    </Modal.Body>
-                  </Modal>
                 </div>
               )
               :
