@@ -133,7 +133,7 @@ export const archiveChildrenGoals = async (parentGoalId: number) => {
 };
 
 export const shareGoal = async (goal: object) => {
-  const URL = "https://amyfb76gldbjtpbbejopg2j7je0wcnzh.lambda-url.eu-west-1.on.aws/";
+  const URL = "https://jb65zz5efi3jy5rw5f2y5ke2u40hobkq.lambda-url.eu-west-1.on.aws/";
   try {
     await fetch(URL, {
       mode: "cors",
