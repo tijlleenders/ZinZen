@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { db } from "@models";
 import { getJustDate } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
@@ -129,4 +130,21 @@ export const removeChildrenGoals = async (parentGoalId: number) => {
 export const archiveChildrenGoals = async (parentGoalId: number) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
   childrenGoals.map((goal: GoalItem) => archiveGoal(Number(goal.id)));
+};
+
+export const shareGoal = async (goal: object) => {
+  const URL = "https://jb65zz5efi3jy5rw5f2y5ke2u40hobkq.lambda-url.eu-west-1.on.aws/";
+  try {
+    await fetch(URL, {
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(goal),
+    });
+    alert("Thank you for sharing anonymously!");
+  } catch (err) {
+    alert("Let's focus on the happy path.");
+  }
 };

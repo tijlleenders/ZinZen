@@ -1,10 +1,10 @@
-import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown } from "react-bootstrap-icons";
+import { PlusLg, Trash3Fill, ShareFill, PencilSquare, CheckLg, ChevronRight, ChevronDown, PeopleFill, PersonFill } from "react-bootstrap-icons";
 import React, { useEffect, useRef, useState } from "react";
-import { Breadcrumb, Container } from "react-bootstrap";
+import { Breadcrumb, Container, Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 
 import addIcon from "@assets/images/GoalsAddIcon.svg";
-import { archiveGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, updateGoal } from "@src/api/GoalsAPI";
+import { archiveGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareGoal, updateGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 
@@ -36,6 +36,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
   const [tapCount, setTapCount] = useState([-1, 0]);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     getGoal(Number(goalID)).then((parent) => setParentGoal(parent));
@@ -46,6 +47,24 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
     getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   }, [parentGoal]);
 
+  const shareMyGoal = async (goal: GoalItem) => {
+    const shareableGoal = {
+      method: "shareGoal",
+      parentTitle: parentGoal?.title,
+      goal: {
+        title: goal.title,
+        duration: goal.duration,
+        repeat: goal.repeat,
+        start: goal.start,
+        finish: goal.finish,
+        createdAt: goal.createdAt,
+        goalColor: goal.goalColor,
+        language: goal.language,
+        link: goal.link
+      }
+    };
+    shareGoal(shareableGoal);
+  };
   const archiveUserGoal = async (goal: GoalItem) => {
     await archiveGoal(Number(goal.id));
     getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
@@ -157,6 +176,13 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                         removeChildrenGoal(Number(goal.id));
                       }}
                     />
+                    <ShareFill
+                      style={{ cursor: "pointer" }}
+                      onClickCapture={(e) => {
+                        e.stopPropagation();
+                        setShowShareModal(true);
+                      }}
+                    />
                     <PencilSquare
                       style={{ cursor: "pointer" }}
                       onClick={() => {
@@ -172,6 +198,40 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                     />
                   </div>
                 ) : null}
+                <Modal
+                  id="share-modal"
+                  show={showShareModal}
+                  onHide={() => setShowShareModal(false)}
+                  centered
+                  autoFocus={false}
+                >
+                  <Modal.Body id="share-modal-body">
+                    <button
+                      onClick={async () => {
+                        await shareMyGoal(goal);
+                      }}
+                      type="button"
+                      className="shareOptions-btn"
+                    >
+                      <div className="share-Options">
+                        <PersonFill />
+                        <p className="shareOption-name">Share Anonymously</p>
+                      </div>
+                    </button>
+                    <button type="button" className="shareOptions-btn">
+                      <div className="share-Options">
+                        <PeopleFill />
+                        <p className="shareOption-name">Share Public</p>
+                      </div>
+                    </button>
+                    <button type="button" className="shareOptions-btn">
+                      <div className="share-Options">
+                        <PersonFill />
+                        <p className="shareOption-name">Share with</p>
+                      </div>
+                    </button>
+                  </Modal.Body>
+                </Modal>
               </div>
             ))}
           </Container>
