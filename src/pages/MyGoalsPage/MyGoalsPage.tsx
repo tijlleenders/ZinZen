@@ -11,17 +11,16 @@ import {
   removeGoal,
   removeChildrenGoals,
   archiveChildrenGoals,
-  shareGoal,
-  getGoal,
+  shareGoal
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
 import { AddGoal } from "@components/GoalsComponents/AddGoal/AddGoal";
+import { UpdateGoal } from "@components/GoalsComponents/UpdateGoal/UpdateGoal";
 
 import "./MyGoalsPage.scss";
-import { UpdateGoal } from "@components/GoalsComponents/UpdateGoal/UpdateGoal";
 
 interface ISubGoalHistoryProps {
   goalID: number,
