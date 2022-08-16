@@ -10,6 +10,7 @@ import logo from "@assets/images/logo.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
+import LogoGradient from "@assets/images/LogoGradient.png";
 
 import "@translations/i18n";
 import "@components/HeaderDashboard/HeaderDashboard.scss";
@@ -56,15 +57,23 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ popFromHistory }) => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="navbar-custom" />
         </Navbar.Collapse>
-        <img
-          role="presentation"
-          src={logo}
-          alt="Zinzen Logo"
-          className="zinzen-logo-nav-dashboard"
-          onClick={() => {
-            navigate("/Home");
-          }}
-        />
+        { window.location.href.includes("AddGoals") ? (
+          <div id="goal-suggestion-btn">
+            <img src={LogoGradient} />
+            <div>?</div>
+          </div>
+        )
+          : (
+            <img
+              role="presentation"
+              src={logo}
+              alt="Zinzen Logo"
+              className="zinzen-logo-nav-dashboard"
+              onClick={() => {
+                navigate("/Home");
+              }}
+            />
+          )}
       </Navbar>
     </div>
   );
