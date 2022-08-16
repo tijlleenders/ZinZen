@@ -136,9 +136,17 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
 
   useEffect(() => {
     getGoal(goalId).then((goal) => {
-      setFormInputData({
-        id: crypto.randomUUID(),
-        inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${goal.link ? ` ${goal.link}` : ""}`
+
+      let tmpTiming = "";
+      if (goal.start && goal.finish) {
+        tmpTiming = ` ${goal.start.getHours()}-${goal.finish.getHours()}`;
+      } else if (goal.start) {
+        tmpTiming = ` start @${goal.start.getHours()}`;
+      } else if (goal.finish) {
+        tmpTiming = ` before @${goal.finish.getHours()}`;
+      }
+      setFormInputData({ id: crypto.randomUUID(),
+        inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`
       });
       setGoalDuration(goal.duration);
       setGoalRepeats(goal.repeat);
@@ -207,6 +215,28 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
           className={goalStart ? "form-tag" : "blank"}
+        >
+          {`Start ${goalStart}:00`}
+        </button>
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+          className={goalDeadline ? "form-tag" : "blank"}
+        >
+          {`Deadline ${goalDeadline}:00`}
+        </button>
+        <button
+          type="button"
+          style={
+            darkModeStatus
+              ? { backgroundColor: colorPallete[selectedColorIndex] }
+              : { backgroundColor: colorPallete[selectedColorIndex] }
+          }
+          className={goalDuration ? "form-tag" : "blank"}
         >
           {`Start ${goalStart}:00`}
         </button>
