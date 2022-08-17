@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
 
-import logo from "@assets/images/logo.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
@@ -18,9 +17,15 @@ import "@components/HeaderDashboard/HeaderDashboard.scss";
 import { GoalItem } from "@src/models/GoalItem";
 
 interface GoalsHeaderProps {
-  popFromHistory: () => void
+  goalID: number,
+  popFromHistory: () => void,
+  setShowAddGoals:React.Dispatch<React.SetStateAction<{
+        open: boolean;
+        goalId: number;
+  }>>,
+  displayTRIcon: string
 }
-export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ popFromHistory }) => {
+export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, popFromHistory, setShowAddGoals }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -88,23 +93,18 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ popFromHistory }) => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="navbar-custom" />
         </Navbar.Collapse>
-        { window.location.href.includes("AddGoals") ? (
-          <button type="button" id="goal-suggestion-btn" onClick={() => { setShowSuggestionsModal(true); }}>
-            <img alt="create-goals-suggestion" src={LogoGradient} />
-            <div>?</div>
-          </button>
-        )
-          : (
-            <img
-              role="presentation"
-              src={logo}
-              alt="Zinzen Logo"
-              className="zinzen-logo-nav-dashboard"
-              onClick={() => {
-                navigate("/Home");
-              }}
-            />
-          )}
+
+        <button
+          type="button"
+          id="goal-suggestion-btn"
+          onClick={() => {
+            if (displayTRIcon === "+") { setShowAddGoals({open: true, goalId: goalID}); } else { setShowSuggestionsModal(true); }
+          }}
+        >
+          <img alt="create-goals-suggestion" src={LogoGradient} />
+          <div>{window.location.href.includes("AddGoals") || displayTRIcon === "?" ? "?" : "+"}</div>
+        </button>
+
       </Navbar>
       <Modal
         id="suggestions-modal"
