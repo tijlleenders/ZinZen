@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Breadcrumb, Container, Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 
-import addIcon from "@assets/images/GoalsAddIcon.svg";
 import { archiveGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareGoal, updateGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -237,18 +236,6 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
           </Container>
         </div>
       </div>
-      <img
-        onClick={() => {
-          setShowAddGoals({
-            open: true,
-            goalId: parentGoal?.id
-          });
-        }}
-        id="addGoal-btn"
-        src={addIcon}
-        alt="add-goal"
-        aria-hidden
-      />
     </div>
   );
 };
