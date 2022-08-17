@@ -98,7 +98,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
           type="button"
           id="goal-suggestion-btn"
           onClick={() => {
-            if (displayTRIcon === "+") { setShowAddGoals({open: true, goalId: goalID}); } else { setShowSuggestionsModal(true); }
+            if (displayTRIcon === "+") { setShowAddGoals({ open: true, goalId: goalID }); } else { setShowSuggestionsModal(true); }
           }}
         >
           <img alt="create-goals-suggestion" src={LogoGradient} />
