@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Modal } from "react-bootstrap";
 
-import addIcon from "@assets/images/GoalsAddIcon.svg";
 import {
   archiveGoal,
   getActiveGoals,
@@ -146,7 +145,7 @@ export const MyGoalsPage = () => {
   }, [selectedGoalId]);
   return (
     <>
-      <GoalsHeader popFromHistory={popFromHistory} />
+      <GoalsHeader goalID={selectedGoalId} setShowAddGoals={setShowAddGoals} displayTRIcon={!showAddGoals.open && !showUpdateGoal.open ? "+" : "?"} popFromHistory={popFromHistory} />
       {
         showAddGoals.open ?
           <AddGoal goalId={showAddGoals.goalId} setShowAddGoals={setShowAddGoals} />
@@ -287,18 +286,6 @@ export const MyGoalsPage = () => {
 
                       ))}
                     </div>
-                    <img
-                      onClick={() => {
-                        setShowAddGoals({
-                          open: true,
-                          goalId: -1
-                        });
-                      }}
-                      id="addGoal-btn"
-                      src={addIcon}
-                      alt="add-goal"
-                      aria-hidden
-                    />
                   </div>
                 </div>
               )

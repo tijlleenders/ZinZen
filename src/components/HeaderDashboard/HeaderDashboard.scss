@@ -15,3 +15,69 @@
   position: fixed;
   z-index: 100;
 }
+
+#suggestions-modal-icon {
+  position: absolute;
+  top: -25px;
+  right: 8px;
+  border: none;
+  background: transparent;
+}
+
+#goal-suggestion-btn {
+    position: absolute;
+    top: 10px;
+    right: 8px;
+    margin-right: 1%;
+    border: none;
+    background: transparent;
+}
+  #goal-suggestion-btn > img, #suggestions-modal-icon > img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+  }
+  #goal-suggestion-btn > div, #suggestions-modal-icon > div  {
+    position: absolute;
+    top: -5px;
+    right: 13px;
+    color: white;
+    font-weight: 800;
+    font-size: 2.5em;
+    font-family: 'Montserrat';
+  }
+
+#suggestions-modal {
+  margin: 0;
+}
+  #suggestions-modal > .modal-content {
+    position: absolute;
+    bottom: 0;
+    background: #EDC7B7;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    padding-bottom: 10%;
+  }
+
+#suggestions-modal-body {
+  display: flex;
+  flex-direction: column;
+  padding-top: 2em;
+}
+
+.suggestions-goal-name {
+  background: #F0E6E1;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 7px;
+  margin-bottom: 2.5%;
+}
+
+#suggestions {
+  background-color: #F0E6E1 !important;
+  border-radius: 7px !important;
+}
+
+.nav-link {
+  color: black !important;
+  font-weight: 600;
+}
