@@ -31,7 +31,7 @@ describe("DashboardUserChoice Test", () => {
       .click()
       .location("pathname")
       .should("include", "MyGoals");
-    cy.get('[alt="Zinzen Logo"]').click();
+    cy.get('[alt="ZinZen Text Logo"]').click();
   });
 
   it("Should have My Time button", () => {
