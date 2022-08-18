@@ -1,6 +1,7 @@
+/* eslint-disable no-await-in-loop */
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown, ShareFill, PersonFill, PeopleFill } from "react-bootstrap-icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Modal } from "react-bootstrap";
 
@@ -10,7 +11,8 @@ import {
   removeGoal,
   removeChildrenGoals,
   archiveChildrenGoals,
-  shareGoal
+  shareGoal,
+  getGoal
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -26,9 +28,14 @@ interface ISubGoalHistoryProps {
   goalColor: string,
   goalTitle: string
 }
+interface ILocationProps {
+  openGoalOfId: number,
+  isRootGoal: boolean
+}
 
 export const MyGoalsPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(false);
@@ -143,6 +150,34 @@ export const MyGoalsPage = () => {
       setUserGoals(goals);
     })();
   }, [selectedGoalId]);
+
+  /* Usefull if navigation is from MyTimePage or external page/component */
+  useEffect(() => {
+    (async () => {
+      const state = location.state as ILocationProps | null | undefined;
+      if (state) {
+        const { isRootGoal } = state;
+        let { openGoalOfId } = state;
+        if (!isRootGoal && openGoalOfId) {
+          const tmpHistory = [];
+          while (openGoalOfId !== -1) {
+            const tmpGoal: GoalItem = await getGoal(openGoalOfId);
+            tmpHistory.push(({
+              goalID: tmpGoal.id || -1,
+              goalColor: tmpGoal.goalColor || "#ffffff",
+              goalTitle: tmpGoal.title || ""
+            }));
+            openGoalOfId = tmpGoal.parentGoalId;
+          }
+          tmpHistory.reverse();
+          setSubGoalHistory([...tmpHistory]);
+          setSelectedGoalId(state.openGoalOfId);
+        }
+        location.state = null;
+      }
+    })();
+  });
+
   return (
     <>
       <GoalsHeader goalID={selectedGoalId} setShowAddGoals={setShowAddGoals} displayTRIcon={!showAddGoals.open && !showUpdateGoal.open ? "+" : "?"} popFromHistory={popFromHistory} />
