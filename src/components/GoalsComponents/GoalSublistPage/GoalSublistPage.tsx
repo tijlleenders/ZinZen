@@ -134,8 +134,14 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                     aria-hidden
                     className="goal-title"
                     suppressContentEditableWarning
-                    onClick={() => {
-                      addInHistory(goal);
+                    onClickCapture={() => {
+                      if (!goal.sublist || goal.sublist?.length === 0) {
+                        if (tapCount[0] === index && tapCount[1] > 0) {
+                          setTapCount([-1, 0]);
+                        } else { setTapCount([index, tapCount[1] + 1]); }
+                      } else {
+                        addInHistory(goal);
+                      }
                     }}
                   >
                     <div>{goal.title}</div>&nbsp;
