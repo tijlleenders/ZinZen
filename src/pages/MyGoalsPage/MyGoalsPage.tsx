@@ -20,6 +20,11 @@ import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSub
 import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
 import { AddGoal } from "@components/GoalsComponents/AddGoal/AddGoal";
 import { UpdateGoal } from "@components/GoalsComponents/UpdateGoal/UpdateGoal";
+import plus from "@assets/images/plus.svg";
+import pencil from "@assets/images/pencil.svg";
+import correct from "@assets/images/correct.svg";
+import share from "@assets/images/share.svg";
+import trash from "@assets/images/trash.svg";
 
 import "./MyGoalsPage.scss";
 
@@ -249,7 +254,9 @@ export const MyGoalsPage = () => {
                           </div>
                           {tapCount[0] === index && tapCount[1] > 0 && (
                             <div className="interactables">
-                              <PlusLg
+                              <img
+                                alt="add subgoal"
+                                src={plus}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={() => {
                                   setShowAddGoals({
@@ -258,28 +265,36 @@ export const MyGoalsPage = () => {
                                   });
                                 }}
                               />
-                              <Trash3Fill
+                              <img
+                                alt="delete goal"
+                                src={trash}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={(e) => {
                                   e.stopPropagation();
                                   removeUserGoal(Number(goal.id));
                                 }}
                               />
-                              <ShareFill
+                              <img
+                                alt="share goal"
+                                src={share}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={(e) => {
                                   e.stopPropagation();
                                   setShowShareModal(true);
                                 }}
                               />
-                              <PencilSquare
+                              <img
+                                alt="Update Goal"
+                                src={pencil}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={() => {
                                   console.log("clicked");
                                   setShowUpdateGoal({ open: true, goalId: goal?.id });
                                 }}
                               />
-                              <CheckLg
+                              <img
+                                alt="archive Goal"
+                                src={correct}
                                 onClickCapture={async () => {
                                   archiveUserGoal(goal);
                                   const updatedGoalsList = await getActiveGoals();
