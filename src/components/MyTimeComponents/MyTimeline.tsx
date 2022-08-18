@@ -1,12 +1,15 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { GoalItem } from "@src/models/GoalItem";
 
 import "./MyTimeline.scss";
 
 export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
+  const navigate = useNavigate();
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState(-1);
+
   const getBreakingPoint = (GoalID:number) => {
     setDisplayOptionsIndex(myTasks.findIndex((task) => task.id === GoalID));
   };
@@ -72,7 +75,12 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
   );
   const showOptions = (task: GoalItem) => (
     <div className="MTL-options_container">
-      <div className="MTL-options-task">
+      <div
+        className="MTL-options-task"
+        onClickCapture={() => {
+          navigate("/Home/MyGoals", { state: { isRootGoal: task.parentGoalId === -1, openGoalOfId: task.id } });
+        }}
+      >
         <div className="MTL-circle" style={{ color: task.goalColor }} />
         <div className="MTL-options-title">{task.title}</div>
       </div>
