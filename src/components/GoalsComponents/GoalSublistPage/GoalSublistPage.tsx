@@ -6,6 +6,11 @@ import { useRecoilValue } from "recoil";
 import { archiveGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareGoal, updateGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
+import plus from "@assets/images/plus.svg";
+import pencil from "@assets/images/pencil.svg";
+import correct from "@assets/images/correct.svg";
+import share from "@assets/images/share.svg";
+import trash from "@assets/images/trash.svg";
 
 import "./GoalSublistPage.scss";
 
@@ -166,7 +171,9 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                 </div>
                 {tapCount[0] === index && tapCount[1] > 0 ? (
                   <div className="interactables">
-                    <PlusLg
+                    <img
+                      alt="add subgoal"
+                      src={plus}
                       style={{ cursor: "pointer" }}
                       onClickCapture={() => {
                         setShowAddGoals({
@@ -175,27 +182,35 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                         });
                       }}
                     />
-                    <Trash3Fill
+                    <img
+                      alt="delete goal"
+                      src={trash}
                       style={{ cursor: "pointer" }}
-                      onClick={() => {
+                      onClickCapture={() => {
                         removeChildrenGoal(Number(goal.id));
                       }}
                     />
-                    <ShareFill
+                    <img
+                      alt="share goal"
+                      src={share}
                       style={{ cursor: "pointer" }}
                       onClickCapture={(e) => {
                         e.stopPropagation();
                         setShowShareModal(true);
                       }}
                     />
-                    <PencilSquare
+                    <img
+                      alt="Update Goal"
+                      src={pencil}
                       style={{ cursor: "pointer" }}
-                      onClick={() => {
+                      onClickCapture={() => {
                         setShowUpdateGoal({ open: true, goalId: goal?.id });
                       }}
                     />
-                    <CheckLg
-                      onClick={async () => {
+                    <img
+                      alt="archive Goal"
+                      src={correct}
+                      onClickCapture={async () => {
                         archiveUserGoal(goal);
                         getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
                       }}
