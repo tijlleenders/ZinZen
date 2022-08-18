@@ -49,13 +49,14 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
     ));
 
   useEffect(() => {
-    if (window.location.href.includes("AddGoals")) {
+    if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
       (async () => {
         const goals: GoalItem[] = await getAllArchivedGoals();
         setArchiveGoals(goals);
+        console.log("ar", goals);
       })();
     }
-  }, []);
+  }, [displayTRIcon]);
 
   return (
     <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
