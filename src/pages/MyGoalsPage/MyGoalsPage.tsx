@@ -186,8 +186,14 @@ export const MyGoalsPage = () => {
                               aria-hidden
                               className="goal-title"
                               suppressContentEditableWarning
-                              onClick={() => {
-                                addInHistory(goal);
+                              onClickCapture={() => {
+                                if (!goal.sublist || goal.sublist?.length === 0) {
+                                  if (tapCount[0] === index && tapCount[1] > 0) {
+                                    setTapCount([-1, 0]);
+                                  } else { setTapCount([index, tapCount[1] + 1]); }
+                                } else {
+                                  addInHistory(goal);
+                                }
                               }}
                             >
                               <div>{goal.title}</div>&nbsp;
@@ -206,7 +212,7 @@ export const MyGoalsPage = () => {
                               )}
                             </div>
                           </div>
-                          {tapCount[0] === index && tapCount[1] > 0 ? (
+                          {tapCount[0] === index && tapCount[1] > 0 && (
                             <div className="interactables">
                               <PlusLg
                                 style={{ cursor: "pointer" }}
@@ -247,7 +253,7 @@ export const MyGoalsPage = () => {
                                 style={{ cursor: "Pointer" }}
                               />
                             </div>
-                          ) : null}
+                          )}
                           <Modal
                             id="share-modal"
                             show={showShareModal}
