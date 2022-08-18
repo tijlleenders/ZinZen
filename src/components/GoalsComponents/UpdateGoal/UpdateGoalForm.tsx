@@ -28,12 +28,12 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   });
   const [error, setError] = useState("");
   const [goalTitle, setGoalTitle] = useState("");
-  const [goalDuration, setGoalDuration] = useState<null | number>(null);
-  const [goalRepeats, setGoalRepeats] = useState<"Once" | "Daily" | "Weekly" | null>(null);
-  const [goalLink, setGoalLink] = useState<string | null>(null);
+  const [goalLink, setGoalLink] = useState<{index:number, value: null | string} | null>(null);
+  const [goalRepeats, setGoalRepeats] = useState<{index:number, value: "Once" | "Daily" | "Weekly" | null} | null>(null);
+  const [goalDuration, setGoalDuration] = useState<{index:number, value: null | number} | null>(null);
+  const [goalStart, setGoalStart] = useState<{index:number, value: null | number} | null>(null);
+  const [goalDeadline, setGoalDeadline] = useState<{index:number, value: null | number} | null>(null);
   const [goalLang, setGoalLang] = useState("english");
-  const [goalStart, setGoalStart] = useState<number|null>(null);
-  const [goalDeadline, setGoalDeadline] = useState<number|null>(null);
 
   const daily = /daily/;
   const once = /once/;
@@ -66,9 +66,9 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     const freqOnceIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(once));
     const freqWeeklyIndex = lowercaseInput.lastIndexOf(lowercaseInput.match(weekly));
     const tempIndex = Math.max(freqDailyIndex, freqOnceIndex, freqWeeklyIndex);
-    if (tempIndex === -1) { setGoalRepeats(null); } else if (tempIndex === freqDailyIndex) setGoalRepeats("Daily");
-    else if (tempIndex === freqOnceIndex) setGoalRepeats("Once");
-    else if (tempIndex === freqWeeklyIndex) setGoalRepeats("Weekly");
+    if (tempIndex === -1) { setGoalRepeats(null); } else if (tempIndex === freqDailyIndex) setGoalRepeats({ index: tempIndex, value: "Daily" });
+    else if (tempIndex === freqOnceIndex) setGoalRepeats({ index: tempIndex, value: "Once" });
+    else if (tempIndex === freqWeeklyIndex) setGoalRepeats({ index: tempIndex, value: "Weekly" });
     return tempIndex - 1;
   }
   function handleGoalLink() {
@@ -76,7 +76,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     const linkIndex = formInputData.inputGoal.search(detector);
     if (linkIndex !== -1) {
       const link = formInputData.inputGoal.slice(linkIndex).split(" ")[0];
-      setGoalLink(link);
+      setGoalLink({ index: linkIndex, value: link });
     } else setGoalLink(null);
     return linkIndex - 1;
   }
@@ -91,8 +91,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       const parseGoal = parseInt(String(reverseInput.match(tracker)), 10) <= 24;
       const tempIndex = reverseInput.search(tracker);
       if (tempIndex !== -1 && parseGoal) {
-        setGoalDuration(checkGoalHr);
         lastIndex += tmpSum;
+        setGoalDuration({ index: lastIndex + 1, value: checkGoalHr });
       }
       tmpSum += reverseInput.length + 1;
     }
@@ -120,11 +120,11 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     await updateGoal(goalId,
       { title: goalTitle,
         goalColor: colorPallete[selectedColorIndex],
-        duration: goalDuration,
-        repeat: goalRepeats,
-        link: goalLink,
-        start: goalStart ? new Date(new Date(new Date().setHours(goalStart)).setMinutes(0)) : null,
-        finish: goalDeadline ? new Date(new Date(new Date().setHours(goalDeadline)).setMinutes(0)) : null,
+        duration: goalDuration?.value,
+        repeat: goalRepeats?.value,
+        link: goalLink?.value,
+        start: goalStart ? new Date(new Date(new Date().setHours(goalStart?.value)).setMinutes(0)) : null,
+        finish: goalDeadline ? new Date(new Date(new Date().setHours(goalDeadline?.value)).setMinutes(0)) : null,
       });
     setFormInputData({
       inputGoal: "",
@@ -147,11 +147,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       setFormInputData({ id: crypto.randomUUID(),
         inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`
       });
-      setGoalDuration(goal.duration);
-      setGoalRepeats(goal.repeat);
-      setGoalLink(goal.link);
-      setGoalStart(goal.start ? goal.start.getHours() : null);
-      setGoalDeadline(goal.finish ? goal.finish.getHours() : null);
       if (goal.language) setGoalLang(goal.language);
     });
   }, []);
@@ -161,8 +156,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     const linkIndx = handleGoalLink();
     const repeatIndx = handleGoalRepeat();
     const goalTiming = handleTiming();
-    setGoalStart(goalTiming.start);
-    setGoalDeadline(goalTiming.end);
+    setGoalStart(goalTiming.start ? { index: goalTiming.index, value: goalTiming.start } : null);
+    setGoalDeadline(goalTiming.end ? { index: goalTiming.index, value: goalTiming.end } : null);
 
     let tmpTitleEnd = formInputData.inputGoal.length;
     if (durIndx > 0) {
@@ -179,6 +174,45 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     }
     setGoalTitle(formInputData.inputGoal.slice(0, tmpTitleEnd));
   }, [formInputData.inputGoal]);
+
+  const handleTagClick = (tagType: string) => {
+    const idNum = crypto.randomUUID();
+    let tmpString = formInputData.inputGoal;
+    if (tagType === "duration") {
+      const end = tmpString.slice(goalDuration?.index).split(" ")[0].length;
+      tmpString = `${tmpString.slice(0, goalDuration?.index).trim()}${tmpString.slice(goalDuration?.index + end)}`;
+      setGoalDuration(null);
+    } else if (tagType === "repeats") {
+      const end = tmpString.slice(goalRepeats?.index).split(" ")[0].length;
+      tmpString = `${tmpString.slice(0, goalRepeats?.index).trim()}${tmpString.slice(goalRepeats?.index + end)}`;
+      setGoalRepeats(null);
+    } else if (tagType === "link") {
+      const end = tmpString.slice(goalLink?.index).split(" ")[0].length;
+      tmpString = `${tmpString.slice(0, goalLink?.index).trim()}${tmpString.slice(goalLink?.index + end)}`;
+      setGoalLink(null);
+    } else if (goalStart && goalStart.index !== -1 && goalDeadline && goalDeadline.index !== -1) {
+      const end = `${goalStart.value}-${goalDeadline.value}`.length;
+      if (tagType === "start") {
+        tmpString = `${tmpString.slice(0, goalStart?.index).trim()} before @${goalDeadline.value} ${tmpString.slice(goalStart?.index + end + 1).trim()}`;
+        setGoalStart(null);
+      } else if (tagType === "deadline") {
+        tmpString = `${tmpString.slice(0, goalDeadline?.index).trim()} start @${goalStart.value} ${tmpString.slice(goalDeadline?.index + end + 1).trim()}`;
+        setGoalDeadline(null);
+      }
+    } else if (tagType === "start") {
+      const end = 7 + `${goalStart.value}`.length;
+      tmpString = `${tmpString.slice(0, goalStart?.index).trim()}${tmpString.slice(goalStart?.index + end + 1).trim()}`;
+      setGoalStart(null);
+    } else if (tagType === "deadline") {
+      const end = 8 + `${goalDeadline.value}`.length;
+      tmpString = `${tmpString.slice(0, goalDeadline?.index).trim()}${tmpString.slice(goalDeadline?.index + end + 1).trim()}`;
+      setGoalDeadline(null);
+    }
+    setFormInputData({
+      id: idNum,
+      inputGoal: tmpString,
+    });
+  };
 
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
@@ -213,9 +247,10 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={goalStart ? "form-tag" : "blank"}
+          className={goalStart?.value ? "form-tag" : "blank"}
+          onClick={() => { handleTagClick("start"); }}
         >
-          {`Start ${goalStart}:00`}
+          {`Start ${goalStart?.value}:00`}
         </button>
         <button
           type="button"
@@ -224,9 +259,10 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={goalDeadline ? "form-tag" : "blank"}
+          className={goalDeadline?.value ? "form-tag" : "blank"}
+          onClick={() => { handleTagClick("deadline"); }}
         >
-          {`Deadline ${goalDeadline}:00`}
+          {`Deadline ${goalDeadline?.value}:00`}
         </button>
         <button
           type="button"
@@ -235,9 +271,10 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={goalDuration ? "form-tag" : "blank"}
+          className={goalDuration?.value ? "form-tag" : "blank"}
+          onClick={() => { handleTagClick("duration"); }}
         >
-          {`${goalDuration} hours`}
+          {`${goalDuration?.value} hours`}
         </button>
         <button
           type="button"
@@ -246,9 +283,10 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={goalRepeats ? "form-tag" : "blank"}
+          className={goalRepeats?.value ? "form-tag" : "blank"}
+          onClick={() => { handleTagClick("repeats"); }}
         >
-          {goalRepeats}
+          {goalRepeats?.value}
         </button>
         <button
           type="button"
@@ -257,7 +295,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
               ? { backgroundColor: colorPallete[selectedColorIndex] }
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
-          className={goalLink ? "form-tag" : "blank"}
+          className={goalLink?.value ? "form-tag" : "blank"}
+          onClick={() => { handleTagClick("link"); }}
         >
           URL
         </button>
