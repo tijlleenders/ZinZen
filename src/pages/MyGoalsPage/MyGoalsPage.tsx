@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { PlusLg, Trash3Fill, PencilSquare, CheckLg, ChevronRight, ChevronDown, ShareFill, PersonFill, PeopleFill } from "react-bootstrap-icons";
+import { ChevronRight, ChevronDown, PersonFill, PeopleFill } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Modal } from "react-bootstrap";
@@ -11,8 +11,8 @@ import {
   removeGoal,
   removeChildrenGoals,
   archiveChildrenGoals,
-  shareGoal,
-  getGoal
+  getGoal,
+  shareMyGoal
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -59,24 +59,7 @@ export const MyGoalsPage = () => {
   //   const dummyData = [goal1, goal2, goal3];
   //   dummyData.map((goal: string) => addGoal(goal));
   // }
-  const shareMyGoal = async (goal: GoalItem) => {
-    const shareableGoal = {
-      method: "shareGoal",
-      parentTitle: "root",
-      goal: {
-        title: goal.title,
-        duration: goal.duration,
-        repeat: goal.repeat,
-        start: goal.start,
-        finish: goal.finish,
-        createdAt: goal.createdAt,
-        goalColor: goal.goalColor,
-        language: goal.language,
-        link: goal.link
-      }
-    };
-    shareGoal(shareableGoal);
-  };
+
   const resetHistory = () => {
     setSubGoalHistory([]);
     setSelectedGoalId(-1);
@@ -314,7 +297,7 @@ export const MyGoalsPage = () => {
                             <Modal.Body id="share-modal-body">
                               <button
                                 onClick={async () => {
-                                  await shareMyGoal(goal);
+                                  await shareMyGoal(goal, "root");
                                 }}
                                 type="button"
                                 className="shareOptions-btn"

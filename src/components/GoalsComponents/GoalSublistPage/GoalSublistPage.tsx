@@ -1,9 +1,9 @@
-import { PlusLg, Trash3Fill, ShareFill, PencilSquare, CheckLg, ChevronRight, ChevronDown, PeopleFill, PersonFill } from "react-bootstrap-icons";
-import React, { useEffect, useRef, useState } from "react";
+import { ChevronRight, ChevronDown, PeopleFill, PersonFill } from "react-bootstrap-icons";
+import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container, Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 
-import { archiveGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareGoal, updateGoal } from "@src/api/GoalsAPI";
+import { archiveGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import plus from "@assets/images/plus.svg";
@@ -51,24 +51,6 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
     getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   }, [parentGoal]);
 
-  const shareMyGoal = async (goal: GoalItem) => {
-    const shareableGoal = {
-      method: "shareGoal",
-      parentTitle: parentGoal?.title,
-      goal: {
-        title: goal.title,
-        duration: goal.duration,
-        repeat: goal.repeat,
-        start: goal.start,
-        finish: goal.finish,
-        createdAt: goal.createdAt,
-        goalColor: goal.goalColor,
-        language: goal.language,
-        link: goal.link
-      }
-    };
-    shareGoal(shareableGoal);
-  };
   const archiveUserGoal = async (goal: GoalItem) => {
     await archiveGoal(Number(goal.id));
     getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
@@ -228,7 +210,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                   <Modal.Body id="share-modal-body">
                     <button
                       onClick={async () => {
-                        await shareMyGoal(goal);
+                        await shareMyGoal(goal, parentGoal ? parentGoal.title : "root");
                       }}
                       type="button"
                       className="shareOptions-btn"
