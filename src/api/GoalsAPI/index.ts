@@ -148,3 +148,45 @@ export const shareGoal = async (goal: object) => {
     alert("Let's focus on the happy path.");
   }
 };
+
+export const shareMyGoal = async (goal: GoalItem, parent: string) => {
+  const shareableGoal = {
+    method: "shareGoal",
+    parentTitle: parent,
+    goal: {
+      title: goal.title,
+      duration: goal.duration,
+      repeat: goal.repeat,
+      start: goal.start,
+      finish: goal.finish,
+      createdAt: goal.createdAt,
+      goalColor: goal.goalColor,
+      language: goal.language,
+      link: goal.link
+    }
+  };
+  shareGoal(shareableGoal);
+};
+
+export const getPublicGoals = async (goalTitle: string) => {
+  const URL = "https://jb65zz5efi3jy5rw5f2y5ke2u40hobkq.lambda-url.eu-west-1.on.aws/";
+  const errorMessage = ["Uh oh, do you have internet?", "No internet. Have aliens landed?", "Oops. The internet seems broken..."];
+
+  try {
+    const response = await (await fetch(URL, {
+      mode: "cors",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        method: "getGoalSuggestions",
+        parentTitle: goalTitle
+      }),
+    })).json();
+    return { status: true, data: [...response.Items] };
+  } catch (err) {
+    console.log(err);
+    return { status: false, message: errorMessage[Math.floor(Math.random() * errorMessage.length)] };
+  }
+};
