@@ -32,8 +32,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   const [goalRepeats, setGoalRepeats] = useState<"Once" | "Daily" | "Weekly" | null>(null);
   const [goalLink, setGoalLink] = useState<string | null>(null);
   const [goalLang, setGoalLang] = useState("english");
-  const [goalStart, setGoalStart] = useState<number|null>(null);
-  const [goalDeadline, setGoalDeadline] = useState<number|null>(null);
+  const [goalStart, setGoalStart] = useState<number | null>(null);
+  const [goalDeadline, setGoalDeadline] = useState<number | null>(null);
 
   const daily = /daily/;
   const once = /once/;
@@ -145,7 +145,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       } else if (goal.finish) {
         tmpTiming = ` before @${goal.finish.getHours()}`;
       }
-      setFormInputData({ id: crypto.randomUUID(),
+      setFormInputData({
+        id: crypto.randomUUID(),
         inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`
       });
       setGoalDuration(goal.duration);
