@@ -10,11 +10,12 @@ import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import LogoGradient from "@assets/images/LogoGradient.png";
-import { getAllArchivedGoals } from "@src/api/GoalsAPI";
+import { getAllArchivedGoals, getGoal, getPublicGoals } from "@src/api/GoalsAPI";
+import { GoalItem } from "@src/models/GoalItem";
+import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
 
 import "@translations/i18n";
 import "@components/HeaderDashboard/HeaderDashboard.scss";
-import { GoalItem } from "@src/models/GoalItem";
 
 interface GoalsHeaderProps {
   goalID: number,
@@ -31,29 +32,39 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
 
   const [showSuggestionsModal, setShowSuggestionsModal] = useState(false);
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
+  const [publicGoals, setPublicGoals] = useState<ISharedGoal[]>([]);
 
-  const getArchiveGoals = (isArchiveTab: boolean) => (archiveGoals.length > 0 ?
-    archiveGoals.map((goal) => (
-      <div key={`my-archive-${goal.id}`} className="suggestions-goal-name">
-        <p style={{ marginBottom: 0, padding: "2%" }}>{goal.title}</p>
-      </div>
-    ))
-    : (
-      <div style={{ textAlign: "center" }} className="suggestions-goal-name">
-        <p style={{ marginBottom: 0, padding: "2%" }}>
-          {
+  const getSuggestions = (isArchiveTab: boolean) => {
+    const lst: ISharedGoal[] = isArchiveTab ? archiveGoals : publicGoals;
+    return lst.length > 0 ?
+      lst.map((goal) => (
+        <div key={`my-archive-${goal.id}`} className="suggestions-goal-name">
+          <p style={{ marginBottom: 0, padding: "2%" }}>{goal.title}</p>
+        </div>
+      ))
+      : (
+        <div style={{ textAlign: "center" }} className="suggestions-goal-name">
+          <p style={{ marginBottom: 0, padding: "2%" }}>
+            {
             isArchiveTab ? "Sorry, No Archived Goals" : "Sorry, No Public Goals"
           }
-        </p>
-      </div>
-    ));
+          </p>
+        </div>
+      );
+  };
 
   useEffect(() => {
     if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
       (async () => {
         const goals: GoalItem[] = await getAllArchivedGoals();
         setArchiveGoals(goals);
-        console.log("ar", goals);
+        let goal: goalItem;
+        if (goalID !== -1) goal = await getGoal(goalID);
+        const res = await getPublicGoals(goalID === -1 ? "root" : goal.title);
+        if (res.status) {
+          const tmpPG = [...res.data];
+          setPublicGoals([...tmpPG]);
+        }
       })();
     }
   }, [displayTRIcon]);
@@ -127,10 +138,10 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
             justify
           >
             <Tab eventKey="My Archive" title="My Archive">
-              {getArchiveGoals(true)}
+              {getSuggestions(true)}
             </Tab>
             <Tab eventKey="Public Goals" title="Public Goals">
-              {getArchiveGoals(false)}
+              {getSuggestions(false)}
             </Tab>
           </Tabs>
         </Modal.Body>
