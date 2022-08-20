@@ -59,14 +59,14 @@ export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoa
           </button>
         </div>
 
-        <div>
+        {/* <div>
           <div className={darkModeStatus ? "goalsubtext-font-dark" : "goalsubtext-font-light"}>
             <p style={{ fontStyle: "normal" }}>
               {t("goalsubtext")}
               <br /> {t("format")}
             </p>
           </div>
-        </div>
+        </div> */}
       </Row>
       <Row>
         <UpdateGoalForm goalId={goalId} setShowUpdateGoal={setShowUpdateGoal} selectedColorIndex={selectedColorIndex} />

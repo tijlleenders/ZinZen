@@ -183,7 +183,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   }, [formInputData.inputGoal]);
 
   return (
-    <form className="todo-form" onSubmit={handleSubmit}>
+    <form id="todo-form" className="todo-form" onSubmit={handleSubmit}>
       <div>
         <input
           className={darkModeStatus ? "addtask-dark" : "addtask-light"}

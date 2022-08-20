@@ -46,10 +46,6 @@ body {
   padding-bottom: 0em;
 }
 
-.alignment-div {
-  position: absolute;
-}
-
 border .addtask-dark {
   background-color: #5f3636;
   color: #cecece;
@@ -146,17 +142,21 @@ border .addtask-dark {
   height: 1rem;
 }
 
+#todo-form{
+position: absolute;
+margin-top: 4em;
+}
+
 #updateTask-button {
   font-size: x-large !important;
   font-weight: bolder !important;
   color: white;
-  display: flex;
   border-style: none;
   padding: 00.3em;
   position: absolute;
   border-radius: 10px;
-  margin-left: 60%;
-  margin-top: -9.5em;
+  margin-left: 4rem;
+  margin-top: -6.7em;
 }
 
 #changeColor-btn {
@@ -179,7 +179,6 @@ border .addtask-dark {
 
 .addtask-button {
   color: white !important;
-  // background: #AC3B61 !important;
   border-radius: 10px !important;
   font-size: x-large !important;
   font-weight: bolder !important;
@@ -191,7 +190,7 @@ border .addtask-dark {
     height: 3em;
     position: absolute;
     right: 0;
-    margin-right: 60%;
+    margin-right: 55%;
     border: none;
     border-radius: 10px;
   }
@@ -204,8 +203,8 @@ border .addtask-dark {
     padding: 00.3em;
     position: absolute;
     border-radius: 10px;
-    margin-left: 41%;
-    margin-top: -10.5em;
+    margin-left: -6em;;
+    margin-top: -6.5em;
   }
 
   .goalsubtext-font-dark {
@@ -226,11 +225,18 @@ border .addtask-dark {
 }
 
 @media (min-width: 950px) {
+  #todo-form{
+    position: absolute;
+    margin-top: 4em;
+    right: 0%;
+    }
+
   #changeColor-btn {
     width: 6em;
     position: absolute;
     right: 0;
-    margin-right: 40%;
+    margin-right: 19.5%;
+    margin-top: -0.4%;
     border: none;
     padding: 0.6em;
     border-radius: 10px;
@@ -244,9 +250,9 @@ border .addtask-dark {
     padding: 00.3em;
     position: absolute;
     border-radius: 10px;
-    margin-left: 60%;
+    margin-left: 81%;
     display: flex;
-    margin-top: -19%;
+    margin-top: -14.4%;
   }
 
   #addGoals-container {
