@@ -108,7 +108,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
             {childrenGoals?.map((goal: GoalItem, index) => (
               <div
                 aria-hidden
-                key={String(`goal-${index}`)}
+                key={String(`goal-${goal.id}`)}
                 className="user-goal"
                 style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
               >
