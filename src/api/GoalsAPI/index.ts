@@ -36,7 +36,7 @@ export const getGoal = async (goalId: number) => {
 };
 
 export const getChildrenGoals = async (parentGoalId: number) => {
-  const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).toArray();
+  const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).and((goal) => goal.status === 0).toArray();
   return childrenGoals;
 };
 
@@ -79,6 +79,21 @@ export const archiveGoal = async (id: number) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(id, updatedGoalStatus);
   });
+};
+
+export const archiveChildrenGoals = async (id: number) => {
+  const childrenGoals = await getChildrenGoals(id);
+  if (childrenGoals) {
+    childrenGoals.forEach(async (goal: GoalItem) => {
+      await archiveChildrenGoals(Number(goal.id));
+      await archiveGoal(Number(goal.id));
+    });
+  }
+};
+
+export const archiveUserGoal = async (id: number) => {
+  await archiveChildrenGoals(id);
+  await archiveGoal(id);
 };
 
 export const isCollectionEmpty = async () => {
@@ -125,11 +140,6 @@ export const removeChildrenGoals = async (parentGoalId: number) => {
     removeChildrenGoals(Number(goal.id));
     removeGoal(Number(goal.id));
   });
-};
-
-export const archiveChildrenGoals = async (parentGoalId: number) => {
-  const childrenGoals = await getChildrenGoals(parentGoalId);
-  childrenGoals.map((goal: GoalItem) => archiveGoal(Number(goal.id)));
 };
 
 export const shareGoal = async (goal: object) => {
