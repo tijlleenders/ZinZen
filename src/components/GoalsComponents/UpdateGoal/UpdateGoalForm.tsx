@@ -28,11 +28,11 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   });
   const [error, setError] = useState("");
   const [goalTitle, setGoalTitle] = useState("");
-  const [goalLink, setGoalLink] = useState<{index:number, value: null | string} | null>(null);
-  const [goalRepeats, setGoalRepeats] = useState<{index:number, value: "Once" | "Daily" | "Weekly" | null} | null>(null);
-  const [goalDuration, setGoalDuration] = useState<{index:number, value: null | number} | null>(null);
-  const [goalStart, setGoalStart] = useState<{index:number, value: null | number} | null>(null);
-  const [goalDeadline, setGoalDeadline] = useState<{index:number, value: null | number} | null>(null);
+  const [goalLink, setGoalLink] = useState<{ index: number, value: null | string } | null>(null);
+  const [goalRepeats, setGoalRepeats] = useState<{ index: number, value: "Once" | "Daily" | "Weekly" | null } | null>(null);
+  const [goalDuration, setGoalDuration] = useState<{ index: number, value: null | number } | null>(null);
+  const [goalStart, setGoalStart] = useState<{ index: number, value: null | number } | null>(null);
+  const [goalDeadline, setGoalDeadline] = useState<{ index: number, value: null | number } | null>(null);
   const [goalLang, setGoalLang] = useState("english");
 
   const daily = /daily/;
@@ -118,7 +118,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       return;
     }
     await updateGoal(goalId,
-      { title: goalTitle,
+      {
+        title: goalTitle,
         goalColor: colorPallete[selectedColorIndex],
         duration: goalDuration?.value,
         repeat: goalRepeats?.value,
@@ -144,7 +145,8 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       } else if (goal.finish) {
         tmpTiming = ` before @${goal.finish.getHours()}`;
       }
-      setFormInputData({ id: crypto.randomUUID(),
+      setFormInputData({
+        id: crypto.randomUUID(),
         inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`
       });
       if (goal.language) setGoalLang(goal.language);
@@ -215,7 +217,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   };
 
   return (
-    <form className="todo-form" onSubmit={handleSubmit}>
+    <form className="updatetodo-form" onSubmit={handleSubmit}>
       <div>
         <input
           className={darkModeStatus ? "addtask-dark" : "addtask-light"}
@@ -228,6 +230,19 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
           onChange={handleChange}
         />
       </div>
+      {/* <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}> */}
+      <Button
+        onClick={handleSubmit}
+        className="updatetask-button"
+        style={
+          darkModeStatus
+            ? { backgroundColor: colorPallete[selectedColorIndex] }
+            : { backgroundColor: colorPallete[selectedColorIndex] }
+        }
+      >
+        Update Goal
+      </Button>
+      {/* </div> */}
       <div className="tags">
         <button
           type="button"
@@ -300,19 +315,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
         >
           URL
         </button>
-      </div>
-      <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
-        <Button
-          onClick={handleSubmit}
-          className="addtask-button"
-          style={
-            darkModeStatus
-              ? { backgroundColor: colorPallete[selectedColorIndex] }
-              : { backgroundColor: colorPallete[selectedColorIndex] }
-          }
-        >
-          Update Goal
-        </Button>
       </div>
       <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
     </form>

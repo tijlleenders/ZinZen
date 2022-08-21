@@ -42,17 +42,8 @@ export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoa
   return (
     <Container fluid id="addGoals-container">
       <Row className="position">
-        <div>
-          <h2 className={darkModeStatus ? "mygoals-font-dark" : "mygoals-font-light"}>Update Goal</h2>
-          <div className={darkModeStatus ? "goalsubtext-font-dark" : "goalsubtext-font-light"}>
-            <p style={{ fontStyle: "normal" }}>
-              {t("goalsubtext")}
-              <br /> {t("format")}
-            </p>
-          </div>
-        </div>
         <button
-          id="changeColor-btn"
+          id="changeColor-btn-update"
           type="button"
           style={
               darkModeStatus
