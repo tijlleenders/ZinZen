@@ -194,7 +194,7 @@ export const MyGoalsPage = () => {
                       {userGoals?.map((goal: GoalItem, index) => (
                         <div
                           aria-hidden
-                          key={String(`task-${index}`)}
+                          key={String(`task-${goal.id}`)}
                           className="user-goal"
                           style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
                         >
@@ -240,6 +240,7 @@ export const MyGoalsPage = () => {
                                 src={plus}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={() => {
+                                  setSelectedGoalId(goal.id);
                                   setShowAddGoals({
                                     open: true,
                                     goalId: goal?.id
@@ -269,7 +270,7 @@ export const MyGoalsPage = () => {
                                 src={pencil}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={() => {
-                                  console.log("clicked");
+                                  setSelectedGoalId(goal.id);
                                   setShowUpdateGoal({ open: true, goalId: goal?.id });
                                 }}
                               />
