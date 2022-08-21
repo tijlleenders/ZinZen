@@ -6,11 +6,10 @@ import { useRecoilValue } from "recoil";
 import { Modal } from "react-bootstrap";
 
 import {
-  archiveGoal,
+  archiveUserGoal,
   getActiveGoals,
   removeGoal,
   removeChildrenGoals,
-  archiveChildrenGoals,
   getGoal,
   shareMyGoal
 } from "@api/GoalsAPI";
@@ -94,12 +93,11 @@ export const MyGoalsPage = () => {
       }
     }
   };
-  async function archiveUserGoal(goal: GoalItem) {
-    await archiveChildrenGoals(Number(goal.id));
-    await archiveGoal(Number(goal.id));
+  const archiveMyGoal = async (id: number) => {
+    await archiveUserGoal(id);
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
-  }
+  };
   async function removeUserGoal(id: number) {
     await removeChildrenGoals(id);
     await removeGoal(id);
@@ -279,9 +277,7 @@ export const MyGoalsPage = () => {
                                 alt="archive Goal"
                                 src={correct}
                                 onClickCapture={async () => {
-                                  archiveUserGoal(goal);
-                                  const updatedGoalsList = await getActiveGoals();
-                                  setUserGoals(updatedGoalsList);
+                                  await archiveMyGoal(goal.id);
                                 }}
                                 style={{ cursor: "Pointer" }}
                               />
