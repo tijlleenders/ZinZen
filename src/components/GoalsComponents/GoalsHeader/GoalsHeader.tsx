@@ -10,7 +10,7 @@ import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import LogoGradient from "@assets/images/LogoGradient.png";
-import { getAllArchivedGoals, getGoal, getPublicGoals } from "@src/api/GoalsAPI";
+import { getGoalsFromArchive, getGoal, getPublicGoals } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
 
@@ -56,7 +56,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
   useEffect(() => {
     if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
       (async () => {
-        const goals: GoalItem[] = await getAllArchivedGoals();
+        const goals: GoalItem[] = await getGoalsFromArchive(goalID);
         setArchiveGoals(goals);
         let goal: goalItem;
         if (goalID !== -1) goal = await getGoal(goalID);
