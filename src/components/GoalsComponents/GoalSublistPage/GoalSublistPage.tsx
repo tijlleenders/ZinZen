@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container, Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 
-import { archiveGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
+import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import plus from "@assets/images/plus.svg";
@@ -51,9 +51,9 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
     getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   }, [parentGoal]);
 
-  const archiveUserGoal = async (goal: GoalItem) => {
-    await archiveGoal(Number(goal.id));
-    getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+  const archiveMyGoal = async (id: number) => {
+    await archiveUserGoal(id);
+    await getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   };
   const removeChildrenGoal = async (goalId: number) => {
     if (parentGoal?.sublist) {
@@ -193,8 +193,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                       alt="archive Goal"
                       src={correct}
                       onClickCapture={async () => {
-                        archiveUserGoal(goal);
-                        getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+                        await archiveMyGoal(goal.id);
                       }}
                       style={{ cursor: "Pointer" }}
                     />
@@ -209,7 +208,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                 >
                   <Modal.Body id="share-modal-body">
                     <button
-                      onClick={async () => {
+                      onClickCapture={async () => {
                         await shareMyGoal(goal, parentGoal ? parentGoal.title : "root");
                       }}
                       type="button"
