@@ -230,7 +230,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
           onChange={handleChange}
         />
       </div>
-      {/* <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}> */}
       <Button
         onClick={handleSubmit}
         className="updatetask-button"
@@ -242,7 +241,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       >
         Update Goal
       </Button>
-      {/* </div> */}
       <div className="tags">
         <button
           type="button"
