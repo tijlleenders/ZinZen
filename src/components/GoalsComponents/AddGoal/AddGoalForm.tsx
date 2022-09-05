@@ -44,33 +44,38 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   const [goalDueDT, setGoalDueDT] = useState<{ index: number, value: Date | null} | null>(null);
   const [goalStartTime, setGoalStartTime] = useState<{index:number, value: null | number} | null>(null);
   const [goalEndTime, setGoalEndTime] = useState<{index:number, value: null | number} | null>(null);
+  const [magicIndices, setMagicIndices] = useState<{word: string, index: number}[]>([]);
 
   const lang = localStorage.getItem("language")?.slice(1, -1);
   const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
   function handleTiming() {
     const handlerOutput = goalTimingHandler(formInputData.inputGoal);
+    const temp = [];
     setGoalStartDT(handlerOutput.start ? handlerOutput.start : null);
     setGoalDueDT(handlerOutput.end ? handlerOutput.end : null);
     setGoalStartTime(handlerOutput.startTime ? handlerOutput.startTime : null);
     setGoalEndTime(handlerOutput.endTime ? handlerOutput.endTime : null);
-    console.log(handlerOutput);
-    return handlerOutput;
+    if (handlerOutput.start) { temp.push({ word: "start", index: handlerOutput.start.index }); }
+    if (handlerOutput.end) { temp.push({ word: "due", index: handlerOutput.end.index }); }
+    if (handlerOutput.startTime) { temp.push({ word: "startTime", index: handlerOutput.startTime.index }); }
+    if (handlerOutput.endTime) { temp.push({ word: "endTime", index: handlerOutput.endTime.index }); }
+    return temp;
   }
   function handleGoalLink() {
     const handlerOutput = goalLinkHandler(formInputData.inputGoal);
     setGoalLink(handlerOutput.value);
-    return handlerOutput.status && handlerOutput.value ? handlerOutput.value.index : -1;
+    return handlerOutput.value ? [{ word: "link", index: handlerOutput.value.index }] : [];
   }
   function handleGoalDuration() {
     const handlerOutput = goalDurationHandler(formInputData.inputGoal);
     setGoalDuration(handlerOutput.value);
-    return handlerOutput.status && handlerOutput.value ? handlerOutput.value.index : -1;
+    return handlerOutput.value ? [{ word: "duration", index: handlerOutput.value.index }] : [];
   }
   function handleGoalRepeat() {
     const handlerOutput = goalRepeatHandler(formInputData.inputGoal);
     setGoalRepeats(handlerOutput.value);
-    return handlerOutput.status && handlerOutput.value ? handlerOutput.value.index : -1;
+    return handlerOutput.value ? [{ word: "repeats", index: handlerOutput.value.index }] : [];
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -85,34 +90,15 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   };
 
   useEffect(() => {
-    const durIndx = handleGoalDuration();
-    const linkIndx = handleGoalLink();
-    const repeatIndx = handleGoalRepeat();
-    const goalTiming = handleTiming();
+    let tmpMagicIndices = [];
+    tmpMagicIndices = [...handleGoalDuration()];
+    tmpMagicIndices = [...tmpMagicIndices, ...handleGoalLink()];
+    tmpMagicIndices = [...tmpMagicIndices, ...handleGoalRepeat()];
+    tmpMagicIndices = [...tmpMagicIndices, ...handleTiming()];
 
-    let tmpTitleEnd = formInputData.inputGoal.length;
-    if (durIndx > 0) {
-      tmpTitleEnd = durIndx > tmpTitleEnd ? tmpTitleEnd : durIndx;
-    }
-    if (linkIndx > 0) {
-      tmpTitleEnd = linkIndx > tmpTitleEnd ? tmpTitleEnd : linkIndx;
-    }
-    if (goalTiming.start && goalTiming.start.index > 0) {
-      tmpTitleEnd = goalTiming.start.index > tmpTitleEnd ? tmpTitleEnd : goalTiming.start.index;
-    }
-    if (goalTiming.end && goalTiming.end.index > 0) {
-      tmpTitleEnd = goalTiming.end.index > tmpTitleEnd ? tmpTitleEnd : goalTiming.end.index;
-    }
-    if (goalTiming.startTime && goalTiming.startTime.index > 0) {
-      tmpTitleEnd = goalTiming.startTime.index > tmpTitleEnd ? tmpTitleEnd : goalTiming.startTime.index;
-    }
-    if (goalTiming.endTime && goalTiming.endTime.index > 0) {
-      tmpTitleEnd = goalTiming.endTime.index > tmpTitleEnd ? tmpTitleEnd : goalTiming.endTime.index;
-    }
-    if (repeatIndx > 0) {
-      tmpTitleEnd = repeatIndx > tmpTitleEnd ? tmpTitleEnd : repeatIndx;
-    }
-    setGoalTitle(formInputData.inputGoal.slice(0, tmpTitleEnd));
+    tmpMagicIndices.sort((a, b) => a.index - b.index);
+    if (tmpMagicIndices.length > 0) setGoalTitle(formInputData.inputGoal.slice(0, tmpMagicIndices[0].index));
+    setMagicIndices([...tmpMagicIndices]);
   }, [formInputData.inputGoal]);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -150,41 +136,37 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   };
 
   const handleTagClick = (tagType: string) => {
-    const idNum = crypto.randomUUID();
     let tmpString = formInputData.inputGoal;
+    const idNum = crypto.randomUUID();
+    const index = magicIndices.findIndex((ele) => ele.word === tagType);
+
+    let nextIndex = index + 1;
+    while (nextIndex < magicIndices.length && magicIndices[nextIndex].index === magicIndices[index].index) { nextIndex += 1; }
+
+    if (index + 1 === magicIndices.length) {
+      tmpString = tmpString.slice(0, magicIndices[index]?.index);
+    } else {
+      tmpString = `${tmpString.slice(0, magicIndices[index]?.index)} ${tmpString.slice(magicIndices[nextIndex].index)}`;
+    }
+    console.log(tmpString);
     if (tagType === "duration") {
-      const end = tmpString.slice(goalDuration?.index).split(" ")[0].length;
-      tmpString = `${tmpString.slice(0, goalDuration?.index).trim()}${tmpString.slice(goalDuration?.index + end)}`;
       setGoalDuration(null);
     } else if (tagType === "repeats") {
-      const end = tmpString.slice(goalRepeats?.index).split(" ")[0].length;
-      tmpString = `${tmpString.slice(0, goalRepeats?.index).trim()}${tmpString.slice(goalRepeats?.index + end)}`;
       setGoalRepeats(null);
     } else if (tagType === "link") {
-      const end = tmpString.slice(goalLink?.index).split(" ")[0].length;
-      tmpString = `${tmpString.slice(0, goalLink?.index).trim()}${tmpString.slice(goalLink?.index + end)}`;
       setGoalLink(null);
-    } else if (goalStartTime && goalStartTime.index !== -1 && goalEndTime && goalEndTime.index !== -1) {
-      const end = `${goalStartTime.value}-${goalEndTime.value}`.length;
-      if (tagType === "start") {
-        tmpString = `${tmpString.slice(0, goalStartTime?.index).trim()} before @${goalEndTime.value} ${tmpString.slice(goalStartTime?.index + end + 1).trim()}`;
-        setGoalStartTime(null);
-      } else if (tagType === "deadline") {
-        tmpString = `${tmpString.slice(0, goalEndTime?.index).trim()} start @${goalStartTime.value} ${tmpString.slice(goalEndTime?.index + end + 1).trim()}`;
-        setGoalEndTime(null);
-      }
     } else if (tagType === "start") {
-      const end = 7 + `${goalStartTime.value}`.length;
-      tmpString = `${tmpString.slice(0, goalStartTime?.index).trim()}${tmpString.slice(goalStartTime?.index + end + 1).trim()}`;
+      setGoalStartDT(null);
+    } else if (tagType === "due") {
+      setGoalDueDT(null);
+    } else if (tagType === "startTime") {
       setGoalStartTime(null);
-    } else if (tagType === "deadline") {
-      const end = 8 + `${goalEndTime.value}`.length;
-      tmpString = `${tmpString.slice(0, goalEndTime?.index).trim()}${tmpString.slice(goalEndTime?.index + end + 1).trim()}`;
+    } else if (tagType === "endTime") {
       setGoalEndTime(null);
     }
     setFormInputData({
       id: idNum,
-      inputGoal: tmpString,
+      inputGoal: tmpString.trim(),
     });
   };
   return (
@@ -235,9 +217,9 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
           className={goalStartTime?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("start"); }}
+          onClick={() => { handleTagClick("startTime"); }}
         >
-          {`StartTime ${goalStartTime?.value}:00`}
+          {`After ${goalStartTime?.value}:00`}
         </button>
 
         <button
@@ -248,9 +230,9 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
           className={goalDueDT?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("start"); }}
+          onClick={() => { handleTagClick("due"); }}
         >
-          {`Start ${goalEndTime?.value ?
+          {`Due ${goalEndTime?.value ?
             goalDueDT?.value.toLocaleDateString()
             :
             goalDueDT?.value.toLocaleString()}`}
@@ -264,9 +246,9 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
               : { backgroundColor: colorPallete[selectedColorIndex] }
           }
           className={goalEndTime?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("deadline"); }}
+          onClick={() => { handleTagClick("endTime"); }}
         >
-          {`Deadline ${goalEndTime?.value}:00`}
+          {`Before ${goalEndTime?.value}:00`}
         </button>
 
         <button
