@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /* eslint-disable import/no-duplicates */
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";

@@ -6,13 +6,13 @@ import { useTranslation } from "react-i18next";
 import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
-
-import "@translations/i18n";
-import "./UpdateGoalForm.scss";
 import { goalDurationHandler } from "@src/helpers/GoalDurationHandler";
 import { goalLinkHandler } from "@src/helpers/GoalLinkHandler";
 import { goalRepeatHandler } from "@src/helpers/GoalRepeatHandler";
 import { goalTimingHandler } from "@src/helpers/GoalTimingHandler";
+
+import "@translations/i18n";
+import "./UpdateGoalForm.scss";
 
 interface UpdateGoalFormProps {
   goalId: number | undefined,
@@ -43,8 +43,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
   const [goalEndTime, setGoalEndTime] = useState<{index:number, value: null | number} | null>(null);
   const [magicIndices, setMagicIndices] = useState<{word: string, index: number}[]>([]);
   const [goalLang, setGoalLang] = useState("english");
-
-  const lowercaseInput = formInputData.inputGoal.toLowerCase();
 
   function handleTiming() {
     const handlerOutput = goalTimingHandler(formInputData.inputGoal);

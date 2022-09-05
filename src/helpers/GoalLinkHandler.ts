@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 interface goalLinkHandlerResponse {
     status: boolean,
     value: { index:number, value: null | string } | null

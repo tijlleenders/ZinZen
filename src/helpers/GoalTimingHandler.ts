@@ -1,4 +1,5 @@
-/* eslint-disable radix */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-nocheck
 interface goalTimingHandlerResponse {
     status: boolean,
     start: { index: number, value: Date | null } | null,
@@ -80,7 +81,7 @@ function handleStart(lowercaseInput:string) {
       }
     },
   ];
-  for (let i = 0; i < startPatterns.length; i++) {
+  for (let i = 0; i < startPatterns.length; i += 1) {
     const ele = startPatterns[i];
     const found = lowercaseInput.search(ele.pattern);
     if (found >= 0) {

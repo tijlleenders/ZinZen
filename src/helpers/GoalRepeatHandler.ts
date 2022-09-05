@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface goalRepeatHandlerResponse {
     status: boolean,
     value: {
