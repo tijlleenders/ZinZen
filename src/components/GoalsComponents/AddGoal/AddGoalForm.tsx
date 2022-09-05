@@ -51,7 +51,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
 
   function handleTiming() {
     const handlerOutput = goalTimingHandler(formInputData.inputGoal);
-    const temp = [];
+    const temp : {word: string, index: number}[] = [];
     setGoalStartDT(handlerOutput.start ? handlerOutput.start : null);
     setGoalDueDT(handlerOutput.end ? handlerOutput.end : null);
     setGoalStartTime(handlerOutput.startTime ? handlerOutput.startTime : null);
@@ -90,7 +90,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
   };
 
   useEffect(() => {
-    let tmpMagicIndices = [];
+    let tmpMagicIndices : { word: string; index: any; }[] = [];
     tmpMagicIndices = [...handleGoalDuration()];
     tmpMagicIndices = [...tmpMagicIndices, ...handleGoalLink()];
     tmpMagicIndices = [...tmpMagicIndices, ...handleGoalRepeat()];
