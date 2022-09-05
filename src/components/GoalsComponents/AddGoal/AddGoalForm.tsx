@@ -109,15 +109,17 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     }
     const newGoal = createGoal(
       goalTitle,
-      goalRepeats?.value,
-      goalDuration?.value,
-      goalStartTime?.value ? new Date(new Date(new Date().setHours(goalStartTime?.value)).setMinutes(0)) : null,
-      goalEndTime?.value ? new Date(new Date(new Date().setHours(goalEndTime?.value)).setMinutes(0)) : null,
+      goalRepeats ? goalRepeats.value : null,
+      goalDuration ? goalDuration.value : null,
+      goalStartDT ? goalStartDT.value : null,
+      goalDueDT ? goalDueDT.value : null,
+      goalStartTime ? goalStartTime.value : null,
+      goalEndTime ? goalEndTime.value : null,
       0,
       parentGoalId!,
       colorPallete[selectedColorIndex], // goalColor
       goalLang,
-      goalLink?.value
+      goalLink ? goalLink.value : null
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
