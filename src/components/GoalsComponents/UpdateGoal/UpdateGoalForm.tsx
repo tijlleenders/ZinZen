@@ -210,7 +210,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
           className={goalStartDT?.value ? "form-tag" : "blank"}
           onClick={() => { handleTagClick("start"); }}
         >
-          {`Start ${goalStartTime?.value ? goalStartDT?.value.toLocaleDateString() : goalStartDT?.value.toLocaleString()}`}
+          {`Start ${goalStartTime?.value ? goalStartDT?.value.toLocaleDateString() : goalStartDT?.value.toLocaleString("en-US", { hour12: false }).slice(0, -3)}`}
         </button>
 
         <button
@@ -239,7 +239,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
           {`Due ${goalEndTime?.value ?
             goalDueDT?.value.toLocaleDateString()
             :
-            goalDueDT?.value.toLocaleString()}`}
+            goalDueDT?.value.toLocaleString("en-US", { hour12: false }).slice(0, -3)}`}
         </button>
 
         <button
