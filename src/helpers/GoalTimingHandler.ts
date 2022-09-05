@@ -3,6 +3,8 @@ interface goalTimingHandlerResponse {
     status: boolean,
     start: { index: number, value: Date | null } | null,
     end: { index: number, value: Date | null } | null,
+    startTime: { index: number, value: number | null } | null,
+    endTime: { index: number, value: number | null } | null
 }
 
 const dayStore = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
@@ -221,43 +223,19 @@ function handleBothTime(lowercaseInput: string) {
 
 export function goalTimingHandler(input: string) {
   const lowercaseInput = input.toLowerCase();
-  const res : goalTimingHandlerResponse = { status: false, start: null, end: null };
+  const res : goalTimingHandlerResponse = { status: false, start: null, end: null, startTime: null, endTime: null };
   res.start = handleStart(`${lowercaseInput.trim()} `);
   res.end = handleDue(`${lowercaseInput.trim()} `);
   const tryBothTime = handleBothTime(`${lowercaseInput.trim()} `);
   const tryStartTime = handleStartTime(`${lowercaseInput.trim()} `);
   const tryEndTime = handleEndTime(`${lowercaseInput.trim()} `);
-  let startTime; 
-  let endTime;
+
   if (tryBothTime) {
-    startTime = { index: tryBothTime.index, value: parseInt(tryBothTime.value.split("-")[0]) };
-    endTime = { index: tryBothTime.index, value: parseInt(tryBothTime.value.split("-")[1]) };
+    res.startTime = { index: tryBothTime.index, value: parseInt(tryBothTime.value.split("-")[0]) };
+    res.endTime = { index: tryBothTime.index, value: parseInt(tryBothTime.value.split("-")[1]) };
   } else {
-    startTime = tryStartTime;
-    endTime = tryEndTime;
-  }
-  if (startTime) {
-    if (res.start) {
-      res.start = {
-        index: res.start?.index,
-        value: new Date(res.start.value?.setHours(startTime.value))
-      };
-    } else {
-      res.start = {
-        index: startTime.index,
-        value: new Date(new Date().setHours(startTime.value))
-      };
-    }
-  }
-  if (endTime) {
-    if (res.end) {
-      res.end = {
-        index: res.end?.index,
-        value: new Date(res.end.value?.setHours(endTime.value))
-      };
-    } else {
-      res.end = { index: endTime.index, value: new Date(new Date().setHours(endTime.value)) };
-    }
+    res.startTime = tryStartTime;
+    res.endTime = tryEndTime;
   }
   return res;
 }
