@@ -210,7 +210,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
           className={goalStartDT?.value ? "form-tag" : "blank"}
           onClick={() => { handleTagClick("start"); }}
         >
-          {`Start ${goalStartTime?.value ? goalStartDT?.value.toLocaleDateString() : goalStartDT?.value.toLocaleString("en-US", { hour12: false }).slice(0, -3)}`}
+          {`Start ${goalStartDT?.value.toLocaleDateString()}${goalStartTime?.value ? "" : `, ${goalStartDT?.value?.toTimeString().slice(0, 5)}`}`}
         </button>
 
         <button
@@ -236,10 +236,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
           className={goalDueDT?.value ? "form-tag" : "blank"}
           onClick={() => { handleTagClick("due"); }}
         >
-          {`Due ${goalEndTime?.value ?
-            goalDueDT?.value.toLocaleDateString()
-            :
-            goalDueDT?.value.toLocaleString("en-US", { hour12: false }).slice(0, -3)}`}
+          {`Due ${goalDueDT?.value.toLocaleDateString()}${goalEndTime?.value ? "" : `, ${goalDueDT?.value?.toTimeString().slice(0, 5)}`}`}
         </button>
 
         <button

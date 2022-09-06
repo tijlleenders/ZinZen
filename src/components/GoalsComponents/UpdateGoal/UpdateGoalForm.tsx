@@ -115,9 +115,9 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       if (goal.startTime && goal.endTime) {
         tmpTiming = ` ${goal.startTime}-${goal.endTime}`;
       } else if (goal.startTime) {
-        tmpTiming = ` after @${goal.startTime}`;
+        tmpTiming = ` after ${goal.startTime}`;
       } else if (goal.endTime) {
-        tmpTiming = ` before @${goal.endTime}`;
+        tmpTiming = ` before ${goal.endTime}`;
       }
       setFormInputData({ id: crypto.randomUUID(),
         inputGoal: `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`
@@ -210,7 +210,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
           className={goalStartDT?.value ? "form-tag" : "blank"}
           onClick={() => { handleTagClick("start"); }}
         >
-          {`Start ${goalStartTime?.value ? goalStartDT?.value.toLocaleDateString() : goalStartDT?.value.toLocaleString("en-US", { hour12: false }).slice(0, -3)}`}
+          {`Start ${goalStartDT?.value.toLocaleDateString()}${goalStartTime?.value ? "" : `, ${goalStartDT?.value?.toTimeString().slice(0, 5)}`}`}
         </button>
 
         <button
@@ -236,10 +236,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
           className={goalDueDT?.value ? "form-tag" : "blank"}
           onClick={() => { handleTagClick("due"); }}
         >
-          {`Due ${goalEndTime?.value ?
-            goalDueDT?.value.toLocaleDateString()
-            :
-            goalDueDT?.value.toLocaleString("en-US", { hour12: false }).slice(0, -3)}`}
+          {`Due ${goalDueDT?.value.toLocaleDateString()}${goalEndTime?.value ? "" : `, ${goalDueDT?.value?.toTimeString().slice(0, 5)}`}`}
         </button>
 
         <button
