@@ -1,6 +1,7 @@
 describe("ExplorePage Test", () => {
   it("Explore page should have Backgorund color rgb(240, 230, 225)", () => {
     cy.visit("/");
+    cy.clearLocalStorage();
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();

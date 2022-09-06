@@ -1,6 +1,7 @@
 describe("FeedbackPage Tests", () => {
   it('1st line should be "We value your opinion."', () => {
     cy.visit("/");
+    cy.clearLocalStorage();
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();

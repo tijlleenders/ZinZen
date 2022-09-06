@@ -2,6 +2,7 @@ describe("Desktop Mode Tests", () => {
   it("should have 6 categories of feelings on addFeelings Page", () => {
     indexedDB.deleteDatabase("ZinZenDB");
     cy.visit("/");
+    cy.clearLocalStorage();
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();

@@ -142,6 +142,8 @@ export const MyTimePage = () => {
         1,
         new Date(new Date().setHours(dummyDates[ele][0], 0, 0)),
         new Date(new Date().setHours(dummyDates[ele][1], 0, 0)),
+        [ele][0],
+        [ele][1],
         0,
         -1,
         "#B2A24D",
@@ -161,7 +163,7 @@ export const MyTimePage = () => {
         title: element.title,
         duration: element.duration,
         start: element.start.toISOString().split(".")[0],
-        deadline: element.finish.toISOString().split(".")[0]
+        deadline: element.due.toISOString().split(".")[0]
       });
     });
     console.log(arr);

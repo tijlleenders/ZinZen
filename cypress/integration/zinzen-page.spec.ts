@@ -1,6 +1,7 @@
 describe("ZinZen-page Test", () => {
   it("Should have btn that redirects to github repo", () => {
     cy.visit("/");
+    cy.clearLocalStorage();
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();

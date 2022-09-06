@@ -1,6 +1,7 @@
 describe("DashboardUserChoice Test", () => {
   it("Should have 5 Choices to navigate My Goals/My Feelings/My Time/Explore/ZinZen", () => {
     cy.visit("/");
+    cy.clearLocalStorage();
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();
