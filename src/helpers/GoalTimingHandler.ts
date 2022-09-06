@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable radix */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 interface goalTimingHandlerResponse {
@@ -98,8 +100,11 @@ function handleDue(lowercaseInput:string) {
       pattern: /\s(due|by)\s([1-9]|1[0-9]|2[0-9]|3[0-1])\/([1-9]|1[0-2])(\s@([0-9]|1[0-9]|2[0-3])\s|\s)/i,
       extractor: function extractDetail(_text : string) {
         const text = _text.split(" ").slice(0, 2).join(" ");
-        const [e_date, e_month] = text.split(" ")[1].split("/");
-        return new Date(new Date().getFullYear(), parseInt(e_month) - 1, parseInt(e_date), text.includes("@") ? parseInt(text.split("@")[1]) : 0);
+        const [eDate, eMonth] = text.split(" ")[1].split("/");
+        let endHr = 23;
+        let endMin = 59;
+        if (text.includes("@")) { [endHr, endMin] = Number.isNaN(parseInt(text.split("@")[1])) ? [23, 59] : [parseInt(text.split("@")[1]), 0]; }
+        return new Date(new Date().getFullYear(), parseInt(eMonth) - 1, parseInt(eDate), endHr, endMin);
       }
     },
     {
@@ -107,7 +112,10 @@ function handleDue(lowercaseInput:string) {
       extractor: function extractDetail(_text : string) {
         const text = _text.split(" ").slice(0, 3).join(" ");
         const tmpDate = text.split(" ")[1] === "today" ? new Date() : new Date(new Date().setDate(new Date().getDate() + 1));
-        return new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate(), text.includes("@") ? parseInt(text.split("@")[1]) : 0);
+        let endHr = 23;
+        let endMin = 59;
+        if (text.includes("@")) { [endHr, endMin] = Number.isNaN(parseInt(text.split("@")[1])) ? [23, 59] : [parseInt(text.split("@")[1]), 0]; }
+        return new Date(tmpDate.getFullYear(), tmpDate.getMonth(), tmpDate.getDate(), endHr, endMin);
       }
     },
     {
@@ -116,7 +124,10 @@ function handleDue(lowercaseInput:string) {
         const text = _text.split(" ").slice(0, 3).join(" ");
         let today = new Date();
         today = new Date(today.setDate(today.getDate() + ((7 - today.getDay() + dayStore[text.split(" ")[1]]) % 7 || 7)));
-        return new Date(today.setHours(text.includes("@") ? parseInt(text.split("@")[1]) : 0, 0, 0));
+        let endHr = 23;
+        let endMin = 59;
+        if (text.includes("@")) { [endHr, endMin] = Number.isNaN(parseInt(text.split("@")[1])) ? [23, 59] : [parseInt(text.split("@")[1]), 0]; }
+        return new Date(today.setHours(endHr, endMin));
       }
     },
     {
@@ -127,7 +138,10 @@ function handleDue(lowercaseInput:string) {
         const dayIndex = dayStore[text.split(" ")[3]];
         today = new Date(today.setDate(today.getDate() + ((7 - today.getDay() + dayIndex) % 7 || 7)));
         if (dayIndex > new Date().getDay()) { today = new Date(today.setDate(today.getDate() + 7)); }
-        return new Date(today.setHours(text.includes("@") ? parseInt(text.split("@")[1]) : 0, 0, 0));
+        let endHr = 23;
+        let endMin = 59;
+        if (text.includes("@")) { [endHr, endMin] = Number.isNaN(parseInt(text.split("@")[1])) ? [23, 59] : [parseInt(text.split("@")[1]), 0]; }
+        return new Date(today.setHours(endHr, endMin));
       }
     },
     {
@@ -136,7 +150,10 @@ function handleDue(lowercaseInput:string) {
         const text = _text.split(" ").slice(0, 4).join(" ");
         let today = new Date();
         today = new Date(today.setDate(today.getDate() + ((7 - today.getDay() + 1) % 7 || 7)));
-        return new Date(today.setHours(text.includes("@") ? parseInt(text.split("@")[1]) : 0, 0, 0));
+        let endHr = 23;
+        let endMin = 59;
+        if (text.includes("@")) { [endHr, endMin] = Number.isNaN(parseInt(text.split("@")[1])) ? [23, 59] : [parseInt(text.split("@")[1]), 0]; }
+        return new Date(today.setHours(endHr, endMin));
       }
     },
     {
@@ -151,8 +168,11 @@ function handleDue(lowercaseInput:string) {
       extractor: function extractDetail(_text : string) {
         const text = _text.split(" ").slice(0, 4).join(" ");
         let today = new Date();
+        let endHr = 23;
+        let endMin = 59;
+        if (text.includes("@")) { [endHr, endMin] = Number.isNaN(parseInt(text.split("@")[1])) ? [23, 59] : [parseInt(text.split("@")[1]), 0]; }
         today = new Date(today.setDate(today.getDate() + ((7 - today.getDay() + 1) % 7 || 7)));
-        return new Date(today.setHours(text.includes("@") ? parseInt(text.split("@")[1]) : 0, 0, 0));
+        return new Date(today.setHours(endHr, endMin));
       }
     }
 
