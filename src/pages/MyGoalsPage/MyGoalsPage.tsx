@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { ChevronRight, ChevronDown, PersonFill, PeopleFill } from "react-bootstrap-icons";
+import { ChevronLeft, ChevronDown, PersonFill, PeopleFill } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { Modal } from "react-bootstrap";
@@ -229,7 +229,7 @@ export const MyGoalsPage = () => {
                               {tapCount[0] === index && tapCount[1] > 0 ? (
                                 <ChevronDown fontSize="30px" />
                               ) : (
-                                <ChevronRight fontSize="30px" />
+                                <ChevronLeft fontSize="30px" />
                               )}
                             </div>
                           </div>
