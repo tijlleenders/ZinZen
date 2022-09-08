@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-alert */
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Modal, Tabs, Tab } from "react-bootstrap";
@@ -10,7 +12,8 @@ import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import LogoGradient from "@assets/images/LogoGradient.png";
-import { getGoalsFromArchive, getGoal, getPublicGoals } from "@src/api/GoalsAPI";
+import plus from "@assets/images/plus.svg";
+import { getGoalsFromArchive, getGoal, addGoal, getPublicGoals } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
 
@@ -34,12 +37,21 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
   const [publicGoals, setPublicGoals] = useState<ISharedGoal[]>([]);
 
+  const addSuggestedGoal = async (goal: ISharedGoal) => {
+    const { id: prevId, ...newGoal } = { ...goal, parentGoalId: goalID, sublist: null, status: 0 };
+    const newGoalId = await addGoal(newGoal);
+    alert(newGoalId ? "Added!" : "Sorry!");
+    return newGoalId;
+  };
   const getSuggestions = (isArchiveTab: boolean) => {
     const lst: ISharedGoal[] = isArchiveTab ? archiveGoals : publicGoals;
     return lst.length > 0 ?
       lst.map((goal) => (
         <div key={`my-archive-${goal.id}`} className="suggestions-goal-name">
-          <p style={{ marginBottom: 0, padding: "2%" }}>{goal.title}</p>
+          <p style={{ marginBottom: 0 }}>{goal.title}</p>
+          <button type="button" onClick={() => { addSuggestedGoal(goal); }}>
+            <img alt="goal suggestion" src={plus} />
+          </button>
         </div>
       ))
       : (
@@ -52,20 +64,23 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
         </div>
       );
   };
+  const getMySuggestions = async () => {
+    const goals: GoalItem[] = await getGoalsFromArchive(goalID);
+    setArchiveGoals(goals);
+    let goal: goalItem;
+    if (goalID !== -1) goal = await getGoal(goalID);
+    if (publicGoals.length === 0) {
+      const res = await getPublicGoals(goalID === -1 ? "root" : goal.title);
+      if (res.status) {
+        const tmpPG = [...res.data];
+        setPublicGoals([...tmpPG]);
+      }
+    }
+  };
 
   useEffect(() => {
     if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
-      (async () => {
-        const goals: GoalItem[] = await getGoalsFromArchive(goalID);
-        setArchiveGoals(goals);
-        let goal: goalItem;
-        if (goalID !== -1) goal = await getGoal(goalID);
-        const res = await getPublicGoals(goalID === -1 ? "root" : goal.title);
-        if (res.status) {
-          const tmpPG = [...res.data];
-          setPublicGoals([...tmpPG]);
-        }
-      })();
+      getMySuggestions();
     }
   }, [displayTRIcon]);
 
@@ -110,7 +125,12 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
           type="button"
           id="goal-suggestion-btn"
           onClick={() => {
-            if (displayTRIcon === "+") { setShowAddGoals({ open: true, goalId: goalID }); } else { setShowSuggestionsModal(true); }
+            if (displayTRIcon === "+") {
+              setShowAddGoals({ open: true, goalId: goalID });
+            } else {
+              setShowSuggestionsModal(true);
+              getMySuggestions();
+            }
           }}
         >
           <img alt="create-goals-suggestion" src={LogoGradient} />

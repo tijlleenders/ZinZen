@@ -47,29 +47,40 @@
     font-family: 'Montserrat';
   }
 
-#suggestions-modal {
-  margin: 0;
+#suggestions-modal > .modal-content {
+  position: absolute;
+  bottom: 0;
+  background: #EDC7B7;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 25px;
+  padding-bottom: 10%;
 }
-  #suggestions-modal > .modal-content {
-    position: absolute;
-    bottom: 0;
-    background: #EDC7B7;
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 25px;
-    padding-bottom: 10%;
-  }
 
 #suggestions-modal-body {
   display: flex;
   flex-direction: column;
-  padding-top: 2em;
+  padding-top: 2em;  
+}
+
+.tab-content {
+  max-height: 48vh;
+  overflow-y: scroll;
 }
 
 .suggestions-goal-name {
   background: #F0E6E1;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 2.5%;
+  padding: 2%;
+  padding-right: 5%;
+
+  button {
+    border: none;
+    background-color: transparent;
+  }
 }
 
 #suggestions {
@@ -80,4 +91,14 @@
 .nav-link {
   color: black !important;
   font-weight: 600;
+}
+
+.toast {
+  position: absolute;
+  color: white;
+  top: -19vh;
+  font-size: 1.286em !important;
+  width: 200px !important;
+  right: 0;
+  border-radius: 16px 0px 0px 16px !important;
 }
