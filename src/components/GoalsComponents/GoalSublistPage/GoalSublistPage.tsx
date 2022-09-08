@@ -1,4 +1,4 @@
-import { ChevronRight, ChevronDown, PeopleFill, PersonFill } from "react-bootstrap-icons";
+import { ChevronLeft, ChevronDown, PeopleFill, PersonFill } from "react-bootstrap-icons";
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container, Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
@@ -145,7 +145,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                         fontSize="30px"
                       />
                     ) : (
-                      <ChevronRight
+                      <ChevronLeft
                         fontSize="30px"
                       />
                     )}
