@@ -100,6 +100,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
 
     tmpMagicIndices.sort((a, b) => a.index - b.index);
     if (tmpMagicIndices.length > 0) setGoalTitle(formInputData.inputGoal.slice(0, tmpMagicIndices[0].index));
+    else setGoalTitle(formInputData.inputGoal.trim());
     setMagicIndices([...tmpMagicIndices]);
   }, [formInputData.inputGoal]);
 
