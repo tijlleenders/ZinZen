@@ -110,8 +110,8 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
       return;
     }
     const newGoal = createGoal(
-      goalTitle,
-      goalRepeats ? goalRepeats.value : null,
+      goalTitle.trim(),
+      goalRepeats ? goalRepeats.value.trim() : null,
       goalDuration ? goalDuration.value : null,
       goalStartDT ? goalStartDT.value : null,
       goalDueDT ? goalDueDT.value : null,
@@ -121,7 +121,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
       parentGoalId!,
       colorPallete[selectedColorIndex], // goalColor
       goalLang,
-      goalLink ? goalLink.value : null
+      goalLink ? goalLink.value.trim() : null
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
