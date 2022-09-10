@@ -69,7 +69,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
     setArchiveGoals(goals);
     let goal: goalItem;
     if (goalID !== -1) goal = await getGoal(goalID);
-    console.log(goal.title);
+    console.log(goalID);
     const res = await getPublicGoals(goalID === -1 ? "root" : goal.title);
     if (res.status) {
       const tmpPG = [...res.data];
