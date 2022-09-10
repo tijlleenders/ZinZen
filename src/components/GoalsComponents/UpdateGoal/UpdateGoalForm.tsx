@@ -91,7 +91,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       return;
     }
     await updateGoal(goalId,
-      { title: goalTitle.split(' ').filter((ele) => ele !== '').join(' '),
+      { title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
         goalColor: colorPallete[selectedColorIndex],
         duration: goalDuration?.value,
         repeat: goalRepeats?.value.trim(),
@@ -177,6 +177,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
         <input
+          autoComplete="off"
           className={darkModeStatus ? "addtask-dark" : "addtask-light"}
           type="text"
           name="inputGoal"
