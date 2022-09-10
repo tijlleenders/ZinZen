@@ -110,7 +110,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
       return;
     }
     const newGoal = createGoal(
-      goalTitle.split(' ').filter((ele) => ele !== '').join(' '),
+      goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
       goalRepeats ? goalRepeats.value.trim() : null,
       goalDuration ? goalDuration.value : null,
       goalStartDT ? goalStartDT.value : null,
@@ -177,6 +177,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     <form className="todo-form" onSubmit={handleSubmit}>
       <div>
         <input
+          autoComplete="off"
           className={darkModeStatus ? "addtask-dark" : "addtask-light"}
           type="text"
           name="inputGoal"
