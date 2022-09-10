@@ -110,7 +110,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
       return;
     }
     const newGoal = createGoal(
-      goalTitle.trim(),
+      goalTitle.split(' ').filter((ele) => ele !== '').join(' '),
       goalRepeats ? goalRepeats.value.trim() : null,
       goalDuration ? goalDuration.value : null,
       goalStartDT ? goalStartDT.value : null,
