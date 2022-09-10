@@ -91,7 +91,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       return;
     }
     await updateGoal(goalId,
-      { title: goalTitle.trim(),
+      { title: goalTitle.split(' ').filter((ele) => ele !== '').join(' '),
         goalColor: colorPallete[selectedColorIndex],
         duration: goalDuration?.value,
         repeat: goalRepeats?.value.trim(),
