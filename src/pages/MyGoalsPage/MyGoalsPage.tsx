@@ -1,8 +1,8 @@
 /* eslint-disable no-await-in-loop */
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { ChevronLeft, ChevronDown, PersonFill, PeopleFill } from "react-bootstrap-icons";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useLocation } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Modal } from "react-bootstrap";
 
 import {
@@ -26,73 +26,32 @@ import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
 import "./MyGoalsPage.scss";
+import { addInGoalsHistory, displayAddGoal, displayGoalId, displayUpdateGoal, goalsHistory } from "@src/store/GoalsHistoryState";
 
-interface ISubGoalHistoryProps {
-  goalID: number,
-  goalColor: string,
-  goalTitle: string
-}
 interface ILocationProps {
   openGoalOfId: number,
   isRootGoal: boolean
 }
 
 export const MyGoalsPage = () => {
-  const navigate = useNavigate();
   const location = useLocation();
+
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(false);
-  const [selectedGoalId, setSelectedGoalId] = useState(-1);
-  const [subGoalHistory, setSubGoalHistory] = useState<ISubGoalHistoryProps[]>([]);
+
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [showAddGoals, setShowAddGoals] = useState<{open: boolean, goalId: number}>({ open: false, goalId: -1 });
-  const [showUpdateGoal, setShowUpdateGoal] = useState<{open: boolean, goalId: number}>({ open: false, goalId: -1 });
+
+  const addInHistory = useSetRecoilState(addInGoalsHistory);
+  const setSubGoalHistory = useSetRecoilState(goalsHistory);
+
+  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+  const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
+  const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
+
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const typeOfPage = window.location.href.split("/").slice(-1)[0];
 
-  // async function populateDummyGoals() {
-  //   const goal1 = createGoal("Goal1", false, 2, null, null, 0);
-  //   const goal2 = createGoal("Goal2", true, 1, null, null, 0);
-  //   const goal3 = createGoal("Goal3", true, 2, null, null, 0);
-  //   const dummyData = [goal1, goal2, goal3];
-  //   dummyData.map((goal: string) => addGoal(goal));
-  // }
-
-  const resetHistory = () => {
-    setSubGoalHistory([]);
-    setSelectedGoalId(-1);
-  };
-  const addInHistory = (goal: GoalItem) => {
-    setSubGoalHistory([...subGoalHistory, ({
-      goalID: goal.id || -1,
-      goalColor: goal.goalColor || "#ffffff",
-      goalTitle: goal.title || ""
-    })]);
-    setSelectedGoalId(goal.id || -1);
-  };
-  const popFromHistory = (index = -1) => {
-    if (showUpdateGoal.open) {
-      setShowUpdateGoal({ open: false, goalId: -1 });
-    } else if (showAddGoals.open) {
-      if (typeOfPage === "AddGoals") { navigate(-1); } else { setShowAddGoals({ open: false, goalId: -1 }); }
-    } else {
-      if (selectedGoalId === -1) {
-        navigate(-1);
-      }
-      let tmpHistory = [...subGoalHistory];
-      if (index === -1) {
-        tmpHistory.pop();
-      } else { tmpHistory = tmpHistory.slice(0, index + 1); }
-      setSubGoalHistory([...tmpHistory]);
-
-      if (tmpHistory.length === 0) {
-        setSelectedGoalId(-1);
-      } else {
-        setSelectedGoalId(tmpHistory.slice(-1)[0].goalID);
-      }
-    }
-  };
   const archiveMyGoal = async (id: number) => {
     await archiveUserGoal(id);
     const goals: GoalItem[] = await getActiveGoals();
@@ -124,16 +83,17 @@ export const MyGoalsPage = () => {
       const goals: GoalItem[] = await getActiveGoals();
       setUserGoals(goals);
     })();
-  }, [showAddGoals, showUpdateGoal]);
-
+  }, [showAddGoal, showUpdateGoal]);
   useEffect(() => {
     (async () => {
       if (typeOfPage === "AddGoals") {
-        setShowAddGoals({ open: true, goalId: -1 });
+        setShowAddGoal({ open: true, goalId: -1 });
       }
       // await populateDummyGoals();
-      const goals: GoalItem[] = await getActiveGoals();
-      setUserGoals(goals);
+      if (selectedGoalId === -1) {
+        const goals: GoalItem[] = await getActiveGoals();
+        setUserGoals(goals);
+      }
     })();
   }, [selectedGoalId]);
 
@@ -151,7 +111,8 @@ export const MyGoalsPage = () => {
             tmpHistory.push(({
               goalID: tmpGoal.id || -1,
               goalColor: tmpGoal.goalColor || "#ffffff",
-              goalTitle: tmpGoal.title || ""
+              goalTitle: tmpGoal.title || "",
+              display: null
             }));
             openGoalOfId = tmpGoal.parentGoalId;
           }
@@ -163,16 +124,15 @@ export const MyGoalsPage = () => {
       }
     })();
   });
-
   return (
     <>
-      <GoalsHeader goalID={selectedGoalId} setShowAddGoals={setShowAddGoals} displayTRIcon={!showAddGoals.open && !showUpdateGoal.open ? "+" : "?"} popFromHistory={popFromHistory} />
+      <GoalsHeader displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "?"} />
       {
-        showAddGoals.open ?
-          <AddGoal goalId={showAddGoals.goalId} setShowAddGoals={setShowAddGoals} />
+        showAddGoal ?
+          <AddGoal />
           :
-          showUpdateGoal.open ?
-            <UpdateGoal goalId={showUpdateGoal.goalId} setShowUpdateGoal={setShowUpdateGoal} />
+          showUpdateGoal ?
+            <UpdateGoal />
             :
             selectedGoalId === -1 ?
               (
@@ -240,8 +200,7 @@ export const MyGoalsPage = () => {
                                 src={plus}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={() => {
-                                  setSelectedGoalId(goal.id);
-                                  setShowAddGoals({
+                                  setShowAddGoal({
                                     open: true,
                                     goalId: goal?.id
                                   });
@@ -270,7 +229,6 @@ export const MyGoalsPage = () => {
                                 src={pencil}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={() => {
-                                  setSelectedGoalId(goal.id);
                                   setShowUpdateGoal({ open: true, goalId: goal?.id });
                                 }}
                               />
@@ -327,15 +285,7 @@ export const MyGoalsPage = () => {
               )
               :
               (
-                <GoalSublist
-                  goalID={selectedGoalId}
-                  subGoalHistory={subGoalHistory}
-                  addInHistory={addInHistory}
-                  resetHistory={resetHistory}
-                  popFromHistory={popFromHistory}
-                  setShowAddGoals={setShowAddGoals}
-                  setShowUpdateGoal={setShowUpdateGoal}
-                />
+                <GoalSublist />
               )
       }
     </>
