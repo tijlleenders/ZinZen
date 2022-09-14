@@ -3,7 +3,7 @@
 /* eslint-disable import/no-duplicates */
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
@@ -18,21 +18,22 @@ import { goalRepeatHandler } from "@src/helpers/GoalRepeatHandler";
 
 import "@translations/i18n";
 import "./AddGoalForm.scss";
+import { addInGoalsHistory, displayAddGoal, displayGoalId } from "@src/store/GoalsHistoryState";
 
 interface AddGoalFormProps {
-  goalId: number | undefined,
-  setShowAddGoals: React.Dispatch<React.SetStateAction<{
-    open: boolean;
-    goalId: number;
-  }>>,
   selectedColorIndex: number,
   parentGoalId: number | -1,
 }
 
-export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoals, selectedColorIndex, parentGoalId }) => {
+export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, parentGoalId }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
   const darkModeStatus = useRecoilValue(darkModeState);
+  const goalID = useRecoilValue(displayGoalId);
+  const addInHistory = useSetRecoilState(addInGoalsHistory);
+  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+
   const [error, setError] = useState("");
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
@@ -129,6 +130,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
       const parentGoal = await getGoal(parentGoalId);
       const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(parentGoalId, { sublist: newSublist });
+      if (goalID !== showAddGoal?.goalId) { addInHistory(parentGoal); }
     }
     setFormInputData({
       inputGoal: "",
@@ -136,7 +138,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     });
     setGoalTitle("");
     const typeOfPage = window.location.href.split("/").slice(-1)[0];
-    setShowAddGoals({ open: false, id: goalId || -1 });
+    setShowAddGoal(null);
     if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
 
@@ -153,7 +155,6 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ goalId, setShowAddGoal
     } else {
       tmpString = `${tmpString.slice(0, magicIndices[index]?.index)} ${tmpString.slice(magicIndices[nextIndex].index)}`;
     }
-    console.log(tmpString);
     if (tagType === "duration") {
       setGoalDuration(null);
     } else if (tagType === "repeats") {
