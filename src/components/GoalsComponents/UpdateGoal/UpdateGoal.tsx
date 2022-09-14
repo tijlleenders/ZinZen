@@ -7,22 +7,17 @@ import paintBrush from "@assets/images/paintBrush.svg";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 import { getGoal } from "@src/api/GoalsAPI";
+import { displayUpdateGoal } from "@src/store/GoalsHistoryState";
 import { UpdateGoalForm } from "./UpdateGoalForm";
 
 import "@translations/i18n";
 import "./UpdateGoalForm.scss";
 
-interface UpdateGoalProps {
-  goalId: number,
-  setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
-    open: boolean;
-    goalId: number;
-  }>>
-}
-
-export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoal }) => {
+export const UpdateGoal = () => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+
   const [selectedColorIndex, setColorIndex] = useState(0);
 
   const changeColor = () => {
@@ -33,7 +28,7 @@ export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoa
 
   useEffect(() => {
     const getGoalColor = async () => {
-      const goal = await getGoal(Number(goalId));
+      const goal = await getGoal(Number(showUpdateGoal?.goalId));
       setColorIndex(colorPallete.indexOf(goal.goalColor));
     };
     getGoalColor();
@@ -65,7 +60,7 @@ export const UpdateGoal: React.FC<UpdateGoalProps> = ({ goalId, setShowUpdateGoa
         </button>
       </Row>
       <Row>
-        <UpdateGoalForm goalId={goalId} setShowUpdateGoal={setShowUpdateGoal} selectedColorIndex={selectedColorIndex} />
+        <UpdateGoalForm selectedColorIndex={selectedColorIndex} />
       </Row>
     </Container>
   );

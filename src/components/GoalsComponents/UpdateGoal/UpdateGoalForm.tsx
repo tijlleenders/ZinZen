@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
 import { getGoal, updateGoal } from "@src/api/GoalsAPI";
@@ -13,26 +13,23 @@ import { goalTimingHandler } from "@src/helpers/GoalTimingHandler";
 
 import "@translations/i18n";
 import "./UpdateGoalForm.scss";
+import { displayUpdateGoal } from "@src/store/GoalsHistoryState";
 
 interface UpdateGoalFormProps {
-  goalId: number | undefined,
   selectedColorIndex: number,
-  setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
-    open: boolean;
-    goalId: number;
-  }>>
 }
 
-export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selectedColorIndex, setShowUpdateGoal }) => {
+export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorIndex }) => {
   const { t } = useTranslation();
+
   const darkModeStatus = useRecoilValue(darkModeState);
+  const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
+
+  const [error, setError] = useState("");
   const [formInputData, setFormInputData] = useState({
     inputGoal: "",
     id: "",
   });
-
-  const [error, setError] = useState("");
-
   const [goalTitle, setGoalTitle] = useState("");
   const [goalLink, setGoalLink] = useState<{index:number, value: null | string} | null>(null);
   const [goalRepeats, setGoalRepeats] = useState<{ index: number, value: "Once" | "Daily" | "Weekly" | "Mondays" | "Tuesdays"| "Wednesdays"| "Thursdays" | "Fridays" | "Saturdays" | "Sundays" } | null>(null);
@@ -90,7 +87,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       setError("Enter a goal title!");
       return;
     }
-    await updateGoal(goalId,
+    await updateGoal(showUpdateGoal?.goalId,
       { title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
         goalColor: colorPallete[selectedColorIndex],
         duration: goalDuration?.value,
@@ -106,11 +103,11 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
       id: "",
     });
     setGoalTitle("");
-    setShowUpdateGoal({ open: false, id: -1 });
+    setShowUpdateGoal(null);
   };
 
   useEffect(() => {
-    getGoal(goalId).then((goal) => {
+    getGoal(showUpdateGoal?.goalId).then((goal) => {
       let tmpTiming = "";
       if (goal.startTime && goal.endTime) {
         tmpTiming = ` ${goal.startTime}-${goal.endTime}`;
@@ -152,7 +149,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ goalId, selected
     } else {
       tmpString = `${tmpString.slice(0, magicIndices[index]?.index)} ${tmpString.slice(magicIndices[nextIndex].index)}`;
     }
-    console.log(tmpString);
     if (tagType === "duration") {
       setGoalDuration(null);
     } else if (tagType === "repeats") {
