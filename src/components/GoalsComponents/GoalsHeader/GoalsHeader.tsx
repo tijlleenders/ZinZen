@@ -3,7 +3,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Modal, Tabs, Tab } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
@@ -13,29 +13,31 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import LogoGradient from "@assets/images/LogoGradient.png";
 import plus from "@assets/images/plus.svg";
-import { getGoalsFromArchive, getGoal, addGoal, getPublicGoals } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
+import { getGoalsFromArchive, getGoal, addGoal, getPublicGoals } from "@src/api/GoalsAPI";
+import { displayAddGoal, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory, popFromGoalsHistory } from "@src/store/GoalsHistoryState";
 
 import "@translations/i18n";
 import "@components/HeaderDashboard/HeaderDashboard.scss";
 
 interface GoalsHeaderProps {
-  goalID: number,
-  popFromHistory: () => void,
-  setShowAddGoals:React.Dispatch<React.SetStateAction<{
-        open: boolean;
-        goalId: number;
-  }>>,
   displayTRIcon: string
 }
-export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, popFromHistory, setShowAddGoals }) => {
+
+export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const goalID = useRecoilValue(displayGoalId);
+  const subGoalsHistory = useRecoilValue(goalsHistory);
+  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
 
   const [showSuggestionsModal, setShowSuggestionsModal] = useState(false);
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
   const [publicGoals, setPublicGoals] = useState<ISharedGoal[]>([]);
+
+  const popFromHistory = useSetRecoilState(popFromGoalsHistory);
 
   const addSuggestedGoal = async (goal: ISharedGoal) => {
     const { id: prevId, ...newGoal } = { ...goal, parentGoalId: goalID, sublist: null, status: 0 };
@@ -69,7 +71,6 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
     setArchiveGoals(goals);
     let goal: goalItem;
     if (goalID !== -1) goal = await getGoal(goalID);
-    console.log(goalID);
     const res = await getPublicGoals(goalID === -1 ? "root" : goal.title);
     if (res.status) {
       const tmpPG = [...res.data];
@@ -92,7 +93,9 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
           alt="Back arrow"
           className="back-arrow-nav-dashboard"
           onClick={() => {
-            popFromHistory();
+            if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
+              navigate(-1);
+            } else popFromHistory(-1);
           }}
         />
         {darkModeStatus ? (
@@ -125,7 +128,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
           id="goal-suggestion-btn"
           onClick={() => {
             if (displayTRIcon === "+") {
-              setShowAddGoals({ open: true, goalId: goalID });
+              setShowAddGoal({ open: true, goalId: goalID });
             } else {
               setShowSuggestionsModal(true);
               getMySuggestions();
