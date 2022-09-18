@@ -1,0 +1,19 @@
+export interface ITags {
+    start: null | { index: number, value: Date | null },
+    due: null | { index: number, value: Date | null },
+    startTime: null | { index: number, value: number | null },
+    endTime: null | { index: number, value: number | null },
+    link: { index: number; value: string | null; } | null,
+    duration: { index: number; value: number; } | null,
+    repeats: { index: number; value: "Once" | "Daily" | "Weekly" | "Mondays" | "Tuesdays" | "Wednesdays" | "Thursdays" | "Fridays" | "Saturdays" | "Sundays"; } | null
+}
+
+export interface ITagIndices {
+    word: string, 
+    index: number
+}
+
+export default interface ITagExtractor {
+    tags: ITags, 
+    occurences: ITagIndices[]
+}
