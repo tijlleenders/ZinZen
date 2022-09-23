@@ -1,31 +1,32 @@
-import React, {  } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil';
 
 import { darkModeState } from '@src/store';
-import { colorPallete } from '@src/utils';
-import { ITagIndices, ITags } from '@src/Interfaces/ITagExtractor';
+import ITagExtractor, { ITagIndices, ITags } from '@src/Interfaces/ITagExtractor';
+import { useTranslation } from 'react-i18next';
+import { TagsExtractor } from '@src/helpers/TagsExtractor';
 
 interface IGoalTagsProps {
-  selectedColorIndex: number,
+  goalInput: string,
+  selectedColor: string,
   goalLang: string,
-  formInputData: string,
-  setFormInputData: React.Dispatch<React.SetStateAction<string>>,
   goalTags: ITags,
+  setGoalTitle: React.Dispatch<React.SetStateAction<string>>,
   setGoalTags: React.Dispatch<React.SetStateAction<ITags>>,
-  magicIndices: ITagIndices[],
-
-
 }
 const GoalTags: React.FC<IGoalTagsProps> = ({ 
-  selectedColorIndex,
+  goalInput,
+  selectedColor,
   goalLang, 
   goalTags,
   setGoalTags,
-  magicIndices,
-  formInputData,
-  setFormInputData,
+  setGoalTitle
 }) => {
     const darkModeStatus = useRecoilValue(darkModeState);
+    const [formInputData, setFormInputData] = useState(goalInput);
+    const [magicIndices, setMagicIndices] = useState<ITagIndices[]>([]);
+
+    const { t } = useTranslation();
 
     const handleTagClick = (tagType: string) => {
       if(goalTags) {
@@ -61,14 +62,35 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
       }
     };
     
+    useEffect(() => {
+      const output: ITagExtractor = TagsExtractor(formInputData);
+      if (output.occurences.length > 0) setGoalTitle(formInputData.slice(0, output.occurences[0].index));
+      else setGoalTitle(formInputData.trim());
+      setGoalTags(output.tags);
+      setMagicIndices(output.occurences);
+    }, [formInputData]);
   return (
+    <>
+     <div>
+        <input
+          autoComplete="off"
+          className={darkModeStatus ? "addtask-dark" : "addtask-light"}
+          type="text"
+          name="inputGoal"
+          placeholder={t("addGoalPlaceholder")}
+          value={formInputData}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
+          onChange={(e) => setFormInputData(e.target.value)}
+          />
+     </div>
      <div className="tags">
       <button
       type="button"
       style={
-          darkModeStatus
-          ? { backgroundColor: colorPallete[selectedColorIndex] }
-          : { backgroundColor: colorPallete[selectedColorIndex] }
+        darkModeStatus
+        ? { backgroundColor: selectedColor }
+        : { backgroundColor: selectedColor }
       }
       className="language"
       >
@@ -79,8 +101,8 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
       type="button"
       style={
           darkModeStatus
-          ? { backgroundColor: colorPallete[selectedColorIndex] }
-          : { backgroundColor: colorPallete[selectedColorIndex] }
+          ? { backgroundColor: selectedColor }
+          : { backgroundColor: selectedColor }
       }
       className={goalTags?.start?.value ? "form-tag" : "blank"}
       onClick={() => { handleTagClick("start"); }}
@@ -92,12 +114,12 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
       type="button"
       style={
           darkModeStatus
-          ? { backgroundColor: colorPallete[selectedColorIndex] }
-          : { backgroundColor: colorPallete[selectedColorIndex] }
-      }
-      className={goalTags?.startTime?.value ? "form-tag" : "blank"}
-      onClick={() => { handleTagClick("startTime"); }}
-      >
+          ? { backgroundColor: selectedColor }
+          : { backgroundColor: selectedColor }
+        }
+        className={goalTags?.startTime?.value ? "form-tag" : "blank"}
+        onClick={() => { handleTagClick("startTime"); }}
+        >
       {`After ${goalTags?.startTime?.value}:00`}
       </button>
 
@@ -105,12 +127,12 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
       type="button"
       style={
           darkModeStatus
-          ? { backgroundColor: colorPallete[selectedColorIndex] }
-          : { backgroundColor: colorPallete[selectedColorIndex] }
-      }
-      className={goalTags?.due?.value ? "form-tag" : "blank"}
-      onClick={() => { handleTagClick("due"); }}
-      >
+          ? { backgroundColor: selectedColor }
+          : { backgroundColor: selectedColor }
+        }
+        className={goalTags?.due?.value ? "form-tag" : "blank"}
+        onClick={() => { handleTagClick("due"); }}
+        >
       {`Due ${goalTags?.due?.value.toLocaleDateString()}${goalTags?.endTime?.value ? "" : `, ${goalTags?.due?.value?.toTimeString().slice(0, 5)}`}`}
       </button>
 
@@ -118,21 +140,21 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
       type="button"
       style={
           darkModeStatus
-          ? { backgroundColor: colorPallete[selectedColorIndex] }
-          : { backgroundColor: colorPallete[selectedColorIndex] }
-      }
-      className={goalTags?.endTime?.value ? "form-tag" : "blank"}
-      onClick={() => { handleTagClick("endTime"); }}
-      >
+          ? { backgroundColor: selectedColor }
+          : { backgroundColor: selectedColor }
+        }
+        className={goalTags?.endTime?.value ? "form-tag" : "blank"}
+        onClick={() => { handleTagClick("endTime"); }}
+        >
       {`Before ${goalTags?.endTime?.value}:00`}
       </button>
 
       <button
       type="button"
       style={
-          darkModeStatus
-          ? { backgroundColor: colorPallete[selectedColorIndex] }
-          : { backgroundColor: colorPallete[selectedColorIndex] }
+        darkModeStatus
+        ? { backgroundColor: selectedColor }
+        : { backgroundColor: selectedColor }
       }
       className={goalTags?.duration?.value ? "form-tag" : "blank"}
       onClick={() => { handleTagClick("duration"); }}
@@ -144,12 +166,12 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
       type="button"
       style={
           darkModeStatus
-          ? { backgroundColor: colorPallete[selectedColorIndex] }
-          : { backgroundColor: colorPallete[selectedColorIndex] }
-      }
-      className={goalTags?.repeats?.value ? "form-tag" : "blank"}
-      onClick={() => { handleTagClick("repeats"); }}
-      >
+          ? { backgroundColor: selectedColor }
+          : { backgroundColor: selectedColor }
+        }
+        className={goalTags?.repeats?.value ? "form-tag" : "blank"}
+        onClick={() => { handleTagClick("repeats"); }}
+        >
       {goalTags?.repeats?.value}
       </button>
 
@@ -157,15 +179,16 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
       type="button"
       style={
           darkModeStatus
-          ? { backgroundColor: colorPallete[selectedColorIndex] }
-          : { backgroundColor: colorPallete[selectedColorIndex] }
-      }
-      className={goalTags?.link?.value ? "form-tag" : "blank"}
+          ? { backgroundColor: selectedColor }
+          : { backgroundColor: selectedColor }
+        }
+        className={goalTags?.link?.value ? "form-tag" : "blank"}
       onClick={() => { handleTagClick("link"); }}
       >
       URL
       </button>
      </div>
+    </>
   )
 }
 
