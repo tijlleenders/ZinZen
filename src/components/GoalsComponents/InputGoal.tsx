@@ -79,6 +79,7 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
           name="inputGoal"
           placeholder={t("addGoalPlaceholder")}
           value={formInputData}
+          id="goalInputField"
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
           onChange={(e) => setFormInputData(e.target.value)}
