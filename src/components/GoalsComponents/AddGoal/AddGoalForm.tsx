@@ -1,6 +1,6 @@
 
 /* eslint-disable import/no-duplicates */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
@@ -11,13 +11,12 @@ import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 import { languagesFullForms } from "@translations/i18n";
 
-import { TagsExtractor } from '@src/helpers/TagsExtractor';
-import ITagExtractor, { ITagIndices, ITags } from '@src/Interfaces/ITagExtractor';
+import { ITags } from '@src/Interfaces/ITagExtractor';
 
 import "@translations/i18n";
 import "./AddGoalForm.scss";
 import { addInGoalsHistory, displayAddGoal, displayGoalId } from "@src/store/GoalsHistoryState";
-import GoalTags from "../GoalTags/GoalTags";
+import InputGoal from "../InputGoal";
 
 interface AddGoalFormProps {
   selectedColorIndex: number,
@@ -33,12 +32,9 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
-
-  const [error, setError] = useState("");
   const [goalTitle, setGoalTitle] = useState("");
-  const [formInputData, setFormInputData] = useState('');
+  const [error, setError] = useState("");
   const [goalTags, setGoalTags] = useState<ITags>({});
-  const [magicIndices, setMagicIndices] = useState<ITagIndices[]>([]);
 
   const lang = localStorage.getItem("language")?.slice(1, -1);
   const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
@@ -70,49 +66,22 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
       await updateGoal(parentGoalId, { sublist: newSublist });
       if (goalID !== showAddGoal?.goalId) { addInHistory(parentGoal); }
     }
-    setFormInputData('');
-    setGoalTitle("");
+    
     const typeOfPage = window.location.href.split("/").slice(-1)[0];
     setShowAddGoal(null);
     if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
-
-  
-  useEffect(() => {
-    const output: ITagExtractor = TagsExtractor(formInputData);
-    if (output.occurences.length > 0) setGoalTitle(formInputData.slice(0, output.occurences[0].index));
-    else setGoalTitle(formInputData.trim());
-    setGoalTags(output.tags);
-    setMagicIndices(output.occurences);
-  }, [formInputData]);
   
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
-      <div>
-        <input
-          autoComplete="off"
-          className={darkModeStatus ? "addtask-dark" : "addtask-light"}
-          type="text"
-          name="inputGoal"
-          placeholder={t("addGoalPlaceholder")}
-          value={formInputData}
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus
-          onChange={(e) => setFormInputData(e.target.value)}
-        />
-      </div>
-      {
-        formInputData !== '' && 
-        <GoalTags 
-          selectedColorIndex={selectedColorIndex}
+       <InputGoal 
+          goalInput={''}
+          selectedColor={colorPallete[selectedColorIndex]}
           goalLang = {goalLang}
-          magicIndices={magicIndices}
           goalTags={goalTags}
           setGoalTags={setGoalTags}
-          formInputData={formInputData}
-          setFormInputData={setFormInputData}
+          setGoalTitle={setGoalTitle}
         />
-      }
       <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
         <Button
           onClick={handleSubmit}

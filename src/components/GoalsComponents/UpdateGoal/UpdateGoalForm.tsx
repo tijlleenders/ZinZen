@@ -11,24 +11,21 @@ import "@translations/i18n";
 import "./UpdateGoalForm.scss";
 import { displayUpdateGoal } from "@src/store/GoalsHistoryState";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
-import ITagExtractor, { ITags, ITagIndices } from "@src/Interfaces/ITagExtractor";
-import GoalTags from "../GoalTags/GoalTags";
+import ITagExtractor, { ITags } from "@src/Interfaces/ITagExtractor";
+import InputGoal from "../InputGoal";
 
 interface UpdateGoalFormProps {
   selectedColorIndex: number,
 }
 
 export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorIndex }) => {
-  const { t } = useTranslation();
-
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
   const [error, setError] = useState("");
   const [goalTitle, setGoalTitle] = useState("");
-  const [formInputData, setFormInputData] = useState('');
+  const [goalInput, setGoalInput] = useState("")
   const [goalTags, setGoalTags] = useState<ITags>({});
-  const [magicIndices, setMagicIndices] = useState<ITagIndices[]>([]);
   const [goalLang, setGoalLang] = useState("english");
 
 
@@ -60,7 +57,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
         startTime: goalTags.startTime ? goalTags.startTime.value : null,
         endTime: goalTags.endTime ? goalTags.endTime.value : null,
       });
-    setFormInputData('');
     setGoalTitle("");
     setShowUpdateGoal(null);
   };
@@ -76,47 +72,24 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
         tmpTiming = ` before ${goal.endTime}`;
       }
       console.log(goal)
-      setFormInputData(`${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`);
+      setGoalInput(`${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`);
       if (goal.language) setGoalLang(goal.language);
     });
   }, []);
 
-  
-  useEffect(() => {
-    const output: ITagExtractor = TagsExtractor(formInputData);
-    if (output.occurences.length > 0) setGoalTitle(formInputData.slice(0, output.occurences[0].index));
-    else setGoalTitle(formInputData.trim());
-    setGoalTags(output.tags);
-    setMagicIndices(output.occurences);
-  }, [formInputData]);
-
   return (
     <form className="todo-form" onSubmit={handleSubmit}>
-      <div>
-        <input
-          autoComplete="off"
-          className={darkModeStatus ? "addtask-dark" : "addtask-light"}
-          type="text"
-          name="inputGoal"
-          placeholder={t("addGoalPlaceholder")}
-          value={formInputData}
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus
-          onChange={(e) => setFormInputData(e.target.value)}
-        />
-      </div>
-      {
-        formInputData !== '' && 
-        <GoalTags 
-          selectedColorIndex={selectedColorIndex}
-          goalLang = {goalLang}
-          magicIndices={magicIndices}
-          goalTags={goalTags}
-          setGoalTags={setGoalTags}
-          formInputData={formInputData}
-          setFormInputData={setFormInputData}
-        />
-      }
+        { 
+          goalInput !== '' && 
+          <InputGoal 
+            goalInput={goalInput}
+            selectedColor={colorPallete[selectedColorIndex]}
+            goalLang = {goalLang}
+            goalTags={goalTags}
+            setGoalTags={setGoalTags}
+            setGoalTitle={setGoalTitle}
+          />
+        }
       <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
         <Button
           onClick={handleSubmit}
