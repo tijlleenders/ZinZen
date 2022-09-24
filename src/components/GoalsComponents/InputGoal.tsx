@@ -14,7 +14,7 @@ interface IGoalTagsProps {
   setGoalTitle: React.Dispatch<React.SetStateAction<string>>,
   setGoalTags: React.Dispatch<React.SetStateAction<ITags>>,
 }
-const GoalTags: React.FC<IGoalTagsProps> = ({ 
+const InputGoal: React.FC<IGoalTagsProps> = ({ 
   goalInput,
   selectedColor,
   goalLang, 
@@ -22,11 +22,12 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
   setGoalTags,
   setGoalTitle
 }) => {
+    const { t } = useTranslation();
+ 
     const darkModeStatus = useRecoilValue(darkModeState);
     const [formInputData, setFormInputData] = useState(goalInput);
     const [magicIndices, setMagicIndices] = useState<ITagIndices[]>([]);
 
-    const { t } = useTranslation();
 
     const handleTagClick = (tagType: string) => {
       if(goalTags) {
@@ -193,4 +194,4 @@ const GoalTags: React.FC<IGoalTagsProps> = ({
   )
 }
 
-export default GoalTags
+export default InputGoal;
