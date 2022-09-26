@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from 'react'
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { darkModeState } from '@src/store';
 import ITagExtractor, { ITagIndices, ITags } from '@src/Interfaces/ITagExtractor';
 import { useTranslation } from 'react-i18next';
 import { TagsExtractor } from '@src/helpers/TagsExtractor';
+import { extractedTitle, inputGoalTags } from '@src/store/GoalsHistoryState';
 
 interface IGoalTagsProps {
   goalInput: string,
   selectedColor: string,
-  goalLang: string,
-  goalTags: ITags,
-  setGoalTitle: React.Dispatch<React.SetStateAction<string>>,
-  setGoalTags: React.Dispatch<React.SetStateAction<ITags>>,
+  goalLang: string
 }
 const InputGoal: React.FC<IGoalTagsProps> = ({ 
   goalInput,
   selectedColor,
   goalLang, 
-  goalTags,
-  setGoalTags,
-  setGoalTitle
 }) => {
     const { t } = useTranslation();
  
     const darkModeStatus = useRecoilValue(darkModeState);
     const [formInputData, setFormInputData] = useState(goalInput);
     const [magicIndices, setMagicIndices] = useState<ITagIndices[]>([]);
-
+    const setGoalTitle = useSetRecoilState(extractedTitle);
+    const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
+  
 
     const handleTagClick = (tagType: string) => {
       if(goalTags) {
-        console.log(magicIndices)
+        const tmpTags = {...goalTags};
         let tmpString = formInputData;
         const index = magicIndices.findIndex((ele) => ele.word === tagType);
         
@@ -44,21 +41,21 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
           tmpString = `${tmpString.slice(0, magicIndices[index]?.index).trim()} ${tmpString.slice(magicIndices[nextIndex].index).trim()}`;
         }
         if (tagType === "duration" && goalTags.duration)  {
-          goalTags.duration = null;
+          tmpTags.duration = null;
         } else if (tagType === "repeats" && goalTags.repeats) {
-          goalTags.repeats = null;
+          tmpTags.repeats = null;
         } else if (tagType === "link" && goalTags.link) {
-          goalTags.link = null;
+          tmpTags.link = null;
         } else if (tagType === "start" && goalTags.start) {
-          goalTags.start = null;
+          tmpTags.start = null;
         } else if (tagType === "due" && goalTags.due) {
-          goalTags.due = null;
+          tmpTags.due = null;
         } else if (tagType === "startTime" && goalTags.startTime) {
-          goalTags.startTime = null;
+          tmpTags.startTime = null;
         } else if (tagType === "endTime" && goalTags.endTime) {
-          goalTags.endTime = null;
+          tmpTags.endTime = null;
         }
-        setGoalTags(goalTags)
+        setGoalTags({...tmpTags})
         setFormInputData(tmpString.trim());
       }
     };
