@@ -5,6 +5,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Modal } from "react-bootstrap";
 
+import plus from "@assets/images/plus.svg";
+import pencil from "@assets/images/pencil.svg";
+import correct from "@assets/images/correct.svg";
+import share from "@assets/images/share.svg";
+import trash from "@assets/images/trash.svg";
+
 import {
   archiveUserGoal,
   getActiveGoals,
@@ -20,21 +26,23 @@ import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
-import { AddGoal } from "@components/GoalsComponents/AddGoal/AddGoal";
 import { UpdateGoal } from "@components/GoalsComponents/UpdateGoal/UpdateGoal";
-import plus from "@assets/images/plus.svg";
-import pencil from "@assets/images/pencil.svg";
-import correct from "@assets/images/correct.svg";
-import share from "@assets/images/share.svg";
-import trash from "@assets/images/trash.svg";
-
-import "./MyGoalsPage.scss";
-import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, extractedTitle, goalsHistory, inputGoalTags } from "@src/store/GoalsHistoryState";
-import InputGoal from "@components/GoalsComponents/InputGoal";
+import { 
+  addInGoalsHistory, 
+  displayAddGoal, 
+  displayAddGoalOptions, 
+  displayGoalId, 
+  displaySuggestionsModal, 
+  displayUpdateGoal, 
+  extractedTitle, 
+  goalsHistory, 
+  inputGoalTags } from "@src/store/GoalsHistoryState";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { colorPallete } from "@src/utils";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions";
 import { languagesFullForms } from "@src/translations/i18n";
+
+import "./MyGoalsPage.scss";
 
 interface ILocationProps {
   openGoalOfId: number,

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { darkModeState } from '@src/store';
-import ITagExtractor, { ITagIndices, ITags } from '@src/Interfaces/ITagExtractor';
+import ITagExtractor, { ITagIndices } from '@src/Interfaces/ITagExtractor';
 import { useTranslation } from 'react-i18next';
 import { TagsExtractor } from '@src/helpers/TagsExtractor';
 import { extractedTitle, inputGoalTags } from '@src/store/GoalsHistoryState';

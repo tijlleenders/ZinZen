@@ -3,20 +3,24 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 import { languagesFullForms } from "@translations/i18n";
+import { 
+  addInGoalsHistory, 
+  displayAddGoal, 
+  displayGoalId, 
+  extractedTitle, 
+  inputGoalTags 
+} from "@src/store/GoalsHistoryState";
+import InputGoal from "../InputGoal";
 
-import { ITags } from '@src/Interfaces/ITagExtractor';
 
 import "@translations/i18n";
 import "./AddGoalForm.scss";
-import { addInGoalsHistory, displayAddGoal, displayGoalId, extractedTitle, inputGoalTags } from "@src/store/GoalsHistoryState";
-import InputGoal from "../InputGoal";
 
 interface AddGoalFormProps {
   selectedColorIndex: number,
@@ -24,7 +28,6 @@ interface AddGoalFormProps {
 }
 
 export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, parentGoalId }) => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const darkModeStatus = useRecoilValue(darkModeState);

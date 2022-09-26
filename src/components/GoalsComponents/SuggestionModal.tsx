@@ -1,17 +1,16 @@
-
 import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import { Modal, Tab, Tabs } from "react-bootstrap";
 
+import plus from "@assets/images/plus.svg";
 import LogoGradient from "@assets/images/LogoGradient.png";
+
 import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
-import plus from "@assets/images/plus.svg";
-import ITagExtractor, { ITagIndices, ITags } from "@src/Interfaces/ITagExtractor";
-import GoalTags from "./InputGoal";
-import InputGoal from "./InputGoal";
-import { useRecoilState } from "recoil";
 import { extractedTitle, inputGoalTags } from "@src/store/GoalsHistoryState";
+import ITagExtractor from "@src/Interfaces/ITagExtractor";
+import InputGoal from "./InputGoal";
 
 const SuggestionModal = ({
     goalID,

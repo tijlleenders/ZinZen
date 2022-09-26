@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useTranslation } from "react-i18next";
 
 import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
+import { displayUpdateGoal, extractedTitle, inputGoalTags } from "@src/store/GoalsHistoryState";
+import InputGoal from "../InputGoal";
 
 import "@translations/i18n";
 import "./UpdateGoalForm.scss";
-import { displayUpdateGoal, extractedTitle, inputGoalTags } from "@src/store/GoalsHistoryState";
-import { TagsExtractor } from "@src/helpers/TagsExtractor";
-import ITagExtractor, { ITags } from "@src/Interfaces/ITagExtractor";
-import InputGoal from "../InputGoal";
 
 interface UpdateGoalFormProps {
   selectedColorIndex: number,
@@ -35,17 +32,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
       setError("Enter a goal title!");
       return;
     }
-    console.log({
-      title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
-        goalColor: colorPallete[selectedColorIndex],
-        duration: goalTags.duration ? goalTags.duration.value : null,
-        repeat: goalTags.repeats ? goalTags.repeats.value : null,
-        link: goalTags.link ? goalTags.link.value?.trim() : null,
-        start: goalTags.start ? goalTags.start.value : null,
-        due: goalTags.due ? goalTags.due.value : null,
-        startTime: goalTags.startTime ? goalTags.startTime.value : null,
-        endTime: goalTags.endTime ? goalTags.endTime.value : null,
-    })
     await updateGoal(showUpdateGoal?.goalId,
       { title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
         goalColor: colorPallete[selectedColorIndex],

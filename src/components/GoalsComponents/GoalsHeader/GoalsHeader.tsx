@@ -59,11 +59,6 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
     }
   };
   useEffect(() => {
-    // console.log(goalID)
-    // if(goalID === -1) {
-    //   if(showAddGoal) { setGoalID(showAddGoal.goalId); }
-    //   else if( showUpdateGoal) { setGoalID(showUpdateGoal.goalId); }
-    // }
     // if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
       getMySuggestions();
     // }

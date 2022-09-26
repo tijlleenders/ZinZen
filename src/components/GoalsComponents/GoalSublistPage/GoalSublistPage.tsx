@@ -3,18 +3,20 @@ import { Breadcrumb, Container, Modal } from "react-bootstrap";
 import { ChevronLeft, ChevronDown, PeopleFill, PersonFill } from "react-bootstrap-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
-import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsHistoryState";
-import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState } from "@src/store";
 import plus from "@assets/images/plus.svg";
 import pencil from "@assets/images/pencil.svg";
 import correct from "@assets/images/correct.svg";
 import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
-import "./GoalSublistPage.scss";
+import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
+import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsHistoryState";
+import { GoalItem } from "@src/models/GoalItem";
+import { darkModeState } from "@src/store";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";
+
+
+import "./GoalSublistPage.scss";
 
 export const GoalSublist = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
