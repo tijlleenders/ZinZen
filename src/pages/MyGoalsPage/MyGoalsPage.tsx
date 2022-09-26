@@ -29,7 +29,7 @@ import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
 import "./MyGoalsPage.scss";
-import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, extractedTitle, goalsHistory, inputGoalTags } from "@src/store/GoalsHistoryState";
+import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, extractedTitle, goalsHistory, inputGoalTags } from "@src/store/GoalsHistoryState";
 import InputGoal from "@components/GoalsComponents/InputGoal";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { colorPallete } from "@src/utils";
@@ -51,6 +51,7 @@ export const MyGoalsPage = () => {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   
   const darkModeStatus = useRecoilValue(darkModeState);
+  const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
@@ -135,7 +136,7 @@ export const MyGoalsPage = () => {
       const goals: GoalItem[] = await getActiveGoals();
       setUserGoals(goals);
     })();
-  }, [showAddGoal, showUpdateGoal]);
+  }, [showAddGoal, showUpdateGoal, showSuggestionModal]);
   useEffect(() => {
     (async () => {
       if (typeOfPage === "AddGoals") {

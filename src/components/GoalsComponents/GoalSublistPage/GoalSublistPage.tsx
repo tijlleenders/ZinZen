@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronDown, PeopleFill, PersonFill } from "react-bootstra
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
-import { addInGoalsHistory, displayAddGoal, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsHistoryState";
+import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsHistoryState";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import plus from "@assets/images/plus.svg";
@@ -20,13 +20,14 @@ export const GoalSublist = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const goalID = useRecoilValue(displayGoalId);
+  const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
-  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const setShowUpdateGoal = useSetRecoilState(displayUpdateGoal);
   const callResetHistory = useSetRecoilState(resetGoalsHistory);
-
+  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+  
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
   const [tapCount, setTapCount] = useState([-1, 0]);
@@ -40,7 +41,7 @@ export const GoalSublist = () => {
 
   useEffect(() => {
     getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
-  }, [parentGoal, showAddGoal]);
+  }, [parentGoal, showAddGoal, showSuggestionModal]);
 
   const archiveMyGoal = async (id: number) => {
     await archiveUserGoal(id);

@@ -16,7 +16,7 @@ import plus from "@assets/images/plus.svg";
 import { GoalItem } from "@src/models/GoalItem";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
 import { getGoalsFromArchive, getGoal, addGoal, getPublicGoals } from "@src/api/GoalsAPI";
-import { displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsHistoryState";
+import { displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsHistoryState";
 import SuggestionModal from "../SuggestionModal";
 
 import "@translations/i18n";
@@ -38,7 +38,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);  
 
-  const [showSuggestionsModal, setShowSuggestionsModal] = useState(false);
+  const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
   const [publicGoals, setPublicGoals] = useState<ISharedGoal[]>([]);
 
@@ -64,10 +64,10 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
     //   if(showAddGoal) { setGoalID(showAddGoal.goalId); }
     //   else if( showUpdateGoal) { setGoalID(showUpdateGoal.goalId); }
     // }
-    if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
+    // if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
       getMySuggestions();
-    }
-  }, [displayTRIcon]);
+    // }
+  }, [showSuggestionsModal]);
 
   return (
     <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
