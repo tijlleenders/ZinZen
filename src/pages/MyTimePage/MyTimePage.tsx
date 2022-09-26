@@ -180,37 +180,37 @@ export const MyTimePage = () => {
       console.log(activeGoals);
       const scheduler = await init();
       const schedulerOutput = schedule({
-        "startDate": "2022-01-01T00:00:00",
-        "endDate": "2022-01-02T00:00:00",
-        "goals": [
+        startDate: "2022-01-01T00:00:00",
+        endDate: "2022-01-02T00:00:00",
+        goals: [
           {
-            "id": 1,
-            "title": "shopping",
-            "duration": 1,
-            "start": "2022-01-01T00:00:00",
-            "deadline": "2022-01-02T00:00:00",
-            "after_time": 10,
-            "before_time": 13
+            id: 1,
+            title: "shopping",
+            duration: 1,
+            start: "2022-01-01T00:00:00",
+            deadline: "2022-01-02T00:00:00",
+            after_time: 10,
+            before_time: 13
           },
           {
-            "id": 2,
-            "title": "dentist",
-            "duration": 1,
-            "start": "2022-01-01T00:00:00",
-            "deadline": "2022-01-02T00:00:00",
-            "after_time": 10,
-            "before_time": 11
+            id: 2,
+            title: "dentist",
+            duration: 1,
+            start: "2022-01-01T00:00:00",
+            deadline: "2022-01-02T00:00:00",
+            after_time: 10,
+            before_time: 11
           },
           {
-            "id": 3,
-            "title": "exercise",
-            "duration": 1,
-            "start": "2022-01-01T00:00:00",
-            "deadline": "2022-01-02T00:00:00",
-            "after_time": 10,
-            "before_time": 18
+            id: 3,
+            title: "exercise",
+            duration: 1,
+            start: "2022-01-01T00:00:00",
+            deadline: "2022-01-02T00:00:00",
+            after_time: 10,
+            before_time: 18
           }
-      ]
+        ]
       });
       // const slotTaskMap = {};
       // schedulerOutput.tasks.forEach((ele) => {
