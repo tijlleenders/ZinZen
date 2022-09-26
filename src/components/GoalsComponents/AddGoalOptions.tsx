@@ -2,11 +2,12 @@ import React from 'react'
 import add from "@assets/images/add.svg";
 import publicGoal from "@assets/images/publicGoal.svg";
 import archiveGoals from "@assets/images/archiveGoals.svg";
-import { useRecoilState } from 'recoil';
-import { displayAddGoal } from '@src/store/GoalsHistoryState';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { displayAddGoal, displaySuggestionsModal } from '@src/store/GoalsHistoryState';
 
 function AddGoalOptions({ parentGoalId }: {parentGoalId: number}) {
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+  const setShowSuggestionsModal = useSetRecoilState(displaySuggestionsModal);
   return (
     <div id="addGoal-options">
         <button
@@ -18,12 +19,14 @@ function AddGoalOptions({ parentGoalId }: {parentGoalId: number}) {
         </button>
         <button
           type="button"
+          onClick={() => {setShowSuggestionsModal(true)}}
         >
           Archive
           <img alt="create-goals-suggestion" src={archiveGoals} />
         </button>
         <button
           type="button"
+          onClick={() => {setShowSuggestionsModal(true)}}
         >
           Public
           <img alt="create-goals-suggestion" src={publicGoal} />
