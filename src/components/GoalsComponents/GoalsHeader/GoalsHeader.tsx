@@ -51,7 +51,6 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
     let goal: goalItem;
 
     if (goalID !== -1) goal = await getGoal(goalID);
-    console.log(goalID, goal.title)
     const res = await getPublicGoals(goalID === -1 ? "root" : goal.title);
     if (res.status) {
       const tmpPG = [...res.data];
