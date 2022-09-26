@@ -4,7 +4,7 @@
   width: 100%;
   background-color: #f0e6e1;
   position: fixed;
-  z-index: 100;
+  z-index: 2;
 }
 
 .positioning-dark {
@@ -13,7 +13,7 @@
   width: 100%;
   background-color: #121212;
   position: fixed;
-  z-index: 100;
+  z-index: 2;
 }
 
 #suggestions-modal-icon {
@@ -97,4 +97,35 @@
 .nav-link {
   color: black !important;
   font-weight: 600;
+}
+
+#addGoal-options {
+  z-index: 10;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 50px;
+  right: 8px;
+  margin-right: 3%;
+
+  button {   
+    margin-top: 25%;
+    background: white;
+    border: none;
+    z-index: 11;
+    position: relative;
+    font-size: 17px;
+    padding: 6px 60px 6px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-align: center;
+
+    img {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      top: -7px;
+      right: -7px;
+    }
+  }
 }
