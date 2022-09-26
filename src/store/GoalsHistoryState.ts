@@ -8,6 +8,11 @@ export interface ISubGoalHistory {
   goalTitle: string,
 }
 
+export const displaySuggestionsModal = atom({
+  key: "displaySuggestionsModal",
+  default: false as boolean
+});
+
 export const displayAddGoalOptions = atom({
   key: "displayAddGoalOptions",
   default: false as boolean
@@ -21,7 +26,7 @@ export const inputGoalTags = atom({
 export const extractedTitle = atom({
   key: "extractedTitle",
   default: "" as string
-})
+})  
 
 export const displayGoalId = atom({
   key: "displayGoalId",
@@ -84,3 +89,4 @@ export const popFromGoalsHistory = selector({
     }
   }
 });
+
