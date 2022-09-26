@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ITags } from "@src/Interfaces/ITagExtractor";
 import { atom, selector } from "recoil";
 
 export interface ISubGoalHistory {
@@ -6,6 +7,21 @@ export interface ISubGoalHistory {
   goalColor: string,
   goalTitle: string,
 }
+
+export const displayAddGoalOptions = atom({
+  key: "displayAddGoalOptions",
+  default: false as boolean
+});
+
+export const inputGoalTags = atom({
+  key: "inputGoalTags",
+  default: {} as ITags
+})
+
+export const extractedTitle = atom({
+  key: "extractedTitle",
+  default: "" as string
+})
 
 export const displayGoalId = atom({
   key: "displayGoalId",
