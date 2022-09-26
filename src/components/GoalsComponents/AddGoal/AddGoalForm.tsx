@@ -15,7 +15,7 @@ import { ITags } from '@src/Interfaces/ITagExtractor';
 
 import "@translations/i18n";
 import "./AddGoalForm.scss";
-import { addInGoalsHistory, displayAddGoal, displayGoalId } from "@src/store/GoalsHistoryState";
+import { addInGoalsHistory, displayAddGoal, displayGoalId, extractedTitle, inputGoalTags } from "@src/store/GoalsHistoryState";
 import InputGoal from "../InputGoal";
 
 interface AddGoalFormProps {
@@ -29,12 +29,12 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const goalID = useRecoilValue(displayGoalId);
-
+  
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
-  const [goalTitle, setGoalTitle] = useState("");
+  const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
+  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [error, setError] = useState("");
-  const [goalTags, setGoalTags] = useState<ITags>({});
 
   const lang = localStorage.getItem("language")?.slice(1, -1);
   const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
@@ -69,6 +69,8 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
     
     const typeOfPage = window.location.href.split("/").slice(-1)[0];
     setShowAddGoal(null);
+    setGoalTags({});
+    setGoalTitle("");
     if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
   
@@ -78,9 +80,6 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
           goalInput={''}
           selectedColor={colorPallete[selectedColorIndex]}
           goalLang = {goalLang}
-          goalTags={goalTags}
-          setGoalTags={setGoalTags}
-          setGoalTitle={setGoalTitle}
         />
       <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
         <Button

@@ -9,7 +9,7 @@ import { colorPallete } from "@src/utils";
 
 import "@translations/i18n";
 import "./UpdateGoalForm.scss";
-import { displayUpdateGoal } from "@src/store/GoalsHistoryState";
+import { displayUpdateGoal, extractedTitle, inputGoalTags } from "@src/store/GoalsHistoryState";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import ITagExtractor, { ITags } from "@src/Interfaces/ITagExtractor";
 import InputGoal from "../InputGoal";
@@ -23,9 +23,9 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
   const [error, setError] = useState("");
-  const [goalTitle, setGoalTitle] = useState("");
   const [goalInput, setGoalInput] = useState("")
-  const [goalTags, setGoalTags] = useState<ITags>({});
+  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
+  const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [goalLang, setGoalLang] = useState("english");
 
 
@@ -85,9 +85,6 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
             goalInput={goalInput}
             selectedColor={colorPallete[selectedColorIndex]}
             goalLang = {goalLang}
-            goalTags={goalTags}
-            setGoalTags={setGoalTags}
-            setGoalTitle={setGoalTitle}
           />
         }
       <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
