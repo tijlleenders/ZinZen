@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container, Modal } from "react-bootstrap";
 import { ChevronLeft, ChevronDown, PeopleFill, PersonFill } from "react-bootstrap-icons";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
 import { addInGoalsHistory, displayAddGoal, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsHistoryState";
@@ -14,6 +14,7 @@ import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
 import "./GoalSublistPage.scss";
+import { AddGoalForm } from "../AddGoal/AddGoalForm";
 
 export const GoalSublist = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -22,7 +23,7 @@ export const GoalSublist = () => {
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
-  const setShowAddGoals = useSetRecoilState(displayAddGoal);
+  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const setShowUpdateGoal = useSetRecoilState(displayUpdateGoal);
   const callResetHistory = useSetRecoilState(resetGoalsHistory);
 
@@ -30,6 +31,7 @@ export const GoalSublist = () => {
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
 
   useEffect(() => {
     getGoal(Number(goalID)).then((parent) => setParentGoal(parent));
@@ -38,7 +40,7 @@ export const GoalSublist = () => {
 
   useEffect(() => {
     getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
-  }, [parentGoal]);
+  }, [parentGoal, showAddGoal]);
 
   const archiveMyGoal = async (id: number) => {
     await archiveUserGoal(id);
@@ -94,6 +96,8 @@ export const GoalSublist = () => {
         <div className="sublist-content">
           <div className="sublist-title">{parentGoal?.title}</div>
           <Container fluid className="sublist-list-container">
+          { showAddGoal && <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={showAddGoal.goalId} /> }
+
             {childrenGoals?.map((goal: GoalItem, index) => (
               <div
                 aria-hidden
@@ -147,7 +151,7 @@ export const GoalSublist = () => {
                       src={plus}
                       style={{ cursor: "pointer" }}
                       onClickCapture={() => {
-                        setShowAddGoals({
+                        setShowAddGoal({
                           open: true,
                           goalId: goal?.id
                         });

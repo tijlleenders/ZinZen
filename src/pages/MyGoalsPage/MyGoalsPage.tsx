@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { ChevronLeft, ChevronDown, PersonFill, PeopleFill } from "react-bootstrap-icons";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Modal } from "react-bootstrap";
 
@@ -11,7 +11,10 @@ import {
   removeGoal,
   removeChildrenGoals,
   getGoal,
-  shareMyGoal
+  shareMyGoal,
+  addGoal,
+  createGoal,
+  updateGoal
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -26,7 +29,12 @@ import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
 import "./MyGoalsPage.scss";
-import { addInGoalsHistory, displayAddGoal, displayGoalId, displayUpdateGoal, goalsHistory } from "@src/store/GoalsHistoryState";
+import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, extractedTitle, goalsHistory, inputGoalTags } from "@src/store/GoalsHistoryState";
+import InputGoal from "@components/GoalsComponents/InputGoal";
+import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
+import { colorPallete } from "@src/utils";
+import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions";
+import { languagesFullForms } from "@src/translations/i18n";
 
 interface ILocationProps {
   openGoalOfId: number,
@@ -35,23 +43,67 @@ interface ILocationProps {
 
 export const MyGoalsPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(false);
-
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
-
+  
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
+  const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);  
+  const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
+  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
 
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const typeOfPage = window.location.href.split("/").slice(-1)[0];
+  const lang = localStorage.getItem("language")?.slice(1, -1);
+  const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
+  const changeColor = () => {
+    const newColorIndex = selectedColorIndex + 1;
+    if (colorPallete[newColorIndex]) setSelectedColorIndex(newColorIndex);
+    else setSelectedColorIndex(0);
+  };
+  const addThisGoal = async ( e: React.SyntheticEvent) => {
+    e.preventDefault();
+    let parentGoalId = showAddGoal?.goalId;
+    const newGoal = createGoal(
+      goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
+      goalTags.repeats ? goalTags?.repeats.value.trim() : null,
+      goalTags.duration ? goalTags.duration.value : null,
+      goalTags.start ? goalTags.start.value : null,
+      goalTags.due ? goalTags.due.value : null,
+      goalTags.startTime ? goalTags.startTime.value : null,
+      goalTags.endTime ? goalTags.endTime.value : null,
+      0,
+      parentGoalId!,
+      colorPallete[selectedColorIndex], // goalColor
+      goalLang,
+      goalTags.link ? goalTags.link.value.trim() : null
+    );
+    const newGoalId = await addGoal(newGoal);
+    if (parentGoalId) {
+      const parentGoal = await getGoal(parentGoalId);
+      const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
+      await updateGoal(parentGoalId, { sublist: newSublist });
+      if (selectedGoalId !== showAddGoal?.goalId) { addInHistory(parentGoal); }
+    }
+    
+    const typeOfPage = window.location.href.split("/").slice(-1)[0];
+    setShowAddGoal(null);
+    setGoalTags({});
+    setGoalTitle("");
+    if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
+  };
+  
   const archiveMyGoal = async (id: number) => {
     await archiveUserGoal(id);
     const goals: GoalItem[] = await getActiveGoals();
@@ -126,11 +178,13 @@ export const MyGoalsPage = () => {
   });
   return (
     <>
-      <GoalsHeader displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "?"} />
+      { showAddGoalOptions && 
+        <div className='overlay' onClick={() => setShowAddGoalOptions(false) }>
+          <AddGoalOptions parentGoalId={selectedGoalId}/>
+        </div>
+      }
+      <GoalsHeader addThisGoal={addThisGoal} displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "✓"} />
       {
-        showAddGoal ?
-          <AddGoal />
-          :
           showUpdateGoal ?
             <UpdateGoal />
             :
@@ -150,6 +204,7 @@ export const MyGoalsPage = () => {
                     <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
                       My Goals
                     </h1>
+                    { showAddGoal && <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={showAddGoal.goalId} /> }
                     <div>
                       {userGoals?.map((goal: GoalItem, index) => (
                         <div
