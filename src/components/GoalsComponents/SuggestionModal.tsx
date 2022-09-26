@@ -10,6 +10,8 @@ import plus from "@assets/images/plus.svg";
 import ITagExtractor, { ITagIndices, ITags } from "@src/Interfaces/ITagExtractor";
 import GoalTags from "./InputGoal";
 import InputGoal from "./InputGoal";
+import { useRecoilState } from "recoil";
+import { extractedTitle, inputGoalTags } from "@src/store/GoalsHistoryState";
 
 const SuggestionModal = ({
     goalID,
@@ -21,9 +23,9 @@ const SuggestionModal = ({
     const [selectedGoal, setSelectedGoal] = useState<{index: number, goal:ISharedGoal} | null>(null);
     const [goalLang, setGoalLang] = useState("en");
             
-    const [goalTitle, setGoalTitle] = useState("");
+    const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
     const [goalInput, setGoalInput] = useState("")
-    const [goalTags, setGoalTags] = useState<ITags>({});
+    const [goalTags, setGoalTags] = useRecoilState(inputGoalTags)
 
     const addSuggestedGoal = async (goal:ISharedGoal, index:number) => {
         let newGoalId;
