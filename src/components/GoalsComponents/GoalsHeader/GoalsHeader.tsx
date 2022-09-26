@@ -16,23 +16,27 @@ import plus from "@assets/images/plus.svg";
 import { GoalItem } from "@src/models/GoalItem";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
 import { getGoalsFromArchive, getGoal, addGoal, getPublicGoals } from "@src/api/GoalsAPI";
-import { displayAddGoal, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsHistoryState";
+import { displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsHistoryState";
 import SuggestionModal from "../SuggestionModal";
 
 import "@translations/i18n";
 import "@components/HeaderDashboard/HeaderDashboard.scss";
+import AddGoalOptions from "../AddGoalOptions";
 
 interface GoalsHeaderProps {
-  displayTRIcon: string
+  displayTRIcon: string,
+  addThisGoal: (e: React.SyntheticEvent, parentGoalId: number) => Promise<void>
 }
 
-export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon }) => {
+export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisGoal }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
-  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   let goalID = useRecoilValue(displayGoalId);
+
+  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+  const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);  
 
   const [showSuggestionsModal, setShowSuggestionsModal] = useState(false);
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
@@ -107,17 +111,19 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon }) => {
         <button
           type="button"
           id="goal-suggestion-btn"
-          onClick={() => {
+          onClick={(e) => {
             if (displayTRIcon === "+") {
-              setShowAddGoal({ open: true, goalId: goalID });
+              setShowAddGoalOptions(true);
+              // setShowAddGoal({ open: true, goalId: goalID });
             } else {
-              setShowSuggestionsModal(true);
-              getMySuggestions();
+              // setShowSuggestionsModal(true);
+              // getMySuggestions();
+              addThisGoal(e)
             }
           }}
         >
           <img alt="create-goals-suggestion" src={LogoGradient} />
-          <div>{window.location.href.includes("AddGoals") || displayTRIcon === "?" ? "?" : "+"}</div>
+          <div>{window.location.href.includes("AddGoals") || displayTRIcon === "✓" ? "✓" : "+"}</div>
         </button>
 
       </Navbar>
