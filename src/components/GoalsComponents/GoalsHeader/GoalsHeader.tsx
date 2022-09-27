@@ -2,8 +2,8 @@
 /* eslint-disable no-alert */
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { Navbar, Nav, Modal, Tabs, Tab } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { Navbar, Nav } from "react-bootstrap";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
@@ -13,75 +13,55 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import LogoGradient from "@assets/images/LogoGradient.png";
 import plus from "@assets/images/plus.svg";
-import { getGoalsFromArchive, getGoal, addGoal, getPublicGoals } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
+import { getGoalsFromArchive, getGoal, addGoal, getPublicGoals } from "@src/api/GoalsAPI";
+import { displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsHistoryState";
+import SuggestionModal from "../SuggestionModal";
 
 import "@translations/i18n";
 import "@components/HeaderDashboard/HeaderDashboard.scss";
+import AddGoalOptions from "../AddGoalOptions";
 
 interface GoalsHeaderProps {
-  goalID: number,
-  popFromHistory: () => void,
-  setShowAddGoals:React.Dispatch<React.SetStateAction<{
-        open: boolean;
-        goalId: number;
-  }>>,
-  displayTRIcon: string
+  displayTRIcon: string,
+  addThisGoal: (e: React.SyntheticEvent, parentGoalId: number) => Promise<void>
 }
-export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, popFromHistory, setShowAddGoals }) => {
+
+export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisGoal }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const subGoalsHistory = useRecoilValue(goalsHistory);
+  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  let goalID = useRecoilValue(displayGoalId);
 
-  const [showSuggestionsModal, setShowSuggestionsModal] = useState(false);
+  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+  const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);  
+
+  const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
   const [publicGoals, setPublicGoals] = useState<ISharedGoal[]>([]);
 
-  const addSuggestedGoal = async (goal: ISharedGoal) => {
-    const { id: prevId, ...newGoal } = { ...goal, parentGoalId: goalID, sublist: null, status: 0 };
-    const newGoalId = await addGoal(newGoal);
-    alert(newGoalId ? "Added!" : "Sorry!");
-    return newGoalId;
-  };
-  const getSuggestions = (isArchiveTab: boolean) => {
-    const lst: ISharedGoal[] = isArchiveTab ? archiveGoals : publicGoals;
-    return lst.length > 0 ?
-      lst.map((goal) => (
-        <div key={`my-archive-${goal.id}`} className="suggestions-goal-name">
-          <p style={{ marginBottom: 0 }}>{goal.title}</p>
-          <button type="button" onClick={() => { addSuggestedGoal(goal); }}>
-            <img alt="goal suggestion" src={plus} />
-          </button>
-        </div>
-      ))
-      : (
-        <div style={{ textAlign: "center" }} className="suggestions-goal-name">
-          <p style={{ marginBottom: 0, padding: "2%" }}>
-            {
-            isArchiveTab ? "Sorry, No Archived Goals" : "Sorry, No Public Goals"
-          }
-          </p>
-        </div>
-      );
-  };
-  const getMySuggestions = async () => {
+  const popFromHistory = useSetRecoilState(popFromGoalsHistory);
+
+
+  const getMySuggestions = async () => { 
     const goals: GoalItem[] = await getGoalsFromArchive(goalID);
     setArchiveGoals(goals);
     let goal: goalItem;
+
     if (goalID !== -1) goal = await getGoal(goalID);
-    console.log(goalID);
     const res = await getPublicGoals(goalID === -1 ? "root" : goal.title);
     if (res.status) {
       const tmpPG = [...res.data];
       setPublicGoals([...tmpPG]);
     }
   };
-
   useEffect(() => {
-    if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
+    // if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
       getMySuggestions();
-    }
-  }, [displayTRIcon]);
+    // }
+  }, [showSuggestionsModal]);
 
   return (
     <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
@@ -92,7 +72,9 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
           alt="Back arrow"
           className="back-arrow-nav-dashboard"
           onClick={() => {
-            popFromHistory();
+            if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
+              navigate(-1);
+            } else popFromHistory(-1);
           }}
         />
         {darkModeStatus ? (
@@ -123,48 +105,29 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ goalID, displayTRIcon, 
         <button
           type="button"
           id="goal-suggestion-btn"
-          onClick={() => {
+          onClick={(e) => {
             if (displayTRIcon === "+") {
-              setShowAddGoals({ open: true, goalId: goalID });
+              setShowAddGoalOptions(true);
+              // setShowAddGoal({ open: true, goalId: goalID });
             } else {
-              setShowSuggestionsModal(true);
-              getMySuggestions();
+              // setShowSuggestionsModal(true);
+              // getMySuggestions();
+              addThisGoal(e)
             }
           }}
         >
           <img alt="create-goals-suggestion" src={LogoGradient} />
-          <div>{window.location.href.includes("AddGoals") || displayTRIcon === "?" ? "?" : "+"}</div>
+          <div>{window.location.href.includes("AddGoals") || displayTRIcon === "✓" ? "✓" : "+"}</div>
         </button>
 
       </Navbar>
-      <Modal
-        id="suggestions-modal"
-        show={showSuggestionsModal}
-        onHide={() => setShowSuggestionsModal(false)}
-        centered
-        autoFocus={false}
-      >
-
-        <Modal.Body id="suggestions-modal-body">
-          <button type="button" id="suggestions-modal-icon" onClick={() => { setShowSuggestionsModal(true); }}>
-            <img alt="create-goals-suggestion" src={LogoGradient} />
-            <div>?</div>
-          </button>
-          <Tabs
-            defaultActiveKey="My Archive"
-            id="suggestions"
-            className="mb-3"
-            justify
-          >
-            <Tab eventKey="My Archive" title="My Archive">
-              {getSuggestions(true)}
-            </Tab>
-            <Tab eventKey="Public Goals" title="Public Goals">
-              {getSuggestions(false)}
-            </Tab>
-          </Tabs>
-        </Modal.Body>
-      </Modal>
+      <SuggestionModal 
+        goalID={goalID}
+        showSuggestionsModal={showSuggestionsModal} 
+        setShowSuggestionsModal={setShowSuggestionsModal}
+        archiveGoals={archiveGoals}
+        publicGoals={publicGoals}
+      />
     </div>
   );
 };

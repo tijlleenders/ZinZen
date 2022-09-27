@@ -152,11 +152,27 @@
   padding-top: 2.5%;
   font-weight: 600;
 }
+
 .my-goals-content {
   margin-top: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  .mygoalsbutton-dark, .mygoalsbutton-light {
+    display: none;
+  }  
+  
+  .todo-form {
+    margin-bottom: 24px !important;
+  }
+  
+  .addtask-light , .addtask-dark {   
+    margin: 0 !important;
+    padding: 3% 4% !important;
+    width: 100% !important;
+    outline: none;
+  }
 }
 
 @media (min-width: 1281px) {

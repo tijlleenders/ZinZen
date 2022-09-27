@@ -38,6 +38,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .mygoalsbutton-dark, .mygoalsbutton-light {
+    display: none;
+  }  
+  
+  .todo-form {
+    margin-bottom: 24px !important;
+  }
+  
+  .addtask-light , .addtask-dark {   
+    margin: 0 !important;
+    padding: 3% 4% !important;
+    width: 100% !important;
+    outline: none;
+  }
 }
 
 @media only screen and (max-width: 600px) {

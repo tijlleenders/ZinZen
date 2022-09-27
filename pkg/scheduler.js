@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 let wasm;
 
 const cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });

@@ -1,46 +1,40 @@
-import { ChevronLeft, ChevronDown, PeopleFill, PersonFill } from "react-bootstrap-icons";
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container, Modal } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { ChevronLeft, ChevronDown, PeopleFill, PersonFill } from "react-bootstrap-icons";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
-import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState } from "@src/store";
 import plus from "@assets/images/plus.svg";
 import pencil from "@assets/images/pencil.svg";
 import correct from "@assets/images/correct.svg";
 import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
+import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
+import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsHistoryState";
+import { GoalItem } from "@src/models/GoalItem";
+import { darkModeState } from "@src/store";
+import { AddGoalForm } from "../AddGoal/AddGoalForm";
+
+
 import "./GoalSublistPage.scss";
 
-interface ISubGoalHistoryProps {
-  goalID: number,
-  goalColor: string,
-  goalTitle: string
-}
-interface GoalSublistProps {
-  goalID: number,
-  subGoalHistory: ISubGoalHistoryProps[],
-  addInHistory: (goal: GoalItem) => void,
-  setShowAddGoals: React.Dispatch<React.SetStateAction<{
-    open: boolean;
-    goalId: number;
-  }>>
-  setShowUpdateGoal: React.Dispatch<React.SetStateAction<{
-    open: boolean;
-    goalId: number;
-  }>>,
-  resetHistory: () => void,
-  popFromHistory: (index?: number) => void
-}
-
-export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory, addInHistory, resetHistory, popFromHistory, setShowAddGoals, setShowUpdateGoal }) => {
+export const GoalSublist = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
+  const subGoalHistory = useRecoilValue(goalsHistory);
+  const goalID = useRecoilValue(displayGoalId);
+  const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
+
+  const addInHistory = useSetRecoilState(addInGoalsHistory);
+  const popFromHistory = useSetRecoilState(popFromGoalsHistory);
+  const setShowUpdateGoal = useSetRecoilState(displayUpdateGoal);
+  const callResetHistory = useSetRecoilState(resetGoalsHistory);
+  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+  
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
 
   useEffect(() => {
     getGoal(Number(goalID)).then((parent) => setParentGoal(parent));
@@ -49,7 +43,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
 
   useEffect(() => {
     getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
-  }, [parentGoal]);
+  }, [parentGoal, showAddGoal, showSuggestionModal]);
 
   const archiveMyGoal = async (id: number) => {
     await archiveUserGoal(id);
@@ -85,7 +79,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
   return (
     <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
       <Breadcrumb style={{ marginTop: "80px" }}>
-        <Breadcrumb.Item onClick={() => { resetHistory(); }}>
+        <Breadcrumb.Item onClick={() => callResetHistory()}>
           <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
         </Breadcrumb.Item>
         {
@@ -105,6 +99,8 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
         <div className="sublist-content">
           <div className="sublist-title">{parentGoal?.title}</div>
           <Container fluid className="sublist-list-container">
+          { showAddGoal && <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={showAddGoal.goalId} /> }
+
             {childrenGoals?.map((goal: GoalItem, index) => (
               <div
                 aria-hidden
@@ -158,7 +154,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ goalID, subGoalHistory
                       src={plus}
                       style={{ cursor: "pointer" }}
                       onClickCapture={() => {
-                        setShowAddGoals({
+                        setShowAddGoal({
                           open: true,
                           goalId: goal?.id
                         });

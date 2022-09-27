@@ -7,24 +7,19 @@ import paintBrush from "@assets/images/paintBrush.svg";
 import { darkModeState } from "@store";
 import { getGoal } from "@src/api/GoalsAPI";
 import { colorPallete } from "@src/utils";
+import { displayAddGoal } from "@src/store/GoalsHistoryState";
 import { AddGoalForm } from "./AddGoalForm";
 
 import "@translations/i18n";
 import "./AddGoalForm.scss";
 
-interface AddGoalProps {
-  goalId: number,
-  setShowAddGoals: React.Dispatch<React.SetStateAction<{
-    open: boolean;
-    goalId: number;
-    }>>
-}
-
-export const AddGoal: React.FC<AddGoalProps> = ({ goalId, setShowAddGoals }) => {
+export const AddGoal = () => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const { goalId } = useRecoilValue(displayAddGoal);
+
   const [selectedColorIndex, setColorIndex] = useState(0);
-  const [parentGoalId, setParentGoalId] = useState<number | -1>();
+  const [parentGoalId, setParentGoalId] = useState<number | -1>(-1);
   const [parentGoalTitle, setParentGoalTitle] = useState("");
 
   useEffect(() => {
@@ -74,7 +69,7 @@ export const AddGoal: React.FC<AddGoalProps> = ({ goalId, setShowAddGoals }) => 
         </button>
       </Row>
       <Row>
-        <AddGoalForm goalId={goalId} setShowAddGoals={setShowAddGoals} selectedColorIndex={selectedColorIndex} parentGoalId={parentGoalId} />
+        <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={parentGoalId} />
       </Row>
     </Container>
   );
