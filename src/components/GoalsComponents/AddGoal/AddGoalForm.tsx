@@ -1,4 +1,3 @@
-
 /* eslint-disable import/no-duplicates */
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
@@ -9,15 +8,14 @@ import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 import { languagesFullForms } from "@translations/i18n";
-import { 
-  addInGoalsHistory, 
-  displayAddGoal, 
-  displayGoalId, 
-  extractedTitle, 
-  inputGoalTags 
+import {
+  addInGoalsHistory,
+  displayAddGoal,
+  displayGoalId,
+  extractedTitle,
+  inputGoalTags
 } from "@src/store/GoalsHistoryState";
 import InputGoal from "../InputGoal";
-
 
 import "@translations/i18n";
 import "./AddGoalForm.scss";
@@ -32,7 +30,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const goalID = useRecoilValue(displayGoalId);
-  
+
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
@@ -69,21 +67,21 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
       await updateGoal(parentGoalId, { sublist: newSublist });
       if (goalID !== showAddGoal?.goalId) { addInHistory(parentGoal); }
     }
-    
+
     const typeOfPage = window.location.href.split("/").slice(-1)[0];
     setShowAddGoal(null);
     setGoalTags({});
     setGoalTitle("");
     if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
-  
+
   return (
-    <form className="todo-form" onSubmit={handleSubmit}>
-       <InputGoal 
-          goalInput={''}
-          selectedColor={colorPallete[selectedColorIndex]}
-          goalLang = {goalLang}
-        />
+    <form id="addGoalForm" className="todo-form" onSubmit={handleSubmit}>
+      <InputGoal
+        goalInput=""
+        selectedColor={colorPallete[selectedColorIndex]}
+        goalLang={goalLang}
+      />
       <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
         <Button
           onClick={handleSubmit}
