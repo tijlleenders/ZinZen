@@ -33,10 +33,10 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
-  let goalID = useRecoilValue(displayGoalId);
+  const goalID = useRecoilValue(displayGoalId);
 
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
-  const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);  
+  const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);
 
   const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
@@ -44,8 +44,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
 
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
 
-
-  const getMySuggestions = async () => { 
+  const getMySuggestions = async () => {
     const goals: GoalItem[] = await getGoalsFromArchive(goalID);
     setArchiveGoals(goals);
     let goal: goalItem;
@@ -59,7 +58,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
   };
   useEffect(() => {
     // if (window.location.href.includes("AddGoals") || (displayTRIcon && displayTRIcon === "?")) {
-      getMySuggestions();
+    getMySuggestions();
     // }
   }, [showSuggestionsModal]);
 
@@ -112,7 +111,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             } else {
               // setShowSuggestionsModal(true);
               // getMySuggestions();
-              addThisGoal(e)
+              addThisGoal(e);
             }
           }}
         >
@@ -121,9 +120,9 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
         </button>
 
       </Navbar>
-      <SuggestionModal 
+      <SuggestionModal
         goalID={goalID}
-        showSuggestionsModal={showSuggestionsModal} 
+        showSuggestionsModal={showSuggestionsModal}
         setShowSuggestionsModal={setShowSuggestionsModal}
         archiveGoals={archiveGoals}
         publicGoals={publicGoals}
