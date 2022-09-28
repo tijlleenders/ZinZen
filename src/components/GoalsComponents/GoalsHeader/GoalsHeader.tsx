@@ -25,10 +25,11 @@ import AddGoalOptions from "../AddGoalOptions";
 
 interface GoalsHeaderProps {
   displayTRIcon: string,
-  addThisGoal: (e: React.SyntheticEvent, parentGoalId: number) => Promise<void>
+  addThisGoal: (e: React.SyntheticEvent, parentGoalId: number) => Promise<void>,
+  updateThisGoal: (e: React.SyntheticEvent) => Promise<void>
 }
 
-export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisGoal }) => {
+export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisGoal, updateThisGoal }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
@@ -108,10 +109,11 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             if (displayTRIcon === "+") {
               setShowAddGoalOptions(true);
               // setShowAddGoal({ open: true, goalId: goalID });
-            } else {
-              // setShowSuggestionsModal(true);
-              // getMySuggestions();
+            } else if( showAddGoal ) {
               addThisGoal(e);
+            }
+            else if( showUpdateGoal ) {
+              updateThisGoal(e);
             }
           }}
         >
