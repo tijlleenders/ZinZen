@@ -109,10 +109,9 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             if (displayTRIcon === "+") {
               setShowAddGoalOptions(true);
               // setShowAddGoal({ open: true, goalId: goalID });
-            } else if( showAddGoal ) {
+            } else if (showAddGoal) {
               addThisGoal(e);
-            }
-            else if( showUpdateGoal ) {
+            } else if (showUpdateGoal) {
               updateThisGoal(e);
             }
           }}
