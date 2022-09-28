@@ -28,25 +28,12 @@ export const DashboardUserChoicePanel = () => {
           <Button
             variant={darkModeStatus ? "brown" : "peach"}
             size="lg"
-            className={darkModeStatus ? "dashboard-choice-dark1" : "dashboard-choice-light1"}
+            className={`no-add ${darkModeStatus ? "dashboard-choice-dark1" : "dashboard-choice-light1"}`}
             onClick={() => {
               navigate("/Home/MyGoals");
             }}
           >
             {truncateContent(t("mygoals"))}
-          </Button>
-          <Button
-            variant={darkModeStatus ? "brown" : "peach"}
-            className={darkModeStatus ? "dashboard-add-btn-dark1" : "dashboard-add-btn-light1"}
-            onClick={() => {
-              navigate("/Home/AddGoals");
-            }}
-          >
-            {darkModeStatus ? (
-              <img src={AddIconDark} alt="Add Icon" className="add-icon" />
-            ) : (
-              <img src={AddIconLight} alt="Add Icon" className="add-icon" />
-            )}
           </Button>
         </Row>
         <Row>

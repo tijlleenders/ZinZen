@@ -37,11 +37,13 @@ export const getGoal = async (goalId: number) => {
 
 export const getChildrenGoals = async (parentGoalId: number) => {
   const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).and((goal) => goal.status === 0).toArray();
+  childrenGoals.reverse();
   return childrenGoals;
 };
 
 export const getAllGoals = async () => {
   const allGoals = await db.goalsCollection.toArray();
+  allGoals.reverse();
   return allGoals;
 };
 
@@ -49,11 +51,13 @@ export const getActiveGoals = async () => {
   const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(0).toArray();
   // Filter and return only parent goals
   const activeParentGoals = activeGoals.filter((goal: GoalItem) => goal.parentGoalId === -1);
+  activeParentGoals.reverse();
   return activeParentGoals;
 };
 
 export const getAllArchivedGoals = async () => {
   const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(1).toArray();
+  activeGoals.reverse();
   return activeGoals;
 };
 
@@ -69,6 +73,7 @@ export const getGoalsFromArchive = async (parentId: number) => {
     });
   }
   const archivedGoals = await db.goalsCollection.where("status").equals(1).and((goal) => parentIds.includes(goal.parentGoalId)).toArray();
+  archivedGoals.reverse();
   return archivedGoals;
 };
 

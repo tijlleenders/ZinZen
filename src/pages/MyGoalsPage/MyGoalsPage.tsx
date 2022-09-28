@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -28,7 +30,6 @@ import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
-import { UpdateGoal } from "@components/GoalsComponents/UpdateGoal/UpdateGoal";
 import {
   addInGoalsHistory,
   displayAddGoal,
@@ -43,6 +44,7 @@ import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { colorPallete } from "@src/utils";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions";
 import { languagesFullForms } from "@src/translations/i18n";
+import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
 
 import "./MyGoalsPage.scss";
 
@@ -113,6 +115,27 @@ export const MyGoalsPage = () => {
     setGoalTags({});
     setGoalTitle("");
     if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
+  };
+
+  const updateThisGoal = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (goalTitle.length === 0) {
+      return;
+    }
+    await updateGoal(showUpdateGoal?.goalId,
+      { title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
+        goalColor: colorPallete[selectedColorIndex],
+        duration: goalTags.duration ? goalTags.duration.value : null,
+        repeat: goalTags.repeats ? goalTags.repeats.value : null,
+        link: goalTags.link ? goalTags.link.value?.trim() : null,
+        start: goalTags.start ? goalTags.start.value : null,
+        due: goalTags.due ? goalTags.due.value : null,
+        startTime: goalTags.startTime ? goalTags.startTime.value : null,
+        endTime: goalTags.endTime ? goalTags.endTime.value : null,
+      });
+    setGoalTitle("");
+    setShowUpdateGoal(null);
+    setGoalTags({});
   };
 
   const archiveMyGoal = async (id: number) => {
@@ -194,30 +217,29 @@ export const MyGoalsPage = () => {
           <AddGoalOptions parentGoalId={selectedGoalId} />
         </div>
       )}
-      <GoalsHeader addThisGoal={addThisGoal} displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "✓"} />
+      <GoalsHeader updateThisGoal={updateThisGoal} addThisGoal={addThisGoal} displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "✓"} />
       {
-          showUpdateGoal ?
-            <UpdateGoal />
-            :
-            selectedGoalId === -1 ?
-              (
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <div
-                    onClickCapture={() => setTapCount([-1, 0])}
-                    className="my-goals-content"
-                  >
-                    <input
-                      id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
-                      onClickCapture={() => setTapCount([-1, 0])}
-                      placeholder="Search"
-                      onChange={(e) => debounceSearch(e)}
-                    />
-                    <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
-                      My Goals
-                    </h1>
-                    { showAddGoal && <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={showAddGoal.goalId} /> }
-                    <div>
-                      {userGoals?.map((goal: GoalItem, index) => (
+        selectedGoalId === -1 ?
+          (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div
+                onClickCapture={() => setTapCount([-1, 0])}
+                className="my-goals-content"
+              >
+                <input
+                  id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
+                  onClickCapture={() => setTapCount([-1, 0])}
+                  placeholder="Search"
+                  onChange={(e) => debounceSearch(e)}
+                />
+                <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
+                  My Goals
+                </h1>
+                { showAddGoal && <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={showAddGoal.goalId} /> }
+                <div>
+                  {userGoals?.map((goal: GoalItem, index) => (
+                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm selectedColorIndex={selectedColorIndex} />
+                      : (
                         <div
                           aria-hidden
                           key={String(`task-${goal.id}`)}
@@ -260,54 +282,54 @@ export const MyGoalsPage = () => {
                             </div>
                           </div>
                           {tapCount[0] === index && tapCount[1] > 0 && (
-                            <div className="interactables">
-                              <img
-                                alt="add subgoal"
-                                src={plus}
-                                style={{ cursor: "pointer" }}
-                                onClickCapture={() => {
-                                  addInHistory(goal);
-                                  setShowAddGoal({
-                                    open: true,
-                                    goalId: goal?.id
-                                  });
-                                }}
-                              />
-                              <img
-                                alt="delete goal"
-                                src={trash}
-                                style={{ cursor: "pointer" }}
-                                onClickCapture={(e) => {
-                                  e.stopPropagation();
-                                  removeUserGoal(Number(goal.id));
-                                }}
-                              />
-                              <img
-                                alt="share goal"
-                                src={share}
-                                style={{ cursor: "pointer" }}
-                                onClickCapture={(e) => {
-                                  e.stopPropagation();
-                                  setShowShareModal(true);
-                                }}
-                              />
-                              <img
-                                alt="Update Goal"
-                                src={pencil}
-                                style={{ cursor: "pointer" }}
-                                onClickCapture={() => {
-                                  setShowUpdateGoal({ open: true, goalId: goal?.id });
-                                }}
-                              />
-                              <img
-                                alt="archive Goal"
-                                src={correct}
-                                onClickCapture={async () => {
-                                  await archiveMyGoal(goal.id);
-                                }}
-                                style={{ cursor: "Pointer" }}
-                              />
-                            </div>
+                          <div className="interactables">
+                            <img
+                              alt="add subgoal"
+                              src={plus}
+                              style={{ cursor: "pointer" }}
+                              onClickCapture={() => {
+                                addInHistory(goal);
+                                setShowAddGoal({
+                                  open: true,
+                                  goalId: goal?.id
+                                });
+                              }}
+                            />
+                            <img
+                              alt="delete goal"
+                              src={trash}
+                              style={{ cursor: "pointer" }}
+                              onClickCapture={(e) => {
+                                e.stopPropagation();
+                                removeUserGoal(Number(goal.id));
+                              }}
+                            />
+                            <img
+                              alt="share goal"
+                              src={share}
+                              style={{ cursor: "pointer" }}
+                              onClickCapture={(e) => {
+                                e.stopPropagation();
+                                setShowShareModal(true);
+                              }}
+                            />
+                            <img
+                              alt="Update Goal"
+                              src={pencil}
+                              style={{ cursor: "pointer" }}
+                              onClickCapture={() => {
+                                setShowUpdateGoal({ open: true, goalId: goal?.id });
+                              }}
+                            />
+                            <img
+                              alt="archive Goal"
+                              src={correct}
+                              onClickCapture={async () => {
+                                await archiveMyGoal(goal.id);
+                              }}
+                              style={{ cursor: "Pointer" }}
+                            />
+                          </div>
                           )}
                           <Modal
                             id="share-modal"
@@ -344,16 +366,16 @@ export const MyGoalsPage = () => {
                             </Modal.Body>
                           </Modal>
                         </div>
-
-                      ))}
-                    </div>
-                  </div>
+                      )
+                  ))}
                 </div>
-              )
-              :
-              (
-                <GoalSublist />
-              )
+              </div>
+            </div>
+          )
+          :
+          (
+            <GoalSublist />
+          )
       }
     </>
   );

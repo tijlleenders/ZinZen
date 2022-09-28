@@ -20,11 +20,10 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
   const [error, setError] = useState("");
-  const [goalInput, setGoalInput] = useState("")
+  const [goalInput, setGoalInput] = useState("");
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [goalLang, setGoalLang] = useState("english");
-
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -45,6 +44,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
       });
     setGoalTitle("");
     setShowUpdateGoal(null);
+    setGoalTags({});
   };
 
   useEffect(() => {
@@ -57,22 +57,23 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
       } else if (goal.endTime) {
         tmpTiming = ` before ${goal.endTime}`;
       }
-      console.log(goal)
+      console.log(goal);
       setGoalInput(`${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`);
       if (goal.language) setGoalLang(goal.language);
     });
   }, []);
 
   return (
-    <form className="todo-form" onSubmit={handleSubmit}>
-        { 
-          goalInput !== '' && 
-          <InputGoal 
+    <form id="updateGoalForm" className="todo-form" onSubmit={handleSubmit}>
+      {
+          goalInput !== "" && (
+          <InputGoal
             goalInput={goalInput}
             selectedColor={colorPallete[selectedColorIndex]}
-            goalLang = {goalLang}
+            goalLang={goalLang}
           />
-        }
+          )
+}
       <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
         <Button
           onClick={handleSubmit}
