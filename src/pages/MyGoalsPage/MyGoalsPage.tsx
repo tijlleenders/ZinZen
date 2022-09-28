@@ -27,15 +27,15 @@ import { darkModeState } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
 import { UpdateGoal } from "@components/GoalsComponents/UpdateGoal/UpdateGoal";
-import { 
-  addInGoalsHistory, 
-  displayAddGoal, 
-  displayAddGoalOptions, 
-  displayGoalId, 
-  displaySuggestionsModal, 
-  displayUpdateGoal, 
-  extractedTitle, 
-  goalsHistory, 
+import {
+  addInGoalsHistory,
+  displayAddGoal,
+  displayAddGoalOptions,
+  displayGoalId,
+  displaySuggestionsModal,
+  displayUpdateGoal,
+  extractedTitle,
+  goalsHistory,
   inputGoalTags } from "@src/store/GoalsHistoryState";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { colorPallete } from "@src/utils";
@@ -57,17 +57,17 @@ export const MyGoalsPage = () => {
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(false);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
-  
+
   const darkModeStatus = useRecoilValue(darkModeState);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
-  
+
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
-  const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);  
+  const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
 
@@ -81,9 +81,9 @@ export const MyGoalsPage = () => {
     if (colorPallete[newColorIndex]) setSelectedColorIndex(newColorIndex);
     else setSelectedColorIndex(0);
   };
-  const addThisGoal = async ( e: React.SyntheticEvent) => {
+  const addThisGoal = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    let parentGoalId = showAddGoal?.goalId;
+    const parentGoalId = showAddGoal?.goalId;
     const newGoal = createGoal(
       goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
       goalTags.repeats ? goalTags?.repeats.value.trim() : null,
@@ -105,14 +105,14 @@ export const MyGoalsPage = () => {
       await updateGoal(parentGoalId, { sublist: newSublist });
       if (selectedGoalId !== showAddGoal?.goalId) { addInHistory(parentGoal); }
     }
-    
+
     const typeOfPage = window.location.href.split("/").slice(-1)[0];
     setShowAddGoal(null);
     setGoalTags({});
     setGoalTitle("");
     if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
-  
+
   const archiveMyGoal = async (id: number) => {
     await archiveUserGoal(id);
     const goals: GoalItem[] = await getActiveGoals();
@@ -187,11 +187,11 @@ export const MyGoalsPage = () => {
   });
   return (
     <>
-      { showAddGoalOptions && 
-        <div className='overlay' onClick={() => setShowAddGoalOptions(false) }>
-          <AddGoalOptions parentGoalId={selectedGoalId}/>
+      { showAddGoalOptions && (
+        <div className="overlay" onClick={() => setShowAddGoalOptions(false)}>
+          <AddGoalOptions parentGoalId={selectedGoalId} />
         </div>
-      }
+      )}
       <GoalsHeader addThisGoal={addThisGoal} displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "✓"} />
       {
           showUpdateGoal ?
@@ -264,6 +264,7 @@ export const MyGoalsPage = () => {
                                 src={plus}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={() => {
+                                  addInHistory(goal);
                                   setShowAddGoal({
                                     open: true,
                                     goalId: goal?.id
