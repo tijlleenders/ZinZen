@@ -21,12 +21,17 @@ export const displayAddGoalOptions = atom({
 export const inputGoalTags = atom({
   key: "inputGoalTags",
   default: {} as ITags
-})
+});
 
 export const extractedTitle = atom({
   key: "extractedTitle",
   default: "" as string
-})  
+});
+
+export const selectedColorIndex = atom({
+  key: "selectedColorIndex",
+  default: 0 as number
+});
 
 export const displayGoalId = atom({
   key: "displayGoalId",
@@ -89,4 +94,3 @@ export const popFromGoalsHistory = selector({
     }
   }
 });
-
