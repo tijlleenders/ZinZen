@@ -1,4 +1,6 @@
 /* eslint-disable no-await-in-loop */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { ChevronLeft, ChevronDown, PersonFill, PeopleFill } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
