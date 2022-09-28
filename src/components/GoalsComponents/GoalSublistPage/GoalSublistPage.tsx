@@ -15,7 +15,6 @@ import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";
 
-
 import "./GoalSublistPage.scss";
 
 export const GoalSublist = () => {
@@ -29,7 +28,7 @@ export const GoalSublist = () => {
   const setShowUpdateGoal = useSetRecoilState(displayUpdateGoal);
   const callResetHistory = useSetRecoilState(resetGoalsHistory);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
-  
+
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
   const [tapCount, setTapCount] = useState([-1, 0]);
@@ -42,7 +41,14 @@ export const GoalSublist = () => {
   }, [goalID]);
 
   useEffect(() => {
-    getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+    getChildrenGoals(Number(goalID))
+      .then((fetchedGoals) => {
+        if (!showAddGoal && fetchedGoals.length === 0) {
+          popFromHistory(-1);
+        } else {
+          setChildrenGoals(fetchedGoals);
+        }
+      });
   }, [parentGoal, showAddGoal, showSuggestionModal]);
 
   const archiveMyGoal = async (id: number) => {
@@ -99,7 +105,7 @@ export const GoalSublist = () => {
         <div className="sublist-content">
           <div className="sublist-title">{parentGoal?.title}</div>
           <Container fluid className="sublist-list-container">
-          { showAddGoal && <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={showAddGoal.goalId} /> }
+            { showAddGoal && <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={showAddGoal.goalId} /> }
 
             {childrenGoals?.map((goal: GoalItem, index) => (
               <div
@@ -158,6 +164,7 @@ export const GoalSublist = () => {
                           open: true,
                           goalId: goal?.id
                         });
+                        addInHistory(goal);
                       }}
                     />
                     <img
