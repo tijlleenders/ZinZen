@@ -10,12 +10,9 @@ describe("DashboardUserChoice Test", () => {
     cy.get(".dashboard-choice-light").should("have.length", 4);
   });
 
-  it("Should have option to add Goals and Feelings", () => {
-    cy.get(".add-icon").should("have.length", 2);
-    // cy.get('.add-icon').eq(0).click().location('pathname')
-    // .should('include', 'MyGoals')
-    // .go('back');
-    cy.get(".add-icon").eq(1).click().location("pathname")
+  it("Should have option to add Feelings", () => {
+    cy.get(".add-icon").should("have.length", 1);
+    cy.get(".add-icon").click().location("pathname")
       .should("include", "AddFeelings")
       .go("back");
   });

@@ -7,7 +7,7 @@ describe("Desktop Mode Tests", () => {
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();
     cy.get('[alt="Zinzen Logo"]').click();
-    cy.get(".add-icon").eq(1).click();
+    cy.get(".add-icon").click();
     cy.contains("Happy");
     cy.contains("Excited");
     cy.contains("Gratitude");
@@ -64,7 +64,7 @@ describe("Mobile Mode Tests", () => {
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();
     cy.get('[alt="Zinzen Logo"]').click();
-    cy.get(".add-icon").eq(1).click();
+    cy.get(".add-icon").click();
     cy.get(".feelings-expand-btw-light").should("have.length", 6);
   });
   it("Should display popup modal when clicked on expand icon of a feeling", () => {
