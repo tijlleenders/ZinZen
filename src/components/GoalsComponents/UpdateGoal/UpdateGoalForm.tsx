@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
-import { displayUpdateGoal, extractedTitle, inputGoalTags } from "@src/store/GoalsHistoryState";
+import { displayUpdateGoal, extractedTitle, inputGoalTags, selectedColorIndex } from "@src/store/GoalsHistoryState";
 import InputGoal from "../InputGoal";
 
 import "@translations/i18n";
 import "./UpdateGoalForm.scss";
 
-interface UpdateGoalFormProps {
-  selectedColorIndex: number,
-}
-
-export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorIndex }) => {
+export const UpdateGoalForm = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
@@ -24,6 +19,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [goalLang, setGoalLang] = useState("english");
+  const [colorIndex, setColorIndex] = useRecoilState(selectedColorIndex);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -45,6 +41,7 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
     setGoalTitle("");
     setShowUpdateGoal(null);
     setGoalTags({});
+    setColorIndex(0);
   };
 
   useEffect(() => {
@@ -57,11 +54,17 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
       } else if (goal.endTime) {
         tmpTiming = ` before ${goal.endTime}`;
       }
-      console.log(goal);
+      setColorIndex(colorPallete.indexOf(goal.goalColor));
       setGoalInput(`${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`);
       if (goal.language) setGoalLang(goal.language);
     });
   }, []);
+
+  const changeColor = () => {
+    const newColorIndex = colorIndex + 1;
+    if (colorPallete[newColorIndex]) setColorIndex(newColorIndex);
+    else setColorIndex(0);
+  };
 
   return (
     <form id="updateGoalForm" className="todo-form" onSubmit={handleSubmit}>
@@ -69,24 +72,24 @@ export const UpdateGoalForm: React.FC<UpdateGoalFormProps> = ({ selectedColorInd
           goalInput !== "" && (
           <InputGoal
             goalInput={goalInput}
-            selectedColor={colorPallete[selectedColorIndex]}
+            selectedColor={colorPallete[colorIndex]}
             goalLang={goalLang}
           />
           )
-}
-      <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
-        <Button
-          onClick={handleSubmit}
-          className="addtask-button"
-          style={
-            darkModeStatus
-              ? { backgroundColor: colorPallete[selectedColorIndex] }
-              : { backgroundColor: colorPallete[selectedColorIndex] }
-          }
-        >
-          Update Goal
-        </Button>
-      </div>
+      }
+      <button
+        type="button"
+        style={
+          darkModeStatus
+            ? { backgroundColor: colorPallete[colorIndex] }
+            : { backgroundColor: colorPallete[colorIndex] }
+        }
+        id="changeColor-btn"
+        className="form-tag"
+        onClick={changeColor}
+      >
+        Color
+      </button>
       <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
     </form>
   );

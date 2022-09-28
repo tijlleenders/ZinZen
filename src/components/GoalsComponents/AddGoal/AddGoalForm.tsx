@@ -1,6 +1,5 @@
 /* eslint-disable import/no-duplicates */
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 
@@ -13,7 +12,8 @@ import {
   displayAddGoal,
   displayGoalId,
   extractedTitle,
-  inputGoalTags
+  inputGoalTags,
+  selectedColorIndex
 } from "@src/store/GoalsHistoryState";
 import InputGoal from "../InputGoal";
 
@@ -21,11 +21,10 @@ import "@translations/i18n";
 import "./AddGoalForm.scss";
 
 interface AddGoalFormProps {
-  selectedColorIndex: number,
   parentGoalId: number | -1,
 }
 
-export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, parentGoalId }) => {
+export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {
   const navigate = useNavigate();
 
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -35,10 +34,17 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
+  const [colorIndex, setColorIndex] = useRecoilState(selectedColorIndex);
   const [error, setError] = useState("");
 
   const lang = localStorage.getItem("language")?.slice(1, -1);
   const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
+
+  const changeColor = () => {
+    const newColorIndex = colorIndex + 1;
+    if (colorPallete[newColorIndex]) setColorIndex(newColorIndex);
+    else setColorIndex(0);
+  };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -56,7 +62,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
       goalTags.endTime ? goalTags.endTime.value : null,
       0,
       parentGoalId!,
-      colorPallete[selectedColorIndex], // goalColor
+      colorPallete[colorIndex], // goalColor
       goalLang,
       goalTags.link ? goalTags.link.value.trim() : null
     );
@@ -72,6 +78,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
     setShowAddGoal(null);
     setGoalTags({});
     setGoalTitle("");
+    setColorIndex(0);
     if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
 
@@ -79,22 +86,22 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ selectedColorIndex, pa
     <form id="addGoalForm" className="todo-form" onSubmit={handleSubmit}>
       <InputGoal
         goalInput=""
-        selectedColor={colorPallete[selectedColorIndex]}
+        selectedColor={colorPallete[colorIndex]}
         goalLang={goalLang}
       />
-      <div className={darkModeStatus ? "mygoalsbutton-dark" : "mygoalsbutton-light"}>
-        <Button
-          onClick={handleSubmit}
-          className="addtask-button"
-          style={
-            darkModeStatus
-              ? { backgroundColor: colorPallete[selectedColorIndex] }
-              : { backgroundColor: colorPallete[selectedColorIndex] }
-          }
-        >
-          Add Goal
-        </Button>
-      </div>
+      <button
+        type="button"
+        style={
+          darkModeStatus
+            ? { backgroundColor: colorPallete[colorIndex] }
+            : { backgroundColor: colorPallete[colorIndex] }
+        }
+        id="changeColor-btn"
+        className="form-tag"
+        onClick={changeColor}
+      >
+        Color
+      </button>
       <div style={{ marginLeft: "10px", marginTop: "10px", color: "red", fontWeight: "lighter" }}>{error}</div>
     </form>
   );
