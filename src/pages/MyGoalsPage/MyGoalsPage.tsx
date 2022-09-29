@@ -39,7 +39,8 @@ import {
   displayUpdateGoal,
   extractedTitle,
   goalsHistory,
-  inputGoalTags } from "@src/store/GoalsHistoryState";
+  inputGoalTags,
+  selectedColorIndex } from "@src/store/GoalsHistoryState";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { colorPallete } from "@src/utils";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions";
@@ -60,10 +61,10 @@ export const MyGoalsPage = () => {
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(false);
-  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
+  const colorIndex = useRecoilValue(selectedColorIndex);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
@@ -80,11 +81,6 @@ export const MyGoalsPage = () => {
   const lang = localStorage.getItem("language")?.slice(1, -1);
   const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
-  const changeColor = () => {
-    const newColorIndex = selectedColorIndex + 1;
-    if (colorPallete[newColorIndex]) setSelectedColorIndex(newColorIndex);
-    else setSelectedColorIndex(0);
-  };
   const addThisGoal = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     const parentGoalId = showAddGoal?.goalId;
@@ -98,7 +94,7 @@ export const MyGoalsPage = () => {
       goalTags.endTime ? goalTags.endTime.value : null,
       0,
       parentGoalId!,
-      colorPallete[selectedColorIndex], // goalColor
+      colorPallete[colorIndex], // goalColor
       goalLang,
       goalTags.link ? goalTags.link.value.trim() : null
     );
@@ -124,7 +120,7 @@ export const MyGoalsPage = () => {
     }
     await updateGoal(showUpdateGoal?.goalId,
       { title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
-        goalColor: colorPallete[selectedColorIndex],
+        goalColor: colorPallete[colorIndex],
         duration: goalTags.duration ? goalTags.duration.value : null,
         repeat: goalTags.repeats ? goalTags.repeats.value : null,
         link: goalTags.link ? goalTags.link.value?.trim() : null,
@@ -235,10 +231,14 @@ export const MyGoalsPage = () => {
                 <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
                   My Goals
                 </h1>
-                { showAddGoal && <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={showAddGoal.goalId} /> }
+                { showAddGoal && (
+                  <AddGoalForm
+                    parentGoalId={showAddGoal.goalId}
+                  />
+                )}
                 <div>
                   {userGoals?.map((goal: GoalItem, index) => (
-                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm selectedColorIndex={selectedColorIndex} />
+                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
                       : (
                         <div
                           aria-hidden

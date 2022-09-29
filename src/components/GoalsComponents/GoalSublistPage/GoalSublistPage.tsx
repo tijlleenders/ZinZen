@@ -107,10 +107,10 @@ export const GoalSublist = () => {
         <div className="sublist-content">
           <div className="sublist-title">{parentGoal?.title}</div>
           <Container fluid className="sublist-list-container">
-            { showAddGoal && <AddGoalForm selectedColorIndex={selectedColorIndex} parentGoalId={showAddGoal.goalId} /> }
+            { showAddGoal && <AddGoalForm parentGoalId={showAddGoal.goalId} /> }
 
             {childrenGoals?.map((goal: GoalItem, index) => (
-              showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm selectedColorIndex={selectedColorIndex} />
+              showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
                 : (
                   <div
                     aria-hidden
