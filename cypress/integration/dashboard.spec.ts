@@ -10,12 +10,6 @@ describe("DashboardUserChoice Test", () => {
     cy.get(".dashboard-choice-light").should("have.length", 4);
   });
 
-  it("Should have option to add Feelings", () => {
-    cy.get(".add-icon").should("have.length", 1);
-    cy.get(".add-icon").click().location("pathname")
-      .should("include", "AddFeelings")
-      .go("back");
-  });
   it("Should have ZinZen button working", () => {
     cy.contains("ZinZen")
       .click()
