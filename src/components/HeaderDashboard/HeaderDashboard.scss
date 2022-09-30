@@ -47,9 +47,6 @@
     font-family: 'Montserrat';
   }
 
-.modal-backdrop.show {
-  opacity: 0 !important;
-}
 
 #suggestions-modal {
 
@@ -61,8 +58,6 @@
    border: 0;
    bottom: 0;
    background: #F0E6E1;
-   height: 45vh;
-   overflow: scroll;
  }
 }
 

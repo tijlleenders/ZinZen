@@ -164,9 +164,6 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
     <Modal
       id="suggestions-modal"
       show={showSuggestionsModal !== null}
-      BackdropProps={{
-        style: { opacity: 0 }
-      }}
       onHide={() => setShowSuggestionsModal(null)}
       centered
       autoFocus={false}
@@ -176,7 +173,9 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
           { showSuggestionsModal === "Public" && "Add from Public" }
           { showSuggestionsModal === "Archive" && "Add from Archive"}
         </p>
-        {getSuggestions(showSuggestionsModal === "Archive")}
+        <div style={{ height: "35vh", overflow: "scroll" }}>
+          {getSuggestions(showSuggestionsModal === "Archive")}
+        </div>
       </Modal.Body>
     </Modal>
   );
