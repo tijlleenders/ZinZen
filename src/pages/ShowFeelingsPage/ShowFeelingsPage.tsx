@@ -93,7 +93,7 @@ export const ShowFeelingsPage = () => {
                     tabIndex={0}
                     key={date}
                     src={addIcon}
-                    alt="add-goal"
+                    alt="add-feeling"
                     style={{ margin: "5px 0 0 30px", height: "30px", width: "30px" }}
                     onClick={() => {
                       navigate("/Home/AddFeelings", {
