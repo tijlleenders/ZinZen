@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-alert */
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
@@ -12,16 +10,11 @@ import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import LogoGradient from "@assets/images/LogoGradient.png";
-import plus from "@assets/images/plus.svg";
-import { GoalItem } from "@src/models/GoalItem";
-import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
-import { getGoalsFromArchive, getGoal, addGoal, getPublicGoals } from "@src/api/GoalsAPI";
-import { displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsState";
+import { displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsState";
 import SuggestionModal from "../SuggestionModal";
 
 import "@translations/i18n";
 import "@components/HeaderDashboard/HeaderDashboard.scss";
-import AddGoalOptions from "../AddGoalOptions";
 
 interface GoalsHeaderProps {
   displayTRIcon: string,
@@ -34,12 +27,10 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const showAddGoal = useRecoilValue(displayAddGoal);
   const goalID = useRecoilValue(displayGoalId);
 
-  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
-  const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);
-
-  const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
+  const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
 
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
 
