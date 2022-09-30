@@ -14,7 +14,7 @@ import {
   extractedTitle,
   inputGoalTags,
   selectedColorIndex
-} from "@src/store/GoalsHistoryState";
+} from "@src/store/GoalsState";
 import InputGoal from "../InputGoal";
 
 import "@translations/i18n";

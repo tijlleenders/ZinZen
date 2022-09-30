@@ -10,7 +10,7 @@ export interface ISubGoalHistory {
 
 export const displaySuggestionsModal = atom({
   key: "displaySuggestionsModal",
-  default: false as boolean
+  default: null as string | null
 });
 
 export const displayAddGoalOptions = atom({

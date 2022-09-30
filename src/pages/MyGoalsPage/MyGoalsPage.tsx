@@ -40,7 +40,7 @@ import {
   extractedTitle,
   goalsHistory,
   inputGoalTags,
-  selectedColorIndex } from "@src/store/GoalsHistoryState";
+  selectedColorIndex } from "@src/store/GoalsState";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { colorPallete } from "@src/utils";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions";
