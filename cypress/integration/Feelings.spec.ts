@@ -1,5 +1,5 @@
 describe("Desktop Mode Tests", () => {
-  it("should have 6 categories of feelings on addFeelings Page", () => {
+  it("should be able to add feeling (Joyful)", () => {
     indexedDB.deleteDatabase("ZinZenDB");
     cy.visit("/");
     cy.clearLocalStorage();
@@ -7,15 +7,8 @@ describe("Desktop Mode Tests", () => {
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();
     cy.get('[alt="Zinzen Logo"]').click();
-    cy.get(".add-icon").click();
-    cy.contains("Happy");
-    cy.contains("Excited");
-    cy.contains("Gratitude");
-    cy.contains("Sad");
-    cy.contains("Afraid");
-    cy.contains("Angry");
-  });
-  it("should be able to add feeling (Joyful)", () => {
+    cy.contains("My Feelings").click();
+    cy.get('[alt="add-feeling"]').click();
     cy.get(".feelings-menu-desktop").get("Button").contains("Joyful").click({ force: true });
   });
   it("Joyful feeling should be added at MyFeelings Page", () => {
@@ -58,17 +51,15 @@ describe("Desktop Mode Tests", () => {
 });
 
 describe("Mobile Mode Tests", () => {
-  it("Should show expand icon adjacent to all 6 categories", () => {
+  it("Should display popup modal when clicked on expand icon of a feeling", () => {
     cy.visit("/");
     cy.get(".lang-btn1").contains("English").click();
     cy.get(".theme-choice-btn").first().click();
     cy.contains("Skip Intro").click();
     cy.get('[alt="Zinzen Logo"]').click();
-    cy.get(".add-icon").click();
-    cy.get(".feelings-expand-btw-light").should("have.length", 6);
-  });
-  it("Should display popup modal when clicked on expand icon of a feeling", () => {
+    cy.contains("My Feelings").click();
     cy.viewport("iphone-6");
+    cy.get('[alt="add-feeling"]').click();
     cy.get(".feelings-expand-btw-light").eq(0).click();
   });
   it("Should have input field for custom feeling", () => {
