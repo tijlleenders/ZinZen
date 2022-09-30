@@ -47,56 +47,60 @@
     font-family: 'Montserrat';
   }
 
-#suggestions-modal > .modal-content {
-  position: absolute;
-  bottom: 0;
-  background: #EDC7B7;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 25px;
-  padding-bottom: 10%;
+.modal-backdrop.show {
+  opacity: 0 !important;
+}
+
+#suggestions-modal {
+
+  height: 100%;
+  margin: 0;
+  background-color: transparent;
+  .modal-content {
+   position: absolute;
+   border: 0;
+   bottom: 0;
+   background: #F0E6E1;
+   height: 45vh;
+   overflow: scroll;
+ }
 }
 
 #suggestions-modal-body {
   display: flex;
   flex-direction: column;
-  padding-top: 2em;  
+  // padding-top: 2em;  
+  padding: 5%;
   
   #goalInputField {
     display: none;
   }
 }
 
-
-.tab-content {
-  max-height: 48vh;
-  overflow-y: scroll;
+#archive-title {
+  font-size: 1.5em;
+  font-weight: bolder;
+  font-family: 'Montserrat';
 }
+
 
 .suggestions-goal-name {
   background: #F0E6E1;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
   cursor: pointer;
+  color: white;
   display: flex;
+  font-size: 1.3em;
+  font-weight: 600;
   justify-content: space-between;
-  margin-top: 2.5%;
-  padding: 2%;
-  padding-right: 5%;
-
+  margin-top: 4%;
+  padding: 2.5% 4%;
+  
   button {
     border: none;
     background-color: transparent;
   }
-}
-
-#suggestions {
-  background-color: #F0E6E1 !important;
-  border-radius: 7px !important;
-}
-
-.nav-link {
-  color: black !important;
-  font-weight: 600;
 }
 
 #addGoal-options {
