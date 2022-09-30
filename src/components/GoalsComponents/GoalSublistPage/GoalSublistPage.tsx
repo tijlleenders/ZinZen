@@ -10,7 +10,7 @@ import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
 import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, shareMyGoal, updateGoal } from "@src/api/GoalsAPI";
-import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsHistoryState";
+import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";

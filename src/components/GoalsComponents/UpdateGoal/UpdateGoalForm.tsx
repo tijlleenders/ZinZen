@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
-import { displayUpdateGoal, extractedTitle, inputGoalTags, selectedColorIndex } from "@src/store/GoalsHistoryState";
+import { displayUpdateGoal, extractedTitle, inputGoalTags, selectedColorIndex } from "@src/store/GoalsState";
 import InputGoal from "../InputGoal";
 
 import "@translations/i18n";
