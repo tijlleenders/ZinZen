@@ -4,10 +4,9 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { ChevronLeft, ChevronDown, PersonFill, PeopleFill } from "react-bootstrap-icons";
+import { ChevronLeft, ChevronDown } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Modal } from "react-bootstrap";
 
 import plus from "@assets/images/plus.svg";
 import pencil from "@assets/images/pencil.svg";
@@ -21,7 +20,6 @@ import {
   removeGoal,
   removeChildrenGoals,
   getGoal,
-  shareMyGoal,
   addGoal,
   createGoal,
   updateGoal
@@ -48,6 +46,7 @@ import { languagesFullForms } from "@src/translations/i18n";
 import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
 
 import "./MyGoalsPage.scss";
+import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 
 interface ILocationProps {
   openGoalOfId: number,
@@ -60,7 +59,7 @@ export const MyGoalsPage = () => {
 
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
-  const [showShareModal, setShowShareModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(-1);
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
@@ -310,7 +309,7 @@ export const MyGoalsPage = () => {
                               style={{ cursor: "pointer" }}
                               onClickCapture={(e) => {
                                 e.stopPropagation();
-                                setShowShareModal(true);
+                                setShowShareModal(index);
                               }}
                             />
                             <img
@@ -331,40 +330,7 @@ export const MyGoalsPage = () => {
                             />
                           </div>
                           )}
-                          <Modal
-                            id="share-modal"
-                            show={showShareModal}
-                            onHide={() => setShowShareModal(false)}
-                            centered
-                            autoFocus={false}
-                          >
-                            <Modal.Body id="share-modal-body">
-                              <button
-                                onClick={async () => {
-                                  await shareMyGoal(goal, "root");
-                                }}
-                                type="button"
-                                className="shareOptions-btn"
-                              >
-                                <div className="share-Options">
-                                  <PersonFill />
-                                  <p className="shareOption-name">Share Anonymously</p>
-                                </div>
-                              </button>
-                              <button type="button" className="shareOptions-btn">
-                                <div className="share-Options">
-                                  <PeopleFill />
-                                  <p className="shareOption-name">Share Public</p>
-                                </div>
-                              </button>
-                              <button type="button" className="shareOptions-btn">
-                                <div className="share-Options">
-                                  <PersonFill />
-                                  <p className="shareOption-name">Share with</p>
-                                </div>
-                              </button>
-                            </Modal.Body>
-                          </Modal>
+                          {showShareModal === index && <ShareGoalModal goal={goal} showShareModal={showShareModal} setShowShareModal={setShowShareModal} />}
                         </div>
                       )
                   ))}
