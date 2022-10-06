@@ -1,0 +1,118 @@
+#share-modal {
+    margin: 0;
+  }
+    #share-modal > .modal-content {
+      position: absolute;
+      bottom: 0;
+      background: rgba(253, 230, 220, 0.8);
+      border-radius: 25px;
+    }
+  
+#share-modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.shareOptions-btn {
+    border-radius: 10px;
+    border: none;
+    padding: 2% 2%;
+    margin-top: 4%;
+}
+
+    .shareOptions-btn:nth-child(1) {
+        background: #AC3B61;
+    }
+    .shareOptions-btn:nth-child(2) {
+        background: #3B6899;
+    }
+    .shareOptions-btn:nth-child(3) {
+        background: #BAB2BC;
+    }
+
+.share-Options {
+    display: flex;
+    justify-content: left;
+}
+
+.share-Options > div, .contact-icon {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    background-color: #EDC7B7;
+    border-radius: 50%;
+    
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+    }
+}
+
+.contact-icon {
+    width: 47px;
+    height: 47px;
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    box-sizing: content-box;
+}
+
+.shareWithContacts {
+    position: relative;
+    text-align: left;
+    margin-top: 2%;
+
+    #contact-list {
+        display: flex;
+        flex-direction: row;
+        overflow-x: scroll;
+    }
+}
+
+
+.contact-button {
+    width: fit-content;
+    text-align: center;
+    margin-left: 2.5%;
+}
+
+
+.share-warning {
+    font-weight: 600;
+    font-style: italic;
+    margin: 0% 2%;
+    margin-bottom: 3%;   
+}
+
+.shareOption-name {
+    margin: 0;
+    margin-left: 3%;
+    padding-top: 1.5%;
+    font-weight: 600;
+}
+
+#addContact-modal {
+    .modal-title {
+        font-style: normal;
+    }
+    
+    .modal-content {
+        background:#FDE6DC !important; 
+    }
+
+    .modal-footer {
+        justify-content: flex-start !important;
+    }
+}
+.addContact-submit-button {
+    font-weight: 600 !important;
+    background-color: #ac3b61 !important;
+
+    img {
+        margin-right: 10px;
+    }
+  }
