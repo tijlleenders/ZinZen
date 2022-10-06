@@ -12,11 +12,19 @@ import copyLink from "@assets/images/copyLink.svg";
 import ContactItem from "@src/models/ContactItem";
 import { addContact, getAllContacts } from "@src/api/ContactsAPI";
 
-import "./ShareGoalModal.scss";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
+import { GoalItem } from "@src/models/GoalItem";
 
-const ShareGoalModal = ({ goal, showShareModal, setShowShareModal }) => {
+import "./ShareGoalModal.scss";
+
+interface IShareGoalModalProps {
+  goal: GoalItem
+  showShareModal: number,
+  setShowShareModal: React.Dispatch<React.SetStateAction<number>>
+}
+
+const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const [contacts, setContacts] = useState<ContactItem[]>([]);
@@ -127,13 +135,14 @@ const ShareGoalModal = ({ goal, showShareModal, setShowShareModal }) => {
             variant="primary"
             type="submit"
             onClick={async () => {
+              navigator.clipboard.writeText("dummyRelationshipId");
               await addContact(newContactName);
               setNewContactName("");
               handleCloseAddContact();
             }}
             className="addContact-submit-button"
           >
-            <img src={copyLink} />Copy Link
+            <img alt="add contact" src={copyLink} />Copy Link
           </Button>
         </Modal.Footer>
       </Modal>

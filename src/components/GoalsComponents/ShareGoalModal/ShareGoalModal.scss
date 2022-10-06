@@ -69,7 +69,7 @@
     #contact-list {
         display: flex;
         flex-direction: row;
-        overflow-x: scroll;
+        overflow-x: hidden;
     }
 }
 
