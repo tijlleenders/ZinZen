@@ -27,6 +27,7 @@ then
     echo No new build found.
 else
     echo A new WASM build detected....
+    echo $latest_artifact_id > artifact_id.txt
     git checkout -b update-build
     echo Requesting download url...
     line=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $token" https://api.github.com/repos/tijlleenders/zinzen-scheduler/actions/artifacts/$latest_artifact_id/zip -I | grep location) &> /dev/null
@@ -36,7 +37,6 @@ else
     wget -O wasm-build-pkg.zip $download_url > /dev/null
     echo Unzipping into pkg directory...
     unzip -o wasm-build-pkg.zip -d pkg
-    echo $latest_artifact_id > artifact_id.txt
     git add pkg/*
     git add artifact_id.txt
     git commit -m "Update artifacts."
