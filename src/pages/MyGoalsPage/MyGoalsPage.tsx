@@ -330,7 +330,13 @@ export const MyGoalsPage = () => {
                             />
                           </div>
                           )}
-                          {showShareModal === index && <ShareGoalModal goal={goal} showShareModal={showShareModal} setShowShareModal={setShowShareModal} />}
+                          {showShareModal === index && (
+                            <ShareGoalModal
+                              goal={goal}
+                              showShareModal={showShareModal}
+                              setShowShareModal={setShowShareModal}
+                            />
+                          )}
                         </div>
                       )
                   ))}

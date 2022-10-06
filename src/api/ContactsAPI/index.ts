@@ -7,7 +7,7 @@ export const getAllContacts = async () => {
   return allContacts;
 };
 
-export const addContact = async (contactName: string, relationshipId: string = "dummyid") => {
+export const addContact = async (contactName: string, relationshipId = "dummyid") => {
   const name = `${contactName.charAt(0).toUpperCase() + contactName.slice(1)}`;
   const currentDate = getJustDate(new Date());
   const newContact: ContactItem = { name, relationshipId, createdAt: currentDate };
