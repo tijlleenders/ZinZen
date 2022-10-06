@@ -77,6 +77,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
           placeholder={t("addGoalPlaceholder")}
           value={formInputData}
           id="goalInputField"
+          style={{ borderColor: selectedColor }}
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
           onChange={(e) => setFormInputData(e.target.value)}
