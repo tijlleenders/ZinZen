@@ -33,7 +33,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const [newContactName, setNewContactName] = useState("");
   const [showAddContactModal, setShowAddContactModal] = useState(false);
   const [displayContacts, setDisplayContacts] = useState(false);
-  
+
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
 
@@ -87,31 +87,31 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           </div>
         </button>
         <button type="button" className="shareOptions-btn">
-          <div className="share-Options" onClick={() => setDisplayContacts(!displayContacts)}>
+          <div className="share-Options" onClickCapture={() => setDisplayContacts(!displayContacts)}>
             <div> <img alt="share with friend" src={shareWithFriend} /> </div>
             <p className="shareOption-name">Share 1:1</p>
           </div>
-          { displayContacts && 
+          { displayContacts && (
             <div className="shareWithContacts">
               {contacts.length === 0 &&
                 <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
-              <div id="modal-contact-list" style={ contacts.length < 3 ? { justifyContent: "flex-start"} : {}}>
+              <div id="modal-contact-list" style={contacts.length < 3 ? { justifyContent: "flex-start" } : {}}>
                 { contacts.length > 0 && contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (getContactBtn(ele.name))) }
-                { contacts.length >=3 && 
+                { contacts.length >= 3 && (
                   <div className="contact-button">
                     <button
                       type="button"
                       className="next-icon"
-                      onClick = {() => navigate("/home/contacts")}
+                      onClick={() => navigate("/home/contacts")}
                     >
                       <ChevronRight />
-                    </button>   
-                  </div> 
-                }
+                    </button>
+                  </div>
+                )}
                 { contacts.length < 3 && getContactBtn() }
               </div>
             </div>
-          }
+          )}
         </button>
         <Form.Check type="checkbox" className="shareOptions-btn" id="cb-withTime">
           <Form.Check.Input type="checkbox" />
