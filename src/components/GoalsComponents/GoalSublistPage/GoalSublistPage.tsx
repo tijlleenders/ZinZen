@@ -22,7 +22,7 @@ import "./GoalSublistPage.scss";
 export const GoalSublist = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalHistory = useRecoilValue(goalsHistory);
-  const goalID = useRecoilValue(displayGoalId); 
+  const goalID = useRecoilValue(displayGoalId);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
