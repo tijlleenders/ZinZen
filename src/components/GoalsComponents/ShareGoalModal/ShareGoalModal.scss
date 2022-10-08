@@ -35,14 +35,14 @@
     justify-content: left;
 }
 
-.share-Options > div, .contact-icon {
+.share-Options > div, .contact-icon, .next-icon {
     position: relative;
     width: 36px;
     height: 36px;
     background-color: #EDC7B7;
     border-radius: 50%;
     
-    img {
+    img, svg {
         position: absolute;
         top: 0;
         left: 0;
@@ -50,26 +50,33 @@
         bottom: 0;
         margin: auto;
     }
+
+    svg {
+        left: 3px;
+    }
 }
 
-.contact-icon {
+.contact-icon, .next-icon {
     width: 47px;
     height: 47px;
     font-size: 2em;
     font-weight: bold;
     text-align: center;
     box-sizing: content-box;
+    border: none;
 }
+
 
 .shareWithContacts {
     position: relative;
     text-align: left;
     margin-top: 2%;
 
-    #contact-list {
+    #modal-contact-list {
         display: flex;
         flex-direction: row;
         overflow-x: hidden;
+        justify-content: space-around;
     }
 }
 
@@ -78,6 +85,7 @@
     width: fit-content;
     text-align: center;
     margin-left: 2.5%;
+    position: relative;
 }
 
 
@@ -116,3 +124,21 @@
         margin-right: 10px;
     }
   }
+
+#cb-withTime {
+    border: 1px solid black;
+    color: black;
+    padding-left: 1em;
+    width: 20px;
+    height: 20px;
+    
+}
+.form-check-label {
+    margin-left: 0.25em;
+    font-weight: 600;
+}
+
+.form-check-input:checked {
+    background-color: black !important;
+}
+  
