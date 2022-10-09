@@ -87,7 +87,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             }
           }}
         >
-          <img alt="create-goals-suggestion" src={LogoGradient} />
+          <img alt="save changes" src={LogoGradient} />
           <div>{window.location.href.includes("AddGoals") || displayTRIcon === "✓" ? "✓" : "+"}</div>
         </button>
 
