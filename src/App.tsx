@@ -16,6 +16,7 @@ import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
+import Contacts from "@pages/ContactsPage/Contacts";
 
 import "./customize.scss";
 import "./App.scss";
@@ -51,7 +52,7 @@ const App = () => {
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
           <Route path="/Home" element={<HomePage />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
-
+          <Route path="Home/Contacts" element={<Contacts />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />

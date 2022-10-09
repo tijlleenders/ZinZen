@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal } from "react-bootstrap";
-
-import { shareMyGoal } from "@src/api/GoalsAPI";
+import { useNavigate } from "react-router";
+import { Button, Form, Modal } from "react-bootstrap";
+import { ChevronRight } from "react-bootstrap-icons";
 
 import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
@@ -11,10 +11,10 @@ import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
 import { addContact, getAllContacts } from "@src/api/ContactsAPI";
-
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
+import { shareMyGoal } from "@src/api/GoalsAPI";
 
 import "./ShareGoalModal.scss";
 
@@ -25,11 +25,14 @@ interface IShareGoalModalProps {
 }
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
+  const navigate = useNavigate();
+
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [newContactName, setNewContactName] = useState("");
   const [showAddContactModal, setShowAddContactModal] = useState(false);
+  const [displayContacts, setDisplayContacts] = useState(false);
 
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
@@ -84,19 +87,36 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           </div>
         </button>
         <button type="button" className="shareOptions-btn">
-          <div className="share-Options">
+          <div className="share-Options" onClickCapture={() => setDisplayContacts(!displayContacts)}>
             <div> <img alt="share with friend" src={shareWithFriend} /> </div>
             <p className="shareOption-name">Share 1:1</p>
           </div>
-          <div className="shareWithContacts">
-            {contacts.length === 0 &&
-              <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
-            <div id="contact-list">
-              { contacts.length > 0 && contacts.map((ele) => (getContactBtn(ele.name))) }
-              { getContactBtn() }
+          { displayContacts && (
+            <div className="shareWithContacts">
+              {contacts.length === 0 &&
+                <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
+              <div id="modal-contact-list" style={contacts.length < 3 ? { justifyContent: "flex-start" } : {}}>
+                { contacts.length > 0 && contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (getContactBtn(ele.name))) }
+                { contacts.length >= 3 && (
+                  <div className="contact-button">
+                    <button
+                      type="button"
+                      className="next-icon"
+                      onClick={() => navigate("/home/contacts")}
+                    >
+                      <ChevronRight />
+                    </button>
+                  </div>
+                )}
+                { contacts.length < 3 && getContactBtn() }
+              </div>
             </div>
-          </div>
+          )}
         </button>
+        <Form.Check type="checkbox" className="shareOptions-btn" id="cb-withTime">
+          <Form.Check.Input type="checkbox" />
+          <Form.Check.Label>Share with time</Form.Check.Label>
+        </Form.Check>
       </Modal.Body>
       <Modal
         id="addContact-modal"
