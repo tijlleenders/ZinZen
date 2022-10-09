@@ -1,96 +1,322 @@
 // @ts-nocheck
-const goalObject = {
-  title: "Walk 22h daily",
-  lang: "en",
-  color: "#fff",
-};
-const goalUrl = {
-  title: "Attend ZinZen online meeting https://meet.google.com/evb-vozr-ico",
-  lang: "en",
-  color: "#fff",
-};
+import { goalDurationHandler } from "@src/helpers/GoalDurationHandler";
+import { goalLinkHandler } from "@src/helpers/GoalLinkHandler";
+import { goalRepeatHandler } from "@src/helpers/GoalRepeatHandler";
+import { goalTimingHandler } from "@src/helpers/GoalTimingHandler";
 
-const newData = (data) => [...data, goalObject];
-const urlData = (data) => [...data, goalUrl];
-const freqRegex = /daily/;
-const lowercaseInput = goalObject.title.toLowerCase();
-const freq = lowercaseInput.match(freqRegex);
-const urlDetector = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])|(www)([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/i;
-const tracker = /(1[0-9]|2[0-4]|[1-9])+h/i;
-const checkGoal = parseInt(goalObject.title.match(tracker), 10);
-const parseGoal = parseInt(goalObject.title.match(tracker), 10) <= 24;
+const testCases = [
+  {
+    input: "workout paper start 12/3 daily 1h",
+    duration: { status: true, value: { index: 31, value: 1 } },
+    repeats: { status: true, value: { index: 24, value: "Daily" } },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 13 },
+      end: null,
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper 2h weekly start tomorrow",
+    duration: { status: true, value: { index: 14, value: 2 } },
+    repeats: { status: true, value: { index: 16, value: "Weekly" } },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 23 },
+      end: null,
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper start tomorrow @15",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 13 },
+      end: null,
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper start tuesday",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 13 },
+      end: null,
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper 3hr monthly start next week www.google.com",
+    duration: { status: true, value: { index: 14, value: 3 } },
+    repeats: { status: true, value: { index: 17, value: "Monthly" } },
+    link: { status: true, value: { index: 42, value: "www.google.com" } },
+    timing: {
+      status: false,
+      start: { index: 25 },
+      end: null,
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper start next week thursday",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 13 },
+      end: null,
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper start tuesday @15",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 13 },
+      end: null,
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper start next week @15",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 13 },
+      end: null,
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper start next week Tuesday @15",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 13 },
+      end: null,
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper by 12/3",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 13 },
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper by tomorrow",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 13 },
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper by tomorrow @15",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 13 },
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper by tuesday",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 13 },
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper by next week",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 13 },
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper by next week thursday",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 13 },
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper by tuesday @15",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 13 },
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper by next week @15",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 13 },
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "workout paper by next week Tuesday @15",
+    duration: { status: false, value: null },
+    repeats: { status: false, value: null },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 13 },
+      startTime: null,
+      endTime: null,
+    },
+  },
+  {
+    input: "watch dailymotion show 1h weekly start tomorrow after 12 daily",
+    duration: { status: true, value: { index: 23, value: 1 } },
+    repeats: { status: true, value: { index: 25, value: "Weekly" } },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 32 },
+      end: null,
+      startTime: { index: 47, value: 12 },
+      endTime: null,
+    },
+  },
+  {
+    input:
+      "watch dailymotion show 1h weekly start tomorrow after 12 by next week weekly",
+    duration: { status: true, value: { index: 23, value: 1 } },
+    repeats: { status: true, value: { index: 25, value: "Weekly" } },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: { index: 32 },
+      end: { index: 56 },
+      startTime: { index: 47, value: 12 },
+      endTime: null,
+    },
+  },
+  {
+    input: "watch dailymotion show 1h weekly after 17 by next week weekly",
+    duration: { status: true, value: { index: 23, value: 1 } },
+    repeats: { status: true, value: { index: 25, value: "Weekly" } },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: { index: 41 },
+      startTime: { index: 32, value: 17 },
+      endTime: null,
+    },
+  },
+  {
+    input: "watch dailymotion show 1h weekly after 12 before 18 weekly",
+    duration: { status: true, value: { index: 23, value: 1 } },
+    repeats: { status: true, value: { index: 25, value: "Weekly" } },
+    link: { status: false, value: null },
+    timing: {
+      status: false,
+      start: null,
+      end: null,
+      startTime: { index: 32, value: 12 },
+      endTime: { index: 41, value: 18 },
+    },
+  },
+  {
+    input: "read 1h daily start 12/4 after 12 due 14/4 www.google.com",
+    duration: { status: true, value: { index: 5, value: 1 } },
+    repeats: { status: true, value: { index: 7, value: "Daily" } },
+    link: { status: true, value: { index: 43, value: "www.google.com" } },
+    timing: {
+      status: false,
+      start: { index: 13 },
+      end: { index: 33 },
+      startTime: { index: 24, value: 12 },
+      endTime: null,
+    },
+  },
+];
 
-function getGoalObject() {
-  if (lowercaseInput.indexOf(`${freq}`) !== -1) {
-    return {
-      newData,
-      suggestion: { repetition: "daily" },
-    };
-  }
-  return {
-    newData,
-  };
-}
-
-function timeSuggestion() {
-  if (lowercaseInput.search(tracker) !== -1 && parseGoal) {
-    return {
-      newData,
-      suggestion: { duration: `${checkGoal} hours` },
-    };
-  }
-
-  return {
-    newData,
-  };
-}
-
-describe("getGoalObject function", () => {
-  it("should return repetition suggestion : daily", () => {
-    function fun() {
-      if (lowercaseInput.indexOf(`${freq}`) !== -1) {
-        return {
-          newData,
-          suggestion: { repetition: "daily" },
-        };
-      }
-
-      return {
-        newData,
-      };
-    }
-    expect(getGoalObject()).toEqual(fun());
-  });
-});
-
-describe("getTime function", () => {
-  it("should return duration suggestion: num", () => {
-    function time() {
-      if (lowercaseInput.search(tracker) !== -1 && parseGoal) {
-        return {
-          newData,
-          suggestion: { duration: `${checkGoal} hours` },
-        };
-      }
-
-      return {
-        newData,
-      };
-    }
-    expect(timeSuggestion()).toEqual(time());
-  });
-});
-function urlDetection() {
-  if (goalUrl.title.search(urlDetector) !== -1) {
-    return "Link";
-  }
-
-  return {
-    urlData,
-  };
-}
-describe("getUrl function", () => {
-  it("should return link : Link", () => {
-    expect(urlDetection()).toEqual("Link");
-  });
+describe("Goal Parser Test cases", () => {
+  testCases.map((tc, index) =>
+    it(`Test Case ${index}`, () => {
+      const timing = goalTimingHandler(tc.input);
+      if (timing && timing.start && timing.start.value) { delete timing.start.value; }
+      if (timing && timing.end && timing.end.value) { delete timing.end.value; }
+      expect(goalDurationHandler(tc.input)).toEqual(tc.duration);
+      expect(goalRepeatHandler(tc.input)).toEqual(tc.repeats);
+      expect(goalLinkHandler(tc.input)).toEqual(tc.link);
+      expect(timing).toEqual(tc.timing);
+    })
+  );
 });

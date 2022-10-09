@@ -268,6 +268,7 @@ export const MyGoalsPage = () => {
                               { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
                             </div>
                             <div
+                              className="goal-dropdown"
                               style={{ paddingLeft: "5%" }}
                               onClickCapture={() => {
                                 if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
