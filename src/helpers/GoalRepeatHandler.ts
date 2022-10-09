@@ -37,7 +37,7 @@ function handleRepeat(lowercaseInput: string) {
     const ele = duePatters[i];
     const found = lowercaseInput.search(ele.pattern);
     if (found >= 0) {
-      console.log(found, ele.pattern);
+      // console.log(found, ele.pattern);
       return { index: found, value: capitalizeFirstLetter(ele.extractor(`${lowercaseInput.slice(found).trim()} `)) };
     }
   }

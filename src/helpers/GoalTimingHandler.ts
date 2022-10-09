@@ -87,7 +87,7 @@ function handleStart(lowercaseInput:string) {
     const ele = startPatterns[i];
     const found = lowercaseInput.search(ele.pattern);
     if (found >= 0) {
-      console.log(found, ele.pattern);
+      // console.log(found, ele.pattern);
       return { index: found, value: ele.extractor(lowercaseInput.slice(found).trim()) };
     }
   }
@@ -181,7 +181,7 @@ function handleDue(lowercaseInput:string) {
     const ele = duePatters[i];
     const found = lowercaseInput.search(ele.pattern);
     if (found >= 0) {
-      console.log(found, ele.pattern);
+      // console.log(found, ele.pattern);
       return { index: found, value: ele.extractor(`${lowercaseInput.slice(found).trim()} `) };
     }
   }
@@ -200,7 +200,7 @@ function handleStartTime(lowercaseInput: string) {
   const ele = startTimePatterns[0];
   const found = lowercaseInput.search(ele.pattern);
   if (found >= 0) {
-    console.log(found, ele.pattern);
+    // console.log(found, ele.pattern);
     return { index: found, value: ele.extractor(lowercaseInput.slice(found).trim()) };
   }
   return null;
@@ -218,7 +218,7 @@ function handleEndTime(lowercaseInput: string) {
   const ele = endTimePatterns[0];
   const found = lowercaseInput.search(ele.pattern);
   if (found >= 0) {
-    console.log(found, ele.pattern);
+    // console.log(found, ele.pattern);
     return { index: found, value: ele.extractor(lowercaseInput.slice(found).trim()) };
   }
   return null;
@@ -236,7 +236,7 @@ function handleBothTime(lowercaseInput: string) {
   const ele = endTimePatterns[0];
   const found = lowercaseInput.search(ele.pattern);
   if (found >= 0) {
-    console.log(found, ele.pattern);
+    // console.log(found, ele.pattern);
     return { index: found, value: ele.extractor(lowercaseInput.slice(found).trim()) };
   }
   return null;
