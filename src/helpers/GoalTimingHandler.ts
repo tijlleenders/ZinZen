@@ -103,7 +103,7 @@ function handleDue(lowercaseInput:string) {
         const [eDate, eMonth] = text.split(" ")[1].split("/");
         let endHr = 23;
         let endMin = 59;
-        if (text.includes("@")) { [endHr, endMin] = Number.isNaN(parseInt(text.split("@")[1])) ? [23, 59] : [parseInt(text.split("@")[1]), 0]; }
+        if (_text.includes("@")) { [endHr, endMin] = Number.isNaN(parseInt(_text.split("@")[1])) ? [23, 59] : [parseInt(_text.split("@")[1]), 0]; }
         return new Date(new Date().getFullYear(), parseInt(eMonth) - 1, parseInt(eDate), endHr, endMin);
       }
     },
