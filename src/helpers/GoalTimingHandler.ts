@@ -42,7 +42,8 @@ function handleStart(lowercaseInput:string) {
       extractor: function extractDetail(_text : string) {
         const text = _text.split(" ").slice(0, 2).join(" ");
         const [e_date, e_month] = text.split(" ")[1].split("/");
-        return new Date(new Date().getFullYear(), parseInt(e_month) - 1, parseInt(e_date), text.includes("@") ? parseInt(text.split("@")[1]) : 0);
+        console.log(_text)
+        return new Date(new Date().getFullYear(), parseInt(e_month) - 1, parseInt(e_date), _text.includes("@") ? parseInt(_text.split("@")[1]) : 0);
       }
     },
     {
