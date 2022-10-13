@@ -41,9 +41,8 @@ function handleStart(lowercaseInput:string) {
       pattern: /\sstart\s([1-9]|1[0-9]|2[0-9]|3[0-1])\/([1-9]|1[0-2])(\s|\s@([0-9]|1[0-9]|2[0-3])\s)/i,
       extractor: function extractDetail(_text : string) {
         const text = _text.split(" ").slice(0, 2).join(" ");
-        const [e_date, e_month] = text.split(" ")[1].split("/");
-        console.log(_text)
-        return new Date(new Date().getFullYear(), parseInt(e_month) - 1, parseInt(e_date), _text.includes("@") ? parseInt(_text.split("@")[1]) : 0);
+        const [eDate, eMonth] = text.split(" ")[1].split("/");
+        return new Date(new Date().getFullYear(), parseInt(eMonth) - 1, parseInt(eDate), _text.includes("@") ? parseInt(_text.split("@")[1]) : 0);
       }
     },
     {
