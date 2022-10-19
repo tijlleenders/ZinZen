@@ -2,7 +2,7 @@ export interface ISharedGoal {
     id: any;
     title: string,
     duration?: number | null,
-    repeat?: "Once" | "Daily" | "Weekly" | "Mondays" | "Tuesdays"| "Wednesdays"| "Thursdays" | "Fridays" | "Saturdays" | "Sundays" | null;
+    repeat?: string | null;
     start: Date | null;
     due: Date | null;
     startTime: number | null;
