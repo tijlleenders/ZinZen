@@ -3,7 +3,7 @@ export interface GoalItem {
   title: string;
   duration?: number | null;
   sublist?: number[];
-  repeat?: "Once" | "Daily" | "Weekly" | "Mondays" | "Tuesdays"| "Wednesdays"| "Thursdays" | "Fridays" | "Saturdays" | "Sundays" | null;
+  repeat?: string | null;
   start: Date | null;
   due: Date | null;
   startTime: number | null;

@@ -3,8 +3,8 @@ interface goalRepeatHandlerResponse {
     status: boolean,
     value: {
         index: number,
-        value: "Once" | "Daily" | "Weekly" |
-        "Mondays" | "Tuesdays"| "Wednesdays"| "Thursdays" | "Fridays" | "Saturdays" | "Sundays"
+        endIndex: number,
+        value: string
     } | null
 }
 function capitalizeFirstLetter(text : string) {
@@ -31,14 +31,26 @@ function handleRepeat(lowercaseInput: string) {
         return _text.split(" ")[0];
       }
     },
+    {
+      pattern: /\severy\s([0-9]|1[0-9]|2[0-3])\s?(h|hr|hrs|hour|hours)\s/i,
+      extractor: function extractDetail(_text: string) {
+        return `every ${_text.split("every ")[1].split(" ").join("").split("h")[0]}h`;
+      }
+    },
+    {
+      pattern: /\severy\s([0-9]|1[0-9]|2[0-3])\sdays\s/i,
+      extractor: function extractDetail(_text: string) {
+        return `every ${_text.split("every ")[1].split(" ")[0]} days`;
+      }
+    }
 
   ];
   for (let i = 0; i < duePatters.length; i += 1) {
     const ele = duePatters[i];
-    const found = lowercaseInput.search(ele.pattern);
-    if (found >= 0) {
-      // console.log(found, ele.pattern);
-      return { index: found, value: capitalizeFirstLetter(ele.extractor(`${lowercaseInput.slice(found).trim()} `)) };
+    const matchRes = lowercaseInput.match(ele.pattern);
+    if (matchRes && matchRes.length > 0 && matchRes.index >= 0) {
+      const found = matchRes.index;
+      return { index: found, endIndex: found + matchRes[0].trim().length, value: capitalizeFirstLetter(ele.extractor(`${lowercaseInput.slice(found).trim()} `)) };
     }
   }
   return null;

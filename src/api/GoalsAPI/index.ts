@@ -128,7 +128,7 @@ export const isCollectionEmpty = async () => {
 
 export const createGoal = (
   goalTitle: string,
-  goalRepeats: "Once" | "Daily" | "Weekly" | "Mondays" | "Tuesdays"| "Wednesdays"| "Thursdays" | "Fridays" | "Saturdays" | "Sundays" | null,
+  goalRepeats: string | null,
   goalDuration: number | null,
   goalStartDT: Date | null,
   goalDueDT: Date | null,

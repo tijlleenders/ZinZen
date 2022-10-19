@@ -5,15 +5,15 @@ export interface ITags {
     endTime: null | { index: number, value: number | null },
     link: { index: number; value: string | null; } | null,
     duration: { index: number; value: number; } | null,
-    repeats: { index: number; value: "Once" | "Daily" | "Weekly" | "Mondays" | "Tuesdays" | "Wednesdays" | "Thursdays" | "Fridays" | "Saturdays" | "Sundays"; } | null
+    repeats: { index: number; value: string; endIndex: number } | null
 }
 
 export interface ITagIndices {
-    word: string, 
+    word: string,
     index: number
 }
 
 export default interface ITagExtractor {
-    tags: ITags, 
+    tags: ITags,
     occurences: ITagIndices[]
 }
