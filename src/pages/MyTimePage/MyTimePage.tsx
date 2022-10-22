@@ -212,10 +212,6 @@ export const MyTimePage = () => {
         ]
       });
       const slotTaskMap = {};
-      // schedulerOutput.tasks.forEach((ele) => {
-      //   slotTaskMap[ele.id] = ele.goal_id;
-      // });
-      // schedulerOutput.slots.sort((a: { start: number }, b: { start: number }) => a.start - b.start);
       schedulerOutput.forEach((element) => {
         const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === element.goalid);
         const poppedGoal = activeGoals.splice(ind, 1)[0];
