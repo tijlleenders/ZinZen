@@ -52,9 +52,7 @@ export const MyTimePage = () => {
       }}
     />
   );
-  const getTimeline = () => (
-    <MyTimeline myTasks={tmpTasks} />
-  );
+  const getTimeline = () => (<MyTimeline myTasks={tmpTasks} />);
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
     return (
@@ -169,6 +167,7 @@ export const MyTimePage = () => {
     console.log(arr);
     return arr;
   };
+
   useEffect(() => {
     (async () => {
       // get goals
@@ -212,18 +211,17 @@ export const MyTimePage = () => {
           }
         ]
       });
-      // const slotTaskMap = {};
+      const slotTaskMap = {};
       // schedulerOutput.tasks.forEach((ele) => {
       //   slotTaskMap[ele.id] = ele.goal_id;
       // });
       // schedulerOutput.slots.sort((a: { start: number }, b: { start: number }) => a.start - b.start);
-      // schedulerOutput.slots.forEach((element) => {
-      //   const tmpId = slotTaskMap[element.task_id];
-      //   const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === tmpId);
-      //   const poppedGoal = activeGoals.splice(ind, 1)[0];
-      //   activeGoals = [...activeGoals, poppedGoal];
-      // });
-      // setTmpTasks([...activeGoals]);
+      schedulerOutput.forEach((element) => {
+        const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === element.goalid);
+        const poppedGoal = activeGoals.splice(ind, 1)[0];
+        activeGoals = [...activeGoals, poppedGoal];
+      });
+      setTmpTasks([...activeGoals]);
       console.log(schedulerOutput);
     })();
   }, []);
