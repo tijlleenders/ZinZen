@@ -14,7 +14,7 @@ import { addContact, getAllContacts } from "@src/api/ContactsAPI";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
-import { shareMyGoal } from "@src/api/GoalsAPI";
+import { getGoal, shareMyGoal } from "@src/api/GoalsAPI";
 
 import "./ShareGoalModal.scss";
 
@@ -70,7 +70,11 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       <Modal.Body id="share-modal-body">
         <button
           onClick={async () => {
-            await shareMyGoal(goal, "root");
+            let parentGoal = "root";
+            if (goal.parentGoalId !== -1) {
+              parentGoal = (await getGoal(goal.parentGoalId)).title;
+            }
+            await shareMyGoal(goal, parentGoal);
           }}
           type="button"
           className="shareOptions-btn"
