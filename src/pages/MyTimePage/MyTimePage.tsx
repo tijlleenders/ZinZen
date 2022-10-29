@@ -178,39 +178,28 @@ export const MyTimePage = () => {
       activeGoals = await getTasks();
       console.log(activeGoals);
       const scheduler = await init();
-      const schedulerOutput = schedule({
-        startDate: "2022-01-01T00:00:00",
-        endDate: "2022-01-02T00:00:00",
-        goals: [
-          {
-            id: 1,
-            title: "shopping",
-            duration: 1,
-            start: "2022-01-01T00:00:00",
-            deadline: "2022-01-02T00:00:00",
-            after_time: 10,
-            before_time: 13
-          },
-          {
-            id: 2,
-            title: "dentist",
-            duration: 1,
-            start: "2022-01-01T00:00:00",
-            deadline: "2022-01-02T00:00:00",
-            after_time: 10,
-            before_time: 11
-          },
-          {
-            id: 3,
-            title: "exercise",
-            duration: 1,
-            start: "2022-01-01T00:00:00",
-            deadline: "2022-01-02T00:00:00",
-            after_time: 10,
-            before_time: 18
-          }
-        ]
+      const _today = new Date();
+      const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
+      const endDate = `${new Date(_today.setDate(_today.getDate() + 1)).toISOString().slice(0, 10)}T00:00:00`;
+
+      const schedulerInput = {
+        startDate,
+        endDate,
+        goals: []
+      };
+      activeGoals.forEach((ele) => {
+        schedulerInput.goals.push({
+          id: ele.id,
+          title: ele.title,
+          duration: ele.duration,
+          start: startDate,
+          deadline: endDate,
+          after_time: ele.startTime || ele.start?.getHours() || 0,
+          before_time: ele.endTime || ele.due?.getHours() || 0
+        });
       });
+      console.log(schedulerInput);
+      const schedulerOutput = schedule(schedulerInput);
       const slotTaskMap = {};
       schedulerOutput.forEach((element) => {
         const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === element.goalid);
