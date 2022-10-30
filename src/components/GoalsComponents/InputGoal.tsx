@@ -66,6 +66,10 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
     setGoalTags(output.tags);
     setMagicIndices(output.occurences);
   }, [formInputData]);
+
+  useEffect(() => {
+    (document.getElementById("goalInputField") as HTMLInputElement).setSelectionRange(0, 0);
+  }, []);
   return (
     <>
       <div>
