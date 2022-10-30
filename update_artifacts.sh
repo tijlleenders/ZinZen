@@ -1,6 +1,11 @@
 #!/bin/bash
-echo Updating artifacts
-echo Checking if jq is installed...
+
+echo "Check prerequisites"
+echo "1. Github CLI installed"
+echo "2. Repo should be using ssh authentication - not https (otherwise it'll pause asking for username)"
+echo "3. jq installed"
+echo
+
 if ! command -v jq &> /dev/null
 then
     echo "Installing jq - needed for parsing json..."
