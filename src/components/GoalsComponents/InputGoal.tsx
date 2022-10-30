@@ -66,6 +66,11 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
     setGoalTags(output.tags);
     setMagicIndices(output.occurences);
   }, [formInputData]);
+
+  useEffect(() => {
+    (document.getElementById("goalInputField") as HTMLInputElement).setSelectionRange(0, 0);
+    (document.getElementById("goalInputField") as HTMLInputElement).focus();
+  }, []);
   return (
     <>
       <div>
@@ -79,7 +84,6 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
           id="goalInputField"
           style={{ borderColor: selectedColor }}
           // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus
           onChange={(e) => setFormInputData(e.target.value)}
         />
       </div>
