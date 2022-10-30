@@ -12,6 +12,13 @@ then
     sudo apt-get -y install jq > /dev/null
 fi
 
+if ! command -v gh &> /dev/null
+then
+    echo "Please install GitHub CLI - needed for creating a pull request..."
+    echo "See https://github.com/cli/cli#linux--bsd"
+    exit -1
+fi
+
 local_artifact_id=$(cat artifact_id.txt)
 echo Last artifact id is $local_artifact_id
 echo Fetching latest artifact id from ZinZen Scheduler repo...
