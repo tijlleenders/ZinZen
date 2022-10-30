@@ -50,7 +50,9 @@ else
     echo Requesting download url...
     line=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $token" https://api.github.com/repos/tijlleenders/zinzen-scheduler/actions/artifacts/$latest_artifact_id/zip -I | grep location) &> /dev/null
     download_url=${line:10}
-    echo Successfully received download url
+
+    echo "Received download url: $download_url"
+
     echo Using wget to download artifacts...
     wget -O wasm-build-pkg.zip $download_url > /dev/null
     echo Unzipping into pkg directory...
