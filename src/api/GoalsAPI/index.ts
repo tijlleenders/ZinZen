@@ -1,4 +1,6 @@
 /* eslint-disable no-alert */
+// @ts-nocheck
+
 import { db } from "@models";
 import { getJustDate } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
@@ -184,24 +186,30 @@ export const shareGoal = async (goal: object) => {
 };
 
 export const shareMyGoal = async (goal: GoalItem, parent: string) => {
+  const goalDetails = {
+    title: goal.title,
+    duration: goal.duration,
+    repeat: goal.repeat,
+    start: goal.start,
+    due: goal.due,
+    startTime: goal.startTime,
+    endTime: goal.endTime,
+    createdAt: goal.createdAt,
+    goalColor: goal.goalColor,
+    language: goal.language,
+    link: goal.link
+  };
+  Object.keys(goalDetails).forEach((key) => {
+    if (!goalDetails[key]) {
+      delete goalDetails[key];
+    }
+  });
   const shareableGoal = {
     method: "shareGoal",
     parentTitle: parent,
-    goal: {
-      title: goal.title,
-      duration: goal.duration,
-      repeat: goal.repeat,
-      start: goal.start,
-      due: goal.due,
-      startTime: goal.startTime,
-      endTime: goal.endTime,
-      createdAt: goal.createdAt,
-      goalColor: goal.goalColor,
-      language: goal.language,
-      link: goal.link
-    }
+    goal: goalDetails
   };
-  shareGoal(shareableGoal);
+  await shareGoal(shareableGoal);
 };
 
 export const getPublicGoals = async (goalTitle: string) => {
