@@ -19,6 +19,12 @@ then
     exit -1
 fi
 
+if [ -z "$GITHUB_TOKEN" ] ; then
+  echo -e "\e[31m\$GITHUB_TOKEN environment variable missing\e[39m"
+  echo "Please update it by running export 'GITHUB_TOKEN={Your github token}'"
+  exit -1
+fi
+
 local_artifact_id=$(cat artifact_id.txt)
 echo Last artifact id is $local_artifact_id
 echo Fetching latest artifact id from ZinZen Scheduler repo...
