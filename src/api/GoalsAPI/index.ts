@@ -24,14 +24,6 @@ export const addGoal = async (goalDetails: GoalItem) => {
   return newGoalId;
 };
 
-export const removeGoal = async (goalId: number) => {
-  db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.delete(goalId);
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
-};
-
 export const getGoal = async (goalId: number) => {
   const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
   return goal[0];
@@ -88,6 +80,14 @@ export const getGoalsOnDate = async (date: Date) => {
   });
 };
 
+export const removeGoal = async (goalId: number) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.delete(goalId);
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
 export const updateGoal = async (id: number, changes: object) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(id, changes).then((updated) => updated);
@@ -96,11 +96,17 @@ export const updateGoal = async (id: number, changes: object) => {
   });
 };
 
-export const archiveGoal = async (id: number) => {
+export const archiveGoal = async (goal: GoalItem) => {
   const updatedGoalStatus = { status: 1 };
   db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.update(id, updatedGoalStatus);
+    await db.goalsCollection.update(goal.id, updatedGoalStatus);
   });
+  if (goal.parentGoalId !== -1) {
+    const parentGoal = await getGoal(goal.parentGoalId);
+    db.transaction("rw", db.goalsCollection, async () => {
+      await db.goalsCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist?.filter((ele) => ele !== goal.id) });
+    });
+  }
 };
 
 export const archiveChildrenGoals = async (id: number) => {
@@ -108,14 +114,14 @@ export const archiveChildrenGoals = async (id: number) => {
   if (childrenGoals) {
     childrenGoals.forEach(async (goal: GoalItem) => {
       await archiveChildrenGoals(Number(goal.id));
-      await archiveGoal(Number(goal.id));
+      await archiveGoal(goal);
     });
   }
 };
 
-export const archiveUserGoal = async (id: number) => {
-  await archiveChildrenGoals(id);
-  await archiveGoal(id);
+export const archiveUserGoal = async (goal: GoalItem) => {
+  await archiveChildrenGoals(goal.id);
+  await archiveGoal(goal);
 };
 
 export const isCollectionEmpty = async () => {
@@ -161,6 +167,7 @@ export const createGoal = (
 
 export const removeChildrenGoals = async (parentGoalId: number) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
+  console.log("child", childrenGoals);
   if (childrenGoals.length === 0) { return; }
   childrenGoals.forEach((goal) => {
     removeChildrenGoals(Number(goal.id));
