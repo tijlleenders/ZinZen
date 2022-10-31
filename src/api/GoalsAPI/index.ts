@@ -81,8 +81,23 @@ export const getGoalsOnDate = async (date: Date) => {
 };
 
 export const removeGoal = async (goalId: number) => {
+  const goal = await getGoal(goalId);
+  const parentGoal = goal.parentGoalId === -1 ? -1 : await getGoal(goal.parentGoalId);
+  console.log("inRemoveGoal", goal,);
   db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.delete(goalId);
+    const goals = await db.goalsCollection.where("title").equals(goal.title).toArray();
+    console.log("here", goals);
+    goals.forEach(async (ele) => {
+      if (parentGoal === -1) {
+        console.log("root");
+        if (ele.parentGoalId === -1) await db.goalsCollection.delete(ele.id);
+      } else {
+        const tmpParentGoal = (await getGoal(ele.parentGoalId)).title;
+        if (tmpParentGoal === parentGoal.title) {
+          await db.goalsCollection.delete(ele.id);
+        }
+      }
+    });
   }).catch((e) => {
     console.log(e.stack || e);
   });
