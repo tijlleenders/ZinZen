@@ -1,10 +1,28 @@
 #!/bin/bash
-echo Updating artifacts
-echo Checking if jq is installed...
+
+echo "Check prerequisites"
+echo "1. Github CLI installed"
+echo "2. Repo should be using ssh authentication - not https (otherwise it'll pause asking for username)"
+echo "3. jq installed"
+echo
+
 if ! command -v jq &> /dev/null
 then
     echo "Installing jq - needed for parsing json..."
     sudo apt-get -y install jq > /dev/null
+fi
+
+if ! command -v gh &> /dev/null
+then
+    echo "Please install GitHub CLI - needed for creating a pull request..."
+    echo "See https://github.com/cli/cli#linux--bsd"
+    exit -1
+fi
+
+if [ -z "$GITHUB_TOKEN" ] ; then
+  echo -e "\e[31m\$GITHUB_TOKEN environment variable missing\e[39m"
+  echo "Please update it by running export 'GITHUB_TOKEN={Your github token}'"
+  exit -1
 fi
 
 local_artifact_id=$(cat artifact_id.txt)
@@ -32,7 +50,9 @@ else
     echo Requesting download url...
     line=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $token" https://api.github.com/repos/tijlleenders/zinzen-scheduler/actions/artifacts/$latest_artifact_id/zip -I | grep location) &> /dev/null
     download_url=${line:10}
-    echo Successfully received download url
+
+    echo "Received download url: $download_url"
+
     echo Using wget to download artifacts...
     wget -O wasm-build-pkg.zip $download_url > /dev/null
     echo Unzipping into pkg directory...
