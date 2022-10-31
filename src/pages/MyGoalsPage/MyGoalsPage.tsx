@@ -138,7 +138,6 @@ export const MyGoalsPage = () => {
     setUserGoals(goals);
   };
   async function removeUserGoal(id: number) {
-    console.log("called")
     await removeChildrenGoals(id);
     await removeGoal(id);
     const goals: GoalItem[] = await getActiveGoals();
