@@ -53,8 +53,8 @@ export const GoalSublist = () => {
       });
   }, [parentGoal, showAddGoal, showSuggestionModal, showUpdateGoal]);
 
-  const archiveMyGoal = async (id: number) => {
-    await archiveUserGoal(id);
+  const archiveMyGoal = async (goal: GoalItem) => {
+    await archiveUserGoal(goal);
     await getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   };
   const removeChildrenGoal = async (goalId: number) => {
@@ -200,7 +200,7 @@ export const GoalSublist = () => {
                           alt="archive Goal"
                           src={correct}
                           onClickCapture={async () => {
-                            await archiveMyGoal(goal.id);
+                            await archiveMyGoal(goal);
                           }}
                           style={{ cursor: "Pointer" }}
                         />
