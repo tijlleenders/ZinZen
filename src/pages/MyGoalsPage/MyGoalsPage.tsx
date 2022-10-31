@@ -76,7 +76,6 @@ export const MyGoalsPage = () => {
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
 
   let debounceTimeout: ReturnType<typeof setTimeout>;
-  const typeOfPage = window.location.href.split("/").slice(-1)[0];
   const lang = localStorage.getItem("language")?.slice(1, -1);
   const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
@@ -133,8 +132,8 @@ export const MyGoalsPage = () => {
     setGoalTags({});
   };
 
-  const archiveMyGoal = async (id: number) => {
-    await archiveUserGoal(id);
+  const archiveMyGoal = async (goal: GoalItem) => {
+    await archiveUserGoal(goal);
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   };
@@ -167,9 +166,6 @@ export const MyGoalsPage = () => {
   }, [showAddGoal, showUpdateGoal, showSuggestionModal]);
   useEffect(() => {
     (async () => {
-      if (typeOfPage === "AddGoals") {
-        setShowAddGoal({ open: true, goalId: -1 });
-      }
       // await populateDummyGoals();
       if (selectedGoalId === -1) {
         const goals: GoalItem[] = await getActiveGoals();
@@ -325,7 +321,7 @@ export const MyGoalsPage = () => {
                               alt="archive Goal"
                               src={correct}
                               onClickCapture={async () => {
-                                await archiveMyGoal(goal.id);
+                                await archiveMyGoal(goal);
                               }}
                               style={{ cursor: "Pointer" }}
                             />
