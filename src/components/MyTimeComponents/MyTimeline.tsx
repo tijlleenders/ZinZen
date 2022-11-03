@@ -2,44 +2,41 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { GoalItem } from "@src/models/GoalItem";
+import { TaskItem } from "@src/models/TaskItem";
 
 import "./MyTimeline.scss";
 
-export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
+export const MyTimeline = ({ myTasks }: {myTasks: TaskItem[]}) => {
   const navigate = useNavigate();
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState(-1);
 
   const getBreakingPoint = (GoalID:number) => {
-    setDisplayOptionsIndex(myTasks.findIndex((task) => task.id === GoalID));
+    setDisplayOptionsIndex(myTasks.findIndex((task) => task.goalid === GoalID));
   };
-  const handleDisplayOptions = (task: GoalItem) => {
-    getBreakingPoint(task.id ? task.id : -1);
+  const handleDisplayOptions = (task: TaskItem) => {
+    getBreakingPoint(task.goalid ? task.goalid : -1);
   };
-  const getTimeComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
+  const getTimeComponents = (vbarUp: boolean, tasks: TaskItem[]) => (
     <div id="MTL-times">
       {vbarUp && <div className="bar" />}
-      {tasks.map((task: GoalItem, index: number) => {
-        const tmpTime = task.start?.toTimeString().slice(0, 5);
-        return (
-          <>
-            <button
-              type="button"
-              onClick={() => handleDisplayOptions(task)}
-              className="MTL-startTime"
-            >
-              {`${Number(tmpTime?.slice(0, 2)) + index}:00`}
-            </button>
-            <div className="bar" />
-          </>
-        );
-      })}
+      {tasks.map((task: TaskItem) => (
+        <>
+          <button
+            type="button"
+            onClick={() => handleDisplayOptions(task)}
+            className="MTL-startTime"
+          >
+            {`${task.start.split("T")[1].slice(0, 2)}:00`}
+          </button>
+          <div className="bar" />
+        </>
+      ))}
     </div>
   );
-  const getCircleComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
+  const getCircleComponents = (vbarUp: boolean, tasks: TaskItem[]) => (
     <div id="MTL-circles">
       {vbarUp && <div className="vbar" />}
-      {tasks.map((task: GoalItem, index: number) => (
+      {tasks.map((task: TaskItem, index: number) => (
         <>
           <button
             type="button"
@@ -56,10 +53,10 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
       ))}
     </div>
   );
-  const getTitleComponents = (vbarUp: boolean, tasks: GoalItem[]) => (
+  const getTitleComponents = (vbarUp: boolean, tasks: TaskItem[]) => (
     <div id="MTL-titles">
       {vbarUp && <div className="bar" />}
-      {tasks.map((task: GoalItem) => (
+      {tasks.map((task: TaskItem) => (
         <>
           <button
             type="button"
@@ -73,12 +70,12 @@ export const MyTimeline = ({ myTasks }: {myTasks: GoalItem[]}) => {
       ))}
     </div>
   );
-  const showOptions = (task: GoalItem) => (
+  const showOptions = (task: TaskItem) => (
     <div className="MTL-options_container">
       <div
         className="MTL-options-task"
         onClickCapture={() => {
-          navigate("/Home/MyGoals", { state: { isRootGoal: task.parentGoalId === -1, openGoalOfId: task.id } });
+          navigate("/Home/MyGoals", { state: { isRootGoal: task.parentGoalId === -1, openGoalOfId: task.goalid } });
         }}
       >
         <div className="MTL-circle" style={{ color: task.goalColor }} />
