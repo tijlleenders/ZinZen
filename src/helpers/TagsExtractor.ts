@@ -10,8 +10,8 @@ export function TagsExtractor(inputGoal: string) {
   const tempData : ITags = {
     start: null,
     due: null,
-    startTime: null,
-    endTime: null,
+    afterTime: null,
+    beforeTime: null,
     link: null,
     duration: null,
     repeats: null
@@ -22,13 +22,13 @@ export function TagsExtractor(inputGoal: string) {
 
     tempData.start = handlerOutput.start;
     tempData.due = handlerOutput.end;
-    tempData.startTime = handlerOutput.startTime;
-    tempData.endTime = handlerOutput.endTime;
+    tempData.afterTime = handlerOutput.afterTime;
+    tempData.beforeTime = handlerOutput.beforeTime;
 
     if (handlerOutput.start) { magicIndices.push({ word: "start", index: handlerOutput.start.index }); }
     if (handlerOutput.end) { magicIndices.push({ word: "due", index: handlerOutput.end.index }); }
-    if (handlerOutput.startTime) { magicIndices.push({ word: "startTime", index: handlerOutput.startTime.index }); }
-    if (handlerOutput.endTime) { magicIndices.push({ word: "endTime", index: handlerOutput.endTime.index }); }
+    if (handlerOutput.afterTime) { magicIndices.push({ word: "afterTime", index: handlerOutput.afterTime.index }); }
+    if (handlerOutput.beforeTime) { magicIndices.push({ word: "beforeTime", index: handlerOutput.beforeTime.index }); }
 
     return magicIndices;
   }

@@ -6,8 +6,8 @@ export interface GoalItem {
   repeat?: string | null;
   start: Date | null;
   due: Date | null;
-  startTime: number | null;
-  endTime: number | null;
+  afterTime: number | null;
+  beforeTime: number | null;
   createdAt?: Date;
   status: 0 | 1; // 0 = active, 1 = archived
   parentGoalId: number | -1; // -1 = no parent

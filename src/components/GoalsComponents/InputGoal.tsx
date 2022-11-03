@@ -49,10 +49,10 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
         tmpTags.start = null;
       } else if (tagType === "due" && goalTags.due) {
         tmpTags.due = null;
-      } else if (tagType === "startTime" && goalTags.startTime) {
-        tmpTags.startTime = null;
-      } else if (tagType === "endTime" && goalTags.endTime) {
-        tmpTags.endTime = null;
+      } else if (tagType === "afterTime" && goalTags.afterTime) {
+        tmpTags.afterTime = null;
+      } else if (tagType === "beforeTime" && goalTags.beforeTime) {
+        tmpTags.beforeTime = null;
       }
       setGoalTags({ ...tmpTags });
       setFormInputData(tmpString.trim());
@@ -110,7 +110,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
           className={goalTags?.start?.value ? "form-tag" : "blank"}
           onClick={() => { handleTagClick("start"); }}
         >
-          {`Start ${goalTags?.start?.value.toLocaleDateString()}${goalTags?.startTime?.value ? "" : `, ${goalTags?.start?.value?.toTimeString().slice(0, 5)}`}`}
+          {`Start ${goalTags?.start?.value.toLocaleDateString()}${goalTags?.afterTime?.value ? "" : `, ${goalTags?.start?.value?.toTimeString().slice(0, 5)}`}`}
         </button>
 
         <button
@@ -120,10 +120,10 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
             ? { backgroundColor: selectedColor }
             : { backgroundColor: selectedColor }
         }
-          className={goalTags?.startTime?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("startTime"); }}
+          className={goalTags?.afterTime?.value ? "form-tag" : "blank"}
+          onClick={() => { handleTagClick("afterTime"); }}
         >
-          {`After ${goalTags?.startTime?.value}:00`}
+          {`After ${goalTags?.afterTime?.value}:00`}
         </button>
 
         <button
@@ -136,7 +136,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
           className={goalTags?.due?.value ? "form-tag" : "blank"}
           onClick={() => { handleTagClick("due"); }}
         >
-          {`Due ${goalTags?.due?.value.toLocaleDateString()}${goalTags?.endTime?.value ? "" : `, ${goalTags?.due?.value?.toTimeString().slice(0, 5)}`}`}
+          {`Due ${goalTags?.due?.value.toLocaleDateString()}${goalTags?.beforeTime?.value ? "" : `, ${goalTags?.due?.value?.toTimeString().slice(0, 5)}`}`}
         </button>
 
         <button
@@ -146,10 +146,10 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
             ? { backgroundColor: selectedColor }
             : { backgroundColor: selectedColor }
         }
-          className={goalTags?.endTime?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("endTime"); }}
+          className={goalTags?.beforeTime?.value ? "form-tag" : "blank"}
+          onClick={() => { handleTagClick("beforeTime"); }}
         >
-          {`Before ${goalTags?.endTime?.value}:00`}
+          {`Before ${goalTags?.beforeTime?.value}:00`}
         </button>
 
         <button

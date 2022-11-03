@@ -88,8 +88,8 @@ export const MyGoalsPage = () => {
       goalTags.duration ? goalTags.duration.value : null,
       goalTags.start ? goalTags.start.value : null,
       goalTags.due ? goalTags.due.value : null,
-      goalTags.startTime ? goalTags.startTime.value : null,
-      goalTags.endTime ? goalTags.endTime.value : null,
+      goalTags.afterTime ? goalTags.afterTime.value : null,
+      goalTags.beforeTime ? goalTags.beforeTime.value : null,
       0,
       parentGoalId!,
       colorPallete[colorIndex], // goalColor
@@ -124,8 +124,8 @@ export const MyGoalsPage = () => {
         link: goalTags.link ? goalTags.link.value?.trim() : null,
         start: goalTags.start ? goalTags.start.value : null,
         due: goalTags.due ? goalTags.due.value : null,
-        startTime: goalTags.startTime ? goalTags.startTime.value : null,
-        endTime: goalTags.endTime ? goalTags.endTime.value : null,
+        afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+        beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
       });
     setGoalTitle("");
     setShowUpdateGoal(null);

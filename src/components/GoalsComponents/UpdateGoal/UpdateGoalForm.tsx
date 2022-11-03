@@ -35,8 +35,8 @@ export const UpdateGoalForm = () => {
         link: goalTags.link ? goalTags.link.value?.trim() : null,
         start: goalTags.start ? goalTags.start.value : null,
         due: goalTags.due ? goalTags.due.value : null,
-        startTime: goalTags.startTime ? goalTags.startTime.value : null,
-        endTime: goalTags.endTime ? goalTags.endTime.value : null,
+        afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+        beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
       });
     setGoalTitle("");
     setShowUpdateGoal(null);
@@ -47,12 +47,12 @@ export const UpdateGoalForm = () => {
   useEffect(() => {
     getGoal(showUpdateGoal?.goalId).then((goal) => {
       let tmpTiming = "";
-      if (goal.startTime && goal.endTime) {
-        tmpTiming = ` ${goal.startTime}-${goal.endTime}`;
-      } else if (goal.startTime) {
-        tmpTiming = ` after ${goal.startTime}`;
-      } else if (goal.endTime) {
-        tmpTiming = ` before ${goal.endTime}`;
+      if (goal.afterTime && goal.beforeTime) {
+        tmpTiming = ` ${goal.afterTime}-${goal.beforeTime}`;
+      } else if (goal.afterTime) {
+        tmpTiming = ` after ${goal.afterTime}`;
+      } else if (goal.beforeTime) {
+        tmpTiming = ` before ${goal.beforeTime}`;
       }
       setColorIndex(colorPallete.indexOf(goal.goalColor));
       setGoalInput(`${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`);
