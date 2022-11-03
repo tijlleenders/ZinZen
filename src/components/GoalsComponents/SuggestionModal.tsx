@@ -47,8 +47,8 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
         goalTags.duration ? goalTags.duration.value : null,
         goalTags.start ? goalTags.start.value : null,
         goalTags.due ? goalTags.due.value : null,
-        goalTags.startTime ? goalTags.startTime.value : null,
-        goalTags.endTime ? goalTags.endTime.value : null,
+        goalTags.afterTime ? goalTags.afterTime.value : null,
+        goalTags.beforeTime ? goalTags.beforeTime.value : null,
         0,
         goalID,
         selectedGoal?.goal.goalColor, // goalColor
@@ -137,12 +137,12 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
     if (selectedGoal) {
       const { goal } = selectedGoal;
       let tmpTiming = "";
-      if (goal.startTime && goal.endTime) {
-        tmpTiming = ` ${goal.startTime}-${goal.endTime}`;
-      } else if (goal.startTime) {
-        tmpTiming = ` after ${goal.startTime}`;
-      } else if (goal.endTime) {
-        tmpTiming = ` before ${goal.endTime}`;
+      if (goal.afterTime && goal.beforeTime) {
+        tmpTiming = ` ${goal.afterTime}-${goal.beforeTime}`;
+      } else if (goal.afterTime) {
+        tmpTiming = ` after ${goal.afterTime}`;
+      } else if (goal.beforeTime) {
+        tmpTiming = ` before ${goal.beforeTime}`;
       }
       const tmp = `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`;
       setGoalInput(tmp);
@@ -158,7 +158,6 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
       setGoalTags({});
     }
   }, [selectedGoal]);
-  console.log(archiveGoals, goalID);
   return (
 
     <Modal

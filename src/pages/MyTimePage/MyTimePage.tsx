@@ -188,15 +188,16 @@ export const MyTimePage = () => {
         goals: []
       };
       activeGoals.forEach((ele) => {
+        const obj = {};
         schedulerInput.goals.push({
           id: ele.id,
           title: ele.title,
           duration: ele.duration,
-          start: startDate,
-          deadline: endDate,
-          after_time: ele.startTime || ele.start?.getHours() || 0,
-          before_time: ele.endTime || ele.due?.getHours() || 0
         });
+        if (ele.start) obj.start = `${ele.start?.toISOString().slice(0, 10)}T${ele.start?.toTimeString().slice(0, 8)}`;
+        if (ele.due) obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
+        if (ele.afterTime) obj.after_time = ele.afterTime;
+        if (ele.beforeTime) obj.before_time = ele.beforeTime;
       });
       console.log(schedulerInput);
       const schedulerOutput = schedule(schedulerInput);

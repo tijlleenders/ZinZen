@@ -5,8 +5,8 @@ export interface ISharedGoal {
     repeat?: string | null;
     start: Date | null;
     due: Date | null;
-    startTime: number | null;
-    endTime: number | null;
+    afterTime: number | null;
+    beforeTime: number | null;
     createdAt?: string,
     goalColor?: string,
     language: string,

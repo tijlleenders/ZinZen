@@ -6,8 +6,8 @@ interface goalTimingHandlerResponse {
     status: boolean,
     start: { index: number, value: Date | null } | null,
     end: { index: number, value: Date | null } | null,
-    startTime: { index: number, value: number | null } | null,
-    endTime: { index: number, value: number | null } | null
+    afterTime: { index: number, value: number | null } | null,
+    beforeTime: { index: number, value: number | null } | null
 }
 
 const dayStore = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
@@ -244,7 +244,7 @@ function handleBothTime(lowercaseInput: string) {
 
 export function goalTimingHandler(input: string) {
   const lowercaseInput = input.toLowerCase();
-  const res : goalTimingHandlerResponse = { status: false, start: null, end: null, startTime: null, endTime: null };
+  const res : goalTimingHandlerResponse = { status: false, start: null, end: null, afterTime: null, beforeTime: null };
   res.start = handleStart(`${lowercaseInput.trim()} `);
   res.end = handleDue(`${lowercaseInput.trim()} `);
   const tryBothTime = handleBothTime(`${lowercaseInput.trim()} `);
@@ -252,11 +252,11 @@ export function goalTimingHandler(input: string) {
   const tryEndTime = handleEndTime(`${lowercaseInput.trim()} `);
 
   if (tryBothTime) {
-    res.startTime = { index: tryBothTime.index, value: parseInt(tryBothTime.value.split("-")[0]) };
-    res.endTime = { index: tryBothTime.index, value: parseInt(tryBothTime.value.split("-")[1]) };
+    res.afterTime = { index: tryBothTime.index, value: parseInt(tryBothTime.value.split("-")[0]) };
+    res.beforeTime = { index: tryBothTime.index, value: parseInt(tryBothTime.value.split("-")[1]) };
   } else {
-    res.startTime = tryStartTime;
-    res.endTime = tryEndTime;
+    res.afterTime = tryStartTime;
+    res.beforeTime = tryEndTime;
   }
   return res;
 }

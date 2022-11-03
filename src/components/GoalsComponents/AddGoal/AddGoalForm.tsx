@@ -58,8 +58,8 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {
       goalTags.duration ? goalTags.duration.value : null,
       goalTags.start ? goalTags.start.value : null,
       goalTags.due ? goalTags.due.value : null,
-      goalTags.startTime ? goalTags.startTime.value : null,
-      goalTags.endTime ? goalTags.endTime.value : null,
+      goalTags.afterTime ? goalTags.afterTime.value : null,
+      goalTags.beforeTime ? goalTags.beforeTime.value : null,
       0,
       parentGoalId!,
       colorPallete[colorIndex], // goalColor

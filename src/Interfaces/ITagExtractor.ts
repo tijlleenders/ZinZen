@@ -1,8 +1,8 @@
 export interface ITags {
     start: null | { index: number, value: Date | null },
     due: null | { index: number, value: Date | null },
-    startTime: null | { index: number, value: number | null },
-    endTime: null | { index: number, value: number | null },
+    afterTime: null | { index: number, value: number | null },
+    beforeTime: null | { index: number, value: number | null },
     link: { index: number; value: string | null; } | null,
     duration: { index: number; value: number; } | null,
     repeats: { index: number; value: string; endIndex: number } | null
