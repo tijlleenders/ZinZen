@@ -55,7 +55,15 @@ export const UpdateGoalForm = () => {
         tmpTiming = ` before ${goal.beforeTime}`;
       }
       setColorIndex(colorPallete.indexOf(goal.goalColor));
-      setGoalInput(`${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`);
+      let inputText = "";
+      inputText += goal.title;
+      inputText += goal.duration ? ` ${goal.duration}hours` : "";
+      inputText += goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1} @${goal.start.getHours()}` : "";
+      inputText += goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1} @${goal.due.getHours()}` : "";
+      inputText += goal.repeat ? ` ${goal.repeat}` : "";
+      inputText += tmpTiming;
+      inputText += goal.link ? ` ${goal.link}` : "";
+      setGoalInput(inputText);
       if (goal.language) setGoalLang(goal.language);
     });
   }, []);
