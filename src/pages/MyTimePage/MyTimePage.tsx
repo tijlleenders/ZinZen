@@ -9,16 +9,15 @@ import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
+import { TaskItem } from "@src/models/TaskItem";
 import { colorPallete, getDiffInHours } from "@src/utils";
-import { ISchedulerInputGoal } from "@src/Interfaces/ISchedulerInputGoal";
 
 import init, { schedule } from "../../../pkg/scheduler";
-
 import "./MyTimePage.scss";
 
 export const MyTimePage = () => {
   const today = new Date();
-  const [tmpTasks, setTmpTasks] = useState<GoalItem[]>([]);
+  const [tmpTasks, setTmpTasks] = useState<TaskItem[]>([]);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
@@ -52,7 +51,9 @@ export const MyTimePage = () => {
       }}
     />
   );
-  const getTimeline = () => (<MyTimeline myTasks={tmpTasks} />);
+  const getTimeline = () => (
+    <MyTimeline myTasks={tmpTasks} />
+  );
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
     return (
@@ -153,21 +154,6 @@ export const MyTimePage = () => {
     });
   };
 
-  const createInputGoals = (goals: GoalItem[]) => {
-    const arr : ISchedulerInputGoal[] = [];
-    goals.forEach((element) => {
-      arr.push({
-        id: element.id,
-        title: element.title,
-        duration: element.duration,
-        start: element.start.toISOString().split(".")[0],
-        deadline: element.due.toISOString().split(".")[0]
-      });
-    });
-    console.log(arr);
-    return arr;
-  };
-
   useEffect(() => {
     (async () => {
       // get goals
@@ -177,7 +163,7 @@ export const MyTimePage = () => {
 
       activeGoals = await getTasks();
       console.log(activeGoals);
-      const scheduler = await init();
+      await init();
       const _today = new Date();
       const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
       const endDate = `${new Date(_today.setDate(_today.getDate() + 1)).toISOString().slice(0, 10)}T00:00:00`;
@@ -188,27 +174,26 @@ export const MyTimePage = () => {
         goals: []
       };
       activeGoals.forEach((ele) => {
-        const obj = {};
-        schedulerInput.goals.push({
+        const obj = {
           id: ele.id,
           title: ele.title,
-          duration: ele.duration,
-        });
+          duration: ele.duration
+        };
         if (ele.start) obj.start = `${ele.start?.toISOString().slice(0, 10)}T${ele.start?.toTimeString().slice(0, 8)}`;
         if (ele.due) obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
         if (ele.afterTime) obj.after_time = ele.afterTime;
         if (ele.beforeTime) obj.before_time = ele.beforeTime;
+        schedulerInput.goals.push(obj);
       });
-      console.log(schedulerInput);
-      const schedulerOutput = schedule(schedulerInput);
-      const slotTaskMap = {};
-      schedulerOutput.forEach((element) => {
-        const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === element.goalid);
-        const poppedGoal = activeGoals.splice(ind, 1)[0];
-        activeGoals = [...activeGoals, poppedGoal];
+      console.log("input", schedulerInput);
+      const schedulerOutput: TaskItem[] = schedule(schedulerInput);
+      schedulerOutput.forEach((ele, index) => {
+        const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === ele.goalid);
+        schedulerOutput[index].parentGoalId = activeGoals[ind].parentGoalId;
+        schedulerOutput[index].goalColor = activeGoals[ind].goalColor;
       });
-      setTmpTasks([...activeGoals]);
-      console.log(schedulerOutput);
+      console.log("output", schedulerOutput);
+      setTmpTasks([...schedulerOutput]);
     })();
   }, []);
 
