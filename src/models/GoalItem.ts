@@ -11,7 +11,7 @@ export interface GoalItem {
   createdAt?: Date;
   status: 0 | 1; // 0 = active, 1 = archived
   parentGoalId: number | -1; // -1 = no parent
-  goalColor?: string;
+  goalColor: string;
   language: string;
   link: string | null;
 }
