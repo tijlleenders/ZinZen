@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { darkModeState, themeSelectionState, languageSelectionState } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
-import { LandingPageThemeChoice } from "@pages/LandingPageThemeChoicePage/LandingPageThemeChoice";
+import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
 import { AddFeelingsPage } from "@pages/AddFeelingsPage/AddFeelingsPage";
 import { HomePage } from "@pages/HomePage/HomePage";
 import { NotFoundPage } from "@pages/NotFoundPage/NotFoundPage";
@@ -37,7 +37,7 @@ const App = () => {
           {!isLanguageChosen ? (
             <Route path="/" element={<LandingPage />} />
           ) : !isThemeChosen ? (
-            <Route path="/" element={<LandingPageThemeChoice />} />
+            <Route path="/" element={<ThemeChoice />} />
           ) : (
             <>
               <Route path="/" element={<MyTimePage />} />
