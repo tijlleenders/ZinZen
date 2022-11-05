@@ -1,20 +1,60 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
 
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import { QueryPageUserChoicePanel } from "@components/QueryPageUserChoicePanel/QueryPageUserChoicePanel";
+import { darkModeState } from "@src/store";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
+import { useRecoilValue } from "recoil";
 
-export const QueryPage = () => (
-  <Container fluid>
-    <Row>
-       <MainHeaderDashboard />
-    </Row>
-    <Row>
-      <Col sm={1} />
-      <Col sm>
-        <QueryPageUserChoicePanel />
-      </Col>
-      <Col sm={1} />
-    </Row>
-  </Container>
-);
+const queryStyle = {
+  main: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  question: {
+    alignSelf: "center",
+    width: "25vw",
+    height: "25vh",
+    minWidth: "220px",
+    minHeight: "145px",
+    maxWidth: "300px",
+    maxHeight: "200px",
+    background: "#EDC7B7",
+    borderRadius: "10px",
+    marginTop: "30px"
+  }
+};
+export const QueryPage = () => {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const darkModeStatus = useRecoilValue(darkModeState);
+
+  return (
+    <div id="query-container">
+      <MainHeaderDashboard />
+      <div style={{ ...queryStyle.main }}>
+        <p className="landing-about" style={{ paddingTop: "100px", margin: 0 }}>
+          <span> a platform for </span>
+          <span>self-actualization </span>
+          <br style={{ marginTop: "5px" }} />
+          <span>and </span>
+          <span>collaboration</span>
+        </p>
+        <button
+          type="button"
+          style={queryStyle.question}
+          onClick={() => { navigate("/ZinZenFAQ"); }}
+        >
+          {t("ihavequestions")}
+        </button>
+        <button
+          type="button"
+          style={queryStyle.question}
+          onClick={() => { navigate("/Home/MyTime"); }}
+        >
+          {t("ialreadyknowZinZen")}
+        </button>
+      </div>
+    </div>
+  );
+};

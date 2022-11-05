@@ -55,7 +55,7 @@ export const LandingPage = () => {
         { /* <img src={Logo} alt="ZinZen Logo" id="landing-logo" /> */ }
         <div> <img src={ZinZen} alt="ZinZen Text Logo" id="landing-textLogo" /> </div>
         <div>
-          <p id="landing-about">
+          <p className="landing-about">
             <span> a platform for </span>
             <span>self-actualization </span>
             <br style={{ marginTop: "5px" }} />
