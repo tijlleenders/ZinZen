@@ -28,7 +28,6 @@ export const MainHeaderDashboard = () => {
         role="presentation"
         src={logo}
         alt="Zinzen Logo"
-        style={{ width: "35px" }}
         id="main-header-homeLogo"
         onClick={() => {
           navigate("/Home");
