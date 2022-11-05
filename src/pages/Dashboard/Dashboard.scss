@@ -1,71 +1,22 @@
-/*Navbar*/
-
-.navbar-custom {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.nav-link-dashboard-light {
-  color: #000000 !important;
-  font-size: 1.2em;
-  margin: 0em 3.2em 0em 1.5em;
-}
-
-.nav-link-dashboard-light:hover {
-  font-size: 1.25em;
-  color: #3b6899 !important;
-}
-
-.nav-link-dashboard-dark {
-  color: #d6d6d6 !important;
-  font-size: 1.2em;
-  margin: 0em 3.2em 0em 1.5em;
-}
-
-.nav-link-dashboard-dark:hover {
-  font-size: 1.25em;
-  color: #3b6899 !important;
-}
-
-.back-arrow-nav-dashboard{
-    position: absolute;
-    width: 5%;
-    cursor: pointer;
-    margin-left: 0em;
-    margin-top: 3.5em;
-    visibility: visible;
-    cursor: pointer;
-}
-
-.zinzen-text-logo-nav-dashboard{
-  position: absolute;
-    cursor: pointer;
-    margin-top: 6em;
-    padding-top: 0.5em;
-    margin-bottom: 2.7em;
-      margin-left: 42%;
-      width:10%;
-      cursor: pointer;
-}
-
-
-.zinzen-logo-nav-dashboard{
- position: absolute;
-  display: flex;
-  margin-top: 4em;
-  margin-left: 92%;
- height: 50px;
-  width: 10%;
-  cursor: pointer;
-}
-
-
-.dark-mode-toggle {
-  margin-bottom: 1.6em;
-}
-
 /*Dashboard*/
+
+#dashboard-bookIcon{
+  width: 25vw;
+  margin-right: 10%;
+  max-width: 350px;
+  min-width: 280px;
+}
+
+#dashboard-container {
+  display: flex;
+  justify-content: center;
+
+  .slide {
+    max-width: 440px;
+    min-width: 220px;
+    width: 50vw;
+  }
+}
 
 .dashboard-choice-light1 {
   color: #000000;
@@ -190,6 +141,18 @@
   position: absolute;
   right: 0px;
   top: 10px;
+}
+
+
+@media (max-width: 800px) {
+  #dashboard-bookIcon {
+    display: none;
+  }
+  #dashboard-container > .slide {
+    max-width: 440px;
+    min-width: 250px;
+    width: 80vw;
+  }
 }
 
 /*Media Query for Mobile View*/
