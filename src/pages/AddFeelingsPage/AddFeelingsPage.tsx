@@ -12,6 +12,7 @@ import { AddFeelingsChoices } from "./AddFeelingsChoices";
 
 import "@translations/i18n";
 import "./AddFeelingsPage.scss";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 export const AddFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -22,36 +23,30 @@ export const AddFeelingsPage = () => {
     ? getJustDate(location?.state?.feelingDate)
     : getJustDate(new Date());
   return (
-    <div>
-      <Container fluid>
-        <Row>
-          <HeaderDashboard />
-        </Row>
-      </Container>
-      <Container fluid className="slide add-feelings__container">
-        <Row>
-          <Col>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
-                {date.getTime() === getJustDate(new Date()).getTime()
-                  ? t("feelingsmessage")
-                  : `${t("feelingsMessagePast")} ${date.toDateString()}`}
-              </h3>
-              <Button
-                id="myFeelings-redirect-btn-desktop"
-                onClick={() => navigate("/Home/MyFeelings")}
-              >View My Feelings
-              </Button>
-            </div>
-            <AddFeelingsChoices date={date} />
-          </Col>
-        </Row>
-        <Button
-          id="myFeelings-redirect-btn-mobile"
-          onClick={() => navigate("/Home/MyFeelings")}
-        >View My Feelings
-        </Button>
-      </Container>
-    </div>
+    <Container fluid className="slide add-feelings__container">
+      <MainHeaderDashboard />
+      <Row>
+        <Col>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
+              {date.getTime() === getJustDate(new Date()).getTime()
+                ? t("feelingsmessage")
+                : `${t("feelingsMessagePast")} ${date.toDateString()}`}
+            </h3>
+            <Button
+              id="myFeelings-redirect-btn-desktop"
+              onClick={() => navigate("/Home/MyFeelings")}
+            >View My Feelings
+            </Button>
+          </div>
+          <AddFeelingsChoices date={date} />
+        </Col>
+      </Row>
+      <Button
+        id="myFeelings-redirect-btn-mobile"
+        onClick={() => navigate("/Home/MyFeelings")}
+      >View My Feelings
+      </Button>
+    </Container>
   );
 };
