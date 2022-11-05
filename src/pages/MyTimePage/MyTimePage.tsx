@@ -198,23 +198,17 @@ export const MyTimePage = () => {
   }, []);
 
   return (
-    <div>
-      <Container fluid>
-        <Row>
-          <MainHeaderDashboard />
-        </Row>
-      </Container>
-      <div className="slide MyTime_container">
-        <div id="MyTime_days_container">
-          {getDayComponent(`My ${today.toDateString()}`)}
-          {getDayComponent("Tomorrow")}
-          {
-            [...Array(5).keys()].map(() => {
-              today.setDate(today.getDate() + 1);
-              return getDayComponent(`${today.toLocaleDateString("en-us", { weekday: "long" })}`);
-            })
-          }
-        </div>
+    <div className="slide MyTime_container">
+      <MainHeaderDashboard />
+      <div id="MyTime_days_container">
+        {getDayComponent(`My ${today.toDateString()}`)}
+        {getDayComponent("Tomorrow")}
+        {
+          [...Array(5).keys()].map(() => {
+            today.setDate(today.getDate() + 1);
+            return getDayComponent(`${today.toLocaleDateString("en-us", { weekday: "long" })}`);
+          })
+        }
       </div>
     </div>
   );
