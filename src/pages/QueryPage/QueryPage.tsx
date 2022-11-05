@@ -1,10 +1,8 @@
 import React from "react";
 
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import { darkModeState } from "@src/store";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
-import { useRecoilValue } from "recoil";
 
 const queryStyle = {
   main: {
@@ -27,7 +25,6 @@ const queryStyle = {
 export const QueryPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
     <div id="query-container">
