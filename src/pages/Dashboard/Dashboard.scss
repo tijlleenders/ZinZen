@@ -49,21 +49,6 @@
       cursor: pointer;
 }
 
-.zinzen-text-logo-nav-dashboard-main{
-  position: absolute;
-    cursor: pointer;
-    margin-top: 2.5em;
-    margin-bottom: 2.7em;
-      margin-left: 42%;
-      width:10%;
-      cursor: pointer;
-}
-
-.zinzen-logo-nav-dashboard-main{
-    position: absolute;
-    height: 80%;
-    cursor: pointer;
-}
 
 .zinzen-logo-nav-dashboard{
  position: absolute;
@@ -200,6 +185,13 @@
   padding-bottom: 0.6em !important;
 }
 
+
+.dark-mode-toggle{
+  position: absolute;
+  right: 0px;
+  top: 10px;
+}
+
 /*Media Query for Mobile View*/
 
 @media (max-width: 600px) {
@@ -228,13 +220,6 @@
     cursor: pointer;
 }
 
-.zinzen-text-logo-nav-dashboard-main{
-  margin-top: 5em;
-  margin-bottom: 2.7em;
-    margin-left: 38%;
-    width:25%;
-    cursor: pointer;
-}
 
    .back-arrow-nav-dashboard{
     position: absolute;
@@ -259,12 +244,6 @@
 
     .nav-collapse-dashboard{
         margin-bottom: 2em;
-    }
-
-    .dark-mode-toggle{
-      position: absolute;
-      right: 0px;
-      top: 10px;
     }
 
   .book-icon-dashboard {

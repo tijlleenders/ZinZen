@@ -1,5 +1,4 @@
 import React from "react";
-import { Nav, Navbar } from "react-bootstrap";
 import { useRecoilState } from "recoil";
 import DarkModeToggle from "react-dark-mode-toggle";
 import { useNavigate } from "react-router-dom";
@@ -24,49 +23,44 @@ export const MainHeaderDashboard = () => {
     }
   };
   return (
-    <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
-      <Navbar collapseOnSelect expand="lg">
+    <>
+      <img
+        role="presentation"
+        src={logo}
+        alt="Zinzen Logo"
+        style={{ width: "35px" }}
+        id="main-header-homeLogo"
+        onClick={() => {
+          navigate("/Home");
+        }}
+      />
+      {darkModeStatus ? (
         <img
           role="presentation"
-          src={logo}
-          alt="Zinzen Logo"
-          className="zinzen-logo-nav-dashboard-main"
+          src={ZinZenTextDark}
+          alt="ZinZen Text Logo"
+          className="main-header-TextLogo"
           onClick={() => {
             navigate("/Home");
           }}
         />
-        {darkModeStatus ? (
-          <img
-            role="presentation"
-            src={ZinZenTextDark}
-            alt="ZinZen Text Logo"
-            className="zinzen-text-logo-nav-dashboard-main"
-            onClick={() => {
-              navigate("/Home");
-            }}
-          />
-        ) : (
-          <img
-            role="presentation"
-            src={ZinZenTextLight}
-            alt="ZinZen Text Logo"
-            className="zinzen-text-logo-nav-dashboard-main"
-            onClick={() => {
-              navigate("/Home");
-            }}
-          />
-        )}
-
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="navbar-custom" />
-        </Navbar.Collapse>
-        <DarkModeToggle
-          onChange={toggleTheme}
-          checked={darkModeStatus}
-          size={60}
-          className="dark-mode-toggle"
+      ) : (
+        <img
+          role="presentation"
+          src={ZinZenTextLight}
+          alt="ZinZen Text Logo"
+          className="main-header-TextLogo"
+          onClick={() => {
+            navigate("/Home");
+          }}
         />
-      </Navbar>
-    </div>
+      )}
+      <DarkModeToggle
+        onChange={toggleTheme}
+        checked={darkModeStatus}
+        size={60}
+        className="main-header-themeToggler"
+      />
+    </>
   );
 };
