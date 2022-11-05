@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
 import { ILanguage } from "@src/Interfaces";
 import ZinZen from "@assets/images/LogoTextLight.svg";
-import Logo from "@assets/images/zinzenlogo.png";
 import BookIcon from "@assets/images/bookicon.svg";
 
 import "./LandingPage.scss";

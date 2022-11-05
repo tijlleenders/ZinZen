@@ -1,16 +1,15 @@
 /* eslint-disable no-alert */
 import React, { useState } from "react";
-import { Container, Button, Row } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState } from "@store";
 import { submitFeedback } from "@src/api/FeedbackAPI";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 import "@translations/i18n";
 import "./feedbackpage.scss";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 export const FeedbackPage = () => {
   const [userRating, setUserRating] = useState(5);

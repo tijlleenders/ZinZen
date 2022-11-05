@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Row } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 
 import ContactItem from "@src/models/ContactItem";
 import { getAllContacts } from "@src/api/ContactsAPI";
 import { darkModeState } from "@src/store";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 import "./Contacts.scss";
 
@@ -33,9 +32,7 @@ const Contacts = () => {
 
   return (
     <>
-      <Row>
-        <HeaderDashboard />
-      </Row>
+      <MainHeaderDashboard />
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div className="my-goals-content">
           <input

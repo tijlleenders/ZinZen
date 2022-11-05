@@ -5,18 +5,17 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
-import { getAllFeelings, isCollectionEmpty } from "@api/FeelingsAPI";
+import { getAllFeelings } from "@api/FeelingsAPI";
 import { IFeelingItem } from "@models";
 import { darkModeState } from "@store";
 import { feelingListType } from "@src/global";
 import { getDates } from "@utils";
 import addIcon from "@assets/images/GoalsAddIcon.svg";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { ShowFeelingTemplate } from "./ShowFeelingTemplate";
 
 import "./ShowFeelingsPage.scss";
 import "./ShowFeelings.scss";
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 export const ShowFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);

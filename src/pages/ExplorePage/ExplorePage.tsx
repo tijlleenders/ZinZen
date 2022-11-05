@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
@@ -10,15 +10,14 @@ import MindAndSpirit from "@assets/images/mind-spirit-goals.jpg";
 import Nature from "@assets/images/nature-environment-goals.jpeg";
 import PersonalGrowth from "@assets/images/personalGrowth-goals.jpg";
 import Relationship from "@assets/images/relationship-goals.jpg";
-
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
-import "@translations/i18n";
-import "./explorepage.scss";
 import { darkModeState } from "@src/store";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
+import "@translations/i18n";
+import "./explorepage.scss";
+
 export const ExplorePage = () => {
-  const goals: any = [
+  const goals: unknown = [
     { goalName: "healthGoals", goalImage: Health },
     { goalName: "relationshipGoals", goalImage: Relationship },
     { goalName: "spiritualGoals", goalImage: MindAndSpirit },

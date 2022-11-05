@@ -7,12 +7,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { getJustDate } from "@utils";
 import { darkModeState } from "@store";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { AddFeelingsChoices } from "./AddFeelingsChoices";
 
 import "@translations/i18n";
 import "./AddFeelingsPage.scss";
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 export const AddFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
