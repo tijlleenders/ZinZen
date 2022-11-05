@@ -41,7 +41,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
           role="presentation"
           src={ArrowIcon}
           alt="Back arrow"
-          className="back-arrow-nav-dashboard"
+          id="main-header-homeLogo"
           onClick={() => {
             if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
               navigate(-1);
@@ -53,7 +53,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             role="presentation"
             src={ZinZenTextDark}
             alt="ZinZen Text Logo"
-            className="zinzen-text-logo-nav-dashboard"
+            className="main-header-TextLogo"
             onClick={() => {
               navigate("/Home");
             }}
@@ -63,7 +63,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             role="presentation"
             src={ZinZenTextLight}
             alt="ZinZen Text Logo"
-            className="zinzen-text-logo-nav-dashboard"
+            className="main-header-TextLogo"
             onClick={() => {
               navigate("/Home");
             }}
