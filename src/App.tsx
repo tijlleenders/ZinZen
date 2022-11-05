@@ -45,7 +45,6 @@ const App = () => {
             </>
           )}
           <Route path="/Home/AddFeelings" element={<AddFeelingsPage />} />
-          <Route path="/Home/AddGoals" element={<MyGoalsPage />} />
           <Route path="/Home/Explore" element={<ExplorePage />} />
           <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
