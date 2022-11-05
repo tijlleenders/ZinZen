@@ -22,6 +22,7 @@ import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
+import { Dashboard } from "@pages/Dashboard/Dashboard";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -49,7 +50,7 @@ const App = () => {
           <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
-          <Route path="/Home" element={<HomePage />} />
+          <Route path="/Home" element={<Dashboard />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
           <Route path="Home/Contacts" element={<Contacts />} />
           <Route path="*" element={<NotFoundPage />} />
