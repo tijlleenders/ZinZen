@@ -7,9 +7,7 @@ import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashb
 
 export const Dashboard = () => (
   <div>
-    <Row>
-      <MainHeaderDashboard />
-    </Row>
+    <MainHeaderDashboard />
     <Container fluid>
       <Row>
         <Col sm={2} />
