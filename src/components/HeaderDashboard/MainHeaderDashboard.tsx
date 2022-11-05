@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
 
+import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import logo from "@assets/images/logo.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
@@ -24,15 +25,28 @@ export const MainHeaderDashboard = () => {
   };
   return (
     <>
-      <img
-        role="presentation"
-        src={logo}
-        alt="Zinzen Logo"
-        id="main-header-homeLogo"
-        onClick={() => {
-          navigate("/Home");
-        }}
-      />
+      { window.location.href.split("/").slice(-1)[0] === "Home" ? (
+        <img
+          role="presentation"
+          src={logo}
+          alt="Zinzen Logo"
+          id="main-header-homeLogo"
+          onClick={() => {
+            navigate("/Home");
+          }}
+        />
+      )
+        : (
+          <img
+            role="presentation"
+            src={ArrowIcon}
+            alt="Back arrow"
+            id="main-header-homeLogo"
+            onClick={() => {
+              navigate(-1);
+            }}
+          />
+        )}
       {darkModeStatus ? (
         <img
           role="presentation"
