@@ -7,7 +7,7 @@
     margin-top: 23px;
 }
 
-#landing-about {
+.landing-about {
     font-family: 'Montserrat';
     font-weight: 600;
     font-size: 25px;
@@ -16,7 +16,7 @@
     margin-top: 70px;
 }
 
-#landing-about > span:nth-child(even) {
+.landing-about > span:nth-child(even) {
     color: #3B6899;
 }
 
@@ -38,7 +38,7 @@
 }
 
 @media (max-width: 500px) {
-    #landing-about {
+    .landing-about {
         font-size: 15px;
     }
 }

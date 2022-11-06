@@ -3,9 +3,9 @@ describe("ZinZen-page Test", () => {
     cy.visit("/");
     cy.clearLocalStorage();
     cy.get(".lang-btn1").contains("English").click();
-    cy.get(".theme-choice-btn").first().click();
+    cy.get(".themeChoice-btn").first().click();
     cy.contains("Skip Intro").click();
-    cy.get('[alt="Zinzen Logo"]').click();
+    cy.get('[alt="ZinZen Text Logo"]').click();
     cy.contains("ZinZen").click();
     cy.contains("Browse the code").parent().should("have.attr", "href", "https://github.com/tijlleenders/ZinZen");
   });

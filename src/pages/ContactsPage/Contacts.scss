@@ -1,3 +1,11 @@
+#my-contacts {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    min-width: 236px;
+    width: 100%;
+}
 #contact-list {
     border-radius: 7px 7px 0px 0px;
     background: rgba(237, 199, 183, 0.4);

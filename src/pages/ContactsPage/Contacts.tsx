@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Row } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 
 import ContactItem from "@src/models/ContactItem";
 import { getAllContacts } from "@src/api/ContactsAPI";
 import { darkModeState } from "@src/store";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 import "./Contacts.scss";
+import "@pages/MyGoalsPage/MyGoalsPage.scss";
 
 const Contacts = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -33,38 +33,34 @@ const Contacts = () => {
 
   return (
     <>
-      <Row>
-        <HeaderDashboard />
-      </Row>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div className="my-goals-content">
-          <input
-            id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
-            placeholder="Search"
-          />
-          <div id="contact-list">
-            <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"}>
-              Recent Contacts
-            </h1>
+      <MainHeaderDashboard />
+      <div id="my-contacts">
+        <input
+          id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
+          placeholder="Search"
+        />
+        <div id="contact-list">
+          <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"}>
+            Recent Contacts
+          </h1>
 
-            {contacts.map((ele) => (
-              <>
-                <div
-                  aria-hidden
-                  key={String(`contact-${ele.id}`)}
-                  className="contact-tile"
-                  style={{ cursor: "pointer" }}
-                >
-                  {getContactBtn(ele.name)}
-                  <span>
-                    { ele.name}
-                  </span>
-                </div>
-                <hr />
-              </>
+          {contacts.map((ele) => (
+            <>
+              <div
+                aria-hidden
+                key={String(`contact-${ele.id}`)}
+                className="contact-tile"
+                style={{ cursor: "pointer" }}
+              >
+                {getContactBtn(ele.name)}
+                <span>
+                  { ele.name}
+                </span>
+              </div>
+              <hr />
+            </>
 
-            ))}
-          </div>
+          ))}
         </div>
       </div>
     </>

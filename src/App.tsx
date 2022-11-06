@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { darkModeState, themeSelectionState, languageSelectionState } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
-import { LandingPageThemeChoice } from "@pages/LandingPageThemeChoicePage/LandingPageThemeChoice";
+import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
 import { AddFeelingsPage } from "@pages/AddFeelingsPage/AddFeelingsPage";
 import { HomePage } from "@pages/HomePage/HomePage";
 import { NotFoundPage } from "@pages/NotFoundPage/NotFoundPage";
@@ -22,6 +22,7 @@ import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
+import { Dashboard } from "@pages/Dashboard/Dashboard";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -37,7 +38,7 @@ const App = () => {
           {!isLanguageChosen ? (
             <Route path="/" element={<LandingPage />} />
           ) : !isThemeChosen ? (
-            <Route path="/" element={<LandingPageThemeChoice />} />
+            <Route path="/" element={<ThemeChoice />} />
           ) : (
             <>
               <Route path="/" element={<MyTimePage />} />
@@ -45,12 +46,11 @@ const App = () => {
             </>
           )}
           <Route path="/Home/AddFeelings" element={<AddFeelingsPage />} />
-          <Route path="/Home/AddGoals" element={<MyGoalsPage />} />
           <Route path="/Home/Explore" element={<ExplorePage />} />
           <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
-          <Route path="/Home" element={<HomePage />} />
+          <Route path="/Home" element={<Dashboard />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
           <Route path="Home/Contacts" element={<Contacts />} />
           <Route path="*" element={<NotFoundPage />} />

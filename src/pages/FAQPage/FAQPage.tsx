@@ -1,28 +1,74 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import { HeaderFAQPage } from "@components/FAQPageUserPanel/HeaderFAQPage";
-import { FAQPageUserPanel } from "@components/FAQPageUserPanel/FAQPageUserPanel";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
+import { darkModeState } from "@store";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-export const FAQPage = () => (
-  <div>
-    <Container fluid>
-      <Row>
-        <MainHeaderDashboard />
-      </Row>
-    </Container>
-    <Container fluid>
-      <Row>
-        <HeaderFAQPage />
-      </Row>
-      <Row>
-        <Col sm={1} />
-        <Col sm>
-          <FAQPageUserPanel />
-        </Col>
-        <Col sm={1} />
-      </Row>
-    </Container>
-  </div>
-);
+import "@translations/i18n";
+import "./FAQPage.scss";
+
+export const FAQPage = () => {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const darkModeStatus = useRecoilValue(darkModeState);
+
+  return (
+    <div className="slide" style={{ display: "flex", justifyContent: "center" }}>
+      <MainHeaderDashboard />
+      <div id="faq-container">
+        <div>
+          <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
+            {t("Qwhatiszinzen")}
+          </h3>
+          <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>{t("AnsWhatiszinzen")}</p>
+        </div>
+        <div>
+          <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
+            {t("Qiszinzenprivate")}
+          </h3>
+          <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>{t("Ansiszinzenprivate")}</p>
+        </div>
+        <div>
+          <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
+            {t("Qiszinzenexpensive")}
+          </h3>
+          <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>
+            {t("Ansiszinzenexpensive")}
+          </p>
+        </div>
+        <div>
+          <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
+            {t("Qtoogoodtobetrue")}
+          </h3>
+          <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>{t("Anstoogoodtobetrue")}</p>
+        </div>
+        <div>
+          <Button
+            variant={darkModeStatus ? "bdivn" : "peach"}
+            size="lg"
+            className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
+            onClick={() => {
+              navigate("/Home/ZinZen/Feedback");
+            }}
+          >
+            {t("ihavedifferentquestions")}
+          </Button>
+          <Button
+            variant={darkModeStatus ? "bdivn" : "peach"}
+            size="lg"
+            className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
+            onClick={() => {
+              navigate("/Home/MyTime");
+            }}
+          >
+            {t("ihavenomorequestions")}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};

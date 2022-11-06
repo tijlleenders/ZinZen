@@ -1,15 +1,14 @@
 /*Main body and App*/
 
-.App-light {
+.App-light, .App-dark {
   background-color: #f0e6e1;
   font-family: "Montserrat";
   font-weight: bolder !important;
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
 }
 
 .App-dark {
   background-color: #121212;
-  font-family: "Montserrat";
-  font-weight: bolder !important;
-  min-height: 100vh;
 }

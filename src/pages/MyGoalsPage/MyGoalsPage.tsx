@@ -108,7 +108,6 @@ export const MyGoalsPage = () => {
     setShowAddGoal(null);
     setGoalTags({});
     setGoalTitle("");
-    if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
   };
 
   const updateThisGoal = async (e: React.SyntheticEvent) => {
@@ -212,7 +211,7 @@ export const MyGoalsPage = () => {
       {
         selectedGoalId === -1 ?
           (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div className="myGoals-container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <div
                 onClickCapture={() => setTapCount([-1, 0])}
                 className="my-goals-content"

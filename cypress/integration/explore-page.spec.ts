@@ -3,9 +3,9 @@ describe("ExplorePage Test", () => {
     cy.visit("/");
     cy.clearLocalStorage();
     cy.get(".lang-btn1").contains("English").click();
-    cy.get(".theme-choice-btn").first().click();
+    cy.get(".themeChoice-btn").first().click();
     cy.contains("Skip Intro").click();
-    cy.get('[alt="Zinzen Logo"]').click();
+    cy.get('[alt="ZinZen Text Logo"]').click();
     cy.contains("Explore").click();
     cy.get("#explore-container-light").invoke("css", "background-color").should("equal", "rgb(240, 230, 225)");
   });

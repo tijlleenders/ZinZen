@@ -3,9 +3,9 @@ describe("DashboardUserChoice Test", () => {
     cy.visit("/");
     cy.clearLocalStorage();
     cy.get(".lang-btn1").contains("English").click();
-    cy.get(".theme-choice-btn").first().click();
+    cy.get(".themeChoice-btn").first().click();
     cy.contains("Skip Intro").click();
-    cy.get('[alt="Zinzen Logo"]').click();
+    cy.get('[alt="ZinZen Text Logo"]').click();
     cy.get(".dashboard-choice-light1").should("have.length", 1);
     cy.get(".dashboard-choice-light").should("have.length", 4);
   });
@@ -43,6 +43,6 @@ describe("DashboardUserChoice Test", () => {
       .click()
       .location("pathname")
       .should("include", "MyFeelings");
-    cy.get('[alt="Zinzen Logo"]').click();
+    cy.get('[alt="ZinZen Text Logo"]').click();
   });
 });

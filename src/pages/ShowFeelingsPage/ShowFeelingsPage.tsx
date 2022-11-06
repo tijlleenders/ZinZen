@@ -5,13 +5,13 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
-import { getAllFeelings, isCollectionEmpty } from "@api/FeelingsAPI";
+import { getAllFeelings } from "@api/FeelingsAPI";
 import { IFeelingItem } from "@models";
 import { darkModeState } from "@store";
 import { feelingListType } from "@src/global";
 import { getDates } from "@utils";
 import addIcon from "@assets/images/GoalsAddIcon.svg";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { ShowFeelingTemplate } from "./ShowFeelingTemplate";
 
 import "./ShowFeelingsPage.scss";
@@ -43,75 +43,69 @@ export const ShowFeelingsPage = () => {
   const dateRangeArr = getDates(new Date(dateArr[0]), new Date()).reverse();
   if (dateRangeArr.length === 0) { dateRangeArr.push(new Date()); }
   return (
-    <div>
-      <Container fluid>
-        <Row>
-          <HeaderDashboard />
-        </Row>
-      </Container>
-      <Container fluid className="slide show-feelings__container">
-        <Row>
-          <Col>
-            <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
-              {t("showfeelingsmessage")}
-            </h3>
-            {feelingsList !== null &&
-            dateRangeArr.map((date) => (
-              <div key={date} className="show-feelings__list-category">
-                <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => {
-                      navigate("/Home/AddFeelings", {
-                        state: { feelingDate: new Date(date) },
-                      });
-                    }}
-                    onKeyDown={() => {
-                      navigate("/Home/AddFeelings", {
-                        state: { feelingDate: new Date(date) },
-                      });
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {new Date(date).toDateString() === new Date().toDateString()
-                      ? "Today"
-                      : new Date(date).toDateString()}
-                  </span>
-                </h3>
-                {feelingsList[date] && feelingsList[date].length > 0 ? (
-                  <ShowFeelingTemplate
-                    key={date}
-                    feelingsListObject={feelingsList[date]}
-                    setFeelingsListObject={{ feelingsList, setFeelingsList }}
-                    currentFeelingsList={feelingsList}
-                    handleFocus={{ selectedFeeling, setSelectedFeeling }}
-                  />
-                ) : (
-                  <input
-                    type="image"
-                    tabIndex={0}
-                    key={date}
-                    src={addIcon}
-                    alt="add-feeling"
-                    style={{ margin: "5px 0 0 30px", height: "30px", width: "30px" }}
-                    onClick={() => {
-                      navigate("/Home/AddFeelings", {
-                        state: { feelingDate: new Date(date) },
-                      });
-                    }}
-                    onKeyDown={() => {
-                      navigate("/Home/AddFeelings", {
-                        state: { feelingDate: new Date(date) },
-                      });
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-          </Col>
-        </Row>
-      </Container>
-    </div>
+    <Container fluid className="slide show-feelings__container">
+      <MainHeaderDashboard />
+      <Row>
+        <Col>
+          <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
+            {t("showfeelingsmessage")}
+          </h3>
+          {feelingsList !== null &&
+          dateRangeArr.map((date) => (
+            <div key={date} className="show-feelings__list-category">
+              <h3 className={darkModeStatus ? "my-feelings-font-dark" : "my-feelings-font-light"}>
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    navigate("/Home/AddFeelings", {
+                      state: { feelingDate: new Date(date) },
+                    });
+                  }}
+                  onKeyDown={() => {
+                    navigate("/Home/AddFeelings", {
+                      state: { feelingDate: new Date(date) },
+                    });
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {new Date(date).toDateString() === new Date().toDateString()
+                    ? "Today"
+                    : new Date(date).toDateString()}
+                </span>
+              </h3>
+              {feelingsList[date] && feelingsList[date].length > 0 ? (
+                <ShowFeelingTemplate
+                  key={date}
+                  feelingsListObject={feelingsList[date]}
+                  setFeelingsListObject={{ feelingsList, setFeelingsList }}
+                  currentFeelingsList={feelingsList}
+                  handleFocus={{ selectedFeeling, setSelectedFeeling }}
+                />
+              ) : (
+                <input
+                  type="image"
+                  tabIndex={0}
+                  key={date}
+                  src={addIcon}
+                  alt="add-feeling"
+                  style={{ margin: "5px 0 0 30px", height: "30px", width: "30px" }}
+                  onClick={() => {
+                    navigate("/Home/AddFeelings", {
+                      state: { feelingDate: new Date(date) },
+                    });
+                  }}
+                  onKeyDown={() => {
+                    navigate("/Home/AddFeelings", {
+                      state: { feelingDate: new Date(date) },
+                    });
+                  }}
+                />
+              )}
+            </div>
+          ))}
+        </Col>
+      </Row>
+    </Container>
   );
 };

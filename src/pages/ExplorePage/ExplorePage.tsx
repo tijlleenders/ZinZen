@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
@@ -10,14 +10,14 @@ import MindAndSpirit from "@assets/images/mind-spirit-goals.jpg";
 import Nature from "@assets/images/nature-environment-goals.jpeg";
 import PersonalGrowth from "@assets/images/personalGrowth-goals.jpg";
 import Relationship from "@assets/images/relationship-goals.jpg";
+import { darkModeState } from "@src/store";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
 import "@translations/i18n";
 import "./explorepage.scss";
-import { darkModeState } from "@src/store";
 
 export const ExplorePage = () => {
-  const goals: any = [
+  const goals: unknown = [
     { goalName: "healthGoals", goalImage: Health },
     { goalName: "relationshipGoals", goalImage: Relationship },
     { goalName: "spiritualGoals", goalImage: MindAndSpirit },
@@ -29,27 +29,21 @@ export const ExplorePage = () => {
   const { t } = useTranslation();
 
   return (
-    <div>
-      <Container fluid>
-        <Row>
-          <HeaderDashboard />
-        </Row>
-      </Container>
-      <div id={`explore-container-${darkModeStatus ? "dark" : "light"}`}>
-        <Container fluid className="slide">
-          <div id="explore-goals-container">
-            {goals.map((goal: any) => (
-              <div className="explore-goal-row">
-                <div className="explore-goal-card">
-                  <img className="explore-goal-img" alt="my-goals" src={goal.goalImage} />
-                  <div className="explore-goal-title">{t(goal.goalName)}</div>
-                  <h1 className="explore-addGoal-btn">+</h1>
-                </div>
+    <div id={`explore-container-${darkModeStatus ? "dark" : "light"}`}>
+      <MainHeaderDashboard />
+      <Container fluid className="slide">
+        <div id="explore-goals-container">
+          {goals.map((goal: any) => (
+            <div className="explore-goal-row">
+              <div className="explore-goal-card">
+                <img className="explore-goal-img" alt="my-goals" src={goal.goalImage} />
+                <div className="explore-goal-title">{t(goal.goalName)}</div>
+                <h1 className="explore-addGoal-btn">+</h1>
               </div>
-            ))}
-          </div>
-        </Container>
-      </div>
+            </div>
+          ))}
+        </div>
+      </Container>
     </div>
   );
 };

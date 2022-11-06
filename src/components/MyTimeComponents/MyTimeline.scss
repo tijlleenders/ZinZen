@@ -1,5 +1,4 @@
 #MTL-display, #MTL-display-withOption {
-  padding: 0% 8%;
   padding-top: 1em;
   display: flex;
   flex-direction: row;
@@ -27,7 +26,7 @@
 }
 
 .MTL-taskTtitle {
-  width: 28vw;
+  width: 100%;
   overflow: hidden;
   white-space: nowrap;
   border: none;
@@ -51,7 +50,7 @@
   height: 30px;
 }
 
-#MTL-circles {
+#MTL-circles, #MTL-titles, #MTL-times {
   display: flex;
   flex-direction: column;
 }
@@ -62,13 +61,7 @@
 }
 
 #MTL-titles {
-  display: flex;
-  flex-direction: column;
-}
-
-#MTL-times {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
 }
 
 .MTL-options_container {

@@ -1,4 +1,4 @@
-/* eslint-disable import/no-duplicates */
+/* eslint-disable */
 import React, { useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { useNavigate } from "react-router";

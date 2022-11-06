@@ -4,9 +4,9 @@ describe("Desktop Mode Tests", () => {
     cy.visit("/");
     cy.clearLocalStorage();
     cy.get(".lang-btn1").contains("English").click();
-    cy.get(".theme-choice-btn").first().click();
+    cy.get(".themeChoice-btn").first().click();
     cy.contains("Skip Intro").click();
-    cy.get('[alt="Zinzen Logo"]').click();
+    cy.get('[alt="ZinZen Text Logo"]').click();
     cy.contains("My Feelings").click();
     cy.get('[alt="add-feeling"]').click();
     cy.get(".feelings-menu-desktop").get("Button").contains("Joyful").click({ force: true });
@@ -54,9 +54,9 @@ describe("Mobile Mode Tests", () => {
   it("Should display popup modal when clicked on expand icon of a feeling", () => {
     cy.visit("/");
     cy.get(".lang-btn1").contains("English").click();
-    cy.get(".theme-choice-btn").first().click();
+    cy.get(".themeChoice-btn").first().click();
     cy.contains("Skip Intro").click();
-    cy.get('[alt="Zinzen Logo"]').click();
+    cy.get('[alt="ZinZen Text Logo"]').click();
     cy.contains("My Feelings").click();
     cy.viewport("iphone-6");
     cy.get('[alt="add-feeling"]').click();

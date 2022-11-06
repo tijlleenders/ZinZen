@@ -4,9 +4,9 @@ describe("DashboardUserChoice Test", () => {
     cy.clearLocalStorage();
     indexedDB.deleteDatabase("ZinZenDB");
     cy.get(".lang-btn1").contains("English").click();
-    cy.get(".theme-choice-btn").first().click();
+    cy.get(".themeChoice-btn").first().click();
     cy.contains("Skip Intro").click();
-    cy.get('[alt="Zinzen Logo"]').click();
+    cy.get('[alt="ZinZen Text Logo"]').click();
     cy.contains("My Goals").click();
     cy.get('[alt="Back arrow"]');
     // cy.get("#goal-searchBar");

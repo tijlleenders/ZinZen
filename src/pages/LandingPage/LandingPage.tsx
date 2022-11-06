@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
 import { ILanguage } from "@src/Interfaces";
 import ZinZen from "@assets/images/LogoTextLight.svg";
-import Logo from "@assets/images/zinzenlogo.png";
 import BookIcon from "@assets/images/bookicon.svg";
 
 import "./LandingPage.scss";
@@ -55,7 +54,7 @@ export const LandingPage = () => {
         { /* <img src={Logo} alt="ZinZen Logo" id="landing-logo" /> */ }
         <div> <img src={ZinZen} alt="ZinZen Text Logo" id="landing-textLogo" /> </div>
         <div>
-          <p id="landing-about">
+          <p className="landing-about">
             <span> a platform for </span>
             <span>self-actualization </span>
             <br style={{ marginTop: "5px" }} />
