@@ -7,6 +7,7 @@ import { darkModeState } from "@src/store";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 import "./Contacts.scss";
+import "@pages/MyGoalsPage/MyGoalsPage.scss";
 
 const Contacts = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -33,35 +34,33 @@ const Contacts = () => {
   return (
     <>
       <MainHeaderDashboard />
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <div className="my-goals-content">
-          <input
-            id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
-            placeholder="Search"
-          />
-          <div id="contact-list">
-            <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"}>
-              Recent Contacts
-            </h1>
+      <div id="my-contacts">
+        <input
+          id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
+          placeholder="Search"
+        />
+        <div id="contact-list">
+          <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"}>
+            Recent Contacts
+          </h1>
 
-            {contacts.map((ele) => (
-              <>
-                <div
-                  aria-hidden
-                  key={String(`contact-${ele.id}`)}
-                  className="contact-tile"
-                  style={{ cursor: "pointer" }}
-                >
-                  {getContactBtn(ele.name)}
-                  <span>
-                    { ele.name}
-                  </span>
-                </div>
-                <hr />
-              </>
+          {contacts.map((ele) => (
+            <>
+              <div
+                aria-hidden
+                key={String(`contact-${ele.id}`)}
+                className="contact-tile"
+                style={{ cursor: "pointer" }}
+              >
+                {getContactBtn(ele.name)}
+                <span>
+                  { ele.name}
+                </span>
+              </div>
+              <hr />
+            </>
 
-            ))}
-          </div>
+          ))}
         </div>
       </div>
     </>
