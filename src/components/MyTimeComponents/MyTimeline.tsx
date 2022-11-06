@@ -92,7 +92,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: TaskItem[]}) => {
     <>
       <div>{getTimeComponents(vbarUp, myTasks.slice(start, end))}</div>
       <div>{getCircleComponents(vbarUp, myTasks.slice(start, end))}</div>
-      <div style={{ paddingLeft: "1vh" }}>{getTitleComponents(vbarUp, myTasks.slice(start, end))}</div>
+      <div style={{ paddingLeft: "1vh", width: "100%" }}>{getTitleComponents(vbarUp, myTasks.slice(start, end))}</div>
     </>
   );
   return (
@@ -101,7 +101,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: TaskItem[]}) => {
         <>
           <div style={{ display: "flex" }}>{renderTimeline(false, 0, displayOptionsIndex)}</div>
           {showOptions(myTasks[displayOptionsIndex])}
-          { displayOptionsIndex + 1 < myTasks.length && <div style={{ display: "flex" }}>{renderTimeline(true, displayOptionsIndex + 1)}</div>}
+          { displayOptionsIndex + 1 < myTasks.length && <div style={{ display: "flex", width: "100%" }}>{renderTimeline(true, displayOptionsIndex + 1)}</div>}
         </>
       ) : renderTimeline(false, 0, myTasks.length)}
     </div>
