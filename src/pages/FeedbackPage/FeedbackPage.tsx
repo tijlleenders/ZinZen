@@ -6,7 +6,7 @@ import { useRecoilValue } from "recoil";
 
 import { darkModeState } from "@store";
 import { submitFeedback } from "@src/api/FeedbackAPI";
-import { HeaderDashboard } from "@components/HeaderDashboard/HeaderDashboard";
+import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
 import "@translations/i18n";
 import "./feedbackpage.scss";
@@ -31,7 +31,7 @@ export const FeedbackPage = () => {
 
   return (
     <div id="feedback-container">
-      <HeaderDashboard />
+      <LandingHeader />
       <Container className="slide" fluid>
         {userRating === 0 ? <h1>hello</h1> : null}
         <div style={{ color: `${darkModeStatus ? "white" : "black"}` }}>
