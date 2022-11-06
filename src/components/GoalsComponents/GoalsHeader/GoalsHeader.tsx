@@ -55,7 +55,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             alt="ZinZen Text Logo"
             className="main-header-TextLogo"
             onClick={() => {
-              navigate("/Home");
+              navigate("/Home/MyTime");
             }}
           />
         ) : (
@@ -65,7 +65,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             alt="ZinZen Text Logo"
             className="main-header-TextLogo"
             onClick={() => {
-              navigate("/Home");
+              navigate("/Home/MyTime");
             }}
           />
         )}
