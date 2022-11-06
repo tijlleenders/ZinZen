@@ -1,19 +1,17 @@
-.positioning-light {
+.positioning-light, .positioning-dark {
   height: 5em;
   display: block;
   width: 100%;
   background-color: #f0e6e1;
   position: fixed;
-  z-index: 2;
+  z-index: 2;    
+  max-width: 600px;
+  min-width: 236px;
+  width: 100%;
 }
 
 .positioning-dark {
-  height: 5em;
-  display: block;
-  width: 100%;
   background-color: #121212;
-  position: fixed;
-  z-index: 2;
 }
 
 #main-header-homeLogo {
@@ -61,8 +59,7 @@
 #goal-suggestion-btn {
     position: absolute;
     top: 10px;
-    right: 8px;
-    margin-right: 1%;
+    right: 0;
     border: none;
     background: transparent;
 }
@@ -82,10 +79,15 @@
   }
 
 #suggestions-modal {
-
   height: 100%;
-  margin: 0;
+  position: absolute;
+  left: 0;
   background-color: transparent;
+  right: 0;
+  margin: auto;
+  width: 100vw !important;
+  max-width: 600px;
+  
   .modal-content {
    position: absolute;
    border: 0;
@@ -137,7 +139,6 @@
   flex-direction: column;
   top: 50px;
   right: 8px;
-  margin-right: 3%;
 
   button {   
     margin-top: 25%;
@@ -158,5 +159,11 @@
       top: -7px;
       right: -7px;
     }
+  }
+}
+
+@media (min-width: 600px) {
+  #addGoal-options {
+    right: calc((100% - 587px) / 2);
   }
 }

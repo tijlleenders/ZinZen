@@ -10,7 +10,7 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
 
-export const HeaderDashboard = () => {
+export const LandingHeader = () => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
 
