@@ -115,12 +115,13 @@ describe("DashboardUserChoice Test", () => {
     cy.contains("Add from Archive");
     cy.contains("Testing this");
     cy.get('[alt="goal suggestion"]').parent().click();
-    cy.get(".modal").click();
+    cy.get(".modal-backdrop").click({ force: true });
+
     cy.contains("Testing this URL");
   });
 
   it("should be able to delete the goal", () => {
-    cy.contains("Testing this URL").click();
+    cy.contains("Testing this").click();
     cy.get('[alt="delete goal"').click();
     cy.get(".goal-title").should("not.have", "Testing this URL");
   });
