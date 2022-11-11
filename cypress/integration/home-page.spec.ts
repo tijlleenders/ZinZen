@@ -3,15 +3,9 @@ describe("Basic Tests Home Page", () => {
     cy.visit("/");
     cy.clearLocalStorage();
     cy.get('[alt="ZinZen Text Logo"]').should("be.visible");
-    cy.get('[alt="ZinZen Text Logo"]').should("be.visible");
-    cy.contains("a platform for");
-    cy.contains("self-actualization");
-    cy.contains("and");
-    cy.contains("collaboration");
-  });
-
-  it("should display the book icon", () => {
-    cy.get('[alt="Book Icon"]').should("be.visible");
+    cy.contains("Realize");
+    cy.contains("dreams");
+    cy.contains("together");
   });
 
   it("user choice panel for language choice should work", () => {
