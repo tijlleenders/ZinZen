@@ -55,11 +55,9 @@ export const LandingPage = () => {
         <div> <img src={ZinZen} alt="ZinZen Text Logo" id="landing-textLogo" /> </div>
         <div>
           <p className="landing-about">
-            <span> a platform for </span>
-            <span>self-actualization </span>
+            <span> Realize dreams </span>
+            <span>together </span>
             <br style={{ marginTop: "5px" }} />
-            <span>and </span>
-            <span>collaboration</span>
           </p>
         </div>
       </div>
