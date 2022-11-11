@@ -14,7 +14,6 @@ import "./DashboardUserChoicePanel.scss";
 
 import "@pages/Dashboard/Dashboard.scss";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import BookIcon from "@assets/images/bookicon.svg";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -25,7 +24,6 @@ export const Dashboard = () => {
     <div>
       <MainHeaderDashboard />
       <div id="dashboard-container">
-        <img src={BookIcon} alt="Book Icon" id="dashboard-bookIcon" />
         <div className="slide">
           <div>
             <Button

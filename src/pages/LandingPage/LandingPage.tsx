@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
 import { ILanguage } from "@src/Interfaces";
 import ZinZen from "@assets/images/LogoTextLight.svg";
-import BookIcon from "@assets/images/bookicon.svg";
 
 import "./LandingPage.scss";
 
@@ -62,7 +61,6 @@ export const LandingPage = () => {
           </p>
         </div>
       </div>
-      <div id="landing-bookIcon"> <img src={BookIcon} alt="Book Icon" /> </div>
       <div id="landing-right-panel">
         <p id="landing-langChoice">{t("langchoice")}</p>
         <LanguagesList languages={languages} />

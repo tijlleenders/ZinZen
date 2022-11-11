@@ -1,12 +1,5 @@
 /*Dashboard*/
 
-#dashboard-bookIcon{
-  width: 25vw;
-  margin-right: 10%;
-  max-width: 350px;
-  min-width: 280px;
-}
-
 #dashboard-container {
   display: flex;
   justify-content: center;
@@ -145,9 +138,6 @@
 
 
 @media (max-width: 800px) {
-  #dashboard-bookIcon {
-    display: none;
-  }
   #dashboard-container > .slide {
     max-width: 440px;
     min-width: 250px;
