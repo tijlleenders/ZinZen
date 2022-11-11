@@ -3,25 +3,8 @@ import React from "react";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
+import { queryStyle } from "@src/constants/booleanScreen";
 
-const queryStyle = {
-  main: {
-    display: "flex",
-    flexDirection: "column"
-  },
-  question: {
-    alignSelf: "center",
-    width: "25vw",
-    height: "25vh",
-    minWidth: "220px",
-    minHeight: "145px",
-    maxWidth: "300px",
-    maxHeight: "200px",
-    background: "#EDC7B7",
-    borderRadius: "10px",
-    marginTop: "30px"
-  }
-};
 export const QueryPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
