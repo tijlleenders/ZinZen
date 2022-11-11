@@ -3,6 +3,7 @@
 export default interface ContactItem {
     id?: number;
     name: string;
-    relationshipId: string;
+    installId: string;
+    relId: string;
     createdAt: Date;
 };
