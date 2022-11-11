@@ -6,12 +6,9 @@ import { darkModeState, themeSelectionState, languageSelectionState } from "@sto
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
 import { AddFeelingsPage } from "@pages/AddFeelingsPage/AddFeelingsPage";
-import { HomePage } from "@pages/HomePage/HomePage";
 import { NotFoundPage } from "@pages/NotFoundPage/NotFoundPage";
-import { ZinZenMenuPage } from "@pages/ZinZenMenuPage/ZinZenMenuPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
-import { ExplorePage } from "@pages/ExplorePage/ExplorePage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
@@ -22,7 +19,6 @@ import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
-import { Dashboard } from "@pages/Dashboard/Dashboard";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -46,11 +42,8 @@ const App = () => {
             </>
           )}
           <Route path="/Home/AddFeelings" element={<AddFeelingsPage />} />
-          <Route path="/Home/Explore" element={<ExplorePage />} />
-          <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
           <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
-          <Route path="/Home" element={<Dashboard />} />
           <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
           <Route path="Home/Contacts" element={<Contacts />} />
           <Route path="*" element={<NotFoundPage />} />
