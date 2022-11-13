@@ -10,7 +10,7 @@ import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
-import { addContact, getAllContacts } from "@src/api/ContactsAPI";
+import { addContact, getAllContacts, initRelationship } from "@src/api/ContactsAPI";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
@@ -159,10 +159,13 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             variant="primary"
             type="submit"
             onClick={async () => {
-              navigator.clipboard.writeText("dummyRelationshipId");
-              await addContact(newContactName);
-              setNewContactName("");
-              handleCloseAddContact();
+              const res = await initRelationship();
+              if (res.success) {
+                await addContact(newContactName, res.response?.relId, res.response?.installId);
+                navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
+                setNewContactName("");
+                handleCloseAddContact();
+              }
             }}
             className="addContact-submit-button"
           >

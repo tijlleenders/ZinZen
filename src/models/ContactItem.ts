@@ -3,6 +3,6 @@
 export default interface ContactItem {
     id?: number;
     name: string;
-    relationshipId: string;
+    relId: string;
     createdAt: Date;
 };

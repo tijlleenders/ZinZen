@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { darkModeState, themeSelectionState, languageSelectionState } from "@store";
@@ -14,6 +16,7 @@ import { FAQPage } from "@pages/FAQPage/FAQPage";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
+import InvitePage from "@pages/InvitePage/InvitePage";
 
 import "./customize.scss";
 import "./App.scss";
@@ -26,6 +29,12 @@ const App = () => {
   const isThemeChosen = theme !== "No theme chosen.";
   const language = useRecoilValue(languageSelectionState);
   const isLanguageChosen = language !== "No language chosen.";
+
+  useEffect(() => {
+    const installId = localStorage.getItem("installId");
+    if (!installId) localStorage.setItem("installId", uuidv4());
+  }, []);
+
   return (
     <div className={darkModeEnabled ? "App-dark" : "App-light"}>
       <BrowserRouter>
@@ -49,6 +58,7 @@ const App = () => {
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />
+          <Route path="/invite/:id" element={<InvitePage />} />
         </Routes>
       </BrowserRouter>
     </div>
