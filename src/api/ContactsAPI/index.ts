@@ -5,7 +5,7 @@ import { getJustDate } from "@src/utils";
 export const initRelationship = async () => {
   try {
     const installId = localStorage.getItem("installId");
-    const res = await fetch("https://gyya537jwynoda4z46nyykeevu0msejw.lambda-url.eu-west-1.on.aws/", {
+    const res = await fetch("https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/", {
       method: "POST",
       mode: "cors",
       headers: {
@@ -27,7 +27,7 @@ export const acceptRelationship = async () => {
   const relId = window.location.pathname.split("/invite/")[1];
   try {
     const installId = localStorage.getItem("installId");
-    const res = await fetch("https://gyya537jwynoda4z46nyykeevu0msejw.lambda-url.eu-west-1.on.aws/", {
+    const res = await fetch("https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/", {
       method: "POST",
       mode: "cors",
       headers: {
@@ -35,7 +35,7 @@ export const acceptRelationship = async () => {
       },
       body: JSON.stringify({ method: "acceptRelationship", installId, relId }),
     });
-    return { success: res.ok, response: (await res.json()).status };
+    return { success: res.ok, response: (await res.json()) };
   } catch (err) {
     return {
       success: false,
@@ -49,10 +49,10 @@ export const getAllContacts = async () => {
   return allContacts;
 };
 
-export const addContact = async (contactName: string, relId: string, installId: string) => {
+export const addContact = async (contactName: string, relId: string) => {
   const name = `${contactName.charAt(0).toUpperCase() + contactName.slice(1)}`;
   const currentDate = getJustDate(new Date());
-  const newContact: ContactItem = { name, relId, installId, createdAt: currentDate };
+  const newContact: ContactItem = { name, relId, createdAt: currentDate };
   let newContactId;
   await db
     .transaction("rw", db.contactsCollection, async () => {
