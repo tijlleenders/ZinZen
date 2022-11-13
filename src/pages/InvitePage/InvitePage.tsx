@@ -1,12 +1,21 @@
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import { acceptRelationship } from "@src/api/ContactsAPI";
-import { queryStyle } from "@src/constants/booleanScreen";
-import { t } from "i18next";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
+
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
+import { acceptRelationship, addContact } from "@src/api/ContactsAPI";
+import { queryStyle } from "@src/constants/booleanScreen";
+import { darkModeState } from "@src/store";
+import { Modal, Button } from "react-bootstrap";
+import { useRecoilValue } from "recoil";
 
 const InvitePage = () => {
   const navigate = useNavigate();
+  const darkModeStatus = useRecoilValue(darkModeState);
+  const [newContactName, setNewContactName] = useState("");
+  const [showAddContactModal, setShowAddContactModal] = useState(false);
+
+  const handleCloseAddContact = () => setShowAddContactModal(false);
+  const handleShowAddContact = () => setShowAddContactModal(true);
   return (
     <div id="query-container">
       <MainHeaderDashboard />
@@ -19,7 +28,7 @@ const InvitePage = () => {
         <button
           type="button"
           style={queryStyle.question}
-          onClick={acceptRelationship}
+          onClick={handleShowAddContact}
         > Yes
         </button>
         <button
@@ -29,6 +38,56 @@ const InvitePage = () => {
         > No
         </button>
       </div>
+      <Modal
+        id="addContact-modal"
+        show={showAddContactModal}
+        onHide={handleCloseAddContact}
+        centered
+        autoFocus={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
+            Enter the contact name
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <input
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+            type="text"
+            placeholder="Name"
+            className="show-feelings__note-input"
+            value={newContactName}
+            onChange={(e) => {
+              setNewContactName(e.target.value);
+            }}
+              // Admittedly not the best way to do this but suffices for now
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setNewContactName("");
+                handleCloseAddContact();
+              }
+            }}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            type="submit"
+            onClick={async () => {
+              const res = await acceptRelationship();
+              if (res.success) {
+                await addContact(newContactName, res.response?.relId);
+                setNewContactName("");
+                handleCloseAddContact();
+                navigate("/");
+              }
+            }}
+            className="addContact-submit-button"
+          >Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
