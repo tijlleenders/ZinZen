@@ -21,7 +21,7 @@ const InvitePage = () => {
       <MainHeaderDashboard />
       <div style={{ ...queryStyle.main }}>
         <p style={{ paddingTop: "100px", margin: 0 }}>
-          You have been invited to colaborate
+          You have been invited.
           <br />
           Would you like to accept the invite?
         </p>
@@ -47,7 +47,7 @@ const InvitePage = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
-            Enter the contact name
+            Name the person you got this link from
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

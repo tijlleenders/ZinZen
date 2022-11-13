@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -21,8 +22,6 @@ import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
-import { v4 as uuidv4 } from 'uuid';
-
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
