@@ -10,11 +10,11 @@ export const MyTimeline = ({ myTasks }: {myTasks: TaskItem[]}) => {
   const navigate = useNavigate();
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState(-1);
 
-  const getBreakingPoint = (GoalID:number) => {
+  const getBreakingPoint = (GoalID:string) => {
     setDisplayOptionsIndex(myTasks.findIndex((task) => task.goalid === GoalID));
   };
   const handleDisplayOptions = (task: TaskItem) => {
-    getBreakingPoint(task.goalid ? task.goalid : -1);
+    getBreakingPoint(task.goalid ? task.goalid : "root");
   };
   const getTimeComponents = (vbarUp: boolean, tasks: TaskItem[]) => (
     <div id="MTL-times">
@@ -75,7 +75,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: TaskItem[]}) => {
       <div
         className="MTL-options-task"
         onClickCapture={() => {
-          navigate("/Home/MyGoals", { state: { isRootGoal: task.parentGoalId === -1, openGoalOfId: task.goalid } });
+          navigate("/Home/MyGoals", { state: { isRootGoal: task.parentGoalId === "root", openGoalOfId: task.goalid } });
         }}
       >
         <div className="MTL-circle" style={{ color: task.goalColor }} />
