@@ -56,8 +56,8 @@ export const getAllArchivedGoals = async () => {
   return activeGoals;
 };
 
-export const getGoalsFromArchive = async (parentId: number) => {
-  const parentIds: number[] = [];
+export const getGoalsFromArchive = async (parentId: string) => {
+  const parentIds: string[] = [];
   if (parentId === "root") {
     parentIds.push("root");
   } else {
@@ -158,11 +158,17 @@ export const createGoal = (
   goalDueDT: Date | null,
   goalAfterTime: number | null,
   goalBeforeTime: number | null,
-  goalStatus: 0 | 1,
-  parentGoalId: string,
-  goalColor: string,
-  goalLang: string,
-  link: string | null
+  goalLang = "English",
+  link: string | null = null,
+  goalStatus: 0 | 1 = 0,
+  parentGoalId = "root",
+  goalColor = "#edc7b7",
+  shared: null |
+  {
+    id: string,
+    relId: string,
+    name: string
+  } = null
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
@@ -176,7 +182,8 @@ export const createGoal = (
     status: goalStatus,
     parentGoalId,
     goalColor,
-    link
+    link,
+    shared
   };
   return newGoal;
 };

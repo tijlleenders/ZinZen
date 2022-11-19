@@ -60,11 +60,11 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {
       goalTags.due ? goalTags.due.value : null,
       goalTags.afterTime ? goalTags.afterTime.value : null,
       goalTags.beforeTime ? goalTags.beforeTime.value : null,
+      goalLang,
+      goalTags.link ? goalTags.link.value.trim() : null,
       0,
       parentGoalId!,
       colorPallete[colorIndex], // goalColor
-      goalLang,
-      goalTags.link ? goalTags.link.value.trim() : null
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {

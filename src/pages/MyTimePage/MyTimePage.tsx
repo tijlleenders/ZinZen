@@ -142,12 +142,7 @@ export const MyTimePage = () => {
         new Date(new Date().setHours(dummyDates[ele][0], 0, 0)),
         new Date(new Date().setHours(dummyDates[ele][1], 0, 0)),
         [ele][0],
-        [ele][1],
-        0,
-        "root",
-        "#B2A24D",
-        "English",
-        null
+        [ele][1]
       );
       const id = await addGoal(dummyGoal);
       return id;
