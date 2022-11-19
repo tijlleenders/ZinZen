@@ -3,7 +3,7 @@ import { ITags } from "@src/Interfaces/ITagExtractor";
 import { atom, selector } from "recoil";
 
 export interface ISubGoalHistory {
-  goalID: number,
+  goalID: string,
   goalColor: string,
   goalTitle: string,
 }
@@ -35,15 +35,15 @@ export const selectedColorIndex = atom({
 
 export const displayGoalId = atom({
   key: "displayGoalId",
-  default: -1 as number
+  default: "root"
 });
 export const displayAddGoal = atom({
   key: "displayAddGoal",
-  default: null as {open: boolean, goalId: number} | null
+  default: null as {open: boolean, goalId: string} | null
 });
 export const displayUpdateGoal = atom({
   key: "displayUpdateGoal",
-  default: null as {open: boolean, goalId: number} | null
+  default: null as {open: boolean, goalId: string} | null
 });
 export const goalsHistory = atom({
   key: "goalsHistory",
@@ -55,11 +55,11 @@ export const addInGoalsHistory = selector({
   get: ({ get }) => get(goalsHistory),
   set: ({ get, set }, goal) => {
     set(goalsHistory, [...get(goalsHistory), ({
-      goalID: goal.id || -1,
+      goalID: goal.id || "root",
       goalColor: goal.goalColor || "#ffffff",
       goalTitle: goal.title || "",
     })]);
-    set(displayGoalId, goal.id || -1);
+    set(displayGoalId, goal.id || "root");
   }
 });
 
@@ -68,7 +68,7 @@ export const resetGoalsHistory = selector({
   get: ({ get }) => get(goalsHistory),
   set: ({ set }) => {
     set(goalsHistory, []);
-    set(displayGoalId, -1);
+    set(displayGoalId, "root");
   }
 });
 
@@ -83,7 +83,7 @@ export const popFromGoalsHistory = selector({
     } else {
       const currentState = get(goalsHistory).slice(0, index === -1 ? -1 : index + 1);
       if (currentState.length === 0) {
-        set(displayGoalId, -1);
+        set(displayGoalId, "root");
         set(displayAddGoal, null);
         set(displayUpdateGoal, null);
       } else {
