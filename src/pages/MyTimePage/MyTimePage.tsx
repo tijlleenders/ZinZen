@@ -144,7 +144,7 @@ export const MyTimePage = () => {
         [ele][0],
         [ele][1],
         0,
-        -1,
+        "root",
         "#B2A24D",
         "English",
         null
