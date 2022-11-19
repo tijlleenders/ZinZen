@@ -6,7 +6,7 @@ import publicGoal from "@assets/images/publicGoal.svg";
 import archiveGoals from "@assets/images/archiveGoals.svg";
 import { displayAddGoal, displaySuggestionsModal } from "@src/store/GoalsState";
 
-const AddGoalOptions = ({ parentGoalId }: {parentGoalId: number}) => {
+const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
   const setShowAddGoal = useSetRecoilState(displayAddGoal);
   const setShowSuggestionsModal = useSetRecoilState(displaySuggestionsModal);
   return (

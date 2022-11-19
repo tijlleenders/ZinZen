@@ -21,7 +21,7 @@ import "@translations/i18n";
 import "./AddGoalForm.scss";
 
 interface AddGoalFormProps {
-  parentGoalId: number | -1,
+  parentGoalId: string,
 }
 
 export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {

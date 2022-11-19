@@ -18,11 +18,11 @@ import { GoalItem } from "@src/models/GoalItem";
 import InputGoal from "./InputGoal";
 
 interface SuggestionModalProps {
-  goalID: number,
+  goalID: string,
 }
 
 const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
-  const [selectedGoal, setSelectedGoal] = useState<{index: number, goal:ISharedGoal} | null>(null);
+  const [selectedGoal, setSelectedGoal] = useState<{index: string, goal:ISharedGoal} | null>(null);
   const [goalLang, setGoalLang] = useState("en");
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
   const [publicGoals, setPublicGoals] = useState<ISharedGoal[]>([]);
@@ -32,7 +32,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
 
-  const addSuggestedGoal = async (goal:ISharedGoal, index:number) => {
+  const addSuggestedGoal = async (goal:ISharedGoal, index:string) => {
     let newGoalId;
     if (!selectedGoal) {
       const { id: prevId, ...newGoal } = { ...goal, parentGoalId: goalID, sublist: null, status: 0 };
@@ -57,7 +57,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
       );
       newGoalId = await addGoal(newGoal);
     }
-    if (goalID !== -1) {
+    if (goalID !== "root") {
       const parentGoal = await getGoal(goalID);
       const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(goalID, { sublist: newSublist });
@@ -120,8 +120,8 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
     } else if (showSuggestionsModal === "Public") {
       let goal: GoalItem;
 
-      if (goalID !== -1) goal = await getGoal(goalID);
-      const res = await getPublicGoals(goalID === -1 ? "root" : goal.title);
+      if (goalID !== "-1") goal = await getGoal(goalID);
+      const res = await getPublicGoals(goalID === "root" ? "root" : goal.title);
       if (res.status) {
         const tmpPG = [...res.data];
         setPublicGoals([...tmpPG]);
