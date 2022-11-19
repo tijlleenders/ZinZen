@@ -14,7 +14,7 @@ import { addContact, getAllContacts, initRelationship, shareGoalWithContact } fr
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
-import { getGoal, shareMyGoal } from "@src/api/GoalsAPI";
+import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 
 import "./ShareGoalModal.scss";
 
@@ -44,7 +44,11 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         onClickCapture={async () => {
           console.log(letter);
           if (letter === "") handleShowAddContact();
-          else { await shareGoalWithContact(relId, { id: goal.id, title: goal.title }); }
+          else {
+            await shareGoalWithContact(relId, { id: goal.id, title: goal.title });
+            await updateSharedStatusOfGoal(goal.id, relId, letter);
+            setShowShareModal(-1);
+          }
         }}
         className="contact-icon"
       >

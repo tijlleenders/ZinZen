@@ -170,7 +170,7 @@ export const MyGoalsPage = () => {
         setUserGoals(goals);
       }
     })();
-  }, [selectedGoalId]);
+  }, [selectedGoalId, showShareModal]);
 
   /* Usefull if navigation is from MyTimePage or external page/component */
   useEffect(() => {
@@ -268,13 +268,8 @@ export const MyGoalsPage = () => {
                                 overlay={<Tooltip id="tooltip-disabled"> {goal.shared.name} </Tooltip>}
                               >
                                 <div className="contact-button">
-                                  <button
-                                    type="button"
-                                    onClickCapture={() => {
-                                    }}
-                                    className="contact-icon"
-                                  >{goal.shared.name[0]}
-
+                                  <button type="button" className="contact-icon">
+                                    {goal.shared.name[0]}
                                   </button>
                                 </div>
 
