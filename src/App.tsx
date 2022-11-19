@@ -22,6 +22,8 @@ import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
+import { getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
+import { addGoal, archiveRootGoalsByTitle, createGoal } from "./api/GoalsAPI";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -31,8 +33,27 @@ const App = () => {
   const isLanguageChosen = language !== "No language chosen.";
 
   useEffect(() => {
+    const init = async () => {
+      const res = await getContactSharedGoals();
+      if (res.success) {
+        console.log(res);
+        res.response.forEach(async (ele: { relId: string; title: string; id: any; }) => {
+          const contact = await getContactByRelId(ele.relId);
+          if (contact) {
+            await archiveRootGoalsByTitle(ele.title);
+            await addGoal({
+              ...createGoal(ele.title),
+              title: ele.title,
+              shared: { id: ele.id, name: contact?.name, relId: ele.relId } });
+          }
+        });
+      }
+    };
     const installId = localStorage.getItem("installId");
     if (!installId) localStorage.setItem("installId", uuidv4());
+    else {
+      init();
+    }
   }, []);
 
   return (
