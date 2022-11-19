@@ -140,6 +140,14 @@ export const archiveUserGoal = async (goal: GoalItem) => {
   await archiveGoal(goal);
 };
 
+export const archiveRootGoalsByTitle = async (goalTitle: string) => {
+  const goals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals("root").and((goal) => goal.title.toLowerCase() === goalTitle.toLowerCase() && goal.status === 0).toArray();
+  console.log(goals)
+  goals.forEach(async (ele) => {
+    await db.goalsCollection.update(ele.id, { status: 1 });
+  });
+};
+
 export const isCollectionEmpty = async () => {
   const goalsCount = await db.goalsCollection.count();
   if (goalsCount === 0) {

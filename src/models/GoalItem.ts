@@ -1,5 +1,5 @@
 export interface GoalItem {
-  id?: string;
+  id: string;
   title: string;
   duration?: number | null;
   sublist?: number[];
