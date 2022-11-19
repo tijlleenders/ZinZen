@@ -5,7 +5,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { ChevronLeft, ChevronDown } from "react-bootstrap-icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import plus from "@assets/images/plus.svg";
@@ -49,13 +49,12 @@ import "./MyGoalsPage.scss";
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 
 interface ILocationProps {
-  openGoalOfId: number,
+  openGoalOfId: string,
   isRootGoal: boolean
 }
 
 export const MyGoalsPage = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
@@ -104,7 +103,6 @@ export const MyGoalsPage = () => {
       if (selectedGoalId !== showAddGoal?.goalId) { addInHistory(parentGoal); }
     }
 
-    const typeOfPage = window.location.href.split("/").slice(-1)[0];
     setShowAddGoal(null);
     setGoalTags({});
     setGoalTitle("");
@@ -136,7 +134,7 @@ export const MyGoalsPage = () => {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   };
-  async function removeUserGoal(id: number) {
+  async function removeUserGoal(id: string) {
     await removeChildrenGoals(id);
     await removeGoal(id);
     const goals: GoalItem[] = await getActiveGoals();
@@ -166,7 +164,7 @@ export const MyGoalsPage = () => {
   useEffect(() => {
     (async () => {
       // await populateDummyGoals();
-      if (selectedGoalId === -1) {
+      if (selectedGoalId === "root") {
         const goals: GoalItem[] = await getActiveGoals();
         setUserGoals(goals);
       }
@@ -182,10 +180,10 @@ export const MyGoalsPage = () => {
         let { openGoalOfId } = state;
         if (!isRootGoal && openGoalOfId) {
           const tmpHistory = [];
-          while (openGoalOfId !== -1) {
+          while (openGoalOfId !== "root") {
             const tmpGoal: GoalItem = await getGoal(openGoalOfId);
             tmpHistory.push(({
-              goalID: tmpGoal.id || -1,
+              goalID: tmpGoal.id || "root",
               goalColor: tmpGoal.goalColor || "#ffffff",
               goalTitle: tmpGoal.title || "",
               display: null
@@ -209,7 +207,7 @@ export const MyGoalsPage = () => {
       )}
       <GoalsHeader updateThisGoal={updateThisGoal} addThisGoal={addThisGoal} displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "✓"} />
       {
-        selectedGoalId === -1 ?
+        selectedGoalId === "root" ?
           (
             <div className="myGoals-container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <div
@@ -296,7 +294,7 @@ export const MyGoalsPage = () => {
                               style={{ cursor: "pointer" }}
                               onClickCapture={(e) => {
                                 e.stopPropagation();
-                                removeUserGoal(Number(goal.id));
+                                removeUserGoal(goal.id);
                               }}
                             />
                             <img
