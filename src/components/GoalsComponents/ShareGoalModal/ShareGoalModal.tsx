@@ -44,7 +44,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         onClickCapture={async () => {
           console.log(letter);
           if (letter === "") handleShowAddContact();
-          else { await shareGoalWithContact(relId, goal.title); }
+          else { await shareGoalWithContact(relId, { id: goal.id, title: goal.title }); }
         }}
         className="contact-icon"
       >
@@ -73,7 +73,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         <button
           onClick={async () => {
             let parentGoal = "root";
-            if (goal.parentGoalId !== -1) {
+            if (goal.parentGoalId !== "root") {
               parentGoal = (await getGoal(goal.parentGoalId)).title;
             }
             await shareMyGoal(goal, parentGoal);
