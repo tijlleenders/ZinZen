@@ -142,7 +142,6 @@ export const archiveUserGoal = async (goal: GoalItem) => {
 
 export const archiveRootGoalsByTitle = async (goalTitle: string) => {
   const goals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals("root").and((goal) => goal.title.toLowerCase() === goalTitle.toLowerCase() && goal.status === 0).toArray();
-  console.log(goals)
   goals.forEach(async (ele) => {
     await db.goalsCollection.update(ele.id, { status: 1 });
   });
@@ -248,6 +247,10 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
     goal: goalDetails
   };
   await shareGoal(shareableGoal);
+};
+
+export const updateSharedStatusOfGoal = async (id, relId, name) => {
+  await db.goalsCollection.update(id, { shared: { relId, name } });
 };
 
 export const getPublicGoals = async (goalTitle: string) => {

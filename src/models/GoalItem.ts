@@ -16,7 +16,6 @@ export interface GoalItem {
   link: string | null;
   shared: null |
     {
-      id: string,
       relId: string,
       name: string
     }
