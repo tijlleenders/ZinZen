@@ -1,10 +1,10 @@
 export interface TaskItem {
-    taskid: number;
-    goalid: number;
+    taskid: string;
+    goalid: string;
     title: string;
     duration: number;
     start: string;
     deadline: string;
     goalColor: string;
-    parentGoalId: number;
+    parentGoalId: string;
 }
