@@ -1,5 +1,5 @@
 export interface ISchedulerInputGoal{
-    id: number;
+    id: string;
     title: string;
     duration: number;
     start: string;

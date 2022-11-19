@@ -1,8 +1,11 @@
 // @ts-nocheck
+
+import { GoalItem } from "./GoalItem";
+
 /* eslint-disable */
 export default interface ContactItem {
-    id?: number;
     name: string;
+    goals: { id: string, goal: GoalItem }[],
     relId: string;
     createdAt: Date;
 };

@@ -5,7 +5,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { ChevronLeft, ChevronDown } from "react-bootstrap-icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import plus from "@assets/images/plus.svg";
@@ -47,15 +47,15 @@ import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoa
 
 import "./MyGoalsPage.scss";
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 interface ILocationProps {
-  openGoalOfId: number,
+  openGoalOfId: string,
   isRootGoal: boolean
 }
 
 export const MyGoalsPage = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
@@ -90,11 +90,11 @@ export const MyGoalsPage = () => {
       goalTags.due ? goalTags.due.value : null,
       goalTags.afterTime ? goalTags.afterTime.value : null,
       goalTags.beforeTime ? goalTags.beforeTime.value : null,
+      goalLang,
+      goalTags.link ? goalTags.link.value.trim() : null,
       0,
       parentGoalId!,
       colorPallete[colorIndex], // goalColor
-      goalLang,
-      goalTags.link ? goalTags.link.value.trim() : null
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
@@ -104,7 +104,6 @@ export const MyGoalsPage = () => {
       if (selectedGoalId !== showAddGoal?.goalId) { addInHistory(parentGoal); }
     }
 
-    const typeOfPage = window.location.href.split("/").slice(-1)[0];
     setShowAddGoal(null);
     setGoalTags({});
     setGoalTitle("");
@@ -136,7 +135,7 @@ export const MyGoalsPage = () => {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   };
-  async function removeUserGoal(id: number) {
+  async function removeUserGoal(id: string) {
     await removeChildrenGoals(id);
     await removeGoal(id);
     const goals: GoalItem[] = await getActiveGoals();
@@ -166,12 +165,12 @@ export const MyGoalsPage = () => {
   useEffect(() => {
     (async () => {
       // await populateDummyGoals();
-      if (selectedGoalId === -1) {
+      if (selectedGoalId === "root") {
         const goals: GoalItem[] = await getActiveGoals();
         setUserGoals(goals);
       }
     })();
-  }, [selectedGoalId]);
+  }, [selectedGoalId, showShareModal]);
 
   /* Usefull if navigation is from MyTimePage or external page/component */
   useEffect(() => {
@@ -182,10 +181,10 @@ export const MyGoalsPage = () => {
         let { openGoalOfId } = state;
         if (!isRootGoal && openGoalOfId) {
           const tmpHistory = [];
-          while (openGoalOfId !== -1) {
+          while (openGoalOfId !== "root") {
             const tmpGoal: GoalItem = await getGoal(openGoalOfId);
             tmpHistory.push(({
-              goalID: tmpGoal.id || -1,
+              goalID: tmpGoal.id || "root",
               goalColor: tmpGoal.goalColor || "#ffffff",
               goalTitle: tmpGoal.title || "",
               display: null
@@ -209,7 +208,7 @@ export const MyGoalsPage = () => {
       )}
       <GoalsHeader updateThisGoal={updateThisGoal} addThisGoal={addThisGoal} displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "✓"} />
       {
-        selectedGoalId === -1 ?
+        selectedGoalId === "root" ?
           (
             <div className="myGoals-container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <div
@@ -262,6 +261,20 @@ export const MyGoalsPage = () => {
                               <div>{goal.title}</div>&nbsp;
                               { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
                             </div>
+                            { goal.shared && (
+                              <OverlayTrigger
+                                trigger="click"
+                                placement="top"
+                                overlay={<Tooltip id="tooltip-disabled"> {goal.shared.name} </Tooltip>}
+                              >
+                                <div className="contact-button">
+                                  <button type="button" className="contact-icon">
+                                    {goal.shared.name[0]}
+                                  </button>
+                                </div>
+
+                              </OverlayTrigger>
+                            )}
                             <div
                               className="goal-dropdown"
                               style={{ paddingLeft: "5%" }}
@@ -296,7 +309,7 @@ export const MyGoalsPage = () => {
                               style={{ cursor: "pointer" }}
                               onClickCapture={(e) => {
                                 e.stopPropagation();
-                                removeUserGoal(Number(goal.id));
+                                removeUserGoal(goal.id);
                               }}
                             />
                             <img

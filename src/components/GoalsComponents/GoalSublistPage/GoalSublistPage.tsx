@@ -37,12 +37,12 @@ export const GoalSublist = () => {
   const [showShareModal, setShowShareModal] = useState(-1);
 
   useEffect(() => {
-    getGoal(Number(goalID)).then((parent) => setParentGoal(parent));
+    getGoal(goalID).then((parent) => setParentGoal(parent));
     setTapCount([-1, 0]);
   }, [goalID]);
 
   useEffect(() => {
-    getChildrenGoals(Number(goalID))
+    getChildrenGoals(goalID)
       .then((fetchedGoals) => {
         if (!showAddGoal && fetchedGoals.length === 0) {
           popFromHistory(-1);
@@ -55,32 +55,32 @@ export const GoalSublist = () => {
 
   const archiveMyGoal = async (goal: GoalItem) => {
     await archiveUserGoal(goal);
-    await getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+    await getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   };
-  const removeChildrenGoal = async (goalId: number) => {
+  const removeChildrenGoal = async (goalId: string) => {
     if (parentGoal?.sublist) {
       // delete subgoals of this goal
       removeChildrenGoals(goalId);
       // removeGoal(goalId)
       await removeGoal(goalId);
       // remove childGoalId from parentGoal.sublist
-      const parentGoalSublist: number[] = parentGoal.sublist;
+      const parentGoalSublist: string[] = parentGoal.sublist;
       const childGoalIndex = parentGoalSublist.indexOf(goalId);
       if (childGoalIndex !== -1) {
         parentGoalSublist.splice(childGoalIndex, 1);
       }
       // update parentGoal with new parentGoal.sublist
-      await updateGoal(Number(parentGoal.id), { sublist: parentGoalSublist });
+      await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
       // getChildrenGoals again
-      getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+      getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
   const updateUserGoals = async (goal: GoalItem, index: number) => {
     const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
     if (updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
       if (updatedTitle.length === 0) return;
-      await updateGoal(Number(goal.id), { title: updatedTitle });
-      getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+      await updateGoal(goal.id, { title: updatedTitle });
+      getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
 
@@ -176,7 +176,7 @@ export const GoalSublist = () => {
                           src={trash}
                           style={{ cursor: "pointer" }}
                           onClickCapture={() => {
-                            removeChildrenGoal(Number(goal.id));
+                            removeChildrenGoal(goal.id);
                           }}
                         />
                         <img

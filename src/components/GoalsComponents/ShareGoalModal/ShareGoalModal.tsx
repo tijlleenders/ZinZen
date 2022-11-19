@@ -10,11 +10,11 @@ import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
-import { addContact, getAllContacts, initRelationship } from "@src/api/ContactsAPI";
+import { addContact, getAllContacts, initRelationship, shareGoalWithContact } from "@src/api/ContactsAPI";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
-import { getGoal, shareMyGoal } from "@src/api/GoalsAPI";
+import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 
 import "./ShareGoalModal.scss";
 
@@ -37,12 +37,18 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
 
-  const getContactBtn = (letter = "") => (
+  const getContactBtn = (relId = "", letter = "") => (
     <div className="contact-button">
       <button
         type="button"
-        onClick={() => {
+        onClickCapture={async () => {
+          console.log(letter);
           if (letter === "") handleShowAddContact();
+          else {
+            await shareGoalWithContact(relId, { id: goal.id, title: goal.title });
+            await updateSharedStatusOfGoal(goal.id, relId, letter);
+            setShowShareModal(-1);
+          }
         }}
         className="contact-icon"
       >
@@ -71,7 +77,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         <button
           onClick={async () => {
             let parentGoal = "root";
-            if (goal.parentGoalId !== -1) {
+            if (goal.parentGoalId !== "root") {
               parentGoal = (await getGoal(goal.parentGoalId)).title;
             }
             await shareMyGoal(goal, parentGoal);
@@ -100,7 +106,10 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               {contacts.length === 0 &&
                 <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
               <div id="modal-contact-list" style={contacts.length < 3 ? { justifyContent: "flex-start" } : {}}>
-                { contacts.length > 0 && contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (getContactBtn(ele.name))) }
+                { contacts.length > 0 &&
+                  contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (
+                    getContactBtn(ele.relId, ele.name)
+                  ))}
                 { contacts.length >= 3 && (
                   <div className="contact-button">
                     <button
