@@ -47,6 +47,7 @@ import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoa
 
 import "./MyGoalsPage.scss";
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 interface ILocationProps {
   openGoalOfId: string,
@@ -260,6 +261,25 @@ export const MyGoalsPage = () => {
                               <div>{goal.title}</div>&nbsp;
                               { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
                             </div>
+                            { goal.shared && (
+                              <OverlayTrigger
+                                trigger="click"
+                                placement="top"
+                                overlay={<Tooltip id="tooltip-disabled"> {goal.shared.name} </Tooltip>}
+                              >
+                                <div className="contact-button">
+                                  <button
+                                    type="button"
+                                    onClickCapture={() => {
+                                    }}
+                                    className="contact-icon"
+                                  >{goal.shared.name[0]}
+
+                                  </button>
+                                </div>
+
+                              </OverlayTrigger>
+                            )}
                             <div
                               className="goal-dropdown"
                               style={{ paddingLeft: "5%" }}
