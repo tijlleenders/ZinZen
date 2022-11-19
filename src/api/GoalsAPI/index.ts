@@ -152,12 +152,12 @@ export const isCollectionEmpty = async () => {
 
 export const createGoal = (
   goalTitle: string,
-  goalRepeats: string | null,
-  goalDuration: number | null,
-  goalStartDT: Date | null,
-  goalDueDT: Date | null,
-  goalAfterTime: number | null,
-  goalBeforeTime: number | null,
+  goalRepeats: string | null = null,
+  goalDuration: number | null = 1,
+  goalStartDT: Date | null = null,
+  goalDueDT: Date | null = null,
+  goalAfterTime: number | null = null,
+  goalBeforeTime: number | null = null,
   goalLang = "English",
   link: string | null = null,
   goalStatus: 0 | 1 = 0,
