@@ -2,7 +2,7 @@
 // @ts-nocheck
 
 import { db } from "@models";
-import { getJustDate } from "@src/utils";
+import { colorPallete, getJustDate } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { v4 as uuidv4 } from "uuid";
 
@@ -169,7 +169,7 @@ export const createGoal = (
   link: string | null = null,
   goalStatus: 0 | 1 = 0,
   parentGoalId = "root",
-  goalColor = "#edc7b7",
+  goalColor = colorPallete[Math.floor(Math.random() * 11)],
   shared: null |
   {
     id: string,

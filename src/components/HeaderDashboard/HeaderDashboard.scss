@@ -2,7 +2,6 @@
   height: 5em;
   display: block;
   width: 100%;
-  background-color: #f0e6e1;
   position: fixed;
   z-index: 2;    
   max-width: 600px;
@@ -10,14 +9,11 @@
   width: 100%;
 }
 
-.positioning-dark {
-  background-color: #121212;
-}
-
 #main-header-homeLogo {
   width: 35px;
   position: absolute;
-  top: 17px;
+  top: 12px;
+  cursor: pointer;
 }
 
 .main-header-TextLogo {
@@ -57,7 +53,7 @@
 
 #goal-suggestion-btn {
     position: absolute;
-    top: 10px;
+    top: 12px;
     right: 0;
     border: none;
     background: transparent;

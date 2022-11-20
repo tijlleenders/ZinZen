@@ -2,7 +2,7 @@ export interface GoalItem {
   id: string;
   title: string;
   duration?: number | null;
-  sublist?: number[];
+  sublist?: string[];
   repeat?: string | null;
   start: Date | null;
   due: Date | null;

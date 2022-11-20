@@ -11,9 +11,11 @@ export const queryStyle = {
     minHeight: "145px",
     maxWidth: "300px",
     maxHeight: "200px",
-    background: "#EDC7B7",
+    color: localStorage.getItem("theme") === "dark" ? "white" : "black",
+    background: localStorage.getItem("theme") !== "dark" ? "#EDC7B7" : "rgba(112, 112, 112, 0.4)",
     borderRadius: "10px",
     marginTop: "30px",
-    fontWeight: "700"
+    fontWeight: "700",
+    border: "none"
   }
 };

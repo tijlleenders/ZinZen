@@ -1,9 +1,9 @@
 import React from "react";
 
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { queryStyle } from "@src/constants/booleanScreen";
+import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
 export const QueryPage = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export const QueryPage = () => {
 
   return (
     <div id="query-container">
-      <MainHeaderDashboard />
+      <LandingHeader avatar={false} />
       <div style={{ ...queryStyle.main }}>
         <p className="landing-about" style={{ paddingTop: "100px", margin: 0 }}>
           <span> a platform for </span>

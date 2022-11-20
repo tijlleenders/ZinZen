@@ -85,10 +85,10 @@ export const GoalSublist = () => {
   };
 
   return (
-    <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
+    <div className="sublist-container">
       <Breadcrumb style={{ marginTop: "80px" }}>
         <Breadcrumb.Item onClick={() => callResetHistory()}>
-          <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
+          <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: "#EDC7B7" }}>My Goals</span>
         </Breadcrumb.Item>
         {
           subGoalHistory.map((item, index) => (
@@ -96,7 +96,7 @@ export const GoalSublist = () => {
               key={`history-${item.goalID}-${item.goalTitle}.`}
               onClick={() => popFromHistory(index)}
             >
-              <span style={{ backgroundColor: item.goalColor, borderRadius: "8px", padding: "5px" }}>
+              <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: item.goalColor }}>
                 {item.goalTitle }
               </span>
             </Breadcrumb.Item>

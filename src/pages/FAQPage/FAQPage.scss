@@ -27,7 +27,9 @@
     color: #d6d6d6;
   }
   
-  .faq-choice-light {
+  .faq-choice-light, .faq-choice-dark {
+    border: none;
+
     width: 100% !important;
     font-weight: bolder !important;
     font-size: 1em !important;
@@ -36,16 +38,13 @@
     margin-bottom: 1em !important;
     margin-top: 1em !important;
     height: auto;
+    background: rgba(246, 246, 246, 0.4);
+    border-radius: 8px;
+    color: black;
   }
   
   .faq-choice-dark {
-    width: 100% !important;
-    font-weight: bolder !important;
-    font-size: 1em !important;
-    text-align: left !important;
-    padding: 1.3em 1em 1.3em 1em !important;
-    margin-bottom: 1em !important;
-    margin-top: 1em !important;
-    height: auto;
+    color: white;
+    background: rgba(112, 112, 112, 0.4);
   }
   
