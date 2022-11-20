@@ -1,3 +1,8 @@
+#feedback-container {
+  min-width: 275px;
+  max-width: 580px;
+  margin-top: 100px;
+}
 
 #feedback-line-1,
 #feedback-line-4 {
@@ -41,14 +46,3 @@
   font-weight: bold;
 }
 
-@media only screen and (min-width: 760px) {
-  #feedback-container {
-    padding: 2% 30%;
-  }
-}
-
-@media only screen and (min-width: 1280px) {
-  #feedback-container {
-    padding: 2% 30%;
-  }
-}
