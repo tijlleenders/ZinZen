@@ -12,12 +12,12 @@
     font-weight: 600;
     font-size: 25px;
     text-align: center;
-    color: #AC3B61;
-    margin-top: 70px;
+    color: #AC3B61 !important;
+    margin-top: 50px;
 }
 
 .landing-about > span:nth-child(even) {
-    color: #3B6899;
+    color: #3B6899 !important;
 }
 
 #landing-right-panel {
@@ -28,7 +28,7 @@
         font-weight: 700;
         font-size: 17px;
         line-height: 17px;
-        color: #AC3B61;
+        color: #AC3B61 !important;
         align-self: center;
     }
 }
