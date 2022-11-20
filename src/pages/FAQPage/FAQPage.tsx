@@ -47,26 +47,24 @@ export const FAQPage = () => {
           <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>{t("Anstoogoodtobetrue")}</p>
         </div>
         <div>
-          <Button
-            variant={darkModeStatus ? "bdivn" : "peach"}
-            size="lg"
+          <button
+            type="button"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
               navigate("/ZinZen/Feedback");
             }}
           >
             {t("ihavedifferentquestions")}
-          </Button>
-          <Button
-            variant={darkModeStatus ? "bdivn" : "peach"}
-            size="lg"
+          </button>
+          <button
+            type="button"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
               navigate("/");
             }}
           >
             {t("ihavenomorequestions")}
-          </Button>
+          </button>
         </div>
       </div>
     </div>

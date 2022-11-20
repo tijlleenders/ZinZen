@@ -10,6 +10,9 @@ import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import LogoGradient from "@assets/images/LogoGradient.png";
+import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
+import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
+
 import { displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsState";
 import SuggestionModal from "../SuggestionModal";
 
@@ -37,17 +40,30 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
   return (
     <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
       <Navbar collapseOnSelect expand="lg">
-        <img
-          role="presentation"
-          src={ArrowIcon}
-          alt="Back arrow"
-          id="main-header-homeLogo"
-          onClick={() => {
-            if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
-              navigate(-1);
-            } else popFromHistory(-1);
-          }}
-        />
+        {
+        !showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0 ? (
+          <img
+            role="presentation"
+            src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
+            alt="Back arrow"
+            style={{ width: "50px" }}
+            id="main-header-homeLogo"
+          />
+        )
+          : (
+            <img
+              role="presentation"
+              src={ArrowIcon}
+              alt="Back arrow"
+              id="main-header-homeLogo"
+              onClick={() => {
+                if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
+                  navigate(-1);
+                } else popFromHistory(-1);
+              }}
+            />
+          )
+}
         {darkModeStatus ? (
           <img
             role="presentation"
