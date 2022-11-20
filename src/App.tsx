@@ -67,16 +67,13 @@ const App = () => {
           ) : !isThemeChosen ? (
             <Route path="/" element={<ThemeChoice />} />
           ) : (
-            <>
-              <Route path="/" element={<MyTimePage />} />
-              <Route path="/Home/MyTime" element={<MyTimePage />} />
-            </>
+            <Route path="/" element={<MyTimePage />} />
           )}
-          <Route path="/Home/AddFeelings" element={<AddFeelingsPage />} />
-          <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
-          <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
-          <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
-          <Route path="Home/Contacts" element={<Contacts />} />
+          <Route path="/AddFeelings" element={<AddFeelingsPage />} />
+          <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
+          <Route path="/MyGoals" element={<MyGoalsPage />} />
+          <Route path="/MyFeelings" element={<ShowFeelingsPage />} />
+          <Route path="/Contacts" element={<Contacts />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />

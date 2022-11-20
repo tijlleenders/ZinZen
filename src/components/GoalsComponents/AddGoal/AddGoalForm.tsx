@@ -79,7 +79,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {
     setGoalTags({});
     setGoalTitle("");
     setColorIndex(0);
-    if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
+    if (typeOfPage === "AddGoals") { navigate("/MyGoals", { replace: true }); }
   };
 
   return (

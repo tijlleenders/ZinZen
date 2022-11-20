@@ -29,7 +29,7 @@ export const MainHeaderDashboard = () => {
         alt="ZinZen Text Logo"
         className="main-header-TextLogo"
         onClick={() => {
-          navigate("/Home/MyGoals");
+          navigate("/MyGoals");
         }}
       />
     ) : (
@@ -39,7 +39,7 @@ export const MainHeaderDashboard = () => {
         alt="ZinZen Text Logo"
         className="main-header-TextLogo"
         onClick={() => {
-          navigate("/Home/MyGoals");
+          navigate("/MyGoals");
         }}
       />
     )

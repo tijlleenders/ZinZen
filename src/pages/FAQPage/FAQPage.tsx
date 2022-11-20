@@ -52,7 +52,7 @@ export const FAQPage = () => {
             size="lg"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
-              navigate("/Home/ZinZen/Feedback");
+              navigate("/ZinZen/Feedback");
             }}
           >
             {t("ihavedifferentquestions")}
@@ -62,7 +62,7 @@ export const FAQPage = () => {
             size="lg"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
-              navigate("/Home/MyTime");
+              navigate("/");
             }}
           >
             {t("ihavenomorequestions")}

@@ -277,7 +277,6 @@ export const MyGoalsPage = () => {
                             )}
                             <div
                               className="goal-dropdown"
-                              style={{ paddingLeft: "5%" }}
                               onClickCapture={() => {
                                 if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
                               }}
