@@ -11,12 +11,13 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
 
-export const LandingHeader = () => {
+export const LandingHeader = ({ avatar }:{avatar: boolean}) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
     <>
+      { avatar && (
       <img
         role="presentation"
         src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
@@ -24,6 +25,7 @@ export const LandingHeader = () => {
         style={{ width: "50px" }}
         id="main-header-homeLogo"
       />
+      )}
       <img
         role="presentation"
         src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}

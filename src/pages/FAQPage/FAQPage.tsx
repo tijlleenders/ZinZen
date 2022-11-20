@@ -1,11 +1,10 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { darkModeState } from "@store";
+import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import "@translations/i18n";
@@ -18,7 +17,7 @@ export const FAQPage = () => {
 
   return (
     <div className="slide" style={{ display: "flex", justifyContent: "center" }}>
-      <MainHeaderDashboard />
+      <LandingHeader avatar={false} />
       <div id="faq-container">
         <div>
           <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
