@@ -18,12 +18,12 @@
 }
 
 .main-header-TextLogo {
-  width: 150px;
+  width: 130px;
   cursor: pointer;
   position: absolute;
   left: 0;
   right: 0;
-  top: 10px;
+  top: 15px;
   margin: auto;
 }
 
@@ -42,7 +42,11 @@
   border: none;
   background: transparent;
 }
-
+.dark-mode-toggle {
+  position: absolute;
+  top: 25px;
+  right: 0;
+}
 #goal-suggestion-btn {
     position: absolute;
     top: 16px;

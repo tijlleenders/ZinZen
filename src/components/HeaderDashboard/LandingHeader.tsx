@@ -27,6 +27,7 @@ export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
           src={ArrowIcon}
           alt="Back arrow"
           id="main-header-homeLogo"
+          style={{ left: 0 }}
           onClick={() => { navigate(-1); }}
         />
       ) : avatar === "sidebar" ? (
