@@ -13,6 +13,7 @@ export const queryStyle = {
     maxHeight: "200px",
     background: "#EDC7B7",
     borderRadius: "10px",
-    marginTop: "30px"
+    marginTop: "30px",
+    fontWeight: "700"
   }
 };
