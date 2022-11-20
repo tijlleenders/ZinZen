@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { acceptRelationship, addContact } from "@src/api/ContactsAPI";
 import { queryStyle } from "@src/constants/booleanScreen";
 import { darkModeState } from "@src/store";
 import { Modal, Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
+import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
 const InvitePage = () => {
   const navigate = useNavigate();
@@ -17,9 +17,9 @@ const InvitePage = () => {
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
   return (
-    <div id="query-container">
-      <MainHeaderDashboard />
+    <>
       <div style={{ ...queryStyle.main }}>
+        <LandingHeader avatar={null}/>
         <p style={{ paddingTop: "100px", margin: 0 }}>
           You have been invited.
           <br />
@@ -88,7 +88,7 @@ const InvitePage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 };
 

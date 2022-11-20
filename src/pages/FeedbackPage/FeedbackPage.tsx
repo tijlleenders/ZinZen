@@ -31,7 +31,7 @@ export const FeedbackPage = () => {
 
   return (
     <div id="feedback-container">
-      <LandingHeader avatar />
+      <LandingHeader avatar={"back"} />
       <Container className="slide" fluid>
         {userRating === 0 ? <h1>hello</h1> : null}
         <div style={{ color: `${darkModeStatus ? "white" : "black"}` }}>
