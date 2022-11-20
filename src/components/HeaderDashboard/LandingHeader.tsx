@@ -15,37 +15,26 @@ export const LandingHeader = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
-    <>
+    darkModeStatus ? (
       <img
         role="presentation"
-        src={logo}
-        alt="Zinzen Logo"
-        id="main-header-homeLogo"
+        src={ZinZenTextDark}
+        alt="ZinZen Text Logo"
+        className="main-header-TextLogo"
         onClick={() => {
-          navigate("/Home");
+          navigate("/");
         }}
       />
-      {darkModeStatus ? (
-        <img
-          role="presentation"
-          src={ZinZenTextDark}
-          alt="ZinZen Text Logo"
-          className="main-header-TextLogo"
-          onClick={() => {
-            navigate("/Home");
-          }}
-        />
-      ) : (
-        <img
-          role="presentation"
-          src={ZinZenTextLight}
-          alt="ZinZen Text Logo"
-          className="main-header-TextLogo"
-          onClick={() => {
-            navigate("/Home");
-          }}
-        />
-      )}
-    </>
+    ) : (
+      <img
+        role="presentation"
+        src={ZinZenTextLight}
+        alt="ZinZen Text Logo"
+        className="main-header-TextLogo"
+        onClick={() => {
+          navigate("/");
+        }}
+      />
+    )
   );
 };

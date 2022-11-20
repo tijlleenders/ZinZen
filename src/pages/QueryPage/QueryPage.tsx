@@ -30,7 +30,7 @@ export const QueryPage = () => {
         <button
           type="button"
           style={queryStyle.question}
-          onClick={() => { navigate("/Home/MyTime"); }}
+          onClick={() => { navigate("/"); }}
         >
           {t("ialreadyknowZinZen")}
         </button>

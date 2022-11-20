@@ -115,7 +115,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                     <button
                       type="button"
                       className="next-icon"
-                      onClick={() => navigate("/home/contacts")}
+                      onClick={() => navigate("/contacts")}
                     >
                       <ChevronRight />
                     </button>

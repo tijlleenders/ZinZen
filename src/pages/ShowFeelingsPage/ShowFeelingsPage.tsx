@@ -58,12 +58,12 @@ export const ShowFeelingsPage = () => {
                   role="button"
                   tabIndex={0}
                   onClick={() => {
-                    navigate("/Home/AddFeelings", {
+                    navigate("/AddFeelings", {
                       state: { feelingDate: new Date(date) },
                     });
                   }}
                   onKeyDown={() => {
-                    navigate("/Home/AddFeelings", {
+                    navigate("/AddFeelings", {
                       state: { feelingDate: new Date(date) },
                     });
                   }}
@@ -91,12 +91,12 @@ export const ShowFeelingsPage = () => {
                   alt="add-feeling"
                   style={{ margin: "5px 0 0 30px", height: "30px", width: "30px" }}
                   onClick={() => {
-                    navigate("/Home/AddFeelings", {
+                    navigate("/AddFeelings", {
                       state: { feelingDate: new Date(date) },
                     });
                   }}
                   onKeyDown={() => {
-                    navigate("/Home/AddFeelings", {
+                    navigate("/AddFeelings", {
                       state: { feelingDate: new Date(date) },
                     });
                   }}

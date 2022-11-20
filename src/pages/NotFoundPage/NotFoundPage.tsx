@@ -26,7 +26,7 @@ export const NotFoundPage = () => {
               size="lg"
               className={darkModeStatus ? "error-btn-dark" : "error-btn-light"}
               onClick={() => {
-                navigate("/Home");
+                navigate("/");
               }}
             >
               Home

@@ -75,7 +75,7 @@ export const MyTimeline = ({ myTasks }: {myTasks: TaskItem[]}) => {
       <div
         className="MTL-options-task"
         onClickCapture={() => {
-          navigate("/Home/MyGoals", { state: { isRootGoal: task.parentGoalId === "root", openGoalOfId: task.goalid } });
+          navigate("/MyGoals", { state: { isRootGoal: task.parentGoalId === "root", openGoalOfId: task.goalid } });
         }}
       >
         <div className="MTL-circle" style={{ color: task.goalColor }} />
