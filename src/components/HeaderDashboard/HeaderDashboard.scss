@@ -10,14 +10,15 @@
 }
 
 #main-header-homeLogo {
-  width: 35px;
+  width: 40px;
   position: absolute;
-  top: 12px;
+  top: 18px;
+  left: 18px;
   cursor: pointer;
 }
 
 .main-header-TextLogo {
-  width: 135px;
+  width: 150px;
   cursor: pointer;
   position: absolute;
   left: 0;
@@ -33,15 +34,6 @@
   margin: 0;
 }
 
-@media (max-width: 420px) {  
-  #main-header-homeLogo {
-    width: 30px;
-  }
-
-  .main-header-TextLogo {
-    width: 120px;
-  }
-}
 /* Goal Suggestion modal css */
 #suggestions-modal-icon {
   position: absolute;
@@ -53,20 +45,20 @@
 
 #goal-suggestion-btn {
     position: absolute;
-    top: 12px;
-    right: 0;
+    top: 16px;
+    right: 18px;
     border: none;
     background: transparent;
 }
   #goal-suggestion-btn > img, #suggestions-modal-icon > img {
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
   #goal-suggestion-btn > div, #suggestions-modal-icon > div  {
     position: absolute;
-    top: -5px;
-    right: 13px;
+    top: -8px;
+    right: 10px;
     color: white;
     font-weight: 800;
     font-size: 2.5em;
@@ -158,6 +150,13 @@
 }
 
 @media (min-width: 600px) {
+  #goal-suggestion-btn {
+    right: 0;
+  }
+  #main-header-homeLogo {
+    left: 0;
+  }
+  
   #addGoal-options {
     right: calc((100% - 587px) / 2);
   }

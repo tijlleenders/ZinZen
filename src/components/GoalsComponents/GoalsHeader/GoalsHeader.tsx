@@ -13,7 +13,9 @@ import LogoGradient from "@assets/images/LogoGradient.png";
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 
+import { displaySidebar } from "@src/store/SidebarState";
 import { displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsState";
+import Sidebar from "@components/Sidebar";
 import SuggestionModal from "../SuggestionModal";
 
 import "@translations/i18n";
@@ -32,6 +34,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showAddGoal = useRecoilValue(displayAddGoal);
   const goalID = useRecoilValue(displayGoalId);
+  const setShowSidebar = useSetRecoilState(displaySidebar);
 
   const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
 
@@ -39,6 +42,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
 
   return (
     <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
+      <Sidebar />
       <Navbar collapseOnSelect expand="lg">
         {
         !showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0 ? (
@@ -48,6 +52,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             alt="Back arrow"
             style={{ width: "50px" }}
             id="main-header-homeLogo"
+            onClickCapture={() => setShowSidebar(true)}
           />
         )
           : (

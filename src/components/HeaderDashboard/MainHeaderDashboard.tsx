@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
@@ -10,10 +10,13 @@ import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
+import { displaySidebar } from "@src/store/SidebarState";
+import Sidebar from "@components/Sidebar";
 
 export const MainHeaderDashboard = () => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const setShowSidebar = useSetRecoilState(displaySidebar);
   // const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   // const toggleTheme = () => {
   //   setDarkModeStatus(!darkModeStatus);
@@ -28,9 +31,10 @@ export const MainHeaderDashboard = () => {
       <img
         role="presentation"
         src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
-        alt="Back arrow"
+        alt="avatar"
         style={{ width: "50px" }}
         id="main-header-homeLogo"
+        onClick={() => setShowSidebar(true)}
       />
       <img
         role="presentation"
@@ -41,6 +45,7 @@ export const MainHeaderDashboard = () => {
           navigate("/MyGoals");
         }}
       />
+      <Sidebar />
     </>
 
   );

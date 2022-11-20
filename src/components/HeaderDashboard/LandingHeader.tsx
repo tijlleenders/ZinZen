@@ -1,31 +1,44 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
 
+import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
+import { displaySidebar } from "@src/store/SidebarState";
 
-export const LandingHeader = ({ avatar }:{avatar: boolean}) => {
+export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const setShowSidebar = useSetRecoilState(displaySidebar);
 
   return (
     <>
-      { avatar && (
-      <img
-        role="presentation"
-        src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
-        alt="Back arrow"
-        style={{ width: "50px" }}
-        id="main-header-homeLogo"
-      />
-      )}
+      { avatar === "back" ? (
+        <img
+          role="presentation"
+          src={ArrowIcon}
+          alt="Back arrow"
+          id="main-header-homeLogo"
+          onClick={() => { navigate(-1); }}
+        />
+      ) : avatar === "sidebar" ? (
+        <img
+          role="presentation"
+          src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
+          alt="avatar"
+          style={{ width: "50px" }}
+          id="main-header-homeLogo"
+          onClick={() => setShowSidebar(true)}
+        />
+      )
+        : null}
       <img
         role="presentation"
         src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
