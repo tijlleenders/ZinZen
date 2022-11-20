@@ -9,9 +9,10 @@ import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
-import "@translations/i18n";
-import "./HeaderDashboard.scss";
 import { displaySidebar } from "@src/store/SidebarState";
+
+import "./HeaderDashboard.scss";
+import "@translations/i18n";
 
 export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
   const navigate = useNavigate();

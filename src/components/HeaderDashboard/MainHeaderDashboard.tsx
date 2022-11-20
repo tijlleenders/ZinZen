@@ -8,10 +8,11 @@ import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
-import "@translations/i18n";
-import "./HeaderDashboard.scss";
 import { displaySidebar } from "@src/store/SidebarState";
 import Sidebar from "@components/Sidebar";
+
+import "@translations/i18n";
+import "./HeaderDashboard.scss";
 
 export const MainHeaderDashboard = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export const MainHeaderDashboard = () => {
         role="presentation"
         src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
         alt="avatar"
-        style={{ width: "50px" }}
+        style={{ width: "50px", left: 0 }}
         id="main-header-homeLogo"
         onClick={() => setShowSidebar(true)}
       />
