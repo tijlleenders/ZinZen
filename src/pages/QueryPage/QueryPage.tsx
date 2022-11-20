@@ -11,7 +11,7 @@ export const QueryPage = () => {
 
   return (
     <div id="query-container">
-      <LandingHeader avatar={false} />
+      <LandingHeader avatar={null} />
       <div style={{ ...queryStyle.main }}>
         <p className="landing-about" style={{ paddingTop: "100px", margin: 0 }}>
           <span> a platform for </span>

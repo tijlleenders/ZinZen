@@ -17,7 +17,7 @@ export const FAQPage = () => {
 
   return (
     <div className="slide" style={{ display: "flex", justifyContent: "center" }}>
-      <LandingHeader avatar={false} />
+      <LandingHeader avatar={null} />
       <div id="faq-container">
         <div>
           <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
