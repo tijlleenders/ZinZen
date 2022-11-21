@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { darkModeState, themeSelectionState, languageSelectionState } from "@store";
+import { darkModeState, themeSelectionState, languageSelectionState, displayLoader } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
@@ -17,19 +17,21 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
+import { addGoalInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
+import { createGoal } from "./api/GoalsAPI";
+import Loader from "./common/Loader";
 
 import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
-import { addGoalInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
-import { createGoal } from "./api/GoalsAPI";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeSelectionState);
-  const isThemeChosen = theme !== "No theme chosen.";
+  const showLoader = useRecoilValue(displayLoader);
   const language = useRecoilValue(languageSelectionState);
+  const isThemeChosen = theme !== "No theme chosen.";
   const isLanguageChosen = language !== "No language chosen.";
 
   useEffect(() => {
@@ -80,6 +82,7 @@ const App = () => {
           <Route path="/invite/:id" element={<InvitePage />} />
         </Routes>
       </BrowserRouter>
+      { showLoader && <Loader /> }
     </div>
   );
 };

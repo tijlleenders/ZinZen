@@ -3,9 +3,9 @@ import { useNavigate } from "react-router";
 
 import { acceptRelationship, addContact } from "@src/api/ContactsAPI";
 import { queryStyle } from "@src/constants/booleanScreen";
-import { darkModeState } from "@src/store";
+import { darkModeState, displayLoader } from "@src/store";
 import { Modal, Button } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
 const InvitePage = () => {
@@ -13,7 +13,7 @@ const InvitePage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [newContactName, setNewContactName] = useState("");
   const [showAddContactModal, setShowAddContactModal] = useState(false);
-
+  const setLoading = useSetRecoilState(displayLoader);
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
   return (
@@ -77,10 +77,12 @@ const InvitePage = () => {
             onClick={async () => {
               const res = await acceptRelationship();
               if (res.success) {
+                setLoading(true);
                 await addContact(newContactName, res.response?.relId);
                 setNewContactName("");
                 handleCloseAddContact();
                 navigate("/");
+                setLoading(false);
               }
             }}
             className="addContact-submit-button"
