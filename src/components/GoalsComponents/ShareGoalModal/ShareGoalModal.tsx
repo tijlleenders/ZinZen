@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 import { Button, Form, Modal } from "react-bootstrap";
-import { ChevronRight } from "react-bootstrap-icons";
 
 import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
@@ -11,8 +9,8 @@ import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
 import { addContact, getAllContacts, initRelationship, shareGoalWithContact } from "@src/api/ContactsAPI";
-import { darkModeState } from "@src/store";
-import { useRecoilValue } from "recoil";
+import { darkModeState, displayLoader } from "@src/store";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 
@@ -25,10 +23,8 @@ interface IShareGoalModalProps {
 }
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
-  const navigate = useNavigate();
-
   const darkModeStatus = useRecoilValue(darkModeState);
-
+  const setLoading = useSetRecoilState(displayLoader);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [newContactName, setNewContactName] = useState("");
   const [showAddContactModal, setShowAddContactModal] = useState(false);
@@ -44,9 +40,11 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         onClick={async () => {
           if (letter === "") handleShowAddContact();
           else {
+            setLoading(true);
             await shareGoalWithContact(relId, { id: goal.id, title: goal.title });
             await updateSharedStatusOfGoal(goal.id, relId, letter);
             setShowShareModal(-1);
+            setLoading(false);
           }
         }}
         className="contact-icon"
@@ -76,10 +74,12 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         <button
           onClick={async () => {
             let parentGoal = "root";
+            setLoading(true);
             if (goal.parentGoalId !== "root") {
               parentGoal = (await getGoal(goal.parentGoalId)).title;
             }
             await shareMyGoal(goal, parentGoal);
+            setLoading(false);
           }}
           type="button"
           className="shareOptions-btn"

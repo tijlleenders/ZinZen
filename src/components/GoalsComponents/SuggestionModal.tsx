@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { Modal } from "react-bootstrap";
 
 import plus from "@assets/images/plus.svg";
@@ -15,6 +15,7 @@ import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
 import { displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
 import ITagExtractor from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
+import { displayLoader } from "@src/store";
 import InputGoal from "./InputGoal";
 
 interface SuggestionModalProps {
@@ -26,9 +27,10 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   const [goalLang, setGoalLang] = useState("en");
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
   const [publicGoals, setPublicGoals] = useState<ISharedGoal[]>([]);
-
-  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalInput, setGoalInput] = useState("");
+
+  const setLoading = useSetRecoilState(displayLoader);
+  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
 
@@ -125,7 +127,9 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     getMySuggestions();
+    setLoading(false);
   }, [showSuggestionsModal]);
 
   useEffect(() => {
