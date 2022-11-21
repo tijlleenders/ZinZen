@@ -41,8 +41,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
     <div className="contact-button">
       <button
         type="button"
-        onClickCapture={async () => {
-          console.log(letter);
+        onClick={async () => {
           if (letter === "") handleShowAddContact();
           else {
             await shareGoalWithContact(relId, { id: goal.id, title: goal.title });
@@ -96,21 +95,23 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             <p className="shareOption-name">Share Public</p>
           </div>
         </button>
-        <button type="button" className="shareOptions-btn">
+        <button disabled={!!goal.shared} type="button" className="shareOptions-btn">
           <div className="share-Options" onClickCapture={() => setDisplayContacts(!displayContacts)}>
             <div> <img alt="share with friend" src={shareWithFriend} /> </div>
-            <p className="shareOption-name">Share 1:1</p>
+            <p className="shareOption-name">{`Share 1:1 ${goal.shared ? ` - Goal is shared with ${goal.shared.name}` : " "}`}</p>
           </div>
-          { displayContacts && (
+          { !goal.shared && displayContacts && (
             <div className="shareWithContacts">
               {contacts.length === 0 &&
                 <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
+              { contacts.length > 0 &&
+                <p className="share-warning"> Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact </p>}
               <div id="modal-contact-list" style={contacts.length < 3 ? { justifyContent: "flex-start" } : {}}>
                 { contacts.length > 0 &&
                   contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (
                     getContactBtn(ele.relId, ele.name)
                   ))}
-                { contacts.length >= 3 && (
+                { /* contacts.length >= 3 && (
                   <div className="contact-button">
                     <button
                       type="button"
@@ -120,8 +121,8 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                       <ChevronRight />
                     </button>
                   </div>
-                )}
-                { contacts.length < 3 && getContactBtn() }
+                ) */}
+                { contacts.length < 1 && getContactBtn() }
               </div>
             </div>
           )}
