@@ -123,7 +123,7 @@ export const GoalSublist = () => {
                         if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
                       }}
                     >
-                      { tapCount[0] === index && tapCount[1] > 0 && (
+                      { goal.sublist && goal.sublist.length > 0 && (
                         <div
                           className="goal-dd-outer"
                           style={{ borderColor: goal.goalColor }}
@@ -131,8 +131,7 @@ export const GoalSublist = () => {
                       )}
                       <div
                         className="goal-dd-inner"
-                        style={{ top: tapCount[0] === index && tapCount[1] > 0 ? 4 : 2,
-                          background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor} 79.17%, ${goal.goalColor} 100%)` }}
+                        style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)` }}
                       />
                     </div>
                     <div

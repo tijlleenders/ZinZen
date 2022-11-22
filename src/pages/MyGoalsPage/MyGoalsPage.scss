@@ -83,7 +83,7 @@
     border-radius: 57px;
     position: absolute;
     left: -37px;
-    top: 2px;
+    top: 1px;
   }
   .goal-dd-inner {
     width: 57px;
@@ -92,7 +92,8 @@
   }
   .goal-dd-outer {
     border: 1.4px solid;
-    width: 60px;
+    width: 59px;
+    top: 0.5px;
     height: 100%;
     background: transparent;
   }
