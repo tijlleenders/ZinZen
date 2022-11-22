@@ -237,8 +237,24 @@ export const MyGoalsPage = () => {
                           aria-hidden
                           key={String(`task-${goal.id}`)}
                           className="user-goal"
-                          style={{ background: `${goal.goalColor}`, cursor: "pointer" }}
                         >
+                          <div
+                            className="goal-dropdown"
+                            onClickCapture={() => {
+                              if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
+                            }}
+                          >
+                            { goal.sublist && goal.sublist.length > 0 && (
+                              <div
+                                className="goal-dd-outer"
+                                style={{ borderColor: goal.goalColor }}
+                              />
+                            )}
+                            <div
+                              className="goal-dd-inner"
+                              style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
+                            />
+                          </div>
                           <div
                             style={{
                               display: "flex",
@@ -268,25 +284,17 @@ export const MyGoalsPage = () => {
                               overlay={<Tooltip id="tooltip-disabled"> {goal.shared.name} </Tooltip>}
                             >
                               <div className="contact-button">
-                                <button type="button" className="contact-icon">
+                                <button
+                                  type="button"
+                                  className="contact-icon"
+                                  style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
+                                >
                                   {goal.shared.name[0]}
                                 </button>
                               </div>
 
                             </OverlayTrigger>
                             )}
-                            <div
-                              className="goal-dropdown"
-                              onClickCapture={() => {
-                                if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
-                              }}
-                            >
-                              {tapCount[0] === index && tapCount[1] > 0 ? (
-                                <ChevronDown fontSize="30px" />
-                              ) : (
-                                <ChevronLeft fontSize="30px" />
-                              )}
-                            </div>
                           </div>
                           {tapCount[0] === index && tapCount[1] > 0 && (
                             <div className="interactables">

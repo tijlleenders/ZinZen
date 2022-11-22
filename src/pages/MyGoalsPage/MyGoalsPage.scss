@@ -3,34 +3,27 @@
   min-width: 236px;
   width: 100%;
 }
-#goal-searchBar {
-  background-color: rgba(237, 199, 183, 0.4);
+#goal-searchBar, #goal-searchBar-dark {
+  background-color: rgba(255, 255, 255, 0.4);
   border: none;
-  border-radius: 10px;
-  color: #504e4e;
+  border-radius: 7px;
+  color: black;
   font-size: 1.4em;
   font-family: "Montserrat";
   font-weight: bolder;
   height: 50px;
   margin-bottom: 3.5%;
-  padding-left: 0.5em;
+  margin: 0 10px;
+  padding: 0 18px;
 }
 
 #goal-searchBar-dark {
-  background-color: rgba(237, 199, 183, 0.4);
-  border: none;
-  border-radius: 10px;
+  background-color: rgba(112, 112, 112, 0.6);;
   color: white;
-  font-size: 1.4em;
-  font-family: "Montserrat";
-  font-weight: bolder;
-  height: 50px;
-  margin-bottom: 3.5%;
-  padding-left: 0.5em;
 }
 
-#myGoals_title {
-  margin: 2% 2% 5% 2%;
+#myGoals_title, #myGoals_title-dark {
+  margin: 18px 18px 5% 18px;
   font-family: "Montserrat";
   font-weight: bolder;
   font-size: 1.5em;
@@ -38,14 +31,10 @@
 
 #myGoals_title-dark {
   color: white;
-  margin: 2% 2% 5% 2%;
-  font-family: "Montserrat";
-  font-weight: bolder;
-  font-size: 1.5em;
 }
 
 #myGoals-list {
-  margin: 2% 2% 0% 2%;
+  margin: 18px 18px 0% 18px;
   height: 418px;
   overflow-y: auto;
   height: 50%;
@@ -57,7 +46,7 @@
 .interactables {
   display: flex;
   justify-content: space-around;
-  padding-top: 1.5%;
+  padding-top: 15px;
 }
 .interactables > svg {
   font-size: 22px;
@@ -65,16 +54,49 @@
 
 .user-goal {
   word-break: break-all;
-  background-color: #edc7b7;
-  border-radius: 10px;
+  background: rgba(246, 246, 246, 0.4);
   margin-top: 4%;
-  padding: 2.5% 4%;
+  padding: 2.5% 4% 2.5% 40px;
   text-align: left;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+
+  .contact-button {
+    height: 100%;
+    align-self: center;
+    color: inherit;
+    .contact-icon {
+      width: 25px;
+      height: 25px;
+      font-size: 1em;
+    }
+  }
 }
 
-.user-goal:first-child {
-  margin: 0;
-}
+  .user-goal:first-child {
+    margin: 0;
+  }
+  .goal-dd-inner, .goal-dd-outer {
+    width: 55px;
+    height: 92%;
+    border-radius: 57px;
+    position: absolute;
+    left: -37px;
+    top: 1px;
+  }
+  .goal-dd-inner {
+    width: 57px;
+    top: 2px;
+    height: 96%;
+  }
+  .goal-dd-outer {
+    border: 1.4px solid;
+    width: 59px;
+    top: 0.5px;
+    height: 100%;
+    background: transparent;
+  }
 
 #addGoal-btn {
   position: fixed;
