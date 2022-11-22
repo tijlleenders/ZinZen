@@ -7,11 +7,10 @@
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  color: black;
-  padding: 0 18px;
+  color: black !important;
 }
 
 .App-dark {
   background: linear-gradient(180deg, #121212 49.07%, #291B5C 100%);
-  color: white;
+  color: white !important;
 }
