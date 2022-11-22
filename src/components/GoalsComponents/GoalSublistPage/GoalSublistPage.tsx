@@ -86,7 +86,7 @@ export const GoalSublist = () => {
 
   return (
     <div className="sublist-container">
-      <Breadcrumb style={{ marginTop: "80px" }}>
+      <Breadcrumb style={{ marginTop: "80px", padding: "0 18px" }}>
         <Breadcrumb.Item onClick={() => callResetHistory()}>
           <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: "#EDC7B7" }}>My Goals</span>
         </Breadcrumb.Item>
@@ -116,8 +116,25 @@ export const GoalSublist = () => {
                     aria-hidden
                     key={String(`goal-${goal.id}`)}
                     className="user-goal"
-                    style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
                   >
+                    <div
+                      className="goal-dropdown"
+                      onClickCapture={() => {
+                        if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
+                      }}
+                    >
+                      { tapCount[0] === index && tapCount[1] > 0 && (
+                        <div
+                          className="goal-dd-outer"
+                          style={{ borderColor: goal.goalColor }}
+                        />
+                      )}
+                      <div
+                        className="goal-dd-inner"
+                        style={{ top: tapCount[0] === index && tapCount[1] > 0 ? 4 : 2,
+                          background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor} 79.17%, ${goal.goalColor} 100%)` }}
+                      />
+                    </div>
                     <div
                       style={{
                         display: "flex",
@@ -139,22 +156,6 @@ export const GoalSublist = () => {
                       >
                         <div>{goal.title}</div>&nbsp;
                         { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
-                      </div>
-                      <div
-                        style={{ paddingLeft: "5%" }}
-                        onClickCapture={() => {
-                          if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
-                        }}
-                      >
-                        {tapCount[0] === index && tapCount[1] > 0 ? (
-                          <ChevronDown
-                            fontSize="30px"
-                          />
-                        ) : (
-                          <ChevronLeft
-                            fontSize="30px"
-                          />
-                        )}
                       </div>
                     </div>
                     {tapCount[0] === index && tapCount[1] > 0 ? (
