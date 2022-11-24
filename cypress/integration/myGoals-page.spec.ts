@@ -57,7 +57,7 @@ describe("DashboardUserChoice Test", () => {
   it("should open share modal when click on share goal", () => {
     cy.get('[alt="share goal"').click();
     cy.get("#share-modal").should("be.visible");
-    cy.get(".modal").click();
+    cy.get(".modal").type("{esc}");
     cy.get("#share-modal").should("not.exist");
   });
 
@@ -115,12 +115,12 @@ describe("DashboardUserChoice Test", () => {
     cy.contains("Add from Archive");
     cy.contains("Testing this");
     cy.get('[alt="goal suggestion"]').parent().click();
-    cy.get(".modal").click();
+    cy.get(".modal-backdrop").click({ force: true });
     cy.contains("Testing this URL");
   });
 
   it("should be able to delete the goal", () => {
-    cy.contains("Testing this URL").click();
+    cy.contains("Testing this").click();
     cy.get('[alt="delete goal"').click();
     cy.get(".goal-title").should("not.have", "Testing this URL");
   });

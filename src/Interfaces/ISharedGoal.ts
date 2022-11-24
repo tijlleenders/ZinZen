@@ -1,5 +1,5 @@
 export interface ISharedGoal {
-    id: any;
+    id: string;
     title: string,
     duration?: number | null,
     repeat?: string | null;

@@ -21,7 +21,7 @@ import "@translations/i18n";
 import "./AddGoalForm.scss";
 
 interface AddGoalFormProps {
-  parentGoalId: number | -1,
+  parentGoalId: string,
 }
 
 export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {
@@ -60,11 +60,11 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {
       goalTags.due ? goalTags.due.value : null,
       goalTags.afterTime ? goalTags.afterTime.value : null,
       goalTags.beforeTime ? goalTags.beforeTime.value : null,
+      goalLang,
+      goalTags.link ? goalTags.link.value.trim() : null,
       0,
       parentGoalId!,
       colorPallete[colorIndex], // goalColor
-      goalLang,
-      goalTags.link ? goalTags.link.value.trim() : null
     );
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
@@ -79,7 +79,7 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {
     setGoalTags({});
     setGoalTitle("");
     setColorIndex(0);
-    if (typeOfPage === "AddGoals") { navigate("/Home/MyGoals", { replace: true }); }
+    if (typeOfPage === "AddGoals") { navigate("/MyGoals", { replace: true }); }
   };
 
   return (

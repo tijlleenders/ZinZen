@@ -34,7 +34,7 @@ export const AddFeelingsPage = () => {
             </h3>
             <Button
               id="myFeelings-redirect-btn-desktop"
-              onClick={() => navigate("/Home/MyFeelings")}
+              onClick={() => navigate("/MyFeelings")}
             >View My Feelings
             </Button>
           </div>
@@ -43,7 +43,7 @@ export const AddFeelingsPage = () => {
       </Row>
       <Button
         id="myFeelings-redirect-btn-mobile"
-        onClick={() => navigate("/Home/MyFeelings")}
+        onClick={() => navigate("/MyFeelings")}
       >View My Feelings
       </Button>
     </Container>

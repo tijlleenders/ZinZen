@@ -1,11 +1,10 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { darkModeState } from "@store";
+import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import "@translations/i18n";
@@ -18,7 +17,7 @@ export const FAQPage = () => {
 
   return (
     <div className="slide" style={{ display: "flex", justifyContent: "center" }}>
-      <MainHeaderDashboard />
+      <LandingHeader avatar={null} />
       <div id="faq-container">
         <div>
           <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
@@ -47,26 +46,24 @@ export const FAQPage = () => {
           <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>{t("Anstoogoodtobetrue")}</p>
         </div>
         <div>
-          <Button
-            variant={darkModeStatus ? "bdivn" : "peach"}
-            size="lg"
+          <button
+            type="button"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
-              navigate("/Home/ZinZen/Feedback");
+              navigate("/ZinZen/Feedback");
             }}
           >
             {t("ihavedifferentquestions")}
-          </Button>
-          <Button
-            variant={darkModeStatus ? "bdivn" : "peach"}
-            size="lg"
+          </button>
+          <button
+            type="button"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
-              navigate("/Home/MyTime");
+              navigate("/");
             }}
           >
             {t("ihavenomorequestions")}
-          </Button>
+          </button>
         </div>
       </div>
     </div>

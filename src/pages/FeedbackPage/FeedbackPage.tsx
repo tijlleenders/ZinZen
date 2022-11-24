@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 import { Container, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { darkModeState } from "@store";
+import { darkModeState, displayLoader } from "@store";
 import { submitFeedback } from "@src/api/FeedbackAPI";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
@@ -15,10 +15,13 @@ export const FeedbackPage = () => {
   const [userRating, setUserRating] = useState(5);
   const [userFeedback, setUserFeedback] = useState("");
   const darkModeStatus = useRecoilValue(darkModeState);
+  const setLoading = useSetRecoilState(displayLoader);
 
   async function submitToAPI(feedback: string) {
     const updatedFeedback = `Rating : ${userRating}\n${feedback}`;
+    setLoading(true);
     const res = await submitFeedback(updatedFeedback);
+    setLoading(false);
     if (res.status === "success") {
       alert(res.message);
       setUserFeedback("");
@@ -31,7 +34,7 @@ export const FeedbackPage = () => {
 
   return (
     <div id="feedback-container">
-      <LandingHeader />
+      <LandingHeader avatar={"back"} />
       <Container className="slide" fluid>
         {userRating === 0 ? <h1>hello</h1> : null}
         <div style={{ color: `${darkModeStatus ? "white" : "black"}` }}>

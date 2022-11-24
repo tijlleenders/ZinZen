@@ -37,12 +37,12 @@ export const GoalSublist = () => {
   const [showShareModal, setShowShareModal] = useState(-1);
 
   useEffect(() => {
-    getGoal(Number(goalID)).then((parent) => setParentGoal(parent));
+    getGoal(goalID).then((parent) => setParentGoal(parent));
     setTapCount([-1, 0]);
   }, [goalID]);
 
   useEffect(() => {
-    getChildrenGoals(Number(goalID))
+    getChildrenGoals(goalID)
       .then((fetchedGoals) => {
         if (!showAddGoal && fetchedGoals.length === 0) {
           popFromHistory(-1);
@@ -55,40 +55,40 @@ export const GoalSublist = () => {
 
   const archiveMyGoal = async (goal: GoalItem) => {
     await archiveUserGoal(goal);
-    await getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+    await getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   };
-  const removeChildrenGoal = async (goalId: number) => {
+  const removeChildrenGoal = async (goalId: string) => {
     if (parentGoal?.sublist) {
       // delete subgoals of this goal
       removeChildrenGoals(goalId);
       // removeGoal(goalId)
       await removeGoal(goalId);
       // remove childGoalId from parentGoal.sublist
-      const parentGoalSublist: number[] = parentGoal.sublist;
+      const parentGoalSublist: string[] = parentGoal.sublist;
       const childGoalIndex = parentGoalSublist.indexOf(goalId);
       if (childGoalIndex !== -1) {
         parentGoalSublist.splice(childGoalIndex, 1);
       }
       // update parentGoal with new parentGoal.sublist
-      await updateGoal(Number(parentGoal.id), { sublist: parentGoalSublist });
+      await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
       // getChildrenGoals again
-      getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+      getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
   const updateUserGoals = async (goal: GoalItem, index: number) => {
     const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
     if (updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
       if (updatedTitle.length === 0) return;
-      await updateGoal(Number(goal.id), { title: updatedTitle });
-      getChildrenGoals(Number(goalID)).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+      await updateGoal(goal.id, { title: updatedTitle });
+      getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
 
   return (
-    <div className={darkModeStatus ? "sublist-container-dark" : "sublist-container"}>
-      <Breadcrumb style={{ marginTop: "80px" }}>
+    <div className="sublist-container">
+      <Breadcrumb style={{ marginTop: "80px", padding: "0 18px" }}>
         <Breadcrumb.Item onClick={() => callResetHistory()}>
-          <span style={{ backgroundColor: "#EDC7B7", borderRadius: "8px", padding: "5px" }}>My Goals</span>
+          <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: "#EDC7B7" }}>My Goals</span>
         </Breadcrumb.Item>
         {
           subGoalHistory.map((item, index) => (
@@ -96,7 +96,7 @@ export const GoalSublist = () => {
               key={`history-${item.goalID}-${item.goalTitle}.`}
               onClick={() => popFromHistory(index)}
             >
-              <span style={{ backgroundColor: item.goalColor, borderRadius: "8px", padding: "5px" }}>
+              <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: item.goalColor }}>
                 {item.goalTitle }
               </span>
             </Breadcrumb.Item>
@@ -116,8 +116,24 @@ export const GoalSublist = () => {
                     aria-hidden
                     key={String(`goal-${goal.id}`)}
                     className="user-goal"
-                    style={{ backgroundColor: goal.goalColor, cursor: "pointer" }}
                   >
+                    <div
+                      className="goal-dropdown"
+                      onClickCapture={() => {
+                        if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
+                      }}
+                    >
+                      { goal.sublist && goal.sublist.length > 0 && (
+                        <div
+                          className="goal-dd-outer"
+                          style={{ borderColor: goal.goalColor }}
+                        />
+                      )}
+                      <div
+                        className="goal-dd-inner"
+                        style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)` }}
+                      />
+                    </div>
                     <div
                       style={{
                         display: "flex",
@@ -140,22 +156,6 @@ export const GoalSublist = () => {
                         <div>{goal.title}</div>&nbsp;
                         { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
                       </div>
-                      <div
-                        style={{ paddingLeft: "5%" }}
-                        onClickCapture={() => {
-                          if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
-                        }}
-                      >
-                        {tapCount[0] === index && tapCount[1] > 0 ? (
-                          <ChevronDown
-                            fontSize="30px"
-                          />
-                        ) : (
-                          <ChevronLeft
-                            fontSize="30px"
-                          />
-                        )}
-                      </div>
                     </div>
                     {tapCount[0] === index && tapCount[1] > 0 ? (
                       <div className="interactables">
@@ -176,7 +176,7 @@ export const GoalSublist = () => {
                           src={trash}
                           style={{ cursor: "pointer" }}
                           onClickCapture={() => {
-                            removeChildrenGoal(Number(goal.id));
+                            removeChildrenGoal(goal.id);
                           }}
                         />
                         <img

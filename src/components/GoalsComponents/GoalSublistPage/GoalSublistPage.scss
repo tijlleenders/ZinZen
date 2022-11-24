@@ -5,22 +5,15 @@
   max-width: 600px;
   min-width: 236px;
   width: 100%;
-}
-
-.sublist-container {
-  padding: 20px;
-}
-
-.sublist-container-dark {
-  padding: 20px;
-  color: white;
+  margin-top: 50px;
 }
 
 .breadcrumb li a {
-  color: black;
   text-decoration: none;
-  padding: 5px;
-  border-radius: 8px;
+  span {
+    border-radius: 5px;
+    padding: 6px;
+  }
 }
 
 .sublist-title {
@@ -34,7 +27,7 @@
 .sublist-list-container {
   margin-top: 40px;
   width: 600px;
-  color: black;
+  padding: 0 !important;
 }
 
 .sublist-content {

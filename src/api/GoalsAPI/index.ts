@@ -2,8 +2,9 @@
 // @ts-nocheck
 
 import { db } from "@models";
-import { getJustDate } from "@src/utils";
+import { colorPallete, getJustDate } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
+import { v4 as uuidv4 } from "uuid";
 
 export const resetDatabase = () =>
   db.transaction("rw", db.goalsCollection, async () => {
@@ -12,7 +13,7 @@ export const resetDatabase = () =>
 
 export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
-  const goals: GoalItem = { ...goalDetails, createdAt: currentDate };
+  const goals: GoalItem = { id: uuidv4(), ...goalDetails, createdAt: currentDate };
   let newGoalId;
   await db
     .transaction("rw", db.goalsCollection, async () => {
@@ -24,12 +25,12 @@ export const addGoal = async (goalDetails: GoalItem) => {
   return newGoalId;
 };
 
-export const getGoal = async (goalId: number) => {
+export const getGoal = async (goalId: string) => {
   const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
   return goal[0];
 };
 
-export const getChildrenGoals = async (parentGoalId: number) => {
+export const getChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).and((goal) => goal.status === 0).toArray();
   childrenGoals.reverse();
   return childrenGoals;
@@ -44,7 +45,7 @@ export const getAllGoals = async () => {
 export const getActiveGoals = async () => {
   const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(0).toArray();
   // Filter and return only parent goals
-  const activeParentGoals = activeGoals.filter((goal: GoalItem) => goal.parentGoalId === -1);
+  const activeParentGoals = activeGoals.filter((goal: GoalItem) => goal.parentGoalId === "root");
   activeParentGoals.reverse();
   return activeParentGoals;
 };
@@ -55,10 +56,10 @@ export const getAllArchivedGoals = async () => {
   return activeGoals;
 };
 
-export const getGoalsFromArchive = async (parentId: number) => {
-  const parentIds: number[] = [];
-  if (parentId === -1) {
-    parentIds.push(-1);
+export const getGoalsFromArchive = async (parentId: string) => {
+  const parentIds: string[] = [];
+  if (parentId === "root") {
+    parentIds.push("root");
   } else {
     const parentGoal = await getGoal(parentId);
     const parentGoals = await db.goalsCollection.where("title").equalsIgnoreCase(parentGoal.title.toLowerCase()).toArray();
@@ -80,17 +81,17 @@ export const getGoalsOnDate = async (date: Date) => {
   });
 };
 
-export const removeGoal = async (goalId: number) => {
+export const removeGoal = async (goalId: string) => {
   const goal = await getGoal(goalId);
-  const parentGoal = goal.parentGoalId === -1 ? -1 : await getGoal(goal.parentGoalId);
+  const parentGoal = goal.parentGoalId === "root" ? "root" : await getGoal(goal.parentGoalId);
   console.log("inRemoveGoal", goal,);
   db.transaction("rw", db.goalsCollection, async () => {
     const goals = await db.goalsCollection.where("title").equals(goal.title).toArray();
     console.log("here", goals);
     goals.forEach(async (ele) => {
-      if (parentGoal === -1) {
+      if (parentGoal === "root") {
         console.log("root");
-        if (ele.parentGoalId === -1) await db.goalsCollection.delete(ele.id);
+        if (ele.parentGoalId === "root") await db.goalsCollection.delete(ele.id);
       } else {
         const tmpParentGoal = (await getGoal(ele.parentGoalId)).title;
         if (tmpParentGoal === parentGoal.title) {
@@ -103,7 +104,7 @@ export const removeGoal = async (goalId: number) => {
   });
 };
 
-export const updateGoal = async (id: number, changes: object) => {
+export const updateGoal = async (id: string, changes: object) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(id, changes).then((updated) => updated);
   }).catch((e) => {
@@ -124,11 +125,11 @@ export const archiveGoal = async (goal: GoalItem) => {
   }
 };
 
-export const archiveChildrenGoals = async (id: number) => {
+export const archiveChildrenGoals = async (id: string) => {
   const childrenGoals = await getChildrenGoals(id);
   if (childrenGoals) {
     childrenGoals.forEach(async (goal: GoalItem) => {
-      await archiveChildrenGoals(Number(goal.id));
+      await archiveChildrenGoals(goal.id);
       await archiveGoal(goal);
     });
   }
@@ -137,6 +138,13 @@ export const archiveChildrenGoals = async (id: number) => {
 export const archiveUserGoal = async (goal: GoalItem) => {
   await archiveChildrenGoals(goal.id);
   await archiveGoal(goal);
+};
+
+export const archiveRootGoalsByTitle = async (goalTitle: string) => {
+  const goals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals("root").and((goal) => goal.title.toLowerCase() === goalTitle.toLowerCase() && goal.status === 0).toArray();
+  goals.forEach(async (ele) => {
+    await db.goalsCollection.update(ele.id, { status: 1 });
+  });
 };
 
 export const isCollectionEmpty = async () => {
@@ -151,17 +159,23 @@ export const isCollectionEmpty = async () => {
 
 export const createGoal = (
   goalTitle: string,
-  goalRepeats: string | null,
-  goalDuration: number | null,
-  goalStartDT: Date | null,
-  goalDueDT: Date | null,
-  goalAfterTime: number | null,
-  goalBeforeTime: number | null,
-  goalStatus: 0 | 1,
-  parentGoalId: number | -1,
-  goalColor: string,
-  goalLang: string,
-  link: string | null
+  goalRepeats: string | null = null,
+  goalDuration: number | null = 1,
+  goalStartDT: Date | null = null,
+  goalDueDT: Date | null = null,
+  goalAfterTime: number | null = null,
+  goalBeforeTime: number | null = null,
+  goalLang = "English",
+  link: string | null = null,
+  goalStatus: 0 | 1 = 0,
+  parentGoalId = "root",
+  goalColor = colorPallete[Math.floor(Math.random() * 11)],
+  shared: null |
+  {
+    id: string,
+    relId: string,
+    name: string
+  } = null
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
@@ -175,18 +189,19 @@ export const createGoal = (
     status: goalStatus,
     parentGoalId,
     goalColor,
-    link
+    link,
+    shared
   };
   return newGoal;
 };
 
-export const removeChildrenGoals = async (parentGoalId: number) => {
+export const removeChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
   console.log("child", childrenGoals);
   if (childrenGoals.length === 0) { return; }
   childrenGoals.forEach((goal) => {
-    removeChildrenGoals(Number(goal.id));
-    removeGoal(Number(goal.id));
+    removeChildrenGoals(goal.id);
+    removeGoal(goal.id);
   });
 };
 
@@ -232,6 +247,10 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
     goal: goalDetails
   };
   await shareGoal(shareableGoal);
+};
+
+export const updateSharedStatusOfGoal = async (id, relId, name) => {
+  await db.goalsCollection.update(id, { shared: { relId, name } });
 };
 
 export const getPublicGoals = async (goalTitle: string) => {

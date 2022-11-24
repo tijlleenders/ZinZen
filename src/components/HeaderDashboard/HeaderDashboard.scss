@@ -2,7 +2,6 @@
   height: 5em;
   display: block;
   width: 100%;
-  background-color: #f0e6e1;
   position: fixed;
   z-index: 2;    
   max-width: 600px;
@@ -10,24 +9,21 @@
   width: 100%;
 }
 
-.positioning-dark {
-  background-color: #121212;
-}
-
 #main-header-homeLogo {
-  width: 35px;
+  width: 40px;
   position: absolute;
-  left: 10px;
-  top: 17px;
+  top: 18px;
+  left: 18px;
+  cursor: pointer;
 }
 
 .main-header-TextLogo {
-  width: 135px;
+  width: 130px;
   cursor: pointer;
   position: absolute;
   left: 0;
   right: 0;
-  top: 10px;
+  top: 15px;
   margin: auto;
 }
 
@@ -38,15 +34,6 @@
   margin: 0;
 }
 
-@media (max-width: 420px) {  
-  #main-header-homeLogo {
-    width: 30px;
-  }
-
-  .main-header-TextLogo {
-    width: 120px;
-  }
-}
 /* Goal Suggestion modal css */
 #suggestions-modal-icon {
   position: absolute;
@@ -55,23 +42,27 @@
   border: none;
   background: transparent;
 }
-
+.dark-mode-toggle {
+  position: absolute;
+  top: 25px;
+  right: 0;
+}
 #goal-suggestion-btn {
     position: absolute;
-    top: 10px;
-    right: 0;
+    top: 16px;
+    right: 18px;
     border: none;
     background: transparent;
 }
   #goal-suggestion-btn > img, #suggestions-modal-icon > img {
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
   #goal-suggestion-btn > div, #suggestions-modal-icon > div  {
     position: absolute;
-    top: -5px;
-    right: 13px;
+    top: -8px;
+    right: 10px;
     color: white;
     font-weight: 800;
     font-size: 2.5em;
@@ -153,16 +144,23 @@
     text-align: center;
 
     img {
-      width: 50px;
-      height: 50px;
+      width: 45px;
+      height: 45px;
       position: absolute;
-      top: -7px;
+      top: -4px;
       right: -7px;
     }
   }
 }
 
 @media (min-width: 600px) {
+  #goal-suggestion-btn {
+    right: 0;
+  }
+  #main-header-homeLogo {
+    left: 0;
+  }
+  
   #addGoal-options {
     right: calc((100% - 587px) / 2);
   }

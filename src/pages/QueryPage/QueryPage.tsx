@@ -1,34 +1,17 @@
 import React from "react";
 
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
+import { queryStyle } from "@src/constants/booleanScreen";
+import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
-const queryStyle = {
-  main: {
-    display: "flex",
-    flexDirection: "column"
-  },
-  question: {
-    alignSelf: "center",
-    width: "25vw",
-    height: "25vh",
-    minWidth: "220px",
-    minHeight: "145px",
-    maxWidth: "300px",
-    maxHeight: "200px",
-    background: "#EDC7B7",
-    borderRadius: "10px",
-    marginTop: "30px"
-  }
-};
 export const QueryPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   return (
     <div id="query-container">
-      <MainHeaderDashboard />
+      <LandingHeader avatar={null} />
       <div style={{ ...queryStyle.main }}>
         <p className="landing-about" style={{ paddingTop: "100px", margin: 0 }}>
           <span> a platform for </span>
@@ -47,7 +30,7 @@ export const QueryPage = () => {
         <button
           type="button"
           style={queryStyle.question}
-          onClick={() => { navigate("/Home/MyTime"); }}
+          onClick={() => { navigate("/"); }}
         >
           {t("ialreadyknowZinZen")}
         </button>

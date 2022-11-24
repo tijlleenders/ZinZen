@@ -1,5 +1,8 @@
 #share-modal {
     margin: 0;
+    max-width: 600px;
+    min-width: 236px;
+    width: 100%;
   }
     #share-modal > .modal-content {
       position: absolute;
@@ -99,7 +102,7 @@
 .shareOption-name {
     margin: 0;
     margin-left: 3%;
-    padding-top: 1.5%;
+    align-self: center;
     font-weight: 600;
 }
 

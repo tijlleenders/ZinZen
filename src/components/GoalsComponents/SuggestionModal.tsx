@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { Modal } from "react-bootstrap";
 
 import plus from "@assets/images/plus.svg";
@@ -15,24 +15,26 @@ import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
 import { displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
 import ITagExtractor from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
+import { displayLoader } from "@src/store";
 import InputGoal from "./InputGoal";
 
 interface SuggestionModalProps {
-  goalID: number,
+  goalID: string,
 }
 
 const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
-  const [selectedGoal, setSelectedGoal] = useState<{index: number, goal:ISharedGoal} | null>(null);
+  const [selectedGoal, setSelectedGoal] = useState<{index: number, goal:ISharedGoal|GoalItem} | null>(null);
   const [goalLang, setGoalLang] = useState("en");
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
   const [publicGoals, setPublicGoals] = useState<ISharedGoal[]>([]);
-
-  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalInput, setGoalInput] = useState("");
+
+  const setLoading = useSetRecoilState(displayLoader);
+  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
 
-  const addSuggestedGoal = async (goal:ISharedGoal, index:number) => {
+  const addSuggestedGoal = async (goal:ISharedGoal | GoalItem, index:number) => {
     let newGoalId;
     if (!selectedGoal) {
       const { id: prevId, ...newGoal } = { ...goal, parentGoalId: goalID, sublist: null, status: 0 };
@@ -49,15 +51,15 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
         goalTags.due ? goalTags.due.value : null,
         goalTags.afterTime ? goalTags.afterTime.value : null,
         goalTags.beforeTime ? goalTags.beforeTime.value : null,
+        goalLang,
+        goalTags.link ? goalTags?.link?.value.trim() : null,
         0,
         goalID,
         selectedGoal?.goal.goalColor, // goalColor
-        goalLang,
-        goalTags.link ? goalTags?.link?.value.trim() : null
       );
       newGoalId = await addGoal(newGoal);
     }
-    if (goalID !== -1) {
+    if (goalID !== "root") {
       const parentGoal = await getGoal(goalID);
       const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(goalID, { sublist: newSublist });
@@ -67,7 +69,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   };
 
   const getSuggestions = (isArchiveTab: boolean) => {
-    const lst: ISharedGoal[] = isArchiveTab ? archiveGoals : publicGoals;
+    const lst: ISharedGoal[] | GoalItem[] = isArchiveTab ? archiveGoals : publicGoals;
     return lst.length > 0 ?
       lst.map((goal, index) => (
         <div>
@@ -112,16 +114,11 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   };
 
   const getMySuggestions = async () => {
-    console.log(showSuggestionsModal);
     if (showSuggestionsModal === "Archive") {
       const goals: GoalItem[] = await getGoalsFromArchive(goalID);
-      console.log(goals);
       setArchiveGoals([...goals]);
     } else if (showSuggestionsModal === "Public") {
-      let goal: GoalItem;
-
-      if (goalID !== -1) goal = await getGoal(goalID);
-      const res = await getPublicGoals(goalID === -1 ? "root" : goal.title);
+      const res = await getPublicGoals(goalID === "root" ? "root" : (await getGoal(goalID)).title);
       if (res.status) {
         const tmpPG = [...res.data];
         setPublicGoals([...tmpPG]);
@@ -130,7 +127,9 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     getMySuggestions();
+    setLoading(false);
   }, [showSuggestionsModal]);
 
   useEffect(() => {

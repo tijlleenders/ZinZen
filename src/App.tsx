@@ -1,35 +1,64 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { darkModeState, themeSelectionState, languageSelectionState } from "@store";
+import { darkModeState, themeSelectionState, languageSelectionState, displayLoader } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
 import { AddFeelingsPage } from "@pages/AddFeelingsPage/AddFeelingsPage";
-import { HomePage } from "@pages/HomePage/HomePage";
 import { NotFoundPage } from "@pages/NotFoundPage/NotFoundPage";
-import { ZinZenMenuPage } from "@pages/ZinZenMenuPage/ZinZenMenuPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
-import { ExplorePage } from "@pages/ExplorePage/ExplorePage";
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
+import InvitePage from "@pages/InvitePage/InvitePage";
+import { addGoalInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
+import { createGoal } from "./api/GoalsAPI";
+import Loader from "./common/Loader";
 
 import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
-import { Dashboard } from "@pages/Dashboard/Dashboard";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeSelectionState);
-  const isThemeChosen = theme !== "No theme chosen.";
+  const showLoader = useRecoilValue(displayLoader);
   const language = useRecoilValue(languageSelectionState);
+  const isThemeChosen = theme !== "No theme chosen.";
   const isLanguageChosen = language !== "No language chosen.";
+
+  useEffect(() => {
+    const init = async () => {
+      const res = await getContactSharedGoals();
+      if (res.success) {
+        console.log(res);
+        res.response.forEach(async (ele: { relId: string; title: string; id: string }) => {
+          const contact = await getContactByRelId(ele.relId);
+          if (contact) {
+            await addGoalInRelId(ele.relId, [...contact.goals,
+              { id: ele.id, goal: createGoal(ele.title) }]);
+            // await archiveRootGoalsByTitle(ele.title);
+            // await addGoal({
+            //   ...createGoal(ele.title),
+            //   shared: { id: ele.id, name: contact?.name, relId: ele.relId } });
+          }
+        });
+      }
+    };
+    const installId = localStorage.getItem("installId");
+    if (!installId) localStorage.setItem("installId", uuidv4());
+    else {
+      init();
+    }
+  }, []);
+
   return (
     <div className={darkModeEnabled ? "App-dark" : "App-light"}>
       <BrowserRouter>
@@ -40,24 +69,20 @@ const App = () => {
           ) : !isThemeChosen ? (
             <Route path="/" element={<ThemeChoice />} />
           ) : (
-            <>
-              <Route path="/" element={<MyTimePage />} />
-              <Route path="/Home/MyTime" element={<MyTimePage />} />
-            </>
+            <Route path="/" element={<MyTimePage />} />
           )}
-          <Route path="/Home/AddFeelings" element={<AddFeelingsPage />} />
-          <Route path="/Home/Explore" element={<ExplorePage />} />
-          <Route path="/Home/ZinZen" element={<ZinZenMenuPage />} />
-          <Route path="/Home/ZinZen/Feedback" element={<FeedbackPage />} />
-          <Route path="/Home/MyGoals" element={<MyGoalsPage />} />
-          <Route path="/Home" element={<Dashboard />} />
-          <Route path="/Home/MyFeelings" element={<ShowFeelingsPage />} />
-          <Route path="Home/Contacts" element={<Contacts />} />
+          <Route path="/AddFeelings" element={<AddFeelingsPage />} />
+          <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
+          <Route path="/MyGoals" element={<MyGoalsPage />} />
+          <Route path="/MyFeelings" element={<ShowFeelingsPage />} />
+          <Route path="/Contacts" element={<Contacts />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />
+          <Route path="/invite/:id" element={<InvitePage />} />
         </Routes>
       </BrowserRouter>
+      { showLoader && <Loader /> }
     </div>
   );
 };

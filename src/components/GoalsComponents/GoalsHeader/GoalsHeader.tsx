@@ -10,7 +10,12 @@ import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import LogoGradient from "@assets/images/LogoGradient.png";
+import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
+import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
+
+import { displaySidebar } from "@src/store/SidebarState";
 import { displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsState";
+import Sidebar from "@components/Sidebar";
 import SuggestionModal from "../SuggestionModal";
 
 import "@translations/i18n";
@@ -29,6 +34,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showAddGoal = useRecoilValue(displayAddGoal);
   const goalID = useRecoilValue(displayGoalId);
+  const setShowSidebar = useSetRecoilState(displaySidebar);
 
   const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
 
@@ -36,18 +42,33 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
 
   return (
     <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
+      <Sidebar />
       <Navbar collapseOnSelect expand="lg">
-        <img
-          role="presentation"
-          src={ArrowIcon}
-          alt="Back arrow"
-          id="main-header-homeLogo"
-          onClick={() => {
-            if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
-              navigate(-1);
-            } else popFromHistory(-1);
-          }}
-        />
+        {
+        !showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0 ? (
+          <img
+            role="presentation"
+            src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
+            alt="Back arrow"
+            style={{ width: "50px" }}
+            id="main-header-homeLogo"
+            onClickCapture={() => setShowSidebar(true)}
+          />
+        )
+          : (
+            <img
+              role="presentation"
+              src={ArrowIcon}
+              alt="Back arrow"
+              id="main-header-homeLogo"
+              onClick={() => {
+                if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
+                  navigate(-1);
+                } else popFromHistory(-1);
+              }}
+            />
+          )
+}
         {darkModeStatus ? (
           <img
             role="presentation"
@@ -55,7 +76,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             alt="ZinZen Text Logo"
             className="main-header-TextLogo"
             onClick={() => {
-              navigate("/Home/MyTime");
+              navigate("/");
             }}
           />
         ) : (
@@ -65,7 +86,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             alt="ZinZen Text Logo"
             className="main-header-TextLogo"
             onClick={() => {
-              navigate("/Home/MyTime");
+              navigate("/");
             }}
           />
         )}
