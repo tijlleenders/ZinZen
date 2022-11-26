@@ -47,7 +47,8 @@ export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
         alt="ZinZen Text Logo"
         className="main-header-TextLogo"
         onClick={() => {
-          if (!showSidebar) navigate("/");
+          if (showSidebar) setShowSidebar(false);
+          else navigate("/");
         }}
       />
 
