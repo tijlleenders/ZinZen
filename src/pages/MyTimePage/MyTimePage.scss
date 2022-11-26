@@ -14,20 +14,25 @@
     font-weight: bolder;
 }
 
-.MyTime_day {
-    background: #EDC7B7 70%;
+.MyTime_day-dark, .MyTime_day-light {
     margin-top: 3vh;
-    padding: 2% 4% 3% 4%;
-    border-radius: 7px;
+    padding: 2% 0% 3% 0%;
+    background: rgba(246, 246, 246, 0.4);
+}
+
+.MyTime_day-dark {
+    background: rgba(57, 57, 57, 0.4);
 }
 
 .MyTime_navRow{
     display: flex;
     justify-content: space-between;
+    padding: 0 4%;
     padding-bottom: 0.5em;
     width: 100%;
     background: transparent;
     border: none;
+    color: inherit;
 }
 
 .MyTime_dayTitle{
@@ -36,14 +41,18 @@
     margin: 0;
 }
 
-.MyTime-expand-btw {
+.MyTime-expand-btw, .MyTime-expand-btw-dark {
     background: transparent;
     border: none;
-    border-left: 2px solid #EDC7B7;
 }
+.MyTime-expand-btw-dark {
+    color: white;
+}
+
 
 .MyTime_colorPalette {
     display: flex;
+    padding: 0 4%;
 }
     .MyTime_colorPalette:first-child{
         border-radius: 2px 0px 0px 2px;

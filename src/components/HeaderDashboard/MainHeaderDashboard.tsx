@@ -33,7 +33,7 @@ export const MainHeaderDashboard = () => {
         role="presentation"
         src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
         alt="avatar"
-        style={{ width: "50px", left: 0 }}
+        style={{ width: "50px" }}
         id="main-header-homeLogo"
         onClick={() => setShowSidebar(true)}
       />

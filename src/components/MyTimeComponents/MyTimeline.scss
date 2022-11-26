@@ -1,31 +1,52 @@
-#MTL-display, #MTL-display-withOption {
+.MTL-display-light, .MTL-display-dark {
   padding-top: 1em;
-  display: flex;
-  flex-direction: row;
-  background-color: #EDC7B7;
+  .MTL-goalTiming {
+    border: none;
+    background-color: transparent;
+    color: #343434;
+    font-weight: 500;
+    margin-top: 4px;
+    margin-bottom: 0;
+    line-height: 16px;
+    white-space: nowrap;
+    width: 80px;
+  }
 }
 
-#MTL-display-withOption {
-  flex-direction: column;
+.MTL-display-dark {
+  .MTL-goalTiming {
+    color: #E4E4E4;
+  }
+}
+
+.MTL-display-light > div, .MTL-display-dark > div  {
+  margin-bottom: 0.7em;
+  padding: 0 4%;  
+  line-height: 22px;
+  padding-bottom: 0.7em;
+  border-bottom: 0.5px solid #303030;
+  
+} 
+.MTL-display-dark > div {
+  border-bottom: 0.5px solid #E4E4E4;
+}
+.MTL-display-light > div:last-child, .MTL-display-dark > div:last-child {
+  border: none;
+  margin-bottom: 0 !important;
+
 }
 
 .MTL-circle {
-  height: 25px;
-  width: 25px;
+  height: 15px;
+  width: 15px;
   border-radius: 50%;
   display: inline-block;
-  background-color: "transparent";
-}
-
-.MTL-startTime {
-  width: 80px;
-  margin-top: 1.5px;
-  border: none;
   background-color: transparent;
-  font-weight: bolder;
+  margin-top: 4px;
 }
 
-.MTL-taskTtitle {
+
+.MTL-taskTitle {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -33,26 +54,11 @@
   text-overflow: ellipsis;
   margin-top: 1.5px;
   background: none;
-  font-weight: bolder;
+  font-weight: 700;
   text-align: left;
-}
-
-.bar{
-    border-left: 0px solid #BC9D90;
-    position: relative;
-    height: 30px;
-}
-
-.vbar{
-  border-left: 1px solid #BC9D90;
-  left: 48%;
-  position: relative;
-  height: 30px;
-}
-
-#MTL-circles, #MTL-titles, #MTL-times {
-  display: flex;
-  flex-direction: column;
+  color: inherit;
+  font-size: 1.286em;
+  line-height: 22px
 }
 
 .MTL-circle {
@@ -60,46 +66,16 @@
   color: transparent;
 }
 
-#MTL-titles {
-  width: 100%;
-}
-
-.MTL-options_container {
-  width: max-content;
-  font-size: 75% !important;
-}
-
-.MTL-options-task {
-  border: 1px solid;
-  border-bottom: 0;
-  border-radius: 7px 7px 0px 0px;
-  cursor: pointer;
+.MTL-options {
   display: flex;
-  padding: 1.5vh 0vh;
-  padding-left: 1.5vw;
-}
-
-.MTL-options-task > .MTL-circle {
-  border: 3.5px solid;
-}
-
-.MTL-options-title {
-  margin-left: 1vw;
-  margin-top: 0.5vh;
+  margin-top: 0.7em;
 }
 
 .MTL-options > button {
   background: transparent;
-  border: 1px solid;
-  border-right: 0px;
+  border: 0px;
+  border-right: 1px solid;
   padding: 0.5vw 2vw;
   font-weight: bolder;
+  color: inherit;
 }
-  .MTL-options > button:first-child {
-    border-radius: 0px 0px 0px 7px;
-  }
-
-  .MTL-options > button:last-child {
-    border-right: 1px solid;
-    border-radius: 0px 0px 7px 0px;
-  }
