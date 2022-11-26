@@ -115,7 +115,7 @@ export const GoalSublist = () => {
                   <div
                     aria-hidden
                     key={String(`goal-${goal.id}`)}
-                    className="user-goal"
+                    className={`user-goal${darkModeStatus ? "-dark" : ""}`}
                   >
                     <div
                       className="goal-dropdown"

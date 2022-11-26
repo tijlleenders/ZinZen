@@ -236,7 +236,7 @@ export const MyGoalsPage = () => {
                         <div
                           aria-hidden
                           key={String(`task-${goal.id}`)}
-                          className="user-goal"
+                          className={`user-goal${darkModeStatus ? "-dark" : ""}`}
                         >
                           <div
                             className="goal-dropdown"

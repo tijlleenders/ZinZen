@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@store";
@@ -17,7 +17,7 @@ import "@translations/i18n";
 export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const setShowSidebar = useSetRecoilState(displaySidebar);
+  const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
 
   return (
     <>
@@ -47,7 +47,8 @@ export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
         alt="ZinZen Text Logo"
         className="main-header-TextLogo"
         onClick={() => {
-          navigate("/");
+          if (showSidebar) setShowSidebar(false);
+          else navigate("/");
         }}
       />
 
