@@ -52,7 +52,7 @@
   font-size: 22px;
 }
 
-.user-goal {
+.user-goal, .user-goal-dark {
   word-break: break-all;
   background: rgba(246, 246, 246, 0.4);
   margin-top: 4%;
@@ -73,8 +73,12 @@
     }
   }
 }
+.user-goal-dark {
+  background: rgba(57, 57, 57, 0.4);
+  color: white;
+}
 
-  .user-goal:first-child {
+  .user-goal:first-child, .user-goal-dark:first-child {
     margin: 0;
   }
   .goal-dd-inner, .goal-dd-outer {
