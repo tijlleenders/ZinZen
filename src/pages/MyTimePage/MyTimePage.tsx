@@ -4,12 +4,14 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
+import { useRecoilValue } from "recoil";
 
 import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem } from "@src/models/TaskItem";
+import { darkModeState } from "@src/store";
 import { colorPallete, getDiffInHours } from "@src/utils";
 
 import init, { schedule } from "../../../pkg/scheduler";
@@ -17,6 +19,7 @@ import "./MyTimePage.scss";
 
 export const MyTimePage = () => {
   const today = new Date();
+  const darkModeStatus = useRecoilValue(darkModeState);
   const [tmpTasks, setTmpTasks] = useState<TaskItem[]>([]);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
@@ -57,7 +60,7 @@ export const MyTimePage = () => {
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
     return (
-      <div key={`day-${day}`} className="MyTime_day">
+      <div key={`day-${day}`} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
         <button
           type="button"
           className="MyTime_navRow"
@@ -67,7 +70,7 @@ export const MyTimePage = () => {
         >
           <h3 className="MyTime_dayTitle"> {day} </h3>
           <button
-            className="MyTime-expand-btw"
+            className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
             type="button"
           >
             <div> { showTasks.includes(day) ? <ChevronDown /> : <ChevronRight /> } </div>
