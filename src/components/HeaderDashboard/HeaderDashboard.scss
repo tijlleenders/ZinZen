@@ -45,7 +45,7 @@
 .dark-mode-toggle {
   position: absolute;
   top: 25px;
-  right: 0;
+  right: 18px;
 }
 #goal-suggestion-btn {
     position: absolute;
@@ -154,6 +154,9 @@
 }
 
 @media (min-width: 600px) {
+  .dark-mode-toggle {
+    right: 0;
+  }
   #goal-suggestion-btn {
     right: 0;
   }
