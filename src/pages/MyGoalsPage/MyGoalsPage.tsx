@@ -297,7 +297,7 @@ export const MyGoalsPage = () => {
                             )}
                           </div>
                           {tapCount[0] === index && tapCount[1] > 0 && (
-                            <div className="interactables">
+                            <div className={`interactables${darkModeStatus ? "-dark" : ""}`}>
                               <img
                                 alt="add subgoal"
                                 src={plus}
