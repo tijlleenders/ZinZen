@@ -4,13 +4,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { ChevronLeft, ChevronDown } from "react-bootstrap-icons";
 import { useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import plus from "@assets/images/plus.svg";
-import pencil from "@assets/images/pencil.svg";
 import correct from "@assets/images/correct.svg";
+import pencil from "@assets/images/pencil.svg";
 import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 

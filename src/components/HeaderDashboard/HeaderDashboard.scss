@@ -47,19 +47,23 @@
   top: 25px;
   right: 18px;
 }
-#goal-suggestion-btn {
+#goal-suggestion-btn, #goal-suggestion-btn-dark {
     position: absolute;
     top: 16px;
     right: 18px;
     border: none;
-    background: transparent;
+    background: radial-gradient(50% 50% at 50% 50%, #FEF2EF 75.64%, #CD6E51 100%);
+    border-radius: 50%;
 }
-  #goal-suggestion-btn > img, #suggestions-modal-icon > img {
+  #goal-suggestion-btn > img, #goal-suggestion-btn-dark > img, #suggestions-modal-icon > img {
     border-radius: 50%;
     width: 45px;
     height: 45px;
+    background: transparent;
+    filter: invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%);
+    padding: 7px 9px;
   }
-  #goal-suggestion-btn > div, #suggestions-modal-icon > div  {
+  #goal-suggestion-btn > div, #goal-suggestion-btn-dark > div #suggestions-modal-icon > div  {
     position: absolute;
     top: -8px;
     right: 10px;
@@ -69,6 +73,12 @@
     font-family: 'Montserrat';
   }
 
+  #goal-suggestion-btn-dark {
+    background: radial-gradient(50% 50% at 50% 50%, #121212 73.18%, #705BBC 100%);
+    img {
+      filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
+    }
+    }
 #suggestions-modal {
   height: 100%;
   position: absolute;
@@ -123,15 +133,15 @@
   }
 }
 
-#addGoal-options {
+#addGoal-options, #addGoal-options-dark {
   z-index: 10;
   position: fixed;
   display: flex;
   flex-direction: column;
-  top:-14px;
-  right:26px;
+  top: -14px;
+  right: 25px;
 
-  button {   
+  .addGoal-option {   
     margin-top: 25%;
     background: white;
     border: none;
@@ -143,15 +153,29 @@
     font-weight: 700;
     text-align: center;
 
-    img {
+    button {
       width: 45px;
       height: 45px;
       position: absolute;
       top: -4px;
       right: -7px;
+      border: none;
+      border-radius: 50%;
+      background: radial-gradient(50% 50% at 50% 50%, #FEF2EF 72.51%, #CD6E51 100%);
     }
   }
 }
+#addGoal-options-dark {
+  .addGoal-option {
+    button {
+      background: radial-gradient(50% 50% at 50% 50%, #121212 72.51%, #705BBC 100%);
+      img {
+        filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%)
+      }
+    }
+  }
+}
+
 
 @media (min-width: 600px) {
   .dark-mode-toggle {
@@ -164,7 +188,7 @@
     left: 0;
   }
   
-  #addGoal-options {
+  #addGoal-options, #addGoal-options-dark {
     right: calc((100% - 587px) / 2);
   }
 }
