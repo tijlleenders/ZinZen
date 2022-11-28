@@ -131,7 +131,10 @@ export const GoalSublist = () => {
                       )}
                       <div
                         className="goal-dd-inner"
-                        style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)` }}
+                        style={{
+                          height: tapCount[0] === index && tapCount[1] > 0 ? "96%" : "80%",
+                          background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`
+                        }}
                       />
                     </div>
                     <div
