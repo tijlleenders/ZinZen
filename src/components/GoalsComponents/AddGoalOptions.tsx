@@ -41,7 +41,7 @@ const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
         className="addGoal-option"
         onClick={() => { setShowSuggestionsModal("Public"); }}
       >
-        Public
+        Hint
         <button type="button"><img alt="create-goals-suggestion" src={publicGoals} /></button>
       </button>
     </div>
