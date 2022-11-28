@@ -9,9 +9,10 @@ import { darkModeState } from "@store";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
-import LogoGradient from "@assets/images/LogoGradient.png";
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
+import plus from "@assets/images/plus.svg";
+import correct from "@assets/images/correct.svg";
 
 import { displaySidebar } from "@src/store/SidebarState";
 import { displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsState";
@@ -96,7 +97,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
 
         <button
           type="button"
-          id="goal-suggestion-btn"
+          id={`goal-suggestion-btn${darkModeStatus ? "-dark" : ""}`}
           onClick={(e) => {
             if (displayTRIcon === "+") {
               setShowAddGoalOptions(true);
@@ -108,8 +109,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
             }
           }}
         >
-          <img alt="save changes" src={LogoGradient} />
-          <div>{window.location.href.includes("AddGoals") || displayTRIcon === "✓" ? "✓" : "+"}</div>
+          <img alt="save changes" src={displayTRIcon === "✓" ? correct : plus} />
         </button>
 
       </Navbar>

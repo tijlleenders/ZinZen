@@ -1,36 +1,48 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import add from "@assets/images/add.svg";
-import publicGoal from "@assets/images/publicGoal.svg";
+import plus from "@assets/images/plus.svg";
+import publicGoals from "@assets/images/publicGoals.svg";
 import archiveGoals from "@assets/images/archiveGoals.svg";
+
 import { displayAddGoal, displaySuggestionsModal } from "@src/store/GoalsState";
+import { darkModeState } from "@src/store";
 
 const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
+  const darkModeStatus = useRecoilValue(darkModeState);
   const setShowAddGoal = useSetRecoilState(displayAddGoal);
   const setShowSuggestionsModal = useSetRecoilState(displaySuggestionsModal);
   return (
-    <div id="addGoal-options">
+    <div id={`addGoal-options${darkModeStatus ? "-dark" : ""}`}>
       <button
         type="button"
+        className="addGoal-option"
         onClick={() => setShowAddGoal({ open: true, goalId: parentGoalId })}
       >
         New
-        <img alt="create-goals-suggestion" src={add} />
+        <button type="button">
+          <img
+            style={!darkModeStatus ? { filter: "invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%)" } : {}}
+            alt="create-goals-suggestion"
+            src={plus}
+          />
+        </button>
       </button>
       <button
         type="button"
+        className="addGoal-option"
         onClick={() => { setShowSuggestionsModal("Archive"); }}
       >
         Archive
-        <img alt="create-goals-suggestion" src={archiveGoals} />
+        <button type="button"><img alt="create-goals-suggestion" src={archiveGoals} /></button>
       </button>
       <button
         type="button"
+        className="addGoal-option"
         onClick={() => { setShowSuggestionsModal("Public"); }}
       >
-        Public
-        <img alt="create-goals-suggestion" src={publicGoal} />
+        Hint
+        <button type="button"><img alt="create-goals-suggestion" src={publicGoals} /></button>
       </button>
     </div>
   );
