@@ -3,6 +3,8 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import peopleIllustration from "@assets/images/peopleIllustration.svg";
+
 import { darkModeState } from "@store";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -19,6 +21,11 @@ export const FAQPage = () => {
     <div className="slide" style={{ display: "flex", justifyContent: "center" }}>
       <LandingHeader avatar={null} />
       <div id="faq-container">
+      <img
+            className="faq-illustration"
+            alt="twopeopleillustration"
+            src={peopleIllustration}
+          />
         <div>
           <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
             {t("Qwhatiszinzen")}
