@@ -7,13 +7,16 @@
     margin-top: 23px;
 }
 
-.landing-about {
+.landing-about, .landing-about-dark {
     font-family: 'Montserrat';
     font-weight: 600;
     font-size: 25px;
     text-align: center;
     color: #CD6E51 !important;
     margin-top: 50px;
+}
+.landing-about-dark {
+    color: rgba(112, 91, 188, 1) !important;
 }
 
 #landing-right-panel {
