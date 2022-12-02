@@ -12,7 +12,8 @@
 
 #feedback-line-2,
 #feedback-line-3 {
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 1.286em;
 }
 
 #userRating-btn {
@@ -34,11 +35,19 @@
   font-size: xxx-large;
 }
 
-#feedback-textbox {
-  background: rgb(237, 199, 183);
-  border-radius: 4px;
+#feedback-textbox, #feedback-textbox-dark {
+  background: rgba(246, 246, 246, 0.4);
+  border-radius: 10px;
   height: 200px;
   width: 100%;
+  padding: 10px;
+  color: black;
+}
+#feedback-textbox-dark {
+  color: white
+}
+#feedback-textbox-dark::placeholder {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 #feedback-submit-btn {

@@ -61,7 +61,7 @@ export const FeedbackPage = () => {
           </div>
           <h5 id="feedback-line-3">{t("experience")}</h5>
           <textarea
-            id="feedback-textbox"
+            id={`feedback-textbox${darkModeStatus ? "-dark" : ""}`}
             value={userFeedback}
             onChange={(e) => { setUserFeedback(e.target.value); }}
             placeholder={t("feedbackPlaceholder")}

@@ -21,11 +21,11 @@ export const FAQPage = () => {
     <div className="slide" style={{ display: "flex", justifyContent: "center" }}>
       <LandingHeader avatar={null} />
       <div id="faq-container">
-      <img
-            className="faq-illustration"
-            alt="twopeopleillustration"
-            src={peopleIllustration}
-          />
+        <img
+          className="faq-illustration"
+          alt="twopeopleillustration"
+          src={peopleIllustration}
+        />
         <div>
           <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
             {t("Qwhatiszinzen")}

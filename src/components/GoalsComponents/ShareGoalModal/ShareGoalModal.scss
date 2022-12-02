@@ -1,37 +1,49 @@
-#share-modal {
+#share-modal, #share-modal-dark {
     margin: 0;
     max-width: 600px;
     min-width: 236px;
     width: 100%;
-  }
-    #share-modal > .modal-content {
+    position: absolute;
+    bottom: 0;
+    .modal-content {
       position: absolute;
       bottom: 0;
-      background: rgba(253, 230, 220, 0.8);
-      border-radius: 25px;
+      background: #FFE1D7;
+      border-radius: 0.5rem 0.5rem 0 0;
     }
+    .shareOptions-btn {
+        border-radius: 10px;
+        border: none;
+        padding: 2% 2%;
+        margin-top: 4%;
+        background-color: rgba(246, 246, 246, 0.4);
+    }
+    .share-Options > div, .contact-icon, .next-icon {
+        background: #EBA48E;
+    }
+} 
+
+#share-modal-dark {
+    .modal-content {
+        color: white;
+        background:  #121212;
+        button {
+            background:  rgba(57, 57, 57, 0.4);
+            color: white;
+        }
+    }
+    .share-Options > div, .contact-icon, .next-icon {
+        background: #705BBC;
+    }
+}
   
+.shareOptions-btn:last-child {
+    background-color: transparent !important;
+}
 #share-modal-body {
     display: flex;
     flex-direction: column;
 }
-
-.shareOptions-btn {
-    border-radius: 10px;
-    border: none;
-    padding: 2% 2%;
-    margin-top: 4%;
-}
-
-    .shareOptions-btn:nth-child(1) {
-        background: #AC3B61;
-    }
-    .shareOptions-btn:nth-child(2) {
-        background: #3B6899;
-    }
-    .shareOptions-btn:nth-child(3) {
-        background: #BAB2BC;
-    }
 
 .share-Options {
     display: flex;

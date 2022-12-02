@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Modal } from "react-bootstrap";
 
 import plus from "@assets/images/plus.svg";
@@ -15,7 +15,7 @@ import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
 import { displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
 import ITagExtractor from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayLoader } from "@src/store";
+import { darkModeState, displayLoader } from "@src/store";
 import InputGoal from "./InputGoal";
 
 interface SuggestionModalProps {
@@ -23,6 +23,7 @@ interface SuggestionModalProps {
 }
 
 const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
+  const darkModeStatus = useRecoilValue(darkModeState);
   const [selectedGoal, setSelectedGoal] = useState<{index: number, goal:ISharedGoal|GoalItem} | null>(null);
   const [goalLang, setGoalLang] = useState("en");
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
@@ -87,7 +88,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
                 addSuggestedGoal(goal, index);
               }}
             >
-              <img alt="goal suggestion" src={plus} />
+              <img alt="goal suggestion" src={plus} style={{ filter: "brightness(0) invert(1)" }} />
             </button>
           </div>
           { goalInput !== "" && selectedGoal?.index === index && (
@@ -160,7 +161,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   return (
 
     <Modal
-      id="suggestions-modal"
+      id={`suggestions-modal${darkModeStatus ? "-dark" : ""}`}
       show={showSuggestionsModal !== null}
       onHide={() => setShowSuggestionsModal(null)}
       centered

@@ -23,18 +23,18 @@ export const ThemeChoice = () => {
       <p id="themeChoice-label">{t("themechoice")}</p>
       <button
         type="button"
-        className="themeChoice-btn"
+        className="themeChoice-btn-light"
         onClick={() => {
           setIsThemeChosen(true);
           localStorage.setItem("theme", "light");
           navigate("/QueryZinZen");
         }}
       >
-        <img src={ThemeLight} alt="Light Theme" className="themechoice" />
+        Light colors
       </button>
       <button
         type="button"
-        className="themeChoice-btn"
+        className="themeChoice-btn-dark"
         onClick={() => {
           setIsThemeChosen(true);
           localStorage.setItem("theme", "dark");
@@ -42,7 +42,7 @@ export const ThemeChoice = () => {
           setDarkModeStatus(true);
         }}
       >
-        <img src={ThemeDark} alt="Dark Theme" className="themechoice" />
+        Dark colors
       </button>
     </div>
   );
