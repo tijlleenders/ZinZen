@@ -46,6 +46,9 @@
 #feedback-textbox-dark {
   color: white
 }
+#feedback-textbox-dark::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
 
 #feedback-submit-btn {
   background: #ccc;
