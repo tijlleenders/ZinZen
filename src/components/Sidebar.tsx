@@ -16,11 +16,11 @@ const navButtonStyle = {
   fontWeight: "bolder",
   fontSize: "1.5em",
   color: "black",
-  backgroundColor: "#EDC7B7",
+  backgroundColor: "#EBA48E",
 };
 const darkNavBtn = {
   color: "white",
-  background: "rgba(112, 112, 112, 0.4)"
+  background: "rgba(57, 57, 57, 0.4)"
 };
 
 const Sidebar = () => {
