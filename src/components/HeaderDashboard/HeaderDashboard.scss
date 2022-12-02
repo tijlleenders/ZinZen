@@ -9,13 +9,18 @@
   width: 100%;
 }
 
-#main-header-homeLogo {
+#main-header-homeLogo, #main-header-homeLogo-dark {
   width: 40px;
   position: absolute;
   top: 18px;
   left: 18px;
   cursor: pointer;
 }
+
+#main-header-homeLogo-dark {
+   filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
+ }
+
 
 .main-header-TextLogo {
   width: 130px;

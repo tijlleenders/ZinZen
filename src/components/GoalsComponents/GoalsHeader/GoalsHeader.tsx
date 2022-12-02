@@ -61,7 +61,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
               role="presentation"
               src={ArrowIcon}
               alt="Back arrow"
-              id="main-header-homeLogo"
+              id={`main-header-homeLogo${darkModeStatus ? "-dark" : ""}`}
               onClick={() => {
                 if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
                   navigate(-1);
