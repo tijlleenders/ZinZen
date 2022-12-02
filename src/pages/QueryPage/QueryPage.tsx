@@ -22,14 +22,20 @@ export const QueryPage = () => {
         </p>
         <button
           type="button"
-          style={queryStyle.question}
+          style={{
+            color: localStorage.getItem("theme") === "dark" ? "white" : "black",
+            ...queryStyle.question
+          }}
           onClick={() => { navigate("/ZinZenFAQ"); }}
         >
           {t("ihavequestions")}
         </button>
         <button
           type="button"
-          style={queryStyle.question}
+          style={{
+            color: localStorage.getItem("theme") === "dark" ? "white" : "black",
+            ...queryStyle.question
+          }}
           onClick={() => { navigate("/"); }}
         >
           {t("ialreadyknowZinZen")}
