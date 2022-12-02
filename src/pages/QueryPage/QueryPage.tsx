@@ -15,10 +15,10 @@ export const QueryPage = () => {
       <div style={{ ...queryStyle.main }}>
         <p className="landing-about" style={{ paddingTop: "100px", margin: 0 }}>
           <span> a platform for </span>
-          <span>self-actualization </span>
+          <span style={{ color: "#C6441D" }}>self-actualization </span>
           <br style={{ marginTop: "5px" }} />
           <span>and </span>
-          <span>collaboration</span>
+          <span style={{ color: "#C6441D" }}>collaboration</span>
         </p>
         <button
           type="button"
