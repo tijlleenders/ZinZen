@@ -64,7 +64,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
 
   return (
     <Modal
-      id="share-modal"
+      id={`share-modal${darkModeStatus ? "-dark" : ""}`}
       show={showShareModal !== -1}
       onHide={() => setShowShareModal(-1)}
       centered
