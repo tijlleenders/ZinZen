@@ -23,6 +23,7 @@ export const QueryPage = () => {
         <button
           type="button"
           style={{
+            background: localStorage.getItem("theme") === "dark" ? "rgba(57, 57, 57, 0.4)" : "rgba(246, 246, 246, 0.4)",
             color: localStorage.getItem("theme") === "dark" ? "white" : "black",
             ...queryStyle.question
           }}
@@ -33,6 +34,7 @@ export const QueryPage = () => {
         <button
           type="button"
           style={{
+            background: localStorage.getItem("theme") === "dark" ? "rgba(57, 57, 57, 0.4)" : "rgba(246, 246, 246, 0.4)",
             color: localStorage.getItem("theme") === "dark" ? "white" : "black",
             ...queryStyle.question
           }}

@@ -11,7 +11,6 @@ export const
       minHeight: "145px",
       maxWidth: "407px",
       maxHeight: "224px",
-      background: localStorage.getItem("theme") === "dark" ? "rgba(57, 57, 57, 0.4)" : "rgba(246, 246, 246, 0.4)",
       borderRadius: "10px",
       marginTop: "30px",
       fontSize: "1.286em",
