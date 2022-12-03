@@ -45,8 +45,9 @@
 
 .interactables, .interactables-dark {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   padding-top: 15px;
+  padding-bottom: 2.5%;
 }
 .interactables > img {
   font-size: 22px;
@@ -61,16 +62,25 @@
   word-break: break-all;
   background: rgba(246, 246, 246, 0.4);
   margin-top: 4%;
-  padding: 2.5% 4% 2.5% 40px;
+  min-height: 61.19px;
   text-align: left;
   overflow: hidden;
   position: relative;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
 
+  .user-goal-main {
+    display: flex;
+    height: 100%;
+    padding: 2.5% 4% 2.5% 40px;
+  }
   .contact-button {
     height: 100%;
     align-self: center;
     color: inherit;
+    display: flex;
+    align-items: center;
     .contact-icon {
       width: 25px;
       height: 25px;
@@ -146,6 +156,13 @@
 .goal-dropdown {
   align-self: center;
   padding-left: 2%;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  left: 0;
+  width: 38px;
 }
 
 #addGoalForm{

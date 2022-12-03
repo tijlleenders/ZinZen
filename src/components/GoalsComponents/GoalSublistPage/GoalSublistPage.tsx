@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
-import { ChevronLeft, ChevronDown } from "react-bootstrap-icons";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import plus from "@assets/images/plus.svg";
@@ -138,23 +139,22 @@ export const GoalSublist = () => {
                       />
                     </div>
                     <div
-                      style={{
-                        display: "flex",
+                      className="user-goal-main"
+                      style={{ ...(tapCount[0] === index) ? { paddingBottom: 0 } : {} }}
+                      onClick={() => {
+                        if (!goal.sublist || goal.sublist?.length === 0) {
+                          if (tapCount[0] === index && tapCount[1] > 0) {
+                            setTapCount([-1, 0]);
+                          } else { setTapCount([index, tapCount[1] + 1]); }
+                        } else {
+                          addInHistory(goal);
+                        }
                       }}
                     >
                       <div
                         aria-hidden
                         className="goal-title"
                         suppressContentEditableWarning
-                        onClickCapture={() => {
-                          if (!goal.sublist || goal.sublist?.length === 0) {
-                            if (tapCount[0] === index && tapCount[1] > 0) {
-                              setTapCount([-1, 0]);
-                            } else { setTapCount([index, tapCount[1] + 1]); }
-                          } else {
-                            addInHistory(goal);
-                          }
-                        }}
                       >
                         <div>{goal.title}</div>&nbsp;
                         { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
