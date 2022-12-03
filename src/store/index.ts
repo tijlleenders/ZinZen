@@ -8,4 +8,9 @@ export const displayLoader = atom({
   default: false as boolean
 });
 
+export const displayArchiveOption = atom({
+  key: "displayArchiveOption",
+  default: false as boolean
+});
+
 export { darkModeState, darkModeStateToggle, themeSelectionState, languageSelectionState };
