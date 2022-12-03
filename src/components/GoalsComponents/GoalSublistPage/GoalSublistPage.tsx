@@ -21,6 +21,7 @@ import ShareGoalModal from "../ShareGoalModal/ShareGoalModal";
 import "./GoalSublistPage.scss";
 
 export const GoalSublist = () => {
+  const defaultTap = { open: "root", click: 1 };
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const goalID = useRecoilValue(displayGoalId);
@@ -29,19 +30,20 @@ export const GoalSublist = () => {
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
   const callResetHistory = useSetRecoilState(resetGoalsHistory);
+
+  const [tapCount, setTapCount] = useState(defaultTap);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
 
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
-  const [tapCount, setTapCount] = useState([-1, 0]);
   const [showShareModal, setShowShareModal] = useState(-1);
 
-  const handleGoalClick = (goal: GoalItem, index: number) => {
+  const handleGoalClick = (goal: GoalItem) => {
     if (!goal.sublist || goal.sublist?.length === 0) {
-      if (tapCount[0] === index && tapCount[1] > 0) {
-        setTapCount([-1, 0]);
-      } else { setTapCount([index, tapCount[1] + 1]); }
+      if (tapCount.open === goal.id && tapCount.click > 0) {
+        setTapCount(defaultTap);
+      } else { setTapCount({ open: goal.id, click: 1 }); }
     } else {
       addInHistory(goal);
     }
@@ -123,22 +125,15 @@ export const GoalSublist = () => {
               showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
                 : (
                   <div
-                    aria-hidden
                     key={String(`goal-${goal.id}`)}
                     className={`user-goal${darkModeStatus ? "-dark" : ""}`}
-                    onClickCapture={(e) => {
-                      if (!goal.sublist || goal.sublist?.length === 0) {
-                        if (tapCount[0] === index && tapCount[1] > 0) {
-                          e.stopPropagation();
-                          setTapCount([-1, 0]);
-                        }
-                      }
-                    }}
                   >
                     <div
                       className="goal-dropdown"
-                      onClickCapture={() => {
-                        if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
+                      onClickCapture={(e) => {
+                        e.stopPropagation();
+                        console.log("lft");
+                        if (tapCount.open === goal.id && tapCount.click > 0) { setTapCount(defaultTap); } else { setTapCount({ open: goal.id, click: 1 }); }
                       }}
                     >
                       { goal.sublist && goal.sublist.length > 0 && (
@@ -150,33 +145,29 @@ export const GoalSublist = () => {
                       <div
                         className="goal-dd-inner"
                         style={{
-                          height: tapCount[0] === index && tapCount[1] > 0 ? "90%" : "80%",
+                          height: tapCount.open === goal.id && tapCount.click > 0 ? "90%" : "80%",
                           background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`
                         }}
                       />
                     </div>
                     <div
-                      className="user-goal-main"
-                      style={{ ...(tapCount[0] === index) ? { paddingBottom: 0 } : {} }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleGoalClick(goal, index);
+                      onClickCapture={(e) => {
+                        console.log("main", tapCount);
+                        handleGoalClick(goal);
                       }}
+                      className="user-goal-main"
+                      style={{ ...(tapCount.open === goal.id) ? { paddingBottom: 0 } : {} }}
                     >
                       <div
                         aria-hidden
                         className="goal-title"
                         suppressContentEditableWarning
-                        onClickCapture={(e) => {
-                          e.stopPropagation();
-                          handleGoalClick(goal, index);
-                        }}
                       >
                         <div>{goal.title}</div>&nbsp;
                         { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
                       </div>
                     </div>
-                    {tapCount[0] === index && tapCount[1] > 0 ? (
+                    {tapCount.open === goal.id && tapCount.click > 0 && (
                       <div className={`interactables${darkModeStatus ? "-dark" : ""}`}>
                         <img
                           alt="add subgoal"
@@ -224,7 +215,7 @@ export const GoalSublist = () => {
                           style={{ cursor: "Pointer" }}
                         />
                       </div>
-                    ) : null}
+                    )}
                     {showShareModal === index && (
                       <ShareGoalModal
                         goal={goal}
