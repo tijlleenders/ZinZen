@@ -245,6 +245,14 @@ export const MyGoalsPage = () => {
                           aria-hidden
                           key={String(`task-${goal.id}`)}
                           className={`user-goal${darkModeStatus ? "-dark" : ""}`}
+                          onClickCapture={(e) => {
+                            if (!goal.sublist || goal.sublist?.length === 0) {
+                              if (tapCount[0] === index && tapCount[1] > 0) {
+                                e.stopPropagation();
+                                setTapCount([-1, 0]);
+                              }
+                            }
+                          }}
                         >
                           <div
                             className="goal-dropdown"
@@ -269,14 +277,16 @@ export const MyGoalsPage = () => {
                           <div
                             className="user-goal-main"
                             style={{ ...(tapCount[0] === index) ? { paddingBottom: 0 } : {} }}
-                            onClick={() => handleGoalClick(goal, index)}
+                            onClickCapture={(e) => {
+                              e.stopPropagation();
+                              handleGoalClick(goal, index);
+                            }}
                           >
                             <div
                               aria-hidden
                               className="goal-title"
                               suppressContentEditableWarning
                               onClickCapture={(e) => {
-                                e.stopPropagation();
                                 handleGoalClick(goal, index);
                               }}
                             >
