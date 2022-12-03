@@ -108,6 +108,15 @@ export const MyGoalsPage = () => {
     setGoalTitle("");
   };
 
+  const handleGoalClick = (goal: GoalItem, index: number) => {
+    if (!goal.sublist || goal.sublist?.length === 0) {
+      if (tapCount[0] === index && tapCount[1] > 0) {
+        setTapCount([-1, 0]);
+      } else { setTapCount([index, tapCount[1] + 1]); }
+    } else {
+      addInHistory(goal);
+    }
+  };
   const updateThisGoal = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (goalTitle.length === 0) {
@@ -260,20 +269,16 @@ export const MyGoalsPage = () => {
                           <div
                             className="user-goal-main"
                             style={{ ...(tapCount[0] === index) ? { paddingBottom: 0 } : {} }}
-                            onClick={() => {
-                              if (!goal.sublist || goal.sublist?.length === 0) {
-                                if (tapCount[0] === index && tapCount[1] > 0) {
-                                  setTapCount([-1, 0]);
-                                } else { setTapCount([index, tapCount[1] + 1]); }
-                              } else {
-                                addInHistory(goal);
-                              }
-                            }}
+                            onClick={() => handleGoalClick(goal, index)}
                           >
                             <div
                               aria-hidden
                               className="goal-title"
                               suppressContentEditableWarning
+                              onClickCapture={(e) => {
+                                e.stopPropagation();
+                                handleGoalClick(goal, index);
+                              }}
                             >
                               <div>{goal.title}</div>&nbsp;
                               { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}

@@ -37,6 +37,15 @@ export const GoalSublist = () => {
   const [tapCount, setTapCount] = useState([-1, 0]);
   const [showShareModal, setShowShareModal] = useState(-1);
 
+  const handleGoalClick = (goal: GoalItem, index: number) => {
+    if (!goal.sublist || goal.sublist?.length === 0) {
+      if (tapCount[0] === index && tapCount[1] > 0) {
+        setTapCount([-1, 0]);
+      } else { setTapCount([index, tapCount[1] + 1]); }
+    } else {
+      addInHistory(goal);
+    }
+  };
   useEffect(() => {
     getGoal(goalID).then((parent) => setParentGoal(parent));
     setTapCount([-1, 0]);
@@ -141,20 +150,16 @@ export const GoalSublist = () => {
                     <div
                       className="user-goal-main"
                       style={{ ...(tapCount[0] === index) ? { paddingBottom: 0 } : {} }}
-                      onClick={() => {
-                        if (!goal.sublist || goal.sublist?.length === 0) {
-                          if (tapCount[0] === index && tapCount[1] > 0) {
-                            setTapCount([-1, 0]);
-                          } else { setTapCount([index, tapCount[1] + 1]); }
-                        } else {
-                          addInHistory(goal);
-                        }
-                      }}
+                      onClick={() => handleGoalClick(goal, index)}
                     >
                       <div
                         aria-hidden
                         className="goal-title"
                         suppressContentEditableWarning
+                        onClickCapture={(e) => {
+                          e.stopPropagation();
+                          handleGoalClick(goal, index);
+                        }}
                       >
                         <div>{goal.title}</div>&nbsp;
                         { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
