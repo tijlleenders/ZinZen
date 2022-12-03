@@ -25,6 +25,7 @@ export const ThemeChoice = () => {
         type="button"
         className="themeChoice-btn-light"
         onClick={() => {
+          navigator.vibrate(100);
           setIsThemeChosen(true);
           localStorage.setItem("theme", "light");
           navigate("/QueryZinZen");
