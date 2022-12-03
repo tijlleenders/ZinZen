@@ -7,6 +7,7 @@ import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import { useRecoilValue } from "recoil";
 
 import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
+import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
@@ -88,18 +89,18 @@ export const MyTimePage = () => {
                     return (
                       <>
                         {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
-                        {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
+                        {getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
                       </>
                     );
                   }
                   return (
                     <>
-                      {getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
+                      {getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
                       {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
                     </>
                   );
                 }
-                return (getColorComponent(`task-${day}-${task.id}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0]));
+                return (getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0]));
               })}
             </div>
           )}
@@ -135,20 +136,12 @@ export const MyTimePage = () => {
   };
 
   const createDummyGoals = async () => {
-    const dummyTitles = ["Shopping", "Dentist", "Exercise"];
-    const dummyDates = [[10, 13], [10, 11], [10, 18]];
-    [...Array(3).keys()].forEach(async (ele) => {
-      const dummyGoal = createGoal(
-        dummyTitles[ele],
-        "Daily",
-        1,
-        new Date(new Date().setHours(dummyDates[ele][0], 0, 0)),
-        new Date(new Date().setHours(dummyDates[ele][1], 0, 0)),
-        [ele][0],
-        [ele][1]
-      );
-      const id = await addGoal(dummyGoal);
-      return id;
+    starterGoals.forEach(async (goal) => {
+      try {
+        await addStarterGoal(goal.title, goal.goalTags);
+      } catch (error) {
+        console.log(error, goal);
+      }
     });
   };
 
