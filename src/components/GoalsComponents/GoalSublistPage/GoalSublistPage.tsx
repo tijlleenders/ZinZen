@@ -11,7 +11,7 @@ import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
 import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, updateGoal } from "@src/api/GoalsAPI";
-import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
+import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";
@@ -24,16 +24,17 @@ export const GoalSublist = () => {
   const defaultTap = { open: "root", click: 1 };
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalHistory = useRecoilValue(goalsHistory);
+  const showAddGoal = useRecoilValue(displayAddGoal);
   const goalID = useRecoilValue(displayGoalId);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
   const callResetHistory = useSetRecoilState(resetGoalsHistory);
+  const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
 
   const [tapCount, setTapCount] = useState(defaultTap);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
-  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
 
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
@@ -56,12 +57,8 @@ export const GoalSublist = () => {
   useEffect(() => {
     getChildrenGoals(goalID)
       .then((fetchedGoals) => {
-        if (!showAddGoal && fetchedGoals.length === 0) {
-          popFromHistory(-1);
-        } else {
-          setChildrenGoals(fetchedGoals);
-          setTapCount([-1, 0]);
-        }
+        setChildrenGoals(fetchedGoals);
+        setTapCount([-1, 0]);
       });
   }, [parentGoal, showAddGoal, showSuggestionModal, showUpdateGoal]);
 
@@ -174,11 +171,8 @@ export const GoalSublist = () => {
                           src={plus}
                           style={{ cursor: "pointer" }}
                           onClickCapture={() => {
-                            setShowAddGoal({
-                              open: true,
-                              goalId: goal?.id
-                            });
                             addInHistory(goal);
+                            setShowAddGoalOptions(true);
                           }}
                         />
                         <img

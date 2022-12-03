@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -309,10 +311,7 @@ export const MyGoalsPage = () => {
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={() => {
                                   addInHistory(goal);
-                                  setShowAddGoal({
-                                    open: true,
-                                    goalId: goal?.id
-                                  });
+                                  setShowAddGoalOptions(true);
                                 }}
                               />
                               <img
