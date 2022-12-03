@@ -1,7 +1,7 @@
 import React from "react";
+import i18n from "i18next";
 import { Button } from "react-bootstrap";
 import { useRecoilState } from "recoil";
-import i18n from "i18next";
 import { useNavigate } from "react-router-dom";
 
 import { ILanguage } from "@src/Interfaces/ILanguage";
@@ -12,8 +12,9 @@ import "./LanguageChoice.scss";
 export const LangItem = ({ lang }: { lang: ILanguage }) => {
   const navigate = useNavigate();
   const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
-  const remainder: Number = Number(lang.sno) % 4;
+  const remainder: number = Number(lang.sno) % 4;
   const handleClick = (langId: string) => {
+    navigator.vibrate(100);
     setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
     localStorage.setItem("language", JSON.stringify(langId));

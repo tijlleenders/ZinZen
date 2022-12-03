@@ -29,7 +29,10 @@ export const QueryPage = () => {
             color: localStorage.getItem("theme") === "dark" ? "white" : "black",
             ...queryStyle.question
           }}
-          onClick={() => { navigate("/ZinZenFAQ"); }}
+          onClick={() => {
+            navigator.vibrate(100);
+            navigate("/ZinZenFAQ");
+          }}
         >
           {t("ihavequestions")}
         </button>
@@ -40,7 +43,10 @@ export const QueryPage = () => {
             color: localStorage.getItem("theme") === "dark" ? "white" : "black",
             ...queryStyle.question
           }}
-          onClick={() => { navigate("/"); }}
+          onClick={() => {
+            navigator.vibrate(100);
+            navigate("/");
+          }}
         >
           {t("ialreadyknowZinZen")}
         </button>

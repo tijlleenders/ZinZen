@@ -3,8 +3,6 @@ import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 
-import ThemeDark from "@assets/images/DashboardThemeDark.svg";
-import ThemeLight from "@assets/images/DashboardThemeLight.svg";
 import ZinZen from "@assets/images/LogoTextLight.svg";
 import { themeSelectionState, darkModeState } from "@src/store";
 
@@ -25,6 +23,7 @@ export const ThemeChoice = () => {
         type="button"
         className="themeChoice-btn-light"
         onClick={() => {
+          navigator.vibrate(100);
           setIsThemeChosen(true);
           localStorage.setItem("theme", "light");
           navigate("/QueryZinZen");
@@ -36,6 +35,7 @@ export const ThemeChoice = () => {
         type="button"
         className="themeChoice-btn-dark"
         onClick={() => {
+          navigator.vibrate(100);
           setIsThemeChosen(true);
           localStorage.setItem("theme", "dark");
           navigate("/QueryZinZen");

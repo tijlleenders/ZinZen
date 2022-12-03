@@ -7,10 +7,10 @@ import peopleIllustration from "@assets/images/peopleIllustration.svg";
 
 import { darkModeState } from "@store";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 import "@translations/i18n";
 import "./FAQPage.scss";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export const FAQPage = () => {
   const navigate = useNavigate();
@@ -57,6 +57,7 @@ export const FAQPage = () => {
             type="button"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
+              navigator.vibrate(100);
               navigate("/ZinZen/Feedback");
             }}
           >
@@ -66,6 +67,7 @@ export const FAQPage = () => {
             type="button"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
+              navigator.vibrate(100);
               navigate("/");
             }}
           >
