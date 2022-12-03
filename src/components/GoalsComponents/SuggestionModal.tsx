@@ -12,10 +12,10 @@ import plus from "@assets/images/plus.svg";
 import { addGoal, createGoal, getGoal, getGoalsFromArchive, getPublicGoals, updateGoal } from "@src/api/GoalsAPI";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
-import { displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
+import { displayAddGoalOptions, displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
 import ITagExtractor from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayLoader } from "@src/store";
+import { darkModeState, displayArchiveOption, displayLoader } from "@src/store";
 import InputGoal from "./InputGoal";
 
 interface SuggestionModalProps {
@@ -24,6 +24,7 @@ interface SuggestionModalProps {
 
 const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
+  const showAddGoalOptions = useRecoilValue(displayAddGoalOptions);
   const [selectedGoal, setSelectedGoal] = useState<{index: number, goal:ISharedGoal|GoalItem} | null>(null);
   const [goalLang, setGoalLang] = useState("en");
   const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
@@ -31,6 +32,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   const [goalInput, setGoalInput] = useState("");
 
   const setLoading = useSetRecoilState(displayLoader);
+  const setShowArchiveOptions = useSetRecoilState(displayArchiveOption);
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
@@ -115,15 +117,15 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   };
 
   const getMySuggestions = async () => {
-    if (showSuggestionsModal === "Archive") {
-      const goals: GoalItem[] = await getGoalsFromArchive(goalID);
-      setArchiveGoals([...goals]);
-    } else if (showSuggestionsModal === "Public") {
-      const res = await getPublicGoals(goalID === "root" ? "root" : (await getGoal(goalID)).title);
-      if (res.status) {
-        const tmpPG = [...res.data];
-        setPublicGoals([...tmpPG]);
-      }
+    const goals: GoalItem[] = await getGoalsFromArchive(goalID);
+    if (goals.length === 0) {
+      setShowArchiveOptions(false);
+    } else { setShowArchiveOptions(true); }
+    setArchiveGoals([...goals]);
+    const res = await getPublicGoals(goalID === "root" ? "root" : (await getGoal(goalID)).title);
+    if (res.status) {
+      const tmpPG = [...res.data];
+      setPublicGoals([...tmpPG]);
     }
   };
 
@@ -131,7 +133,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
     setLoading(true);
     getMySuggestions();
     setLoading(false);
-  }, [showSuggestionsModal]);
+  }, [showAddGoalOptions]);
 
   useEffect(() => {
     if (selectedGoal) {
