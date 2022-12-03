@@ -6,10 +6,11 @@ import publicGoals from "@assets/images/publicGoals.svg";
 import archiveGoals from "@assets/images/archiveGoals.svg";
 
 import { displayAddGoal, displaySuggestionsModal } from "@src/store/GoalsState";
-import { darkModeState } from "@src/store";
+import { darkModeState, displayArchiveOption } from "@src/store";
 
 const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
   const darkModeStatus = useRecoilValue(darkModeState);
+  const showArchiveOptions = useRecoilValue(displayArchiveOption);
   const setShowAddGoal = useSetRecoilState(displayAddGoal);
   const setShowSuggestionsModal = useSetRecoilState(displaySuggestionsModal);
   return (
@@ -28,6 +29,7 @@ const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
           />
         </button>
       </button>
+      { showArchiveOptions && (
       <button
         type="button"
         className="addGoal-option"
@@ -36,6 +38,7 @@ const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
         Archive
         <button type="button"><img alt="create-goals-suggestion" src={archiveGoals} /></button>
       </button>
+      ) }
       <button
         type="button"
         className="addGoal-option"
