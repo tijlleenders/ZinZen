@@ -280,11 +280,11 @@ export const MyGoalsPage = () => {
                             </div>
                             { goal.shared && (
                             <OverlayTrigger
-                              trigger="click"
+                              trigger="focus"
                               placement="top"
                               overlay={<Tooltip id="tooltip-disabled"> {goal.shared.name} </Tooltip>}
                             >
-                              <div className="contact-button">
+                              <div className="contact-button" onClickCapture={(e) => e.stopPropagation()}>
                                 <button
                                   type="button"
                                   className="contact-icon"
