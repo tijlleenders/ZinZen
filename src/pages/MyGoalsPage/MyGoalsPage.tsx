@@ -1,8 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -55,8 +50,8 @@ interface ILocationProps {
 
 export const MyGoalsPage = () => {
   const location = useLocation();
-
-  const [tapCount, setTapCount] = useState([-1, 0]);
+  const defaultTap = { open: "root", click: 1 };
+  const [tapCount, setTapCount] = useState(defaultTap);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(-1);
 
@@ -108,6 +103,15 @@ export const MyGoalsPage = () => {
     setGoalTitle("");
   };
 
+  const handleGoalClick = (goal: GoalItem) => {
+    if (!goal.sublist || goal.sublist?.length === 0) {
+      if (tapCount.open === goal.id && tapCount.click > 0) {
+        setTapCount(defaultTap);
+      } else { setTapCount({ open: goal.id, click: 1 }); }
+    } else {
+      addInHistory(goal);
+    }
+  };
   const updateThisGoal = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (goalTitle.length === 0) {
@@ -198,6 +202,7 @@ export const MyGoalsPage = () => {
       }
     })();
   });
+
   return (
     <>
       { showAddGoalOptions && (
@@ -211,12 +216,12 @@ export const MyGoalsPage = () => {
           selectedGoalId === "root" ?
             (
               <div
-                onClickCapture={() => setTapCount([-1, 0])}
+                onClickCapture={() => setTapCount(defaultTap)}
                 className="my-goals-content"
               >
                 <input
                   id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
-                  onClickCapture={() => setTapCount([-1, 0])}
+                  onClickCapture={() => setTapCount(defaultTap)}
                   placeholder="Search"
                   onChange={(e) => debounceSearch(e)}
                 />
@@ -233,14 +238,15 @@ export const MyGoalsPage = () => {
                     showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
                       : (
                         <div
-                          aria-hidden
                           key={String(`task-${goal.id}`)}
                           className={`user-goal${darkModeStatus ? "-dark" : ""}`}
                         >
                           <div
                             className="goal-dropdown"
-                            onClickCapture={() => {
-                              if (tapCount[0] === index && tapCount[1] > 0) { setTapCount([-1, 0]); } else { setTapCount([index, tapCount[1] + 1]); }
+                            onClickCapture={(e) => {
+                              e.stopPropagation();
+                              console.log("lft");
+                              if (tapCount.open === goal.id && tapCount.click > 0) { setTapCount(defaultTap); } else { setTapCount({ open: goal.id, click: 1 }); }
                             }}
                           >
                             { goal.sublist && goal.sublist.length > 0 && (
@@ -253,39 +259,37 @@ export const MyGoalsPage = () => {
                               className="goal-dd-inner"
                               style={{
                                 background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)`,
-                                height: tapCount[0] === index && tapCount[1] > 0 ? "90%" : "80%"
+                                height: tapCount.open === goal.id && tapCount.click > 0 ? "90%" : "80%"
                               }}
                             />
                           </div>
                           <div
-                            style={{
-                              display: "flex",
+                            onClickCapture={(e) => {
+                              console.log("main", tapCount);
+                              handleGoalClick(goal);
                             }}
+                            className="user-goal-main"
+                            style={{ ...(tapCount.open === goal.id) ? { paddingBottom: 0 } : {} }}
                           >
                             <div
                               aria-hidden
                               className="goal-title"
                               suppressContentEditableWarning
-                              onClickCapture={() => {
-                                if (!goal.sublist || goal.sublist?.length === 0) {
-                                  if (tapCount[0] === index && tapCount[1] > 0) {
-                                    setTapCount([-1, 0]);
-                                  } else { setTapCount([index, tapCount[1] + 1]); }
-                                } else {
-                                  addInHistory(goal);
-                                }
-                              }}
                             >
                               <div>{goal.title}</div>&nbsp;
-                              { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
+                              { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClickCapture={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
                             </div>
-                            { goal.shared && (
+                          </div>
+
+                          { goal.shared && (
                             <OverlayTrigger
                               trigger="click"
                               placement="top"
                               overlay={<Tooltip id="tooltip-disabled"> {goal.shared.name} </Tooltip>}
                             >
-                              <div className="contact-button">
+                              <div
+                                className="contact-button"
+                              >
                                 <button
                                   type="button"
                                   className="contact-icon"
@@ -296,9 +300,8 @@ export const MyGoalsPage = () => {
                               </div>
 
                             </OverlayTrigger>
-                            )}
-                          </div>
-                          {tapCount[0] === index && tapCount[1] > 0 && (
+                          )}
+                          {tapCount.open === goal.id && tapCount.click > 0 && (
                             <div className={`interactables${darkModeStatus ? "-dark" : ""}`}>
                               <img
                                 alt="add subgoal"
