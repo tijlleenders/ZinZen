@@ -12,7 +12,7 @@ import "@translations/i18n";
 import "./feedbackpage.scss";
 
 export const FeedbackPage = () => {
-  const [userRating, setUserRating] = useState(5);
+  const [userRating, setUserRating] = useState(3);
   const [userFeedback, setUserFeedback] = useState("");
   const darkModeStatus = useRecoilValue(darkModeState);
   const setLoading = useSetRecoilState(displayLoader);
