@@ -4,7 +4,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-import { darkModeState } from "@store";
+import { darkModeState, displayLoader } from "@store";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
@@ -15,6 +15,7 @@ import plus from "@assets/images/plus.svg";
 import correct from "@assets/images/correct.svg";
 
 import { displaySidebar } from "@src/store/SidebarState";
+import Loader from "@src/common/Loader";
 import { displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsState";
 import Sidebar from "@components/Sidebar";
 import SuggestionModal from "../SuggestionModal";
@@ -30,6 +31,7 @@ interface GoalsHeaderProps {
 
 export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisGoal, updateThisGoal }) => {
   const navigate = useNavigate();
+  const showLoader = useRecoilValue(displayLoader);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
@@ -44,6 +46,8 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
   return (
     <div className={darkModeStatus ? "positioning-dark" : "positioning-light"}>
       <Sidebar />
+      { showLoader && <Loader /> }
+
       <Navbar collapseOnSelect expand="lg">
         {
         !showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0 ? (
