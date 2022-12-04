@@ -14,3 +14,14 @@
   background: linear-gradient(180deg, #121212 49.07%, #291B5C 100%);
   color: white !important;
 }
+
+#toast, #toast-dark {
+  position: absolute;
+  width: 95vw;
+  max-width: 600px;
+  top: 100px;
+  background-color: rgba(255, 255, 255);
+}
+#toast-dark {
+  background-color: #5468ff;
+}

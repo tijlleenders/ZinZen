@@ -95,7 +95,7 @@ export const GoalSublist = () => {
 
   return (
     <div className="sublist-container">
-      <Breadcrumb style={{ marginTop: "80px", padding: "0 18px" }}>
+      <Breadcrumb style={{ marginTop: "68px", padding: "0 18px" }}>
         <Breadcrumb.Item onClick={() => callResetHistory()}>
           <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: "#EDC7B7" }}>My Goals</span>
         </Breadcrumb.Item>

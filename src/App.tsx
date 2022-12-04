@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Toast from "react-bootstrap/Toast";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { darkModeState, themeSelectionState, languageSelectionState, displayLoader } from "@store";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { darkModeState, themeSelectionState, languageSelectionState, displayLoader, displayToast } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
@@ -33,6 +34,8 @@ const App = () => {
   const language = useRecoilValue(languageSelectionState);
   const isThemeChosen = theme !== "No theme chosen.";
   const isLanguageChosen = language !== "No language chosen.";
+
+  const [showToast, setShowToast] = useRecoilState(displayToast);
 
   useEffect(() => {
     const init = async () => {
@@ -83,6 +86,9 @@ const App = () => {
         </Routes>
       </BrowserRouter>
       { showLoader && <Loader /> }
+      <Toast autohide delay={3000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
+        <Toast.Body>{showToast.message}</Toast.Body>
+      </Toast>
     </div>
   );
 };
