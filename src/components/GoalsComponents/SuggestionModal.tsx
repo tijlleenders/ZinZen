@@ -133,9 +133,11 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    getMySuggestions();
-    setLoading(false);
+    if (showAddGoalOptions) {
+      setLoading(true);
+      getMySuggestions();
+      setLoading(false);
+    }
   }, [showAddGoalOptions]);
 
   useEffect(() => {
