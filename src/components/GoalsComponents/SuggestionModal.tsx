@@ -181,7 +181,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
     <Modal
       id={`suggestions-modal${darkModeStatus ? "-dark" : ""}`}
       show={open}
-      onHide={() => { setOpen(false); setShowSuggestionsModal(null); setShowFromOptions({ archive: false, public: false })}}
+      onHide={() => { setOpen(false); setShowSuggestionsModal(null); setShowFromOptions({ archive: false, public: false }); }}
       centered
       autoFocus={false}
     >
