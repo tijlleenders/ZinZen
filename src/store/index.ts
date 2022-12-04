@@ -8,9 +8,14 @@ export const displayLoader = atom({
   default: false as boolean
 });
 
-export const displayArchiveOption = atom({
-  key: "displayArchiveOption",
-  default: false as boolean
+export const displayFromOptions = atom({
+  key: "displayFromOptions",
+  default: { archive: false, public: false }
+});
+
+export const displayToast = atom({
+  key: "displayToast",
+  default: { open: false, message: "Awww... no hints today. We'll keep looking!" }
 });
 
 export { darkModeState, darkModeStateToggle, themeSelectionState, languageSelectionState };
