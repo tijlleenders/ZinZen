@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Toast from "react-bootstrap/Toast";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { darkModeState, themeSelectionState, languageSelectionState, displayLoader } from "@store";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { darkModeState, themeSelectionState, languageSelectionState, displayToast } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
@@ -19,7 +20,6 @@ import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import { addGoalInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
 import { createGoal } from "./api/GoalsAPI";
-import Loader from "./common/Loader";
 
 import "./customize.scss";
 import "./App.scss";
@@ -29,10 +29,11 @@ import "@fontsource/montserrat";
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeSelectionState);
-  const showLoader = useRecoilValue(displayLoader);
   const language = useRecoilValue(languageSelectionState);
   const isThemeChosen = theme !== "No theme chosen.";
   const isLanguageChosen = language !== "No language chosen.";
+
+  const [showToast, setShowToast] = useRecoilState(displayToast);
 
   useEffect(() => {
     const init = async () => {
@@ -82,7 +83,9 @@ const App = () => {
           <Route path="/invite/:id" element={<InvitePage />} />
         </Routes>
       </BrowserRouter>
-      { showLoader && <Loader /> }
+      <Toast autohide delay={3000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
+        <Toast.Body>{showToast.message}</Toast.Body>
+      </Toast>
     </div>
   );
 };

@@ -12,10 +12,10 @@ import plus from "@assets/images/plus.svg";
 import { addGoal, createGoal, getGoal, getGoalsFromArchive, getPublicGoals, updateGoal } from "@src/api/GoalsAPI";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
-import { displayAddGoalOptions, displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
 import ITagExtractor from "@src/Interfaces/ITagExtractor";
+import { displayAddGoalOptions, displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayArchiveOption, displayLoader } from "@src/store";
+import { darkModeState, displayFromOptions, displayLoader, displayToast } from "@src/store";
 import InputGoal from "./InputGoal";
 
 interface SuggestionModalProps {
@@ -23,6 +23,7 @@ interface SuggestionModalProps {
 }
 
 const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
+  const [open, setOpen] = useState(false);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showAddGoalOptions = useRecoilValue(displayAddGoalOptions);
   const [selectedGoal, setSelectedGoal] = useState<{index: number, goal:ISharedGoal|GoalItem} | null>(null);
@@ -32,10 +33,11 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   const [goalInput, setGoalInput] = useState("");
 
   const setLoading = useSetRecoilState(displayLoader);
-  const setShowArchiveOptions = useSetRecoilState(displayArchiveOption);
+  const [showFromOptions, setShowFromOptions] = useRecoilState(displayFromOptions);
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
+  const setShowToast = useSetRecoilState(displayToast);
 
   const addSuggestedGoal = async (goal:ISharedGoal | GoalItem, index:number) => {
     let newGoalId;
@@ -117,23 +119,40 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   };
 
   const getMySuggestions = async () => {
+    setLoading(true);
     const goals: GoalItem[] = await getGoalsFromArchive(goalID);
-    if (goals.length === 0) {
-      setShowArchiveOptions(false);
-    } else { setShowArchiveOptions(true); }
-    setArchiveGoals([...goals]);
     const res = await getPublicGoals(goalID === "root" ? "root" : (await getGoal(goalID)).title);
+    setArchiveGoals([...goals]);
+    let publicGoalsEmpty = true;
+    const archiveGoalsEmpty = goals.length === 0;
     if (res.status) {
       const tmpPG = [...res.data];
+      publicGoalsEmpty = tmpPG.length === 0;
       setPublicGoals([...tmpPG]);
     }
+    setShowFromOptions({ ...showFromOptions, archive: !archiveGoalsEmpty, public: !publicGoalsEmpty });
+    setLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
-    getMySuggestions();
-    setLoading(false);
+    if (showAddGoalOptions) {
+      getMySuggestions();
+    }
   }, [showAddGoalOptions]);
+
+  useEffect(() => {
+    if (showSuggestionsModal === "Archive") {
+      setOpen(true);
+    } else if (showSuggestionsModal === "Public") {
+      if (showFromOptions.public) {
+        setOpen(true);
+      } else {
+        setShowToast({ open: true, message: "Awww... no hints today. We'll keep looking!" });
+        setShowSuggestionsModal(null);
+        setShowFromOptions({ archive: false, public: false });
+      }
+    }
+  }, [showSuggestionsModal]);
 
   useEffect(() => {
     if (selectedGoal) {
@@ -161,11 +180,10 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
     }
   }, [selectedGoal]);
   return (
-
     <Modal
       id={`suggestions-modal${darkModeStatus ? "-dark" : ""}`}
-      show={showSuggestionsModal !== null}
-      onHide={() => setShowSuggestionsModal(null)}
+      show={open}
+      onHide={() => { setOpen(false); setShowSuggestionsModal(null); setShowFromOptions({ archive: false, public: false }); }}
       centered
       autoFocus={false}
     >
@@ -179,6 +197,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
         </div>
       </Modal.Body>
     </Modal>
+
   );
 };
 

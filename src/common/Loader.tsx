@@ -1,29 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
-import { Modal } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
-
-import { displayLoader } from "@src/store";
 
 const Loader = () => {
-  const showLoader = useRecoilValue(displayLoader);
+  const [mobile, setMobile] = useState(window.matchMedia("(max-width: 600px)").matches);
+  window.matchMedia("(max-width: 600px)").onchange = () => setMobile(window.matchMedia("(max-width: 600px)").matches);
   return (
-    <Modal
-      show={showLoader}
-    >
-      <Modal.Body style={{
-        background: "transparent",
-        color: "white",
+    <Spinner
+      style={{
         position: "absolute",
-        width: "100%",
-        textAlign: "center"
+        top: "18px",
+        left: mobile ? "18px" : 0,
+        width: "50px",
+        height: "50px",
+        color: "#CD6E51"
       }}
-      >
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </Modal.Body>
-    </Modal>
+      animation="border"
+      role="status"
+    >
+
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
 
   );
 };
