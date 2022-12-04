@@ -119,6 +119,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   };
 
   const getMySuggestions = async () => {
+    setLoading(true);
     const goals: GoalItem[] = await getGoalsFromArchive(goalID);
     const res = await getPublicGoals(goalID === "root" ? "root" : (await getGoal(goalID)).title);
     setArchiveGoals([...goals]);
@@ -130,13 +131,12 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
       setPublicGoals([...tmpPG]);
     }
     setShowFromOptions({ ...showFromOptions, archive: !archiveGoalsEmpty, public: !publicGoalsEmpty });
+    setLoading(false);
   };
 
   useEffect(() => {
     if (showAddGoalOptions) {
-      setLoading(true);
       getMySuggestions();
-      setLoading(false);
     }
   }, [showAddGoalOptions]);
 
