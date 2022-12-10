@@ -1,5 +1,142 @@
 .show-feelings {
   &__list-category {
-    margin: 40px 0 0 0;
+    margin-top: 30px;
   }
+}
+
+#myFeelings-container {
+  margin-top: 100px;
+  max-width: 600px;
+  min-width: 236px;
+  width: 100%;
+}
+
+#myFeelings-title, #myFeelings-title-dark {
+  font-size: 1.5em;
+  font-weight: 700;
+  font-style: italic;
+  padding-left: 20px;
+}
+
+.feelings-date, .feelings-date-dark {
+  font-size: 1.286em;
+  font-weight: 700;
+  font-style: italic;
+  padding-left: 20px;
+}
+
+.feelingOfDay, .feelingOfDay-dark {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 21px;
+  width: 100%;
+  background: rgba(246, 246, 246, 0.4);
+  border: none;
+  border-bottom: 1px solid #303030;
+  .feelingOfDay-name {
+    font-size: 1.286em;
+    font-weight: 700;
+  }
+  .feelingOfDaty-options {
+    display: flex;
+    align-self: center;
+    img {
+      margin-left: 10px;
+    }
+  }
+}
+
+.feelingOfDay-dark {
+  background: rgba(57, 57, 57, 0.4);
+  border-bottom: 1px solid #E4E4E4;
+  color: white;
+
+  .feelingOfDaty-options > img {
+    filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
+  }
+}
+
+.feelingOfDay:last-child, .feelingOfDay-dark:last-child {
+  border: none;
+}
+
+.addFeeling-btn, .addFeeling-btn-dark{
+  margin-left: 20px;
+  border-radius: 50%;
+  border: none;
+  background: radial-gradient(50% 50% at 50% 50%, #FEF2EF 75.64%, #CD6E51 100%);
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  input {
+    filter: invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%);
+  }
+}
+.addFeeling-btn-dark {
+  background: radial-gradient(50% 50% at 50% 50%, #121212 73.18%, #705BBC 100%);
+  input {
+    filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
+  }  
+}
+
+.notes-modal .modal-content {
+  background-color: #FFEBEB;  
+
+}
+
+.notes-modal-dark .modal-content {
+  background-color: #121212;
+  border: 3px solid #3a2a22 !important;
+}
+
+
+.note-modal-title {
+  &-dark {
+    color: white;
+    font-style: italic;
+  }
+  &-light {
+    color: black;
+    font-style: italic;
+  }
+}
+
+.notes-modal-input, .notes-modal-input-dark {
+  background-color: #EEB8A7 !important;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  font-weight: bold;
+  width: 55%;
+}
+
+.notes-modal-input-dark { 
+    background: #343434 !important;
+    color: white !important;
+}
+.feelingsModal-btn, .feelingsModal-btn-dark {
+  background: #CD6E51;
+  border-radius: 5px; 
+  font-size: 1.286em;
+  font-weight: 600;
+  padding: 8px 14px;
+  border: none;
+}
+.feelingsModal-btn-dark {
+  background: #705BBC;
+  color: white;
+}
+
+.show-feeling__note-textarea, .show-feeling__note-textarea-dark {
+  background-color: #edc7b7 !important;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  font-weight: bold;
+}
+.show-feeling__note-textarea-dark {
+  background: #343434 !important;
+  color: white !important;
 }
