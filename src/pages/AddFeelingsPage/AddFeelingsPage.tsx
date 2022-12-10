@@ -27,15 +27,16 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
 
   const [feelingNote, setFeelingNote] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [choice, setChoice] = useState(0);
   const [customFeeling, setCustomFeeling] = useState<string>("");
 
   const addThisFeeling = async (directAdd = "") => {
     if (directAdd !== "") {
       await addFeeling(directAdd, directAdd, date);
     } else if (feelingNote && feelingNote !== "") {
-      await addFeelingWithNote(customFeeling === "" ? selectedCategory : customFeeling, selectedCategory, date, feelingNote);
+      await addFeelingWithNote(customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling, selectedCategory, date, feelingNote);
     } else {
-      await addFeeling(customFeeling === "" ? selectedCategory : customFeeling, selectedCategory, date);
+      await addFeeling(customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling, selectedCategory, date);
     }
     setSelectedCategory("");
     setCustomFeeling("");
@@ -82,22 +83,22 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
         (
           <>
             <Modal.Body id={`feeling-modal-body${darkModeStatus ? "-dark" : ""}`}>
-              <p id="feeling-reason-ques">Want to be more specific?</p>
+              <p className="heading">{`You feel ${customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling}`}</p>
               <input
                 type="text"
-                placeholder="I Feel..."
+                placeholder="New Feeling? Write here..."
                 id="myfeelings-custom-feeling-input"
-                onChange={(e) => { setCustomFeeling(e.target.value); }}
+                onChange={(e) => { setCustomFeeling(e.target.value); setChoice(e.target.value === "" ? 0 : -1); }}
                 value={customFeeling}
               />
               <div id="feelingOptions">
-                { selectedCategory !== "" && feelingsList[selectedCategory].map((feeling) => (
+                { selectedCategory !== "" && feelingsList[selectedCategory].map((feeling, index) => (
                   <button
                     type="button"
-                    className={`feelingOption-name feelingOption-${selectedCategory === feeling ? "selected" : ""}`}
+                    className={`feelingOption-name feelingOption-${choice === index ? "selected" : ""}`}
                     key={`feelingOption-${feeling}`}
-                    style={customFeeling === feeling ? { background: "#EEB8A7" } : {}}
-                    onClick={() => { setCustomFeeling(feeling); }}
+                    style={choice === index ? { background: "#EEB8A7" } : {}}
+                    onClick={() => { setChoice(index); setCustomFeeling(""); }}
                   >
                     {t(feeling)}
                   </button>
