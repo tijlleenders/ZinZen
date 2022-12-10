@@ -1,11 +1,12 @@
 // @ts-nocheck
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { Button, Container, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ChevronRight, TrashFill, Journal } from "react-bootstrap-icons";
 
+import deleteFeelingIcon from "@assets/images/deleteFeelingIcon.svg";
+import noteIcon from "@assets/images/noteIcon.svg";
 import { darkModeState } from "@store";
 import { IFeelingItem } from "@models";
 import { removeFeeling, addFeelingNote, removeFeelingNote } from "@api/FeelingsAPI";
@@ -13,7 +14,6 @@ import { feelingListType } from "@src/global";
 import { feelingsEmojis } from "@consts/FeelingsList";
 
 import "@translations/i18n";
-import "./ShowFeelingsPage.scss";
 
 interface ISetFeelingsListObject {
   feelingsList: feelingListType[];
@@ -38,18 +38,22 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
 }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [showInputModal, setShowInputModal] = useState(false);
-  const [showNotesModal, setShowNotesModal] = useState(false);
+  const [showInputModal, setShowInputModal] = useState(-1);
+  const [showNotesModal, setShowNotesModal] = useState(-1);
   const [selectedFeelingNote, setSelectedFeelingNote] = useState("");
   const [noteValue, setNoteValue] = useState("");
 
-  const handleInputClose = () => setShowInputModal(false);
-  const handleInputShow = () => setShowInputModal(true);
-  const handleNotesClose = () => setShowNotesModal(false);
-  const handleNotesShow = () => setShowNotesModal(true);
-  const handleFeelingsNoteModify = async () => {
-    addFeelingNote(handleFocus.selectedFeeling!, noteValue).then((newFeelingsList) => {
-      const feelingsByDates: feelingListType[] = newFeelingsList!.reduce((dates: Date[], feeling: IFeelingItem) => {
+  const handleInputClose = () => setShowInputModal(-1);
+  const handleInputShow = (id) => setShowInputModal(id);
+  const handleNotesClose = () => setShowNotesModal(-1);
+  const handleNotesShow = (id) => setShowNotesModal(id);
+
+  const handleFeelingsNoteModify = async (id: number) => {
+    console.log(id, noteValue);
+    const res = await addFeelingNote(id, noteValue);
+    console.log(res);
+    if (res) {
+      const feelingsByDates: feelingListType[] = res.reduce((dates: Date[], feeling: IFeelingItem) => {
         if (dates[feeling.date]) {
           dates[feeling.date].push(feeling);
         } else {
@@ -59,7 +63,7 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
         return dates;
       }, {});
       setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
-    });
+    }
   };
 
   const handleFeelingClick = (id: number) => {
@@ -67,9 +71,10 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
   };
 
   const handleJournalClick = (id: number) => {
-    if (feelingsListObject[id]?.note) setSelectedFeelingNote(feelingsListObject[id]?.note!);
-    if (feelingsListObject[id]?.note) handleNotesShow();
-    else handleInputShow();
+    if (feelingsListObject[id].note) {
+      setSelectedFeelingNote(feelingsListObject[id].note);
+      handleNotesShow(feelingsListObject[id].id);
+    } else handleInputShow(feelingsListObject[id].id);
   };
 
   const handleTrashClick = (id: number) => {
@@ -84,154 +89,118 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
   };
   return (
     <div>
-      <Container fluid>
-        <div>
-          {feelingsListObject &&
-            Object.keys(feelingsListObject).map((ID: string) => {
-              const feelingId = Number(ID);
-              return (
-                <Button
-                  key={feelingsListObject[feelingId].content + feelingsListObject[feelingId].date}
-                  className={darkModeStatus ? "btn-my-feelings-dark btn-feelings-dark" : "show-btn-my-feelings-light"}
-                  size="lg"
-                >
-                  <div
-                    className="btn-my-feelings_container"
-                    aria-hidden="true"
-                    onClick={() => {
-                      handleFeelingClick(feelingsListObject[feelingId].id);
-                    }}
-                  >
-                    <div>
-                      {feelingsEmojis[feelingsListObject[feelingId].category]}
-                      <span className="btn-my-feelings__text">{t(feelingsListObject[feelingId].content)}</span>
-                    </div>
-                    <div>
-                      <div>
-                        {handleFocus.selectedFeeling === feelingsListObject[feelingId].id ? (
-                          <ChevronDown />
-                        ) : (
-                          <ChevronRight />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  {feelingsListObject[feelingId]?.note && (
-                  <span
-                    aria-hidden="true"
-                    className="btn-my-feelings__note"
-                    onClick={() => {
-                      handleFeelingClick(feelingsListObject[feelingId].id);
-                    }}
-                  >
-                    {handleFocus.selectedFeeling === feelingsListObject[feelingId].id
-                      ? `${feelingsListObject[feelingId].note}`
-                      : "..."}
-                  </span>
-                  )}
-                  {handleFocus.selectedFeeling === feelingsListObject[feelingId].id && (
-                  <div className="show-feelings__options">
-                    <TrashFill
-                      onClick={() => handleTrashClick(feelingId)}
-                      size={20}
-                    />
-                    <Journal
-                      onClick={() => handleJournalClick(feelingId)}
-                      size={20}
-                    />
-                  </div>
-                  )}
-                </Button>
-              );
-            })}
-        </div>
-        <Modal
-          show={showInputModal}
-          onHide={handleInputClose}
-          centered
-          autoFocus={false}
-          className={darkModeStatus ? "notes-modal-dark" : "notes-modal-light"}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
-              Want to tell more about it?
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <input
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
-              type="text"
-              placeholder="Add a reason"
-              className="show-feelings__note-input"
-              value={noteValue}
-              onChange={(e) => {
-                setNoteValue(e.target.value);
-              }}
-              // Admittedly not the best way to do this but suffices for now
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleFeelingsNoteModify();
-                  setNoteValue("");
-                  handleInputClose();
-                }
-              }}
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="primary"
-              type="submit"
-              onClick={() => {
-                handleFeelingsNoteModify();
+      <div>
+        {feelingsListObject &&
+          Object.keys(feelingsListObject).map((ID: string) => {
+            const feelingId = Number(ID);
+            return (
+              <button
+                type="button"
+                key={feelingsListObject[feelingId].content + feelingsListObject[feelingId].date}
+                className={`feelingOfDay${darkModeStatus ? "-dark" : ""}`}
+                onClick={() => { handleFeelingClick(feelingsListObject[feelingId].id); }}
+              >
+                <div className="feelingOfDay-name">
+                  {feelingsEmojis[feelingsListObject[feelingId].category]}&nbsp;
+                  <span>{t(feelingsListObject[feelingId].content)}</span>
+                </div>
+                <div className="feelingOfDaty-options">
+                  <img alt="add note to feeling" src={noteIcon} onClick={() => handleJournalClick(feelingId)} />
+                  <img alt="delete feeling" src={deleteFeelingIcon} onClick={() => handleTrashClick(feelingId)} />
+                </div>
+              </button>
+            );
+          })}
+      </div>
+      <Modal
+        show={showInputModal !== -1}
+        onHide={handleInputClose}
+        centered
+        autoFocus={false}
+        className={`notes-modal${darkModeStatus ? "-dark" : ""}`}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
+            Want to tell more about it?
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <input
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+            type="text"
+            placeholder="Add a reason"
+            className={`notes-modal-input${darkModeStatus ? "-dark" : ""}`}
+            value={noteValue}
+            onChange={(e) => {
+              setNoteValue(e.target.value);
+            }}
+            // Admittedly not the best way to do this but suffices for now
+            onKeyDown={async (e) => {
+              if (e.key === "Enter") {
+                await handleFeelingsNoteModify(showInputModal);
                 setNoteValue("");
                 handleInputClose();
-              }}
-              className="show-feelings__modal-button"
-            >
-              Done
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        <Modal
-          show={showNotesModal}
-          onHide={handleNotesClose}
-          centered
-          className={darkModeStatus ? "notes-modal-dark" : "notes-modal-light"}
-        >
-          <Modal.Body>
-            <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="primary"
-              onClick={async () => {
-                const newFeelingsList = await removeFeelingNote(handleFocus.selectedFeeling!);
-                const feelingsByDates: feelingListType[] = newFeelingsList!.reduce(
-                  (dates: Date[], feeling: IFeelingItem) => {
-                    if (dates[feeling.date]) {
-                      dates[feeling.date].push(feeling);
-                    } else {
-                      // eslint-disable-next-line no-param-reassign
-                      dates[feeling.date] = [feeling];
-                    }
-                    return dates;
-                  },
-                  {}
-                );
-                setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
-                handleNotesClose();
-              }}
-              className="show-feelings__modal-button"
-            >
-              Delete
-            </Button>
-            <Button variant="primary" onClick={handleNotesClose} className="show-feelings__modal-button">
-              Done
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </Container>
+              }
+            }}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            type="submit"
+            onClick={async () => {
+              await handleFeelingsNoteModify(showInputModal);
+              setNoteValue("");
+              handleInputClose();
+            }}
+            className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
+          >
+            Done
+          </button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={showNotesModal !== -1}
+        onHide={handleNotesClose}
+        centered
+        className={darkModeStatus ? "notes-modal-dark" : "notes-modal-light"}
+      >
+        <Modal.Body>
+          <textarea readOnly className={`show-feeling__note-textarea${darkModeStatus ? "-dark" : ""}`} rows={5} cols={32} value={selectedFeelingNote} />
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            type="button"
+            onClick={async () => {
+              const newFeelingsList = await removeFeelingNote(showNotesModal);
+              const feelingsByDates: feelingListType[] = newFeelingsList!.reduce(
+                (dates: Date[], feeling: IFeelingItem) => {
+                  if (dates[feeling.date]) {
+                    dates[feeling.date].push(feeling);
+                  } else {
+                    // eslint-disable-next-line no-param-reassign
+                    dates[feeling.date] = [feeling];
+                  }
+                  return dates;
+                },
+                {}
+              );
+              setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
+              handleNotesClose();
+            }}
+            className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            onClick={handleNotesClose}
+            className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
+          >
+            Done
+          </button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
