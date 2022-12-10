@@ -1,5 +1,5 @@
 {
-  "langchoice": "Kies uw voorkeurstaal.",
+  "langchoice": "Hoi! Welke taal wil je?",
   "english": "Engels",
   "french": "Frans",
   "hindi": "Hindi",
@@ -7,7 +7,7 @@
   "german": "Duits",
   "dutch": "Nederlands",
   "portuguese": "Portugees",
-  "themechoice": "Kies je kleurenthema.",
+  "themechoice": "Waar hou je van?",
   "home": "Home",
   "discover": "Blader door de code",
   "donate": "Doneer",

@@ -1,5 +1,5 @@
 {
-  "langchoice": "Wählen Sie Ihre bevorzugte Sprache.",
+  "langchoice": "Hi! Welche Sprache möchten Sie?",
   "english": "Englisch",
   "french": "Französisch",
   "hindi": "Hindi",
@@ -7,7 +7,7 @@
   "german": "Deutsch",
   "dutch": "Niederländisch",
   "portuguese": "Portugiesisch",
-  "themechoice": "Wählen Sie Ihr bevorzugtes Thema.",
+  "themechoice": "Was haben Sie gern?",
   "home": "Heim",
   "discover": "Durchsuchen Sie den Code",
   "donate": "Spenden",
