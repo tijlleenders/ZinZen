@@ -32,12 +32,9 @@ export const FeelingTemplate = ({
   const [selectedFeeling, setSelectedFeeling] = useState(feelingCategory);
 
   const addThisFeeling = () => {
-    console.log(feelingCategory);
     if (feelingNote && feelingNote !== "") {
-      console.log(selectedFeeling, feelingCategory, feelingDate, feelingNote);
       addFeelingWithNote(selectedFeeling, feelingCategory, feelingDate, feelingNote);
     } else {
-      console.log(selectedFeeling, feelingCategory, feelingDate);
       addFeeling(selectedFeeling, feelingCategory, feelingDate);
     }
     setTimeout(() => {
