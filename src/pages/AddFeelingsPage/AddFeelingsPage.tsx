@@ -85,13 +85,6 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
           <>
             <Modal.Body id={`feeling-modal-body${darkModeStatus ? "-dark" : ""}`}>
               <p className="heading">{`You feel ${customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling}`}</p>
-              <input
-                type="text"
-                placeholder="New Feeling? Write here..."
-                id="myfeelings-custom-feeling-input"
-                onChange={(e) => { setCustomFeeling(e.target.value); setChoice(e.target.value === "" ? 0 : -1); }}
-                value={customFeeling}
-              />
               <div id={`feelingOptions${darkModeStatus ? "-dark" : ""}`}>
                 { selectedCategory !== "" && feelingsList[selectedCategory].map((feeling, index) => (
                   <button
@@ -103,6 +96,13 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
                     {t(feeling)}
                   </button>
                 ))}
+                <input
+                  type="text"
+                  placeholder="New Feeling? Write here..."
+                  id="myfeelings-custom-feeling-input"
+                  onChange={(e) => { setCustomFeeling(e.target.value); setChoice(e.target.value === "" ? 0 : -1); }}
+                  value={customFeeling}
+                />
               </div>
               <input
                 type="text"
