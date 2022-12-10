@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 // @ts-nocheck
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
