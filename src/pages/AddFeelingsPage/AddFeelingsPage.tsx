@@ -41,6 +41,7 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
     setSelectedCategory("");
     setCustomFeeling("");
     setFeelingNote("");
+    setChoice(0);
     setShowAddFeelingsModal(null);
   };
   return (
@@ -91,13 +92,12 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
                 onChange={(e) => { setCustomFeeling(e.target.value); setChoice(e.target.value === "" ? 0 : -1); }}
                 value={customFeeling}
               />
-              <div id="feelingOptions">
+              <div id={`feelingOptions${darkModeStatus ? "-dark" : ""}`}>
                 { selectedCategory !== "" && feelingsList[selectedCategory].map((feeling, index) => (
                   <button
                     type="button"
-                    className={`feelingOption-name feelingOption-${choice === index ? "selected" : ""}`}
+                    className={`feelingOption${choice === index ? "-selected" : ""}`}
                     key={`feelingOption-${feeling}`}
-                    style={choice === index ? { background: "#EEB8A7" } : {}}
                     onClick={() => { setChoice(index); setCustomFeeling(""); }}
                   >
                     {t(feeling)}
