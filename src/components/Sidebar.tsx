@@ -58,6 +58,7 @@ const Sidebar = () => {
       </Offcanvas.Header>
       <Offcanvas.Body>
         <div style={{ display: "flex", flexDirection: "column", marginTop: "4vh", alignItems: "center" }}>
+          { getNavButton("My Feelings", "/MyFeelings") }
           { getNavButton("Blog", "https://blog.zinzen.me/") }
           { getNavButton("Donate", "https://donate.stripe.com/6oE4jK1iPcPT1m89AA") }
           { getNavButton("Feedback", "/ZinZen/Feedback") }

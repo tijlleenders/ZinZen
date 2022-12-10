@@ -25,3 +25,27 @@
 #toast-dark {
   background-color: #5468ff;
 }
+
+.popupModal, .popupModal-dark {
+  .modal-dialog {
+    margin-top: 18%;
+  }
+  .modal-content {
+    background: #FFEBEB;
+  }
+  .modal-body {
+    background: #FFEBEB;
+    border-radius: 10px;
+    padding: 33px;
+  }
+}
+
+.popupModal-dark {
+  .modal-content {
+    background: #121212;
+  }
+  .modal-body {
+    background: #121212;
+    color: white;
+  }
+}
