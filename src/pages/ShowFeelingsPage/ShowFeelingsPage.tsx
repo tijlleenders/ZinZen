@@ -74,7 +74,7 @@ export const ShowFeelingsPage = () => {
                   : new Date(date).toDateString()}
               </span>
             </p>
-            {feelingsList[date] && feelingsList[date].length > 0 ? (
+            {feelingsList[date] && feelingsList[date].length > 0 && (
               <ShowFeelingTemplate
                 key={date}
                 feelingsListObject={feelingsList[date]}
@@ -82,21 +82,21 @@ export const ShowFeelingsPage = () => {
                 currentFeelingsList={feelingsList}
                 handleFocus={{ selectedFeeling, setSelectedFeeling }}
               />
-            ) : (
-              <button
-                type="button"
-                className={`addFeeling-btn${darkModeStatus ? "-dark" : ""}`}
-                onClick={() => { setShowAddFeelingsModal(new Date(date)); }}
-              >
-                <input
-                  type="image"
-                  tabIndex={0}
-                  key={date}
-                  src={addIcon}
-                  alt="add-feeling"
-                />
-              </button>
             )}
+            <button
+              type="button"
+              className={`addFeeling-btn${darkModeStatus ? "-dark" : ""}`}
+              onClick={() => { setShowAddFeelingsModal(new Date(date)); }}
+            >
+              <input
+                type="image"
+                tabIndex={0}
+                key={date}
+                src={addIcon}
+                alt="add-feeling"
+              />
+            </button>
+
           </div>
         ))}
       <AddFeelingsPage feelingDate={showAddFeelingsModal} setShowAddFeelingsModal={setShowAddFeelingsModal} />
