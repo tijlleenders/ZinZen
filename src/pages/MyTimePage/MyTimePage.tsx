@@ -178,8 +178,9 @@ export const MyTimePage = () => {
         schedulerInput.goals.push(obj);
       });
       console.log("input", schedulerInput);
-      const schedulerOutput: TaskItem[] = (schedule(schedulerInput)).scheduled;
-      console.log("output", schedulerOutput);
+      const res = schedule(schedulerInput);
+      console.log("output", res);
+      const schedulerOutput = res.scheduled;
       schedulerOutput.forEach((ele, index) => {
         const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === ele.goalid);
         schedulerOutput[index].parentGoalId = activeGoals[ind].parentGoalId;
