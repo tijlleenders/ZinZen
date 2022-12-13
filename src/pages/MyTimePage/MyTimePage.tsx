@@ -164,6 +164,7 @@ export const MyTimePage = () => {
         endDate,
         goals: []
       };
+      activeGoals = [...activeGoals.filter((ele) => (!!ele.duration))];
       activeGoals.forEach((ele) => {
         const obj = {
           id: ele.id,
