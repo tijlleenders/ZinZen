@@ -177,13 +177,13 @@ export const MyTimePage = () => {
         schedulerInput.goals.push(obj);
       });
       console.log("input", schedulerInput);
-      const schedulerOutput: TaskItem[] = schedule(schedulerInput);
+      const schedulerOutput: TaskItem[] = (schedule(schedulerInput)).scheduled;
+      console.log("output", schedulerOutput);
       schedulerOutput.forEach((ele, index) => {
         const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === ele.goalid);
         schedulerOutput[index].parentGoalId = activeGoals[ind].parentGoalId;
         schedulerOutput[index].goalColor = activeGoals[ind].goalColor;
       });
-      console.log("output", schedulerOutput);
       setTmpTasks([...schedulerOutput]);
     })();
   }, []);
