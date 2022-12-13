@@ -1,5 +1,8 @@
 .MTL-display-light, .MTL-display-dark {
   padding-top: 1em;
+  .MTL-taskTitle {
+    color: #343434;
+  }
   .MTL-goalTiming {
     border: none;
     background-color: transparent;
@@ -14,7 +17,7 @@
 }
 
 .MTL-display-dark {
-  .MTL-goalTiming {
+  .MTL-goalTiming, .MTL-taskTitle {
     color: #E4E4E4;
   }
 }
