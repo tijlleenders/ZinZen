@@ -133,18 +133,14 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         </Form.Check>
       </Modal.Body>
       <Modal
-        id="addContact-modal"
+        className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""}`}
         show={showAddContactModal}
         onHide={handleCloseAddContact}
         centered
         autoFocus={false}
       >
-        <Modal.Header closeButton>
-          <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
-            Add a contact name
-          </Modal.Title>
-        </Modal.Header>
         <Modal.Body>
+          <p className="popupModal-title"> Add a contact name </p>
           <input
               // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
@@ -163,10 +159,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               }
             }}
           />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="primary"
+          <button
             type="submit"
             onClick={async () => {
               const res = await initRelationship();
@@ -177,11 +170,11 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                 handleCloseAddContact();
               }
             }}
-            className="addContact-submit-button"
+            className={`addContact-btn${darkModeStatus ? "-dark" : ""}`}
           >
-            <img alt="add contact" src={copyLink} />Copy Link
-          </Button>
-        </Modal.Footer>
+            <img alt="add contact" src={copyLink} />Copy Invite Link
+          </button>
+        </Modal.Body>
       </Modal>
     </Modal>
   );

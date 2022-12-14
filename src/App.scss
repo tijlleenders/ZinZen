@@ -27,6 +27,10 @@
 }
 
 .popupModal, .popupModal-dark {
+  .popupModal-title {
+    font-size: 1.286em;
+    font-weight: 700;
+  }
   .modal-dialog {
     margin-top: 18%;
   }
@@ -41,6 +45,10 @@
 }
 
 .popupModal-dark {
+  input {
+    background: #343434 !important;
+    color: white !important;
+  }
   .modal-content {
     background: #121212;
   }

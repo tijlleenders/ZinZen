@@ -119,27 +119,39 @@
     font-weight: 600;
 }
 
-#addContact-modal {
-    .modal-title {
-        font-style: normal;
+.addContact-modal {
+    padding: 15px !important;
+    input {
+        background: #EEB8A7;
+        border-radius: 7px;
+        border: none;
+        padding: 8px; 
+        width: 80%;
+        font-size: 1.286em !important;
+        font-weight: 700;
     }
-    
-    .modal-content {
-        background:#FDE6DC !important; 
-    }
-
     .modal-footer {
         justify-content: flex-start !important;
     }
 }
-.addContact-submit-button {
+.addContact-btn, .addContact-btn-dark {
     font-weight: 600 !important;
-    background-color: #ac3b61 !important;
-
+    background: #CD6E51;
+    border-radius: 5px;
+    padding: 8px;
+    border: none;
+    margin-top: 20px;
     img {
         margin-right: 10px;
     }
   }
+.addContact-btn-dark {
+    color: white;
+    background:#9984E4;
+    img {
+        filter: brightness(0) invert(1);
+    }
+}
 
 #cb-withTime {
     border: 1px solid black;
