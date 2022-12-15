@@ -122,7 +122,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                     </button>
                   </div>
                 ) */}
-                { contacts.length < 1 && getContactBtn() }
+                { contacts.length < 8 && getContactBtn() }
               </div>
             </div>
           )}

@@ -40,6 +40,7 @@
 .shareOptions-btn:last-child {
     background-color: transparent !important;
 }
+
 #share-modal-body {
     display: flex;
     flex-direction: column;
@@ -82,7 +83,6 @@
     color: inherit;
 }
 
-
 .shareWithContacts {
     position: relative;
     text-align: left;
@@ -96,14 +96,12 @@
     }
 }
 
-
 .contact-button {
     width: fit-content;
     text-align: center;
     margin-left: 2.5%;
     position: relative;
 }
-
 
 .share-warning {
     font-weight: 600;
@@ -134,6 +132,7 @@
         justify-content: flex-start !important;
     }
 }
+
 .addContact-btn, .addContact-btn-dark {
     font-weight: 600 !important;
     background: #CD6E51;
@@ -144,7 +143,8 @@
     img {
         margin-right: 10px;
     }
-  }
+}
+
 .addContact-btn-dark {
     color: white;
     background:#9984E4;
@@ -161,6 +161,7 @@
     height: 20px;
     
 }
+
 .form-check-label {
     margin-left: 0.25em;
     font-weight: 600;
