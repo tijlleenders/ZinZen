@@ -147,7 +147,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
       if (showFromOptions.public) {
         setOpen(true);
       } else {
-        setShowToast({ open: true, message: "Awww... no hints today. We'll keep looking!" });
+        setShowToast({ open: true, message: "Awww... no hints today. We'll keep looking!", extra: "" });
         setShowSuggestionsModal(null);
         setShowFromOptions({ archive: false, public: false });
       }

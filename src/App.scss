@@ -21,6 +21,16 @@
   max-width: 600px;
   top: 100px;
   background-color: rgba(255, 255, 255);
+  z-index: 9999;
+  text-align: center;
+  #toast-message {
+    font-size: 1.285em;
+    font-weight: 600;
+  }
+  #extra-message {
+    font-size: 0.856em;
+    font-weight: 600;
+  }
 }
 #toast-dark {
   background-color: #5468ff;
