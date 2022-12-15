@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 
 import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
@@ -9,7 +9,7 @@ import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
 import { addContact, getAllContacts, initRelationship, shareGoalWithContact } from "@src/api/ContactsAPI";
-import { darkModeState, displayLoader } from "@src/store";
+import { darkModeState, displayLoader, displayToast } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
@@ -25,8 +25,9 @@ interface IShareGoalModalProps {
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const setLoading = useSetRecoilState(displayLoader);
+  const setShowToast = useSetRecoilState(displayToast);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
-  const [newContactName, setNewContactName] = useState("");
+  const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const [showAddContactModal, setShowAddContactModal] = useState(false);
   const [displayContacts, setDisplayContacts] = useState(false);
 
@@ -69,6 +70,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       onHide={() => setShowShareModal(-1)}
       centered
       autoFocus={false}
+      style={showAddContactModal ? { zIndex: 1 } : {}}
     >
       <Modal.Body id="share-modal-body">
         <button
@@ -122,7 +124,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                     </button>
                   </div>
                 ) */}
-                { contacts.length < 8 && getContactBtn() }
+                { contacts.length < 3 && getContactBtn() }
               </div>
             </div>
           )}
@@ -135,7 +137,10 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       <Modal
         className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""}`}
         show={showAddContactModal}
-        onHide={handleCloseAddContact}
+        onHide={() => {
+          setNewContact(null);
+          handleCloseAddContact();
+        }}
         centered
         autoFocus={false}
       >
@@ -144,17 +149,18 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           <input
               // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
+            disabled={newContact ? newContact.relId !== "" : false}
             type="text"
             placeholder="Name"
             className="show-feelings__note-input"
-            value={newContactName}
+            value={newContact?.contactName || ""}
             onChange={(e) => {
-              setNewContactName(e.target.value);
+              setNewContact({ contactName: e.target.value, relId: newContact?.relId || "" });
             }}
               // Admittedly not the best way to do this but suffices for now
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                setNewContactName("");
+                setNewContact(null);
                 handleCloseAddContact();
               }
             }}
@@ -162,13 +168,17 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           <button
             type="submit"
             onClick={async () => {
-              const res = await initRelationship();
-              if (res.success) {
-                await addContact(newContactName, res.response?.relId, res.response?.installId);
-                navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
-                setNewContactName("");
-                handleCloseAddContact();
+              if (newContact && newContact.relId === "") {
+                const res = await initRelationship();
+                if (res.success) {
+                  await addContact(newContact?.contactName, res.response?.relId);
+                  setNewContact({ ...newContact, relId: res.response?.relId });
+                  navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
+                }
+              } else {
+                navigator.clipboard.writeText(`${window.location.origin}/invite/${newContact?.relId}`);
               }
+              setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${newContact?.contactName} so that they can add you in their contacts` });
             }}
             className={`addContact-btn${darkModeStatus ? "-dark" : ""}`}
           >
