@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 
 import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
@@ -8,13 +8,14 @@ import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
-import { addContact, getAllContacts, initRelationship, shareGoalWithContact } from "@src/api/ContactsAPI";
-import { darkModeState, displayLoader } from "@src/store";
+import { addContact, getAllContacts, initRelationship } from "@src/api/ContactsAPI";
+import { darkModeState, displayLoader, displayToast } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
-import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getGoal, shareMyGoal } from "@src/api/GoalsAPI";
 
 import "./ShareGoalModal.scss";
+import InviteLinkModal from "./InviteLinkModal";
 
 interface IShareGoalModalProps {
   goal: GoalItem
@@ -25,33 +26,31 @@ interface IShareGoalModalProps {
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const setLoading = useSetRecoilState(displayLoader);
+  const setShowToast = useSetRecoilState(displayToast);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
-  const [newContactName, setNewContactName] = useState("");
+  const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
+  const [showInviteModal, setShowInviteModal] = useState<{ goal: GoalItem, id: string, name: string, relId: string, accepted: boolean } | null>(null);
   const [showAddContactModal, setShowAddContactModal] = useState(false);
   const [displayContacts, setDisplayContacts] = useState(false);
 
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
 
-  const getContactBtn = (relId = "", letter = "") => (
+  const getContactBtn = (id = "", relId = "", name = "", accepted = false) => (
     <div className="contact-button">
       <button
         type="button"
         onClick={async () => {
-          if (letter === "") handleShowAddContact();
+          if (name === "") handleShowAddContact();
           else {
-            setLoading(true);
-            await shareGoalWithContact(relId, { id: goal.id, title: goal.title });
-            await updateSharedStatusOfGoal(goal.id, relId, letter);
-            setShowShareModal(-1);
-            setLoading(false);
+            setShowInviteModal({ goal, id, name, relId, accepted });
           }
         }}
         className="contact-icon"
       >
-        { letter === "" ? <img alt="add contact" src={addContactIcon} /> : letter[0]}
+        { name === "" ? <img alt="add contact" src={addContactIcon} /> : name[0]}
       </button>
-      { letter !== "" && <p>{letter}</p> }
+      { name !== "" && <p>{name}</p> }
     </div>
   );
 
@@ -69,6 +68,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       onHide={() => setShowShareModal(-1)}
       centered
       autoFocus={false}
+      style={showAddContactModal || showInviteModal ? { zIndex: 1 } : {}}
     >
       <Modal.Body id="share-modal-body">
         <button
@@ -109,7 +109,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               <div id="modal-contact-list" style={contacts.length < 3 ? { justifyContent: "flex-start" } : {}}>
                 { contacts.length > 0 &&
                   contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (
-                    getContactBtn(ele.relId, ele.name)
+                    getContactBtn(ele.id, ele.relId, ele.name, ele.accepted)
                   ))}
                 { /* contacts.length >= 3 && (
                   <div className="contact-button">
@@ -122,7 +122,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                     </button>
                   </div>
                 ) */}
-                { contacts.length < 1 && getContactBtn() }
+                { contacts.length < 3 && getContactBtn() }
               </div>
             </div>
           )}
@@ -133,56 +133,59 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         </Form.Check>
       </Modal.Body>
       <Modal
-        id="addContact-modal"
+        className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""}`}
         show={showAddContactModal}
-        onHide={handleCloseAddContact}
+        onHide={() => {
+          setNewContact(null);
+          handleCloseAddContact();
+        }}
         centered
         autoFocus={false}
       >
-        <Modal.Header closeButton>
-          <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
-            Add a contact name
-          </Modal.Title>
-        </Modal.Header>
         <Modal.Body>
+          <p className="popupModal-title"> Add a contact name </p>
           <input
               // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
+            disabled={newContact ? newContact.relId !== "" : false}
             type="text"
             placeholder="Name"
             className="show-feelings__note-input"
-            value={newContactName}
+            value={newContact?.contactName || ""}
             onChange={(e) => {
-              setNewContactName(e.target.value);
+              setNewContact({ contactName: e.target.value, relId: newContact?.relId || "" });
             }}
               // Admittedly not the best way to do this but suffices for now
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                setNewContactName("");
+                setNewContact(null);
                 handleCloseAddContact();
               }
             }}
           />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="primary"
+          <button
             type="submit"
             onClick={async () => {
-              const res = await initRelationship();
-              if (res.success) {
-                await addContact(newContactName, res.response?.relId, res.response?.installId);
-                navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
-                setNewContactName("");
-                handleCloseAddContact();
+              if (newContact && newContact.relId === "") {
+                const res = await initRelationship();
+                if (res.success) {
+                  await addContact(newContact?.contactName, res.response?.relId);
+                  setNewContact({ ...newContact, relId: res.response?.relId });
+                  navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
+                }
+              } else {
+                navigator.clipboard.writeText(`${window.location.origin}/invite/${newContact?.relId}`);
               }
+              setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${newContact?.contactName} so that they can add you in their contacts` });
             }}
-            className="addContact-submit-button"
+            className={`addContact-btn${darkModeStatus ? "-dark" : ""}`}
           >
-            <img alt="add contact" src={copyLink} />Copy Link
-          </Button>
-        </Modal.Footer>
+            <img alt="add contact" src={copyLink} />Add Contact
+          </button>
+        </Modal.Body>
       </Modal>
+      { showInviteModal && <InviteLinkModal showInviteModal={showInviteModal} setShowInviteModal={setShowInviteModal} /> }
+
     </Modal>
   );
 };

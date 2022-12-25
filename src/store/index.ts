@@ -15,7 +15,7 @@ export const displayFromOptions = atom({
 
 export const displayToast = atom({
   key: "displayToast",
-  default: { open: false, message: "Awww... no hints today. We'll keep looking!" }
+  default: { open: false, message: "Awww... no hints today. We'll keep looking!", extra: "" }
 });
 
 export { darkModeState, darkModeStateToggle, themeSelectionState, languageSelectionState };

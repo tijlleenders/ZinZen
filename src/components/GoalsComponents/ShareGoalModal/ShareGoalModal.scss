@@ -40,6 +40,7 @@
 .shareOptions-btn:last-child {
     background-color: transparent !important;
 }
+
 #share-modal-body {
     display: flex;
     flex-direction: column;
@@ -74,14 +75,13 @@
 .contact-icon, .next-icon {
     width: 47px;
     height: 47px;
-    font-size: 2em;
+    font-size: 1.7em;
     font-weight: bold;
     text-align: center;
     box-sizing: content-box;
     border: none;
     color: inherit;
 }
-
 
 .shareWithContacts {
     position: relative;
@@ -96,14 +96,12 @@
     }
 }
 
-
 .contact-button {
     width: fit-content;
     text-align: center;
     margin-left: 2.5%;
     position: relative;
 }
-
 
 .share-warning {
     font-weight: 600;
@@ -119,27 +117,45 @@
     font-weight: 600;
 }
 
-#addContact-modal {
-    .modal-title {
-        font-style: normal;
+.addContact-modal {
+    padding: 15px !important;
+    input {
+        background: #EEB8A7;
+        border-radius: 7px;
+        border: none;
+        padding: 8px; 
+        width: 100%;
+        max-width: 300px;
+        font-size: 1.286em !important;
+        font-weight: 700;
     }
-    
-    .modal-content {
-        background:#FDE6DC !important; 
-    }
-
     .modal-footer {
         justify-content: flex-start !important;
     }
 }
-.addContact-submit-button {
-    font-weight: 600 !important;
-    background-color: #ac3b61 !important;
 
+.addContact-btn, .addContact-btn-dark {
+    font-weight: 600 !important;
+    background: #CD6E51;
+    border-radius: 5px;
+    padding: 8px;
+    border: none;
+    margin-top: 20px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
     img {
         margin-right: 10px;
     }
-  }
+}
+
+.addContact-btn-dark {
+    color: white;
+    background:#9984E4;
+    img {
+        filter: brightness(0) invert(1);
+    }
+}
 
 #cb-withTime {
     border: 1px solid black;
@@ -149,6 +165,7 @@
     height: 20px;
     
 }
+
 .form-check-label {
     margin-left: 0.25em;
     font-weight: 600;

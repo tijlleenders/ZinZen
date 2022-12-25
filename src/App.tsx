@@ -8,7 +8,6 @@ import { darkModeState, themeSelectionState, languageSelectionState, displayToas
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
-import { AddFeelingsPage } from "@pages/AddFeelingsPage/AddFeelingsPage";
 import { NotFoundPage } from "@pages/NotFoundPage/NotFoundPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
@@ -54,8 +53,9 @@ const App = () => {
       }
     };
     const installId = localStorage.getItem("installId");
-    if (!installId) localStorage.setItem("installId", uuidv4());
-    else {
+    if (!installId) {
+      localStorage.setItem("installId", uuidv4());
+    } else {
       init();
     }
   }, []);
@@ -72,7 +72,6 @@ const App = () => {
           ) : (
             <Route path="/" element={<MyTimePage />} />
           )}
-          <Route path="/AddFeelings" element={<AddFeelingsPage />} />
           <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/MyGoals" element={<MyGoalsPage />} />
           <Route path="/MyFeelings" element={<ShowFeelingsPage />} />
@@ -83,8 +82,11 @@ const App = () => {
           <Route path="/invite/:id" element={<InvitePage />} />
         </Routes>
       </BrowserRouter>
-      <Toast autohide delay={3000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
-        <Toast.Body>{showToast.message}</Toast.Body>
+      <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
+        <Toast.Body>
+          <p id="toast-message">{showToast.message}</p>
+          { showToast.extra !== "" && <p id="extra-message">{showToast.extra}</p> }
+        </Toast.Body>
       </Toast>
     </div>
   );

@@ -44,8 +44,15 @@ export const QueryPage = () => {
             ...queryStyle.question
           }}
           onClick={() => {
+            localStorage.setItem("checkedIn", "yes");
+            const invite = localStorage.getItem("pendingInvite");
             navigator.vibrate(100);
-            navigate("/");
+            if (invite && invite !== "none") {
+              localStorage.removeItem("pendingInvite");
+              navigate(`/invite/${invite}`);
+            } else {
+              navigate("/");
+            }
           }}
         >
           {t("ialreadyknowZinZen")}
