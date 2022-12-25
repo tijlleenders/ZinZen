@@ -5,6 +5,8 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getJustDate } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
+const installId = localStorage.getItem("installId");
+
 const createRequest = async (url: string, body : object | null = null, method = "POST") => {
   try {
     const res = await fetch(url, {
@@ -24,7 +26,6 @@ const createRequest = async (url: string, body : object | null = null, method = 
   }
 };
 export const initRelationship = async () => {
-  const installId = localStorage.getItem("installId");
   const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
 
   const res = await createRequest(url, { method: "initiateRelationship", installId });
@@ -36,24 +37,28 @@ export const initRelationship = async () => {
 };
 
 export const acceptRelationship = async () => {
+  const _installId = localStorage.getItem("installId");
   const relId = window.location.pathname.split("/invite/")[1];
-  const installId = localStorage.getItem("installId");
   const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "acceptRelationship", installId, relId });
+  const res = await createRequest(url, { method: "acceptRelationship", installId: _installId, relId });
   return res;
 };
 
 export const shareGoalWithContact = async (relId: string, goal: { id: string, title: string }) => {
-  const installId = localStorage.getItem("installId");
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
   const res = await createRequest(url, { method: "shareGoal", installId, relId, goal });
   return res;
 };
 
 export const getContactSharedGoals = async () => {
-  const installId = localStorage.getItem("installId");
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
   const res = await createRequest(url, { method: "getGoals", installId });
+  return res;
+};
+
+export const getRelationshipStatus = async (relationshipId) => {
+  const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url, { method: "getRelationshipStatus", installId, relationshipId });
   return res;
 };
 
@@ -65,7 +70,7 @@ export const getAllContacts = async () => {
 export const addContact = async (contactName: string, relId: string) => {
   const name = `${contactName.charAt(0).toUpperCase() + contactName.slice(1)}`;
   const currentDate = getJustDate(new Date());
-  const newContact: ContactItem = { name, relId, goals: [], createdAt: currentDate };
+  const newContact: ContactItem = { id: uuidv4(), name, relId, goals: [], createdAt: currentDate, accepted: false };
   let newContactId;
   await db
     .transaction("rw", db.contactsCollection, async () => {
@@ -104,4 +109,12 @@ export const addGoalInRelId = async (relId: string, goals:{ id: string, goal: Go
 export const getAllSharedGoals = async () => {
   const contacts = await db.contactsCollection.toArray();
   return contacts;
+};
+
+export const updateStatusOfContact = async (id: string, accepted: boolean) => {
+  db.transaction("rw", db.contactsCollection, async () => {
+    await db.contactsCollection.update(id, { accepted }).then((updated) => updated);
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
 };
