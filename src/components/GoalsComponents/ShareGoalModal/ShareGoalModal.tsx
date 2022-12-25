@@ -8,13 +8,14 @@ import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
-import { addContact, getAllContacts, initRelationship, shareGoalWithContact } from "@src/api/ContactsAPI";
+import { addContact, getAllContacts, initRelationship } from "@src/api/ContactsAPI";
 import { darkModeState, displayLoader, displayToast } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
-import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getGoal, shareMyGoal } from "@src/api/GoalsAPI";
 
 import "./ShareGoalModal.scss";
+import InviteLinkModal from "./InviteLinkModal";
 
 interface IShareGoalModalProps {
   goal: GoalItem
@@ -28,31 +29,28 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const setShowToast = useSetRecoilState(displayToast);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
+  const [showInviteModal, setShowInviteModal] = useState<{ goal: GoalItem, id: string, name: string, relId: string, accepted: boolean } | null>(null);
   const [showAddContactModal, setShowAddContactModal] = useState(false);
   const [displayContacts, setDisplayContacts] = useState(false);
 
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
 
-  const getContactBtn = (relId = "", letter = "") => (
+  const getContactBtn = (id = "", relId = "", name = "", accepted = false) => (
     <div className="contact-button">
       <button
         type="button"
         onClick={async () => {
-          if (letter === "") handleShowAddContact();
+          if (name === "") handleShowAddContact();
           else {
-            setLoading(true);
-            await shareGoalWithContact(relId, { id: goal.id, title: goal.title });
-            await updateSharedStatusOfGoal(goal.id, relId, letter);
-            setShowShareModal(-1);
-            setLoading(false);
+            setShowInviteModal({ goal, id, name, relId, accepted });
           }
         }}
         className="contact-icon"
       >
-        { letter === "" ? <img alt="add contact" src={addContactIcon} /> : letter[0]}
+        { name === "" ? <img alt="add contact" src={addContactIcon} /> : name[0]}
       </button>
-      { letter !== "" && <p>{letter}</p> }
+      { name !== "" && <p>{name}</p> }
     </div>
   );
 
@@ -70,7 +68,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       onHide={() => setShowShareModal(-1)}
       centered
       autoFocus={false}
-      style={showAddContactModal ? { zIndex: 1 } : {}}
+      style={showAddContactModal || showInviteModal ? { zIndex: 1 } : {}}
     >
       <Modal.Body id="share-modal-body">
         <button
@@ -111,7 +109,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               <div id="modal-contact-list" style={contacts.length < 3 ? { justifyContent: "flex-start" } : {}}>
                 { contacts.length > 0 &&
                   contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (
-                    getContactBtn(ele.relId, ele.name)
+                    getContactBtn(ele.id, ele.relId, ele.name, ele.accepted)
                   ))}
                 { /* contacts.length >= 3 && (
                   <div className="contact-button">
@@ -182,10 +180,12 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             }}
             className={`addContact-btn${darkModeStatus ? "-dark" : ""}`}
           >
-            <img alt="add contact" src={copyLink} />Copy Invite Link
+            <img alt="add contact" src={copyLink} />Add Contact
           </button>
         </Modal.Body>
       </Modal>
+      { showInviteModal && <InviteLinkModal showInviteModal={showInviteModal} setShowInviteModal={setShowInviteModal} /> }
+
     </Modal>
   );
 };

@@ -36,6 +36,43 @@
   background-color: #5468ff;
 }
 
+.default-input, .default-input-dark {
+  background: #EEB8A7;
+  border-radius: 7px;
+  border: none;
+  padding: 8px; 
+  font-size: 1.143em !important;
+  font-weight: 700;
+}
+.default-input-dark {
+  background: #343434 !important;
+  color: white !important;
+}
+
+.default-btn, .default-btn-dark {
+  font-weight: 600 !important;
+  background: #CD6E51;
+  border-radius: 5px;
+  padding: 8px 15px;
+  border: none;
+  margin-top: 20px;
+  width: max-content;
+  display: flex;
+  justify-content: space-between;
+  place-self: flex-end;
+  img {
+      margin-right: 10px;
+  }
+}
+
+.default-btn-dark {
+  color: white;
+  background:#9984E4;
+  img {
+      filter: brightness(0) invert(1);
+  }
+}
+
 .popupModal, .popupModal-dark {
   .popupModal-title {
     font-size: 1.286em;

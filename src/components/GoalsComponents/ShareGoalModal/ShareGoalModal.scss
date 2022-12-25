@@ -75,7 +75,7 @@
 .contact-icon, .next-icon {
     width: 47px;
     height: 47px;
-    font-size: 2em;
+    font-size: 1.7em;
     font-weight: bold;
     text-align: center;
     box-sizing: content-box;
@@ -141,6 +141,9 @@
     padding: 8px;
     border: none;
     margin-top: 20px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
     img {
         margin-right: 10px;
     }
