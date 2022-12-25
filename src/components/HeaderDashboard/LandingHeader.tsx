@@ -27,7 +27,18 @@ export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
           src={ArrowIcon}
           alt="Back arrow"
           id="main-header-homeLogo"
-          onClick={() => { navigate(-1); }}
+          onClick={() => {
+            if (localStorage.getItem("checkedIn") !== "yes") {
+              localStorage.setItem("checkedIn", "yes");
+              const invite = localStorage.getItem("pendingInvite");
+              localStorage.removeItem("pendingInvite");
+              if (invite && invite !== "none") {
+                navigate(`/invite/${invite}`);
+              } else {
+                navigate("/");
+              }
+            } else { navigate(-1); }
+          }}
         />
       ) : avatar === "sidebar" ? (
         <img

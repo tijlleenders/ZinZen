@@ -53,8 +53,9 @@ const App = () => {
       }
     };
     const installId = localStorage.getItem("installId");
-    if (!installId) localStorage.setItem("installId", uuidv4());
-    else {
+    if (!installId) {
+      localStorage.setItem("installId", uuidv4());
+    } else {
       init();
     }
   }, []);
