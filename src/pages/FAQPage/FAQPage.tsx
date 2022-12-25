@@ -57,6 +57,7 @@ export const FAQPage = () => {
             type="button"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
+              localStorage.setItem("checkedIn", "yes");
               navigator.vibrate(100);
               navigate("/ZinZen/Feedback");
             }}
@@ -67,8 +68,15 @@ export const FAQPage = () => {
             type="button"
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
+              localStorage.setItem("checkedIn", "yes");
+              const invite = localStorage.getItem("pendingInvite");
+              localStorage.removeItem("pendingInvite");
               navigator.vibrate(100);
-              navigate("/");
+              if (invite && invite !== "none") {
+                navigate(`/invite/${invite}`);
+              } else {
+                navigate("/");
+              }
             }}
           >
             {t("ihavenomorequestions")}

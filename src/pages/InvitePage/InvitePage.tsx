@@ -1,96 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useRecoilValue } from "recoil";
 
 import { acceptRelationship, addContact } from "@src/api/ContactsAPI";
 import { queryStyle } from "@src/constants/booleanScreen";
-import { darkModeState, displayLoader } from "@src/store";
-import { Modal, Button } from "react-bootstrap";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { darkModeState } from "@src/store";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
 const InvitePage = () => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [newContactName, setNewContactName] = useState("");
-  const [showAddContactModal, setShowAddContactModal] = useState(false);
-  const setLoading = useSetRecoilState(displayLoader);
-  const handleCloseAddContact = () => setShowAddContactModal(false);
-  const handleShowAddContact = () => setShowAddContactModal(true);
+
+  useEffect(() => {
+    const checkin = localStorage.getItem("checkedIn");
+    if (!checkin) {
+      localStorage.setItem("checkedIn", "no");
+    }
+    if (checkin !== "yes") {
+      localStorage.setItem("pendingInvite", window.location.href.split("invite/")[1]);
+      navigate("/");
+    }
+  }, []);
   return (
-    <>
-      <div style={{ ...queryStyle.main }}>
-        <LandingHeader avatar={null}/>
-        <p style={{ paddingTop: "100px", margin: 0 }}>
-          You have been invited.
-          <br />
-          Would you like to accept the invite?
-        </p>
-        <button
-          type="button"
-          style={queryStyle.question}
-          onClick={handleShowAddContact}
-        > Yes
-        </button>
-        <button
-          type="button"
-          style={queryStyle.question}
-          onClick={() => { navigate("/"); }}
-        > No
-        </button>
-      </div>
-      <Modal
-        id="addContact-modal"
-        show={showAddContactModal}
-        onHide={handleCloseAddContact}
-        centered
-        autoFocus={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
-            Name the person you got this link from
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <input
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
-            type="text"
-            placeholder="Name"
-            className="show-feelings__note-input"
-            value={newContactName}
-            onChange={(e) => {
-              setNewContactName(e.target.value);
-            }}
-              // Admittedly not the best way to do this but suffices for now
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                setNewContactName("");
-                handleCloseAddContact();
-              }
-            }}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={async () => {
-              const res = await acceptRelationship();
-              if (res.success) {
-                setLoading(true);
-                await addContact(newContactName, res.response?.relId);
-                setNewContactName("");
-                handleCloseAddContact();
-                navigate("/");
-                setLoading(false);
-              }
-            }}
-            className="addContact-submit-button"
-          >Save
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+    <div style={{ ...queryStyle.main, padding: "100px 28px 0 28px" }}>
+      <LandingHeader avatar={null} />
+      <p style={{ margin: "0 0 20px 0", color: darkModeStatus ? "rgb(171, 158, 216)" : "#CD6E51" }}>
+        Welcome to ZinZen!<br />
+        The person that sent you this, wants to connect with you here.
+        <br />Add them to your contacts.
+      </p>
+      <input onChange={(e) => setNewContactName(e.target.value)} className={`default-input${darkModeStatus ? "-dark" : ""}`} placeholder="Name" />
+      <button
+        type="button"
+        className={`default-btn${darkModeStatus ? "-dark" : ""}`}
+        style={{ alignSelf: "right" }}
+        onClick={async () => {
+          const res = await acceptRelationship();
+          if (res.success) {
+            await addContact(newContactName, res.response?.relId);
+            setNewContactName("");
+          }
+          navigate("/");
+        }}
+      > Add Contact
+      </button>
+    </div>
   );
 };
 
