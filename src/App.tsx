@@ -45,7 +45,7 @@ const App = () => {
           if (ele.type === "shareGoal") {
             getContactByRelId(ele.relId).then((contact: ContactItem) => {
               if (contact) {
-                promisesArr.push(addGoalInRelId(ele.relId, [...contact.goals, { id: ele.goal.id, goal: createGoal(ele.goal.title) }]));
+                promisesArr.push(addGoalInRelId(ele.relId, [...contact.sharedGoals, { id: ele.goal.id, goal: createGoal(ele.goal.title) }]));
               }
             }).catch((e) => console.log(e));
           }
@@ -57,7 +57,7 @@ const App = () => {
     if (!installId) {
       localStorage.setItem("installId", uuidv4());
     } else {
-      init();
+      // init();
     }
   }, []);
 

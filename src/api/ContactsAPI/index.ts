@@ -100,7 +100,7 @@ export const getContactGoalById = async (id: string) => {
 export const addGoalInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
   db.transaction("rw", db.contactsCollection, async () => {
     await db.contactsCollection.where("relId").equals(relId)
-      .modify({ goals: [...goals] });
+      .modify({ sharedGoals: [...goals] });
   }).catch((e) => {
     console.log(e.stack || e);
   });
