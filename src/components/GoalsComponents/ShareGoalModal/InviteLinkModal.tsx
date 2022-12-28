@@ -18,13 +18,6 @@ const InviteLinkModal : React.FC<IInviteLinkModalProps> = ({ showInviteModal, se
   const [accepted, setAccepted] = useState(false);
   const setShowToast = useSetRecoilState(displayToast);
 
-  // const shareGoal = async () => {
-  //   setLoading(true);
-  //   await shareGoalWithContact(relId, { id: goal.id, title: goal.title });
-  //   await updateSharedStatusOfGoal(goal.id, relId, letter);
-  //   setShowShareModal(-1);
-  //   setLoading(false);
-  // };
   useEffect(() => {
     const checkStatus = async () => {
       if (showInviteModal && !showInviteModal.accepted) {
@@ -33,7 +26,7 @@ const InviteLinkModal : React.FC<IInviteLinkModalProps> = ({ showInviteModal, se
           await updateStatusOfContact(showInviteModal.id, res.response.status !== "pending");
           setAccepted(res.response.status !== "pending");
         }
-      }
+      } else { setAccepted(true); }
     };
     checkStatus();
   }, []);
