@@ -46,7 +46,7 @@ export const acceptRelationship = async () => {
 
 export const shareGoalWithContact = async (relId: string, goal: { id: string, title: string }) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "shareGoal", installId, relId, goal });
+  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "shareGoal", goal } });
   return res;
 };
 
@@ -56,7 +56,7 @@ export const getContactSharedGoals = async () => {
   return res;
 };
 
-export const getRelationshipStatus = async (relationshipId) => {
+export const getRelationshipStatus = async (relationshipId: string) => {
   const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
   const res = await createRequest(url, { method: "getRelationshipStatus", installId, relationshipId });
   return res;
