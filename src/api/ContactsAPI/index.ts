@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable arrow-body-style */
 import { db } from "@models";
 import ContactItem from "@src/models/ContactItem";
@@ -70,7 +71,7 @@ export const getAllContacts = async () => {
 export const addContact = async (contactName: string, relId: string) => {
   const name = `${contactName.charAt(0).toUpperCase() + contactName.slice(1)}`;
   const currentDate = getJustDate(new Date());
-  const newContact: ContactItem = { id: uuidv4(), name, relId, goals: [], createdAt: currentDate, accepted: false };
+  const newContact: ContactItem = { id: uuidv4(), name, relId, sharedGoals: [], collaborativeGoals: [], createdAt: currentDate, accepted: false };
   let newContactId;
   await db
     .transaction("rw", db.contactsCollection, async () => {
@@ -97,10 +98,22 @@ export const getContactGoalById = async (id: string) => {
   return goal[0];
 };
 
-export const addGoalInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
+export const addGoalsInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
   db.transaction("rw", db.contactsCollection, async () => {
     await db.contactsCollection.where("relId").equals(relId)
       .modify({ sharedGoals: [...goals] });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const removeGoalInRelId = async (relId: string, goalId: string) => {
+  db.transaction("rw", db.contactsCollection, async () => {
+    await db.contactsCollection.where("relId").equals(relId)
+      .modify((obj: ContactItem) => {
+        const tmp = obj.sharedGoals.filter((ele) => ele.id !== goalId);
+        obj.sharedGoals = [...tmp];
+      });
   }).catch((e) => {
     console.log(e.stack || e);
   });
