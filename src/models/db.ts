@@ -16,7 +16,7 @@ export class FeelingsDB extends Dexie {
       feelingsCollection: "++id, content, category, date, note",
       goalsCollection:
       "id, title, duration, sublist, repeat, start, finish, createdAt, status, parentGoalId, goalColor",
-      contactsCollection: "id, name, goals, relId, accepted, createdAt",
+      contactsCollection: "id, name, sharedGoals, relId, accepted, createdAt",
     });
   }
 }

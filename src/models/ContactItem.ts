@@ -6,7 +6,7 @@ import { GoalItem } from "./GoalItem";
 export default interface ContactItem {
     id: string;
     name: string;
-    goals: { id: string, goal: GoalItem }[],
+    sharedGoals: { id: string, goal: GoalItem }[],
     relId: string;
     accepted: boolean; 
     createdAt: Date;
