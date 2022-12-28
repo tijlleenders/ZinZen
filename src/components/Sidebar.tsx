@@ -6,6 +6,7 @@ import { displaySidebar } from "@src/store/SidebarState";
 import { darkModeState } from "@src/store";
 import { useNavigate } from "react-router";
 import { LandingHeader } from "./HeaderDashboard/LandingHeader";
+import GoalInvites from "./GoalsComponents/GoalInvites/GoalInvites";
 
 const navButtonStyle = {
   border: "none",
@@ -14,13 +15,13 @@ const navButtonStyle = {
   borderRadius: "8px",
   padding: "5px 20px",
   fontWeight: "bolder",
-  fontSize: "1.5em",
+  fontSize: "1.143em",
   color: "black",
-  backgroundColor: "#EBA48E",
+  textAlign: "left",
+  background: "transparent"
 };
 const darkNavBtn = {
   color: "white",
-  background: "rgba(57, 57, 57, 0.4)"
 };
 
 const Sidebar = () => {
@@ -43,13 +44,14 @@ const Sidebar = () => {
       {text}
     </button>
   );
+
   return (
 
     <Offcanvas
       show={showSidebar}
       onHide={() => setShowSidebar(false)}
       className={darkModeStatus ? "App-dark" : "App-light"}
-      style={{ width: "65vw" }}
+      style={{ width: "85vw" }}
     >
       <Offcanvas.Header>
         <Offcanvas.Title>
@@ -57,8 +59,10 @@ const Sidebar = () => {
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <div style={{ display: "flex", flexDirection: "column", marginTop: "4vh", alignItems: "center" }}>
+        <div style={{ display: "flex", flexDirection: "column", marginTop: "4vh" }}>
           { getNavButton("My Feelings", "/MyFeelings") }
+          <GoalInvites invitesType="sharedGoals" />
+          <GoalInvites invitesType="collaboratedGoals" />
           { getNavButton("Blog", "https://blog.zinzen.me/") }
           { getNavButton("Donate", "https://donate.stripe.com/6oE4jK1iPcPT1m89AA") }
           { getNavButton("Feedback", "/ZinZen/Feedback") }
