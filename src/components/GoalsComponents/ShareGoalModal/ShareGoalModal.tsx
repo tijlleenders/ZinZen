@@ -25,7 +25,7 @@ interface IShareGoalModalProps {
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const setLoading = useSetRecoilState(displayLoader);
+  // const setLoading = useSetRecoilState(displayLoader);
   const setShowToast = useSetRecoilState(displayToast);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
@@ -74,12 +74,12 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         <button
           onClick={async () => {
             let parentGoal = "root";
-            setLoading(true);
+            // setLoading(true);
             if (goal.parentGoalId !== "root") {
               parentGoal = (await getGoal(goal.parentGoalId)).title;
             }
             await shareMyGoal(goal, parentGoal);
-            setLoading(false);
+            // setLoading(false);
           }}
           type="button"
           className="shareOptions-btn"

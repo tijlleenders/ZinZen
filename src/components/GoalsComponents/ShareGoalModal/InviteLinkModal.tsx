@@ -4,7 +4,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import copyLink from "@assets/images/copyLink.svg";
 import { darkModeState, displayToast } from "@src/store";
-import { getRelationshipStatus, shareGoalWithContact, updateStatusOfContact } from "@src/api/ContactsAPI";
+import { collaborateWithContact, getRelationshipStatus, shareGoalWithContact, updateStatusOfContact } from "@src/api/ContactsAPI";
 import { updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 
@@ -15,7 +15,7 @@ interface IInviteLinkModalProps {
 
 const InviteLinkModal : React.FC<IInviteLinkModalProps> = ({ showInviteModal, setShowInviteModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [accepted, setAccepted] = useState(false);
+  const [accepted, setAccepted] = useState(true);
   const setShowToast = useSetRecoilState(displayToast);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const InviteLinkModal : React.FC<IInviteLinkModalProps> = ({ showInviteModal, se
       if (showInviteModal && !showInviteModal.accepted) {
         const res = await getRelationshipStatus(showInviteModal.relId);
         if (res.success) {
-          await updateStatusOfContact(showInviteModal.id, res.response.status !== "pending");
+          await updateStatusOfContact(showInviteModal.relId, res.response.status !== "pending");
           setAccepted(res.response.status !== "pending");
         }
       } else { setAccepted(true); }
@@ -65,6 +65,16 @@ const InviteLinkModal : React.FC<IInviteLinkModalProps> = ({ showInviteModal, se
           style={{ width: "100%" }}
           className={`addContact-btn${darkModeStatus ? "-dark" : ""}`}
           type="submit"
+          onClick={async () => {
+            if (showInviteModal?.goal.parentGoalId === "root") {
+              const { goal, relId, name } = showInviteModal;
+              await collaborateWithContact(relId, goal);
+              await updateSharedStatusOfGoal(goal.id, relId, name, true);
+              setShowInviteModal(null);
+            } else {
+              setShowToast({ open: true, message: "You can only collaborate on goals with no sublist.", extra: "" });
+            }
+          }}
         >
           Invite to collaborate<img alt="add contact" src={copyLink} />
         </button>
