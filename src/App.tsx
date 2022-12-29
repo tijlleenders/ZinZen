@@ -18,14 +18,14 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
-import { addGoalsInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
+import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
 
 import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
 import ContactItem from "./models/ContactItem";
-import { createGoal } from "./api/GoalsAPI";
+import { createGoal, updateGoal } from "./api/GoalsAPI";
 import { GoalItem } from "./models/GoalItem";
 
 const App = () => {
@@ -44,12 +44,23 @@ const App = () => {
       if (res.success) {
         Object.keys(resObject).forEach(async (k: any) => {
           const goals: { id: string, goal: GoalItem }[] = [];
+          const collaborateInvites: { id: string, goal: GoalItem }[] = [];
           resObject[k].forEach((ele) => {
             if (ele.type === "shareGoal") {
               goals.push({ id: ele.goal.id, goal: createGoal(ele.goal.title) });
+            } else if (ele.type === "collaboration") {
+              collaborateInvites.push({ id: ele.goal.id, goal: ele.goal });
+            } else if (ele.type === "colabInviteResponse") {
+              updateGoal(ele.goalId, ele.status === "accepted" ? { collaboration: "accepted" } : { shared: null }).then(() => console.log("updated invite response"));
             }
           });
-          addGoalsInRelId(k, goals).then(() => console.log("success")).catch((err) => console.log(err));
+          console.log(collaborateInvites);
+          if (collaborateInvites.length > 0) {
+            addColabInvitesInRelId(k, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
+          }
+          if (goals.length > 0) {
+            addSharedGoalsInRelId(k, goals).then(() => console.log("success")).catch((err) => console.log(err));
+          }
         });
       }
     };

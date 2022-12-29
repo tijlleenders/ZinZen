@@ -176,7 +176,7 @@ export const createGoal = (
     relId: string,
     name: string
   } = null,
-  collaboration = false
+  collaboration = "none"
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
@@ -251,7 +251,7 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
   await shareGoal(shareableGoal);
 };
 
-export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string, collaboration = false) => {
+export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string, collaboration = "pending") => {
   await db.goalsCollection.update(id, { shared: { relId, name }, collaboration });
 };
 

@@ -69,7 +69,7 @@ const InviteLinkModal : React.FC<IInviteLinkModalProps> = ({ showInviteModal, se
             if (showInviteModal?.goal.parentGoalId === "root") {
               const { goal, relId, name } = showInviteModal;
               await collaborateWithContact(relId, goal);
-              await updateSharedStatusOfGoal(goal.id, relId, name, true);
+              await updateSharedStatusOfGoal(goal.id, relId, name);
               setShowInviteModal(null);
             } else {
               setShowToast({ open: true, message: "You can only collaborate on goals with no sublist.", extra: "" });

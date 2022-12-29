@@ -42,11 +42,11 @@ const GoalInvites = ({ invitesType }: { invitesType: string }) => {
   const [showChoice, setShowChoice] = useState<string>("");
   const handleChoice = async (choice: string, index: number, goal: GoalItem) => {
     if (choice === "Add") {
-      const thisGoal = invitesType === "sharedGoals" ? goal : { ...goal, collaboration: true, shared: { relId: invites[index].relId, name: invites[index].contactName } };
+      const thisGoal = invitesType === "sharedGoals" ? goal : { ...goal, collaboration: "accepted", shared: { relId: invites[index].relId, name: invites[index].contactName } };
       await addGoal(thisGoal);
     }
     if (invitesType === "collaboratedGoals") {
-      sendResponseOfColabInvite(choice === "Add", invites[index].relId, goal.id).then(() => console.log("response sent"));
+      sendResponseOfColabInvite(choice === "Add" ? "accepted" : "declined", invites[index].relId, goal.id).then(() => console.log("response sent"));
     }
     removeGoalInRelId(invites[index].relId, invites[index].id).then(() => {
       invites.splice(index, 1);

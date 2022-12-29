@@ -10,6 +10,8 @@ import correct from "@assets/images/correct.svg";
 import pencil from "@assets/images/pencil.svg";
 import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
+import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
+import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 
 import {
   archiveUserGoal,
@@ -293,6 +295,13 @@ export const MyGoalsPage = () => {
                               <div
                                 className="contact-button"
                               >
+                                { goal.collaboration === "accepted" && (
+                                  <img
+                                    alt="collaborate goal"
+                                    src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
+                                    style={{ width: "27px", position: "absolute", right: "18px" }}
+                                  />
+                                ) }
                                 <button
                                   type="button"
                                   className="contact-icon"
