@@ -238,11 +238,11 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
     language: goal.language,
     link: goal.link
   };
-  Object.keys(goalDetails).forEach((key) => {
-    if (!goalDetails[key]) {
-      delete goalDetails[key];
-    }
-  });
+  // Object.keys(goalDetails).forEach((key) => {
+  //   if (!goalDetails[key]) {
+  //     delete goalDetails[key];
+  //   }
+  // });
   const shareableGoal = {
     method: "shareGoal",
     parentTitle: parent,
@@ -251,8 +251,8 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
   await shareGoal(shareableGoal);
 };
 
-export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string) => {
-  await db.goalsCollection.update(id, { shared: { relId, name } });
+export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string, collaboration = false) => {
+  await db.goalsCollection.update(id, { shared: { relId, name }, collaboration });
 };
 
 export const getPublicGoals = async (goalTitle: string) => {
