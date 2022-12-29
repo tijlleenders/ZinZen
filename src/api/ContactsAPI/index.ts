@@ -57,9 +57,9 @@ export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
   return res;
 };
 
-export const sendResponseOfColabInvite = async (accepted: boolean, relId: string, goalId: string) => {
+export const sendResponseOfColabInvite = async (status: string, relId: string, goalId: string) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "colabInviteResponse", goalId, accepted } });
+  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "colabInviteResponse", goalId, status } });
   return res;
 };
 
