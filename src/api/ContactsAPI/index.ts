@@ -51,6 +51,18 @@ export const shareGoalWithContact = async (relId: string, goal: { id: string, ti
   return res;
 };
 
+export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
+  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "collaboration", goal } });
+  return res;
+};
+
+export const sendResponseOfColabInvite = async (accepted: boolean, relId: string, goalId: string) => {
+  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "colabInviteResponse", goalId, accepted } });
+  return res;
+};
+
 export const getContactSharedGoals = async () => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
   const res = await createRequest(url, { method: "getGoals", installId });
@@ -68,10 +80,10 @@ export const getAllContacts = async () => {
   return allContacts;
 };
 
-export const addContact = async (contactName: string, relId: string) => {
+export const addContact = async (contactName: string, relId: string, accepted = false) => {
   const name = `${contactName.charAt(0).toUpperCase() + contactName.slice(1)}`;
   const currentDate = getJustDate(new Date());
-  const newContact: ContactItem = { id: uuidv4(), name, relId, sharedGoals: [], collaborativeGoals: [], createdAt: currentDate, accepted: false };
+  const newContact: ContactItem = { id: uuidv4(), name, relId, sharedGoals: [], collaborativeGoals: [], createdAt: currentDate, accepted };
   let newContactId;
   await db
     .transaction("rw", db.contactsCollection, async () => {
@@ -98,10 +110,19 @@ export const getContactGoalById = async (id: string) => {
   return goal[0];
 };
 
-export const addGoalsInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
+export const addSharedGoalsInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
   db.transaction("rw", db.contactsCollection, async () => {
     await db.contactsCollection.where("relId").equals(relId)
       .modify({ sharedGoals: [...goals] });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const addColabInvitesInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
+  db.transaction("rw", db.contactsCollection, async () => {
+    await db.contactsCollection.where("relId").equals(relId)
+      .modify({ collaborativeGoals: [...goals] });
   }).catch((e) => {
     console.log(e.stack || e);
   });
@@ -124,9 +145,10 @@ export const getAllSharedGoals = async () => {
   return contacts;
 };
 
-export const updateStatusOfContact = async (id: string, accepted: boolean) => {
+export const updateStatusOfContact = async (relId: string, accepted: boolean) => {
   db.transaction("rw", db.contactsCollection, async () => {
-    await db.contactsCollection.update(id, { accepted }).then((updated) => updated);
+    await db.contactsCollection.where("relId").equals(relId)
+      .modify((obj) => { obj.accepted = accepted; });
   }).catch((e) => {
     console.log(e.stack || e);
   });
