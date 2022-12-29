@@ -14,6 +14,7 @@ export interface GoalItem {
   goalColor: string;
   language: string;
   link: string | null;
+  collaboration: boolean;
   shared: null |
     {
       relId: string,
