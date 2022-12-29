@@ -13,7 +13,7 @@ export const resetDatabase = () =>
 
 export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
-  const goals: GoalItem = { id: uuidv4(), ...goalDetails, createdAt: currentDate };
+  const goals: GoalItem = { ...goalDetails, id: uuidv4(), createdAt: currentDate };
   let newGoalId;
   await db
     .transaction("rw", db.goalsCollection, async () => {
@@ -117,7 +117,7 @@ export const archiveGoal = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, updatedGoalStatus);
   });
-  if (goal.parentGoalId !== -1) {
+  if (goal.parentGoalId !== "root") {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
       await db.goalsCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist?.filter((ele) => ele !== goal.id) });
@@ -175,7 +175,8 @@ export const createGoal = (
     id: string,
     relId: string,
     name: string
-  } = null
+  } = null,
+  collaboration = false
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
@@ -190,6 +191,7 @@ export const createGoal = (
     parentGoalId,
     goalColor,
     link,
+    collaboration,
     shared
   };
   return newGoal;
@@ -249,7 +251,7 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
   await shareGoal(shareableGoal);
 };
 
-export const updateSharedStatusOfGoal = async (id, relId, name) => {
+export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string) => {
   await db.goalsCollection.update(id, { shared: { relId, name } });
 };
 
