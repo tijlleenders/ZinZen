@@ -2,7 +2,7 @@ import Dexie, { Table } from "dexie";
 import { IFeelingItem } from "./FeelingItem";
 import { GoalItem } from "./GoalItem";
 import ContactItem from "./ContactItem";
-import { DumpboxItem } from "./DumpboxItem";
+import { OutboxItem } from "./OutboxItem";
 
 export class FeelingsDB extends Dexie {
   feelingsCollection!: Table<IFeelingItem, number>;
@@ -11,7 +11,7 @@ export class FeelingsDB extends Dexie {
 
   contactsCollection!: Table<ContactItem, number>;
 
-  dumpboxCollection!: Table<DumpboxItem, number>;
+  outboxCollection!: Table<OutboxItem, number>;
 
   constructor() {
     super("ZinZenDB");
@@ -20,7 +20,7 @@ export class FeelingsDB extends Dexie {
       goalsCollection:
       "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, status, goalColor, language, link, collaboration, shared",
       contactsCollection: "id, name, collaborativeGoals, sharedGoals, relId, accepted, createdAt",
-      dumpboxCollection: "++id, relId, goalId, subgoals, updatedGoals, deletedGoals"
+      outboxCollection: "++id, relId, goalId, subgoals, updatedGoals, deletedGoals, anyUpdates"
     });
   }
 }

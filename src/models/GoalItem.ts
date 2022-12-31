@@ -14,10 +14,13 @@ export interface GoalItem {
   goalColor: string;
   language: string;
   link: string | null;
-  collaboration: string;
+  collaboration: {
+    status: "none" | "pending" | "accepted" | "declined",
+    newUpdates: boolean,
+  };
   shared: null |
     {
       relId: string,
-      name: string
+      name: string,
     }
 }
