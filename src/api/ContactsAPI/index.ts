@@ -64,6 +64,7 @@ export const sendResponseOfColabInvite = async (status: string, relId: string, g
 };
 
 export const getContactSharedGoals = async () => {
+  const lastProcessedTimestamp = new Date(Date.now()).toISOString();
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
   const res = await createRequest(url, { method: "getGoals", installId });
   return res;
@@ -78,6 +79,21 @@ export const getRelationshipStatus = async (relationshipId: string) => {
 export const getAllContacts = async () => {
   const allContacts = await db.contactsCollection.toArray();
   return allContacts;
+};
+
+export const sendColabUpdatesToContact = async (relId: string, goalId:string, changes: object) => {
+  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url,
+    { method: "shareGoal",
+      installId,
+      relId,
+      event: {
+        type: "collaborationChanges",
+        goalId,
+        changes
+      }
+    });
+  return res;
 };
 
 export const addContact = async (contactName: string, relId: string, accepted = false) => {
