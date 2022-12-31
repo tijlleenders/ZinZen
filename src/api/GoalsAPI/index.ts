@@ -13,7 +13,7 @@ export const resetDatabase = () =>
 
 export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
-  const goals: GoalItem = { ...goalDetails, id: uuidv4(), createdAt: currentDate };
+  const goals: GoalItem = { id: uuidv4(), ...goalDetails, createdAt: currentDate };
   let newGoalId;
   await db
     .transaction("rw", db.goalsCollection, async () => {
@@ -172,11 +172,10 @@ export const createGoal = (
   goalColor = colorPallete[Math.floor(Math.random() * 11)],
   shared: null |
   {
-    id: string,
     relId: string,
-    name: string
+    name: string,
   } = null,
-  collaboration = "none"
+  collaboration = { status: "none", newUpdates: false }
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
@@ -251,8 +250,8 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
   await shareGoal(shareableGoal);
 };
 
-export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string, collaboration = "pending") => {
-  await db.goalsCollection.update(id, { shared: { relId, name }, collaboration });
+export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string, collaboration = { status: "pending", newUpdates: false }) => {
+  await db.goalsCollection.update(id, { shared: { relId, name, newUpdates: false }, collaboration });
 };
 
 export const getPublicGoals = async (goalTitle: string) => {
