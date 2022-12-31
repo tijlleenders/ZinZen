@@ -5,11 +5,12 @@ import { useRecoilValue } from "recoil";
 
 import plus from "@assets/images/plus.svg";
 import ignore from "@assets/images/ignore.svg";
+import trash from "@assets/images/trash.svg";
 
 import "./DisplayChangesModal.scss";
 import { GoalItem } from "@src/models/GoalItem";
 import { OutboxItem } from "@src/models/OutboxItem";
-import { cleanChangesOf, getDump } from "@src/api/OutboxAPI";
+import { cleanChangesOf, deleteChanges, getDump } from "@src/api/OutboxAPI";
 import { addGoal, addIntoSublist, changeNewUpdatesStatus } from "@src/api/GoalsAPI";
 
 interface IDisplayChangesModalProps {
@@ -22,12 +23,21 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
   const [changes, setChanges] = useState<OutboxItem|null>(null);
   const [activeChange, setActiveChange] = useState(["deletedGoals", "updatedGoals", "subgoals"]);
   const show = activeChange.slice(-1)[0];
-  let contactName = "";
-  let goalTitle = "";
-  if (showChangesModal) {
-    contactName = showChangesModal.shared?.name || "";
-    goalTitle = showChangesModal.title;
-  }
+
+  const getMessage = () => {
+    if (showChangesModal) {
+      const contactName = showChangesModal.shared?.name || "";
+      const goalTitle = showChangesModal.title;
+      switch (show) {
+        case "subgoals":
+          return <> {contactName} added to {goalTitle}.<br /> Add as well ?</>;
+        case "deletedGoals":
+          return <> {contactName} deleted {goalTitle}. </>;
+        default:
+          return null;
+      }
+    }
+  };
 
   const handleChoice = async (choice:string) => {
     if (show === "subgoals") {
@@ -38,25 +48,58 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
         }).catch((err) => console.log("failed to add subgoals", err));
       }
       await cleanChangesOf(showChangesModal.id, show);
+    } else if (show === "deletedGoals") {
+      if (choice === "accept") {
+        await deleteChanges(true, showChangesModal.id);
+      }
     }
     const tmp = [...activeChange.filter((ele) => ele !== show && changes[ele].length !== 0)];
     setActiveChange([...tmp]);
+    console.log(tmp)
     if (tmp.length === 0) {
-      await changeNewUpdatesStatus(false, showChangesModal.id);
+      if (show !== "deletedGoals") { await changeNewUpdatesStatus(false, showChangesModal.id); }
       setChanges(null);
       setShowChangesModal(null);
     }
   };
+  const getAcceptBtn = () => (
+    <button
+      type="button"
+      style={{ width: "100%", justifyContent: "flex-start" }}
+      className={`default-btn${darkModeStatus ? "-dark" : ""}`}
+      onClick={async () => { await handleChoice("accept"); }}
+    >
+      <img
+        alt="add changes"
+        src={show === "deletedGoals" ? trash : plus}
+        width={25}
+      />&nbsp;{ show === "deletedGoals" ? "Delete for me too" : "Add all checked" }
+    </button>
+  );
+
+  const getIgnoreBtn = () => (
+    <button
+      type="button"
+      style={{ backgroundColor: "rgba(214, 211, 211, 0.6)", width: "100%", justifyContent: "flex-start" }}
+      className={`default-btn${darkModeStatus ? "-dark" : ""}`}
+      onClick={async () => { await handleChoice("ignore"); }}
+    >
+      <img
+        alt="add changes"
+        src={ignore}
+        width={25}
+      />&nbsp;Ignore{ show === "deletedGoals" ? "" : " all" }
+    </button>
+  );
+
   useEffect(() => {
     const getOutbox = async () => {
       if (showChangesModal) {
-        console.log(showChangesModal)
         const res = await getDump(showChangesModal.shared?.relId, showChangesModal.id);
         if (res) {
           console.log(res);
           const tmp = [...activeChange.filter((ele) => res[ele].length !== 0)];
           setActiveChange([...tmp]);
-          console.log(tmp)
           if (tmp.length === 0) {
             setShowChangesModal(null);
           }
@@ -75,10 +118,8 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
       onHide={() => { setShowChangesModal(null); }}
     >
       <Modal.Body>
-        <h2>
-          {contactName} added to {goalTitle}.<br />
-          Add as well ?
-        </h2>
+        <h2>{ show && getMessage()}</h2>
+        { show !== "deletedGoals" && (
         <Form className="changes-list">
           { changes && show && changes[show].map((ele) => (
             <div key={`${ele.id}-subgoal`}>
@@ -91,30 +132,9 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
             </div>
           ))}
         </Form>
-        <button
-          type="button"
-          style={{ width: "100%", justifyContent: "flex-start" }}
-          className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-          onClick={async () => { await handleChoice("accept"); }}
-        >
-          <img
-            alt="add changes"
-            src={plus}
-            width={25}
-          />&nbsp;Add all checked
-        </button>
-        <button
-          type="button"
-          style={{ backgroundColor: "rgba(214, 211, 211, 0.6)", width: "100%", justifyContent: "flex-start" }}
-          className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-          onClick={async () => { await handleChoice("ignore"); }}
-        >
-          <img
-            alt="add changes"
-            src={ignore}
-            width={25}
-          />&nbsp;Ignore all
-        </button>
+        )}
+        { getAcceptBtn() }
+        { getIgnoreBtn() }
       </Modal.Body>
     </Modal>
   );
