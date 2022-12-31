@@ -46,15 +46,15 @@ const App = () => {
         Object.keys(resObject).forEach(async (k: any) => {
           const goals: { id: string, goal: GoalItem }[] = [];
           const collaborateInvites: { id: string, goal: GoalItem }[] = [];
-          resObject[k].forEach((ele) => {
+          resObject[k].forEach( async (ele) => {
             if (ele.type === "shareGoal") {
               goals.push({ id: ele.goal.id, goal: createGoal(ele.goal.title) });
             } else if (ele.type === "collaboration") {
               collaborateInvites.push({ id: ele.goal.id, goal: ele.goal });
             } else if (ele.type === "colabInviteResponse") {
-              updateGoal(ele.goalId, ele.status === "accepted" ? { collaboration: { status: "accepted", newUpdates: false } } : { shared: null }).then(() => console.log("updated invite response"));
+              await updateGoal(ele.goalId, ele.status === "accepted" ? { collaboration: { status: "accepted", newUpdates: false } } : { shared: null }).then(() => console.log("updated invite response"));
             } else if (ele.type === "collaborationChanges") {
-              handleIncomingChanges(ele);
+              await handleIncomingChanges(ele).then(() => console.log("changes added"));
             }
           });
           console.log(collaborateInvites);
@@ -71,7 +71,7 @@ const App = () => {
     if (!installId) {
       localStorage.setItem("installId", uuidv4());
     } else {
-      // init();
+      init();
     }
   }, []);
 

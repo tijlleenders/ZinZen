@@ -1,6 +1,7 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { OutboxItem } from "@src/models/OutboxItem";
+import { changeNewUpdatesStatus } from "../GoalsAPI";
 
 export const getDump = async (relId = "", goalId = "") => {
   const dump: OutboxItem[] = await db.outboxCollection.where("goalId").equals(goalId).and((obj) => obj.relId === relId).toArray();
@@ -36,4 +37,15 @@ export const addGoalChanges = async (type: string, event: OutboxItem) => {
       console.log(e.stack || e);
     });
   }
+};
+
+export const cleanChangesOf = async (goalId: string, k: string) => {
+  await db.transaction("rw", db.outboxCollection, async () => {
+    await db.outboxCollection.where("goalId").equals(goalId)
+      .modify((obj: OutboxItem) => {
+        obj[k] = [];
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
 };
