@@ -88,5 +88,9 @@
   "Qtoogoodtobetrue": "¿Demasiado bueno para ser verdad?",
   "Anstoogoodtobetrue": "¡No nos creas, solo inténtalo!",
   "ihavedifferentquestions": "Tengo una pregunta diferente.",
-  "ihavenomorequestions": "No tengo más preguntas por ahora."
+  "ihavenomorequestions": "No tengo más preguntas por ahora.",
+  "search":"Búsqueda",
+  "privacy":"Privacidad",
+  "sharedwithme": "Comparte conmigo",
+  "collaborationinvites": "Invitaciones de colaboración"
 }

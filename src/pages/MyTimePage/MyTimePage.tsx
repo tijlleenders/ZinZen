@@ -101,7 +101,7 @@ export const MyTimePage = () => {
                   );
                 }
                 return (getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0]));
-              })}
+              })}sea
             </div>
           )}
       </div>

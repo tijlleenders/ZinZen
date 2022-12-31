@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Accordion, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import { getAllContacts, removeGoalInRelId } from "@src/api/ContactsAPI";
+import { useTranslation } from "react-i18next";
 
 import "./GoalInvites.scss";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
 import { addGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
+
+
+import "@translations/i18n";
 
 interface shareInviteSchema {
     id: string,
@@ -40,6 +44,9 @@ const GoalInvites = ({ invitesType }: { invitesType: string }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [invites, setInvites] = useState<shareInviteSchema[]>([]);
   const [showChoice, setShowChoice] = useState<string>("");
+
+  const { t } = useTranslation();
+
   const handleChoice = async (choice: string, index: number, goal: GoalItem) => {
     if (choice === "Add") {
       await addGoal(goal);
@@ -75,7 +82,7 @@ const GoalInvites = ({ invitesType }: { invitesType: string }) => {
             ...commonStyle,
             ...(darkModeStatus ? darkCommonStyle : {}) }}
           >
-            { invitesType === "sharedGoals" ? "Shared with me" : "Collaboration invites" }
+            { invitesType === "sharedGoals" ? t("sharedwithme") :  t("collaborationinvites") }
           </p>
         </Accordion.Header>
         <Accordion.Body>
