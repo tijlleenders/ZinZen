@@ -64,9 +64,10 @@ export const sendResponseOfColabInvite = async (status: string, relId: string, g
 };
 
 export const getContactSharedGoals = async () => {
-  const lastProcessedTimestamp = new Date(Date.now()).toISOString();
+  const lastProcessedTimestamp = new Date(Number(localStorage.getItem("lastProcessedTimestamp"))).toISOString();
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "getGoals", installId });
+  const res = await createRequest(url, { method: "getGoals", installId, ...(lastProcessedTimestamp ? { lastProcessedTimestamp } : {}) });
+  localStorage.setItem("lastProcessedTimestamp", `${Date.now()}`);
   return res;
 };
 
