@@ -1,0 +1,13 @@
+.changes-list{
+    border-radius: 8px;
+    background: rgba(246, 246, 246, 0.4);
+    overflow-y: scroll;
+    max-height: 60vh;
+}
+.changes-list > div {
+    padding: 20px;
+    border-bottom: 1px solid #303030;
+    font-size: 1em;
+    font-weight: 700;
+    display: flex;
+}
