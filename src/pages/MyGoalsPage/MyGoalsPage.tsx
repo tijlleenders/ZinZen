@@ -47,6 +47,9 @@ import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoa
 import "./MyGoalsPage.scss";
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { sendColabUpdatesToContact } from "@src/api/ContactsAPI";
+import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
+import NotificationSymbol from "@src/common/NotificationSymbol";
 
 interface ILocationProps {
   openGoalOfId: string,
@@ -59,6 +62,7 @@ export const MyGoalsPage = () => {
   const [tapCount, setTapCount] = useState(defaultTap);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(-1);
+  const [showChangesModal, setShowChangesModal] = useState<{open: boolean, goal: GoalItem} | null>(null);
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
@@ -96,8 +100,14 @@ export const MyGoalsPage = () => {
       colorPallete[colorIndex], // goalColor
     );
     const newGoalId = await addGoal(newGoal);
-    if (parentGoalId) {
+    if (parentGoalId && parentGoalId !== "root") {
       const parentGoal = await getGoal(parentGoalId);
+      if (parentGoal.collaboration.status === "accepted") {
+        sendColabUpdatesToContact(parentGoal.shared?.relId, parentGoalId, {
+          type: "goalAdded",
+          subgoals: [{ ...newGoal, id: newGoalId }]
+        });
+      }
       const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(parentGoalId, { sublist: newSublist });
       if (selectedGoalId !== showAddGoal?.goalId) { addInHistory(parentGoal); }
@@ -163,6 +173,13 @@ export const MyGoalsPage = () => {
     }, 300);
   }
 
+  function handleDropDown(goal: GoalItem) {
+    if (tapCount.open === goal.id && tapCount.click > 0) {
+      setTapCount(defaultTap);
+    } else if (goal.collaboration.newUpdates) {
+      setShowChangesModal({ open: true, goal });
+    } else setTapCount({ open: goal.id, click: 1 });
+  }
   useEffect(() => {
     (async () => {
       // await populateDummyGoals();
@@ -250,10 +267,10 @@ export const MyGoalsPage = () => {
                             className="goal-dropdown"
                             onClickCapture={(e) => {
                               e.stopPropagation();
-                              console.log("lft");
-                              if (tapCount.open === goal.id && tapCount.click > 0) { setTapCount(defaultTap); } else { setTapCount({ open: goal.id, click: 1 }); }
+                              handleDropDown(goal);
                             }}
                           >
+                            { goal.collaboration.newUpdates && <NotificationSymbol color={goal.goalColor} /> }
                             { goal.sublist && goal.sublist.length > 0 && (
                               <div
                                 className="goal-dd-outer"
@@ -295,7 +312,7 @@ export const MyGoalsPage = () => {
                               <div
                                 className="contact-button"
                               >
-                                { goal.collaboration === "accepted" && (
+                                { goal.collaboration.status === "accepted" && (
                                   <img
                                     alt="collaborate goal"
                                     src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
@@ -376,6 +393,7 @@ export const MyGoalsPage = () => {
             :
             (<GoalSublist />)
         }
+        { showChangesModal && <DisplayChangesModal showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} /> }
       </div>
     </>
   );
