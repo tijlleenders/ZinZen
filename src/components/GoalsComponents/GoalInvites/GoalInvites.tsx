@@ -42,7 +42,8 @@ const GoalInvites = ({ invitesType }: { invitesType: string }) => {
   const [showChoice, setShowChoice] = useState<string>("");
   const handleChoice = async (choice: string, index: number, goal: GoalItem) => {
     if (choice === "Add") {
-      const thisGoal = invitesType === "sharedGoals" ? goal : { ...goal, collaboration: "accepted", shared: { relId: invites[index].relId, name: invites[index].contactName } };
+      const thisGoal = invitesType === "sharedGoals" ? goal :
+        { ...goal, collaboration: { status: "accepted", newUpdates: false }, shared: { newUpdates: false, relId: invites[index].relId, name: invites[index].contactName } };
       await addGoal(thisGoal);
     }
     if (invitesType === "collaboratedGoals") {
