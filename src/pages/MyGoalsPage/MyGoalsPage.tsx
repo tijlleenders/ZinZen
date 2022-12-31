@@ -106,7 +106,7 @@ export const MyGoalsPage = () => {
         sendColabUpdatesToContact(parentGoal.shared?.relId, parentGoalId, {
           type: "goalAdded",
           subgoals: [{ ...newGoal, id: newGoalId }]
-        });
+        }).then(() => console.log("update sent"));
       }
       const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(parentGoalId, { sublist: newSublist });
@@ -347,6 +347,12 @@ export const MyGoalsPage = () => {
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={(e) => {
                                   e.stopPropagation();
+                                  if (goal.collaboration.status) {
+                                    sendColabUpdatesToContact(goal.shared?.relId, goal.id, {
+                                      type: "goalDeleted",
+                                      deletedGoals: [goal]
+                                    }).then(() => console.log("update sent"));
+                                  }
                                   removeUserGoal(goal.id);
                                 }}
                               />
