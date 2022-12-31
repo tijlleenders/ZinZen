@@ -27,6 +27,7 @@ import "@fontsource/montserrat";
 import ContactItem from "./models/ContactItem";
 import { createGoal, updateGoal } from "./api/GoalsAPI";
 import { GoalItem } from "./models/GoalItem";
+import { handleIncomingChanges } from "./helpers/CollaborationHandler";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -51,7 +52,9 @@ const App = () => {
             } else if (ele.type === "collaboration") {
               collaborateInvites.push({ id: ele.goal.id, goal: ele.goal });
             } else if (ele.type === "colabInviteResponse") {
-              updateGoal(ele.goalId, ele.status === "accepted" ? { collaboration: "accepted" } : { shared: null }).then(() => console.log("updated invite response"));
+              updateGoal(ele.goalId, ele.status === "accepted" ? { collaboration: { status: "accepted", newUpdates: false } } : { shared: null }).then(() => console.log("updated invite response"));
+            } else if (ele.type === "collaborationChanges") {
+              handleIncomingChanges(ele);
             }
           });
           console.log(collaborateInvites);
@@ -68,7 +71,7 @@ const App = () => {
     if (!installId) {
       localStorage.setItem("installId", uuidv4());
     } else {
-      init();
+      // init();
     }
   }, []);
 
