@@ -62,7 +62,7 @@ export const MyGoalsPage = () => {
   const [tapCount, setTapCount] = useState(defaultTap);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(-1);
-  const [showChangesModal, setShowChangesModal] = useState<{open: boolean, goal: GoalItem} | null>(null);
+  const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
@@ -177,7 +177,7 @@ export const MyGoalsPage = () => {
     if (tapCount.open === goal.id && tapCount.click > 0) {
       setTapCount(defaultTap);
     } else if (goal.collaboration.newUpdates) {
-      setShowChangesModal({ open: true, goal });
+      setShowChangesModal(goal);
     } else setTapCount({ open: goal.id, click: 1 });
   }
   useEffect(() => {
@@ -186,7 +186,7 @@ export const MyGoalsPage = () => {
       const goals: GoalItem[] = await getActiveGoals();
       setUserGoals(goals);
     })();
-  }, [showAddGoal, showUpdateGoal, showSuggestionModal]);
+  }, [showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     (async () => {
       // await populateDummyGoals();
