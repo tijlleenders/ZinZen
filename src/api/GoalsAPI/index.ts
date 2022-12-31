@@ -11,6 +11,16 @@ export const resetDatabase = () =>
     await Promise.all(db.tables.map((table) => table.clear()));
   });
 
+export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(parentGoalId)
+      .modify((obj: GoalItem) => {
+        obj.sublist = [...(obj.sublist || []), ...goalIds];
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
 export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
   const goals: GoalItem = { id: uuidv4(), ...goalDetails, createdAt: currentDate };
@@ -275,4 +285,15 @@ export const getPublicGoals = async (goalTitle: string) => {
     console.log(err);
     return { status: false, message: errorMessage[Math.floor(Math.random() * errorMessage.length)] };
   }
+};
+
+export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(goalId)
+      .modify((obj: GoalItem) => {
+        obj.collaboration = { ...obj.collaboration, newUpdates };
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
 };
