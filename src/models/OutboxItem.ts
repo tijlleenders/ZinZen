@@ -1,6 +1,6 @@
 import { GoalItem } from "./GoalItem";
 
-export interface DumpboxItem {
+export interface OutboxItem {
     id?: number,
     relId: string,
     goalId: string,
