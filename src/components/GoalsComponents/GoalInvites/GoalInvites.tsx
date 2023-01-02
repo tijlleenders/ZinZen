@@ -49,10 +49,11 @@ const GoalInvites = ({ invitesType }: { invitesType: string }) => {
     if (invitesType === "collaboratedGoals") {
       sendResponseOfColabInvite(choice === "Add" ? "accepted" : "declined", invites[index].relId, goal.id).then(() => console.log("response sent"));
     }
-    removeGoalInRelId(invites[index].relId, invites[index].id).then(() => {
-      invites.splice(index, 1);
-      setInvites([...invites]);
-    }).catch((err) => console.log("cant remove", err));
+    removeGoalInRelId(invites[index].relId, invites[index].id, invitesType === "sharedGoals" ? "sharedGoals" : "collaborativeGoals")
+      .then(() => {
+        invites.splice(index, 1);
+        setInvites([...invites]);
+      }).catch((err) => console.log("cant remove", err));
   };
   useEffect(() => {
     const getInvites = async () => {
