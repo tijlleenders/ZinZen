@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
 
 const Loader = () => {
-  const [mobile, setMobile] = useState(window.matchMedia("(max-width: 600px)").matches);
-  window.matchMedia("(max-width: 600px)").onchange = () => setMobile(window.matchMedia("(max-width: 600px)").matches);
+  const [mobile, setMobile] = useState(false);
+
+  // window.matchMedia("(max-width: 600px)").onchange = () => setMobile(window.matchMedia("(max-width: 600px)").matches);
+
+  // useEffect(() => {
+  //   setMobile(window.matchMedia("(max-width: 600px)").matches);
+  // }, []);
+
   return (
     <Spinner
       style={{

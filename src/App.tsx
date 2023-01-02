@@ -18,15 +18,15 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
-import { addGoalsInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
+import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactSharedGoals } from "./api/ContactsAPI";
+import { createGoal, updateGoal } from "./api/GoalsAPI";
+import { GoalItem } from "./models/GoalItem";
+import { handleIncomingChanges } from "./helpers/CollaborationHandler";
 
 import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
-import ContactItem from "./models/ContactItem";
-import { createGoal } from "./api/GoalsAPI";
-import { GoalItem } from "./models/GoalItem";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -40,16 +40,30 @@ const App = () => {
   useEffect(() => {
     const init = async () => {
       const res = await getContactSharedGoals();
+      // @ts-ignore
       const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
       if (res.success) {
         Object.keys(resObject).forEach(async (k: any) => {
           const goals: { id: string, goal: GoalItem }[] = [];
-          resObject[k].forEach((ele) => {
+          const collaborateInvites: { id: string, goal: GoalItem }[] = [];
+          // @ts-ignore
+          resObject[k].forEach(async (ele) => {
             if (ele.type === "shareGoal") {
               goals.push({ id: ele.goal.id, goal: createGoal(ele.goal.title) });
+            } else if (ele.type === "collaboration") {
+              collaborateInvites.push({ id: ele.goal.id, goal: ele.goal });
+            } else if (ele.type === "colabInviteResponse") {
+              await updateGoal(ele.goalId, ele.status === "accepted" ? { collaboration: { status: "accepted", newUpdates: false } } : { shared: null }).then(() => console.log("updated invite response"));
+            } else if (ele.type === "collaborationChanges") {
+              await handleIncomingChanges(ele).then(() => console.log("changes added"));
             }
           });
-          addGoalsInRelId(k, goals).then(() => console.log("success")).catch((err) => console.log(err));
+          if (collaborateInvites.length > 0) {
+            addColabInvitesInRelId(k, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
+          }
+          if (goals.length > 0) {
+            addSharedGoalsInRelId(k, goals).then(() => console.log("success")).catch((err) => console.log(err));
+          }
         });
       }
     };

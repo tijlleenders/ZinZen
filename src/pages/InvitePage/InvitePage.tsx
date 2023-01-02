@@ -38,7 +38,7 @@ const InvitePage = () => {
         onClick={async () => {
           const res = await acceptRelationship();
           if (res.success) {
-            await addContact(newContactName, res.response?.relId);
+            await addContact(newContactName, res.response?.relId, true);
             setNewContactName("");
           }
           navigate("/");

@@ -102,14 +102,14 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
         <button
           type="button"
           id={`goal-suggestion-btn${darkModeStatus ? "-dark" : ""}`}
-          onClick={(e) => {
+          onClick={async (e) => {
             if (displayTRIcon === "+") {
               setShowAddGoalOptions(true);
               // setShowAddGoal({ open: true, goalId: goalID });
             } else if (showAddGoal) {
-              addThisGoal(e);
+              await addThisGoal(e);
             } else if (showUpdateGoal) {
-              updateThisGoal(e);
+              await updateThisGoal(e);
             }
           }}
         >
