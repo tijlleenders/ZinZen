@@ -5,6 +5,7 @@ import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 import { displayUpdateGoal, extractedTitle, inputGoalTags, selectedColorIndex } from "@src/store/GoalsState";
+import { formatTagsToText } from "@src/helpers/GoalConvertor";
 import InputGoal from "../InputGoal";
 
 import "@translations/i18n";
@@ -46,25 +47,10 @@ export const UpdateGoalForm = () => {
 
   useEffect(() => {
     getGoal(showUpdateGoal?.goalId).then((goal) => {
-      let tmpTiming = "";
-      if (goal.afterTime && goal.beforeTime) {
-        tmpTiming = ` ${goal.afterTime}-${goal.beforeTime}`;
-      } else if (goal.afterTime) {
-        tmpTiming = ` after ${goal.afterTime}`;
-      } else if (goal.beforeTime) {
-        tmpTiming = ` before ${goal.beforeTime}`;
-      }
-      setColorIndex(colorPallete.indexOf(goal.goalColor));
-      let inputText = "";
-      inputText += goal.title;
-      inputText += goal.duration ? ` ${goal.duration}hours` : "";
-      inputText += goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1} @${goal.start.getHours()}` : "";
-      inputText += goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1} @${goal.due.getHours()}` : "";
-      inputText += goal.repeat ? ` ${goal.repeat}` : "";
-      inputText += tmpTiming;
-      inputText += goal.link ? ` ${goal.link}` : "";
-      setGoalInput(inputText);
+      const res = formatTagsToText(goal);
       if (goal.language) setGoalLang(goal.language);
+      setColorIndex(colorPallete.indexOf(goal.goalColor));
+      setGoalInput(res.inputText);
     });
   }, []);
 
