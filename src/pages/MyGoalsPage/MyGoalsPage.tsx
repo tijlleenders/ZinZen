@@ -117,16 +117,6 @@ export const MyGoalsPage = () => {
     setGoalTags({});
     setGoalTitle("");
   };
-
-  const handleGoalClick = (goal: GoalItem) => {
-    if (!goal.sublist || goal.sublist?.length === 0) {
-      if (tapCount.open === goal.id && tapCount.click > 0) {
-        setTapCount(defaultTap);
-      } else { setTapCount({ open: goal.id, click: 1 }); }
-    } else {
-      addInHistory(goal);
-    }
-  };
   const updateThisGoal = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (goalTitle.length === 0) {
@@ -155,7 +145,6 @@ export const MyGoalsPage = () => {
     setShowUpdateGoal(null);
     setGoalTags({});
   };
-
   const archiveMyGoal = async (goal: GoalItem) => {
     await archiveUserGoal(goal);
     if (goal.collaboration.status) {
@@ -173,6 +162,7 @@ export const MyGoalsPage = () => {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   }
+
   async function search(text: string) {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
@@ -187,6 +177,15 @@ export const MyGoalsPage = () => {
     }, 300);
   }
 
+  const handleGoalClick = (goal: GoalItem) => {
+    if (!goal.sublist || goal.sublist?.length === 0) {
+      if (tapCount.open === goal.id && tapCount.click > 0) {
+        setTapCount(defaultTap);
+      } else { setTapCount({ open: goal.id, click: 1 }); }
+    } else {
+      addInHistory(goal);
+    }
+  };
   function handleDropDown(goal: GoalItem) {
     if (tapCount.open === goal.id && tapCount.click > 0) {
       setTapCount(defaultTap);
@@ -194,9 +193,9 @@ export const MyGoalsPage = () => {
       setShowChangesModal(goal);
     } else setTapCount({ open: goal.id, click: 1 });
   }
+
   useEffect(() => {
     (async () => {
-      // await populateDummyGoals();
       const goals: GoalItem[] = await getActiveGoals();
       setUserGoals(goals);
     })();

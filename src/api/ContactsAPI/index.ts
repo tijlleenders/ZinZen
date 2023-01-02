@@ -145,12 +145,12 @@ export const addColabInvitesInRelId = async (relId: string, goals:{ id: string, 
   });
 };
 
-export const removeGoalInRelId = async (relId: string, goalId: string) => {
+export const removeGoalInRelId = async (relId: string, goalId: string, typeOfGoal: "sharedGoals" | "collaborativeGoals") => {
   db.transaction("rw", db.contactsCollection, async () => {
     await db.contactsCollection.where("relId").equals(relId)
       .modify((obj: ContactItem) => {
-        const tmp = obj.sharedGoals.filter((ele) => ele.id !== goalId);
-        obj.sharedGoals = [...tmp];
+        const tmp = obj[typeOfGoal].filter((ele) => ele.id !== goalId);
+        obj[typeOfGoal] = [...tmp];
       });
   }).catch((e) => {
     console.log(e.stack || e);
