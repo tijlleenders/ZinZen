@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, OverlayTrigger, Tooltip } from "react-bootstrap";
-
-import { getAllContacts, removeGoalInRelId } from "@src/api/ContactsAPI";
 import { useTranslation } from "react-i18next";
+
+import { getAllContacts, removeGoalInRelId, sendResponseOfColabInvite } from "@src/api/ContactsAPI";
 
 import "./GoalInvites.scss";
 import { darkModeState } from "@src/store";
@@ -49,27 +49,32 @@ const GoalInvites = ({ invitesType }: { invitesType: string }) => {
 
   const handleChoice = async (choice: string, index: number, goal: GoalItem) => {
     if (choice === "Add") {
-      await addGoal(goal);
+      const thisGoal = invitesType === "sharedGoals" ? goal :
+        { ...goal, collaboration: { status: "accepted", newUpdates: false }, shared: { newUpdates: false, relId: invites[index].relId, name: invites[index].contactName } };
+      await addGoal(thisGoal);
     }
-    removeGoalInRelId(invites[index].relId, invites[index].id).then(() => {
-      invites.splice(index, 1);
-      setInvites([...invites]);
-    }).catch((err) => console.log("cant remove", err));
+    if (invitesType === "collaboratedGoals") {
+      sendResponseOfColabInvite(choice === "Add" ? "accepted" : "declined", invites[index].relId, goal.id).then(() => console.log("response sent"));
+    }
+    removeGoalInRelId(invites[index].relId, invites[index].id, invitesType === "sharedGoals" ? "sharedGoals" : "collaborativeGoals")
+      .then(() => {
+        invites.splice(index, 1);
+        setInvites([...invites]);
+      }).catch((err) => console.log("cant remove", err));
   };
   useEffect(() => {
     const getInvites = async () => {
       const contacts = await getAllContacts();
       const _invites: shareInviteSchema[] = [];
-      if (invitesType === "sharedGoals") {
-        contacts.forEach((ele) => {
-          ele.sharedGoals.forEach((sg) => _invites.push({
-            id: sg.id,
-            relId: ele.relId,
-            contactName: ele.name,
-            goal: sg.goal
-          }));
-        });
-      }
+      contacts.forEach((ele) => {
+        ele[invitesType === "sharedGoals" ? "sharedGoals" : "collaborativeGoals"].forEach((sg) => _invites.push({
+          id: sg.id,
+          relId: ele.relId,
+          contactName: ele.name,
+          goal: sg.goal
+        }));
+      });
+
       setInvites([..._invites]);
     };
     getInvites();

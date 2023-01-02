@@ -11,6 +11,16 @@ export const resetDatabase = () =>
     await Promise.all(db.tables.map((table) => table.clear()));
   });
 
+export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(parentGoalId)
+      .modify((obj: GoalItem) => {
+        obj.sublist = [...(obj.sublist || []), ...goalIds];
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
 export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
   const goals: GoalItem = { id: uuidv4(), ...goalDetails, createdAt: currentDate };
@@ -117,7 +127,7 @@ export const archiveGoal = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, updatedGoalStatus);
   });
-  if (goal.parentGoalId !== -1) {
+  if (goal.parentGoalId !== "root") {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
       await db.goalsCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist?.filter((ele) => ele !== goal.id) });
@@ -172,10 +182,10 @@ export const createGoal = (
   goalColor = colorPallete[Math.floor(Math.random() * 11)],
   shared: null |
   {
-    id: string,
     relId: string,
-    name: string
-  } = null
+    name: string,
+  } = null,
+  collaboration = { status: "none", newUpdates: false }
 ) => {
   const newGoal: GoalItem = {
     title: goalTitle,
@@ -190,6 +200,7 @@ export const createGoal = (
     parentGoalId,
     goalColor,
     link,
+    collaboration,
     shared
   };
   return newGoal;
@@ -236,11 +247,11 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
     language: goal.language,
     link: goal.link
   };
-  Object.keys(goalDetails).forEach((key) => {
-    if (!goalDetails[key]) {
-      delete goalDetails[key];
-    }
-  });
+  // Object.keys(goalDetails).forEach((key) => {
+  //   if (!goalDetails[key]) {
+  //     delete goalDetails[key];
+  //   }
+  // });
   const shareableGoal = {
     method: "shareGoal",
     parentTitle: parent,
@@ -249,8 +260,8 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
   await shareGoal(shareableGoal);
 };
 
-export const updateSharedStatusOfGoal = async (id, relId, name) => {
-  await db.goalsCollection.update(id, { shared: { relId, name } });
+export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string, collaboration = { status: "pending", newUpdates: false }) => {
+  await db.goalsCollection.update(id, { shared: { relId, name, newUpdates: false }, collaboration });
 };
 
 export const getPublicGoals = async (goalTitle: string) => {
@@ -274,4 +285,15 @@ export const getPublicGoals = async (goalTitle: string) => {
     console.log(err);
     return { status: false, message: errorMessage[Math.floor(Math.random() * errorMessage.length)] };
   }
+};
+
+export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(goalId)
+      .modify((obj: GoalItem) => {
+        obj.collaboration = { ...obj.collaboration, newUpdates };
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
 };

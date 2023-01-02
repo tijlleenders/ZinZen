@@ -51,9 +51,23 @@ export const shareGoalWithContact = async (relId: string, goal: { id: string, ti
   return res;
 };
 
-export const getContactSharedGoals = async () => {
+export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "getGoals", installId });
+  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "collaboration", goal } });
+  return res;
+};
+
+export const sendResponseOfColabInvite = async (status: string, relId: string, goalId: string) => {
+  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "colabInviteResponse", goalId, status } });
+  return res;
+};
+
+export const getContactSharedGoals = async () => {
+  const lastProcessedTimestamp = new Date(Number(localStorage.getItem("lastProcessedTimestamp"))).toISOString();
+  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url, { method: "getGoals", installId, ...(lastProcessedTimestamp ? { lastProcessedTimestamp } : {}) });
+  localStorage.setItem("lastProcessedTimestamp", `${Date.now()}`);
   return res;
 };
 
@@ -68,10 +82,25 @@ export const getAllContacts = async () => {
   return allContacts;
 };
 
-export const addContact = async (contactName: string, relId: string) => {
+export const sendColabUpdatesToContact = async (relId: string, goalId:string, changes: object) => {
+  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url,
+    { method: "shareGoal",
+      installId,
+      relId,
+      event: {
+        type: "collaborationChanges",
+        goalId,
+        changes
+      }
+    });
+  return res;
+};
+
+export const addContact = async (contactName: string, relId: string, accepted = false) => {
   const name = `${contactName.charAt(0).toUpperCase() + contactName.slice(1)}`;
   const currentDate = getJustDate(new Date());
-  const newContact: ContactItem = { id: uuidv4(), name, relId, sharedGoals: [], collaborativeGoals: [], createdAt: currentDate, accepted: false };
+  const newContact: ContactItem = { id: uuidv4(), name, relId, sharedGoals: [], collaborativeGoals: [], createdAt: currentDate, accepted };
   let newContactId;
   await db
     .transaction("rw", db.contactsCollection, async () => {
@@ -98,7 +127,7 @@ export const getContactGoalById = async (id: string) => {
   return goal[0];
 };
 
-export const addGoalsInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
+export const addSharedGoalsInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
   db.transaction("rw", db.contactsCollection, async () => {
     await db.contactsCollection.where("relId").equals(relId)
       .modify({ sharedGoals: [...goals] });
@@ -107,12 +136,21 @@ export const addGoalsInRelId = async (relId: string, goals:{ id: string, goal: G
   });
 };
 
-export const removeGoalInRelId = async (relId: string, goalId: string) => {
+export const addColabInvitesInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
+  db.transaction("rw", db.contactsCollection, async () => {
+    await db.contactsCollection.where("relId").equals(relId)
+      .modify({ collaborativeGoals: [...goals] });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const removeGoalInRelId = async (relId: string, goalId: string, typeOfGoal: "sharedGoals" | "collaborativeGoals") => {
   db.transaction("rw", db.contactsCollection, async () => {
     await db.contactsCollection.where("relId").equals(relId)
       .modify((obj: ContactItem) => {
-        const tmp = obj.sharedGoals.filter((ele) => ele.id !== goalId);
-        obj.sharedGoals = [...tmp];
+        const tmp = obj[typeOfGoal].filter((ele) => ele.id !== goalId);
+        obj[typeOfGoal] = [...tmp];
       });
   }).catch((e) => {
     console.log(e.stack || e);
@@ -124,9 +162,10 @@ export const getAllSharedGoals = async () => {
   return contacts;
 };
 
-export const updateStatusOfContact = async (id: string, accepted: boolean) => {
+export const updateStatusOfContact = async (relId: string, accepted: boolean) => {
   db.transaction("rw", db.contactsCollection, async () => {
-    await db.contactsCollection.update(id, { accepted }).then((updated) => updated);
+    await db.contactsCollection.where("relId").equals(relId)
+      .modify((obj) => { obj.accepted = accepted; });
   }).catch((e) => {
     console.log(e.stack || e);
   });

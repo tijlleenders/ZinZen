@@ -25,7 +25,7 @@ interface IShareGoalModalProps {
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const setLoading = useSetRecoilState(displayLoader);
+  // const setLoading = useSetRecoilState(displayLoader);
   const setShowToast = useSetRecoilState(displayToast);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
@@ -74,12 +74,12 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         <button
           onClick={async () => {
             let parentGoal = "root";
-            setLoading(true);
+            // setLoading(true);
             if (goal.parentGoalId !== "root") {
               parentGoal = (await getGoal(goal.parentGoalId)).title;
             }
             await shareMyGoal(goal, parentGoal);
-            setLoading(false);
+            // setLoading(false);
           }}
           type="button"
           className="shareOptions-btn"
@@ -95,10 +95,19 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             <p className="shareOption-name">Share Public</p>
           </div>
         </button>
-        <button disabled={!!goal.shared} type="button" className="shareOptions-btn">
+        <button disabled={!!goal.shared || goal.collaboration.status !== "none"} type="button" className="shareOptions-btn">
           <div className="share-Options" onClickCapture={() => setDisplayContacts(!displayContacts)}>
             <div> <img alt="share with friend" src={shareWithFriend} /> </div>
-            <p className="shareOption-name">{`Share 1:1 ${goal.shared ? ` - Goal is shared with ${goal.shared.name}` : " "}`}</p>
+            <p className="shareOption-name">
+              Share 1:1
+              { goal.collaboration.status === "accepted" ?
+                ` - Goal is collaborated with ${goal.shared?.name}` :
+                goal.collaboration.status === "pending" ?
+                  " - Goal collaboration invite is not yet accepted"
+                  :
+                  ""}
+              {`${goal.shared && goal.collaboration.status === "none" ? ` - Goal is shared with ${goal.shared.name}` : ""}`}
+            </p>
           </div>
           { !goal.shared && displayContacts && (
             <div className="shareWithContacts">

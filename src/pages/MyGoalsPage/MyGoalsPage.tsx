@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect, ChangeEvent } from "react";
@@ -10,6 +11,8 @@ import correct from "@assets/images/correct.svg";
 import pencil from "@assets/images/pencil.svg";
 import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
+import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
+import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 
 import "@translations/i18n";
 
@@ -47,6 +50,9 @@ import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoa
 import "./MyGoalsPage.scss";
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { sendColabUpdatesToContact } from "@src/api/ContactsAPI";
+import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
+import NotificationSymbol from "@src/common/NotificationSymbol";
 
 interface ILocationProps {
   openGoalOfId: string,
@@ -59,6 +65,7 @@ export const MyGoalsPage = () => {
   const [tapCount, setTapCount] = useState(defaultTap);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(-1);
+  const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
 
   const { t } = useTranslation();
 
@@ -78,6 +85,7 @@ export const MyGoalsPage = () => {
 
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const lang = localStorage.getItem("language")?.slice(1, -1);
+  // @ts-ignore
   const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
   const addThisGoal = async (e: React.SyntheticEvent) => {
@@ -92,56 +100,70 @@ export const MyGoalsPage = () => {
       goalTags.afterTime ? goalTags.afterTime.value : null,
       goalTags.beforeTime ? goalTags.beforeTime.value : null,
       goalLang,
-      goalTags.link ? goalTags.link.value.trim() : null,
+      goalTags.link ? `${goalTags.link.value}`.trim() : null,
       0,
       parentGoalId!,
       colorPallete[colorIndex], // goalColor
     );
     const newGoalId = await addGoal(newGoal);
-    if (parentGoalId) {
+    if (parentGoalId && parentGoalId !== "root") {
       const parentGoal = await getGoal(parentGoalId);
+      if (parentGoal.collaboration.status === "accepted" && parentGoal.shared) {
+        sendColabUpdatesToContact(parentGoal.shared.relId, parentGoalId, {
+          type: "goalAdded",
+          subgoals: [{ ...newGoal, id: newGoalId }]
+        }).then(() => console.log("update sent"));
+      }
       const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(parentGoalId, { sublist: newSublist });
+      // @ts-ignore
       if (selectedGoalId !== showAddGoal?.goalId) { addInHistory(parentGoal); }
     }
 
     setShowAddGoal(null);
+    // @ts-ignore
     setGoalTags({});
     setGoalTitle("");
-  };
-
-  const handleGoalClick = (goal: GoalItem) => {
-    if (!goal.sublist || goal.sublist?.length === 0) {
-      if (tapCount.open === goal.id && tapCount.click > 0) {
-        setTapCount(defaultTap);
-      } else { setTapCount({ open: goal.id, click: 1 }); }
-    } else {
-      addInHistory(goal);
-    }
   };
   const updateThisGoal = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (goalTitle.length === 0) {
       return;
     }
-    await updateGoal(showUpdateGoal?.goalId,
-      { title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
-        goalColor: colorPallete[colorIndex],
-        duration: goalTags.duration ? goalTags.duration.value : null,
-        repeat: goalTags.repeats ? goalTags.repeats.value : null,
-        link: goalTags.link ? goalTags.link.value?.trim() : null,
-        start: goalTags.start ? goalTags.start.value : null,
-        due: goalTags.due ? goalTags.due.value : null,
-        afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
-        beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
+    if (showUpdateGoal) {
+      await updateGoal(showUpdateGoal.goalId,
+        { title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
+          goalColor: colorPallete[colorIndex],
+          duration: goalTags.duration ? goalTags.duration.value : null,
+          repeat: goalTags.repeats ? goalTags.repeats.value : null,
+          link: goalTags.link ? goalTags.link.value?.trim() : null,
+          start: goalTags.start ? goalTags.start.value : null,
+          due: goalTags.due ? goalTags.due.value : null,
+          afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+          beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
+        });
+      getGoal(showUpdateGoal.goalId).then((goal: GoalItem) => {
+        if (goal.collaboration.status && goal.shared) {
+          sendColabUpdatesToContact(goal.shared.relId, goal.id, {
+            type: "goalEdited",
+            updatedGoals: [goal]
+          }).then(() => { console.log("edit updates sent"); });
+        }
       });
-    setGoalTitle("");
-    setShowUpdateGoal(null);
-    setGoalTags({});
+      setGoalTitle("");
+      setShowUpdateGoal(null);
+      // @ts-ignore
+      setGoalTags({});
+    }
   };
-
   const archiveMyGoal = async (goal: GoalItem) => {
     await archiveUserGoal(goal);
+    if (goal.collaboration.status && goal.shared) {
+      sendColabUpdatesToContact(goal.shared.relId, goal.id, {
+        type: "goalCompleted",
+        completedGoals: [goal]
+      }).then(() => console.log("complete update sent"));
+    }
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   };
@@ -151,6 +173,7 @@ export const MyGoalsPage = () => {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   }
+
   async function search(text: string) {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
@@ -165,13 +188,30 @@ export const MyGoalsPage = () => {
     }, 300);
   }
 
+  const handleGoalClick = (goal: GoalItem) => {
+    if (!goal.sublist || goal.sublist?.length === 0) {
+      if (tapCount.open === goal.id && tapCount.click > 0) {
+        setTapCount(defaultTap);
+      } else { setTapCount({ open: goal.id, click: 1 }); }
+    } else {
+      // @ts-ignore
+      addInHistory(goal);
+    }
+  };
+  function handleDropDown(goal: GoalItem) {
+    if (tapCount.open === goal.id && tapCount.click > 0) {
+      setTapCount(defaultTap);
+    } else if (goal.collaboration.newUpdates) {
+      setShowChangesModal(goal);
+    } else setTapCount({ open: goal.id, click: 1 });
+  }
+
   useEffect(() => {
     (async () => {
-      // await populateDummyGoals();
       const goals: GoalItem[] = await getActiveGoals();
       setUserGoals(goals);
     })();
-  }, [showAddGoal, showUpdateGoal, showSuggestionModal]);
+  }, [showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     (async () => {
       // await populateDummyGoals();
@@ -252,10 +292,10 @@ export const MyGoalsPage = () => {
                             className="goal-dropdown"
                             onClickCapture={(e) => {
                               e.stopPropagation();
-                              console.log("lft");
-                              if (tapCount.open === goal.id && tapCount.click > 0) { setTapCount(defaultTap); } else { setTapCount({ open: goal.id, click: 1 }); }
+                              handleDropDown(goal);
                             }}
                           >
+                            { goal.collaboration.newUpdates && <NotificationSymbol color={goal.goalColor} /> }
                             { goal.sublist && goal.sublist.length > 0 && (
                               <div
                                 className="goal-dd-outer"
@@ -271,10 +311,7 @@ export const MyGoalsPage = () => {
                             />
                           </div>
                           <div
-                            onClickCapture={(e) => {
-                              console.log("main", tapCount);
-                              handleGoalClick(goal);
-                            }}
+                            onClickCapture={() => { handleGoalClick(goal); }}
                             className="user-goal-main"
                             style={{ ...(tapCount.open === goal.id) ? { paddingBottom: 0 } : {} }}
                           >
@@ -297,6 +334,13 @@ export const MyGoalsPage = () => {
                               <div
                                 className="contact-button"
                               >
+                                { goal.collaboration.status === "accepted" && (
+                                  <img
+                                    alt="collaborate goal"
+                                    src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
+                                    style={{ width: "27px", position: "absolute", right: "18px" }}
+                                  />
+                                ) }
                                 <button
                                   type="button"
                                   className="contact-icon"
@@ -315,6 +359,7 @@ export const MyGoalsPage = () => {
                                 src={plus}
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={() => {
+                                  // @ts-ignore
                                   addInHistory(goal);
                                   setShowAddGoalOptions(true);
                                 }}
@@ -325,6 +370,12 @@ export const MyGoalsPage = () => {
                                 style={{ cursor: "pointer" }}
                                 onClickCapture={(e) => {
                                   e.stopPropagation();
+                                  if (goal.collaboration.status && goal.shared) {
+                                    sendColabUpdatesToContact(goal.shared.relId, goal.id, {
+                                      type: "goalDeleted",
+                                      deletedGoals: [goal]
+                                    }).then(() => console.log("update sent"));
+                                  }
                                   removeUserGoal(goal.id);
                                 }}
                               />
@@ -371,6 +422,7 @@ export const MyGoalsPage = () => {
             :
             (<GoalSublist />)
         }
+        { showChangesModal && <DisplayChangesModal showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} /> }
       </div>
     </>
   );
