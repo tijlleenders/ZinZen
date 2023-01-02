@@ -143,6 +143,14 @@ export const MyGoalsPage = () => {
         afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
         beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
       });
+    getGoal(showUpdateGoal?.goalId).then((goal: GoalItem) => {
+      if (goal.collaboration.status) {
+        sendColabUpdatesToContact(goal.shared?.relId, goal.id, {
+          type: "goalEdited",
+          updatedGoals: [goal]
+        }).then(() => { console.log("edit updates sent"); });
+      }
+    });
     setGoalTitle("");
     setShowUpdateGoal(null);
     setGoalTags({});
