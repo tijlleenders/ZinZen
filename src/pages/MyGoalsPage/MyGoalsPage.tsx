@@ -14,7 +14,7 @@ import trash from "@assets/images/trash.svg";
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 
-import "@translations/i18n";
+import { languagesFullForms } from "@translations/i18n";
 
 import {
   archiveUserGoal,
@@ -24,7 +24,7 @@ import {
   getGoal,
   addGoal,
   createGoal,
-  updateGoal
+  updateGoal, getAllArchivedGoals
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -44,7 +44,7 @@ import {
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { colorPallete } from "@src/utils";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions";
-import { languagesFullForms } from "@src/translations/i18n";
+
 import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
 
 import "./MyGoalsPage.scss";
@@ -156,7 +156,26 @@ export const MyGoalsPage = () => {
       setGoalTags({});
     }
   };
+  async function removeUserGoal(id: string) {
+    await removeChildrenGoals(id);
+    await removeGoal(id);
+    const goals: GoalItem[] = await getActiveGoals();
+    setUserGoals(goals);
+  }
+
   const archiveMyGoal = async (goal: GoalItem) => {
+    const archivedGoals = await getAllArchivedGoals();
+    console.log(goal);
+    if (archivedGoals.filter((item) =>
+      item.title === goal.title &&
+      item.duration === goal.duration &&
+      item.goalColor === goal.goalColor &&
+      item.language === goal.language &&
+      item.repeat === goal.repeat
+    ).length > 0) {
+      await removeUserGoal(goal.id);
+      return;
+    }
     await archiveUserGoal(goal);
     if (goal.collaboration.status && goal.shared) {
       sendColabUpdatesToContact(goal.shared.relId, goal.id, {
@@ -167,12 +186,6 @@ export const MyGoalsPage = () => {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   };
-  async function removeUserGoal(id: string) {
-    await removeChildrenGoals(id);
-    await removeGoal(id);
-    const goals: GoalItem[] = await getActiveGoals();
-    setUserGoals(goals);
-  }
 
   async function search(text: string) {
     const goals: GoalItem[] = await getActiveGoals();
@@ -282,7 +295,7 @@ export const MyGoalsPage = () => {
                 )}
                 <div>
                   {userGoals?.map((goal: GoalItem, index) => (
-                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
+                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm key={String(`task-${goal.id}`)} />
                       : (
                         <div
                           key={String(`task-${goal.id}`)}

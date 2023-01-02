@@ -101,10 +101,10 @@ export const removeGoal = async (goalId: string) => {
     goals.forEach(async (ele) => {
       if (parentGoal === "root") {
         console.log("root");
-        if (ele.parentGoalId === "root") await db.goalsCollection.delete(ele.id);
+        if (ele.parentGoalId === "root" && ele.status === 0) await db.goalsCollection.delete(ele.id);
       } else {
         const tmpParentGoal = (await getGoal(ele.parentGoalId)).title;
-        if (tmpParentGoal === parentGoal.title) {
+        if (tmpParentGoal === parentGoal.title && ele.status === 0) {
           await db.goalsCollection.delete(ele.id);
         }
       }

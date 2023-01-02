@@ -10,7 +10,15 @@ import correct from "@assets/images/correct.svg";
 import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
-import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, updateGoal } from "@src/api/GoalsAPI";
+import {
+  archiveUserGoal,
+  getChildrenGoals,
+  getGoal,
+  getGoalsFromArchive,
+  removeChildrenGoals,
+  removeGoal,
+  updateGoal
+} from "@src/api/GoalsAPI";
 import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -62,10 +70,6 @@ export const GoalSublist = () => {
       });
   }, [parentGoal, showAddGoal, showSuggestionModal, showUpdateGoal]);
 
-  const archiveMyGoal = async (goal: GoalItem) => {
-    await archiveUserGoal(goal);
-    await getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
-  };
   const removeChildrenGoal = async (goalId: string) => {
     if (parentGoal?.sublist) {
       // delete subgoals of this goal
@@ -84,6 +88,24 @@ export const GoalSublist = () => {
       getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
+
+  const archiveMyGoal = async (goal: GoalItem) => {
+    const archivedGoals = await getGoalsFromArchive(goal.parentGoalId);
+
+    if (archivedGoals.filter((item) =>
+      item.title === goal.title &&
+      item.duration === goal.duration &&
+      item.goalColor === goal.goalColor &&
+      item.language === goal.language &&
+      item.repeat === goal.repeat
+    ).length > 0) {
+      await removeChildrenGoal(goal.id);
+      return;
+    }
+    await archiveUserGoal(goal);
+    await getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+  };
+
   const updateUserGoals = async (goal: GoalItem, index: number) => {
     const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
     if (updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
