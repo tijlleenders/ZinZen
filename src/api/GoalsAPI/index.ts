@@ -1,10 +1,10 @@
 /* eslint-disable no-alert */
 // @ts-nocheck
 
-import { db } from "@models";
-import { colorPallete, getJustDate } from "@src/utils";
-import { GoalItem } from "@src/models/GoalItem";
-import { v4 as uuidv4 } from "uuid";
+import {db} from "@models";
+import {colorPallete, getJustDate} from "@src/utils";
+import {GoalItem} from "@src/models/GoalItem";
+import {v4 as uuidv4} from "uuid";
 
 export const resetDatabase = () =>
   db.transaction("rw", db.goalsCollection, async () => {
@@ -74,8 +74,7 @@ export const getGoalsFromArchive = async (parentId: string) => {
 
 export const getGoalsOnDate = async (date: Date) => {
   db.transaction("rw", db.goalsCollection, async () => {
-    const goalsList = await db.goalsCollection.where("start").equals(date);
-    return goalsList;
+    return await db.goalsCollection.where("start").equals(date);
   }).catch((e) => {
     console.log(e.stack || e);
   });
@@ -91,10 +90,10 @@ export const removeGoal = async (goalId: string) => {
     goals.forEach(async (ele) => {
       if (parentGoal === "root") {
         console.log("root");
-        if (ele.parentGoalId === "root") await db.goalsCollection.delete(ele.id);
+        if (ele.parentGoalId === "root" && ele.status === 0) await db.goalsCollection.delete(ele.id);
       } else {
         const tmpParentGoal = (await getGoal(ele.parentGoalId)).title;
-        if (tmpParentGoal === parentGoal.title) {
+        if (tmpParentGoal === parentGoal.title && ele.status === 0) {
           await db.goalsCollection.delete(ele.id);
         }
       }

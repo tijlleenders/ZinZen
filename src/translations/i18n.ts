@@ -55,8 +55,8 @@ i18n.init({
   },
 });
 
-const languagesAvailable = ["de", "en", "es", "fr", "hi", "nl"];
-const languagesFullForms = {
+const languagesAvailable: string[] = ["de", "en", "es", "fr", "hi", "nl"];
+const languagesFullForms: { [key: string]: string } = {
   de: "Deutsch",
   en: "English",
   es: "español",

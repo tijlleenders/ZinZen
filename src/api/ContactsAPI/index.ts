@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable arrow-body-style */
-import { db } from "@models";
+import {db} from "@models";
 import ContactItem from "@src/models/ContactItem";
-import { GoalItem } from "@src/models/GoalItem";
-import { getJustDate } from "@src/utils";
-import { v4 as uuidv4 } from "uuid";
+import {GoalItem} from "@src/models/GoalItem";
+import {getJustDate} from "@src/utils";
+import {v4 as uuidv4} from "uuid";
 
 const installId = localStorage.getItem("installId");
 
@@ -41,31 +41,26 @@ export const acceptRelationship = async () => {
   const _installId = localStorage.getItem("installId");
   const relId = window.location.pathname.split("/invite/")[1];
   const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "acceptRelationship", installId: _installId, relId });
-  return res;
+  return await createRequest(url, {method: "acceptRelationship", installId: _installId, relId});
 };
 
 export const shareGoalWithContact = async (relId: string, goal: { id: string, title: string }) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "shareGoal", goal } });
-  return res;
+  return await createRequest(url, {method: "shareGoal", installId, relId, event: {type: "shareGoal", goal}});
 };
 
 export const getContactSharedGoals = async () => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "getGoals", installId });
-  return res;
+  return await createRequest(url, {method: "getGoals", installId});
 };
 
 export const getRelationshipStatus = async (relationshipId: string) => {
   const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "getRelationshipStatus", installId, relationshipId });
-  return res;
+  return await createRequest(url, {method: "getRelationshipStatus", installId, relationshipId});
 };
 
 export const getAllContacts = async () => {
-  const allContacts = await db.contactsCollection.toArray();
-  return allContacts;
+  return await db.contactsCollection.toArray();
 };
 
 export const addContact = async (contactName: string, relId: string) => {
@@ -120,13 +115,12 @@ export const removeGoalInRelId = async (relId: string, goalId: string) => {
 };
 
 export const getAllSharedGoals = async () => {
-  const contacts = await db.contactsCollection.toArray();
-  return contacts;
+  return await db.contactsCollection.toArray();
 };
 
 export const updateStatusOfContact = async (id: string, accepted: boolean) => {
   db.transaction("rw", db.contactsCollection, async () => {
-    await db.contactsCollection.update(id, { accepted }).then((updated) => updated);
+    await db.contactsCollection.update(+id, { accepted }).then((updated) => updated);
   }).catch((e) => {
     console.log(e.stack || e);
   });

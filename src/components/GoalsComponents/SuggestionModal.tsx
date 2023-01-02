@@ -77,10 +77,9 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
     const lst: ISharedGoal[] | GoalItem[] = isArchiveTab ? archiveGoals : publicGoals;
     return lst.length > 0 ?
       lst.map((goal, index) => (
-        <div>
+        <div key={`my-archive-${goal.id}`}>
           <div
             onClick={() => setSelectedGoal(selectedGoal?.index === index ? null : { index, goal })}
-            key={`my-archive-${goal.id}`}
             className="suggestions-goal-name"
             style={{ backgroundColor: goal.goalColor }}
           >

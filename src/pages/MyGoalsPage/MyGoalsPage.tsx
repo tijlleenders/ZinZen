@@ -18,7 +18,7 @@ import {
   getGoal,
   addGoal,
   createGoal,
-  updateGoal
+  updateGoal, getAllArchivedGoals
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -44,6 +44,7 @@ import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoa
 import "./MyGoalsPage.scss";
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import {ITags} from "@src/Interfaces/ITagExtractor";
 
 interface ILocationProps {
   openGoalOfId: string,
@@ -53,7 +54,7 @@ interface ILocationProps {
 export const MyGoalsPage = () => {
   const location = useLocation();
   const defaultTap = { open: "root", click: 1 };
-  const [tapCount, setTapCount] = useState(defaultTap);
+  const [tapCount, setTapCount] = useState<{open: string | number, click: number}>(defaultTap);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(-1);
 
@@ -101,7 +102,7 @@ export const MyGoalsPage = () => {
     }
 
     setShowAddGoal(null);
-    setGoalTags({});
+    setGoalTags({} as ITags);
     setGoalTitle("");
   };
 
@@ -132,24 +133,40 @@ export const MyGoalsPage = () => {
       });
     setGoalTitle("");
     setShowUpdateGoal(null);
-    setGoalTags({});
+    setGoalTags({} as ITags);
   };
 
   const archiveMyGoal = async (goal: GoalItem) => {
+    const archivedGoals = await getAllArchivedGoals()
+    console.log(goal)
+    if(archivedGoals.filter((item) =>
+        item.title === goal.title &&
+        item.duration === goal.duration &&
+        item.goalColor === goal.goalColor &&
+        item.language === goal.language &&
+        item.repeat === goal.repeat
+    ).length > 0) {
+      await removeUserGoal(goal.id);
+      return
+    }
+    
     await archiveUserGoal(goal);
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   };
+  
   async function removeUserGoal(id: string) {
     await removeChildrenGoals(id);
     await removeGoal(id);
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   }
+  
   async function search(text: string) {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
   }
+  
   function debounceSearch(event: ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
     if (debounceTimeout) {
@@ -167,6 +184,7 @@ export const MyGoalsPage = () => {
       setUserGoals(goals);
     })();
   }, [showAddGoal, showUpdateGoal, showSuggestionModal]);
+  
   useEffect(() => {
     (async () => {
       // await populateDummyGoals();
@@ -227,7 +245,7 @@ export const MyGoalsPage = () => {
                   placeholder="Search"
                   onChange={(e) => debounceSearch(e)}
                 />
-                <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
+                <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount({open: -1, click: 0})}>
                   My Goals
                 </h1>
                 { showAddGoal && (
@@ -237,10 +255,10 @@ export const MyGoalsPage = () => {
                 )}
                 <div>
                   {userGoals?.map((goal: GoalItem, index) => (
-                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
+                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm key={goal.id} />
                       : (
                         <div
-                          key={String(`task-${goal.id}`)}
+                          key={`task-${goal.id}`}
                           className={`user-goal${darkModeStatus ? "-dark" : ""}`}
                         >
                           <div
@@ -266,7 +284,7 @@ export const MyGoalsPage = () => {
                             />
                           </div>
                           <div
-                            onClickCapture={(e) => {
+                            onClickCapture={() => {
                               console.log("main", tapCount);
                               handleGoalClick(goal);
                             }}
