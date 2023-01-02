@@ -1,4 +1,4 @@
-import { addDeleteChanges, addEditChanges, addGoalChanges, deleteChanges } from "@src/api/OutboxAPI";
+import { addCompleteChanges, addDeleteChanges, addEditChanges, addGoalChanges, deleteChanges } from "@src/api/OutboxAPI";
 
 export const handleIncomingChanges = async (payload: object) => {
   const { changes, goalId, relId } = payload;
@@ -10,6 +10,7 @@ export const handleIncomingChanges = async (payload: object) => {
       subgoals,
       updatedGoals: [],
       deletedGoals: [],
+      completedGoals: []
     }
     );
   } else if (changes.type === "goalDeleted") {
@@ -21,6 +22,7 @@ export const handleIncomingChanges = async (payload: object) => {
         deletedGoals,
         updatedGoals: [],
         subgoals: [],
+        completedGoals: []
       }
     );
   } else if (changes.type === "goalEdited") {
@@ -32,9 +34,20 @@ export const handleIncomingChanges = async (payload: object) => {
         updatedGoals,
         deletedGoals: [],
         subgoals: [],
+        completedGoals: []
       }
     );
   } else if (changes.type === "goalCompleted") {
-
+    const { completedGoals } = changes;
+    await addCompleteChanges(
+      {
+        relId,
+        goalId,
+        completedGoals,
+        updatedGoals: [],
+        deletedGoals: [],
+        subgoals: [],
+      }
+    );
   }
 };

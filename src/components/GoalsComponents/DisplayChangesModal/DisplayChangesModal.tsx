@@ -10,8 +10,8 @@ import trash from "@assets/images/trash.svg";
 import "./DisplayChangesModal.scss";
 import { GoalItem } from "@src/models/GoalItem";
 import { OutboxItem } from "@src/models/OutboxItem";
-import { cleanChangesOf, deleteChanges, getDump } from "@src/api/OutboxAPI";
-import { addGoal, addIntoSublist, changeNewUpdatesStatus, updateGoal } from "@src/api/GoalsAPI";
+import { cleanChangesOf, completeChanges, deleteChanges, getDump } from "@src/api/OutboxAPI";
+import { addGoal, addIntoSublist, archiveUserGoal, changeNewUpdatesStatus, updateGoal } from "@src/api/GoalsAPI";
 import { formatTagsToText } from "@src/helpers/GoalConvertor";
 
 const tags = ["title", "duration", "sublist", "repeat", "start", "due", "afterTime", "beforeTime", "goalColor", "language", "link"];
@@ -23,7 +23,7 @@ interface IDisplayChangesModalProps {
 const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesModal, setShowChangesModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [changes, setChanges] = useState<OutboxItem|null>(null);
-  const [activeChange, setActiveChange] = useState(["deletedGoals", "updatedGoals", "subgoals"]);
+  const [activeChange, setActiveChange] = useState(["deletedGoals", "updatedGoals", "subgoals", "completedGoals"]);
   const show = activeChange.slice(-1)[0];
 
   const getMessage = () => {
@@ -37,6 +37,8 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
           return <> {contactName} deleted {goalTitle}. </>;
         case "updatedGoals":
           return <> {contactName} made changes in {goalTitle}.<br /> Make changes ? </>;
+        case "completedGoals":
+          return <> {contactName} completed {goalTitle} </>;
         default:
           return null;
       }
@@ -67,6 +69,11 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
         await updateGoal(showChangesModal?.id, { ...showChangesModal, ...incGoal });
       }
       await cleanChangesOf(showChangesModal.id, show);
+    } else if (show === "completedGoals") {
+      if (choice === "accept") {
+        await archiveUserGoal(showChangesModal);
+      }
+      await completeChanges(true, showChangesModal.id);
     }
     const tmp = [...activeChange.filter((ele) => ele !== show && changes[ele].length !== 0)];
     setActiveChange([...tmp]);
@@ -88,6 +95,7 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
         src={show === "deletedGoals" ? trash : plus}
         width={25}
       />&nbsp;
+      { show === "completedGoals" && "Complete for me too" }
       { show === "deletedGoals" && "Delete for me too" }
       { show === "subgoals" && "Add all checked" }
       { show === "updatedGoals" && "Make all checked changes" }
@@ -105,7 +113,7 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
         alt="add changes"
         src={ignore}
         width={25}
-      />&nbsp;Ignore all
+      />&nbsp;Ignore {show !== "completedGoals" && "all" }
     </button>
   );
 
@@ -138,7 +146,7 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
                   {incFormatTags[k]}
 
                 </span>
-              </p>
+                 </p>
             </div>
           ))}
         </Form>
