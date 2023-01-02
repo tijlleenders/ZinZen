@@ -41,7 +41,7 @@ describe("Feedback Page", () => {
         </BrowserRouter>
       </RecoilRoot>
     );
-    const button = getByText("submit");
+    const button = getByText("Submit");
     fireEvent.click(button);
     await act(async () =>
       render(
@@ -69,7 +69,7 @@ describe("Feedback Page", () => {
         </BrowserRouter>
       </RecoilRoot>
     );
-    const button = getByText("submit");
+    const button = getByText("Submit");
     fireEvent.click(button);
 
     expect(fetch).toHaveBeenCalledTimes(1);
