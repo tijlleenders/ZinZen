@@ -19,8 +19,8 @@ export const FAQPage = () => {
 
   return (
     <div className="slide" style={{ display: "flex", justifyContent: "center" }}>
-      <LandingHeader avatar={null} />
       <div id="faq-container">
+        <LandingHeader avatar={localStorage.getItem("checkedIn") === "yes" ? "back" : null} />
         <img
           className="faq-illustration"
           alt="twopeopleillustration"
