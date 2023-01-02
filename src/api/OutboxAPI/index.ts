@@ -56,6 +56,11 @@ export const deleteChanges = async (root: boolean, goalId: string) => {
     await db.outboxCollection.where("goalId").equals(goalId).delete();
   }
 };
+export const completeChanges = async (root: boolean, goalId: string) => {
+  if (root) {
+    await db.outboxCollection.where("goalId").equals(goalId).delete();
+  }
+};
 
 export const addDeleteChanges = async (event: OutboxItem) => {
   const dump = await getDump(event.relId, event.goalId);
@@ -96,6 +101,29 @@ export const addEditChanges = async (event: OutboxItem) => {
       await db.outboxCollection.where("goalId").equals(goalId)
         .modify((obj: OutboxItem) => {
           obj.updatedGoals = [...obj.updatedGoals, ...event.updatedGoals];
+        });
+    }).catch((e) => {
+      console.log(e.stack || e);
+    });
+  }
+};
+
+export const addCompleteChanges = async (event: OutboxItem) => {
+  const dump = await getDump(event.relId, event.goalId);
+  const { goalId } = event;
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(goalId)
+      .modify((obj: GoalItem) => {
+        obj.collaboration = { ...obj.collaboration, newUpdates: true };
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+  if (!dump) { await createDumpForContact(event); } else {
+    db.transaction("rw", db.outboxCollection, async () => {
+      await db.outboxCollection.where("goalId").equals(goalId)
+        .modify((obj: OutboxItem) => {
+          obj.deletedGoals = [...obj.completedGoals, ...event.completedGoals];
         });
     }).catch((e) => {
       console.log(e.stack || e);
