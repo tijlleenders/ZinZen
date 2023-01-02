@@ -11,8 +11,10 @@ import "./DisplayChangesModal.scss";
 import { GoalItem } from "@src/models/GoalItem";
 import { OutboxItem } from "@src/models/OutboxItem";
 import { cleanChangesOf, deleteChanges, getDump } from "@src/api/OutboxAPI";
-import { addGoal, addIntoSublist, changeNewUpdatesStatus } from "@src/api/GoalsAPI";
+import { addGoal, addIntoSublist, changeNewUpdatesStatus, updateGoal } from "@src/api/GoalsAPI";
+import { formatTagsToText } from "@src/helpers/GoalConvertor";
 
+const tags = ["title", "duration", "sublist", "repeat", "start", "due", "afterTime", "beforeTime", "goalColor", "language", "link"];
 interface IDisplayChangesModalProps {
   showChangesModal: GoalItem | null,
   setShowChangesModal: React.Dispatch<React.SetStateAction<GoalItem | null>>
@@ -33,6 +35,8 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
           return <> {contactName} added to {goalTitle}.<br /> Add as well ?</>;
         case "deletedGoals":
           return <> {contactName} deleted {goalTitle}. </>;
+        case "updatedGoals":
+          return <> {contactName} made changes in {goalTitle}.<br /> Make changes ? </>;
         default:
           return null;
       }
@@ -52,10 +56,20 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
       if (choice === "accept") {
         await deleteChanges(true, showChangesModal.id);
       }
+    } else if (show === "updatedGoals") {
+      if (choice === "accept") {
+        const incGoal: GoalItem = changes.updatedGoals.slice(-1)[0];
+        Object.keys(incGoal).forEach((key) => {
+          if (!tags.includes(key) || incGoal[key] === showChangesModal[key]) {
+            delete incGoal[key];
+          }
+        });
+        await updateGoal(showChangesModal?.id, { ...showChangesModal, ...incGoal });
+      }
+      await cleanChangesOf(showChangesModal.id, show);
     }
     const tmp = [...activeChange.filter((ele) => ele !== show && changes[ele].length !== 0)];
     setActiveChange([...tmp]);
-    console.log(tmp)
     if (tmp.length === 0) {
       if (show !== "deletedGoals") { await changeNewUpdatesStatus(false, showChangesModal.id); }
       setChanges(null);
@@ -73,7 +87,10 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
         alt="add changes"
         src={show === "deletedGoals" ? trash : plus}
         width={25}
-      />&nbsp;{ show === "deletedGoals" ? "Delete for me too" : "Add all checked" }
+      />&nbsp;
+      { show === "deletedGoals" && "Delete for me too" }
+      { show === "subgoals" && "Add all checked" }
+      { show === "updatedGoals" && "Make all checked changes" }
     </button>
   );
 
@@ -88,10 +105,46 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
         alt="add changes"
         src={ignore}
         width={25}
-      />&nbsp;Ignore{ show === "deletedGoals" ? "" : " all" }
+      />&nbsp;Ignore all
     </button>
   );
 
+  const getEditChangesList = () => {
+    if (changes && show) {
+      const incGoal: GoalItem = changes.updatedGoals.slice(-1)[0];
+      const currFormatTags = formatTagsToText(showChangesModal);
+      const incFormatTags = formatTagsToText(incGoal);
+
+      Object.keys(incGoal).forEach((key) => {
+        if (!tags.includes(key) || incGoal[key] === showChangesModal[key]) {
+          delete incGoal[key];
+        }
+      });
+
+      return (
+        <Form className="changes-list">
+          { Object.keys(incGoal).map((k) => (
+            <div key={`${k}-edit`}>
+              <Form.Check
+                checked
+                disabled
+                name="group1"
+                type="checkbox"
+              /> <p>&nbsp;{k}:&nbsp;
+                <span className="existingChange">
+                  {currFormatTags[k]}
+                </span>&nbsp;
+                <span className="incomingChange">
+                  {incFormatTags[k]}
+
+                </span>
+              </p>
+            </div>
+          ))}
+        </Form>
+      );
+    }
+  };
   useEffect(() => {
     const getOutbox = async () => {
       if (showChangesModal) {
@@ -119,7 +172,7 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
     >
       <Modal.Body>
         <h2>{ show && getMessage()}</h2>
-        { show !== "deletedGoals" && (
+        { show === "subgoals" && (
         <Form className="changes-list">
           { changes && show && changes[show].map((ele) => (
             <div key={`${ele.id}-subgoal`}>
@@ -133,6 +186,7 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
           ))}
         </Form>
         )}
+        { show === "updatedGoals" && getEditChangesList() }
         { getAcceptBtn() }
         { getIgnoreBtn() }
       </Modal.Body>
