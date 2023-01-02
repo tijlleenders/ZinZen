@@ -20,7 +20,7 @@ export class FeelingsDB extends Dexie {
       goalsCollection:
       "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, status, goalColor, language, link, collaboration, shared",
       contactsCollection: "id, name, collaborativeGoals, sharedGoals, relId, accepted, createdAt",
-      outboxCollection: "++id, relId, goalId, subgoals, updatedGoals, deletedGoals, anyUpdates"
+      outboxCollection: "++id, relId, goalId, subgoals, updatedGoals, deletedGoals, completedGoals, anyUpdates"
     });
   }
 }

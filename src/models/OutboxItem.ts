@@ -7,4 +7,5 @@ export interface OutboxItem {
     subgoals: GoalItem[],
     updatedGoals: GoalItem[],
     deletedGoals: GoalItem[],
+    completedGoals: GoalItem[],
 }
