@@ -88,5 +88,10 @@
   "Qtoogoodtobetrue": "इतना अच्छा कि यकीन करना मुश्किल है?",
   "Anstoogoodtobetrue": "हम पर विश्वास मत करो, बस कोशिश करो!",
   "ihavedifferentquestions": "मेरे पास एक अलग प्रश्न है।",
-  "ihavenomorequestions": "मेरे पास अभी के लिए और कोई प्रश्न नहीं है।"
+  "ihavenomorequestions": "मेरे पास अभी के लिए और कोई प्रश्न नहीं है।",
+  "privacy":"निजता",
+  "search": "खोज",
+  "sharedwithme": "मेरे साथ बांटा",
+  "collaborationinvites": "सहयोग आमंत्रित"
+  
 }

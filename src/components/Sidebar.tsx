@@ -1,12 +1,15 @@
 import React from "react";
 import { Offcanvas } from "react-bootstrap";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
 
 import { displaySidebar } from "@src/store/SidebarState";
 import { darkModeState } from "@src/store";
 import { useNavigate } from "react-router";
 import { LandingHeader } from "./HeaderDashboard/LandingHeader";
 import GoalInvites from "./GoalsComponents/GoalInvites/GoalInvites";
+
+import "@translations/i18n";
 
 const navButtonStyle = {
   border: "none",
@@ -28,6 +31,8 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
+
+  const { t } = useTranslation();
 
   const getNavButton = (text: string, to = "/") => (
     <button
@@ -60,13 +65,13 @@ const Sidebar = () => {
       </Offcanvas.Header>
       <Offcanvas.Body>
         <div style={{ display: "flex", flexDirection: "column", marginTop: "4vh" }}>
-          { getNavButton("My Feelings", "/MyFeelings") }
+          { getNavButton(t("myfeelings"), "/MyFeelings") }
           <GoalInvites invitesType="sharedGoals" />
           <GoalInvites invitesType="collaboratedGoals" />
-          { getNavButton("Blog", "https://blog.zinzen.me/") }
-          { getNavButton("Donate", "https://donate.stripe.com/6oE4jK1iPcPT1m89AA") }
-          { getNavButton("Feedback", "/ZinZen/Feedback") }
-          { getNavButton("Privacy", "/ZinZenFAQ") }
+          { getNavButton(t("blog"), "https://blog.zinzen.me/") }
+          { getNavButton(t("donate"), "https://donate.stripe.com/6oE4jK1iPcPT1m89AA") }
+          { getNavButton(t("feedback"), "/ZinZen/Feedback") }
+          { getNavButton(t("privacy"), "/ZinZenFAQ") }
         </div>
       </Offcanvas.Body>
     </Offcanvas>

@@ -88,5 +88,10 @@
   "Qtoogoodtobetrue": "Too good to be true?",
   "Anstoogoodtobetrue": "Don't believe us, just try!",
   "ihavedifferentquestions": "I have a different question.",
-  "ihavenomorequestions": "I have no more questions for now."
+  "ihavenomorequestions": "I have no more questions for now.",
+  "privacy":"Privacy",
+  "search": "Search",
+  "sharedwithme": "Shared with me",
+  "collaborationinvites": "Collaboration invites"
+
 }

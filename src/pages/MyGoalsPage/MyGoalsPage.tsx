@@ -4,6 +4,7 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useLocation } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useTranslation } from "react-i18next";
 
 import plus from "@assets/images/plus.svg";
 import correct from "@assets/images/correct.svg";
@@ -12,6 +13,8 @@ import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
+
+import "@translations/i18n";
 
 import {
   archiveUserGoal,
@@ -63,6 +66,8 @@ export const MyGoalsPage = () => {
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(-1);
   const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
+
+  const { t } = useTranslation();
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
@@ -264,11 +269,11 @@ export const MyGoalsPage = () => {
                 <input
                   id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
                   onClickCapture={() => setTapCount(defaultTap)}
-                  placeholder="Search"
+                  placeholder={t("search")}
                   onChange={(e) => debounceSearch(e)}
                 />
-                <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount(defaultTap)}>
-                  My Goals
+                <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
+                  {t("mygoals")}
                 </h1>
                 { showAddGoal && (
                 <AddGoalForm
