@@ -18,16 +18,15 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
-import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
+import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactSharedGoals } from "./api/ContactsAPI";
+import { createGoal, updateGoal } from "./api/GoalsAPI";
+import { GoalItem } from "./models/GoalItem";
+import { handleIncomingChanges } from "./helpers/CollaborationHandler";
 
 import "./customize.scss";
 import "./App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
-import ContactItem from "./models/ContactItem";
-import { createGoal, updateGoal } from "./api/GoalsAPI";
-import { GoalItem } from "./models/GoalItem";
-import { handleIncomingChanges } from "./helpers/CollaborationHandler";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -41,11 +40,13 @@ const App = () => {
   useEffect(() => {
     const init = async () => {
       const res = await getContactSharedGoals();
+      // @ts-ignore
       const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
       if (res.success) {
         Object.keys(resObject).forEach(async (k: any) => {
           const goals: { id: string, goal: GoalItem }[] = [];
           const collaborateInvites: { id: string, goal: GoalItem }[] = [];
+          // @ts-ignore
           resObject[k].forEach(async (ele) => {
             if (ele.type === "shareGoal") {
               goals.push({ id: ele.goal.id, goal: createGoal(ele.goal.title) });
