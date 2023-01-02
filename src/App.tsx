@@ -46,7 +46,7 @@ const App = () => {
         Object.keys(resObject).forEach(async (k: any) => {
           const goals: { id: string, goal: GoalItem }[] = [];
           const collaborateInvites: { id: string, goal: GoalItem }[] = [];
-          resObject[k].forEach( async (ele) => {
+          resObject[k].forEach(async (ele) => {
             if (ele.type === "shareGoal") {
               goals.push({ id: ele.goal.id, goal: createGoal(ele.goal.title) });
             } else if (ele.type === "collaboration") {
@@ -57,7 +57,6 @@ const App = () => {
               await handleIncomingChanges(ele).then(() => console.log("changes added"));
             }
           });
-          console.log(collaborateInvites);
           if (collaborateInvites.length > 0) {
             addColabInvitesInRelId(k, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
           }
