@@ -158,6 +158,12 @@ export const MyGoalsPage = () => {
 
   const archiveMyGoal = async (goal: GoalItem) => {
     await archiveUserGoal(goal);
+    if (goal.collaboration.status) {
+      sendColabUpdatesToContact(goal.shared?.relId, goal.id, {
+        type: "goalCompleted",
+        completedGoals: [goal]
+      }).then(() => console.log("complete update sent"));
+    }
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   };
