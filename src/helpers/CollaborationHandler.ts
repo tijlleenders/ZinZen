@@ -1,4 +1,4 @@
-import { addDeleteChanges, addGoalChanges, deleteChanges } from "@src/api/OutboxAPI";
+import { addDeleteChanges, addEditChanges, addGoalChanges, deleteChanges } from "@src/api/OutboxAPI";
 
 export const handleIncomingChanges = async (payload: object) => {
   const { changes, goalId, relId } = payload;
@@ -24,7 +24,16 @@ export const handleIncomingChanges = async (payload: object) => {
       }
     );
   } else if (changes.type === "goalEdited") {
-
+    const { updatedGoals } = changes;
+    await addEditChanges(
+      {
+        relId,
+        goalId,
+        updatedGoals,
+        deletedGoals: [],
+        subgoals: [],
+      }
+    );
   } else if (changes.type === "goalCompleted") {
 
   }
