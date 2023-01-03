@@ -62,7 +62,7 @@ interface ILocationProps {
 export const MyGoalsPage = () => {
   const location = useLocation();
   const defaultTap = { open: "root", click: 1 };
-  const [tapCount, setTapCount] = useState(defaultTap);
+  const [tapCount, setTapCount] = useState<{open: string | number, click: number}>(defaultTap);
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showShareModal, setShowShareModal] = useState(-1);
   const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
@@ -165,24 +165,28 @@ export const MyGoalsPage = () => {
 
   const archiveMyGoal = async (goal: GoalItem) => {
     const archivedGoals = await getAllArchivedGoals();
-    console.log(goal);
-    if (archivedGoals.filter((item) =>
-      item.title === goal.title &&
-      item.duration === goal.duration &&
-      item.goalColor === goal.goalColor &&
-      item.language === goal.language &&
-      item.repeat === goal.repeat
-    ).length > 0) {
-      await removeUserGoal(goal.id);
-      return;
+    const oldArchivedGoal = archivedGoals.find((item) =>
+      item.title === goal.title
+    )
+    
+    if(oldArchivedGoal) {
+      await removeUserGoal(oldArchivedGoal.id)
+    }
+    if(goal.shared !== null || goal.collaboration.status !== 'none') {
+      await updateGoal(goal.id, {
+        shared: null,
+        collaboration: { status: "none", newUpdates: false }
+      })
     }
     await archiveUserGoal(goal);
+    
     if (goal.collaboration.status && goal.shared) {
       sendColabUpdatesToContact(goal.shared.relId, goal.id, {
         type: "goalCompleted",
         completedGoals: [goal]
       }).then(() => console.log("complete update sent"));
     }
+    
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals);
   };
@@ -196,8 +200,8 @@ export const MyGoalsPage = () => {
     if (debounceTimeout) {
       clearTimeout(debounceTimeout);
     }
-    debounceTimeout = setTimeout(() => {
-      search(value);
+    debounceTimeout = setTimeout(async () => {
+      await search(value);
     }, 300);
   }
 
@@ -225,6 +229,7 @@ export const MyGoalsPage = () => {
       setUserGoals(goals);
     })();
   }, [showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
+  
   useEffect(() => {
     (async () => {
       // await populateDummyGoals();
@@ -285,7 +290,7 @@ export const MyGoalsPage = () => {
                   placeholder={t("search")}
                   onChange={(e) => debounceSearch(e)}
                 />
-                <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
+                <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount({open: -1, click: 0})}>
                   {t("mygoals")}
                 </h1>
                 { showAddGoal && (

@@ -10,6 +10,7 @@ import InputGoal from "../InputGoal";
 
 import "@translations/i18n";
 import "./UpdateGoalForm.scss";
+import { ITags } from "@src/Interfaces/ITagExtractor";
 
 export const UpdateGoalForm = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -28,9 +29,10 @@ export const UpdateGoalForm = () => {
       setError("Enter a goal title!");
       return;
     }
-    await updateGoal(showUpdateGoal?.goalId,
+    showUpdateGoal &&
+    await updateGoal(showUpdateGoal.goalId,
       { title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
-        goalColor: colorPallete[selectedColorIndex],
+        goalColor: colorPallete[colorIndex],
         duration: goalTags.duration ? goalTags.duration.value : null,
         repeat: goalTags.repeats ? goalTags.repeats.value : null,
         link: goalTags.link ? goalTags.link.value?.trim() : null,
@@ -41,12 +43,12 @@ export const UpdateGoalForm = () => {
       });
     setGoalTitle("");
     setShowUpdateGoal(null);
-    setGoalTags({});
+    setGoalTags({} as ITags);
     setColorIndex(0);
   };
 
   useEffect(() => {
-    getGoal(showUpdateGoal?.goalId).then((goal) => {
+    showUpdateGoal && getGoal(showUpdateGoal.goalId).then((goal) => {
       const res = formatTagsToText(goal);
       if (goal.language) setGoalLang(goal.language);
       setColorIndex(colorPallete.indexOf(goal.goalColor));

@@ -6,7 +6,6 @@
   z-index: 2;    
   max-width: 600px;
   min-width: 236px;
-  width: 100%;
 }
 
 #main-header-homeLogo, #main-header-homeLogo-dark {
@@ -75,7 +74,7 @@
     color: white;
     font-weight: 800;
     font-size: 2.5em;
-    font-family: 'Montserrat';
+    font-family: 'Montserrat', sans-serif;
   }
 
   #goal-suggestion-btn-dark {
@@ -123,12 +122,12 @@
 #archive-title {
   font-size: 1.5em;
   font-weight: bolder;
-  font-family: 'Montserrat';
+  font-family: 'Montserrat', sans-serif;
 }
 
 .suggestions-goal-name {
   background: #F0E6E1;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
   cursor: pointer;
   color: white;
@@ -165,7 +164,10 @@
     font-weight: 700;
     text-align: center;
 
-    button {
+    > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 45px;
       height: 45px;
       position: absolute;
@@ -179,7 +181,7 @@
 }
 #addGoal-options-dark {
   .addGoal-option {
-    button {
+    > div {
       background: radial-gradient(50% 50% at 50% 50%, #121212 72.51%, #705BBC 100%);
       img {
         filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%)

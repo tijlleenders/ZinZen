@@ -21,13 +21,13 @@ const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
         onClick={() => setShowAddGoal({ open: true, goalId: parentGoalId })}
       >
         New
-        <button type="button">
+        <div>
           <img
             style={!darkModeStatus ? { filter: "invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%)" } : {}}
             alt="create-goals-suggestion"
             src={plus}
           />
-        </button>
+        </div>
       </button>
       { showFromOptions.archive && (
       <button
@@ -36,7 +36,7 @@ const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
         onClick={() => { setShowSuggestionsModal("Archive"); }}
       >
         Archive
-        <button type="button"><img alt="create-goals-suggestion" src={archiveGoals} /></button>
+        <div><img alt="create-goals-suggestion" src={archiveGoals} /></div>
       </button>
       ) }
       <button
@@ -45,7 +45,7 @@ const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
         onClick={() => { setShowSuggestionsModal("Public"); }}
       >
         Hint
-        <button type="button"><img alt="create-goals-suggestion" src={publicGoals} /></button>
+        <div><img alt="create-goals-suggestion" src={publicGoals} /></div>
       </button>
     </div>
   );

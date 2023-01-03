@@ -5,6 +5,7 @@ import { db } from "@models";
 import { colorPallete, getJustDate } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { v4 as uuidv4 } from "uuid";
+import Omit = Cypress.Omit;
 
 export const resetDatabase = () =>
   db.transaction("rw", db.goalsCollection, async () => {
@@ -21,7 +22,7 @@ export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) =>
     console.log(e.stack || e);
   });
 };
-export const addGoal = async (goalDetails: GoalItem) => {
+export const addGoal = async (goalDetails: Omit<GoalItem, "id", "createdAt">) => {
   const currentDate = getJustDate(new Date());
   const goals: GoalItem = { id: uuidv4(), ...goalDetails, createdAt: currentDate };
   let newGoalId;
@@ -84,31 +85,17 @@ export const getGoalsFromArchive = async (parentId: string) => {
 
 export const getGoalsOnDate = async (date: Date) => {
   db.transaction("rw", db.goalsCollection, async () => {
-    const goalsList = await db.goalsCollection.where("start").equals(date);
-    return goalsList;
+    return db.goalsCollection.where("start").equals(date);
   }).catch((e) => {
     console.log(e.stack || e);
   });
 };
 
 export const removeGoal = async (goalId: string) => {
-  const goal = await getGoal(goalId);
-  const parentGoal = goal.parentGoalId === "root" ? "root" : await getGoal(goal.parentGoalId);
-  console.log("inRemoveGoal", goal,);
   db.transaction("rw", db.goalsCollection, async () => {
-    const goals = await db.goalsCollection.where("title").equals(goal.title).toArray();
-    console.log("here", goals);
-    goals.forEach(async (ele) => {
-      if (parentGoal === "root") {
-        console.log("root");
-        if (ele.parentGoalId === "root" && ele.status === 0) await db.goalsCollection.delete(ele.id);
-      } else {
-        const tmpParentGoal = (await getGoal(ele.parentGoalId)).title;
-        if (tmpParentGoal === parentGoal.title && ele.status === 0) {
-          await db.goalsCollection.delete(ele.id);
-        }
-      }
-    });
+    await db.goalsCollection.delete(goalId)
+  }).then(() => {
+    console.log('deleted', goalId)
   }).catch((e) => {
     console.log(e.stack || e);
   });
@@ -124,11 +111,17 @@ export const updateGoal = async (id: string, changes: object) => {
 
 export const archiveGoal = async (goal: GoalItem) => {
   const updatedGoalStatus = { status: 1 };
+  const parentGoal = await getGoal(goal.parentGoalId);
+  
+  if (parentGoal && parentGoal.collaboration.status !== 'none') {
+    return
+  }
+  
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, updatedGoalStatus);
   });
+  
   if (goal.parentGoalId !== "root") {
-    const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
       await db.goalsCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist?.filter((ele) => ele !== goal.id) });
     });

@@ -11,7 +11,7 @@ import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
 import {
-  archiveUserGoal,
+  archiveUserGoal, getActiveGoals,
   getChildrenGoals,
   getGoal,
   getGoalsFromArchive,
@@ -41,7 +41,7 @@ export const GoalSublist = () => {
   const callResetHistory = useSetRecoilState(resetGoalsHistory);
   const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
 
-  const [tapCount, setTapCount] = useState(defaultTap);
+  const [tapCount, setTapCount] = useState<{ open: string | number, click: number }>(defaultTap);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
   const [parentGoal, setParentGoal] = useState<GoalItem>();
@@ -59,21 +59,21 @@ export const GoalSublist = () => {
   };
   useEffect(() => {
     getGoal(goalID).then((parent) => setParentGoal(parent));
-    setTapCount([-1, 0]);
+    setTapCount({open: -1, click: 0});
   }, [goalID]);
 
   useEffect(() => {
     getChildrenGoals(goalID)
       .then((fetchedGoals) => {
         setChildrenGoals(fetchedGoals);
-        setTapCount([-1, 0]);
+        setTapCount({open: -1, click: 0});
       });
   }, [parentGoal, showAddGoal, showSuggestionModal, showUpdateGoal]);
 
   const removeChildrenGoal = async (goalId: string) => {
     if (parentGoal?.sublist) {
       // delete subgoals of this goal
-      removeChildrenGoals(goalId);
+      await removeChildrenGoals(goalId);
       // removeGoal(goalId)
       await removeGoal(goalId);
       // remove childGoalId from parentGoal.sublist
@@ -88,37 +88,41 @@ export const GoalSublist = () => {
       getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
+  
+  async function removeUserGoal(id: string) {
+    await removeChildrenGoals(id);
+    await removeGoal(id);
+    const goals: GoalItem[] = await getActiveGoals();
+    setChildrenGoals(goals);
+  }
 
   const archiveMyGoal = async (goal: GoalItem) => {
     const archivedGoals = await getGoalsFromArchive(goal.parentGoalId);
+    const oldArchivedGoal = archivedGoals.find((item) =>
+      item.title === goal.title
+    )
 
-    if (archivedGoals.filter((item) =>
-      item.title === goal.title &&
-      item.duration === goal.duration &&
-      item.goalColor === goal.goalColor &&
-      item.language === goal.language &&
-      item.repeat === goal.repeat
-    ).length > 0) {
-      await removeChildrenGoal(goal.id);
-      return;
+    if(oldArchivedGoal) {
+      await removeUserGoal(oldArchivedGoal.id)
     }
+  
     await archiveUserGoal(goal);
     await getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   };
 
-  const updateUserGoals = async (goal: GoalItem, index: number) => {
-    const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
-    if (updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
-      if (updatedTitle.length === 0) return;
-      await updateGoal(goal.id, { title: updatedTitle });
-      getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
-    }
-  };
+  // const updateUserGoals = async (goal: GoalItem, index: number) => {
+  //   const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
+  //   if (updatedTitle && tapCount['open'] === index && updatedTitle !== goal.title) {
+  //     if (updatedTitle.length === 0) return;
+  //     await updateGoal(goal.id, { title: updatedTitle });
+  //     getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
+  //   }
+  // };
 
   return (
     <div className="sublist-container">
       <Breadcrumb style={{ marginTop: "68px", padding: "0 18px" }}>
-        <Breadcrumb.Item onClick={() => callResetHistory()}>
+        <Breadcrumb.Item onClick={() => callResetHistory([])}>
           <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: "#EDC7B7" }}>My Goals</span>
         </Breadcrumb.Item>
         {
@@ -141,7 +145,7 @@ export const GoalSublist = () => {
             { showAddGoal && <AddGoalForm parentGoalId={showAddGoal.goalId} /> }
 
             {childrenGoals?.map((goal: GoalItem, index) => (
-              showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
+              showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm key={String(`goal-${goal.id}`)} />
                 : (
                   <div
                     key={String(`goal-${goal.id}`)}
@@ -170,7 +174,7 @@ export const GoalSublist = () => {
                       />
                     </div>
                     <div
-                      onClickCapture={(e) => {
+                      onClickCapture={() => {
                         console.log("main", tapCount);
                         handleGoalClick(goal);
                       }}
