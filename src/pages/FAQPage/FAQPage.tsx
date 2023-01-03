@@ -7,6 +7,7 @@ import peopleIllustration from "@assets/images/peopleIllustration.svg";
 
 import { darkModeState } from "@store";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
+import { vibrateWorks } from "@src/constants/vibrateCheck";
 
 import "@translations/i18n";
 import "./FAQPage.scss";
@@ -58,7 +59,7 @@ export const FAQPage = () => {
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
               localStorage.setItem("checkedIn", "yes");
-              navigator.vibrate(100);
+              (vibrateWorks)?navigator.vibrate(100):null;
               navigate("/ZinZen/Feedback");
             }}
           >
@@ -71,7 +72,7 @@ export const FAQPage = () => {
               localStorage.setItem("checkedIn", "yes");
               const invite = localStorage.getItem("pendingInvite");
               localStorage.removeItem("pendingInvite");
-              navigator.vibrate(100);
+              (vibrateWorks)?navigator.vibrate(100):null;
               if (invite && invite !== "none") {
                 navigate(`/invite/${invite}`);
               } else {

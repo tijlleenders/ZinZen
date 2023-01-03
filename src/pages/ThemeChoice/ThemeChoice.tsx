@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import ZinZen from "@assets/images/LogoTextLight.svg";
 import { themeSelectionState, darkModeState } from "@src/store";
+import { vibrateWorks } from "@src/constants/vibrateCheck";
 
 import "@translations/i18n";
 import "./ThemeChoice.scss";
@@ -23,7 +24,7 @@ export const ThemeChoice = () => {
         type="button"
         className="themeChoice-btn-light"
         onClick={() => {
-          navigator.vibrate(100);
+          (vibrateWorks)?navigator.vibrate(100):null;
           setIsThemeChosen(true);
           localStorage.setItem("theme", "light");
           navigate("/QueryZinZen");
@@ -35,7 +36,7 @@ export const ThemeChoice = () => {
         type="button"
         className="themeChoice-btn-dark"
         onClick={() => {
-          navigator.vibrate(100);
+          (vibrateWorks)?navigator.vibrate(100):null;
           setIsThemeChosen(true);
           localStorage.setItem("theme", "dark");
           navigate("/QueryZinZen");
