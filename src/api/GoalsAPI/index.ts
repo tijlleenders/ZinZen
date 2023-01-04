@@ -1,10 +1,11 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-alert */
-// @ts-nocheck
-
 import { db } from "@models";
 import { colorPallete, getJustDate } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { v4 as uuidv4 } from "uuid";
+import { ICollaboration } from "@src/Interfaces/ICollaboration";
+import { IShared } from "@src/Interfaces/IShared";
 
 export const resetDatabase = () =>
   db.transaction("rw", db.goalsCollection, async () => {
@@ -15,7 +16,7 @@ export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) =>
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(parentGoalId)
       .modify((obj: GoalItem) => {
-        obj.sublist = [...(obj.sublist || []), ...goalIds];
+        obj.sublist = [...obj.sublist, ...goalIds];
       });
   }).catch((e) => {
     console.log(e.stack || e);
@@ -23,7 +24,8 @@ export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) =>
 };
 export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
-  const goals: GoalItem = { id: uuidv4(), ...goalDetails, createdAt: currentDate };
+  // @ts-ignore
+  const goals: GoalItem = { ...goalDetails, createdAt: currentDate };
   let newGoalId;
   await db
     .transaction("rw", db.goalsCollection, async () => {
@@ -41,7 +43,7 @@ export const getGoal = async (goalId: string) => {
 };
 
 export const getChildrenGoals = async (parentGoalId: string) => {
-  const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).and((goal) => goal.status === 0).toArray();
+  const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).and((goal) => goal.archived === "false").toArray();
   childrenGoals.reverse();
   return childrenGoals;
 };
@@ -53,7 +55,7 @@ export const getAllGoals = async () => {
 };
 
 export const getActiveGoals = async () => {
-  const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(0).toArray();
+  const activeGoals: GoalItem[] = await db.goalsCollection.where("archived").equals("false").toArray();
   // Filter and return only parent goals
   const activeParentGoals = activeGoals.filter((goal: GoalItem) => goal.parentGoalId === "root");
   activeParentGoals.reverse();
@@ -61,7 +63,7 @@ export const getActiveGoals = async () => {
 };
 
 export const getAllArchivedGoals = async () => {
-  const activeGoals: GoalItem[] = await db.goalsCollection.where("status").equals(1).toArray();
+  const activeGoals: GoalItem[] = await db.goalsCollection.where("archived").equals("true").toArray();
   activeGoals.reverse();
   return activeGoals;
 };
@@ -77,7 +79,7 @@ export const getGoalsFromArchive = async (parentId: string) => {
       parentIds.push(goal.id);
     });
   }
-  const archivedGoals = await db.goalsCollection.where("status").equals(1).and((goal) => parentIds.includes(goal.parentGoalId)).toArray();
+  const archivedGoals = await db.goalsCollection.where("archived").equals("true").and((goal) => parentIds.includes(goal.parentGoalId)).toArray();
   archivedGoals.reverse();
   return archivedGoals;
 };
@@ -123,14 +125,13 @@ export const updateGoal = async (id: string, changes: object) => {
 };
 
 export const archiveGoal = async (goal: GoalItem) => {
-  const updatedGoalStatus = { status: 1 };
   db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.update(goal.id, updatedGoalStatus);
+    await db.goalsCollection.update(goal.id, { archived: "true" });
   });
   if (goal.parentGoalId !== "root") {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
-      await db.goalsCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist?.filter((ele) => ele !== goal.id) });
+      await db.goalsCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist.filter((ele) => ele !== goal.id) });
     });
   }
 };
@@ -151,7 +152,7 @@ export const archiveUserGoal = async (goal: GoalItem) => {
 };
 
 export const archiveRootGoalsByTitle = async (goalTitle: string) => {
-  const goals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals("root").and((goal) => goal.title.toLowerCase() === goalTitle.toLowerCase() && goal.status === 0).toArray();
+  const goals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals("root").and((goal) => goal.title.toLowerCase() === goalTitle.toLowerCase() && goal.archived === "false").toArray();
   goals.forEach(async (ele) => {
     await db.goalsCollection.update(ele.id, { status: 1 });
   });
@@ -167,41 +168,32 @@ export const isCollectionEmpty = async () => {
   return allGoals.length === archivedGoals.length;
 };
 
-export const createGoal = (
-  goalTitle: string,
-  goalRepeats: string | null = null,
-  goalDuration: number | null = 1,
-  goalStartDT: Date | null = null,
-  goalDueDT: Date | null = null,
-  goalAfterTime: number | null = null,
-  goalBeforeTime: number | null = null,
-  goalLang = "English",
-  link: string | null = null,
-  goalStatus: 0 | 1 = 0,
-  parentGoalId = "root",
-  goalColor = colorPallete[Math.floor(Math.random() * 11)],
-  shared: null |
-  {
-    relId: string,
-    name: string,
-  } = null,
-  collaboration = { status: "none", newUpdates: false }
-) => {
+export const createGoalObjectFromTags = (obj: object) => {
   const newGoal: GoalItem = {
-    title: goalTitle,
-    language: goalLang,
-    repeat: goalRepeats,
-    duration: goalDuration,
-    start: goalStartDT,
-    due: goalDueDT,
-    afterTime: goalAfterTime,
-    beforeTime: goalBeforeTime,
-    status: goalStatus,
-    parentGoalId,
-    goalColor,
-    link,
-    collaboration,
-    shared
+    id: uuidv4(),
+    title: "",
+    language: "English",
+    repeat: null,
+    duration: null,
+    start: null,
+    due: null,
+    afterTime: null,
+    beforeTime: null,
+    archived: "false",
+    parentGoalId: "root",
+    link: null,
+    sublist: [],
+    goalColor: colorPallete[Math.floor(Math.random() * 11)],
+    shared: null,
+    collaboration: {
+      status: "none",
+      newUpdates: false,
+      relId: "",
+      name: "",
+      rootGoal: "",
+      allowed: true
+    },
+    ...obj
   };
   return newGoal;
 };
@@ -260,8 +252,26 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
   await shareGoal(shareableGoal);
 };
 
-export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string, collaboration = { status: "pending", newUpdates: false }) => {
-  await db.goalsCollection.update(id, { shared: { relId, name, newUpdates: false }, collaboration });
+export const updateSharedStatusOfGoal = async (id: string, shared: IShared) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(id)
+      .modify((obj: GoalItem) => {
+        obj.shared = { ...shared };
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const updateColabStatusOfGoal = async (id: string, collaboration: ICollaboration) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(id)
+      .modify((obj: GoalItem) => {
+        obj.collaboration = { ...collaboration };
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
 };
 
 export const getPublicGoals = async (goalTitle: string) => {
@@ -287,11 +297,11 @@ export const getPublicGoals = async (goalTitle: string) => {
   }
 };
 
-export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId) => {
+export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(goalId)
       .modify((obj: GoalItem) => {
-        obj.collaboration = { ...obj.collaboration, newUpdates };
+        obj.collaboration = { ...obj.collaboration, newUpdates, allowed: false };
       });
   }).catch((e) => {
     console.log(e.stack || e);
