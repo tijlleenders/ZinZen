@@ -9,7 +9,7 @@ import { Modal } from "react-bootstrap";
 
 import plus from "@assets/images/plus.svg";
 
-import { addGoal, createGoal, getGoal, getGoalsFromArchive, getPublicGoals, updateGoal } from "@src/api/GoalsAPI";
+import { addGoal, createGoalObjectFromTags, getGoal, getGoalsFromArchive, getPublicGoals, updateGoal } from "@src/api/GoalsAPI";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
 import ITagExtractor from "@src/Interfaces/ITagExtractor";
@@ -42,31 +42,30 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
   const addSuggestedGoal = async (goal:ISharedGoal | GoalItem, index:number) => {
     let newGoalId;
     if (!selectedGoal) {
-      const { id: prevId, ...newGoal } = { ...goal, parentGoalId: goalID, sublist: null, status: 0 };
-      newGoalId = await addGoal(newGoal);
+      const { id: prevId, ...newGoal } = { ...goal, parentGoalId: goalID, sublist: [], archived: "false" };
+      newGoalId = await addGoal(createGoalObjectFromTags(newGoal));
     } else if (selectedGoal.index !== index) {
       setSelectedGoal(null);
       return;
     } else {
-      const newGoal = createGoal(
-        goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
-        goalTags.repeats ? goalTags?.repeats.value.trim() : null,
-        goalTags.duration ? goalTags.duration.value : null,
-        goalTags.start ? goalTags.start.value : null,
-        goalTags.due ? goalTags.due.value : null,
-        goalTags.afterTime ? goalTags.afterTime.value : null,
-        goalTags.beforeTime ? goalTags.beforeTime.value : null,
-        goalLang,
-        goalTags.link ? goalTags?.link?.value.trim() : null,
-        0,
-        goalID,
-        selectedGoal?.goal.goalColor, // goalColor
-      );
+      const newGoal = createGoalObjectFromTags({
+        language: goalLang,
+        parentGoalId: goalID,
+        title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
+        repeat: goalTags.repeats ? goalTags?.repeats.value.trim() : null,
+        duration: goalTags.duration ? goalTags.duration.value : null,
+        start: goalTags.start ? goalTags.start.value : null,
+        due: goalTags.due ? goalTags.due.value : null,
+        afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+        beforeTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+        link: goalTags.link ? `${goalTags.link.value}`.trim() : null,
+        goalColor: selectedGoal?.goal.goalColor
+      });
       newGoalId = await addGoal(newGoal);
     }
-    if (goalID !== "root") {
+    if (goalID !== "root" && newGoalId) {
       const parentGoal = await getGoal(goalID);
-      const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
+      const newSublist = parentGoal ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(goalID, { sublist: newSublist });
     }
     setSelectedGoal(null);

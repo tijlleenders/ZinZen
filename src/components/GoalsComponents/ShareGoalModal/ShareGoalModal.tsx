@@ -95,8 +95,13 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             <p className="shareOption-name">Share Public</p>
           </div>
         </button>
-        <button disabled={!!goal.shared || goal.collaboration.status !== "none"} type="button" className="shareOptions-btn">
-          <div className="share-Options" onClickCapture={() => setDisplayContacts(!displayContacts)}>
+        <button
+          disabled={!!goal.shared || goal.collaboration.status !== "none"}
+          type="button"
+          onClick={() => setDisplayContacts(!displayContacts)}
+          className="shareOptions-btn"
+        >
+          <div className="share-Options">
             <div> <img alt="share with friend" src={shareWithFriend} /> </div>
             <p className="shareOption-name">
               Share 1:1
@@ -109,7 +114,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               {`${goal.shared && goal.collaboration.status === "none" ? ` - Goal is shared with ${goal.shared.name}` : ""}`}
             </p>
           </div>
-          { !goal.shared && displayContacts && (
+          { (!goal.shared || !goal.collaboration.status) && displayContacts && (
             <div className="shareWithContacts">
               {contacts.length === 0 &&
                 <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}

@@ -3,7 +3,7 @@ import { GoalItem } from "@src/models/GoalItem";
 export const formatTagsToText = (_goal: GoalItem) => {
   const goal = { ..._goal };
   if (goal.start) { goal.start = new Date(goal.start); }
-  if (goal.due) { goal.start = new Date(goal.due); }
+  if (goal.due) { goal.due = new Date(goal.due); }
 
   const response = { title: "", duration: "", start: "", due: "", repeat: "", timing: "", link: "", language: goal.language, goalColor: goal.goalColor };
   if (goal.afterTime && goal.beforeTime) {

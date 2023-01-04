@@ -1,26 +1,22 @@
+import { ICollaboration } from "@src/Interfaces/ICollaboration";
+import { IShared } from "@src/Interfaces/IShared";
+
 export interface GoalItem {
   id: string;
   title: string;
   duration?: number | null;
-  sublist?: string[];
+  sublist: string[];
   repeat?: string | null;
   start: Date | null;
   due: Date | null;
   afterTime: number | null;
   beforeTime: number | null;
   createdAt?: Date;
-  status: 0 | 1; // 0 = active, 1 = archived
+  archived: "false" | "true";
   parentGoalId: string; // -1 = no parent
   goalColor: string;
   language: string;
   link: string | null;
-  collaboration: {
-    status: "none" | "pending" | "accepted" | "declined",
-    newUpdates: boolean,
-  };
-  shared: null |
-    {
-      relId: string,
-      name: string,
-    }
+  collaboration: ICollaboration;
+  shared: IShared | null
 }

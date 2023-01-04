@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 
-import { addGoal, createGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { addGoal, createGoalObjectFromTags, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 import { languagesFullForms } from "@translations/i18n";
@@ -52,24 +52,23 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {
       setError("Enter a goal title!");
       return;
     }
-    const newGoal = createGoal(
-      goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
-      goalTags.repeats ? goalTags?.repeats.value.trim() : null,
-      goalTags.duration ? goalTags.duration.value : null,
-      goalTags.start ? goalTags.start.value : null,
-      goalTags.due ? goalTags.due.value : null,
-      goalTags.afterTime ? goalTags.afterTime.value : null,
-      goalTags.beforeTime ? goalTags.beforeTime.value : null,
-      goalLang,
-      goalTags.link ? goalTags.link.value.trim() : null,
-      0,
-      parentGoalId!,
-      colorPallete[colorIndex], // goalColor
-    );
+    const newGoal = createGoalObjectFromTags({
+      language: goalLang,
+      parentGoalId,
+      title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
+      repeat: goalTags.repeats ? goalTags?.repeats.value.trim() : null,
+      duration: goalTags.duration ? goalTags.duration.value : null,
+      start: goalTags.start ? goalTags.start.value : null,
+      due: goalTags.due ? goalTags.due.value : null,
+      afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+      beforeTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+      link: goalTags.link ? `${goalTags.link.value}`.trim() : null,
+      goalColor: colorPallete[colorIndex]
+    });
     const newGoalId = await addGoal(newGoal);
     if (parentGoalId) {
       const parentGoal = await getGoal(parentGoalId);
-      const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
+      const newSublist = parentGoal ? [...parentGoal.sublist, newGoalId] : [newGoalId];
       await updateGoal(parentGoalId, { sublist: newSublist });
       if (goalID !== showAddGoal?.goalId) { addInHistory(parentGoal); }
     }

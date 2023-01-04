@@ -2,11 +2,10 @@
 /* eslint-disable import/no-relative-packages */
 // @ts-nocheck
 import React, { useEffect, useState } from "react";
-import { Container, Row } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import { useRecoilValue } from "recoil";
 
-import { addGoal, createGoal, getActiveGoals } from "@src/api/GoalsAPI";
+import { getActiveGoals } from "@src/api/GoalsAPI";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
@@ -101,7 +100,7 @@ export const MyTimePage = () => {
                   );
                 }
                 return (getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0]));
-              })}sea
+              })}
             </div>
           )}
       </div>
@@ -112,13 +111,13 @@ export const MyTimePage = () => {
     const goals: GoalItem[] = await getActiveGoals();
     let GMD = goals[0].duration;
     let MDU = goals[0].duration;
-    let prev = new Date(goals[0].finish ? goals[0].finish : new Date());
+    let prev = new Date(goals[0].due ? goals[0].due : new Date());
     prev = new Date(prev.setHours(0));
     const unplannedInd :number[] = [];
     const unplannedDur :number[] = [];
     goals.map((goal, index) => {
       const diff = getDiffInHours(goal.start ? goal.start : new Date(), prev);
-      prev = new Date(goal.finish ? goal.finish : new Date());
+      prev = new Date(goal.due ? goal.due : new Date());
       if (diff > 0) {
         unplannedInd.push(index - 1);
         unplannedDur.push(diff);

@@ -41,7 +41,7 @@ export const GoalSublist = () => {
   const [showShareModal, setShowShareModal] = useState(-1);
 
   const handleGoalClick = (goal: GoalItem) => {
-    if (!goal.sublist || goal.sublist?.length === 0) {
+    if (goal.sublist.length === 0) {
       if (tapCount.open === goal.id && tapCount.click > 0) {
         setTapCount(defaultTap);
       } else { setTapCount({ open: goal.id, click: 1 }); }
@@ -68,19 +68,14 @@ export const GoalSublist = () => {
   };
   const removeChildrenGoal = async (goalId: string) => {
     if (parentGoal?.sublist) {
-      // delete subgoals of this goal
       removeChildrenGoals(goalId);
-      // removeGoal(goalId)
       await removeGoal(goalId);
-      // remove childGoalId from parentGoal.sublist
-      const parentGoalSublist: string[] = parentGoal.sublist;
+      const parentGoalSublist = parentGoal.sublist;
       const childGoalIndex = parentGoalSublist.indexOf(goalId);
       if (childGoalIndex !== -1) {
         parentGoalSublist.splice(childGoalIndex, 1);
       }
-      // update parentGoal with new parentGoal.sublist
       await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
-      // getChildrenGoals again
       getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
@@ -133,7 +128,7 @@ export const GoalSublist = () => {
                         if (tapCount.open === goal.id && tapCount.click > 0) { setTapCount(defaultTap); } else { setTapCount({ open: goal.id, click: 1 }); }
                       }}
                     >
-                      { goal.sublist && goal.sublist.length > 0 && (
+                      { goal.sublist.length > 0 && (
                         <div
                           className="goal-dd-outer"
                           style={{ borderColor: goal.goalColor }}

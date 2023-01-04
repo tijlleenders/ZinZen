@@ -5,8 +5,10 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import copyLink from "@assets/images/copyLink.svg";
 import { darkModeState, displayToast } from "@src/store";
 import { collaborateWithContact, getRelationshipStatus, shareGoalWithContact, updateStatusOfContact } from "@src/api/ContactsAPI";
-import { updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { updateColabStatusOfGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { ICollaboration } from "@src/Interfaces/ICollaboration";
+import { getDefaultValueOfCollab } from "@src/utils";
 
 interface IInviteLinkModalProps {
   showInviteModal: { goal: GoalItem, id: string, name: string, relId: string, accepted: boolean } | null,
@@ -51,8 +53,11 @@ const InviteLinkModal : React.FC<IInviteLinkModalProps> = ({ showInviteModal, se
             if (showInviteModal) {
               const { goal, relId, name } = showInviteModal;
               // setLoading(true);
-              await shareGoalWithContact(relId, { id: goal.id, title: goal.title });
-              await updateSharedStatusOfGoal(goal.id, relId, name);
+              if (!goal.shared && ["none", "declined"].includes(goal.collaboration.status)) {
+                goal.collaboration = getDefaultValueOfCollab();
+                await shareGoalWithContact(relId, goal);
+                await updateSharedStatusOfGoal(goal.id, { relId, name, allowed: false });
+              }
               setShowInviteModal(null);
               // setLoading(false);
             }
@@ -66,13 +71,21 @@ const InviteLinkModal : React.FC<IInviteLinkModalProps> = ({ showInviteModal, se
           className={`addContact-btn${darkModeStatus ? "-dark" : ""}`}
           type="submit"
           onClick={async () => {
-            if (showInviteModal?.goal.parentGoalId === "root") {
+            if (showInviteModal) {
               const { goal, relId, name } = showInviteModal;
-              await collaborateWithContact(relId, goal);
-              await updateSharedStatusOfGoal(goal.id, relId, name);
-              setShowInviteModal(null);
-            } else {
-              setShowToast({ open: true, message: "You can only collaborate on goals with no sublist.", extra: "" });
+              if (goal.collaboration.allowed && (!goal.shared || (goal.shared && goal.shared.allowed))) {
+                await collaborateWithContact(relId, goal);
+                const colabObject: ICollaboration = {
+                  relId,
+                  name,
+                  rootGoal: goal.id,
+                  allowed: false,
+                  newUpdates: false,
+                  status: "pending"
+                };
+                await updateColabStatusOfGoal(goal.id, colabObject);
+                setShowInviteModal(null);
+              }
             }
           }}
         >

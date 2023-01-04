@@ -18,10 +18,11 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
-import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactSharedGoals } from "./api/ContactsAPI";
-import { createGoal, updateGoal } from "./api/GoalsAPI";
+import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
+import { createGoalObjectFromTags, updateColabStatusOfGoal, updateGoal } from "./api/GoalsAPI";
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/CollaborationHandler";
+import { getDefaultValueOfCollab } from "./utils";
 
 import "./customize.scss";
 import "./App.scss";
@@ -46,14 +47,23 @@ const App = () => {
         Object.keys(resObject).forEach(async (k: any) => {
           const goals: { id: string, goal: GoalItem }[] = [];
           const collaborateInvites: { id: string, goal: GoalItem }[] = [];
+          const contactItem = await getContactByRelId(k);
           // @ts-ignore
           resObject[k].forEach(async (ele) => {
             if (ele.type === "shareGoal") {
-              goals.push({ id: ele.goal.id, goal: createGoal(ele.goal.title) });
+              goals.push({ id: ele.goal.id, goal: createGoalObjectFromTags(ele.goal) });
             } else if (ele.type === "collaboration") {
               collaborateInvites.push({ id: ele.goal.id, goal: ele.goal });
             } else if (ele.type === "colabInviteResponse") {
-              await updateGoal(ele.goalId, ele.status === "accepted" ? { collaboration: { status: "accepted", newUpdates: false } } : { shared: null }).then(() => console.log("updated invite response"));
+              console.log(ele);
+              await updateColabStatusOfGoal(ele.goalId, ele.status === "accepted" ? {
+                status: "accepted",
+                newUpdates: false,
+                allowed: false,
+                relId: ele.relId,
+                rootGoal: ele.goalId,
+                name: contactItem?.name || ""
+              } : getDefaultValueOfCollab()).then(() => console.log("updated invite response"));
             } else if (ele.type === "collaborationChanges") {
               await handleIncomingChanges(ele).then(() => console.log("changes added"));
             }
