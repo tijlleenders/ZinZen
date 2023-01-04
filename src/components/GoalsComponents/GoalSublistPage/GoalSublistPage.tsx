@@ -73,7 +73,7 @@ export const GoalSublist = () => {
   const removeChildrenGoal = async (goalId: string) => {
     if (parentGoal?.sublist) {
       // delete subgoals of this goal
-      await removeChildrenGoals(goalId);
+      removeChildrenGoals(goalId);
       // removeGoal(goalId)
       await removeGoal(goalId);
       // remove childGoalId from parentGoal.sublist
