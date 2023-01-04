@@ -1,6 +1,6 @@
 import { addChangesInGoal } from "@src/api/OutboxAPI";
 
-export const handleIncomingChanges = async (payload: object) => {
+export const handleIncomingChanges = async (payload) => {
   const { changes, goalId, relId } = payload;
   const defaultParams = {
     relId,

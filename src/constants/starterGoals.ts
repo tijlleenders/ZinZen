@@ -1,5 +1,4 @@
-import { addGoal, createGoal } from "@src/api/GoalsAPI";
-import { colorPallete } from "@src/utils";
+import { addGoal, createGoalObjectFromTags } from "@src/api/GoalsAPI";
 
 export const addStarterGoal = async (
   goalTitle: string,
@@ -13,20 +12,16 @@ export const addStarterGoal = async (
     link: { value: string };
   },
 ) => {
-  await addGoal(createGoal(
-    goalTitle,
-    goalTags.repeats ? goalTags?.repeats.value.trim() : null,
-    goalTags.duration ? goalTags.duration.value : null,
-    goalTags.start ? goalTags.start.value : null,
-    goalTags.due ? goalTags.due.value : null,
-    goalTags.afterTime ? goalTags.afterTime.value : null,
-    goalTags.beforeTime ? goalTags.beforeTime.value : null,
-    "English",
-    goalTags.link ? goalTags.link.value.trim() : null,
-    0,
-    "root",
-    colorPallete[Math.floor(Math.random() * 11)]
-  ));
+  await addGoal(createGoalObjectFromTags({
+    title: goalTitle,
+    repeat: goalTags.repeats ? goalTags?.repeats.value.trim() : null,
+    duration: goalTags.duration ? goalTags.duration.value : null,
+    start: goalTags.start ? goalTags.start.value : null,
+    due: goalTags.due ? goalTags.due.value : null,
+    afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+    beforeTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+    link: goalTags.link ? `${goalTags.link.value}`.trim() : null,
+  }));
 };
 export const starterGoals = [
   {

@@ -7,9 +7,8 @@ import { getAllContacts, removeGoalInRelId, sendResponseOfColabInvite } from "@s
 import "./GoalInvites.scss";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
-import { addGoal } from "@src/api/GoalsAPI";
+import { addGoal, createGoalObjectFromTags } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
-
 
 import "@translations/i18n";
 
@@ -49,8 +48,16 @@ const GoalInvites = ({ invitesType }: { invitesType: string }) => {
 
   const handleChoice = async (choice: string, index: number, goal: GoalItem) => {
     if (choice === "Add") {
-      const thisGoal = invitesType === "sharedGoals" ? goal :
-        { ...goal, collaboration: { status: "accepted", newUpdates: false }, shared: { newUpdates: false, relId: invites[index].relId, name: invites[index].contactName } };
+      const thisGoal : GoalItem = invitesType === "sharedGoals" ? createGoalObjectFromTags(goal) :
+        createGoalObjectFromTags({ ...goal,
+          collaboration: { status: "accepted",
+            newUpdates: false,
+            relId: invites[index].relId,
+            name: invites[index].contactName,
+            rootGoal: goal.id,
+            allowed: false
+          } });
+          console.log(invitesType, thisGoal)
       await addGoal(thisGoal);
     }
     if (invitesType === "collaboratedGoals") {
@@ -87,7 +94,7 @@ const GoalInvites = ({ invitesType }: { invitesType: string }) => {
             ...commonStyle,
             ...(darkModeStatus ? darkCommonStyle : {}) }}
           >
-            { invitesType === "sharedGoals" ? t("sharedwithme") :  t("collaborationinvites") }
+            { invitesType === "sharedGoals" ? t("sharedwithme") : t("collaborationinvites") }
           </p>
         </Accordion.Header>
         <Accordion.Body>

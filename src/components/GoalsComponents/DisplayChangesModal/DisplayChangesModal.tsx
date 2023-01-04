@@ -155,7 +155,7 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
     useEffect(() => {
       const getOutbox = async () => {
         if (showChangesModal) {
-          const res = await getDump(showChangesModal.shared?.relId, showChangesModal.id);
+          const res = await getDump(showChangesModal.collaboration.relId, showChangesModal.id);
           if (res) {
             console.log(res);
             const tmp = [...activeChange.filter((ele) => res[ele].length !== 0)];
