@@ -1,3 +1,5 @@
+import { ICollaboration } from "@src/Interfaces/ICollaboration";
+
 // @ts-nocheck
 export const formatDate = () => {
   const newDate = new Date();
@@ -36,3 +38,15 @@ export const colorPallete = [
   "#FFCC33", "#FF7A00", "#FC0909",
   "#FD5B78", "#FF007C"
 ];
+
+export function getDefaultValueOfCollab() {
+  const value: ICollaboration = {
+    status: "none",
+    newUpdates: false,
+    relId: "",
+    name: "",
+    rootGoal: "root",
+    allowed: true
+  };
+  return value;
+}
