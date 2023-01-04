@@ -1,5 +1,5 @@
 describe("DashboardUserChoice Test", () => {
-  it("should have back button on the top-left in header", () => {
+  it("reset", () => {
     cy.visit("/");
     cy.clearLocalStorage();
     indexedDB.deleteDatabase("ZinZenDB");

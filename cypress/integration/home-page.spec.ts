@@ -28,8 +28,7 @@ describe("Basic Tests Home Page", () => {
   it("Default entry page", () => {
     cy.visit("/");
     cy.get(".lang-btn1").contains("English").click();
-    cy.get(".themeChoice-btn-light").first().click();
-    cy.contains("Skip Intro")
-      .click()
+    cy.get(".themeChoice-btn-light").click();
+    cy.contains("Skip Intro").click()
   });
 });
