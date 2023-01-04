@@ -2,6 +2,7 @@
 
 .App-light, .App-dark {
   background: linear-gradient(180deg, #FFEEEE 0%, #EEA791 100%);
+  background-attachment: fixed;
   font-family: "Montserrat";
   font-weight: bolder;
   min-height: 100vh;
@@ -14,6 +15,7 @@
 
 .App-dark {
   background: linear-gradient(180deg, #121212 49.07%, #291B5C 100%);
+  background-attachment: fixed;
   color: white !important;
 }
 

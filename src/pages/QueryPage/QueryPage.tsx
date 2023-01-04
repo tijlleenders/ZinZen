@@ -6,6 +6,7 @@ import { queryStyle } from "@src/constants/booleanScreen";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
+import { vibrateWorks } from "@src/constants/vibrateCheck";
 
 export const QueryPage = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export const QueryPage = () => {
             ...queryStyle.question
           }}
           onClick={() => {
-            navigator.vibrate(100);
+            (vibrateWorks)?navigator.vibrate(100):null;
             navigate("/ZinZenFAQ");
           }}
         >
@@ -46,7 +47,7 @@ export const QueryPage = () => {
           onClick={() => {
             localStorage.setItem("checkedIn", "yes");
             const invite = localStorage.getItem("pendingInvite");
-            navigator.vibrate(100);
+            (vibrateWorks)?navigator.vibrate(100):null;
             if (invite && invite !== "none") {
               localStorage.removeItem("pendingInvite");
               navigate(`/invite/${invite}`);

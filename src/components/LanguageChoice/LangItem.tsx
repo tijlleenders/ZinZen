@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ILanguage } from "@src/Interfaces/ILanguage";
 import { languageSelectionState } from "@store";
-
+import { vibrateWorks } from "@src/constants/vibrateCheck";
 import "./LanguageChoice.scss";
 
 export const LangItem = ({ lang }: { lang: ILanguage }) => {
@@ -14,7 +14,7 @@ export const LangItem = ({ lang }: { lang: ILanguage }) => {
   const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
   const remainder: number = Number(lang.sno) % 4;
   const handleClick = (langId: string) => {
-    navigator.vibrate(100);
+    (vibrateWorks)?navigator.vibrate(100):null;
     setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
     localStorage.setItem("language", JSON.stringify(langId));

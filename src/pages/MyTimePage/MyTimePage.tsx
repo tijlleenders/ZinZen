@@ -157,7 +157,7 @@ export const MyTimePage = () => {
       await init();
       const _today = new Date();
       const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
-      const endDate = `${new Date(_today.setDate(_today.getDate() + 1)).toISOString().slice(0, 10)}T00:00:00`;
+      const endDate = `${new Date(_today.setDate(_today.getDate() + 7)).toISOString().slice(0, 10)}T00:00:00`;
 
       const schedulerInput = {
         startDate,
@@ -169,7 +169,7 @@ export const MyTimePage = () => {
         const obj = {
           id: ele.id,
           title: ele.title,
-          duration: ele.duration
+          duration: `${ele.duration}`
         };
         if (ele.start) obj.start = `${ele.start?.toISOString().slice(0, 10)}T${ele.start?.toTimeString().slice(0, 8)}`;
         if (ele.due) obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
