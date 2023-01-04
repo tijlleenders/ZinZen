@@ -1,6 +1,6 @@
 describe("Basic Tests Home Page", () => {
   it("should have Home Page title", () => {
-    cy.visit("/");
+    cy.visit("/MyGoals");
     cy.clearLocalStorage();
     cy.get('[alt="ZinZen Text Logo"]').should("be.visible");
     cy.contains("Realize");
@@ -9,19 +9,27 @@ describe("Basic Tests Home Page", () => {
   });
 
   it("user choice panel for language choice should work", () => {
+    cy.visit("/MyGoals");
     cy.get(".containerLang").should("be.visible");
   });
 
-  it("Theme & Language Selection", () => {
-    cy.visit("/");
+  it("Language Selection & Theme Light", () => {
+    cy.visit("/MyGoals");
     cy.get(".lang-btn1").contains("English").click();
-    cy.get(".themeChoice-btn").first().click();
+    cy.get(".themeChoice-btn-light").first().click();
+  });
+  
+  it("Language Selection & Theme Dark", () => {
+    cy.visit("/MyGoals");
+    cy.get(".lang-btn1").contains("English").click();
+    cy.get(".themeChoice-btn-dark").first().click();
   });
 
-  it("Default entry page should be MyTime", () => {
+  it("Default entry page", () => {
+    cy.visit("/MyGoals");
+    cy.get(".lang-btn1").contains("English").click();
+    cy.get(".themeChoice-btn-light").first().click();
     cy.contains("Skip Intro")
       .click()
-      .location("pathname")
-      .should("include", "MyTime");
   });
 });

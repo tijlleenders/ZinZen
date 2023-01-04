@@ -9,10 +9,9 @@
   border-radius: 7px;
   color: black;
   font-size: 1.4em;
-  font-family: "Montserrat";
+  font-family: "Montserrat", sans-serif;
   font-weight: bolder;
   height: 47px;
-  margin-bottom: 3.5%;
   margin: 0 13px;
   padding: 0 18px;
 }
@@ -24,7 +23,7 @@
 
 #myGoals_title, #myGoals_title-dark {
   margin: 18px 18px 5% 18px;
-  font-family: "Montserrat";
+  font-family: "Montserrat", sans-serif;
   font-weight: bolder;
   font-size: 1.5em;
 }
@@ -34,8 +33,7 @@
 }
 
 #myGoals-list {
-  margin: 18px 18px 0% 18px;
-  height: 418px;
+  margin: 18px 18px 0 18px;
   overflow-y: auto;
   height: 50%;
 }
@@ -132,7 +130,7 @@
   border: none;
   background: transparent;
   display: flex;
-  font-family: "Montserrat";
+  font-family: "Montserrat", sans-serif;
   font-weight: bold;
   font-size: 1.3em;
   // justify-content: space-between;
@@ -149,7 +147,7 @@
 }
 
 .my-goals-content {
-  margin-top: 100px;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -195,7 +193,7 @@
   }
 
   .addtask-light , .addtask-dark {   
-    margin: 10px 0px 0px 0px !important;
+    margin: 10px 0 0 0 !important;
     padding: 3% 4% !important;
     width: 100% !important;
     outline: none;
