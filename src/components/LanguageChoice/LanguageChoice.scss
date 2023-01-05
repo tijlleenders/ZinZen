@@ -10,50 +10,60 @@
   justify-content: center;
 }
 
+.containerLang>button>input{
+  float: right;
+  margin-top: 3%;
+}
+
+.containerLang>button{
+  border-radius: 0%;
+  border-top: 1px solid black;
+  color: black;
+}
+
+.containerLang:nth-child(1)>button{
+  border-top-left-radius: 10px!important;
+  border-top-right-radius: 10px!important;
+  border-top: 0px!important;
+}
+
+.containerLang:nth-last-child(1)>button{
+  border-bottom-left-radius: 10px!important;
+  border-bottom-right-radius: 10px!important;
+}
+
 .lang-btn1 {
-  color: #000000 !important;
   font-weight: bolder !important;
   font-size: 1.2rem !important;
   width: 300px !important;
-  margin-top: 0.7em;
   text-align: left !important;
   padding-left: 8% !important;
-  border-radius: 10px !important;
 }
 
 .lang-btn2 {
-  color: #ffffff !important;
   font-weight: bolder !important;
   font-size: 1.2rem !important;
   width: 300px !important;
-  margin-top: 0.7em;
   text-align: left !important;
   padding-left: 8% !important;
-  border-radius: 10px !important;
 }
 
 /*Media Query for Mobile View*/
 
 @media (max-width: 600px) {
   .lang-btn1 {
-    color: #000000 !important;
     font-weight: bolder !important;
     font-size: 1.2rem !important;
     width: 80vw !important;
-    margin-top: 0.7em;
     text-align: left !important;
     padding-left: 8% !important;
-    border-radius: 10px !important;
   }
 
   .lang-btn2 {
-    color: #ffffff !important;
     font-weight: bolder !important;
     font-size: 1.2rem !important;
     width: 80vw !important;
-    margin-top: 0.7em;
     text-align: left !important;
     padding-left: 8% !important;
-    border-radius: 10px !important;
   }
 }
