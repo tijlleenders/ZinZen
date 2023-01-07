@@ -7,13 +7,13 @@ export interface GoalItem {
   duration?: number | null;
   sublist: string[];
   repeat?: string | null;
-  start: Date | null;
   due: Date | null;
-  afterTime: number | null;
+  start: Date | null;
   beforeTime: number | null;
+  afterTime: number | null;
   createdAt?: Date;
   archived: "false" | "true";
-  parentGoalId: string; // -1 = no parent
+  parentGoalId: string;
   goalColor: string;
   language: string;
   link: string | null;

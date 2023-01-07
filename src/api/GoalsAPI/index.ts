@@ -191,6 +191,7 @@ export const createGoalObjectFromTags = (obj: object) => {
       relId: "",
       name: "",
       rootGoal: "",
+      notificationCounter: 0,
       allowed: true
     },
     ...obj

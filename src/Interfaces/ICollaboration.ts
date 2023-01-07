@@ -4,5 +4,6 @@ export interface ICollaboration {
     relId: string,
     name: string,
     rootGoal: string,
+    notificationCounter: number,
     allowed: boolean
   }
