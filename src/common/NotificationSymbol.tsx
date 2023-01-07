@@ -7,7 +7,7 @@ const NotificationSymbol = ({ color }:{color: string}) => (
     background: color,
     borderRadius: "50%",
     position: "absolute",
-    left: "24px",
+    left: "33px",
     top: "28px"
   }}
   />
