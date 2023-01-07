@@ -55,9 +55,9 @@ const GoalInvites = ({ invitesType }: { invitesType: string }) => {
             relId: invites[index].relId,
             name: invites[index].contactName,
             rootGoal: goal.id,
-            allowed: false
+            allowed: false,
+            notificationCounter: 0
           } });
-          console.log(invitesType, thisGoal)
       await addGoal(thisGoal);
     }
     if (invitesType === "collaboratedGoals") {

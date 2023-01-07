@@ -111,7 +111,7 @@ export const MyGoalsPage = () => {
       if (parentGoal.collaboration.status === "accepted") {
         sendColabUpdatesToContact(parentGoal.collaboration.relId, parentGoalId, {
           type: "goalAdded",
-          subgoals: [{ ...newGoal, id: newGoalId, collaboration: { ...getDefaultValueOfCollab(), allowed: false }}]
+          subgoals: [{ ...newGoal, id: newGoalId, collaboration: { ...getDefaultValueOfCollab(), allowed: false } }]
         }).then(() => console.log("update sent"));
       }
       const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
