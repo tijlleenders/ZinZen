@@ -13,12 +13,15 @@ import trash from "@assets/images/trash.svg";
 import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, updateGoal } from "@src/api/GoalsAPI";
 import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
+import NotificationSymbol from "@src/common/NotificationSymbol";
 import { darkModeState } from "@src/store";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";
 import { UpdateGoalForm } from "../UpdateGoal/UpdateGoalForm";
 import ShareGoalModal from "../ShareGoalModal/ShareGoalModal";
 
 import "./GoalSublistPage.scss";
+import DisplayChangesModal from "../DisplayChangesModal/DisplayChangesModal";
+import { sendColabUpdatesToContact } from "@src/api/ContactsAPI";
 
 export const GoalSublist = () => {
   const defaultTap = { open: "root", click: 1 };
@@ -35,6 +38,7 @@ export const GoalSublist = () => {
 
   const [tapCount, setTapCount] = useState(defaultTap);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
+  const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
 
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
@@ -46,23 +50,38 @@ export const GoalSublist = () => {
         setTapCount(defaultTap);
       } else { setTapCount({ open: goal.id, click: 1 }); }
     } else {
+      // @ts-ignore
       addInHistory(goal);
     }
   };
+  function handleDropDown(goal: GoalItem) {
+    if (tapCount.open === goal.id && tapCount.click > 0) {
+      setTapCount(defaultTap);
+    } else if (goal.collaboration.newUpdates) {
+      setShowChangesModal(goal);
+    } else setTapCount({ open: goal.id, click: 1 });
+  }
+
   useEffect(() => {
     getGoal(goalID).then((parent) => setParentGoal(parent));
-    setTapCount([-1, 0]);
+    setTapCount(defaultTap);
   }, [goalID]);
 
   useEffect(() => {
     getChildrenGoals(goalID)
       .then((fetchedGoals) => {
         setChildrenGoals(fetchedGoals);
-        setTapCount([-1, 0]);
+        setTapCount(defaultTap);
       });
-  }, [parentGoal, showAddGoal, showSuggestionModal, showUpdateGoal]);
+  }, [showChangesModal, parentGoal, showAddGoal, showSuggestionModal, showUpdateGoal]);
 
   const archiveMyGoal = async (goal: GoalItem) => {
+    if (goal.collaboration.status) {
+      sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
+        type: "goalCompleted",
+        completed: [goal]
+      }).then(() => console.log("complete update sent"));
+    }
     await archiveUserGoal(goal);
     await getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
   };
@@ -76,14 +95,6 @@ export const GoalSublist = () => {
         parentGoalSublist.splice(childGoalIndex, 1);
       }
       await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
-      getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
-    }
-  };
-  const updateUserGoals = async (goal: GoalItem, index: number) => {
-    const updatedTitle = document.querySelector(`.goal-title:nth-child(${index + 1}`)?.textContent;
-    if (updatedTitle && tapCount[0] === index && updatedTitle !== goal.title) {
-      if (updatedTitle.length === 0) return;
-      await updateGoal(goal.id, { title: updatedTitle });
       getChildrenGoals(goalID).then((fetchedGoals) => setChildrenGoals(fetchedGoals));
     }
   };
@@ -124,10 +135,13 @@ export const GoalSublist = () => {
                       className="goal-dropdown"
                       onClickCapture={(e) => {
                         e.stopPropagation();
-                        console.log("lft");
-                        if (tapCount.open === goal.id && tapCount.click > 0) { setTapCount(defaultTap); } else { setTapCount({ open: goal.id, click: 1 }); }
+                        handleDropDown(goal);
                       }}
                     >
+                      { (
+                        goal.collaboration.newUpdates ||
+                        goal.collaboration.notificationCounter > 0
+                      ) && <NotificationSymbol color={goal.goalColor} /> }
                       { goal.sublist.length > 0 && (
                         <div
                           className="goal-dd-outer"
@@ -143,11 +157,8 @@ export const GoalSublist = () => {
                       />
                     </div>
                     <div
-                      onClickCapture={(e) => {
-                        console.log("main", tapCount);
-                        handleGoalClick(goal);
-                      }}
                       className="user-goal-main"
+                      onClickCapture={() => { handleGoalClick(goal); }}
                       style={{ ...(tapCount.open === goal.id) ? { paddingBottom: 0 } : {} }}
                     >
                       <div
@@ -175,6 +186,12 @@ export const GoalSublist = () => {
                           src={trash}
                           style={{ cursor: "pointer" }}
                           onClickCapture={() => {
+                            if (goal.collaboration.status) {
+                              sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
+                                type: "goalDeleted",
+                                deletedGoals: [goal]
+                              }).then(() => console.log("update sent"));
+                            }
                             removeChildrenGoal(goal.id);
                           }}
                         />
@@ -212,6 +229,8 @@ export const GoalSublist = () => {
                         setShowShareModal={setShowShareModal}
                       />
                     )}
+                    { showChangesModal && <DisplayChangesModal showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} /> }
+
                   </div>
                 )
             ))}
