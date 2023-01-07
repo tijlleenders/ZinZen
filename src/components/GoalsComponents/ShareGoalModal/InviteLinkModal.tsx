@@ -81,7 +81,8 @@ const InviteLinkModal : React.FC<IInviteLinkModalProps> = ({ showInviteModal, se
                   rootGoal: goal.id,
                   allowed: false,
                   newUpdates: false,
-                  status: "pending"
+                  status: "pending",
+                  notificationCounter: 0,
                 };
                 await updateColabStatusOfGoal(goal.id, colabObject);
                 setShowInviteModal(null);

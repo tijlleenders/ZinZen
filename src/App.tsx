@@ -55,14 +55,14 @@ const App = () => {
             } else if (ele.type === "collaboration") {
               collaborateInvites.push({ id: ele.goal.id, goal: ele.goal });
             } else if (ele.type === "colabInviteResponse") {
-              console.log(ele);
               await updateColabStatusOfGoal(ele.goalId, ele.status === "accepted" ? {
                 status: "accepted",
                 newUpdates: false,
                 allowed: false,
                 relId: ele.relId,
                 rootGoal: ele.goalId,
-                name: contactItem?.name || ""
+                name: contactItem?.name || "",
+                notificationCounter: 0
               } : getDefaultValueOfCollab()).then(() => console.log("updated invite response"));
             } else if (ele.type === "collaborationChanges") {
               await handleIncomingChanges(ele).then(() => console.log("changes added"));

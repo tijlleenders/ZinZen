@@ -106,12 +106,16 @@ export const MyGoalsPage = () => {
     });
 
     if (parentGoalId && parentGoalId !== "root") {
-      const newGoalId = await addGoal(newGoal);
       const parentGoal = await getGoal(parentGoalId);
+      const newGoalId = await addGoal({ ...newGoal, collaboration: { ...parentGoal.collaboration, notificationCounter: 0 } });
       if (parentGoal.collaboration.status === "accepted") {
         sendColabUpdatesToContact(parentGoal.collaboration.relId, parentGoalId, {
           type: "goalAdded",
-          subgoals: [{ ...newGoal, id: newGoalId, collaboration: { ...getDefaultValueOfCollab(), allowed: false }}]
+          subgoals: [{
+            ...newGoal,
+            id: newGoalId,
+            collaboration: { ...parentGoal.collaboration, allowed: false, notificationCounter: 0 }
+          }]
         }).then(() => console.log("update sent"));
       }
       const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
@@ -146,7 +150,7 @@ export const MyGoalsPage = () => {
         if (goal.collaboration.status) {
           sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
             type: "goalEdited",
-            updatedGoals: [goal]
+            updates: [goal]
           }).then(() => { console.log("edit updates sent"); });
         }
       });
@@ -161,7 +165,7 @@ export const MyGoalsPage = () => {
     if (goal.collaboration.status) {
       sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
         type: "goalCompleted",
-        completedGoals: [goal]
+        completed: [goal]
       }).then(() => console.log("complete update sent"));
     }
     const goals: GoalItem[] = await getActiveGoals();
@@ -295,7 +299,10 @@ export const MyGoalsPage = () => {
                               handleDropDown(goal);
                             }}
                           >
-                            { goal.collaboration.newUpdates && <NotificationSymbol color={goal.goalColor} /> }
+                            { (
+                              goal.collaboration.newUpdates ||
+                              goal.collaboration.notificationCounter > 0
+                            ) && <NotificationSymbol color={goal.goalColor} /> }
                             { goal.sublist.length > 0 && (
                               <div
                                 className="goal-dd-outer"

@@ -46,7 +46,8 @@ export function getDefaultValueOfCollab() {
     relId: "",
     name: "",
     rootGoal: "root",
-    allowed: true
+    allowed: true,
+    notificationCounter: 0,
   };
   return value;
 }

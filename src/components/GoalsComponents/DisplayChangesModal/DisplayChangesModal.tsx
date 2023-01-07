@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { darkModeState } from "@src/store";
 import React, { useEffect, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
@@ -10,7 +11,7 @@ import trash from "@assets/images/trash.svg";
 import { GoalItem } from "@src/models/GoalItem";
 import { OutboxItem } from "@src/models/OutboxItem";
 import { cleanChangesOf, completeChanges, deleteChanges, getDump } from "@src/api/OutboxAPI";
-import { addGoal, addIntoSublist, archiveUserGoal, changeNewUpdatesStatus, updateGoal } from "@src/api/GoalsAPI";
+import { addGoal, addIntoSublist, archiveUserGoal, changeNewUpdatesStatus, notifyItsAncestor, updateGoal } from "@src/api/GoalsAPI";
 import { formatTagsToText } from "@src/helpers/GoalConvertor";
 
 import "./DisplayChangesModal.scss";
@@ -24,43 +25,54 @@ interface IDisplayChangesModalProps {
 const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesModal, setShowChangesModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [changes, setChanges] = useState<OutboxItem|null>(null);
-  const [activeChange, setActiveChange] = useState(["deletedGoals", "updatedGoals", "subgoals", "completedGoals"]);
+  const [activeChange, setActiveChange] = useState(["deleted", "completed", "updates", "subgoals"]);
   const show = activeChange.slice(-1)[0];
   if (showChangesModal) {
     const getMessage = () => {
       if (showChangesModal) {
-        const contactName = showChangesModal.shared?.name || "";
+        const contactName = showChangesModal.collaboration?.name || "";
         const goalTitle = showChangesModal.title;
         switch (show) {
           case "subgoals":
             return <> {contactName} added to {goalTitle}.<br /> Add as well ?</>;
-          case "deletedGoals":
+          case "deleted":
             return <> {contactName} deleted {goalTitle}. </>;
-          case "updatedGoals":
+          case "updates":
             return <> {contactName} made changes in {goalTitle}.<br /> Make changes ? </>;
-          case "completedGoals":
+          case "completed":
             return <> {contactName} completed {goalTitle} </>;
           default:
             return null;
         }
       }
     };
+    const isChangePresent = (box: OutboxItem, key: string) => {
+      if (key === "completed") { return box.completed; }
+      if (key === "deleted") { return box.deleted; }
+      if (key === "updates") { return box.updates.length > 0; }
+      if (key === "subgoals") { return box.subgoals.length > 0; }
+      return undefined;
+    };
     const handleChoice = async (choice:string) => {
+      if (showChangesModal.parentGoalId !== "root") {
+        await notifyItsAncestor(showChangesModal.id, true, true);
+      }
       if (show === "subgoals") {
         if (choice === "accept") {
           const promisesArr = changes?.subgoals.map((ele) => addGoal({ ...ele, parentGoalId: showChangesModal.id }));
-          await Promise.all(promisesArr).then((ids: string[]) => {
-            addIntoSublist(showChangesModal.id, ids).then(() => console.log("sublist updates in parent"));
+          await Promise.all(promisesArr).then(async (ids: string[]) => {
+            await addIntoSublist(showChangesModal.id, ids);
+            console.log("sublist updates in parent");
           }).catch((err) => console.log("failed to add subgoals", err));
         }
         await cleanChangesOf(showChangesModal.id, show);
-      } else if (show === "deletedGoals") {
+      } else if (show === "deleted") {
         if (choice === "accept") {
           await deleteChanges(true, showChangesModal.id);
         }
-      } else if (show === "updatedGoals") {
+      } else if (show === "updates") {
         if (choice === "accept") {
-          const incGoal: GoalItem = changes.updatedGoals.slice(-1)[0];
+          const incGoal: GoalItem = changes?.updates.slice(-1)[0];
           Object.keys(incGoal).forEach((key) => {
             if (!tags.includes(key) || incGoal[key] === showChangesModal[key]) {
               delete incGoal[key];
@@ -68,20 +80,21 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
           });
           await updateGoal(showChangesModal?.id, { ...showChangesModal, ...incGoal });
         }
-        await cleanChangesOf(showChangesModal.id, show);
-      } else if (show === "completedGoals") {
+      } else if (show === "completed") {
         if (choice === "accept") {
           await archiveUserGoal(showChangesModal);
         }
         await completeChanges(true, showChangesModal.id);
       }
-      const tmp = [...activeChange.filter((ele) => ele !== show && changes[ele].length !== 0)];
-      setActiveChange([...tmp]);
+
+      const tmp = activeChange.filter((ele) => ele !== show && isChangePresent(changes, ele));
       if (tmp.length === 0) {
-        if (show !== "deletedGoals") { await changeNewUpdatesStatus(false, showChangesModal.id); }
+        if (show !== "deleted") {
+          await changeNewUpdatesStatus(false, showChangesModal.id, false);
+        }
         setChanges(null);
         setShowChangesModal(null);
-      }
+      } else { setActiveChange([...tmp]); }
     };
     const getAcceptBtn = () => (
       <button
@@ -92,13 +105,13 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
       >
         <img
           alt="add changes"
-          src={show === "deletedGoals" ? trash : plus}
+          src={show === "deleted" ? trash : plus}
           width={25}
         />&nbsp;
-        { show === "completedGoals" && "Complete for me too" }
-        { show === "deletedGoals" && "Delete for me too" }
+        { show === "completed" && "Complete for me too" }
+        { show === "deleted" && "Delete for me too" }
         { show === "subgoals" && "Add all checked" }
-        { show === "updatedGoals" && "Make all checked changes" }
+        { show === "updates" && "Make all checked changes" }
       </button>
     );
     const getIgnoreBtn = () => (
@@ -112,12 +125,12 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
           alt="add changes"
           src={ignore}
           width={25}
-        />&nbsp;Ignore {show !== "completedGoals" && "all" }
+        />&nbsp;Ignore {show !== "completed" && "all" }
       </button>
     );
     const getEditChangesList = () => {
       if (changes && show) {
-        const incGoal: GoalItem = changes.updatedGoals.slice(-1)[0];
+        const incGoal: GoalItem = changes.updates.slice(-1)[0];
         const currFormatTags = formatTagsToText(showChangesModal);
         const incFormatTags = formatTagsToText(incGoal);
 
@@ -157,12 +170,7 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
         if (showChangesModal) {
           const res = await getDump(showChangesModal.collaboration.relId, showChangesModal.id);
           if (res) {
-            console.log(res);
-            const tmp = [...activeChange.filter((ele) => res[ele].length !== 0)];
-            setActiveChange([...tmp]);
-            if (tmp.length === 0) {
-              setShowChangesModal(null);
-            }
+            setActiveChange([...activeChange.filter((ele) => isChangePresent(res, ele))]);
             setChanges(res);
           }
         }
@@ -194,7 +202,7 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
             ))}
           </Form>
           )}
-          { show === "updatedGoals" && getEditChangesList() }
+          { show === "updates" && getEditChangesList() }
           { getAcceptBtn() }
           { getIgnoreBtn() }
         </Modal.Body>
