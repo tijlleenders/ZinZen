@@ -298,11 +298,36 @@ export const getPublicGoals = async (goalTitle: string) => {
   }
 };
 
-export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string) => {
+export const notifyItsAncestor = async (goalId: string, allAncestors = true, reduceCount = false) => {
+  let parentId = "";
+  if (goalId === "root") return;
+  console.log("parent update", goalId);
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(goalId)
       .modify((obj: GoalItem) => {
-        obj.collaboration = { ...obj.collaboration, newUpdates, allowed: false };
+        parentId = obj.parentGoalId;
+        const { notificationCounter } = obj.collaboration;
+        obj.collaboration = { ...obj.collaboration, notificationCounter: notificationCounter + (reduceCount ? -1 : 1) };
+      });
+  }).then(async () => {
+    if (allAncestors) {
+      await notifyItsAncestor(parentId, allAncestors, reduceCount);
+    }
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string, notifyAncestors = false) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(goalId)
+      .modify(async (obj: GoalItem) => {
+        obj.collaboration = {
+          ...obj.collaboration,
+          newUpdates,
+          allowed: false,
+        };
+        if (notifyAncestors) { await notifyItsAncestor(obj.parentGoalId, true); }
       });
   }).catch((e) => {
     console.log(e.stack || e);
