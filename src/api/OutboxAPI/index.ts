@@ -19,7 +19,7 @@ export const cleanChangesOf = async (goalId: string, k: string) => {
   await db.transaction("rw", db.outboxCollection, async () => {
     await db.outboxCollection.where("goalId").equals(goalId)
       .modify((obj: OutboxItem) => {
-        obj[k] = [];
+        if (k === "deleted" || k === "completed") { obj[k] = false; } else obj[k] = [];
       });
   }).catch((e) => {
     console.log(e.stack || e);
@@ -37,15 +37,17 @@ export const completeChanges = async (root: boolean, goalId: string) => {
   }
 };
 
-export const addChangesInGoal = async (event: OutboxItem, type: "subgoals" | "updatedGoals" | "deletedGoals"| "completedGoals") => {
+export const addChangesInGoal = async (event: OutboxItem, type: "subgoals" | "updates" | "deleted"| "completed") => {
   const dump = await getDump(event.relId, event.goalId);
   const { goalId } = event;
-  changeNewUpdatesStatus(true, goalId);
+  await changeNewUpdatesStatus(true, goalId, true);
   if (!dump) { await createDumpForContact(event); } else {
     db.transaction("rw", db.outboxCollection, async () => {
       await db.outboxCollection.where("goalId").equals(goalId)
         .modify((obj: OutboxItem) => {
-          obj[type] = [...obj[type], ...event[type]];
+          if (type === "deleted" || type === "completed") {
+            obj[type] = true;
+          } else { obj[type] = [...obj[type], ...event[type]]; }
         });
     }).catch((e) => {
       console.log(e.stack || e);

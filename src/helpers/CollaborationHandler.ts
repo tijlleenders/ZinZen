@@ -6,21 +6,19 @@ export const handleIncomingChanges = async (payload) => {
     relId,
     goalId,
     subgoals: [],
-    updatedGoals: [],
-    deletedGoals: [],
-    completedGoals: []
+    updates: [],
+    deleted: false,
+    completed: false,
   };
   if (changes.type === "goalAdded") {
     const { subgoals } = changes;
     await addChangesInGoal({ ...defaultParams, subgoals }, "subgoals");
   } else if (changes.type === "goalDeleted") {
-    const { deletedGoals } = changes;
-    await addChangesInGoal({ ...defaultParams, deletedGoals }, "deletedGoals");
+    await addChangesInGoal({ ...defaultParams, deleted: true }, "deleted");
   } else if (changes.type === "goalEdited") {
-    const { updatedGoals } = changes;
-    await addChangesInGoal({ ...defaultParams, updatedGoals }, "updatedGoals");
+    const { updates } = changes;
+    await addChangesInGoal({ ...defaultParams, updates }, "updates");
   } else if (changes.type === "goalCompleted") {
-    const { completedGoals } = changes;
-    await addChangesInGoal({ ...defaultParams, completedGoals }, "completedGoals");
+    await addChangesInGoal({ ...defaultParams, completed: true }, "completed");
   }
 };
