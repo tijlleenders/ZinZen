@@ -104,9 +104,9 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           <div className="share-Options">
             <div> <img alt="share with friend" src={shareWithFriend} /> </div>
             <p className="shareOption-name">
-              Share 1:1
+              Share 1:1 <br />
               { goal.collaboration.status === "accepted" ?
-                ` - Goal is collaborated with ${goal.shared?.name}` :
+                ` - Goal is collaborated with ${goal.collaboration?.name}` :
                 goal.collaboration.status === "pending" ?
                   " - Goal collaboration invite is not yet accepted"
                   :
