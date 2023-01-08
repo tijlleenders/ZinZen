@@ -27,7 +27,7 @@ import {
   updateGoal
 } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState } from "@src/store";
+import { darkModeState, displayToast } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
 import {
@@ -75,6 +75,7 @@ export const MyGoalsPage = () => {
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
+  const setShowToast = useSetRecoilState(displayToast);
 
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
@@ -90,6 +91,10 @@ export const MyGoalsPage = () => {
 
   const addThisGoal = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    if (goalTitle.length === 0) {
+      setShowToast({ open: true, message: "Goal cannot be added without title", extra: "" });
+      return;
+    }
     const parentGoalId = showAddGoal?.goalId;
     const newGoal = createGoalObjectFromTags({
       language: goalLang,
@@ -132,6 +137,7 @@ export const MyGoalsPage = () => {
   const updateThisGoal = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (goalTitle.length === 0) {
+      setShowToast({ open: true, message: "Goal cannot be added without title", extra: "" });
       return;
     }
     if (showUpdateGoal) {
@@ -276,17 +282,18 @@ export const MyGoalsPage = () => {
                   placeholder={t("search")}
                   onChange={(e) => debounceSearch(e)}
                 />
-                <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount([-1, 0])}>
+                <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"} onClickCapture={() => setTapCount(defaultTap)}>
                   {t("mygoals")}
                 </h1>
                 { showAddGoal && (
                 <AddGoalForm
                   parentGoalId={showAddGoal.goalId}
+                  addThisGoal={addThisGoal}
                 />
                 )}
                 <div>
                   {userGoals?.map((goal: GoalItem, index) => (
-                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
+                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm updateThisGoal={updateThisGoal}/>
                       : (
                         <div
                           key={String(`task-${goal.id}`)}
@@ -427,7 +434,7 @@ export const MyGoalsPage = () => {
               </div>
             )
             :
-            (<GoalSublist />)
+            (<GoalSublist addThisGoal={addThisGoal} updateThisGoal={updateThisGoal} />)
         }
         { showChangesModal && <DisplayChangesModal showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} /> }
       </div>

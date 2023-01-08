@@ -12,6 +12,7 @@ import trash from "@assets/images/trash.svg";
 
 import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, updateGoal } from "@src/api/GoalsAPI";
 import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
+import { sendColabUpdatesToContact } from "@src/api/ContactsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { darkModeState } from "@src/store";
@@ -21,9 +22,13 @@ import ShareGoalModal from "../ShareGoalModal/ShareGoalModal";
 
 import "./GoalSublistPage.scss";
 import DisplayChangesModal from "../DisplayChangesModal/DisplayChangesModal";
-import { sendColabUpdatesToContact } from "@src/api/ContactsAPI";
 
-export const GoalSublist = () => {
+interface GoalSublistProps {
+  addThisGoal:(e: React.SyntheticEvent) => Promise<void>,
+  updateThisGoal: (e: React.SyntheticEvent) => Promise<void>
+
+}
+export const GoalSublist: React.FC<GoalSublistProps> = ({ addThisGoal, updateThisGoal }) => {
   const defaultTap = { open: "root", click: 1 };
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalHistory = useRecoilValue(goalsHistory);
@@ -122,10 +127,10 @@ export const GoalSublist = () => {
         <div className="sublist-content">
           <div className="sublist-title">{parentGoal?.title}</div>
           <Container fluid className="sublist-list-container">
-            { showAddGoal && <AddGoalForm parentGoalId={showAddGoal.goalId} /> }
+            { showAddGoal && <AddGoalForm parentGoalId={showAddGoal.goalId} addThisGoal={addThisGoal} /> }
 
             {childrenGoals?.map((goal: GoalItem, index) => (
-              showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
+              showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm updateThisGoal={updateThisGoal} />
                 : (
                   <div
                     key={String(`goal-${goal.id}`)}
