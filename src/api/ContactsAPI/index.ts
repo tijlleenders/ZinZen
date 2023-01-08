@@ -6,7 +6,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getJustDate } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
-const installId = localStorage.getItem("installId");
+const getInstallId = () => { return localStorage.getItem("installId"); };
 
 const createRequest = async (url: string, body : object | null = null, method = "POST") => {
   try {
@@ -29,51 +29,51 @@ const createRequest = async (url: string, body : object | null = null, method = 
 export const initRelationship = async () => {
   const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
 
-  const res = await createRequest(url, { method: "initiateRelationship", installId });
+  const res = await createRequest(url, { method: "initiateRelationship", installId: getInstallId() });
   if (res.success) {
     const { relId } = res.response;
-    return { success: true, response: { installId, relId } };
+    return { success: true, response: { installId: getInstallId(), relId } };
   }
   return res;
 };
 
+
 export const acceptRelationship = async () => {
-  const _installId = localStorage.getItem("installId");
   const relId = window.location.pathname.split("/invite/")[1];
   const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "acceptRelationship", installId: _installId, relId });
+  const res = await createRequest(url, { method: "acceptRelationship", installId: getInstallId(), relId });
   return res;
 };
 
 export const shareGoalWithContact = async (relId: string, goal: GoalItem) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "shareGoal", goal } });
+  const res = await createRequest(url, { method: "shareGoal", installId: getInstallId(), relId, event: { type: "shareGoal", goal } });
   return res;
 };
 
 export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "collaboration", goal } });
+  const res = await createRequest(url, { method: "shareGoal", installId: getInstallId(), relId, event: { type: "collaboration", goal } });
   return res;
 };
 
 export const sendResponseOfColabInvite = async (status: string, relId: string, goalId: string) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "shareGoal", installId, relId, event: { type: "colabInviteResponse", goalId, status } });
+  const res = await createRequest(url, { method: "shareGoal", installId: getInstallId(), relId, event: { type: "colabInviteResponse", goalId, status } });
   return res;
 };
 
 export const getContactSharedGoals = async () => {
   const lastProcessedTimestamp = new Date(Number(localStorage.getItem("lastProcessedTimestamp"))).toISOString();
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "getGoals", installId, ...(lastProcessedTimestamp ? { lastProcessedTimestamp } : {}) });
+  const res = await createRequest(url, { method: "getGoals", installId: getInstallId(), ...(lastProcessedTimestamp ? { lastProcessedTimestamp } : {}) });
   localStorage.setItem("lastProcessedTimestamp", `${Date.now()}`);
   return res;
 };
 
 export const getRelationshipStatus = async (relationshipId: string) => {
   const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "getRelationshipStatus", installId, relationshipId });
+  const res = await createRequest(url, { method: "getRelationshipStatus", installId: getInstallId(), relationshipId });
   return res;
 };
 
@@ -86,7 +86,7 @@ export const sendColabUpdatesToContact = async (relId: string, goalId:string, ch
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
   const res = await createRequest(url,
     { method: "shareGoal",
-      installId,
+      installId: getInstallId(),
       relId,
       event: {
         type: "collaborationChanges",
