@@ -48,6 +48,9 @@
   padding-left: 8% !important;
 }
 
+input[type="radio"] {
+  accent-color: #CD6E51;
+}
 /*Media Query for Mobile View*/
 
 @media (max-width: 600px) {
