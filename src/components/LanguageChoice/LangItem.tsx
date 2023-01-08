@@ -25,47 +25,51 @@ export const LangItem = ({ lang }: { lang: ILanguage }) => {
     <div className="containerLang">
       {remainder === 1 ? (
         <Button
-          variant="peach"
+          variant={(lang.selected)?"dark-peach":"light-peach"}
           size="lg"
-          className="lang-btn1"
+          className={(lang.selected)?"lang-btn1 selected":"lang-btn1"}
           onClick={() => {
             handleClick(lang.langId);
           }}
         >
           {lang.title}
+          <input type="radio" checked={lang.selected} readOnly/>
         </Button>
       ) : remainder === 2 ? (
         <Button
-          variant="dark-pink"
+          variant={(lang.selected)?"dark-peach":"light-peach"}
           size="lg"
-          className="lang-btn1"
+          className={(lang.selected)?"lang-btn1 selected":"lang-btn1"}
           onClick={() => {
             handleClick(lang.langId);
           }}
         >
           {lang.title}
+          <input type="radio" checked={lang.selected} readOnly/>
         </Button>
       ) : remainder === 3 ? (
         <Button
-          variant="grey-base"
+          variant={(lang.selected)?"dark-peach":"light-peach"}
           size="lg"
-          className="lang-btn2"
+          className={(lang.selected)?"lang-btn2 selected":"lang-btn1"}
           onClick={() => {
             handleClick(lang.langId);
           }}
         >
           {lang.title}
+          <input type="radio" checked={lang.selected} readOnly/>
         </Button>
       ) : (
         <Button
-          variant="pale-blue"
+          variant={(lang.selected)?"dark-peach":"light-peach"}
           size="lg"
-          className="lang-btn2"
+          className={(lang.selected)?"lang-btn2 selected":"lang-btn1"}
           onClick={() => {
             handleClick(lang.langId);
           }}
         >
           {lang.title}
+          <input type="radio" checked={lang.selected} readOnly/>
         </Button>
       )}
     </div>
