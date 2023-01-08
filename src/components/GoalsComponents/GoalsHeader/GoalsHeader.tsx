@@ -25,7 +25,7 @@ import "@components/HeaderDashboard/HeaderDashboard.scss";
 
 interface GoalsHeaderProps {
   displayTRIcon: string,
-  addThisGoal: (e: React.SyntheticEvent, parentGoalId: number) => Promise<void>,
+  addThisGoal: (e: React.SyntheticEvent) => Promise<void>,
   updateThisGoal: (e: React.SyntheticEvent) => Promise<void>
 }
 
