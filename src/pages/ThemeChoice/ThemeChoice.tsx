@@ -30,7 +30,7 @@ export const ThemeChoice = () => {
           navigate("/QueryZinZen");
         }}
       >
-        Light colors
+        {t("Light colors")}
       </button>
       <button
         type="button"
@@ -43,7 +43,7 @@ export const ThemeChoice = () => {
           setDarkModeStatus(true);
         }}
       >
-        Dark colors
+        {t("Dark colors")}
       </button>
     </div>
   );
