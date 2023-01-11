@@ -2,7 +2,6 @@
 /* eslint-disable import/no-relative-packages */
 // @ts-nocheck
 import React, { useEffect, useState } from "react";
-import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import { useRecoilValue } from "recoil";
 
 import { getActiveGoals } from "@src/api/GoalsAPI";
@@ -14,6 +13,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { darkModeState } from "@src/store";
 import { colorPallete, getDiffInHours } from "@src/utils";
 
+import { TaskFilter } from "@src/helpers/TaskFilter/TaskFilter";
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
 
@@ -27,12 +27,9 @@ export const MyTimePage = () => {
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [showTasks, setShowTasks] = useState<string[]>([`My ${today.toDateString()}`]);
   const toggle = true;
+  const [numDays, setNumDays] = useState<number>(7);
+  const [dropDownValue, setDropDownValue] = useState<number>(7);
 
-  const handleShowTasks = (dayName: string) => {
-    if (showTasks.includes(dayName)) {
-      setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
-    } else { setShowTasks([...showTasks, dayName]); }
-  };
   const getColorWidth = (unplanned: boolean, duration: number) => {
     if (!toggle) return (duration * 4.17);
     let colorWidth = 0;
@@ -54,58 +51,6 @@ export const MyTimePage = () => {
       }}
     />
   );
-  const getTimeline = () => (
-    <MyTimeline myTasks={tmpTasks} />
-  );
-  const getDayComponent = (day: string) => {
-    let colorIndex = -1;
-    return (
-      <div key={`day-${day}`} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
-        <button
-          type="button"
-          className="MyTime_navRow"
-          onClick={() => {
-            handleShowTasks(day);
-          }}
-        >
-          <h3 className="MyTime_dayTitle"> {day} </h3>
-          <button
-            className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
-            type="button"
-          >
-            <div> { showTasks.includes(day) ? <ChevronDown /> : <ChevronRight /> } </div>
-          </button>
-        </button>
-        {showTasks.includes(day) ? getTimeline() :
-          (
-            <div className="MyTime_colorPalette">
-              {tmpTasks.map((task, index) => {
-                const colorWidth = getColorWidth(false, task.duration);
-                colorIndex = (colorIndex === colorPallete.length - 1) ? 0 : colorIndex + 1;
-                if (unplannedIndices.includes(index)) {
-                  const unpColorWidth = getColorWidth(true, unplannedDurations[unplannedIndices.indexOf(index)]);
-                  if (index === 0) {
-                    return (
-                      <>
-                        {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
-                        {getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
-                      </>
-                    );
-                  }
-                  return (
-                    <>
-                      {getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
-                      {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
-                    </>
-                  );
-                }
-                return (getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0]));
-              })}
-            </div>
-          )}
-      </div>
-    );
-  };
 
   const getTasks = async () => {
     const goals: GoalItem[] = await getActiveGoals();
@@ -190,18 +135,23 @@ export const MyTimePage = () => {
     })();
   }, []);
 
+  const handleSelect = (e) => {
+    setNumDays(Number(e.target.value));
+    setDropDownValue(Number(e.target.value));
+  };
+
   return (
     <div className="slide MyTime_container">
       <div id="MyTime_days_container">
         <MainHeaderDashboard />
-        {getDayComponent(`My ${today.toDateString()}`)}
-        {getDayComponent("Tomorrow")}
-        {
-          [...Array(5).keys()].map(() => {
-            today.setDate(today.getDate() + 1);
-            return getDayComponent(`${today.toLocaleDateString("en-us", { weekday: "long" })}`);
-          })
-        }
+        Days to display:
+        <select onChange={handleSelect} value={dropDownValue}>
+          {[...Array(7).keys()].map((num) => <option key={num} value={num + 1}>{num + 1}</option>)}
+        </select>
+        {[...Array(numDays).keys()].map((dayNum) => {
+          const tasks = TaskFilter(tmpTasks, dayNum);
+          return <MyTimeline key={dayNum} myTasks={tasks} daysAfterToday={dayNum} />;
+        })}
       </div>
     </div>
   );
