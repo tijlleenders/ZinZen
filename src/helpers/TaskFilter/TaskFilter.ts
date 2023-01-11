@@ -7,7 +7,7 @@ export const TaskFilter = (tasks: TaskItem[], daysAfterToday: number): TaskItem[
   const targetDate = new Date();
   targetDate.setDate(today.getDate() + daysAfterToday);
   return tasks.filter((task) => {
-    const taskDate = new Date(`${task.start}Z`); // 'Z' needed to specify UTC
+    const taskDate = new Date(`${task.start}`);
     return taskDate.toDateString() === targetDate.toDateString();
   });
 };
