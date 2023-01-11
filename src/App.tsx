@@ -19,7 +19,7 @@ import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
-import { createGoalObjectFromTags, updateColabStatusOfGoal, updateGoal } from "./api/GoalsAPI";
+import { createGoalObjectFromTags, updateColabStatusOfGoal } from "./api/GoalsAPI";
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/CollaborationHandler";
 import { getDefaultValueOfCollab } from "./utils";
@@ -109,7 +109,7 @@ const App = () => {
       </BrowserRouter>
       <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
         <Toast.Body>
-          <p id="toast-message">{showToast.message}</p>
+          <p id="toast-message" style={showToast.extra === "" ? { margin: 0 } : {}}>{showToast.message}</p>
           { showToast.extra !== "" && <p id="extra-message">{showToast.extra}</p> }
         </Toast.Body>
       </Toast>
