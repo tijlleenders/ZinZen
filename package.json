@@ -57,7 +57,8 @@
     "lint-fix": "eslint ./ --fix",
     "format": "lint-staged",
     "format-all": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cy:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
