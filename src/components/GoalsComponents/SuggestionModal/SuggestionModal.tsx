@@ -7,13 +7,13 @@ import { Modal } from "react-bootstrap";
 
 import plus from "@assets/images/plus.svg";
 
-import { addGoal, createGoalObjectFromTags, getGoal, getGoalsFromArchive, getPublicGoals, updateGoal } from "@src/api/GoalsAPI";
-import { TagsExtractor } from "@src/helpers/TagsExtractor";
-import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
-import ITagExtractor from "@src/Interfaces/ITagExtractor";
-import { displayAddGoalOptions, displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayFromOptions, displayLoader, displayToast } from "@src/store";
+import { TagsExtractor } from "@src/helpers/TagsExtractor";
+import ITagExtractor from "@src/Interfaces/ITagExtractor";
+import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
+import { addGoal, createGoalObjectFromTags, getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
+import { darkModeState, displayToast } from "@src/store";
 import InputGoal from "../InputGoal";
 
 import "./SuggestionModal.scss";
@@ -23,21 +23,16 @@ interface SuggestionModalProps {
 }
 
 const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
-  const [open, setOpen] = useState(false);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showAddGoalOptions = useRecoilValue(displayAddGoalOptions);
+  const setShowToast = useSetRecoilState(displayToast);
+
+  const [open, setOpen] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState<{index: number, goal:ISharedGoal|GoalItem} | null>(null);
   const [goalLang, setGoalLang] = useState("en");
-  const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
-  const [publicGoals, setPublicGoals] = useState<ISharedGoal[]>([]);
   const [goalInput, setGoalInput] = useState("");
-
-  const setLoading = useSetRecoilState(displayLoader);
-  const [showFromOptions, setShowFromOptions] = useRecoilState(displayFromOptions);
-  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
+  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [showSuggestionsModal, setShowSuggestionsModal] = useRecoilState(displaySuggestionsModal);
-  const setShowToast = useSetRecoilState(displayToast);
 
   const addSuggestedGoal = async (goal:ISharedGoal | GoalItem, index:number) => {
     let newGoalId;
@@ -72,84 +67,39 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
     setShowToast({ open: true, message: newGoalId ? "Goal Added!" : "Failed to add this Goal", extra: "" });
   };
 
-  const getSuggestions = (isArchiveTab: boolean) => {
-    const lst: ISharedGoal[] | GoalItem[] = isArchiveTab ? archiveGoals : publicGoals;
-    return lst.length > 0 ?
-      lst.map((goal, index) => (
-        <div key={goal.id}>
-          <div
-            onClick={() => setSelectedGoal(selectedGoal?.index === index ? null : { index, goal })}
-            key={`my-archive-${goal.id}`}
-            className="suggestions-goal-name"
-            style={{ backgroundColor: goal.goalColor }}
+  const getSuggestions = () => {
+    const { goals } = showSuggestionsModal;
+    return goals.map((goal, index) => (
+      <div key={goal.id}>
+        <div
+          onClick={() => setSelectedGoal(selectedGoal?.index === index ? null : { index, goal })}
+          className="suggestions-goal-name"
+          style={{ backgroundColor: goal.goalColor }}
+        >
+          <p style={{ marginBottom: 0 }}>{goal.title}</p>
+          <button
+            type="button"
+            onClickCapture={(e) => {
+              e.stopPropagation();
+              addSuggestedGoal(goal, index);
+            }}
           >
-            <p style={{ marginBottom: 0 }}>{goal.title}</p>
-            <button
-              type="button"
-              onClickCapture={(e) => {
-                e.stopPropagation();
-                addSuggestedGoal(goal, index);
-              }}
-            >
-              <img alt="goal suggestion" src={plus} style={{ filter: "brightness(0) invert(1)" }} />
-            </button>
-          </div>
-          { goalInput !== "" && selectedGoal?.index === index && (
-          <InputGoal
-            goalInput={goalInput}
-            selectedColor={goal.goalColor ? goal.goalColor : "#FFFFFF"}
-            goalLang={goalLang}
-            goalTags={goalTags}
-            setGoalTags={setGoalTags}
-            setGoalTitle={setGoalTitle}
-          />
-          )}
+            <img alt="goal suggestion" src={plus} style={{ filter: "brightness(0) invert(1)" }} />
+          </button>
         </div>
-      ))
-      : (
-        <div style={{ textAlign: "center" }} className="suggestions-goal-name">
-          <p style={{ marginBottom: 0, padding: "2%", color: "black" }}>
-            { isArchiveTab ? "Sorry, No Archived Goals" : "Sorry, No Public Goals" }
-          </p>
-        </div>
-      );
+        { goalInput !== "" && selectedGoal?.index === index && (
+        <InputGoal
+          goalInput={goalInput}
+          selectedColor={goal.goalColor ? goal.goalColor : "#FFFFFF"}
+          goalLang={goalLang}
+          goalTags={goalTags}
+          setGoalTags={setGoalTags}
+          setGoalTitle={setGoalTitle}
+        />
+        )}
+      </div>
+    ));
   };
-
-  const getMySuggestions = async () => {
-    setLoading(true);
-    const goals: GoalItem[] = await getGoalsFromArchive(goalID);
-    const res = await getPublicGoals(goalID === "root" ? "root" : (await getGoal(goalID)).title);
-    setArchiveGoals([...goals]);
-    let publicGoalsEmpty = true;
-    const archiveGoalsEmpty = goals.length === 0;
-    if (res.status) {
-      const tmpPG = [...res.data];
-      publicGoalsEmpty = tmpPG.length === 0;
-      setPublicGoals([...tmpPG]);
-    }
-    setShowFromOptions({ ...showFromOptions, archive: !archiveGoalsEmpty, public: !publicGoalsEmpty });
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    if (showAddGoalOptions) {
-      getMySuggestions();
-    }
-  }, [showAddGoalOptions]);
-
-  useEffect(() => {
-    if (showSuggestionsModal === "Archive") {
-      setOpen(true);
-    } else if (showSuggestionsModal === "Public") {
-      if (showFromOptions.public) {
-        setOpen(true);
-      } else {
-        setShowToast({ open: true, message: "Awww... no hints today. We'll keep looking!", extra: "" });
-        setShowSuggestionsModal(null);
-        setShowFromOptions({ archive: false, public: false });
-      }
-    }
-  }, [showSuggestionsModal]);
 
   useEffect(() => {
     if (selectedGoal) {
@@ -176,25 +126,30 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
       setGoalTags({});
     }
   }, [selectedGoal]);
+
+  useEffect(() => {
+    if (["Archive", "Public"].includes(showSuggestionsModal.selected)) {
+      setOpen(true);
+    }
+  }, [showSuggestionsModal]);
+
   return (
     <Modal
       id={`suggestions-modal${darkModeStatus ? "-dark" : ""}`}
       show={open}
-      onHide={() => { setOpen(false); setShowSuggestionsModal(null); setShowFromOptions({ archive: false, public: false }); }}
+      onHide={() => { setOpen(false); setShowSuggestionsModal({ goals: [], selected: "" }); }}
       centered
       autoFocus={false}
     >
       <Modal.Body id="suggestions-modal-body">
         <p id="archive-title">
-          { showSuggestionsModal === "Public" && "Add from Public" }
-          { showSuggestionsModal === "Archive" && "Add from Archive"}
+          { `Add from ${showSuggestionsModal.selected || ""}` }
         </p>
-        <div style={{ height: "35vh", overflow: "scroll" }}>
-          {getSuggestions(showSuggestionsModal === "Archive")}
+        <div style={{ height: "35vh", overflowY: "scroll" }}>
+          {getSuggestions()}
         </div>
       </Modal.Body>
     </Modal>
-
   );
 };
 

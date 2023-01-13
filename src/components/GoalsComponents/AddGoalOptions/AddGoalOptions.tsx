@@ -1,20 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import plus from "@assets/images/plus.svg";
 import publicGoals from "@assets/images/publicGoals.svg";
-import archiveGoals from "@assets/images/archiveGoals.svg";
+import archiveGoalsIcon from "@assets/images/archiveGoals.svg";
 
-import { displayAddGoal, displaySuggestionsModal } from "@src/store/GoalsState";
-import { darkModeState, displayFromOptions } from "@src/store";
+import Loader from "@src/common/Loader";
+import { GoalItem } from "@src/models/GoalItem";
+import { darkModeState, displayToast } from "@src/store";
+import { displayAddGoal, displayAddGoalOptions, displaySuggestionsModal } from "@src/store/GoalsState";
+import { getGoal, getGoalsFromArchive, getPublicGoals } from "@src/api/GoalsAPI";
 
 import "./AddGoalOptions.scss";
 
 const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
+  const [loading, setLoading] = useState(false);
+  const [empty, setEmpty] = useState({ A: true, P: true });
+  const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
+
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showFromOptions = useRecoilValue(displayFromOptions);
+  const setShowToast = useSetRecoilState(displayToast);
   const setShowAddGoal = useSetRecoilState(displayAddGoal);
   const setShowSuggestionsModal = useSetRecoilState(displaySuggestionsModal);
+
+  useEffect(() => {
+    const checkArchive = async () => {
+      const res = await getGoalsFromArchive(parentGoalId);
+      setArchiveGoals([...res]);
+      setEmpty({ ...empty, A: res.length === 0 });
+    };
+    checkArchive();
+  }, []);
   return (
     <div id={`addGoal-options${darkModeStatus ? "-dark" : ""}`}>
       <button
@@ -31,23 +47,41 @@ const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
           />
         </button>
       </button>
-      { showFromOptions.archive && (
+      { archiveGoals.length > 0 && (
       <button
         type="button"
         className="addGoal-option"
-        onClick={() => { setShowSuggestionsModal("Archive"); }}
+        onClick={() => { setShowSuggestionsModal({ selected: "Archive", goals: archiveGoals }); }}
       >
         Archive
-        <button type="button"><img alt="create-goals-suggestion" src={archiveGoals} /></button>
+        <button type="button"><img alt="create-goals-suggestion" src={archiveGoalsIcon} /></button>
       </button>
       ) }
       <button
         type="button"
+        disabled={loading}
         className="addGoal-option"
-        onClick={() => { setShowSuggestionsModal("Public"); }}
+        onClick={async () => {
+          setLoading(true);
+          const res = await getPublicGoals(parentGoalId === "root" ? "root" : (await getGoal(parentGoalId)).title);
+          if (res.status && res.data?.length > 0) {
+            const tmpPG = [...res.data];
+            setEmpty({ ...empty, P: tmpPG.length === 0 });
+            setShowSuggestionsModal({ selected: "Public", goals: [...tmpPG] });
+          } else {
+            setShowToast({ open: true, message: "Awww... no hints today. We'll keep looking!", extra: "" });
+          }
+          setLoading(false);
+        }}
       >
         Hint
-        <button type="button"><img alt="create-goals-suggestion" src={publicGoals} /></button>
+        <button
+          type="button"
+          disabled={loading}
+        >
+          <img alt="create-goals-suggestion" src={publicGoals} />
+          { loading && <Loader /> }
+        </button>
       </button>
     </div>
   );
