@@ -42,8 +42,7 @@ import {
   inputGoalTags,
   selectedColorIndex } from "@src/store/GoalsState";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
-import { colorPallete, getDefaultValueOfCollab } from "@src/utils";
-import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions";
+import { colorPallete } from "@src/utils";
 
 import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
 
@@ -53,6 +52,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { sendColabUpdatesToContact } from "@src/api/ContactsAPI";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import NotificationSymbol from "@src/common/NotificationSymbol";
+import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions/AddGoalOptions";
 
 interface ILocationProps {
   openGoalOfId: string,

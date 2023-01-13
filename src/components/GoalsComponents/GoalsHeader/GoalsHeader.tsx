@@ -18,7 +18,7 @@ import { displaySidebar } from "@src/store/SidebarState";
 import Loader from "@src/common/Loader";
 import { displayAddGoal, displayAddGoalOptions, displayGoalId, displayUpdateGoal, goalsHistory, popFromGoalsHistory } from "@src/store/GoalsState";
 import Sidebar from "@components/Sidebar";
-import SuggestionModal from "../SuggestionModal";
+import SuggestionModal from "../SuggestionModal/SuggestionModal";
 
 import "@translations/i18n";
 import "@components/HeaderDashboard/HeaderDashboard.scss";
