@@ -18,7 +18,11 @@
       border-radius: 8px;
       font-weight: 700;
       text-align: center;
-  
+      
+      .loader { 
+        top: -3px;
+        left: -2px;
+      }
       button {
         width: 45px;
         height: 45px;
