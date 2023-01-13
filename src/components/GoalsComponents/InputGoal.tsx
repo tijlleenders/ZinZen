@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
 import { darkModeState } from "@src/store";
 import ITagExtractor, { ITagIndices } from "@src/Interfaces/ITagExtractor";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { extractedTitle, inputGoalTags } from "@src/store/GoalsState";
+import { formatTagsToText } from "@src/helpers/GoalConvertor";
+import { createGoalObjectFromTags } from "@src/api/GoalsAPI";
 
 interface IGoalTagsProps {
   goalInput: string,
@@ -21,42 +23,27 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const [formInputData, setFormInputData] = useState(goalInput);
-  const [magicIndices, setMagicIndices] = useState<ITagIndices[]>([]);
-  const setGoalTitle = useSetRecoilState(extractedTitle);
+  const [, setMagicIndices] = useState<ITagIndices[]>([]);
+  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
 
   const handleTagClick = (tagType: string) => {
-    if (goalTags) {
-      const tmpTags = { ...goalTags };
-      let tmpString = formInputData;
-      const index = magicIndices.findIndex((ele) => ele.word === tagType);
-
-      let nextIndex = index + 1;
-      while (nextIndex < magicIndices.length && magicIndices[nextIndex].index === magicIndices[index].index) { nextIndex += 1; }
-
-      if (index + 1 === magicIndices.length) {
-        tmpString = tmpString.slice(0, magicIndices[index]?.index);
-      } else {
-        tmpString = `${tmpString.slice(0, magicIndices[index]?.index).trim()} ${tmpString.slice(magicIndices[nextIndex].index).trim()}`;
-      }
-      if (tagType === "duration" && goalTags.duration) {
-        tmpTags.duration = null;
-      } else if (tagType === "repeats" && goalTags.repeats) {
-        tmpTags.repeats = null;
-      } else if (tagType === "link" && goalTags.link) {
-        tmpTags.link = null;
-      } else if (tagType === "start" && goalTags.start) {
-        tmpTags.start = null;
-      } else if (tagType === "due" && goalTags.due) {
-        tmpTags.due = null;
-      } else if (tagType === "afterTime" && goalTags.afterTime) {
-        tmpTags.afterTime = null;
-      } else if (tagType === "beforeTime" && goalTags.beforeTime) {
-        tmpTags.beforeTime = null;
-      }
-      setGoalTags({ ...tmpTags });
-      setFormInputData(tmpString.trim());
-    }
+    const updatedTags = { ...goalTags };
+    delete updatedTags[tagType]
+    setGoalTags({ ...updatedTags });
+    const res = formatTagsToText(
+      createGoalObjectFromTags({
+        title: goalTitle,
+        repeat: updatedTags.repeats ? updatedTags?.repeats.value.trim() : null,
+        duration: updatedTags.duration ? updatedTags.duration.value : null,
+        start: updatedTags.start ? updatedTags.start.value : null,
+        due: updatedTags.due ? updatedTags.due.value : null,
+        afterTime: updatedTags.afterTime ? updatedTags.afterTime.value : null,
+        beforeTime: updatedTags.beforeTime ? updatedTags.beforeTime.value : null,
+        link: updatedTags.link ? `${updatedTags.link.value}`.trim() : null,
+      })
+    );
+    setFormInputData(res.inputText);
   };
 
   useEffect(() => {
