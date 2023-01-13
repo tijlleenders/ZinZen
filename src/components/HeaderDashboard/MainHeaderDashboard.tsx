@@ -28,7 +28,7 @@ export const MainHeaderDashboard = () => {
     }
   };
   return (
-    <>
+    <div className={`positioning${!darkModeStatus ? "-light" : "-dark"}`}>
       <img
         role="presentation"
         src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
@@ -53,7 +53,7 @@ export const MainHeaderDashboard = () => {
         className="dark-mode-toggle"
       />
       <Sidebar />
-    </>
+    </div>
 
   );
 };
