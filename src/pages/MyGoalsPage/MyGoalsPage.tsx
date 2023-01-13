@@ -105,7 +105,7 @@ export const MyGoalsPage = () => {
       start: goalTags.start ? goalTags.start.value : null,
       due: goalTags.due ? goalTags.due.value : null,
       afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
-      beforeTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+      beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
       link: goalTags.link ? `${goalTags.link.value}`.trim() : null,
       goalColor: colorPallete[colorIndex]
     });
