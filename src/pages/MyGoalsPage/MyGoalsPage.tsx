@@ -42,7 +42,7 @@ import {
   inputGoalTags,
   selectedColorIndex } from "@src/store/GoalsState";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
-import { colorPallete } from "@src/utils";
+import { colorPallete, inheritParentProps } from "@src/utils";
 
 import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
 
@@ -96,7 +96,7 @@ export const MyGoalsPage = () => {
       return;
     }
     const parentGoalId = showAddGoal?.goalId;
-    const newGoal = createGoalObjectFromTags({
+    let newGoal = createGoalObjectFromTags({
       language: goalLang,
       parentGoalId,
       title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
@@ -112,6 +112,7 @@ export const MyGoalsPage = () => {
 
     if (parentGoalId && parentGoalId !== "root") {
       const parentGoal = await getGoal(parentGoalId);
+      newGoal = inheritParentProps(newGoal, parentGoal);
       const newGoalId = await addGoal({ ...newGoal, collaboration: { ...parentGoal.collaboration, notificationCounter: 0 } });
       if (parentGoal.collaboration.status === "accepted") {
         sendColabUpdatesToContact(parentGoal.collaboration.relId, parentGoalId, {
@@ -293,7 +294,7 @@ export const MyGoalsPage = () => {
                 )}
                 <div>
                   {userGoals?.map((goal: GoalItem, index) => (
-                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm updateThisGoal={updateThisGoal}/>
+                    showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm updateThisGoal={updateThisGoal} />
                       : (
                         <div
                           key={String(`task-${goal.id}`)}
