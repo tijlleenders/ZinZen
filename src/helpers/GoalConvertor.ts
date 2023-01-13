@@ -24,6 +24,7 @@ export const formatTagsToText = (_goal: GoalItem) => {
     start,
     due,
     repeat,
-    link } = response;
-  return { inputText: title + duration + start + due + repeat + link, ...response };
+    link,
+    timing } = response;
+  return { inputText: title + duration + start + due + timing + repeat + link, ...response };
 };
