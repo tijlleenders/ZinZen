@@ -1,6 +1,4 @@
-/* eslint-disable no-alert */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react/jsx-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from "react";
@@ -16,7 +14,9 @@ import ITagExtractor from "@src/Interfaces/ITagExtractor";
 import { displayAddGoalOptions, displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState, displayFromOptions, displayLoader, displayToast } from "@src/store";
-import InputGoal from "./InputGoal";
+import InputGoal from "../InputGoal";
+
+import "./SuggestionModal.scss";
 
 interface SuggestionModalProps {
   goalID: string,
@@ -69,14 +69,14 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
       await updateGoal(goalID, { sublist: newSublist });
     }
     setSelectedGoal(null);
-    alert(newGoalId ? "Added!" : "Sorry!");
+    setShowToast({ open: true, message: newGoalId ? "Goal Added!" : "Failed to add this Goal", extra: "" });
   };
 
   const getSuggestions = (isArchiveTab: boolean) => {
     const lst: ISharedGoal[] | GoalItem[] = isArchiveTab ? archiveGoals : publicGoals;
     return lst.length > 0 ?
       lst.map((goal, index) => (
-        <div>
+        <div key={goal.id}>
           <div
             onClick={() => setSelectedGoal(selectedGoal?.index === index ? null : { index, goal })}
             key={`my-archive-${goal.id}`}
@@ -109,9 +109,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
       : (
         <div style={{ textAlign: "center" }} className="suggestions-goal-name">
           <p style={{ marginBottom: 0, padding: "2%", color: "black" }}>
-            {
-                isArchiveTab ? "Sorry, No Archived Goals" : "Sorry, No Public Goals"
-                }
+            { isArchiveTab ? "Sorry, No Archived Goals" : "Sorry, No Public Goals" }
           </p>
         </div>
       );
