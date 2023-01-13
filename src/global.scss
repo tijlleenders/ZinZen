@@ -131,7 +131,7 @@
 }
 
 /* Loader */
-#loader {
+.loader {
   position: absolute;
   top: 18px;
   left: 0;
@@ -140,7 +140,7 @@
   color: #CD6E51
 }
 @media (max-width: 600px) {
-  #loader {
+  .loader {
       left: 18px;
   }
 }

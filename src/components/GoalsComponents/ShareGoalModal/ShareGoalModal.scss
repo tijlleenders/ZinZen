@@ -46,6 +46,16 @@
 .share-Options {
     display: flex;
     justify-content: left;
+    position: relative;
+    .loader {
+        color: #CD6E51;
+        top: -4px;
+        left: -4px;
+        width: 44px;
+        height: 44px;
+        background: transparent !important;
+        position: absolute;
+    }
 }
 
 .share-Options > div, .contact-icon, .next-icon {

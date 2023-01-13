@@ -15,6 +15,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 
 import "./ShareGoalModal.scss";
+import Loader from "@src/common/Loader";
 import InviteLinkModal from "./InviteLinkModal";
 
 interface IShareGoalModalProps {
@@ -26,13 +27,13 @@ interface IShareGoalModalProps {
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const minContacts = 1;
   const darkModeStatus = useRecoilValue(darkModeState);
-  // const setLoading = useSetRecoilState(displayLoader);
   const setShowToast = useSetRecoilState(displayToast);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const [showInviteModal, setShowInviteModal] = useState<{ goal: GoalItem, id: string, name: string, relId: string, accepted: boolean } | null>(null);
   const [showAddContactModal, setShowAddContactModal] = useState(false);
   const [displayContacts, setDisplayContacts] = useState(false);
+  const [loading, setLoading] = useState({ P: false, A: false, S: false });
 
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
@@ -51,6 +52,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       <button
         type="button"
         onClick={async () => {
+          setLoading({ ...loading, S: true });
           if (name === "") handleShowAddContact();
           else {
             const status = accepted ? true : await checkStatus(relId);
@@ -63,6 +65,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${name} so that they can add you in their contacts` });
             }
           }
+          setLoading({ ...loading, S: false });
         }}
         className="contact-icon"
       >
@@ -93,12 +96,11 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         <button
           onClick={async () => {
             let parentGoal = "root";
-            // setLoading(true);
-            if (goal.parentGoalId !== "root") {
-              parentGoal = (await getGoal(goal.parentGoalId)).title;
-            }
-            await shareMyGoal(goal, parentGoal);
-            // setLoading(false);
+            setLoading({ ...loading, A: true });
+            if (goal.parentGoalId !== "root") { parentGoal = (await getGoal(goal.parentGoalId)).title; }
+            const { response } = await shareMyGoal(goal, parentGoal);
+            setShowToast({ open: true, message: response, extra: "" });
+            setLoading({ ...loading, A: false });
           }}
           type="button"
           className="shareOptions-btn"
@@ -106,12 +108,14 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           <div className="share-Options">
             <div> <img alt="share goal anonymously" src={shareAnonymous} /> </div>
             <p className="shareOption-name">Share Anonymously</p>
+            { loading.A && <Loader /> }
           </div>
         </button>
         <button type="button" className="shareOptions-btn">
           <div className="share-Options">
             <div> <img alt="share goal public" src={sharePublic} /> </div>
             <p className="shareOption-name">Share Public</p>
+            { loading.P && <Loader /> }
           </div>
         </button>
         <button
@@ -132,6 +136,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                   ""}
               {`${goal.shared && goal.collaboration.status === "none" ? ` - Goal is shared with ${goal.shared.name}` : ""}`}
             </p>
+            { loading.S && <Loader /> }
           </div>
           { (!goal.shared || !goal.collaboration.status) && displayContacts && (
             <div className="shareWithContacts">
