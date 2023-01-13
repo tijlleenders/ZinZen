@@ -8,11 +8,11 @@ import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
-import { addContact, getAllContacts, initRelationship } from "@src/api/ContactsAPI";
-import { darkModeState, displayLoader, displayToast } from "@src/store";
+import { addContact, getAllContacts, getRelationshipStatus, initRelationship, shareGoalWithContact, updateStatusOfContact } from "@src/api/ContactsAPI";
+import { darkModeState, displayToast } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
-import { getGoal, shareMyGoal } from "@src/api/GoalsAPI";
+import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 
 import "./ShareGoalModal.scss";
 import InviteLinkModal from "./InviteLinkModal";
@@ -36,14 +36,31 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
 
-  const getContactBtn = (id = "", relId = "", name = "", accepted = false) => (
+  const checkStatus = async (relId: string) => {
+    if (relId === "") { return false; }
+    const res = await getRelationshipStatus(relId);
+    if (res.success) {
+      await updateStatusOfContact(relId, res.response.status !== "pending");
+      return res.response.status !== "pending";
+    }
+    return false;
+  };
+  const getContactBtn = (relId = "", name = "", accepted = false) => (
     <div className="contact-button">
       <button
         type="button"
         onClick={async () => {
           if (name === "") handleShowAddContact();
           else {
-            setShowInviteModal({ goal, id, name, relId, accepted });
+            const status = accepted ? true : await checkStatus(relId);
+            if (!goal.shared && status) {
+              await shareGoalWithContact(relId, goal);
+              await updateSharedStatusOfGoal(goal.id, { relId, name, allowed: false });
+              setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });
+            } else {
+              navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);
+              setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${name} so that they can add you in their contacts` });
+            }
           }
         }}
         className="contact-icon"
@@ -123,7 +140,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               <div id="modal-contact-list" style={contacts.length < 3 ? { justifyContent: "flex-start" } : {}}>
                 { contacts.length > 0 &&
                   contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (
-                    getContactBtn(ele.id, ele.relId, ele.name, ele.accepted)
+                    getContactBtn(ele.relId, ele.name, ele.accepted)
                   ))}
                 { /* contacts.length >= 3 && (
                   <div className="contact-button">
