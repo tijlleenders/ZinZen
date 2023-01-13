@@ -71,7 +71,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       >
         { name === "" ? <img alt="add contact" src={addContactIcon} /> : name[0]}
       </button>
-      { name !== "" && <p>{name}</p> }
+      { name !== "" && <p style={{ margin: 0 }}>{name}</p> }
     </div>
   );
 
@@ -111,13 +111,13 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             { loading.A && <Loader /> }
           </div>
         </button>
-        <button type="button" className="shareOptions-btn">
+        {/* <button type="button" className="shareOptions-btn">
           <div className="share-Options">
             <div> <img alt="share goal public" src={sharePublic} /> </div>
             <p className="shareOption-name">Share Public</p>
             { loading.P && <Loader /> }
           </div>
-        </button>
+        </button> */}
         <button
           disabled={!!goal.shared || goal.collaboration.status !== "none"}
           type="button"
