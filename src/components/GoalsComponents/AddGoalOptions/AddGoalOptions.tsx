@@ -8,6 +8,8 @@ import archiveGoals from "@assets/images/archiveGoals.svg";
 import { displayAddGoal, displaySuggestionsModal } from "@src/store/GoalsState";
 import { darkModeState, displayFromOptions } from "@src/store";
 
+import "./AddGoalOptions.scss";
+
 const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const showFromOptions = useRecoilValue(displayFromOptions);
