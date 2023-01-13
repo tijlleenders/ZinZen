@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
@@ -24,6 +24,7 @@ interface IShareGoalModalProps {
 }
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
+  const minContacts = 1;
   const darkModeStatus = useRecoilValue(darkModeState);
   // const setLoading = useSetRecoilState(displayLoader);
   const setShowToast = useSetRecoilState(displayToast);
@@ -88,6 +89,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       style={showAddContactModal || showInviteModal ? { zIndex: 1 } : {}}
     >
       <Modal.Body id="share-modal-body">
+        <h4>Share Goals</h4>
         <button
           onClick={async () => {
             let parentGoal = "root";
@@ -137,9 +139,9 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                 <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
               { contacts.length > 0 &&
                 <p className="share-warning"> Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact </p>}
-              <div id="modal-contact-list" style={contacts.length < 3 ? { justifyContent: "flex-start" } : {}}>
+              <div id="modal-contact-list" style={contacts.length <= minContacts ? { justifyContent: "flex-start" } : {}}>
                 { contacts.length > 0 &&
-                  contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (
+                  contacts.slice(0, Math.min(minContacts, contacts.length)).map((ele) => (
                     getContactBtn(ele.relId, ele.name, ele.accepted)
                   ))}
                 { /* contacts.length >= 3 && (
@@ -153,15 +155,11 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                     </button>
                   </div>
                 ) */}
-                { contacts.length < 3 && getContactBtn() }
+                { contacts.length === 0 && getContactBtn() }
               </div>
             </div>
           )}
         </button>
-        <Form.Check type="checkbox" className="shareOptions-btn" id="cb-withTime">
-          <Form.Check.Input type="checkbox" />
-          <Form.Check.Label>Share with time</Form.Check.Label>
-        </Form.Check>
       </Modal.Body>
       <Modal
         className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""}`}
