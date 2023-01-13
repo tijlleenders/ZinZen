@@ -1,4 +1,5 @@
 import { ICollaboration } from "@src/Interfaces/ICollaboration";
+import { GoalItem } from "@src/models/GoalItem";
 
 // @ts-nocheck
 export const formatDate = () => {
@@ -50,4 +51,13 @@ export function getDefaultValueOfCollab() {
     notificationCounter: 0,
   };
   return value;
+}
+
+export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
+  const goal = { ...newGoal };
+  if (!goal.start) { goal.start = parentGoal.start; }
+  if (!goal.due) { goal.due = parentGoal.due; }
+  if (!goal.beforeTime) { goal.beforeTime = parentGoal.beforeTime; }
+  if (!goal.afterTime) { goal.afterTime = parentGoal.afterTime; }
+  return goal;
 }
