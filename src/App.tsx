@@ -25,7 +25,7 @@ import { handleIncomingChanges } from "./helpers/CollaborationHandler";
 import { getDefaultValueOfCollab } from "./utils";
 
 import "./customize.scss";
-import "./App.scss";
+import "./global.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fontsource/montserrat";
 
