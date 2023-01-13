@@ -37,7 +37,6 @@ const App = () => {
   const isLanguageChosen = language !== "No language chosen.";
 
   const [showToast, setShowToast] = useRecoilState(displayToast);
-
   useEffect(() => {
     const init = async () => {
       const res = await getContactSharedGoals();
@@ -83,6 +82,7 @@ const App = () => {
     } else {
       init();
     }
+    if ((!isLanguageChosen || !isThemeChosen) && window.location.pathname !== "/" ) { window.open("/", "_self"); }
   }, []);
 
   return (
