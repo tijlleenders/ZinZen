@@ -32,7 +32,7 @@ describe("DashboardUserChoice Test", () => {
     cy.get(".form-tag").contains("Due");
     cy.get(".form-tag").contains("Before");
     cy.get(".form-tag").contains("After");
-    cy.get(".form-tag").contains("1 hours");
+    cy.get(".form-tag").contains("1h");
     cy.get(".form-tag").contains("URL");
     cy.get(".language");
   });
@@ -91,7 +91,7 @@ describe("DashboardUserChoice Test", () => {
   it("should remove tag when clicked", () => {
     cy.get(".form-tag").contains("Start");
     cy.get(".form-tag").contains("Daily");
-    cy.get(".form-tag").contains("1 hours");
+    cy.get(".form-tag").contains("1h");
     cy.get(".form-tag").contains("URL");
     cy.get(".language");
     cy.get(".form-tag").contains("Due").click({ force: true });

@@ -212,7 +212,7 @@ export const removeChildrenGoals = async (parentGoalId: string) => {
 export const shareGoal = async (goal: object) => {
   const URL = "https://jb65zz5efi3jy5rw5f2y5ke2u40hobkq.lambda-url.eu-west-1.on.aws/";
   try {
-    await fetch(URL, {
+    const res = await fetch(URL, {
       mode: "cors",
       method: "POST",
       headers: {
@@ -220,9 +220,9 @@ export const shareGoal = async (goal: object) => {
       },
       body: JSON.stringify(goal),
     });
-    alert("Thank you for sharing anonymously!");
+    return { success: res.ok, response: res.ok ? "Thank you for sharing anonymously!" : "Let's focus on happy path" };
   } catch (err) {
-    alert("Let's focus on the happy path.");
+    return { success: false, response: "Let's focus on happy path" };
   }
 };
 
@@ -250,7 +250,8 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
     parentTitle: parent,
     goal: goalDetails
   };
-  await shareGoal(shareableGoal);
+  const res = await shareGoal(shareableGoal);
+  return res;
 };
 
 export const updateSharedStatusOfGoal = async (id: string, shared: IShared) => {

@@ -1,0 +1,56 @@
+#suggestions-modal, #suggestions-modal-dark {
+  height: 100%;
+  background-color: transparent;
+  margin: auto;
+  width: 100vw !important;
+  max-width: 600px;
+  
+  .modal-content {
+   margin-top: auto;
+   border: 0;
+   background: #FFE1D7;
+   border-radius: 0.5rem 0.5rem 0 0;
+ }
+}
+#suggestions-modal-dark {
+  .modal-content {
+    background: #121212;
+    color: white
+  }
+}
+
+.suggestions-goal-name {
+    background: #F0E6E1;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    font-size: 1.3em;
+    font-weight: 600;
+    justify-content: space-between;
+    margin-top: 4%;
+    padding: 2.5% 4%;
+    
+    button {
+      border: none;
+      background-color: transparent;
+    }
+  }
+  
+  
+#suggestions-modal-body {
+  display: flex;
+  flex-direction: column;
+  padding: 5%;
+  
+  #goalInputField {
+    display: none;
+  }
+}
+
+#archive-title {
+  font-size: 1.5em;
+  font-weight: bolder;
+  font-family: 'Montserrat';
+}

@@ -11,7 +11,7 @@ import share from "@assets/images/share.svg";
 import trash from "@assets/images/trash.svg";
 
 import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, updateGoal } from "@src/api/GoalsAPI";
-import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
+import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 import { sendColabUpdatesToContact } from "@src/api/ContactsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import NotificationSymbol from "@src/common/NotificationSymbol";
@@ -104,23 +104,36 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ addThisGoal, updateThi
     }
   };
 
+  const getBreadcrumbs = (sHistory: ISubGoalHistory[], longJump = true) => sHistory.map((item, index) => (
+    <Breadcrumb.Item
+      key={`history-${item.goalID}-${item.goalTitle}.`}
+      onClick={() => { // @ts-ignore
+        popFromHistory(longJump ? index : -1);
+      }}
+    >
+      <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: item.goalColor }}>
+        {item.goalTitle.slice(0, 10) }
+      </span>
+    </Breadcrumb.Item>
+  ));
   return (
     <div className="sublist-container">
       <Breadcrumb style={{ marginTop: "68px", padding: "0 18px" }}>
+        {/* @ts-ignore */ }
         <Breadcrumb.Item onClick={() => callResetHistory()}>
-          <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: "#EDC7B7" }}>My Goals</span>
+          <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: darkModeStatus ? "#393939" : "#EDC7B7" }}>My Goals</span>
         </Breadcrumb.Item>
         {
-          subGoalHistory.map((item, index) => (
-            <Breadcrumb.Item
-              key={`history-${item.goalID}-${item.goalTitle}.`}
-              onClick={() => popFromHistory(index)}
-            >
-              <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: item.goalColor }}>
-                {item.goalTitle }
-              </span>
-            </Breadcrumb.Item>
-          ))
+          subGoalHistory.length <= 3 ? getBreadcrumbs(subGoalHistory.slice(0, 3)) : (
+            <>
+              { getBreadcrumbs(subGoalHistory.slice(0, 1)) }
+              {/* @ts-ignore */ }
+              <Breadcrumb.Item onClick={() => popFromHistory(-1)}>
+                <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: darkModeStatus ? "#393939" : "#EDC7B7" }}>...</span>
+              </Breadcrumb.Item>
+              { getBreadcrumbs(subGoalHistory.slice(-1), false) }
+            </>
+          )
         }
       </Breadcrumb>
       <div className="sublist-content-container">

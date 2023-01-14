@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
 import { darkModeState } from "@src/store";
 import ITagExtractor, { ITagIndices } from "@src/Interfaces/ITagExtractor";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { extractedTitle, inputGoalTags } from "@src/store/GoalsState";
+import { formatTagsToText } from "@src/helpers/GoalConvertor";
+import { createGoalObjectFromTags } from "@src/api/GoalsAPI";
+import { getDateInText } from "@src/utils";
 
 interface IGoalTagsProps {
   goalInput: string,
@@ -21,43 +24,39 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const [formInputData, setFormInputData] = useState(goalInput);
-  const [magicIndices, setMagicIndices] = useState<ITagIndices[]>([]);
-  const setGoalTitle = useSetRecoilState(extractedTitle);
+  const [, setMagicIndices] = useState<ITagIndices[]>([]);
+  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
 
   const handleTagClick = (tagType: string) => {
-    if (goalTags) {
-      const tmpTags = { ...goalTags };
-      let tmpString = formInputData;
-      const index = magicIndices.findIndex((ele) => ele.word === tagType);
-
-      let nextIndex = index + 1;
-      while (nextIndex < magicIndices.length && magicIndices[nextIndex].index === magicIndices[index].index) { nextIndex += 1; }
-
-      if (index + 1 === magicIndices.length) {
-        tmpString = tmpString.slice(0, magicIndices[index]?.index);
-      } else {
-        tmpString = `${tmpString.slice(0, magicIndices[index]?.index).trim()} ${tmpString.slice(magicIndices[nextIndex].index).trim()}`;
-      }
-      if (tagType === "duration" && goalTags.duration) {
-        tmpTags.duration = null;
-      } else if (tagType === "repeats" && goalTags.repeats) {
-        tmpTags.repeats = null;
-      } else if (tagType === "link" && goalTags.link) {
-        tmpTags.link = null;
-      } else if (tagType === "start" && goalTags.start) {
-        tmpTags.start = null;
-      } else if (tagType === "due" && goalTags.due) {
-        tmpTags.due = null;
-      } else if (tagType === "afterTime" && goalTags.afterTime) {
-        tmpTags.afterTime = null;
-      } else if (tagType === "beforeTime" && goalTags.beforeTime) {
-        tmpTags.beforeTime = null;
-      }
-      setGoalTags({ ...tmpTags });
-      setFormInputData(tmpString.trim());
-    }
+    const updatedTags = { ...goalTags };
+    delete updatedTags[tagType];
+    setGoalTags({ ...updatedTags });
+    const res = formatTagsToText(
+      createGoalObjectFromTags({
+        title: goalTitle,
+        repeat: updatedTags.repeats ? updatedTags?.repeats.value.trim() : null,
+        duration: updatedTags.duration ? updatedTags.duration.value : null,
+        start: updatedTags.start ? updatedTags.start.value : null,
+        due: updatedTags.due ? updatedTags.due.value : null,
+        afterTime: updatedTags.afterTime ? updatedTags.afterTime.value : null,
+        beforeTime: updatedTags.beforeTime ? updatedTags.beforeTime.value : null,
+        link: updatedTags.link ? `${updatedTags.link.value}`.trim() : null,
+      })
+    );
+    setFormInputData(res.inputText);
   };
+
+  const getTag = (tagName: string, content: string | null) => (
+    <button
+      type="button"
+      style={{ backgroundColor: selectedColor }}
+      className="form-tag"
+      onClick={() => { if (content) { handleTagClick(tagName); } }}
+    >
+      {content}
+    </button>
+  );
 
   useEffect(() => {
     const output: ITagExtractor = TagsExtractor(formInputData);
@@ -71,6 +70,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
     (document.getElementById("goalInputField") as HTMLInputElement).setSelectionRange(0, 0);
     (document.getElementById("goalInputField") as HTMLInputElement).focus();
   }, []);
+
   return (
     <>
       <div>
@@ -91,105 +91,35 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
         <button
           type="button"
           style={
-        darkModeStatus
-          ? { backgroundColor: selectedColor }
-          : { backgroundColor: selectedColor }
-      }
+            darkModeStatus
+              ? { backgroundColor: selectedColor }
+              : { backgroundColor: selectedColor }
+          }
           className="language"
         >
           {goalLang}
         </button>
 
-        <button
-          type="button"
-          style={
-          darkModeStatus
-            ? { backgroundColor: selectedColor }
-            : { backgroundColor: selectedColor }
-      }
-          className={goalTags?.start?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("start"); }}
-        >
-          {`Start ${goalTags?.start?.value.toLocaleDateString()}${goalTags?.afterTime?.value ? "" : `, ${goalTags?.start?.value?.toTimeString().slice(0, 5)}`}`}
-        </button>
+        { goalTags?.start?.value &&
+          getTag("start", `Start ${getDateInText(goalTags.start.value)} ${goalTags?.afterTime?.value ? "" : `, ${goalTags?.start?.value?.toTimeString().slice(0, 5)}`}`)}
 
-        <button
-          type="button"
-          style={
-          darkModeStatus
-            ? { backgroundColor: selectedColor }
-            : { backgroundColor: selectedColor }
-        }
-          className={goalTags?.afterTime?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("afterTime"); }}
-        >
-          {`After ${goalTags?.afterTime?.value}:00`}
-        </button>
+        { goalTags?.afterTime?.value &&
+          getTag("afterTime", `After ${goalTags.afterTime.value}:00`)}
 
-        <button
-          type="button"
-          style={
-          darkModeStatus
-            ? { backgroundColor: selectedColor }
-            : { backgroundColor: selectedColor }
-        }
-          className={goalTags?.due?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("due"); }}
-        >
-          {`Due ${goalTags?.due?.value.toLocaleDateString()}${goalTags?.beforeTime?.value ? "" : `, ${goalTags?.due?.value?.toTimeString().slice(0, 5)}`}`}
-        </button>
+        { goalTags?.due?.value &&
+          getTag("due", `Due ${getDateInText(goalTags.due.value)}${goalTags?.beforeTime?.value ? "" : `, ${goalTags?.due?.value?.toTimeString().slice(0, 5)}`}`)}
 
-        <button
-          type="button"
-          style={
-          darkModeStatus
-            ? { backgroundColor: selectedColor }
-            : { backgroundColor: selectedColor }
-        }
-          className={goalTags?.beforeTime?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("beforeTime"); }}
-        >
-          {`Before ${goalTags?.beforeTime?.value}:00`}
-        </button>
+        { goalTags?.beforeTime?.value &&
+          getTag("beforeTime", `After ${goalTags.beforeTime.value}:00`)}
 
-        <button
-          type="button"
-          style={
-        darkModeStatus
-          ? { backgroundColor: selectedColor }
-          : { backgroundColor: selectedColor }
-      }
-          className={goalTags?.duration?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("duration"); }}
-        >
-          {`${goalTags?.duration?.value} hours`}
-        </button>
+        { goalTags?.duration?.value &&
+          getTag("duration", `${goalTags.duration.value}h`)}
 
-        <button
-          type="button"
-          style={
-          darkModeStatus
-            ? { backgroundColor: selectedColor }
-            : { backgroundColor: selectedColor }
-        }
-          className={goalTags?.repeats?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("repeats"); }}
-        >
-          {goalTags?.repeats?.value}
-        </button>
+        { goalTags?.repeats?.value &&
+          getTag("repeats", goalTags.repeats.value)}
 
-        <button
-          type="button"
-          style={
-          darkModeStatus
-            ? { backgroundColor: selectedColor }
-            : { backgroundColor: selectedColor }
-        }
-          className={goalTags?.link?.value ? "form-tag" : "blank"}
-          onClick={() => { handleTagClick("link"); }}
-        >
-          URL
-        </button>
+        { goalTags?.repeats?.value &&
+          getTag("link", "URL")}
       </div>
     </>
   );
