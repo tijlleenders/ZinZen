@@ -192,8 +192,8 @@ export const MyTimePage = () => {
 
   return (
     <div className="slide MyTime_container">
+      <MainHeaderDashboard />
       <div id="MyTime_days_container">
-        <MainHeaderDashboard />
         {getDayComponent(`My ${today.toDateString()}`)}
         {getDayComponent("Tomorrow")}
         {

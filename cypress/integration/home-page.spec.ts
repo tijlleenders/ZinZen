@@ -15,13 +15,14 @@ describe("Basic Tests Home Page", () => {
   it("Theme & Language Selection", () => {
     cy.visit("/");
     cy.get(".lang-btn1").contains("English").click();
-    cy.get(".themeChoice-btn").first().click();
+    cy.get(".themeChoice-btn-light").first().click();
   });
 
   it("Default entry page should be MyTime", () => {
     cy.contains("Skip Intro")
       .click()
       .location("pathname")
-      .should("include", "MyTime");
+      .get("#MyTime_days_container")
+      .should("exist");
   });
 });

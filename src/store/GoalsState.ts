@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { ITags } from "@src/Interfaces/ITagExtractor";
+import { GoalItem } from "@src/models/GoalItem";
 import { atom, selector } from "recoil";
 
 export interface ISubGoalHistory {
@@ -10,7 +11,7 @@ export interface ISubGoalHistory {
 
 export const displaySuggestionsModal = atom({
   key: "displaySuggestionsModal",
-  default: null as string | null
+  default: { goals: [], selected: "" } as { goals: GoalItem[], selected: string }
 });
 
 export const displayAddGoalOptions = atom({

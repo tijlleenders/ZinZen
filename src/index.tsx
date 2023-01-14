@@ -5,8 +5,6 @@ import * as serviceWorkerRegistration from "./service-worker/serviceWorkerRegist
 
 import App from "./App";
 
-import "./index.scss";
-
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
