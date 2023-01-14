@@ -112,7 +112,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
       } else if (goal.beforeTime) {
         tmpTiming = ` before ${goal.beforeTime}`;
       }
-      const tmp = `${goal.title}${goal.duration ? ` ${goal.duration}hours` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`;
+      const tmp = `${goal.title}${goal.duration ? ` ${goal.duration}h` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`;
       setGoalInput(tmp);
       const output: ITagExtractor = TagsExtractor(tmp);
       if (output.occurences.length > 0) setGoalTitle(goalInput.slice(0, output.occurences[0].index));

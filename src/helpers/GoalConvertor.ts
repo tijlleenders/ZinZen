@@ -14,7 +14,7 @@ export const formatTagsToText = (_goal: GoalItem) => {
     response.timing = ` before ${goal.beforeTime}`;
   }
   response.title = goal.title;
-  response.duration = goal.duration ? ` ${goal.duration}hours` : "";
+  response.duration = goal.duration ? ` ${goal.duration}h` : "";
   response.start = goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1} @${goal.start.getHours()}` : "";
   response.due = goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1} @${goal.due.getHours()}` : "";
   response.repeat = goal.repeat ? ` ${goal.repeat}` : "";
