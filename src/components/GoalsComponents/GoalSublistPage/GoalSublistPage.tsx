@@ -104,15 +104,15 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ addThisGoal, updateThi
     }
   };
 
-  const getBreadcrumbs = (sHistory: ISubGoalHistory[]) => sHistory.map((item, index) => (
+  const getBreadcrumbs = (sHistory: ISubGoalHistory[], longJump = true) => sHistory.map((item, index) => (
     <Breadcrumb.Item
       key={`history-${item.goalID}-${item.goalTitle}.`}
       onClick={() => { // @ts-ignore
-        popFromHistory(index);
+        popFromHistory(longJump ? index : -1);
       }}
     >
       <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: item.goalColor }}>
-        {item.goalTitle }
+        {item.goalTitle.slice(0, 10) }
       </span>
     </Breadcrumb.Item>
   ));
@@ -128,10 +128,10 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ addThisGoal, updateThi
             <>
               { getBreadcrumbs(subGoalHistory.slice(0, 1)) }
               {/* @ts-ignore */ }
-              <Breadcrumb.Item onClick={() => popFromHistory(subGoalHistory.length - 1)}>
+              <Breadcrumb.Item onClick={() => popFromHistory(-1)}>
                 <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: darkModeStatus ? "#393939" : "#EDC7B7" }}>...</span>
               </Breadcrumb.Item>
-              { getBreadcrumbs(subGoalHistory.slice(-1)) }
+              { getBreadcrumbs(subGoalHistory.slice(-1), false) }
             </>
           )
         }
