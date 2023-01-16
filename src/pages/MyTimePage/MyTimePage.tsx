@@ -174,6 +174,7 @@ export const MyTimePage = () => {
         if (ele.due) obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
         if (ele.afterTime) obj.after_time = ele.afterTime;
         if (ele.beforeTime) obj.before_time = ele.beforeTime;
+        if (ele.repeat) obj.repeat = ele.repeat;
         schedulerInput.goals.push(obj);
       });
       console.log("input", schedulerInput);
@@ -191,8 +192,8 @@ export const MyTimePage = () => {
 
   return (
     <div className="slide MyTime_container">
+      <MainHeaderDashboard />
       <div id="MyTime_days_container">
-        <MainHeaderDashboard />
         {getDayComponent(`My ${today.toDateString()}`)}
         {getDayComponent("Tomorrow")}
         {

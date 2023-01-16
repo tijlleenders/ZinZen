@@ -15,3 +15,24 @@ $theme-colors: (
 );
 
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+
+.overlay {
+  position: fixed;
+  background: rgba(85, 85, 85, 0.47);
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+}

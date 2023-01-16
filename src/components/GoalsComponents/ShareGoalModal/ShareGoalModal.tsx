@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
@@ -15,6 +15,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 
 import "./ShareGoalModal.scss";
+import Loader from "@src/common/Loader";
 import InviteLinkModal from "./InviteLinkModal";
 
 interface IShareGoalModalProps {
@@ -24,14 +25,15 @@ interface IShareGoalModalProps {
 }
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
+  const minContacts = 1;
   const darkModeStatus = useRecoilValue(darkModeState);
-  // const setLoading = useSetRecoilState(displayLoader);
   const setShowToast = useSetRecoilState(displayToast);
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const [showInviteModal, setShowInviteModal] = useState<{ goal: GoalItem, id: string, name: string, relId: string, accepted: boolean } | null>(null);
   const [showAddContactModal, setShowAddContactModal] = useState(false);
   const [displayContacts, setDisplayContacts] = useState(false);
+  const [loading, setLoading] = useState({ P: false, A: false, S: false });
 
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
@@ -50,6 +52,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       <button
         type="button"
         onClick={async () => {
+          setLoading({ ...loading, S: true });
           if (name === "") handleShowAddContact();
           else {
             const status = accepted ? true : await checkStatus(relId);
@@ -62,12 +65,13 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${name} so that they can add you in their contacts` });
             }
           }
+          setLoading({ ...loading, S: false });
         }}
         className="contact-icon"
       >
         { name === "" ? <img alt="add contact" src={addContactIcon} /> : name[0]}
       </button>
-      { name !== "" && <p>{name}</p> }
+      { name !== "" && <p style={{ margin: 0 }}>{name}</p> }
     </div>
   );
 
@@ -88,15 +92,15 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       style={showAddContactModal || showInviteModal ? { zIndex: 1 } : {}}
     >
       <Modal.Body id="share-modal-body">
+        <h4>Share Goals</h4>
         <button
           onClick={async () => {
             let parentGoal = "root";
-            // setLoading(true);
-            if (goal.parentGoalId !== "root") {
-              parentGoal = (await getGoal(goal.parentGoalId)).title;
-            }
-            await shareMyGoal(goal, parentGoal);
-            // setLoading(false);
+            setLoading({ ...loading, A: true });
+            if (goal.parentGoalId !== "root") { parentGoal = (await getGoal(goal.parentGoalId)).title; }
+            const { response } = await shareMyGoal(goal, parentGoal);
+            setShowToast({ open: true, message: response, extra: "" });
+            setLoading({ ...loading, A: false });
           }}
           type="button"
           className="shareOptions-btn"
@@ -104,14 +108,16 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           <div className="share-Options">
             <div> <img alt="share goal anonymously" src={shareAnonymous} /> </div>
             <p className="shareOption-name">Share Anonymously</p>
+            { loading.A && <Loader /> }
           </div>
         </button>
-        <button type="button" className="shareOptions-btn">
+        {/* <button type="button" className="shareOptions-btn">
           <div className="share-Options">
             <div> <img alt="share goal public" src={sharePublic} /> </div>
             <p className="shareOption-name">Share Public</p>
+            { loading.P && <Loader /> }
           </div>
-        </button>
+        </button> */}
         <button
           disabled={!!goal.shared || goal.collaboration.status !== "none"}
           type="button"
@@ -130,6 +136,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                   ""}
               {`${goal.shared && goal.collaboration.status === "none" ? ` - Goal is shared with ${goal.shared.name}` : ""}`}
             </p>
+            { loading.S && <Loader /> }
           </div>
           { (!goal.shared || !goal.collaboration.status) && displayContacts && (
             <div className="shareWithContacts">
@@ -137,9 +144,9 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                 <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
               { contacts.length > 0 &&
                 <p className="share-warning"> Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact </p>}
-              <div id="modal-contact-list" style={contacts.length < 3 ? { justifyContent: "flex-start" } : {}}>
+              <div id="modal-contact-list" style={contacts.length <= minContacts ? { justifyContent: "flex-start" } : {}}>
                 { contacts.length > 0 &&
-                  contacts.slice(0, Math.min(3, contacts.length)).map((ele) => (
+                  contacts.slice(0, Math.min(minContacts, contacts.length)).map((ele) => (
                     getContactBtn(ele.relId, ele.name, ele.accepted)
                   ))}
                 { /* contacts.length >= 3 && (
@@ -153,15 +160,11 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                     </button>
                   </div>
                 ) */}
-                { contacts.length < 3 && getContactBtn() }
+                { contacts.length === 0 && getContactBtn() }
               </div>
             </div>
           )}
         </button>
-        <Form.Check type="checkbox" className="shareOptions-btn" id="cb-withTime">
-          <Form.Check.Input type="checkbox" />
-          <Form.Check.Label>Share with time</Form.Check.Label>
-        </Form.Check>
       </Modal.Body>
       <Modal
         className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""}`}

@@ -23,7 +23,7 @@ export const MainHeaderDashboard = () => {
   const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
 
   return (
-    <>
+    <div className={`positioning${!darkModeStatus ? "-light" : "-dark"}`}>
       <img
         role="presentation"
         src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
@@ -52,7 +52,7 @@ export const MainHeaderDashboard = () => {
         <img alt="save changes" src={plus} />
       </button>
       <Sidebar />
-    </>
+    </div>
 
   );
 };
