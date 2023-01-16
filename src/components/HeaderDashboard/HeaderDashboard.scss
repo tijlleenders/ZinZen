@@ -45,8 +45,11 @@
 }
 
 .dark-mode-toggle {
-  margin-left: 138px;
-  margin-top: 90px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 80px;
+  margin: auto;
 }
 
 
