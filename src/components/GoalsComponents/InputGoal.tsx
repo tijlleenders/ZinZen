@@ -110,7 +110,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
           getTag("due", `Due ${getDateInText(goalTags.due.value)}${goalTags?.beforeTime?.value ? "" : `, ${goalTags?.due?.value?.toTimeString().slice(0, 5)}`}`)}
 
         { goalTags?.beforeTime?.value &&
-          getTag("beforeTime", `After ${goalTags.beforeTime.value}:00`)}
+          getTag("beforeTime", `Before ${goalTags.beforeTime.value}:00`)}
 
         { goalTags?.duration?.value &&
           getTag("duration", `${goalTags.duration.value}h`)}
@@ -118,7 +118,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
         { goalTags?.repeats?.value &&
           getTag("repeats", goalTags.repeats.value)}
 
-        { goalTags?.repeats?.value &&
+        { goalTags?.link?.value &&
           getTag("link", "URL")}
       </div>
     </>
