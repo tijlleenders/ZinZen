@@ -2,7 +2,7 @@ import React from "react";
 import { Offcanvas } from "react-bootstrap";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-
+import DarkModeToggle from "react-dark-mode-toggle";
 import { displaySidebar } from "@src/store/SidebarState";
 import { darkModeState } from "@src/store";
 import { useNavigate } from "react-router";
@@ -29,10 +29,18 @@ const darkNavBtn = {
 
 const Sidebar = () => {
   const navigate = useNavigate();
-  const darkModeStatus = useRecoilValue(darkModeState);
   const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
+  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const { t } = useTranslation();
+  const toggleTheme = () => {
+    setDarkModeStatus(!darkModeStatus);
+    if (darkModeStatus) {
+      localStorage.setItem("theme", "light");
+    } else {
+      localStorage.setItem("theme", "dark");
+    }
+  };
 
   const getNavButton = (text: string, to = "/") => (
     <button
@@ -64,7 +72,13 @@ const Sidebar = () => {
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <div style={{ display: "flex", flexDirection: "column", marginTop: "4vh" }}>
+        <DarkModeToggle
+          onChange={toggleTheme}
+          checked={darkModeStatus}
+          size={60}
+          className="dark-mode-toggle"
+        />
+        <div style={{ display: "flex", flexDirection: "column", marginTop: "3vh" }}>
           { getNavButton(t("myfeelings"), "/MyFeelings") }
           <GoalInvites invitesType="sharedGoals" />
           <GoalInvites invitesType="collaboratedGoals" />
