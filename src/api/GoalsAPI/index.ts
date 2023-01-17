@@ -171,7 +171,6 @@ export const isCollectionEmpty = async () => {
 
 export const removeChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
-  console.log("child", childrenGoals);
   if (childrenGoals.length === 0) { return; }
   childrenGoals.forEach((goal) => {
     removeChildrenGoals(goal.id);

@@ -32,9 +32,10 @@ export const createGoal = async (
     }
     const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
     await updateGoal(parentGoalId, { sublist: newSublist });
-    // @ts-ignore
-    if (selectedGoalId !== parentGoalId) { addInHistory(parentGoal); }
-  } else { await addGoal(newGoal); }
+    return { parentGoal };
+  }
+  await addGoal(newGoal);
+  return { parentGoal: null };
 };
 
 export const modifyGoal = async (goalId: string, goalTags: ITags, goalTitle: string, goalColor: string) => {
@@ -43,33 +44,41 @@ export const modifyGoal = async (goalId: string, goalTags: ITags, goalTitle: str
     goalColor,
     ...extractFromGoalTags(goalTags)
   });
-  getGoal(goalId).then((goal: GoalItem) => {
-    if (goal.collaboration.status) {
-      sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
-        type: "goalEdited",
-        updates: [goal]
-      }).then(() => { console.log("edit updates sent"); });
-    }
-  });
+  // getGoal(goalId).then((goal: GoalItem) => {
+  //   if (goal.collaboration.status) {
+  //     sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
+  //       type: "goalEdited",
+  //       updates: [goal]
+  //     }).then(() => { console.log("edit updates sent"); });
+  //   }
+  // });
 };
 
 export const archiveGoal = async (goal: GoalItem) => {
+  // if (goal.collaboration.status) {
+  //   sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
+  //     type: "goalCompleted",
+  //     completed: [goal]
+  //   }).then(() => console.log("complete update sent"));
+  // }
   await archiveUserGoal(goal);
-  if (goal.collaboration.status) {
-    sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
-      type: "goalCompleted",
-      completed: [goal]
-    }).then(() => console.log("complete update sent"));
-  }
 };
 
 export const deleteGoal = async (goal: GoalItem) => {
-  if (goal.collaboration.status) {
-    sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
-      type: "goalDeleted",
-      deletedGoals: [goal]
-    }).then(() => console.log("update sent"));
-  }
+  // if (goal.collaboration.status) {
+  //   sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
+  //     type: "goalDeleted",
+  //     deletedGoals: [goal]
+  //   }).then(() => console.log("update sent"));
+  // }
   await removeChildrenGoals(goal.id);
   await removeGoal(goal.id);
+  if (goal.parentGoalId !== "root") {
+    getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
+      const parentGoalSublist = parentGoal.sublist;
+      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
+      if (childGoalIndex !== -1) { parentGoalSublist.splice(childGoalIndex, 1); }
+      await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
+    });
+  }
 };
