@@ -78,7 +78,7 @@ const Sidebar = () => {
           size={60}
           className="dark-mode-toggle"
         />
-        <div style={{ display: "flex", flexDirection: "column", marginTop: "6vh" }}>
+        <div style={{ display: "flex", flexDirection: "column", marginTop: "60px" }}>
           { getNavButton(t("myfeelings"), "/MyFeelings") }
           <GoalInvites invitesType="sharedGoals" />
           <GoalInvites invitesType="collaboratedGoals" />
