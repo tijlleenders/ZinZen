@@ -23,9 +23,9 @@ import {
   removeChildrenGoals,
   getGoal,
   addGoal,
-  createGoalObjectFromTags,
   updateGoal
 } from "@api/GoalsAPI";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState, displayToast } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
@@ -49,7 +49,7 @@ import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoa
 import "./MyGoalsPage.scss";
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { sendColabUpdatesToContact } from "@src/api/ContactsAPI";
+import { sendColabUpdatesToContact } from "@src/services/contact.service";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions/AddGoalOptions";
@@ -225,7 +225,6 @@ export const MyGoalsPage = () => {
   }, [showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     (async () => {
-      // await populateDummyGoals();
       if (selectedGoalId === "root") {
         const goals: GoalItem[] = await getActiveGoals();
         setUserGoals(goals);

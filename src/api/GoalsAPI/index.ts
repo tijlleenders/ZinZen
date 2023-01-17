@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-alert */
 import { db } from "@models";
-import { colorPallete, getJustDate } from "@src/utils";
+import { getJustDate } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
-import { v4 as uuidv4 } from "uuid";
 import { ICollaboration } from "@src/Interfaces/ICollaboration";
 import { IShared } from "@src/Interfaces/IShared";
+import { shareGoal } from "@src/services/goal.service";
 
 export const resetDatabase = () =>
   db.transaction("rw", db.goalsCollection, async () => {
@@ -22,6 +22,7 @@ export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) =>
     console.log(e.stack || e);
   });
 };
+
 export const addGoal = async (goalDetails: GoalItem) => {
   const currentDate = getJustDate(new Date());
   // @ts-ignore
@@ -168,37 +169,6 @@ export const isCollectionEmpty = async () => {
   return allGoals.length === archivedGoals.length;
 };
 
-export const createGoalObjectFromTags = (obj: object) => {
-  const newGoal: GoalItem = {
-    id: uuidv4(),
-    title: "",
-    language: "English",
-    repeat: null,
-    duration: null,
-    start: null,
-    due: null,
-    afterTime: null,
-    beforeTime: null,
-    archived: "false",
-    parentGoalId: "root",
-    link: null,
-    sublist: [],
-    goalColor: colorPallete[Math.floor(Math.random() * 11)],
-    shared: null,
-    collaboration: {
-      status: "none",
-      newUpdates: false,
-      relId: "",
-      name: "",
-      rootGoal: "",
-      notificationCounter: 0,
-      allowed: true
-    },
-    ...obj
-  };
-  return newGoal;
-};
-
 export const removeChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
   console.log("child", childrenGoals);
@@ -207,23 +177,6 @@ export const removeChildrenGoals = async (parentGoalId: string) => {
     removeChildrenGoals(goal.id);
     removeGoal(goal.id);
   });
-};
-
-export const shareGoal = async (goal: object) => {
-  const URL = "https://jb65zz5efi3jy5rw5f2y5ke2u40hobkq.lambda-url.eu-west-1.on.aws/";
-  try {
-    const res = await fetch(URL, {
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(goal),
-    });
-    return { success: res.ok, response: res.ok ? "Thank you for sharing anonymously!" : "Let's focus on happy path" };
-  } catch (err) {
-    return { success: false, response: "Let's focus on happy path" };
-  }
 };
 
 export const shareMyGoal = async (goal: GoalItem, parent: string) => {
@@ -240,11 +193,6 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
     language: goal.language,
     link: goal.link
   };
-  // Object.keys(goalDetails).forEach((key) => {
-  //   if (!goalDetails[key]) {
-  //     delete goalDetails[key];
-  //   }
-  // });
   const shareableGoal = {
     method: "shareGoal",
     parentTitle: parent,
@@ -274,29 +222,6 @@ export const updateColabStatusOfGoal = async (id: string, collaboration: ICollab
   }).catch((e) => {
     console.log(e.stack || e);
   });
-};
-
-export const getPublicGoals = async (goalTitle: string) => {
-  const URL = "https://jb65zz5efi3jy5rw5f2y5ke2u40hobkq.lambda-url.eu-west-1.on.aws/";
-  const errorMessage = ["Uh oh, do you have internet?", "No internet. Have aliens landed?", "Oops. The internet seems broken..."];
-
-  try {
-    const response = await (await fetch(URL, {
-      mode: "cors",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        method: "getGoalSuggestions",
-        parentTitle: goalTitle
-      }),
-    })).json();
-    return { status: true, data: [...response.Items] };
-  } catch (err) {
-    console.log(err);
-    return { status: false, message: errorMessage[Math.floor(Math.random() * errorMessage.length)] };
-  }
 };
 
 export const notifyItsAncestor = async (goalId: string, allAncestors = true, reduceCount = false) => {

@@ -8,8 +8,9 @@ import archiveGoalsIcon from "@assets/images/archiveGoals.svg";
 import Loader from "@src/common/Loader";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState, displayToast } from "@src/store";
-import { displayAddGoal, displayAddGoalOptions, displaySuggestionsModal } from "@src/store/GoalsState";
-import { getGoal, getGoalsFromArchive, getPublicGoals } from "@src/api/GoalsAPI";
+import { displayAddGoal, displaySuggestionsModal } from "@src/store/GoalsState";
+import { getGoal, getGoalsFromArchive } from "@src/api/GoalsAPI";
+import { getPublicGoals } from "@src/services/goal.service";
 
 import "./AddGoalOptions.scss";
 

@@ -3,12 +3,14 @@ import { Modal } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import copyLink from "@assets/images/copyLink.svg";
+
 import { darkModeState, displayToast } from "@src/store";
-import { collaborateWithContact, getRelationshipStatus, shareGoalWithContact, updateStatusOfContact } from "@src/api/ContactsAPI";
+import { updateStatusOfContact } from "@src/api/ContactsAPI";
 import { updateColabStatusOfGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ICollaboration } from "@src/Interfaces/ICollaboration";
 import { getDefaultValueOfCollab } from "@src/utils";
+import { collaborateWithContact, getRelationshipStatus, shareGoalWithContact } from "@src/services/contact.service";
 
 interface IInviteLinkModalProps {
   showInviteModal: { goal: GoalItem, id: string, name: string, relId: string, accepted: boolean } | null,

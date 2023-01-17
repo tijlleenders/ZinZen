@@ -12,16 +12,17 @@ import trash from "@assets/images/trash.svg";
 
 import { archiveUserGoal, getChildrenGoals, getGoal, removeChildrenGoals, removeGoal, updateGoal } from "@src/api/GoalsAPI";
 import { addInGoalsHistory, displayAddGoal, displayAddGoalOptions, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
-import { sendColabUpdatesToContact } from "@src/api/ContactsAPI";
+
 import { GoalItem } from "@src/models/GoalItem";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { darkModeState } from "@src/store";
+import { sendColabUpdatesToContact } from "@src/services/contact.service";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";
 import { UpdateGoalForm } from "../UpdateGoal/UpdateGoalForm";
 import ShareGoalModal from "../ShareGoalModal/ShareGoalModal";
+import DisplayChangesModal from "../DisplayChangesModal/DisplayChangesModal";
 
 import "./GoalSublistPage.scss";
-import DisplayChangesModal from "../DisplayChangesModal/DisplayChangesModal";
 
 interface GoalSublistProps {
   addThisGoal:(e: React.SyntheticEvent) => Promise<void>,

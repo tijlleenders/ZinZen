@@ -18,11 +18,13 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
-import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactByRelId, getContactSharedGoals } from "./api/ContactsAPI";
-import { createGoalObjectFromTags, updateColabStatusOfGoal } from "./api/GoalsAPI";
+import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactByRelId } from "./api/ContactsAPI";
+import { updateColabStatusOfGoal } from "./api/GoalsAPI";
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/CollaborationHandler";
 import { getDefaultValueOfCollab } from "./utils";
+import { createGoalObjectFromTags } from "./helpers/GoalProcessor";
+import { getContactSharedGoals } from "./services/contact.service";
 
 import "./customize.scss";
 import "./global.scss";

@@ -8,11 +8,12 @@ import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
-import { addContact, getAllContacts, getRelationshipStatus, initRelationship, shareGoalWithContact, updateStatusOfContact } from "@src/api/ContactsAPI";
+import { addContact, getAllContacts, updateStatusOfContact } from "@src/api/ContactsAPI";
 import { darkModeState, displayToast } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getRelationshipStatus, initRelationship, shareGoalWithContact } from "@src/services/contact.service";
 
 import "./ShareGoalModal.scss";
 import Loader from "@src/common/Loader";
