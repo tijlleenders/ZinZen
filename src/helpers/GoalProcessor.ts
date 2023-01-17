@@ -1,3 +1,4 @@
+import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
 import { colorPallete } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
@@ -61,3 +62,13 @@ export const createGoalObjectFromTags = (obj: object) => {
   };
   return newGoal;
 };
+
+export const extractFromGoalTags = (goalTags: ITags) => ({
+  duration: goalTags.duration ? goalTags.duration.value : null,
+  repeat: goalTags.repeats ? goalTags.repeats.value : null,
+  link: goalTags.link ? goalTags.link.value?.trim() : null,
+  start: goalTags.start ? goalTags.start.value : null,
+  due: goalTags.due ? goalTags.due.value : null,
+  afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
+  beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
+});
