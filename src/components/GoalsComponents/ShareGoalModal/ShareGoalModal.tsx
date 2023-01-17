@@ -21,8 +21,8 @@ import InviteLinkModal from "./InviteLinkModal";
 
 interface IShareGoalModalProps {
   goal: GoalItem
-  showShareModal: number,
-  setShowShareModal: React.Dispatch<React.SetStateAction<number>>
+  showShareModal: string,
+  setShowShareModal: React.Dispatch<React.SetStateAction<string>>
 }
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
@@ -86,8 +86,8 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   return (
     <Modal
       id={`share-modal${darkModeStatus ? "-dark" : ""}`}
-      show={showShareModal !== -1}
-      onHide={() => setShowShareModal(-1)}
+      show={showShareModal !== ""}
+      onHide={() => setShowShareModal("")}
       centered
       autoFocus={false}
       style={showAddContactModal || showInviteModal ? { zIndex: 1 } : {}}
