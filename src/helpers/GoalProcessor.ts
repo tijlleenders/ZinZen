@@ -1,4 +1,6 @@
 import { GoalItem } from "@src/models/GoalItem";
+import { colorPallete } from "@src/utils";
+import { v4 as uuidv4 } from "uuid";
 
 export const formatTagsToText = (_goal: GoalItem) => {
   const goal = { ..._goal };
@@ -27,4 +29,35 @@ export const formatTagsToText = (_goal: GoalItem) => {
     link,
     timing } = response;
   return { inputText: title + duration + start + due + timing + repeat + link, ...response };
+};
+
+export const createGoalObjectFromTags = (obj: object) => {
+  const newGoal: GoalItem = {
+    id: uuidv4(),
+    title: "",
+    language: "English",
+    repeat: null,
+    duration: null,
+    start: null,
+    due: null,
+    afterTime: null,
+    beforeTime: null,
+    archived: "false",
+    parentGoalId: "root",
+    link: null,
+    sublist: [],
+    goalColor: colorPallete[Math.floor(Math.random() * 11)],
+    shared: null,
+    collaboration: {
+      status: "none",
+      newUpdates: false,
+      relId: "",
+      name: "",
+      rootGoal: "",
+      notificationCounter: 0,
+      allowed: true
+    },
+    ...obj
+  };
+  return newGoal;
 };
