@@ -1,6 +1,6 @@
 import React from "react";
 import { Offcanvas } from "react-bootstrap";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
 import DarkModeToggle from "react-dark-mode-toggle";
 import { displaySidebar } from "@src/store/SidebarState";
@@ -78,7 +78,7 @@ const Sidebar = () => {
           size={60}
           className="dark-mode-toggle"
         />
-        <div style={{ display: "flex", flexDirection: "column", marginTop: "4vh" }}>
+        <div style={{ display: "flex", flexDirection: "column", marginTop: "6vh" }}>
           { getNavButton(t("myfeelings"), "/MyFeelings") }
           <GoalInvites invitesType="sharedGoals" />
           <GoalInvites invitesType="collaboratedGoals" />
