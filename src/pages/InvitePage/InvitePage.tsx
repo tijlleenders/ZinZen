@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 
-import { acceptRelationship, addContact } from "@src/api/ContactsAPI";
+import { addContact } from "@src/api/ContactsAPI";
 import { queryStyle } from "@src/constants/booleanScreen";
 import { darkModeState } from "@src/store";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
+import { acceptRelationship } from "@src/services/contact.service";
 
 const InvitePage = () => {
   const navigate = useNavigate();

@@ -1,5 +1,25 @@
 import { ICollaboration } from "@src/Interfaces/ICollaboration";
 import { GoalItem } from "@src/models/GoalItem";
+import { languagesFullForms } from "@src/translations/i18n";
+
+export async function createContactRequest(url: string, body : object | null = null, method = "POST") {
+  try {
+    const res = await fetch(url, {
+      method,
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body || {})
+    });
+    return { success: res.ok, response: await res.json() };
+  } catch (err) {
+    return {
+      success: false,
+      message: "Aww... So sorry something went wrong. Try again later",
+    };
+  }
+}
 
 // @ts-nocheck
 export const formatDate = () => {
@@ -60,6 +80,14 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   if (!goal.beforeTime) { goal.beforeTime = parentGoal.beforeTime; }
   if (!goal.afterTime) { goal.afterTime = parentGoal.afterTime; }
   return goal;
+}
+
+export function getInstallId() { return localStorage.getItem("installId"); }
+
+export function getSelectedLanguage() {
+  const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
+  const lang = langFromStorage ? languagesFullForms[langFromStorage] : languagesFullForms.en;
+  return lang;
 }
 
 export function getDateInText(date: Date) {

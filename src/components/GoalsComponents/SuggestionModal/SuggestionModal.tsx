@@ -11,8 +11,9 @@ import { GoalItem } from "@src/models/GoalItem";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import ITagExtractor from "@src/Interfaces/ITagExtractor";
 import { ISharedGoal } from "@src/Interfaces/ISharedGoal";
-import { addGoal, createGoalObjectFromTags, getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { addGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { displaySuggestionsModal, extractedTitle, inputGoalTags } from "@src/store/GoalsState";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { darkModeState, displayToast } from "@src/store";
 import InputGoal from "../InputGoal";
 

@@ -8,11 +8,12 @@ import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
-import { addContact, getAllContacts, getRelationshipStatus, initRelationship, shareGoalWithContact, updateStatusOfContact } from "@src/api/ContactsAPI";
+import { addContact, getAllContacts, updateStatusOfContact } from "@src/api/ContactsAPI";
 import { darkModeState, displayToast } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getRelationshipStatus, initRelationship, shareGoalWithContact } from "@src/services/contact.service";
 
 import "./ShareGoalModal.scss";
 import Loader from "@src/common/Loader";
@@ -20,8 +21,8 @@ import InviteLinkModal from "./InviteLinkModal";
 
 interface IShareGoalModalProps {
   goal: GoalItem
-  showShareModal: number,
-  setShowShareModal: React.Dispatch<React.SetStateAction<number>>
+  showShareModal: string,
+  setShowShareModal: React.Dispatch<React.SetStateAction<string>>
 }
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
@@ -85,8 +86,8 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   return (
     <Modal
       id={`share-modal${darkModeStatus ? "-dark" : ""}`}
-      show={showShareModal !== -1}
-      onHide={() => setShowShareModal(-1)}
+      show={showShareModal !== ""}
+      onHide={() => setShowShareModal("")}
       centered
       autoFocus={false}
       style={showAddContactModal || showInviteModal ? { zIndex: 1 } : {}}

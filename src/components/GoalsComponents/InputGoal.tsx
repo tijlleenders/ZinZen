@@ -6,8 +6,7 @@ import { darkModeState } from "@src/store";
 import ITagExtractor, { ITagIndices } from "@src/Interfaces/ITagExtractor";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { extractedTitle, inputGoalTags } from "@src/store/GoalsState";
-import { formatTagsToText } from "@src/helpers/GoalConvertor";
-import { createGoalObjectFromTags } from "@src/api/GoalsAPI";
+import { createGoalObjectFromTags, formatTagsToText } from "@src/helpers/GoalProcessor";
 import { getDateInText } from "@src/utils";
 
 interface IGoalTagsProps {
