@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo "Check prerequisites"
-echo "1. Github CLI installed"
+echo "Prerequisites:"
+echo "1. Github CLI should be installed"
 echo "2. Repo should be using ssh authentication - not https (otherwise it'll pause asking for username)"
-echo "3. jq installed"
+echo "3. Run on Ubuntu"
 echo
 
 if ! command -v jq &> /dev/null
@@ -56,8 +56,8 @@ else
     echo Using wget to download artifacts...
     wget -O wasm-build-pkg.zip $download_url > /dev/null
     echo Unzipping into pkg directory...
-    unzip -o wasm-build-pkg.zip -d pkg
-    git add pkg/*
+    unzip -o wasm-build-pkg.zip -d ../pkg
+    git add ../pkg/*
     git add artifact_id.txt
     git commit -m "Update artifacts."
     git push origin update-build
