@@ -1,9 +1,10 @@
 #!/bin/bash
 
 echo "Prerequisites:"
-echo "1. Github CLI should be installed"
+echo "1. Run on Ubuntu"
 echo "2. Repo should be using ssh authentication - not https (otherwise it'll pause asking for username)"
-echo "3. Run on Ubuntu"
+echo "3. Github CLI should be installed"
+echo "4. You must have the GITHUB_TOKEN environmental variable set"
 echo
 
 if ! command -v jq &> /dev/null
