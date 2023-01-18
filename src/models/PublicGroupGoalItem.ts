@@ -1,11 +1,10 @@
 export interface PublicGroupGoalItem {
-    id: string;
-    title: string;
-    parentId: string;
-    inMyGoals: number | null,
-    feelGoods: number | null,
-    dislikes: number | null,
+    feelingScore: number | null,
     completed: number | null,
+    title: string,
     feelBads: number | null,
-    likes: number | null
+    parentId: string,
+    likeScore: number | null,
+    inMyGoals: boolean,
+    completed: boolean
   }

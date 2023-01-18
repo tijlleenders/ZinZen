@@ -1,9 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable arrow-body-style */
-import { db } from "@models";
 import { PublicGroupGoalItem } from "@src/models/PublicGroupGoalItem";
-import { getJustDate } from "@src/utils";
-import { v4 as uuidv4 } from "uuid";
 
 const getInstallId = () => { return localStorage.getItem("installId"); };
 
@@ -25,12 +22,27 @@ const createRequest = async (url: string, body : object | null = null, method = 
     };
   }
 };
-export const getPublicGroupGoals = async (ParentGoalId: string) => {
+
+export const getPublicGroupGoals = async (publicGroupParentGoalId: string) => {
   const url = "https://xcmyippimqii2x76diluvd4ywu0oojhu.lambda-url.eu-west-1.on.aws/";
-  const res = await createRequest(url, { method: "getPublicGroupGoals", installId: getInstallId(), publicGroupParentGoalId: ParentGoalId });
-  if (res.success) {
-    const { relId } = res.response;
-    return { success: true, response: { installId: getInstallId(), relId } };
-  }
+  const res = await createRequest(url, { method: "getPublicGroupGoals", installId: getInstallId(), publicGroupParentGoalId });
+  return res;
+};
+
+export const joinPublicGroup = async (title: string) => {
+  const url = "https://xcmyippimqii2x76diluvd4ywu0oojhu.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url, { method: "joinPublicGroup", installId: getInstallId(), title });
+  return res;
+};
+
+export const quitPublicGroup = async (groupId: string) => {
+  const url = "https://xcmyippimqii2x76diluvd4ywu0oojhu.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url, { method: "quitPublicGroup", installId: getInstallId(), groupId });
+  return res;
+};
+
+export const updatePublicGroupGoal = async (publicGroupGoal: PublicGroupGoalItem) => {
+  const url = "https://xcmyippimqii2x76diluvd4ywu0oojhu.lambda-url.eu-west-1.on.aws/";
+  const res = await createRequest(url, { method: "updatePublicGroupGoal", installId: getInstallId(), publicGroupGoal });
   return res;
 };
