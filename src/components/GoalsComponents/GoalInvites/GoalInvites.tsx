@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Accordion, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
-import { getAllContacts, removeGoalInRelId, sendResponseOfColabInvite } from "@src/api/ContactsAPI";
-
-import "./GoalInvites.scss";
+import { getAllContacts, removeGoalInRelId } from "@src/api/ContactsAPI";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
-import { addGoal, createGoalObjectFromTags } from "@src/api/GoalsAPI";
+import { addGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { sendResponseOfColabInvite } from "@src/services/contact.service";
 
+import "./GoalInvites.scss";
 import "@translations/i18n";
 
 interface shareInviteSchema {

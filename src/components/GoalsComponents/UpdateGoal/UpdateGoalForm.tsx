@@ -5,7 +5,7 @@ import { getGoal } from "@src/api/GoalsAPI";
 import { darkModeState } from "@store";
 import { colorPallete } from "@src/utils";
 import { displayUpdateGoal, selectedColorIndex } from "@src/store/GoalsState";
-import { formatTagsToText } from "@src/helpers/GoalConvertor";
+import { formatTagsToText } from "@src/helpers/GoalProcessor";
 import InputGoal from "../InputGoal";
 
 import "@translations/i18n";

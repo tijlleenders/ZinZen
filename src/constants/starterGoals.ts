@@ -1,4 +1,5 @@
-import { addGoal, createGoalObjectFromTags } from "@src/api/GoalsAPI";
+import { addGoal } from "@src/api/GoalsAPI";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 
 export const addStarterGoal = async (
   goalTitle: string,

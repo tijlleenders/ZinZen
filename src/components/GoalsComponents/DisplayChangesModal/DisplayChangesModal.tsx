@@ -12,7 +12,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { OutboxItem } from "@src/models/OutboxItem";
 import { cleanChangesOf, completeChanges, deleteChanges, getDump } from "@src/api/OutboxAPI";
 import { addGoal, addIntoSublist, archiveUserGoal, changeNewUpdatesStatus, notifyItsAncestor, updateGoal } from "@src/api/GoalsAPI";
-import { formatTagsToText } from "@src/helpers/GoalConvertor";
+import { formatTagsToText } from "@src/helpers/GoalProcessor";
 
 import "./DisplayChangesModal.scss";
 
