@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 
 import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
-import sharePublic from "@assets/images/sharePublic.svg";
+// import sharePublic from "@assets/images/sharePublic.svg";
 import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
@@ -14,6 +14,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { getRelationshipStatus, initRelationship, shareGoalWithContact } from "@src/services/contact.service";
+import { addSubInPub } from "@src/api/PubSubAPI";
 
 import "./ShareGoalModal.scss";
 import Loader from "@src/common/Loader";
@@ -60,8 +61,9 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             const status = accepted ? true : await checkStatus(relId);
             if (!goal.shared && status) {
               await shareGoalWithContact(relId, goal);
-              await updateSharedStatusOfGoal(goal.id, { relId, name, allowed: false });
               setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });
+              updateSharedStatusOfGoal(goal.id, { relId, name, allowed: false }).then(() => console.log("status updated"));
+              addSubInPub(goal.id, relId, "shared").then(() => console.log("subscriber added"));
             } else {
               navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);
               setShowToast({ open: true, message: "Link copied to clipboard", extra: `Your invite hasn't been accepted yet. Send this link to ${name} so that they can add you in their contacts` });
