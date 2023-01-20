@@ -7,7 +7,6 @@ import { displaySidebar } from "@src/store/SidebarState";
 import { darkModeState } from "@src/store";
 import { useNavigate } from "react-router";
 import { LandingHeader } from "./HeaderDashboard/LandingHeader";
-import GoalInvites from "./GoalsComponents/GoalInvites/GoalInvites";
 
 import "@translations/i18n";
 
@@ -80,8 +79,6 @@ const Sidebar = () => {
         />
         <div style={{ display: "flex", flexDirection: "column", marginTop: "60px" }}>
           { getNavButton(t("myfeelings"), "/MyFeelings") }
-          <GoalInvites invitesType="sharedGoals" />
-          <GoalInvites invitesType="collaboratedGoals" />
           { getNavButton(t("blog"), "https://blog.zinzen.me/") }
           { getNavButton(t("donate"), "https://donate.stripe.com/6oE4jK1iPcPT1m89AA") }
           { getNavButton(t("feedback"), "/ZinZen/Feedback") }
