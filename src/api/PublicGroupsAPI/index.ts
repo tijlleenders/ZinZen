@@ -31,8 +31,8 @@ export const createRootGroup = async () => {
   return res.response.groups[res.response.groups.length - 1]; // returns the id of the created root group
 };
 
-export const addGroupToRootGroup = async (publicGroupGoal: UpdatePublicGroupGoalItem) => {
-  // eslint-disable-next-line no-param-reassign
+export const addGroupToRootGroup = async (_publicGroupGoal: UpdatePublicGroupGoalItem) => {
+  let publicGroupGoal = {..._publicGroupGoal};
   publicGroupGoal.parentId = await createRootGroup(); // gets the id of the created root group (without recreating another group)
   const res = await updatePublicGroupGoal(publicGroupGoal); // add a new group to the created root group (for explore groups screen)
   const rootGroupAddedGroup : RetrievePublicGroupGoalItem = res.response.publicGroupGoal;
