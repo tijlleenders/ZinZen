@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-alert */
 import { db } from "@models";
-import { getJustDate } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
+import { getJustDate } from "@src/utils";
 import { ICollaboration } from "@src/Interfaces/ICollaboration";
 import { IShared } from "@src/Interfaces/IShared";
 import { shareGoal } from "@src/services/goal.service";

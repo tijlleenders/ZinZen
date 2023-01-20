@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
+import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
+import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 import { darkModeState } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayGoalId, addInGoalsHistory, displayUpdateGoal } from "@src/store/GoalsState";
@@ -11,6 +14,7 @@ import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
 
 interface MyGoalProps {
     goal: GoalItem,
+    typeOfGoal: "sharedGoal" | "myGoal",
     showActions: {
       open: string;
       click: number;
@@ -21,7 +25,7 @@ interface MyGoalProps {
   }>>
   setLastAction: React.Dispatch<React.SetStateAction<string>>
 }
-const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions, setLastAction }) => {
+const MyGoal: React.FC<MyGoalProps> = ({ goal, typeOfGoal, showActions, setShowActions, setLastAction }) => {
   const defaultTap = { open: "root", click: 1 };
 
   const selectedGoalId = useRecoilValue(displayGoalId);
@@ -99,8 +103,35 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions, setL
           <div>{goal.title}</div>&nbsp;
           { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
         </div>
+        { (goal.shared || goal.collaboration.status !== "none") && (
+        <OverlayTrigger
+          trigger="click"
+          placement="top"
+          overlay={<Tooltip id="tooltip-disabled"> {goal.shared?.name || goal.collaboration.name} </Tooltip>}
+        >
+          <div
+            className="contact-button"
+          >
+            { goal.collaboration.status === "accepted" && (
+            <img
+              alt="collaborate goal"
+              src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
+              style={{ width: "27px", position: "absolute", right: "18px" }}
+            />
+            ) }
+            <button
+              type="button"
+              className="contact-icon"
+              style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
+            >
+              {goal.shared?.name[0] || goal.collaboration.name[0]}
+            </button>
+          </div>
+
+        </OverlayTrigger>
+        )}
       </div>
-      {showActions.open === goal.id && showActions.click > 0 && (
+      { typeOfGoal === "myGoal" && showActions.open === goal.id && showActions.click > 0 && (
         <MyGoalActions
           goal={goal}
           setShowShareModal={setShowShareModal}

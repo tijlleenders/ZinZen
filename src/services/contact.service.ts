@@ -1,3 +1,4 @@
+import { GoalItem } from "@src/models/GoalItem";
 import { createContactRequest, getInstallId } from "@src/utils";
 
 export const initRelationship = async () => {

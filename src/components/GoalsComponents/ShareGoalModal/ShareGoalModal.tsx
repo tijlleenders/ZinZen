@@ -52,6 +52,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
     <div className="contact-button">
       <button
         type="button"
+        style={name === "" || accepted ? {} : { background: "#DFDFDF", color: "#979797" }}
         onClick={async () => {
           setLoading({ ...loading, S: true });
           if (name === "") handleShowAddContact();
@@ -63,7 +64,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });
             } else {
               navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);
-              setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${name} so that they can add you in their contacts` });
+              setShowToast({ open: true, message: "Link copied to clipboard", extra: `Your invite hasn't been accepted yet. Send this link to ${name} so that they can add you in their contacts` });
             }
           }
           setLoading({ ...loading, S: false });
