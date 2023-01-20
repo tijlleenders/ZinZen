@@ -1,3 +1,5 @@
+import { getPubById } from "@src/api/PubSubAPI";
+import { ITypeOfChanges } from "@src/Interfaces/ITypeOfChanges";
 import { GoalItem } from "@src/models/GoalItem";
 import { createContactRequest, getInstallId } from "@src/utils";
 
@@ -51,17 +53,20 @@ export const getRelationshipStatus = async (relationshipId: string) => {
   return res;
 };
 
-export const sendColabUpdatesToContact = async (relId: string, goalId:string, changes: object) => {
+export const sendUpdatesToSubscriber = async (rootGoalId: string, typeOfChanges: ITypeOfChanges, changes: GoalItem[]) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createContactRequest(url,
-    { method: "shareGoal",
-      installId: getInstallId(),
-      relId,
-      event: {
-        type: "collaborationChanges",
-        goalId,
-        changes
-      }
-    });
+  const pub = await getPubById(rootGoalId);
+  const { relId, type } = pub.subscribers[0];
+  const res = await createContactRequest(url, {
+    method: "shareGoal",
+    installId: getInstallId(),
+    relId,
+    event: {
+      type,
+      typeOfChanges,
+      rootGoalId,
+      changes
+    }
+  });
   return res;
 };
