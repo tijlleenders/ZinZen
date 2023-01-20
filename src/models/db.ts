@@ -3,8 +3,9 @@ import { IFeelingItem } from "./FeelingItem";
 import { GoalItem } from "./GoalItem";
 import ContactItem from "./ContactItem";
 import { OutboxItem } from "./OutboxItem";
+import { PubSubItem } from "./PubSubItem";
 
-export class FeelingsDB extends Dexie {
+export class ZinZenDB extends Dexie {
   feelingsCollection!: Table<IFeelingItem, number>;
 
   goalsCollection!: Table<GoalItem, string>;
@@ -15,6 +16,8 @@ export class FeelingsDB extends Dexie {
 
   outboxCollection!: Table<OutboxItem, number>;
 
+  pubSubCollection!: Table<PubSubItem, string>;
+
   constructor() {
     super("ZinZenDB");
     this.version(1).stores({
@@ -22,9 +25,10 @@ export class FeelingsDB extends Dexie {
       goalsCollection: "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared",
       sharedWMCollection: "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared",
       contactsCollection: "id, name, collaborativeGoals, sharedGoals, relId, accepted, createdAt",
-      outboxCollection: "++id, relId, goalId, subgoals, updates, deleted, completed, anyUpdates"
+      outboxCollection: "++id, relId, goalId, subgoals, updates, deleted, completed, anyUpdates",
+      pubSubCollection: "id, subscribers"
     });
   }
 }
 
-export const db = new FeelingsDB();
+export const db = new ZinZenDB();
