@@ -18,5 +18,6 @@ export interface GoalItem {
   language: string;
   link: string | null;
   collaboration: ICollaboration;
-  shared: IShared | null
+  shared: IShared | null,
+  typeOfGoal: "myGoal" | "shared" | "collaborate",
 }
