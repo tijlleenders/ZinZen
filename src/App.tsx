@@ -6,6 +6,7 @@ import Toast from "react-bootstrap/Toast";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, themeSelectionState, languageSelectionState, displayToast } from "@store";
+import { PublicGroupsPage } from "@pages/PublicGroupsPage/PublicGroupsPage";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
@@ -102,6 +103,7 @@ const App = () => {
           <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/MyGoals" element={<MyGoalsPage />} />
           <Route path="/MyFeelings" element={<ShowFeelingsPage />} />
+          <Route path="/Groups" element={<PublicGroupsPage />} />
           <Route path="/Contacts" element={<Contacts />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />

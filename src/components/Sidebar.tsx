@@ -80,6 +80,7 @@ const Sidebar = () => {
         />
         <div style={{ display: "flex", flexDirection: "column", marginTop: "60px" }}>
           { getNavButton(t("myfeelings"), "/MyFeelings") }
+          { getNavButton(t("groups"), "/Groups") }
           <GoalInvites invitesType="sharedGoals" />
           <GoalInvites invitesType="collaboratedGoals" />
           { getNavButton(t("blog"), "https://blog.zinzen.me/") }
