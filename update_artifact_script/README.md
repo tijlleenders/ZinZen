@@ -9,4 +9,5 @@ From your local clone of the `ZinZen` repo, navigate to the `update_artifact_scr
 - Run on Ubuntu (any Debian based distro should work but only tested on Ubuntu).
 - You should be using SSH authentication on the repo, not https (otherwise it will pause asking for credentials)
 - You should have Github CLI installed
-- Before running the script, you must have the GITHUB_TOKEN environmental variable set with a token that has `repo` scope. You can set the environment variable by running `export GITHUB_TOKEN={Your github token}`
+- Before running the script, you must have the GITHUB_TOKEN environmental variable set with a token that has `repo` scope. You can set the environment variable by running `export GITHUB_TOKEN=YOUR_GITHUB_TOKEN`
+![screenshot](scope_screenshot.png)
