@@ -1,74 +1,86 @@
 .public-groups-container {
-    max-width: 600px;
-    min-width: 236px;
-    width: 100%;    
+  max-width: 600px;
+  min-width: 236px;
+  width: 100%;
 }
 
-#public-groups-searchBar, #public-groups-searchBar-dark {
-    background-color: rgba(255, 255, 255, 0.4);
-    border: none;
-    border-radius: 7px;
-    color: black;
-    font-size: 1.4em;
-    font-family: "Montserrat";
-    font-weight: bolder;
-    height: 47px;
-    margin-bottom: 3.5%;
-    margin: 0 13px;
-    padding: 0 18px;
-  }
-  #public-groups-searchBar-dark {
-    background-color: rgba(112, 112, 112, 0.6);;
-    color: white;
-  }
+#public-groups-searchBar,
+#public-groups-searchBar-dark {
+  background-color: rgba(255, 255, 255, 0.4);
+  border: none;
+  border-radius: 7px;
+  color: black;
+  font-size: 1.4em;
+  font-family: "Montserrat";
+  font-weight: bolder;
+  height: 47px;
+  margin-bottom: 3.5%;
+  margin: 0 13px;
+  padding: 0 18px;
+}
+#public-groups-searchBar-dark {
+  background-color: rgba(112, 112, 112, 0.6);
+  color: white;
+}
 
-  .public-groups-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;  
-  }
-  
-  .public-groups-exploreGroups-container {
-    margin-top:80px;
-    margin-left:10px;
-    justify-content: start;
-    width: 100%;  
-    display: flex;
-    flex-direction: row;
-    
-  }
+.public-groups-content {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
 
-  .public-groups-myGroups-container {
-    margin-top:-28px;
-    margin-left:-10px;
-    justify-content: end;
-    width: 100%;  
-    display: flex;
-    flex-direction: row;
-    
-  }
+.public-groups-nav-container {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 
-  #public-groups-exploreGroups, #public-groups-exploreGroups-dark {
-    
-    font-family: "Montserrat";
-    font-weight: bolder;
-    font-size: 1.1em;
+#left-groups-nav,
+#left-groups-nav-dark {
+  font-style: normal;
+  font-family: "Montserrat";
+  font-weight: 700;
+  font-size: 21px;
+  margin: 0 19px;
+  text-decoration: underline;
+}
 
-    
-  }
+#right-groups-nav,
+#right-groups-nav-dark {
+  font-style: normal;
+  font-family: "Montserrat";
+  font-weight: 700;
+  font-size: 21px;
+  margin: 0 19px;
+}
 
-  #public-groups-myGroups, #public-groups-myGroups-dark {
-   
-    font-family: "Montserrat";
-    font-weight: bolder;
-    font-size: 1.1em;
-  }
+#explore-groups-switch,
+#explore-groups-switch-dark {
+  display: flex;
+  flex-direction: row;
+}
+.group-interactables,
+.group-interactables-dark {
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 15px;
+  padding-bottom: 2.5%;
+}
 
-  #explore-groups-switch, #explore-groups-switch-dark {
-    display: flex;
-    flex-direction: row;
-  }
-
-
-
+.join-group-button {
+  width: 116px;
+  height: 30px;
+  background: #cd6e51;
+  border-radius: 6px;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  margin-left: 307px;
+}
