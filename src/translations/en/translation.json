@@ -12,11 +12,14 @@
   "discover": "Browse the code",
   "donate": "Donate",
   "mygoals": "My Goals",
+  "exploregroups": "Explore groups",
+  "mygroups": "My groups",
   "goalsubtext": "Add your task in format-",
   "format": "task + duration + frequency",
   "addGoalPlaceholder": "Type your goal + 1h + daily",
   "addTimePlaceholder": "Add time",
   "myfeelings": "My Feelings",
+  "groups": "Groups",
   "mytime": "My Time",
   "explore": "Explore",
   "zinzen": "ZinZen",
@@ -93,11 +96,10 @@
   "Anstoogoodtobetrue": "Don't believe us, just try!",
   "ihavedifferentquestions": "I have a different question.",
   "ihavenomorequestions": "I have no more questions for now.",
-  "privacy":"Privacy",
+  "privacy": "Privacy",
   "search": "Search",
   "sharedwithme": "Shared with me",
   "collaborationinvites": "Collaboration invites",
-  "Light colors" : "Light colors",
-  "Dark colors" : "Dark colors"
-
+  "Light colors": "Light colors",
+  "Dark colors": "Dark colors"
 }

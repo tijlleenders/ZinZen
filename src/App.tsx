@@ -6,6 +6,7 @@ import Toast from "react-bootstrap/Toast";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, themeSelectionState, languageSelectionState, displayToast } from "@store";
+import { PublicGroupsPage } from "@pages/PublicGroupsPage/PublicGroupsPage";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
@@ -43,11 +44,14 @@ const App = () => {
     const init = async () => {
       const res = await getContactSharedGoals();
       // @ts-ignore
-      const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
+      const resObject = res.response.reduce(
+        (acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }),
+        {}
+      );
       if (res.success) {
         Object.keys(resObject).forEach(async (k: any) => {
-          const goals: { id: string, goal: GoalItem }[] = [];
-          const collaborateInvites: { id: string, goal: GoalItem }[] = [];
+          const goals: { id: string; goal: GoalItem }[] = [];
+          const collaborateInvites: { id: string; goal: GoalItem }[] = [];
           const contactItem = await getContactByRelId(k);
           // @ts-ignore
           resObject[k].forEach(async (ele) => {
@@ -56,24 +60,33 @@ const App = () => {
             } else if (ele.type === "collaboration") {
               collaborateInvites.push({ id: ele.goal.id, goal: ele.goal });
             } else if (ele.type === "colabInviteResponse") {
-              await updateColabStatusOfGoal(ele.goalId, ele.status === "accepted" ? {
-                status: "accepted",
-                newUpdates: false,
-                allowed: false,
-                relId: ele.relId,
-                rootGoal: ele.goalId,
-                name: contactItem?.name || "",
-                notificationCounter: 0
-              } : getDefaultValueOfCollab()).then(() => console.log("updated invite response"));
+              await updateColabStatusOfGoal(
+                ele.goalId,
+                ele.status === "accepted"
+                  ? {
+                      status: "accepted",
+                      newUpdates: false,
+                      allowed: false,
+                      relId: ele.relId,
+                      rootGoal: ele.goalId,
+                      name: contactItem?.name || "",
+                      notificationCounter: 0,
+                    }
+                  : getDefaultValueOfCollab()
+              ).then(() => console.log("updated invite response"));
             } else if (ele.type === "collaborationChanges") {
               await handleIncomingChanges(ele).then(() => console.log("changes added"));
             }
           });
           if (collaborateInvites.length > 0) {
-            addColabInvitesInRelId(k, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
+            addColabInvitesInRelId(k, collaborateInvites)
+              .then(() => console.log("success"))
+              .catch((err) => console.log(err));
           }
           if (goals.length > 0) {
-            addSharedGoalsInRelId(k, goals).then(() => console.log("success")).catch((err) => console.log(err));
+            addSharedGoalsInRelId(k, goals)
+              .then(() => console.log("success"))
+              .catch((err) => console.log(err));
           }
         });
       }
@@ -84,7 +97,9 @@ const App = () => {
     } else {
       init();
     }
-    if ((!isLanguageChosen || !isThemeChosen) && window.location.pathname !== "/" ) { window.open("/", "_self"); }
+    if ((!isLanguageChosen || !isThemeChosen) && window.location.pathname !== "/") {
+      window.open("/", "_self");
+    }
   }, []);
 
   return (
@@ -102,6 +117,7 @@ const App = () => {
           <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/MyGoals" element={<MyGoalsPage />} />
           <Route path="/MyFeelings" element={<ShowFeelingsPage />} />
+          <Route path="/Groups" element={<PublicGroupsPage />} />
           <Route path="/Contacts" element={<Contacts />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
@@ -109,10 +125,18 @@ const App = () => {
           <Route path="/invite/:id" element={<InvitePage />} />
         </Routes>
       </BrowserRouter>
-      <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
+      <Toast
+        autohide
+        delay={5000}
+        show={showToast.open}
+        onClose={() => setShowToast({ ...showToast, open: false })}
+        id={`toast${darkModeEnabled ? "-dark" : ""}`}
+      >
         <Toast.Body>
-          <p id="toast-message" style={showToast.extra === "" ? { margin: 0 } : {}}>{showToast.message}</p>
-          { showToast.extra !== "" && <p id="extra-message">{showToast.extra}</p> }
+          <p id="toast-message" style={showToast.extra === "" ? { margin: 0 } : {}}>
+            {showToast.message}
+          </p>
+          {showToast.extra !== "" && <p id="extra-message">{showToast.extra}</p>}
         </Toast.Body>
       </Toast>
     </div>

@@ -21,7 +21,7 @@ const navButtonStyle = {
   fontSize: "1.143em",
   color: "black",
   textAlign: "left",
-  background: "transparent"
+  background: "transparent",
 };
 const darkNavBtn = {
   color: "white",
@@ -47,7 +47,8 @@ const Sidebar = () => {
       type="button"
       style={{
         ...navButtonStyle,
-        ...(darkModeStatus ? darkNavBtn : {}) }}
+        ...(darkModeStatus ? darkNavBtn : {}),
+      }}
       onClick={() => {
         setShowSidebar(false);
         if (to.includes("http")) window.open(to, "_self");
@@ -59,7 +60,6 @@ const Sidebar = () => {
   );
 
   return (
-
     <Offcanvas
       show={showSidebar}
       onHide={() => setShowSidebar(false)}
@@ -72,20 +72,16 @@ const Sidebar = () => {
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <DarkModeToggle
-          onChange={toggleTheme}
-          checked={darkModeStatus}
-          size={60}
-          className="dark-mode-toggle"
-        />
+        <DarkModeToggle onChange={toggleTheme} checked={darkModeStatus} size={60} className="dark-mode-toggle" />
         <div style={{ display: "flex", flexDirection: "column", marginTop: "60px" }}>
-          { getNavButton(t("myfeelings"), "/MyFeelings") }
+          {getNavButton(t("myfeelings"), "/MyFeelings")}
+          {getNavButton(t("groups"), "/Groups")}
           <GoalInvites invitesType="sharedGoals" />
           <GoalInvites invitesType="collaboratedGoals" />
-          { getNavButton(t("blog"), "https://blog.zinzen.me/") }
-          { getNavButton(t("donate"), "https://donate.stripe.com/6oE4jK1iPcPT1m89AA") }
-          { getNavButton(t("feedback"), "/ZinZen/Feedback") }
-          { getNavButton(t("privacy"), "/ZinZenFAQ") }
+          {getNavButton(t("blog"), "https://blog.zinzen.me/")}
+          {getNavButton(t("donate"), "https://donate.stripe.com/6oE4jK1iPcPT1m89AA")}
+          {getNavButton(t("feedback"), "/ZinZen/Feedback")}
+          {getNavButton(t("privacy"), "/ZinZenFAQ")}
         </div>
       </Offcanvas.Body>
     </Offcanvas>
