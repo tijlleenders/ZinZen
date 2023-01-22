@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { darkModeState } from "@src/store";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { getRootGroupGroups } from "@api/PublicGroupsAPI";
+import { useRecoilValue } from "recoil";
+import { getPublicGroupGoals } from "@api/PublicGroupsAPI";
 import { RetrievePublicGroupGoalItem } from "@src/models/RetrievePublicGroupGoalItem";
 import MyGroup from "@components/MyGroup";
 
@@ -14,10 +14,10 @@ import "./PublicGroupsPage.scss";
 export const PublicGroupsPage = () => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [showActions, setShowActions] = useState({ open: "56057db3-c50f-5fc9-9cdd-de991a592d16", click: 1 });
+  const [showActions, setShowActions] = useState({ open: "dad3e06f-eafe-5366-8145-e766d2a82783", click: 1 });
   const [navGroups, setNavGroups] = useState(true);
   let debounceTimeout: ReturnType<typeof setTimeout>;
-  const [exploreGroups, setExploreGroups] = useState<retrRetrievePublicGroupGoalItem[]>();
+  const [exploreGroups, setExploreGroups] = useState<RetrievePublicGroupGoalItem[]>();
 
   const array = [
     {
@@ -42,29 +42,21 @@ export const PublicGroupsPage = () => {
       parentId: "ffee4830-a840-5b5e-884c-fd373d6023a5",
       likes: 1,
     },
-    {
-      inMyGoals: 1,
-      feelGoods: 0,
-      dislikes: 0,
-      id: "56057db3-c50f-5fc9-92dd-de991a599123",
-      completed: 0,
-      title: "New Group",
-      feelBads: 1,
-      parentId: "ffee4830-a840-5b5e-884c-fd373d6023a5",
-      likes: 1,
-    },
   ];
+  const [myGroups, setMyGroups] = useState<RetrievePublicGroupGoalItem[]>(array);
+  const [activeGroups, setActiveGroups] = useState<RetrievePublicGroupGoalItem[]>(array);
   useEffect(() => {
-    setExploreGroups(array);
-
-    // (async () => {
-    //   const rootGroups: RetrievePublicGroupGoalItem[] = await getRootGroupGroups();
-    //   setExploreGroups(rootGroups);
-    // })();
-  }, []);
+    (async () => {
+      const rootGroups = await getPublicGroupGoals("dad3e06f-eafe-5366-8145-e766d2a82783");
+      setExploreGroups(rootGroups);
+    })();
+  }, [getPublicGroupGoals]);
   const search = async (text: string) => {
-    // const groups: RetrievePublicGroupGoalItem[] = await getRootGroupGroups();
-    setExploreGroups(array.filter((group) => group.title.toUpperCase().includes(text.toUpperCase())));
+    if (navGroups) {
+      setActiveGroups(myGroups.filter((group) => group.title.toUpperCase().includes(text.toUpperCase())));
+    } else {
+      setActiveGroups(exploreGroups.filter((group) => group.title.toUpperCase().includes(text.toUpperCase())));
+    }
   };
 
   const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -93,13 +85,20 @@ export const PublicGroupsPage = () => {
             <h1
               type="button"
               id={!darkModeStatus ? "right-groups-nav-dark" : "right-groups-nav"}
-              onClick={() => setNavGroups(!navGroups)}
+              onClick={() => {
+                setNavGroups(!navGroups);
+                if (!navGroups) {
+                  setActiveGroups(myGroups);
+                } else {
+                  setActiveGroups(exploreGroups);
+                }
+              }}
             >
               {navGroups ? t("exploregroups") : t("mygroups")}
             </h1>
           </div>
           <div>
-            {exploreGroups?.map((rootGroup: RetrievePublicGroupGoalItem) => (
+            {activeGroups?.map((rootGroup: RetrievePublicGroupGoalItem) => (
               // eslint-disable-next-line react/jsx-key
               <MyGroup group={rootGroup} showActions={showActions} setShowActions={setShowActions} />
             ))}

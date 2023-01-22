@@ -36,7 +36,7 @@ const MyGroup: React.FC<MyGroupProps> = ({ group, showActions, setShowActions, s
 
   useEffect(() => {
     setShowActions(defaultTap);
-  }, []);
+  }, [setShowActions]);
 
   return (
     <div key={String(`goal-${group.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
