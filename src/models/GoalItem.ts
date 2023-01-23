@@ -20,5 +20,5 @@ export interface GoalItem {
   collaboration: ICollaboration;
   shared: IShared,
   rootGoalId: string,
-  typeOfGoal: "myGoal" | "shared" | "collaborate",
+  typeOfGoal: "myGoal" | "shared" | "collaboration",
 }
