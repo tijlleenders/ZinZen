@@ -8,12 +8,12 @@ import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
-import { addContact, getAllContacts, updateStatusOfContact } from "@src/api/ContactsAPI";
+import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import { darkModeState, displayToast } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
-import { getRelationshipStatus, initRelationship, shareGoalWithContact } from "@src/services/contact.service";
+import { initRelationship, shareGoalWithContact } from "@src/services/contact.service";
 import { addSubInPub } from "@src/api/PubSubAPI";
 
 import "./ShareGoalModal.scss";
@@ -41,15 +41,6 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
 
-  const checkStatus = async (relId: string) => {
-    if (relId === "") { return false; }
-    const res = await getRelationshipStatus(relId);
-    if (res.success) {
-      await updateStatusOfContact(relId, res.response.status !== "pending");
-      return res.response.status !== "pending";
-    }
-    return false;
-  };
   const getContactBtn = (relId = "", name = "", accepted = false) => (
     <div className="contact-button">
       <button
@@ -59,7 +50,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           setLoading({ ...loading, S: true });
           if (name === "") handleShowAddContact();
           else {
-            const status = accepted ? true : await checkStatus(relId);
+            const status = accepted ? true : await checkAndUpdateRelationshipStatus(relId);
             if (goal.typeOfGoal === "myGoal" && status) {
               await shareGoalWithContact(relId, convertIntoSharedGoal(goal));
               setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });

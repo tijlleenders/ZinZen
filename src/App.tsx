@@ -18,7 +18,7 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
-import { addColabInvitesInRelId, getContactByRelId } from "./api/ContactsAPI";
+import { addColabInvitesInRelId, getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/OutboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
@@ -39,6 +39,7 @@ const App = () => {
   const [showToast, setShowToast] = useRecoilState(displayToast);
   useEffect(() => {
     const init = async () => {
+      updateAllUnacceptedContacts();
       const res = await getContactSharedGoals();
       // @ts-ignore
       const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
