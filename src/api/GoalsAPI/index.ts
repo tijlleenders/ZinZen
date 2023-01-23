@@ -94,29 +94,6 @@ export const getGoalsOnDate = async (date: Date) => {
   });
 };
 
-export const removeGoal = async (goalId: string) => {
-  const goal = await getGoal(goalId);
-  const parentGoal = goal.parentGoalId === "root" ? "root" : await getGoal(goal.parentGoalId);
-  console.log("inRemoveGoal", goal,);
-  db.transaction("rw", db.goalsCollection, async () => {
-    const goals = await db.goalsCollection.where("title").equals(goal.title).toArray();
-    console.log("here", goals);
-    goals.forEach(async (ele) => {
-      if (parentGoal === "root") {
-        console.log("root");
-        if (ele.parentGoalId === "root") await db.goalsCollection.delete(ele.id);
-      } else {
-        const tmpParentGoal = (await getGoal(ele.parentGoalId)).title;
-        if (tmpParentGoal === parentGoal.title) {
-          await db.goalsCollection.delete(ele.id);
-        }
-      }
-    });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
-};
-
 export const updateGoal = async (id: string, changes: object) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(id, changes).then((updated) => updated);
@@ -167,6 +144,10 @@ export const isCollectionEmpty = async () => {
   const allGoals = await getAllGoals();
   const archivedGoals = await getAllArchivedGoals();
   return allGoals.length === archivedGoals.length;
+};
+
+export const removeGoal = async (goalId: string) => {
+  await db.goalsCollection.delete(goalId).catch((err) => console.log("failed to delete", err));
 };
 
 export const removeChildrenGoals = async (parentGoalId: string) => {
