@@ -1,4 +1,5 @@
 import { db } from "@models";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { GoalItem } from "@src/models/GoalItem";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
@@ -12,16 +13,18 @@ export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]
   });
 };
 
-export const addSharedWMGoal = async (goalDetails: GoalItem) => {
-  let newGoalId;
+export const addSharedWMGoal = async (goalDetails: object) => {
+  const newGoal = createGoalObjectFromTags({ ...goalDetails, typeOfGoal: "shared" });
   await db
     .transaction("rw", db.sharedWMCollection, async () => {
-      newGoalId = await db.sharedWMCollection.add(goalDetails);
-    })
-    .catch((e) => {
+      await db.sharedWMCollection.add(newGoal);
+    }).then(async () => {
+      const { parentGoalId } = newGoal;
+      if (parentGoalId !== "root") { await addSharedWMSublist(parentGoalId, [newGoal.id]); }
+    }).catch((e) => {
       console.log(e.stack || e);
     });
-  return newGoalId;
+  return newGoal.id;
 };
 
 export const addGoalsInSharedWM = async (goals: GoalItem[]) => {
@@ -53,4 +56,52 @@ export const getActiveSharedWMGoals = async () => {
   const activeParentGoals = activeGoals.filter((goal: GoalItem) => goal.archived === "false");
   activeParentGoals.reverse();
   return activeParentGoals;
+};
+
+export const updateSharedWMGoal = async (id: string, changes: object) => {
+  db.transaction("rw", db.sharedWMCollection, async () => {
+    await db.sharedWMCollection.update(id, changes).then((updated) => updated);
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const archiveGoal = async (goal: GoalItem) => {
+  db.transaction("rw", db.sharedWMCollection, async () => {
+    await db.sharedWMCollection.update(goal.id, { archived: "true" });
+  });
+  if (goal.parentGoalId !== "root") {
+    const parentGoal = await getSharedWMGoal(goal.parentGoalId);
+    db.transaction("rw", db.sharedWMCollection, async () => {
+      await db.sharedWMCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist.filter((ele) => ele !== goal.id) });
+    });
+  }
+};
+
+export const archiveChildrenGoals = async (id: string) => {
+  const childrenGoals = await getSharedWMChildrenGoals(id);
+  if (childrenGoals) {
+    childrenGoals.forEach(async (goal: GoalItem) => {
+      await archiveChildrenGoals(goal.id);
+      await archiveGoal(goal);
+    });
+  }
+};
+
+export const archiveSharedWMGoal = async (goal: GoalItem) => {
+  await archiveChildrenGoals(goal.id);
+  await archiveGoal(goal);
+};
+
+export const removeGoal = async (goalId: string) => {
+  await db.sharedWMCollection.delete(goalId).catch((err) => console.log("failed to delete", err));
+};
+
+export const removeChildrenGoals = async (parentGoalId: string) => {
+  const childrenGoals = await getSharedWMChildrenGoals(parentGoalId);
+  if (childrenGoals.length === 0) { return; }
+  childrenGoals.forEach((goal) => {
+    removeChildrenGoals(goal.id);
+    removeGoal(goal.id);
+  });
 };
