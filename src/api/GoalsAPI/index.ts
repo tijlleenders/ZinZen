@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-alert */
 import { db } from "@models";
-import { getJustDate } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
+import { getJustDate } from "@src/utils";
 import { ICollaboration } from "@src/Interfaces/ICollaboration";
-import { IShared } from "@src/Interfaces/IShared";
 import { shareGoal } from "@src/services/goal.service";
+import { convertIntoAnonymousGoal } from "@src/helpers/GoalProcessor";
 
 export const resetDatabase = () =>
   db.transaction("rw", db.goalsCollection, async () => {
@@ -94,29 +94,6 @@ export const getGoalsOnDate = async (date: Date) => {
   });
 };
 
-export const removeGoal = async (goalId: string) => {
-  const goal = await getGoal(goalId);
-  const parentGoal = goal.parentGoalId === "root" ? "root" : await getGoal(goal.parentGoalId);
-  console.log("inRemoveGoal", goal,);
-  db.transaction("rw", db.goalsCollection, async () => {
-    const goals = await db.goalsCollection.where("title").equals(goal.title).toArray();
-    console.log("here", goals);
-    goals.forEach(async (ele) => {
-      if (parentGoal === "root") {
-        console.log("root");
-        if (ele.parentGoalId === "root") await db.goalsCollection.delete(ele.id);
-      } else {
-        const tmpParentGoal = (await getGoal(ele.parentGoalId)).title;
-        if (tmpParentGoal === parentGoal.title) {
-          await db.goalsCollection.delete(ele.id);
-        }
-      }
-    });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
-};
-
 export const updateGoal = async (id: string, changes: object) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(id, changes).then((updated) => updated);
@@ -169,6 +146,10 @@ export const isCollectionEmpty = async () => {
   return allGoals.length === archivedGoals.length;
 };
 
+export const removeGoal = async (goalId: string) => {
+  await db.goalsCollection.delete(goalId).catch((err) => console.log("failed to delete", err));
+};
+
 export const removeChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
   if (childrenGoals.length === 0) { return; }
@@ -179,33 +160,21 @@ export const removeChildrenGoals = async (parentGoalId: string) => {
 };
 
 export const shareMyGoal = async (goal: GoalItem, parent: string) => {
-  const goalDetails = {
-    title: goal.title,
-    duration: goal.duration,
-    repeat: goal.repeat,
-    start: goal.start,
-    due: goal.due,
-    afterTime: goal.afterTime,
-    beforeTime: goal.beforeTime,
-    createdAt: goal.createdAt,
-    goalColor: goal.goalColor,
-    language: goal.language,
-    link: goal.link
-  };
   const shareableGoal = {
     method: "shareGoal",
     parentTitle: parent,
-    goal: goalDetails
+    goal: convertIntoAnonymousGoal(goal)
   };
   const res = await shareGoal(shareableGoal);
   return res;
 };
 
-export const updateSharedStatusOfGoal = async (id: string, shared: IShared) => {
+export const updateSharedStatusOfGoal = async (id: string, name: string) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(id)
       .modify((obj: GoalItem) => {
-        obj.shared = { ...shared };
+        obj.typeOfGoal = "shared";
+        obj.shared.contacts = [...obj.shared.contacts, name];
       });
   }).catch((e) => {
     console.log(e.stack || e);

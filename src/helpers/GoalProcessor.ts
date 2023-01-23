@@ -1,6 +1,6 @@
 import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
-import { colorPallete } from "@src/utils";
+import { colorPallete, getDefaultValueOfCollab, getDefaultValueOfShared } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
 export const formatTagsToText = (_goal: GoalItem) => {
@@ -45,21 +45,24 @@ export const createGoalObjectFromTags = (obj: object) => {
     beforeTime: null,
     archived: "false",
     parentGoalId: "root",
+    rootGoalId: "root",
     link: null,
     sublist: [],
     goalColor: colorPallete[Math.floor(Math.random() * 11)],
-    shared: null,
+    shared: {
+      conversionRequests: false,
+      contacts: [],
+      allowed: true,
+    },
     collaboration: {
-      status: "none",
       newUpdates: false,
-      relId: "",
-      name: "",
-      rootGoal: "",
-      notificationCounter: 0,
+      collaborators: [],
       allowed: true
     },
+    typeOfGoal: "myGoal",
     ...obj
   };
+  if (newGoal.rootGoalId === "root") { newGoal.rootGoalId = newGoal.id; }
   return newGoal;
 };
 
@@ -71,4 +74,24 @@ export const extractFromGoalTags = (goalTags: ITags) => ({
   due: goalTags.due ? goalTags.due.value : null,
   afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
   beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
+});
+
+export const convertIntoAnonymousGoal = (goal: GoalItem) => ({
+  title: goal.title,
+  duration: goal.duration,
+  repeat: goal.repeat,
+  start: goal.start,
+  due: goal.due,
+  afterTime: goal.afterTime,
+  beforeTime: goal.beforeTime,
+  createdAt: goal.createdAt,
+  goalColor: goal.goalColor,
+  language: goal.language,
+  link: goal.link,
+});
+
+export const convertIntoSharedGoal = (goal: GoalItem) => ({
+  ...goal,
+  shared: getDefaultValueOfShared(),
+  collaboration: getDefaultValueOfCollab()
 });

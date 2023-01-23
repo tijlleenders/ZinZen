@@ -3,20 +3,22 @@ import { Modal } from "react-bootstrap";
 
 import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
-import sharePublic from "@assets/images/sharePublic.svg";
+// import sharePublic from "@assets/images/sharePublic.svg";
 import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
-import { addContact, getAllContacts, updateStatusOfContact } from "@src/api/ContactsAPI";
+import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import { darkModeState, displayToast } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
-import { getRelationshipStatus, initRelationship, shareGoalWithContact } from "@src/services/contact.service";
+import { initRelationship, shareGoalWithContact } from "@src/services/contact.service";
+import { addSubInPub } from "@src/api/PubSubAPI";
 
 import "./ShareGoalModal.scss";
 import Loader from "@src/common/Loader";
+import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
 import InviteLinkModal from "./InviteLinkModal";
 
 interface IShareGoalModalProps {
@@ -39,31 +41,24 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
 
-  const checkStatus = async (relId: string) => {
-    if (relId === "") { return false; }
-    const res = await getRelationshipStatus(relId);
-    if (res.success) {
-      await updateStatusOfContact(relId, res.response.status !== "pending");
-      return res.response.status !== "pending";
-    }
-    return false;
-  };
   const getContactBtn = (relId = "", name = "", accepted = false) => (
     <div className="contact-button">
       <button
         type="button"
+        style={name === "" || accepted ? {} : { background: "#DFDFDF", color: "#979797" }}
         onClick={async () => {
           setLoading({ ...loading, S: true });
           if (name === "") handleShowAddContact();
           else {
-            const status = accepted ? true : await checkStatus(relId);
-            if (!goal.shared && status) {
-              await shareGoalWithContact(relId, goal);
-              await updateSharedStatusOfGoal(goal.id, { relId, name, allowed: false });
+            const status = accepted ? true : await checkAndUpdateRelationshipStatus(relId);
+            if (goal.typeOfGoal === "myGoal" && status) {
+              await shareGoalWithContact(relId, convertIntoSharedGoal(goal));
               setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });
+              updateSharedStatusOfGoal(goal.id, name).then(() => console.log("status updated"));
+              addSubInPub(goal.id, relId, "shared").then(() => console.log("subscriber added"));
             } else {
               navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);
-              setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${name} so that they can add you in their contacts` });
+              setShowToast({ open: true, message: "Link copied to clipboard", extra: `Your invite hasn't been accepted yet. Send this link to ${name} so that they can add you in their contacts` });
             }
           }
           setLoading({ ...loading, S: false });
@@ -96,10 +91,10 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
         <h4>Share Goals</h4>
         <button
           onClick={async () => {
-            let parentGoal = "root";
+            let parentGoalTitle = "root";
             setLoading({ ...loading, A: true });
-            if (goal.parentGoalId !== "root") { parentGoal = (await getGoal(goal.parentGoalId)).title; }
-            const { response } = await shareMyGoal(goal, parentGoal);
+            if (goal.parentGoalId !== "root") { parentGoalTitle = (await getGoal(goal.parentGoalId)).title; }
+            const { response } = await shareMyGoal(goal, parentGoalTitle);
             setShowToast({ open: true, message: response, extra: "" });
             setLoading({ ...loading, A: false });
           }}
@@ -120,7 +115,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           </div>
         </button> */}
         <button
-          disabled={!!goal.shared || goal.collaboration.status !== "none"}
+          disabled={goal.typeOfGoal !== "myGoal"}
           type="button"
           onClick={() => setDisplayContacts(!displayContacts)}
           className="shareOptions-btn"
@@ -129,17 +124,12 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             <div> <img alt="share with friend" src={shareWithFriend} /> </div>
             <p className="shareOption-name">
               Share 1:1 <br />
-              { goal.collaboration.status === "accepted" ?
-                ` - Goal is collaborated with ${goal.collaboration?.name}` :
-                goal.collaboration.status === "pending" ?
-                  " - Goal collaboration invite is not yet accepted"
-                  :
-                  ""}
-              {`${goal.shared && goal.collaboration.status === "none" ? ` - Goal is shared with ${goal.shared.name}` : ""}`}
+              {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0]}`}
+              {goal.typeOfGoal === "collaboration" && ` - Goal is in collaboration with ${goal.collaboration.collaborators[0]}`}
             </p>
             { loading.S && <Loader /> }
           </div>
-          { (!goal.shared || !goal.collaboration.status) && displayContacts && (
+          { (goal.typeOfGoal === "myGoal") && displayContacts && (
             <div className="shareWithContacts">
               {contacts.length === 0 &&
                 <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}

@@ -13,6 +13,11 @@ export const displayFromOptions = atom({
   default: { archive: false, public: false }
 });
 
+export const displayInbox = atom({
+  key: "displayInbox",
+  default: false as boolean
+});
+
 export const displayToast = atom({
   key: "displayToast",
   default: { open: false, message: "Awww... no hints today. We'll keep looking!", extra: "" }

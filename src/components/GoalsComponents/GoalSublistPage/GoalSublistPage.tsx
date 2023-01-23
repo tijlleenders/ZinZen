@@ -8,7 +8,8 @@ import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState } from "@src/store";
+import { darkModeState, displayInbox } from "@src/store";
+import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";
 import { UpdateGoalForm } from "../UpdateGoal/UpdateGoalForm";
 import MyGoal from "../MyGoal";
@@ -22,10 +23,11 @@ interface GoalSublistProps {
 }
 export const GoalSublist: React.FC<GoalSublistProps> = ({ addThisGoal, updateThisGoal }) => {
   const goalID = useRecoilValue(displayGoalId);
-  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const openInbox = useRecoilValue(displayInbox);
   const showAddGoal = useRecoilValue(displayAddGoal);
-  const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalHistory = useRecoilValue(goalsHistory);
+  const darkModeStatus = useRecoilValue(darkModeState);
+  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
@@ -50,14 +52,14 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ addThisGoal, updateThi
   ));
 
   useEffect(() => {
-    getGoal(goalID).then((parent) => setParentGoal(parent));
+    (openInbox ? getSharedWMGoal(goalID) : getGoal(goalID))
+      .then((parent) => setParentGoal(parent));
   }, [goalID]);
 
   useEffect(() => {
-    getChildrenGoals(goalID).then((fetchedGoals) => {
-      setChildrenGoals(fetchedGoals);
-    });
-  }, [lastAction, parentGoal, showAddGoal, showSuggestionModal,]);
+    (openInbox ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID))
+      .then((fetchedGoals) => { setChildrenGoals(fetchedGoals); });
+  }, [lastAction, parentGoal, showAddGoal, showSuggestionModal, showUpdateGoal]);
 
   return (
     <div className="sublist-container">
@@ -88,7 +90,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ addThisGoal, updateThi
             {childrenGoals?.map((goal: GoalItem) => (
               showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm updateThisGoal={updateThisGoal} />
                 :
-              <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} setLastAction={setLastAction} />
+              <MyGoal typeOfGoal={openInbox ? "sharedGoal" : "myGoal"} goal={goal} showActions={showActions} setShowActions={setShowActions} setLastAction={setLastAction} />
             ))}
           </Container>
         </div>

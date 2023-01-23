@@ -8,7 +8,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { getActiveGoals, getGoal } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayToast } from "@src/store";
+import { darkModeState, displayInbox, displayToast } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
 import {
@@ -28,9 +28,10 @@ import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoa
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions/AddGoalOptions";
 import { createGoal, modifyGoal } from "@src/helpers/GoalController";
+import MyGoal from "@components/GoalsComponents/MyGoal";
 
 import "./MyGoalsPage.scss";
-import MyGoal from "@components/GoalsComponents/MyGoal";
+import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 
 interface ILocationProps {
   openGoalOfId: string,
@@ -55,6 +56,7 @@ export const MyGoalsPage = () => {
   const setShowToast = useSetRecoilState(displayToast);
 
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
+  const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
@@ -62,7 +64,7 @@ export const MyGoalsPage = () => {
   const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);
 
   const refreshActiveGoals = async () => {
-    const goals: GoalItem[] = await getActiveGoals();
+    const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals();
     setUserGoals(goals);
   };
   const isTitleEmpty = () => {
@@ -101,7 +103,7 @@ export const MyGoalsPage = () => {
 
   useEffect(() => {
     refreshActiveGoals();
-  }, [lastAction, showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
+  }, [openInbox, lastAction, showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId]);
@@ -151,15 +153,31 @@ export const MyGoalsPage = () => {
                 placeholder={t("search")}
                 onChange={(e) => debounceSearch(e)}
               />
-              <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"}>
-                {t("mygoals")}
-              </h1>
+              <div className="sec-header">
+                <button aria-hidden type="button">
+                  <h1 className={`myGoals_title${darkModeStatus ? "-dark" : ""} activeTab`}>
+                    { openInbox ? "Inbox" : t("mygoals") }
+                  </h1>
+                </button>
+                <button type="button" onClick={() => { setOpenInbox(!openInbox); }}>
+                  <h1 className={`myGoals_title${darkModeStatus ? "-dark" : ""}`}>
+                    { !openInbox ? "Inbox" : t("mygoals") }
+                  </h1>
+                </button>
+              </div>
               { showAddGoal && (<AddGoalForm parentGoalId={showAddGoal.goalId} addThisGoal={addThisGoal} />)}
               <div>
                 {userGoals?.map((goal: GoalItem) => (
                   showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm updateThisGoal={updateThisGoal} />
-                    :
-                  <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} setLastAction={setLastAction} />
+                    : (
+                      <MyGoal
+                        goal={goal}
+                        showActions={showActions}
+                        setShowActions={setShowActions}
+                        setLastAction={setLastAction}
+                        typeOfGoal={openInbox ? "sharedGoal" : "myGoal"}
+                      />
+                    )
                 ))}
               </div>
             </div>
