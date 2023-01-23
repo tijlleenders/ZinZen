@@ -55,3 +55,11 @@ export const getRootGroupGroups = async () => {
   const rootGroupPublicGroups: RetrievePublicGroupGoalItem[] = res;
   return rootGroupPublicGroups;
 };
+
+export const getUserGroups = async () => {
+  const res = await joinPublicGroup("Root Group");
+  const groupIds: string[] = res.response.groups;
+  const groups = await getPublicGroupGoals("dad3e06f-eafe-5366-8145-e766d2a82783");
+  const result = groups.filter((item) => groupIds.includes(item.id));
+  return result;
+};

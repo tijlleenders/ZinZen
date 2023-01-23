@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
-import { getPublicGroupGoals } from "@api/PublicGroupsAPI";
+import { getPublicGroupGoals, getUserGroups } from "@api/PublicGroupsAPI";
 import { RetrievePublicGroupGoalItem } from "@src/models/RetrievePublicGroupGoalItem";
 import MyGroup from "@components/MyGroup";
 
@@ -18,39 +18,19 @@ export const PublicGroupsPage = () => {
   const [navGroups, setNavGroups] = useState(true);
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const [exploreGroups, setExploreGroups] = useState<RetrievePublicGroupGoalItem[]>();
+  const [myGroups, setMyGroups] = useState<RetrievePublicGroupGoalItem[]>();
+  const [activeGroups, setActiveGroups] = useState<RetrievePublicGroupGoalItem[]>(myGroups);
 
-  const array = [
-    {
-      inMyGoals: 1,
-      feelGoods: 0,
-      dislikes: 0,
-      id: "56057db3-c50f-5fc9-9cdd-de991a592d16",
-      completed: 0,
-      title: "Public Group 2",
-      feelBads: 1,
-      parentId: "ffee4830-a840-5b5e-884c-fd373d6023a5",
-      likes: 1,
-    },
-    {
-      inMyGoals: 1,
-      feelGoods: 0,
-      dislikes: 0,
-      id: "56057db3-c50f-5fc9-9cdd-de991a592123",
-      completed: 0,
-      title: "Public Group 4",
-      feelBads: 1,
-      parentId: "ffee4830-a840-5b5e-884c-fd373d6023a5",
-      likes: 1,
-    },
-  ];
-  const [myGroups, setMyGroups] = useState<RetrievePublicGroupGoalItem[]>(array);
-  const [activeGroups, setActiveGroups] = useState<RetrievePublicGroupGoalItem[]>(array);
   useEffect(() => {
     (async () => {
-      const rootGroups = await getPublicGroupGoals("dad3e06f-eafe-5366-8145-e766d2a82783");
-      setExploreGroups(rootGroups);
+      const allRootGroups = await getPublicGroupGoals("dad3e06f-eafe-5366-8145-e766d2a82783");
+      const myRootGroups = await getUserGroups();
+      setExploreGroups(allRootGroups);
+      setMyGroups(myRootGroups);
+      setActiveGroups(myRootGroups);
     })();
-  }, [getPublicGroupGoals]);
+  }, [setMyGroups, setExploreGroups, setActiveGroups]);
+
   const search = async (text: string) => {
     if (navGroups) {
       setActiveGroups(myGroups.filter((group) => group.title.toUpperCase().includes(text.toUpperCase())));
@@ -86,12 +66,12 @@ export const PublicGroupsPage = () => {
               type="button"
               id={!darkModeStatus ? "right-groups-nav-dark" : "right-groups-nav"}
               onClick={() => {
-                setNavGroups(!navGroups);
                 if (!navGroups) {
                   setActiveGroups(myGroups);
                 } else {
                   setActiveGroups(exploreGroups);
                 }
+                setNavGroups(!navGroups);
               }}
             >
               {navGroups ? t("exploregroups") : t("mygroups")}
