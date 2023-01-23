@@ -73,8 +73,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, typeOfGoal, showActions, setShowA
         }}
       >
         { (
-          goal.collaboration.newUpdates ||
-              goal.collaboration.notificationCounter > 0
+          goal.collaboration.newUpdates
         ) && <NotificationSymbol color={goal.goalColor} /> }
         { goal.sublist.length > 0 && (
           <div
@@ -103,32 +102,32 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, typeOfGoal, showActions, setShowA
           <div>{goal.title}</div>&nbsp;
           { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
         </div>
-        { (goal.shared || goal.collaboration.status !== "none") && (
-        <OverlayTrigger
-          trigger="click"
-          placement="top"
-          overlay={<Tooltip id="tooltip-disabled"> {goal.shared?.name || goal.collaboration.name} </Tooltip>}
-        >
-          <div
-            className="contact-button"
+        { (goal.typeOfGoal === "shared" || goal.typeOfGoal === "collaboration") && (
+          <OverlayTrigger
+            trigger="click"
+            placement="top"
+            overlay={<Tooltip id="tooltip-disabled"> {goal.shared.contacts[0] || goal.collaboration.collaborators[0] || "N/A"} </Tooltip>}
           >
-            { goal.collaboration.status === "accepted" && (
-            <img
-              alt="collaborate goal"
-              src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
-              style={{ width: "27px", position: "absolute", right: "18px" }}
-            />
-            ) }
-            <button
-              type="button"
-              className="contact-icon"
-              style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
+            <div
+              className="contact-button"
             >
-              {goal.shared?.name[0] || goal.collaboration.name[0]}
-            </button>
-          </div>
+              { goal.typeOfGoal === "collaboration" && (
+              <img
+                alt="collaborate goal"
+                src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
+                style={{ width: "27px", position: "absolute", right: "18px" }}
+              />
+              ) }
+              <button
+                type="button"
+                className="contact-icon"
+                style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
+              >
+                {goal.shared.contacts[0][0] || goal.collaboration.collaborators[0][0] || "N/A"}
+              </button>
+            </div>
 
-        </OverlayTrigger>
+          </OverlayTrigger>
         )}
       </div>
       { typeOfGoal === "myGoal" && showActions.open === goal.id && showActions.click > 0 && (
