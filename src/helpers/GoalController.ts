@@ -1,7 +1,8 @@
 import { getGoal, addGoal, updateGoal, archiveUserGoal, removeChildrenGoals, removeGoal } from "@src/api/GoalsAPI";
+import { getPubById } from "@src/api/PubSubAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
-import { sendColabUpdatesToContact } from "@src/services/contact.service";
+import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 import { createGoalObjectFromTags, extractFromGoalTags } from "./GoalProcessor";
 
@@ -19,16 +20,13 @@ export const createGoal = async (
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
     newGoal = inheritParentProps(newGoal, parentGoal);
-    const newGoalId = await addGoal({ ...newGoal, collaboration: { ...parentGoal.collaboration, notificationCounter: 0 } });
-    if (parentGoal.collaboration.status === "accepted") {
-      sendColabUpdatesToContact(parentGoal.collaboration.relId, parentGoalId, {
-        type: "goalAdded",
-        subgoals: [{
-          ...newGoal,
-          id: newGoalId,
-          collaboration: { ...parentGoal.collaboration, allowed: false, notificationCounter: 0 }
-        }]
-      }).then(() => console.log("update sent"));
+    const newGoalId = await addGoal(newGoal);
+    const pub = await getPubById(parentGoal.rootGoalId);
+    if (pub && pub.subscribers.length > 0 && newGoalId) {
+      sendUpdatesToSubscriber(pub, parentGoal.rootGoalId, "subgoals", [{
+        ...newGoal,
+        id: newGoalId
+      }]).then(() => console.log("update sent"));
     }
     const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
     await updateGoal(parentGoalId, { sublist: newSublist });
@@ -44,33 +42,28 @@ export const modifyGoal = async (goalId: string, goalTags: ITags, goalTitle: str
     goalColor,
     ...extractFromGoalTags(goalTags)
   });
-  // getGoal(goalId).then((goal: GoalItem) => {
-  //   if (goal.collaboration.status) {
-  //     sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
-  //       type: "goalEdited",
-  //       updates: [goal]
-  //     }).then(() => { console.log("edit updates sent"); });
-  //   }
-  // });
+  const goal = await getGoal(goalId);
+  if (goal) {
+    const pub = await getPubById(goal.rootGoalId);
+    if (pub && pub.subscribers.length > 0) {
+      sendUpdatesToSubscriber(pub, goal.rootGoalId, "modifiedGoals", [goal]).then(() => console.log("update sent"));
+    }
+  }
 };
 
 export const archiveGoal = async (goal: GoalItem) => {
-  // if (goal.collaboration.status) {
-  //   sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
-  //     type: "goalCompleted",
-  //     completed: [goal]
-  //   }).then(() => console.log("complete update sent"));
-  // }
+  const pub = await getPubById(goal.rootGoalId);
+  if (pub && pub.subscribers.length > 0) {
+    sendUpdatesToSubscriber(pub, goal.rootGoalId, "archivedGoals", [goal.id]).then(() => console.log("update sent"));
+  }
   await archiveUserGoal(goal);
 };
 
 export const deleteGoal = async (goal: GoalItem) => {
-  // if (goal.collaboration.status) {
-  //   sendColabUpdatesToContact(goal.collaboration.relId, goal.id, {
-  //     type: "goalDeleted",
-  //     deletedGoals: [goal]
-  //   }).then(() => console.log("update sent"));
-  // }
+  const pub = await getPubById(goal.rootGoalId);
+  if (pub && pub.subscribers.length > 0) {
+    sendUpdatesToSubscriber(pub, goal.rootGoalId, "deletedGoals", [goal.id]).then(() => console.log("update sent"));
+  }
   await removeChildrenGoals(goal.id);
   await removeGoal(goal.id);
   if (goal.parentGoalId !== "root") {
