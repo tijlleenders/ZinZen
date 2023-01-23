@@ -24,7 +24,7 @@ export const addSubInPub = async (goalId: string, relId: string, type: "shared" 
     db.transaction("rw", db.pubSubCollection, async () => {
       await db.pubSubCollection.where("id").equals(relId)
         .modify((obj: PubSubItem) => {
-          obj.subscribers = [...obj.subscribers, [{ relId, type }]];
+          obj.subscribers = [...obj.subscribers, { relId, type }];
         });
     }).catch((e) => {
       console.log(e.stack || e);
