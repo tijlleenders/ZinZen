@@ -3,6 +3,7 @@
 import { db } from "@models";
 import ContactItem from "@src/models/ContactItem";
 import { GoalItem } from "@src/models/GoalItem";
+import { getRelationshipStatus } from "@src/services/contact.service";
 import { getJustDate } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
@@ -83,4 +84,19 @@ export const updateStatusOfContact = async (relId: string, accepted: boolean) =>
   }).catch((e) => {
     console.log(e.stack || e);
   });
+};
+
+export const checkAndUpdateRelationshipStatus = async (relId: string) => {
+  if (relId === "") { return false; }
+  const res = await getRelationshipStatus(relId);
+  if (res.success) {
+    await updateStatusOfContact(relId, res.response.status !== "pending");
+    return res.response.status !== "pending";
+  }
+  return false;
+};
+
+export const updateAllUnacceptedContacts = async () => {
+  const allContacts = await db.contactsCollection.toArray();
+  allContacts.forEach(async (ele) => { if (!ele.accepted) { checkAndUpdateRelationshipStatus(ele.relId); } });
 };
