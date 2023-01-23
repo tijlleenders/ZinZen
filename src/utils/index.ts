@@ -1,4 +1,5 @@
 import { ICollaboration } from "@src/Interfaces/ICollaboration";
+import { IShared } from "@src/Interfaces/IShared";
 import { GoalItem } from "@src/models/GoalItem";
 import { languagesFullForms } from "@src/translations/i18n";
 
@@ -62,15 +63,20 @@ export const colorPallete = [
 
 export function getDefaultValueOfCollab() {
   const value: ICollaboration = {
-    status: "none",
     newUpdates: false,
-    relId: "",
-    name: "",
-    rootGoal: "root",
-    allowed: true,
-    notificationCounter: 0,
+    collaborators: [],
+    allowed: true
   };
   return value;
+}
+
+export function getDefaultValueOfShared() {
+  const shared: IShared = {
+    conversionRequests: false,
+    contacts: [],
+    allowed: true,
+  };
+  return shared;
 }
 
 export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
@@ -79,6 +85,8 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   if (!goal.due) { goal.due = parentGoal.due; }
   if (!goal.beforeTime) { goal.beforeTime = parentGoal.beforeTime; }
   if (!goal.afterTime) { goal.afterTime = parentGoal.afterTime; }
+  goal.rootGoalId = parentGoal.rootGoalId;
+  goal.typeOfGoal = parentGoal.typeOfGoal;
   return goal;
 }
 

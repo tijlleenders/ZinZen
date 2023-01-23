@@ -53,7 +53,7 @@ export const getRelationshipStatus = async (relationshipId: string) => {
   return res;
 };
 
-export const sendUpdatesToSubscriber = async (pub: PubSubItem, rootGoalId: string, typeOfChanges: ITypeOfChanges, changes: GoalItem[]) => {
+export const sendUpdatesToSubscriber = async (pub: PubSubItem, rootGoalId: string, typeOfChanges: "subgoals" | "modifiedGoals" | "deletedGoals" | "archivedGoals", changes: GoalItem[] | string[]) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
   const { relId, type } = pub.subscribers[0];
   const res = await createContactRequest(url, {

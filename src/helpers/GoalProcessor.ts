@@ -62,6 +62,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     typeOfGoal: "myGoal",
     ...obj
   };
+  if (newGoal.rootGoalId === "root") { newGoal.rootGoalId = newGoal.id; }
   return newGoal;
 };
 

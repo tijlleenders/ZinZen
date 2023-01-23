@@ -18,13 +18,11 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
-import { addColabInvitesInRelId, addSharedGoalsInRelId, getContactByRelId } from "./api/ContactsAPI";
-import { updateColabStatusOfGoal } from "./api/GoalsAPI";
+import { addColabInvitesInRelId, getContactByRelId } from "./api/ContactsAPI";
 import { GoalItem } from "./models/GoalItem";
-import { handleIncomingChanges } from "./helpers/CollaborationHandler";
-import { getDefaultValueOfCollab } from "./utils";
-import { createGoalObjectFromTags } from "./helpers/GoalProcessor";
+import { handleIncomingChanges } from "./helpers/OutboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
+import { addGoalsInSharedWM, addSharedWMGoal } from "./api/SharedWMAPI";
 
 import "./customize.scss";
 import "./global.scss";
@@ -46,34 +44,28 @@ const App = () => {
       const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
       if (res.success) {
         Object.keys(resObject).forEach(async (k: any) => {
-          const goals: { id: string, goal: GoalItem }[] = [];
+          const goals: GoalItem[] = [];
           const collaborateInvites: { id: string, goal: GoalItem }[] = [];
           const contactItem = await getContactByRelId(k);
+          if (contactItem) {
           // @ts-ignore
-          resObject[k].forEach(async (ele) => {
-            if (ele.type === "shareGoal") {
-              goals.push({ id: ele.goal.id, goal: createGoalObjectFromTags(ele.goal) });
-            } else if (ele.type === "collaboration") {
-              collaborateInvites.push({ id: ele.goal.id, goal: ele.goal });
-            } else if (ele.type === "colabInviteResponse") {
-              await updateColabStatusOfGoal(ele.goalId, ele.status === "accepted" ? {
-                status: "accepted",
-                newUpdates: false,
-                allowed: false,
-                relId: ele.relId,
-                rootGoal: ele.goalId,
-                name: contactItem?.name || "",
-                notificationCounter: 0
-              } : getDefaultValueOfCollab()).then(() => console.log("updated invite response"));
-            } else if (ele.type === "collaborationChanges") {
-              await handleIncomingChanges(ele).then(() => console.log("changes added"));
+            resObject[k].forEach(async (ele) => {
+              if (ele.type === "shareGoal") {
+                const { goal } : { goal: GoalItem } = ele;
+                goal.shared.contacts.push(contactItem.name);
+                addSharedWMGoal(goal)
+                  .then(() => console.log("goal added in inbox"))
+                  .catch((err) => console.log("Failed to add in inbox", err));
+              } else if (["shared", "collaboration"].includes(ele.type)) {
+                handleIncomingChanges(ele);
+              }
+            });
+            if (collaborateInvites.length > 0) {
+              addColabInvitesInRelId(k, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
             }
-          });
-          if (collaborateInvites.length > 0) {
-            addColabInvitesInRelId(k, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
-          }
-          if (goals.length > 0) {
-            addSharedGoalsInRelId(k, goals).then(() => console.log("success")).catch((err) => console.log(err));
+            if (goals.length > 0) {
+              addGoalsInSharedWM(goals).then(() => console.log("success")).catch((err) => console.log(err));
+            }
           }
         });
       }
@@ -84,7 +76,7 @@ const App = () => {
     } else {
       init();
     }
-    if ((!isLanguageChosen || !isThemeChosen) && window.location.pathname !== "/" ) { window.open("/", "_self"); }
+    if ((!isLanguageChosen || !isThemeChosen) && window.location.pathname !== "/") { window.open("/", "_self"); }
   }, []);
 
   return (

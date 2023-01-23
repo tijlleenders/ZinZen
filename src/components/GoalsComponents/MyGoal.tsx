@@ -102,7 +102,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, typeOfGoal, showActions, setShowA
           <div>{goal.title}</div>&nbsp;
           { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
         </div>
-        { (goal.typeOfGoal === "shared" || goal.typeOfGoal === "collaboration") && (
+        { (goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root") && (
           <OverlayTrigger
             trigger="click"
             placement="top"
