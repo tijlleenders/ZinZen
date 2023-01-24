@@ -1,6 +1,7 @@
 import { db } from "@models";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { GoalItem } from "@src/models/GoalItem";
+import { addGoal } from "../GoalsAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -103,5 +104,14 @@ export const removeChildrenGoals = async (parentGoalId: string) => {
   childrenGoals.forEach((goal) => {
     removeChildrenGoals(goal.id);
     removeGoal(goal.id);
+  });
+};
+
+export const transferToMyGoals = async (id: string) => {
+  const childrenGoals = await getSharedWMChildrenGoals(id);
+  if (childrenGoals.length === 0) { return; }
+  childrenGoals.forEach((goal) => {
+    transferToMyGoals(goal.id);
+    addGoal(goal).then(async () => removeGoal(goal.id));
   });
 };
