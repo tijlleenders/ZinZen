@@ -14,7 +14,6 @@ import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
 
 interface MyGoalProps {
     goal: GoalItem,
-    typeOfGoal: "sharedGoal" | "myGoal",
     showActions: {
       open: string;
       click: number;
@@ -25,7 +24,7 @@ interface MyGoalProps {
   }>>
   setLastAction: React.Dispatch<React.SetStateAction<string>>
 }
-const MyGoal: React.FC<MyGoalProps> = ({ goal, typeOfGoal, showActions, setShowActions, setLastAction }) => {
+const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions, setLastAction }) => {
   const defaultTap = { open: "root", click: 1 };
 
   const selectedGoalId = useRecoilValue(displayGoalId);
@@ -130,7 +129,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, typeOfGoal, showActions, setShowA
           </OverlayTrigger>
         )}
       </div>
-      { typeOfGoal === "myGoal" && showActions.open === goal.id && showActions.click > 0 && (
+      { showActions.open === goal.id && showActions.click > 0 && (
         <MyGoalActions
           goal={goal}
           setShowShareModal={setShowShareModal}

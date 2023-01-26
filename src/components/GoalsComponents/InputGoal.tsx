@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
-import { darkModeState } from "@src/store";
+import { darkModeState, displayInbox } from "@src/store";
 import ITagExtractor, { ITagIndices } from "@src/Interfaces/ITagExtractor";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { extractedTitle, inputGoalTags } from "@src/store/GoalsState";
@@ -22,6 +22,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
   const { t } = useTranslation();
 
   const darkModeStatus = useRecoilValue(darkModeState);
+  const openInbox = useRecoilValue(displayInbox);
   const [formInputData, setFormInputData] = useState(goalInput);
   const [, setMagicIndices] = useState<ITagIndices[]>([]);
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
@@ -51,7 +52,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
       type="button"
       style={{ backgroundColor: selectedColor }}
       className="form-tag"
-      onClick={() => { if (content) { handleTagClick(tagName); } }}
+      onClick={() => { if (content && !openInbox) { handleTagClick(tagName); } }}
     >
       {content}
     </button>
@@ -82,6 +83,8 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
           value={formInputData}
           id="goalInputField"
           style={{ borderColor: selectedColor }}
+          contentEditable={!openInbox}
+          disabled={openInbox}
           // eslint-disable-next-line jsx-a11y/no-autofocus
           onChange={(e) => setFormInputData(e.target.value)}
         />

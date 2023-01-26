@@ -94,16 +94,16 @@ export const archiveSharedWMGoal = async (goal: GoalItem) => {
   await archiveGoal(goal);
 };
 
-export const removeGoal = async (goalId: string) => {
+export const removeSharedWMGoal = async (goalId: string) => {
   await db.sharedWMCollection.delete(goalId).catch((err) => console.log("failed to delete", err));
 };
 
-export const removeChildrenGoals = async (parentGoalId: string) => {
+export const removeSharedWMChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals = await getSharedWMChildrenGoals(parentGoalId);
   if (childrenGoals.length === 0) { return; }
   childrenGoals.forEach((goal) => {
-    removeChildrenGoals(goal.id);
-    removeGoal(goal.id);
+    removeSharedWMChildrenGoals(goal.id);
+    removeSharedWMGoal(goal.id);
   });
 };
 

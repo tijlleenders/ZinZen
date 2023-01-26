@@ -175,7 +175,6 @@ export const MyGoalsPage = () => {
                         showActions={showActions}
                         setShowActions={setShowActions}
                         setLastAction={setLastAction}
-                        typeOfGoal={openInbox ? "sharedGoal" : "myGoal"}
                       />
                     )
                 ))}
