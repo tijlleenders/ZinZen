@@ -1,6 +1,7 @@
 import { db } from "@models";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { GoalItem } from "@src/models/GoalItem";
+import { addGoal } from "../GoalsAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -93,15 +94,24 @@ export const archiveSharedWMGoal = async (goal: GoalItem) => {
   await archiveGoal(goal);
 };
 
-export const removeGoal = async (goalId: string) => {
+export const removeSharedWMGoal = async (goalId: string) => {
   await db.sharedWMCollection.delete(goalId).catch((err) => console.log("failed to delete", err));
 };
 
-export const removeChildrenGoals = async (parentGoalId: string) => {
+export const removeSharedWMChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals = await getSharedWMChildrenGoals(parentGoalId);
   if (childrenGoals.length === 0) { return; }
   childrenGoals.forEach((goal) => {
-    removeChildrenGoals(goal.id);
-    removeGoal(goal.id);
+    removeSharedWMChildrenGoals(goal.id);
+    removeSharedWMGoal(goal.id);
+  });
+};
+
+export const transferToMyGoals = async (id: string) => {
+  const childrenGoals = await getSharedWMChildrenGoals(id);
+  if (childrenGoals.length === 0) { return; }
+  childrenGoals.forEach((goal) => {
+    transferToMyGoals(goal.id);
+    addGoal(goal).then(async () => removeGoal(goal.id));
   });
 };

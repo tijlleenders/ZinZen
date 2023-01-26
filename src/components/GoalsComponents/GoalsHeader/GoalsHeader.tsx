@@ -4,7 +4,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-import { darkModeState, displayLoader } from "@store";
+import { darkModeState, displayInbox, displayLoader } from "@store";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
@@ -32,6 +32,7 @@ interface GoalsHeaderProps {
 export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisGoal, updateThisGoal }) => {
   const navigate = useNavigate();
   const showLoader = useRecoilValue(displayLoader);
+  const openInbox = useRecoilValue(displayInbox);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
@@ -73,7 +74,7 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
               }}
             />
           )
-}
+        }
         {darkModeStatus ? (
           <img
             role="presentation"
@@ -99,23 +100,24 @@ export const GoalsHeader:React.FC<GoalsHeaderProps> = ({ displayTRIcon, addThisG
           <Nav className="navbar-custom" />
         </Navbar.Collapse>
 
-        <button
-          type="button"
-          id={`goal-suggestion-btn${darkModeStatus ? "-dark" : ""}`}
-          onClick={async (e) => {
-            if (displayTRIcon === "+") {
-              setShowAddGoalOptions(true);
-              // setShowAddGoal({ open: true, goalId: goalID });
-            } else if (showAddGoal) {
-              await addThisGoal(e);
-            } else if (showUpdateGoal) {
-              await updateThisGoal(e);
-            }
-          }}
-        >
-          <img alt="save changes" src={displayTRIcon === "✓" ? correct : plus} />
-        </button>
-
+        { !openInbox && (
+          <button
+            type="button"
+            id={`goal-suggestion-btn${darkModeStatus ? "-dark" : ""}`}
+            onClick={async (e) => {
+              if (displayTRIcon === "+") {
+                setShowAddGoalOptions(true);
+                // setShowAddGoal({ open: true, goalId: goalID });
+              } else if (showAddGoal) {
+                await addThisGoal(e);
+              } else if (showUpdateGoal) {
+                await updateThisGoal(e);
+              }
+            }}
+          >
+            <img alt="save changes" src={displayTRIcon === "✓" ? correct : plus} />
+          </button>
+        )}
       </Navbar>
       <SuggestionModal
         goalID={goalID}

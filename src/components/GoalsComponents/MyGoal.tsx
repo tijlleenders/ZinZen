@@ -6,7 +6,7 @@ import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 import { darkModeState } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayGoalId, addInGoalsHistory, displayUpdateGoal } from "@src/store/GoalsState";
+import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal } from "@src/store/GoalsState";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import MyGoalActions from "./MyGoalActions";
 import DisplayChangesModal from "./DisplayChangesModal/DisplayChangesModal";
@@ -14,7 +14,6 @@ import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
 
 interface MyGoalProps {
     goal: GoalItem,
-    typeOfGoal: "sharedGoal" | "myGoal",
     showActions: {
       open: string;
       click: number;
@@ -25,13 +24,14 @@ interface MyGoalProps {
   }>>
   setLastAction: React.Dispatch<React.SetStateAction<string>>
 }
-const MyGoal: React.FC<MyGoalProps> = ({ goal, typeOfGoal, showActions, setShowActions, setLastAction }) => {
+const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions, setLastAction }) => {
   const defaultTap = { open: "root", click: 1 };
 
+  const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0] : "";
   const selectedGoalId = useRecoilValue(displayGoalId);
   const darkModeStatus = useRecoilValue(darkModeState);
 
-  const [showShareModal, setShowShareModal] = useState("");
+  const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
   const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
@@ -106,7 +106,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, typeOfGoal, showActions, setShowA
           <OverlayTrigger
             trigger="click"
             placement="top"
-            overlay={<Tooltip id="tooltip-disabled"> {goal.shared.contacts[0] || goal.collaboration.collaborators[0] || "N/A"} </Tooltip>}
+            overlay={<Tooltip id="tooltip-disabled"> {sharedWithContact || "N/A"} </Tooltip>}
           >
             <div
               className="contact-button"
@@ -123,14 +123,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, typeOfGoal, showActions, setShowA
                 className="contact-icon"
                 style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
               >
-                {goal.shared.contacts[0][0] || goal.collaboration.collaborators[0][0] || "N/A"}
+                {sharedWithContact[0] || "N/A"}
               </button>
             </div>
 
           </OverlayTrigger>
         )}
       </div>
-      { typeOfGoal === "myGoal" && showActions.open === goal.id && showActions.click > 0 && (
+      { showActions.open === goal.id && showActions.click > 0 && (
         <MyGoalActions
           goal={goal}
           setShowShareModal={setShowShareModal}

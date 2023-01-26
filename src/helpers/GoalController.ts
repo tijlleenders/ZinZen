@@ -1,5 +1,6 @@
 import { getGoal, addGoal, updateGoal, archiveUserGoal, removeChildrenGoals, removeGoal } from "@src/api/GoalsAPI";
 import { getPubById } from "@src/api/PubSubAPI";
+import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
@@ -75,3 +76,16 @@ export const deleteGoal = async (goal: GoalItem) => {
     });
   }
 };
+
+export const deleteSharedGoal = async (goal: GoalItem) => { 
+  await removeSharedWMChildrenGoals(goal.id);
+  await removeSharedWMGoal(goal.id);
+  if (goal.parentGoalId !== "root") {
+    getSharedWMGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
+      const parentGoalSublist = parentGoal.sublist;
+      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
+      if (childGoalIndex !== -1) { parentGoalSublist.splice(childGoalIndex, 1); }
+      await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
+    });
+  }
+}

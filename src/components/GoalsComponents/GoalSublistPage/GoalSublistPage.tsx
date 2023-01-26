@@ -90,7 +90,7 @@ export const GoalSublist: React.FC<GoalSublistProps> = ({ addThisGoal, updateThi
             {childrenGoals?.map((goal: GoalItem) => (
               showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm updateThisGoal={updateThisGoal} />
                 :
-              <MyGoal typeOfGoal={openInbox ? "sharedGoal" : "myGoal"} goal={goal} showActions={showActions} setShowActions={setShowActions} setLastAction={setLastAction} />
+              <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} setLastAction={setLastAction} />
             ))}
           </Container>
         </div>
