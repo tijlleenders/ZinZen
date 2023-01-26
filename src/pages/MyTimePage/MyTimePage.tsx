@@ -10,23 +10,25 @@ import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
-import { TaskItem } from "@src/models/TaskItem";
+
 import { darkModeState } from "@src/store";
 import { colorPallete, getDiffInHours } from "@src/utils";
+import { ITask } from "@src/Interfaces/Task";
+import { TaskFilter } from "@src/helpers/TaskFilter/TaskFilter";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
 
 export const MyTimePage = () => {
+  const toggle = true;
   const today = new Date();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [tmpTasks, setTmpTasks] = useState<TaskItem[]>([]);
+  const [tasks, setTasks] = useState<{[day: string]: ITask[]}>({});
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
-  const [showTasks, setShowTasks] = useState<string[]>([`My ${today.toDateString()}`]);
-  const toggle = true;
+  const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
@@ -44,9 +46,8 @@ export const MyTimePage = () => {
     return colorWidth;
   };
 
-  const getColorComponent = (id: number|undefined|string, colorWidth:number, color: string) => (
+  const getColorComponent = (colorWidth:number, color: string) => (
     <div
-      key={`task-${id}`}
       style={{
         width: `${colorWidth}%`,
         height: "10px",
@@ -54,13 +55,13 @@ export const MyTimePage = () => {
       }}
     />
   );
-  const getTimeline = () => (
-    <MyTimeline myTasks={tmpTasks} />
+  const getTimeline = (day: string) => (
+    tasks[day] ? <MyTimeline myTasks={tasks[day]} /> : <div />
   );
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
     return (
-      <div key={`day-${day}`} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
+      <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
         <button
           type="button"
           className="MyTime_navRow"
@@ -68,7 +69,7 @@ export const MyTimePage = () => {
             handleShowTasks(day);
           }}
         >
-          <h3 className="MyTime_dayTitle"> {day} </h3>
+          <h3 className="MyTime_dayTitle"> {day === "Today" ? `My ${today.toDateString()}` : day}</h3>
           <button
             className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
             type="button"
@@ -76,10 +77,10 @@ export const MyTimePage = () => {
             <div> { showTasks.includes(day) ? <ChevronDown /> : <ChevronRight /> } </div>
           </button>
         </button>
-        {showTasks.includes(day) ? getTimeline() :
+        {showTasks.includes(day) ? getTimeline(day) :
           (
             <div className="MyTime_colorPalette">
-              {tmpTasks.map((task, index) => {
+              {tasks[day]?.map((task, index) => {
                 const colorWidth = getColorWidth(false, task.duration);
                 colorIndex = (colorIndex === colorPallete.length - 1) ? 0 : colorIndex + 1;
                 if (unplannedIndices.includes(index)) {
@@ -87,19 +88,19 @@ export const MyTimePage = () => {
                   if (index === 0) {
                     return (
                       <>
-                        {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
-                        {getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
+                        {getColorComponent(unpColorWidth, "lightgray")}
+                        {getColorComponent(colorWidth, task.goalColor)}
                       </>
                     );
                   }
                   return (
                     <>
-                      {getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0])}
-                      {getColorComponent(`U-${day}-${index}`, unpColorWidth, "lightgray")}
+                      {getColorComponent(colorWidth, task.goalColor)}
+                      {getColorComponent(unpColorWidth, "lightgray")}
                     </>
                   );
                 }
-                return (getColorComponent(`task-${day}-${task.goalid}`, colorWidth, task.goalColor ? task.goalColor : colorPallete[0]));
+                return (getColorComponent(colorWidth, task.goalColor));
               })}
             </div>
           )}
@@ -154,7 +155,7 @@ export const MyTimePage = () => {
       activeGoals = await getTasks();
       console.log(activeGoals);
       await init();
-      const _today = new Date();
+      let _today = new Date();
       const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
       const endDate = `${new Date(_today.setDate(_today.getDate() + 7)).toISOString().slice(0, 10)}T00:00:00`;
 
@@ -182,11 +183,22 @@ export const MyTimePage = () => {
       console.log("output", res);
       const schedulerOutput = res.scheduled;
       schedulerOutput.forEach((ele, index) => {
-        const ind = activeGoals.findIndex((tmpGoal) => tmpGoal.id === ele.goalid);
-        schedulerOutput[index].parentGoalId = activeGoals[ind].parentGoalId;
-        schedulerOutput[index].goalColor = activeGoals[ind].goalColor;
+        activeGoals.forEach((tmpGoal, ind) => {
+          if (tmpGoal.id === ele.goalid) {
+            schedulerOutput[index].parentGoalId = activeGoals[ind].parentGoalId;
+            schedulerOutput[index].goalColor = activeGoals[ind].goalColor;
+          }
+        });
       });
-      setTmpTasks([...schedulerOutput]);
+      _today = new Date();
+      tasks.Today = TaskFilter(schedulerOutput, 0);
+      tasks.Tomorrow = TaskFilter(schedulerOutput, 1);
+      [...Array(5).keys()].forEach((ind) => {
+        _today.setDate(_today.getDate() + 1);
+        tasks[`${_today.toLocaleDateString("en-us", { weekday: "long" })}`] = TaskFilter(schedulerOutput, ind + 2);
+      });
+      console.log(tasks);
+      setTasks({ ...tasks });
     })();
   }, []);
 
@@ -194,7 +206,7 @@ export const MyTimePage = () => {
     <div className="slide MyTime_container">
       <MainHeaderDashboard />
       <div id="MyTime_days_container">
-        {getDayComponent(`My ${today.toDateString()}`)}
+        {getDayComponent("Today")}
         {getDayComponent("Tomorrow")}
         {
           [...Array(5).keys()].map(() => {
