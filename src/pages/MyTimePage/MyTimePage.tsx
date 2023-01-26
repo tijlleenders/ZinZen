@@ -20,7 +20,7 @@ import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
 
 export const MyTimePage = () => {
-  const toggle = true;
+  const toggle = false;
   const today = new Date();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [tasks, setTasks] = useState<{[day: string]: ITask[]}>({});
@@ -35,8 +35,8 @@ export const MyTimePage = () => {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
     } else { setShowTasks([...showTasks, dayName]); }
   };
-  const getColorWidth = (unplanned: boolean, duration: number) => {
-    if (!toggle) return (duration * 4.17);
+  const getColorWidth = (day:string, unplanned: boolean, duration: number) => {
+    if (!toggle) return (duration * (100 / (tasks[day].length)));
     let colorWidth = 0;
     if (unplanned && duration > goalOfMaxDuration) {
       colorWidth = (goalOfMaxDuration + 1) * 4.17;
@@ -81,10 +81,10 @@ export const MyTimePage = () => {
           (
             <div className="MyTime_colorPalette">
               {tasks[day]?.map((task, index) => {
-                const colorWidth = getColorWidth(false, task.duration);
+                const colorWidth = getColorWidth(day, false, task.duration);
                 colorIndex = (colorIndex === colorPallete.length - 1) ? 0 : colorIndex + 1;
                 if (unplannedIndices.includes(index)) {
-                  const unpColorWidth = getColorWidth(true, unplannedDurations[unplannedIndices.indexOf(index)]);
+                  const unpColorWidth = getColorWidth(day, true, unplannedDurations[unplannedIndices.indexOf(index)]);
                   if (index === 0) {
                     return (
                       <>
@@ -108,8 +108,7 @@ export const MyTimePage = () => {
     );
   };
 
-  const getTasks = async () => {
-    const goals: GoalItem[] = await getActiveGoals();
+  const initColorPallette = async (goals: ITask) => {
     let GMD = goals[0].duration;
     let MDU = goals[0].duration;
     let prev = new Date(goals[0].due ? goals[0].due : new Date());
@@ -151,8 +150,6 @@ export const MyTimePage = () => {
       let activeGoals: GoalItem[] = await getActiveGoals();
       // if goals doesn't exist create dummy goals
       if (activeGoals.length === 0) { await createDummyGoals(); }
-
-      activeGoals = await getTasks();
       console.log(activeGoals);
       await init();
       let _today = new Date();
@@ -198,6 +195,7 @@ export const MyTimePage = () => {
         tasks[`${_today.toLocaleDateString("en-us", { weekday: "long" })}`] = TaskFilter(schedulerOutput, ind + 2);
       });
       console.log(tasks);
+      initColorPallette(tasks);
       setTasks({ ...tasks });
     })();
   }, []);
