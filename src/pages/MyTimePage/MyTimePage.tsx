@@ -108,32 +108,6 @@ export const MyTimePage = () => {
     );
   };
 
-  const initColorPallette = async (goals: ITask) => {
-    let GMD = goals[0].duration;
-    let MDU = goals[0].duration;
-    let prev = new Date(goals[0].due ? goals[0].due : new Date());
-    prev = new Date(prev.setHours(0));
-    const unplannedInd :number[] = [];
-    const unplannedDur :number[] = [];
-    goals.map((goal, index) => {
-      const diff = getDiffInHours(goal.start ? goal.start : new Date(), prev);
-      prev = new Date(goal.due ? goal.due : new Date());
-      if (diff > 0) {
-        unplannedInd.push(index - 1);
-        unplannedDur.push(diff);
-        MDU = MDU < diff ? diff : MDU;
-      }
-      if (GMD < goal.duration) GMD = goal.duration;
-      return null;
-    });
-    unplannedInd[0] = unplannedInd[0] === -1 ? 0 : unplannedInd[0];
-    setUnplannedDurations([...unplannedDur]);
-    setUnplannedIndices([...unplannedInd]);
-    setGoalOfMaxDuration(GMD);
-    setMaxDurationOfUnplanned(MDU);
-    return goals;
-  };
-
   const createDummyGoals = async () => {
     starterGoals.forEach(async (goal) => {
       try {
@@ -149,7 +123,7 @@ export const MyTimePage = () => {
       // get goals
       let activeGoals: GoalItem[] = await getActiveGoals();
       // if goals doesn't exist create dummy goals
-      if (activeGoals.length === 0) { await createDummyGoals(); }
+      if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
       console.log(activeGoals);
       await init();
       let _today = new Date();
@@ -195,7 +169,6 @@ export const MyTimePage = () => {
         tasks[`${_today.toLocaleDateString("en-us", { weekday: "long" })}`] = TaskFilter(schedulerOutput, ind + 2);
       });
       console.log(tasks);
-      initColorPallette(tasks);
       setTasks({ ...tasks });
     })();
   }, []);
