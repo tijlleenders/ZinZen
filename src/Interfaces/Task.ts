@@ -1,4 +1,4 @@
-export interface TaskItem {
+export interface ITask {
     taskid: string;
     goalid: string;
     title: string;
