@@ -9,6 +9,11 @@ export interface ISubGoalHistory {
   goalTitle: string,
 }
 
+export const displayShareModal = atom(({
+  key: "displayShareModal",
+  default: ""
+}));
+
 export const displaySuggestionsModal = atom({
   key: "displaySuggestionsModal",
   default: { goals: [], selected: "" } as { goals: GoalItem[], selected: string }

@@ -16,6 +16,7 @@ import {
   displayAddGoal,
   displayAddGoalOptions,
   displayGoalId,
+  displayShareModal,
   displaySuggestionsModal,
   displayUpdateGoal,
   extractedTitle,
@@ -50,6 +51,7 @@ export const MyGoalsPage = () => {
   const colorIndex = useRecoilValue(selectedColorIndex);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
+  const showShareModal = useRecoilValue(displayShareModal);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
@@ -103,7 +105,7 @@ export const MyGoalsPage = () => {
 
   useEffect(() => {
     refreshActiveGoals();
-  }, [openInbox, lastAction, showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
+  }, [showShareModal, openInbox, lastAction, showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId]);

@@ -66,16 +66,14 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
           await removeThisGoal();
         }}
       />
-      { !(openInbox && goal.parentGoalId !== "root") && (
+      { !openInbox && (
         <img
           alt="share goal"
           src={openInbox ? collaborateSvg : share}
           style={{ cursor: "pointer", ...(openInbox && !darkModeStatus ? { filter: "none" } : {}) }}
           onClickCapture={async (e) => {
             e.stopPropagation();
-            if (openInbox) {
-              await transferToMyGoals(goal.id);
-            } else { setShowShareModal(goal.id); }
+            setShowShareModal(goal.id);
           }}
         />
       )}
@@ -87,12 +85,14 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
         onClickCapture={() => { setShowUpdateGoal({ open: true, goalId: goal.id }); }}
       />
 
+      { !openInbox && (
       <img
         alt="archive Goal"
         src={openInbox ? envelope : correct}
         onClickCapture={async () => { await archiveThisGoal(); }}
         style={{ cursor: "Pointer" }}
       />
+      ) }
     </div>
   );
 };
