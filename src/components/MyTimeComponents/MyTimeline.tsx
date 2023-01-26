@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { TaskItem } from "@src/models/TaskItem";
-
-import "./MyTimeline.scss";
-import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
 
-export const MyTimeline = ({ myTasks }: {myTasks: TaskItem[]}) => {
+import { darkModeState } from "@src/store";
+import { ITask } from "@src/Interfaces/Task";
+
+import "./MyTimeline.scss";
+
+export const MyTimeline = ({ myTasks }: {myTasks: ITask[]}) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");

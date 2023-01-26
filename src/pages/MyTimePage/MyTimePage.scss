@@ -53,10 +53,10 @@
 .MyTime_colorPalette {
     display: flex;
     padding: 0 4%;
+    div:first-child{
+        border-radius: 8px 0px 0px 8px;
+    }
+    div:last-child{
+        border-radius: 0px 8px 8px 0px;
+    }
 }
-    .MyTime_colorPalette:first-child{
-        border-radius: 2px 0px 0px 2px;
-    }
-    .MyTime_colorPalette:last-child{
-        border-radius: 0px 2px 2px 0px;
-    }

@@ -1,8 +1,8 @@
-import { TaskItem } from "@src/models/TaskItem";
+import { ITask } from "@src/Interfaces/Task";
 
 // Returns tasks whose start day is a specified number of days after today
 // For tasks starting today, pass 'daysAfterToday' = 0
-export const TaskFilter = (tasks: TaskItem[], daysAfterToday: number): TaskItem[] => {
+export const TaskFilter = (tasks: ITask[], daysAfterToday: number): ITask[] => {
   const today = new Date();
   const targetDate = new Date();
   targetDate.setDate(today.getDate() + daysAfterToday);
