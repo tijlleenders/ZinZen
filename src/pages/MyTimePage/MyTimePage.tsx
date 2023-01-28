@@ -24,6 +24,7 @@ export const MyTimePage = () => {
   const today = new Date();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [tasks, setTasks] = useState<{[day: string]: ITask[]}>({});
+  const [impossibleTasks, setImpossibleTasks] = useState<{[day: string]: ITask[]}>({});
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
@@ -56,7 +57,7 @@ export const MyTimePage = () => {
     />
   );
   const getTimeline = (day: string) => (
-    tasks[day] ? <MyTimeline myTasks={tasks[day]} /> : <div />
+    tasks[day] ? <MyTimeline myTasks={tasks[day]} impossible={impossibleTasks[day] || []} /> : <div />
   );
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
@@ -65,6 +66,7 @@ export const MyTimePage = () => {
         <button
           type="button"
           className="MyTime_navRow"
+          style={showTasks.includes(day) ? { boxShadow: `0px 2px 3px rgba(${darkModeStatus ? "255, 255, 255" : "0, 0, 0"}, 0.25)` } : {}}
           onClick={() => {
             handleShowTasks(day);
           }}
@@ -110,23 +112,38 @@ export const MyTimePage = () => {
 
   const createDummyGoals = async () => {
     starterGoals.forEach(async (goal) => {
-      try {
-        await addStarterGoal(goal.title, goal.goalTags);
-      } catch (error) {
-        console.log(error, goal);
-      }
+      addStarterGoal(goal.title, goal.goalTags)
+        .catch((error) => { console.log(error, goal); });
     });
   };
 
+  const handleSchedulerOutput = (_schedulerOutput, activeGoals:GoalItem[]) => {
+    const schedulerOutput = [..._schedulerOutput];
+    schedulerOutput.forEach((ele, index) => {
+      activeGoals.forEach((tmpGoal, ind) => {
+        if (tmpGoal.id === ele.goalid) {
+          schedulerOutput[index].parentGoalId = activeGoals[ind].parentGoalId;
+          schedulerOutput[index].goalColor = activeGoals[ind].goalColor;
+        }
+      });
+    });
+    const _today = new Date();
+    const temp = { };
+    temp.Today = TaskFilter(schedulerOutput, 0);
+    temp.Tomorrow = TaskFilter(schedulerOutput, 1);
+    [...Array(5).keys()].forEach((ind) => {
+      _today.setDate(_today.getDate() + 1);
+      temp[`${_today.toLocaleDateString("en-us", { weekday: "long" })}`] = TaskFilter(schedulerOutput, ind + 2);
+    });
+    return temp;
+  };
   useEffect(() => {
     (async () => {
-      // get goals
       let activeGoals: GoalItem[] = await getActiveGoals();
-      // if goals doesn't exist create dummy goals
       if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
       console.log(activeGoals);
       await init();
-      let _today = new Date();
+      const _today = new Date();
       const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
       const endDate = `${new Date(_today.setDate(_today.getDate() + 7)).toISOString().slice(0, 10)}T00:00:00`;
 
@@ -152,24 +169,8 @@ export const MyTimePage = () => {
       console.log("input", schedulerInput);
       const res = schedule(schedulerInput);
       console.log("output", res);
-      const schedulerOutput = res.scheduled;
-      schedulerOutput.forEach((ele, index) => {
-        activeGoals.forEach((tmpGoal, ind) => {
-          if (tmpGoal.id === ele.goalid) {
-            schedulerOutput[index].parentGoalId = activeGoals[ind].parentGoalId;
-            schedulerOutput[index].goalColor = activeGoals[ind].goalColor;
-          }
-        });
-      });
-      _today = new Date();
-      tasks.Today = TaskFilter(schedulerOutput, 0);
-      tasks.Tomorrow = TaskFilter(schedulerOutput, 1);
-      [...Array(5).keys()].forEach((ind) => {
-        _today.setDate(_today.getDate() + 1);
-        tasks[`${_today.toLocaleDateString("en-us", { weekday: "long" })}`] = TaskFilter(schedulerOutput, ind + 2);
-      });
-      console.log(tasks);
-      setTasks({ ...tasks });
+      setTasks({ ...handleSchedulerOutput(res.scheduled, activeGoals) });
+      setImpossibleTasks({ ...handleSchedulerOutput(res.impossible, activeGoals) });
     })();
   }, []);
 
