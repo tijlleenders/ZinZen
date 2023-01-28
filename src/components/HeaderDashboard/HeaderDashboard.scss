@@ -1,6 +1,7 @@
 .positioning-light, .positioning-dark {
   height: 5em;
-  display: block;
+  display: flex;
+  justify-content: space-around;
   width: 100%;
   position: fixed;
   z-index: 2;    
@@ -14,7 +15,13 @@
   background: linear-gradient(178.54deg, #121212 52.07%, #291B5C 129.23%);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
-
+.nav-icon { 
+  border: none;
+  background: transparent;
+  img {
+    width: 35px;
+  }
+}
 #main-header-homeLogo, #main-header-homeLogo-dark {
   width: 50px;
   position: absolute;
@@ -53,46 +60,8 @@
 }
 
 
-#goal-suggestion-btn, #goal-suggestion-btn-dark {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  top: 17px;
-  right: 18px;
-  border: none;
-  background: radial-gradient(50% 50% at 50% 50%, #FEF2EF 75.64%, #CD6E51 100%);
-  border-radius: 50%;
-}
-#goal-suggestion-btn > img, #goal-suggestion-btn-dark > img, #suggestions-modal-icon > img {
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  background: transparent;
-  filter: invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%);
-  padding: 7px 9px;
-}
-#goal-suggestion-btn > div, #goal-suggestion-btn-dark > div #suggestions-modal-icon > div  {
-  position: absolute;
-  top: -8px;
-  right: 10px;
-  color: white;
-  font-weight: 800;
-  font-size: 2.5em;
-  font-family: 'Montserrat';
-}
-
-#goal-suggestion-btn-dark {
-  background: radial-gradient(50% 50% at 50% 50%, #121212 73.18%, #705BBC 100%);
-  img {
-    filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
-  }
-}
-
 @media (min-width: 600px) {
   .dark-mode-toggle {
-    right: 0;
-  }
-  #goal-suggestion-btn {
     right: 0;
   }
   #main-header-homeLogo {
