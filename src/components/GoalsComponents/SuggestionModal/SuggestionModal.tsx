@@ -85,7 +85,7 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
               addSuggestedGoal(goal, index);
             }}
           >
-            <img alt="goal suggestion" src={plus} style={{ filter: "brightness(0) invert(1)" }} />
+            <img alt="goal suggestion" src={plus} style={{ filter: "brightness(1) invert(0)" }} />
           </button>
         </div>
         { goalInput !== "" && selectedGoal?.index === index && (
