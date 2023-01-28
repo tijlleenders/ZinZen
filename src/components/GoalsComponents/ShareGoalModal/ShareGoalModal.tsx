@@ -5,7 +5,6 @@ import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
 // import sharePublic from "@assets/images/sharePublic.svg";
 import shareWithFriend from "@assets/images/shareWithFriend.svg";
-import copyLink from "@assets/images/copyLink.svg";
 
 import ContactItem from "@src/models/ContactItem";
 import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
@@ -26,6 +25,8 @@ interface IShareGoalModalProps {
   showShareModal: string,
   setShowShareModal: React.Dispatch<React.SetStateAction<string>>
 }
+
+const shareInvitation = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA30lEQVR4nOXUvUoDQRTF8d9WEay20EKbNH5EfKBY2FrrY/gAEXwFG+0FU9ha2oakiWin+ADKwBWmWNlZXUH0wIHhnnv/MMwH5VrHmp61gwc8Yb9v6Fu4F/gIj1jgPryIWsq+rDPMMcR1eBi1yXfAK1iN9QdY1FLWWZs4xBEGDeBBZKlnoxS6h5fssOoGcJ3lz9gtAZ/iFVsBqBrAVWTb0ZtmWnWOWUM9B+eaxcw/Al/h8ifAdXZDegV/pj8MnmDZAbws/ZAO4qne4KLF0+gdl4ArnOAWdy1OPccddveL9Q7lolSRwSaqJAAAAABJRU5ErkJggg==";
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const minContacts = 1;
@@ -71,6 +72,21 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
     </div>
   );
 
+  const addNewContact = async () => {
+    if (newContact && newContact.relId === "") {
+      const res = await initRelationship();
+      if (res.success) {
+        await addContact(newContact?.contactName, res.response?.relId);
+        setNewContact({ ...newContact, relId: res.response?.relId });
+        navigator.share({ text: `${window.location.origin}/invite/${newContact?.relId}` });
+        // navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
+      }
+    } else {
+      navigator.share({ text: `${window.location.origin}/invite/${newContact?.relId}` });
+      // navigator.clipboard.writeText(`${window.location.origin}/invite/${newContact?.relId}`);
+    }
+    setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${newContact?.contactName} so that they can add you in their contacts` });
+  };
   useEffect(() => {
     (async () => {
       const tmp = await getAllContacts();
@@ -180,34 +196,18 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             onChange={(e) => {
               setNewContact({ contactName: e.target.value, relId: newContact?.relId || "" });
             }}
-              // Admittedly not the best way to do this but suffices for now
-            onKeyDown={(e) => {
+            onKeyDown={async (e) => {
               if (e.key === "Enter") {
-                setNewContact(null);
-                handleCloseAddContact();
+                await addNewContact();
               }
             }}
           />
           <button
-            type="submit"
-            onClick={async () => {
-              if (newContact && newContact.relId === "") {
-                const res = await initRelationship();
-                if (res.success) {
-                  await addContact(newContact?.contactName, res.response?.relId);
-                  setNewContact({ ...newContact, relId: res.response?.relId });
-                  navigator.share({ text: `${window.location.origin}/invite/${newContact?.relId}` });
-                  // navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
-                }
-              } else {
-                navigator.share({ text: `${window.location.origin}/invite/${newContact?.relId}`});
-                // navigator.clipboard.writeText(`${window.location.origin}/invite/${newContact?.relId}`);
-              }
-              setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${newContact?.contactName} so that they can add you in their contacts` });
-            }}
+            type="button"
+            onClick={async () => { await addNewContact(); }}
             className={`addContact-btn${darkModeStatus ? "-dark" : ""}`}
           >
-            <img alt="add contact" src={copyLink} />Add Contact
+            <img alt="add contact" src={shareInvitation} />Share invitation
           </button>
         </Modal.Body>
       </Modal>
