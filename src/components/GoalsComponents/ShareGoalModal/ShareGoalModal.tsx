@@ -15,11 +15,11 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { initRelationship, shareGoalWithContact } from "@src/services/contact.service";
 import { addSubInPub } from "@src/api/PubSubAPI";
+import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
+import Loader from "@src/common/Loader";
+import InviteLinkModal from "./InviteLinkModal";
 
 import "./ShareGoalModal.scss";
-import Loader from "@src/common/Loader";
-import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
-import InviteLinkModal from "./InviteLinkModal";
 
 interface IShareGoalModalProps {
   goal: GoalItem
@@ -196,10 +196,12 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                 if (res.success) {
                   await addContact(newContact?.contactName, res.response?.relId);
                   setNewContact({ ...newContact, relId: res.response?.relId });
-                  navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
+                  navigator.share({ text: `${window.location.origin}/invite/${newContact?.relId}` });
+                  // navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
                 }
               } else {
-                navigator.clipboard.writeText(`${window.location.origin}/invite/${newContact?.relId}`);
+                navigator.share({ text: `${window.location.origin}/invite/${newContact?.relId}`});
+                // navigator.clipboard.writeText(`${window.location.origin}/invite/${newContact?.relId}`);
               }
               setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${newContact?.contactName} so that they can add you in their contacts` });
             }}
