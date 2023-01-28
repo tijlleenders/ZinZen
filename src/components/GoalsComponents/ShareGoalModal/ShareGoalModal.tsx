@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 
-import addContactIcon from "@assets/images/addContact.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
 // import sharePublic from "@assets/images/sharePublic.svg";
 import shareWithFriend from "@assets/images/shareWithFriend.svg";
+import addLight from "@assets/images/addLight.svg";
+import addDark from "@assets/images/addDark.svg";
 
 import ContactItem from "@src/models/ContactItem";
 import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
@@ -64,28 +65,31 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           }
           setLoading({ ...loading, S: false });
         }}
-        className="contact-icon"
+        className={`${name === "" ? "add-icon" : "contact-icon"}`}
       >
-        { name === "" ? <img alt="add contact" src={addContactIcon} /> : name[0]}
+        { name === "" ? <img alt="add contact" width={35} src={darkModeStatus ? addDark : addLight} /> : name[0]}
       </button>
       { name !== "" && <p style={{ margin: 0 }}>{name}</p> }
     </div>
   );
 
+  const shareThisLink = (link: string) => {
+    navigator.share({ text: link }).then(() => {
+      setNewContact(null);
+      handleCloseAddContact();
+    });
+  };
   const addNewContact = async () => {
     if (newContact && newContact.relId === "") {
       const res = await initRelationship();
       if (res.success) {
         await addContact(newContact?.contactName, res.response?.relId);
         setNewContact({ ...newContact, relId: res.response?.relId });
-        navigator.share({ text: `${window.location.origin}/invite/${newContact?.relId}` });
-        // navigator.clipboard.writeText(`${window.location.origin}/invite/${res.response?.relId}`);
+        shareThisLink(`${window.location.origin}/invite/${newContact?.relId}`);
       }
     } else {
-      navigator.share({ text: `${window.location.origin}/invite/${newContact?.relId}` });
-      // navigator.clipboard.writeText(`${window.location.origin}/invite/${newContact?.relId}`);
+      shareThisLink(`${window.location.origin}/invite/${newContact?.relId}`);
     }
-    setShowToast({ open: true, message: "Link copied to clipboard", extra: `Send this link to ${newContact?.contactName} so that they can add you in their contacts` });
   };
   useEffect(() => {
     (async () => {
