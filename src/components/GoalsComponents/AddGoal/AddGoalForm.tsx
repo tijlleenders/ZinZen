@@ -1,8 +1,8 @@
 /* eslint-disable */
 import React from "react";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 
-import { darkModeState } from "@store";
+import { darkModeState, lastAction } from "@store";
 import { colorPallete } from "@src/utils";
 import { languagesFullForms } from "@translations/i18n";
 import {
@@ -15,14 +15,13 @@ import "./AddGoalForm.scss";
 
 interface AddGoalFormProps {
   parentGoalId: string,
-  addThisGoal: (e: React.SyntheticEvent) => Promise<void>
 }
 
-export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId, addThisGoal }) => {
+export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId }) => {
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const [colorIndex, setColorIndex] = useRecoilState(selectedColorIndex);
-
+  const setLastAction = useSetRecoilState(lastAction);
   const lang = localStorage.getItem("language")?.slice(1, -1);
   const goalLang = lang ? languagesFullForms[lang] : languagesFullForms.en;
 
@@ -33,7 +32,8 @@ export const AddGoalForm: React.FC<AddGoalFormProps> = ({ parentGoalId, addThisG
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    await addThisGoal(e);
+    e.preventDefault();
+    setLastAction("addGoal");
   };
 
   return (

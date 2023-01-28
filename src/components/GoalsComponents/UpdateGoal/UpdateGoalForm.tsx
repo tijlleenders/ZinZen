@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { getGoal } from "@src/api/GoalsAPI";
-import { darkModeState, displayInbox } from "@store";
+import { darkModeState, displayInbox, lastAction } from "@store";
 import { colorPallete } from "@src/utils";
 import { displayUpdateGoal, selectedColorIndex } from "@src/store/GoalsState";
 import { formatTagsToText } from "@src/helpers/GoalProcessor";
@@ -12,19 +12,18 @@ import InputGoal from "../InputGoal";
 import "@translations/i18n";
 import "./UpdateGoalForm.scss";
 
-interface UpdateGoalFormProps {
-  updateThisGoal: (e: React.SyntheticEvent) => Promise<void>
-}
-export const UpdateGoalForm : React.FC<UpdateGoalFormProps> = ({ updateThisGoal }) => {
+export const UpdateGoalForm = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const openInbox = useRecoilValue(displayInbox);
   const [goalInput, setGoalInput] = useState("");
   const [goalLang, setGoalLang] = useState("english");
   const [colorIndex, setColorIndex] = useRecoilState(selectedColorIndex);
+  const setLastAction = useSetRecoilState(lastAction);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    await updateThisGoal(e);
+    e.preventDefault();
+    setLastAction("updateGoal");
   };
 
   useEffect(() => {
