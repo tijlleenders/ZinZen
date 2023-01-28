@@ -8,7 +8,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { getActiveGoals, getGoal } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayInbox, displayToast } from "@src/store";
+import { darkModeState, displayInbox, displayToast, lastAction } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
 import {
@@ -33,6 +33,7 @@ import MyGoal from "@components/GoalsComponents/MyGoal";
 
 import "./MyGoalsPage.scss";
 import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 interface ILocationProps {
   openGoalOfId: string,
@@ -44,56 +45,26 @@ export const MyGoalsPage = () => {
   const location = useLocation();
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
-  const [lastAction, setLastAction] = useState("");
+  const action = useRecoilValue(lastAction);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
-  const colorIndex = useRecoilValue(selectedColorIndex);
+  const showAddGoal = useRecoilValue(displayAddGoal);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
   const showShareModal = useRecoilValue(displayShareModal);
+  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
-  const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
-  const setShowToast = useSetRecoilState(displayToast);
 
-  const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
-  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
-  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
-  const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);
 
   const refreshActiveGoals = async () => {
     const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals();
     setUserGoals(goals);
   };
-  const isTitleEmpty = () => {
-    if (goalTitle.length === 0) { setShowToast({ open: true, message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`, extra: "" }); }
-    return goalTitle.length === 0;
-  };
-  const resetCurrentStates = () => {
-    if (showAddGoal) { setShowAddGoal(null); } else if (showUpdateGoal) { setShowUpdateGoal(null); }
-    // @ts-ignore
-    setGoalTags({});
-    setGoalTitle("");
-  };
-  const addThisGoal = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    if (!showAddGoal || isTitleEmpty()) { return; }
-    const { parentGoal } = await createGoal(showAddGoal.goalId, goalTags, goalTitle, colorPallete[colorIndex]);
-    // @ts-ignore
-    if (parentGoal && selectedGoalId !== parentGoal.id) { addInHistory(parentGoal); }
-    resetCurrentStates();
-  };
-  const updateThisGoal = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    if (!showUpdateGoal || isTitleEmpty()) { return; }
-    await modifyGoal(showUpdateGoal.goalId, goalTags, goalTitle, colorPallete[colorIndex]);
-    resetCurrentStates();
-  };
-
   const search = async (text: string) => {
     const goals: GoalItem[] = await getActiveGoals();
     setUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
@@ -105,7 +76,7 @@ export const MyGoalsPage = () => {
 
   useEffect(() => {
     refreshActiveGoals();
-  }, [showShareModal, openInbox, lastAction, showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
+  }, [showShareModal, openInbox, action, showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId]);
@@ -145,7 +116,8 @@ export const MyGoalsPage = () => {
           <AddGoalOptions parentGoalId={selectedGoalId} />
         </div>
       )}
-      <GoalsHeader updateThisGoal={updateThisGoal} addThisGoal={addThisGoal} displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "✓"} />
+      <MainHeaderDashboard />
+      {/* <GoalsHeader updateThisGoal={updateThisGoal} addThisGoal={addThisGoal} displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "✓"} /> */}
       <div className="myGoals-container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {
           selectedGoalId === "root" ? (
@@ -167,16 +139,15 @@ export const MyGoalsPage = () => {
                   </h1>
                 </button>
               </div>
-              { showAddGoal && (<AddGoalForm parentGoalId={showAddGoal.goalId} addThisGoal={addThisGoal} />)}
+              { showAddGoal && (<AddGoalForm parentGoalId={showAddGoal.goalId} />)}
               <div>
                 {userGoals?.map((goal: GoalItem) => (
-                  showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm updateThisGoal={updateThisGoal} />
+                  showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
                     : (
                       <MyGoal
                         goal={goal}
                         showActions={showActions}
                         setShowActions={setShowActions}
-                        setLastAction={setLastAction}
                       />
                     )
                 ))}
@@ -184,7 +155,7 @@ export const MyGoalsPage = () => {
             </div>
           )
             :
-            (<GoalSublist addThisGoal={addThisGoal} updateThisGoal={updateThisGoal} />)
+            (<GoalSublist />)
         }
         { showChangesModal && <DisplayChangesModal showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} /> }
       </div>

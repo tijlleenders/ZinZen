@@ -93,9 +93,9 @@ const App = () => {
             <Route path="/" element={<MyTimePage />} />
           )}
           <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
+          <Route path="/Contacts" element={<Contacts />} />
           <Route path="/MyGoals" element={<MyGoalsPage />} />
           <Route path="/MyFeelings" element={<ShowFeelingsPage />} />
-          <Route path="/Contacts" element={<Contacts />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />

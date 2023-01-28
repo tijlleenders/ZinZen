@@ -22,9 +22,8 @@ interface MyGoalProps {
     open: string;
     click: number;
   }>>
-  setLastAction: React.Dispatch<React.SetStateAction<string>>
 }
-const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions, setLastAction }) => {
+const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
   const defaultTap = { open: "root", click: 1 };
 
   const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0] : "";
@@ -35,7 +34,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions, setL
   const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
-
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
   const handleGoalClick = () => {
@@ -134,7 +132,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions, setL
         <MyGoalActions
           goal={goal}
           setShowShareModal={setShowShareModal}
-          setLastAction={setLastAction}
           setShowUpdateGoal={setShowUpdateGoal}
         />
       )}
