@@ -41,16 +41,16 @@ export const MainHeaderDashboard = () => {
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalsHistory = useRecoilValue(goalsHistory);
 
-  const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [action, setLastAction] = useRecoilState(lastAction);
+  const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
+  const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
-  const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-  const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
+  const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
+  const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
   const setShowToast = useSetRecoilState(displayToast);
-  const setShowSidebar = useSetRecoilState(displaySidebar);
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
 
   const isTitleEmpty = () => {
@@ -81,8 +81,8 @@ export const MainHeaderDashboard = () => {
     if (to === "Zinzen") {
       setDarkModeStatus(!darkModeStatus);
       localStorage.setItem("theme", darkModeStatus ? "dark" : "light");
-    } else if (to === "Didebar") {
-      setShowSidebar(!displaySidebar);
+    } else if (to === "Sidebar") {
+      setShowSidebar(!showSidebar);
     } else if (to === "My Goals") {
       navigate("/MyGoals");
     } else if (to === "My Time") {
