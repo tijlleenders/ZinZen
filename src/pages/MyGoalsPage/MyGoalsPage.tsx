@@ -8,27 +8,20 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { getActiveGoals, getGoal } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayInbox, displayToast, lastAction } from "@src/store";
+import { darkModeState, displayInbox, lastAction } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
-import { GoalsHeader } from "@components/GoalsComponents/GoalsHeader/GoalsHeader";
 import {
-  addInGoalsHistory,
   displayAddGoal,
   displayAddGoalOptions,
   displayGoalId,
   displayShareModal,
   displaySuggestionsModal,
   displayUpdateGoal,
-  extractedTitle,
-  goalsHistory,
-  inputGoalTags,
-  selectedColorIndex } from "@src/store/GoalsState";
-import { colorPallete } from "@src/utils";
+  goalsHistory } from "@src/store/GoalsState";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions/AddGoalOptions";
-import { createGoal, modifyGoal } from "@src/helpers/GoalController";
 import MyGoal from "@components/GoalsComponents/MyGoal";
 
 import "./MyGoalsPage.scss";

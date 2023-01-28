@@ -4,7 +4,6 @@ import { db } from "@models";
 import ContactItem from "@src/models/ContactItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { getRelationshipStatus } from "@src/services/contact.service";
-import { getJustDate } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
 export const getAllContacts = async () => {
@@ -14,7 +13,7 @@ export const getAllContacts = async () => {
 
 export const addContact = async (contactName: string, relId: string, accepted = false) => {
   const name = `${contactName.charAt(0).toUpperCase() + contactName.slice(1)}`;
-  const currentDate = getJustDate(new Date());
+  const currentDate = new Date();
   const newContact: ContactItem = { id: uuidv4(), name, relId, sharedGoals: [], collaborativeGoals: [], createdAt: currentDate, accepted };
   let newContactId;
   await db
