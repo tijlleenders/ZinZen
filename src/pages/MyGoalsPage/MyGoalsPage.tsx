@@ -156,14 +156,14 @@ export const MyGoalsPage = () => {
                 onChange={(e) => debounceSearch(e)}
               />
               <div className="sec-header">
-                <button aria-hidden type="button">
-                  <h1 className={`myGoals_title${darkModeStatus ? "-dark" : ""} activeTab`}>
-                    { openInbox ? "Inbox" : t("mygoals") }
+                <button type="button" onClick={() => { setOpenInbox(false); }}>
+                  <h1 className={`myGoals_title${darkModeStatus ? "-dark" : ""} ${openInbox ? "" : "activeTab"}`}>
+                    { t("mygoals") }
                   </h1>
                 </button>
-                <button type="button" onClick={() => { setOpenInbox(!openInbox); }}>
-                  <h1 className={`myGoals_title${darkModeStatus ? "-dark" : ""}`}>
-                    { !openInbox ? "Inbox" : t("mygoals") }
+                <button type="button" onClick={() => { setOpenInbox(true); }}>
+                  <h1 className={`myGoals_title${darkModeStatus ? "-dark" : ""} ${!openInbox ? "" : "activeTab"}`}>
+                    Inbox
                   </h1>
                 </button>
               </div>
