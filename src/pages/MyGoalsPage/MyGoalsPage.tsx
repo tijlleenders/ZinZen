@@ -45,24 +45,20 @@ export const MyGoalsPage = () => {
   const location = useLocation();
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
-  const [action, setAction] = useState(lastAction);
+  const action = useRecoilValue(lastAction);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
+  const showAddGoal = useRecoilValue(displayAddGoal);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
   const showShareModal = useRecoilValue(displayShareModal);
+  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
-  const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
-  const setShowToast = useSetRecoilState(displayToast);
 
-  const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
-  const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
-  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
-  const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);
 
   const refreshActiveGoals = async () => {
