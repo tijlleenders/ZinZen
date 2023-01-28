@@ -1,3 +1,39 @@
+.timeline-view,.timeline-view-dark {
+  display: flex;
+  button {
+    border: none;
+    box-shadow: inset -2px -2px 4px 0.5px rgba(0, 0, 0, 0.25);
+    width: 50%;
+    padding: 18px;
+    background: #FFCEBF;
+    font-weight: 500;
+    color: #636363;
+  }
+  .activeView {
+    background: transparent;
+    box-shadow: none;
+    font-weight: 700;
+    color: #000;
+  }
+}
+.timeline-view-dark {
+  button {
+    border: none;
+    background: rgba(112, 91, 188, 0.4);
+    box-shadow: inset 2px -2px 4px 0.5px rgba(0, 0, 0, 0.5);
+    width: 50%;
+    padding: 18px;
+    font-weight: 500;
+    color: #E1E1E1;
+  }
+  .activeView {
+    background: transparent;
+    box-shadow: none;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+}
+
 .MTL-display-light, .MTL-display-dark {
   padding-top: 1em;
   .MTL-taskTitle {
