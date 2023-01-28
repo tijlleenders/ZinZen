@@ -45,7 +45,6 @@ export const MyGoalsPage = () => {
   const location = useLocation();
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
-  const action = useRecoilValue(lastAction);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
@@ -57,6 +56,7 @@ export const MyGoalsPage = () => {
 
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
 
+  const [action, setLastAction] = useRecoilState(lastAction);
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
   const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);
@@ -75,8 +75,14 @@ export const MyGoalsPage = () => {
   };
 
   useEffect(() => {
+    if (action !== "none") {
+      setLastAction("none");
+      refreshActiveGoals();
+    }
+  }, [action]);
+  useEffect(() => {
     refreshActiveGoals();
-  }, [showShareModal, openInbox, action, showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
+  }, [showShareModal, openInbox, showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId]);
