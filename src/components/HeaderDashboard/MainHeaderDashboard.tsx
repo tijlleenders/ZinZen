@@ -103,13 +103,13 @@ export const MainHeaderDashboard = () => {
       }
     }
   };
-  const getNavIcon = (imageVariable: string, to = "") => (
+  const getNavIcon = (imageVariable: string, to = "", customStyle = {}) => (
     <button
       type="button"
       className="nav-icon"
       onClick={() => { handleNavClick(to); }}
     >
-      <img alt={to} style={to === "Zinzen" ? zinzenLogoStyle : {}} src={imageVariable} />
+      <img alt={to} style={customStyle} src={imageVariable} />
     </button>
   );
   useEffect(() => {
@@ -128,13 +128,13 @@ export const MainHeaderDashboard = () => {
       {!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0 ?
         getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")
         : getNavIcon(ArrowIcon, "Back")}
-      {getNavIcon(myTimeIcon, "My Time")}
-      {getNavIcon(darkModeStatus ? ZinZenTextDark : ZinZenTextLight, "Zinzen")}
+      {getNavIcon(myTimeIcon, "My Time", { paddingTop: "4px" })}
+      {getNavIcon(darkModeStatus ? ZinZenTextDark : ZinZenTextLight, "Zinzen", zinzenLogoStyle)}
       {getNavIcon(myFeelingsIcon, "My Feelings")}
       {
         window.location.pathname !== "/MyGoals" ?
-          getNavIcon(myGoalsIcon, "My Goals") :
-          getNavIcon(!showAddGoal && !showUpdateGoal ? (darkModeStatus ? addDark : addLight) : (darkModeStatus ? correctDark : correctLight), "goal action")
+          getNavIcon(myGoalsIcon, "My Goals", { paddingTop: "4px" }) :
+          getNavIcon(!showAddGoal && !showUpdateGoal ? (darkModeStatus ? addDark : addLight) : (darkModeStatus ? correctDark : correctLight), "goal action", { width: "30px" })
       }
       <Sidebar />
       <SuggestionModal goalID={goalID} />
