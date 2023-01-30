@@ -61,6 +61,15 @@ export const colorPallete = [
   "#FD5B78", "#FF007C"
 ];
 
+export function getDefaultValueOfGoalChanges() {
+  return {
+    subgoals: [],
+    modifiedGoals: [],
+    archived: [],
+    deleted: []
+  };
+}
+
 export function getDefaultValueOfCollab() {
   const value: ICollaboration = {
     newUpdates: false,
