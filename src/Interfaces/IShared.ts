@@ -1,5 +1,5 @@
 export interface IShared {
     conversionRequests: boolean,
-    contacts: string[],
+    contacts: {relId: string, name: string}[],
     allowed: boolean,
   }
