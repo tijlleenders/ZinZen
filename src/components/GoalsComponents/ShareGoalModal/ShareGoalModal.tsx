@@ -56,7 +56,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             if (goal.typeOfGoal === "myGoal" && status) {
               await shareGoalWithContact(relId, convertIntoSharedGoal(goal));
               setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });
-              updateSharedStatusOfGoal(goal.id, name).then(() => console.log("status updated"));
+              updateSharedStatusOfGoal(goal.id, relId, name).then(() => console.log("status updated"));
               addSubInPub(goal.id, relId, "shared").then(() => console.log("subscriber added"));
             } else {
               navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);

@@ -57,7 +57,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   useEffect(() => {
     setShowActions(defaultTap);
   }, [showChangesModal, showUpdateGoal, selectedGoalId]);
-
   return (
     <div
       key={String(`goal-${goal.id}`)}
@@ -121,7 +120,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                 className="contact-icon"
                 style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
               >
-                {sharedWithContact[0] || "N/A"}
+                {sharedWithContact !== "" && sharedWithContact[0]}
               </button>
             </div>
 

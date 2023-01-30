@@ -167,12 +167,12 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
   return res;
 };
 
-export const updateSharedStatusOfGoal = async (id: string, name: string) => {
+export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(id)
       .modify((obj: GoalItem) => {
         obj.typeOfGoal = "shared";
-        obj.shared.contacts = [...obj.shared.contacts, name];
+        obj.shared.contacts = [...obj.shared.contacts, { relId, name }];
       });
   }).catch((e) => {
     console.log(e.stack || e);

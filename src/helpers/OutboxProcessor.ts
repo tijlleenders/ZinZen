@@ -3,14 +3,14 @@ import { GoalItem } from "@src/models/GoalItem";
 
 export const handleIncomingChanges = async (payload) => {
   if (payload.type === "shared") {
-    if (payload.typeOfChanges === "subgoals") {
-      await addGoalsInSharedWM(payload.changes);
-    } else if (payload.typeOfChanges === "modifiedGoals") {
-      await updateSharedWMGoal(payload.changes[0].id, payload.changes[0]);
-    } else if (payload.typeOfChanges === "deletedGoals") {
-      await removeSharedWMChildrenGoals(payload.changes[0]);
-      await removeSharedWMGoal(payload.changes[0]);
-      getSharedWMGoal(payload.changes[0]).then((goal: GoalItem) => {
+    if (payload.changeType === "subgoals") {
+      await addGoalsInSharedWM([payload.changes[0].goal]);
+    } else if (payload.changeType === "modifiedGoals") {
+      await updateSharedWMGoal(payload.changes[0].goal.id, payload.changes[0].goal);
+    } else if (payload.changeType === "deleted") {
+      await removeSharedWMChildrenGoals(payload.changes[0].id);
+      await removeSharedWMGoal(payload.changes[0].id);
+      getSharedWMGoal(payload.changes[0].id).then((goal: GoalItem) => {
         if (goal.parentGoalId !== "root") {
           getSharedWMGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
             const parentGoalSublist = parentGoal.sublist;
@@ -20,8 +20,8 @@ export const handleIncomingChanges = async (payload) => {
           });
         }
       });
-    } else if (payload.typeOfChanges === "archivedGoals") {
-      getSharedWMGoal(payload.changes[0]).then((goal: GoalItem) => archiveSharedWMGoal(goal));
+    } else if (payload.changeType === "archived") {
+      getSharedWMGoal(payload.changes[0].id).then((goal: GoalItem) => archiveSharedWMGoal(goal));
     }
   }
 };

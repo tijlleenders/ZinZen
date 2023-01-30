@@ -1,5 +1,6 @@
 import { ITypeOfChanges } from "@src/Interfaces/ITypeOfChanges";
 import { GoalItem } from "@src/models/GoalItem";
+import { typeOfChange } from "@src/models/InboxItem";
 import { PubSubItem } from "@src/models/PubSubItem";
 import { createContactRequest, getInstallId } from "@src/utils";
 
@@ -53,7 +54,10 @@ export const getRelationshipStatus = async (relationshipId: string) => {
   return res;
 };
 
-export const sendUpdatesToSubscriber = async (pub: PubSubItem, rootGoalId: string, typeOfChanges: "subgoals" | "modifiedGoals" | "deletedGoals" | "archivedGoals", changes: GoalItem[] | string[]) => {
+export const sendUpdatesToSubscriber = async (
+  pub: PubSubItem, rootGoalId: string,
+  changeType: typeOfChange,
+  changes: { level: number, goal: GoalItem }[] | { level: number, id: string }[]) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
   const { relId, type } = pub.subscribers[0];
   const res = await createContactRequest(url, {
@@ -62,7 +66,7 @@ export const sendUpdatesToSubscriber = async (pub: PubSubItem, rootGoalId: strin
     relId,
     event: {
       type,
-      typeOfChanges,
+      changeType,
       rootGoalId,
       changes
     }

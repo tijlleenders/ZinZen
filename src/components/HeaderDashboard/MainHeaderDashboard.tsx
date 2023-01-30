@@ -66,14 +66,14 @@ export const MainHeaderDashboard = () => {
   };
   const addThisGoal = async () => {
     if (!showAddGoal || isTitleEmpty()) { return; }
-    const { parentGoal } = await createGoal(showAddGoal.goalId, goalTags, goalTitle, colorPallete[colorIndex]);
+    const { parentGoal } = await createGoal(showAddGoal.goalId, goalTags, goalTitle, colorPallete[colorIndex], subGoalsHistory.length);
     // @ts-ignore
     if (parentGoal && selectedGoalId !== parentGoal.id) { addInHistory(parentGoal); }
     resetCurrentStates();
   };
   const updateThisGoal = async () => {
     if (!showUpdateGoal || isTitleEmpty()) { return; }
-    await modifyGoal(showUpdateGoal.goalId, goalTags, goalTitle, colorPallete[colorIndex]);
+    await modifyGoal(showUpdateGoal.goalId, goalTags, goalTitle, colorPallete[colorIndex], subGoalsHistory.length);
     resetCurrentStates();
   };
 

@@ -11,7 +11,7 @@ import collaborateSvg from "@assets/images/collaborate.svg";
 import { darkModeState, displayInbox, lastAction } from "@src/store";
 import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalController";
 import { GoalItem } from "@src/models/GoalItem";
-import { addInGoalsHistory, displayAddGoalOptions } from "@src/store/GoalsState";
+import { addInGoalsHistory, displayAddGoalOptions, goalsHistory } from "@src/store/GoalsState";
 import { archiveSharedWMGoal } from "@src/api/SharedWMAPI";
 
 const eyeSvg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABkklEQVR4nO2WvUoDQRSFPwsjoomk8wHEUpNgL9aKnVjYii/hT2FEIwgS8hBKgp1gY6ddYpGHWPNjKRKrRAZuYBj3zu5iRIs9cJs7557D3Duzs5AixT/AGlAGHoEOMJDoSO4UKE3ScBt4AUYxowls/cRwGXhIYOjGPbCU1HQX+AgR6wGHQAGYkygCR7Lm8t+BnTiGU8A5MAwRqQNZT61Za4TUGa0z0VZNa0rb6r5CRyPMfARUNY0rpaAXsVMXOaCvaF265APPITEztZERgVcgACqSs3Hs0dsfk1aBTw/RrNuohHBMzkbRozcAVgypFXEt3DYHIRyTs5GN0GwZUvsXjHMRmm1D2lCuzzgKMVp9kaDVQ2B9TKx6iObjYCMj5oHncJ149K5dsecJXacF4E3RegKm3YK8Z96NBB+QO89c81rhorwumnkuYqeaaVO0vZgFbhWBvnwczLs7L1GSmWrtvRHNWDAt21OuTtwIRCPOiL4hKy+LthutK+WEB1LFDLApr5c5/V3r16cruZpwDDdFCv4MXw/YJO5+W1zLAAAAAElFTkSuQmCC";
@@ -30,16 +30,17 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
   const setLastAction = useSetRecoilState(lastAction);
+  const subGoalsHistory = useRecoilValue(goalsHistory);
 
   const archiveThisGoal = async () => {
-    if (openInbox) { await archiveSharedWMGoal(goal); } else await archiveGoal(goal);
+    if (openInbox) { await archiveSharedWMGoal(goal); } else await archiveGoal(goal, subGoalsHistory.length);
     setLastAction("Archive");
   };
 
   const removeThisGoal = async () => {
     if (openInbox) {
       await deleteSharedGoal(goal);
-    } else { await deleteGoal(goal); }
+    } else { await deleteGoal(goal, subGoalsHistory.length); }
     setLastAction("Delete");
   };
 
