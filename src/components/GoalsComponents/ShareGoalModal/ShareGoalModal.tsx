@@ -144,8 +144,8 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             <div> <img alt="share with friend" src={shareWithFriend} /> </div>
             <p className="shareOption-name">
               Share 1:1 <br />
-              {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0]}`}
-              {goal.typeOfGoal === "collaboration" && ` - Goal is in collaboration with ${goal.collaboration.collaborators[0]}`}
+              {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
+              {goal.typeOfGoal === "collaboration" && ` - Goal is in collaboration with ${goal.collaboration.collaborators[0].name}`}
             </p>
             { loading.S && <Loader /> }
           </div>

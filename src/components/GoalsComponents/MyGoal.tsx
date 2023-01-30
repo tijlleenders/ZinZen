@@ -26,7 +26,7 @@ interface MyGoalProps {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
   const defaultTap = { open: "root", click: 1 };
 
-  const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0] : "";
+  const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : "";
   const selectedGoalId = useRecoilValue(displayGoalId);
   const darkModeStatus = useRecoilValue(darkModeState);
 
