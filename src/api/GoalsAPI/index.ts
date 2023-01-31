@@ -179,6 +179,24 @@ export const updateSharedStatusOfGoal = async (id: string, relId: string, name: 
   });
 };
 
+export const convertSharedGoalToColab = async (relId: string) => {
+
+};
+
+export const notifyNewColabRequest = async (id:string, relId: string) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(id)
+      .modify((obj: GoalItem) => {
+        obj.shared = {
+          conversionRequests: { status: true, senders: [relId] },
+          allowed: false,
+          contacts: obj.shared.contacts.slice(0, -1) };
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
 export const updateColabStatusOfGoal = async (id: string, collaboration: ICollaboration) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(id)
