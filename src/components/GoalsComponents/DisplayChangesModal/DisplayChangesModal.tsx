@@ -4,17 +4,19 @@ import React, { useEffect, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 
-import plus from "@assets/images/plus.svg";
-import ignore from "@assets/images/ignore.svg";
-import trash from "@assets/images/trash.svg";
-
 import { GoalItem } from "@src/models/GoalItem";
 import { OutboxItem } from "@src/models/OutboxItem";
 import { cleanChangesOf, completeChanges, deleteChanges, getDump } from "@src/api/OutboxAPI";
 import { addGoal, addIntoSublist, archiveUserGoal, changeNewUpdatesStatus, notifyItsAncestor, updateGoal } from "@src/api/GoalsAPI";
 import { formatTagsToText } from "@src/helpers/GoalProcessor";
+import { IChangesInGoal, typeOfChange } from "@src/models/InboxItem";
+import AcceptBtn from "./AcceptBtn";
+import IgnoreBtn from "./IgnoreBtn";
 
 import "./DisplayChangesModal.scss";
+import { getInboxItem } from "@src/api/InboxAPI";
+import { getDefaultValueOfGoalChanges } from "@src/utils";
+import Header from "./Header";
 
 const tags = ["title", "duration", "repeat", "start", "due", "afterTime", "beforeTime", "goalColor", "language", "link"];
 interface IDisplayChangesModalProps {
@@ -25,111 +27,17 @@ interface IDisplayChangesModalProps {
 const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesModal, setShowChangesModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [changes, setChanges] = useState<OutboxItem|null>(null);
-  const [activeChange, setActiveChange] = useState(["deleted", "completed", "updates", "subgoals"]);
-  const show = activeChange.slice(-1)[0];
-  if (showChangesModal) {
-    const getMessage = () => {
-      if (showChangesModal) {
-        const contactName = showChangesModal.collaboration?.name || "";
-        const goalTitle = showChangesModal.title;
-        switch (show) {
-          case "subgoals":
-            return <> {contactName} added to {goalTitle}.<br /> Add as well ?</>;
-          case "deleted":
-            return <> {contactName} deleted {goalTitle}. </>;
-          case "updates":
-            return <> {contactName} made changes in {goalTitle}.<br /> Make changes ? </>;
-          case "completed":
-            return <> {contactName} completed {goalTitle} </>;
-          default:
-            return null;
-        }
-      }
-    };
-    const isChangePresent = (box: OutboxItem, key: string) => {
-      if (key === "completed") { return box.completed; }
-      if (key === "deleted") { return box.deleted; }
-      if (key === "updates") { return box.updates.length > 0; }
-      if (key === "subgoals") { return box.subgoals.length > 0; }
-      return undefined;
-    };
-    const handleChoice = async (choice:string) => {
-      if (showChangesModal.parentGoalId !== "root") {
-        await notifyItsAncestor(showChangesModal.id, true, true);
-      }
-      if (show === "subgoals") {
-        if (choice === "accept") {
-          const promisesArr = changes?.subgoals.map((ele) => addGoal({ ...ele, parentGoalId: showChangesModal.id }));
-          await Promise.all(promisesArr).then(async (ids: string[]) => {
-            await addIntoSublist(showChangesModal.id, ids);
-            console.log("sublist updates in parent");
-          }).catch((err) => console.log("failed to add subgoals", err));
-        }
-        await cleanChangesOf(showChangesModal.id, show);
-      } else if (show === "deleted") {
-        if (choice === "accept") {
-          await deleteChanges(true, showChangesModal.id);
-        }
-      } else if (show === "updates") {
-        if (choice === "accept") {
-          const incGoal: GoalItem = changes?.updates.slice(-1)[0];
-          Object.keys(incGoal).forEach((key) => {
-            if (!tags.includes(key) || incGoal[key] === showChangesModal[key]) {
-              delete incGoal[key];
-            }
-          });
-          await updateGoal(showChangesModal?.id, { ...showChangesModal, ...incGoal });
-        }
-      } else if (show === "completed") {
-        if (choice === "accept") {
-          await archiveUserGoal(showChangesModal);
-        }
-        await completeChanges(true, showChangesModal.id);
-      }
+  const [activeChanges, setActiveChanges] = useState<IChangesInGoal>(getDefaultValueOfGoalChanges());
+  const [currentDisplay, setCurrentDisplay] = useState<typeOfChange | "none">("none");
 
-      const tmp = activeChange.filter((ele) => ele !== show && isChangePresent(changes, ele));
-      if (tmp.length === 0) {
-        if (show !== "deleted") {
-          await changeNewUpdatesStatus(false, showChangesModal.id, false);
-        }
-        setChanges(null);
-        setShowChangesModal(null);
-      } else { setActiveChange([...tmp]); }
+  if (showChangesModal) {
+    const conversionRequests = showChangesModal?.shared.conversionRequests.status;
+    const handleCurrentDisplay = () => {
+      if (activeChanges.subgoals.length > 0) { setCurrentDisplay("subgoals"); } else if (activeChanges.modifiedGoals.length > 0) { setCurrentDisplay("modifiedGoals"); } else if (activeChanges.archived.length > 0) { setCurrentDisplay("archived"); } else if (activeChanges.deleted.length > 0) { setCurrentDisplay("deleted"); } else setCurrentDisplay("none");
     };
-    const getAcceptBtn = () => (
-      <button
-        type="button"
-        style={{ width: "100%", justifyContent: "flex-start" }}
-        className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-        onClick={async () => { await handleChoice("accept"); }}
-      >
-        <img
-          alt="add changes"
-          src={show === "deleted" ? trash : plus}
-          width={25}
-        />&nbsp;
-        { show === "completed" && "Complete for me too" }
-        { show === "deleted" && "Delete for me too" }
-        { show === "subgoals" && "Add all checked" }
-        { show === "updates" && "Make all checked changes" }
-      </button>
-    );
-    const getIgnoreBtn = () => (
-      <button
-        type="button"
-        style={{ backgroundColor: "rgba(115, 115, 115, 0.6)", width: "100%", justifyContent: "flex-start" }}
-        className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-        onClick={async () => { await handleChoice("ignore"); }}
-      >
-        <img
-          alt="add changes"
-          src={ignore}
-          width={25}
-        />&nbsp;Ignore {show !== "completed" && "all" }
-      </button>
-    );
+
     const getEditChangesList = () => {
-      if (changes && show) {
+      if (changes && currentDisplay) {
         const incGoal: GoalItem = changes.updates.slice(-1)[0];
         const currFormatTags = formatTagsToText(showChangesModal);
         const incFormatTags = formatTagsToText(incGoal);
@@ -158,7 +66,7 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
                     {incFormatTags[k]}
 
                   </span>
-                   </p>
+                </p>
               </div>
             ))}
           </Form>
@@ -166,18 +74,19 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
       }
     };
     useEffect(() => {
-      const getOutbox = async () => {
-        if (showChangesModal) {
-          const res = await getDump(showChangesModal.collaboration.relId, showChangesModal.id);
-          if (res) {
-            setActiveChange([...activeChange.filter((ele) => isChangePresent(res, ele))]);
-            setChanges(res);
-          }
+      const getInbox = async () => {
+        if (showChangesModal && !conversionRequests) {
+          const res = await getInboxItem(showChangesModal.id);
+          if (res) { setActiveChanges(res.goalChanges); }
         }
       };
-      getOutbox();
+      getInbox();
     }, [showChangesModal]);
 
+    useEffect(() => {
+      handleCurrentDisplay();
+    }, [activeChanges]);
+    console.log(currentDisplay)
     return (
       <Modal
         className={`popupModal${darkModeStatus ? "-dark" : ""}`}
@@ -186,25 +95,25 @@ const DisplayChangesModal: React.FC<IDisplayChangesModalProps> = ({ showChangesM
         onHide={() => { setShowChangesModal(null); }}
       >
         <Modal.Body>
-          <h2>{ show && getMessage()}</h2>
-          { show === "subgoals" && (
-          <Form className={`changes-list${darkModeStatus ? "-dark" : ""}`}>
-            { changes && show && changes[show].map((ele) => (
-              <div key={`${ele.id}-subgoal`}>
-                <Form.Check
-                  checked
-                  disabled
-                  className={`default-checkbox${darkModeStatus ? "-dark" : ""}`}
-                  name="group1"
-                  type="checkbox"
-                /> <p>&nbsp;{ele.title}</p>
-              </div>
-            ))}
-          </Form>
+          <h2><Header goal={showChangesModal} currentDisplay={currentDisplay} /></h2>
+          { currentDisplay === "subgoals" && (
+            <Form className={`changes-list${darkModeStatus ? "-dark" : ""}`}>
+              { activeChanges[currentDisplay].map((ele) => (
+                <div key={`${ele.goal.id}-subgoal`}>
+                  <Form.Check
+                    checked
+                    disabled
+                    className={`default-checkbox${darkModeStatus ? "-dark" : ""}`}
+                    name="group1"
+                    type="checkbox"
+                  /> <p>&nbsp;{ele.goal.title}</p>
+                </div>
+              ))}
+            </Form>
           )}
-          { show === "updates" && getEditChangesList() }
-          { getAcceptBtn() }
-          { getIgnoreBtn() }
+          {/* { currentDisplay === "modifiedGoals" && getEditChangesList() } */}
+          <AcceptBtn goal={showChangesModal} changeType={currentDisplay} setShowChangesModal={setShowChangesModal}/>
+          <IgnoreBtn goal={showChangesModal} changeType={currentDisplay} setShowChangesModal={setShowChangesModal}/>
         </Modal.Body>
       </Modal>
     );
