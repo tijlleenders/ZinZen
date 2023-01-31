@@ -5,6 +5,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { ICollaboration } from "@src/Interfaces/ICollaboration";
 import { shareGoal } from "@src/services/goal.service";
 import { convertIntoAnonymousGoal } from "@src/helpers/GoalProcessor";
+import { getDefaultValueOfShared } from "@src/utils";
 
 export const resetDatabase = () =>
   db.transaction("rw", db.goalsCollection, async () => {
@@ -179,18 +180,26 @@ export const updateSharedStatusOfGoal = async (id: string, relId: string, name: 
   });
 };
 
-export const convertSharedGoalToColab = async (relId: string) => {
-
+export const convertSharedGoalToColab = async (id: string, accepted = true) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(id)
+      .modify((obj: GoalItem) => {
+        if (accepted) {
+          obj.collaboration.collaborators.push(obj.shared.contacts[0]);
+          obj.typeOfGoal = "collaboration";
+        }
+        obj.shared = getDefaultValueOfShared();
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
 };
 
 export const notifyNewColabRequest = async (id:string, relId: string) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(id)
       .modify((obj: GoalItem) => {
-        obj.shared = {
-          conversionRequests: { status: true, senders: [relId] },
-          allowed: false,
-          contacts: obj.shared.contacts.slice(0, -1) };
+        obj.shared.conversionRequests = { status: true, senders: [relId] };
       });
   }).catch((e) => {
     console.log(e.stack || e);
