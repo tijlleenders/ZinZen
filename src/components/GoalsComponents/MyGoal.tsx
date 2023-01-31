@@ -26,7 +26,8 @@ interface MyGoalProps {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
   const defaultTap = { open: "root", click: 1 };
 
-  const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : "";
+  const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
+  const collabWithContact = goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null; 
   const selectedGoalId = useRecoilValue(displayGoalId);
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -103,7 +104,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           <OverlayTrigger
             trigger="click"
             placement="top"
-            overlay={<Tooltip id="tooltip-disabled"> {sharedWithContact || "N/A"} </Tooltip>}
+            overlay={<Tooltip id="tooltip-disabled"> {sharedWithContact || collabWithContact } </Tooltip>}
           >
             <div
               className="contact-button"
@@ -120,7 +121,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                 className="contact-icon"
                 style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
               >
-                {sharedWithContact !== "" && sharedWithContact[0]}
+                {sharedWithContact?.charAt(0) || collabWithContact?.charAt(0) || "" }
               </button>
             </div>
 

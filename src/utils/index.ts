@@ -81,7 +81,7 @@ export function getDefaultValueOfCollab() {
 
 export function getDefaultValueOfShared() {
   const shared: IShared = {
-    conversionRequests: false,
+    conversionRequests: { status: false, senders: [] },
     contacts: [],
     allowed: true,
   };

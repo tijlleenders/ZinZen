@@ -49,16 +49,8 @@ export const createGoalObjectFromTags = (obj: object) => {
     link: null,
     sublist: [],
     goalColor: colorPallete[Math.floor(Math.random() * 11)],
-    shared: {
-      conversionRequests: false,
-      contacts: [],
-      allowed: true,
-    },
-    collaboration: {
-      newUpdates: false,
-      collaborators: [],
-      allowed: true
-    },
+    shared: getDefaultValueOfShared(),
+    collaboration: getDefaultValueOfCollab(),
     typeOfGoal: "myGoal",
     ...obj
   };
