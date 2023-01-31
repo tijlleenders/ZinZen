@@ -10,6 +10,11 @@ export const createEmptyInboxItem = async (id: string) => {
   });
 };
 
+export const getInboxItem = async (id: string) => {
+  const inboxItems: InboxItem[] = await db.inboxCollection.where("id").equals(id).toArray();
+  return inboxItems[0];
+};
+
 export const addGoalChangesInID = async (id: string, newChanges: IChangesInGoal) => {
   db.transaction("rw", db.inboxCollection, async () => {
     await db.inboxCollection.where("id").equals(id)
