@@ -1,3 +1,4 @@
+import { notifyNewColabRequest } from "@src/api/GoalsAPI";
 import { addGoalsInSharedWM, archiveSharedWMGoal, getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
 
@@ -23,5 +24,7 @@ export const handleIncomingChanges = async (payload) => {
     } else if (payload.changeType === "archived") {
       getSharedWMGoal(payload.changes[0].id).then((goal: GoalItem) => archiveSharedWMGoal(goal));
     }
+  } else if (payload.type === "collaboration") {
+    notifyNewColabRequest(payload.goal.id, payload.relId).catch(() => console.log("failed to notify about new colab"));
   }
 };
