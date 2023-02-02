@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-alert */
 import { db } from "@models";
@@ -16,6 +17,7 @@ export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) =>
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(parentGoalId)
       .modify((obj: GoalItem) => {
+        console.log("e",parentGoalId, goalIds)
         obj.sublist = [...obj.sublist, ...goalIds];
       });
   }).catch((e) => {
@@ -237,7 +239,7 @@ export const notifyItsAncestor = async (goalId: string, allAncestors = true, red
   });
 };
 
-export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string, notifyAncestors = false) => {
+export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(goalId)
       .modify(async (obj: GoalItem) => {
@@ -246,9 +248,21 @@ export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string
           newUpdates,
           allowed: false,
         };
-        if (notifyAncestors) { await notifyItsAncestor(obj.parentGoalId, true); }
       });
   }).catch((e) => {
-    console.log(e.stack || e);
+    console.log(e.stack || e, goalId);
   });
+};
+
+export const removeGoalWithChildrens = async (goal: GoalItem) => {
+  await removeChildrenGoals(goal.id);
+  await removeGoal(goal.id);
+  if (goal.parentGoalId !== "root") {
+    getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
+      const parentGoalSublist = parentGoal.sublist;
+      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
+      if (childGoalIndex !== -1) { parentGoalSublist.splice(childGoalIndex, 1); }
+      await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
+    });
+  }
 };

@@ -1,4 +1,4 @@
-import { getGoal, addGoal, updateGoal, archiveUserGoal, removeChildrenGoals, removeGoal } from "@src/api/GoalsAPI";
+import { getGoal, addGoal, updateGoal, archiveUserGoal, removeChildrenGoals, removeGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
 import { getPubById } from "@src/api/PubSubAPI";
 import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
@@ -67,16 +67,7 @@ export const deleteGoal = async (goal: GoalItem, level: number) => {
     sendUpdatesToSubscriber(pub, goal.rootGoalId, "deleted", [{ level, id: goal.id }])
       .then(() => console.log("update sent"));
   }
-  await removeChildrenGoals(goal.id);
-  await removeGoal(goal.id);
-  if (goal.parentGoalId !== "root") {
-    getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
-      const parentGoalSublist = parentGoal.sublist;
-      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
-      if (childGoalIndex !== -1) { parentGoalSublist.splice(childGoalIndex, 1); }
-      await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
-    });
-  }
+  await removeGoalWithChildrens(goal);
 };
 
 export const deleteSharedGoal = async (goal: GoalItem) => {
