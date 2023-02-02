@@ -22,12 +22,29 @@ export const addSubInPub = async (goalId: string, relId: string, type: "shared" 
   const pubId = await getPubById(goalId);
   if (pubId) {
     db.transaction("rw", db.pubSubCollection, async () => {
-      await db.pubSubCollection.where("id").equals(relId)
+      await db.pubSubCollection.where("id").equals(goalId)
         .modify((obj: PubSubItem) => {
-          obj.subscribers = [...obj.subscribers, { relId, type }];
+          obj.subscribers.push({ relId, type });
         });
     }).catch((e) => {
       console.log(e.stack || e);
     });
   } else { await addPub(goalId, [{ relId, type }]); }
+};
+
+export const convertTypeOfSub = async (goalId: string, relId: string, newType: "shared" | "collaboration") => {
+  db.transaction("rw", db.pubSubCollection, async () => {
+    await db.pubSubCollection.where("id").equals(goalId)
+      .modify((obj: PubSubItem) => {
+        const { subscribers } = obj;
+        const ind = subscribers.findIndex((ele) => ele.relId === relId);
+        console.log(ind);
+        if (ind >= 0) {
+          subscribers.splice(ind, 1, { relId, type: newType });
+        }
+        obj.subscribers = [...subscribers];
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
 };
