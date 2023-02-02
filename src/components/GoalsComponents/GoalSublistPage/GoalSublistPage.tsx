@@ -5,7 +5,7 @@ import { Breadcrumb, Container } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
-import { displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
+import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState, displayInbox, lastAction } from "@src/store";
@@ -24,6 +24,7 @@ export const GoalSublist = () => {
   const subGoalHistory = useRecoilValue(goalsHistory);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
@@ -54,7 +55,7 @@ export const GoalSublist = () => {
   useEffect(() => {
     (openInbox ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID))
       .then((fetchedGoals) => { setChildrenGoals(fetchedGoals); });
-  }, [action, parentGoal, showAddGoal, showSuggestionModal, showUpdateGoal]);
+  }, [action, parentGoal, showAddGoal, showSuggestionModal, showChangesModal, showUpdateGoal]);
 
   return (
     <div className="sublist-container">
