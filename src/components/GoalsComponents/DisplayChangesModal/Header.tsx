@@ -1,16 +1,11 @@
 import React from "react";
 
-import { GoalItem } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
 
-const Header = ({ goal, currentDisplay }: {goal: GoalItem, currentDisplay: typeOfChange | "none"}) => {
-  const conversionRequests = goal.shared.conversionRequests.status;
-  const contactName = conversionRequests ? goal.shared.contacts[0].name : goal.collaboration.collaborators[0].name || "";
-  const { title } = goal;
-  console.log(goal)
-  if (conversionRequests) {
+const Header = ({ title, contactName, currentDisplay }: { title: string, contactName: string, currentDisplay: typeOfChange | "none" | "conversionRequest"}) => {
+  if (currentDisplay === "conversionRequest") {
     return (
-      <> {contactName} is also working on {goal.title}. Do you want to collaborate?</>
+      <> {contactName} is also working on {title}. Do you want to collaborate?</>
     );
   }
 
