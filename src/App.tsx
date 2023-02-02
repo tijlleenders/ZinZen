@@ -20,7 +20,7 @@ import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import { addColabInvitesInRelId, getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
 import { GoalItem } from "./models/GoalItem";
-import { handleIncomingChanges } from "./helpers/OutboxProcessor";
+import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
 import { addGoalsInSharedWM, addSharedWMGoal } from "./api/SharedWMAPI";
 
