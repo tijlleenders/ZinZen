@@ -1,6 +1,9 @@
-import { notifyNewColabRequest } from "@src/api/GoalsAPI";
+import { changeNewUpdatesStatus, notifyNewColabRequest } from "@src/api/GoalsAPI";
+import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
 import { addGoalsInSharedWM, archiveSharedWMGoal, getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { InboxItem } from "@src/models/InboxItem";
+import { getDefaultValueOfGoalChanges } from "@src/utils";
 
 export const handleIncomingChanges = async (payload) => {
   if (payload.type === "shared") {
@@ -24,7 +27,24 @@ export const handleIncomingChanges = async (payload) => {
     } else if (payload.changeType === "archived") {
       getSharedWMGoal(payload.changes[0].id).then((goal: GoalItem) => archiveSharedWMGoal(goal));
     }
-  } else if (payload.type === "collaboration") {
+  } else if (payload.type === "collaborationInvite") {
     notifyNewColabRequest(payload.goal.id, payload.relId).catch(() => console.log("failed to notify about new colab"));
+  } else if (payload.type === "collaboration") {
+    const { rootGoalId, changes, changeType } = payload;
+    let inbox: InboxItem = await getInboxItem(rootGoalId);
+    const defaulChanges = getDefaultValueOfGoalChanges();
+    defaulChanges[changeType] = [...changes];
+    if (!inbox) {
+      await createEmptyInboxItem(rootGoalId);
+      inbox = await getInboxItem(rootGoalId);
+    }
+    // const goalItemExist = changeType === "subgoals" || changeType === "modifiedGoals";
+    // changes.forEach(async (ele) => {
+    //   console.log(ele)
+    //   changeNewUpdatesStatus(true, goalItemExist ? ele.goal.parentGoalId : ele.id).catch(() => console.log("failed parent notification", ele));
+    // });
+    changeNewUpdatesStatus(true, rootGoalId).catch((err) => console.log(err));
+    // @ts-ignore
+    await addGoalChangesInID(rootGoalId, defaulChanges);
   }
 };
