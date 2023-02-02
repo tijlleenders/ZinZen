@@ -109,3 +109,58 @@ export const getHistoryUptoGoal = async (id: string) => {
   history.reverse();
   return history;
 };
+
+export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
+  let typeAtPriority :typeOfChange | "none" = "none";
+  if (goalChanges.subgoals.length > 0) {
+    typeAtPriority = "subgoals";
+  } else if (goalChanges.modifiedGoals.length > 0) {
+    typeAtPriority = "modifiedGoals";
+  } else if (goalChanges.archived.length > 0) {
+    typeAtPriority = "archived";
+  } else if (goalChanges.deleted.length > 0) {
+    typeAtPriority = "deleted";
+  }
+  return { typeAtPriority };
+};
+
+export const jumpToLowestChanges = async (id: string) => {
+  const inbox: InboxItem = await getInboxItem(id);
+  let typeAtPriority : typeOfChange | "none" = "none";
+  if (inbox) {
+    const { goalChanges } = inbox;
+    typeAtPriority = getTypeAtPriority(goalChanges).typeAtPriority;
+    if (typeAtPriority !== "none") {
+      goalChanges[typeAtPriority].sort((a: { level: number; }, b: { level: number; }) => a.level - b.level);
+      let goals: GoalItem[] = [];
+      const goalAtPriority = goalChanges[typeAtPriority][0];
+      const parentId = "id" in goalAtPriority
+        ? goalAtPriority.id : typeAtPriority === "subgoals"
+          ? goalAtPriority.goal.parentGoalId : goalAtPriority.goal.id;
+      if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
+        return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+      }
+      if (typeAtPriority === "subgoals") {
+        goalChanges.subgoals.forEach((ele: changesInGoal) => {
+          if (ele.goal.parentGoalId === parentId) goals.push(ele.goal);
+        });
+      }
+      if (typeAtPriority === "modifiedGoals") {
+        let goal = createGoalObjectFromTags({});
+        goalChanges.modifiedGoals.forEach((ele) => {
+          if (ele.goal.id === parentId) {
+            goal = { ...goal, ...ele.goal };
+          }
+        });
+        goals = [goal];
+      }
+
+      return {
+        typeAtPriority,
+        parentId,
+        goals
+      };
+    }
+  } else { console.log("inbox item doesn't exist"); }
+  return { typeAtPriority, parentId: "", goals: [] };
+};
