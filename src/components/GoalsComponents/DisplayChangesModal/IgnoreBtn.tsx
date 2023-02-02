@@ -3,28 +3,36 @@ import React from "react";
 import ignore from "@assets/images/ignore.svg";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { typeOfChange } from "@src/models/InboxItem";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
-import { convertSharedGoalToColab } from "@src/api/GoalsAPI";
+import { changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
+import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
+import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
+import { getTypeAtPriority } from "@src/helpers/GoalProcessor";
 
 interface IgnoreBtnProps {
     goal: GoalItem,
-    changeType: typeOfChange | "none",
-    setShowChangesModal: React.Dispatch<React.SetStateAction<GoalItem | null>>
-
+    showChangesModal: IDisplayChangesModal,
+    setShowChangesModal: React.Dispatch<React.SetStateAction<IDisplayChangesModal | null>>
 }
-const IgnoreBtn = ({ changeType, goal, setShowChangesModal }: IgnoreBtnProps) => {
-  const { conversionRequests } = goal.shared;
+const IgnoreBtn = ({ showChangesModal, goal, setShowChangesModal }: IgnoreBtnProps) => {
+  const { typeAtPriority } = showChangesModal;
+  const isConversionRequest = typeAtPriority === "conversionRequest";
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const handleClick = async () => {
-    if (conversionRequests) {
+    if (isConversionRequest) {
       convertSharedGoalToColab(goal.id, false);
       setShowChangesModal(null);
     } else {
-
+      const removeChanges = showChangesModal.goals.map((colabGoal: GoalItem) => colabGoal.id);
+      if (typeAtPriority !== "none") { await deleteGoalChangesInID(goal.rootGoalId, typeAtPriority, removeChanges); }
     }
+    const inbox = await getInboxItem(goal.rootGoalId);
+    if (getTypeAtPriority(inbox.goalChanges).typeAtPriority === "none") {
+      changeNewUpdatesStatus(false, goal.rootGoalId).catch((err) => console.log(err));
+    }
+    setShowChangesModal(null);
   };
   return (
 
@@ -38,7 +46,7 @@ const IgnoreBtn = ({ changeType, goal, setShowChangesModal }: IgnoreBtnProps) =>
         alt="add changes"
         src={ignore}
         width={25}
-      />&nbsp;{ conversionRequests ? "Keep separate" : `Ignore ${changeType !== "archived" && "all"}`}
+      />&nbsp;{ isConversionRequest ? "Keep separate" : `Ignore${typeAtPriority === "subgoals" ? " all" : ""}`}
     </button>
   );
 };
