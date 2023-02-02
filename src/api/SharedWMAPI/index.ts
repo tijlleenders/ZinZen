@@ -4,6 +4,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { collaborateWithContact } from "@src/services/contact.service";
 import { getDefaultValueOfShared } from "@src/utils";
 import { addGoal } from "../GoalsAPI";
+import { addSubInPub } from "../PubSubAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -119,8 +120,10 @@ export const transferToMyGoals = async (id: string) => {
 };
 
 export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
-  collaborateWithContact(goal.shared.contacts[0].relId, goal)
+  const { relId } = goal.shared.contacts[0];
+  collaborateWithContact(relId, goal)
     .then((res) => console.log(res.success ? "colab inv sent" : "failed to sent invite"));
+  addSubInPub(goal.id, relId, "collaboration").catch((err) => console.log("failed to add sub in pub", err));
   transferToMyGoals(goal.id).then(async () => {
     const { collaboration } = goal;
     const { relId, name } = goal.shared.contacts[0];
