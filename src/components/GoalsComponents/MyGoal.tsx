@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
@@ -6,10 +6,10 @@ import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 import { darkModeState } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal } from "@src/store/GoalsState";
+import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 import NotificationSymbol from "@src/common/NotificationSymbol";
+import { getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import MyGoalActions from "./MyGoalActions";
-import DisplayChangesModal from "./DisplayChangesModal/DisplayChangesModal";
 import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
 
 interface MyGoalProps {
@@ -23,19 +23,22 @@ interface MyGoalProps {
     click: number;
   }>>
 }
+
 const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
   const defaultTap = { open: "root", click: 1 };
 
   const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
-  const collabWithContact = goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null; 
-  const selectedGoalId = useRecoilValue(displayGoalId);
+  const collabWithContact = goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
+
   const darkModeStatus = useRecoilValue(darkModeState);
 
+  const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
+  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
-  const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
-
-  const addInHistory = useSetRecoilState(addInGoalsHistory);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
+
+  const setSubGoalHistory = useSetRecoilState(goalsHistory);
+  const addInHistory = useSetRecoilState(addInGoalsHistory);
 
   const handleGoalClick = () => {
     if (goal.sublist.length === 0) {
@@ -47,16 +50,29 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       addInHistory(goal);
     }
   };
-  function handleDropDown() {
+  async function handleDropDown() {
     if (showActions.open === goal.id && showActions.click > 0) {
       setShowActions(defaultTap);
     } else if (goal.collaboration.newUpdates || goal.shared.conversionRequests.status) {
-      setShowChangesModal(goal);
+      if (goal.shared.conversionRequests.status) {
+        setShowChangesModal({ typeAtPriority: "conversionRequest", parentId: goal.id, goals: [] });
+      } else {
+        const res = await jumpToLowestChanges(goal.rootGoalId);
+        const pathToGoal = (await getHistoryUptoGoal(res.parentId));
+        console.log(res, pathToGoal);
+        if (pathToGoal.length > 1) {
+          pathToGoal.pop();
+          setSubGoalHistory([...pathToGoal]);
+          setSelectedGoalId(pathToGoal.slice(-1)[0].goalID);
+        }
+        setShowChangesModal(res);
+      }
     } else setShowActions({ open: goal.id, click: 1 });
   }
-
   useEffect(() => {
-    setShowActions(defaultTap);
+    if (showActions !== defaultTap) {
+      setShowActions(defaultTap);
+    }
   }, [showChangesModal, showUpdateGoal, selectedGoalId]);
   return (
     <div
@@ -142,8 +158,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           setShowShareModal={setShowShareModal}
         />
       )}
-      { showChangesModal && <DisplayChangesModal showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} /> }
-
     </div>
   );
 };
