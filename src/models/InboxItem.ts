@@ -2,11 +2,14 @@ import { GoalItem } from "./GoalItem";
 
 export type typeOfChange = "subgoals" | "modifiedGoals" | "archived" | "deleted"
 
+export type changesInId = { level: number, id: string }
+
+export type changesInGoal = { level: number, goal: GoalItem }
 export interface IChangesInGoal {
-    subgoals: { level: number, goal: GoalItem }[],
-    modifiedGoals: { level: number, goal: GoalItem }[],
-    archived: { level: number, id: string }[],
-    deleted: { level: number, id: string }[]
+    subgoals: changesInGoal[],
+    modifiedGoals: changesInGoal[],
+    archived: changesInId[],
+    deleted: changesInId[]
 }
 
 export interface InboxItem {
