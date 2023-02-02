@@ -53,7 +53,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   async function handleDropDown() {
     if (showActions.open === goal.id && showActions.click > 0) {
       setShowActions(defaultTap);
-    } else if (goal.collaboration.newUpdates || goal.shared.conversionRequests.status) {
+    } else if ((goal.collaboration.newUpdates && goal.typeOfGoal === "collaboration") || goal.shared.conversionRequests.status) {
       if (goal.shared.conversionRequests.status) {
         setShowChangesModal({ typeAtPriority: "conversionRequest", parentId: goal.id, goals: [] });
       } else {
