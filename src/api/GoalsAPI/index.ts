@@ -17,7 +17,6 @@ export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) =>
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(parentGoalId)
       .modify((obj: GoalItem) => {
-        console.log("e",parentGoalId, goalIds)
         obj.sublist = [...obj.sublist, ...goalIds];
       });
   }).catch((e) => {
@@ -189,8 +188,8 @@ export const convertSharedGoalToColab = async (id: string, accepted = true) => {
         if (accepted) {
           obj.collaboration.collaborators.push(obj.shared.contacts[0]);
           obj.typeOfGoal = "collaboration";
-        }
-        obj.shared = getDefaultValueOfShared();
+          obj.shared = getDefaultValueOfShared();
+        } else { obj.shared.conversionRequests = getDefaultValueOfShared().conversionRequests; }
       });
   }).catch((e) => {
     console.log(e.stack || e);
