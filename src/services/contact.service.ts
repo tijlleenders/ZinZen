@@ -1,4 +1,3 @@
-import { ITypeOfChanges } from "@src/Interfaces/ITypeOfChanges";
 import { GoalItem } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
 import { PubSubItem } from "@src/models/PubSubItem";
@@ -30,7 +29,7 @@ export const shareGoalWithContact = async (relId: string, goal: GoalItem) => {
 
 export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createContactRequest(url, { method: "shareGoal", installId: getInstallId(), relId, event: { type: "collaboration", goal } });
+  const res = await createContactRequest(url, { method: "shareGoal", installId: getInstallId(), relId, event: { type: "collaborationInvite", goal } });
   return res;
 };
 
