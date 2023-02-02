@@ -1,5 +1,10 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable no-await-in-loop */
+import { getGoal } from "@src/api/GoalsAPI";
+import { getInboxItem } from "@src/api/InboxAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
+import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
 import { colorPallete, getDefaultValueOfCollab, getDefaultValueOfShared } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
@@ -87,3 +92,20 @@ export const convertIntoSharedGoal = (goal: GoalItem) => ({
   shared: getDefaultValueOfShared(),
   collaboration: getDefaultValueOfCollab()
 });
+
+export const getHistoryUptoGoal = async (id: string) => {
+  const history = [];
+  let openGoalOfId = id;
+  while (openGoalOfId !== "root") {
+    const tmpGoal: GoalItem = await getGoal(openGoalOfId);
+    history.push(({
+      goalID: tmpGoal.id || "root",
+      goalColor: tmpGoal.goalColor || "#ffffff",
+      goalTitle: tmpGoal.title || "",
+      display: null
+    }));
+    openGoalOfId = tmpGoal.parentGoalId;
+  }
+  history.reverse();
+  return history;
+};
