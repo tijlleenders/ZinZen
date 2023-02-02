@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-alert */
 import { db } from "@models";
@@ -5,6 +6,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { ICollaboration } from "@src/Interfaces/ICollaboration";
 import { shareGoal } from "@src/services/goal.service";
 import { convertIntoAnonymousGoal } from "@src/helpers/GoalProcessor";
+import { getDefaultValueOfShared } from "@src/utils";
 
 export const resetDatabase = () =>
   db.transaction("rw", db.goalsCollection, async () => {
@@ -167,12 +169,38 @@ export const shareMyGoal = async (goal: GoalItem, parent: string) => {
   return res;
 };
 
-export const updateSharedStatusOfGoal = async (id: string, name: string) => {
+export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(id)
       .modify((obj: GoalItem) => {
         obj.typeOfGoal = "shared";
-        obj.shared.contacts = [...obj.shared.contacts, name];
+        obj.shared.contacts = [...obj.shared.contacts, { relId, name }];
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const convertSharedGoalToColab = async (id: string, accepted = true) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(id)
+      .modify((obj: GoalItem) => {
+        if (accepted) {
+          obj.collaboration.collaborators.push(obj.shared.contacts[0]);
+          obj.typeOfGoal = "collaboration";
+          obj.shared = getDefaultValueOfShared();
+        } else { obj.shared.conversionRequests = getDefaultValueOfShared().conversionRequests; }
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const notifyNewColabRequest = async (id:string, relId: string) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.where("id").equals(id)
+      .modify((obj: GoalItem) => {
+        obj.shared.conversionRequests = { status: true, senders: [relId] };
       });
   }).catch((e) => {
     console.log(e.stack || e);
@@ -210,7 +238,7 @@ export const notifyItsAncestor = async (goalId: string, allAncestors = true, red
   });
 };
 
-export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string, notifyAncestors = false) => {
+export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.where("id").equals(goalId)
       .modify(async (obj: GoalItem) => {
@@ -219,9 +247,21 @@ export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string
           newUpdates,
           allowed: false,
         };
-        if (notifyAncestors) { await notifyItsAncestor(obj.parentGoalId, true); }
       });
   }).catch((e) => {
-    console.log(e.stack || e);
+    console.log(e.stack || e, goalId);
   });
+};
+
+export const removeGoalWithChildrens = async (goal: GoalItem) => {
+  await removeChildrenGoals(goal.id);
+  await removeGoal(goal.id);
+  if (goal.parentGoalId !== "root") {
+    getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
+      const parentGoalSublist = parentGoal.sublist;
+      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
+      if (childGoalIndex !== -1) { parentGoalSublist.splice(childGoalIndex, 1); }
+      await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
+    });
+  }
 };

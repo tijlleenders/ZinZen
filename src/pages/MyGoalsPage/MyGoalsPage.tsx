@@ -13,6 +13,7 @@ import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSub
 import {
   displayAddGoal,
   displayAddGoalOptions,
+  displayChangesModal,
   displayGoalId,
   displayShareModal,
   displaySuggestionsModal,
@@ -40,11 +41,11 @@ export const MyGoalsPage = () => {
 
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
   const [userGoals, setUserGoals] = useState<GoalItem[]>();
-  const [showChangesModal, setShowChangesModal] = useState<GoalItem | null>(null);
   const showAddGoal = useRecoilValue(displayAddGoal);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
@@ -75,7 +76,7 @@ export const MyGoalsPage = () => {
   }, [action]);
   useEffect(() => {
     refreshActiveGoals();
-  }, [showShareModal, openInbox, showAddGoal, showUpdateGoal, showSuggestionModal, showChangesModal]);
+  }, [showShareModal, openInbox, showAddGoal, showChangesModal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId]);
@@ -156,7 +157,7 @@ export const MyGoalsPage = () => {
             :
             (<GoalSublist />)
         }
-        { showChangesModal && <DisplayChangesModal showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} /> }
+        { showChangesModal && <DisplayChangesModal /> }
       </div>
     </>
   );

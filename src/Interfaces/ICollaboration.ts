@@ -1,5 +1,5 @@
 export interface ICollaboration {
     newUpdates: boolean,
-    collaborators: string[],
+    collaborators: {relId: string, name: string}[],
     allowed: boolean
   }

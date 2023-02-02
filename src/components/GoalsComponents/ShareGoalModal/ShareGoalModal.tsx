@@ -56,7 +56,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             if (goal.typeOfGoal === "myGoal" && status) {
               await shareGoalWithContact(relId, convertIntoSharedGoal(goal));
               setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });
-              updateSharedStatusOfGoal(goal.id, name).then(() => console.log("status updated"));
+              updateSharedStatusOfGoal(goal.id, relId, name).then(() => console.log("status updated"));
               addSubInPub(goal.id, relId, "shared").then(() => console.log("subscriber added"));
             } else {
               navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);
@@ -144,8 +144,8 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             <div> <img alt="share with friend" src={shareWithFriend} /> </div>
             <p className="shareOption-name">
               Share 1:1 <br />
-              {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0]}`}
-              {goal.typeOfGoal === "collaboration" && ` - Goal is in collaboration with ${goal.collaboration.collaborators[0]}`}
+              {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
+              {goal.typeOfGoal === "collaboration" && ` - Goal is in collaboration with ${goal.collaboration.collaborators[0].name}`}
             </p>
             { loading.S && <Loader /> }
           </div>

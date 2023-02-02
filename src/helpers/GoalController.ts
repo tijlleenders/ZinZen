@@ -1,4 +1,4 @@
-import { getGoal, addGoal, updateGoal, archiveUserGoal, removeChildrenGoals, removeGoal } from "@src/api/GoalsAPI";
+import { getGoal, addGoal, updateGoal, archiveUserGoal, removeChildrenGoals, removeGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
 import { getPubById } from "@src/api/PubSubAPI";
 import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
@@ -8,7 +8,7 @@ import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 import { createGoalObjectFromTags, extractFromGoalTags } from "./GoalProcessor";
 
 export const createGoal = async (
-  parentGoalId: string, goalTags: ITags, goalTitle: string, goalColor: string
+  parentGoalId: string, goalTags: ITags, goalTitle: string, goalColor: string, level: number
 ) => {
   let newGoal = createGoalObjectFromTags({
     title: goalTitle.split(" ").filter((ele:string) => ele !== "").join(" "),
@@ -25,9 +25,8 @@ export const createGoal = async (
     const pub = await getPubById(parentGoal.rootGoalId);
     if (pub && pub.subscribers.length > 0 && newGoalId) {
       sendUpdatesToSubscriber(pub, parentGoal.rootGoalId, "subgoals", [{
-        ...newGoal,
-        id: newGoalId
-      }]).then(() => console.log("update sent"));
+        level, goal: { ...newGoal, id: newGoalId } }]
+      ).then(() => console.log("update sent"));
     }
     const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
     await updateGoal(parentGoalId, { sublist: newSublist });
@@ -37,7 +36,7 @@ export const createGoal = async (
   return { parentGoal: null };
 };
 
-export const modifyGoal = async (goalId: string, goalTags: ITags, goalTitle: string, goalColor: string) => {
+export const modifyGoal = async (goalId: string, goalTags: ITags, goalTitle: string, goalColor: string, level: number) => {
   await updateGoal(goalId, {
     title: goalTitle.split(" ").filter((ele:string) => ele !== "").join(" "),
     goalColor,
@@ -47,37 +46,31 @@ export const modifyGoal = async (goalId: string, goalTags: ITags, goalTitle: str
   if (goal) {
     const pub = await getPubById(goal.rootGoalId);
     if (pub && pub.subscribers.length > 0) {
-      sendUpdatesToSubscriber(pub, goal.rootGoalId, "modifiedGoals", [goal]).then(() => console.log("update sent"));
+      sendUpdatesToSubscriber(pub, goal.rootGoalId, "modifiedGoals", [{ level, goal }])
+        .then(() => console.log("update sent"));
     }
   }
 };
 
-export const archiveGoal = async (goal: GoalItem) => {
+export const archiveGoal = async (goal: GoalItem, level: number) => {
   const pub = await getPubById(goal.rootGoalId);
   if (pub && pub.subscribers.length > 0) {
-    sendUpdatesToSubscriber(pub, goal.rootGoalId, "archivedGoals", [goal.id]).then(() => console.log("update sent"));
+    sendUpdatesToSubscriber(pub, goal.rootGoalId, "archived", [{ level, id: goal.id }])
+      .then(() => console.log("update sent"));
   }
   await archiveUserGoal(goal);
 };
 
-export const deleteGoal = async (goal: GoalItem) => {
+export const deleteGoal = async (goal: GoalItem, level: number) => {
   const pub = await getPubById(goal.rootGoalId);
   if (pub && pub.subscribers.length > 0) {
-    sendUpdatesToSubscriber(pub, goal.rootGoalId, "deletedGoals", [goal.id]).then(() => console.log("update sent"));
+    sendUpdatesToSubscriber(pub, goal.rootGoalId, "deleted", [{ level, id: goal.id }])
+      .then(() => console.log("update sent"));
   }
-  await removeChildrenGoals(goal.id);
-  await removeGoal(goal.id);
-  if (goal.parentGoalId !== "root") {
-    getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
-      const parentGoalSublist = parentGoal.sublist;
-      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
-      if (childGoalIndex !== -1) { parentGoalSublist.splice(childGoalIndex, 1); }
-      await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
-    });
-  }
+  await removeGoalWithChildrens(goal);
 };
 
-export const deleteSharedGoal = async (goal: GoalItem) => { 
+export const deleteSharedGoal = async (goal: GoalItem) => {
   await removeSharedWMChildrenGoals(goal.id);
   await removeSharedWMGoal(goal.id);
   if (goal.parentGoalId !== "root") {
@@ -88,4 +81,4 @@ export const deleteSharedGoal = async (goal: GoalItem) => {
       await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
     });
   }
-}
+};

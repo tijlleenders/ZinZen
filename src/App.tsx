@@ -20,7 +20,7 @@ import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import { addColabInvitesInRelId, getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
 import { GoalItem } from "./models/GoalItem";
-import { handleIncomingChanges } from "./helpers/OutboxProcessor";
+import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
 import { addGoalsInSharedWM, addSharedWMGoal } from "./api/SharedWMAPI";
 
@@ -44,25 +44,25 @@ const App = () => {
       // @ts-ignore
       const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
       if (res.success) {
-        Object.keys(resObject).forEach(async (k: any) => {
+        Object.keys(resObject).forEach(async (relId: string) => {
           const goals: GoalItem[] = [];
           const collaborateInvites: { id: string, goal: GoalItem }[] = [];
-          const contactItem = await getContactByRelId(k);
+          const contactItem = await getContactByRelId(relId);
           if (contactItem) {
           // @ts-ignore
-            resObject[k].forEach(async (ele) => {
+            resObject[relId].forEach(async (ele) => {
               if (ele.type === "shareGoal") {
                 const { goal } : { goal: GoalItem } = ele;
-                goal.shared.contacts.push(contactItem.name);
+                goal.shared.contacts.push({ name: contactItem.name, relId });
                 addSharedWMGoal(goal)
                   .then(() => console.log("goal added in inbox"))
                   .catch((err) => console.log("Failed to add in inbox", err));
-              } else if (["shared", "collaboration"].includes(ele.type)) {
+              } else if (["shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
                 handleIncomingChanges(ele);
               }
             });
             if (collaborateInvites.length > 0) {
-              addColabInvitesInRelId(k, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
+              addColabInvitesInRelId(relId, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
             }
             if (goals.length > 0) {
               addGoalsInSharedWM(goals).then(() => console.log("success")).catch((err) => console.log(err));

@@ -1,5 +1,10 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable no-await-in-loop */
+import { getGoal } from "@src/api/GoalsAPI";
+import { getInboxItem } from "@src/api/InboxAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
+import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
 import { colorPallete, getDefaultValueOfCollab, getDefaultValueOfShared } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
@@ -49,16 +54,8 @@ export const createGoalObjectFromTags = (obj: object) => {
     link: null,
     sublist: [],
     goalColor: colorPallete[Math.floor(Math.random() * 11)],
-    shared: {
-      conversionRequests: false,
-      contacts: [],
-      allowed: true,
-    },
-    collaboration: {
-      newUpdates: false,
-      collaborators: [],
-      allowed: true
-    },
+    shared: getDefaultValueOfShared(),
+    collaboration: getDefaultValueOfCollab(),
     typeOfGoal: "myGoal",
     ...obj
   };
@@ -95,3 +92,75 @@ export const convertIntoSharedGoal = (goal: GoalItem) => ({
   shared: getDefaultValueOfShared(),
   collaboration: getDefaultValueOfCollab()
 });
+
+export const getHistoryUptoGoal = async (id: string) => {
+  const history = [];
+  let openGoalOfId = id;
+  while (openGoalOfId !== "root") {
+    const tmpGoal: GoalItem = await getGoal(openGoalOfId);
+    history.push(({
+      goalID: tmpGoal.id || "root",
+      goalColor: tmpGoal.goalColor || "#ffffff",
+      goalTitle: tmpGoal.title || "",
+      display: null
+    }));
+    openGoalOfId = tmpGoal.parentGoalId;
+  }
+  history.reverse();
+  return history;
+};
+
+export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
+  let typeAtPriority :typeOfChange | "none" = "none";
+  if (goalChanges.subgoals.length > 0) {
+    typeAtPriority = "subgoals";
+  } else if (goalChanges.modifiedGoals.length > 0) {
+    typeAtPriority = "modifiedGoals";
+  } else if (goalChanges.archived.length > 0) {
+    typeAtPriority = "archived";
+  } else if (goalChanges.deleted.length > 0) {
+    typeAtPriority = "deleted";
+  }
+  return { typeAtPriority };
+};
+
+export const jumpToLowestChanges = async (id: string) => {
+  const inbox: InboxItem = await getInboxItem(id);
+  let typeAtPriority : typeOfChange | "none" = "none";
+  if (inbox) {
+    const { goalChanges } = inbox;
+    typeAtPriority = getTypeAtPriority(goalChanges).typeAtPriority;
+    if (typeAtPriority !== "none") {
+      goalChanges[typeAtPriority].sort((a: { level: number; }, b: { level: number; }) => a.level - b.level);
+      let goals: GoalItem[] = [];
+      const goalAtPriority = goalChanges[typeAtPriority][0];
+      const parentId = "id" in goalAtPriority
+        ? goalAtPriority.id : typeAtPriority === "subgoals"
+          ? goalAtPriority.goal.parentGoalId : goalAtPriority.goal.id;
+      if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
+        return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+      }
+      if (typeAtPriority === "subgoals") {
+        goalChanges.subgoals.forEach((ele: changesInGoal) => {
+          if (ele.goal.parentGoalId === parentId) goals.push(ele.goal);
+        });
+      }
+      if (typeAtPriority === "modifiedGoals") {
+        let goal = createGoalObjectFromTags({});
+        goalChanges.modifiedGoals.forEach((ele) => {
+          if (ele.goal.id === parentId) {
+            goal = { ...goal, ...ele.goal };
+          }
+        });
+        goals = [goal];
+      }
+
+      return {
+        typeAtPriority,
+        parentId,
+        goals
+      };
+    }
+  } else { console.log("inbox item doesn't exist"); }
+  return { typeAtPriority, parentId: "", goals: [] };
+};

@@ -1,7 +1,10 @@
 import { db } from "@models";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { GoalItem } from "@src/models/GoalItem";
+import { collaborateWithContact } from "@src/services/contact.service";
+import { getDefaultValueOfShared } from "@src/utils";
 import { addGoal } from "../GoalsAPI";
+import { addSubInPub } from "../PubSubAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -114,4 +117,19 @@ export const transferToMyGoals = async (id: string) => {
     transferToMyGoals(goal.id);
     addGoal(goal).then(async () => removeSharedWMGoal(goal.id));
   });
+};
+
+export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
+  const { relId } = goal.shared.contacts[0];
+  collaborateWithContact(relId, goal)
+    .then((res) => console.log(res.success ? "colab inv sent" : "failed to sent invite"));
+  addSubInPub(goal.id, relId, "collaboration").catch((err) => console.log("failed to add sub in pub", err));
+  transferToMyGoals(goal.id).then(async () => {
+    const { collaboration } = goal;
+    const { relId, name } = goal.shared.contacts[0];
+    collaboration.collaborators.push({ relId, name });
+    addGoal({ ...goal, typeOfGoal: "collaboration", collaboration, shared: getDefaultValueOfShared() }).then(async () => {
+      removeSharedWMGoal(goal.id);
+    }).catch((err) => console.log(err));
+  }).catch((err) => console.log(err));
 };

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
 import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
 import { atom, selector } from "recoil";
@@ -8,6 +9,11 @@ export interface ISubGoalHistory {
   goalColor: string,
   goalTitle: string,
 }
+
+export const displayChangesModal = atom({
+  key: "displayChangesModal",
+  default: null as IDisplayChangesModal | null
+});
 
 export const displayShareModal = atom(({
   key: "displayShareModal",
