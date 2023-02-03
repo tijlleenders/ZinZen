@@ -30,7 +30,7 @@ export const MyTimePage = () => {
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
-
+  const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
@@ -85,24 +85,7 @@ export const MyTimePage = () => {
               {tasks[day]?.map((task, index) => {
                 const colorWidth = getColorWidth(day, false, task.duration);
                 colorIndex = (colorIndex === colorPallete.length - 1) ? 0 : colorIndex + 1;
-                if (unplannedIndices.includes(index)) {
-                  const unpColorWidth = getColorWidth(day, true, unplannedDurations[unplannedIndices.indexOf(index)]);
-                  if (index === 0) {
-                    return (
-                      <>
-                        {getColorComponent(unpColorWidth, "lightgray")}
-                        {getColorComponent(colorWidth, task.goalColor)}
-                      </>
-                    );
-                  }
-                  return (
-                    <>
-                      {getColorComponent(colorWidth, task.goalColor)}
-                      {getColorComponent(unpColorWidth, "lightgray")}
-                    </>
-                  );
-                }
-                return (getColorComponent(colorWidth, task.goalColor));
+                return getColorComponent((colorBands[day]/tasks[day].length)*100, task.goalColor);
               })}
             </div>
           )}
@@ -169,7 +152,15 @@ export const MyTimePage = () => {
       console.log("input", schedulerInput);
       const res = schedule(schedulerInput);
       console.log("output", res);
-      setTasks({ ...handleSchedulerOutput(res.scheduled, activeGoals) });
+      const userTasks = handleSchedulerOutput(res.scheduled, activeGoals);
+      const bandWidths = {};
+      Object.keys(userTasks).forEach((day) => {
+        let totalDuration = 0;
+        userTasks[day].forEach((tsk: ITask) => { totalDuration += tsk.duration; });
+        bandWidths[day] = totalDuration;
+      });
+      setColorBands({ ...bandWidths });
+      setTasks({ ...userTasks });
       setImpossibleTasks({ ...handleSchedulerOutput(res.impossible, activeGoals) });
     })();
   }, []);
