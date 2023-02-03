@@ -90,8 +90,8 @@ export const starterGoals = [
     goalTags: {
       start: null,
       due: null,
-      afterTime: null,
-      beforeTime: null,
+      afterTime: 7,
+      beforeTime: 21,
       link: null,
       duration: { index: 25, value: 1 },
       repeats: { index: 27, endIndex: 39, value: "every 3 days" },
@@ -102,8 +102,8 @@ export const starterGoals = [
     goalTags: {
       start: null,
       due: null,
-      afterTime: null,
-      beforeTime: null,
+      afterTime: 7,
+      beforeTime: 21,
       link: null,
       duration: { index: 8, value: 1 },
       repeats: { index: 10, endIndex: 15, value: "daily" },
