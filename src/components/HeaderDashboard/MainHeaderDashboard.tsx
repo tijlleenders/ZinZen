@@ -129,7 +129,7 @@ export const MainHeaderDashboard = () => {
         getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")
         : getNavIcon(ArrowIcon, "Back")}
       {getNavIcon(myTimeIcon, "My Time", { paddingTop: "4px" })}
-      {getNavIcon(darkModeStatus ? ZinZenTextDark : ZinZenTextLight, "Zinzen", zinzenLogoStyle)}
+      {/* {getNavIcon(darkModeStatus ? ZinZenTextDark : ZinZenTextLight, "Zinzen", zinzenLogoStyle)} */}
       {getNavIcon(myFeelingsIcon, "My Feelings")}
       {
         window.location.pathname !== "/MyGoals" ?
