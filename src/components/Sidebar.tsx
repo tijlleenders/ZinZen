@@ -46,7 +46,8 @@ const Sidebar = () => {
       type="button"
       style={{
         ...navButtonStyle,
-        ...(darkModeStatus ? darkNavBtn : {}) }}
+        ...(darkModeStatus ? darkNavBtn : {})
+      }}
       onClick={() => {
         setShowSidebar(false);
         if (to.includes("http")) window.open(to, "_self");
@@ -78,11 +79,10 @@ const Sidebar = () => {
           className="dark-mode-toggle"
         />
         <div style={{ display: "flex", flexDirection: "column", marginTop: "60px" }}>
-          { getNavButton(t("myfeelings"), "/MyFeelings") }
-          { getNavButton(t("blog"), "https://blog.zinzen.me/") }
-          { getNavButton(t("donate"), "https://donate.stripe.com/6oE4jK1iPcPT1m89AA") }
-          { getNavButton(t("feedback"), "/ZinZen/Feedback") }
-          { getNavButton(t("privacy"), "/ZinZenFAQ") }
+          {getNavButton(t("blog"), "https://blog.zinzen.me/")}
+          {getNavButton(t("donate"), "https://donate.stripe.com/6oE4jK1iPcPT1m89AA")}
+          {getNavButton(t("feedback"), "/ZinZen/Feedback")}
+          {getNavButton(t("privacy"), "/ZinZenFAQ")}
         </div>
       </Offcanvas.Body>
     </Offcanvas>
