@@ -26,7 +26,7 @@ export const addStarterGoal = async (
 };
 export const starterGoals = [
   {
-    title: "Sleep",
+    title: "Sleep 😴🌙",
     goalTags: {
       start: null,
       due: null,
@@ -38,7 +38,7 @@ export const starterGoals = [
     }
   },
   {
-    title: "Breakfast",
+    title: "Breakfast 🥐🥣",
     goalTags: {
       start: null,
       due: null,
@@ -50,7 +50,7 @@ export const starterGoals = [
     }
   },
   {
-    title: "Lunch",
+    title: "Lunch 🥪",
     goalTags: {
       start: null,
       due: null,
@@ -62,7 +62,7 @@ export const starterGoals = [
     }
   },
   {
-    title: "Dinner",
+    title: "Dinner 🍽️",
     goalTags: {
       start: null,
       due: null,
@@ -74,7 +74,7 @@ export const starterGoals = [
     }
   },
   {
-    title: "Walk",
+    title: "Walk 🚶🏽",
     goalTags: {
       start: null,
       due: null,
@@ -86,7 +86,7 @@ export const starterGoals = [
     }
   },
   {
-    title: "Water the plants indoors",
+    title: "Water the plants 🪴 indoors",
     goalTags: {
       start: null,
       due: null,
@@ -98,7 +98,7 @@ export const starterGoals = [
     }
   },
   {
-    title: "Me time",
+    title: "Me time 🧘🏽😌",
     goalTags: {
       start: null,
       due: null,
