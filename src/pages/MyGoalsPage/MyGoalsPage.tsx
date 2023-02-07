@@ -61,7 +61,7 @@ export const MyGoalsPage = () => {
     setUserGoals(goals);
   };
   const search = async (text: string) => {
-    const goals: GoalItem[] = await getActiveGoals();
+    const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals();
     setUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
   };
   const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
