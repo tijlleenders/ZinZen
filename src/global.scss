@@ -130,6 +130,27 @@
   }
 }
 
+.colorPallette, .colorPallette-dark {
+  display: flex;
+  gap: 25px;
+  overflow: scroll;
+  width: 100%;
+  margin: 10px 0;
+  background: rgba(246, 246, 246, 0.4);
+  padding: 10px 20px;
+  
+  button {
+    border: none;    
+    min-width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 1.5em;
+  }
+}
+.colorPallette-dark {
+  background-color: rgba(57, 57, 57, 0.4);
+}
 /* Loader */
 .loader {
   position: absolute;
