@@ -25,7 +25,7 @@ export const handleIncomingChanges = async (payload) => {
         }
       });
     } else if (payload.changeType === "archived") {
-      getSharedWMGoal(payload.changes[0].id).then((goal: GoalItem) => archiveSharedWMGoal(goal));
+      getSharedWMGoal(payload.changes[0].id).then(async(goal: GoalItem) => archiveSharedWMGoal(goal).catch((err) => console.log(err, "failed to archive")));
     }
   } else if (payload.type === "collaborationInvite") {
     notifyNewColabRequest(payload.goal.id, payload.relId).catch(() => console.log("failed to notify about new colab"));
@@ -34,8 +34,8 @@ export const handleIncomingChanges = async (payload) => {
     const rootGoal = await getGoal(rootGoalId);
     if (rootGoal.typeOfGoal === "collaboration") {
       let inbox: InboxItem = await getInboxItem(rootGoalId);
-      const defaulChanges = getDefaultValueOfGoalChanges();
-      defaulChanges[changeType] = [...changes];
+      const defaultChanges = getDefaultValueOfGoalChanges();
+      defaultChanges[changeType] = [...changes];
       if (!inbox) {
         await createEmptyInboxItem(rootGoalId);
         inbox = await getInboxItem(rootGoalId);
@@ -47,7 +47,7 @@ export const handleIncomingChanges = async (payload) => {
       // });
       changeNewUpdatesStatus(true, rootGoalId).catch((err) => console.log(err));
       // @ts-ignore
-      await addGoalChangesInID(rootGoalId, defaulChanges);
+      await addGoalChangesInID(rootGoalId, defaultChanges);
     }
   }
 };
