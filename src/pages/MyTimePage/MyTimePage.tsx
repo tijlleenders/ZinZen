@@ -124,7 +124,6 @@ export const MyTimePage = () => {
     (async () => {
       const devMode = await checkMagicGoal();
       let activeGoals: GoalItem[] = await (devMode ? getAllGoals() : getActiveGoals());
-      console.log(devMode, activeGoals)
       if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
       console.log(activeGoals);
       await init();
