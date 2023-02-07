@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { getGoal } from "@src/api/GoalsAPI";
-import { darkModeState, displayInbox, lastAction } from "@store";
-import { colorPallete } from "@src/utils";
+import { displayInbox, lastAction } from "@store";
+import { colorPalleteList } from "@src/utils";
 import { displayUpdateGoal, selectedColorIndex } from "@src/store/GoalsState";
 import { formatTagsToText } from "@src/helpers/GoalProcessor";
 import { getSharedWMGoal } from "@src/api/SharedWMAPI";
+import ColorPalette from "@src/common/ColorPalette";
 import InputGoal from "../InputGoal";
 
 import "@translations/i18n";
 import "./UpdateGoalForm.scss";
 
 export const UpdateGoalForm = () => {
-  const darkModeStatus = useRecoilValue(darkModeState);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const openInbox = useRecoilValue(displayInbox);
   const [goalInput, setGoalInput] = useState("");
@@ -31,19 +31,11 @@ export const UpdateGoalForm = () => {
       (openInbox ? getSharedWMGoal(showUpdateGoal.goalId) : getGoal(showUpdateGoal.goalId)).then((goal) => {
         const res = formatTagsToText(goal);
         if (goal.language) setGoalLang(goal.language);
-        setColorIndex(colorPallete.indexOf(goal.goalColor));
+        setColorIndex(colorPalleteList.indexOf(goal.goalColor));
         setGoalInput(res.inputText);
       });
     }
   }, []);
-
-  const changeColor = () => {
-    if (!openInbox) {
-      const newColorIndex = colorIndex + 1;
-      if (colorPallete[newColorIndex]) setColorIndex(newColorIndex);
-      else setColorIndex(0);
-    }
-  };
 
   return (
     <form id="updateGoalForm" className="todo-form" onSubmit={handleSubmit}>
@@ -51,24 +43,12 @@ export const UpdateGoalForm = () => {
         goalInput !== "" && (
           <InputGoal
             goalInput={goalInput}
-            selectedColor={colorPallete[colorIndex]}
+            selectedColor={colorPalleteList[colorIndex]}
             goalLang={goalLang}
           />
         )
       }
-      <button
-        type="button"
-        style={
-          darkModeStatus
-            ? { backgroundColor: colorPallete[colorIndex] }
-            : { backgroundColor: colorPallete[colorIndex] }
-        }
-        id="changeColor-btn"
-        className="form-tag"
-        onClick={changeColor}
-      >
-        Color
-      </button>
+      <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
     </form>
   );
 };
