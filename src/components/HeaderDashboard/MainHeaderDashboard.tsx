@@ -69,6 +69,7 @@ export const MainHeaderDashboard = () => {
     const { parentGoal } = await createGoal(showAddGoal.goalId, goalTags, goalTitle, colorPallete[colorIndex], subGoalsHistory.length);
     // @ts-ignore
     if (parentGoal && selectedGoalId !== parentGoal.id) { addInHistory(parentGoal); }
+    if (!parentGoal && goalTitle === "magic") { setShowToast({ open: true, message: "Congratulations, you activated DEV mode", extra: "Explore what's hidden" }); }
     resetCurrentStates();
   };
   const updateThisGoal = async () => {
