@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import { useRecoilValue } from "recoil";
 
-import { getActiveGoals } from "@src/api/GoalsAPI";
+import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
@@ -85,7 +85,7 @@ export const MyTimePage = () => {
               {tasks[day]?.map((task, index) => {
                 const colorWidth = getColorWidth(day, false, task.duration);
                 colorIndex = (colorIndex === colorPallete.length - 1) ? 0 : colorIndex + 1;
-                return getColorComponent((colorBands[day]/tasks[day].length)*100, task.goalColor);
+                return getColorComponent((colorBands[day] / tasks[day].length) * 100, task.goalColor);
               })}
             </div>
           )}
@@ -122,7 +122,8 @@ export const MyTimePage = () => {
   };
   useEffect(() => {
     (async () => {
-      let activeGoals: GoalItem[] = await getActiveGoals();
+      const devMode = await checkMagicGoal();
+      let activeGoals: GoalItem[] = await (devMode ? getAllGoals() : getActiveGoals());
       if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
       console.log(activeGoals);
       await init();
@@ -135,13 +136,10 @@ export const MyTimePage = () => {
         endDate,
         goals: []
       };
-      activeGoals = [...activeGoals.filter((ele) => (!!ele.duration))];
+      // activeGoals = [...activeGoals.filter((ele) => (!!ele.duration))];
       activeGoals.forEach((ele) => {
-        const obj = {
-          id: ele.id,
-          title: ele.title,
-          duration: `${ele.duration}`
-        };
+        const obj = { id: ele.id, title: ele.title };
+        if (ele.duration) obj.duration = `${ele.duration}`;
         if (ele.start) obj.start = `${ele.start?.toISOString().slice(0, 10)}T${ele.start?.toTimeString().slice(0, 8)}`;
         if (ele.due) obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
         if (ele.afterTime) obj.after_time = ele.afterTime;

@@ -50,9 +50,14 @@ export const getChildrenGoals = async (parentGoalId: string) => {
 };
 
 export const getAllGoals = async () => {
-  const allGoals = await db.goalsCollection.toArray();
+  const allGoals = await db.goalsCollection.where("archived").equals("false").toArray();
   allGoals.reverse();
   return allGoals;
+};
+
+export const checkMagicGoal = async () => {
+  const goal = await db.goalsCollection.where("title").equals("magic").toArray();
+  return !!(goal && goal.length > 0);
 };
 
 export const getActiveGoals = async () => {
