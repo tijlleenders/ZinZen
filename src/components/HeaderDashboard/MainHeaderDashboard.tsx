@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-import { darkModeState, displayLoader, displayToast, lastAction } from "@store";
+import { darkModeState, displayLoader, displayToast, lastAction, searchActive } from "@store";
 
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
@@ -46,6 +46,7 @@ export const MainHeaderDashboard = () => {
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+  const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
@@ -91,7 +92,9 @@ export const MainHeaderDashboard = () => {
     } else if (to === "My Feelings") {
       navigate("/MyFeelings");
     } else if (to === "Back") {
-      if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
+      if (displaySearch) {
+        setDisplaySearch(false);
+      } else if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
         navigate(-1);
       } else popFromHistory(-1);
     } else if (to === "goal action") {
@@ -126,7 +129,7 @@ export const MainHeaderDashboard = () => {
     <div className={`positioning${!darkModeStatus ? "-light" : "-dark"}`}>
       { showLoader && <Loader /> }
 
-      {!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0 ?
+      {!showAddGoal && !showUpdateGoal && !displaySearch && subGoalsHistory.length === 0 ?
         getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")
         : getNavIcon(ArrowIcon, "Back")}
       {getNavIcon(myTimeIcon, "My Time", { paddingTop: "4px" })}
