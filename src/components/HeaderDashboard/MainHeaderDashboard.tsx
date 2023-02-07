@@ -6,8 +6,8 @@ import { darkModeState, displayLoader, displayToast, lastAction } from "@store";
 
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
-import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
-import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
+// import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
+// import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import myTimeIcon from "@assets/images/myTimeIcon.svg";
 import myGoalsIcon from "@assets/images/myGoalsIcon.svg";
 import myFeelingsIcon from "@assets/images/myFeelingsIcon.svg";
@@ -21,17 +21,17 @@ import Sidebar from "@components/Sidebar";
 import { displaySidebar } from "@src/store/SidebarState";
 import { inputGoalTags, extractedTitle, displayAddGoal, displayGoalId, displayUpdateGoal, selectedColorIndex, goalsHistory, popFromGoalsHistory, displayAddGoalOptions } from "@src/store/GoalsState";
 import { createGoal, modifyGoal } from "@src/helpers/GoalController";
-import { colorPallete } from "@src/utils";
+import { colorPalleteList } from "@src/utils";
 
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
 import SuggestionModal from "@components/GoalsComponents/SuggestionModal/SuggestionModal";
 import Loader from "@src/common/Loader";
 
-const zinzenLogoStyle = {
-  width: "110px",
-  paddingBottom: "6px"
-};
+// const zinzenLogoStyle = {
+//   width: "110px",
+//   paddingBottom: "6px"
+// };
 
 export const MainHeaderDashboard = () => {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ export const MainHeaderDashboard = () => {
   };
   const addThisGoal = async () => {
     if (!showAddGoal || isTitleEmpty()) { return; }
-    const { parentGoal } = await createGoal(showAddGoal.goalId, goalTags, goalTitle, colorPallete[colorIndex], subGoalsHistory.length);
+    const { parentGoal } = await createGoal(showAddGoal.goalId, goalTags, goalTitle, colorPalleteList[colorIndex], subGoalsHistory.length);
     // @ts-ignore
     if (parentGoal && selectedGoalId !== parentGoal.id) { addInHistory(parentGoal); }
     if (!parentGoal && goalTitle === "magic") { setShowToast({ open: true, message: "Congratulations, you activated DEV mode", extra: "Explore what's hidden" }); }
@@ -74,7 +74,7 @@ export const MainHeaderDashboard = () => {
   };
   const updateThisGoal = async () => {
     if (!showUpdateGoal || isTitleEmpty()) { return; }
-    await modifyGoal(showUpdateGoal.goalId, goalTags, goalTitle, colorPallete[colorIndex], subGoalsHistory.length);
+    await modifyGoal(showUpdateGoal.goalId, goalTags, goalTitle, colorPalleteList[colorIndex], subGoalsHistory.length);
     resetCurrentStates();
   };
 

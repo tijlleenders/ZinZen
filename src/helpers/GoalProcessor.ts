@@ -5,7 +5,7 @@ import { getInboxItem } from "@src/api/InboxAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
 import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
-import { colorPallete, getDefaultValueOfCollab, getDefaultValueOfShared } from "@src/utils";
+import { colorPalleteList, getDefaultValueOfCollab, getDefaultValueOfShared } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
 export const formatTagsToText = (_goal: GoalItem) => {
@@ -53,7 +53,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     rootGoalId: "root",
     link: null,
     sublist: [],
-    goalColor: colorPallete[Math.floor(Math.random() * 11)],
+    goalColor: colorPalleteList[Math.floor(Math.random() * 11)],
     shared: getDefaultValueOfShared(),
     collaboration: getDefaultValueOfCollab(),
     typeOfGoal: "myGoal",
