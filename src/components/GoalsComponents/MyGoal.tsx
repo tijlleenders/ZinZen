@@ -26,7 +26,7 @@ interface MyGoalProps {
 
 const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
   const defaultTap = { open: "root", click: 1 };
-
+  const crossedOut = goal.typeOfGoal !== "myGoal" && goal.archived === "true";
   const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
   const collabWithContact = goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
 
@@ -114,7 +114,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           className="goal-title"
           suppressContentEditableWarning
         >
-          <div>{goal.title}</div>&nbsp;
+          <div style={crossedOut ? { textDecoration: "line-through" } : {}}>{goal.title}</div>&nbsp;
           { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
         </div>
         { (goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root") && (
@@ -145,7 +145,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           </OverlayTrigger>
         )}
       </div>
-      { showActions.open === goal.id && showActions.click > 0 && (
+      { showActions.open === goal.id && showActions.click > 0 && !crossedOut && (
         <MyGoalActions
           goal={goal}
           setShowShareModal={setShowShareModal}

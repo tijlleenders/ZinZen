@@ -43,7 +43,9 @@ export const getSharedWMGoal = async (goalId: string) => {
 };
 
 export const getSharedWMChildrenGoals = async (parentGoalId: string) => {
-  const childrenGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals(parentGoalId).and((goal) => goal.archived === "false").sortBy("createdAt");
+  const parentGoal = await getSharedWMGoal(parentGoalId);
+  const getArchived = ["shared", "collaboration"].includes(parentGoal.typeOfGoal);
+  const childrenGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals(parentGoalId).and((goal) => getArchived || goal.archived === "false").sortBy("createdAt"); 
   childrenGoals.reverse();
   return childrenGoals;
 };
@@ -74,7 +76,7 @@ export const archiveGoal = async (goal: GoalItem) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
     await db.sharedWMCollection.update(goal.id, { archived: "true" });
   });
-  if (goal.parentGoalId !== "root") {
+  if (goal.parentGoalId !== "root" && !["collaboration", "shared"].includes(goal.typeOfGoal)) {
     const parentGoal = await getSharedWMGoal(goal.parentGoalId);
     db.transaction("rw", db.sharedWMCollection, async () => {
       await db.sharedWMCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist.filter((ele) => ele !== goal.id) });
