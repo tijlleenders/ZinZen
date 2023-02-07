@@ -4,7 +4,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
-import { darkModeState } from "@src/store";
+import { darkModeState, searchActive } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 import NotificationSymbol from "@src/common/NotificationSymbol";
@@ -31,11 +31,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const collabWithContact = goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
 
   const darkModeStatus = useRecoilValue(darkModeState);
-
+  const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
-  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
+  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
 
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
   const addInHistory = useSetRecoilState(addInGoalsHistory);
@@ -46,6 +46,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         setShowActions(defaultTap);
       } else { setShowActions({ open: goal.id, click: 1 }); }
     } else {
+      if (displaySearch) setDisplaySearch(false);
       // @ts-ignore
       addInHistory(goal);
     }
