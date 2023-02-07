@@ -7,6 +7,7 @@ import { darkModeState } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
 
 import "./MyTimeline.scss";
+import { ChevronDown } from "react-bootstrap-icons";
 
 export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossible: ITask[]}) => {
   const navigate = useNavigate();
@@ -32,9 +33,7 @@ export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossibl
           }
           return (
             <div>
-              <div style={{
-                display: "flex" }}
-              >
+              <div style={{ display: "flex", position: "relative" }}>
                 <button
                   type="button"
                   className="MTL-circle"
@@ -58,6 +57,15 @@ export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossibl
                     {startTime ? `${startTime}:00` : ""}-{endTime ? `${endTime}:00` : ""}
                   </p>
                 </div>
+
+                { displayOptionsIndex === task.goalid && (
+                  <button
+                    type="button"
+                    onClick={() => setDisplayOptionsIndex("")}
+                    className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""} task-dropdown${darkModeStatus ? "-dark" : ""}`}
+                  > <div><ChevronDown /></div>
+                  </button>
+                )}
               </div>
               { displayOptionsIndex === task.goalid ? (
                 <div className="MTL-options">
