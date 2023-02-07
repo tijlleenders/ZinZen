@@ -32,7 +32,14 @@ export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossibl
             startTime = Number(startTime) > Number(endTime) ? "0" : startTime;
           }
           return (
-            <div>
+            <div
+              style={displayOptionsIndex !== task.goalid ? { cursor: "pointer" } : {}}
+              onClickCapture={() => {
+                if (displayOptionsIndex !== task.goalid) {
+                  setDisplayOptionsIndex(task.goalid);
+                }
+              }}
+            >
               <div style={{ display: "flex", position: "relative" }}>
                 <button
                   type="button"
