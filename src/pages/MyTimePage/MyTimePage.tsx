@@ -12,7 +12,7 @@ import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { GoalItem } from "@src/models/GoalItem";
 
 import { darkModeState } from "@src/store";
-import { colorPallete, getDiffInHours } from "@src/utils";
+import { colorPalleteList, getDiffInHours } from "@src/utils";
 import { ITask } from "@src/Interfaces/Task";
 import { TaskFilter } from "@src/helpers/TaskFilter/TaskFilter";
 
@@ -84,7 +84,7 @@ export const MyTimePage = () => {
             <div className="MyTime_colorPalette">
               {tasks[day]?.map((task, index) => {
                 const colorWidth = getColorWidth(day, false, task.duration);
-                colorIndex = (colorIndex === colorPallete.length - 1) ? 0 : colorIndex + 1;
+                colorIndex = (colorIndex === colorPalleteList.length - 1) ? 0 : colorIndex + 1;
                 return getColorComponent((colorBands[day] / tasks[day].length) * 100, task.goalColor);
               })}
             </div>
