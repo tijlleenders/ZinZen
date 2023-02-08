@@ -44,7 +44,9 @@ export const getGoal = async (goalId: string) => {
 };
 
 export const getChildrenGoals = async (parentGoalId: string) => {
-  const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).and((goal) => goal.archived === "false").sortBy("createdAt");
+  const parentGoal = await getGoal(parentGoalId);
+  const getArchived = ["shared", "collaboration"].includes(parentGoal.typeOfGoal);
+  const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).and((goal) => getArchived || goal.archived === "false").sortBy("createdAt");
   childrenGoals.reverse();
   return childrenGoals;
 };
@@ -111,7 +113,7 @@ export const archiveGoal = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, { archived: "true" });
   });
-  if (goal.parentGoalId !== "root") {
+  if (goal.parentGoalId !== "root" && !["collaboration", "shared"].includes(goal.typeOfGoal)) {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
       await db.goalsCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist.filter((ele) => ele !== goal.id) });

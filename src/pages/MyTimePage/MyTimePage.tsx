@@ -18,6 +18,9 @@ import { TaskFilter } from "@src/helpers/TaskFilter/TaskFilter";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
+import "@translations/i18n";
+
+import { useTranslation } from "react-i18next";
 
 export const MyTimePage = () => {
   const toggle = false;
@@ -31,6 +34,7 @@ export const MyTimePage = () => {
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
+  const { t } = useTranslation();
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
@@ -95,6 +99,7 @@ export const MyTimePage = () => {
 
   const createDummyGoals = async () => {
     starterGoals.forEach(async (goal) => {
+      goal.title = t(goal.title);
       addStarterGoal(goal.title, goal.goalTags)
         .catch((error) => { console.log(error, goal); });
     });

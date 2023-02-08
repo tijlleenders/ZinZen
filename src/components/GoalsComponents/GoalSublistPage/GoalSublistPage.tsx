@@ -81,7 +81,7 @@ export const GoalSublist = () => {
         <div className="sublist-content">
           <div className="sublist-title">{parentGoal?.title}</div>
           <Container fluid className="sublist-list-container">
-            { showAddGoal && <AddGoalForm parentGoalId={showAddGoal.goalId} /> }
+            { showAddGoal && <AddGoalForm /> }
 
             {childrenGoals?.map((goal: GoalItem) => (
               showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
