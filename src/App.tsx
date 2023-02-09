@@ -23,6 +23,7 @@ import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
 import { addGoalsInSharedWM, addSharedWMGoal } from "./api/SharedWMAPI";
+import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
 
 import "./customize.scss";
 import "./global.scss";
@@ -95,11 +96,12 @@ const App = () => {
           <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Contacts" element={<Contacts />} />
           <Route path="/MyGoals" element={<MyGoalsPage />} />
+          <Route path="/MyGroups" element={<MyGroupsPage />} />
           <Route path="/MyFeelings" element={<ShowFeelingsPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />
-          <Route path="/invite/:id" element={<InvitePage />} />
+          <Route path="/invite/:id" element={<InvitePage />} /> 
         </Routes>
       </BrowserRouter>
       <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
