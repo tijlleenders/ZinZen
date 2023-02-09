@@ -12,6 +12,7 @@ import { darkModeState, displayInbox, lastAction } from "@src/store";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";
 import { UpdateGoalForm } from "../UpdateGoal/UpdateGoalForm";
+import ArchivedAccordion from "../ArchivedAccordion/ArchivedAccordion";
 import MyGoal from "../MyGoal";
 
 import "./GoalSublistPage.scss";
@@ -31,8 +32,9 @@ export const GoalSublist = () => {
   const callResetHistory = useSetRecoilState(resetGoalsHistory);
 
   const [parentGoal, setParentGoal] = useState<GoalItem>();
-  const [showActions, setShowActions] = useState({ open: "root", click: 1 });
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
+  const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
+  const [showActions, setShowActions] = useState({ open: "root", click: 1 });
 
   const getBreadcrumbs = (sHistory: ISubGoalHistory[], longJump = true) => sHistory.map((item, index) => (
     <Breadcrumb.Item
@@ -47,6 +49,10 @@ export const GoalSublist = () => {
     </Breadcrumb.Item>
   ));
 
+  const handleChildrenGoals = (goals:GoalItem[]) => {
+    setChildrenGoals([...goals.filter((goal) => goal.archived === "false")]);
+    setArchivedChildren([...goals.filter((goal) => goal.archived === "true")]);
+  };
   useEffect(() => {
     (openInbox ? getSharedWMGoal(goalID) : getGoal(goalID))
       .then((parent) => setParentGoal(parent));
@@ -54,7 +60,7 @@ export const GoalSublist = () => {
 
   useEffect(() => {
     (openInbox ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID))
-      .then((fetchedGoals) => { setChildrenGoals(fetchedGoals); });
+      .then((fetchedGoals) => { handleChildrenGoals(fetchedGoals); });
   }, [action, parentGoal, showAddGoal, showSuggestionModal, showChangesModal, showUpdateGoal]);
 
   return (
@@ -88,6 +94,16 @@ export const GoalSublist = () => {
                 :
               <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} />
             ))}
+            <ArchivedAccordion totalArchived={archivedChildren.length}>
+              {archivedChildren.map((goal: GoalItem) => (
+                <MyGoal
+                  key={`goal-${goal.id}`}
+                  goal={goal}
+                  showActions={showActions}
+                  setShowActions={setShowActions}
+                />
+              ))}
+            </ArchivedAccordion>
           </Container>
         </div>
       </div>
