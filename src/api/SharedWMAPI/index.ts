@@ -43,9 +43,7 @@ export const getSharedWMGoal = async (goalId: string) => {
 };
 
 export const getSharedWMChildrenGoals = async (parentGoalId: string) => {
-  const parentGoal = await getSharedWMGoal(parentGoalId);
-  const getArchived = ["shared", "collaboration"].includes(parentGoal.typeOfGoal);
-  const childrenGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals(parentGoalId).and((goal) => getArchived || goal.archived === "false").sortBy("createdAt"); 
+  const childrenGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals(parentGoalId).sortBy("createdAt");
   childrenGoals.reverse();
   return childrenGoals;
 };
@@ -58,10 +56,8 @@ export const getAllSharedWMGoals = async () => {
 
 export const getActiveSharedWMGoals = async () => {
   const activeGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals("root").sortBy("createdAt");
-  // Filter and return only parent goals
-  const activeParentGoals = activeGoals.filter((goal: GoalItem) => goal.archived === "false");
-  activeParentGoals.reverse();
-  return activeParentGoals;
+  activeGoals.reverse();
+  return activeGoals;
 };
 
 export const updateSharedWMGoal = async (id: string, changes: object) => {
@@ -122,13 +118,12 @@ export const transferToMyGoals = async (id: string) => {
 };
 
 export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
-  const { relId } = goal.shared.contacts[0];
+  const { relId, name } = goal.shared.contacts[0];
   collaborateWithContact(relId, goal)
     .then((res) => console.log(res.success ? "colab inv sent" : "failed to sent invite"));
   addSubInPub(goal.id, relId, "collaboration").catch((err) => console.log("failed to add sub in pub", err));
   transferToMyGoals(goal.id).then(async () => {
     const { collaboration } = goal;
-    const { relId, name } = goal.shared.contacts[0];
     collaboration.collaborators.push({ relId, name });
     addGoal({ ...goal, typeOfGoal: "collaboration", collaboration, shared: getDefaultValueOfShared() }).then(async () => {
       removeSharedWMGoal(goal.id);
