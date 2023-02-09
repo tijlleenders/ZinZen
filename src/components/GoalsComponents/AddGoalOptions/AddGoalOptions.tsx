@@ -16,22 +16,13 @@ import "./AddGoalOptions.scss";
 
 const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
   const [loading, setLoading] = useState(false);
-  const [empty, setEmpty] = useState({ A: true, P: true });
-  const [archiveGoals, setArchiveGoals] = useState<GoalItem[]>([]);
+  const [empty, setEmpty] = useState({ P: true });
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
   const setShowAddGoal = useSetRecoilState(displayAddGoal);
   const setShowSuggestionsModal = useSetRecoilState(displaySuggestionsModal);
 
-  useEffect(() => {
-    const checkArchive = async () => {
-      const res = await getGoalsFromArchive(parentGoalId);
-      setArchiveGoals([...res]);
-      setEmpty({ ...empty, A: res.length === 0 });
-    };
-    checkArchive();
-  }, []);
   return (
     <div id={`addGoal-options${darkModeStatus ? "-dark" : ""}`}>
       <button
@@ -48,16 +39,6 @@ const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
           />
         </button>
       </button>
-      { archiveGoals.length > 0 && (
-      <button
-        type="button"
-        className="addGoal-option"
-        onClick={() => { setShowSuggestionsModal({ selected: "Archive", goals: archiveGoals }); }}
-      >
-        Archive
-        <button type="button"><img alt="create-goals-suggestion" src={archiveGoalsIcon} /></button>
-      </button>
-      ) }
       <button
         type="button"
         disabled={loading}
