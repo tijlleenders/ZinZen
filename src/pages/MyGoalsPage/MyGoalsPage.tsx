@@ -60,7 +60,7 @@ export const MyGoalsPage = () => {
 
   const handleUserGoals = (goals: GoalItem[]) => {
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
-    setArchivedGoals([...goals.filter((goal) => goal.archived === "true")]);
+    setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
   };
   const refreshActiveGoals = async () => {
     const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals("true");
