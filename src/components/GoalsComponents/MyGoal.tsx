@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
-import { darkModeState, searchActive } from "@src/store";
+
 import { GoalItem } from "@src/models/GoalItem";
-import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
+import { darkModeState, lastAction, searchActive } from "@src/store";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
+import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
+import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import MyGoalActions from "./MyGoalActions";
 import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
 
@@ -26,6 +28,7 @@ interface MyGoalProps {
 
 const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
   const defaultTap = { open: "root", click: 1 };
+  const archived = goal.archived === "true";
   const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
   const collabWithContact = goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
 
@@ -36,6 +39,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
 
+  const setLastAction = useSetRecoilState(lastAction);
   const setSubGoalHistory = useSetRecoilState(goalsHistory);
   const addInHistory = useSetRecoilState(addInGoalsHistory);
 
@@ -50,7 +54,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       addInHistory(goal);
     }
   };
-  async function handleDropDown() {
+  async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    e.stopPropagation();
+    if (archived) { return; }
     if (showActions.open === goal.id && showActions.click > 0) {
       setShowActions(defaultTap);
     } else if ((goal.collaboration.newUpdates && goal.typeOfGoal === "collaboration") || goal.shared.conversionRequests.status) {
@@ -81,10 +87,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     >
       <div
         className="goal-dropdown"
-        onClickCapture={(e) => {
-          e.stopPropagation();
-          handleDropDown();
-        }}
+        onClickCapture={(e) => { handleDropDown(e); }}
       >
         { (
           goal.collaboration.newUpdates || goal.shared.conversionRequests.status
@@ -124,6 +127,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           >
             <div
               className="contact-button"
+              style={archived ? { right: "78px" } : {}}
             >
               { goal.typeOfGoal === "collaboration" && (
               <img
@@ -143,8 +147,25 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
           </OverlayTrigger>
         )}
+        { archived && (
+          <button
+            type="button"
+            className="contact-icon"
+            style={{
+              width: "25px",
+              height: "32px",
+              position: "absolute",
+              right: "18px",
+              ...(darkModeStatus ? {
+                background: "transparent",
+                filter: "invert(1)" } : {}) }}
+            onClickCapture={async () => { await unarchiveUserGoal(goal); setLastAction("unarchived"); }}
+          >
+            <img alt="archived goal" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB4ElEQVR4nGNgIAmwWEAwbYA8KyvHOxAGsaltOAcLK8cNE+uwP2a2EX9ZWDluMzAwcBKrOZqBgeEMDjwFpICFjXO5srrl1+C4zv8grKxu+Z2VlWMdVP9UPPqjQAo6GRgYyhkYGJSwYBEmJpYsfgHJT4ExbWDDQTgotv2/gJDMJyYWliyQGhx6y6Fmg4kkHL4zY2Pn+uwdUg03HIZ9wmr/s7Fzf2JgYLDGoTeJkAViLCxsr62dEv/7RjSAXQ0zHOQbkBhIjoWV/TVILRkWMEWysLK/AhnAzML6UVHVDB4HIDZIDCQHUgNSS44PkIG/jIL+B5gFIDZIjICeUQsYRoOISqmIiZFxExc7y0tBHo67yJiLnTURSbEXCwvbN25e4XcgDGIzMDB4wiRBajH1s7xkYmTcyMDLxTatKtzk/8kJ4XC8tz3oPz8X20cGBgZlqBlMDAwMikjljCJUDASU+bnZPoL0IJsBMhNkNsiCSf1pdv9fLEtBwdOyHf7xc7FfQjIIG2Di42Y7Nz3b8S+6fpCZILNxWgDCPuaKnzjYWL7jwyA12PQSZQElmCgLpuc4/vc1V8SLQWrItuDKjOj/u1oD8OKrM2IIWxBmq/q/O8WGqhhkJtgCFhYGax4O1gm0wCCzAT7lGEfIoQ9QAAAAAElFTkSuQmCC" />
+          </button>
+        )}
       </div>
-      { showActions.open === goal.id && showActions.click > 0 && (
+      { showActions.open === goal.id && showActions.click > 0 && !archived && (
         <MyGoalActions
           goal={goal}
           setShowShareModal={setShowShareModal}
