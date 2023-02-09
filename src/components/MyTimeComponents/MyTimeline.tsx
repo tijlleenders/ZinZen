@@ -7,6 +7,7 @@ import { darkModeState } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
 
 import "./MyTimeline.scss";
+import { ChevronDown } from "react-bootstrap-icons";
 
 export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossible: ITask[]}) => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossibl
           <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>Impossible</button>
         </div>
       )}
-      <div className={`MTL-display-${darkModeStatus ? "dark" : "light"}`}>
+      <div className={`MTL-display-${darkModeStatus ? "dark" : ""}`}>
         { (showScheduled ? myTasks : impossible).map((task) => {
           let startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
@@ -31,10 +32,16 @@ export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossibl
             startTime = Number(startTime) > Number(endTime) ? "0" : startTime;
           }
           return (
-            <div>
-              <div style={{
-                display: "flex" }}
-              >
+            <button
+              type="button"
+              style={displayOptionsIndex !== task.goalid ? { cursor: "pointer" } : {}}
+              onClick={() => {
+                if (displayOptionsIndex !== task.goalid) {
+                  setDisplayOptionsIndex(task.goalid);
+                } else setDisplayOptionsIndex("");
+              }}
+            >
+              <div style={{ display: "flex", position: "relative" }}>
                 <button
                   type="button"
                   className="MTL-circle"
@@ -45,7 +52,8 @@ export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossibl
                   <button
                     type="button"
                     className="MTL-taskTitle"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setDisplayOptionsIndex(task.goalid);
                       if (displayOptionsIndex === task.goalid) {
                         navigate("/MyGoals", { state: { isRootGoal: task.parentGoalId === "root", openGoalOfId: task.goalid } });
@@ -58,15 +66,24 @@ export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossibl
                     {startTime ? `${startTime}:00` : ""}-{endTime ? `${endTime}:00` : ""}
                   </p>
                 </div>
+
+                { displayOptionsIndex === task.goalid && (
+                  <button
+                    type="button"
+                    onClick={() => setDisplayOptionsIndex("")}
+                    className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""} task-dropdown${darkModeStatus ? "-dark" : ""}`}
+                  > <div><ChevronDown /></div>
+                  </button>
+                )}
               </div>
               { displayOptionsIndex === task.goalid ? (
                 <div className="MTL-options">
-                  <button type="button"> Forget</button><div />
-                  <button type="button"> Reschedule</button><div />
-                  <button type="button"> Done</button><div />
+                  <button type="button" onClick={(e) => { e.stopPropagation(); }}> Forget</button><div />
+                  <button type="button" onClick={(e) => { e.stopPropagation(); }}> Reschedule</button><div />
+                  <button type="button" onClick={(e) => { e.stopPropagation(); }}> Done</button><div />
                 </div>
               ) : null}
-            </div>
+            </button>
           );
         })}
       </div>
