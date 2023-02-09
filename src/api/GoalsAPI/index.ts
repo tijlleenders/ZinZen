@@ -135,6 +135,33 @@ export const archiveUserGoal = async (goal: GoalItem) => {
   await archiveGoal(goal);
 };
 
+export const unarchiveGoal = async (goal: GoalItem) => {
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection.update(goal.id, { archived: "false" });
+  });
+  if (goal.parentGoalId !== "root" && !["collaboration", "shared"].includes(goal.typeOfGoal)) {
+    const parentGoal = await getGoal(goal.parentGoalId);
+    db.transaction("rw", db.goalsCollection, async () => {
+      await db.goalsCollection.update(goal.parentGoalId, { sublist: [...parentGoal.sublist, goal.id] });
+    });
+  }
+};
+
+export const unarchiveChildrenGoals = async (id: string) => {
+  const childrenGoals = await getChildrenGoals(id);
+  if (childrenGoals) {
+    childrenGoals.forEach(async (goal: GoalItem) => {
+      await unarchiveChildrenGoals(goal.id);
+      await unarchiveGoal(goal);
+    });
+  }
+};
+
+export const unarchiveUserGoal = async (goal: GoalItem) => {
+  await unarchiveChildrenGoals(goal.id);
+  await unarchiveGoal(goal);
+};
+
 export const archiveRootGoalsByTitle = async (goalTitle: string) => {
   const goals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals("root").and((goal) => goal.title.toLowerCase() === goalTitle.toLowerCase() && goal.archived === "false").toArray();
   goals.forEach(async (ele) => {
