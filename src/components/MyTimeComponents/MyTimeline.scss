@@ -34,7 +34,9 @@
   }
 }
 
-.MTL-display-light, .MTL-display-dark {
+.MTL-display, .MTL-display-dark {
+  display: flex;
+  flex-direction: column;
   padding-top: 1em;
   .MTL-taskTitle {
     color: #343434;
@@ -58,18 +60,20 @@
   }
 }
 
-.MTL-display-light > div, .MTL-display-dark > div  {
+.MTL-display > button, .MTL-display-dark > button  {
   margin-bottom: 0.7em;
   padding: 0 4%;  
   line-height: 22px;
   padding-bottom: 0.7em;
   border-bottom: 0.5px solid #303030;
-  
+  border: none;
+  background: transparent;
+  color: inherit
 } 
-.MTL-display-dark > div {
+.MTL-display-dark > button {
   border-bottom: 0.5px solid #E4E4E4;
 }
-.MTL-display-light > div:last-child, .MTL-display-dark > div:last-child {
+.MTL-display > button:last-child, .MTL-display-dark > button:last-child {
   border: none;
   margin-bottom: 0 !important;
 
