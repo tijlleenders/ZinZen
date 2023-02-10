@@ -194,7 +194,7 @@ export const removeChildrenGoals = async (parentGoalId: string) => {
 
 export const shareMyGoal = async (goal: GoalItem, parent: string) => {
   const shareableGoal = {
-    method: "shareGoal",
+    method: "shareMessage",
     parentTitle: parent,
     goal: convertIntoAnonymousGoal(goal)
   };
