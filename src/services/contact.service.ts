@@ -33,12 +33,6 @@ export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
   return res;
 };
 
-export const sendResponseOfColabInvite = async (status: string, relId: string, goalId: string) => {
-  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const res = await createContactRequest(url, { method: "shareGoal", installId: getInstallId(), relId, event: { type: "colabInviteResponse", goalId, status } });
-  return res;
-};
-
 export const getContactSharedGoals = async () => {
   const lastProcessedTimestamp = new Date(Number(localStorage.getItem("lastProcessedTimestamp"))).toISOString();
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
