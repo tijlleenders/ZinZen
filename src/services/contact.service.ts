@@ -22,20 +22,20 @@ export const acceptRelationship = async () => {
 };
 
 export const shareGoalWithContact = async (relId: string, goal: GoalItem) => {
-  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, { method: "shareGoal", installId: getInstallId(), relId, event: { type: "shareGoal", goal } });
   return res;
 };
 
 export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
-  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, { method: "shareGoal", installId: getInstallId(), relId, event: { type: "collaborationInvite", goal } });
   return res;
 };
 
 export const getContactSharedGoals = async () => {
   const lastProcessedTimestamp = new Date(Number(localStorage.getItem("lastProcessedTimestamp"))).toISOString();
-  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, { method: "getGoals", installId: getInstallId(), ...(lastProcessedTimestamp ? { lastProcessedTimestamp } : {}) });
   localStorage.setItem("lastProcessedTimestamp", `${Date.now()}`);
   return res;
@@ -51,7 +51,7 @@ export const sendUpdatesToSubscriber = async (
   pub: PubSubItem, rootGoalId: string,
   changeType: typeOfChange,
   changes: { level: number, goal: GoalItem }[] | { level: number, id: string }[]) => {
-  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
   const { relId, type } = pub.subscribers[0];
   const res = await createContactRequest(url, {
     method: "shareGoal",
