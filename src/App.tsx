@@ -4,8 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 import Toast from "react-bootstrap/Toast";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { darkModeState, themeSelectionState, languageSelectionState, displayToast } from "@store";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { darkModeState, themeSelectionState, languageSelectionState, displayToast, lastAction } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
@@ -39,10 +39,11 @@ const App = () => {
   const isLanguageChosen = language !== "No language chosen.";
 
   const [showToast, setShowToast] = useRecoilState(displayToast);
+  const setLastAction = useSetRecoilState(lastAction);
+
   useEffect(() => {
     const init = async () => {
       updateAllUnacceptedContacts();
-      syncGroupPolls();
       const res = await getContactSharedGoals();
       // @ts-ignore
       const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
@@ -73,6 +74,7 @@ const App = () => {
           }
         });
       }
+      syncGroupPolls().then(() => setLastAction("groupSync"));
     };
     const installId = localStorage.getItem("installId");
     if (!installId) {
