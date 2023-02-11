@@ -14,7 +14,7 @@ import { updateMyMetric } from "@src/api/PublicGroupsAPI";
 interface MyGoalActionsProps {
   poll: IPoll,
 }
-type actionType = "upvotes" | "downvotes" | "inMygoals" | "completed"
+type actionType = "upVotes" | "downVotes" | "inMyGoals" | "completed"
 
 const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -22,13 +22,13 @@ const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll }) => {
   const setLastAction = useSetRecoilState(lastAction);
   const handleClick = async (typeOfAction: string) => {
     if (selectedGroup) {
-      const newMetricsState = poll.myMetrics;
+      const newMetricsState = { ...poll.myMetrics };
       if (typeOfAction === "inMygoals") {
         newMetricsState.inMyGoals = true;
       } else if (typeOfAction === "completed") {
         newMetricsState.completed = true;
       } else {
-        newMetricsState.voteScore = typeOfAction === "upvotes" ? 1 : -1;
+        newMetricsState.voteScore = typeOfAction === "upVotes" ? 1 : -1;
       }
       await updateMyMetric(selectedGroup.id, poll.id, newMetricsState);
       await sendReactionOnPoll(selectedGroup.id, poll.id, newMetricsState);
@@ -36,7 +36,11 @@ const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll }) => {
     }
   };
   const getActionImg = (typeOfAction: actionType, imgSrc: string, definition: string, exceptional = false, customStyle = {}) => (
-    <button type="button" onClick={async () => { await handleClick(typeOfAction); }} style={{ background: "transparent", border: "none" }}>
+    <button
+      type="button"
+      onClick={async () => { await handleClick(typeOfAction); }}
+      style={{ background: "transparent", border: "none", color: "inherit" }}
+    >
       <img
         alt={definition}
         src={imgSrc}
@@ -47,9 +51,9 @@ const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll }) => {
   );
   return (
     <div className={`interactables${darkModeStatus ? "-dark" : ""}`}>
-      {getActionImg("upvotes", vote, "upvote", darkModeStatus, { rotate: "180deg" })}
-      {getActionImg("downvotes", vote, "downvote", darkModeStatus)}
-      {getActionImg("inMygoals", peopleIcon, "People added to my goals", darkModeStatus)}
+      {getActionImg("upVotes", vote, "upvote", darkModeStatus, { rotate: "180deg" })}
+      {getActionImg("downVotes", vote, "downvote", darkModeStatus)}
+      {getActionImg("inMyGoals", peopleIcon, "People added to my goals", darkModeStatus)}
       {getActionImg("completed", correct, "People Completed Goal", true)}
     </div>
   );
