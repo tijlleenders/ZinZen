@@ -48,7 +48,7 @@ const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
     let message = "";
     if (openExploreGroups) {
       message = "Sorry, You've to Join this group first :)";
-    } else if (typeOfAction.includes("Votes") && poll.myMetrics.voteScore !== 0) {
+    } else if ((poll.myMetrics.voteScore === 1 && typeOfAction === "upVotes") || (poll.myMetrics.voteScore === -1 && typeOfAction === "downVotes")) {
       message = "You've already voted ;)";
     } else if (selectedGroup) {
       const newMetricsState = { ...poll.myMetrics };
@@ -61,8 +61,8 @@ const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
         newMetricsState.voteScore = typeOfAction === "upVotes" ? 1 : -1;
         message = "Your vote is submitted";
       }
-      setLastAction("groupAction");
       await sendUpdatesOfThisPoll(selectedGroup.id, poll.id, newMetricsState, typeOfAction);
+      setLastAction(`groupAction${typeOfAction}`);
       setShowToast({ open: true, message, extra: "" });
     }
     setShowToast({ open: true, message, extra: "" });

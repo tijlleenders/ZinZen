@@ -76,7 +76,11 @@ export const updatePollMetrics = async (publicGroupId: string, pollId: string, t
       .modify((obj: PublicGroupItem) => {
         const indx = obj.polls.findIndex((poll) => poll.id === pollId);
         if (indx >= 0) {
+          const myCurrMetrics = obj.polls[indx].myMetrics;
           obj.polls[indx].metrics[typeOfMetric] += value;
+          if ((typeOfMetric === "downVotes" && myCurrMetrics.voteScore === 1) || (typeOfMetric === "upVotes" && myCurrMetrics.voteScore === -1)) {
+            obj.polls[indx].metrics[typeOfMetric === "downVotes" ? "upVotes" : "downVotes"] -= 1;
+          }
         }
       });
   }).catch((e) => {
