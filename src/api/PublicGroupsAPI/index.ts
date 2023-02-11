@@ -1,5 +1,6 @@
 import { db } from "@models";
-import { IMyMetrics, IPoll, PublicGroupItem } from "@src/models/PublicGroupItem";
+import { createPollObject } from "@src/helpers/GroupsProcessor";
+import { PollActionType, IMyMetrics, IPoll, PublicGroupItem } from "@src/models/PublicGroupItem";
 import { findPublicGroupsOnline } from "@src/services/group.service";
 
 export const addPublicGroup = async (groupDetails: PublicGroupItem) => {
@@ -59,8 +60,23 @@ export const updateMyMetric = async (publicGroupId: string, pollId: string, RxnM
     await db.publicGroupsCollection.where("id").equals(publicGroupId)
       .modify((obj: PublicGroupItem) => {
         const indx = obj.polls.findIndex((poll) => poll.id === pollId);
-        if (indx) {
-          obj.polls[indx].myMetrics = RxnMetric;
+        if (indx >= 0) {
+          obj.polls[indx] = { ...obj.polls[indx], myMetrics: { ...RxnMetric } };
+        }
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+    return "Failed to Share your Goal";
+  });
+};
+
+export const updatePollMetrics = async (publicGroupId: string, pollId: string, typeOfMetric: PollActionType, value: number) => {
+  db.transaction("rw", db.publicGroupsCollection, async () => {
+    await db.publicGroupsCollection.where("id").equals(publicGroupId)
+      .modify((obj: PublicGroupItem) => {
+        const indx = obj.polls.findIndex((poll) => poll.id === pollId);
+        if (indx >= 0) {
+          obj.polls[indx].metrics[typeOfMetric] += value;
         }
       });
   }).catch((e) => {
@@ -75,13 +91,13 @@ export const syncGroupPolls = async () => {
       const mygroups = await getAllPublicGroups();
       const userGroups = mygroups.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
       res.response.forEach(async (group: PublicGroupItem) => {
-        if (Object.keys(userGroups).includes(group.id)) {
-          addPollsInPublicGroup(group.id, group.polls, true).then(() => {
-            if (Object.keys(userGroups).length > 0) {
-              userGroups[group.id].polls.forEach(async (poll: IPoll) => {
-                updateMyMetric(group.id, poll.id, userGroups[group.id].poll.myMetrics);
-              });
-            }
+        await addPollsInPublicGroup(
+          group.id,
+          group.polls.map((poll) => createPollObject(poll.goal, poll)),
+          true);
+        if (Object.keys(userGroups).includes(group.id) && Object.keys(userGroups).length > 0) {
+          userGroups[group.id].polls.forEach(async (poll: IPoll) => {
+            updateMyMetric(group.id, poll.id, poll.myMetrics);
           });
         }
       });
