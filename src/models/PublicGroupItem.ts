@@ -1,5 +1,7 @@
 import { GoalItem } from "./GoalItem";
 
+export type PollActionType = "upVotes" | "downVotes" | "inMyGoals" | "completed"
+
 export interface IPollMetrics {
     upVotes: number,
     downVotes: number,
