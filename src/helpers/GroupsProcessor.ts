@@ -3,12 +3,12 @@ import { GoalItem } from "@src/models/GoalItem";
 import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { sendNewPublicGroup } from "@src/services/group.service";
 import { languagesFullForms } from "@src/translations/i18n";
-import { colorPalleteList } from "@src/utils";
-import { v4 as uuidv4 } from "uuid";
+import { colorPalleteList, myNameSpace } from "@src/utils";
+import { v5 as uuidv5 } from "uuid";
 
 export const createPublicGroupObject = (params: object) => {
   const groupItem: PublicGroupItem = {
-    id: uuidv4(),
+    id: "",
     title: "N/A",
     polls: [],
     language: "English",
@@ -16,11 +16,12 @@ export const createPublicGroupObject = (params: object) => {
     createdAt: new Date().toISOString(),
     ...params
   };
+  groupItem.id = uuidv5(groupItem.title, myNameSpace);
   return groupItem;
 };
 
 export const createPollObject = (goal: GoalItem) => ({
-  id: uuidv4(),
+  id: uuidv5(goal.title, myNameSpace),
   goal,
   metrics: {
     upvotes: 0,
@@ -41,5 +42,5 @@ export const createUserGroup = async (title: string) => {
   const language = lang ? languagesFullForms[lang] : languagesFullForms.en;
   const newGroup = createPublicGroupObject({ title, language });
   await addPublicGroup(newGroup);
-  await sendNewPublicGroup(newGroup.title, language, newGroup.groupColor);
+  await sendNewPublicGroup(newGroup.id, newGroup.title, language, newGroup.groupColor);
 };
