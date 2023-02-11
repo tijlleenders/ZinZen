@@ -48,7 +48,7 @@ export const sendUpdateOfNewPoll = async (publicGroupId: string, poll: IPoll) =>
   return res;
 };
 
-export const sendNewPublicGroup = async (title: string, language: string, color: string
+export const sendNewPublicGroup = async (publicGroupId: string, title: string, language: string, color: string
 ) => {
   const res = await createGroupRequest(groupServiceUrl, {
     debugKey,
@@ -57,7 +57,7 @@ export const sendNewPublicGroup = async (title: string, language: string, color:
       commandType: "createPublicGroup",
       installId: getInstallId(),
       publicGroup: {
-        title, language, color
+        publicGroupId, title, language, color
       }
     }
   });
