@@ -104,7 +104,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           }}
         />
       </div>
-      <div
+      <button
+        type="button"
         className="user-goal-main"
         onClickCapture={() => { handleGoalClick(); }}
         style={{ ...(showActions.open === goal.id) ? { paddingBottom: 0 } : {} }}
@@ -144,7 +145,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
           </OverlayTrigger>
         )}
-      </div>
+      </button>
       { showActions.open === goal.id && showActions.click > 0 && !crossedOut && (
         <MyGoalActions
           goal={goal}
