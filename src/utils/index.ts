@@ -41,6 +41,8 @@ export async function createGroupRequest(url: string, body : object | null = nul
   }
 }
 
+export const myNameSpace = "c95256dc-aa03-11ed-afa1-0242ac120002";
+
 // @ts-nocheck
 export const formatDate = () => {
   const newDate = new Date();
