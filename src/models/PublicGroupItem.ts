@@ -1,9 +1,9 @@
 import { GoalItem } from "./GoalItem";
 
 export interface IPollMetrics {
-    upvotes: number,
-    downvotes: number,
-    inMygoals: number,
+    upVotes: number,
+    downVotes: number,
+    inMyGoals: number,
     completed: number
 }
 
