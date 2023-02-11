@@ -1,5 +1,5 @@
 import { db } from "@models";
-import { ISubscriber, PubSubItem } from "@src/models/PubSubItem";
+import { ISubscriber, PubSubItem, typeOfSub } from "@src/models/PubSubItem";
 
 export const addPub = async (id: string, subscribers: ISubscriber[]) => {
   let newPubId;
@@ -18,29 +18,29 @@ export const getPubById = async (id: string) => {
   return goal[0];
 };
 
-export const addSubInPub = async (goalId: string, relId: string, type: "shared" | "collaboration") => {
+export const addSubInPub = async (goalId: string, subId: string, type: typeOfSub) => {
   const pubId = await getPubById(goalId);
   if (pubId) {
     db.transaction("rw", db.pubSubCollection, async () => {
       await db.pubSubCollection.where("id").equals(goalId)
         .modify((obj: PubSubItem) => {
-          obj.subscribers.push({ relId, type });
+          obj.subscribers.push({ subId, type });
         });
     }).catch((e) => {
       console.log(e.stack || e);
     });
-  } else { await addPub(goalId, [{ relId, type }]); }
+  } else { await addPub(goalId, [{ subId, type }]); }
 };
 
-export const convertTypeOfSub = async (goalId: string, relId: string, newType: "shared" | "collaboration") => {
+export const convertTypeOfSub = async (goalId: string, subId: string, newType: typeOfSub) => {
   db.transaction("rw", db.pubSubCollection, async () => {
     await db.pubSubCollection.where("id").equals(goalId)
       .modify((obj: PubSubItem) => {
         const { subscribers } = obj;
-        const ind = subscribers.findIndex((ele) => ele.relId === relId);
+        const ind = subscribers.findIndex((ele) => ele.subId === subId);
         console.log(ind);
         if (ind >= 0) {
-          subscribers.splice(ind, 1, { relId, type: newType });
+          subscribers.splice(ind, 1, { subId, type: newType });
         }
         obj.subscribers = [...subscribers];
       });

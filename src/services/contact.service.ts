@@ -1,10 +1,10 @@
 import { GoalItem } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
-import { PubSubItem } from "@src/models/PubSubItem";
+import { ISubscriber } from "@src/models/PubSubItem";
 import { createContactRequest, getInstallId } from "@src/utils";
 
 export const initRelationship = async () => {
-  const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
+  const url = "https://n65hkx5nehmmkzy5wp6ijyarka0qujrj.lambda-url.eu-west-1.on.aws/";
 
   const res = await createContactRequest(url, { method: "initiateRelationship", installId: getInstallId() });
   if (res.success) {
@@ -16,7 +16,7 @@ export const initRelationship = async () => {
 
 export const acceptRelationship = async () => {
   const relId = window.location.pathname.split("/invite/")[1];
-  const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
+  const url = "https://n65hkx5nehmmkzy5wp6ijyarka0qujrj.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, { method: "acceptRelationship", installId: getInstallId(), relId });
   return res;
 };
@@ -42,21 +42,21 @@ export const getContactSharedGoals = async () => {
 };
 
 export const getRelationshipStatus = async (relationshipId: string) => {
-  const url = "https://7i76q5jdugdvmk7fycy3owyxce0wdlqv.lambda-url.eu-west-1.on.aws/";
+  const url = "https://n65hkx5nehmmkzy5wp6ijyarka0qujrj.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, { method: "getRelationshipStatus", installId: getInstallId(), relationshipId });
   return res;
 };
 
 export const sendUpdatesToSubscriber = async (
-  pub: PubSubItem, rootGoalId: string,
+  sub: ISubscriber, rootGoalId: string,
   changeType: typeOfChange,
   changes: { level: number, goal: GoalItem }[] | { level: number, id: string }[]) => {
-  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
-  const { relId, type } = pub.subscribers[0];
+  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const { subId, type } = sub;
   const res = await createContactRequest(url, {
     method: "shareMessage",
     installId: getInstallId(),
-    relId,
+    relId: subId,
     event: {
       type,
       changeType,
