@@ -122,13 +122,12 @@ export const transferToMyGoals = async (id: string) => {
 };
 
 export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
-  const { relId } = goal.shared.contacts[0];
+  const { relId, name } = goal.shared.contacts[0];
   collaborateWithContact(relId, goal)
     .then((res) => console.log(res.success ? "colab inv sent" : "failed to sent invite"));
   addSubInPub(goal.id, relId, "collaboration").catch((err) => console.log("failed to add sub in pub", err));
   transferToMyGoals(goal.id).then(async () => {
     const { collaboration } = goal;
-    const { relId, name } = goal.shared.contacts[0];
     collaboration.collaborators.push({ relId, name });
     addGoal({ ...goal, typeOfGoal: "collaboration", collaboration, shared: getDefaultValueOfShared() }).then(async () => {
       removeSharedWMGoal(goal.id);
