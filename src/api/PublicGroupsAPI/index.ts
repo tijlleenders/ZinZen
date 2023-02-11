@@ -5,6 +5,17 @@ import { findPublicGroupsOnline } from "@src/services/group.service";
 export const addPublicGroup = async (groupDetails: PublicGroupItem) => {
   // @ts-ignore
   const publicGroup: PublicGroupItem = { ...groupDetails, createdAt: new Date() };
+  publicGroup.polls = [...publicGroup.polls.map((ele) => (
+    {
+      ...ele,
+      myMetrics: {
+        voteScore: 0,
+        inMyGoals: false,
+        completed: false,
+      }
+    })
+  )];
+
   let newGoalId;
   await db
     .transaction("rw", db.publicGroupsCollection, async () => {
