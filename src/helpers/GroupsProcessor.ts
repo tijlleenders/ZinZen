@@ -1,7 +1,7 @@
-import { addPublicGroup } from "@src/api/PublicGroupsAPI";
+import { addPublicGroup, updateMyMetric, updatePollMetrics } from "@src/api/PublicGroupsAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { PublicGroupItem } from "@src/models/PublicGroupItem";
-import { sendNewPublicGroup } from "@src/services/group.service";
+import { IMyMetrics, PollActionType, PublicGroupItem } from "@src/models/PublicGroupItem";
+import { sendNewPublicGroup, sendReactionOnPoll } from "@src/services/group.service";
 import { languagesFullForms } from "@src/translations/i18n";
 import { colorPalleteList, myNameSpace } from "@src/utils";
 import { v5 as uuidv5 } from "uuid";
@@ -20,13 +20,13 @@ export const createPublicGroupObject = (params: object) => {
   return groupItem;
 };
 
-export const createPollObject = (goal: GoalItem) => ({
+export const createPollObject = (goal: GoalItem, params: object = {}) => ({
   id: uuidv5(goal.title, myNameSpace),
   goal,
   metrics: {
-    upvotes: 0,
-    downvotes: 0,
-    inMygoals: 0,
+    upVotes: 0,
+    downVotes: 0,
+    inMyGoals: 0,
     completed: 0
   },
   myMetrics: {
@@ -35,6 +35,7 @@ export const createPollObject = (goal: GoalItem) => ({
     completed: false,
   },
   createdAt: new Date().toISOString(),
+  ...params
 });
 
 export const createUserGroup = async (title: string) => {
@@ -43,4 +44,10 @@ export const createUserGroup = async (title: string) => {
   const newGroup = createPublicGroupObject({ title, language });
   await addPublicGroup(newGroup);
   await sendNewPublicGroup(newGroup.id, newGroup.title, language, newGroup.groupColor);
+};
+
+export const sendUpdatesOfThisPoll = async (groupId: string, pollId: string, newMetricsState: IMyMetrics, typeOfAction: PollActionType) => {
+  sendReactionOnPoll(groupId, pollId, newMetricsState);
+  await updatePollMetrics(groupId, pollId, typeOfAction, 1);
+  await updateMyMetric(groupId, pollId, newMetricsState);
 };
