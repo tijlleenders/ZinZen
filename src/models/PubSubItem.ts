@@ -1,6 +1,7 @@
+export type typeOfSub = "shared" | "collaboration" | "publicGroup";
 export interface ISubscriber {
-    relId: string,
-    type: "shared" | "collaboration"
+    subId: string,
+    type: typeOfSub
 }
 export interface PubSubItem {
     id: string,

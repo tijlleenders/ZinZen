@@ -4,8 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 import Toast from "react-bootstrap/Toast";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { darkModeState, themeSelectionState, languageSelectionState, displayToast } from "@store";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { darkModeState, themeSelectionState, languageSelectionState, displayToast, lastAction } from "@store";
 
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
@@ -18,11 +18,13 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
+import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
 import { addColabInvitesInRelId, getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
 import { addGoalsInSharedWM, addSharedWMGoal } from "./api/SharedWMAPI";
+import { syncGroupPolls } from "./api/PublicGroupsAPI";
 
 import "./customize.scss";
 import "./global.scss";
@@ -37,6 +39,8 @@ const App = () => {
   const isLanguageChosen = language !== "No language chosen.";
 
   const [showToast, setShowToast] = useRecoilState(displayToast);
+  const setLastAction = useSetRecoilState(lastAction);
+
   useEffect(() => {
     const init = async () => {
       updateAllUnacceptedContacts();
@@ -70,6 +74,7 @@ const App = () => {
           }
         });
       }
+      syncGroupPolls().then(() => setLastAction("groupSync"));
     };
     const installId = localStorage.getItem("installId");
     if (!installId) {
@@ -95,6 +100,7 @@ const App = () => {
           <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
           <Route path="/Contacts" element={<Contacts />} />
           <Route path="/MyGoals" element={<MyGoalsPage />} />
+          <Route path="/MyGroups" element={<MyGroupsPage />} />
           <Route path="/MyFeelings" element={<ShowFeelingsPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />

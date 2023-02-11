@@ -1,47 +1,110 @@
-import { UpdatePublicGroupGoalItem } from "@src/models/UpdatePublicGroupGoalItem";
-import { RetrievePublicGroupGoalItem } from "@src/models/RetrievePublicGroupGoalItem";
-import { getInstallId, createContactRequest } from "@src/utils";
+import { db } from "@models";
+import { createPollObject } from "@src/helpers/GroupsProcessor";
+import { PollActionType, IMyMetrics, IPoll, PublicGroupItem } from "@src/models/PublicGroupItem";
+import { findPublicGroupsOnline } from "@src/services/group.service";
 
-export const getPublicGroupGoals = async (publicGroupParentGoalId: string) => {
-  const url = "https://xcmyippimqii2x76diluvd4ywu0oojhu.lambda-url.eu-west-1.on.aws/";
-  const res = await createContactRequest(url, { method: "getPublicGroupGoals", installId: getInstallId(), publicGroupParentGoalId });
-  return res;
+export const addPublicGroup = async (groupDetails: PublicGroupItem) => {
+  // @ts-ignore
+  const publicGroup: PublicGroupItem = { ...groupDetails, createdAt: new Date() };
+  publicGroup.polls = [...publicGroup.polls.map((ele) => (
+    {
+      ...ele,
+      myMetrics: {
+        voteScore: 0,
+        inMyGoals: false,
+        completed: false,
+      }
+    })
+  )];
+
+  let newGoalId;
+  await db
+    .transaction("rw", db.publicGroupsCollection, async () => {
+      newGoalId = await db.publicGroupsCollection.add(publicGroup);
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+  return newGoalId;
 };
 
-export const joinPublicGroup = async (title: string) => {
-  const url = "https://xcmyippimqii2x76diluvd4ywu0oojhu.lambda-url.eu-west-1.on.aws/";
-  const res = await createContactRequest(url, { method: "joinPublicGroup", installId: getInstallId(), title });
-  return res;
+export const getPublicGroup = async (groupId: string) => {
+  const publicGroups: PublicGroupItem[] = await db.publicGroupsCollection.where("id").equals(groupId).toArray();
+  return publicGroups[0];
 };
 
-export const quitPublicGroup = async (groupId: string) => {
-  const url = "https://xcmyippimqii2x76diluvd4ywu0oojhu.lambda-url.eu-west-1.on.aws/";
-  const res = await createContactRequest(url, { method: "quitPublicGroup", installId: getInstallId(), groupId });
-  return res;
+export const getAllPublicGroups = async () => {
+  const allGroups: PublicGroupItem[] = await db.publicGroupsCollection.toArray();
+  allGroups.reverse();
+  return allGroups;
 };
 
-export const updatePublicGroupGoal = async (publicGroupGoal: UpdatePublicGroupGoalItem) => {
-  const url = "https://xcmyippimqii2x76diluvd4ywu0oojhu.lambda-url.eu-west-1.on.aws/";
-  const res = await createContactRequest(url, { method: "updatePublicGroupGoal", installId: getInstallId(), publicGroupGoal });
-  return res;
+export const addPollsInPublicGroup = async (publicGroupId: string, polls: IPoll[], replace = false) => (
+  db.transaction("rw", db.publicGroupsCollection, async () => {
+    await db.publicGroupsCollection.where("id").equals(publicGroupId)
+      .modify((obj: PublicGroupItem) => {
+        obj.polls = replace ? [...polls] : [...obj.polls, ...polls];
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+    return "Failed to Share your Goal";
+  })
+);
+
+export const deleteGroup = async (id: string) => {
+  await db.publicGroupsCollection.delete(id).catch((err) => console.log("failed to delete", err));
 };
 
-export const createRootGroup = async () => {
-  const res = await joinPublicGroup("Root Group"); // creates a new root group
-  return res.response.groups[res.response.groups.length - 1]; // returns the id of the created root group
+export const updateMyMetric = async (publicGroupId: string, pollId: string, RxnMetric: IMyMetrics) => {
+  db.transaction("rw", db.publicGroupsCollection, async () => {
+    await db.publicGroupsCollection.where("id").equals(publicGroupId)
+      .modify((obj: PublicGroupItem) => {
+        const indx = obj.polls.findIndex((poll) => poll.id === pollId);
+        if (indx >= 0) {
+          obj.polls[indx] = { ...obj.polls[indx], myMetrics: { ...RxnMetric } };
+        }
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+    return "Failed to Share your Goal";
+  });
 };
 
-export const addGroupToRootGroup = async (_publicGroupGoal: UpdatePublicGroupGoalItem) => {
-  let publicGroupGoal = {..._publicGroupGoal};
-  publicGroupGoal.parentId = await createRootGroup(); // gets the id of the created root group (without recreating another group)
-  const res = await updatePublicGroupGoal(publicGroupGoal); // add a new group to the created root group (for explore groups screen)
-  const rootGroupAddedGroup : RetrievePublicGroupGoalItem = res.response.publicGroupGoal;
-  return rootGroupAddedGroup;
+export const updatePollMetrics = async (publicGroupId: string, pollId: string, typeOfMetric: PollActionType, value: number) => {
+  db.transaction("rw", db.publicGroupsCollection, async () => {
+    await db.publicGroupsCollection.where("id").equals(publicGroupId)
+      .modify((obj: PublicGroupItem) => {
+        const indx = obj.polls.findIndex((poll) => poll.id === pollId);
+        if (indx >= 0) {
+          const myCurrMetrics = obj.polls[indx].myMetrics;
+          obj.polls[indx].metrics[typeOfMetric] += value;
+          if ((typeOfMetric === "downVotes" && myCurrMetrics.voteScore === 1) || (typeOfMetric === "upVotes" && myCurrMetrics.voteScore === -1)) {
+            obj.polls[indx].metrics[typeOfMetric === "downVotes" ? "upVotes" : "downVotes"] -= 1;
+          }
+        }
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+    return "Failed to Share your Goal";
+  });
 };
 
-export const getRootGroupGroups = async () => {
-  const publicGroupParentGoalId = await createRootGroup();
-  const res = await getPublicGroupGoals(publicGroupParentGoalId); // gets the sub groups of the root group (for explore groups screen)
-  const rootGroupPublicGroups : RetrievePublicGroupGoalItem[] = res.response;
-  return rootGroupPublicGroups;
+export const syncGroupPolls = async () => {
+  findPublicGroupsOnline().then(async (res) => {
+    if (res.success) {
+      const mygroups = await getAllPublicGroups();
+      const userGroups = mygroups.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+      res.response.forEach(async (group: PublicGroupItem) => {
+        await addPollsInPublicGroup(
+          group.id,
+          group.polls.map((poll) => createPollObject(poll.goal, poll)),
+          true);
+        if (Object.keys(userGroups).includes(group.id) && Object.keys(userGroups).length > 0) {
+          userGroups[group.id].polls.forEach(async (poll: IPoll) => {
+            updateMyMetric(group.id, poll.id, poll.myMetrics);
+          });
+        }
+      });
+    }
+  });
 };

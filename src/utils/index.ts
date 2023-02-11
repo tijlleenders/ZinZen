@@ -22,6 +22,27 @@ export async function createContactRequest(url: string, body : object | null = n
   }
 }
 
+export async function createGroupRequest(url: string, body : object | null = null, method = "POST") {
+  try {
+    const res = await fetch(url, {
+      method,
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body || {})
+    });
+    return { success: res.ok, response: await res.json() };
+  } catch (err) {
+    return {
+      success: false,
+      message: "Aww... So sorry something went wrong. Try again later",
+    };
+  }
+}
+
+export const myNameSpace = "c95256dc-aa03-11ed-afa1-0242ac120002";
+
 // @ts-nocheck
 export const formatDate = () => {
   const newDate = new Date();

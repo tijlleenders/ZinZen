@@ -1,6 +1,6 @@
 import { GoalItem } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
-import { PubSubItem } from "@src/models/PubSubItem";
+import { ISubscriber } from "@src/models/PubSubItem";
 import { createContactRequest, getInstallId } from "@src/utils";
 
 export const initRelationship = async () => {
@@ -54,15 +54,15 @@ export const getRelationshipStatus = async (relationshipId: string) => {
 };
 
 export const sendUpdatesToSubscriber = async (
-  pub: PubSubItem, rootGoalId: string,
+  sub: ISubscriber, rootGoalId: string,
   changeType: typeOfChange,
   changes: { level: number, goal: GoalItem }[] | { level: number, id: string }[]) => {
   const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
-  const { relId, type } = pub.subscribers[0];
+  const { subId, type } = sub;
   const res = await createContactRequest(url, {
     method: "shareGoal",
     installId: getInstallId(),
-    relId,
+    relId: subId,
     event: {
       type,
       changeType,
