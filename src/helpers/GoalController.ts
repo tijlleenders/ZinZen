@@ -1,4 +1,5 @@
 import { getGoal, addGoal, updateGoal, archiveUserGoal, removeChildrenGoals, removeGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
+import { getPublicGroup } from "@src/api/PublicGroupsAPI";
 import { getPubById } from "@src/api/PubSubAPI";
 import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
@@ -6,6 +7,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 import { createGoalObjectFromTags, extractFromGoalTags } from "./GoalProcessor";
+import { sendUpdatesOfThisPoll } from "./GroupsProcessor";
 
 export const createGoal = async (
   parentGoalId: string, goalTags: ITags, goalTitle: string, goalColor: string, level: number
@@ -24,9 +26,13 @@ export const createGoal = async (
     const newGoalId = await addGoal(newGoal);
     const pub = await getPubById(parentGoal.rootGoalId);
     if (pub && pub.subscribers.length > 0 && newGoalId) {
-      sendUpdatesToSubscriber(pub, parentGoal.rootGoalId, "subgoals", [{
-        level, goal: { ...newGoal, id: newGoalId } }]
-      ).then(() => console.log("update sent"));
+      pub.subscribers.forEach(async (sub) => {
+        if (sub.type === "collaboration" || sub.type === "shared") {
+          sendUpdatesToSubscriber(sub, parentGoal.rootGoalId, "subgoals", [{
+            level, goal: { ...newGoal, id: newGoalId } }])
+            .then(() => console.log("update sent"));
+        }
+      });
     }
     const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
     await updateGoal(parentGoalId, { sublist: newSublist });
@@ -46,8 +52,12 @@ export const modifyGoal = async (goalId: string, goalTags: ITags, goalTitle: str
   if (goal) {
     const pub = await getPubById(goal.rootGoalId);
     if (pub && pub.subscribers.length > 0) {
-      sendUpdatesToSubscriber(pub, goal.rootGoalId, "modifiedGoals", [{ level, goal }])
-        .then(() => console.log("update sent"));
+      pub.subscribers.forEach(async (sub) => {
+        if (sub.type === "collaboration" || sub.type === "shared") {
+          sendUpdatesToSubscriber(sub, goal.rootGoalId, "modifiedGoals", [{ level, goal }])
+            .then(() => console.log("update sent"));
+        }
+      });
     }
   }
 };
@@ -55,8 +65,18 @@ export const modifyGoal = async (goalId: string, goalTags: ITags, goalTitle: str
 export const archiveGoal = async (goal: GoalItem, level: number) => {
   const pub = await getPubById(goal.rootGoalId);
   if (pub && pub.subscribers.length > 0) {
-    sendUpdatesToSubscriber(pub, goal.rootGoalId, "archived", [{ level, id: goal.id }])
-      .then(() => console.log("update sent"));
+    pub.subscribers.forEach(async (sub) => {
+      if (sub.type === "collaboration" || sub.type === "shared") {
+        sendUpdatesToSubscriber(sub, goal.rootGoalId, "archived", [{ level, id: goal.id }])
+          .then(() => console.log("update sent"));
+      } else if (sub.type === "publicGroup") {
+        const group = await getPublicGroup(sub.subId);
+        const poll = group.polls.find((ele) => ele.goal.id === goal.id);
+        if (poll && !poll.myMetrics.completed) {
+          sendUpdatesOfThisPoll(group.id, poll.id, { ...poll.myMetrics, completed: true }, "completed");
+        }
+      }
+    });
   }
   await archiveUserGoal(goal);
 };
@@ -64,8 +84,12 @@ export const archiveGoal = async (goal: GoalItem, level: number) => {
 export const deleteGoal = async (goal: GoalItem, level: number) => {
   const pub = await getPubById(goal.rootGoalId);
   if (pub && pub.subscribers.length > 0) {
-    sendUpdatesToSubscriber(pub, goal.rootGoalId, "deleted", [{ level, id: goal.id }])
-      .then(() => console.log("update sent"));
+    pub.subscribers.forEach(async (sub) => {
+      if (sub.type === "collaboration" || sub.type === "shared") {
+        sendUpdatesToSubscriber(sub, goal.rootGoalId, "deleted", [{ level, id: goal.id }])
+          .then(() => console.log("update sent"));
+      }
+    });
   }
   await removeGoalWithChildrens(goal);
 };
