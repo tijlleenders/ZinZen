@@ -1,14 +1,15 @@
 import { addPollsInPublicGroup } from "@src/api/PublicGroupsAPI";
 import { createPollObject } from "@src/helpers/GroupsProcessor";
 import { GoalItem } from "@src/models/GoalItem";
-import { PublicGroupItem } from "@src/models/PublicGroupItem";
+import { IPoll, PublicGroupItem } from "@src/models/PublicGroupItem";
 import { sendUpdateOfNewPoll } from "@src/services/group.service";
-import { displayToast } from "@src/store";
+import { displayToast, lastAction } from "@src/store";
 import React from "react";
 import { useSetRecoilState } from "recoil";
 
 export const SubMenuItem = ({ goal, group }: { goal: GoalItem, group: PublicGroupItem }) => {
   const setShowToast = useSetRecoilState(displayToast);
+  const setLastAction = useSetRecoilState(lastAction);
   return (
     <button
       style={{
@@ -22,10 +23,11 @@ export const SubMenuItem = ({ goal, group }: { goal: GoalItem, group: PublicGrou
       className="share-Options"
       onClick={async () => {
         if (group) {
-          const poll = createPollObject(goal);
+          const poll: IPoll = createPollObject(goal);
           await addPollsInPublicGroup(group.id, [poll]);
           const res = await sendUpdateOfNewPoll(group.id, poll);
           const message = res.success ? "Goal is shared successfully" : "failed to send add poll update";
+          setLastAction("pollAdded");
           setShowToast({ open: true, message, extra: "" });
         }
       }}
