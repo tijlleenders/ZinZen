@@ -55,7 +55,7 @@ const App = () => {
           if (contactItem) {
           // @ts-ignore
             resObject[relId].forEach(async (ele) => {
-              if (ele.type === "shareGoal") {
+              if (ele.type === "shareMessage") {
                 const { goal } : { goal: GoalItem } = ele;
                 goal.shared.contacts.push({ name: contactItem.name, relId });
                 addSharedWMGoal(goal)
