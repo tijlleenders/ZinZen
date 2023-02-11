@@ -1,9 +1,10 @@
-import { addPublicGroup, deleteGroup } from "@src/api/PublicGroupsAPI";
+import React from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+
+import { addPublicGroup, deleteGroup, getPublicGroup } from "@src/api/PublicGroupsAPI";
 import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { darkModeState, lastAction } from "@src/store";
 import { displayExploreGroups, displayGroup } from "@src/store/GroupsState";
-import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface MyGroupProps {
   group: PublicGroupItem,
@@ -38,7 +39,9 @@ const MyGroup = ({ group }: MyGroupProps) => {
       <button
         type="button"
         className="user-goal-main"
-        onClick={() => { setSelectedGroup(group); }}
+        onClick={async () => {
+          setSelectedGroup({ ...(await getPublicGroup(group.id)) });
+        }}
       >
         <div
           aria-hidden
