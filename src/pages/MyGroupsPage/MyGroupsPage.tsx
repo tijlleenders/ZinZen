@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import addIcon from "@assets/images/plus.svg";
 
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import { PublicGroupItem } from "@src/models/PublicGroupItem";
+import { IPoll, PublicGroupItem } from "@src/models/PublicGroupItem";
 import { findPublicGroupsOnline } from "@src/services/group.service";
 import { darkModeState, lastAction, searchActive } from "@src/store";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
+import { getAllPublicGroups, getPublicGroup } from "@src/api/PublicGroupsAPI";
 import { displayAddPublicGroup, displayExploreGroups, displayGroup } from "@src/store/GroupsState";
 import MyPoll from "@components/GroupComponents/MyPoll";
 import MyGroup from "@components/GroupComponents/MyGroup";
@@ -15,7 +15,7 @@ import AddGroup from "@components/GroupComponents/AddGroup";
 const MyGroupsPage = () => {
   const action = useRecoilValue(lastAction);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const selectedGroup = useRecoilValue(displayGroup);
+  const [selectedGroup, setSelectedGroup] = useRecoilState(displayGroup);
 
   const [userGroups, setUserGroups] = useState<PublicGroupItem[]>([]);
   const [exploreGroups, setExploreGroups] = useState<PublicGroupItem[]>([]);
@@ -25,7 +25,13 @@ const MyGroupsPage = () => {
   const [openAddGroup, setOpenAddGroup] = useRecoilState(displayAddPublicGroup);
   const [openExploreGroups, setOpenExploreGroups] = useRecoilState(displayExploreGroups);
 
+  const renewSelectedGroup = async () => {
+    if (selectedGroup) {
+      setSelectedGroup({ ...(await getPublicGroup(selectedGroup.id)) });
+    }
+  };
   const fetchGroups = async () => {
+    await renewSelectedGroup();
     const mygroups = await getAllPublicGroups();
     findPublicGroupsOnline().then(async (res) => {
       if (res.success) {
@@ -33,6 +39,7 @@ const MyGroupsPage = () => {
         setExploreGroups([...res.response.filter((group: PublicGroupItem) => !myGroupsIds.includes(group.id))]);
       }
     });
+    console.log("gr", mygroups);
     setUserGroups([...mygroups]);
   };
 
@@ -41,7 +48,11 @@ const MyGroupsPage = () => {
   }, []);
 
   useEffect(() => {
-    if (action.includes("group")) { fetchGroups(); }
+    if (action.includes("group")) {
+      fetchGroups();
+    } else if (action === "pollAdded") {
+      renewSelectedGroup();
+    }
   }, [action]);
   return (
     <>
