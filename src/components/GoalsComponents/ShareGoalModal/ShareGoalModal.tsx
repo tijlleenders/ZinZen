@@ -17,7 +17,6 @@ import { initRelationship, shareGoalWithContact } from "@src/services/contact.se
 import { addSubInPub } from "@src/api/PubSubAPI";
 import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
 import Loader from "@src/common/Loader";
-import InviteLinkModal from "./InviteLinkModal";
 
 import "./ShareGoalModal.scss";
 import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
@@ -44,7 +43,6 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const [userGroups, setUserGroups] = useState<PublicGroupItem[]>([]);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const [displaySubmenu, setDisplaySubmenu] = useState("");
-  const [showInviteModal, setShowInviteModal] = useState<{ goal: GoalItem, id: string, name: string, relId: string, accepted: boolean } | null>(null);
   const [showAddContactModal, setShowAddContactModal] = useState(false);
 
   const handleCloseAddContact = () => setShowAddContactModal(false);
@@ -114,7 +112,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       onHide={() => setShowShareModal("")}
       centered
       autoFocus={false}
-      style={showAddContactModal || showInviteModal ? { zIndex: 1 } : {}}
+      style={showAddContactModal ? { zIndex: 1 } : {}}
     >
       <Modal.Body id="share-modal-body">
         <h4>{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</h4>
@@ -240,8 +238,6 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           </button>
         </Modal.Body>
       </Modal>
-      { showInviteModal && <InviteLinkModal showInviteModal={showInviteModal} setShowInviteModal={setShowInviteModal} /> }
-
     </Modal>
   );
 };
