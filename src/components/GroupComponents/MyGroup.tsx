@@ -40,7 +40,7 @@ const MyGroup = ({ group }: MyGroupProps) => {
         type="button"
         className="user-goal-main"
         onClick={async () => {
-          setSelectedGroup({ ...(await getPublicGroup(group.id)) });
+          setSelectedGroup({ ...(openExploreGroups ? group : await getPublicGroup(group.id)) });
         }}
       >
         <div

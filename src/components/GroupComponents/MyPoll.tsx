@@ -7,7 +7,7 @@ import { darkModeState, displayToast, lastAction } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { addGoal } from "@src/api/GoalsAPI";
 import { addSubInPub } from "@src/api/PubSubAPI";
-import { displayGroup } from "@src/store/GroupsState";
+import { displayExploreGroups, displayGroup } from "@src/store/GroupsState";
 import { sendUpdatesOfThisPoll } from "@src/helpers/GroupsProcessor";
 import MyPollActions from "./MyPollActions";
 
@@ -29,6 +29,7 @@ const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
   const action = useRecoilValue(lastAction);
   const selectedGroup = useRecoilValue(displayGroup);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const openExploreGroups = useRecoilValue(displayExploreGroups);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
 
@@ -44,22 +45,27 @@ const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
   }
 
   const handlePollAction = async (typeOfAction: PollActionType) => {
-    if (typeOfAction.includes("Votes") && poll.myMetrics.voteScore !== 0) {
-      setShowToast({ open: true, message: "You've already voted ;)", extra: "" });
+    let message = "";
+    if (openExploreGroups) {
+      message = "Sorry, You've to Join this group first :)";
+    } else if (typeOfAction.includes("Votes") && poll.myMetrics.voteScore !== 0) {
+      message = "You've already voted ;)";
     } else if (selectedGroup) {
       const newMetricsState = { ...poll.myMetrics };
       if (typeOfAction === "inMyGoals") {
         newMetricsState.inMyGoals = true;
         await addGoal({ ...poll.goal, parentGoalId: "root" });
         addSubInPub(poll.goal.id, selectedGroup?.id, "publicGroup");
-        setShowToast({ open: true, message: "Added To My Goals", extra: "" });
+        message = "Added To My Goals";
       } else if (typeOfAction.includes("Votes")) {
         newMetricsState.voteScore = typeOfAction === "upVotes" ? 1 : -1;
-        setShowToast({ open: true, message: "Your vote is submitted", extra: "" });
+        message = "Your vote is submitted";
       }
-      await sendUpdatesOfThisPoll(selectedGroup.id, poll.id, newMetricsState, typeOfAction);
       setLastAction("groupAction");
+      await sendUpdatesOfThisPoll(selectedGroup.id, poll.id, newMetricsState, typeOfAction);
+      setShowToast({ open: true, message, extra: "" });
     }
+    setShowToast({ open: true, message, extra: "" });
   };
   useEffect(() => {
     if (action === "groupAction") {
@@ -99,7 +105,7 @@ const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
           <div>{goal.title}</div>&nbsp;
           { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
         </div>
-        { !poll.myMetrics.inMyGoals && (
+        { !openExploreGroups && !poll.myMetrics.inMyGoals && (
           <button
             type="button"
             style={{

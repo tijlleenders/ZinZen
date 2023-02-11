@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import peopleIcon from "@assets/images/peopleIcon.svg";
 import correct from "@assets/images/correct.svg";
@@ -16,7 +16,6 @@ interface MyGoalActionsProps {
 
 const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll, handleClick }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-
   const getHelperText = (type: PollActionType) => {
     if (type === "upVotes") { return "People who liked it"; }
     if (type === "downVotes") { return "People who disliked it"; }
