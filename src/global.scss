@@ -111,6 +111,9 @@
 }
 
 /* Accordion */
+.accordion-body {
+  padding: 1em 0 !important;
+}
 .accordion-item, .accordion-header, .accordion-button {
   background: transparent !important;
   border: none !important;

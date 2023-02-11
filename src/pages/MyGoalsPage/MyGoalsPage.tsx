@@ -23,6 +23,7 @@ import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions/AddGoalOptions";
+import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion/ArchivedAccordion";
 import MyGoal from "@components/GoalsComponents/MyGoal";
 
 import "./MyGoalsPage.scss";
@@ -39,8 +40,9 @@ export const MyGoalsPage = () => {
   const location = useLocation();
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
+  const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
+  const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
-  const [userGoals, setUserGoals] = useState<GoalItem[]>();
   const showAddGoal = useRecoilValue(displayAddGoal);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
@@ -56,13 +58,17 @@ export const MyGoalsPage = () => {
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
   const [showAddGoalOptions, setShowAddGoalOptions] = useRecoilState(displayAddGoalOptions);
 
+  const handleUserGoals = (goals: GoalItem[]) => {
+    setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
+    setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
+  };
   const refreshActiveGoals = async () => {
-    const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals();
-    setUserGoals(goals);
+    const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals("true");
+    handleUserGoals(goals);
   };
   const search = async (text: string) => {
-    const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals();
-    setUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
+    const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals("true");
+    handleUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
   };
   const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
     if (debounceTimeout) { clearTimeout(debounceTimeout); }
@@ -118,7 +124,6 @@ export const MyGoalsPage = () => {
         </div>
       )}
       <MainHeaderDashboard />
-      {/* <GoalsHeader updateThisGoal={updateThisGoal} addThisGoal={addThisGoal} displayTRIcon={!showAddGoal && !showUpdateGoal ? "+" : "✓"} /> */}
       <div className="myGoals-container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {
           selectedGoalId === "root" ? (
@@ -153,7 +158,7 @@ export const MyGoalsPage = () => {
               )}
               { showAddGoal && (<AddGoalForm />)}
               <div>
-                {userGoals?.map((goal: GoalItem) => (
+                {activeGoals.map((goal: GoalItem) => (
                   showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
                     : (
                       <MyGoal
@@ -163,6 +168,16 @@ export const MyGoalsPage = () => {
                       />
                     )
                 ))}
+                <ArchivedAccordion totalArchived={archivedGoals.length}>
+                  {archivedGoals.map((goal: GoalItem) => (
+                    <MyGoal
+                      key={`goal-${goal.id}`}
+                      goal={goal}
+                      showActions={showActions}
+                      setShowActions={setShowActions}
+                    />
+                  ))}
+                </ArchivedAccordion>
               </div>
             </div>
           )

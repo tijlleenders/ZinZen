@@ -43,9 +43,7 @@ export const getSharedWMGoal = async (goalId: string) => {
 };
 
 export const getSharedWMChildrenGoals = async (parentGoalId: string) => {
-  const parentGoal = await getSharedWMGoal(parentGoalId);
-  const getArchived = ["shared", "collaboration"].includes(parentGoal.typeOfGoal);
-  const childrenGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals(parentGoalId).and((goal) => getArchived || goal.archived === "false").sortBy("createdAt"); 
+  const childrenGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals(parentGoalId).sortBy("createdAt");
   childrenGoals.reverse();
   return childrenGoals;
 };
@@ -58,10 +56,8 @@ export const getAllSharedWMGoals = async () => {
 
 export const getActiveSharedWMGoals = async () => {
   const activeGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals("root").sortBy("createdAt");
-  // Filter and return only parent goals
-  const activeParentGoals = activeGoals.filter((goal: GoalItem) => goal.archived === "false");
-  activeParentGoals.reverse();
-  return activeParentGoals;
+  activeGoals.reverse();
+  return activeGoals;
 };
 
 export const updateSharedWMGoal = async (id: string, changes: object) => {
