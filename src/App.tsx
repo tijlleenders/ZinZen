@@ -18,12 +18,13 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
+import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
 import { addColabInvitesInRelId, getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
 import { addGoalsInSharedWM, addSharedWMGoal } from "./api/SharedWMAPI";
-import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
+import { syncGroupPolls } from "./api/PublicGroupsAPI";
 
 import "./customize.scss";
 import "./global.scss";
@@ -41,6 +42,7 @@ const App = () => {
   useEffect(() => {
     const init = async () => {
       updateAllUnacceptedContacts();
+      syncGroupPolls();
       const res = await getContactSharedGoals();
       // @ts-ignore
       const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
@@ -101,7 +103,7 @@ const App = () => {
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />
-          <Route path="/invite/:id" element={<InvitePage />} /> 
+          <Route path="/invite/:id" element={<InvitePage />} />
         </Routes>
       </BrowserRouter>
       <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
