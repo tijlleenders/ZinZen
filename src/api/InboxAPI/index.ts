@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
 import { getDefaultValueOfGoalChanges } from "@src/utils";
@@ -20,6 +21,7 @@ export const addGoalChangesInID = async (id: string, newChanges: IChangesInGoal)
     await db.inboxCollection.where("id").equals(id)
       .modify((obj: InboxItem) => {
         Object.keys(newChanges).forEach((changeType: typeOfChange) => {
+          // @ts-ignore
           obj.goalChanges[changeType] = [...obj.goalChanges[changeType], ...newChanges[changeType]];
         });
       });
@@ -33,6 +35,7 @@ export const deleteGoalChangesInID = async (id:string, categoryOfChange:typeOfCh
     await db.inboxCollection.where("id").equals(id)
       .modify((obj: InboxItem) => {
         const arr = [...obj.goalChanges[categoryOfChange]];
+        // @ts-ignore
         obj.goalChanges[categoryOfChange] = arr.filter((ele) =>
           !changes.includes("goal" in ele ? ele.goal.id : ele.id)
         );

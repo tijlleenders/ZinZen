@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { ISubscriber, PubSubItem, typeOfSub } from "@src/models/PubSubItem";
 

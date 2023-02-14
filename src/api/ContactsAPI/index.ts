@@ -1,8 +1,6 @@
 /* eslint-disable no-param-reassign */
-/* eslint-disable arrow-body-style */
 import { db } from "@models";
 import ContactItem from "@src/models/ContactItem";
-import { GoalItem } from "@src/models/GoalItem";
 import { getRelationshipStatus } from "@src/services/contact.service";
 import { v4 as uuidv4 } from "uuid";
 
@@ -39,41 +37,6 @@ export const getContactByRelId = async (relId: string) => {
 export const getContactGoalById = async (id: string) => {
   const goal = await db.contactsCollection.where("id").equals(id).toArray();
   return goal[0];
-};
-
-export const addSharedGoalsInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
-  db.transaction("rw", db.contactsCollection, async () => {
-    await db.contactsCollection.where("relId").equals(relId)
-      .modify({ sharedGoals: [...goals] });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
-};
-
-export const addColabInvitesInRelId = async (relId: string, goals:{ id: string, goal: GoalItem }[]) => {
-  db.transaction("rw", db.contactsCollection, async () => {
-    await db.contactsCollection.where("relId").equals(relId)
-      .modify({ collaborativeGoals: [...goals] });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
-};
-
-export const removeGoalInRelId = async (relId: string, goalId: string, typeOfGoal: "sharedGoals" | "collaborativeGoals") => {
-  db.transaction("rw", db.contactsCollection, async () => {
-    await db.contactsCollection.where("relId").equals(relId)
-      .modify((obj: ContactItem) => {
-        const tmp = obj[typeOfGoal].filter((ele) => ele.id !== goalId);
-        obj[typeOfGoal] = [...tmp];
-      });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
-};
-
-export const getAllSharedGoals = async () => {
-  const contacts = await db.contactsCollection.toArray();
-  return contacts;
 };
 
 export const updateStatusOfContact = async (relId: string, accepted: boolean) => {

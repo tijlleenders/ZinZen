@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { GoalItem } from "@src/models/GoalItem";

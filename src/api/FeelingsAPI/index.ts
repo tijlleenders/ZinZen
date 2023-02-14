@@ -10,11 +10,6 @@ export const getFeeling = async (feelingId: number) => {
   });
 };
 
-export const resetDatabase = () =>
-  db.transaction("rw", db.feelingsCollection, async () => {
-    await Promise.all(db.tables.map((table) => table.clear()));
-  });
-
 export const removeFeeling = (feelingId: number) => {
   db.transaction("rw", db.feelingsCollection, async () => {
     await db.feelingsCollection.delete(feelingId);
@@ -28,11 +23,6 @@ export const getAllFeelings = async () => {
   return allFeelings;
 };
 
-export const isCollectionEmpty = async () => {
-  const feelingsCount = await db.feelingsCollection.count();
-  return feelingsCount === 0;
-};
-
 export const getFeelingsOnDate = async (date: Date) => {
   let feelingsList: IFeelingItem[] = [];
   await db
@@ -43,13 +33,6 @@ export const getFeelingsOnDate = async (date: Date) => {
       console.log(e.stack || e);
     });
   return feelingsList;
-};
-
-export const getFeelingsBetweenDates = async (startDate: Date, endDate: Date) => {
-  db.transaction("rw", db.feelingsCollection, async () => {
-    const feelingsList = await db.feelingsCollection.where("date").between(startDate, endDate);
-    return feelingsList;
-  });
 };
 
 export const addFeelingWithNote = async (feelingName: string, feelingCategory: string, feelingDate: Date, feelingNote: string) => {
