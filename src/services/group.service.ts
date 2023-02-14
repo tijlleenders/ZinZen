@@ -1,6 +1,6 @@
-import { createPublicGroupObject } from "@src/helpers/GroupsProcessor";
 import { IPoll } from "@src/models/PublicGroupItem";
 import { createGroupRequest, getInstallId } from "@src/utils";
+import { createPublicGroupObject } from "@src/utils/defaultGenerators";
 
 const groupServiceUrl = "https://kuwwyp2dq4kvnxib46isqttfru0gwmyq.lambda-url.eu-west-1.on.aws/";
 const debugKey = "82098435-380a-43ec-9122-0662870a5ea5";

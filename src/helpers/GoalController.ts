@@ -1,4 +1,4 @@
-import { getGoal, addGoal, updateGoal, archiveUserGoal, removeChildrenGoals, removeGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
+import { getGoal, addGoal, updateGoal, archiveUserGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
 import { getPublicGroup } from "@src/api/PublicGroupsAPI";
 import { getPubById } from "@src/api/PubSubAPI";
 import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";

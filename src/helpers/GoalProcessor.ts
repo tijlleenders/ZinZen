@@ -73,20 +73,6 @@ export const extractFromGoalTags = (goalTags: ITags) => ({
   beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
 });
 
-export const convertIntoAnonymousGoal = (goal: GoalItem) => ({
-  title: goal.title,
-  duration: goal.duration,
-  repeat: goal.repeat,
-  start: goal.start,
-  due: goal.due,
-  afterTime: goal.afterTime,
-  beforeTime: goal.beforeTime,
-  createdAt: goal.createdAt,
-  goalColor: goal.goalColor,
-  language: goal.language,
-  link: goal.link,
-});
-
 export const convertIntoSharedGoal = (goal: GoalItem) => ({
   ...goal,
   shared: getDefaultValueOfShared(),

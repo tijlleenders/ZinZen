@@ -12,7 +12,7 @@ import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@s
 import { darkModeState, displayToast } from "@src/store";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
-import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getGoal, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { initRelationship, shareGoalWithContact } from "@src/services/contact.service";
 import { addSubInPub } from "@src/api/PubSubAPI";
 import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
@@ -128,7 +128,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                 let parentGoalTitle = "root";
                 setLoading({ ...loading, A: true });
                 if (goal.parentGoalId !== "root") { parentGoalTitle = (await getGoal(goal.parentGoalId)).title; }
-                const { response } = await shareMyGoal(goal, parentGoalTitle);
+                const { response } = await shareMyGoalAnonymously(goal, parentGoalTitle);
                 setShowToast({ open: true, message: response, extra: "" });
                 setLoading({ ...loading, A: false });
               }}

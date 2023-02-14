@@ -1,11 +1,12 @@
+import React from "react";
+import { useSetRecoilState } from "recoil";
+
 import { addPollsInPublicGroup } from "@src/api/PublicGroupsAPI";
-import { createPollObject } from "@src/helpers/GroupsProcessor";
 import { GoalItem } from "@src/models/GoalItem";
 import { IPoll, PublicGroupItem } from "@src/models/PublicGroupItem";
 import { sendUpdateOfNewPoll } from "@src/services/group.service";
 import { displayToast, lastAction } from "@src/store";
-import React from "react";
-import { useSetRecoilState } from "recoil";
+import { createPollObject } from "@src/utils/defaultGenerators";
 
 export const SubMenuItem = ({ goal, group }: { goal: GoalItem, group: PublicGroupItem }) => {
   const setShowToast = useSetRecoilState(displayToast);

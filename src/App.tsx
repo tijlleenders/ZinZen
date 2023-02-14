@@ -19,11 +19,11 @@ import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
-import { addColabInvitesInRelId, getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
+import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
-import { addGoalsInSharedWM, addSharedWMGoal } from "./api/SharedWMAPI";
+import { addSharedWMGoal } from "./api/SharedWMAPI";
 import { syncGroupPolls } from "./api/PublicGroupsAPI";
 
 import "./customize.scss";
@@ -49,8 +49,6 @@ const App = () => {
       const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
       if (res.success) {
         Object.keys(resObject).forEach(async (relId: string) => {
-          const goals: GoalItem[] = [];
-          const collaborateInvites: { id: string, goal: GoalItem }[] = [];
           const contactItem = await getContactByRelId(relId);
           if (contactItem) {
           // @ts-ignore
@@ -65,12 +63,6 @@ const App = () => {
                 handleIncomingChanges(ele);
               }
             });
-            if (collaborateInvites.length > 0) {
-              addColabInvitesInRelId(relId, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
-            }
-            if (goals.length > 0) {
-              addGoalsInSharedWM(goals).then(() => console.log("success")).catch((err) => console.log(err));
-            }
           }
         });
       }

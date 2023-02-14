@@ -158,9 +158,6 @@ export const MainHeaderDashboard = () => {
   return (
     <div className={`positioning${!darkModeStatus ? "-light" : "-dark"}`}>
       { showLoader && <Loader /> }
-
-      { showBack ? getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")
-        : getNavIcon(ArrowIcon, "Back")}
       {getNavIcon(
         (currentPage !== "" ? myTimeIcon :
           darkModeStatus ? myTimeIconFilledDark : myTimeIconFilledLight),
@@ -171,16 +168,16 @@ export const MainHeaderDashboard = () => {
           darkModeStatus ? myGroupsIconFilledDark : myGroupsIconFilledLight),
         "My Groups",
         { width: "45px", paddingTop: "4px" })}
+      { showBack ? getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")
+        : getNavIcon(ArrowIcon, "Back")}
       {getNavIcon(
         (currentPage !== "MyFeelings" ? myFeelingsIcon :
           darkModeStatus ? myFeelingsIconFilledDark : myFeelingsIconFilledLight),
         "My Feelings")}
-      {
-        currentPage !== "/MyGoals" ?
-          getNavIcon((currentPage !== "MyGoals" ? myGoalsIcon :
-            darkModeStatus ? myGoalsIconFilledDark : myGoalsIconFilledLight), "My Goals", { paddingTop: "4px" }) :
-          getNavIcon(!showAddGoal && !showUpdateGoal ? (darkModeStatus ? addDark : addLight) : (darkModeStatus ? correctDark : correctLight), "save action", { width: "30px" })
-      }
+      {currentPage !== "/MyGoals" ?
+        getNavIcon((currentPage !== "MyGoals" ? myGoalsIcon :
+          darkModeStatus ? myGoalsIconFilledDark : myGoalsIconFilledLight), "My Goals", { paddingTop: "4px" }) :
+        getNavIcon(!showAddGoal && !showUpdateGoal ? (darkModeStatus ? addDark : addLight) : (darkModeStatus ? correctDark : correctLight), "save action", { width: "30px" })}
       <Sidebar />
       <SuggestionModal goalID={goalID} />
     </div>

@@ -5,6 +5,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { lastAction } from "@store";
 import { colorPalleteList } from "@src/utils";
 import { languagesFullForms } from "@translations/i18n";
+import ColorPalette from "@src/common/ColorPalette";
 import {
   selectedColorIndex
 } from "@src/store/GoalsState";
@@ -12,7 +13,6 @@ import InputGoal from "../InputGoal";
 
 import "@translations/i18n";
 import "./AddGoalForm.scss";
-import ColorPalette from "@src/common/ColorPalette";
 
 export const AddGoalForm = () => {
 
