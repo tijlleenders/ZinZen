@@ -6,8 +6,8 @@ import { useLocation } from "react-router-dom";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import { getActiveGoals, getGoal } from "@api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { getActiveGoals, getGoal } from "@api/GoalsAPI";
 import { darkModeState, displayInbox, lastAction, searchActive } from "@src/store";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import {
@@ -19,16 +19,16 @@ import {
   displaySuggestionsModal,
   displayUpdateGoal,
   goalsHistory } from "@src/store/GoalsState";
+import MyGoal from "@components/GoalsComponents/MyGoal";
+import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import AddGoalOptions from "@components/GoalsComponents/AddGoalOptions/AddGoalOptions";
 import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion/ArchivedAccordion";
-import MyGoal from "@components/GoalsComponents/MyGoal";
 
 import "./MyGoalsPage.scss";
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 interface ILocationProps {
   openGoalOfId: string,

@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+
 import addIcon from "@assets/images/plus.svg";
 
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import { IPoll, PublicGroupItem } from "@src/models/PublicGroupItem";
-import { findPublicGroupsOnline } from "@src/services/group.service";
-import { darkModeState, lastAction, searchActive } from "@src/store";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { getAllPublicGroups, getPublicGroup } from "@src/api/PublicGroupsAPI";
-import { displayAddPublicGroup, displayExploreGroups, displayGroup } from "@src/store/GroupsState";
 import MyPoll from "@components/GroupComponents/MyPoll";
 import MyGroup from "@components/GroupComponents/MyGroup";
 import AddGroup from "@components/GroupComponents/AddGroup";
+import { PublicGroupItem } from "@src/models/PublicGroupItem";
+import { findPublicGroupsOnline } from "@src/services/group.service";
+import { darkModeState, lastAction, searchActive } from "@src/store";
+import { getAllPublicGroups, getPublicGroup } from "@src/api/PublicGroupsAPI";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
+import { displayAddPublicGroup, displayExploreGroups, displayGroup } from "@src/store/GroupsState";
 
 const MyGroupsPage = () => {
   const action = useRecoilValue(lastAction);

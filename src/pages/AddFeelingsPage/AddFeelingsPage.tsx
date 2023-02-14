@@ -1,14 +1,14 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
-import { ChevronRight } from "react-bootstrap-icons";
-import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
+import { ChevronRight } from "react-bootstrap-icons";
 
-import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
 import { darkModeState } from "@store";
 import { getJustDate } from "@utils";
 import { addFeelingWithNote, addFeeling } from "@src/api/FeelingsAPI";
+import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
 
 import "@translations/i18n";
 import "./AddFeelingsPage.scss";

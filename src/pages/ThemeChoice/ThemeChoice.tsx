@@ -1,11 +1,13 @@
+/* eslint-disable no-unused-expressions */
 import React from "react";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 
 import ZinZen from "@assets/images/LogoTextLight.svg";
-import { themeSelectionState, darkModeState } from "@src/store";
+
 import { vibrateWorks } from "@src/constants/vibrateCheck";
+import { themeSelectionState, darkModeState } from "@src/store";
 
 import "@translations/i18n";
 import "./ThemeChoice.scss";
@@ -24,8 +26,8 @@ export const ThemeChoice = () => {
         type="button"
         className="themeChoice-btn-light"
         onClick={() => {
-          (vibrateWorks)?navigator.vibrate(100):null;
-          setIsThemeChosen(true);
+          (vibrateWorks) ? navigator.vibrate(100) : null;
+          setIsThemeChosen("light");
           localStorage.setItem("theme", "light");
           navigate("/QueryZinZen");
         }}
@@ -36,8 +38,8 @@ export const ThemeChoice = () => {
         type="button"
         className="themeChoice-btn-dark"
         onClick={() => {
-          (vibrateWorks)?navigator.vibrate(100):null;
-          setIsThemeChosen(true);
+          (vibrateWorks) ? navigator.vibrate(100) : null;
+          setIsThemeChosen("dark");
           localStorage.setItem("theme", "dark");
           navigate("/QueryZinZen");
           setDarkModeStatus(true);

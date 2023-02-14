@@ -1,5 +1,3 @@
-import { ICollaboration } from "@src/Interfaces/ICollaboration";
-import { IShared } from "@src/Interfaces/IShared";
 import { GoalItem } from "@src/models/GoalItem";
 import { languagesFullForms } from "@src/translations/i18n";
 
@@ -43,7 +41,6 @@ export async function createGroupRequest(url: string, body : object | null = nul
 
 export const myNameSpace = "c95256dc-aa03-11ed-afa1-0242ac120002";
 
-// @ts-nocheck
 export const formatDate = () => {
   const newDate = new Date();
   return newDate;
@@ -81,33 +78,6 @@ export const colorPalleteList = [
   "#FFCC33", "#FF7A00", "#FC0909",
   "#FD5B78", "#FF007C"
 ];
-
-export function getDefaultValueOfGoalChanges() {
-  return {
-    subgoals: [],
-    modifiedGoals: [],
-    archived: [],
-    deleted: []
-  };
-}
-
-export function getDefaultValueOfCollab() {
-  const value: ICollaboration = {
-    newUpdates: false,
-    collaborators: [],
-    allowed: true
-  };
-  return value;
-}
-
-export function getDefaultValueOfShared() {
-  const shared: IShared = {
-    conversionRequests: { status: false, senders: [] },
-    contacts: [],
-    allowed: true,
-  };
-  return shared;
-}
 
 export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   const goal = { ...newGoal };

@@ -1,12 +1,13 @@
+/* eslint-disable no-unused-expressions */
 import React from "react";
-
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import { queryStyle } from "@src/constants/booleanScreen";
-import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
+
 import { darkModeState } from "@src/store";
+import { queryStyle } from "@src/constants/booleanScreen";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
+import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
 export const QueryPage = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export const QueryPage = () => {
             ...queryStyle.question
           }}
           onClick={() => {
-            (vibrateWorks)?navigator.vibrate(100):null;
+            (vibrateWorks) ? navigator.vibrate(100) : null;
             navigate("/ZinZenFAQ");
           }}
         >
@@ -47,7 +48,7 @@ export const QueryPage = () => {
           onClick={() => {
             localStorage.setItem("checkedIn", "yes");
             const invite = localStorage.getItem("pendingInvite");
-            (vibrateWorks)?navigator.vibrate(100):null;
+            (vibrateWorks) ? navigator.vibrate(100) : null;
             if (invite && invite !== "none") {
               localStorage.removeItem("pendingInvite");
               navigate(`/invite/${invite}`);

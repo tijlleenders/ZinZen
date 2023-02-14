@@ -2,7 +2,7 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { shareGoal } from "@src/services/goal.service";
-import { getDefaultValueOfShared } from "@src/utils";
+import { getDefaultValueOfShared } from "@src/utils/defaultGenerators";
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.goalsCollection, async () => {

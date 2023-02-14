@@ -1,6 +1,7 @@
 import { GoalItem } from "@src/models/GoalItem";
 import { InboxItem } from "@src/models/InboxItem";
-import { getDefaultValueOfGoalChanges } from "@src/utils";
+
+import { getDefaultValueOfGoalChanges } from "@src/utils/defaultGenerators";
 import { changeNewUpdatesStatus, getGoal, notifyNewColabRequest } from "@src/api/GoalsAPI";
 import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
 import { addGoalsInSharedWM, archiveSharedWMGoal, getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";

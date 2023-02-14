@@ -1,7 +1,9 @@
 import { v5 as uuidv5 } from "uuid";
 
-import { PublicGroupItem } from "@src/models/PublicGroupItem";
+import { IShared } from "@src/Interfaces/IShared";
 import { GoalItem } from "@src/models/GoalItem";
+import { PublicGroupItem } from "@src/models/PublicGroupItem";
+import { ICollaboration } from "@src/Interfaces/ICollaboration";
 import { colorPalleteList, myNameSpace } from ".";
 
 export const createPublicGroupObject = (params: object) => {
@@ -35,3 +37,30 @@ export const createPollObject = (goal: GoalItem, params: object = {}) => ({
   createdAt: new Date().toISOString(),
   ...params
 });
+
+export function getDefaultValueOfGoalChanges() {
+  return {
+    subgoals: [],
+    modifiedGoals: [],
+    archived: [],
+    deleted: []
+  };
+}
+
+export function getDefaultValueOfCollab() {
+  const value: ICollaboration = {
+    newUpdates: false,
+    collaborators: [],
+    allowed: true
+  };
+  return value;
+}
+
+export function getDefaultValueOfShared() {
+  const shared: IShared = {
+    conversionRequests: { status: false, senders: [] },
+    contacts: [],
+    allowed: true,
+  };
+  return shared;
+}

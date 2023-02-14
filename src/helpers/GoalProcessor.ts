@@ -1,11 +1,12 @@
 /* eslint-disable no-await-in-loop */
 import { v4 as uuidv4 } from "uuid";
 import { getGoal } from "@src/api/GoalsAPI";
+import { colorPalleteList } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
 import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
-import { colorPalleteList, getDefaultValueOfCollab, getDefaultValueOfShared } from "@src/utils";
+import { getDefaultValueOfShared, getDefaultValueOfCollab } from "@src/utils/defaultGenerators";
 
 export const formatTagsToText = (_goal: GoalItem) => {
   const goal = { ..._goal };

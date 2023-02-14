@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
-import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { GoalItem } from "@src/models/GoalItem";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { collaborateWithContact } from "@src/services/contact.service";
-import { getDefaultValueOfShared } from "@src/utils";
+import { getDefaultValueOfShared } from "@src/utils/defaultGenerators";
 import { addGoal } from "../GoalsAPI";
 import { addSubInPub } from "../PubSubAPI";
 

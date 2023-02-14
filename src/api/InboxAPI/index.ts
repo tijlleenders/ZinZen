@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
-import { getDefaultValueOfGoalChanges } from "@src/utils";
+import { getDefaultValueOfGoalChanges } from "@src/utils/defaultGenerators";
 
 export const createEmptyInboxItem = async (id: string) => {
   db.transaction("rw", db.inboxCollection, async () => {

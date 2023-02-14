@@ -1,35 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import React, { useEffect } from "react";
 import Toast from "react-bootstrap/Toast";
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { darkModeState, themeSelectionState, languageSelectionState, displayToast, lastAction } from "@store";
 
+import { QueryPage } from "@pages/QueryPage/QueryPage";
+import { FAQPage } from "@pages/FAQPage/FAQPage";
+import Contacts from "@pages/ContactsPage/Contacts";
+import InvitePage from "@pages/InvitePage/InvitePage";
+import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
+import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
+import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
 import { NotFoundPage } from "@pages/NotFoundPage/NotFoundPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
-import { QueryPage } from "@pages/QueryPage/QueryPage";
-import { FAQPage } from "@pages/FAQPage/FAQPage";
-import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
-import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
-import Contacts from "@pages/ContactsPage/Contacts";
-import InvitePage from "@pages/InvitePage/InvitePage";
-import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
-import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
+
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
 import { addSharedWMGoal } from "./api/SharedWMAPI";
 import { syncGroupPolls } from "./api/PublicGroupsAPI";
+import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
 
-import "./customize.scss";
 import "./global.scss";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "./customize.scss";
 import "@fontsource/montserrat";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
