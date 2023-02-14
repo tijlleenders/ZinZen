@@ -1,9 +1,9 @@
-import { changeNewUpdatesStatus, getGoal, notifyNewColabRequest } from "@src/api/GoalsAPI";
-import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
-import { addGoalsInSharedWM, archiveSharedWMGoal, getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { InboxItem } from "@src/models/InboxItem";
 import { getDefaultValueOfGoalChanges } from "@src/utils";
+import { changeNewUpdatesStatus, getGoal, notifyNewColabRequest } from "@src/api/GoalsAPI";
+import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
+import { addGoalsInSharedWM, archiveSharedWMGoal, getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 
 export const handleIncomingChanges = async (payload) => {
   if (payload.type === "shared") {
@@ -25,7 +25,7 @@ export const handleIncomingChanges = async (payload) => {
         }
       });
     } else if (payload.changeType === "archived") {
-      getSharedWMGoal(payload.changes[0].id).then(async(goal: GoalItem) => archiveSharedWMGoal(goal).catch((err) => console.log(err, "failed to archive")));
+      getSharedWMGoal(payload.changes[0].id).then(async (goal: GoalItem) => archiveSharedWMGoal(goal).catch((err) => console.log(err, "failed to archive")));
     }
   } else if (payload.type === "collaborationInvite") {
     notifyNewColabRequest(payload.goal.id, payload.relId).catch(() => console.log("failed to notify about new colab"));

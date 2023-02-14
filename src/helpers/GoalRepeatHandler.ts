@@ -1,4 +1,3 @@
-// @ts-nocheck
 interface goalRepeatHandlerResponse {
     status: boolean,
     value: {
@@ -48,7 +47,7 @@ function handleRepeat(lowercaseInput: string) {
   for (let i = 0; i < duePatters.length; i += 1) {
     const ele = duePatters[i];
     const matchRes = lowercaseInput.match(ele.pattern);
-    if (matchRes && matchRes.length > 0 && matchRes.index >= 0) {
+    if (matchRes && matchRes.length > 0 && matchRes.index && matchRes.index >= 0) {
       const found = matchRes.index;
       return { index: found, endIndex: found + matchRes[0].trim().length, value: capitalizeFirstLetter(ele.extractor(`${lowercaseInput.slice(found).trim()} `)) };
     }

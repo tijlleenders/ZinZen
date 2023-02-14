@@ -1,8 +1,8 @@
-import { addPublicGroup, updateMyMetric, updatePollMetrics } from "@src/api/PublicGroupsAPI";
-import { IMyMetrics, PollActionType } from "@src/models/PublicGroupItem";
-import { sendNewPublicGroup, sendReactionOnPoll } from "@src/services/group.service";
 import { languagesFullForms } from "@src/translations/i18n";
 import { createPublicGroupObject } from "@src/utils/defaultGenerators";
+import { IMyMetrics, PollActionType } from "@src/models/PublicGroupItem";
+import { sendNewPublicGroup, sendReactionOnPoll } from "@src/services/group.service";
+import { addPublicGroup, updateMyMetric, updatePollMetrics } from "@src/api/PublicGroupsAPI";
 
 export const createUserGroup = async (title: string) => {
   const lang = localStorage.getItem("language")?.slice(1, -1);
