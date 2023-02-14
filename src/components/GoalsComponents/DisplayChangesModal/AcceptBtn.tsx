@@ -2,7 +2,7 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 
 import collaborateSvg from "@assets/images/collaborate.svg";
-import trash from "@assets/images/trash.svg";
+import deleteIcon from "@assets/images/deleteIcon.svg";
 import plus from "@assets/images/plus.svg";
 
 import { GoalItem } from "@src/models/GoalItem";
@@ -63,9 +63,9 @@ const AcceptBtn = ({ showChangesModal, goal, acceptChanges, setShowChangesModal 
     >
       <img
         alt="add changes"
-        src={isConversionRequest ? collaborateSvg : (typeAtPriority === "deleted" ? trash : plus)}
+        src={isConversionRequest ? collaborateSvg : (typeAtPriority === "deleted" ? deleteIcon : plus)}
         width={25}
-        style={isConversionRequest ? { filter: "brightness(0)" } : {}}
+        style={!darkModeStatus ? { filter: "brightness(0)" } : {}}
       />&nbsp;
       {isConversionRequest ? `Collaborate with ${goal.shared.contacts[0].name}` : (
         <>{ typeAtPriority === "archived" && "Complete for me too" }

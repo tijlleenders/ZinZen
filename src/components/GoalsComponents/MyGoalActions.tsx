@@ -5,7 +5,7 @@ import plus from "@assets/images/plus.svg";
 import correct from "@assets/images/correct.svg";
 import pencil from "@assets/images/pencil.svg";
 import share from "@assets/images/share.svg";
-import trash from "@assets/images/trash.svg";
+import deleteIcon from "@assets/images/deleteIcon.svg";
 import collaborateSvg from "@assets/images/collaborate.svg";
 
 import { darkModeState, displayInbox, lastAction } from "@src/store";
@@ -52,6 +52,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
         alt="add subgoal"
         src={plus}
         style={{ cursor: "pointer" }}
+        className={`${darkModeStatus ? "dark-svg" : ""}`}
         onClickCapture={() => {
           // @ts-ignore
           addInHistory(goal);
@@ -61,7 +62,8 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
       )}
       <img
         alt="delete goal"
-        src={trash}
+        src={deleteIcon}
+        className={`${darkModeStatus ? "dark-svg" : ""}`}
         style={{ cursor: "pointer" }}
         onClickCapture={async (e) => {
           e.stopPropagation();
@@ -73,6 +75,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
         <img
           alt="share goal"
           src={openInbox ? collaborateSvg : share}
+          className={`${darkModeStatus ? "dark" : "light"}-svg`}
           style={{ cursor: "pointer", ...(openInbox && !darkModeStatus ? { filter: "none" } : {}) }}
           onClickCapture={async (e) => {
             e.stopPropagation();
@@ -89,7 +92,8 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
       <img
         alt="Update Goal"
         src={openInbox ? eyeSvg : pencil}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: "pointer", height: "35px" }}
+        className={`${darkModeStatus ? "dark" : `${openInbox ? "light" : ""}`}-svg`}
         onClickCapture={() => { setShowUpdateGoal({ open: true, goalId: goal.id }); }}
       />
 
@@ -99,6 +103,8 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
         src={openInbox ? envelope : correct}
         onClickCapture={async () => { await archiveThisGoal(); }}
         style={{ cursor: "Pointer" }}
+        className={`${darkModeStatus ? "dark" : "light"}-svg`}
+
       />
       ) }
     </div>

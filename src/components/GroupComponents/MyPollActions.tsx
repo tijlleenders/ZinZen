@@ -23,7 +23,7 @@ const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll, handleClick }) => {
     if (type === "completed") { return "People who completed this goal"; }
     return "";
   };
-  const getActionImg = (typeOfAction: PollActionType, imgSrc: string, definition: string, exceptional = false, customStyle = {}) => (
+  const getActionImg = (typeOfAction: PollActionType, imgSrc: string, definition: string, exceptional = true, customStyle = {}) => (
     <OverlayTrigger
       trigger={typeOfAction.includes("Votes") ? "hover" : "click"}
       placement="top"
@@ -37,7 +37,7 @@ const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll, handleClick }) => {
         <img
           alt={definition}
           src={imgSrc}
-          className={exceptional ? `exceptional${darkModeStatus ? "-dark" : ""}-img` : ""}
+          className={`${darkModeStatus ? "dark" : !exceptional ? "" : "light"}-svg`}
           style={{ cursor: "pointer", ...customStyle }}
         />&nbsp;&nbsp;&nbsp;{`${poll.metrics[typeOfAction]}`}
       </button>
@@ -45,9 +45,9 @@ const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll, handleClick }) => {
   );
   return (
     <div className={`interactables${darkModeStatus ? "-dark" : ""}`}>
-      {getActionImg("upVotes", vote, "up vote", darkModeStatus, { rotate: "180deg" })}
-      {getActionImg("downVotes", vote, "down vote", darkModeStatus)}
-      {getActionImg("inMyGoals", peopleIcon, "People added to my goals", darkModeStatus)}
+      {getActionImg("upVotes", vote, "up vote", false, { rotate: "180deg" })}
+      {getActionImg("downVotes", vote, "down vote")}
+      {getActionImg("inMyGoals", peopleIcon, "People added to my goals")}
       {getActionImg("completed", correct, "People Completed Goal", true)}
     </div>
   );

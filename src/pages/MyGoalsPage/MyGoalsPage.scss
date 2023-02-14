@@ -68,13 +68,9 @@
     height: 32px;
   }
 }
+
 .interactables > img, .exceptional-img {
   font-size: 22px;
-  filter: invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%);
-
-}
-.interactables-dark > img, .exceptional-dark-img{
-  filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
 }
 
 .user-goal, .user-goal-dark {

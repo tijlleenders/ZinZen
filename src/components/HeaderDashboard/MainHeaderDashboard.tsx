@@ -167,7 +167,7 @@ export const MainHeaderDashboard = () => {
         (currentPage !== "MyGroups" ? myGroupsIcon :
           darkModeStatus ? myGroupsIconFilledDark : myGroupsIconFilledLight),
         "My Groups",
-        { width: "45px", paddingTop: "4px" })}
+        { paddingTop: "4px" })}
       { showBack ? getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")
         : getNavIcon(ArrowIcon, "Back")}
       {getNavIcon(

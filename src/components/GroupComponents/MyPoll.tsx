@@ -111,7 +111,6 @@ const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
             style={{
               background: "transparent",
               border: "none",
-              filter: `invert(${darkModeStatus ? 1 : 0.4})`,
               position: "absolute",
               right: "30px",
             }}
@@ -120,7 +119,7 @@ const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
               await handlePollAction("inMyGoals");
             }}
           >
-            <img alt="goal suggestion" src={plus} style={{ filter: "brightness(1) invert(0)" }} />
+            <img alt="goal suggestion" src={plus} className={`${darkModeStatus ? "dark-svg" : ""}`} />
           </button>
         )}
       </div>

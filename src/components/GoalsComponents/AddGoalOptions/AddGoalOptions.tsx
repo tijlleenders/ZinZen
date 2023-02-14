@@ -5,10 +5,10 @@ import plus from "@assets/images/plus.svg";
 import publicGoals from "@assets/images/publicGoals.svg";
 
 import Loader from "@src/common/Loader";
-import { darkModeState, displayToast } from "@src/store";
-import { displayAddGoal, displaySuggestionsModal } from "@src/store/GoalsState";
 import { getGoal } from "@src/api/GoalsAPI";
+import { darkModeState, displayToast } from "@src/store";
 import { getPublicGoals } from "@src/services/goal.service";
+import { displayAddGoal, displaySuggestionsModal } from "@src/store/GoalsState";
 
 import "./AddGoalOptions.scss";
 
@@ -31,7 +31,6 @@ const AddGoalOptions = ({ parentGoalId }: {parentGoalId: string}) => {
         New
         <button type="button">
           <img
-            style={!darkModeStatus ? { filter: "invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%)" } : {}}
             alt="create-goals-suggestion"
             src={plus}
           />

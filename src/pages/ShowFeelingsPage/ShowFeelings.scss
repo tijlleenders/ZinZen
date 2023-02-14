@@ -40,6 +40,8 @@
   .feelingOfDaty-options {
     display: flex;
     align-self: center;
+    gap: 20px;
+    height: 25px;
     img {
       margin-left: 10px;
     }
@@ -61,23 +63,13 @@
 }
 
 .addFeeling-btn, .addFeeling-btn-dark{
+  background: transparent;
   margin-left: 20px;
   border-radius: 50%;
   border: none;
-  background: radial-gradient(50% 50% at 50% 50%, #FEF2EF 75.64%, #CD6E51 100%);
   width: 50px;
   height: 50px;
-  padding: 10px;
   margin-top: 1rem;
-  input {
-    filter: invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%);
-  }
-}
-.addFeeling-btn-dark {
-  background: radial-gradient(50% 50% at 50% 50%, #121212 73.18%, #705BBC 100%);
-  input {
-    filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
-  }  
 }
 
 .notes-modal .modal-content {
