@@ -57,12 +57,12 @@ export const MainHeaderDashboard = () => {
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
   const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
-  const [openAddGroup, setOpenAddGroup] = useRecoilState(displayAddPublicGroup);
-  const [selectedGroup, setSelectedGroup] = useRecoilState(displayGroup);
+  const [newGroupName, setNewGroupName] = useRecoilState(newGroupTitle);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
+  const [selectedGroup, setSelectedGroup] = useRecoilState(displayGroup);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
-  const [newGroupName, setNewGroupName] = useRecoilState(newGroupTitle);
+  const [openAddGroup, setOpenAddGroup] = useRecoilState(displayAddPublicGroup);
 
   const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
   const setShowToast = useSetRecoilState(displayToast);

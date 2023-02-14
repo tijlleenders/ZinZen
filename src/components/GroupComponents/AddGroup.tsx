@@ -1,12 +1,13 @@
-import ColorPalette from "@src/common/ColorPalette";
-import { createUserGroup } from "@src/helpers/GroupsProcessor";
-import { darkModeState, lastAction } from "@src/store";
-import { selectedColorIndex } from "@src/store/GoalsState";
-import { displayAddPublicGroup, newGroupTitle } from "@src/store/GroupsState";
-import { languagesFullForms } from "@src/translations/i18n";
-import { colorPalleteList } from "@src/utils";
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+
+import { colorPalleteList } from "@src/utils";
+import ColorPalette from "@src/common/ColorPalette";
+import { darkModeState, lastAction } from "@src/store";
+import { selectedColorIndex } from "@src/store/GoalsState";
+import { languagesFullForms } from "@src/translations/i18n";
+import { createUserGroup } from "@src/helpers/GroupsProcessor";
+import { displayAddPublicGroup, newGroupTitle } from "@src/store/GroupsState";
 
 const AddGroup = () => {
   const lang = localStorage.getItem("language")?.slice(1, -1);

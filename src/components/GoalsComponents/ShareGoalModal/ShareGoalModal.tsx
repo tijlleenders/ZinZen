@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import addDark from "@assets/images/addDark.svg";
@@ -18,8 +18,8 @@ import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
 import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
 import { initRelationship, shareGoalWithContact } from "@src/services/contact.service";
-import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import { getGoal, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import SubMenu, { SubMenuItem } from "./SubMenu";
 
 import "./ShareGoalModal.scss";
@@ -38,12 +38,12 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
 
-  const [contacts, setContacts] = useState<ContactItem[]>([]);
-  const [loading, setLoading] = useState({ P: false, A: false, S: false });
-  const [userGroups, setUserGroups] = useState<PublicGroupItem[]>([]);
-  const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const [displaySubmenu, setDisplaySubmenu] = useState("");
+  const [contacts, setContacts] = useState<ContactItem[]>([]);
+  const [userGroups, setUserGroups] = useState<PublicGroupItem[]>([]);
   const [showAddContactModal, setShowAddContactModal] = useState(false);
+  const [loading, setLoading] = useState({ P: false, A: false, S: false });
+  const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
 
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);

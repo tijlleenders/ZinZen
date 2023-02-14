@@ -1,11 +1,12 @@
 import React from "react";
-import { Offcanvas } from "react-bootstrap";
 import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router";
+import { Offcanvas } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import DarkModeToggle from "react-dark-mode-toggle";
-import { displaySidebar } from "@src/store/SidebarState";
+
 import { darkModeState } from "@src/store";
-import { useNavigate } from "react-router";
+import { displaySidebar } from "@src/store/SidebarState";
 import { LandingHeader } from "./HeaderDashboard/LandingHeader";
 
 import "@translations/i18n";

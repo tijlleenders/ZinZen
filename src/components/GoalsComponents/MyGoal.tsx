@@ -6,11 +6,11 @@ import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, lastAction, searchActive } from "@src/store";
+import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import NotificationSymbol from "@src/common/NotificationSymbol";
+import { darkModeState, lastAction, searchActive } from "@src/store";
 import { getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
-import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import MyGoalActions from "./MyGoalActions";
 import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
 

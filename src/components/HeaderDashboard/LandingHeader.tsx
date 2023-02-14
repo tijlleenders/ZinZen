@@ -1,18 +1,18 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
-
-import { darkModeState } from "@store";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
+
+import { darkModeState } from "@store";
 import { displaySidebar } from "@src/store/SidebarState";
 
-import "./HeaderDashboard.scss";
 import "@translations/i18n";
+import "./HeaderDashboard.scss";
 
 export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
   const navigate = useNavigate();

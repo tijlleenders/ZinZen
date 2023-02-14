@@ -1,13 +1,13 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
+import { ChevronDown } from "react-bootstrap-icons";
 
 import { darkModeState } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
 
 import "./MyTimeline.scss";
-import { ChevronDown } from "react-bootstrap-icons";
 
 export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossible: ITask[]}) => {
   const navigate = useNavigate();

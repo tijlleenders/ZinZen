@@ -1,13 +1,13 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
-import peopleIcon from "@assets/images/peopleIcon.svg";
-import correct from "@assets/images/correct.svg";
 import vote from "@assets/images/vote.svg";
+import correct from "@assets/images/correct.svg";
+import peopleIcon from "@assets/images/peopleIcon.svg";
 
 import { darkModeState } from "@src/store";
 import { PollActionType, IPoll } from "@src/models/PublicGroupItem";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 interface MyGoalActionsProps {
   poll: IPoll,

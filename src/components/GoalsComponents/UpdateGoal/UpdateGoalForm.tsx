@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { getGoal } from "@src/api/GoalsAPI";
-import { displayInbox, lastAction } from "@store";
 import { colorPalleteList } from "@src/utils";
-import { displayUpdateGoal, selectedColorIndex } from "@src/store/GoalsState";
-import { formatTagsToText } from "@src/helpers/GoalProcessor";
-import { getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { displayInbox, lastAction } from "@store";
 import ColorPalette from "@src/common/ColorPalette";
+import { getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { formatTagsToText } from "@src/helpers/GoalProcessor";
+import { displayUpdateGoal, selectedColorIndex } from "@src/store/GoalsState";
 import InputGoal from "../InputGoal";
 
 import "@translations/i18n";

@@ -1,14 +1,14 @@
 /* eslint-disable consistent-return */
-import { darkModeState } from "@src/store";
-import React, { useEffect, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
+import { darkModeState } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
-import { formatTagsToText } from "@src/helpers/GoalProcessor";
 import { typeOfChange } from "@src/models/InboxItem";
-import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { displayChangesModal } from "@src/store/GoalsState";
+import { formatTagsToText } from "@src/helpers/GoalProcessor";
+import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";

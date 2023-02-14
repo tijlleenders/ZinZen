@@ -4,12 +4,11 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
-import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
-
 import { GoalItem } from "@src/models/GoalItem";
+import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { darkModeState, displayInbox, lastAction } from "@src/store";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";
 import { UpdateGoalForm } from "../UpdateGoal/UpdateGoalForm";
 import ArchivedAccordion from "../ArchivedAccordion/ArchivedAccordion";

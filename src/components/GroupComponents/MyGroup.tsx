@@ -1,10 +1,10 @@
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { addPublicGroup, deleteGroup, getPublicGroup } from "@src/api/PublicGroupsAPI";
-import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { darkModeState, lastAction } from "@src/store";
+import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { displayExploreGroups, displayGroup } from "@src/store/GroupsState";
+import { addPublicGroup, deleteGroup, getPublicGroup } from "@src/api/PublicGroupsAPI";
 
 interface MyGroupProps {
   group: PublicGroupItem,
