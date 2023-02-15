@@ -9,7 +9,7 @@ import deleteIcon from "@assets/images/deleteIcon.svg";
 import collaborateSvg from "@assets/images/collaborate.svg";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayInbox, lastAction } from "@src/store";
+import { darkModeState, displayInbox, displayToast, lastAction } from "@src/store";
 import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalController";
 import { addInGoalsHistory, displayAddGoalOptions, goalsHistory } from "@src/store/GoalsState";
@@ -30,6 +30,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
   const addInHistory = useSetRecoilState(addInGoalsHistory);
   const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
   const setLastAction = useSetRecoilState(lastAction);
+  const setShowToast = useSetRecoilState(displayToast);
 
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
 
@@ -80,7 +81,9 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
           onClickCapture={async (e) => {
             e.stopPropagation();
             if (!openInbox) {
-              setShowShareModal(goal.id);
+              if (goal.typeOfGoal !== "myGoal" && goal.parentGoalId !== "root") {
+                setShowToast({ message: "Sorry, you are not allowed to share", open: true, extra: "Shared or Collaborated subgoals cannot be shared again " });
+              } else { setShowShareModal(goal.id); }
             } else {
               await convertSharedWMGoalToColab(goal);
               setOpenInbox(false);
