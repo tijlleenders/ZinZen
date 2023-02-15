@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
-import { darkModeState, displayLoader, displayToast, lastAction, searchActive } from "@store";
+import { darkModeState, displayLoader, displayToast, lastAction } from "@store";
 
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
@@ -24,24 +24,23 @@ import myTimeIconFilledDark from "@assets/images/myTimeIconFilledDark.svg";
 import myGoalsIconFilledDark from "@assets/images/myGoalsIconFilledDark.svg";
 import myFeelingsIconFilledDark from "@assets/images/myFeelingsIconFilledDark.svg";
 
-import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import addLight from "@assets/images/addLight.svg";
 import addDark from "@assets/images/addDark.svg";
 import correctLight from "@assets/images/correctLight.svg";
 import correctDark from "@assets/images/correctDark.svg";
 
+import Loader from "@src/common/Loader";
 import Sidebar from "@components/Sidebar";
-import { displaySidebar } from "@src/store/SidebarState";
-import { inputGoalTags, extractedTitle, displayAddGoal, displayGoalId, displayUpdateGoal, selectedColorIndex, goalsHistory, popFromGoalsHistory, displayAddGoalOptions } from "@src/store/GoalsState";
-import { createGoal, modifyGoal } from "@src/helpers/GoalController";
 import { colorPalleteList } from "@src/utils";
+import { displaySidebar } from "@src/store/SidebarState";
+import { createUserGroup } from "@src/helpers/GroupsProcessor";
+import { createGoal, modifyGoal } from "@src/helpers/GoalController";
+import SuggestionModal from "@components/GoalsComponents/SuggestionModal/SuggestionModal";
+import { displayAddPublicGroup, newGroupTitle } from "@src/store/GroupsState";
+import { inputGoalTags, extractedTitle, displayAddGoal, displayGoalId, displayUpdateGoal, selectedColorIndex, goalsHistory, displayAddGoalOptions } from "@src/store/GoalsState";
 
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
-import SuggestionModal from "@components/GoalsComponents/SuggestionModal/SuggestionModal";
-import Loader from "@src/common/Loader";
-import { displayAddPublicGroup, displayGroup, newGroupTitle } from "@src/store/GroupsState";
-import { createUserGroup } from "@src/helpers/GroupsProcessor";
 
 export const MainHeaderDashboard = () => {
   const navigate = useNavigate();
@@ -51,6 +50,7 @@ export const MainHeaderDashboard = () => {
   const colorIndex = useRecoilValue(selectedColorIndex);
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalsHistory = useRecoilValue(goalsHistory);
+  const openAddGroup = useRecoilValue(displayAddPublicGroup);
 
   const [action, setLastAction] = useRecoilState(lastAction);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
@@ -58,17 +58,11 @@ export const MainHeaderDashboard = () => {
   const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [newGroupName, setNewGroupName] = useRecoilState(newGroupTitle);
-  const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
-  const [selectedGroup, setSelectedGroup] = useRecoilState(displayGroup);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
-  const [openAddGroup, setOpenAddGroup] = useRecoilState(displayAddPublicGroup);
 
   const setShowAddGoalOptions = useSetRecoilState(displayAddGoalOptions);
   const setShowToast = useSetRecoilState(displayToast);
-  const popFromHistory = useSetRecoilState(popFromGoalsHistory);
-
-  const showBack = !openAddGroup && !showAddGoal && !showUpdateGoal && !displaySearch && subGoalsHistory.length === 0 && !selectedGroup;
 
   const isTitleEmpty = () => {
     if (goalTitle.length === 0) { setShowToast({ open: true, message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`, extra: "" }); }
@@ -108,16 +102,6 @@ export const MainHeaderDashboard = () => {
       navigate("/MyFeelings");
     } else if (to === "My Groups") {
       navigate("/MyGroups");
-    } else if (to === "Back") {
-      if (displaySearch) {
-        setDisplaySearch(false);
-      } else if (selectedGroup) {
-        setSelectedGroup(null);
-      } else if (openAddGroup) {
-        setOpenAddGroup(false);
-      } else if (!showAddGoal && !showUpdateGoal && subGoalsHistory.length === 0) {
-        navigate(-1);
-      } else popFromHistory(-1);
     } else if (to === "save action") {
       if (openAddGroup) {
         await createUserGroup(newGroupName);
@@ -168,8 +152,7 @@ export const MainHeaderDashboard = () => {
           darkModeStatus ? myGroupsIconFilledDark : myGroupsIconFilledLight),
         "My Groups",
         { paddingTop: "4px" })}
-      { showBack ? getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")
-        : getNavIcon(ArrowIcon, "Back")}
+      { getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar") }
       {getNavIcon(
         (currentPage !== "MyFeelings" ? myFeelingsIcon :
           darkModeStatus ? myFeelingsIconFilledDark : myFeelingsIconFilledLight),
