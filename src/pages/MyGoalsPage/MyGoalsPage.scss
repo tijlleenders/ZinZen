@@ -91,7 +91,7 @@
     color: inherit;
     display: flex;
     height: 100%;
-    width: 91%;
+    width: 100%;
     padding: 15px 4% 15px 50px;
   }
   .contact-button {
@@ -153,9 +153,16 @@
   font-family: "Montserrat";
   font-weight: bold;
   font-size: 1.3em;
-  // justify-content: space-between;
   text-align: left !important;
-  width: 100%;
+  max-width: unset;
+  white-space: nowrap;
+  overflow: scroll;
+
+  -ms-overflow-style: none;  
+  scrollbar-width: none;
+}
+.goal-title::-webkit-scrollbar {
+  display: none;
 }
 
 .goal-link {
