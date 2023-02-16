@@ -42,8 +42,9 @@ const InvestPage = () => {
 
         <p>We offer debt-financing  </p>
         <p>and 200k will get us to default-alive within a year.  </p>
-        <button type="button" style={{ fontSize: "14px", marginBottom: "5px" }} className={`default-btn${darkModeStatus ? "-dark" : ""}`}> 
-          <img alt="download zinzen pitch" src={download} className={darkModeStatus ? "dark-svg" : ""} />Download ZinZen pitch deck </button>
+        <button type="button" style={{ fontSize: "14px", marginBottom: "5px" }} onClick={() => window.open("https://drive.google.com/u/0/uc?id=1w158k7GF9GyKDPkE--Zv7tgzSORfjXwQ&export=download", "_blank")} className={`default-btn${darkModeStatus ? "-dark" : ""}`}>
+          <img alt="download zinzen pitch" src={download} className={darkModeStatus ? "dark-svg" : ""} />Download ZinZen pitch deck
+        </button>
       </div>
     </div>
   );
