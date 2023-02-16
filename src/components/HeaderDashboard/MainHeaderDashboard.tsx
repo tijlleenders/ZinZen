@@ -152,39 +152,38 @@ export const MainHeaderDashboard = () => {
     }
   }, [action]);
   return (
-    <>
-      <div className={showSidebar ? "overlay" : ""} onClick={() => setShowSidebar(false)}>
-        {showSidebar && (<Sidebar />)}
-      </div>
-      <div className={`positioning${!darkModeStatus ? "-light" : "-dark"}`} style={{ height: `${showSidebar ? 6 : 5}em` }}>
-        <div className="nav-layer">
-          {getNavIcon(
-            (currentPage !== "" ? myTimeIcon :
-              darkModeStatus ? myTimeIconFilledDark : myTimeIconFilledLight),
-            "My Time",
-            { paddingTop: "4px", width: "32px" })}
-          {getNavIcon((currentPage !== "MyGoals" ? myGoalsIcon :
-            darkModeStatus ? myGoalsIconFilledDark : myGoalsIconFilledLight), "My Goals", { paddingTop: "4px" })}
-          {getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")}
-          {getNavIcon(
-            (currentPage !== "MyFeelings" ? myFeelingsIcon :
-              darkModeStatus ? myFeelingsIconFilledDark : myFeelingsIconFilledLight),
-            "My Feelings")}
-          { currentPage !== "MyGoals" && currentPage !== "MyGroups" ?
-            getNavIcon((currentPage !== "MyGroups" ? myGroupsIcon :
-              darkModeStatus ? myGroupsIconIconFilledDark : myGroupsIconFilledLight),
-            "My Groups",
-            { paddingTop: "4px" })
-            :
-            getNavIcon(!showAddGoal && !showUpdateGoal && !openAddGroup ?
-              (darkModeStatus ? addDark : addLight)
-              : (darkModeStatus ? correctDark : correctLight),
-            "save action",
-            { width: "30px" })}
+    <div className={`positioning${!darkModeStatus ? "-light" : "-dark"}`} style={{ height: `${showSidebar ? 6 : 5}em` }}>
+      <div className="nav-layer">
+        {getNavIcon(
+          (currentPage !== "" ? myTimeIcon :
+            darkModeStatus ? myTimeIconFilledDark : myTimeIconFilledLight),
+          "My Time",
+          { paddingTop: "4px", width: "32px" })}
+        {getNavIcon((currentPage !== "MyGoals" ? myGoalsIcon :
+          darkModeStatus ? myGoalsIconFilledDark : myGoalsIconFilledLight), "My Goals", { paddingTop: "4px" })}
+        {getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")}
+
+        <div className={showSidebar ? "overlay" : ""} onClick={() => setShowSidebar(false)}>
+          {showSidebar && (<Sidebar />)}
         </div>
-        <SuggestionModal goalID={goalID} />
+        {getNavIcon(
+          (currentPage !== "MyFeelings" ? myFeelingsIcon :
+            darkModeStatus ? myFeelingsIconFilledDark : myFeelingsIconFilledLight),
+          "My Feelings")}
+        { currentPage !== "MyGoals" && currentPage !== "MyGroups" ?
+          getNavIcon((currentPage !== "MyGroups" ? myGroupsIcon :
+            darkModeStatus ? myGroupsIconIconFilledDark : myGroupsIconFilledLight),
+          "My Groups",
+          { paddingTop: "4px" })
+          :
+          getNavIcon(!showAddGoal && !showUpdateGoal && !openAddGroup ?
+            (darkModeStatus ? addDark : addLight)
+            : (darkModeStatus ? correctDark : correctLight),
+          "save action",
+          { width: "30px" })}
       </div>
-    </>
+      <SuggestionModal goalID={goalID} />
+    </div>
 
   );
 };

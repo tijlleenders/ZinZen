@@ -60,8 +60,8 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  top: 60px;
-  right: 48px;
+  top: 70px;
+  right: calc((100% - 265px) / 2);
   gap: 20px;
   
 }
