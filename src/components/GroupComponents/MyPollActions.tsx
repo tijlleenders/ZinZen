@@ -23,7 +23,7 @@ const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll, handleClick }) => {
     if (type === "completed") { return "People who completed this goal"; }
     return "";
   };
-  const getActionImg = (typeOfAction: PollActionType, imgSrc: string, definition: string, exceptional = true, customStyle = {}) => (
+  const getActionImg = (typeOfAction: PollActionType, imgSrc: string, definition: string, exceptional = false, customStyle = {}) => (
     <OverlayTrigger
       trigger={typeOfAction.includes("Votes") ? "hover" : "click"}
       placement="top"
