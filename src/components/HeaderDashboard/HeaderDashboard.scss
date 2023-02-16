@@ -1,7 +1,4 @@
 .positioning-light, .positioning-dark {
-  height: 5em;
-  display: flex;
-  justify-content: space-around;
   width: 100%;
   position: fixed;
   z-index: 2;    
@@ -14,6 +11,11 @@
 .positioning-dark {
   background: linear-gradient(178.54deg, #121212 52.07%, #291B5C 129.23%);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+.nav-layer {
+  height: 5em;
+  display: flex;
+  justify-content: space-around;
 }
 .nav-icon, .nav-icon-dark { 
   border: none;
