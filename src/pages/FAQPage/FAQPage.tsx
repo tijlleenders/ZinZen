@@ -61,7 +61,7 @@ export const FAQPage = () => {
             onClick={() => {
               localStorage.setItem("checkedIn", "yes");
               (vibrateWorks) ? navigator.vibrate(100) : null;
-              navigate("/ZinZen/Feedback");
+              navigate("/Feedback");
             }}
           >
             {t("ihavedifferentquestions")}

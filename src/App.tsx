@@ -90,7 +90,7 @@ const App = () => {
           ) : (
             <Route path="/" element={<MyTimePage />} />
           )}
-          <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
+          <Route path="/Feedback" element={<FeedbackPage />} />
           <Route path="/Contacts" element={<Contacts />} />
           <Route path="/MyGoals" element={<MyGoalsPage />} />
           <Route path="/MyGroups" element={<MyGroupsPage />} />
@@ -99,7 +99,7 @@ const App = () => {
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />
           <Route path="/invite/:id" element={<InvitePage />} />
-          <Route path="/ZinZen/Invest" element={<InvestPage />} />
+          <Route path="/Invest" element={<InvestPage />} />
         </Routes>
       </BrowserRouter>
       <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
