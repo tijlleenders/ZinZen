@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { ChevronDown } from "react-bootstrap-icons";
 
-import { darkModeState } from "@src/store";
+import { darkModeState, displayToast } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
 
 import "./MyTimeline.scss";
@@ -12,10 +12,17 @@ import "./MyTimeline.scss";
 export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossible: ITask[]}) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
   const [showScheduled, setShowScheduled] = useState(true);
+  const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
+
+  const setShowToast = useSetRecoilState(displayToast);
 
   const handleView = () => { setShowScheduled(!showScheduled); };
+
+  const handleActionClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    setShowToast({ open: true, message: "Consider donating...", extra: "Feature coming soon..." });
+  };
   return (
     <>
       {impossible.length > 0 && (
@@ -78,9 +85,9 @@ export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossibl
               </div>
               { displayOptionsIndex === task.goalid ? (
                 <div className="MTL-options">
-                  <button type="button" onClick={(e) => { e.stopPropagation(); }}> Forget</button><div />
-                  <button type="button" onClick={(e) => { e.stopPropagation(); }}> Reschedule</button><div />
-                  <button type="button" onClick={(e) => { e.stopPropagation(); }}> Done</button><div />
+                  <button type="button" onClick={handleActionClick}> Forget</button><div />
+                  <button type="button" onClick={handleActionClick}> Reschedule</button><div />
+                  <button type="button" onClick={handleActionClick}> Done</button><div />
                 </div>
               ) : null}
             </button>
