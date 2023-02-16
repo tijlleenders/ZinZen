@@ -8,6 +8,10 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 21px;
+  .back { 
+    width: unset;
+    margin-left: 7%;
+  }
   button { 
     background-color: transparent;
     border: none;
@@ -26,9 +30,9 @@
   font-family: "Montserrat";
   font-weight: bolder;
   height: 47px;
-  margin-bottom: 3.5%;
-  margin: 5px 13px 13px 13px;
+  margin: 5px 0 13px 7%;
   padding: 0 18px;
+  width: 90%;
 }
 
 #goal-searchBar-dark {
@@ -37,7 +41,7 @@
 }
 
 .myGoals_title, .myGoals_title-dark {
-  margin: 18px 18px 5% 18px;
+  margin: 7px 18px 0 18px;
   font-family: "Montserrat";
   font-weight: bolder;
   font-size: 1.429em;
