@@ -123,6 +123,9 @@ export const MainHeaderDashboard = () => {
         setLastAction("updateGoal");
       }
     }
+    if (to !== "save action") {
+      if (showAddGoal) { setShowAddGoal(null); } else if (showUpdateGoal) { setShowUpdateGoal(null); } else if (openAddGroup) { setOpenAddGroup(false); }
+    }
   };
 
   const getNavIcon = (imageVariable: string, to = "", customStyle = {}) => {
