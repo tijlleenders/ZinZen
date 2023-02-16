@@ -10,6 +10,7 @@ import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
+import InvestPage from "@pages/InvestPage/InvestPage";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
 import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
@@ -98,6 +99,7 @@ const App = () => {
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />
           <Route path="/invite/:id" element={<InvitePage />} />
+          <Route path="/ZinZen/Invest" element={<InvestPage />} />
         </Routes>
       </BrowserRouter>
       <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
