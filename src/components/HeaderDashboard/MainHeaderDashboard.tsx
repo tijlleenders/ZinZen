@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState, displayToast, lastAction } from "@store";
@@ -48,7 +48,6 @@ export const MainHeaderDashboard = () => {
   const colorIndex = useRecoilValue(selectedColorIndex);
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalsHistory = useRecoilValue(goalsHistory);
-  const openAddGroup = useRecoilValue(displayAddPublicGroup);
 
   const [action, setLastAction] = useRecoilState(lastAction);
   const [goalTags, setGoalTags] = useRecoilState(inputGoalTags);
@@ -56,6 +55,7 @@ export const MainHeaderDashboard = () => {
   const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [newGroupName, setNewGroupName] = useRecoilState(newGroupTitle);
+  const [openAddGroup, setOpenAddGroup] = useRecoilState(displayAddPublicGroup);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
@@ -84,6 +84,16 @@ export const MainHeaderDashboard = () => {
     await modifyGoal(showUpdateGoal.goalId, goalTags, goalTitle, colorPalleteList[colorIndex], subGoalsHistory.length);
     resetCurrentStates();
   };
+  const addThisGroup = async () => {
+    if (newGroupName.trim() === "") {
+      setShowToast({ open: true, message: "Group cannot be created without name", extra: "" });
+    } else {
+      await createUserGroup(newGroupName);
+      setOpenAddGroup(false);
+      setNewGroupName("");
+      setLastAction("groupAdded");
+    }
+  };
   const handleNavClick = async (to: string) => {
     if (to === "Zinzen") {
       setDarkModeStatus(!darkModeStatus);
@@ -99,9 +109,10 @@ export const MainHeaderDashboard = () => {
     } else if (to === "My Groups") {
       navigate("/MyGroups");
     } else if (to === "save action") {
-      if (openAddGroup) {
-        await createUserGroup(newGroupName);
-        setNewGroupName("");
+      if (currentPage === "MyGroups") {
+        if (openAddGroup) {
+          setLastAction("addGroup");
+        } else { setOpenAddGroup(true); }
       } else if (!showAddGoal && !showUpdateGoal) {
         setShowAddGoal({ open: true, goalId: selectedGoalId });
       } else if (showAddGoal) {
@@ -127,7 +138,9 @@ export const MainHeaderDashboard = () => {
   };
 
   useEffect(() => {
-    if (action === "addGoal") {
+    if (action === "addGroup") {
+      addThisGroup();
+    } else if (action === "addGoal") {
       addThisGoal();
     } else if (action === "updateGoal") {
       updateThisGoal();
@@ -154,7 +167,11 @@ export const MainHeaderDashboard = () => {
             (currentPage !== "MyFeelings" ? myFeelingsIcon :
               darkModeStatus ? myFeelingsIconFilledDark : myFeelingsIconFilledLight),
             "My Feelings")}
-          {getNavIcon(!showAddGoal && !showUpdateGoal ? (darkModeStatus ? addDark : addLight) : (darkModeStatus ? correctDark : correctLight), "save action", { width: "30px" })}
+          {getNavIcon(!showAddGoal && !showUpdateGoal && !openAddGroup ?
+            (darkModeStatus ? addDark : addLight)
+            : (darkModeStatus ? correctDark : correctLight),
+          "save action",
+          { width: "30px" })}
         </div>
         <SuggestionModal goalID={goalID} />
       </div>
