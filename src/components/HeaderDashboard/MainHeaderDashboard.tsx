@@ -60,7 +60,7 @@ export const MainHeaderDashboard = () => {
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
   const setShowToast = useSetRecoilState(displayToast);
-  const setOpenExploreGroups = useSetRecoilState(displayExploreGroups)
+  const setOpenExploreGroups = useSetRecoilState(displayExploreGroups);
 
   const isTitleEmpty = () => {
     if (goalTitle.length === 0) { setShowToast({ open: true, message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`, extra: "" }); }
@@ -116,6 +116,7 @@ export const MainHeaderDashboard = () => {
         } else { setOpenAddGroup(true); setOpenExploreGroups(false); }
       } else if (!showAddGoal && !showUpdateGoal) {
         setShowAddGoal({ open: true, goalId: selectedGoalId });
+        if (currentPage !== "MyGoals") { navigate("/MyGoals"); }
       } else if (showAddGoal) {
         setLastAction("addGoal");
       } else if (showUpdateGoal) {
