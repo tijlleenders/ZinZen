@@ -65,7 +65,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       } else {
         const res = await jumpToLowestChanges(goal.rootGoalId);
         const pathToGoal = (await getHistoryUptoGoal(res.parentId));
-        console.log(res, pathToGoal);
         if (pathToGoal.length > 1) {
           pathToGoal.pop();
           setSubGoalHistory([...pathToGoal]);
