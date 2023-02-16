@@ -100,7 +100,8 @@ const MyGroupsPage = () => {
           )}
           <div>
             {openAddGroup && <AddGroup />}
-
+            { !openExploreGroups && userGroups.length === 0 &&
+            <p className={`myGoals_title${darkModeStatus ? "-dark" : ""}`}>You don&apos;t have any group. Create one...</p>}
             { !selectedGroup ?
               (openExploreGroups ? exploreGroups : userGroups).map((group) => (
                 <MyGroup
