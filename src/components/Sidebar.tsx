@@ -35,6 +35,7 @@ const Sidebar = () => {
             key={ele.name}
             type="button"
             className="sidebar-item"
+            style={{ color: darkModeStatus ? "white" : "black" }}
             onClick={() => {
               setShowSidebar(false);
               if (ele.link.includes("http")) window.open(ele.link, "_self");
