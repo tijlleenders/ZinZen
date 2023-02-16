@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect } from "react";
-import { useRecoilState, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState, displayToast, lastAction } from "@store";
@@ -13,15 +13,18 @@ import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 
 import myTimeIcon from "@assets/images/myTimeIconLight.svg";
 import myGoalsIcon from "@assets/images/myGoalsIconLight.svg";
+import myGroupsIcon from "@assets/images/myGroupsIconLight.svg";
 import myFeelingsIcon from "@assets/images/myFeelingsIconLight.svg";
 
 import myTimeIconFilledLight from "@assets/images/myTimeIconFilledLight.svg";
 import myGoalsIconFilledLight from "@assets/images/myGoalsIconFilledLight.svg";
 import myFeelingsIconFilledLight from "@assets/images/myFeelingsIconFilledLight.svg";
+import myGroupsIconFilledLight from "@assets/images/myGroupsIconFilledLight.svg";
 
 import myTimeIconFilledDark from "@assets/images/myTimeIconFilledDark.svg";
 import myGoalsIconFilledDark from "@assets/images/myGoalsIconFilledDark.svg";
 import myFeelingsIconFilledDark from "@assets/images/myFeelingsIconFilledDark.svg";
+import myGroupsIconIconFilledDark from "@assets/images/myGroupsIconFilledDark.svg";
 
 import addLight from "@assets/images/addLight.svg";
 import addDark from "@assets/images/addDark.svg";
@@ -167,11 +170,17 @@ export const MainHeaderDashboard = () => {
             (currentPage !== "MyFeelings" ? myFeelingsIcon :
               darkModeStatus ? myFeelingsIconFilledDark : myFeelingsIconFilledLight),
             "My Feelings")}
-          {getNavIcon(!showAddGoal && !showUpdateGoal && !openAddGroup ?
-            (darkModeStatus ? addDark : addLight)
-            : (darkModeStatus ? correctDark : correctLight),
-          "save action",
-          { width: "30px" })}
+          { currentPage !== "MyGoals" && currentPage !== "MyGroups" ?
+            getNavIcon((currentPage !== "MyGroups" ? myGroupsIcon :
+              darkModeStatus ? myGroupsIconIconFilledDark : myGroupsIconFilledLight),
+            "My Groups",
+            { paddingTop: "4px" })
+            :
+            getNavIcon(!showAddGoal && !showUpdateGoal && !openAddGroup ?
+              (darkModeStatus ? addDark : addLight)
+              : (darkModeStatus ? correctDark : correctLight),
+            "save action",
+            { width: "30px" })}
         </div>
         <SuggestionModal goalID={goalID} />
       </div>
