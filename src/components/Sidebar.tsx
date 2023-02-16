@@ -1,7 +1,7 @@
 import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router";
-
+import DarkModeToggle from "react-dark-mode-toggle";
 import myGroupsIcon from "@assets/images/myGroupsIconLight.svg";
 import myGroupsIconFilledLight from "@assets/images/myGroupsIconFilledLight.svg";
 import myGroupsIconIconFilledDark from "@assets/images/myGroupsIconFilledDark.svg";
@@ -16,7 +16,7 @@ const Sidebar = () => {
   const currentPage = window.location.pathname.split("/")[1];
   const navigate = useNavigate();
   const setShowSidebar = useSetRecoilState(displaySidebar);
-  const darkModeStatus = useRecoilValue(darkModeState);
+  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const list = [
     { name: "My Groups", link: "/MyGroups" },
     { name: t("blog"), link: "https://blog.zinzen.me/", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACdElEQVR4nO2au1IUQRSGPww2QdAQMBLIFYlcCATC9XFAEy8BCvIEAq9AQZkr8hSCD8BaJZi4EGA0Vlv/VHVNObPdQ8/0KPNXddLndO/5pi9nenqhVatWZfUUOAQugSRyuVAsPV+INw0IPskp6z4jYRpcAavAJPE1CawppsR1ZD7L2UA0Tc8Um5lmQ3Uh5wmapwnFNnBxTudiU5W4xndjQVaAXeCkYKu+lH0HWC7PUA3ILHBUcgs1i3XGJZiqQRaAH/L7DrwAHgKjOf6mfg54CZypnWnfdQmoKpBZC2IPGMNP48C+BTMdC+TIghihnG4BB+rnUwyQFWs6+Y5EVneAc/W3VDfIrmxmTdjqAFvAt5zF3Qc25WfrlezbdYN8le1Bpv6d4261kWk3p/qTukEGsmWnVV/13YJdLh0ZW2M+rxwhQfJsKYgJ+G9alP20oK3rVlwpyKbj1Hrr0Lafs55qAenox9Onmy2nguh4tN2IARJS3Zz19M+BBIuhBfkfRqQzJLP7ZPuoIK6Z3SXbRwXxTWpF2b4WkGGvKHmZ3Sfbjw95bQn60mhOg2Uyu0u2f6T64ypBdmQzR1afzO6T7V/L/r5KkGXZzjQFQuuudYx+UiI+L8dD2fd1ZA0l09cH9f3xGvE5O85YT+1AR9YQI5FCmOPv/WvE5+XYtWDOdWQ1i/S2R/Bm55vXmrD7ehwgPi/HaX0BSQIVM52KRqIykFRL+nhwbH3JdynG94va5i3sWkHqVnLjQAZybMKVW1b3FNtPHJTmCXNn1zQ997l668n5Snd2U8TXlCB+KTbna+r1gNtqtOvpVD0Noc+W2rg/DLRq1Yo/+g2kbEze1vccAgAAAABJRU5ErkJggg==" },
@@ -25,16 +25,30 @@ const Sidebar = () => {
     { name: t("privacy"), link: "/ZinZenFAQ", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAACXBIWXMAAAsTAAALEwEAmpwYAAABG0lEQVR4nO3WPUoDQRjG8b+1TXA3BARPYKeVYKrkALGwFUGw2c5GvIMXsPYY3mD7TVKFgCDYLOQCGRnY4mXd1WGcj0XmgaebyftjZjcspKT8PVPgGXjxWP37l79B7oA9oAJUz7n9CfMZCKKafvRBMrFoC8w99l3MGnVhxmJBhd+sxayjhHF5MjPg2qJ6XzsrMSuzwZSWb4ze5/xkyiFhniz/bfU+59fkMv8LcwM8GvTMALMUs3KfD3BhgAn2ahchMFfAvUFPQ1yTyySM9cnkYsEGOPfQk2ZWJWbpx+NbDoDa82fmDrgwweg8eMaoBlSbYHQWwCvw5rjyu1eZYnxl0rqeqJg+UDRMFygqpg2KjpGgQWAAjoHD2IjOfAGj8V95qRszdgAAAABJRU5ErkJggg==" },
     { name: "Invest", link: "/Invest", src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAACXBIWXMAAAsTAAALEwEAmpwYAAACyklEQVR4nMXXW4iWVRQG4GcqsHKC7MKKrMgKIehAaTeBVxESDQWiXUhhdJKSwkqbjkQkBTEqQVhJFGoF3ihpXRQYaIVRSdGFdqIBKSvLwgoPFCMb3h8+fmZkJvc388Li+/bea//f+++91rvX5vhwCRZgMW7BDBOAPnyJv7AVG/ABDuAL3DAeJHqwEr9iKR7BFnya56N4KOMr4t8ansY3uAu/4T3cjRuxCO9jH+7A13iqLSKX4W/cnu2YN4Lf/IwvzLPMq4512aJduKdrrKxOE/fiq/i/XptID/7E/diDE9M/Ff9gKKvWm/4y/iPuwx+1yZyF/7AMbzT6L8JhPIw7uwL2rQR5mXd2TTLn4yAew5pG/2nJohK4/2J6Y+zV+Jd502qSOTUfW4IPG/2TsbFB5sLG2I74H8EpKuNjPBihuzR9J0R5d+ZZ2gVXxK9ozkdawMJk0vKo7JQR/M5IJhVN2o1b2yBzEj7BaryJ7zAXkzJ+cjTme6zHS1nNMq8VnJePrcuWlX9+CD8lq3YlTtaHbPFvFWdiE37Hi3ggqb0k7f0ZL37jhquxKtlVRG972qV/wtAbMnMj/y932XUTQeaXkHmuYdu6RLIankw8NO3nFFaFzDVJ91WJmYLH2yKzBgOR/I5djrdDZllqnNK+OHNeyApVxyt4Iu/PRwSL4p4bMgeSVVdhZsqKctJf2QaZpXgn79fj25Sbc0Lmh2hQx7a2Gbynp+Tclix5LefPUKxTy4wbelN2PtvImBUhczPWtrk1Y0ntUoA/k6BuFRfg2hGsL2T6juFT5lfDJgzis/9hgw3dqYLN6O/SmNFaf+ZXFbyh47CiUVWxqKEzo8W7w9ypqmBWzqKxYG/UuDompZo7Z5T+0+LfKUurY2cu+aPBTfi81ocHUh40rVxty82gu384K37Fv9O+LQV7+d0xo1wxyilcy2anJC33q2FxFLqr4pWrT6gFAAAAAElFTkSuQmCC" }
   ];
+  const toggleTheme = () => {
+    setDarkModeStatus(!darkModeStatus);
+    if (darkModeStatus) {
+      localStorage.setItem("theme", "light");
+    } else {
+      localStorage.setItem("theme", "dark");
+    }
+  };
 
   return (
     <div className="sidebar">
+      <DarkModeToggle
+        onChange={toggleTheme}
+        checked={darkModeStatus}
+        size={60}
+        className="dark-mode-toggle"
+      />
       {list.map((ele) => {
         const src = ele.src ? ele.src : currentPage !== "MyGroups" ? myGroupsIcon : darkModeStatus ? myGroupsIconIconFilledDark : myGroupsIconFilledLight;
         return (
           <button
             key={ele.name}
             type="button"
-            className="sidebar-item"
+            className={`sidebar-item${darkModeStatus ? "dark" : ""}`}
             style={{ color: darkModeStatus ? "white" : "black" }}
             onClick={() => {
               setShowSidebar(false);

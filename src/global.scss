@@ -66,8 +66,9 @@
   
 }
 
-.sidebar-item {   
+.sidebar-item, .sidebar-item-dark {   
   background: white;
+  color: black;
   border: none;
   z-index: 11;
   position: relative;
@@ -90,7 +91,10 @@
     justify-content: center;
   }
 }
-
+.sidebar-item-dark {
+  background: #121212;
+  color: white
+}
 /* Toast */
 #toast, #toast-dark {
   position: absolute;
