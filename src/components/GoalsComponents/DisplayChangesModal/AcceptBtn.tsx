@@ -2,21 +2,20 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 
 import collaborateSvg from "@assets/images/collaborate.svg";
-import trash from "@assets/images/trash.svg";
+import deleteIcon from "@assets/images/deleteIcon.svg";
 import plus from "@assets/images/plus.svg";
 
-import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
-import { addGoal, addIntoSublist, changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
+import { GoalItem } from "@src/models/GoalItem";
 import { convertTypeOfSub } from "@src/api/PubSubAPI";
-import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
-import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
 import { getTypeAtPriority } from "@src/helpers/GoalProcessor";
+import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
+import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
+import { addGoal, addIntoSublist, changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
 
 interface AcceptBtnProps {
   goal: GoalItem,
   acceptChanges: () => Promise<void>,
-  // newChanges: GoalItem[] | string[] | undefined | null,
   showChangesModal: IDisplayChangesModal,
   setShowChangesModal: React.Dispatch<React.SetStateAction<IDisplayChangesModal | null>>
 }
@@ -25,6 +24,7 @@ const AcceptBtn = ({ showChangesModal, goal, acceptChanges, setShowChangesModal 
   const { typeAtPriority } = showChangesModal;
   const isConversionRequest = typeAtPriority === "conversionRequest";
   const darkModeStatus = useRecoilValue(darkModeState);
+
   const handleClick = async () => {
     if (isConversionRequest) {
       await convertTypeOfSub(goal.rootGoalId, goal.shared.contacts[0].relId, "collaboration");
@@ -63,9 +63,9 @@ const AcceptBtn = ({ showChangesModal, goal, acceptChanges, setShowChangesModal 
     >
       <img
         alt="add changes"
-        src={isConversionRequest ? collaborateSvg : (typeAtPriority === "deleted" ? trash : plus)}
+        src={isConversionRequest ? collaborateSvg : (typeAtPriority === "deleted" ? deleteIcon : plus)}
         width={25}
-        style={isConversionRequest ? { filter: "brightness(0)" } : {}}
+        style={!darkModeStatus ? { filter: "brightness(0)" } : {}}
       />&nbsp;
       {isConversionRequest ? `Collaborate with ${goal.shared.contacts[0].name}` : (
         <>{ typeAtPriority === "archived" && "Complete for me too" }

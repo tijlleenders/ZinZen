@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import plus from "@assets/images/plus.svg";
 
-import { IPoll, PollActionType } from "@src/models/PublicGroupItem";
-import { darkModeState, displayToast, lastAction } from "@src/store";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import { addGoal } from "@src/api/GoalsAPI";
 import { addSubInPub } from "@src/api/PubSubAPI";
-import { displayExploreGroups, displayGroup } from "@src/store/GroupsState";
+import { IPoll, PollActionType } from "@src/models/PublicGroupItem";
 import { sendUpdatesOfThisPoll } from "@src/helpers/GroupsProcessor";
+import { darkModeState, displayToast, lastAction } from "@src/store";
+import { displayExploreGroups, displayGroup } from "@src/store/GroupsState";
+
 import MyPollActions from "./MyPollActions";
 
 interface MyPollProps {
@@ -26,10 +27,12 @@ interface MyPollProps {
 const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
   const { goal } = poll;
   const defaultTap = { open: "root", click: 1 };
+
   const action = useRecoilValue(lastAction);
   const selectedGroup = useRecoilValue(displayGroup);
   const darkModeStatus = useRecoilValue(darkModeState);
   const openExploreGroups = useRecoilValue(displayExploreGroups);
+
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
 
@@ -111,7 +114,6 @@ const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
             style={{
               background: "transparent",
               border: "none",
-              filter: `invert(${darkModeStatus ? 1 : 0.4})`,
               position: "absolute",
               right: "30px",
             }}
@@ -120,7 +122,7 @@ const MyPoll = ({ poll, showActions, setShowActions }: MyPollProps) => {
               await handlePollAction("inMyGoals");
             }}
           >
-            <img alt="goal suggestion" src={plus} style={{ filter: "brightness(1) invert(0)" }} />
+            <img alt="goal suggestion" src={plus} className={`${darkModeStatus ? "dark-svg" : ""}`} />
           </button>
         )}
       </div>

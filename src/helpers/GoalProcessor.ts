@@ -1,12 +1,12 @@
-/* eslint-disable import/no-cycle */
 /* eslint-disable no-await-in-loop */
+import { v4 as uuidv4 } from "uuid";
 import { getGoal } from "@src/api/GoalsAPI";
+import { colorPalleteList } from "@src/utils";
+import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
-import { GoalItem } from "@src/models/GoalItem";
 import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
-import { colorPalleteList, getDefaultValueOfCollab, getDefaultValueOfShared } from "@src/utils";
-import { v4 as uuidv4 } from "uuid";
+import { getDefaultValueOfShared, getDefaultValueOfCollab } from "@src/utils/defaultGenerators";
 
 export const formatTagsToText = (_goal: GoalItem) => {
   const goal = { ..._goal };
@@ -71,20 +71,6 @@ export const extractFromGoalTags = (goalTags: ITags) => ({
   due: goalTags.due ? goalTags.due.value : null,
   afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
   beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
-});
-
-export const convertIntoAnonymousGoal = (goal: GoalItem) => ({
-  title: goal.title,
-  duration: goal.duration,
-  repeat: goal.repeat,
-  start: goal.start,
-  due: goal.due,
-  afterTime: goal.afterTime,
-  beforeTime: goal.beforeTime,
-  createdAt: goal.createdAt,
-  goalColor: goal.goalColor,
-  language: goal.language,
-  link: goal.link,
 });
 
 export const convertIntoSharedGoal = (goal: GoalItem) => ({

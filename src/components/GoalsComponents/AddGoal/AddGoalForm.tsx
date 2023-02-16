@@ -1,21 +1,18 @@
-/* eslint-disable */
 import React from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { lastAction } from "@store";
 import { colorPalleteList } from "@src/utils";
 import { languagesFullForms } from "@translations/i18n";
+import ColorPalette from "@src/common/ColorPalette";
 import {
   selectedColorIndex
 } from "@src/store/GoalsState";
 import InputGoal from "../InputGoal";
 
-import "@translations/i18n";
 import "./AddGoalForm.scss";
-import ColorPalette from "@src/common/ColorPalette";
 
 export const AddGoalForm = () => {
-
   const [colorIndex, setColorIndex] = useRecoilState(selectedColorIndex);
   const setLastAction = useSetRecoilState(lastAction);
   const lang = localStorage.getItem("language")?.slice(1, -1);
@@ -34,8 +31,7 @@ export const AddGoalForm = () => {
         goalLang={goalLang}
       />
       <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
-      
+
     </form>
   );
 };
-

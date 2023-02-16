@@ -1,11 +1,11 @@
+/* eslint-disable no-param-reassign */
 import { db } from "@models";
-import { createPollObject } from "@src/helpers/GroupsProcessor";
 import { PollActionType, IMyMetrics, IPoll, PublicGroupItem } from "@src/models/PublicGroupItem";
 import { findPublicGroupsOnline } from "@src/services/group.service";
+import { createPollObject } from "@src/utils/defaultGenerators";
 
 export const addPublicGroup = async (groupDetails: PublicGroupItem) => {
-  // @ts-ignore
-  const publicGroup: PublicGroupItem = { ...groupDetails, createdAt: new Date() };
+  const publicGroup: PublicGroupItem = { ...groupDetails, createdAt: new Date().toISOString() };
   publicGroup.polls = [...publicGroup.polls.map((ele) => (
     {
       ...ele,
@@ -93,7 +93,7 @@ export const syncGroupPolls = async () => {
   findPublicGroupsOnline().then(async (res) => {
     if (res.success) {
       const mygroups = await getAllPublicGroups();
-      const userGroups = mygroups.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+      const userGroups : { [key: string]: PublicGroupItem } = mygroups.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
       res.response.forEach(async (group: PublicGroupItem) => {
         await addPollsInPublicGroup(
           group.id,

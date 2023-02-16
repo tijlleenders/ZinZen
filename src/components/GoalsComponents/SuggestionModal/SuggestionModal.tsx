@@ -93,9 +93,6 @@ const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
           goalInput={goalInput}
           selectedColor={goal.goalColor ? goal.goalColor : "#FFFFFF"}
           goalLang={goalLang}
-          goalTags={goalTags}
-          setGoalTags={setGoalTags}
-          setGoalTitle={setGoalTitle}
         />
         )}
       </div>

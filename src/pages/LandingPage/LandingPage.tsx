@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React, { useLayoutEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -10,15 +11,14 @@ import { i18n } from "@src/translations/i18n";
 
 export const LandingPage = () => {
   const { t } = useTranslation();
-  const [position, setPosition] = useState(1);
-  const langSelected = (lang:string, newPos:number) =>{
-      if((i18n.language.includes(lang))){
-          setPosition(newPos);
-          return true;
-      }else{
-          return false;
-      }
-  }
+  const [, setPosition] = useState(1);
+  const langSelected = (lang:string, newPos:number) => {
+    if ((i18n.language.includes(lang))) {
+      setPosition(newPos);
+      return true;
+    }
+    return false;
+  };
 
   let languages: ILanguage[] = [
     {
@@ -64,26 +64,25 @@ export const LandingPage = () => {
       selected: false,
     },
   ];
-  
+
   const [Languages, setLanguages] = useState(languages);
 
   useLayoutEffect(() => {
-    languages.forEach(element => {
-      if(langSelected(element.langId, element.sno)){
+    languages.forEach((element) => {
+      if (langSelected(element.langId, element.sno)) {
         languages[0].sno = element.sno;
         languages[0].selected = false;
         element.sno = 1;
         element.selected = true;
       }
     });
-    languages = languages.sort((a,b) => a.sno - b.sno);
+    languages = languages.sort((a, b) => a.sno - b.sno);
     setLanguages(languages);
   }, []);
 
   return (
     <div id="landing-container">
       <div id="landing-left-panel">
-        { /* <img src={Logo} alt="ZinZen Logo" id="landing-logo" /> */ }
         <div> <img src={ZinZen} alt="ZinZen Text Logo" id="landing-textLogo" /> </div>
         <div>
           <p className="landing-about">

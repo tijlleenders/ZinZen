@@ -1,8 +1,8 @@
 import { ITagIndices, ITags } from "@src/Interfaces/ITagExtractor";
-import { goalDurationHandler } from "./GoalDurationHandler";
 import { goalLinkHandler } from "./GoalLinkHandler";
 import { goalRepeatHandler } from "./GoalRepeatHandler";
 import { goalTimingHandler } from "./GoalTimingHandler";
+import { goalDurationHandler } from "./GoalDurationHandler";
 
 export function TagsExtractor(inputGoal: string) {
   const magicIndices : ITagIndices[] = [];

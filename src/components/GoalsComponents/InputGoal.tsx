@@ -1,13 +1,13 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useTranslation } from "react-i18next";
 
+import { getDateInText } from "@src/utils";
 import { darkModeState, displayInbox } from "@src/store";
-import ITagExtractor, { ITagIndices } from "@src/Interfaces/ITagExtractor";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { extractedTitle, inputGoalTags } from "@src/store/GoalsState";
+import ITagExtractor, { ITagIndices } from "@src/Interfaces/ITagExtractor";
 import { createGoalObjectFromTags, formatTagsToText } from "@src/helpers/GoalProcessor";
-import { getDateInText } from "@src/utils";
 
 interface IGoalTagsProps {
   goalInput: string,

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
@@ -9,8 +10,8 @@ import { darkModeState } from "@store";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
 
-import "@translations/i18n";
 import "./FAQPage.scss";
+import "@translations/i18n";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export const FAQPage = () => {
@@ -59,8 +60,8 @@ export const FAQPage = () => {
             className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
             onClick={() => {
               localStorage.setItem("checkedIn", "yes");
-              (vibrateWorks)?navigator.vibrate(100):null;
-              navigate("/ZinZen/Feedback");
+              (vibrateWorks) ? navigator.vibrate(100) : null;
+              navigate("/Feedback");
             }}
           >
             {t("ihavedifferentquestions")}
@@ -72,7 +73,7 @@ export const FAQPage = () => {
               localStorage.setItem("checkedIn", "yes");
               const invite = localStorage.getItem("pendingInvite");
               localStorage.removeItem("pendingInvite");
-              (vibrateWorks)?navigator.vibrate(100):null;
+              (vibrateWorks) ? navigator.vibrate(100) : null;
               if (invite && invite !== "none") {
                 navigate(`/invite/${invite}`);
               } else {

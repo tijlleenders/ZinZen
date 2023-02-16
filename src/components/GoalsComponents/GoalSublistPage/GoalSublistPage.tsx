@@ -1,23 +1,28 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+import { useNavigate } from "react-router";
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
-import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
+import ArrowIcon from "@assets/images/ArrowIcon.svg";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayInbox, lastAction } from "@src/store";
+import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
+import { darkModeState, displayInbox, lastAction, searchActive } from "@src/store";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
+import { displayGroup, displayAddPublicGroup } from "@src/store/GroupsState";
+
+import MyGoal from "../MyGoal";
 import { AddGoalForm } from "../AddGoal/AddGoalForm";
 import { UpdateGoalForm } from "../UpdateGoal/UpdateGoalForm";
 import ArchivedAccordion from "../ArchivedAccordion/ArchivedAccordion";
-import MyGoal from "../MyGoal";
 
 import "./GoalSublistPage.scss";
 
 export const GoalSublist = () => {
+  const navigate = useNavigate();
   const action = useRecoilValue(lastAction);
   const goalID = useRecoilValue(displayGoalId);
   const openInbox = useRecoilValue(displayInbox);
@@ -27,6 +32,10 @@ export const GoalSublist = () => {
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
+
+  const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
+  const [selectedGroup, setSelectedGroup] = useRecoilState(displayGroup);
+  const [openAddGroup, setOpenAddGroup] = useRecoilState(displayAddPublicGroup);
 
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
   const callResetHistory = useSetRecoilState(resetGoalsHistory);
@@ -53,6 +62,19 @@ export const GoalSublist = () => {
     setChildrenGoals([...goals.filter((goal) => goal.archived === "false")]);
     setArchivedChildren([...goals.filter((goal) => goal.archived === "true")]);
   };
+
+  const handleBackClick = () => {
+    if (displaySearch) {
+      setDisplaySearch(false);
+    } else if (selectedGroup) {
+      setSelectedGroup(null);
+    } else if (openAddGroup) {
+      setOpenAddGroup(false);
+    } else if (!showAddGoal && !showUpdateGoal && subGoalHistory.length === 0) {
+      navigate(-1);
+    } else popFromHistory(-1);
+  };
+
   useEffect(() => {
     (openInbox ? getSharedWMGoal(goalID) : getGoal(goalID))
       .then((parent) => setParentGoal(parent));
@@ -65,7 +87,7 @@ export const GoalSublist = () => {
 
   return (
     <div className="sublist-container">
-      <Breadcrumb style={{ marginTop: "68px", padding: "0 18px" }}>
+      <Breadcrumb style={{ marginTop: "56px", padding: "0 18px" }}>
         {/* @ts-ignore */ }
         <Breadcrumb.Item onClick={() => callResetHistory()}>
           <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: darkModeStatus ? "#393939" : "#EDC7B7" }}>My Goals</span>
@@ -85,7 +107,17 @@ export const GoalSublist = () => {
       </Breadcrumb>
       <div className="sublist-content-container">
         <div className="sublist-content">
-          <div className="sublist-title">{parentGoal?.title}</div>
+
+          <div className="sublist-title">
+            <button
+              type="button"
+              className="nav-icon"
+              onClick={() => { handleBackClick(); }}
+            >
+              <img alt="zinzen my goals" src={ArrowIcon} />
+            </button>
+            <p>  {parentGoal?.title}</p>
+          </div>
           <Container fluid className="sublist-list-container">
             { showAddGoal && <AddGoalForm /> }
 

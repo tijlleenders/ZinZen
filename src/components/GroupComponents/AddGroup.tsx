@@ -1,12 +1,12 @@
+import React from "react";
+import { languagesFullForms } from "@src/translations/i18n";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+
+import { colorPalleteList } from "@src/utils";
 import ColorPalette from "@src/common/ColorPalette";
-import { createUserGroup } from "@src/helpers/GroupsProcessor";
 import { darkModeState, lastAction } from "@src/store";
 import { selectedColorIndex } from "@src/store/GoalsState";
-import { displayAddPublicGroup, newGroupTitle } from "@src/store/GroupsState";
-import { languagesFullForms } from "@src/translations/i18n";
-import { colorPalleteList } from "@src/utils";
-import React from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { newGroupTitle } from "@src/store/GroupsState";
 
 const AddGroup = () => {
   const lang = localStorage.getItem("language")?.slice(1, -1);
@@ -16,15 +16,11 @@ const AddGroup = () => {
   const [newGroupName, setNewGroupName] = useRecoilState(newGroupTitle);
   const [colorIndex, setColorIndex] = useRecoilState(selectedColorIndex);
 
-  const setOpenAddGroup = useSetRecoilState(displayAddPublicGroup);
   const setLastAction = useSetRecoilState(lastAction);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    await createUserGroup(newGroupName);
-    setNewGroupName("");
-    setOpenAddGroup(false);
-    setLastAction("groupAdded");
+    setLastAction("addGroup");
   };
 
   return (

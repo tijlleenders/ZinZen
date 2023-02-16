@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
-
-import shareAnonymous from "@assets/images/shareAnonymous.svg";
-import sharePublic from "@assets/images/sharePublic.svg";
-import shareWithFriend from "@assets/images/shareWithFriend.svg";
-import addLight from "@assets/images/addLight.svg";
-import addDark from "@assets/images/addDark.svg";
-
-import ContactItem from "@src/models/ContactItem";
-import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
-import { darkModeState, displayToast } from "@src/store";
+import React, { useState, useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { GoalItem } from "@src/models/GoalItem";
-import { getGoal, shareMyGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
-import { initRelationship, shareGoalWithContact } from "@src/services/contact.service";
-import { addSubInPub } from "@src/api/PubSubAPI";
-import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
+
+import addDark from "@assets/images/addDark.svg";
+import addLight from "@assets/images/addLight.svg";
+import shareAnonymous from "@assets/images/shareAnonymous.svg";
+import shareWithFriend from "@assets/images/shareWithFriend.svg";
+import myGroupsIconFilledLight from "@assets/images/myGroupsIconFilledLight.svg";
+import myGroupsIconFilledDark from "@assets/images/myGroupsIconFilledDark.svg";
+
 import Loader from "@src/common/Loader";
+import { GoalItem } from "@src/models/GoalItem";
+import { addSubInPub } from "@src/api/PubSubAPI";
+import ContactItem from "@src/models/ContactItem";
+import { darkModeState, displayToast } from "@src/store";
+import { PublicGroupItem } from "@src/models/PublicGroupItem";
+import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
+import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
+import { initRelationship, shareGoalWithContact } from "@src/services/contact.service";
+import { getGoal, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
+import SubMenu, { SubMenuItem } from "./SubMenu";
 
 import "./ShareGoalModal.scss";
-import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
-import { PublicGroupItem } from "@src/models/PublicGroupItem";
-
-import SubMenu, { SubMenuItem } from "./SubMenu";
 
 interface IShareGoalModalProps {
   goal: GoalItem
@@ -38,12 +38,12 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
 
-  const [contacts, setContacts] = useState<ContactItem[]>([]);
-  const [loading, setLoading] = useState({ P: false, A: false, S: false });
-  const [userGroups, setUserGroups] = useState<PublicGroupItem[]>([]);
-  const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const [displaySubmenu, setDisplaySubmenu] = useState("");
+  const [contacts, setContacts] = useState<ContactItem[]>([]);
+  const [userGroups, setUserGroups] = useState<PublicGroupItem[]>([]);
   const [showAddContactModal, setShowAddContactModal] = useState(false);
+  const [loading, setLoading] = useState({ P: false, A: false, S: false });
+  const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
 
   const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
@@ -128,7 +128,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                 let parentGoalTitle = "root";
                 setLoading({ ...loading, A: true });
                 if (goal.parentGoalId !== "root") { parentGoalTitle = (await getGoal(goal.parentGoalId)).title; }
-                const { response } = await shareMyGoal(goal, parentGoalTitle);
+                const { response } = await shareMyGoalAnonymously(goal, parentGoalTitle);
                 setShowToast({ open: true, message: response, extra: "" });
                 setLoading({ ...loading, A: false });
               }}
@@ -158,7 +158,11 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               }}
             >
               <div className="share-Options">
-                <div> <img alt="share goal public" src={sharePublic} /> </div>
+                <div> <img
+                  alt="share goal public"
+                  src={darkModeStatus ? myGroupsIconFilledDark : myGroupsIconFilledLight}
+                />
+                </div>
                 <p className="shareOption-name">Share in Public Group</p>
                 { loading.P && <Loader /> }
               </div>

@@ -1,40 +1,38 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/no-relative-packages */
 // @ts-nocheck
+import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
-import { useRecoilValue } from "recoil";
-
-import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
-import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
-import { GoalItem } from "@src/models/GoalItem";
 
 import { darkModeState } from "@src/store";
-import { colorPalleteList, getDiffInHours } from "@src/utils";
 import { ITask } from "@src/Interfaces/Task";
+import { GoalItem } from "@src/models/GoalItem";
+import { colorPalleteList, getDiffInHours } from "@src/utils";
 import { TaskFilter } from "@src/helpers/TaskFilter/TaskFilter";
+import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
+import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
+import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
+import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
 import "@translations/i18n";
 
-import { useTranslation } from "react-i18next";
-
 export const MyTimePage = () => {
   const toggle = false;
   const today = new Date();
-  const darkModeStatus = useRecoilValue(darkModeState);
-  const [tasks, setTasks] = useState<{[day: string]: ITask[]}>({});
-  const [impossibleTasks, setImpossibleTasks] = useState<{[day: string]: ITask[]}>({});
-  const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
-  const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
-  const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
-  const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
-  const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
-  const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
   const { t } = useTranslation();
+  const darkModeStatus = useRecoilValue(darkModeState);
+  const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
+  const [tasks, setTasks] = useState<{[day: string]: ITask[]}>({});
+  const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
+  const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
+  const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
+  const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
+  const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
+  const [impossibleTasks, setImpossibleTasks] = useState<{[day: string]: ITask[]}>({});
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
@@ -99,8 +97,7 @@ export const MyTimePage = () => {
 
   const createDummyGoals = async () => {
     starterGoals.forEach(async (goal) => {
-      goal.title = t(goal.title);
-      addStarterGoal(goal.title, goal.goalTags)
+      addStarterGoal(t(goal.title), goal.goalTags)
         .catch((error) => { console.log(error, goal); });
     });
   };

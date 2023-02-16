@@ -15,7 +15,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }
       type="button"
       className="form-tag"
       onClick={() => setOpen(true)}
-      style={{ color: "inherit", backgroundColor: colorPalleteList[colorIndex], margin: "1em 0 0.5em 0.5em" }}
+      style={{ color: "black", backgroundColor: colorPalleteList[colorIndex], margin: "1em 0 0.5em 0.5em" }}
     >
       Change Color
     </button>

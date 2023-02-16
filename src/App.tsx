@@ -1,35 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import React, { useEffect } from "react";
 import Toast from "react-bootstrap/Toast";
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { darkModeState, themeSelectionState, languageSelectionState, displayToast, lastAction } from "@store";
 
+import { QueryPage } from "@pages/QueryPage/QueryPage";
+import { FAQPage } from "@pages/FAQPage/FAQPage";
+import Contacts from "@pages/ContactsPage/Contacts";
+import InvitePage from "@pages/InvitePage/InvitePage";
+import InvestPage from "@pages/InvestPage/InvestPage";
+import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
+import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
+import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { ThemeChoice } from "@pages/ThemeChoice/ThemeChoice";
 import { NotFoundPage } from "@pages/NotFoundPage/NotFoundPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
-import { QueryPage } from "@pages/QueryPage/QueryPage";
-import { FAQPage } from "@pages/FAQPage/FAQPage";
-import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
-import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
-import Contacts from "@pages/ContactsPage/Contacts";
-import InvitePage from "@pages/InvitePage/InvitePage";
-import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
-import { addColabInvitesInRelId, getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
+
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
-import { addGoalsInSharedWM, addSharedWMGoal } from "./api/SharedWMAPI";
+import { addSharedWMGoal } from "./api/SharedWMAPI";
 import { syncGroupPolls } from "./api/PublicGroupsAPI";
+import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
 
-import "./customize.scss";
 import "./global.scss";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "./customize.scss";
 import "@fontsource/montserrat";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);
@@ -49,8 +50,6 @@ const App = () => {
       const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
       if (res.success) {
         Object.keys(resObject).forEach(async (relId: string) => {
-          const goals: GoalItem[] = [];
-          const collaborateInvites: { id: string, goal: GoalItem }[] = [];
           const contactItem = await getContactByRelId(relId);
           if (contactItem) {
           // @ts-ignore
@@ -65,12 +64,6 @@ const App = () => {
                 handleIncomingChanges(ele);
               }
             });
-            if (collaborateInvites.length > 0) {
-              addColabInvitesInRelId(relId, collaborateInvites).then(() => console.log("success")).catch((err) => console.log(err));
-            }
-            if (goals.length > 0) {
-              addGoalsInSharedWM(goals).then(() => console.log("success")).catch((err) => console.log(err));
-            }
           }
         });
       }
@@ -97,7 +90,7 @@ const App = () => {
           ) : (
             <Route path="/" element={<MyTimePage />} />
           )}
-          <Route path="/ZinZen/Feedback" element={<FeedbackPage />} />
+          <Route path="/Feedback" element={<FeedbackPage />} />
           <Route path="/Contacts" element={<Contacts />} />
           <Route path="/MyGoals" element={<MyGoalsPage />} />
           <Route path="/MyGroups" element={<MyGroupsPage />} />
@@ -106,6 +99,7 @@ const App = () => {
           <Route path="/QueryZinZen" element={<QueryPage />} />
           <Route path="/ZinZenFAQ" element={<FAQPage />} />
           <Route path="/invite/:id" element={<InvitePage />} />
+          <Route path="/Invest" element={<InvestPage />} />
         </Routes>
       </BrowserRouter>
       <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>

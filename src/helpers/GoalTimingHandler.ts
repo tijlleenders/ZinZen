@@ -1,6 +1,4 @@
-/* eslint-disable prefer-destructuring */
 /* eslint-disable radix */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 interface goalTimingHandlerResponse {
     status: boolean,
@@ -12,28 +10,28 @@ interface goalTimingHandlerResponse {
 
 const dayStore = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
 
-const startTests = [
-  "workout paper start 12/3",
-  "workout paper start tomorrow",
-  "workout paper start tomorrow @15",
-  "workout paper start tuesday",
-  "workout paper start next week",
-  "workout paper start next week thursday",
-  "workout paper start tuesday @15",
-  "workout paper start next week @15",
-  "workout paper start next week Tuesday @15",
-];
-const endTests = [
-  "workout paper by 12/3",
-  "workout paper by tomorrow",
-  "workout paper by tomorrow @15",
-  "workout paper by tuesday",
-  "workout paper by next week",
-  "workout paper by next week thursday",
-  "workout paper by tuesday @15",
-  "workout paper by next week @15",
-  "workout paper by next week Tuesday @15",
-];
+// const startTests = [
+//   "workout paper start 12/3",
+//   "workout paper start tomorrow",
+//   "workout paper start tomorrow @15",
+//   "workout paper start tuesday",
+//   "workout paper start next week",
+//   "workout paper start next week thursday",
+//   "workout paper start tuesday @15",
+//   "workout paper start next week @15",
+//   "workout paper start next week Tuesday @15",
+// ];
+// const endTests = [
+//   "workout paper by 12/3",
+//   "workout paper by tomorrow",
+//   "workout paper by tomorrow @15",
+//   "workout paper by tuesday",
+//   "workout paper by next week",
+//   "workout paper by next week thursday",
+//   "workout paper by tuesday @15",
+//   "workout paper by next week @15",
+//   "workout paper by next week Tuesday @15",
+// ];
 
 function handleStart(lowercaseInput:string) {
   const startPatterns = [
@@ -87,7 +85,6 @@ function handleStart(lowercaseInput:string) {
     const ele = startPatterns[i];
     const found = lowercaseInput.search(ele.pattern);
     if (found >= 0) {
-      // console.log(found, ele.pattern);
       return { index: found, value: ele.extractor(lowercaseInput.slice(found).trim()) };
     }
   }
@@ -158,7 +155,7 @@ function handleDue(lowercaseInput:string) {
     },
     {
       pattern: /\s(due|by)\sthis\syear\s/i,
-      extractor: function extractDetail(_text : string) {
+      extractor: function extractDetail() {
         const today = new Date();
         return new Date(today.getFullYear(), 11, 31, 0);
       }

@@ -1,14 +1,14 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 
 import ignore from "@assets/images/ignore.svg";
 
-import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
-import { useRecoilValue } from "recoil";
-import { changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
-import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
-import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
+import { GoalItem } from "@src/models/GoalItem";
 import { getTypeAtPriority } from "@src/helpers/GoalProcessor";
+import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
+import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
+import { changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
 
 interface IgnoreBtnProps {
     goal: GoalItem,

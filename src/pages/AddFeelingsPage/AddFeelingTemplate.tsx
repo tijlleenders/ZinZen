@@ -1,11 +1,10 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { Button, Navbar, Container, Modal } from "react-bootstrap";
-import { ChevronRight } from "react-bootstrap-icons";
-
 import { useRecoilValue } from "recoil";
-import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
+import { ChevronRight } from "react-bootstrap-icons";
+import { Button, Navbar, Container, Modal } from "react-bootstrap";
 
 import { addFeeling, addFeelingWithNote } from "@api/FeelingsAPI";
 import { darkModeState } from "@store";

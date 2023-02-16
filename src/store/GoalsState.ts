@@ -25,11 +25,6 @@ export const displaySuggestionsModal = atom({
   default: { goals: [], selected: "" } as { goals: GoalItem[], selected: string }
 });
 
-export const displayAddGoalOptions = atom({
-  key: "displayAddGoalOptions",
-  default: false as boolean
-});
-
 export const inputGoalTags = atom({
   key: "inputGoalTags",
   default: {} as ITags

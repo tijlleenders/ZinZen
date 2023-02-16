@@ -1,7 +1,8 @@
-import { darkModeState } from "@src/store";
 import React, { ReactNode } from "react";
 import { Accordion } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
+
+import { darkModeState } from "@src/store";
 
 const commonStyle = {
   margin: 0,

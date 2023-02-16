@@ -4,7 +4,8 @@ import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-import addIcon from "@assets/images/plus.svg";
+import addDark from "@assets/images/addDark.svg";
+import addLight from "@assets/images/addLight.svg";
 import { getAllFeelings } from "@api/FeelingsAPI";
 import { IFeelingItem } from "@models";
 import { darkModeState } from "@store";
@@ -88,13 +89,7 @@ export const ShowFeelingsPage = () => {
               className={`addFeeling-btn${darkModeStatus ? "-dark" : ""}`}
               onClick={() => { setShowAddFeelingsModal(new Date(date)); }}
             >
-              <input
-                type="image"
-                tabIndex={0}
-                key={date}
-                src={addIcon}
-                alt="add-feeling"
-              />
+              <img alt="add feeling" src={darkModeStatus ? addDark : addLight} />
             </button>
 
           </div>

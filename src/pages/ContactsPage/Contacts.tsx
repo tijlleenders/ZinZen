@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
+import React, { useEffect, useState } from "react";
 
+import { darkModeState } from "@src/store";
 import ContactItem from "@src/models/ContactItem";
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { darkModeState } from "@src/store";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 import "./Contacts.scss";

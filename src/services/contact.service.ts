@@ -51,9 +51,9 @@ export const sendUpdatesToSubscriber = async (
   sub: ISubscriber, rootGoalId: string,
   changeType: typeOfChange,
   changes: { level: number, goal: GoalItem }[] | { level: number, id: string }[]) => {
-  const url = "https://j6hf6i4ia5lpkutkhdkmhpyf4q0ueufu.lambda-url.eu-west-1.on.aws/";
+  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
   const { subId, type } = sub;
-  const res = await createContactRequest(url, {
+  const requestBody = {
     method: "shareMessage",
     installId: getInstallId(),
     relId: subId,
@@ -63,6 +63,7 @@ export const sendUpdatesToSubscriber = async (
       rootGoalId,
       changes
     }
-  });
+  };
+  const res = await createContactRequest(url, requestBody);
   return res;
 };

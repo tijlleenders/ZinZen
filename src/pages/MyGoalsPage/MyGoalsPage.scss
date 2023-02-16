@@ -8,6 +8,10 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 21px;
+  .back { 
+    width: unset;
+    margin-left: 7%;
+  }
   button { 
     background-color: transparent;
     border: none;
@@ -26,9 +30,9 @@
   font-family: "Montserrat";
   font-weight: bolder;
   height: 47px;
-  margin-bottom: 3.5%;
-  margin: 5px 13px 13px 13px;
+  margin: 5px 0 13px 7%;
   padding: 0 18px;
+  width: 90%;
 }
 
 #goal-searchBar-dark {
@@ -37,7 +41,7 @@
 }
 
 .myGoals_title, .myGoals_title-dark {
-  margin: 18px 18px 5% 18px;
+  margin: 7px 18px 0 18px;
   font-family: "Montserrat";
   font-weight: bolder;
   font-size: 1.429em;
@@ -68,13 +72,9 @@
     height: 32px;
   }
 }
+
 .interactables > img, .exceptional-img {
   font-size: 22px;
-  filter: invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%);
-
-}
-.interactables-dark > img, .exceptional-dark-img{
-  filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
 }
 
 .user-goal, .user-goal-dark {
@@ -95,7 +95,7 @@
     color: inherit;
     display: flex;
     height: 100%;
-    width: 91%;
+    width: 100%;
     padding: 15px 4% 15px 50px;
   }
   .contact-button {
@@ -157,9 +157,16 @@
   font-family: "Montserrat";
   font-weight: bold;
   font-size: 1.3em;
-  // justify-content: space-between;
   text-align: left !important;
-  width: 100%;
+  max-width: unset;
+  white-space: nowrap;
+  overflow: scroll;
+
+  -ms-overflow-style: none;  
+  scrollbar-width: none;
+}
+.goal-title::-webkit-scrollbar {
+  display: none;
 }
 
 .goal-link {

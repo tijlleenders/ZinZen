@@ -1,13 +1,13 @@
-import { getGoal, addGoal, updateGoal, archiveUserGoal, removeChildrenGoals, removeGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
-import { getPublicGroup } from "@src/api/PublicGroupsAPI";
 import { getPubById } from "@src/api/PubSubAPI";
-import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
-import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
-import { sendUpdatesToSubscriber } from "@src/services/contact.service";
+import { ITags } from "@src/Interfaces/ITagExtractor";
+import { getPublicGroup } from "@src/api/PublicGroupsAPI";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
-import { createGoalObjectFromTags, extractFromGoalTags } from "./GoalProcessor";
+import { sendUpdatesToSubscriber } from "@src/services/contact.service";
+import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
+import { getGoal, addGoal, updateGoal, archiveUserGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
 import { sendUpdatesOfThisPoll } from "./GroupsProcessor";
+import { createGoalObjectFromTags, extractFromGoalTags } from "./GoalProcessor";
 
 export const createGoal = async (
   parentGoalId: string, goalTags: ITags, goalTitle: string, goalColor: string, level: number

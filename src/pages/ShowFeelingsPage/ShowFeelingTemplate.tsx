@@ -7,7 +7,7 @@ import { Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
-import deleteFeelingIcon from "@assets/images/deleteFeelingIcon.svg";
+import deleteIcon from "@assets/images/deleteIcon.svg";
 import noteIcon from "@assets/images/noteIcon.svg";
 import { darkModeState } from "@store";
 import { IFeelingItem } from "@models";
@@ -107,8 +107,8 @@ export const ShowFeelingTemplate: React.FC<IProps> = ({
                   <span>{t(feelingsListObject[feelingId].content)}</span>
                 </div>
                 <div className="feelingOfDaty-options">
-                  <img alt="add note to feeling" src={noteIcon} onClick={() => handleJournalClick(feelingId)} />
-                  <img alt="delete feeling" src={deleteFeelingIcon} onClick={() => handleTrashClick(feelingId)} />
+                  <img alt="add note to feeling" className={`${darkModeStatus ? "dark" : "light"}-svg`} src={noteIcon} onClick={() => handleJournalClick(feelingId)} />
+                  <img alt="delete feeling" className={`${darkModeStatus ? "dark-svg" : ""}`} src={deleteIcon} onClick={() => handleTrashClick(feelingId)} />
                 </div>
               </button>
             );
