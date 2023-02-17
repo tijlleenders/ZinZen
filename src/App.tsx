@@ -75,7 +75,8 @@ const App = () => {
     } else {
       init();
     }
-    if ((!isLanguageChosen || !isThemeChosen) && window.location.pathname !== "/") { window.open("/", "_self"); }
+    console.log(window.location.pathname);
+    if ((!isLanguageChosen || !isThemeChosen) && window.location.pathname !== "/" && window.location.pathname.toLowerCase() !== "/invest") { window.open("/", "_self"); }
   }, []);
 
   return (
