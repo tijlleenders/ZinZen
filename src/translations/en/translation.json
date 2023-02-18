@@ -14,7 +14,7 @@
   "mygoals": "My Goals",
   "goalsubtext": "Add your task in format-",
   "format": "task + duration + frequency",
-  "addGoalPlaceholder": "Type your goal + 1h + daily",
+  "addGoalPlaceholder": "Type 'Walk 1h daily'",
   "addTimePlaceholder": "Add time",
   "myfeelings": "My Feelings",
   "mytime": "My Time",
