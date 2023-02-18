@@ -30,7 +30,6 @@ import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAP
 import "./global.scss";
 import "./customize.scss";
 import "@fontsource/montserrat";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
   const darkModeEnabled = useRecoilValue(darkModeState);

@@ -12,7 +12,6 @@ import { vibrateWorks } from "@src/constants/vibrateCheck";
 
 import "./FAQPage.scss";
 import "@translations/i18n";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 export const FAQPage = () => {
   const navigate = useNavigate();
