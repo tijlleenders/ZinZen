@@ -5,6 +5,25 @@ can talk big-O, add features or optimize hot loops.
 
 > Please contact me tijl.leenders@gmail.com or open an issue.
 
+## Getting started
+0. ```cd ~ && git clone https://github.com/tijlleenders/ZinZen-scheduler.git```  
+
+1. [Install Rust](https://www.rust-lang.org/tools/install)
+
+2. Add target for wasm:
+```rustup target add wasm32-unknown-unknown```  
+   ```cd ~/ZinZen-scheduler/ && cargo test``` should work now  
+
+3. ```cargo install wasm-bindgen-cli``` or [Install wasm-bindgen command line interface](https://rustwasm.github.io/wasm-bindgen/reference/cli.html) with any dependencies if it fails (openssl, pkg-config) or 
+
+4. ```sudo apt-get install wabt``` [... or DIY](https://github.com/WebAssembly/wabt)
+
+5. ```sudo apt-get install binaryen```
+
+6. [Install deno](https://deno.land/manual/getting_started/installation)
+
+7. You can now run the test from javascript/deno land using ```deno test```  
+  
 ## Legal stuff
 
 &copy;2020-now ZinZen&reg;
