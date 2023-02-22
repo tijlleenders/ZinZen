@@ -26,6 +26,18 @@ if [ -z "$GITHUB_TOKEN" ] ; then
   exit -1
 fi
 
+cd ..
+if [ -z "$(git status --porcelain)" ]; then 
+  echo "Working directory clean"
+else 
+  echo "Uncommitted changes in working directory"
+  exit -1
+fi
+git checkout main
+git pull
+
+cd update_artifact_script
+
 local_artifact_id=$(cat artifact_id.txt)
 echo Last artifact id is $local_artifact_id
 echo Fetching latest artifact id from ZinZen Scheduler repo...
