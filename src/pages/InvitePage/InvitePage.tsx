@@ -13,7 +13,8 @@ const InvitePage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [newContactName, setNewContactName] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
     const res = await acceptRelationship();
     if (res.success) {
       await addContact(newContactName, res.response?.relId, true);
@@ -32,14 +33,14 @@ const InvitePage = () => {
     }
   }, []);
   return (
-    <div style={{ ...queryStyle.main, padding: "100px 28px 0 28px" }}>
+    <form style={{ ...queryStyle.main, padding: "100px 28px 0 28px" }} onSubmit={handleSubmit}>
       <LandingHeader avatar={null} />
       <p style={{ margin: "0 0 20px 0", color: darkModeStatus ? "rgb(171, 158, 216)" : "#CD6E51" }}>
         Welcome to ZinZen!<br />
         The person that sent you this, wants to connect with you here.
         <br />Add them to your contacts.
       </p>
-      <input onSubmit={handleSubmit} onChange={(e) => setNewContactName(e.target.value)} className={`default-input${darkModeStatus ? "-dark" : ""}`} placeholder="Name" />
+      <input onChange={(e) => setNewContactName(e.target.value)} className={`default-input${darkModeStatus ? "-dark" : ""}`} placeholder="Name" />
       <button
         type="button"
         className={`default-btn${darkModeStatus ? "-dark" : ""}`}
@@ -47,7 +48,7 @@ const InvitePage = () => {
         onClick={handleSubmit}
       > Add Contact
       </button>
-    </div>
+    </form>
   );
 };
 
