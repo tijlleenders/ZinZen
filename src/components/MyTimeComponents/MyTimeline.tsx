@@ -9,7 +9,7 @@ import { ITask } from "@src/Interfaces/Task";
 
 import "./MyTimeline.scss";
 
-export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossible: ITask[]}) => {
+export const MyTimeline = ({ myTasks }: { myTasks: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number }}) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showScheduled, setShowScheduled] = useState(true);
@@ -25,19 +25,16 @@ export const MyTimeline = ({ myTasks, impossible }: {myTasks: ITask[], impossibl
   };
   return (
     <>
-      {impossible.length > 0 && (
+      {myTasks.impossible.length > 0 && (
         <div className={`timeline-view${darkModeStatus ? "-dark" : ""}`}>
           <button type="button" className={`${showScheduled && "activeView"}`} onClick={handleView}>Scheduled</button>
           <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>Impossible</button>
         </div>
       )}
       <div className={`MTL-display${darkModeStatus ? "-dark" : ""}`}>
-        { (showScheduled ? myTasks : impossible).map((task) => {
-          let startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
+        { myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
+          const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
-          if (startTime && endTime) {
-            startTime = Number(startTime) > Number(endTime) ? "0" : startTime;
-          }
           return (
             <button
               type="button"

@@ -21,33 +21,24 @@ import "./MyTimePage.scss";
 import "@translations/i18n";
 
 export const MyTimePage = () => {
-  const toggle = false;
   const today = new Date();
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
-  const [tasks, setTasks] = useState<{[day: string]: ITask[]}>({});
+  const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number }}>({});
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
   const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [impossibleTasks, setImpossibleTasks] = useState<{[day: string]: ITask[]}>({});
+
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
     } else { setShowTasks([...showTasks, dayName]); }
   };
-  const getColorWidth = (day:string, unplanned: boolean, duration: number) => {
-    if (!toggle) return (duration * (100 / (tasks[day].length)));
-    let colorWidth = 0;
-    if (unplanned && duration > goalOfMaxDuration) {
-      colorWidth = (goalOfMaxDuration + 1) * 4.17;
-    } else {
-      colorWidth = (duration * 4.17) + (maxDurationOfUnplanned - 1 - goalOfMaxDuration) * 4.17;
-    }
-    return colorWidth;
-  };
+  const getColorWidth = (day:string, unplanned: boolean, duration: number) => (duration * (100 / (tasks[day].scheduled.length)));
 
   const getColorComponent = (colorWidth:number, color: string) => (
     <div
@@ -59,7 +50,7 @@ export const MyTimePage = () => {
     />
   );
   const getTimeline = (day: string) => (
-    tasks[day] ? <MyTimeline myTasks={tasks[day]} impossible={impossibleTasks[day] || []} /> : <div />
+    tasks[day] ? <MyTimeline myTasks={tasks[day]} /> : <div />
   );
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
@@ -78,16 +69,16 @@ export const MyTimePage = () => {
             className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
             type="button"
           >
-            <div> { showTasks.includes(day) ? <ChevronDown /> : <ChevronRight /> } </div>
+            <div> { showTasks.includes(day) ? `${tasks[day]?.freeHrsOfDay} hours free` : <ChevronRight /> } </div>
           </button>
         </button>
         {showTasks.includes(day) ? getTimeline(day) :
           (
             <div className="MyTime_colorPalette">
-              {tasks[day]?.map((task, index) => {
+              {tasks[day]?.scheduled.map((task, index) => {
                 const colorWidth = getColorWidth(day, false, task.duration);
                 colorIndex = (colorIndex === colorPalleteList.length - 1) ? 0 : colorIndex + 1;
-                return getColorComponent((colorBands[day] / tasks[day].length) * 100, task.goalColor);
+                return getColorComponent((tasks[day].scheduledHrs / tasks[day].scheduled.length) * 100, task.goalColor);
               })}
             </div>
           )}
@@ -103,24 +94,36 @@ export const MyTimePage = () => {
   };
 
   const handleSchedulerOutput = (_schedulerOutput, activeGoals:GoalItem[]) => {
-    const schedulerOutput = [..._schedulerOutput];
-    schedulerOutput.forEach((ele, index) => {
-      activeGoals.forEach((tmpGoal, ind) => {
-        if (tmpGoal.id === ele.goalid) {
-          schedulerOutput[index].parentGoalId = activeGoals[ind].parentGoalId;
-          schedulerOutput[index].goalColor = activeGoals[ind].goalColor;
-        }
-      });
+    const obj = { };
+    const res = { };
+    activeGoals.forEach((goal) => {
+      obj[goal.id] = { parentGoalId: goal.parentGoalId, goalColor: goal.goalColor };
     });
     const _today = new Date();
-    const temp = { };
-    temp.Today = TaskFilter(schedulerOutput, 0);
-    temp.Tomorrow = TaskFilter(schedulerOutput, 1);
-    [...Array(5).keys()].forEach((ind) => {
+    _schedulerOutput.scheduled.forEach((dayOutput, index) => {
+      const { day } = dayOutput;
+      const thisDay = { freeHrsOfDay: 0, scheduledHrs: 0, scheduled: [], impossible: [] };
+      _schedulerOutput.impossible[index].outputs.forEach((ele) => {
+        const { goalColor, parentGoalId } = obj[ele.goalid];
+        thisDay.impossible.push({ ...ele, goalColor, parentGoalId });
+      });
+      dayOutput.outputs.forEach((ele) => {
+        if (ele.title !== "free" && obj[ele.goalid]) {
+          const { goalColor, parentGoalId } = obj[ele.goalid];
+          thisDay.scheduledHrs += ele.duration;
+          thisDay.scheduled.push({ ...ele, goalColor, parentGoalId });
+        } else {
+          thisDay.freeHrsOfDay += ele.duration;
+        }
+      });
+      if (index === 0) {
+        res.Today = thisDay;
+      } else if (index === 1) {
+        res.Tomorrow = thisDay;
+      } else res[`${_today.toLocaleDateString("en-us", { weekday: "long" })}`] = thisDay;
       _today.setDate(_today.getDate() + 1);
-      temp[`${_today.toLocaleDateString("en-us", { weekday: "long" })}`] = TaskFilter(schedulerOutput, ind + 2);
     });
-    return temp;
+    return res;
   };
   useEffect(() => {
     (async () => {
@@ -152,16 +155,12 @@ export const MyTimePage = () => {
       console.log("input", schedulerInput);
       const res = schedule(schedulerInput);
       console.log("output", res);
-      const userTasks = handleSchedulerOutput(res.scheduled, activeGoals);
-      const bandWidths = {};
-      Object.keys(userTasks).forEach((day) => {
-        let totalDuration = 0;
-        userTasks[day].forEach((tsk: ITask) => { totalDuration += tsk.duration; });
-        bandWidths[day] = totalDuration;
-      });
-      setColorBands({ ...bandWidths });
-      setTasks({ ...userTasks });
-      setImpossibleTasks({ ...handleSchedulerOutput(res.impossible, activeGoals) });
+      const processedOutput = handleSchedulerOutput(res, activeGoals);
+      // const bandWidths = {};
+      console.log(processedOutput);
+      // setColorBands({ ...bandWidths });
+      setTasks({ ...processedOutput });
+      // setImpossibleTasks({ ...handleSchedulerOutput(res.impossible, activeGoals) });
     })();
   }, []);
 
@@ -173,7 +172,7 @@ export const MyTimePage = () => {
         {getDayComponent("Tomorrow")}
         {
           [...Array(5).keys()].map(() => {
-            today.setDate(today.getDate() + 1);
+            today.setDate(today.getDate() + 2);
             return getDayComponent(`${today.toLocaleDateString("en-us", { weekday: "long" })}`);
           })
         }
