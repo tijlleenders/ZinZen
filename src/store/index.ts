@@ -1,7 +1,25 @@
 import { atom } from "recoil";
-import { darkModeState, darkModeStateToggle } from "./DarkModeState";
+import { darkModeState } from "./DarkModeState";
 import { themeSelectionState } from "./ThemeSelectionState";
 import { languageSelectionState } from "./LanguageSelectionState";
+
+export const showConfirmation = atom({
+  key: "showConfirmation",
+  default: JSON.parse(localStorage.getItem("confirmationState") || JSON.stringify({
+    open: false,
+    goal: {
+      archive: true,
+      delete: true,
+      shareAnonymously: true,
+      shareWithOne: true
+    },
+    collaboration: {
+      colabRequest: true,
+      delete: true,
+      archive: true
+    },
+  }))
+});
 
 export const lastAction = atom({
   key: "lastAction",
@@ -33,4 +51,4 @@ export const displayToast = atom({
   default: { open: false, message: "Awww... no hints today. We'll keep looking!", extra: "" }
 });
 
-export { darkModeState, darkModeStateToggle, themeSelectionState, languageSelectionState };
+export { darkModeState, themeSelectionState, languageSelectionState };
