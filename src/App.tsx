@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Toast from "react-bootstrap/Toast";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, themeSelectionState, languageSelectionState, displayToast, lastAction } from "@store";
+import { darkModeState, themeSelectionState, languageSelectionState, displayToast, lastAction, showConfirmation } from "@store";
 
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
@@ -38,6 +38,7 @@ const App = () => {
   const language = useRecoilValue(languageSelectionState);
   const isThemeChosen = theme !== "No theme chosen.";
   const isLanguageChosen = language !== "No language chosen.";
+  const confirmationState = useRecoilValue(showConfirmation);
 
   const [showToast, setShowToast] = useRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
@@ -75,10 +76,12 @@ const App = () => {
     } else {
       init();
     }
-    console.log(window.location.pathname);
     if ((!isLanguageChosen || !isThemeChosen) && window.location.pathname !== "/" && window.location.pathname.toLowerCase() !== "/invest") { window.open("/", "_self"); }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("confirmationState", JSON.stringify(confirmationState));
+  }, [confirmationState]);
   return (
     <div className={darkModeEnabled ? "App-dark" : "App-light"}>
       <BrowserRouter>
