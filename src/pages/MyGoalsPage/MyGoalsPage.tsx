@@ -9,10 +9,12 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import publicGoals from "@assets/images/publicGoals.svg";
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 
+import Search from "@src/common/Search";
+import Loader from "@src/common/Loader";
 import { GoalItem } from "@src/models/GoalItem";
 import { getActiveGoals, getGoal } from "@api/GoalsAPI";
-import { darkModeState, displayInbox, displayToast, lastAction, searchActive } from "@src/store";
-import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
+import { ILocationProps } from "@src/Interfaces/IPages";
+import { getPublicGoals } from "@src/services/goal.service";
 import {
   displayAddGoal,
   displayChangesModal,
@@ -27,18 +29,12 @@ import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
-import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
+import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion/ArchivedAccordion";
+import { darkModeState, displayInbox, displayToast, lastAction, searchActive } from "@src/store";
+import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import "./MyGoalsPage.scss";
-import { getPublicGoals } from "@src/services/goal.service";
-import Loader from "@src/common/Loader";
-import Search from "@src/common/Search";
-
-interface ILocationProps {
-  openGoalOfId: string,
-  isRootGoal: boolean
-}
 
 export const MyGoalsPage = () => {
   const { t } = useTranslation();

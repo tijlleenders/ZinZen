@@ -7,16 +7,12 @@ import { ChevronRight } from "react-bootstrap-icons";
 
 import { darkModeState } from "@store";
 import { getJustDate } from "@utils";
+import { AddFeelingsPageProps } from "@src/Interfaces/IPages";
 import { addFeelingWithNote, addFeeling } from "@src/api/FeelingsAPI";
 import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
 
 import "@translations/i18n";
 import "./AddFeelingsPage.scss";
-
-interface AddFeelingsPageProps {
-  feelingDate: Date | null;
-  setShowAddFeelingsModal: React.Dispatch<React.SetStateAction<Date | null>>;
-}
 
 export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, setShowAddFeelingsModal }) => {
   const { t } = useTranslation();

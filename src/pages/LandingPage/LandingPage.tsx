@@ -2,12 +2,13 @@
 import React, { useLayoutEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
-import { ILanguage } from "@src/Interfaces";
 import ZinZen from "@assets/images/LogoTextLight.svg";
 
-import "./LandingPage.scss";
+import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
+import { ILanguage } from "@src/Interfaces";
 import { i18n } from "@src/translations/i18n";
+
+import "./LandingPage.scss";
 
 export const LandingPage = () => {
   const { t } = useTranslation();

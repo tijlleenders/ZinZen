@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { confirmActionState } from "@src/Interfaces/IPopupModals";
 import { darkModeState } from "./DarkModeState";
 import { themeSelectionState } from "./ThemeSelectionState";
 import { languageSelectionState } from "./LanguageSelectionState";
@@ -18,7 +19,7 @@ export const showConfirmation = atom({
       delete: true,
       archive: true
     },
-  }))
+  })) as confirmActionState
 });
 
 export const lastAction = atom({

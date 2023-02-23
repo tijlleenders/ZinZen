@@ -11,28 +11,14 @@ import deleteIcon from "@assets/images/deleteIcon.svg";
 import noteIcon from "@assets/images/noteIcon.svg";
 import { darkModeState } from "@store";
 import { IFeelingItem } from "@models";
-import { removeFeeling, addFeelingNote, removeFeelingNote } from "@api/FeelingsAPI";
 import { feelingListType } from "@src/global";
 import { feelingsEmojis } from "@consts/FeelingsList";
+import { ShowFeelingTemplateProps } from "@src/Interfaces/IPages";
+import { removeFeeling, addFeelingNote, removeFeelingNote } from "@api/FeelingsAPI";
 
 import "@translations/i18n";
 
-interface ISetFeelingsListObject {
-  feelingsList: feelingListType[];
-  setFeelingsList: React.Dispatch<React.SetStateAction<feelingListType[]>>;
-}
-interface ISetSelectedFeeling {
-  selectedFeeling: number;
-  setSelectedFeeling: React.Dispatch<React.SetStateAction<number>>;
-}
-interface IProps {
-  feelingsListObject: IFeelingItem[];
-  setFeelingsListObject: ISetFeelingsListObject;
-  currentFeelingsList: feelingListType[];
-  handleFocus: ISetSelectedFeeling;
-}
-
-export const ShowFeelingTemplate: React.FC<IProps> = ({
+export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
   feelingsListObject,
   setFeelingsListObject,
   currentFeelingsList,
