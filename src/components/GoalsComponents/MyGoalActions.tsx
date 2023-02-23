@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SetterOrUpdater, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import plus from "@assets/images/plus.svg";
@@ -9,10 +9,12 @@ import deleteIcon from "@assets/images/deleteIcon.svg";
 import collaborateSvg from "@assets/images/collaborate.svg";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayInbox, displayToast, lastAction } from "@src/store";
+import { darkModeState, displayInbox, displayToast, lastAction, showConfirmation } from "@src/store";
 import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalController";
 import { addInGoalsHistory, displayAddGoal, goalsHistory } from "@src/store/GoalsState";
+import ConfirmationModal from "@src/common/ConfirmationModal";
+import { confirmAction } from "@src/Interfaces/IPopupModals";
 
 const eyeSvg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABkklEQVR4nO2WvUoDQRSFPwsjoomk8wHEUpNgL9aKnVjYii/hT2FEIwgS8hBKgp1gY6ddYpGHWPNjKRKrRAZuYBj3zu5iRIs9cJs7557D3Duzs5AixT/AGlAGHoEOMJDoSO4UKE3ScBt4AUYxowls/cRwGXhIYOjGPbCU1HQX+AgR6wGHQAGYkygCR7Lm8t+BnTiGU8A5MAwRqQNZT61Za4TUGa0z0VZNa0rb6r5CRyPMfARUNY0rpaAXsVMXOaCvaF265APPITEztZERgVcgACqSs3Hs0dsfk1aBTw/RrNuohHBMzkbRozcAVgypFXEt3DYHIRyTs5GN0GwZUvsXjHMRmm1D2lCuzzgKMVp9kaDVQ2B9TKx6iObjYCMj5oHncJ149K5dsecJXacF4E3RegKm3YK8Z96NBB+QO89c81rhorwumnkuYqeaaVO0vZgFbhWBvnwczLs7L1GSmWrtvRHNWDAt21OuTtwIRCPOiL4hKy+LthutK+WEB1LFDLApr5c5/V3r16cruZpwDDdFCv4MXw/YJO5+W1zLAAAAAElFTkSuQmCC";
 const envelope = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABRElEQVR4nO3TPyuFYRgG8B+LwYBisChhwGJQBllkQPkESvI9lOQLGK1GmzIoBhmUwSSDFCKlzmbxp/zprfutp9N5nXM4YnDVvTz3dV/X0/1cD38IA9jBPoYbKdyKFTzhPeoF62j7jnAzlnAfoq/YiHqNs/vgZNy6MIqj5MbHGEv6IzhM+icYr0W4u+yGd1hAUwF/DtfBfcMWeorEZ/EQ5Eesxf6roTW4jzGbacxUIl4FYRu96kdvzGYal5UI+T7PMfkFg3GcJjqFBvk+N9FZg3B7RDZ/t6oGq3hOYjj/ifh8EuPnmK1qkKEfe8nZAQYTbh92k34W2aEKOoUGIpqLKCXJWo7KE1MKThrjmg1ydMTfeCvbcZb5rjp0ihuBCZzhAlOK8WWDDC1RfsqgFvyewW3ZI36nbioZzESjEeLTDdjEPzQGH5tWnsH1/ab+AAAAAElFTkSuQmCC";
@@ -24,7 +26,9 @@ interface MyGoalActionsProps {
       goalId: string;
   } | null>,
 }
+
 const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, setShowUpdateGoal }) => {
+  const confirmActionCategory = goal.typeOfGoal === "collaboration" && goal.parentGoalId === "root" ? "collaboration" : "goal";
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const addInHistory = useSetRecoilState(addInGoalsHistory);
@@ -32,7 +36,10 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
   const setShowToast = useSetRecoilState(displayToast);
   const setShowAddGoal = useSetRecoilState(displayAddGoal);
 
+  const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
+
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
+  const [displayConfirmation, setDisplayConfirmation] = useRecoilState(showConfirmation);
 
   const archiveThisGoal = async () => {
     if (openInbox) { await archiveSharedWMGoal(goal); } else await archiveGoal(goal, subGoalsHistory.length);
@@ -46,8 +53,35 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
     setLastAction("Delete");
   };
 
+  const handleActionClick = async (action: string) => {
+    if (action === "delete") {
+      await removeThisGoal();
+    } else if (action === "archive") {
+      await archiveThisGoal();
+    } else if (action === "colabRequest") {
+      await convertSharedWMGoalToColab(goal);
+      setOpenInbox(false);
+    }
+    setConfirmationAction(null);
+  };
+
+  const openConfirmationPopUp = async (action: confirmAction) => {
+    const { actionCategory, actionName } = action;
+    if (actionCategory === "collaboration" && displayConfirmation.collaboration[actionName]) {
+      setConfirmationAction({ ...action });
+      setDisplayConfirmation({ ...displayConfirmation, open: true });
+    } else if (actionCategory === "goal" && displayConfirmation.goal[action.actionName]) {
+      setConfirmationAction({ ...action });
+      setDisplayConfirmation({ ...displayConfirmation, open: true, });
+    } else {
+      await handleActionClick(actionName);
+    }
+  };
+
   return (
     <div className={`interactables${darkModeStatus ? "-dark" : ""}`}>
+      { confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} /> }
+
       {!openInbox && (
       <img
         alt="add subgoal"
@@ -68,7 +102,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
         style={{ cursor: "pointer" }}
         onClickCapture={async (e) => {
           e.stopPropagation();
-          await removeThisGoal();
+          await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
         }}
       />
 
@@ -85,8 +119,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
                 setShowToast({ message: "Sorry, you are not allowed to share", open: true, extra: "Shared or Collaborated subgoals cannot be shared again " });
               } else { setShowShareModal(goal.id); }
             } else {
-              await convertSharedWMGoalToColab(goal);
-              setOpenInbox(false);
+              await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
             }
           }}
         />
@@ -104,10 +137,12 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
       <img
         alt="archive Goal"
         src={openInbox ? envelope : correct}
-        onClickCapture={async () => { await archiveThisGoal(); }}
+        onClickCapture={async (e) => {
+          e.stopPropagation();
+          await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
+        }}
         style={{ cursor: "Pointer" }}
         className={`${darkModeStatus ? "dark" : "light"}-svg`}
-
       />
       ) }
     </div>

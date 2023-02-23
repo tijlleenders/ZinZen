@@ -7,20 +7,17 @@ import { ChevronRight } from "react-bootstrap-icons";
 import { Button, Navbar, Container, Modal } from "react-bootstrap";
 
 import { addFeeling, addFeelingWithNote } from "@api/FeelingsAPI";
-import { darkModeState } from "@store";
+import { AddFeelingTemplate } from "@src/Interfaces/IPages";
 import { feelingsEmojis } from "@consts/FeelingsList";
+import { darkModeState } from "@store";
 
 import "@translations/i18n";
 import "./AddFeelingsPage.scss";
 
-export const FeelingTemplate = ({
+export const FeelingTemplate: React.FC<AddFeelingTemplate> = ({
   feelingCategory,
   feelingsList,
   feelingDate,
-}: {
-  feelingCategory: string;
-  feelingsList: string[];
-  feelingDate: Date;
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();

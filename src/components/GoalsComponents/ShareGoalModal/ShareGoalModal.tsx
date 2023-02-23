@@ -1,6 +1,6 @@
 import { Modal } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import addDark from "@assets/images/addDark.svg";
 import addLight from "@assets/images/addLight.svg";
@@ -10,27 +10,21 @@ import myGroupsIconFilledLight from "@assets/images/myGroupsIconFilledLight.svg"
 import myGroupsIconFilledDark from "@assets/images/myGroupsIconFilledDark.svg";
 
 import Loader from "@src/common/Loader";
-import { GoalItem } from "@src/models/GoalItem";
 import { addSubInPub } from "@src/api/PubSubAPI";
 import ContactItem from "@src/models/ContactItem";
-import { darkModeState, displayToast } from "@src/store";
+import ConfirmationModal from "@src/common/ConfirmationModal";
 import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
+import { confirmAction, IShareGoalModalProps } from "@src/Interfaces/IPopupModals";
 import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
-import { initRelationship, shareGoalWithContact } from "@src/services/contact.service";
+import { shareGoalWithContact } from "@src/services/contact.service";
+import { darkModeState, displayToast, showConfirmation } from "@src/store";
+import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import { getGoal, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
-import { addContact, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import SubMenu, { SubMenuItem } from "./SubMenu";
+import AddContactModal from "./AddContactModal";
 
 import "./ShareGoalModal.scss";
-
-interface IShareGoalModalProps {
-  goal: GoalItem
-  showShareModal: string,
-  setShowShareModal: React.Dispatch<React.SetStateAction<string>>
-}
-
-const shareInvitation = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA30lEQVR4nOXUvUoDQRTF8d9WEay20EKbNH5EfKBY2FrrY/gAEXwFG+0FU9ha2oakiWin+ADKwBWmWNlZXUH0wIHhnnv/MMwH5VrHmp61gwc8Yb9v6Fu4F/gIj1jgPryIWsq+rDPMMcR1eBi1yXfAK1iN9QdY1FLWWZs4xBEGDeBBZKlnoxS6h5fssOoGcJ3lz9gtAZ/iFVsBqBrAVWTb0ZtmWnWOWUM9B+eaxcw/Al/h8ifAdXZDegV/pj8MnmDZAbws/ZAO4qne4KLF0+gdl4ArnOAWdy1OPccddveL9Q7lolSRwSaqJAAAAABJRU5ErkJggg==";
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const minContacts = 1;
@@ -38,14 +32,14 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
 
-  const [displaySubmenu, setDisplaySubmenu] = useState("");
+  const [loading, setLoading] = useState({ P: false, A: false, S: false });
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [userGroups, setUserGroups] = useState<PublicGroupItem[]>([]);
+  const [displaySubmenu, setDisplaySubmenu] = useState("");
   const [showAddContactModal, setShowAddContactModal] = useState(false);
-  const [loading, setLoading] = useState({ P: false, A: false, S: false });
-  const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
+  const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
+  const [displayConfirmation, setDisplayConfirmation] = useRecoilState(showConfirmation);
 
-  const handleCloseAddContact = () => setShowAddContactModal(false);
   const handleShowAddContact = () => setShowAddContactModal(true);
 
   const getContactBtn = (relId = "", name = "", accepted = false) => (
@@ -53,7 +47,8 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       <button
         type="button"
         style={name === "" || accepted ? {} : { background: "#DFDFDF", color: "#979797" }}
-        onClick={async () => {
+        onClick={async (e) => {
+          e.stopPropagation();
           setLoading({ ...loading, S: true });
           if (name === "") handleShowAddContact();
           else {
@@ -78,22 +73,31 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
     </div>
   );
 
-  const shareThisLink = (link: string) => {
-    navigator.share({ text: link }).then(() => {
-      setNewContact(null);
-      handleCloseAddContact();
-    });
+  const handleActionClick = async (action: string) => {
+    console.log(action);
+    if (action === "shareAnonymously") {
+      let parentGoalTitle = "root";
+      setLoading({ ...loading, A: true });
+      if (goal.parentGoalId !== "root") { parentGoalTitle = (await getGoal(goal.parentGoalId)).title; }
+      const { response } = await shareMyGoalAnonymously(goal, parentGoalTitle);
+      setShowToast({ open: true, message: response, extra: "" });
+      setLoading({ ...loading, A: false });
+    } else if (action === "shareWithOne") {
+      setDisplaySubmenu("contacts");
+    }
+    setConfirmationAction(null);
   };
-  const addNewContact = async () => {
-    if (newContact && newContact.relId === "") {
-      const res = await initRelationship();
-      if (res.success) {
-        await addContact(newContact?.contactName, res.response?.relId);
-        setNewContact({ ...newContact, relId: res.response?.relId });
-        shareThisLink(`${window.location.origin}/invite/${newContact?.relId}`);
-      }
+
+  const openConfirmationPopUp = async (action: confirmAction) => {
+    const { actionCategory, actionName } = action;
+    if (actionCategory === "collaboration" && displayConfirmation.collaboration[actionName]) {
+      setConfirmationAction({ ...action });
+      setDisplayConfirmation({ ...displayConfirmation, open: true });
+    } else if (actionCategory === "goal" && displayConfirmation.goal[action.actionName]) {
+      setConfirmationAction({ ...action });
+      setDisplayConfirmation({ ...displayConfirmation, open: true, });
     } else {
-      shareThisLink(`${window.location.origin}/invite/${newContact?.relId}`);
+      await handleActionClick(actionName);
     }
   };
   useEffect(() => {
@@ -115,6 +119,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       style={showAddContactModal ? { zIndex: 1 } : {}}
     >
       <Modal.Body id="share-modal-body">
+        { confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} /> }
         <h4>{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</h4>
         { displaySubmenu === "groups" ? (
           <SubMenu>
@@ -125,12 +130,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             {/* Share Anonymously */}
             <button
               onClick={async () => {
-                let parentGoalTitle = "root";
-                setLoading({ ...loading, A: true });
-                if (goal.parentGoalId !== "root") { parentGoalTitle = (await getGoal(goal.parentGoalId)).title; }
-                const { response } = await shareMyGoalAnonymously(goal, parentGoalTitle);
-                setShowToast({ open: true, message: response, extra: "" });
-                setLoading({ ...loading, A: false });
+                await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareAnonymously" });
               }}
               type="button"
               className="shareOptions-btn"
@@ -172,7 +172,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
             <button
               disabled={goal.typeOfGoal !== "myGoal"}
               type="button"
-              onClick={() => setDisplaySubmenu("contacts")}
+              onClick={async () => { if (displaySubmenu !== "contacts") await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareWithOne" }); }}
               className="shareOptions-btn"
             >
               <div className="share-Options">
@@ -204,44 +204,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           </>
         )}
       </Modal.Body>
-      <Modal
-        className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""}`}
-        show={showAddContactModal}
-        onHide={() => {
-          setNewContact(null);
-          handleCloseAddContact();
-        }}
-        centered
-        autoFocus={false}
-      >
-        <Modal.Body>
-          <p className="popupModal-title"> Add a contact name </p>
-          <input
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
-            disabled={newContact ? newContact.relId !== "" : false}
-            type="text"
-            placeholder="Name"
-            className="show-feelings__note-input"
-            value={newContact?.contactName || ""}
-            onChange={(e) => {
-              setNewContact({ contactName: e.target.value, relId: newContact?.relId || "" });
-            }}
-            onKeyDown={async (e) => {
-              if (e.key === "Enter") {
-                await addNewContact();
-              }
-            }}
-          />
-          <button
-            type="button"
-            onClick={async () => { await addNewContact(); }}
-            className={`addContact-btn${darkModeStatus ? "-dark" : ""}`}
-          >
-            <img alt="add contact" src={shareInvitation} />Share invitation
-          </button>
-        </Modal.Body>
-      </Modal>
+      { showAddContactModal && <AddContactModal showAddContactModal={showAddContactModal} setShowAddContactModal={setShowAddContactModal} /> }
     </Modal>
   );
 };

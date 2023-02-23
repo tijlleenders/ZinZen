@@ -19,11 +19,7 @@ import InputGoal from "../InputGoal";
 
 import "./SuggestionModal.scss";
 
-interface SuggestionModalProps {
-  goalID: string,
-}
-
-const SuggestionModal: React.FC<SuggestionModalProps> = ({ goalID }) => {
+const SuggestionModal = ({ goalID } : {goalID: string}) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
 
