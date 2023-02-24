@@ -32,6 +32,7 @@ import Sidebar from "@components/Sidebar";
 import { colorPalleteList } from "@src/utils";
 import { displaySidebar } from "@src/store/SidebarState";
 import { createUserGroup } from "@src/helpers/GroupsProcessor";
+import { areGoalTagsValid } from "@src/validators/GoalValidators";
 import { createGoal, modifyGoal } from "@src/helpers/GoalController";
 import SuggestionModal from "@components/GoalsComponents/SuggestionModal/SuggestionModal";
 import { displayAddPublicGroup, displayExploreGroups, newGroupTitle } from "@src/store/GroupsState";
@@ -74,6 +75,8 @@ export const MainHeaderDashboard = () => {
   };
   const addThisGoal = async () => {
     if (!showAddGoal || isTitleEmpty()) { return; }
+    const { valid, reason } = areGoalTagsValid(goalTags);
+    if (!valid) { setShowToast({ open: true, message: reason, extra: "" }); return; }
     const { parentGoal } = await createGoal(showAddGoal.goalId, goalTags, goalTitle, colorPalleteList[colorIndex], subGoalsHistory.length);
     // @ts-ignore
     if (parentGoal && selectedGoalId !== parentGoal.id) { addInHistory(parentGoal); }
@@ -82,6 +85,8 @@ export const MainHeaderDashboard = () => {
   };
   const updateThisGoal = async () => {
     if (!showUpdateGoal || isTitleEmpty()) { return; }
+    const { valid, reason } = areGoalTagsValid(goalTags);
+    if (!valid) { setShowToast({ open: true, message: reason, extra: "" }); return; }
     await modifyGoal(showUpdateGoal.goalId, goalTags, goalTitle, colorPalleteList[colorIndex], subGoalsHistory.length);
     resetCurrentStates();
   };
