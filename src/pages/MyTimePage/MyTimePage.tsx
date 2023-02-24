@@ -22,6 +22,7 @@ import "@translations/i18n";
 
 export const MyTimePage = () => {
   const today = new Date();
+  today.setDate(today.getDate() + 1);
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
@@ -64,7 +65,7 @@ export const MyTimePage = () => {
             handleShowTasks(day);
           }}
         >
-          <h3 className="MyTime_dayTitle"> {day === "Today" ? `My ${today.toDateString()}` : day}</h3>
+          <h3 className="MyTime_dayTitle"> {day === "Today" ? `My ${new Date().toDateString()}` : day}</h3>
           <button
             className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
             type="button"
@@ -172,7 +173,7 @@ export const MyTimePage = () => {
         {getDayComponent("Tomorrow")}
         {
           [...Array(5).keys()].map(() => {
-            today.setDate(today.getDate() + 2);
+            today.setDate(today.getDate() + 1);
             return getDayComponent(`${today.toLocaleDateString("en-us", { weekday: "long" })}`);
           })
         }
