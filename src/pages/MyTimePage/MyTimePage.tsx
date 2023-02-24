@@ -55,6 +55,7 @@ export const MyTimePage = () => {
   );
   const getDayComponent = (day: string) => {
     let colorIndex = -1;
+    const freeHours = tasks[day]?.freeHrsOfDay;
     return (
       <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
         <button
@@ -70,7 +71,7 @@ export const MyTimePage = () => {
             className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
             type="button"
           >
-            <div> { showTasks.includes(day) ? `${tasks[day]?.freeHrsOfDay} hours free` : <ChevronRight /> } </div>
+            <div> { showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <ChevronRight /> } </div>
           </button>
         </button>
         {showTasks.includes(day) ? getTimeline(day) :
