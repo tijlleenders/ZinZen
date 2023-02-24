@@ -1,7 +1,7 @@
 export interface ISharedGoal {
     id: string;
     title: string,
-    duration: number | null,
+    duration: string | null,
     repeat: string | null;
     start: Date | null;
     due: Date | null;
