@@ -26,7 +26,7 @@ export const MyTimePage = () => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
-  const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number }}>({});
+  const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } }}>({});
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
@@ -39,7 +39,7 @@ export const MyTimePage = () => {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
     } else { setShowTasks([...showTasks, dayName]); }
   };
-  const getColorWidth = (day:string, unplanned: boolean, duration: number) => (duration * (100 / (tasks[day].scheduled.length)));
+  const getColorWidth = (duration: number, totalSlots: number) => (duration * (100 / (totalSlots)));
 
   const getColorComponent = (colorWidth:number, color: string) => (
     <div
@@ -54,7 +54,7 @@ export const MyTimePage = () => {
     tasks[day] ? <MyTimeline myTasks={tasks[day]} /> : <div />
   );
   const getDayComponent = (day: string) => {
-    let colorIndex = -1;
+    const colorIndex = -1;
     const freeHours = tasks[day]?.freeHrsOfDay;
     return (
       <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
@@ -77,11 +77,7 @@ export const MyTimePage = () => {
         {showTasks.includes(day) ? getTimeline(day) :
           (
             <div className="MyTime_colorPalette">
-              {tasks[day]?.scheduled.map((task, index) => {
-                const colorWidth = getColorWidth(day, false, task.duration);
-                colorIndex = (colorIndex === colorPalleteList.length - 1) ? 0 : colorIndex + 1;
-                return getColorComponent((tasks[day].scheduledHrs / tasks[day].scheduled.length) * 100, task.goalColor);
-              })}
+              {tasks[day]?.colorBands.map((ele) => getColorComponent(ele.colorWidth, ele.color))}
             </div>
           )}
       </div>
@@ -104,7 +100,7 @@ export const MyTimePage = () => {
     const _today = new Date();
     _schedulerOutput.scheduled.forEach((dayOutput, index) => {
       const { day } = dayOutput;
-      const thisDay = { freeHrsOfDay: 0, scheduledHrs: 0, scheduled: [], impossible: [] };
+      const thisDay = { freeHrsOfDay: 0, scheduledHrs: 0, scheduled: [], impossible: [], colorBands: [] };
       _schedulerOutput.impossible[index].outputs.forEach((ele) => {
         const { goalColor, parentGoalId } = obj[ele.goalid];
         thisDay.impossible.push({ ...ele, goalColor, parentGoalId });
@@ -117,6 +113,14 @@ export const MyTimePage = () => {
         } else {
           thisDay.freeHrsOfDay += ele.duration;
         }
+      });
+      const totalSlots = dayOutput.outputs.length;
+      dayOutput.outputs.forEach((ele) => {
+        const colorWidth = getColorWidth(ele.duration, totalSlots);
+        thisDay.colorBands.push({
+          colorWidth: (ele.duration / 24) * (1 / totalSlots) * 100 * 100,
+          color: ele.title === "free" ? "rgba(115, 115, 115, 0.2)" : obj[ele.goalid].goalColor
+        });
       });
       if (index === 0) {
         res.Today = thisDay;
