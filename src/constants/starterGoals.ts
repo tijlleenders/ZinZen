@@ -16,7 +16,7 @@ export const addStarterGoal = async (
   await addGoal(createGoalObjectFromTags({
     title: goalTitle,
     repeat: goalTags.repeats ? goalTags?.repeats.value.trim() : null,
-    duration: goalTags.duration ? goalTags.duration.value : null,
+    duration: goalTags.duration ? `${goalTags.duration.value}` : null,
     start: goalTags.start ? goalTags.start.value : null,
     due: goalTags.due ? goalTags.due.value : null,
     afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
