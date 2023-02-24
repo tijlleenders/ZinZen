@@ -34,7 +34,7 @@ export const goalDurationHandler = (input:string) => {
 
   if (!lowercaseInput) { return res; }
 
-  const output = handleDuration(lowercaseInput);
+  const output = handleDuration(`${lowercaseInput} `);
   if (output) {
     res.status = true;
     res.value = output;
