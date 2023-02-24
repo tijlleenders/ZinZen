@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 import { darkModeState, searchActive } from "@src/store";
 import React, { ChangeEvent } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -10,11 +11,13 @@ const Search = ({ debounceSearch }: { debounceSearch: (event: ChangeEvent<HTMLIn
   const darkModeStatus = useRecoilValue(darkModeState);
   const setDisplaySearch = useSetRecoilState(searchActive);
   return (
-    <div style={{ display: "flex", gap: "10px" }}><input
-      id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
-      placeholder={t("search")}
-      onChange={(e) => debounceSearch(e)}
-    />
+    <div style={{ display: "flex", gap: "10px" }}>
+      <input
+        id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
+        placeholder={t("search")}
+        autoFocus
+        onChange={(e) => debounceSearch(e)}
+      />
       <button
         type="button"
         style={{ margin: "0 8% 2% 8px",
