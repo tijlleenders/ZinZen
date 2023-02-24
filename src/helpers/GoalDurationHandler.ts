@@ -1,6 +1,31 @@
 interface goalDurationHandlerResponse {
     status: boolean,
-    value: { index: number, value: number} | null
+    value: { index: number, value: string} | null
+}
+
+function handleDuration(lowercaseInput: string) {
+  const durationPatterns = [
+    {
+      pattern: /\s(\d+-\d+)+h\s/i,
+      extractor(input: string) {
+        return input.split("h")[0];
+      }
+    },
+    {
+      pattern: /\s\d+h\s/i,
+      extractor(input: string) {
+        return input.split("h")[0];
+      }
+    }
+  ];
+  for (let i = 0; i < durationPatterns.length; i += 1) {
+    const ele = durationPatterns[i];
+    const found = lowercaseInput.search(ele.pattern);
+    if (found >= 0) {
+      return { index: found, value: ele.extractor(`${lowercaseInput.slice(found).trim()}`) };
+    }
+  }
+  return null;
 }
 
 export const goalDurationHandler = (input:string) => {
@@ -9,34 +34,11 @@ export const goalDurationHandler = (input:string) => {
 
   if (!lowercaseInput) { return res; }
 
-  const tracker = /(1[0-9]|2[0-4]|[1-9])+h/i;
-  let lastIndex = lowercaseInput.match(tracker)?.index || -1;
-  if (lastIndex) {
-    const value = parseInt(lowercaseInput.slice(lastIndex, lastIndex + 2).split("h")[0], 10);
-    if (value > 0 && value <= 24) {
-      res.value = { index: lastIndex, value };
-    } else lastIndex = -1;
+  const output = handleDuration(`${lowercaseInput} `);
+  if (output) {
+    res.status = true;
+    res.value = output;
   }
-  // console.log(lowercaseInput.match(tracker));
-  // const reverseInputArr = lowercaseInput.split(" ");
-  // let lastIndex = -1;
-  // let tmpSum = 0;
-
-  // console.log(reverseInputArr, reverseInputArr.length)
-  // for (let i = 0; i < reverseInputArr.length; i += 1) {
-  //   const reverseInput = reverseInputArr[i];
-  //   const checkGoalHr = parseInt(String(reverseInput.match(tracker)), 10);
-  //   const parseGoal = parseInt(String(reverseInput.match(tracker)), 10) <= 24;
-  //   const tempIndex = reverseInput.search(tracker);
-  //   if (tempIndex !== -1 && parseGoal) {
-  //     lastIndex += tmpSum;
-  //     res.value = { index: lastIndex + 1, value: checkGoalHr };
-  //     console.log("duration", res.value)
-  //   }
-  //   tmpSum += reverseInput.length + 1;
-  // }
-
-  if (lastIndex < 0) { res.value = null; } else { res.status = true; }
 
   return res;
 };

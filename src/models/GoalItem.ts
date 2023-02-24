@@ -4,7 +4,7 @@ import { IShared } from "@src/Interfaces/IShared";
 export interface GoalItem {
   id: string;
   title: string;
-  duration?: number | null;
+  duration?: string | null;
   sublist: string[];
   repeat?: string | null;
   due: Date | null;

@@ -10,7 +10,6 @@ import { darkModeState } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
 import { colorPalleteList, getDiffInHours } from "@src/utils";
-import { TaskFilter } from "@src/helpers/TaskFilter/TaskFilter";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
@@ -150,7 +149,7 @@ export const MyTimePage = () => {
       activeGoals = [...activeGoals.filter((ele) => (!!ele.duration && !devMode))];
       activeGoals.forEach((ele) => {
         const obj = { id: ele.id, title: ele.title };
-        if (ele.duration) obj.duration = `${ele.duration}`;
+        if (ele.duration) obj.duration = `${ele.duration}${ele.duration.includes("-") ? "h" : ""}`;
         if (ele.start) obj.start = `${ele.start?.toISOString().slice(0, 10)}T${ele.start?.toTimeString().slice(0, 8)}`;
         if (ele.due) obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
         if (ele.afterTime) obj.after_time = ele.afterTime;

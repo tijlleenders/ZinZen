@@ -4,7 +4,7 @@ export interface ITags {
     afterTime: null | { index: number, value: number | null },
     beforeTime: null | { index: number, value: number | null },
     link: { index: number; value: string | null; } | null,
-    duration: { index: number; value: number; } | null,
+    duration: { index: number; value: string; } | null,
     repeats: { index: number; value: string; endIndex: number } | null
 }
 
