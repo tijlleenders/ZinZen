@@ -62,7 +62,7 @@ const App = () => {
                   .then(() => console.log("goal added in inbox"))
                   .catch((err) => console.log("Failed to add in inbox", err));
               } else if (["shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
-                handleIncomingChanges(ele);
+                handleIncomingChanges(ele).then(() => setLastAction("goalNewUpdates"));
               }
             });
           }
