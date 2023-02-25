@@ -150,3 +150,20 @@ export const jumpToLowestChanges = async (id: string) => {
   } else { console.log("inbox item doesn't exist"); }
   return { typeAtPriority, parentId: "", goals: [] };
 };
+
+export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
+  const tags = ["title", "duration", "repeat", "start", "due", "afterTime", "beforeTime", "goalColor", "language", "link"];
+  const res = { schemaVersion: { }, prettierVersion: { } };
+  const goal1Tags = formatTagsToText(goal1);
+  const goal2Tags = formatTagsToText(goal2);
+  console.log(goal1Tags, goal2Tags);
+  tags.forEach((tag) => {
+    if (goal1[tag] !== goal2[tag]) {
+      res.schemaVersion[tag] = goal2[tag];
+      if (tag.includes("Time")) {
+        res.prettierVersion.timing = { oldVal: goal1Tags.timing, newVal: goal2Tags.timing };
+      } else res.prettierVersion[tag] = { oldVal: goal1Tags[tag], newVal: goal2Tags[tag] };
+    }
+  });
+  return res;
+};
