@@ -55,8 +55,30 @@ export const MyTimePage = () => {
   const getDayComponent = (day: string) => {
     const colorIndex = -1;
     const freeHours = tasks[day]?.freeHrsOfDay;
+    
+    const today = new Date();
+    const dayOfMonth = today.getDate();
+    let suffix = "";
+    if (dayOfMonth === 1 || dayOfMonth === 21 || dayOfMonth === 31) {
+      suffix = "st";
+    } else if (dayOfMonth === 2 || dayOfMonth === 22) {
+      suffix = "nd";
+    } else if (dayOfMonth === 3 || dayOfMonth === 23) {
+      suffix = "rd";
+    } else {
+      suffix = "th";
+    }
     return (
-      <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
+        <h3 className="MyTime_dayTitle">
+            {day === "Today" ? (
+              <>
+                My {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
+                <sup>{suffix}</sup>
+              </>
+            ) : (
+              day
+            )}
+         </h3>
         <button
           type="button"
           className="MyTime_navRow"
