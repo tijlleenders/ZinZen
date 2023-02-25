@@ -7,6 +7,7 @@ import { getInboxItem } from "@src/api/InboxAPI";
 import { ITags } from "@src/Interfaces/ITagExtractor";
 import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
 import { getDefaultValueOfShared, getDefaultValueOfCollab } from "@src/utils/defaultGenerators";
+import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
 export const formatTagsToText = (_goal: GoalItem) => {
   const goal = { ..._goal };
@@ -152,15 +153,15 @@ export const jumpToLowestChanges = async (id: string) => {
 };
 
 export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
-  const tags = ["title", "duration", "repeat", "start", "due", "afterTime", "beforeTime", "goalColor", "language", "link"];
-  const res = { schemaVersion: { }, prettierVersion: { } };
+  const tags: ITagsAllowedToDisplay[] = ["title", "duration", "repeat", "start", "due", "afterTime", "beforeTime", "goalColor", "language", "link"];
+  const res:ITagsChanges = { schemaVersion: { }, prettierVersion: { } };
   const goal1Tags = formatTagsToText(goal1);
   const goal2Tags = formatTagsToText(goal2);
   console.log(goal1Tags, goal2Tags);
   tags.forEach((tag) => {
     if (goal1[tag] !== goal2[tag]) {
-      res.schemaVersion[tag] = goal2[tag];
-      if (tag.includes("Time")) {
+      res.schemaVersion[tag] = goal2[tag] || null;
+      if (tag === "afterTime" || tag === "beforeTime") {
         res.prettierVersion.timing = { oldVal: goal1Tags.timing, newVal: goal2Tags.timing };
       } else res.prettierVersion[tag] = { oldVal: goal1Tags[tag], newVal: goal2Tags[tag] };
     }

@@ -15,7 +15,7 @@ import { changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/Goals
 
 interface AcceptBtnProps {
   goal: GoalItem,
-  acceptChanges: () => Promise<string[]>,
+  acceptChanges: () => Promise<void>,
   showChangesModal: IDisplayChangesModal,
   setShowChangesModal: React.Dispatch<React.SetStateAction<IDisplayChangesModal | null>>
 }

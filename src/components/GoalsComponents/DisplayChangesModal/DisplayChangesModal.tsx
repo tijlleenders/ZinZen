@@ -4,11 +4,13 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { darkModeState } from "@src/store";
+import { getGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
 import { displayChangesModal } from "@src/store/GoalsState";
 import { findGoalTagChanges } from "@src/helpers/GoalProcessor";
-import { addGoal, addIntoSublist, archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
+import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
+import { acceptChangesOf } from "@src/helpers/InboxProcessor";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
@@ -17,14 +19,13 @@ import "./DisplayChangesModal.scss";
 
 const DisplayChangesModal = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [activeContact, setActiveContact] = useState("");
   const [activeGoal, setActiveGoal] = useState<GoalItem>();
-  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
+  const [updateList, setUpdateList] = useState<ITagsChanges>({ schemaVersion: { }, prettierVersion: { } });
+  const [activeContact, setActiveContact] = useState("");
   const [currentDisplay, setCurrentDisplay] = useState<typeOfChange | "none" | "conversionRequest">("none");
+  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [unselectedChanges, setUnselectedChanges] = useState<string[]>([]);
 
-  const [updateList, setUpdateList] = useState({ schemaVersion: { }, prettierVersion: { } });
-  console.log(unselectedChanges);
   const getEditChangesList = () => {
     const { prettierVersion } = updateList;
     return (
@@ -67,35 +68,9 @@ const DisplayChangesModal = () => {
 
   const acceptChanges = async () => {
     if (showChangesModal) {
-      const goal = showChangesModal.goals[0];
-      if (showChangesModal.typeAtPriority === "subgoals" && activeGoal) {
-        const childrens: string[] = [];
-        showChangesModal.goals.forEach(async (colabGoal: GoalItem) => {
-          if (!(unselectedChanges.includes(colabGoal.id))) {
-            addGoal(colabGoal).catch((err) => console.log(err));
-            childrens.push(colabGoal.id);
-          }
-        });
-        addIntoSublist(activeGoal.id, childrens).then(() => { setShowChangesModal(null); });
-      } if (showChangesModal.typeAtPriority === "modifiedGoals") {
-        const { schemaVersion, prettierVersion } = updateList;
-        const finalChanges = { };
-        Object.keys(prettierVersion).forEach((ele) => {
-          if (!(unselectedChanges.includes(ele))) {
-            if (ele === "timing") {
-              if (schemaVersion.hasOwnProperty("afterTime")) { finalChanges.afterTime = schemaVersion.afterTime; }
-              if (schemaVersion.hasOwnProperty("beforeTime")) { finalChanges.beforeTime = schemaVersion.beforeTime; }
-            } else finalChanges[ele] = schemaVersion[ele]; 
-          }
-        });
-        await updateGoal(goal.id, finalChanges);
-      } else if (showChangesModal.typeAtPriority === "deleted") {
-        await removeGoalWithChildrens(goal);
-      } else if (showChangesModal.typeAtPriority === "archived") {
-        await archiveUserGoal(goal);
-      }
-      setUnselectedChanges([]);
+      await acceptChangesOf(unselectedChanges, showChangesModal, updateList, activeGoal);
     }
+    setUnselectedChanges([]);
   };
   const getChanges = () => (
     currentDisplay === "archived" || currentDisplay === "deleted" ? <div /> :
@@ -109,7 +84,6 @@ const DisplayChangesModal = () => {
         if (showChangesModal.typeAtPriority === "conversionRequest") {
           setActiveContact(rootGoal.shared.contacts[0].name);
         } else { setActiveContact(rootGoal.collaboration.collaborators[0].name); }
-        console.log(showChangesModal, goal);
         if (showChangesModal.typeAtPriority === "modifiedGoals") {
           const incGoal: GoalItem = { ...(showChangesModal.goals[0]) };
           const currGoal = await getGoal(showChangesModal.parentId);
