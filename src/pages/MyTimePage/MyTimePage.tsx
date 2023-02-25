@@ -81,7 +81,7 @@ export const MyTimePage = () => {
           <h3 className="MyTime_dayTitle">
             {day === "Today" ? (
               <>
-                My {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
+                {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
                 <sup>{suffix}</sup>
               </>
             ) : (
