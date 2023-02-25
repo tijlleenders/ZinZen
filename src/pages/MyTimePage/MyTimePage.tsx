@@ -69,16 +69,7 @@ export const MyTimePage = () => {
       suffix = "th";
     }
     return (
-        <h3 className="MyTime_dayTitle">
-            {day === "Today" ? (
-              <>
-                My {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
-                <sup>{suffix}</sup>
-              </>
-            ) : (
-              day
-            )}
-         </h3>
+      <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
         <button
           type="button"
           className="MyTime_navRow"
@@ -87,7 +78,16 @@ export const MyTimePage = () => {
             handleShowTasks(day);
           }}
         >
-          <h3 className="MyTime_dayTitle"> {day === "Today" ? `My ${new Date().toDateString()}` : day}</h3>
+          <h3 className="MyTime_dayTitle">
+            {day === "Today" ? (
+              <>
+                My {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
+                <sup>{suffix}</sup>
+              </>
+            ) : (
+              day
+            )}
+          </h3>
           <button
             className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
             type="button"
