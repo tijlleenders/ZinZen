@@ -9,7 +9,7 @@ import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import { darkModeState } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
-import { colorPalleteList, getDiffInHours } from "@src/utils";
+import { colorPalleteList, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
@@ -58,16 +58,7 @@ export const MyTimePage = () => {
     
     const today = new Date();
     const dayOfMonth = today.getDate();
-    let suffix = "";
-    if (dayOfMonth === 1 || dayOfMonth === 21 || dayOfMonth === 31) {
-      suffix = "st";
-    } else if (dayOfMonth === 2 || dayOfMonth === 22) {
-      suffix = "nd";
-    } else if (dayOfMonth === 3 || dayOfMonth === 23) {
-      suffix = "rd";
-    } else {
-      suffix = "th";
-    }
+    const suffix = getOrdinalSuffix(dayOfMonth);
     return (
       <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
         <button
