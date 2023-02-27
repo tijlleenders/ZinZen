@@ -56,8 +56,7 @@ export const MyTimePage = () => {
     const colorIndex = -1;
     const freeHours = tasks[day]?.freeHrsOfDay;
     
-    const today = new Date();
-    const dayOfMonth = today.getDate();
+    const dayOfMonth = today.getDate() - 1;
     const suffix = getOrdinalSuffix(dayOfMonth);
     return (
       <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
