@@ -9,7 +9,7 @@ import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import { darkModeState } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
-import { colorPalleteList, getDiffInHours } from "@src/utils";
+import { colorPalleteList, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
@@ -55,6 +55,9 @@ export const MyTimePage = () => {
   const getDayComponent = (day: string) => {
     const colorIndex = -1;
     const freeHours = tasks[day]?.freeHrsOfDay;
+    
+    const dayOfMonth = today.getDate() - 1;
+    const suffix = getOrdinalSuffix(dayOfMonth);
     return (
       <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
         <button
@@ -65,7 +68,16 @@ export const MyTimePage = () => {
             handleShowTasks(day);
           }}
         >
-          <h3 className="MyTime_dayTitle"> {day === "Today" ? `My ${new Date().toDateString()}` : day}</h3>
+          <h3 className="MyTime_dayTitle">
+            {day === "Today" ? (
+              <>
+                {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
+                <sup>{suffix}</sup>
+              </>
+            ) : (
+              day
+            )}
+          </h3>
           <button
             className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
             type="button"

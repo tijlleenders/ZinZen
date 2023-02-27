@@ -107,3 +107,15 @@ export function getDateInText(date: Date) {
   }
   return dateInText;
 }
+
+export function getOrdinalSuffix(dayOfMonth: number): string {
+  if (dayOfMonth % 10 === 1 && dayOfMonth !== 11) {
+    return "st";
+  } else if (dayOfMonth % 10 === 2 && dayOfMonth !== 12) {
+    return "nd";
+  } else if (dayOfMonth % 10 === 3 && dayOfMonth !== 13) {
+    return "rd";
+  } else {
+    return "th";
+  }
+}
