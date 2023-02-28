@@ -20,8 +20,10 @@ import "./MyTimePage.scss";
 import "@translations/i18n";
 
 export const MyTimePage = () => {
+  const fakeThursday = new Date();
+  fakeThursday.setDate(fakeThursday.getDate() + (fakeThursday.getDate() === 28 ? 2 : 1));
   const today = new Date();
-  today.setDate(today.getDate() + 1);
+
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
@@ -32,7 +34,7 @@ export const MyTimePage = () => {
   const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
   const [impossibleTasks, setImpossibleTasks] = useState<{[day: string]: ITask[]}>({});
-
+  const [devMode, setDevMode] = useState(false);
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
@@ -55,8 +57,7 @@ export const MyTimePage = () => {
   const getDayComponent = (day: string) => {
     const colorIndex = -1;
     const freeHours = tasks[day]?.freeHrsOfDay;
-    
-    const dayOfMonth = today.getDate() - 1;
+    const dayOfMonth = devMode ? fakeThursday.getDate() : today.getDate();
     const suffix = getOrdinalSuffix(dayOfMonth);
     return (
       <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
@@ -71,7 +72,7 @@ export const MyTimePage = () => {
           <h3 className="MyTime_dayTitle">
             {day === "Today" ? (
               <>
-                {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
+                {(devMode ? fakeThursday : today).toLocaleString("default", { weekday: "long" })} {dayOfMonth}
                 <sup>{suffix}</sup>
               </>
             ) : (
@@ -108,7 +109,7 @@ export const MyTimePage = () => {
     activeGoals.forEach((goal) => {
       obj[goal.id] = { parentGoalId: goal.parentGoalId, goalColor: goal.goalColor };
     });
-    const _today = new Date();
+    const _today = devMode ? new Date(fakeThursday) : new Date();
     _schedulerOutput.scheduled.forEach((dayOutput, index) => {
       const { day } = dayOutput;
       const thisDay = { freeHrsOfDay: 0, scheduledHrs: 0, scheduled: [], impossible: [], colorBands: [] };
@@ -143,13 +144,23 @@ export const MyTimePage = () => {
     return res;
   };
   useEffect(() => {
-    (async () => {
-      const devMode = await checkMagicGoal();
-      let activeGoals: GoalItem[] = await (devMode ? getAllGoals() : getActiveGoals());
+    const checkDevMode = async () => {
+      const isDevMode = await checkMagicGoal();
+      if (!devMode && isDevMode) {
+        setDevMode(isDevMode);
+      }
+    };
+    checkDevMode();
+  }, []);
+  useEffect(() => {
+    const initialCall = async () => {
+      let activeGoals: GoalItem[] = await getAllGoals();
       if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
       console.log(activeGoals);
+
       await init();
-      const _today = new Date();
+      const _today = devMode ? new Date(fakeThursday) : new Date();
+      _today.setDate(_today.getDate() + 1);
       const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
       const endDate = `${new Date(_today.setDate(_today.getDate() + 7)).toISOString().slice(0, 10)}T00:00:00`;
 
@@ -158,28 +169,39 @@ export const MyTimePage = () => {
         endDate,
         goals: []
       };
-      activeGoals = [...activeGoals.filter((ele) => (!!ele.duration && !devMode))];
+      const noDurationGoals = [];
+      activeGoals = [...activeGoals.filter((ele) => {
+        if (!ele.duration) noDurationGoals.push(ele.id);
+        return !!(ele.duration);
+      })];
       activeGoals.forEach((ele) => {
         const obj = { id: ele.id, title: ele.title };
         if (ele.duration) obj.duration = `${ele.duration}${ele.duration.includes("-") ? "h" : ""}`;
-        if (ele.start) obj.start = `${ele.start?.toISOString().slice(0, 10)}T${ele.start?.toTimeString().slice(0, 8)}`;
-        if (ele.due) obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
+        if (ele.start) {
+          const { start } = ele;
+          start.setDate(start.getDate() + 1);
+          obj.start = `${ele.start?.toISOString().slice(0, 10)}T${ele.start?.toTimeString().slice(0, 8)}`;
+        }
+        if (ele.due) {
+          const { due } = ele;
+          due.setDate(due.getDate() + 1);
+          obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
+        }
         if (ele.afterTime) obj.after_time = ele.afterTime;
         if (ele.beforeTime) obj.before_time = ele.beforeTime;
         if (ele.repeat) obj.repeat = ele.repeat.toLowerCase();
+        if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
         schedulerInput.goals.push(obj);
       });
       console.log("input", schedulerInput);
       const res = schedule(schedulerInput);
       console.log("output", res);
-      const processedOutput = handleSchedulerOutput(res, activeGoals);
-      // const bandWidths = {};
+      const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
       console.log(processedOutput);
-      // setColorBands({ ...bandWidths });
       setTasks({ ...processedOutput });
-      // setImpossibleTasks({ ...handleSchedulerOutput(res.impossible, activeGoals) });
-    })();
-  }, []);
+    };
+    initialCall();
+  }, [devMode]);
 
   return (
     <div className="slide MyTime_container">
@@ -188,9 +210,12 @@ export const MyTimePage = () => {
         {getDayComponent("Today")}
         {getDayComponent("Tomorrow")}
         {
-          [...Array(5).keys()].map(() => {
-            today.setDate(today.getDate() + 1);
-            return getDayComponent(`${today.toLocaleDateString("en-us", { weekday: "long" })}`);
+          [...Array(6).keys()].map((i) => {
+            const thisDay = devMode ? new Date(fakeThursday) : new Date(today);
+            thisDay.setDate(thisDay.getDate() + i + 1);
+            if (i >= 1) {
+              return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
+            }
           })
         }
       </div>

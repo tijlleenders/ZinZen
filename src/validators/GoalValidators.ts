@@ -9,6 +9,7 @@ export const areGoalTagsValid = (goalTags: ITags) => {
     const durationValue = Number(duration.value.includes("-") ? duration.value.split("-")[1] : duration.value);
     if (afterTime?.value) { maxDurationPerDay -= afterTime.value; }
     if (beforeTime?.value) { maxDurationPerDay -= 24 - beforeTime.value; }
+    maxDurationPerDay = Math.abs(maxDurationPerDay);
     reason = `Impossible. Current max duration per day = ${maxDurationPerDay}h.`;
     if (repeats) {
       const repeatsValue = repeats.value.toLowerCase();
