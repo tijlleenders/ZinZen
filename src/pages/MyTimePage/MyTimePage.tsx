@@ -120,7 +120,7 @@ export const MyTimePage = () => {
         if (ele.title !== "free" && obj[ele.goalid]) {
           const { goalColor, parentGoalId } = obj[ele.goalid];
           thisDay.scheduledHrs += ele.duration;
-          thisDay.scheduled.push({ ...ele, goalColor, parentGoalId });
+          thisDay.scheduled.push({ ...ele, goalColor, parentGoalId, duration: ele.duration });
         } else {
           thisDay.freeHrsOfDay += ele.duration;
         }

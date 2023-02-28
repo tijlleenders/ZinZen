@@ -11,27 +11,28 @@ interface AddContactModalProps {
     showAddContactModal: boolean
     setShowAddContactModal: React.Dispatch<React.SetStateAction<boolean>>
 }
-const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, setShowAddContactModal}) => {
+const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, setShowAddContactModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const handleCloseAddContact = () => setShowAddContactModal(false);
 
-  const shareThisLink = (link: string) => {
-    navigator.share({ text: link }).then(() => {
-      setNewContact(null);
-      handleCloseAddContact();
-    });
-  };
   const addNewContact = async () => {
+    let link = "";
     if (newContact && newContact.relId === "") {
       const res = await initRelationship();
       if (res.success) {
         await addContact(newContact?.contactName, res.response?.relId);
         setNewContact({ ...newContact, relId: res.response?.relId });
-        shareThisLink(`${window.location.origin}/invite/${newContact?.relId}`);
+        link = `${window.location.origin}/invite/${newContact?.relId}`;
       }
     } else {
-      shareThisLink(`${window.location.origin}/invite/${newContact?.relId}`);
+      link = `${window.location.origin}/invite/${newContact?.relId}`;
+    }
+    if (link !== "") {
+      navigator.share({ text: link }).then(() => {
+        setNewContact(null);
+        handleCloseAddContact();
+      });
     }
   };
   return (

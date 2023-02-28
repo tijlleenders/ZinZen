@@ -2,9 +2,10 @@ import { GoalItem } from "@src/models/GoalItem";
 import { InboxItem } from "@src/models/InboxItem";
 
 import { getDefaultValueOfGoalChanges } from "@src/utils/defaultGenerators";
-import { changeNewUpdatesStatus, getGoal, notifyNewColabRequest } from "@src/api/GoalsAPI";
+import { addGoal, addIntoSublist, archiveUserGoal, changeNewUpdatesStatus, getGoal, notifyNewColabRequest, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
 import { addGoalsInSharedWM, archiveSharedWMGoal, getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
+import { IDisplayChangesModal, ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
 export const handleIncomingChanges = async (payload) => {
   if (payload.type === "shared") {
@@ -50,5 +51,48 @@ export const handleIncomingChanges = async (payload) => {
       // @ts-ignore
       await addGoalChangesInID(rootGoalId, defaultChanges);
     }
+  }
+};
+
+export const acceptSelectedSubgoals = async (unselectedGoalIds: string[], showChangesModal: IDisplayChangesModal, parentGoal: GoalItem) => {
+  try {
+    const childrens: string[] = [];
+    showChangesModal.goals.forEach(async (colabGoal: GoalItem) => {
+      if (!(unselectedGoalIds.includes(colabGoal.id))) {
+        addGoal(colabGoal).catch((err) => console.log(err));
+        childrens.push(colabGoal.id);
+      }
+    });
+    await addIntoSublist(parentGoal.id, childrens);
+    return "Done!!";
+  } catch (err) {
+    return "Failed To add Changes";
+  }
+};
+
+export const acceptSelectedTags = async (unselectedTags: string[], updateList: ITagsChanges, goal: GoalItem) => {
+  const { schemaVersion, prettierVersion } = updateList;
+  const finalChanges: ITagChangesSchemaVersion = { };
+  Object.keys(prettierVersion).forEach((ele) => {
+    if (!(unselectedTags.includes(ele))) {
+      if (ele === "timing") {
+        if ("afterTime" in schemaVersion) { finalChanges.afterTime = schemaVersion.afterTime; }
+        if ("beforeTime" in schemaVersion) { finalChanges.beforeTime = schemaVersion.beforeTime; }
+      } else finalChanges[ele] = schemaVersion[ele];
+    }
+  });
+  await updateGoal(goal.id, finalChanges);
+};
+
+export const acceptChangesOf = async (unselectedChanges: string[], showChangesModal: IDisplayChangesModal, updateList: ITagsChanges, activeGoal: GoalItem | undefined) => {
+  const goal = showChangesModal.goals[0];
+  if (showChangesModal.typeAtPriority === "subgoals" && activeGoal) {
+    await acceptSelectedSubgoals(unselectedChanges, showChangesModal, activeGoal);
+  } else if (showChangesModal.typeAtPriority === "modifiedGoals" && updateList) {
+    await acceptSelectedTags(unselectedChanges, updateList, goal);
+  } else if (showChangesModal.typeAtPriority === "deleted") {
+    await removeGoalWithChildrens(goal);
+  } else if (showChangesModal.typeAtPriority === "archived") {
+    await archiveUserGoal(goal);
   }
 };

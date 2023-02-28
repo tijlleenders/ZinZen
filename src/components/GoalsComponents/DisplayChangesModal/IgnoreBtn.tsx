@@ -46,7 +46,7 @@ const IgnoreBtn = ({ showChangesModal, goal, setShowChangesModal }: IgnoreBtnPro
         alt="add changes"
         src={ignore}
         width={25}
-      />&nbsp;{ isConversionRequest ? "Keep separate" : `Ignore${typeAtPriority === "subgoals" ? " all" : ""}`}
+      />&nbsp;{ isConversionRequest ? "Keep separate" : "Ignore all"}
     </button>
   );
 };

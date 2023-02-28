@@ -1,17 +1,17 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import collaborateSvg from "@assets/images/collaborate.svg";
 import deleteIcon from "@assets/images/deleteIcon.svg";
 import plus from "@assets/images/plus.svg";
 
-import { darkModeState } from "@src/store";
+import { darkModeState, lastAction } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { convertTypeOfSub } from "@src/api/PubSubAPI";
 import { getTypeAtPriority } from "@src/helpers/GoalProcessor";
 import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
 import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
-import { addGoal, addIntoSublist, changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
+import { changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
 
 interface AcceptBtnProps {
   goal: GoalItem,
@@ -24,6 +24,7 @@ const AcceptBtn = ({ showChangesModal, goal, acceptChanges, setShowChangesModal 
   const { typeAtPriority } = showChangesModal;
   const isConversionRequest = typeAtPriority === "conversionRequest";
   const darkModeStatus = useRecoilValue(darkModeState);
+  const setLastAction = useSetRecoilState(lastAction);
 
   const handleClick = async () => {
     if (isConversionRequest) {
@@ -31,26 +32,17 @@ const AcceptBtn = ({ showChangesModal, goal, acceptChanges, setShowChangesModal 
       await convertSharedGoalToColab(goal.id);
       setShowChangesModal(null);
     } else {
-      let removeChanges :string[] = [];
-      if (typeAtPriority === "subgoals") {
-        const childrens = showChangesModal.goals.map((colabGoal: GoalItem) => {
-          addGoal(colabGoal).catch((err) => console.log(err));
-          return colabGoal.id;
-        });
-        console.log(goal.id, childrens);
-        addIntoSublist(goal.id, childrens).then(() => { setShowChangesModal(null); });
-        removeChanges = [...childrens];
-      } else {
-        await acceptChanges();
-        removeChanges = [showChangesModal.goals[0].id];
-      }
+      await acceptChanges();
+      const removeChanges = typeAtPriority === "subgoals" ? showChangesModal.goals.map((ele) => ele.id) : [showChangesModal.goals[0].id];
       if (typeAtPriority !== "none") {
         await deleteGoalChangesInID(goal.rootGoalId, typeAtPriority, removeChanges);
       }
     }
     const inbox = await getInboxItem(goal.rootGoalId);
     if (getTypeAtPriority(inbox.goalChanges).typeAtPriority === "none") {
-      changeNewUpdatesStatus(false, goal.rootGoalId).catch((err) => console.log(err));
+      changeNewUpdatesStatus(false, goal.rootGoalId).then(() => {
+        setLastAction("goalUpdates");
+      }).catch((err) => console.log(err));
     }
     setShowChangesModal(null);
   };
