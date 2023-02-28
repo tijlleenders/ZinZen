@@ -84,6 +84,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       setLoading({ ...loading, A: false });
     } else if (action === "shareWithOne") {
       setDisplaySubmenu("contacts");
+      if (contacts.length === 0) { handleShowAddContact(); }
     }
     setConfirmationAction(null);
   };
