@@ -160,7 +160,7 @@ export const MyTimePage = () => {
 
       await init();
       const _today = devMode ? new Date(fakeThursday) : new Date();
-      _today.setDate(_today.getDate() + 1);
+      // _today.setDate(_today.getDate() + 1);
       const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
       const endDate = `${new Date(_today.setDate(_today.getDate() + 7)).toISOString().slice(0, 10)}T00:00:00`;
 
