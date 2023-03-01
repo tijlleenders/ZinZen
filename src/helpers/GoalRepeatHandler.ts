@@ -13,7 +13,7 @@ function capitalizeFirstLetter(text : string) {
 function handleRepeat(lowercaseInput: string) {
   const duePatters = [
     {
-      pattern: /\s(daily|weekly|monthly)\s/i,
+      pattern: /\s(daily|weekly|monthly|weekdays|weekends)\s/i,
       extractor: function extractDetail(_text : string) {
         return _text.split(" ")[0];
       }
