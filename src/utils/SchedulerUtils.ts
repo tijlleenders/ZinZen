@@ -98,3 +98,20 @@ export const addFreeSlots = (slotsOfDay) => {
   });
   return all24Slots;
 };
+
+export const getDurations = (goal) => {
+  let duration;
+  let diff = 0;
+  let minDuration;
+  let maxDuration;
+  if (goal.duration.includes("-")) {
+    [minDuration, maxDuration] = goal.duration.split("-").map((d) => Number(d.slice(-1) === "h" ? d.slice(0, -1) : d));
+    duration = maxDuration;
+    diff = maxDuration - minDuration;
+  } else {
+    duration = Number(goal.duration);
+    minDuration = duration;
+    maxDuration = duration;
+  }
+  return { goalDuration: duration, diff };
+};

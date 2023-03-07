@@ -1,7 +1,7 @@
 /* eslint-disable no-continue */
 // @ts-nocheck
 import { IMSInputGoal } from "@src/Interfaces/ISchedulerInputGoal";
-import { addFreeSlots, BookSlots, convertDateToDay, get24Slots, getHrInDate, getNecessaryParams, sortTheGoals } from "@src/utils/SchedulerUtils";
+import { addFreeSlots, BookSlots, convertDateToDay, get24Slots, getDurations, getHrInDate, getNecessaryParams, sortTheGoals } from "@src/utils/SchedulerUtils";
 
 const globalSlots = get24Slots();
 let schedulerSlots = {};
@@ -90,57 +90,55 @@ export const callMiniScheduler = (inputObj: {
   const alreadyDone: string[] = [];
   hierarchicalGoals.forEach((goal) => {
     alreadyDone.push(goal.id);
-    let duration;
-    let diff = 0;
-    if (goal.duration.includes("-")) {
-      const [minDuration, maxDuration] = goal.duration.split("-").map((d) => Number(d.slice(-1) === "h" ? d.slice(0, -1) : d));
-      duration = maxDuration;
-      diff = maxDuration - minDuration;
-    } else {
-      duration = Number(goal.duration);
-    }
+    const { goalDuration, diff } = getDurations(goal);
+    let duration = goalDuration;
     const hierGoals = [];
-    if (goal.repeat.toLowerCase().includes("week")) {
-      goal.children.forEach((id) => {
-        const child = inputGoalsObj[id];
-        duration -= Number(child.duration);
-        hierGoals.push(child);
-        alreadyDone.push(child.id);
-      });
-      if (duration >= 0) {
-        if (duration > 0) { hierGoals.push({ ...goal, title: `${goal.title} filler`, duration: Math.min(diff, duration) }); }
-        let success = true;
-        const assignedSlotsOfGoal = {};
-        let outputCopy = { ...output };
-        for (let i = 0; i < hierGoals.length; i += 1) {
-          const hGoal = hierGoals[i];
-          const hStartDate = goal.start ? new Date(goal.start) : new Date(startDate);
-          const hEndDate = goal.deadline ? new Date(goal.deadline) : new Date(endDate);
-          const { status, outputSlotsTemp, slotsOnDays } = tryThisWeeklyGoal(hGoal, hStartDate, hEndDate, outputCopy);
-          outputCopy = { ...outputSlotsTemp };
-          assignedSlotsOfGoal[hGoal.id] = { ...slotsOnDays };
-          if (success) { success = status; } else break;
-        }
-        Object.keys(assignedSlotsOfGoal).forEach((goalid) => {
-          Object.keys(assignedSlotsOfGoal[goalid]).forEach((slotsOfDay) => {
-            if (success) {
-              schedulerSlots[slotsOfDay] = [...(schedulerSlots[slotsOfDay] || []), ...assignedSlotsOfGoal[goalid][slotsOfDay]];
-            } else {
-              impossibleTasks[slotsOfDay] = [...(impossibleTasks[slotsOfDay] || []), ...assignedSlotsOfGoal[goalid][slotsOfDay]];
-            }
-          });
+    // if (goal.repeat.toLowerCase().includes("week")) {
+    goal.children.forEach((id) => {
+      const child = inputGoalsObj[id];
+      duration -= Number(child.duration);
+      hierGoals.push(child);
+      alreadyDone.push(child.id);
+    });
+    const fillerDuration = duration > diff ? duration - diff : 0;
+    console.log(duration, fillerDuration)
+    if (duration >= 0) {
+      if (duration > 0) { hierGoals.push({ ...goal, title: `${goal.title} filler`, duration: fillerDuration }); }
+      let success = true;
+      const assignedSlotsOfGoal = {};
+      let outputCopy = { ...output };
+      for (let i = 0; i < hierGoals.length; i += 1) {
+        const hGoal = hierGoals[i];
+        const hStartDate = goal.start ? new Date(goal.start) : new Date(startDate);
+        const hEndDate = goal.deadline ? new Date(goal.deadline) : new Date(endDate);
+        const { status, outputSlotsTemp, slotsOnDays } = tryThisWeeklyGoal(hGoal, hStartDate, hEndDate, outputCopy);
+        outputCopy = { ...outputSlotsTemp };
+        assignedSlotsOfGoal[hGoal.id] = { ...slotsOnDays };
+        if (success) { success = status; } else break;
+      }
+      Object.keys(assignedSlotsOfGoal).forEach((goalid) => {
+        Object.keys(assignedSlotsOfGoal[goalid]).forEach((slotsOfDay) => {
+          if (success) {
+            schedulerSlots[slotsOfDay] = [...(schedulerSlots[slotsOfDay] || []), ...assignedSlotsOfGoal[goalid][slotsOfDay]];
+          } else {
+            impossibleTasks[slotsOfDay] = [...(impossibleTasks[slotsOfDay] || []), ...assignedSlotsOfGoal[goalid][slotsOfDay]];
+          }
         });
-        if (success) {
-          output = { ...outputCopy };
-        }
+      });
+      if (success) {
+        output = { ...outputCopy };
       }
     }
+    // }
   });
   goals.forEach((goal: IMSInputGoal) => {
     const wStartDate = goal.start ? new Date(goal.start) : new Date(startDate);
     const wEndDate = goal.deadline ? new Date(goal.deadline) : new Date(endDate);
     if (goal.repeat.toLowerCase().includes("week") && !alreadyDone.includes(goal.id)) {
-      const { status, outputSlotsTemp, slotsOnDays } = tryThisWeeklyGoal(goal, new Date(wStartDate), new Date(wEndDate), output);
+      const { goalDuration, diff } = getDurations(goal);
+      const fillerDuration = goalDuration > diff ? goalDuration - diff : 0;
+      console.log(goal.title, fillerDuration)
+      const { status, outputSlotsTemp, slotsOnDays } = tryThisWeeklyGoal({ ...goal, duration: fillerDuration }, new Date(wStartDate), new Date(wEndDate), output);
       if (status) {
         output = { ...outputSlotsTemp };
       }
