@@ -30,10 +30,10 @@ export const starterGoals = [
     goalTags: {
       start: null,
       due: null,
-      afterTime: { index: 11, value: 22 },
-      beforeTime: { index: 11, value: 8 },
+      afterTime: { index: 11, value: 0 },
+      beforeTime: { index: 11, value: 6 },
       link: null,
-      duration: { index: 17, value: 8 },
+      duration: { index: 17, value: 6 },
       repeats: { index: 5, endIndex: 10, value: "daily" },
     }
   },
@@ -85,18 +85,18 @@ export const starterGoals = [
       repeats: { index: 4, endIndex: 9, value: "daily" },
     }
   },
-  {
-    title: "Water the plants 🪴 indoors",
-    goalTags: {
-      start: null,
-      due: null,
-      afterTime: { index: 11, value: 7 },
-      beforeTime: { index: 11, value: 21 },
-      link: null,
-      duration: { index: 25, value: 1 },
-      repeats: { index: 27, endIndex: 39, value: "every 3 days" },
-    }
-  },
+  // {
+  //   title: "Water the plants 🪴 indoors",
+  //   goalTags: {
+  //     start: null,
+  //     due: null,
+  //     afterTime: { index: 11, value: 7 },
+  //     beforeTime: { index: 11, value: 21 },
+  //     link: null,
+  //     duration: { index: 25, value: 1 },
+  //     repeats: { index: 27, endIndex: 39, value: "every 3 days" },
+  //   }
+  // },
   {
     title: "Me time 🧘🏽😌",
     goalTags: {
