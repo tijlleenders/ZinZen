@@ -88,9 +88,17 @@ export const callMiniScheduler = (inputObj: {
   const hierarchicalGoals = goals.filter((goal) => goal.children && goal.children.length > 0);
   const inputGoalsObj = goals.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
   const alreadyDone: string[] = [];
-  hierarchicalGoals.forEach((goal, index) => {
+  hierarchicalGoals.forEach((goal) => {
     alreadyDone.push(goal.id);
-    let duration = Number(goal.duration);
+    let duration;
+    let diff = 0;
+    if (goal.duration.includes("-")) {
+      const [minDuration, maxDuration] = goal.duration.split("-").map((d) => Number(d.slice(-1) === "h" ? d.slice(0, -1) : d));
+      duration = maxDuration;
+      diff = maxDuration - minDuration;
+    } else {
+      duration = Number(goal.duration);
+    }
     const hierGoals = [];
     if (goal.repeat.toLowerCase().includes("week")) {
       goal.children.forEach((id) => {
@@ -100,7 +108,7 @@ export const callMiniScheduler = (inputObj: {
         alreadyDone.push(child.id);
       });
       if (duration >= 0) {
-        if (duration > 0) { hierGoals.push({ ...goal, title: `${goal.title} filler`, duration }); }
+        if (duration > 0) { hierGoals.push({ ...goal, title: `${goal.title} filler`, duration: Math.min(diff, duration) }); }
         let success = true;
         const assignedSlotsOfGoal = {};
         let outputCopy = { ...output };
