@@ -101,7 +101,6 @@ export const callMiniScheduler = (inputObj: {
       alreadyDone.push(child.id);
     });
     const fillerDuration = duration > diff ? duration - diff : 0;
-    console.log(duration, fillerDuration)
     if (duration >= 0) {
       if (duration > 0) { hierGoals.push({ ...goal, title: `${goal.title} filler`, duration: fillerDuration }); }
       let success = true;
@@ -137,12 +136,11 @@ export const callMiniScheduler = (inputObj: {
     if (goal.repeat.toLowerCase().includes("week") && !alreadyDone.includes(goal.id)) {
       const { goalDuration, diff } = getDurations(goal);
       const fillerDuration = goalDuration > diff ? goalDuration - diff : 0;
-      console.log(goal.title, fillerDuration)
       const { status, outputSlotsTemp, slotsOnDays } = tryThisWeeklyGoal({ ...goal, duration: fillerDuration }, new Date(wStartDate), new Date(wEndDate), output);
       if (status) {
         output = { ...outputSlotsTemp };
       }
-      Object.keys(slotsOnDays).map((slotsOfDay) => {
+      Object.keys(slotsOnDays).forEach((slotsOfDay) => {
         if (status) {
           schedulerSlots[slotsOfDay] = [...(schedulerSlots[slotsOfDay] || []), ...slotsOnDays[slotsOfDay]];
         } else {
