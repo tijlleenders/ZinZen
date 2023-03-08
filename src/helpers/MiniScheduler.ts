@@ -35,7 +35,7 @@ const createScheduleForDay = (date: Date, tmpInputGoals: IMSInputGoal[]) => {
   const day = convertDateToDay(date);
   output[day] = [...globalSlots];
   const inputGoals = [...sortTheGoals(tmpInputGoals)];
-  const dailyGoals = inputGoals.filter((goal) => goal.repeat.toLowerCase() === "daily");
+  const dailyGoals = inputGoals.filter((goal) => goal.repeat && goal.repeat.toLowerCase() === "daily");
   dailyGoals.forEach((goal: IMSInputGoal) => {
     tryToAddThisGoal(goal, day, new Date(date));
   });
@@ -50,8 +50,8 @@ const tryThisWeeklyGoal = (goal: IMSInputGoal, StartDate: Date, endDate: Date, o
   const thisDate = StartDate;
   for (let i = StartDate.getDate(); i < endDate.getDate(); i += 1) {
     const day = convertDateToDay(thisDate);
-    if ((goal.repeat === "weekdays" && ["Sunday", "Saturday"].includes(day)) ||
-       (goal.repeat === "weekends" && !["Sunday", "Saturday"].includes(day))) {
+    if ((goal.repeat && goal.repeat === "weekdays" && ["Sunday", "Saturday"].includes(day)) ||
+       (goal.repeat && goal.repeat === "weekends" && !["Sunday", "Saturday"].includes(day))) {
       // console.log(day, thisDate);
       thisDate.setDate(thisDate.getDate() + 1);
       continue;
@@ -110,7 +110,7 @@ export const callMiniScheduler = (inputObj: {
         const hGoal = hierGoals[i];
         const hStartDate = goal.start ? new Date(goal.start) : new Date(startDate);
         const hEndDate = goal.deadline ? new Date(goal.deadline) : new Date(endDate);
-        const { status, outputSlotsTemp, slotsOnDays } = tryThisWeeklyGoal(hGoal, hStartDate, hEndDate, outputCopy);
+        const { status, outputSlotsTemp, slotsOnDays } = tryThisWeeklyGoal({ ...hGoal, repeat: "weekly" }, hStartDate, hEndDate, outputCopy);
         outputCopy = { ...outputSlotsTemp };
         assignedSlotsOfGoal[hGoal.id] = { ...slotsOnDays };
         if (success) { success = status; } else break;
@@ -133,7 +133,7 @@ export const callMiniScheduler = (inputObj: {
   goals.forEach((goal: IMSInputGoal) => {
     const wStartDate = goal.start ? new Date(goal.start) : new Date(startDate);
     const wEndDate = goal.deadline ? new Date(goal.deadline) : new Date(endDate);
-    if (goal.repeat.toLowerCase().includes("week") && !alreadyDone.includes(goal.id)) {
+    if (!alreadyDone.includes(goal.id) && goal.repeat && goal.repeat.toLowerCase().includes("week")) {
       const { goalDuration, diff } = getDurations(goal);
       const fillerDuration = goalDuration > diff ? goalDuration - diff : 0;
       const { status, outputSlotsTemp, slotsOnDays } = tryThisWeeklyGoal({ ...goal, duration: fillerDuration }, new Date(wStartDate), new Date(wEndDate), output);
