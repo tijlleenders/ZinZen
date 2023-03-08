@@ -48,8 +48,8 @@ const SuggestionModal = ({ goalID } : {goalID: string}) => {
         duration: goalTags.duration ? goalTags.duration.value : null,
         start: goalTags.start ? goalTags.start.value : null,
         due: goalTags.due ? goalTags.due.value : null,
-        afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
-        beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
+        afterTime: (goalTags.afterTime || goalTags.afterTime === 0) ? goalTags.afterTime.value : null,
+        beforeTime: (goalTags.beforeTime || goalTags.beforeTime === 0) ? goalTags.beforeTime.value : null,
         link: goalTags.link ? `${goalTags.link.value}`.trim() : null,
         goalColor: selectedGoal?.goal.goalColor
       });
@@ -99,11 +99,11 @@ const SuggestionModal = ({ goalID } : {goalID: string}) => {
     if (selectedGoal) {
       const { goal } = selectedGoal;
       let tmpTiming = "";
-      if (goal.afterTime && goal.beforeTime) {
+      if ((goal.afterTime || goal.afterTime === 0) && (goal.beforeTime && goal.afterTime === 0)) {
         tmpTiming = ` ${goal.afterTime}-${goal.beforeTime}`;
-      } else if (goal.afterTime) {
+      } else if (goal.afterTime || goal.afterTime === 0) {
         tmpTiming = ` after ${goal.afterTime}`;
-      } else if (goal.beforeTime) {
+      } else if (goal.beforeTime || goal.beforeTime === 0) {
         tmpTiming = ` before ${goal.beforeTime}`;
       }
       const tmp = `${goal.title}${goal.duration ? ` ${goal.duration}h` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`;

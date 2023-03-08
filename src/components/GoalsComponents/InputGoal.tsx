@@ -39,8 +39,8 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
         duration: updatedTags.duration ? updatedTags.duration.value : null,
         start: updatedTags.start ? updatedTags.start.value : null,
         due: updatedTags.due ? updatedTags.due.value : null,
-        afterTime: updatedTags.afterTime ? updatedTags.afterTime.value : null,
-        beforeTime: updatedTags.beforeTime ? updatedTags.beforeTime.value : null,
+        afterTime: (updatedTags.afterTime || updatedTags.afterTime === 0) ? updatedTags.afterTime.value : null,
+        beforeTime: (updatedTags.beforeTime || updatedTags.beforeTime === 0) ? updatedTags.beforeTime.value : null,
         link: updatedTags.link ? `${updatedTags.link.value}`.trim() : null,
       })
     );
@@ -105,13 +105,13 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
         { goalTags?.start?.value &&
           getTag("start", `Start ${getDateInText(goalTags.start.value)} ${goalTags?.afterTime?.value ? "" : `, ${goalTags?.start?.value?.toTimeString().slice(0, 5)}`}`)}
 
-        { goalTags?.afterTime?.value &&
+        { (goalTags?.afterTime?.value || goalTags?.afterTime?.value === 0) &&
           getTag("afterTime", `After ${goalTags.afterTime.value}:00`)}
 
         { goalTags?.due?.value &&
           getTag("due", `Due ${getDateInText(goalTags.due.value)}${goalTags?.beforeTime?.value ? "" : `, ${goalTags?.due?.value?.toTimeString().slice(0, 5)}`}`)}
 
-        { goalTags?.beforeTime?.value &&
+        { (goalTags?.beforeTime?.value || goalTags?.beforeTime?.value === 0) &&
           getTag("beforeTime", `Before ${goalTags.beforeTime.value}:00`)}
 
         { goalTags?.duration?.value &&

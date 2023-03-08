@@ -83,8 +83,8 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   const goal = { ...newGoal };
   if (!goal.start) { goal.start = parentGoal.start; }
   if (!goal.due) { goal.due = parentGoal.due; }
-  if (!goal.beforeTime) { goal.beforeTime = parentGoal.beforeTime; }
-  if (!goal.afterTime) { goal.afterTime = parentGoal.afterTime; }
+  if (!(goal.beforeTime || goal.beforeTime === 0)) { goal.beforeTime = parentGoal.beforeTime; }
+  if (!(goal.afterTime || goal.afterTime === 0)) { goal.afterTime = parentGoal.afterTime; }
   goal.rootGoalId = parentGoal.rootGoalId;
   goal.typeOfGoal = parentGoal.typeOfGoal;
   return goal;
@@ -111,11 +111,10 @@ export function getDateInText(date: Date) {
 export function getOrdinalSuffix(dayOfMonth: number): string {
   if (dayOfMonth % 10 === 1 && dayOfMonth !== 11) {
     return "st";
-  } else if (dayOfMonth % 10 === 2 && dayOfMonth !== 12) {
+  } if (dayOfMonth % 10 === 2 && dayOfMonth !== 12) {
     return "nd";
-  } else if (dayOfMonth % 10 === 3 && dayOfMonth !== 13) {
+  } if (dayOfMonth % 10 === 3 && dayOfMonth !== 13) {
     return "rd";
-  } else {
-    return "th";
   }
+  return "th";
 }

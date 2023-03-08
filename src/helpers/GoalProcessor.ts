@@ -15,9 +15,9 @@ export const formatTagsToText = (_goal: GoalItem) => {
   if (goal.due) { goal.due = new Date(goal.due); }
 
   const response = { title: "", duration: "", start: "", due: "", repeat: "", timing: "", link: "", language: goal.language, goalColor: goal.goalColor };
-  if (goal.afterTime && goal.beforeTime) {
+  if ((goal.afterTime || goal.afterTime === 0) && goal.beforeTime) {
     response.timing = ` ${goal.afterTime}-${goal.beforeTime}`;
-  } else if (goal.afterTime) {
+  } else if ((goal.afterTime || goal.afterTime === 0)) {
     response.timing = ` after ${goal.afterTime}`;
   } else if (goal.beforeTime) {
     response.timing = ` before ${goal.beforeTime}`;
@@ -70,8 +70,8 @@ export const extractFromGoalTags = (goalTags: ITags) => ({
   link: goalTags.link ? goalTags.link.value?.trim() : null,
   start: goalTags.start ? goalTags.start.value : null,
   due: goalTags.due ? goalTags.due.value : null,
-  afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
-  beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
+  afterTime: (goalTags.afterTime || goalTags.afterTime === 0) ? goalTags.afterTime.value : null,
+  beforeTime: (goalTags.beforeTime || goalTags.beforeTime === 0) ? goalTags.beforeTime.value : null,
 });
 
 export const convertIntoSharedGoal = (goal: GoalItem) => ({

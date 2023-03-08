@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 
-import { darkModeState } from "@src/store";
+import { darkModeState, lastAction } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
 import { colorPalleteList, getDiffInHours, getOrdinalSuffix } from "@src/utils";
@@ -14,6 +14,7 @@ import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
+import { callMiniScheduler } from "@src/helpers/MiniScheduler";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
@@ -25,6 +26,7 @@ export const MyTimePage = () => {
   const today = new Date();
 
   const { t } = useTranslation();
+  const action = useRecoilValue(lastAction);
   const darkModeStatus = useRecoilValue(darkModeState);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
   const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } }}>({});
@@ -97,8 +99,8 @@ export const MyTimePage = () => {
   };
 
   const createDummyGoals = async () => {
-    starterGoals.forEach(async (goal) => {
-      addStarterGoal(t(goal.title), goal.goalTags)
+    starterGoals.forEach(async (goal, index) => {
+      addStarterGoal(t(goal.title), goal.goalTags, index)
         .catch((error) => { console.log(error, goal); });
     });
   };
@@ -140,6 +142,7 @@ export const MyTimePage = () => {
         res.Tomorrow = thisDay;
       } else res[`${_today.toLocaleDateString("en-us", { weekday: "long" })}`] = thisDay;
       _today.setDate(_today.getDate() + 1);
+      thisDay.freeHrsOfDay = 24 - thisDay.scheduledHrs;
     });
     return res;
   };
@@ -187,21 +190,22 @@ export const MyTimePage = () => {
           due.setDate(due.getDate() + 1);
           obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
         }
-        if (ele.afterTime) obj.after_time = ele.afterTime;
-        if (ele.beforeTime) obj.before_time = ele.beforeTime;
+        if (ele.afterTime || ele.afterTime === 0) obj.after_time = ele.afterTime;
+        if (ele.beforeTime || ele.beforeTime === 0) obj.before_time = ele.beforeTime;
         if (ele.repeat) obj.repeat = ele.repeat.toLowerCase();
         if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
         schedulerInput.goals.push(obj);
       });
       console.log("input", schedulerInput);
-      const res = schedule(schedulerInput);
+      // const res = schedule(schedulerInput);
+      const res = callMiniScheduler(schedulerInput);
       console.log("output", res);
       const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
-      console.log(processedOutput);
+      // console.log(processedOutput);
       setTasks({ ...processedOutput });
     };
     initialCall();
-  }, [devMode]);
+  }, [devMode, action]);
 
   return (
     <div className="slide MyTime_container">

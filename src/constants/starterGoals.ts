@@ -1,5 +1,6 @@
 import { addGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import { colorPalleteList } from "@src/utils";
 
 export const addStarterGoal = async (
   goalTitle: string,
@@ -12,6 +13,7 @@ export const addStarterGoal = async (
     beforeTime: { value: number | null | undefined };
     link: { value: string };
   },
+  colorIndex: number
 ) => {
   await addGoal(createGoalObjectFromTags({
     title: goalTitle,
@@ -19,9 +21,10 @@ export const addStarterGoal = async (
     duration: goalTags.duration ? `${goalTags.duration.value}` : null,
     start: goalTags.start ? goalTags.start.value : null,
     due: goalTags.due ? goalTags.due.value : null,
-    afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
-    beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
+    afterTime: (goalTags.afterTime || goalTags.afterTime === 0) ? goalTags.afterTime.value : null,
+    beforeTime: (goalTags.beforeTime || goalTags.beforeTime === 0) ? goalTags.beforeTime.value : null,
     link: goalTags.link ? `${goalTags.link.value}`.trim() : null,
+    goalColor: colorPalleteList[colorIndex],
   }));
 };
 export const starterGoals = [
@@ -30,10 +33,10 @@ export const starterGoals = [
     goalTags: {
       start: null,
       due: null,
-      afterTime: { index: 11, value: 22 },
-      beforeTime: { index: 11, value: 8 },
+      afterTime: { index: 11, value: 0 },
+      beforeTime: { index: 11, value: 6 },
       link: null,
-      duration: { index: 17, value: 8 },
+      duration: { index: 17, value: 6 },
       repeats: { index: 5, endIndex: 10, value: "daily" },
     }
   },
@@ -85,18 +88,18 @@ export const starterGoals = [
       repeats: { index: 4, endIndex: 9, value: "daily" },
     }
   },
-  {
-    title: "Water the plants 🪴 indoors",
-    goalTags: {
-      start: null,
-      due: null,
-      afterTime: { index: 11, value: 7 },
-      beforeTime: { index: 11, value: 21 },
-      link: null,
-      duration: { index: 25, value: 1 },
-      repeats: { index: 27, endIndex: 39, value: "every 3 days" },
-    }
-  },
+  // {
+  //   title: "Water the plants 🪴 indoors",
+  //   goalTags: {
+  //     start: null,
+  //     due: null,
+  //     afterTime: { index: 11, value: 7 },
+  //     beforeTime: { index: 11, value: 21 },
+  //     link: null,
+  //     duration: { index: 25, value: 1 },
+  //     repeats: { index: 27, endIndex: 39, value: "every 3 days" },
+  //   }
+  // },
   {
     title: "Me time 🧘🏽😌",
     goalTags: {
