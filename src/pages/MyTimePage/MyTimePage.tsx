@@ -190,8 +190,8 @@ export const MyTimePage = () => {
           due.setDate(due.getDate() + 1);
           obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
         }
-        if (ele.afterTime) obj.after_time = ele.afterTime;
-        if (ele.beforeTime) obj.before_time = ele.beforeTime;
+        if (ele.afterTime || ele.afterTime === 0) obj.after_time = ele.afterTime;
+        if (ele.beforeTime || ele.beforeTime === 0) obj.before_time = ele.beforeTime;
         if (ele.repeat) obj.repeat = ele.repeat.toLowerCase();
         if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
         schedulerInput.goals.push(obj);
