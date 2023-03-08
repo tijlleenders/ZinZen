@@ -1,5 +1,6 @@
 import { addGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import { colorPalleteList } from "@src/utils";
 
 export const addStarterGoal = async (
   goalTitle: string,
@@ -12,6 +13,7 @@ export const addStarterGoal = async (
     beforeTime: { value: number | null | undefined };
     link: { value: string };
   },
+  colorIndex: number
 ) => {
   await addGoal(createGoalObjectFromTags({
     title: goalTitle,
@@ -22,6 +24,7 @@ export const addStarterGoal = async (
     afterTime: (goalTags.afterTime || goalTags.afterTime === 0) ? goalTags.afterTime.value : null,
     beforeTime: (goalTags.beforeTime || goalTags.beforeTime === 0) ? goalTags.beforeTime.value : null,
     link: goalTags.link ? `${goalTags.link.value}`.trim() : null,
+    goalColor: colorPalleteList[colorIndex],
   }));
 };
 export const starterGoals = [

@@ -99,8 +99,8 @@ export const MyTimePage = () => {
   };
 
   const createDummyGoals = async () => {
-    starterGoals.forEach(async (goal) => {
-      addStarterGoal(t(goal.title), goal.goalTags)
+    starterGoals.forEach(async (goal, index) => {
+      addStarterGoal(t(goal.title), goal.goalTags, index)
         .catch((error) => { console.log(error, goal); });
     });
   };
