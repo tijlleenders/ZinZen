@@ -19,8 +19,8 @@ export const addStarterGoal = async (
     duration: goalTags.duration ? `${goalTags.duration.value}` : null,
     start: goalTags.start ? goalTags.start.value : null,
     due: goalTags.due ? goalTags.due.value : null,
-    afterTime: goalTags.afterTime ? goalTags.afterTime.value : null,
-    beforeTime: goalTags.beforeTime ? goalTags.beforeTime.value : null,
+    afterTime: (goalTags.afterTime || goalTags.afterTime === 0) ? goalTags.afterTime.value : null,
+    beforeTime: (goalTags.beforeTime || goalTags.beforeTime === 0) ? goalTags.beforeTime.value : null,
     link: goalTags.link ? `${goalTags.link.value}`.trim() : null,
   }));
 };
