@@ -80,17 +80,21 @@ export const addFreeSlots = (slotsOfDay) => {
     const BStartHr = Number(b.start.slice(11, 13));
     return AStartHr - BStartHr;
   });
-  let all24Slots = [...slotsOfDay];
+  const all24Slots = [...slotsOfDay];
   slotsOfDay.forEach((ele) => {
     const slotStartHr = Number(ele.start.slice(11, 13));
     if (slotStartHr !== startHr) {
-      all24Slots.push({ title: "free", goalid: uuidv4(), duration: Math.abs(slotStartHr - startHr), start: `${ele.start.slice(0, 11)}${startHr === 0 ? "00" : startHr}:00:00`, deadline: ele.start });
+      all24Slots.push({
+        title: "free",
+        goalid: uuidv4(),
+        duration: Math.abs(slotStartHr - startHr),
+        start: `${ele.start.slice(0, 11)}${startHr <= 9 ? "0" : ""}${startHr}:00:00`,
+        deadline: ele.start });
       startHr = Number(ele.deadline.slice(11, 13));
     } else {
       startHr = Number(ele.deadline.slice(11, 13));
     }
   });
-  all24Slots = [...all24Slots];
   all24Slots.sort((a, b) => {
     const AStartHr = Number(a.start.slice(11, 13));
     const BStartHr = Number(b.start.slice(11, 13));
