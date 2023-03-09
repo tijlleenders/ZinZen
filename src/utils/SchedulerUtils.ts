@@ -95,6 +95,15 @@ export const addFreeSlots = (slotsOfDay) => {
       startHr = Number(ele.deadline.slice(11, 13));
     }
   });
+  if (startHr !== 0) {
+    const lastSlot = slotsOfDay[slotsOfDay.length - 1];
+    all24Slots.push({
+      title: "free",
+      goalid: uuidv4(),
+      duration: Math.abs(24 - startHr),
+      start: `${lastSlot.start.slice(0, 11)}${startHr <= 9 ? "0" : ""}${startHr}:00:00`,
+      deadline: `${lastSlot.start.slice(0, 11)}${"00"}${startHr}:00:00` });
+  }
   all24Slots.sort((a, b) => {
     const AStartHr = Number(a.start.slice(11, 13));
     const BStartHr = Number(b.start.slice(11, 13));

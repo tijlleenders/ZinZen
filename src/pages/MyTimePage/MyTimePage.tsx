@@ -194,6 +194,7 @@ export const MyTimePage = () => {
         if (ele.beforeTime || ele.beforeTime === 0) obj.before_time = ele.beforeTime;
         if (ele.repeat) obj.repeat = ele.repeat.toLowerCase();
         if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
+        obj.parentGoalId = ele.parentGoalId;
         schedulerInput.goals.push(obj);
       });
       console.log("input", schedulerInput);
