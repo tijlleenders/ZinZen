@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
@@ -30,6 +30,7 @@ import correctDark from "@assets/images/correctDark.svg";
 
 import Sidebar from "@components/Sidebar";
 import { colorPalleteList } from "@src/utils";
+import { IHighlighter } from "@src/Interfaces/IHeader";
 import { displaySidebar } from "@src/store/SidebarState";
 import { createUserGroup } from "@src/helpers/GroupsProcessor";
 import { areGoalTagsValid } from "@src/validators/GoalValidators";
@@ -40,6 +41,38 @@ import { inputGoalTags, extractedTitle, displayAddGoal, displayGoalId, displayUp
 
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
+
+export const PageHighlighter = () => {
+  const [selected, setSelected] = useState(0);
+  const darkModeStatus = useRecoilValue(darkModeState);
+  useEffect(() => {
+    const currentPage = window.location.pathname.split("/")[1];
+    if (currentPage === "") {
+      setSelected(1);
+    } else if (currentPage === "MyGoals") {
+      setSelected(2);
+    } else if (currentPage === "MyFeelings") {
+      setSelected(4);
+    } else {
+      setSelected(0);
+    }
+  }, []);
+  return (
+    <div
+      style={{
+        display: selected ? "hidden" : "block",
+        background: darkModeStatus ? "#705BBC" : "#CD6E51",
+        height: "3px",
+        width: "20vw",
+        maxWidth: "120px",
+        borderRadius: "50%",
+        position: "absolute",
+        bottom: "0",
+        left: `${(selected - 1) * 20}%`,
+      }}
+    />
+  );
+};
 
 export const MainHeaderDashboard = () => {
   const navigate = useNavigate();
@@ -159,7 +192,7 @@ export const MainHeaderDashboard = () => {
     }
   }, [action]);
   return (
-    <div className={`positioning${!darkModeStatus ? "-light" : "-dark"}`} style={{ height: `${showSidebar ? 6 : 5}em` }}>
+    <div className={`positioning${!darkModeStatus ? "-light" : "-dark"}`} style={{ height: "5em" }}>
       <div className="nav-layer">
         {getNavIcon(
           (currentPage !== "" ? myTimeIcon :
@@ -182,6 +215,8 @@ export const MainHeaderDashboard = () => {
           : (darkModeStatus ? correctDark : correctLight),
         "save action",
         { width: "30px" })}
+        <PageHighlighter />
+        <div />
       </div>
       <SuggestionModal goalID={goalID} />
     </div>
