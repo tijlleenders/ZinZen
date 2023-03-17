@@ -134,7 +134,7 @@ export const MainHeaderDashboard = () => {
     if (to === "Zinzen") {
       setDarkModeStatus(!darkModeStatus);
       localStorage.setItem("theme", darkModeStatus ? "dark" : "light");
-    } else if (to === "Sidebar") {
+    } else if (to === "Menu") {
       setShowSidebar(!showSidebar);
     } else if (to === "My Goals") {
       navigate("/MyGoals");
@@ -169,7 +169,7 @@ export const MainHeaderDashboard = () => {
     return (
       <button
         type="button"
-        className={`nav-icon ${to === "Sidebar" ? "" : imgCustomClass}`}
+        className={`nav-icon ${to === "Menu" ? "" : imgCustomClass}`}
         onClick={() => { handleNavClick(to); }}
       >
         <img alt={to} style={customStyle} src={imageVariable} />
@@ -203,7 +203,7 @@ export const MainHeaderDashboard = () => {
           { paddingTop: "4px", width: "32px" })}
         {getNavIcon((currentPage !== "MyGoals" ? myGoalsIcon :
           darkModeStatus ? myGoalsIconFilledDark : myGoalsIconFilledLight), "My Goals", { paddingTop: "4px" })}
-        {getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Sidebar")}
+        {getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Menu")}
 
         <div className={showSidebar ? "overlay" : ""} onClick={() => setShowSidebar(false)}>
           {showSidebar && (<Sidebar />)}
