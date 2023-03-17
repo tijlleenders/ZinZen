@@ -1,15 +1,13 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 import { darkModeState, displayToast, lastAction } from "@store";
 
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
-// import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
-// import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
 import myTimeIcon from "@assets/images/myTimeIconLight.svg";
 import myGoalsIcon from "@assets/images/myGoalsIconLight.svg";
@@ -30,7 +28,6 @@ import correctDark from "@assets/images/correctDark.svg";
 
 import Sidebar from "@components/Sidebar";
 import { colorPalleteList } from "@src/utils";
-import { IHighlighter } from "@src/Interfaces/IHeader";
 import { displaySidebar } from "@src/store/SidebarState";
 import { createUserGroup } from "@src/helpers/GroupsProcessor";
 import { areGoalTagsValid } from "@src/validators/GoalValidators";
@@ -176,6 +173,11 @@ export const MainHeaderDashboard = () => {
         onClick={() => { handleNavClick(to); }}
       >
         <img alt={to} style={customStyle} src={imageVariable} />
+        <p style={{ color: !darkModeStatus ? "#CD6E51" : "#705BBC" }} className={pageName === currentPage ? "selected" : ""}>{
+          to === "save action" ? (!showAddGoal && !showUpdateGoal && !openAddGroup)
+            ? "Add" : "Save" : to
+          }
+        </p>
       </button>
     );
   };
@@ -215,7 +217,7 @@ export const MainHeaderDashboard = () => {
           : (darkModeStatus ? correctDark : correctLight),
         "save action",
         { width: "30px" })}
-        <PageHighlighter />
+        { currentPage !== "MyGroups" && <PageHighlighter /> }
         <div />
       </div>
       <SuggestionModal goalID={goalID} />
