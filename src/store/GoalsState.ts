@@ -10,6 +10,11 @@ export interface ISubGoalHistory {
   goalTitle: string,
 }
 
+export const displayGoalConfigModal = atom({
+  key: "displayGoalConfigModal",
+  default: null as {open: boolean, goalId: string} | null
+});
+
 export const displayChangesModal = atom({
   key: "displayChangesModal",
   default: null as IDisplayChangesModal | null
