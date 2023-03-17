@@ -90,6 +90,8 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   return goal;
 }
 
+export const convertNumberToHr = (hr: number) => `${hr > 9 ? "" : "0"}${hr} : 00`;
+
 export function getInstallId() { return localStorage.getItem("installId"); }
 
 export function getSelectedLanguage() {
