@@ -175,7 +175,7 @@ export const MainHeaderDashboard = () => {
         <img alt={to} style={customStyle} src={imageVariable} />
         <p style={{ color: !darkModeStatus ? "#CD6E51" : "#705BBC" }} className={pageName === currentPage ? "selected" : ""}>{
           to === "save action" ? (!showAddGoal && !showUpdateGoal && !openAddGroup)
-            ? "Add" : "Save" : to
+            ? "Add" : "Save" : (to.includes("My") ? to.split(" ")[1] : to)
           }
         </p>
       </button>
