@@ -1,23 +1,22 @@
 import { getPubById } from "@src/api/PubSubAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { ITags } from "@src/Interfaces/ITagExtractor";
 import { getPublicGroup } from "@src/api/PublicGroupsAPI";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { getGoal, addGoal, updateGoal, archiveUserGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
 import { sendUpdatesOfThisPoll } from "./GroupsProcessor";
-import { createGoalObjectFromTags, extractFromGoalTags } from "./GoalProcessor";
+import { createGoalObjectFromTags } from "./GoalProcessor";
 
 export const createGoal = async (
-  parentGoalId: string, goalTags: ITags, goalTitle: string, goalColor: string, level: number
+  parentGoalId: string, goalTags: GoalItem, goalTitle: string, goalColor: string, level: number
 ) => {
   let newGoal = createGoalObjectFromTags({
+    ...goalTags,
     title: goalTitle.split(" ").filter((ele:string) => ele !== "").join(" "),
     language: getSelectedLanguage(),
     parentGoalId,
     goalColor,
-    ...extractFromGoalTags(goalTags)
   });
 
   if (parentGoalId && parentGoalId !== "root") {
@@ -42,11 +41,11 @@ export const createGoal = async (
   return { parentGoal: null };
 };
 
-export const modifyGoal = async (goalId: string, goalTags: ITags, goalTitle: string, goalColor: string, level: number) => {
+export const modifyGoal = async (goalId: string, goalTags: GoalItem, goalTitle: string, goalColor: string, level: number) => {
   await updateGoal(goalId, {
+    ...goalTags,
     title: goalTitle.split(" ").filter((ele:string) => ele !== "").join(" "),
     goalColor,
-    ...extractFromGoalTags(goalTags)
   });
   const goal = await getGoal(goalId);
   if (goal) {
