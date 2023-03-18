@@ -9,14 +9,14 @@ import ArrowIcon from "@assets/images/ArrowIcon.svg";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
-import { darkModeState, displayInbox, lastAction, searchActive } from "@src/store";
-import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
-import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { displayGroup, displayAddPublicGroup } from "@src/store/GroupsState";
+import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { darkModeState, displayInbox, lastAction, searchActive } from "@src/store";
+import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 
+import GoalConfigModal from "../GoalConfigModal/GoalConfigModal";
 import MyGoal from "../MyGoal";
-import { AddGoalForm } from "../AddGoal/AddGoalForm";
-import { UpdateGoalForm } from "../UpdateGoal/UpdateGoalForm";
 import ArchivedAccordion from "../ArchivedAccordion/ArchivedAccordion";
 
 import "./GoalSublistPage.scss";
@@ -119,10 +119,10 @@ export const GoalSublist = () => {
             <p>  {parentGoal?.title}</p>
           </div>
           <Container fluid className="sublist-list-container">
-            { showAddGoal && <AddGoalForm /> }
+            { showAddGoal && <GoalConfigModal goal={createGoalObjectFromTags({})} /> }
 
             {childrenGoals?.map((goal: GoalItem) => (
-              showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
+              showUpdateGoal?.goalId === goal.id ? <GoalConfigModal goal={goal} />
                 :
               <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} />
             ))}
