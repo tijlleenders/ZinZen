@@ -220,19 +220,20 @@
 .colorPallette, .colorPallette-dark {
   display: flex;
   gap: 25px;
-  overflow: scroll;
-  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
   margin: 10px 0;
   background: rgba(246, 246, 246, 0.4);
   padding: 10px 20px;
-  
+  width: 465px;
+  border-radius: 10px;
   button {
     border: none;    
     min-width: 35px;
     height: 35px;
     border-radius: 50%;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 1em;
   }
 }
 .colorPallette-dark {
@@ -249,5 +250,8 @@
 @media (max-width: 600px) {
   .loader {
       left: 18px;
+  }
+  .colorPallette, .colorPallette-dark{
+    width: 65vw;
   }
 }
