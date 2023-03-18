@@ -142,8 +142,10 @@ export const shareMyGoalAnonymously = async (goal: GoalItem, parent: string) => 
     goal: {
       title: goal.title,
       duration: goal.duration,
-      repeat: goal.repeat,
+      habit: goal.habit,
       start: goal.start,
+      on: goal.on,
+      timeBudget: goal.timeBudget,
       due: goal.due,
       afterTime: goal.afterTime,
       beforeTime: goal.beforeTime,
