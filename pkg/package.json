@@ -16,7 +16,9 @@
   "module": "scheduler.js",
   "homepage": "https://github.com/tijlleenders/ZinZen-scheduler/wiki",
   "types": "scheduler.d.ts",
-  "sideEffects": false,
+  "sideEffects": [
+    "./snippets/*"
+  ],
   "keywords": [
     "zinzen",
     "scheduler",
