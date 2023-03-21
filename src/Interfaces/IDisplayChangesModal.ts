@@ -1,7 +1,7 @@
 import { GoalItem } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
 
-export type ITagsAllowedToDisplay = "title" | "duration" | "repeat" | "start" | "due" | "afterTime" | "beforeTime" | "goalColor" | "language" | "link";
+export type ITagsAllowedToDisplay = "title" | "duration" | "habit" | "on" | "timeBudget" | "start" | "due" | "afterTime" | "beforeTime" | "goalColor" | "language" | "link";
 
 export interface ITagChangesSchemaVersion {
   [K : string] : string | Date | number | null
