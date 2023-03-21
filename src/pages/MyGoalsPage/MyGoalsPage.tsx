@@ -26,9 +26,9 @@ import {
   popFromGoalsHistory } from "@src/store/GoalsState";
 import MyGoal from "@components/GoalsComponents/MyGoal";
 import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
-import { AddGoalForm } from "@components/GoalsComponents/AddGoal/AddGoalForm";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import { UpdateGoalForm } from "@components/GoalsComponents/UpdateGoal/UpdateGoalForm";
+import GoalConfigModal from "@components/GoalsComponents/GoalConfigModal/GoalConfigModal";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion/ArchivedAccordion";
 import { darkModeState, displayInbox, displayToast, lastAction, searchActive } from "@src/store";
@@ -189,10 +189,10 @@ export const MyGoalsPage = () => {
                 </button>
               </div>
               )}
-              { showAddGoal && (<AddGoalForm />)}
+              { showAddGoal && (<GoalConfigModal goal={createGoalObjectFromTags({})} />)}
               <div>
                 {activeGoals.map((goal: GoalItem) => (
-                  showUpdateGoal?.goalId === goal.id ? <UpdateGoalForm />
+                  showUpdateGoal?.goalId === goal.id ? <GoalConfigModal goal={goal} />
                     : (
                       <MyGoal
                         goal={goal}

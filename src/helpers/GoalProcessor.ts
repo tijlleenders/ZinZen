@@ -14,7 +14,7 @@ export const formatTagsToText = (_goal: GoalItem) => {
   if (goal.start) { goal.start = new Date(goal.start); }
   if (goal.due) { goal.due = new Date(goal.due); }
 
-  const response = { title: "", duration: "", start: "", due: "", repeat: "", timing: "", link: "", language: goal.language, goalColor: goal.goalColor };
+  const response = { title: "", duration: "", start: "", due: "", habit: "", on: "", timeBudget: "" ,timing: "", link: "", language: goal.language, goalColor: goal.goalColor };
   if ((goal.afterTime || goal.afterTime === 0) && goal.beforeTime) {
     response.timing = ` ${goal.afterTime}-${goal.beforeTime}`;
   } else if ((goal.afterTime || goal.afterTime === 0)) {
@@ -26,16 +26,20 @@ export const formatTagsToText = (_goal: GoalItem) => {
   response.duration = goal.duration ? ` ${goal.duration}h` : "";
   response.start = goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1} @${goal.start.getHours()}` : "";
   response.due = goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1} @${goal.due.getHours()}` : "";
-  response.repeat = goal.repeat ? ` ${goal.repeat}` : "";
+  response.habit = goal.habit ? ` ${goal.habit}` : "";
+  response.on = goal.on ? `${goal.on}` : "";
+  response.timeBudget = goal.timeBudget ? `${goal.timeBudget.duration}hr${Number(goal.timeBudget.duration) > 1 ? "s" : ""} / ${goal.timeBudget.period}` : "";
   response.link = goal.link ? ` ${goal.link}` : "";
   const { title,
     duration,
     start,
     due,
-    repeat,
+    habit,
+    on,
+    timeBudget,
     link,
     timing } = response;
-  return { inputText: title + duration + start + due + timing + repeat + link, ...response };
+  return { inputText: title + duration + start + due + timing + on + timeBudget + habit + link, ...response };
 };
 
 export const createGoalObjectFromTags = (obj: object) => {
@@ -43,7 +47,9 @@ export const createGoalObjectFromTags = (obj: object) => {
     id: uuidv4(),
     title: "",
     language: "English",
-    repeat: null,
+    habit: null,
+    on: null,
+    timeBudget: null,
     duration: null,
     start: null,
     due: null,
@@ -58,7 +64,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     shared: getDefaultValueOfShared(),
     collaboration: getDefaultValueOfCollab(),
     typeOfGoal: "myGoal",
-    ...obj
+    ...obj,
   };
   if (newGoal.rootGoalId === "root") { newGoal.rootGoalId = newGoal.id; }
   return newGoal;
@@ -153,7 +159,7 @@ export const jumpToLowestChanges = async (id: string) => {
 };
 
 export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
-  const tags: ITagsAllowedToDisplay[] = ["title", "duration", "repeat", "start", "due", "afterTime", "beforeTime", "goalColor", "language", "link"];
+  const tags: ITagsAllowedToDisplay[] = ["title", "duration", "habit", "on", "timeBudget", "start", "due", "afterTime", "beforeTime", "goalColor", "language", "link"];
   const res:ITagsChanges = { schemaVersion: { }, prettierVersion: { } };
   const goal1Tags = formatTagsToText(goal1);
   const goal2Tags = formatTagsToText(goal2);

@@ -28,8 +28,8 @@ export class ZinZenDB extends Dexie {
     super("ZinZenDB");
     this.version(1).stores({
       feelingsCollection: "++id, content, category, date, note",
-      goalsCollection: "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared",
-      sharedWMCollection: "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared",
+      goalsCollection: "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
+      sharedWMCollection: "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
       contactsCollection: "id, name, collaborativeGoals, sharedGoals, relId, accepted, createdAt",
       outboxCollection: "++id, relId, goalId, subgoals, updates, deleted, completed, anyUpdates",
       inboxCollection: "id, goalChanges",
