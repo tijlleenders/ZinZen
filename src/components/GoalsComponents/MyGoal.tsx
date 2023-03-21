@@ -143,7 +143,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           <button
             type="button"
             className="contact-icon"
-            style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
+            style={{ width: "15px", background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
           >
             {sharedWithContact?.charAt(0) || collabWithContact?.charAt(0) || "" }
           </button>
