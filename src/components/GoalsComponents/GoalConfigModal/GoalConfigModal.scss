@@ -186,6 +186,7 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    display: none;
 }
 @media (max-width: 600px) {
     #tagsContainer {
