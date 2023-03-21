@@ -38,7 +38,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
   const [budget, setBudget] = useState({ duration: changes.timeBudget?.duration || "", period: changes.timeBudget?.duration || "day" });
   const [otherTagValues, setOtherTagValues] = useState({ duration: `${changes.duration || "-"}`, habit: changes.habit || "-" });
   const [selectedFilter, setSelectedFilter] = useState({ active: "On", On: changes.on || "-", Before: `${changes.beforeTime || "-"}`, After: `${changes.afterTime || "-"}` });
-
+  const [budgetPeriod, setBudgetPeriod] = useState("day");
   const handleOtherTags = (value: string) => {
     setOtherTagValues({ ...otherTagValues, [title]: value });
     handleChange({ [title.toLowerCase()]: value === "-" ? null : value.toLowerCase() });
@@ -59,6 +59,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
     period: string;
   }) => {
     setBudget({ ...newBudget });
+    setBudgetPeriod(newBudget.period);
     handleChange({ timeBudget: newBudget });
   };
 
@@ -109,11 +110,11 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
             placeholder="0"
             onChange={(e) => {
               const { value } = e.target;
-              handleBudgetChange({ duration: value, period: Number(value) > 24 ? "week" : budget.period });
+              handleBudgetChange({ duration: value, period: Number(value) > 24 ? "week" : budgetPeriod });
             }}
           />
           <p>hrs per</p>
-          <select value={budget.period} className="dropdown" onChange={(e) => handleBudgetChange({ ...budget, period: e.target.value })}>
+          <select value={budgetPeriod} className="dropdown" onChange={(e) => handleBudgetChange({ ...budget, period: e.target.value })}>
             {
               ["day", "week"].map((ele) => <option key={`budget-${ele}`} value={ele}>{ele}</option>)
             }
@@ -245,7 +246,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
               getTag("on", `On ${changes.on}`)}
 
               { changes.timeBudget &&
-              getTag("on", `${changes.timeBudget.duration}hr${Number(changes.timeBudget.duration) > 1 ? "s" : ""} / ${changes.timeBudget.period}`)}
+              getTag("timeBudget", `${changes.timeBudget.duration}hr${Number(changes.timeBudget.duration) > 1 ? "s" : ""} / ${changes.timeBudget.period}`)}
             </div>
             <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
           </div>
