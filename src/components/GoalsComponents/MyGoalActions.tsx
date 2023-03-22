@@ -7,6 +7,7 @@ import pencil from "@assets/images/pencil.svg";
 import share from "@assets/images/share.svg";
 import deleteIcon from "@assets/images/deleteIcon.svg";
 import collaborateSvg from "@assets/images/collaborate.svg";
+import archiveSound from "@assets/archive.mp3";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState, displayInbox, displayToast, lastAction, showConfirmation } from "@src/store";
@@ -28,6 +29,7 @@ interface MyGoalActionsProps {
 }
 
 const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, setShowUpdateGoal }) => {
+  const mySound = new Audio(archiveSound);
   const confirmActionCategory = goal.typeOfGoal === "collaboration" && goal.parentGoalId === "root" ? "collaboration" : "goal";
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
@@ -139,6 +141,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
         src={openInbox ? envelope : correct}
         onClickCapture={async (e) => {
           e.stopPropagation();
+          await mySound.play();
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
         }}
         style={{ cursor: "Pointer" }}
