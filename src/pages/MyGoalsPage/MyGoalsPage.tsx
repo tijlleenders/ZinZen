@@ -33,6 +33,7 @@ import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSub
 import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion/ArchivedAccordion";
 import { darkModeState, displayInbox, displayToast, lastAction, searchActive } from "@src/store";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
+import { restoreData } from "@src/models";
 
 import "./MyGoalsPage.scss";
 
@@ -189,6 +190,8 @@ export const MyGoalsPage = () => {
                 </button>
               </div>
               )}
+              <input type="file" id="myFile" name="Restore" onChange={restoreData} />
+
               { showAddGoal && (<GoalConfigModal goal={createGoalObjectFromTags({})} />)}
               <div>
                 {activeGoals.map((goal: GoalItem) => (

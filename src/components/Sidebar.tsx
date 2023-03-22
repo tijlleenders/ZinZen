@@ -1,4 +1,6 @@
 import React from "react";
+import { backupData } from "@models";
+
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import myGroupsIcon from "@assets/images/myGroupsIconLight.svg";
@@ -44,9 +46,10 @@ const Sidebar = () => {
             type="button"
             className={`sidebar-item${darkModeStatus ? "-dark" : ""}`}
             style={{ color: darkModeStatus ? "white" : "black" }}
-            onClick={() => {
+            onClick={async () => {
               setShowSidebar(false);
               if (ele.name === "Theme") {
+                await backupData();
                 toggleTheme();
               } else if (ele.link) {
                 if (ele.link.includes("http")) {
