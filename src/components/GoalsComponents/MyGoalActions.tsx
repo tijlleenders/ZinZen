@@ -59,6 +59,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
     if (action === "delete") {
       await removeThisGoal();
     } else if (action === "archive") {
+      await mySound.play();
       await archiveThisGoal();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
@@ -141,7 +142,6 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
         src={openInbox ? envelope : correct}
         onClickCapture={async (e) => {
           e.stopPropagation();
-          await mySound.play();
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
         }}
         style={{ cursor: "Pointer" }}
