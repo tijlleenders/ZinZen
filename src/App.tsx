@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Toast from "react-bootstrap/Toast";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, themeSelectionState, languageSelectionState, displayToast, lastAction, showConfirmation } from "@store";
+import { darkModeState, themeSelectionState, languageSelectionState, displayToast, lastAction, showConfirmation, backupRestoreModal } from "@store";
 
 import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
@@ -26,6 +26,7 @@ import { getContactSharedGoals } from "./services/contact.service";
 import { addSharedWMGoal } from "./api/SharedWMAPI";
 import { syncGroupPolls } from "./api/PublicGroupsAPI";
 import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
+import BackupRestoreModal from "@components/BackupRestoreModal/BackupRestoreModal";
 
 import "./global.scss";
 import "./customize.scss";
@@ -33,9 +34,10 @@ import "@fontsource/montserrat";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
-  const darkModeEnabled = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeSelectionState);
   const language = useRecoilValue(languageSelectionState);
+  const darkModeEnabled = useRecoilValue(darkModeState);
+  const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
   const isThemeChosen = theme !== "No theme chosen.";
   const isLanguageChosen = language !== "No language chosen.";
   const confirmationState = useRecoilValue(showConfirmation);
@@ -112,6 +114,7 @@ const App = () => {
           { showToast.extra !== "" && <p id="extra-message">{showToast.extra}</p> }
         </Toast.Body>
       </Toast>
+      { displayBackupRestoreModal && <BackupRestoreModal /> }
     </div>
   );
 };

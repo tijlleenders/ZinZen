@@ -32,6 +32,11 @@ export const searchActive = atom({
   default: false
 });
 
+export const backupRestoreModal = atom({
+  key: "backupRestoreModal",
+  default: false
+});
+
 export const displayLoader = atom({
   key: "displayLoader",
   default: false as boolean
