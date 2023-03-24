@@ -188,6 +188,12 @@
     gap: 10px;
     display: none;
 }
+
+.restricted {
+    pointer-events: none;
+    filter: blur(5px);
+}
+
 @media (max-width: 600px) {
     #tagsContainer {
         width: 70vw;

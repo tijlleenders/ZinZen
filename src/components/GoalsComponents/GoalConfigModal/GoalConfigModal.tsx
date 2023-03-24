@@ -39,9 +39,14 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
   const [otherTagValues, setOtherTagValues] = useState({ duration: `${changes.duration || "-"}`, habit: changes.habit || "-" });
   const [selectedFilter, setSelectedFilter] = useState({ active: "On", On: changes.on || "-", Before: `${changes.beforeTime || "-"}`, After: `${changes.afterTime || "-"}` });
   const [budgetPeriod, setBudgetPeriod] = useState("day");
+  const budgetEditable = !(changes.duration);
+  const durationEditable = title === "Duration" && !changes.timeBudget;
+
   const handleOtherTags = (value: string) => {
-    setOtherTagValues({ ...otherTagValues, [title]: value });
-    handleChange({ [title.toLowerCase()]: value === "-" ? null : value.toLowerCase() });
+    if (durationEditable || title === "Habit") {
+      setOtherTagValues({ ...otherTagValues, [title]: value });
+      handleChange({ [title.toLowerCase()]: value === "-" ? null : value.toLowerCase() });
+    }
   };
   const handleDates = (value: string) => {
     handleChange({ [title === "Start date" ? "start" : "due"]: new Date(value) });
@@ -71,57 +76,64 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
     setSelectedFilter({ active: "On", On: changes.on || "-", Before: `${changes.beforeTime || "-"}`, After: `${changes.afterTime || "-"}` });
   }, [changes]);
   return (
-    <div>
-      {title === "Due date" && <input type="date" className="datepicker" value={due} onChange={(e) => handleDates(e.target.value)} name={title} />}
-      {title === "Start date" && <input type="date" className="datepicker" value={start} onChange={(e) => handleDates(e.target.value)} name={title} />}
-      { (title === "Duration" || title === "Habit") && (
-        <ul className="dropdown">
-          {options.map((ele) => (
-            <li className={otherTagValues[title.toLowerCase()] === `${ele}` ? "selected" : ""} key={ele}>
-              <button type="button" onClick={() => { handleOtherTags(`${ele}`); }}>{ele}</button>
-            </li>
-          ))}
-        </ul>
-      )}
-      {title === "Filter" && (
-      <div className="filter">
-        <select defaultValue={selectedFilter.active} className="dropdown" onChange={(e) => setSelectedFilter({ ...selectedFilter, active: e.target.value })}>
-          {
-            ["On", "Before", "After"].map((ele) => <option key={ele} value={ele}>{ele}</option>)
-          }
-        </select>
-        <ul className="dropdown">
-          {(selectedFilter.active === "On" ? ["-", "weekends", "weekdays"] : ["-", ...Array(25).keys()]).map((ele) => (
-            <li className={selectedFilter[selectedFilter.active] === `${ele}` ? "selected" : ""} key={ele}>
-              <button type="button" onClick={() => { handleFilterChange(selectedFilter.active, `${ele}`); }}>
-                {selectedFilter.active === "On" ? ele : ele === "-" ? "-" : convertNumberToHr(ele)}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-      )}
-      {title === "Time budget" && (
-        <div className="budget">
-          <Form.Control
-            aria-label="Small"
-            aria-describedby="inputGroup-sizing-sm"
-            value={budget.duration}
-            placeholder="0"
-            onChange={(e) => {
-              const { value } = e.target;
-              handleBudgetChange({ duration: value, period: Number(value) > 24 ? "week" : budgetPeriod });
-            }}
-          />
-          <p>hrs per</p>
-          <select value={budgetPeriod} className="dropdown" onChange={(e) => handleBudgetChange({ ...budget, period: e.target.value })}>
+    <>
+      <p className="tag-heading">
+        {title === "Duration" && getHeadingOfTag(title, !durationEditable)}
+        {title === "Time budget" && getHeadingOfTag(title, !budgetEditable)}
+        {(title !== "Duration" && title !== "Time budget") && getHeadingOfTag(title)}
+      </p>
+      <div>
+        {title === "Due date" && <input type="date" className="datepicker" value={due} onChange={(e) => handleDates(e.target.value)} name={title} />}
+        {title === "Start date" && <input type="date" className="datepicker" value={start} onChange={(e) => handleDates(e.target.value)} name={title} />}
+        { (title === "Duration" || title === "Habit") && (
+          <ul className={`dropdown ${durationEditable ? "" : "restricted"}`}>
+            {options.map((ele) => (
+              <li className={otherTagValues[title.toLowerCase()] === `${ele}` ? "selected" : ""} key={ele}>
+                <button type="button" onClick={() => { handleOtherTags(`${ele}`); }}>{ele}</button>
+              </li>
+            ))}
+          </ul>
+        )}
+        {title === "Filter" && (
+        <div className="filter">
+          <select defaultValue={selectedFilter.active} className="dropdown" onChange={(e) => setSelectedFilter({ ...selectedFilter, active: e.target.value })}>
             {
-              ["day", "week"].map((ele) => <option key={`budget-${ele}`} value={ele}>{ele}</option>)
+              ["On", "Before", "After"].map((ele) => <option key={ele} value={ele}>{ele}</option>)
             }
           </select>
+          <ul className="dropdown">
+            {(selectedFilter.active === "On" ? ["-", "weekends", "weekdays"] : ["-", ...Array(25).keys()]).map((ele) => (
+              <li className={selectedFilter[selectedFilter.active] === `${ele}` ? "selected" : ""} key={ele}>
+                <button type="button" onClick={() => { handleFilterChange(selectedFilter.active, `${ele}`); }}>
+                  {selectedFilter.active === "On" ? ele : ele === "-" ? "-" : convertNumberToHr(ele)}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-      )}
-    </div>
+        )}
+        {title === "Time budget" && (
+          <div className={`budget ${budgetEditable ? "" : "restricted"}`}>
+            <Form.Control
+              aria-label="Small"
+              aria-describedby="inputGroup-sizing-sm"
+              value={budget.duration}
+              placeholder="0"
+              onChange={(e) => {
+                const { value } = e.target;
+                handleBudgetChange({ duration: value, period: Number(value) > 24 ? "week" : budgetPeriod });
+              }}
+            />
+            <p>hrs per</p>
+            <select value={budgetPeriod} className="dropdown" onChange={(e) => handleBudgetChange({ ...budget, period: e.target.value })}>
+              {
+                ["day", "week"].map((ele) => <option key={`budget-${ele}`} value={ele}>{ele}</option>)
+              }
+            </select>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
@@ -197,7 +209,6 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
   };
   useEffect(() => {
     if (showAddGoal?.open) { document.getElementById("inputGoalField")?.focus(); }
-    setColorIndex(colorPalleteList.indexOf(goal.goalColor));
   }, []);
   return (
     <Modal
@@ -221,6 +232,11 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
               placeholder={t("addGoalPlaceholder")}
               contentEditable
               value={newTitle}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  document.getElementById("inputGoalField")?.blur();
+                }
+              }}
               onChange={(e) => setNewTitle(e.target.value)}
             />
             <div id="tagsContainer">
@@ -294,7 +310,6 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
           ))}
         </div>
         <div id="editSection">
-          <p className="tag-heading">{getHeadingOfTag(selectedTag)}</p>
           <EditTagSection changes={changes} title={selectedTag} handleChange={handleChange} />
         </div>
       </Modal.Body>
