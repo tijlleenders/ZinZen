@@ -233,6 +233,11 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
               placeholder={t("addGoalPlaceholder")}
               contentEditable
               value={newTitle}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  document.getElementById("inputGoalField")?.blur();
+                }
+              }}
               onChange={(e) => setNewTitle(e.target.value)}
             />
             <div id="tagsContainer">
