@@ -91,6 +91,7 @@ export const MainHeaderDashboard = () => {
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
   const setShowToast = useSetRecoilState(displayToast);
+  const setColorIndex = useSetRecoilState(selectedColorIndex);
   const setOpenExploreGroups = useSetRecoilState(displayExploreGroups);
 
   const isTitleEmpty = () => {
@@ -150,6 +151,7 @@ export const MainHeaderDashboard = () => {
           setLastAction("addGroup");
         } else { setOpenAddGroup(true); setOpenExploreGroups(false); }
       } else if (!showAddGoal && !showUpdateGoal) {
+        setColorIndex(Math.floor((Math.random() * colorPalleteList.length) + 1));
         setShowAddGoal({ open: true, goalId: selectedGoalId });
         if (currentPage !== "MyGoals") { navigate("/MyGoals"); }
       } else if (showAddGoal) {
