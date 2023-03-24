@@ -209,7 +209,6 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
   };
   useEffect(() => {
     if (showAddGoal?.open) { document.getElementById("inputGoalField")?.focus(); }
-    setColorIndex(colorPalleteList.indexOf(goal.goalColor));
   }, []);
   return (
     <Modal
