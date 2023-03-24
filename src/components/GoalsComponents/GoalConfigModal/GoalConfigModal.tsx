@@ -86,7 +86,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
         {title === "Due date" && <input type="date" className="datepicker" value={due} onChange={(e) => handleDates(e.target.value)} name={title} />}
         {title === "Start date" && <input type="date" className="datepicker" value={start} onChange={(e) => handleDates(e.target.value)} name={title} />}
         { (title === "Duration" || title === "Habit") && (
-          <ul className={`dropdown ${durationEditable ? "" : "restricted"}`}>
+          <ul className={`dropdown ${title === "Duration" ? durationEditable ? "" : "restricted" : ""}`}>
             {options.map((ele) => (
               <li className={otherTagValues[title.toLowerCase()] === `${ele}` ? "selected" : ""} key={ele}>
                 <button type="button" onClick={() => { handleOtherTags(`${ele}`); }}>{ele}</button>
