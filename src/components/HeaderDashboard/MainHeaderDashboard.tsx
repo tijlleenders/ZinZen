@@ -38,6 +38,7 @@ import { inputGoalTags, extractedTitle, displayAddGoal, displayGoalId, displayUp
 
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
+import { getGoal } from "@src/api/GoalsAPI";
 
 export const PageHighlighter = () => {
   const [selected, setSelected] = useState(0);
@@ -151,7 +152,8 @@ export const MainHeaderDashboard = () => {
           setLastAction("addGroup");
         } else { setOpenAddGroup(true); setOpenExploreGroups(false); }
       } else if (!showAddGoal && !showUpdateGoal) {
-        setColorIndex(Math.floor((Math.random() * colorPalleteList.length) + 1));
+        if (selectedGoalId === "root") { setColorIndex(Math.floor((Math.random() * colorPalleteList.length) + 1)); }
+        else { await getGoal(selectedGoalId).then((goal) => setColorIndex(colorPalleteList.indexOf(goal.goalColor))); }
         setShowAddGoal({ open: true, goalId: selectedGoalId });
         if (currentPage !== "MyGoals") { navigate("/MyGoals"); }
       } else if (showAddGoal) {
