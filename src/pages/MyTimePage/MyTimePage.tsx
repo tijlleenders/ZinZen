@@ -108,14 +108,22 @@ export const MyTimePage = () => {
   const handleSchedulerOutput = (_schedulerOutput, activeGoals:GoalItem[]) => {
     const obj = { };
     const res = { };
+    const scheduled = _schedulerOutput.scheduled.map((ele) => ({
+      day: ele.day,
+      outputs: ele.outputs.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] })) }
+    ));
+    const impossible = _schedulerOutput.impossible.map((ele) => ({
+      day: ele.day,
+      outputs: ele.outputs.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] })) }
+    ));
     activeGoals.forEach((goal) => {
       obj[goal.id] = { parentGoalId: goal.parentGoalId, goalColor: goal.goalColor };
     });
     const _today = devMode ? new Date(fakeThursday) : new Date();
-    _schedulerOutput.scheduled.forEach((dayOutput, index) => {
+    scheduled.forEach((dayOutput, index) => {
       const { day } = dayOutput;
       const thisDay = { freeHrsOfDay: 0, scheduledHrs: 0, scheduled: [], impossible: [], colorBands: [] };
-      _schedulerOutput.impossible[index].outputs.forEach((ele) => {
+      impossible[index].outputs.forEach((ele) => {
         const { goalColor, parentGoalId } = obj[ele.goalid];
         thisDay.impossible.push({ ...ele, goalColor, parentGoalId });
       });
@@ -174,12 +182,12 @@ export const MyTimePage = () => {
       };
       const noDurationGoals = [];
       activeGoals = [...activeGoals.filter((ele) => {
-        if (!ele.duration) noDurationGoals.push(ele.id);
-        return !!(ele.duration);
+        if (!ele.duration && !ele.timeBudget) noDurationGoals.push(ele.id);
+        return !!(ele.duration) || ele.timeBudget;
       })];
       activeGoals.forEach((ele) => {
-        const obj = { id: ele.id, title: ele.title };
-        if (ele.duration) obj.duration = `${ele.duration}${ele.duration.includes("-") ? "h" : ""}`;
+        const obj = { id: ele.id, title: ele.title, filters: {} };
+        if (ele.duration) obj.min_duration = Number(ele.duration);
         if (ele.start) {
           const { start } = ele;
           start.setDate(start.getDate() + 1);
@@ -190,16 +198,19 @@ export const MyTimePage = () => {
           due.setDate(due.getDate() + 1);
           obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
         }
-        if (ele.afterTime || ele.afterTime === 0) obj.after_time = ele.afterTime;
-        if (ele.beforeTime || ele.beforeTime === 0) obj.before_time = ele.beforeTime;
-        if (ele.repeat) obj.repeat = ele.repeat.toLowerCase();
+        if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
+        if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;
+        if (ele.habit) obj.repeat = ele.habit.toLowerCase();
+        if (ele.timeBudget) obj.budgets = [{ budget_type: ele.timeBudget.period === "day" ? "Daily" : "Weekly", min: Number(ele.timeBudget.duration) }];
         if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
-        obj.parentGoalId = ele.parentGoalId;
+        if (Object.keys(obj.filters).length === 0) { delete obj.filters; }
+        // obj.parentGoalId = ele.parentGoalId;
         schedulerInput.goals.push(obj);
       });
+      schedulerInput.goals = schedulerInput.goals.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
       console.log("input", schedulerInput);
-      // const res = schedule(schedulerInput);
-      const res = callMiniScheduler(schedulerInput);
+      const res = schedule(schedulerInput);
+      // const res = callMiniScheduler(schedulerInput);
       console.log("output", res);
       const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
       // console.log(processedOutput);
