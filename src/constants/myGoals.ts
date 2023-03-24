@@ -19,7 +19,7 @@ export const getHeadingOfTag = (tagName: string, warningMessage = false) => {
       heading = "When you want to work on this?";
       break;
     case "Time budget":
-      heading = warningMessage ? "This goal already has a budget so no duration can be added." : "Let's decide a budget for this goal?";
+      heading = warningMessage ? "This goal already has a duration so no budget can be added." : "Let's decide a budget for this goal?";
       break;
     default:
       break;
