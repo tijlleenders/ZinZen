@@ -41,6 +41,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
   const [budgetPeriod, setBudgetPeriod] = useState("day");
   const budgetEditable = !(changes.duration);
   const durationEditable = title === "Duration" && !changes.timeBudget;
+  const darkModeStatus = useRecoilValue(darkModeState);
 
   const handleOtherTags = (value: string) => {
     if (durationEditable || title === "Habit") {
@@ -86,9 +87,9 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
         {title === "Due date" && <input type="date" className="datepicker" value={due} onChange={(e) => handleDates(e.target.value)} name={title} />}
         {title === "Start date" && <input type="date" className="datepicker" value={start} onChange={(e) => handleDates(e.target.value)} name={title} />}
         { (title === "Duration" || title === "Habit") && (
-          <ul className={`dropdown ${title === "Duration" ? durationEditable ? "" : "restricted" : ""}`}>
+          <ul className={`dropdown${darkModeStatus ? "-dark" : ""} ${title === "Duration" ? durationEditable ? "" : "restricted" : ""}`}>
             {options.map((ele) => (
-              <li className={otherTagValues[title.toLowerCase()] === `${ele}` ? "selected" : ""} key={ele}>
+              <li className={otherTagValues[title.toLowerCase()] === `${ele}` ? `selected${darkModeStatus ? "-dark" : ""}` : ""} key={ele}>
                 <button type="button" onClick={() => { handleOtherTags(`${ele}`); }}>{ele}</button>
               </li>
             ))}
@@ -96,14 +97,14 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
         )}
         {title === "Filter" && (
         <div className="filter">
-          <select defaultValue={selectedFilter.active} className="dropdown" onChange={(e) => setSelectedFilter({ ...selectedFilter, active: e.target.value })}>
+          <select defaultValue={selectedFilter.active} className={`dropdown${darkModeStatus ? "-dark" : ""}`} onChange={(e) => setSelectedFilter({ ...selectedFilter, active: e.target.value })}>
             {
               ["On", "Before", "After"].map((ele) => <option key={ele} value={ele}>{ele}</option>)
             }
           </select>
-          <ul className="dropdown">
+          <ul className={`dropdown${darkModeStatus ? "-dark" : ""}`}>
             {(selectedFilter.active === "On" ? ["-", "weekends", "weekdays"] : ["-", ...Array(25).keys()]).map((ele) => (
-              <li className={selectedFilter[selectedFilter.active] === `${ele}` ? "selected" : ""} key={ele}>
+              <li className={selectedFilter[selectedFilter.active] === `${ele}` ? `selected${darkModeStatus ? "-dark" : ""}` : ""} key={ele}>
                 <button type="button" onClick={() => { handleFilterChange(selectedFilter.active, `${ele}`); }}>
                   {selectedFilter.active === "On" ? ele : ele === "-" ? "-" : convertNumberToHr(ele)}
                 </button>
@@ -125,7 +126,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
               }}
             />
             <p>hrs per</p>
-            <select value={budgetPeriod} className="dropdown" onChange={(e) => handleBudgetChange({ ...budget, period: e.target.value })}>
+            <select value={budgetPeriod} className={`dropdown${darkModeStatus ? "-dark" : ""}`} onChange={(e) => handleBudgetChange({ ...budget, period: e.target.value })}>
               {
                 ["day", "week"].map((ele) => <option key={`budget-${ele}`} value={ele}>{ele}</option>)
               }
@@ -165,7 +166,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
     <button
       type="button"
       onClick={() => { setSelectedTag(name); }}
-      className={`tagOption${darkModeStatus ? "-dark" : ""} ${selectedTag === name ? "selected" : ""}`}
+      className={`tagOption${darkModeStatus ? "-dark" : ""} ${selectedTag === name ? `selected${darkModeStatus ? "-dark" : ""}` : ""}`}
     >
       {name}
     </button>
@@ -213,7 +214,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
   return (
     <Modal
       id="editTagModal"
-      className="popupModal"
+      className={`popupModal${darkModeStatus ? "-dark" : ""}`}
       onHide={handleSave}
       show={!!showAddGoal || !!showUpdateGoal}
     >
@@ -224,14 +225,16 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
             src={pencil}
             width={25}
             alt="edit goal"
+            className={`${darkModeStatus ? "dark-svg" : ""}`}
             onClickCapture={() => { document.getElementById("inputGoalField")?.focus(); }}
           />
           <div>
             <input
-              id="inputGoalField"
-              placeholder={t("addGoalPlaceholder")}
               contentEditable
               value={newTitle}
+              id="inputGoalField"
+              style={{ color: darkModeStatus ? "white" : "black" }}
+              placeholder={t("addGoalPlaceholder")}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   document.getElementById("inputGoalField")?.blur();

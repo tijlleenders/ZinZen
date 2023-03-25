@@ -4,7 +4,6 @@
     min-width: 236px;
     width: 100%;
     height: 100%;
-    
 }
 
 #editTagModal {
@@ -12,6 +11,13 @@
         position: absolute;
         bottom: 0;
         border-radius: 0.5rem 0.5rem 0 0;
+        
+        .selected {
+            background: rgba(205, 110, 81, 0.5);
+        }
+        .selected-dark {
+            background:#9984E4;
+        }
     }
     .modal-header {
         gap: 10px;
@@ -47,27 +53,30 @@
     gap: 10px;
     background: rgba(205, 110, 81, 0.2);
 }
-.tagOption {
+
+.tagOption, .tagOption-dark {
     background: transparent;
     border: none;
     padding: 0.5em 1em;
     white-space: nowrap;
     font-weight: 600;
 }
-.tagOption.selected {
-    background-color: rgba(205, 110, 81, 0.5);
+
+.tagOption-dark {
+    color: #FFF;
 }
+
 #editSection {
     padding: 1em 1em 0 1em;
     width: 100%;
     text-align: center;
-    .datepicker, .dropdown, .filter > div > * {
+    .datepicker, .dropdown, .dropdown-dark, .filter > div > * {
         text-align: left;
         border: none;
         padding: 0.5em 0.5em;
         border-radius: 0.475em;
     }
-    .dropdown {
+    .dropdown, .dropdown-dark {
         max-width: 120px !important;
         text-align: center;
         margin: auto;
@@ -83,9 +92,6 @@
             border: none;
             background: transparent;
         }
-        }
-        li.selected {
-        background-color: rgba(205, 110, 81, 0.5) !important;
         }
     }
 }
@@ -107,7 +113,7 @@
         text-align: right;
         margin: 0;
     }
-    .dropdown {
+    .dropdown, .dropdown-dark {
         min-width: 120px;
         max-height: 160px !important;
     }
@@ -139,7 +145,8 @@
         margin: 0;
         align-self: center;
     }
-    .dropdown {
+    .dropdown, .dropdown-dark {
+        border-right: 7px solid transparent !important;
         margin: unset !important;
     }
 }
@@ -192,6 +199,28 @@
 .restricted {
     pointer-events: none;
     filter: blur(5px);
+}
+
+.popupModal-dark {
+    .datepicker::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+    .modal-header { 
+        background-color: #343434 !important;
+    }
+    #tagsList {
+        background-color: #343434 !important;
+    }
+    #editSection {
+        background-color: rgba(52, 52, 52, 0.4) !important;
+    }
+}
+.dropdown-dark {
+    background: #343434 !important;
+    color: white;
+    li, button {
+        color: white
+    }
 }
 
 @media (max-width: 600px) {
