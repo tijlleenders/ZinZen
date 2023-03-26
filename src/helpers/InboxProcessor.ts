@@ -1,18 +1,21 @@
 import { GoalItem } from "@src/models/GoalItem";
-import { InboxItem } from "@src/models/InboxItem";
+import { changesInGoal, InboxItem } from "@src/models/InboxItem";
 
 import { getDefaultValueOfGoalChanges } from "@src/utils/defaultGenerators";
 import { addGoal, addIntoSublist, archiveUserGoal, changeNewUpdatesStatus, getGoal, notifyNewColabRequest, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
 import { addGoalsInSharedWM, archiveSharedWMGoal, getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { IDisplayChangesModal, ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
+import { fixDateVlauesInGoalObject } from "@src/utils";
 
 export const handleIncomingChanges = async (payload) => {
   if (payload.type === "shared") {
     if (payload.changeType === "subgoals") {
-      await addGoalsInSharedWM([payload.changes[0].goal]);
+      const changes = [...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) }))];
+      await addGoalsInSharedWM([changes[0].goal]);
     } else if (payload.changeType === "modifiedGoals") {
-      await updateSharedWMGoal(payload.changes[0].goal.id, payload.changes[0].goal);
+      const changes = [...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) }))];
+      await updateSharedWMGoal(changes[0].goal.id, changes[0].goal);
     } else if (payload.changeType === "deleted") {
       await removeSharedWMChildrenGoals(payload.changes[0].id);
       await removeSharedWMGoal(payload.changes[0].id);
@@ -59,7 +62,9 @@ export const acceptSelectedSubgoals = async (unselectedGoalIds: string[], showCh
     const childrens: string[] = [];
     showChangesModal.goals.forEach(async (colabGoal: GoalItem) => {
       if (!(unselectedGoalIds.includes(colabGoal.id))) {
-        addGoal(colabGoal).catch((err) => console.log(err));
+        addGoal({
+          ...fixDateVlauesInGoalObject(colabGoal)
+        }).catch((err) => console.log(err));
         childrens.push(colabGoal.id);
       }
     });
@@ -81,7 +86,11 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
       } else finalChanges[ele] = schemaVersion[ele];
     }
   });
-  await updateGoal(goal.id, finalChanges);
+  await updateGoal(goal.id, {
+    ...finalChanges,
+    start: finalChanges.start ? new Date(finalChanges.start) : null,
+    due: finalChanges.due ? new Date(finalChanges.due) : null
+  });
 };
 
 export const acceptChangesOf = async (unselectedChanges: string[], showChangesModal: IDisplayChangesModal, updateList: ITagsChanges, activeGoal: GoalItem | undefined) => {
