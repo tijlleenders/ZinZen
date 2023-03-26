@@ -19,6 +19,8 @@ import { callMiniScheduler } from "@src/helpers/MiniScheduler";
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
 import "@translations/i18n";
+import { getAllTasks } from "@src/api/TasksAPI";
+import { TaskItem } from "@src/models/TaskItem";
 
 export const MyTimePage = () => {
   const fakeThursday = new Date();
@@ -28,15 +30,18 @@ export const MyTimePage = () => {
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
+
   const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } }}>({});
-  const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
-  const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
-  const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
-  const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
-  const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
-  const [impossibleTasks, setImpossibleTasks] = useState<{[day: string]: ITask[]}>({});
   const [devMode, setDevMode] = useState(false);
+  const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
+  const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
+  const [tasksStatus, setTasksStatus] = useState<{[goalId: string]: TaskItem}>({});
+  const [impossibleTasks, setImpossibleTasks] = useState<{[day: string]: ITask[]}>({});
+  const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
+  const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
+  const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
+  const [maxDurationOfUnplanned, setMaxDurationOfUnplanned] = useState(0);
+
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
@@ -54,7 +59,7 @@ export const MyTimePage = () => {
     />
   );
   const getTimeline = (day: string) => (
-    tasks[day] ? <MyTimeline myTasks={tasks[day]} /> : <div />
+    tasks[day] ? <MyTimeline myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} /> : <div />
   );
   const getDayComponent = (day: string) => {
     const colorIndex = -1;
@@ -168,7 +173,9 @@ export const MyTimePage = () => {
       let activeGoals: GoalItem[] = await getAllGoals();
       if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
       console.log(activeGoals);
-
+      getAllTasks().then((dbTasks) => {
+        setTasksStatus(dbTasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {}));
+      });
       await init();
       const _today = devMode ? new Date(fakeThursday) : new Date();
       // _today.setDate(_today.getDate() + 1);
