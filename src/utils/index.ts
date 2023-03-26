@@ -79,6 +79,11 @@ export const colorPalleteList = [
   "#FD5B78", "#FF007C"
 ];
 
+export const fixDateVlauesInGoalObject = (goal: GoalItem) => ({ ...goal,
+  start: goal.start ? new Date(goal.start) : null,
+  due: goal.due ? new Date(goal.due) : null
+});
+
 export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   const goal = { ...newGoal };
   if (!goal.start) { goal.start = parentGoal.start; }
