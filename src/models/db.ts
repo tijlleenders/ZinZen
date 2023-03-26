@@ -6,6 +6,7 @@ import { OutboxItem } from "./OutboxItem";
 import { PubSubItem } from "./PubSubItem";
 import { InboxItem } from "./InboxItem";
 import { PublicGroupItem } from "./PublicGroupItem";
+import { TaskItem } from "./TaskItem";
 
 export class ZinZenDB extends Dexie {
   feelingsCollection!: Table<IFeelingItem, number>;
@@ -24,6 +25,8 @@ export class ZinZenDB extends Dexie {
 
   publicGroupsCollection!: Table<PublicGroupItem, string>;
 
+  taskCollection! : Table<TaskItem, string>;
+
   constructor() {
     super("ZinZenDB");
     this.version(1).stores({
@@ -34,7 +37,8 @@ export class ZinZenDB extends Dexie {
       outboxCollection: "++id, relId, goalId, subgoals, updates, deleted, completed, anyUpdates",
       inboxCollection: "id, goalChanges",
       pubSubCollection: "id, subscribers",
-      publicGroupsCollection: "id, title, polls, language, groupColor, createdAt"
+      publicGroupsCollection: "id, title, polls, language, groupColor, createdAt",
+      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, forget"
     });
   }
 }
