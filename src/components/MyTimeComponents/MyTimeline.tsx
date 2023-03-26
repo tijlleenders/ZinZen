@@ -1,15 +1,31 @@
 /* eslint-disable react/jsx-key */
+import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { ChevronDown } from "react-bootstrap-icons";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { darkModeState, displayToast } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
+import { TaskItem } from "@src/models/TaskItem";
+import { darkModeState, displayToast } from "@src/store";
+import { addTask, completeTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./MyTimeline.scss";
 
-export const MyTimeline = ({ myTasks }: { myTasks: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number }}) => {
+interface MyTimelineProps {
+  taskDetails: { [goalid: string] : TaskItem},
+  setTaskDetails: React.Dispatch<React.SetStateAction<{
+    [goalid: string]: TaskItem;
+  }>>
+  myTasks: {
+    scheduled: ITask[],
+    impossible: ITask[],
+    freeHrsOfDay: number,
+    scheduledHrs: number
+  }
+}
+
+export const MyTimeline: React.FC<MyTimelineProps> = ({ myTasks, taskDetails, setTaskDetails }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showScheduled, setShowScheduled] = useState(true);
@@ -19,9 +35,26 @@ export const MyTimeline = ({ myTasks }: { myTasks: { scheduled: ITask[], impossi
 
   const handleView = () => { setShowScheduled(!showScheduled); };
 
-  const handleActionClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
-    setShowToast({ open: true, message: "Consider donating...", extra: "Feature coming soon..." });
+  const handleActionClick = async (actionName: "Forget" | "Reschedule" | "Done", task: ITask) => {
+    const taskItem = await getTaskByGoalId(task.goalid);
+    if (!taskItem) {
+      // @ts-ignore
+      await addTask({
+        id: uuidv4(),
+        goalId: task.goalid,
+        title: task.title,
+        hoursSpent: actionName === "Done" ? Number(task.duration) : 0,
+        lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
+        forget: actionName === "Reschedule",
+      });
+    } else if (actionName === "Done") {
+      await completeTask(taskItem.id);
+    }
+    if (actionName !== "Done") {
+      setShowToast({ open: true, message: "Consider donating...", extra: "Feature coming soon..." });
+    } else {
+      setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastCompleted: new Date().toLocaleDateString() } });
+    }
   };
   return (
     <>
@@ -35,8 +68,10 @@ export const MyTimeline = ({ myTasks }: { myTasks: { scheduled: ITask[], impossi
         { myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
+          const completedToday = taskDetails[task.goalid] ? taskDetails[task.goalid].lastCompleted === new Date().toLocaleDateString() : false;
           return (
             <button
+              className={completedToday ? "completedTask" : ""}
               type="button"
               style={displayOptionsIndex !== task.goalid ? { cursor: "pointer" } : {}}
               onClick={() => {
@@ -82,9 +117,9 @@ export const MyTimeline = ({ myTasks }: { myTasks: { scheduled: ITask[], impossi
               </div>
               { displayOptionsIndex === task.goalid ? (
                 <div className="MTL-options">
-                  <button type="button" onClick={handleActionClick}> Forget</button><div />
-                  <button type="button" onClick={handleActionClick}> Reschedule</button><div />
-                  <button type="button" onClick={handleActionClick}> Done</button><div />
+                  <button type="button" onClick={() => handleActionClick("Forget", task)}> Forget</button><div />
+                  <button type="button" onClick={() => handleActionClick("Reschedule", task)}> Reschedule</button><div />
+                  <button type="button" onClick={() => handleActionClick("Done", task)}> Done</button><div />
                 </div>
               ) : null}
             </button>

@@ -37,7 +37,6 @@
 .MTL-display, .MTL-display-dark {
   display: flex;
   flex-direction: column;
-  padding-top: 1em;
   .MTL-taskTitle {
     color: #343434;
   }
@@ -61,8 +60,8 @@
 }
 
 .MTL-display > button, .MTL-display-dark > button  {
-  margin-bottom: 0.7em;
-  padding: 0 4%;  
+  line-height: 22px;
+  padding: 0.7em 4%;
   line-height: 22px;
   padding-bottom: 0.7em;
   border: none;
@@ -73,6 +72,11 @@
 .MTL-display-dark > button {
   border-bottom: 0.5px solid #E4E4E4;
 }
+
+.MTL-display > button:first-child, .MTL-display-dark > button:first-child {
+  padding-top: 1.4em;
+}
+
 .MTL-display > button:last-child, .MTL-display-dark > button:last-child {
   border: none;
   margin-bottom: 0 !important;
@@ -127,4 +131,13 @@
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.completedTask {
+  background: #EEA791;
+  opacity: 0.4;
+  pointer-events: none;
+  .MTL-taskTitle {
+    text-decoration: line-through;
+  }
 }
