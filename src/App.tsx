@@ -20,18 +20,19 @@ import { NotFoundPage } from "@pages/NotFoundPage/NotFoundPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 
+import BackupRestoreModal from "@components/BackupRestoreModal/BackupRestoreModal";
 import { GoalItem } from "./models/GoalItem";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
 import { addSharedWMGoal } from "./api/SharedWMAPI";
 import { syncGroupPolls } from "./api/PublicGroupsAPI";
 import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
-import BackupRestoreModal from "@components/BackupRestoreModal/BackupRestoreModal";
 
 import "./global.scss";
 import "./customize.scss";
 import "@fontsource/montserrat";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { findTypeOfSub } from "./api/PubSubAPI";
 
 const App = () => {
   const theme = useRecoilValue(themeSelectionState);
@@ -64,7 +65,8 @@ const App = () => {
                   .then(() => console.log("goal added in inbox"))
                   .catch((err) => console.log("Failed to add in inbox", err));
               } else if (["shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
-                handleIncomingChanges(ele).then(() => setLastAction("goalNewUpdates"));
+                const typeOfSub = await findTypeOfSub(ele.rootGoalId) === "collaboration" ? "collaboration" : ele.type;
+                handleIncomingChanges({ ...ele, type: typeOfSub }).then(() => setLastAction("goalNewUpdates"));
               }
             });
           }

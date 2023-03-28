@@ -49,3 +49,9 @@ export const convertTypeOfSub = async (goalId: string, subId: string, newType: t
     console.log(e.stack || e);
   });
 };
+
+export const findTypeOfSub = async (goalId: string) => {
+  const goal = await db.pubSubCollection.where("id").equals(goalId).toArray();
+  if (goal && goal.length > 0) { return "collaboration"; }
+  return "none";
+};
