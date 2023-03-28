@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import pencil from "@assets/images/pencil.svg";
 import correctLight from "@assets/images/correctLight.svg";
@@ -12,7 +12,7 @@ import Loader from "@src/common/Loader";
 import { getGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import ColorPalette from "@src/common/ColorPalette";
-import { darkModeState, displayToast } from "@src/store";
+import { darkModeState, displayInbox, displayToast } from "@src/store";
 import { getPublicGoals } from "@src/services/goal.service";
 import { createGoal, modifyGoal } from "@src/helpers/GoalController";
 import { getHeadingOfTag, goalConfigTags } from "@src/constants/myGoals";
@@ -144,6 +144,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const selectedGoalId = useRecoilValue(displayGoalId);
+  const openInbox = useRecoilValue(displayInbox);
 
   const setShowToast = useSetRecoilState(displayToast);
   const addInHistory = useSetRecoilState(addInGoalsHistory);
@@ -176,7 +177,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
       type="button"
       style={{ backgroundColor: colorPalleteList[colorIndex] }}
       className="form-tag"
-      onClick={() => { setChanges({ ...changes, [tagName]: null }); }}
+      onClick={() => { if (!openInbox) { setChanges({ ...changes, [tagName]: null }); } }}
     >
       {content}
     </button>
@@ -214,7 +215,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
   return (
     <Modal
       id="editTagModal"
-      className={`popupModal${darkModeStatus ? "-dark" : ""}`}
+      className={`${openInbox ? "inboxCall" : ""} popupModal${darkModeStatus ? "-dark" : ""}`}
       onHide={handleSave}
       show={!!showAddGoal || !!showUpdateGoal}
     >
@@ -226,11 +227,11 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
             width={25}
             alt="edit goal"
             className={`${darkModeStatus ? "dark-svg" : ""}`}
-            onClickCapture={() => { document.getElementById("inputGoalField")?.focus(); }}
+            onClickCapture={() => { if (!openInbox) document.getElementById("inputGoalField")?.focus(); }}
           />
           <div>
             <input
-              contentEditable
+              disabled={openInbox}
               value={newTitle}
               id="inputGoalField"
               style={{ color: darkModeStatus ? "white" : "black" }}
@@ -267,7 +268,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
               { changes.timeBudget &&
               getTag("timeBudget", `${changes.timeBudget.duration}hr${Number(changes.timeBudget.duration) > 1 ? "s" : ""} / ${changes.timeBudget.period}`)}
             </div>
-            <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
+            { !openInbox && <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} /> }
           </div>
         </div>
         <div id="config-actions">
@@ -306,6 +307,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
           )}
         </div>
       </Modal.Header>
+      { !openInbox && (
       <Modal.Body>
         <div id="tagsList">
           {goalConfigTags.map((tagName) => (
@@ -316,6 +318,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
           <EditTagSection changes={changes} title={selectedTag} handleChange={handleChange} />
         </div>
       </Modal.Body>
+      )}
     </Modal>
   );
 };

@@ -66,11 +66,26 @@
   display: flex;
   justify-content: space-evenly;
   padding-top: 15px;
-  padding-bottom: 2.5%;
+  padding-bottom: 1.25%;
+  div {
+    text-align: center;
+    p { 
+      font-weight: 500;
+      margin: 0;
+    }
+  }
   img { 
     width: 35px;
     height: 32px;
   }
+}
+
+.interactables > div > p {
+  color: rgb(205, 110, 81)
+}
+
+.interactables-dark > div > p {
+  color: rgb(112, 91, 188);
 }
 
 .interactables > img, .exceptional-img {
@@ -230,4 +245,3 @@
     outline: none;
   }
 }
-

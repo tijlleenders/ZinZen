@@ -9,17 +9,16 @@ import deleteIcon from "@assets/images/deleteIcon.svg";
 import collaborateSvg from "@assets/images/collaborate.svg";
 import archiveSound from "@assets/archive.mp3";
 
+import { colorPalleteList } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
-import { darkModeState, displayInbox, displayToast, lastAction, showConfirmation } from "@src/store";
-import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
-import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalController";
-import { addInGoalsHistory, displayAddGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
-import { colorPalleteList } from "@src/utils";
+import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
+import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalController";
+import { darkModeState, displayInbox, displayToast, lastAction, showConfirmation } from "@src/store";
+import { addInGoalsHistory, displayAddGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 
 const eyeSvg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABkklEQVR4nO2WvUoDQRSFPwsjoomk8wHEUpNgL9aKnVjYii/hT2FEIwgS8hBKgp1gY6ddYpGHWPNjKRKrRAZuYBj3zu5iRIs9cJs7557D3Duzs5AixT/AGlAGHoEOMJDoSO4UKE3ScBt4AUYxowls/cRwGXhIYOjGPbCU1HQX+AgR6wGHQAGYkygCR7Lm8t+BnTiGU8A5MAwRqQNZT61Za4TUGa0z0VZNa0rb6r5CRyPMfARUNY0rpaAXsVMXOaCvaF265APPITEztZERgVcgACqSs3Hs0dsfk1aBTw/RrNuohHBMzkbRozcAVgypFXEt3DYHIRyTs5GN0GwZUvsXjHMRmm1D2lCuzzgKMVp9kaDVQ2B9TKx6iObjYCMj5oHncJ149K5dsecJXacF4E3RegKm3YK8Z96NBB+QO89c81rhorwumnkuYqeaaVO0vZgFbhWBvnwczLs7L1GSmWrtvRHNWDAt21OuTtwIRCPOiL4hKy+LthutK+WEB1LFDLApr5c5/V3r16cruZpwDDdFCv4MXw/YJO5+W1zLAAAAAElFTkSuQmCC";
-const envelope = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABRElEQVR4nO3TPyuFYRgG8B+LwYBisChhwGJQBllkQPkESvI9lOQLGK1GmzIoBhmUwSSDFCKlzmbxp/zprfutp9N5nXM4YnDVvTz3dV/X0/1cD38IA9jBPoYbKdyKFTzhPeoF62j7jnAzlnAfoq/YiHqNs/vgZNy6MIqj5MbHGEv6IzhM+icYr0W4u+yGd1hAUwF/DtfBfcMWeorEZ/EQ5Eesxf6roTW4jzGbacxUIl4FYRu96kdvzGYal5UI+T7PMfkFg3GcJjqFBvk+N9FZg3B7RDZ/t6oGq3hOYjj/ifh8EuPnmK1qkKEfe8nZAQYTbh92k34W2aEKOoUGIpqLKCXJWo7KE1MKThrjmg1ydMTfeCvbcZb5rjp0ihuBCZzhAlOK8WWDDC1RfsqgFvyewW3ZI36nbioZzESjEeLTDdjEPzQGH5tWnsH1/ab+AAAAAElFTkSuQmCC";
 interface MyGoalActionsProps {
   goal: GoalItem,
   setShowShareModal: React.Dispatch<React.SetStateAction<string>>,
@@ -85,38 +84,44 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
   return (
     <div className={`interactables${darkModeStatus ? "-dark" : ""}`}>
       { confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} /> }
-
       {!openInbox && (
-      <img
-        alt="add subgoal"
-        src={plus}
-        style={{ cursor: "pointer" }}
-        className={`${darkModeStatus ? "dark-svg" : ""}`}
-        onClickCapture={() => {
-          setColorIndex(colorPalleteList.indexOf(goal.goalColor));
-          // @ts-ignore
-          addInHistory(goal);
-          setShowAddGoal({ open: true, goalId: goal.id });
-        }}
-      />
+        <div
+          className="goal-action"
+          onClickCapture={() => {
+            setColorIndex(colorPalleteList.indexOf(goal.goalColor));
+            // @ts-ignore
+            addInHistory(goal);
+            setShowAddGoal({ open: true, goalId: goal.id });
+          }}
+        >
+          <img
+            alt="add subgoal"
+            src={plus}
+            style={{ cursor: "pointer" }}
+            className={`${darkModeStatus ? "dark-svg" : ""}`}
+          />
+          <p>Add</p>
+        </div>
       )}
-      <img
-        alt="delete goal"
-        src={deleteIcon}
-        className={`${darkModeStatus ? "dark-svg" : ""}`}
-        style={{ cursor: "pointer" }}
+      <div
+        className="goal-action"
         onClickCapture={async (e) => {
           e.stopPropagation();
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
         }}
-      />
+      >
+        <img
+          alt="delete goal"
+          src={deleteIcon}
+          className={`${darkModeStatus ? "dark-svg" : ""}`}
+          style={{ cursor: "pointer" }}
+        />
+        <p>Delete</p>
+      </div>
 
       { ((openInbox && goal.parentGoalId === "root") || !openInbox) && (
-        <img
-          alt="share goal"
-          src={openInbox ? collaborateSvg : share}
-          className={`${darkModeStatus ? "dark" : "light"}-svg`}
-          style={{ cursor: "pointer", ...(openInbox && !darkModeStatus ? { filter: "none" } : {}) }}
+        <div
+          className="goal-action"
           onClickCapture={async (e) => {
             e.stopPropagation();
             if (!openInbox) {
@@ -127,31 +132,50 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
               await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
             }
           }}
-        />
-      )}
+        >
+          <img
+            alt="share goal"
+            src={openInbox ? collaborateSvg : share}
+            className={`${darkModeStatus ? "dark" : "light"}-svg`}
+            style={{ cursor: "pointer", ...(openInbox && !darkModeStatus ? { filter: "none" } : {}) }}
 
-      <img
-        alt="Update Goal"
-        src={openInbox ? eyeSvg : pencil}
-        style={{ cursor: "pointer", height: "35px" }}
-        className={`${darkModeStatus ? "dark" : `${openInbox ? "light" : ""}`}-svg`}
+          />
+          <p>{openInbox ? "Collaborate" : "Share"}</p>
+        </div>
+      )}
+      <div
+        className="goal-action"
         onClickCapture={() => {
           setColorIndex(colorPalleteList.indexOf(goal.goalColor));
           setShowUpdateGoal({ open: true, goalId: goal.id });
         }}
-      />
+      >
+        <img
+          alt="Update Goal"
+          src={openInbox ? eyeSvg : pencil}
+          style={{ cursor: "pointer" }}
+          className={`${darkModeStatus ? "dark" : `${openInbox ? "light" : ""}`}-svg`}
+
+        />
+        <p>{openInbox ? "View" : "Edit"}</p>
+      </div>
 
       { !openInbox && (
-      <img
-        alt="archive Goal"
-        src={openInbox ? envelope : correct}
+      <div
+        className="goal-action"
         onClickCapture={async (e) => {
           e.stopPropagation();
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
         }}
-        style={{ cursor: "Pointer" }}
-        className={`${darkModeStatus ? "dark" : "light"}-svg`}
-      />
+      >
+        <img
+          alt="archive Goal"
+          src={correct}
+          style={{ cursor: "Pointer" }}
+          className={`${darkModeStatus ? "dark" : "light"}-svg`}
+        />
+        <p>Complete</p>
+      </div>
       ) }
     </div>
   );
