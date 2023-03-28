@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
+import archiveSound from "@assets/archive.mp3";
+
 import { ITask } from "@src/Interfaces/Task";
 import { TaskItem } from "@src/models/TaskItem";
 import { darkModeState, displayToast } from "@src/store";
@@ -27,6 +29,8 @@ interface MyTimelineProps {
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ myTasks, taskDetails, setTaskDetails }) => {
   const navigate = useNavigate();
+  const mySound = new Audio(archiveSound);
+
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showScheduled, setShowScheduled] = useState(true);
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
@@ -53,6 +57,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ myTasks, taskDetails, se
     if (actionName !== "Done") {
       setShowToast({ open: true, message: "Consider donating...", extra: "Feature coming soon..." });
     } else {
+      await mySound.play();
       setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastCompleted: new Date().toLocaleDateString() } });
     }
   };
