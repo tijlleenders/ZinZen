@@ -192,14 +192,14 @@ export const MyGoalsPage = () => {
               { showAddGoal && (<GoalConfigModal goal={createGoalObjectFromTags({})} />)}
               <div>
                 {activeGoals.map((goal: GoalItem) => (
-                  showUpdateGoal?.goalId === goal.id ? <GoalConfigModal goal={goal} />
-                    : (
-                      <MyGoal
-                        goal={goal}
-                        showActions={showActions}
-                        setShowActions={setShowActions}
-                      />
-                    )
+                  <>
+                    { showUpdateGoal?.goalId === goal.id && <GoalConfigModal goal={goal} /> }
+                    <MyGoal
+                      goal={goal}
+                      showActions={showActions}
+                      setShowActions={setShowActions}
+                    />
+                  </>
                 ))}
                 <ArchivedAccordion totalArchived={archivedGoals.length}>
                   {archivedGoals.map((goal: GoalItem) => (

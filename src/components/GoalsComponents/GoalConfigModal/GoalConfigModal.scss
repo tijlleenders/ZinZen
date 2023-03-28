@@ -47,6 +47,13 @@
     }
 }
 
+.inboxCall {
+    .modal-content {
+        border-radius: 0.5rem !important;
+        bottom: 50% !important;
+    }
+}
+
 #tagsList {
     display: flex;
     flex-direction: column;
