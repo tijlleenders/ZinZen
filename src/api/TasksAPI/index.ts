@@ -22,9 +22,17 @@ export const getTaskByGoalId = async (goalId: string) => {
   }
 };
 
-export const completeTask = async (id: string) => {
+export const completeTask = async (id: string, duration: number) => {
   db.transaction("rw", db.taskCollection, async () => {
-    await db.taskCollection.update(id, { lastCompleted: new Date().toLocaleDateString() });
+    await db.taskCollection.where("id").equals(id)
+      .modify((obj: TaskItem) => {
+        obj.lastCompleted = new Date().toLocaleDateString();
+        obj.hoursSpent += duration;
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
   }).catch((e) => {
     console.log(e.stack || e);
   });
