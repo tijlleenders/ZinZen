@@ -5,16 +5,18 @@ import { useNavigate } from "react-router-dom";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import archiveSound from "@assets/archive.mp3";
+import archiveTune from "@assets/archive.mp3";
+import forgetTune from "@assets/forget.mp3";
 
 import { ITask } from "@src/Interfaces/Task";
 import { TaskItem } from "@src/models/TaskItem";
 import { darkModeState, displayToast } from "@src/store";
-import { addTask, completeTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./MyTimeline.scss";
 
 interface MyTimelineProps {
+  day: string,
   taskDetails: { [goalid: string] : TaskItem},
   setTaskDetails: React.Dispatch<React.SetStateAction<{
     [goalid: string]: TaskItem;
@@ -27,40 +29,47 @@ interface MyTimelineProps {
   }
 }
 
-export const MyTimeline: React.FC<MyTimelineProps> = ({ myTasks, taskDetails, setTaskDetails }) => {
+export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetails, setTaskDetails }) => {
   const navigate = useNavigate();
-  const mySound = new Audio(archiveSound);
-
+  const doneSound = new Audio(archiveTune);
+  const forgetSound = new Audio(forgetTune);
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showScheduled, setShowScheduled] = useState(true);
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
-
   const setShowToast = useSetRecoilState(displayToast);
 
   const handleView = () => { setShowScheduled(!showScheduled); };
 
   const handleActionClick = async (actionName: "Forget" | "Reschedule" | "Done", task: ITask) => {
-    const taskItem = await getTaskByGoalId(task.goalid);
-    if (!taskItem) {
-      // @ts-ignore
-      await addTask({
-        id: uuidv4(),
-        goalId: task.goalid,
-        title: task.title,
-        hoursSpent: actionName === "Done" ? Number(task.duration) : 0,
-        lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
-        forget: actionName === "Reschedule",
-      });
-    } else if (actionName === "Done") {
-      await completeTask(taskItem.id);
-    }
-    if (actionName !== "Done") {
-      setShowToast({ open: true, message: "Consider donating...", extra: "Feature coming soon..." });
+    if (day === "Today") {
+      const taskItem = await getTaskByGoalId(task.goalid);
+      if (!taskItem) {
+        // @ts-ignore
+        await addTask({
+          id: uuidv4(),
+          goalId: task.goalid,
+          title: task.title,
+          hoursSpent: actionName !== "Reschedule" ? Number(task.duration) : 0,
+          lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
+          lastForget: actionName === "Forget" ? new Date().toLocaleDateString() : "",
+        });
+      } else if (actionName === "Done") {
+        await completeTask(taskItem.id, Number(task.duration));
+      } else if (actionName === "Forget") {
+        await forgetTask(taskItem.id, Number(task.duration));
+      }
+      if (actionName === "Done") {
+        await doneSound.play();
+        setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastCompleted: new Date().toLocaleDateString() } });
+      } else {
+        await forgetSound.play();
+        setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastForget: new Date().toLocaleDateString() } });
+      }
     } else {
-      await mySound.play();
-      setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastCompleted: new Date().toLocaleDateString() } });
+      setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
+
   return (
     <>
       {myTasks.impossible.length > 0 && (
@@ -74,9 +83,10 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ myTasks, taskDetails, se
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
           const completedToday = taskDetails[task.goalid] ? taskDetails[task.goalid].lastCompleted === new Date().toLocaleDateString() : false;
-          return (
+          const forgotToday = taskDetails[task.goalid] ? taskDetails[task.goalid].lastForget === new Date().toLocaleDateString() : false;
+          return (day === "Today" ? !forgotToday : true) && (
             <button
-              className={completedToday ? "completedTask" : ""}
+              className={`${day === "Today" ? completedToday ? "completedTask" : forgotToday ? "forgot" : "" : ""}`}
               type="button"
               style={displayOptionsIndex !== task.goalid ? { cursor: "pointer" } : {}}
               onClick={() => {

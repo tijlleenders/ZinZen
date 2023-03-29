@@ -141,3 +141,8 @@
     text-decoration: line-through;
   }
 }
+
+.forgot {
+  display: none;
+  transition: opacity 0.5s ease-out;
+}

@@ -3,6 +3,6 @@ export interface TaskItem {
     goalId: string,
     title: string,
     hoursSpent: number,
-    lastCompleted: string,
-    forget: boolean
+    lastCompleted: string, // date
+    lastForget: string // date
 }
