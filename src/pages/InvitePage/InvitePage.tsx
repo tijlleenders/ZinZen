@@ -37,7 +37,7 @@ const InvitePage = () => {
       <LandingHeader avatar={null} />
       <p style={{ margin: "0 0 20px 0", color: darkModeStatus ? "rgb(171, 158, 216)" : "#CD6E51" }}>
         Welcome to ZinZen!<br />
-        The sender of this message want to connect with you here.
+        The sender of this message wants to connect with you here.
         <br />Add them to your contact list.
       </p>
       <input onChange={(e) => setNewContactName(e.target.value)} className={`default-input${darkModeStatus ? "-dark" : ""}`} placeholder="Contact name" />
