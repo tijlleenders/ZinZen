@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/no-relative-packages */
 // @ts-nocheck
@@ -6,21 +7,20 @@ import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 
-import { darkModeState, lastAction } from "@src/store";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
-import { colorPalleteList, getDiffInHours, getOrdinalSuffix } from "@src/utils";
+import { getAllTasks } from "@src/api/TasksAPI";
+import { TaskItem } from "@src/models/TaskItem";
+import { darkModeState, lastAction } from "@src/store";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
+import { colorPalleteList, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import { callMiniScheduler } from "@src/helpers/MiniScheduler";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
 import "@translations/i18n";
-import { getAllTasks } from "@src/api/TasksAPI";
-import { TaskItem } from "@src/models/TaskItem";
 
 export const MyTimePage = () => {
   const fakeThursday = new Date();
@@ -59,7 +59,7 @@ export const MyTimePage = () => {
     />
   );
   const getTimeline = (day: string) => (
-    tasks[day] ? <MyTimeline myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} /> : <div />
+    tasks[day] ? <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} /> : <div />
   );
   const getDayComponent = (day: string) => {
     const colorIndex = -1;
@@ -217,7 +217,6 @@ export const MyTimePage = () => {
       schedulerInput.goals = schedulerInput.goals.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
       console.log("input", schedulerInput);
       const res = schedule(schedulerInput);
-      // const res = callMiniScheduler(schedulerInput);
       console.log("output", res);
       const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
       // console.log(processedOutput);
