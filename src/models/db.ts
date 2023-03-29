@@ -38,7 +38,7 @@ export class ZinZenDB extends Dexie {
       inboxCollection: "id, goalChanges",
       pubSubCollection: "id, subscribers",
       publicGroupsCollection: "id, title, polls, language, groupColor, createdAt",
-      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, forget"
+      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, lastForget"
     });
   }
 }
