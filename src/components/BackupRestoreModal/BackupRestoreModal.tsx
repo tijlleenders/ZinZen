@@ -1,10 +1,12 @@
 import React from "react";
+import Dexie from "dexie";
 import { Modal } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { db } from "@models";
 import { backupRestoreModal, darkModeState, displayToast, lastAction } from "@src/store";
 
+import "dexie-export-import";
 import "./BackupRestoreModal.scss";
 
 const backupImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADB0lEQVR4nO2Z3YtMYRzHP3a9jpc21sxQ5C1FFFHakJeibd24EQnXe4H2brkTpVUU+QMWiVLWhfdEsSHvNizLtkoJid3FLlvs6Nm+R481M7szc87OeTSfOs0855zn9/y+53n7nd+BAgUKhIHBwAJgE7Ad2AqsBRYCxTjAIuAI8BVIpDg+ArVAGSFkAnAK6LYcfg6cAA4Bh4E64FkvUXXAdELCcuC9HPsM7AYmpbl/BrALaFedVqCcPLMa+C6HTgLRDOqOV4+Zuj+BLeSJ2cA3ObIzSxuDVNcMyS5gCQER0UqzUkPCYwjwVCL2+NDOXtkyQ7QEH5kGHAc6e03ORmAdUKXydaDIh/aKgKuyWYNPlFsT0YzdR8A14LUlyAyFX8AsvxoF5smmeXgxP4x1yNlaLas2ZRLmLZ1+c0a2K3M1dFOG9vUxbyr9eGpJ2Kz2L5ID82XklSZzPojKh0+5GKnycRXKhU75MSKbykuB+zKQt41JtMiPqWRAzJpgXkBn7xf54K18OQCsAYb2VWGmtaS2aKJl1Z0+86TX3vUBqE41b8cBzbrxNDCK8DAGWAxs1KbcJT/vJovljuni5TyuUP3FRBm3rcjCCP0T7HVr956IGwxXOJRQL/WwXycO4hZx4Is6wUQgPJCQZbhHjd0JrSqMDagxMwTuBZgTSGhl44cKwwJqzFs2g6BEtttM4Y0K6d6rwypkpGybN1OuqLDeQSFzZPulKWxT4ayDQqqtdyVKrTdAk8pxRUjEisMqvJM7dOIdMMURIUdl95ayLz2Y/OsFS8yKEAuJWCLaFZn8xWjgvNXwOWADMLk/oXPAQiLAXM0JbziZXX1VqgrFurktTdI51VGfhZD6LNpJaDj90xPJKFXq/5L2GS90TnfcCFBIB9Ck1anCnhMDSZDL74BSEBI2nOyRh8BjvfSkEmKuNQB3CDEN1me2eBIhcV1LKGccWqLWd5Im5QA8ITHr2gsX8gNx66l7v/Z/u7dCT9R6+vbhRE/0JcZJER5xJdEaXRpO6Xomk8/UBfgf+A3SSyxFIXLo1QAAAABJRU5ErkJggg==";
@@ -17,55 +19,40 @@ const BackupRestoreModal = () => {
   const setBackupRestoreModal = useSetRecoilState(backupRestoreModal);
 
   const backupData = async () => {
-    await Promise.all([
-      db.contactsCollection.toArray(),
-      db.feelingsCollection.toArray(),
-      db.goalsCollection.toArray(),
-      db.inboxCollection.toArray(),
-      db.outboxCollection.toArray(),
-      db.pubSubCollection.toArray(),
-      db.publicGroupsCollection.toArray(),
-      db.sharedWMCollection.toArray()
-    ]).then((data) => {
-      const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `ZinZenBackup-${new Date().toLocaleDateString()}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }).catch((error) => {
-      console.error(error);
-    });
+    const file = await db.export({ prettyJson: true });
+    const blob = new Blob([file], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ZinZenBackup-${new Date().toLocaleDateString()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
-  const restoreData = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const importSuccessfull = () => {
+    setLastAction("goalsRestored");
+    setBackupRestoreModal(false);
+    setShowToast({ open: true, message: "Data Restored Successfully", extra: "" });
+  };
+
+  const restoreData = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) { return; }
-    const reader = new FileReader();
-    reader.readAsText(e.target.files[0]);
-    reader.onload = () => {
-      const data = JSON.parse(reader.result);
-      Promise.all([
-        db.contactsCollection.bulkPut(data[0]),
-        db.feelingsCollection.bulkPut(data[1]),
-        db.goalsCollection.bulkPut(data[2]),
-        db.inboxCollection.bulkPut(data[3]),
-        db.outboxCollection.bulkPut(data[4]),
-        db.pubSubCollection.bulkPut(data[5]),
-        db.publicGroupsCollection.bulkPut(data[6]),
-        db.sharedWMCollection.bulkPut(data[7])
-      ]).then(() => {
-        setLastAction("goalsRestored");
-        setBackupRestoreModal(false);
-        setShowToast({ open: true, message: "Data Restored Successfully", extra: "" });
-      }).catch((error) => {
-        setShowToast({ open: true, message: "Failed to restore the data", extra: "File is not supported" });
-        console.error(error);
-      });
-    };
-  };
 
+    try {
+      const data = await Dexie.import(e.target.files[0]);
+      await db.transaction("rw", db.tables, async () => {
+        await Promise.all(data.tables.map(async (table) => {
+          const dbTable = db.table(table.name);
+          await dbTable.bulkPut(table.rows);
+        }));
+        importSuccessfull();
+      });
+    } catch (error) {
+      console.error(error);
+      setShowToast({ open: true, message: "Failed to restore the data", extra: error.message });
+    }
+  };
   const getOption = (text: "Backup" | "Restore") => (
     <button
       type="button"
