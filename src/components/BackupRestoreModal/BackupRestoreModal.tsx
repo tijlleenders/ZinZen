@@ -40,14 +40,21 @@ const BackupRestoreModal = () => {
     if (!e.target.files || !e.target.files[0]) { return; }
 
     try {
-      const data = await Dexie.import(e.target.files[0]);
-      await db.transaction("rw", db.tables, async () => {
-        await Promise.all(data.tables.map(async (table) => {
-          const dbTable = db.table(table.name);
-          await dbTable.bulkPut(table.rows);
-        }));
-        importSuccessfull();
-      });
+      const reader = new FileReader();
+      reader.readAsText(e.target.files[0]);
+      reader.onload = async () => {
+        if (reader.result) {
+          const { data } = JSON.parse(reader.result);
+          console.log(data);
+          await Promise.all(data.data.map(async (table: { tableName: string; rows: readonly any[]; }) => {
+            const dbTable = db.table(table.tableName);
+            await dbTable.bulkPut(table.rows).catch((err) => console.log(err));
+          }));
+          importSuccessfull();
+        } else {
+          setShowToast({ open: true, message: "The backup file is either corrupted or doesn't contain the data", extra: "" });
+        }
+      };
     } catch (error) {
       console.error(error);
       setShowToast({ open: true, message: "Failed to restore the data", extra: error.message });
