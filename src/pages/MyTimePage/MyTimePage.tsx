@@ -196,14 +196,14 @@ export const MyTimePage = () => {
         const obj = { id: ele.id, title: ele.title, filters: {} };
         if (ele.duration) obj.min_duration = Number(ele.duration);
         if (ele.start) {
-          const { start } = ele;
+          const start = new Date(ele.start);
           start.setDate(start.getDate() + 1);
-          obj.start = `${ele.start?.toISOString().slice(0, 10)}T${ele.start?.toTimeString().slice(0, 8)}`;
+          obj.start = `${start?.toISOString().slice(0, 10)}T${start?.toTimeString().slice(0, 8)}`;
         }
         if (ele.due) {
-          const { due } = ele;
+          const due = new Date(ele.due);
           due.setDate(due.getDate() + 1);
-          obj.deadline = `${ele.due?.toISOString().slice(0, 10)}T${ele.due?.toTimeString().slice(0, 8)}`;
+          obj.deadline = `${due?.toISOString().slice(0, 10)}T${due?.toTimeString().slice(0, 8)}`;
         }
         if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
         if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;

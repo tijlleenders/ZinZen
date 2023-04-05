@@ -48,7 +48,11 @@ const BackupRestoreModal = () => {
           console.log(data);
           await Promise.all(data.data.map(async (table: { tableName: string; rows: readonly any[]; }) => {
             const dbTable = db.table(table.tableName);
-            await dbTable.bulkPut(table.rows).catch((err) => console.log(err));
+            if (table.tableName === "goalsCollection") {
+              await dbTable.bulkPut(table.rows.map((ele) => (ele.$ ? ele.$ : ele))).catch((err) => console.log(err));
+            } else {
+              await dbTable.bulkPut(table.rows).catch((err) => console.log(err));
+            }
           }));
           importSuccessfull();
         } else {
