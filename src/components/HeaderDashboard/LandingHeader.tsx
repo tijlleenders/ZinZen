@@ -56,10 +56,6 @@ export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
         src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
         alt="ZinZen Text Logo"
         className="main-header-TextLogo"
-        onClick={() => {
-          if (showSidebar) setShowSidebar(false);
-          else navigate("/");
-        }}
       />
 
     </>
