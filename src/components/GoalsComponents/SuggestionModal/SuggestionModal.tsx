@@ -46,8 +46,8 @@ const SuggestionModal = ({ goalID } : {goalID: string}) => {
         title: goalTitle.split(" ").filter((ele) => ele !== "").join(" "),
         repeat: goalTags.repeats ? goalTags?.repeats.value.trim() : null,
         duration: goalTags.duration ? goalTags.duration.value : null,
-        start: goalTags.start ? goalTags.start.value : null,
-        due: goalTags.due ? goalTags.due.value : null,
+        start: goalTags.start ? goalTags.start.value?.toString() : null,
+        due: goalTags.due ? goalTags.due.value?.toString() : null,
         afterTime: (goalTags.afterTime || goalTags.afterTime === 0) ? goalTags.afterTime.value : null,
         beforeTime: (goalTags.beforeTime || goalTags.beforeTime === 0) ? goalTags.beforeTime.value : null,
         link: goalTags.link ? `${goalTags.link.value}`.trim() : null,
@@ -106,6 +106,8 @@ const SuggestionModal = ({ goalID } : {goalID: string}) => {
       } else if (goal.beforeTime || goal.beforeTime === 0) {
         tmpTiming = ` before ${goal.beforeTime}`;
       }
+      goal.start = goal.start ? new Date(goal.start) : null;
+      goal.due = goal.due ? new Date(goal.due) : null;
       const tmp = `${goal.title}${goal.duration ? ` ${goal.duration}h` : ""}${goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1}` : ""}${goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1}` : ""}${goal.repeat ? ` ${goal.repeat}` : ""}${tmpTiming}${goal.link ? ` ${goal.link}` : ""}`;
       setGoalInput(tmp);
       const output: ITagExtractor = TagsExtractor(tmp);

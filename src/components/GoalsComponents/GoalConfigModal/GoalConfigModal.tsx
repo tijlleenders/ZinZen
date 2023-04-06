@@ -33,8 +33,8 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
   } else if (title === "Habit") {
     options = [...["-", "daily", "weekly"]];
   }
-  const [due, setDue] = useState(changes.due ? changes.due.toISOString().slice(0, 10) : "");
-  const [start, setStart] = useState(changes.start ? changes.start.toISOString().slice(0, 10) : "");
+  const [due, setDue] = useState(changes.due ? new Date(changes.due).toISOString().slice(0, 10) : "");
+  const [start, setStart] = useState(changes.start ? new Date(changes.start).toISOString().slice(0, 10) : "");
   const [budget, setBudget] = useState({ duration: changes.timeBudget?.duration || "", period: changes.timeBudget?.duration || "day" });
   const [otherTagValues, setOtherTagValues] = useState({ duration: `${changes.duration || "-"}`, habit: changes.habit || "-" });
   const [selectedFilter, setSelectedFilter] = useState({ active: "On", On: changes.on || "-", Before: `${changes.beforeTime || "-"}`, After: `${changes.afterTime || "-"}` });
@@ -50,7 +50,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
     }
   };
   const handleDates = (value: string) => {
-    handleChange({ [title === "Start date" ? "start" : "due"]: new Date(value) });
+    handleChange({ [title === "Start date" ? "start" : "due"]: new Date(value).toString() });
     if (title === "Start date") {
       setStart(value);
     } else { setDue(value); }
@@ -70,8 +70,8 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
   };
 
   useEffect(() => {
-    setDue(changes.due ? changes.due.toISOString().slice(0, 10) : "");
-    setStart(changes.start ? changes.start.toISOString().slice(0, 10) : "");
+    setDue(changes.due ? new Date(changes.due).toISOString().slice(0, 10) : "");
+    setStart(changes.start ? new Date(changes.start).toISOString().slice(0, 10) : "");
     setBudget({ duration: changes.timeBudget?.duration || "", period: changes.timeBudget?.duration || "day" });
     setOtherTagValues({ duration: `${changes.duration || "-"}`, habit: changes.habit || "-" });
     setSelectedFilter({ active: "On", On: changes.on || "-", Before: `${changes.beforeTime || "-"}`, After: `${changes.afterTime || "-"}` });
@@ -245,13 +245,13 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
             />
             <div id="tagsContainer">
               { changes.start &&
-              getTag("start", `Start ${getDateInText(changes.start)} ${changes.afterTime ? "" : `, ${changes.start.toTimeString().slice(0, 5)}`}`)}
+              getTag("start", `Start ${getDateInText(new Date(changes.start))} ${changes.afterTime ? "" : `, ${new Date(changes.start).toTimeString().slice(0, 5)}`}`)}
 
               { (changes.afterTime || changes.afterTime === 0) &&
               getTag("afterTime", `After ${changes.afterTime}:00`)}
 
               { changes.due &&
-              getTag("due", `Due ${getDateInText(changes.due)}${changes.beforeTime ? "" : `, ${changes.due.toTimeString().slice(0, 5)}`}`)}
+              getTag("due", `Due ${getDateInText(new Date(changes.due))}${changes.beforeTime ? "" : `, ${new Date(changes.due).toTimeString().slice(0, 5)}`}`)}
 
               { (changes.beforeTime || changes.beforeTime === 0) &&
               getTag("beforeTime", `Before ${changes.beforeTime}:00`)}
