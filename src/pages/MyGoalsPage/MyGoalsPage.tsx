@@ -186,7 +186,7 @@ export const MyGoalsPage = () => {
                   type="button"
                   onClick={async () => {
                     if ((await getActiveSharedWMGoals()).length === 0) {
-                      setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Make some friends so that they can share there goals with you too😊" });
+                      setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Make some friends so that they can share their goals with you too😊" });
                     } else setOpenInbox(true);
                   }}
                 >
