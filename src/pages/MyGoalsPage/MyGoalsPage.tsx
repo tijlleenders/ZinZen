@@ -182,7 +182,14 @@ export const MyGoalsPage = () => {
                   />
                   { loading && <Loader /> }
                 </button>
-                <button type="button" onClick={() => { setOpenInbox(true); }}>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if ((await getActiveSharedWMGoals()).length === 0) {
+                      setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Make some friends so that they can share there goals with you too😊" });
+                    } else setOpenInbox(true);
+                  }}
+                >
                   <h1 className={`myGoals_title${darkModeStatus ? "-dark" : ""} ${!openInbox ? "" : "activeTab"}`}>
                     Inbox
                   </h1>
