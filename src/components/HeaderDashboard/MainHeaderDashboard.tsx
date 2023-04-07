@@ -49,7 +49,7 @@ export const PageHighlighter = () => {
       setSelected(1);
     } else if (currentPage === "MyGoals") {
       setSelected(2);
-    } else if (currentPage === "MyFeelings") {
+    } else if (currentPage === "MyJournal") {
       setSelected(4);
     } else {
       setSelected(0);
@@ -142,8 +142,8 @@ export const MainHeaderDashboard = () => {
       navigate("/MyGoals");
     } else if (to === "My Time") {
       navigate("/");
-    } else if (to === "My Feelings") {
-      navigate("/MyFeelings");
+    } else if (to === "My Journal") {
+      navigate("/MyJournal");
     } else if (to === "My Groups") {
       navigate("/MyGroups");
     } else if (to === "save action") {
@@ -213,9 +213,9 @@ export const MainHeaderDashboard = () => {
           {showSidebar && (<Sidebar />)}
         </div>
         {getNavIcon(
-          (currentPage !== "MyFeelings" ? myFeelingsIcon :
+          (currentPage !== "MyJournal" ? myFeelingsIcon :
             darkModeStatus ? myFeelingsIconFilledDark : myFeelingsIconFilledLight),
-          "My Feelings")}
+          "My Journal")}
         {getNavIcon(!showAddGoal && !showUpdateGoal && !openAddGroup ?
           (darkModeStatus ? addDark : addLight)
           : (darkModeStatus ? correctDark : correctLight),
