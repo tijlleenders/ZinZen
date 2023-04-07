@@ -35,6 +35,7 @@ import { darkModeState, displayInbox, displayToast, lastAction, searchActive } f
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import "./MyGoalsPage.scss";
+import { getAllContacts } from "@src/api/ContactsAPI";
 
 export const MyGoalsPage = () => {
   const { t } = useTranslation();
@@ -182,7 +183,18 @@ export const MyGoalsPage = () => {
                   />
                   { loading && <Loader /> }
                 </button>
-                <button type="button" onClick={() => { setOpenInbox(true); }}>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if ((await getActiveSharedWMGoals()).length === 0) {
+                      if ((await getAllContacts()).length === 0) {
+                        setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Make some friends so that they can share their goals with you too😊" });
+                      } else {
+                        setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Your current friends haven't shared any of their goals with you" });
+                      }
+                    } else setOpenInbox(true);
+                  }}
+                >
                   <h1 className={`myGoals_title${darkModeStatus ? "-dark" : ""} ${!openInbox ? "" : "activeTab"}`}>
                     Inbox
                   </h1>
@@ -201,16 +213,18 @@ export const MyGoalsPage = () => {
                     />
                   </>
                 ))}
-                <ArchivedAccordion totalArchived={archivedGoals.length}>
-                  {archivedGoals.map((goal: GoalItem) => (
-                    <MyGoal
-                      key={`goal-${goal.id}`}
-                      goal={goal}
-                      showActions={showActions}
-                      setShowActions={setShowActions}
-                    />
-                  ))}
-                </ArchivedAccordion>
+                { archivedGoals.length > 0 && (
+                  <ArchivedAccordion totalArchived={archivedGoals.length}>
+                    {archivedGoals.map((goal: GoalItem) => (
+                      <MyGoal
+                        key={`goal-${goal.id}`}
+                        goal={goal}
+                        showActions={showActions}
+                        setShowActions={setShowActions}
+                      />
+                    ))}
+                  </ArchivedAccordion>
+                )}
               </div>
             </div>
           )

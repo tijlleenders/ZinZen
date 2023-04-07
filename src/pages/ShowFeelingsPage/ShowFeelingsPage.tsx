@@ -49,7 +49,7 @@ export const ShowFeelingsPage = () => {
     <div id="myFeelings-container">
       <MainHeaderDashboard />
       <h1 id={`myFeelings-title${darkModeStatus ? "-dark" : ""}`}>
-        {t("showfeelingsmessage")}
+        My Journal
       </h1>
       {feelingsList &&
         dateRangeArr.map((date) => (

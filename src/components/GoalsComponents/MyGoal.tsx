@@ -156,10 +156,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         type="button"
         className="contact-icon"
         style={{
-          width: "25px",
-          height: "32px",
+          width: "35px",
+          height: "45px",
           position: "absolute",
           right: "18px",
+          top: "5px",
           ...(darkModeStatus ? {
             background: "transparent",
             filter: "invert(1)" } : {}) }}
