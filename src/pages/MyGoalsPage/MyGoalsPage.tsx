@@ -208,16 +208,18 @@ export const MyGoalsPage = () => {
                     />
                   </>
                 ))}
-                <ArchivedAccordion totalArchived={archivedGoals.length}>
-                  {archivedGoals.map((goal: GoalItem) => (
-                    <MyGoal
-                      key={`goal-${goal.id}`}
-                      goal={goal}
-                      showActions={showActions}
-                      setShowActions={setShowActions}
-                    />
-                  ))}
-                </ArchivedAccordion>
+                { archivedGoals.length > 0 && (
+                  <ArchivedAccordion totalArchived={archivedGoals.length}>
+                    {archivedGoals.map((goal: GoalItem) => (
+                      <MyGoal
+                        key={`goal-${goal.id}`}
+                        goal={goal}
+                        showActions={showActions}
+                        setShowActions={setShowActions}
+                      />
+                    ))}
+                  </ArchivedAccordion>
+                )}
               </div>
             </div>
           )
