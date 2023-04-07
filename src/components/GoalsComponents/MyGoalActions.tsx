@@ -174,7 +174,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
           style={{ cursor: "Pointer" }}
           className={`${darkModeStatus ? "dark" : "light"}-svg`}
         />
-        <p>Complete</p>
+        <p>Done</p>
       </div>
       ) }
     </div>
