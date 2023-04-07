@@ -35,6 +35,7 @@ import { darkModeState, displayInbox, displayToast, lastAction, searchActive } f
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import "./MyGoalsPage.scss";
+import { getAllContacts } from "@src/api/ContactsAPI";
 
 export const MyGoalsPage = () => {
   const { t } = useTranslation();
@@ -186,7 +187,11 @@ export const MyGoalsPage = () => {
                   type="button"
                   onClick={async () => {
                     if ((await getActiveSharedWMGoals()).length === 0) {
-                      setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Make some friends so that they can share their goals with you too😊" });
+                      if ((await getAllContacts()).length === 0) {
+                        setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Make some friends so that they can share their goals with you too😊" });
+                      } else {
+                        setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Your current friends haven't shared any of their goals with you" });
+                      }
                     } else setOpenInbox(true);
                   }}
                 >
