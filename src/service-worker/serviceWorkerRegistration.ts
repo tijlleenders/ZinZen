@@ -34,6 +34,17 @@ function registerValidSW(swUrl: string, config?: Config) {
         if (installingWorker == null) {
           return;
         }
+        function showNotification() {
+          const notification = new Notification("New Update Available", {
+            body: "Click here to update the app",
+            icon: "/favicon-32x32.png",
+          });
+
+          notification.onclick = () => {
+            installingWorker?.postMessage({ type: "SKIP_WAITING" });
+            window.location.reload();
+          };
+        }
         installingWorker.onstatechange = () => {
           if (installingWorker.state === "installed") {
             if (navigator.serviceWorker.controller) {
@@ -48,6 +59,18 @@ function registerValidSW(swUrl: string, config?: Config) {
               // Execute callback
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
+              }
+
+              // Check if the user has already granted permission to display notifications
+              if (Notification.permission === "granted") {
+                showNotification();
+              } else {
+                // Request permission to display notifications
+                Notification.requestPermission().then((permission) => {
+                  if (permission === "granted") {
+                    showNotification();
+                  }
+                });
               }
             } else {
               // At this point, everything has been precached.
