@@ -246,3 +246,22 @@
     outline: none;
   }
 }
+
+#Notifications-accordion {
+  margin-top: 0 !important;
+}
+.notification-item {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  p {
+    margin: 0;
+  }
+  button {
+    margin: 0;
+    place-self: initial;
+    padding: 8px 12px;
+    font-size: 0.875em;
+  }
+}
