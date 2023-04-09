@@ -16,19 +16,20 @@ const darkCommonStyle = {
 };
 
 export interface ArchivedAccordionProps {
-  totalArchived: number,
-  children: ReactNode
+  totalItems: number,
+  children: ReactNode,
+  name: string
 }
-const ArchivedAccordion: React.FC<ArchivedAccordionProps> = ({ totalArchived, children }) => {
+const ArchivedAccordion: React.FC<ArchivedAccordionProps> = ({ name, totalItems, children }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
-    <Accordion className={`Accordion${darkModeStatus ? "-dark" : ""}`} style={{ margin: "1.5em 0" }}>
+    <Accordion id={`${name}-accordion`} className={`Accordion${darkModeStatus ? "-dark" : ""}`} style={{ margin: "1.5em 0" }}>
       <Accordion.Item eventKey="0">
         <Accordion.Header>
           <p style={{
             ...commonStyle,
             ...(darkModeStatus ? darkCommonStyle : {}) }}
-          > {`Archived (${totalArchived})`}
+          > {`${name} (${totalItems})`}
           </p>
         </Accordion.Header>
         <Accordion.Body>

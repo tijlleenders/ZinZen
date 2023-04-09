@@ -24,6 +24,7 @@ import {
   displayUpdateGoal,
   goalsHistory,
   popFromGoalsHistory } from "@src/store/GoalsState";
+import { getAllContacts } from "@src/api/ContactsAPI";
 import MyGoal from "@components/GoalsComponents/MyGoal";
 import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
@@ -35,12 +36,13 @@ import { darkModeState, displayInbox, displayToast, lastAction, searchActive } f
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import "./MyGoalsPage.scss";
-import { getAllContacts } from "@src/api/ContactsAPI";
+import * as serviceWorkerRegistration from "../../service-worker/serviceWorkerRegistration";
 
 export const MyGoalsPage = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const isUpdgradeAvailable = localStorage.getItem("updateAvailable") === "true";
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
   const [loading, setLoading] = useState(false);
@@ -186,13 +188,13 @@ export const MyGoalsPage = () => {
                 <button
                   type="button"
                   onClick={async () => {
-                    if ((await getActiveSharedWMGoals()).length === 0) {
+                    if (!isUpdgradeAvailable && (await getActiveSharedWMGoals()).length === 0) {
                       if ((await getAllContacts()).length === 0) {
                         setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Make some friends so that they can share their goals with you too😊" });
                       } else {
                         setShowToast({ open: true, message: "Your Inbox is empty.", extra: "Your current friends haven't shared any of their goals with you" });
                       }
-                    } else setOpenInbox(true);
+                    } else { setOpenInbox(true); }
                   }}
                 >
                   <h1 className={`myGoals_title${darkModeStatus ? "-dark" : ""} ${!openInbox ? "" : "activeTab"}`}>
@@ -203,6 +205,28 @@ export const MyGoalsPage = () => {
               )}
               { showAddGoal && (<GoalConfigModal goal={createGoalObjectFromTags({})} />)}
               <div>
+                { openInbox && isUpdgradeAvailable && (
+                  <ArchivedAccordion name="Notifications" totalItems={1}>
+                    <div className={`notification-item user-goal${darkModeStatus ? "-dark" : ""}`}>
+                      <p>Upgrade Available !!</p>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          navigator.serviceWorker.register("../../service-worker.js")
+                            .then((registration) => {
+                              if (registration.waiting) {
+                                registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+                                localStorage.setItem("updateAvailable", "false");
+                                window.location.reload();
+                              }
+                            });
+                        }}
+                        className={`default-btn${darkModeStatus ? "-dark" : ""}`}
+                      >Upgrade Now
+                      </button>
+                    </div>
+                  </ArchivedAccordion>
+                )}
                 {activeGoals.map((goal: GoalItem) => (
                   <>
                     { showUpdateGoal?.goalId === goal.id && <GoalConfigModal goal={goal} /> }
@@ -214,7 +238,7 @@ export const MyGoalsPage = () => {
                   </>
                 ))}
                 { archivedGoals.length > 0 && (
-                  <ArchivedAccordion totalArchived={archivedGoals.length}>
+                  <ArchivedAccordion name="Archived" totalItems={archivedGoals.length}>
                     {archivedGoals.map((goal: GoalItem) => (
                       <MyGoal
                         key={`goal-${goal.id}`}
