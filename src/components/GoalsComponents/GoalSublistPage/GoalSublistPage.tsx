@@ -120,13 +120,18 @@ export const GoalSublist = () => {
           </div>
           <Container fluid className="sublist-list-container">
             { showAddGoal && <GoalConfigModal goal={createGoalObjectFromTags({})} /> }
-
             {childrenGoals?.map((goal: GoalItem) => (
-              showUpdateGoal?.goalId === goal.id ? <GoalConfigModal goal={goal} />
-                :
-              <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} />
+              <>
+                { showUpdateGoal?.goalId === goal.id && <GoalConfigModal goal={goal} /> }
+                <MyGoal
+                  goal={goal}
+                  showActions={showActions}
+                  setShowActions={setShowActions}
+                />
+              </>
             ))}
-            <ArchivedAccordion totalArchived={archivedChildren.length}>
+            { archivedChildren.length > 0 && (
+            <ArchivedAccordion name="Archived" totalItems={archivedChildren.length}>
               {archivedChildren.map((goal: GoalItem) => (
                 <MyGoal
                   key={`goal-${goal.id}`}
@@ -136,6 +141,7 @@ export const GoalSublist = () => {
                 />
               ))}
             </ArchivedAccordion>
+            )}
           </Container>
         </div>
       </div>
