@@ -52,6 +52,6 @@ export const convertTypeOfSub = async (goalId: string, subId: string, newType: t
 
 export const findTypeOfSub = async (goalId: string) => {
   const goal = await db.pubSubCollection.where("id").equals(goalId).toArray();
-  if (goal && goal.length > 0) { return "collaboration"; }
+  if (goal && goal.length > 0) { return goal[0].subscribers[0].type; }
   return "none";
 };

@@ -65,8 +65,17 @@ const App = () => {
                   .then(() => console.log("goal added in inbox"))
                   .catch((err) => console.log("Failed to add in inbox", err));
               } else if (["shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
-                const typeOfSub = await findTypeOfSub(ele.rootGoalId) === "collaboration" ? "collaboration" : ele.type;
-                handleIncomingChanges({ ...ele, type: typeOfSub }).then(() => setLastAction("goalNewUpdates"));
+                let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
+                if (ele.type === "collaborationInvite") {
+                  typeOfSub = "collaborationInvite";
+                } else if (ele.type === "collaboration") {
+                  typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
+                } else if (ele.type === "shared") {
+                  typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
+                }
+                if (typeOfSub !== "none") {
+                  handleIncomingChanges({ ...ele, type: typeOfSub }).then(() => setLastAction("goalNewUpdates"));
+                }
               }
             });
           }

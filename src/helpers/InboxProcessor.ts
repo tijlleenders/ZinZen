@@ -33,6 +33,7 @@ export const handleIncomingChanges = async (payload) => {
       getSharedWMGoal(payload.changes[0].id).then(async (goal: GoalItem) => archiveSharedWMGoal(goal).catch((err) => console.log(err, "failed to archive")));
     }
   } else if (payload.type === "collaborationInvite") {
+    console.log(payload)
     notifyNewColabRequest(payload.goal.id, payload.relId).catch(() => console.log("failed to notify about new colab"));
   } else if (payload.type === "collaboration") {
     const { rootGoalId, changes, changeType } = payload;
