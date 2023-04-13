@@ -3,8 +3,7 @@ describe("Basic Tests Home Page", () => {
     cy.visit("/");
     cy.clearLocalStorage();
     cy.get('[alt="ZinZen Text Logo"]').should("be.visible");
-    cy.contains("Realize");
-    cy.contains("dreams");
+    cy.contains("Better");
     cy.contains("together");
   });
 

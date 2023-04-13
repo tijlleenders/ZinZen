@@ -13,7 +13,7 @@ import "./LandingPage.scss";
 export const LandingPage = () => {
   const { t } = useTranslation();
   const [, setPosition] = useState(1);
-  const langSelected = (lang:string, newPos:number) => {
+  const langSelected = (lang: string, newPos: number) => {
     if ((i18n.language.includes(lang))) {
       setPosition(newPos);
       return true;
@@ -87,8 +87,7 @@ export const LandingPage = () => {
         <div> <img src={ZinZen} alt="ZinZen Text Logo" id="landing-textLogo" /> </div>
         <div>
           <p className="landing-about">
-            <span> Realize</span>
-            <span> dreams</span>
+            <span> Better </span>
             <span> together</span>
             <br style={{ marginTop: "5px" }} />
           </p>
