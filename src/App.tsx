@@ -69,7 +69,7 @@ const App = () => {
                 if (ele.type === "collaborationInvite") {
                   typeOfSub = "collaborationInvite";
                 } else if (ele.type === "collaboration") {
-                  typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
+                  typeOfSub = "collaboration";
                 } else if (ele.type === "shared") {
                   typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
                 }

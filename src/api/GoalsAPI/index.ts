@@ -31,7 +31,7 @@ export const addGoal = async (goalDetails: GoalItem) => {
 
 export const getGoal = async (goalId: string) => {
   const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
-  return goal[0];
+  return goal.length > 0 ? goal[0] : null;
 };
 
 export const getChildrenGoals = async (parentGoalId: string) => {
