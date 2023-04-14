@@ -16,6 +16,10 @@ export const getInboxItem = async (id: string) => {
   return inboxItems[0];
 };
 
+export const removeGoalInbox = async (id: string) => {
+  await db.inboxCollection.where("id").equals(id).delete().catch((err) => console.log("failed to delete", err));
+};
+
 export const addGoalChangesInID = async (id: string, newChanges: IChangesInGoal) => {
   db.transaction("rw", db.inboxCollection, async () => {
     await db.inboxCollection.where("id").equals(id)
