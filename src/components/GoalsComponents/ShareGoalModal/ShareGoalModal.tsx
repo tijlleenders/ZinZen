@@ -15,12 +15,11 @@ import ContactItem from "@src/models/ContactItem";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
-import { confirmAction, IShareGoalModalProps } from "@src/Interfaces/IPopupModals";
-import { convertIntoSharedGoal } from "@src/helpers/GoalProcessor";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { darkModeState, displayToast, showConfirmation } from "@src/store";
+import { confirmAction, IShareGoalModalProps } from "@src/Interfaces/IPopupModals";
 import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
-import { getGoal, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { convertIntoSharedGoal, getAllLevelGoalsOfId, getGoal, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import SubMenu, { SubMenuItem } from "./SubMenu";
 import AddContactModal from "./AddContactModal";
 
@@ -54,7 +53,8 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           else {
             const status = accepted ? true : await checkAndUpdateRelationshipStatus(relId);
             if (goal.typeOfGoal === "myGoal" && status) {
-              await shareGoalWithContact(relId, convertIntoSharedGoal(goal));
+              const goalWithChildrens = await getAllLevelGoalsOfId(goal.id, true);
+              await shareGoalWithContact(relId, [convertIntoSharedGoal(goal), ...goalWithChildrens]);
               setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });
               updateSharedStatusOfGoal(goal.id, relId, name).then(() => console.log("status updated"));
               addSubInPub(goal.id, relId, "shared").then(() => console.log("subscriber added"));
@@ -78,7 +78,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
     if (action === "shareAnonymously") {
       let parentGoalTitle = "root";
       setLoading({ ...loading, A: true });
-      if (goal.parentGoalId !== "root") { parentGoalTitle = (await getGoal(goal.parentGoalId)).title; }
+      if (goal.parentGoalId !== "root") { parentGoalTitle = (await getGoal(goal.parentGoalId))?.title || ""; }
       const { response } = await shareMyGoalAnonymously(goal, parentGoalTitle);
       setShowToast({ open: true, message: response, extra: "" });
       setLoading({ ...loading, A: false });

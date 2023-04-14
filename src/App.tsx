@@ -59,17 +59,20 @@ const App = () => {
           // @ts-ignore
             resObject[relId].forEach(async (ele) => {
               if (ele.type === "shareMessage") {
-                const { goal } : { goal: GoalItem } = ele;
-                goal.shared.contacts.push({ name: contactItem.name, relId });
-                addSharedWMGoal(goal)
-                  .then(() => console.log("goal added in inbox"))
-                  .catch((err) => console.log("Failed to add in inbox", err));
+                const { goalWithChildrens } : { goalWithChildrens: GoalItem[] } = ele;
+                const rootGoal = goalWithChildrens[0];
+                rootGoal.shared.contacts.push({ name: contactItem.name, relId });
+                addSharedWMGoal(rootGoal).then(() => {
+                  goalWithChildrens.slice(1).forEach((goal) => {
+                    addSharedWMGoal(goal).catch((err) => console.log(`Failed to add in inbox ${goal.title}`, err));
+                  });
+                }).catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
               } else if (["shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
                 let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
                 if (ele.type === "collaborationInvite") {
                   typeOfSub = "collaborationInvite";
                 } else if (ele.type === "collaboration") {
-                  typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
+                  typeOfSub = "collaboration";
                 } else if (ele.type === "shared") {
                   typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
                 }

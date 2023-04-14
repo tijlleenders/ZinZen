@@ -6,7 +6,7 @@ import ignore from "@assets/images/ignore.svg";
 import { darkModeState } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { getTypeAtPriority } from "@src/helpers/GoalProcessor";
-import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
+import { deleteGoalChangesInID, getInboxItem, removeGoalInbox } from "@src/api/InboxAPI";
 import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
 import { changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
 
@@ -21,16 +21,18 @@ const IgnoreBtn = ({ showChangesModal, goal, setShowChangesModal }: IgnoreBtnPro
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const handleClick = async () => {
+    let deleteInbox = false;
     if (isConversionRequest) {
+      deleteInbox = true;
       convertSharedGoalToColab(goal.id, false);
-      setShowChangesModal(null);
     } else {
       const removeChanges = showChangesModal.goals.map((colabGoal: GoalItem) => colabGoal.id);
       if (typeAtPriority !== "none") { await deleteGoalChangesInID(goal.rootGoalId, typeAtPriority, removeChanges); }
     }
     const inbox = await getInboxItem(goal.rootGoalId);
-    if (getTypeAtPriority(inbox.goalChanges).typeAtPriority === "none") {
-      changeNewUpdatesStatus(false, goal.rootGoalId).catch((err) => console.log(err));
+    if (deleteInbox || getTypeAtPriority(inbox.goalChanges).typeAtPriority === "none") {
+      await changeNewUpdatesStatus(false, goal.rootGoalId).catch((err) => console.log(err));
+      removeGoalInbox(goal.rootGoalId);
     }
     setShowChangesModal(null);
   };

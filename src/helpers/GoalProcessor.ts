@@ -80,12 +80,6 @@ export const extractFromGoalTags = (goalTags: ITags) => ({
   beforeTime: (goalTags.beforeTime || goalTags.beforeTime === 0) ? goalTags.beforeTime.value : null,
 });
 
-export const convertIntoSharedGoal = (goal: GoalItem) => ({
-  ...goal,
-  shared: getDefaultValueOfShared(),
-  collaboration: getDefaultValueOfCollab()
-});
-
 export const getHistoryUptoGoal = async (id: string) => {
   const history = [];
   let openGoalOfId = id;
