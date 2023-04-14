@@ -21,9 +21,9 @@ export const acceptRelationship = async () => {
   return res;
 };
 
-export const shareGoalWithContact = async (relId: string, goal: GoalItem) => {
+export const shareGoalWithContact = async (relId: string, goalWithChildrens: GoalItem[]) => {
   const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
-  const res = await createContactRequest(url, { method: "shareMessage", installId: getInstallId(), relId, event: { type: "shareMessage", goal } });
+  const res = await createContactRequest(url, { method: "shareMessage", installId: getInstallId(), relId, event: { type: "shareMessage", goalWithChildrens } });
   return res;
 };
 
