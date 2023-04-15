@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/no-relative-packages */
 // @ts-nocheck
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
-import { getAllTasks } from "@src/api/TasksAPI";
+import { getAllTasks, getTaskByGoalId } from "@src/api/TasksAPI";
 import { TaskItem } from "@src/models/TaskItem";
 import { darkModeState, lastAction } from "@src/store";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
@@ -23,14 +23,13 @@ import "./MyTimePage.scss";
 import "@translations/i18n";
 
 export const MyTimePage = () => {
-  const fakeThursday = new Date();
-  fakeThursday.setDate(fakeThursday.getDate() + (fakeThursday.getDate() === 28 ? 2 : 1));
+  const fakeNextDay = new Date();
+  fakeNextDay.setDate(fakeNextDay.getDate() + 1);
   const today = new Date();
 
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
   const darkModeStatus = useRecoilValue(darkModeState);
-
   const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } }}>({});
   const [devMode, setDevMode] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
@@ -59,12 +58,12 @@ export const MyTimePage = () => {
     />
   );
   const getTimeline = (day: string) => (
-    tasks[day] ? <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} /> : <div />
+    tasks[day] ? <MyTimeline devMode={devMode} day={day} myTasks={tasks[day]} tasksStatus={tasksStatus} setTasksStatus={setTasksStatus} /> : <div />
   );
   const getDayComponent = (day: string) => {
     const colorIndex = -1;
     const freeHours = tasks[day]?.freeHrsOfDay;
-    const dayOfMonth = devMode ? fakeThursday.getDate() : today.getDate();
+    const dayOfMonth = devMode ? fakeNextDay.getDate() : today.getDate();
     const suffix = getOrdinalSuffix(dayOfMonth);
     return (
       <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
@@ -79,7 +78,7 @@ export const MyTimePage = () => {
           <h3 className="MyTime_dayTitle">
             {day === "Today" ? (
               <>
-                {(devMode ? fakeThursday : today).toLocaleString("default", { weekday: "long" })} {dayOfMonth}
+                {(devMode ? fakeNextDay : today).toLocaleString("default", { weekday: "long" })} {dayOfMonth}
                 <sup>{suffix}</sup>
               </>
             ) : (
@@ -124,7 +123,7 @@ export const MyTimePage = () => {
     activeGoals.forEach((goal) => {
       obj[goal.id] = { parentGoalId: goal.parentGoalId, goalColor: goal.goalColor };
     });
-    const _today = devMode ? new Date(fakeThursday) : new Date();
+    const _today = devMode ? new Date(fakeNextDay) : new Date();
     scheduled.forEach((dayOutput, index) => {
       const { day } = dayOutput;
       const thisDay = { freeHrsOfDay: 0, scheduledHrs: 0, scheduled: [], impossible: [], colorBands: [] };
@@ -173,15 +172,14 @@ export const MyTimePage = () => {
       let activeGoals: GoalItem[] = await getAllGoals();
       if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
       console.log(activeGoals);
-      getAllTasks().then((dbTasks) => {
-        setTasksStatus(dbTasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {}));
-      });
+
       await init();
-      const _today = devMode ? new Date(fakeThursday) : new Date();
+      const _today = devMode ? new Date(fakeNextDay) : new Date();
       // _today.setDate(_today.getDate() + 1);
       const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
       const endDate = `${new Date(_today.setDate(_today.getDate() + 7)).toISOString().slice(0, 10)}T00:00:00`;
-
+      const tasksStates = await getAllTasks().then((dbTasks) => dbTasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {}));
+      console.log(tasksStates);
       const schedulerInput = {
         startDate,
         endDate,
@@ -192,9 +190,11 @@ export const MyTimePage = () => {
         if (!ele.duration && !ele.timeBudget) noDurationGoals.push(ele.id);
         return !!(ele.duration) || ele.timeBudget;
       })];
-      activeGoals.forEach((ele) => {
+      activeGoals.forEach(async (ele) => {
         const obj = { id: ele.id, title: ele.title, filters: {} };
-        if (ele.duration) obj.min_duration = Number(ele.duration);
+        const task: TaskItem = tasksStates[ele.id] || null;
+
+        if (ele.duration) obj.min_duration = Number(ele.duration) - (task ? task.hoursSpent - (task.currentStatus.count || 0) : 0);
         if (ele.start) {
           const start = new Date(ele.start);
           start.setDate(start.getDate() + 1);
@@ -208,7 +208,7 @@ export const MyTimePage = () => {
         if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
         if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;
         if (ele.habit) obj.repeat = ele.habit.toLowerCase();
-        if (ele.timeBudget) obj.budgets = [{ budget_type: ele.timeBudget.period === "day" ? "Daily" : "Weekly", min: Number(ele.timeBudget.duration) }];
+        if (ele.timeBudget) obj.budgets = [{ budget_type: ele.timeBudget.period === "day" ? "Daily" : "Weekly", min: Number(ele.timeBudget.duration) - (task ? task.hoursSpent - (task.currentStatus.count || 0) : 0) }];
         if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
         if (ele.on) obj.filters.on_days = ele.on.charAt(0).toUpperCase() + ele.on.slice(1);
         if (Object.keys(obj.filters).length === 0) { delete obj.filters; }
@@ -222,6 +222,9 @@ export const MyTimePage = () => {
       const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
       // console.log(processedOutput);
       setTasks({ ...processedOutput });
+      await getAllTasks().then((dbTasks) => {
+        setTasksStatus(dbTasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {}));
+      });
     };
     initialCall();
   }, [devMode, action]);
@@ -234,7 +237,7 @@ export const MyTimePage = () => {
         {getDayComponent("Tomorrow")}
         {
           [...Array(6).keys()].map((i) => {
-            const thisDay = devMode ? new Date(fakeThursday) : new Date(today);
+            const thisDay = devMode ? new Date(fakeNextDay) : new Date(today);
             thisDay.setDate(thisDay.getDate() + i + 1);
             if (i >= 1) {
               return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
