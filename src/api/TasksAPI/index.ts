@@ -23,24 +23,40 @@ export const getTaskByGoalId = async (goalId: string) => {
   }
 };
 
-export const completeTask = async (id: string, duration: number) => {
+export const completeTask = async (goalId: string, taskId: string, duration: number) => {
   db.transaction("rw", db.taskCollection, async () => {
-    await db.taskCollection.where("id").equals(id)
+    await db.taskCollection.where("id").equals(goalId)
       .modify((obj: TaskItem) => {
-        obj.lastCompleted = new Date().toLocaleDateString();
+        const { lastCompleted } = obj;
+        lastCompleted.taskIds.push(taskId);
+        lastCompleted.date = new Date().toLocaleDateString();
+        obj.lastCompleted = { ...lastCompleted };
         obj.hoursSpent += duration;
+        if (obj.currentStatus?.date === new Date().toLocaleDateString()) {
+          obj.currentStatus.count += duration;
+        } else {
+          obj.currentStatus = { date: new Date().toLocaleDateString(), count: duration };
+        }
       });
   }).catch((e) => {
     console.log(e.stack || e);
   });
 };
 
-export const forgetTask = async (id: string, duration: number) => {
+export const forgetTask = async (goalId: string, taskId: string, duration: number) => {
   db.transaction("rw", db.taskCollection, async () => {
-    await db.taskCollection.where("id").equals(id)
+    await db.taskCollection.where("id").equals(goalId)
       .modify((obj: TaskItem) => {
-        obj.lastForget = new Date().toLocaleDateString();
+        const { lastForget } = obj;
+        lastForget.taskIds.push(taskId);
+        lastForget.date = new Date().toLocaleDateString();
+        obj.lastForget = { ...lastForget };
         obj.hoursSpent += duration;
+        if (obj.currentStatus?.date === new Date().toLocaleDateString()) {
+          obj.currentStatus.count += duration;
+        } else {
+          obj.currentStatus = { date: new Date().toLocaleDateString(), count: duration };
+        }
       });
   }).catch((e) => {
     console.log(e.stack || e);
