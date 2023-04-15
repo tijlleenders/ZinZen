@@ -3,6 +3,7 @@ export interface TaskItem {
     goalId: string,
     title: string,
     hoursSpent: number,
-    lastCompleted: string, // date
-    lastForget: string // date
+    currentStatus: { date: string, count: number } | null,
+    lastCompleted: { taskIds: string[], date: string }, // date
+    lastForget: { taskIds: string[], date: string }, // date
 }
