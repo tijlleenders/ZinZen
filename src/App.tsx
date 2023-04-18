@@ -89,6 +89,7 @@ const App = () => {
     const installId = localStorage.getItem("installId");
     if (!installId) {
       localStorage.setItem("installId", uuidv4());
+      localStorage.setItem("theme", "light");
     } else {
       init();
     }
@@ -105,8 +106,6 @@ const App = () => {
         <Routes>
           {!isLanguageChosen ? (
             <Route path="/" element={<LandingPage />} />
-          ) : !isThemeChosen ? (
-            <Route path="/" element={<ThemeChoice />} />
           ) : (
             <Route path="/" element={<MyTimePage />} />
           )}
