@@ -70,7 +70,7 @@
 }
 
 .tagOption-dark {
-    color: #FFF;
+    
 }
 
 #editSection {
@@ -225,10 +225,10 @@
 }
 .dropdown-dark {
     background: #343434 !important;
-    color: white;
-    li, button {
-        color: white
-    }
+    
+    // li, button {
+    //     color: white
+    // }
 }
 
 @media (max-width: 600px) {

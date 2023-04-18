@@ -31,7 +31,7 @@
   height: 36px;
   padding: 0;
   line-height: 36px;
-  color: #fff;
+  
   font-weight: bold;
   box-sizing: border-box;
 }
@@ -39,13 +39,13 @@
   content: "YES";
   padding-left: 10px;
   background-color: #060;
-  color: #fff;
+  
 }
 .inner:after {
   content: "NO";
   padding-right: 10px;
   background-color: #bbb;
-  color: #fff;
+  
   text-align: right;
 }
 .switch {

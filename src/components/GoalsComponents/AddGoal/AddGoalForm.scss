@@ -17,7 +17,6 @@ body {
 }
 
 .mygoals-font-dark {
-  color: #cecece;
   margin-left: 0.3em;
   font-style: normal;
   font-weight: bolder;
@@ -31,14 +30,12 @@ body {
 }
 
 .goalsubtext-font-dark {
-  color: #cecece;
   margin-left: 0.5em;
   font-style: italic;
   padding-bottom: 0em;
 }
 
 .goalsubtext-font-light {
-  color: #686868;
   margin-left: 0.5em;
   font-style: italic;
   padding-bottom: 0em;
@@ -46,7 +43,6 @@ body {
 
 .addtask-dark {
   background-color: #5f3636;
-  color: #cecece;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -143,7 +139,6 @@ body {
   margin: 2.5% 0% 4% 1%;
   padding: 1% 6%;
   font-size: 0.875em;
-  color: black;
 }
 
 .color-button {
@@ -154,8 +149,6 @@ body {
 }
 
 .addtask-button {
-  color: white !important;
-  // background: #AC3B61 !important;
   border-radius: 10px !important;
   font-size: x-large !important;
   font-weight: bolder !important;

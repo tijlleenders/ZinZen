@@ -21,11 +21,11 @@
 
 #share-modal-dark {
     .modal-content {
-        color: white;
+        
         background:  #121212;
         button {
             background:  rgba(57, 57, 57, 0.4);
-            color: white;
+            
         }
     }
     .share-Options > div, .contact-icon, .next-icon {
@@ -94,7 +94,7 @@
     text-align: center;
     box-sizing: content-box;
     border: none;
-    color: inherit;
+    
 }
 
 .shareWithContacts {
@@ -168,7 +168,7 @@
 }
 
 .addContact-btn-dark {
-    color: white;
+    
     background:#9984E4;
     img {
         filter: brightness(0) invert(1);

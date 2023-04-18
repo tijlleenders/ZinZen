@@ -20,7 +20,7 @@ export const LangItem = ({ lang }: { lang: ILanguage }) => {
     setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
     localStorage.setItem("language", JSON.stringify(langId));
-    navigate("/");
+    navigate("/QueryZinZen");
   };
 
   return (

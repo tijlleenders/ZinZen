@@ -8,13 +8,18 @@
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  color: #343434 !important;
+  p, button, span, div, h1, h2, h3, h4, h5 {
+    color: black !important;
+  }
 }
 .App-dark {
   background: linear-gradient(180deg, #121212 49.07%, #291B5C 100%);
   background-attachment: fixed;
-  color: white !important;
+  p, button, span, div, h1, h2, h3, h4, h5 {
+    color: white !important;
+  }
 }
+
 
 .publicGoal {
   border-radius: 50%;
@@ -68,7 +73,6 @@
 
 .sidebar-item, .sidebar-item-dark {   
   background: white;
-  color: black;
   border: none;
   z-index: 11;
   position: relative;
@@ -93,7 +97,6 @@
 }
 .sidebar-item-dark {
   background: rgb(18,18,18, 0.7);
-  color: white
 }
 /* Toast */
 #toast, #toast-dark {
@@ -128,7 +131,6 @@
 }
 .default-input-dark {
   background: #343434 !important;
-  color: white !important;
 }
 
 .ordinary-btn {
@@ -154,7 +156,6 @@
   }
 }
 .default-btn-dark {
-  color: white;
   background:#9984E4;
   img {
       filter: brightness(0) invert(1);
@@ -183,14 +184,12 @@
 .popupModal-dark {
   input {
     background: #343434 !important;
-    color: white !important;
   }
   .modal-content {
     background: #121212;
   }
   .modal-body {
     background: #121212;
-    color: white;
   }
 }
 

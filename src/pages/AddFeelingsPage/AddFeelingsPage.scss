@@ -10,7 +10,7 @@
     margin-top: 20px;
     position: relative;
     button:first-child {
-        color: black;
+        
         padding: 4% 7%;
         background: transparent;
         font-size: 1.286em;
@@ -21,7 +21,7 @@
         border-right: 2px solid #EDC7B7;
     }
     button:last-child {
-        color: black;
+        
         width: 20%;
         display: flex;
         align-items: center;
@@ -34,7 +34,7 @@
 .feelings-category-dark {
     background: rgba(57, 57, 57, 0.4);
     button {
-        color: white !important;
+        
     }
 }
 
@@ -62,7 +62,7 @@
 
     button {
       border: none;
-      color: #454545;
+    //   color: #454545;
       background: transparent;
       border: 1px solid #EEB8A7;
       border-radius: 7px;
@@ -77,10 +77,10 @@
     background: #121212;
     input {
         background: #343434 !important;
-        color: white !important;
+        
     }
     button {
-        color: white;
+        
         border: 1px solid #9984E4;
     }
 }
