@@ -1,6 +1,6 @@
 .changes-list, .changes-list-dark{
     border-radius: 8px;
-    background: rgba(246, 246, 246, 0.4);
+    
     overflow-y: hidden;
     max-height: 60vh;
 }
@@ -15,7 +15,7 @@
     }
 }
 .changes-list-dark {
-    background: rgba(52, 52, 52, 0.4);
+    
 }
 
 .existingChange{ 
@@ -34,12 +34,12 @@
 .default-checkbox, .default-checkbox-dark {
     .form-check-input:checked[type=checkbox] {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
-        background-color: #3291ae !important;
+        
         opacity: 1 !important;
     }
   }
   .default-checkbox-dark {
     .form-check-input:checked[type=checkbox] {
-        background-color: #9984E4 !important;
+        
     }
   }

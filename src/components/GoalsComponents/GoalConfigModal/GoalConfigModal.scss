@@ -13,10 +13,10 @@
         border-radius: 0.5rem 0.5rem 0 0;
         
         .selected {
-            background: rgba(205, 110, 81, 0.5);
+            
         }
         .selected-dark {
-            background:#9984E4;
+            
         }
     }
     .modal-header {
@@ -28,10 +28,10 @@
         padding-left: 12px;
         font-size: 1.429em;
         font-weight: 700;
-        background-color: rgba(205, 110, 81, 0.4);
+        
         border-bottom: 2px solid rgba(205, 110, 81, 0.4);
         #inputGoalField {
-            background: transparent;
+            
             border: none;
             outline: none;
             width: 100%;
@@ -58,11 +58,11 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: rgba(205, 110, 81, 0.2);
+    
 }
 
 .tagOption, .tagOption-dark {
-    background: transparent;
+    
     border: none;
     padding: 0.5em 1em;
     white-space: nowrap;
@@ -88,7 +88,7 @@
         text-align: center;
         margin: auto;
         max-height: 200px;
-        background: white;
+        
         list-style: none;
         overflow-y: scroll;
         li {
@@ -97,7 +97,7 @@
         button {
             width: 100%;
             border: none;
-            background: transparent;
+            
         }
         }
     }
@@ -133,7 +133,7 @@
     div {
         display: flex;
         justify-content: space-between;
-        background: #fff;
+        
         width: 120px;
         svg {
             align-self: center;
@@ -175,7 +175,7 @@
 }
 
 #saveGoal {
-    background: transparent;
+    
 }
 
 .hintsBtn {
@@ -213,18 +213,18 @@
         filter: invert(1);
     }
     .modal-header { 
-        background-color: #343434 !important;
+        
         border-color: #121212 !important;
     }
     #tagsList {
-        background-color: #343434 !important;
+        
     }
     #editSection {
-        background-color: rgba(52, 52, 52, 0.4) !important;
+        
     }
 }
 .dropdown-dark {
-    background: #343434 !important;
+    
     
     // li, button {
     //     color: white

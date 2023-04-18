@@ -13,7 +13,7 @@
     margin-left: 7%;
   }
   button { 
-    background-color: transparent;
+    
     border: none;
   }
   .activeTab { 
@@ -22,7 +22,7 @@
   }
 }
 #goal-searchBar, #goal-searchBar-dark {
-  background-color: rgba(255, 255, 255, 0.4);
+  
   border: none;
   border-radius: 7px;
   
@@ -36,7 +36,7 @@
 }
 
 #goal-searchBar-dark {
-  background-color: rgba(112, 112, 112, 0.6);;
+  
   
 }
 
@@ -95,7 +95,7 @@
 
 .user-goal, .user-goal-dark {
   word-break: break-all;
-  background: rgba(246, 246, 246, 0.4);
+  
   margin-top: 4%;
   min-height: 61.19px;
   text-align: left;
@@ -106,7 +106,7 @@
   flex-direction: column;
   width: 100%;
   .user-goal-main {
-    background: transparent;
+    
     border: none;
     
     display: flex;
@@ -130,7 +130,7 @@
   }
 }
 .user-goal-dark {
-  background: rgba(57, 57, 57, 0.4);
+  
   
 }
 
@@ -155,7 +155,7 @@
     width: 61px;
     top: 0.5px;
     height: 100%;
-    background: transparent;
+    
   }
 
 #addGoal-btn {
@@ -168,7 +168,7 @@
 .goal-title {
   align-items: center;
   border: none;
-  background: transparent;
+  
   display: flex;
   font-family: "Montserrat";
   font-weight: bold;
@@ -188,7 +188,7 @@
 .goal-link {
   // width: 100%;
   border: none;
-  background-color: transparent;
+  
   font-weight: bold;
   font-size: 1em;
 }

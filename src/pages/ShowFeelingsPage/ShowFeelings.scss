@@ -30,7 +30,7 @@
   justify-content: space-between;
   padding: 18px 21px;
   width: 100%;
-  background: rgba(246, 246, 246, 0.4);
+  
   border: none;
   border-bottom: 1px solid #303030;
   .feelingOfDay-name {
@@ -49,7 +49,7 @@
 }
 
 .feelingOfDay-dark {
-  background: rgba(57, 57, 57, 0.4);
+  
   border-bottom: 1px solid #E4E4E4;
   
 
@@ -63,7 +63,7 @@
 }
 
 .addFeeling-btn, .addFeeling-btn-dark{
-  background: transparent;
+  
   margin-left: 20px;
   border-radius: 50%;
   border: none;
@@ -73,12 +73,12 @@
 }
 
 .notes-modal .modal-content {
-  background-color: #FFEBEB;  
+  
 
 }
 
 .notes-modal-dark .modal-content {
-  background-color: #121212;
+  
   border: 3px solid #3a2a22 !important;
 }
 
@@ -95,7 +95,7 @@
 }
 
 .notes-modal-input, .notes-modal-input-dark {
-  background-color: #EEB8A7 !important;
+  
   outline: none;
   border: none;
   border-radius: 8px;
@@ -105,11 +105,11 @@
 }
 
 .notes-modal-input-dark { 
-    background: #343434 !important;
+    
     
 }
 .feelingsModal-btn, .feelingsModal-btn-dark {
-  background: #CD6E51;
+  
   border-radius: 5px; 
   font-size: 1.286em;
   font-weight: 600;
@@ -117,12 +117,12 @@
   border: none;
 }
 .feelingsModal-btn-dark {
-  background: #705BBC;
+  
   
 }
 
 .show-feeling__note-textarea, .show-feeling__note-textarea-dark {
-  background-color: #edc7b7 !important;
+  
   outline: none;
   border: none;
   border-radius: 8px;
@@ -130,6 +130,6 @@
   font-weight: bold;
 }
 .show-feeling__note-textarea-dark {
-  background: #343434 !important;
+  
   
 }

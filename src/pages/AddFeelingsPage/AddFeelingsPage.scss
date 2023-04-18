@@ -3,7 +3,7 @@
     font-weight: 700;
 }
 .feelings-category, .feelings-category-dark {
-    background: rgba(246, 246, 246, 0.4);
+    
     border: 2px solid #EDC7B7;
     border-radius: 10px;
     display: flex;
@@ -12,7 +12,7 @@
     button:first-child {
         
         padding: 4% 7%;
-        background: transparent;
+        
         font-size: 1.286em;
         font-weight: 700;
         border: none;
@@ -26,20 +26,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: transparent;
+        
         border: none;
     }
 }
 
 .feelings-category-dark {
-    background: rgba(57, 57, 57, 0.4);
+    
     button {
         
     }
 }
 
 #feeling-modal-body, #feeling-modal-body-dark {
-    background: #FFEBEB;
+    
     border-radius: 10px;
     padding: 25px;
     .heading {
@@ -52,7 +52,7 @@
       font-weight: 600;
     }
     input {
-      background: #EEB8A7 !important;
+      
       border-radius: 7px !important;
       border: none;
       padding: 11px 14px;
@@ -63,7 +63,7 @@
     button {
       border: none;
     //   color: #454545;
-      background: transparent;
+      
       border: 1px solid #EEB8A7;
       border-radius: 7px;
       padding: 7px 20px;
@@ -74,9 +74,9 @@
 }
 
 #feeling-modal-body-dark {
-    background: #121212;
+    
     input {
-        background: #343434 !important;
+        
         
     }
     button {
@@ -87,11 +87,11 @@
 
 #feelingOptions {
     .feelingOption-selected {
-        background: #EEB8A7;
+        
     }
 }
 #feelingOptions-dark {
     .feelingOption-selected {
-        background: #343434;
+        
     }
 }

@@ -6,30 +6,30 @@
     height: 100%;
     .modal-content {
       margin-top: auto;
-      background: #FFE1D7;
+      
       border-radius: 0.5rem 0.5rem 0 0;
     }
     .shareOptions-btn {
         border: none;
         padding: 2% 5%;
-        background-color: rgba(246, 246, 246, 0.4);
+        
     }
     .share-Options > div, .contact-icon, .next-icon {
-        background: #EBA48E;
+        
     }
 } 
 
 #share-modal-dark {
     .modal-content {
         
-        background:  #121212;
+        
         button {
-            background:  rgba(57, 57, 57, 0.4);
+            
             
         }
     }
     .share-Options > div, .contact-icon, .next-icon {
-        background: #705BBC;
+        
     }
 }
 
@@ -53,7 +53,7 @@
         left: -4px;
         width: 44px;
         height: 44px;
-        background: transparent !important;
+        
         position: absolute;
     }
 }
@@ -62,7 +62,7 @@
     position: relative;
     width: 36px;
     height: 36px;
-    background-color: #EDC7B7;
+    
     border-radius: 50%;
     
     img, svg {
@@ -83,7 +83,7 @@
 
 .add-icon {
     border: none !important;
-    background-color: transparent !important;
+    
 }
 
 .contact-icon, .next-icon {
@@ -135,7 +135,7 @@
 .addContact-modal {
     padding: 15px !important;
     input {
-        background: #EEB8A7;
+        
         border-radius: 7px;
         border: none;
         padding: 8px; 
@@ -154,7 +154,7 @@
 
 .addContact-btn, .addContact-btn-dark {
     font-weight: 600 !important;
-    background: #CD6E51;
+    
     border-radius: 5px;
     padding: 8px;
     border: none;
@@ -169,7 +169,7 @@
 
 .addContact-btn-dark {
     
-    background:#9984E4;
+    
     img {
         filter: brightness(0) invert(1);
     }

@@ -1,7 +1,7 @@
 /*Main body and App*/
 
 .App-light, .App-dark {
-  background: linear-gradient(180deg, #FFEEEE 0%, #EEA791 100%);
+  
   background-attachment: fixed;
   font-family: "Montserrat";
   font-weight: bolder;
@@ -13,7 +13,7 @@
   }
 }
 .App-dark {
-  background: linear-gradient(180deg, #121212 49.07%, #291B5C 100%);
+  
   background-attachment: fixed;
   p, button, span, div, h1, h2, h3, h4, h5 {
     color: white !important;
@@ -44,11 +44,11 @@
   }
 }
 .light-svg-bg {
-  background: radial-gradient(50% 50% at 50% 50%, #FEF2EF 72.51%, #CD6E51 100%);
+  
 }
 
 .dark-svg-bg {
-  background: radial-gradient(50% 50% at 50% 50%, #121212 72.51%, #705BBC 100%);
+  
 }
 
 .light-svg {
@@ -72,7 +72,7 @@
 }
 
 .sidebar-item, .sidebar-item-dark {   
-  background: white;
+  
   border: none;
   z-index: 11;
   position: relative;
@@ -96,7 +96,7 @@
   }
 }
 .sidebar-item-dark {
-  background: rgb(18,18,18, 0.7);
+  
 }
 /* Toast */
 #toast, #toast-dark {
@@ -104,7 +104,7 @@
   width: 95vw;
   max-width: 600px;
   top: 100px;
-  background-color: rgba(255, 255, 255);
+  
   z-index: 9999;
   text-align: center;
   #toast-message {
@@ -117,12 +117,12 @@
   }
 }
 #toast-dark {
-  background-color: #5468ff;
+  
 }
 
 /* input field */
 .default-input, .default-input-dark {
-  background: #EEB8A7;
+  
   border-radius: 7px;
   border: none;
   padding: 8px; 
@@ -130,18 +130,18 @@
   font-weight: 700;
 }
 .default-input-dark {
-  background: #343434 !important;
+  
 }
 
 .ordinary-btn {
-  background: transparent;
+  
   border: none;
 }
 
 /* button */
 .default-btn, .default-btn-dark {
   font-weight: 600 !important;
-  background: #CD6E51;
+  
   border-radius: 5px;
   padding: 8px 15px;
   border: none;
@@ -156,7 +156,7 @@
   }
 }
 .default-btn-dark {
-  background:#9984E4;
+  
   img {
       filter: brightness(0) invert(1);
   }
@@ -173,23 +173,23 @@
   }
   .modal-content {
     margin-top: auto;
-    background: #FFEBEB;
+    
   }
   .modal-body {
-    background: #FFEBEB;
+    
     border-radius: 10px;
     padding: 33px;
   }
 }
 .popupModal-dark {
   input {
-    background: #343434 !important;
+    
   }
   .modal-content {
-    background: #121212;
+    
   }
   .modal-body {
-    background: #121212;
+    
   }
 }
 
@@ -198,7 +198,7 @@
   padding: 1em 0 !important;
 }
 .accordion-item, .accordion-header, .accordion-button {
-  background: transparent !important;
+  
   border: none !important;
   box-shadow: none !important;
 }
@@ -222,7 +222,7 @@
   overflow-x: scroll;
   overflow-y: hidden;
   margin: 10px 0;
-  background: rgba(246, 246, 246, 0.4);
+  
   padding: 10px 20px;
   width: 465px;
   border-radius: 10px;
@@ -236,7 +236,7 @@
   }
 }
 .colorPallette-dark {
-  background-color: rgba(57, 57, 57, 0.4);
+  
 }
 /* Loader */
 .loader {

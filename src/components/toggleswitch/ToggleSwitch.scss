@@ -38,13 +38,13 @@
 .inner:before {
   content: "YES";
   padding-left: 10px;
-  background-color: #060;
+  
   
 }
 .inner:after {
   content: "NO";
   padding-right: 10px;
-  background-color: #bbb;
+  
   
   text-align: right;
 }
@@ -52,7 +52,7 @@
   display: block;
   width: 24px;
   margin: 5px;
-  background: #fff;
+  
   position: absolute;
   top: 0;
   bottom: 0;
