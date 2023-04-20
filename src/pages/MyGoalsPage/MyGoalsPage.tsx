@@ -142,7 +142,7 @@ export const MyGoalsPage = () => {
           selectedGoalId === "root" ? (
             <div className="my-goals-content">
               { displaySearch && <Search debounceSearch={debounceSearch} />}
-              { !displaySearch && (
+              {/* { !displaySearch && (
               <div className="sec-header">
                 { showAddGoal || showUpdateGoal ? (
                   <button
@@ -204,7 +204,7 @@ export const MyGoalsPage = () => {
                   </h1>
                 </button>
               </div>
-              )}
+              )} */}
               { showAddGoal && (<GoalConfigModal goal={createGoalObjectFromTags({})} />)}
               <div>
                 { openInbox && isUpdgradeAvailable && (
@@ -229,16 +229,18 @@ export const MyGoalsPage = () => {
                     </div>
                   </ArchivedAccordion>
                 )}
-                {activeGoals.map((goal: GoalItem) => (
-                  <>
-                    { showUpdateGoal?.goalId === goal.id && <GoalConfigModal goal={goal} /> }
-                    <MyGoal
-                      goal={goal}
-                      showActions={showActions}
-                      setShowActions={setShowActions}
-                    />
-                  </>
-                ))}
+                <div style={{ display: "flex", flexDirection: "column", gap: "1px"}}>
+                  {activeGoals.map((goal: GoalItem) => (
+                    <>
+                      { showUpdateGoal?.goalId === goal.id && <GoalConfigModal goal={goal} /> }
+                      <MyGoal
+                        goal={goal}
+                        showActions={showActions}
+                        setShowActions={setShowActions}
+                      />
+                    </>
+                  ))}
+                </div>
                 { archivedGoals.length > 0 && (
                   <ArchivedAccordion name="Archived" totalItems={archivedGoals.length}>
                     {archivedGoals.map((goal: GoalItem) => (

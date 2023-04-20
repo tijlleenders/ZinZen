@@ -2,8 +2,8 @@
   max-width: 600px;
   min-width: 236px;
   width: 100%;
-  
 }
+
 .sec-header {
   display: flex;
   justify-content: space-between;
@@ -95,8 +95,7 @@
 
 .user-goal, .user-goal-dark {
   word-break: break-all;
-  
-  margin-top: 4%;
+  padding: 10px 0;
   min-height: 61.19px;
   text-align: left;
   overflow: hidden;
@@ -105,6 +104,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  background: var(--secondary-background);
   .user-goal-main {
     
     border: none;
@@ -131,7 +131,6 @@
 }
 .user-goal-dark {
   
-  
 }
 
   .user-goal:first-child, .user-goal-dark:first-child {
@@ -147,7 +146,7 @@
   }
   .goal-dd-inner {
     width: 55px;
-    top: 6px;
+    top: 15px;
     height: 96%;
   }
   .goal-dd-outer {  
@@ -194,7 +193,6 @@
 }
 
 .my-goals-content {
-  margin-top: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;

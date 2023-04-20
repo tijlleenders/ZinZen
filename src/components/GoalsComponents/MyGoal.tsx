@@ -100,7 +100,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         <div
           className="goal-dd-inner"
           style={{
-            height: showActions.open === goal.id && showActions.click > 0 ? "90%" : "80%",
+            height: showActions.open === goal.id && showActions.click > 0 ? "75%" : "65%",
             background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`
           }}
         />
