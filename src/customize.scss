@@ -27,6 +27,14 @@ $theme-colors: (
   "dark-purple": #612854,
 );
 
+.App-light {
+  --bottom-nav-text-color: #CD6E51;
+}
+
+.App-dark {
+  --bottom-nav-text-color: #9E9E9E;
+}
+
 /* Color Pallette of Light Theme(s) */
 .light-theme1 {
   --app-background: linear-gradient(180deg, #FFCDD2 0%, #FFEEEE 100%, #FFEEEE 100%);
@@ -34,7 +42,7 @@ $theme-colors: (
   --header-color: #FFADB5;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
-  // --border-color: #;
+  --default-border-color: #FF9F9F;
 }
 .light-theme2 {
   --app-background: linear-gradient(180deg, #FAD2D2 0%, #FFC8A2 80.78%);
@@ -42,7 +50,7 @@ $theme-colors: (
   --header-color: #FFBBBB;
   --bottom-nav-color: #FFC8A2;
   --selection-color: #FCE3D2;
-  // --border-color: #;
+  --default-border-color: #FFA07A;
 }
 .light-theme3 {
   --app-background: linear-gradient(180deg, #FFC0CB 0%, #FFA07A 100%);
@@ -50,7 +58,7 @@ $theme-colors: (
   --header-color: #FF9FB0;
   --bottom-nav-color: #FFB89B;
   --selection-color: #FCE3D2;
-  // --border-color: #;
+  --default-border-color: #FF7944;
 }
 .light-theme4 {
   --app-background: linear-gradient(180deg, #FDBCB4 0%, #FCD3A5 100%);
@@ -58,7 +66,7 @@ $theme-colors: (
   --header-color: #FF9C8F;
   --bottom-nav-color: #FCD3A5;
   --selection-color: #FCE3D2;
-  // --border-color: #;
+  --default-border-color: #FF7944;
 }
 .light-theme5 {
   --app-background: linear-gradient(180deg, #FFDAB9 0%, #FFE4B5 100%);
@@ -66,7 +74,7 @@ $theme-colors: (
   --header-color: #FFCEA2;
   --bottom-nav-color: #FCD3A5;
   --selection-color: #FCE3D2;
-  // --border-color: #;
+  --default-border-color: #FFA07A;
 }
 .light-theme6 {
   --app-background: linear-gradient(180deg, #FCD3A5 0%, #FFA07A 100%);
@@ -74,7 +82,7 @@ $theme-colors: (
   --header-color: #FFC38D;
   --bottom-nav-color: #FCD3A5;
   --selection-color: #FCE3D2;
-  // --border-color: #;
+  --default-border-color: #FF8B5C;
 }
 .light-theme7 {
   --app-background: linear-gradient(180deg, #FFF8DC 0%, #FFEEEE 100%);
@@ -82,7 +90,7 @@ $theme-colors: (
   --header-color: #F8EDC2;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
-  // --border-color: #;
+  --default-border-color: #FF8B5C;
 }
 .light-theme8 {
   --app-background: linear-gradient(180deg, #FFF8DC 0%, #FFB6C1 100%, #FFB6C1 100%);
@@ -90,7 +98,7 @@ $theme-colors: (
   --header-color: #FFF8DC;
   --bottom-nav-color: #FFDADA;
   --selection-color: #FFF9FB;
-  // --border-color: #;
+  --default-border-color: #FFA07A;
 }
 .light-theme9 {
   --app-background: linear-gradient(180deg, #FFA07A 0%, #FF9CCE 100%);
@@ -98,7 +106,7 @@ $theme-colors: (
   --header-color: #FFA07A;
   --bottom-nav-color: #FF9FD0
   --selection-color: #FFBACA;
-  // --border-color: #;
+  --default-border-color: #F6426D;
 }
 
 /* Color Pallette of Dark Theme(s) */
