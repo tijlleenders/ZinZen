@@ -6,7 +6,7 @@
   font-weight: bolder;
   min-height: 100vh;
   background: var(--app-background);
-  p, button, span, div, h1, h2, h3, h4, h5, .theme-icon {
+  p, button, span, div, h1, h2, h3, h4, h5 {
     color: black !important;
   }
   p, h1, h2, h3, h4, h5 {
@@ -14,8 +14,11 @@
   }
 }
 .App-dark {
-    p, button, span, div, h1, h2, h3, h4, h5, .theme-icon {
-      color: white !important;
+  p, button, span, div, h1, h2, h3, h4, h5 {
+    color: white !important;
+  }
+  .theme-icon {
+    filter: invert(1);
   }
 }
 
