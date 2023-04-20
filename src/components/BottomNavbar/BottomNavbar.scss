@@ -16,8 +16,12 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
+    background: transparent;
+    border: none;
     p { 
         font-size: 0.875rem;
+        color: var(--bottom-nav-text-color) !important;
+        font-weight: 600;
     }
     img {
         width: 30px;
@@ -26,4 +30,7 @@
 .bottom-nav-item.active {
     background: var(--selection-color);
     border-radius: 8px;
+    p {
+        font-weight: 700;
+    }
 }
