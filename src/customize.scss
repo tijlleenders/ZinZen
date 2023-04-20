@@ -30,119 +30,147 @@ $theme-colors: (
 /* Color Pallette of Light Theme(s) */
 .light-theme1 {
   --app-background: linear-gradient(180deg, #FFCDD2 0%, #FFEEEE 100%, #FFEEEE 100%);
+  --secondary-background: ;
   --header-color: #FFADB5;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
+  // --border-color: #;
 }
 .light-theme2 {
   --app-background: linear-gradient(180deg, #FAD2D2 0%, #FFC8A2 80.78%);
+  --secondary-background: ;
   --header-color: #FFBBBB;
   --bottom-nav-color: #FFC8A2;
   --selection-color: #FCE3D2;
+  // --border-color: #;
 }
 .light-theme3 {
   --app-background: linear-gradient(180deg, #FFC0CB 0%, #FFA07A 100%);
+  --secondary-background: ;
   --header-color: #FF9FB0;
   --bottom-nav-color: #FFB89B;
   --selection-color: #FCE3D2;
+  // --border-color: #;
 }
 .light-theme4 {
   --app-background: linear-gradient(180deg, #FDBCB4 0%, #FCD3A5 100%);
+  --secondary-background: ;
   --header-color: #FF9C8F;
   --bottom-nav-color: #FCD3A5;
   --selection-color: #FCE3D2;
+  // --border-color: #;
 }
 .light-theme5 {
   --app-background: linear-gradient(180deg, #FFDAB9 0%, #FFE4B5 100%);
+  --secondary-background: ;
   --header-color: #FFCEA2;
   --bottom-nav-color: #FCD3A5;
   --selection-color: #FCE3D2;
+  // --border-color: #;
 }
 .light-theme6 {
   --app-background: linear-gradient(180deg, #FCD3A5 0%, #FFA07A 100%);
+  --secondary-background: ;
   --header-color: #FFC38D;
   --bottom-nav-color: #FCD3A5;
   --selection-color: #FCE3D2;
+  // --border-color: #;
 }
 .light-theme7 {
   --app-background: linear-gradient(180deg, #FFF8DC 0%, #FFEEEE 100%);
+  --secondary-background: ;
   --header-color: #F8EDC2;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
+  // --border-color: #;
 }
 .light-theme8 {
   --app-background: linear-gradient(180deg, #FFF8DC 0%, #FFB6C1 100%, #FFB6C1 100%);
+  --secondary-background: ;
   --header-color: #FFF8DC;
   --bottom-nav-color: #FFDADA;
   --selection-color: #FFF9FB;
+  // --border-color: #;
 }
 .light-theme9 {
   --app-background: linear-gradient(180deg, #FFA07A 0%, #FF9CCE 100%);
+  --secondary-background: ;
   --header-color: #FFA07A;
   --bottom-nav-color: #FF9FD0
   --selection-color: #FFBACA;
+  // --border-color: #;
 }
 
 /* Color Pallette of Dark Theme(s) */
 .dark-theme1 {
   --app-background: linear-gradient(180deg, #0F0F16 0%, #1F2A4B 50%, #1F2A4B 50%, #0C0B14 100%);
+  --secondary-background: #0D121D;
   --header-color: #181824;
-  --bottom-nav-color: #FFEEEE;
-  --selection-color: #FFFDFE;
+  --bottom-nav-color: #181824;
+  --selection-color: #1F2A38;
 }
 .dark-theme2 {
   --app-background: linear-gradient(180deg, #17252A 0%, #0F1C20 100%), linear-gradient(0deg, #345B63 0%, #0D232A 100%);
+  --secondary-background: #03181E;
   --header-color: #0D232A;
-  --bottom-nav-color: #FFC8A2;
-  --selection-color: #FCE3D2;
+  --bottom-nav-color: #0D232A;
+  --selection-color: #0D4051;
 }
 .dark-theme3 {
   --app-background: linear-gradient(180deg, #050202 0%, #0A5D5D 100%), linear-gradient(0deg, #234B4B 0%, #0C1616 100%, #0C1616 100%);
+  --secondary-background: #002E2E;
   --header-color: #0D232A;
-  --bottom-nav-color: #FFB89B;
-  --selection-color: #FCE3D2;
+  --bottom-nav-color: #0D232A;
+  --selection-color: #234B4B;
 }
 .dark-theme4 {
   --app-background: linear-gradient(180deg, #050202 0%, #0D3838 100%), linear-gradient(0deg, #1F4D4E 0%, #0C1E20 100%);
+  --secondary-background: #091719;
   --header-color: #0C1E20;
-  --bottom-nav-color: #FCD3A5;
-  --selection-color: #FCE3D2;
+  --bottom-nav-color: #0C1E20;
+  --selection-color: #234B4B;
 }
 .dark-theme5 {
   --app-background: linear-gradient(180deg, #202C39 0%, #101C24 100%), linear-gradient(0deg, #3B8EA5 0%, #0F1C20 100%);
+  --secondary-background: #17232A;
   --header-color: #202C39;
-  --bottom-nav-color: #FCD3A5;
-  --selection-color: #FCE3D2;
+  --bottom-nav-color: #202C39;
+  --selection-color: #424F5E;
 }
 .dark-theme6 {
   --app-background: linear-gradient(180deg, #0D0D0D 0%, #2F213D 50%, #5B4379 100%);
+  --secondary-background: #1F1E2F;
   --header-color: #3E2F51;
-  --bottom-nav-color: #FCD3A5;
-  --selection-color: #FCE3D2;
+  --bottom-nav-color: #3E2F51;
+  --selection-color: #654D84;
 }
 .dark-theme7 {
   --app-background: linear-gradient(180deg, #111111 0%, #1B2340 50%, #454F9E 100%);
+  --secondary-background: #0C0E16;
   --header-color: #111111;
-  --bottom-nav-color: #FFEEEE;
-  --selection-color: #FFFDFE;
+  --bottom-nav-color: #111111;
+  --selection-color: #222222;
 }
 .dark-theme8 {
   --app-background: linear-gradient(180deg, #0D1117 0%, #2B6B92 100%);
+  --secondary-background: #18222D;
   --header-color: #0D1117;
-  --bottom-nav-color: #FFDADA;
-  --selection-color: #FFF9FB;
+  --bottom-nav-color: #0D1117;
+  --selection-color: #181F29;
 }
 .dark-theme9 {
   --app-background: linear-gradient(180deg, #162A4A 0%, #0B1220 100%);
+  --secondary-background: #0A162B;
   --header-color: #162A4A;
-  --bottom-nav-color: #FF9FD0
-  --selection-color: #FFBACA;
+  --bottom-nav-color: #162A4A
+  --selection-color: #2D466D;
 }
 .dark-theme10 {
   --app-background: linear-gradient(180deg, #060B0E 0%, #2D2B36 100%);
+  --secondary-background: #121417;
   --header-color: #060B0E;
-  --bottom-nav-color: #FF9FD0
-  --selection-color: #FFBACA;
+  --bottom-nav-color: #26242F
+  --selection-color: #3F3D47;
 }
 
 
