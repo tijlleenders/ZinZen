@@ -36,7 +36,10 @@ import { darkModeState, displayInbox, displayToast, lastAction, searchActive } f
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import "./MyGoalsPage.scss";
+import Header from "@components/Header/Header";
+import BottomNavbar from "@components/BottomNavbar/BottomNavbar";
 import * as serviceWorkerRegistration from "../../service-worker/serviceWorkerRegistration";
+import AppLayout from "@src/layouts/AppLayout";
 
 export const MyGoalsPage = () => {
   const { t } = useTranslation();
@@ -133,8 +136,7 @@ export const MyGoalsPage = () => {
   });
 
   return (
-    <>
-      <MainHeaderDashboard />
+    <AppLayout title="My Goals">
       <div className="myGoals-container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {
           selectedGoalId === "root" ? (
@@ -257,6 +259,6 @@ export const MyGoalsPage = () => {
         }
         { showChangesModal && <DisplayChangesModal /> }
       </div>
-    </>
+    </AppLayout>
   );
 };
