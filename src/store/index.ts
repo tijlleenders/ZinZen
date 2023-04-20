@@ -1,7 +1,6 @@
 import { atom } from "recoil";
 import { confirmActionState } from "@src/Interfaces/IPopupModals";
 import { darkModeState } from "./DarkModeState";
-import { themeSelectionState } from "./ThemeSelectionState";
 import { languageSelectionState } from "./LanguageSelectionState";
 
 export const showConfirmation = atom({
@@ -57,4 +56,4 @@ export const displayToast = atom({
   default: { open: false, message: "Awww... no hints today. We'll keep looking!", extra: "" }
 });
 
-export { darkModeState, themeSelectionState, languageSelectionState };
+export { darkModeState, languageSelectionState };
