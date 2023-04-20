@@ -1,25 +1,23 @@
-/*Main body and App*/
-
-.App-light, .App-dark {
-  
-  background-attachment: fixed;
+.App-light, .App-dark {  
+  display: flex;
+  flex-direction: column;
+  place-items: center;
   font-family: "Montserrat";
   font-weight: bolder;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  p, button, span, div, h1, h2, h3, h4, h5 {
+  background: var(--app-background);
+  p, button, span, div, h1, h2, h3, h4, h5, .theme-icon {
     color: black !important;
+  }
+  p, h1, h2, h3, h4, h5 {
+    margin: 0;
   }
 }
 .App-dark {
-  
-  background-attachment: fixed;
-  p, button, span, div, h1, h2, h3, h4, h5 {
-    color: white !important;
+    p, button, span, div, h1, h2, h3, h4, h5, .theme-icon {
+      color: white !important;
   }
 }
-
 
 .publicGoal {
   border-radius: 50%;
