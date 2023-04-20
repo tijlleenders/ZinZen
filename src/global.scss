@@ -15,10 +15,14 @@
 }
 .App-dark {
   p, button, span, div, h1, h2, h3, h4, h5 {
+    border-color: transparent !important;
     color: white !important;
   }
   .theme-icon {
     filter: invert(1);
+  }
+  .secondary-icon {
+    filter: invert(53%) sepia(70%) saturate(11%) hue-rotate(322deg) brightness(104%) contrast(89%)
   }
 }
 
