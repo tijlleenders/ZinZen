@@ -2,7 +2,7 @@ import { atom } from "recoil";
 
 export const getTheme = () => {
   const x = localStorage.getItem("theme");
-  return x ? JSON.parse(x) : { light: 0, dark: 0 };
+  return x ? JSON.parse(x) : { light: 1, dark: 1 };
 };
 export const themeState = atom({
   key: "themeState",
