@@ -4,10 +4,10 @@
   place-items: center;
   font-family: "Montserrat";
   font-weight: bolder;
-  min-height: 100vh;
+  height: 100vh;
   background: var(--app-background);
   p, button, span, div, h1, h2, h3, h4, h5 {
-    color: black !important;
+    color: black;
   }
   p, h1, h2, h3, h4, h5 {
     margin: 0;
@@ -16,7 +16,7 @@
 .App-dark {
   p, button, span, div, h1, h2, h3, h4, h5 {
     border-color: transparent !important;
-    color: white !important;
+    color: white;
   }
   .theme-icon {
     filter: invert(1);
