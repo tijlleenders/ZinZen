@@ -1,9 +1,3 @@
-.myGoals-container {
-  max-width: 600px;
-  min-width: 236px;
-  width: 100%;
-}
-
 .sec-header {
   display: flex;
   justify-content: space-between;
@@ -104,6 +98,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  border-bottom: 1.5px solid var(--default-border-color);
   background: var(--secondary-background);
   .user-goal-main {
     
@@ -130,7 +125,7 @@
   }
 }
 .user-goal-dark {
-  
+  border: none;
 }
 
   .user-goal:first-child, .user-goal-dark:first-child {
