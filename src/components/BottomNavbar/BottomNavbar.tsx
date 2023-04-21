@@ -15,7 +15,7 @@ const BottomNavbar = () => {
   const [month, date] = new Date().toDateString().split(" ").slice(1, 3);
 
   const handleClick = (to: string) => {
-    if (to === "MyTime" && currentPage !== "/") {
+    if (to === "MyTime" && currentPage !== "") {
       navigate("/");
     } else if (to === "MyGoals" && currentPage !== "MyGoals") {
       navigate("/MyGoals");
@@ -26,8 +26,8 @@ const BottomNavbar = () => {
 
   return (
     <div className="bottom-navbar">
-      <button type="button" onClick={() => { handleClick("MyTime"); }} className={`bottom-nav-item ${currentPage === "MyTime" ? "active" : ""}`}>
-        <img className="secondary-icon" src={calendarIcon} alt="My Time" />
+      <button type="button" onClick={() => { handleClick("MyTime"); }} className={`bottom-nav-item ${currentPage === "" ? "active" : ""}`}>
+        <img className="secondary-icon" style={{ width: 28 }} src={calendarIcon} alt="My Time" />
         <p>{date}<sup>{getOrdinalSuffix(Number(date))}</sup>{` ${month}`}</p>
       </button>
       <button type="button" onClick={() => { handleClick("MyGoals"); }} className={`bottom-nav-item ${currentPage === "MyGoals" ? "active" : ""}`}>
