@@ -16,6 +16,7 @@ import { AddFeelingsPage } from "@pages/AddFeelingsPage/AddFeelingsPage";
 import { ShowFeelingTemplate } from "./ShowFeelingTemplate";
 
 import "./ShowFeelings.scss";
+import AppLayout from "@src/layouts/AppLayout";
 
 export const ShowFeelingsPage = () => {
   const { t } = useTranslation();
@@ -46,11 +47,7 @@ export const ShowFeelingsPage = () => {
   const dateRangeArr = getDates(new Date(dateArr[0]), new Date()).reverse();
   if (dateRangeArr.length === 0) { dateRangeArr.push(new Date()); }
   return (
-    <div id="myFeelings-container">
-      <MainHeaderDashboard />
-      <h1 id={`myFeelings-title${darkModeStatus ? "-dark" : ""}`}>
-        My Journal
-      </h1>
+    <AppLayout title="My Journal">
       {feelingsList &&
         dateRangeArr.map((date) => (
           <div key={date} className="show-feelings__list-category">
@@ -91,10 +88,9 @@ export const ShowFeelingsPage = () => {
             >
               <img alt="add feeling" src={darkModeStatus ? addDark : addLight} />
             </button>
-
           </div>
         ))}
       <AddFeelingsPage feelingDate={showAddFeelingsModal} setShowAddFeelingsModal={setShowAddFeelingsModal} />
-    </div>
+    </AppLayout>
   );
 };
