@@ -17,6 +17,7 @@ import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { colorPalleteList, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
+import AppLayout from "@src/layouts/AppLayout";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
@@ -227,21 +228,18 @@ export const MyTimePage = () => {
   }, [devMode, action]);
 
   return (
-    <div className="slide MyTime_container">
-      <MainHeaderDashboard />
-      <div id="MyTime_days_container">
-        {getDayComponent("Today")}
-        {getDayComponent("Tomorrow")}
-        {
-          [...Array(6).keys()].map((i) => {
-            const thisDay = devMode ? new Date(fakeThursday) : new Date(today);
-            thisDay.setDate(thisDay.getDate() + i + 1);
-            if (i >= 1) {
-              return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
-            }
-          })
-        }
-      </div>
-    </div>
+    <AppLayout>
+      {getDayComponent("Today")}
+      {getDayComponent("Tomorrow")}
+      {
+        [...Array(6).keys()].map((i) => {
+          const thisDay = devMode ? new Date(fakeThursday) : new Date(today);
+          thisDay.setDate(thisDay.getDate() + i + 1);
+          if (i >= 1) {
+            return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
+          }
+        })
+      }
+    </AppLayout>
   );
 };
