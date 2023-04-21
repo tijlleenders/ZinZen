@@ -1,9 +1,3 @@
-.show-feelings {
-  &__list-category {
-    margin-top: 30px;
-  }
-}
-
 #myFeelings-title, #myFeelings-title-dark {
   font-size: 1.5em;
   font-weight: 700;
@@ -15,8 +9,9 @@
 .feelings-date, .feelings-date-dark {
   font-size: 1.286em;
   font-weight: 700;
+  text-align: center;
   font-style: italic;
-  padding-left: 20px;
+  padding-bottom: 5px;
 }
 
 .feelingOfDay, .feelingOfDay-dark {

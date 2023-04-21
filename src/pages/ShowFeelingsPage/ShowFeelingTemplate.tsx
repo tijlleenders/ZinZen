@@ -76,7 +76,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
     setFeelingsListObject.setFeelingsList({ ...newFeelingsList });
   };
   return (
-    <div>
+    <>
       <div>
         {feelingsListObject &&
           Object.keys(feelingsListObject).map((ID: string) => {
@@ -189,6 +189,6 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
           </button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 };
