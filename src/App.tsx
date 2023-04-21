@@ -122,20 +122,19 @@ const App = () => {
             <Route path="/Invest" element={<InvestPage />} />
           </Routes>
         </BrowserRouter>
-        {/* <button
+        <button
           style={{ position: "absolute", right: 10, bottom: 100, background: "transparent", border: "none" }}
           type="button"
           onClick={() => {
             if (theme) {
               let choice = theme[darkModeEnabled ? "dark" : "light"] + 1;
               if (choice === 9) { choice = 1; }
-              console.log(choice)
               setTheme({ ...theme, [darkModeEnabled ? "dark" : "light"]: choice });
             }
           }}
         >
           Change
-        </button> */}
+        </button>
         <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
           <Toast.Body>
             <p id="toast-message" style={showToast.extra === "" ? { margin: 0 } : {}}>{showToast.message}</p>
