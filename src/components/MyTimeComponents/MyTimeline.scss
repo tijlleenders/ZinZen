@@ -37,6 +37,7 @@
 .MTL-display, .MTL-display-dark {
   display: flex;
   flex-direction: column;
+  background: transparent;
   .MTL-taskTitle {
     
   }
@@ -65,13 +66,9 @@
   line-height: 22px;
   padding-bottom: 0.7em;
   border: none;
-  border-bottom: 0.5px solid #303030;
-  
-  
+  border-bottom: 0.5px solid var(--default-border-color);
+  background: transparent;
 } 
-.MTL-display-dark > button {
-  border-bottom: 0.5px solid #E4E4E4;
-}
 
 .MTL-display > button:first-child, .MTL-display-dark > button:first-child {
   padding-top: 1.4em;
@@ -103,7 +100,7 @@
   
   font-weight: 700;
   text-align: left;
-  
+  background: transparent;
   font-size: 1.286em;
   line-height: 22px
 }

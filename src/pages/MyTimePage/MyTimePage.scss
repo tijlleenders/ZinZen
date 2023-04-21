@@ -1,27 +1,16 @@
-.MyTime_container {
-    max-width: 600px;
-    min-width: 236px;
-    width: 100%;    
-    position: relative;
-}
-
-#MyTime_days_container {
-    margin-top: 100px;
-}
-
 #MyTime_title{
     font-size: xx-large;
     font-weight: bolder;
 }
 
 .MyTime_day-dark, .MyTime_day-light {
-    margin-top: 3vh;
-    padding-bottom: 3%;
-    
+    padding: 2vh 0;
+    // padding-bottom: 3%;
+    border-bottom: 2px solid var(--default-border-color);
+    background: var(--secondary-background);
 }
 
 .MyTime_day-dark {
-    
 }
 
 .MyTime_navRow{
@@ -30,9 +19,8 @@
     padding: 3% 4% 0 4%;
     padding-bottom: 0.5em;
     width: 100%;
-    
     border: none;
-    
+    background: transparent;
 }
 
 .MyTime_dayTitle{
@@ -42,7 +30,7 @@
 }
 
 .MyTime-expand-btw, .MyTime-expand-btw-dark {
-    
+    background: transparent;
     border: none;
 }
 .MyTime-expand-btw-dark {
