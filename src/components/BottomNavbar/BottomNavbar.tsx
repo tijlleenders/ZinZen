@@ -38,7 +38,7 @@ const BottomNavbar = ({ title }: { title: string}) => {
       <button type="button" onClick={() => { handleClick("MyJournal"); }} style={{ gap: 10 }} className={`bottom-nav-item ${currentPage === "MyJournal" ? "active" : ""}`}>
         <img style={{ paddingTop: 3 }} className="secondary-icon" src={journalIcon} alt="My Journal" />
         <p>Journal</p>
-        <GlobalAddBtn add={title} />
+        { title !== "My Time" && <GlobalAddBtn add={title} /> }
       </button>
     </div>
   );
