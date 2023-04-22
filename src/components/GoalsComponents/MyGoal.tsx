@@ -94,7 +94,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         { goal.sublist.length > 0 && (
           <div
             className="goal-dd-outer"
-            style={{ borderColor: goal.goalColor }}
+            style={{ borderColor: goal.goalColor, top: showActions.open === goal.id ? 11.5 : 9 }}
           />
         )}
         <div
