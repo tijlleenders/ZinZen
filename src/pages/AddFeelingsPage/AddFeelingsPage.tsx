@@ -1,12 +1,13 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
 import { ChevronRight } from "react-bootstrap-icons";
 
 import { darkModeState } from "@store";
 import { getJustDate } from "@utils";
+import { displayAddFeeling } from "@src/store/FeelingsState";
 import { AddFeelingsPageProps } from "@src/Interfaces/IPages";
 import { addFeelingWithNote, addFeeling } from "@src/api/FeelingsAPI";
 import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
@@ -14,7 +15,7 @@ import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/Feelin
 import "@translations/i18n";
 import "./AddFeelingsPage.scss";
 
-export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, setShowAddFeelingsModal }) => {
+export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const date = feelingDate
@@ -25,6 +26,8 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
   const [selectedCategory, setSelectedCategory] = useState("");
   const [choice, setChoice] = useState(0);
   const [customFeeling, setCustomFeeling] = useState<string>("");
+
+  const setShowAddFeelingsModal = useSetRecoilState(displayAddFeeling);
 
   const addThisFeeling = async (directAdd = "") => {
     if (directAdd !== "") {
@@ -38,13 +41,13 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
     setCustomFeeling("");
     setFeelingNote("");
     setChoice(0);
-    setShowAddFeelingsModal(null);
+    setShowAddFeelingsModal(false);
   };
   return (
     <Modal
       className={`popupModal${darkModeStatus ? "-dark" : ""}`}
       show={!!feelingDate}
-      onHide={() => { setShowAddFeelingsModal(null); setSelectedCategory(""); }}
+      onHide={() => { setShowAddFeelingsModal(false); setSelectedCategory(""); }}
     >
       { selectedCategory === "" ? (
         <Modal.Body>

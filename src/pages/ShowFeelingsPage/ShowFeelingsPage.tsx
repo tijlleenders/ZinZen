@@ -14,6 +14,7 @@ import { darkModeState } from "@store";
 import { feelingListType } from "@src/global";
 import AppLayout from "@src/layouts/AppLayout";
 import { AddFeelingsPage } from "@pages/AddFeelingsPage/AddFeelingsPage";
+import { displayAddFeeling } from "@src/store/FeelingsState";
 import { ShowFeelingTemplate } from "./ShowFeelingTemplate";
 
 import "./ShowFeelings.scss";
@@ -22,10 +23,11 @@ export const ShowFeelingsPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const showAddFeelingsModal = useRecoilValue(displayAddFeeling);
+
+  const [selectedDay, setSelectedDay] = useState(0);
   const [feelingsList, setFeelingsList] = useState<feelingListType[]>([]);
   const [selectedFeeling, setSelectedFeeling] = useState<number>();
-  const [selectedDay, setSelectedDay] = useState(0);
-  const [showAddFeelingsModal, setShowAddFeelingsModal] = useState<Date | null>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -41,7 +43,7 @@ export const ShowFeelingsPage = () => {
       setFeelingsList(feelingsByDates);
     };
     getData();
-  }, [showAddFeelingsModal]);
+  }, [selectedDay, showAddFeelingsModal]);
 
   const dateArr = Object.keys(feelingsList).map((date) => date);
   const dateRangeArr = getDates(new Date(dateArr[0]), new Date()).reverse();
@@ -96,7 +98,7 @@ export const ShowFeelingsPage = () => {
           </div>
         )}
       </div>
-      <AddFeelingsPage feelingDate={showAddFeelingsModal} setShowAddFeelingsModal={setShowAddFeelingsModal} />
+      {showAddFeelingsModal && <AddFeelingsPage feelingDate={new Date()} />}
     </AppLayout>
   );
 };
