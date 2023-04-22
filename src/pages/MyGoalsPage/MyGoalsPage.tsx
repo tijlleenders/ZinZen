@@ -137,7 +137,7 @@ export const MyGoalsPage = () => {
 
   return (
     <AppLayout title="My Goals">
-      <div className="myGoals-container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div className="myGoals-container">
         {
           selectedGoalId === "root" ? (
             <div className="my-goals-content">
@@ -229,7 +229,7 @@ export const MyGoalsPage = () => {
                     </div>
                   </ArchivedAccordion>
                 )}
-                <div style={{ display: "flex", flexDirection: "column", gap: "1px"}}>
+                <div style={{ display: "flex", flexDirection: "column" }}>
                   {activeGoals.map((goal: GoalItem) => (
                     <>
                       { showUpdateGoal?.goalId === goal.id && <GoalConfigModal goal={goal} /> }

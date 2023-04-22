@@ -1,3 +1,8 @@
+.myGoals-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .sec-header {
   display: flex;
   justify-content: space-between;
@@ -101,9 +106,6 @@
   border-bottom: 1.5px solid var(--default-border-color);
   background: var(--secondary-background);
   .user-goal-main {
-    
-    border: none;
-    
     display: flex;
     height: 100%;
     width: 100%;
@@ -124,9 +126,6 @@
     }
   }
 }
-.user-goal-dark {
-  border: none;
-}
 
   .user-goal:first-child, .user-goal-dark:first-child {
     margin: 0;
@@ -145,10 +144,11 @@
     height: 96%;
   }
   .goal-dd-outer {  
-    border: 1.4px solid;
+    border: solid;
+    border-width: 1.4px;
     width: 61px;
-    top: 0.5px;
-    height: 100%;
+    top: 9.5px;
+    height: 80%;
     
   }
 
