@@ -228,7 +228,7 @@ export const MyTimePage = () => {
   }, [devMode, action]);
 
   return (
-    <AppLayout>
+    <AppLayout title="My Time">
       {getDayComponent("Today")}
       {getDayComponent("Tomorrow")}
       {
