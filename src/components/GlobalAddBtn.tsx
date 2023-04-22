@@ -7,6 +7,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   return (
     <button
       type="button"
+      id="global-addBtn"
       onClick={handleClick}
       style={{
         position: "fixed",

@@ -27,6 +27,8 @@ $theme-colors: (
   "dark-purple": #612854,
 );
 
+#global-addBtn > img { filter: brightness(0) invert(1); }
+
 .App-light {
   --secondary-background: transparent;
   --bottom-nav-text-color: #CD6E51;
@@ -39,14 +41,17 @@ $theme-colors: (
 /* Color Pallette of Light Theme(s) */
 .light-theme1 {
   --app-background: linear-gradient(180deg, #FFCDD2 0%, #FFEEEE 100%, #FFEEEE 100%);
+  --primary-background: #FFEEEE;
   --secondary-background: ;
   --header-color: #FFADB5;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
   --default-border-color: #FF9F9F;
+  #global-addBtn > img { filter: unset !important; }
 }
 .light-theme2 {
   --app-background: linear-gradient(180deg, #FAD2D2 0%, #FFC8A2 80.78%);
+  --primary-background: #EF9479;
   --secondary-background: ;
   --header-color: #FFBBBB;
   --bottom-nav-color: #FFC8A2;
@@ -55,7 +60,8 @@ $theme-colors: (
 }
 .light-theme3 {
   --app-background: linear-gradient(180deg, #FFC0CB 0%, #FFA07A 100%);
-  --secondary-background: ;
+  --primary-background: #FA805B;
+  --secondary-background: #FA805B;
   --header-color: #FF9FB0;
   --bottom-nav-color: #FFB89B;
   --selection-color: #FCE3D2;
@@ -63,6 +69,7 @@ $theme-colors: (
 }
 .light-theme4 {
   --app-background: linear-gradient(180deg, #FDBCB4 0%, #FCD3A5 100%);
+  --primary-background: #FA805B;
   --secondary-background: ;
   --header-color: #FF9C8F;
   --bottom-nav-color: #FCD3A5;
@@ -71,6 +78,7 @@ $theme-colors: (
 }
 .light-theme5 {
   --app-background: linear-gradient(180deg, #FFDAB9 0%, #FFE4B5 100%);
+  --primary-background: #FA805B;
   --secondary-background: ;
   --header-color: #FFCEA2;
   --bottom-nav-color: #FCD3A5;
@@ -79,6 +87,7 @@ $theme-colors: (
 }
 .light-theme6 {
   --app-background: linear-gradient(180deg, #FCD3A5 0%, #FFA07A 100%);
+  --primary-background: #FA805B;
   --secondary-background: ;
   --header-color: #FFC38D;
   --bottom-nav-color: #FCD3A5;
@@ -87,32 +96,39 @@ $theme-colors: (
 }
 .light-theme7 {
   --app-background: linear-gradient(180deg, #FFF8DC 0%, #FFEEEE 100%);
+  --primary-background: #FFDADA;
   --secondary-background: ;
   --header-color: #F8EDC2;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
   --default-border-color: #FF8B5C;
+  #global-addBtn > img { filter: unset !important; }
 }
 .light-theme8 {
   --app-background: linear-gradient(180deg, #FFF8DC 0%, #FFB6C1 100%, #FFB6C1 100%);
+  --primary-background: #FFDADA;
   --secondary-background: ;
   --header-color: #FFF8DC;
   --bottom-nav-color: #FFDADA;
   --selection-color: #FFF9FB;
   --default-border-color: #FFA07A;
+  #global-addBtn > img { filter: unset !important; }
 }
 .light-theme9 {
   --app-background: linear-gradient(180deg, #FFA07A 0%, #FF9CCE 100%);
+  --primary-background: #FFC7D4;
   --secondary-background: ;
   --header-color: #FFA07A;
   --bottom-nav-color: #FF9FD0
   --selection-color: #FFBACA;
   --default-border-color: #F6426D;
+  #global-addBtn > img { filter: invert(23%) sepia(99%) saturate(2498%) hue-rotate(314deg) brightness(84%) contrast(93%) !important; }
 }
 
 /* Color Pallette of Dark Theme(s) */
 .dark-theme1 {
   --app-background: linear-gradient(180deg, #0F0F16 0%, #1F2A4B 50%, #1F2A4B 50%, #0C0B14 100%);
+  --primary-background: #1F2A38;
   --secondary-background: #0D121D;
   --header-color: #181824;
   --bottom-nav-color: #181824;
@@ -120,6 +136,7 @@ $theme-colors: (
 }
 .dark-theme2 {
   --app-background: linear-gradient(180deg, #17252A 0%, #0F1C20 100%), linear-gradient(0deg, #345B63 0%, #0D232A 100%);
+  --primary-background: #0D4051;
   --secondary-background: #03181E;
   --header-color: #0D232A;
   --bottom-nav-color: #0D232A;
@@ -127,6 +144,7 @@ $theme-colors: (
 }
 .dark-theme3 {
   --app-background: linear-gradient(180deg, #050202 0%, #0A5D5D 100%), linear-gradient(0deg, #234B4B 0%, #0C1616 100%, #0C1616 100%);
+  --primary-background: #234B4B;
   --secondary-background: #002E2E;
   --header-color: #0D232A;
   --bottom-nav-color: #0D232A;
@@ -134,6 +152,7 @@ $theme-colors: (
 }
 .dark-theme4 {
   --app-background: linear-gradient(180deg, #050202 0%, #0D3838 100%), linear-gradient(0deg, #1F4D4E 0%, #0C1E20 100%);
+  --primary-background: #234B4B;
   --secondary-background: #091719;
   --header-color: #0C1E20;
   --bottom-nav-color: #0C1E20;
@@ -141,6 +160,7 @@ $theme-colors: (
 }
 .dark-theme5 {
   --app-background: linear-gradient(180deg, #202C39 0%, #101C24 100%), linear-gradient(0deg, #3B8EA5 0%, #0F1C20 100%);
+  --primary-background: #424F5E;
   --secondary-background: #17232A;
   --header-color: #202C39;
   --bottom-nav-color: #202C39;
@@ -148,6 +168,7 @@ $theme-colors: (
 }
 .dark-theme6 {
   --app-background: linear-gradient(180deg, #0D0D0D 0%, #2F213D 50%, #5B4379 100%);
+  --primary-background: #654D84;
   --secondary-background: #1F1E2F;
   --header-color: #3E2F51;
   --bottom-nav-color: #3E2F51;
@@ -155,6 +176,7 @@ $theme-colors: (
 }
 .dark-theme7 {
   --app-background: linear-gradient(180deg, #111111 0%, #1B2340 50%, #454F9E 100%);
+  --primary-background: #454F9E;
   --secondary-background: #0C0E16;
   --header-color: #111111;
   --bottom-nav-color: #111111;
@@ -162,6 +184,7 @@ $theme-colors: (
 }
 .dark-theme8 {
   --app-background: linear-gradient(180deg, #0D1117 0%, #2B6B92 100%);
+  --primary-background: #0D1117;
   --secondary-background: #18222D;
   --header-color: #0D1117;
   --bottom-nav-color: #0D1117;
@@ -169,6 +192,7 @@ $theme-colors: (
 }
 .dark-theme9 {
   --app-background: linear-gradient(180deg, #162A4A 0%, #0B1220 100%);
+  --primary-background: #2D466D;
   --secondary-background: #0A162B;
   --header-color: #162A4A;
   --bottom-nav-color: #162A4A
@@ -176,6 +200,7 @@ $theme-colors: (
 }
 .dark-theme10 {
   --app-background: linear-gradient(180deg, #060B0E 0%, #2D2B36 100%);
+  --primary-background: #3F3D47;
   --secondary-background: #121417;
   --header-color: #060B0E;
   --bottom-nav-color: #26242F
