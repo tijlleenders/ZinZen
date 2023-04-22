@@ -12,11 +12,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title }) => (
       overflow: "scroll",
       width: "100%",
       marginTop: 75,
-      height: "calc(100vh - 145px)"
+      height: "calc(100vh - 145px)",
+      position: "relative",
     }}
     > {children}
     </div>
-    <BottomNavbar />
+    <BottomNavbar title={title} />
   </>
 );
 

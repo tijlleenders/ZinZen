@@ -6,10 +6,11 @@ import calendarIcon from "@assets/images/calendarIcon.svg";
 import journalIcon from "@assets/images/journalIcon.svg";
 
 import { getOrdinalSuffix } from "@src/utils";
+import GlobalAddBtn from "@components/GlobalAddBtn";
 
 import "./BottomNavbar.scss";
 
-const BottomNavbar = () => {
+const BottomNavbar = ({ title }: { title: string}) => {
   const navigate = useNavigate();
   const currentPage = window.location.pathname.split("/")[1];
   const [month, date] = new Date().toDateString().split(" ").slice(1, 3);
@@ -37,6 +38,7 @@ const BottomNavbar = () => {
       <button type="button" onClick={() => { handleClick("MyJournal"); }} style={{ gap: 10 }} className={`bottom-nav-item ${currentPage === "MyJournal" ? "active" : ""}`}>
         <img style={{ paddingTop: 3 }} className="secondary-icon" src={journalIcon} alt="My Journal" />
         <p>Journal</p>
+        <GlobalAddBtn add={title} />
       </button>
     </div>
   );
