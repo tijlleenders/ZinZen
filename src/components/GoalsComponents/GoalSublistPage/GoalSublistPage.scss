@@ -5,7 +5,7 @@
   max-width: 600px;
   min-width: 236px;
   width: 100%;
-  margin-top: 50px;
+  padding-top: 10;
 }
 
 .breadcrumb li {
@@ -21,38 +21,22 @@
 }
 
 .sublist-title {
-  position: relative;
-  button {
-    position: absolute;
-    left: 5px;
-    width: unset;
-  }
-  p {
     margin-left: -10px;
     text-transform: capitalize;
     font-style: italic;
     cursor: default;
     text-align: center;
     white-space: nowrap;
-    width: 80%;
-    overflow: scroll;
-    margin: 5px 0 0 50px;
-    -ms-overflow-style: none;  
-    scrollbar-width: none;
-  }
-  p::-webkit-scrollbar {
-    display: none;
-  }
+    overflow: hidden;
 }
 
 .sublist-list-container {
-  margin-top: 40px;
+  margin-top: 10px;
   width: 600px;
   padding: 0 !important;
 }
 
 .sublist-content {
-  margin-top: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -76,7 +60,7 @@
 
 @media only screen and (max-width: 600px) {
   .sublist-list-container {
-    margin-top: 40px;
+    // margin-top: 40px;
     
   }
 }

@@ -87,7 +87,7 @@ export const GoalSublist = () => {
 
   return (
     <div className="sublist-container">
-      <Breadcrumb style={{ marginTop: "56px", padding: "0 18px" }}>
+      <Breadcrumb style={{ padding: "25px 18px 10px 18px" }}>
         {/* @ts-ignore */ }
         <Breadcrumb.Item onClick={() => callResetHistory()}>
           <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: darkModeStatus ? "#393939" : "#EDC7B7" }}>My Goals</span>
@@ -107,17 +107,7 @@ export const GoalSublist = () => {
       </Breadcrumb>
       <div className="sublist-content-container">
         <div className="sublist-content">
-
-          <div className="sublist-title">
-            <button
-              type="button"
-              className="nav-icon"
-              onClick={() => { handleBackClick(); }}
-            >
-              <img alt="zinzen my goals" src={ArrowIcon} />
-            </button>
-            <p>  {parentGoal?.title}</p>
-          </div>
+          <p className="sublist-title">{parentGoal?.title}</p>
           <Container fluid className="sublist-list-container">
             { showAddGoal && <GoalConfigModal goal={createGoalObjectFromTags({})} /> }
             {childrenGoals?.map((goal: GoalItem) => (
