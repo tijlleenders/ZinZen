@@ -32,10 +32,13 @@ $theme-colors: (
 .App-light {
   --secondary-background: transparent;
   --bottom-nav-text-color: #CD6E51;
+  --default-border-color: lightgrey;
 }
 
 .App-dark {
   --bottom-nav-text-color: #9E9E9E;
+  --default-border-color: slategrey;
+
 }
 
 /* Color Pallette of Light Theme(s) */
@@ -46,7 +49,6 @@ $theme-colors: (
   --header-color: #FFADB5;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
-  --default-border-color: #FF9F9F;
   #global-addBtn > img { filter: unset !important; }
 }
 .light-theme2 {
@@ -206,6 +208,7 @@ $theme-colors: (
   --bottom-nav-color: #26242F
   --selection-color: #3F3D47;
 }
+
 
 
 h1 {
