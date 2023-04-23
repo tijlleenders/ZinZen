@@ -22,7 +22,6 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
   feelingsListObject,
   setFeelingsListObject,
   currentFeelingsList,
-  handleFocus,
 }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -54,10 +53,6 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
     }
   };
 
-  const handleFeelingClick = (id: number) => {
-    handleFocus.setSelectedFeeling(handleFocus.selectedFeeling === id ? -1 : id);
-  };
-
   const handleJournalClick = (id: number) => {
     if (feelingsListObject[id].note) {
       setSelectedFeelingNote(feelingsListObject[id].note);
@@ -86,7 +81,6 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
                 type="button"
                 key={feelingsListObject[feelingId].content + feelingsListObject[feelingId].date}
                 className={`feelingOfDay${darkModeStatus ? "-dark" : ""}`}
-                onClick={() => { handleFeelingClick(feelingsListObject[feelingId].id); }}
               >
                 <div className="feelingOfDay-name">
                   {feelingsEmojis[feelingsListObject[feelingId].category]}&nbsp;

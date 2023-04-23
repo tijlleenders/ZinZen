@@ -1,16 +1,13 @@
-// @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
 
-import addDark from "@assets/images/addDark.svg";
-import addLight from "@assets/images/addLight.svg";
 import { getAllFeelings } from "@api/FeelingsAPI";
 import { getDates } from "@utils";
 import { IFeelingItem } from "@models";
-import { darkModeState } from "@store";
+import { darkModeState, displayToast } from "@store";
 import { feelingListType } from "@src/global";
 import AppLayout from "@src/layouts/AppLayout";
 import { AddFeelingsPage } from "@pages/AddFeelingsPage/AddFeelingsPage";
@@ -25,9 +22,11 @@ export const ShowFeelingsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const showAddFeelingsModal = useRecoilValue(displayAddFeeling);
 
-  const [selectedDay, setSelectedDay] = useState(0);
+  const setShowToast = useSetRecoilState(displayToast);
+
+  const [selectedDate, setSelectedDate] = useState(0);
   const [feelingsList, setFeelingsList] = useState<feelingListType[]>([]);
-  const [selectedFeeling, setSelectedFeeling] = useState<number>();
+  const [journalDates, setJournalDates] = useState<Date[]>([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -40,23 +39,38 @@ export const ShowFeelingsPage = () => {
         }
         return dates;
       }, {});
+      const dateArr = Object.keys(feelingsByDates).map((date) => date);
+      const dateRangeArr = getDates(new Date(dateArr[0]), new Date());
+      if (dateRangeArr.length === 0) { dateRangeArr.push(new Date()); }
+      setJournalDates([...dateRangeArr]);
+      setSelectedDate(dateRangeArr.length - 1);
       setFeelingsList(feelingsByDates);
     };
     getData();
-  }, [selectedDay, showAddFeelingsModal]);
+  }, [showAddFeelingsModal]);
 
-  const dateArr = Object.keys(feelingsList).map((date) => date);
-  const dateRangeArr = getDates(new Date(dateArr[0]), new Date()).reverse();
-  if (dateRangeArr.length === 0) { dateRangeArr.push(new Date()); }
-  const date = dateRangeArr[selectedDay];
+  const handleNavigation = (direction: "left" | "right") => {
+    if (direction === "left") {
+      if (selectedDate > 0) {
+        setSelectedDate(selectedDate - 1);
+      } else {
+        setShowToast({ open: true, message: "Let past rest in past.", extra: "" });
+      }
+    } else if (selectedDate + 1 < journalDates.length) {
+      setSelectedDate(selectedDate + 1);
+    } else {
+      setShowToast({ open: true, message: "Shall we wait for that day?", extra: "" });
+    }
+  };
+  const date = journalDates.length > 0 ? journalDates[selectedDate] : null;
   return (
     <AppLayout title="My Journal">
       <div>
-        {feelingsList && (
+        {feelingsList && date && (
           <div key={date}>
-            <div style={{ display: "flex", justifyContent: "center", gap: 100, alignItems: "center", paddingTop: 10 }}>
-              <ChevronLeft />
-              <p style={{ padding: "15px 0" }} className={`feelings-date${darkModeStatus ? "-dark" : ""}`}>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: 10 }}>
+              <ChevronLeft style={{ flex: 1 }} onClick={() => { handleNavigation("left"); }} />
+              <p style={{ padding: "15px 0", margin: "0px 15px", flex: 2 }} className={`feelings-date${darkModeStatus ? "-dark" : ""}`}>
                 <span
                   role="button"
                   tabIndex={0}
@@ -77,7 +91,7 @@ export const ShowFeelingsPage = () => {
                     : new Date(date).toDateString()}
                 </span>
               </p>
-              <ChevronRight />
+              <ChevronRight style={{ flex: 1 }} onClick={() => { handleNavigation("right"); }} />
             </div>
             {feelingsList[date] && feelingsList[date].length > 0 && (
             <ShowFeelingTemplate
@@ -85,16 +99,8 @@ export const ShowFeelingsPage = () => {
               feelingsListObject={feelingsList[date]}
               setFeelingsListObject={{ feelingsList, setFeelingsList }}
               currentFeelingsList={feelingsList}
-              handleFocus={{ selectedFeeling, setSelectedFeeling }}
             />
             )}
-            {/* <button
-              type="button"
-              className={`addFeeling-btn${darkModeStatus ? "-dark" : ""}`}
-              onClick={() => { setShowAddFeelingsModal(new Date(date)); }}
-            >
-              <img alt="add feeling" src={darkModeStatus ? addDark : addLight} />
-            </button> */}
           </div>
         )}
       </div>
