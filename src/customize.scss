@@ -29,23 +29,21 @@ $theme-colors: (
 
 #global-addBtn > img { filter: brightness(0) invert(1); }
 
-.App-light {
-  --secondary-background: transparent;
+.App-light, .modal-content {
   --bottom-nav-text-color: #CD6E51;
   --default-border-color: lightgrey;
 }
 
-.App-dark {
+.App-dark, .modal-content {
   --bottom-nav-text-color: #9E9E9E;
   --default-border-color: slategrey;
-
 }
 
 /* Color Pallette of Light Theme(s) */
 .light-theme1 {
   --app-background: linear-gradient(180deg, #FFCDD2 0%, #FFEEEE 100%, #FFEEEE 100%);
   --primary-background: #FFEEEE;
-  --secondary-background: ;
+  --secondary-background: transparent;
   --header-color: #FFADB5;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
@@ -54,7 +52,7 @@ $theme-colors: (
 .light-theme2 {
   --app-background: linear-gradient(180deg, #FAD2D2 0%, #FFC8A2 80.78%);
   --primary-background: #EF9479;
-  --secondary-background: ;
+  --secondary-background: transparent;
   --header-color: #FFBBBB;
   --bottom-nav-color: #FFC8A2;
   --selection-color: #FCE3D2;
@@ -72,7 +70,7 @@ $theme-colors: (
 .light-theme4 {
   --app-background: linear-gradient(180deg, #FDBCB4 0%, #FCD3A5 100%);
   --primary-background: #FA805B;
-  --secondary-background: ;
+  --secondary-background: transparent;
   --header-color: #FF9C8F;
   --bottom-nav-color: #FCD3A5;
   --selection-color: #FCE3D2;
@@ -81,7 +79,7 @@ $theme-colors: (
 .light-theme5 {
   --app-background: linear-gradient(180deg, #FFDAB9 0%, #FFE4B5 100%);
   --primary-background: #FA805B;
-  --secondary-background: ;
+  --secondary-background: transparent;
   --header-color: #FFCEA2;
   --bottom-nav-color: #FCD3A5;
   --selection-color: #FCE3D2;
@@ -90,7 +88,7 @@ $theme-colors: (
 .light-theme6 {
   --app-background: linear-gradient(180deg, #FCD3A5 0%, #FFA07A 100%);
   --primary-background: #FA805B;
-  --secondary-background: ;
+  --secondary-background: transparent;
   --header-color: #FFC38D;
   --bottom-nav-color: #FCD3A5;
   --selection-color: #FCE3D2;
@@ -99,7 +97,7 @@ $theme-colors: (
 .light-theme7 {
   --app-background: linear-gradient(180deg, #FFF8DC 0%, #FFEEEE 100%);
   --primary-background: #FFDADA;
-  --secondary-background: ;
+  --secondary-background: transparent;
   --header-color: #F8EDC2;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
@@ -109,7 +107,7 @@ $theme-colors: (
 .light-theme8 {
   --app-background: linear-gradient(180deg, #FFF8DC 0%, #FFB6C1 100%, #FFB6C1 100%);
   --primary-background: #FFDADA;
-  --secondary-background: ;
+  --secondary-background: transparent;
   --header-color: #FFF8DC;
   --bottom-nav-color: #FFDADA;
   --selection-color: #FFF9FB;
@@ -119,7 +117,7 @@ $theme-colors: (
 .light-theme9 {
   --app-background: linear-gradient(180deg, #FFA07A 0%, #FF9CCE 100%);
   --primary-background: #FFC7D4;
-  --secondary-background: ;
+  --secondary-background: transparent;
   --header-color: #FFA07A;
   --bottom-nav-color: #FF9FD0
   --selection-color: #FFBACA;

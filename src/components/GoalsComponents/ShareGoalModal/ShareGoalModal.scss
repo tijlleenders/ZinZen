@@ -6,12 +6,16 @@
     height: 100%;
     .modal-content {
       margin-top: auto;
-      
+      background: var(--bottom-nav-color);
       border-radius: 0.5rem 0.5rem 0 0;
     }
     .shareOptions-btn {
+        background: var(--selection-color);
         border: none;
+        border-bottom: 1px solid var(--default-border-color);
         padding: 2% 5%;
+        width: 100%;
+        border-radius: 8px;
         
     }
     .share-Options > div, .contact-icon, .next-icon {
@@ -37,7 +41,7 @@
     display: flex;
     flex-direction: column;
     padding: var(--bs-modal-padding) 0;
-    gap: 15px
+    // gap: 15px
 }
 #share-modal-body > * {
     padding: 0 var(--bs-modal-padding);

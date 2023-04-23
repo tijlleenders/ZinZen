@@ -22,12 +22,14 @@ import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/Conta
 import { convertIntoSharedGoal, getAllLevelGoalsOfId, getGoal, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import SubMenu, { SubMenuItem } from "./SubMenu";
 import AddContactModal from "./AddContactModal";
+import { themeState } from "@src/store/ThemeState";
 
 import "./ShareGoalModal.scss";
 
 const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const minContacts = 1;
 
+  const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
 
@@ -113,6 +115,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   return (
     <Modal
       id={`share-modal${darkModeStatus ? "-dark" : ""}`}
+      className={`${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       show={showShareModal !== ""}
       onHide={() => setShowShareModal("")}
       centered
@@ -122,88 +125,90 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       <Modal.Body id="share-modal-body">
         { confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} /> }
         <h4>{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</h4>
-        { displaySubmenu === "groups" ? (
-          <SubMenu>
-            {userGroups.map((grp) => <SubMenuItem key={grp.id} group={grp} goal={goal} />)}
-          </SubMenu>
-        ) : (
-          <>
-            {/* Share Anonymously */}
-            <button
-              onClick={async () => {
-                await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareAnonymously" });
-              }}
-              type="button"
-              className="shareOptions-btn"
-            >
-              <div className="share-Options">
-                <div> <img alt="share goal anonymously" src={shareAnonymous} /> </div>
-                <p className="shareOption-name">Share Anonymously</p>
-                { loading.A && <Loader /> }
-              </div>
-            </button>
-
-            {/* Share in a public group */}
-            <button
-              type="button"
-              className="shareOptions-btn"
-              onClick={() => {
-                if (userGroups.length > 0) {
-                  setDisplaySubmenu("groups");
-                } else {
-                  setShowToast({
-                    open: true,
-                    message: "Sorry, You don't have any groups.",
-                    extra: "Create or Join a group on My Groups page" });
-                }
-              }}
-            >
-              <div className="share-Options">
-                <div> <img
-                  alt="share goal public"
-                  src={darkModeStatus ? myGroupsIconFilledDark : myGroupsIconFilledLight}
-                />
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          { displaySubmenu === "groups" ? (
+            <SubMenu>
+              {userGroups.map((grp) => <SubMenuItem key={grp.id} group={grp} goal={goal} />)}
+            </SubMenu>
+          ) : (
+            <>
+              {/* Share Anonymously */}
+              <button
+                onClick={async () => {
+                  await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareAnonymously" });
+                }}
+                type="button"
+                className="shareOptions-btn"
+              >
+                <div className="share-Options">
+                  <div> <img alt="share goal anonymously" src={shareAnonymous} /> </div>
+                  <p className="shareOption-name">Share Anonymously</p>
+                  { loading.A && <Loader /> }
                 </div>
-                <p className="shareOption-name">Share in Public Group</p>
-                { loading.P && <Loader /> }
-              </div>
-            </button>
+              </button>
 
-            {/* Share 1:1 */}
-            <button
-              disabled={goal.typeOfGoal !== "myGoal"}
-              type="button"
-              onClick={async () => { if (displaySubmenu !== "contacts") await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareWithOne" }); }}
-              className="shareOptions-btn"
-            >
-              <div className="share-Options">
-                <div> <img alt="share with friend" src={shareWithFriend} /> </div>
-                <p className="shareOption-name">
-                  Share 1:1 <br />
-                  {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
-                  {goal.typeOfGoal === "collaboration" && ` - Goal is in collaboration with ${goal.collaboration.collaborators[0].name}`}
-                </p>
-                { loading.S && <Loader /> }
-              </div>
-              { (goal.typeOfGoal === "myGoal") && displaySubmenu === "contacts" && (
-              <div className="shareWithContacts">
-                {contacts.length === 0 &&
-                  <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
-                { contacts.length > 0 &&
-                  <p className="share-warning"> Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact </p>}
-                <div id="modal-contact-list" style={contacts.length <= minContacts ? { justifyContent: "flex-start" } : {}}>
+              {/* Share in a public group */}
+              <button
+                type="button"
+                className="shareOptions-btn"
+                onClick={() => {
+                  if (userGroups.length > 0) {
+                    setDisplaySubmenu("groups");
+                  } else {
+                    setShowToast({
+                      open: true,
+                      message: "Sorry, You don't have any groups.",
+                      extra: "Create or Join a group on My Groups page" });
+                  }
+                }}
+              >
+                <div className="share-Options">
+                  <div> <img
+                    alt="share goal public"
+                    src={darkModeStatus ? myGroupsIconFilledDark : myGroupsIconFilledLight}
+                  />
+                  </div>
+                  <p className="shareOption-name">Share in Public Group</p>
+                  { loading.P && <Loader /> }
+                </div>
+              </button>
+
+              {/* Share 1:1 */}
+              <button
+                disabled={goal.typeOfGoal !== "myGoal"}
+                type="button"
+                onClick={async () => { if (displaySubmenu !== "contacts") await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareWithOne" }); }}
+                className="shareOptions-btn"
+              >
+                <div className="share-Options">
+                  <div> <img alt="share with friend" src={shareWithFriend} /> </div>
+                  <p className="shareOption-name">
+                    Share 1:1 <br />
+                    {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
+                    {goal.typeOfGoal === "collaboration" && ` - Goal is in collaboration with ${goal.collaboration.collaborators[0].name}`}
+                  </p>
+                  { loading.S && <Loader /> }
+                </div>
+                { (goal.typeOfGoal === "myGoal") && displaySubmenu === "contacts" && (
+                <div className="shareWithContacts">
+                  {contacts.length === 0 &&
+                    <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
                   { contacts.length > 0 &&
-                    contacts.slice(0, Math.min(minContacts, contacts.length)).map((ele) => (
-                      getContactBtn(ele.relId, ele.name, ele.accepted)
-                    ))}
-                  { contacts.length === 0 && getContactBtn() }
+                    <p className="share-warning"> Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact </p>}
+                  <div id="modal-contact-list" style={contacts.length <= minContacts ? { justifyContent: "flex-start" } : {}}>
+                    { contacts.length > 0 &&
+                      contacts.slice(0, Math.min(minContacts, contacts.length)).map((ele) => (
+                        getContactBtn(ele.relId, ele.name, ele.accepted)
+                      ))}
+                    { contacts.length === 0 && getContactBtn() }
+                  </div>
                 </div>
-              </div>
-              )}
-            </button>
+                )}
+              </button>
 
-          </>
-        )}
+            </>
+          )}
+        </div>
       </Modal.Body>
       { showAddContactModal && <AddContactModal showAddContactModal={showAddContactModal} setShowAddContactModal={setShowAddContactModal} /> }
     </Modal>
