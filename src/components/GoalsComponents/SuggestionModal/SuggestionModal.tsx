@@ -124,7 +124,7 @@ const SuggestionModal = ({ goalID } : {goalID: string}) => {
   }, [selectedGoal]);
 
   useEffect(() => {
-    if (["Archive", "Public"].includes(showSuggestionsModal.selected)) {
+    if (showSuggestionsModal.selected === "Public") {
       setOpen(true);
     }
   }, [showSuggestionsModal]);

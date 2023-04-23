@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dropdown, Switch } from "antd";
-import { useRecoilState } from "recoil";
-import { darkModeState } from "@src/store";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { darkModeState, displayToast } from "@src/store";
 import type { MenuProps } from "antd/es/menu/menu";
 
 import bulbIcon from "@assets/images/bulbIcon.svg";
@@ -12,6 +12,8 @@ import "./Header.scss";
 
 const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
+
+  const setShowToast = useSetRecoilState(displayToast);
   const items: MenuProps["items"] = [
     {
       label: (
@@ -26,15 +28,38 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
       key: "1",
     }
   ];
+
+  const handleClick = async () => {
+    // setLoading(true);
+    if (alt === "zinzen hints") {
+      setShowToast({ open: true, message: "Coming soon...", extra: "" });
+      // const res = await getPublicGoals(selectedGoalId === "root" ? "root" : (await getGoal(selectedGoalId))?.title || "root");
+      // if (res.status && res.data?.length > 0) {
+      //   const tmpPG = [...res.data];
+      //   setShowSuggestionsModal({ selected: "Public", goals: [...tmpPG] });
+      // } else {
+      //   setShowToast({ open: true, message: "Awww... no hints today. We'll keep looking!", extra: "" });
+      // }
+    }
+    // setLoading(false);
+  };
   return (
     <div style={{ alignSelf: "center" }}>
-      <Dropdown menu={{ items }} trigger={["click"]}>
-        <img className="theme-icon header-icon" src={path} alt={alt} />
-      </Dropdown>
+      { alt === "zinzen settings" ? (
+        <Dropdown menu={{ items }} trigger={["click"]}>
+          <img className="theme-icon header-icon" src={path} alt={alt} />
+        </Dropdown>
+      ) : (
+        <img
+          onClickCapture={handleClick}
+          className="theme-icon header-icon"
+          src={path}
+          alt={alt}
+        />
+      )}
     </div>
   );
 };
-
 const Header = ({ title } : { title: string }) => (
   <div className="header">
     <h1>{title || "My Goals"}</h1>
