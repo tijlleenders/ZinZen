@@ -206,12 +206,13 @@ div::-webkit-scrollbar {
   padding: 1em 0 !important;
 }
 .accordion-item, .accordion-header, .accordion-button {
-  
+  background: transparent;
   border: none !important;
   box-shadow: none !important;
 }
 .accordion-button {
   padding: 0;
+  background: transparent !important;
 }
 .Accordion { 
   .accordion-button::after {
