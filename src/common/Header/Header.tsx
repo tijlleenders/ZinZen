@@ -21,7 +21,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
           <p>Dark Mode</p>
           <Switch
             checked={darkMode}
-            onChange={() => { setDarkMode(!darkMode); }}
+            onChange={() => { localStorage.setItem("darkMode", darkMode ? "off" : "on"); setDarkMode(!darkMode); }}
           />
         </div>
       ),
