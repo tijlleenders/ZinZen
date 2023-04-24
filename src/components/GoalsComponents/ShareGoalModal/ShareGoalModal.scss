@@ -1,48 +1,32 @@
+/* Share Modal */
 #share-modal, #share-modal-dark {
     margin: auto;
     max-width: 600px;
     min-width: 236px;
     width: 100%;
     height: 100%;
+
     .modal-content {
       margin-top: auto;
-      background: var(--bottom-nav-color);
       border-radius: 0.5rem 0.5rem 0 0;
     }
-    .shareOptions-btn {
-        background: var(--selection-color);
-        border: none;
-        border-bottom: 1px solid var(--default-border-color);
-        padding: 2% 5%;
-        width: 100%;
-        border-radius: 8px;
-        
-    }
-    .share-Options > div, .contact-icon, .next-icon {
-        
-    }
 } 
-
-#share-modal-dark {
-    .modal-content {
-        
-        
-        button {
-            
-            
-        }
-    }
-    .share-Options > div, .contact-icon, .next-icon {
-        
-    }
-}
 
 #share-modal-body {
     display: flex;
     flex-direction: column;
     padding: var(--bs-modal-padding) 0;
-    // gap: 15px
+
+    .shareOptions-btn {
+      background: var(--bottom-nav-color);
+      border: none;
+      border-bottom: 1px solid var(--default-border-color);
+      padding: 5%;
+      width: 100%;
+      border-radius: 8px;  
+    }
 }
+
 #share-modal-body > * {
     padding: 0 var(--bs-modal-padding);
 }
@@ -51,74 +35,71 @@
     display: flex;
     justify-content: left;
     position: relative;
+    gap: 30px;
     .loader {
-        color: #CD6E51;
-        top: -4px;
-        left: -4px;
-        width: 44px;
-        height: 44px;
-        
-        position: absolute;
+      color: #CD6E51;
+      top: -8px;
+      left: -6px;
+      width: 40px;
+      height: 40px;
+      position: absolute;
     }
 }
 
-.share-Options > div, .contact-icon, .next-icon {
+.share-Options > div {
     position: relative;
-    width: 36px;
-    height: 36px;
-    
     border-radius: 50%;
-    
     img, svg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        width: 28px;
-        filter: brightness(0);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      width: 28px;
+      filter: brightness(0);
     }
-
     svg {
-        left: 3px;
+      left: 3px;
     }
-}
-
-.add-icon {
-    border: none !important;
-    
-}
-
-.contact-icon, .next-icon {
-    width: 47px;
-    height: 47px;
-    font-size: 1.7em;
-    font-weight: bold;
-    text-align: center;
-    box-sizing: content-box;
-    border: none;
-    
 }
 
 .shareWithContacts {
     position: relative;
     text-align: left;
-    margin-top: 2%;
-
-    #modal-contact-list {
-        display: flex;
-        flex-direction: row;
-        overflow-x: hidden;
-        justify-content: space-around;
-    }
+    margin-top: 4%;
 }
 
-.contact-button {
-    width: fit-content;
-    text-align: center;
-    margin-left: 2.5%;
-    position: relative;
+#modal-contact-list {
+    display: flex;
+    flex-direction: row;
+    overflow-x: hidden;
+    justify-content: space-around;
+    padding: 1% 0;
+
+    .contact-icon {
+      width: fit-content;
+      text-align: center;
+      margin-left: 2.5%;
+      position: relative;
+    
+      button {
+        border-radius: 50%;
+        width: 1.785em;
+        height: 1.785em;
+        font-size: 1.785em;
+        font-weight: bold;
+        text-align: center;
+        border: none;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+        background: var(--primary-background);
+        
+        img {
+          position: absolute;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
 }
 
 .share-warning {
@@ -136,46 +117,36 @@
     text-align: left;
 }
 
+/* Add Contact Modal */
+
 .addContact-modal {
     padding: 15px !important;
+
     input {
-        
-        border-radius: 7px;
-        border: none;
-        padding: 8px; 
-        width: 100%;
-        max-width: 300px;
-        font-size: 1.286em !important;
-        font-weight: 700;
+      border-radius: 7px;
+      border: none;
+      padding: 8px; 
+      width: 100%;
+      max-width: 300px;
+      font-size: 1.286em !important;
+      font-weight: 700;
     }
+    
     .modal-content {
-        margin: auto !important;
+      margin: auto !important;
+      
+      .action-btn {
+        display: flex;
+        margin: 0 auto;
+        margin-top: 20px;
+        background: var(--selection-color);
+        img {
+          margin-right: 10px;
+        }
+      }
     }
     .modal-footer {
         justify-content: flex-start !important;
-    }
-}
-
-.addContact-btn, .addContact-btn-dark {
-    font-weight: 600 !important;
-    
-    border-radius: 5px;
-    padding: 8px;
-    border: none;
-    margin-top: 20px;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    img {
-        margin-right: 10px;
-    }
-}
-
-.addContact-btn-dark {
-    
-    
-    img {
-        filter: brightness(0) invert(1);
     }
 }
 

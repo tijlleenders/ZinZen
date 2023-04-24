@@ -17,7 +17,7 @@ div::-webkit-scrollbar {
     margin: 0;
   }
 }
-.App-dark {
+.App-dark, .popupModal-dark {
   p, button, span, div, h1, h2, h3, h4, h5 {
     color: white;
   }
@@ -26,6 +26,12 @@ div::-webkit-scrollbar {
   }
   .secondary-icon {
     filter: invert(53%) sepia(70%) saturate(11%) hue-rotate(322deg) brightness(104%) contrast(89%)
+  }
+}
+
+.submit-btn-dark {
+  img {
+    filter: brightness(0) invert(1);
   }
 }
 
@@ -51,13 +57,6 @@ div::-webkit-scrollbar {
     margin: 0 !important;
   }
 }
-.light-svg-bg {
-  
-}
-
-.dark-svg-bg {
-  
-}
 
 .light-svg {
   filter: invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%);
@@ -67,45 +66,7 @@ div::-webkit-scrollbar {
   filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
 }
 
-/* Sidebar */
-.sidebar {
-  z-index: 10;
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  top: 70px;
-  left: calc(calc(100vw - 600px)/2 + 290px);
-  gap: 20px;
-  
-}
 
-.sidebar-item, .sidebar-item-dark {   
-  
-  border: none;
-  z-index: 11;
-  position: relative;
-  font-size: 16px;
-  padding: 6px 25px 6px 38px;
-  border-radius: 8px;
-  font-weight: 700;
-  text-align: left;
-  
-  button {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    top: -2px;
-    left: -10px;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    place-items: center;
-    justify-content: center;
-  }
-}
-.sidebar-item-dark {
-  
-}
 /* Toast */
 #toast, #toast-dark {
   position: absolute;
@@ -124,9 +85,6 @@ div::-webkit-scrollbar {
     font-weight: 600;
   }
 }
-#toast-dark {
-  
-}
 
 /* input field */
 .default-input, .default-input-dark {
@@ -137,12 +95,8 @@ div::-webkit-scrollbar {
   font-size: 1.143em !important;
   font-weight: 700;
 }
-.default-input-dark {
-  
-}
 
 .ordinary-btn {
-  
   border: none;
 }
 
@@ -176,28 +130,18 @@ div::-webkit-scrollbar {
     font-size: 1.286em;
     font-weight: 700;
   }
+  
   .modal-dialog {
     margin-top: 18%;
   }
+  
   .modal-content {
     margin-top: auto;
-    
   }
+
   .modal-body {
-    
     border-radius: 10px;
-    padding: 33px;
-  }
-}
-.popupModal-dark {
-  input {
-    
-  }
-  .modal-content {
-    
-  }
-  .modal-body {
-    
+    padding: 23px;
   }
 }
 
@@ -244,9 +188,7 @@ div::-webkit-scrollbar {
     font-size: 1em;
   }
 }
-.colorPallette-dark {
-  
-}
+
 /* Loader */
 .loader {
   position: absolute;
@@ -255,6 +197,7 @@ div::-webkit-scrollbar {
   width: 50px;
   height: 50px;
 }
+
 @media (max-width: 600px) {
   .loader {
       left: 18px;

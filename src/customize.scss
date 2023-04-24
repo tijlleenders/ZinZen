@@ -27,7 +27,7 @@ $theme-colors: (
   "dark-purple": #612854,
 );
 
-#global-addBtn > img { filter: brightness(0) invert(1); }
+.global-addBtn-img { filter: brightness(0) invert(1); }
 
 .App-light, .modal-content {
   --bottom-nav-text-color: #CD6E51;
@@ -43,16 +43,16 @@ $theme-colors: (
 .light-theme1 {
   --app-background: linear-gradient(180deg, #FFCDD2 0%, #FFEEEE 100%, #FFEEEE 100%);
   --primary-background: #FFEEEE;
-  --secondary-background: transparent;
+  --secondary-background: #FFE6F1;
   --header-color: #FFADB5;
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
-  #global-addBtn > img { filter: unset !important; }
+  .global-addBtn-img { filter: unset !important; }
 }
 .light-theme2 {
   --app-background: linear-gradient(180deg, #FAD2D2 0%, #FFC8A2 80.78%);
   --primary-background: #EF9479;
-  --secondary-background: transparent;
+  --secondary-background: #FFEAEA;
   --header-color: #FFBBBB;
   --bottom-nav-color: #FFC8A2;
   --selection-color: #FCE3D2;
@@ -102,7 +102,7 @@ $theme-colors: (
   --bottom-nav-color: #FFEEEE;
   --selection-color: #FFFDFE;
   --default-border-color: #FF8B5C;
-  #global-addBtn > img { filter: unset !important; }
+  .global-addBtn-img { filter: unset !important; }
 }
 .light-theme8 {
   --app-background: linear-gradient(180deg, #FFF8DC 0%, #FFB6C1 100%, #FFB6C1 100%);
@@ -112,7 +112,7 @@ $theme-colors: (
   --bottom-nav-color: #FFDADA;
   --selection-color: #FFF9FB;
   --default-border-color: #FFA07A;
-  #global-addBtn > img { filter: unset !important; }
+  .global-addBtn-img { filter: unset !important; }
 }
 .light-theme9 {
   --app-background: linear-gradient(180deg, #FFA07A 0%, #FF9CCE 100%);
@@ -122,7 +122,7 @@ $theme-colors: (
   --bottom-nav-color: #FF9FD0
   --selection-color: #FFBACA;
   --default-border-color: #F6426D;
-  #global-addBtn > img { filter: invert(23%) sepia(99%) saturate(2498%) hue-rotate(314deg) brightness(84%) contrast(93%) !important; }
+  .global-addBtn-img { filter: invert(23%) sepia(99%) saturate(2498%) hue-rotate(314deg) brightness(84%) contrast(93%) !important; }
 }
 
 /* Color Pallette of Dark Theme(s) */
@@ -207,7 +207,19 @@ $theme-colors: (
   --selection-color: #3F3D47;
 }
 
+.modal-content {
+  background: var(--secondary-background);
+}
 
+.action-btn { 
+  font-size: 0.875em;
+  font-weight: 600 !important;
+  border-radius: 5px;
+  padding: 8px;
+  border: none;
+  background: var(--selection-color);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+}
 
 h1 {
   font-size: 1.8rem;

@@ -53,7 +53,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
         padding: 20,
       }}
-    > <img width={30} src={GlobalAddIcon} alt="add goal | add feeling | add group" />
+    > <img className="global-addBtn-img" width={30} src={GlobalAddIcon} alt="add goal | add feeling | add group" />
     </button>
   );
 };
