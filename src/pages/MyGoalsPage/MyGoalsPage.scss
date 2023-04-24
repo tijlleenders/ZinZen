@@ -104,7 +104,7 @@
   flex-direction: column;
   width: 100%;
   border-bottom: 1.5px solid var(--default-border-color);
-  background: var(--secondary-background);
+  background: transparent;
   .user-goal-main {
     display: flex;
     height: 100%;
@@ -125,6 +125,9 @@
       font-size: 1em;
     }
   }
+}
+.user-goal-dark {
+  background: var(--secondary-background);
 }
 
   .user-goal:first-child, .user-goal-dark:first-child {
