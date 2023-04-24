@@ -2,8 +2,7 @@ import { Modal } from "react-bootstrap";
 import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import addDark from "@assets/images/addDark.svg";
-import addLight from "@assets/images/addLight.svg";
+import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
 import shareWithFriend from "@assets/images/shareWithFriend.svg";
 import myGroupsIconFilledLight from "@assets/images/myGroupsIconFilledLight.svg";
@@ -16,13 +15,13 @@ import ConfirmationModal from "@src/common/ConfirmationModal";
 import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
 import { shareGoalWithContact } from "@src/services/contact.service";
+import { themeState } from "@src/store/ThemeState";
 import { darkModeState, displayToast, showConfirmation } from "@src/store";
 import { confirmAction, IShareGoalModalProps } from "@src/Interfaces/IPopupModals";
 import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import { convertIntoSharedGoal, getAllLevelGoalsOfId, getGoal, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import SubMenu, { SubMenuItem } from "./SubMenu";
 import AddContactModal from "./AddContactModal";
-import { themeState } from "@src/store/ThemeState";
 
 import "./ShareGoalModal.scss";
 
@@ -44,7 +43,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
   const handleShowAddContact = () => setShowAddContactModal(true);
 
   const getContactBtn = (relId = "", name = "", accepted = false) => (
-    <div className="contact-button">
+    <div className="contact-icon">
       <button
         type="button"
         style={name === "" || accepted ? {} : { background: "#DFDFDF", color: "#979797" }}
@@ -67,9 +66,8 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           }
           setLoading({ ...loading, S: false });
         }}
-        className={`${name === "" ? "add-icon" : "contact-icon"}`}
       >
-        { name === "" ? <img alt="add contact" width={35} src={darkModeStatus ? addDark : addLight} /> : name[0]}
+        { name === "" ? <img alt="add contact" className="global-addBtn-img" width={25} src={GlobalAddIcon} /> : name[0]}
       </button>
       { name !== "" && <p style={{ margin: 0 }}>{name}</p> }
     </div>
@@ -111,11 +109,10 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       setContacts([...userContacts]);
     })();
   }, [showAddContactModal]);
-
   return (
     <Modal
       id={`share-modal${darkModeStatus ? "-dark" : ""}`}
-      className={`${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       show={showShareModal !== ""}
       onHide={() => setShowShareModal("")}
       centered
@@ -141,7 +138,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                 className="shareOptions-btn"
               >
                 <div className="share-Options">
-                  <div> <img alt="share goal anonymously" src={shareAnonymous} /> </div>
+                  <div> <img className="secondary-icon" alt="share goal anonymously" src={shareAnonymous} /> </div>
                   <p className="shareOption-name">Share Anonymously</p>
                   { loading.A && <Loader /> }
                 </div>
@@ -164,6 +161,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
               >
                 <div className="share-Options">
                   <div> <img
+                    className="secondary-icon"
                     alt="share goal public"
                     src={darkModeStatus ? myGroupsIconFilledDark : myGroupsIconFilledLight}
                   />
@@ -181,7 +179,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                 className="shareOptions-btn"
               >
                 <div className="share-Options">
-                  <div> <img alt="share with friend" src={shareWithFriend} /> </div>
+                  <div> <img className="secondary-icon" alt="share with friend" src={shareWithFriend} /> </div>
                   <p className="shareOption-name">
                     Share 1:1 <br />
                     {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
