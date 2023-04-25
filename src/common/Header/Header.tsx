@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Dropdown, Switch } from "antd";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { darkModeState, displayToast } from "@src/store";
 import type { MenuProps } from "antd/es/menu/menu";
 
@@ -9,7 +9,6 @@ import searchIcon from "@assets/images/searchIcon.svg";
 import verticalDots from "@assets/images/verticalDots.svg";
 
 import "./Header.scss";
-import React from "react";
 
 const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
@@ -61,14 +60,17 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     </div>
   );
 };
-const Header = ({ title } : { title: string }) => (
-  <div className="header">
-    <h6>{title || "My Goals"}</h6>
-    <div className="header-items">
-      <HeaderBtn path={searchIcon} alt="zinzen search" />
-      <HeaderBtn path={bulbIcon} alt="zinzen hints" />
-      <HeaderBtn path={verticalDots} alt="zinzen settings" />
+const Header = ({ title } : { title: string }) => {
+  const darkModeStatus = useRecoilValue(darkModeState);
+  return (
+    <div className="header" style={{ background: darkModeStatus ? "var(--selection-color)" : "transparent" }}>
+      <h6>{title || "My Goals"}</h6>
+      <div className="header-items">
+        <HeaderBtn path={searchIcon} alt="zinzen search" />
+        <HeaderBtn path={bulbIcon} alt="zinzen hints" />
+        <HeaderBtn path={verticalDots} alt="zinzen settings" />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 export default Header;
