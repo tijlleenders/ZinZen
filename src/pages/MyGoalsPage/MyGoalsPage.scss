@@ -74,9 +74,10 @@
       font-size: 0.875em;
     }
   }
-  img { 
+  img, svg { 
     width: 20px;
     height: 20px;
+    opacity: 0.6;
   }
 }
 
@@ -88,13 +89,13 @@
   color: rgb(112, 91, 188);
 }
 
-.interactables > img, .exceptional-img {
+.interactables > img, .interactables > svg, .exceptional-img {
   font-size: 22px;
 }
 
 .user-goal, .user-goal-dark {
   word-break: break-all;
-  padding: 10px 0;
+  padding: 8px 0;
   min-height: 61.19px;
   text-align: left;
   overflow: hidden;
@@ -103,7 +104,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  border-bottom: 1.5px solid var(--default-border-color);
+  border-bottom: 1px solid var(--default-border-color);
   background: transparent;
   .user-goal-main {
     display: flex;
@@ -112,22 +113,17 @@
     padding: 15px 4% 15px 50px;
   }
   .contact-button {
-    align-self: center;
-    
-    display: flex;
-    align-items: center;
     position: absolute;
-    top: 18px;
     right: 28px;
+    top: 23px;
     .contact-icon {
-      width: 25px;
-      height: 25px;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
       font-size: 1em;
     }
   }
-}
-.user-goal-dark {
-  background: var(--secondary-background);
 }
 
   .user-goal:first-child, .user-goal-dark:first-child {
@@ -144,15 +140,13 @@
   .goal-dd-inner {
     width: 55px;
     top: 15px;
-    height: 96%;
+    height: 45px;
   }
   .goal-dd-outer {  
     border: solid;
     border-width: 1.4px;
-    width: 61px;
-    top: 9.5px;
-    height: 80%;
-    
+    width: 60px;
+    top: 9.3px;    
   }
 
 #addGoal-btn {
@@ -168,8 +162,8 @@
   
   display: flex;
   font-family: "Montserrat";
-  font-weight: bold;
-  font-size: 1.3em;
+  font-weight: 400;
+  font-size: 1.143em;
   text-align: left !important;
   max-width: unset;
   white-space: nowrap;
