@@ -46,14 +46,16 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       onClick={(e) => { handleClick(e); }}
       style={{
         position: "fixed",
-        bottom: 100,
         borderRadius: "50%",
         border: "none",
         background: "var(--primary-background)",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-        padding: 20,
+        width: 56,
+        height: 56,
+        right: 34,
+        bottom: 74
       }}
-    > <img className="global-addBtn-img" width={30} src={GlobalAddIcon} alt="add goal | add feeling | add group" />
+    > <img className="global-addBtn-img" width={24} height={24} src={GlobalAddIcon} alt="add goal | add feeling | add group" />
     </button>
   );
 };
