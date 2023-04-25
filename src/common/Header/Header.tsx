@@ -9,6 +9,7 @@ import searchIcon from "@assets/images/searchIcon.svg";
 import verticalDots from "@assets/images/verticalDots.svg";
 
 import "./Header.scss";
+import React from "react";
 
 const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
@@ -62,7 +63,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
 };
 const Header = ({ title } : { title: string }) => (
   <div className="header">
-    <h1>{title || "My Goals"}</h1>
+    <h6>{title || "My Goals"}</h6>
     <div className="header-items">
       <HeaderBtn path={searchIcon} alt="zinzen search" />
       <HeaderBtn path={bulbIcon} alt="zinzen hints" />
