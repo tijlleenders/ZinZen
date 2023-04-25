@@ -19,10 +19,10 @@ const BottomNavbar = ({ title }: { title: string}) => {
   const [month, date] = new Date().toDateString().split(" ").slice(1, 3);
 
   const handleClick = (to: string) => {
-    if (to === "MyTime" && currentPage !== "") {
-      navigate("/");
-    } else if (to === "MyGoals" && currentPage !== "MyGoals") {
-      navigate("/MyGoals");
+    if (to === "MyTime") {
+      if (currentPage !== "") navigate("/");
+    } else if (to === "MyGoals") {
+      if (currentPage !== "MyGoals") navigate("/MyGoals");
     } else if (currentPage !== "MyJournal") {
       navigate("/MyJournal");
     }
