@@ -94,13 +94,13 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         { goal.sublist.length > 0 && (
           <div
             className="goal-dd-outer"
-            style={{ borderColor: goal.goalColor, top: showActions.open === goal.id ? 11.5 : 9 }}
+            style={{ height: showActions.open === goal.id && showActions.click > 0 ? 96 : 55, borderColor: goal.goalColor, top: showActions.open === goal.id ? 11.5 : 9 }}
           />
         )}
         <div
           className="goal-dd-inner"
           style={{
-            height: showActions.open === goal.id && showActions.click > 0 ? "75%" : "65%",
+            height: showActions.open === goal.id && showActions.click > 0 ? 90 : 44,
             background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`
           }}
         />
@@ -136,14 +136,15 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           { goal.typeOfGoal === "collaboration" && (
           <img
             alt="collaborate goal"
+            width={25}
             src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
-            style={{ width: "27px", position: "absolute", right: "18px" }}
+            style={{ position: "absolute", right: "18px" }}
           />
           ) }
           <button
             type="button"
             className="contact-icon"
-            style={{ width: "15px", background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
+            style={{ background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)` }}
           >
             {sharedWithContact?.charAt(0) || collabWithContact?.charAt(0) || "" }
           </button>
