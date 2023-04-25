@@ -13,8 +13,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title }) => (
       minWidth: 236,
       overflow: "scroll",
       width: "100%",
-      marginTop: 75,
-      height: "calc(100vh - 145px)",
+      marginTop: 57,
+      height: "calc(100vh - 112px)",
       position: "relative",
     }}
     > {children}
