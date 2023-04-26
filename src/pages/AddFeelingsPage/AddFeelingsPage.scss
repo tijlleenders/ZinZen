@@ -3,43 +3,32 @@
     font-weight: 700;
 }
 .feelings-category, .feelings-category-dark {
-    
-    border: 2px solid #EDC7B7;
+    background-color: var(--bottom-nav-color);
     border-radius: 10px;
     display: flex;
-    margin-top: 20px;
     position: relative;
+    height: 48px;
+    button {
+        background: transparent;
+        padding: 12px 16px;
+        font-weight: 400;
+        font-size: 1.143em;
+        align-self: center;
+    }
     button:first-child {
-        
-        padding: 4% 7%;
-        
-        font-size: 1.286em;
-        font-weight: 700;
         border: none;
         width: 80%;
         text-align: left;
-        border-right: 2px solid #EDC7B7;
     }
     button:last-child {
-        
         width: 20%;
         display: flex;
-        align-items: center;
         justify-content: center;
-        
         border: none;
-    }
-}
-
-.feelings-category-dark {
-    
-    button {
-        
     }
 }
 
 #feeling-modal-body, #feeling-modal-body-dark {
-    
     border-radius: 10px;
     padding: 25px;
     .heading {
@@ -63,7 +52,6 @@
     button {
       border: none;
     //   color: #454545;
-      
       border: 1px solid #EEB8A7;
       border-radius: 7px;
       padding: 7px 20px;
