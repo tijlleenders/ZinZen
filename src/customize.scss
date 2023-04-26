@@ -232,7 +232,9 @@ $theme-colors: (
   font-weight: 600 !important;
   border-radius: 5px;
   padding: 8px;
+  margin-top: 20px;
   border: none;
+  align-items: center;
   background: var(--selection-color);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
 }
