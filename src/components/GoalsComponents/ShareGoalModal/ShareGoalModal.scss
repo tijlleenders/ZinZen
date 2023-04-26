@@ -1,158 +1,138 @@
 /* Share Modal */
 #share-modal, #share-modal-dark {
-    margin: auto;
-    max-width: 600px;
-    min-width: 236px;
-    width: 100%;
-    height: 100%;
+  margin: auto;
+  max-width: 600px;
+  min-width: 236px;
+  width: 100%;
+  height: 100%;
 
-    .modal-content {
-      margin-top: auto;
-      border-radius: 0.5rem 0.5rem 0 0;
-    }
+  .modal-content {
+    margin-top: auto;
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
 } 
 
 #share-modal-body {
-    display: flex;
-    flex-direction: column;
-    padding: var(--bs-modal-padding) 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--bs-modal-padding) 0;
 
-    .shareOptions-btn {
-      background: var(--bottom-nav-color);
-      border: none;
-      border-bottom: 1px solid var(--default-border-color);
-      padding: 5%;
-      width: 100%;
-      border-radius: 8px;  
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-    }
+  .shareOptions-btn {
+    background: var(--bottom-nav-color);
+    border: none;
+    border-bottom: 1px solid var(--default-border-color);
+    padding: 18px;
+    width: 100%;
+    border-radius: 8px;  
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  }
 }
 
 #share-modal-body > * {
-    padding: 0 var(--bs-modal-padding);
+  padding: 0 var(--bs-modal-padding);
 }
 
 .share-Options {
-    display: flex;
-    justify-content: left;
-    position: relative;
-    gap: 30px;
-    .loader {
-      color: #CD6E51;
-      top: -8px;
-      left: -6px;
-      width: 40px;
-      height: 40px;
-      position: absolute;
-    }
+  display: flex;
+  justify-content: left;
+  position: relative;
+  gap: 30px;
+  .loader {
+    color: #CD6E51;
+    top: -8px;
+    left: -6px;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+  }
 }
 
 .share-Options > div {
-    position: relative;
-    border-radius: 50%;
-    img, svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      margin: auto;
-      width: 28px;
-      filter: brightness(0);
-    }
-    svg {
-      left: 3px;
-    }
+  position: relative;
+  border-radius: 50%;
+  img, svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 28px;
+    filter: brightness(0);
+  }
+  svg {
+    left: 3px;
+  }
 }
 
 .shareWithContacts {
-    position: relative;
-    text-align: left;
-    margin-top: 4%;
+  position: relative;
+  text-align: left;
+  margin-top: 4%;
 }
 
 #modal-contact-list {
-    display: flex;
-    flex-direction: row;
-    overflow-x: hidden;
-    justify-content: space-around;
-    padding: 1% 0;
+  display: flex;
+  flex-direction: row;
+  overflow-x: hidden;
+  justify-content: space-around;
+  padding: 1% 0;
 
-    .contact-icon {
-      width: fit-content;
+  .contact-icon {
+    width: fit-content;
+    text-align: center;
+    margin-left: 2.5%;
+    position: relative;
+  
+    button {
+      border-radius: 50%;
+      width: 1.785em;
+      height: 1.785em;
+      font-size: 1.785em;
+      font-weight: bold;
       text-align: center;
-      margin-left: 2.5%;
-      position: relative;
-    
-      button {
-        border-radius: 50%;
-        width: 1.785em;
-        height: 1.785em;
-        font-size: 1.785em;
-        font-weight: bold;
-        text-align: center;
-        border: none;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-        background: var(--primary-background);
-        
-        img {
-          position: absolute;
-          transform: translate(-50%, -50%);
-        }
+      border: none;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+      background: var(--primary-background);
+      
+      img {
+        position: absolute;
+        transform: translate(-50%, -50%);
       }
     }
+  }
 }
 
 .share-warning {
-    font-weight: 600;
-    font-style: italic;
-    margin: 0% 2%;
-    margin-bottom: 3%;   
+  font-weight: 600;
+  font-style: italic;
+  margin: 0% 2%;
+  margin-bottom: 3%;   
 }
 
 .shareOption-name {
-    margin: 0;
-    margin-left: 3%;
-    align-self: center;
-    font-weight: 600;
-    text-align: left;
+  margin: 0;
+  margin-left: 3%;
+  align-self: center;
+  font-weight: 600;
+  text-align: left;
 }
 
 /* Add Contact Modal */
 
 .addContact-modal {
-    padding: 15px !important;
-
-    input {
-      border-radius: 7px;
-      border: none;
-      padding: 8px; 
-      width: 100%;
-      max-width: 300px;
-      font-size: 1.286em !important;
-      font-weight: 700;
-    }
-    
-    .modal-content {
-      margin: auto !important;
-      
-      .action-btn {
-        display: flex;
-        margin: 0 auto;
-        margin-top: 20px;
-        background: var(--selection-color);
-        img {
-          margin-right: 10px;
-        }
+  padding: 15px !important;
+  input {
+    width: 100%;
+  }
+  .modal-content {
+    margin: auto !important;
+    .action-btn {
+      background: var(--selection-color);
+      img {
+        margin-right: 10px;
       }
     }
-    .modal-footer {
-        justify-content: flex-start !important;
-    }
-}
-
-.form-check-label {
-    margin-left: 0.25em;
-    font-weight: 600;
+  }
 }
 

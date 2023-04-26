@@ -122,28 +122,25 @@
   }
 }
 
-  .user-goal:first-child, .user-goal-dark:first-child {
-    margin: 0;
-  }
-  .goal-dd-inner, .goal-dd-outer {
-    width: 55px;
-    height: 92%;
-    border-radius: 57px;
-    position: absolute;
-    left: -37px;
-    top: 1px;
-  }
-  .goal-dd-inner {
-    width: 55px;
-    top: 15px;
-    height: 45px;
-  }
-  .goal-dd-outer {  
-    border: solid;
-    border-width: 1.4px;
-    width: 60px;
-    top: 9.3px;    
-  }
+.goal-dd-inner, .goal-dd-outer {
+  width: 55px;
+  height: 92%;
+  border-radius: 57px;
+  position: absolute;
+  left: -37px;
+  top: 1px;
+}
+.goal-dd-inner {
+  width: 55px;
+  top: 15px;
+  height: 45px;
+}
+.goal-dd-outer {  
+  border: solid;
+  border-width: 1.4px;
+  width: 60px;
+  top: 9.3px;    
+}
 
 #addGoal-btn {
   position: fixed;
