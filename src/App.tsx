@@ -41,7 +41,6 @@ const App = () => {
   const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
   const isLanguageChosen = language !== "No language chosen.";
   const confirmationState = useRecoilValue(showConfirmation);
-  console.log(darkModeEnabled)
   const [showToast, setShowToast] = useRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
 
@@ -91,7 +90,7 @@ const App = () => {
       localStorage.setItem("darkMode", "off");
       localStorage.setItem("theme", JSON.stringify(getTheme()));
     } else {
-      init();
+      // init();
     }
     if ((!isLanguageChosen) && window.location.pathname !== "/" && window.location.pathname.toLowerCase() !== "/invest") { window.open("/", "_self"); }
   }, []);
@@ -123,13 +122,15 @@ const App = () => {
           </Routes>
         </BrowserRouter>
         <button
-          style={{ position: "absolute", right: 10, bottom: 100, background: "transparent", border: "none" }}
+          style={{ position: "absolute", right: 10, bottom: 200, background: "transparent", border: "none" }}
           type="button"
           onClick={() => {
             if (theme) {
               let choice = theme[darkModeEnabled ? "dark" : "light"] + 1;
-              if (choice === 9) { choice = 1; }
-              setTheme({ ...theme, [darkModeEnabled ? "dark" : "light"]: choice });
+              if (choice === 10) { choice = 1; }
+              const newTheme = { ...theme, [darkModeEnabled ? "dark" : "light"]: choice };
+              localStorage.setItem("theme", JSON.stringify(newTheme));
+              setTheme({ ...newTheme });
             }
           }}
         >

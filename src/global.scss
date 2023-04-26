@@ -99,7 +99,6 @@ img {
 
 /* input field */
 .default-input, .default-input-dark {
-  
   border-radius: 7px;
   border: none;
   padding: 8px; 
@@ -129,7 +128,6 @@ img {
   }
 }
 .default-btn-dark {
-  
   img {
       filter: brightness(0) invert(1);
   }
@@ -140,7 +138,7 @@ img {
   input {
     font-size: 1em;
     font-weight: 400;
-    padding: 8px; 
+    padding: 8px 16px; 
     border-radius: 8px;
     outline: none;
     border: none;

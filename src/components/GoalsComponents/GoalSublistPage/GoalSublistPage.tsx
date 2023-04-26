@@ -5,8 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import ArrowIcon from "@assets/images/ArrowIcon.svg";
-
+import { homeIcon } from "@src/assets";
 import { GoalItem } from "@src/models/GoalItem";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
@@ -15,8 +14,8 @@ import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI"
 import { darkModeState, displayInbox, lastAction, searchActive } from "@src/store";
 import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 
-import GoalConfigModal from "../GoalConfigModal/GoalConfigModal";
 import MyGoal from "../MyGoal";
+import GoalConfigModal from "../GoalConfigModal/GoalConfigModal";
 import ArchivedAccordion from "../ArchivedAccordion/ArchivedAccordion";
 
 import "./GoalSublistPage.scss";
@@ -90,7 +89,7 @@ export const GoalSublist = () => {
       <Breadcrumb style={{ padding: "25px 18px 10px 18px" }}>
         {/* @ts-ignore */ }
         <Breadcrumb.Item onClick={() => callResetHistory()}>
-          <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: darkModeStatus ? "#393939" : "#EDC7B7" }}>My Goals</span>
+          <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: darkModeStatus ? "#393939" : "#EDC7B7" }}><img src={homeIcon} alt="my goals" /></span>
         </Breadcrumb.Item>
         {
           subGoalHistory.length <= 3 ? getBreadcrumbs(subGoalHistory.slice(0, 3)) : (

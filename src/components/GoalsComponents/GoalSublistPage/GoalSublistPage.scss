@@ -32,7 +32,6 @@
 
 .sublist-list-container {
   margin-top: 10px;
-  width: 600px;
   padding: 0 !important;
 }
 
@@ -48,19 +47,5 @@
   .todo-form {
     margin-bottom: 24px !important;
   }
-  
-  .addtask-light , .addtask-dark {   
-    margin: 0 !important;
-    padding: 3% 4% !important;
-    width: 100% !important;
-    outline: none;
-  }
 }
 
-
-@media only screen and (max-width: 600px) {
-  .sublist-list-container {
-    // margin-top: 40px;
-    
-  }
-}

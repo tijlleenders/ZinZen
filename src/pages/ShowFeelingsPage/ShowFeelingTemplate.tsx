@@ -134,8 +134,6 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
               handleInputClose();
             }}
             className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
-
-            // className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
           >
             Save Note
           </button>
