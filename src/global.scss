@@ -137,9 +137,18 @@ img {
 
 /* Popup Modals */
 .popupModal, .popupModal-dark {
+  input {
+    font-size: 1em;
+    font-weight: 400;
+    padding: 8px; 
+    border-radius: 8px;
+    outline: none;
+    border: none;
+  }
   .popupModal-title {
     font-size: 1.286em;
-    font-weight: 700;
+    font-weight: 500;
+    margin-bottom: 10px;
   }
   
   .modal-dialog {
