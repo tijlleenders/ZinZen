@@ -55,7 +55,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         right: 34,
         bottom: 74
       }}
-    > <img className="global-addBtn-img" width={24} height={24} src={GlobalAddIcon} alt="add goal | add feeling | add group" />
+    > <img className="global-addBtn-img" src={GlobalAddIcon} alt="add goal | add feeling | add group" />
     </button>
   );
 };
