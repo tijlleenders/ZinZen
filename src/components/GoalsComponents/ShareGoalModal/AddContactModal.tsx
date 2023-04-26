@@ -67,9 +67,11 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
             }
           }}
         />
+        <br />
         <button
           type="button"
           onClick={async () => { await addNewContact(); }}
+          style={{ float: "right" }}
           className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
         >
           <img alt="add contact" className="theme-icon" src={shareInvitation} />Share invitation
