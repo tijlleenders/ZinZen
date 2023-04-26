@@ -4,6 +4,11 @@ div::-webkit-scrollbar {
   display: none;
 }
 
+img {
+  width: 24px;
+  height: 24px;
+}
+
 .App-light, .App-dark {  
   display: flex;
   flex-direction: column;
