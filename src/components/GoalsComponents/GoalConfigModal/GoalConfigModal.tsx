@@ -20,6 +20,7 @@ import { colorPalleteList, convertNumberToHr, getDateInText } from "@src/utils";
 import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 
 import "./GoalConfigModal.scss";
+import { themeState } from "@src/store/ThemeState";
 
 export interface EditTagSectionProps {
   title: string,
@@ -87,7 +88,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
         {title === "Due date" && <input type="date" className="datepicker" value={due} onChange={(e) => handleDates(e.target.value)} name={title} />}
         {title === "Start date" && <input type="date" className="datepicker" value={start} onChange={(e) => handleDates(e.target.value)} name={title} />}
         { (title === "Duration" || title === "Habit") && (
-          <ul className={`dropdown${darkModeStatus ? "-dark" : ""} ${title === "Duration" ? durationEditable ? "" : "restricted" : ""}`}>
+          <ul className={`dropdown ${title === "Duration" ? durationEditable ? "" : "restricted" : ""}`}>
             {options.map((ele) => (
               <li className={otherTagValues[title.toLowerCase()] === `${ele}` ? `selected${darkModeStatus ? "-dark" : ""}` : ""} key={ele}>
                 <button type="button" onClick={() => { handleOtherTags(`${ele}`); }}>{ele}</button>
@@ -97,12 +98,12 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
         )}
         {title === "Filter" && (
         <div className="filter">
-          <select defaultValue={selectedFilter.active} className={`dropdown${darkModeStatus ? "-dark" : ""}`} onChange={(e) => setSelectedFilter({ ...selectedFilter, active: e.target.value })}>
+          <select defaultValue={selectedFilter.active} className="dropdown" onChange={(e) => setSelectedFilter({ ...selectedFilter, active: e.target.value })}>
             {
               ["On", "Before", "After"].map((ele) => <option key={ele} value={ele}>{ele}</option>)
             }
           </select>
-          <ul className={`dropdown${darkModeStatus ? "-dark" : ""}`}>
+          <ul className="dropdown">
             {(selectedFilter.active === "On" ? ["-", "weekends", "weekdays"] : ["-", ...Array(25).keys()]).map((ele) => (
               <li className={selectedFilter[selectedFilter.active] === `${ele}` ? `selected${darkModeStatus ? "-dark" : ""}` : ""} key={ele}>
                 <button type="button" onClick={() => { handleFilterChange(selectedFilter.active, `${ele}`); }}>
@@ -126,7 +127,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
               }}
             />
             <p>hrs per</p>
-            <select value={budgetPeriod} className={`dropdown${darkModeStatus ? "-dark" : ""}`} onChange={(e) => handleBudgetChange({ ...budget, period: e.target.value })}>
+            <select value={budgetPeriod} className="dropdown" onChange={(e) => handleBudgetChange({ ...budget, period: e.target.value })}>
               {
                 ["day", "week"].map((ele) => <option key={`budget-${ele}`} value={ele}>{ele}</option>)
               }
@@ -141,10 +142,11 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
-  const darkModeStatus = useRecoilValue(darkModeState);
-  const subGoalsHistory = useRecoilValue(goalsHistory);
-  const selectedGoalId = useRecoilValue(displayGoalId);
+  const theme = useRecoilValue(themeState);
   const openInbox = useRecoilValue(displayInbox);
+  const darkModeStatus = useRecoilValue(darkModeState);
+  const selectedGoalId = useRecoilValue(displayGoalId);
+  const subGoalsHistory = useRecoilValue(goalsHistory);
 
   const setShowToast = useSetRecoilState(displayToast);
   const addInHistory = useSetRecoilState(addInGoalsHistory);
@@ -215,7 +217,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
   return (
     <Modal
       id="editTagModal"
-      className={`${openInbox ? "inboxCall" : ""} popupModal${darkModeStatus ? "-dark" : ""}`}
+      className={`${openInbox ? "inboxCall" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       onHide={handleSave}
       show={!!showAddGoal || !!showUpdateGoal}
     >
@@ -314,7 +316,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
             getTagLabel(tagName)
           ))}
         </div>
-        <div id="editSection">
+        <div className={`editSection${darkModeStatus ? "-dark" : ""}`}>
           <EditTagSection changes={changes} title={selectedTag} handleChange={handleChange} />
         </div>
       </Modal.Body>
