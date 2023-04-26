@@ -68,11 +68,11 @@ export const MyTimePage = () => {
     const dayOfMonth = devMode ? fakeThursday.getDate() : today.getDate();
     const suffix = getOrdinalSuffix(dayOfMonth);
     return (
-      <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
+      <div key={day} className="MyTime_day">
         <button
           type="button"
-          className="MyTime_navRow"
-          style={showTasks.includes(day) ? { boxShadow: `0px 2px 3px rgba(${darkModeStatus ? "255, 255, 255" : "0, 0, 0"}, 0.25)` } : {}}
+          className={`MyTime_navRow ${showTasks.includes(day) ? "selected" : ""}`}
+          style={showTasks.includes(day) ? { boxShadow: `0px 1px 3px rgba(${darkModeStatus ? "255, 255, 255" : "0, 0, 0"}, 0.25)` } : {}}
           onClick={() => {
             handleShowTasks(day);
           }}
@@ -88,7 +88,7 @@ export const MyTimePage = () => {
             )}
           </h3>
           <button
-            className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
+            className="MyTime-expand-btw"
             type="button"
           >
             <div> { showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <ChevronRight /> } </div>

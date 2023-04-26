@@ -78,7 +78,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>Impossible</button>
         </div>
       )}
-      <div className={`MTL-display${darkModeStatus ? "-dark" : ""}`}>
+      <div className="MTL-display">
         { myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
@@ -125,7 +125,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   <button
                     type="button"
                     onClick={() => setDisplayOptionsIndex("")}
-                    className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""} task-dropdown${darkModeStatus ? "-dark" : ""}`}
+                    className="MyTime-expand-btw task-dropdown"
                   > <div><ChevronDown /></div>
                   </button>
                 )}

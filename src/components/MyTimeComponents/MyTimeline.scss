@@ -5,47 +5,36 @@
     box-shadow: inset -2px -2px 4px 0.5px rgba(0, 0, 0, 0.25);
     width: 50%;
     padding: 18px;
-    
-    // font-weight: 500;
-    
   }
   .activeView {
-    
     box-shadow: none;
     font-weight: 700;
-    
   }
 }
 .timeline-view-dark {
   button {
     border: none;
-    
     box-shadow: inset 2px -2px 4px 0.5px rgba(0, 0, 0, 0.5);
     width: 50%;
     padding: 18px;
     font-weight: 500;
-    
   }
   .activeView {
-    
     box-shadow: none;
     font-weight: 700;
-    
   }
 }
 
-.MTL-display, .MTL-display-dark {
+.MTL-display {
   display: flex;
   flex-direction: column;
-  background: transparent;
   .MTL-taskTitle {
-    
+    font-size: 1.143rem;
+    font-weight: 500;
   }
   .MTL-goalTiming {
     border: none;
-    
-    
-    font-weight: 500;
+    font-weight: 400;
     margin-top: 4px;
     margin-bottom: 0;
     line-height: 16px;
@@ -54,30 +43,23 @@
   }
 }
 
-.MTL-display-dark {
-  .MTL-goalTiming, .MTL-taskTitle {
-    
-  }
-}
-
-.MTL-display > button, .MTL-display-dark > button  {
+.MTL-display > button {
   line-height: 22px;
   padding: 0.7em 4%;
   line-height: 22px;
   padding-bottom: 0.7em;
+  background: transparent;
   border: none;
   border-bottom: 0.5px solid var(--default-border-color);
-  background: transparent;
 } 
 
-.MTL-display > button:first-child, .MTL-display-dark > button:first-child {
+.MTL-display > button:first-child {
   padding-top: 1.4em;
 }
 
-.MTL-display > button:last-child, .MTL-display-dark > button:last-child {
+.MTL-display > button:last-child {
   border: none;
   margin-bottom: 0 !important;
-
 }
 
 .MTL-circle {
@@ -85,10 +67,13 @@
   width: 15px;
   border-radius: 50%;
   display: inline-block;
-  
   margin-top: 4px;
 }
 
+.MyTime-expand-btw {
+  border: none;
+  background: transparent;
+}
 
 .MTL-taskTitle {
   width: 100%;
@@ -97,12 +82,11 @@
   border: none;
   text-overflow: ellipsis;
   margin-top: 1.5px;
-  
-  font-weight: 700;
   text-align: left;
+  font-size: 1.143em;
+  line-height: 22px;
   background: transparent;
-  font-size: 1.286em;
-  line-height: 22px
+  padding: 0;
 }
 
 .MTL-circle {
@@ -113,18 +97,19 @@
 .MTL-options {
   display: flex;
   margin-top: 0.7em;
+  margin-left: 18px;
 }
 
 .MTL-options > button {
-  
+  background: transparent;
   border: 0px;
   border-right: 1px solid;
   padding: 0.5vw 2vw;
-  font-weight: bolder;
-  
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
-.task-dropdown, .task-dropdown-dark {
+.task-dropdown {
   position: absolute;
   top: 0;
   right: 0;
