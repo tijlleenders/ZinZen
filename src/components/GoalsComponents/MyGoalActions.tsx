@@ -136,7 +136,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
           <img
             alt="share goal"
             src={openInbox ? collaborateSvg : share}
-            className={`${darkModeStatus ? "dark" : "light"}-svg`}
+            className={`${darkModeStatus ? "dark-svg" : ""}`}
             style={{ cursor: "pointer", ...(openInbox && !darkModeStatus ? { filter: "none" } : {}) }}
 
           />
@@ -172,7 +172,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
           alt="archive Goal"
           src={correct}
           style={{ cursor: "Pointer" }}
-          className={`${darkModeStatus ? "dark" : "light"}-svg`}
+          className={`${darkModeStatus ? "dark-svg" : ""}`}
         />
         <p>Done</p>
       </div>
