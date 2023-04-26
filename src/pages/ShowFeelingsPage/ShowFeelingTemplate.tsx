@@ -15,6 +15,7 @@ import { feelingListType } from "@src/global";
 import { feelingsEmojis } from "@consts/FeelingsList";
 import { ShowFeelingTemplateProps } from "@src/Interfaces/IPages";
 import { removeFeeling, addFeelingNote, removeFeelingNote } from "@api/FeelingsAPI";
+import { themeState } from "@src/store/ThemeState";
 
 import "@translations/i18n";
 
@@ -29,6 +30,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
   const [showNotesModal, setShowNotesModal] = useState(-1);
   const [selectedFeelingNote, setSelectedFeelingNote] = useState("");
   const [noteValue, setNoteValue] = useState("");
+  const theme = useRecoilValue(themeState);
 
   const handleInputClose = () => setShowInputModal(-1);
   const handleInputShow = (id) => setShowInputModal(id);
@@ -87,7 +89,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
                   <span>{t(feelingsListObject[feelingId].content)}</span>
                 </div>
                 <div className="feelingOfDaty-options">
-                  <img alt="add note to feeling" className={`${darkModeStatus ? "dark" : "light"}-svg`} src={noteIcon} onClick={() => handleJournalClick(feelingId)} />
+                  <img alt="add note to feeling" className={`${darkModeStatus ? "dark-svg" : ""}`} src={noteIcon} onClick={() => handleJournalClick(feelingId)} />
                   <img alt="delete feeling" className={`${darkModeStatus ? "dark-svg" : ""}`} src={deleteIcon} onClick={() => handleTrashClick(feelingId)} />
                 </div>
               </button>
@@ -97,49 +99,47 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
       <Modal
         show={showInputModal !== -1}
         onHide={handleInputClose}
-        centered
         autoFocus={false}
-        className={`notes-modal${darkModeStatus ? "-dark" : ""}`}
+        className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       >
-        <Modal.Header closeButton>
-          <Modal.Title className={darkModeStatus ? "note-modal-title-dark" : "note-modal-title-light"}>
-            Want to tell more about it?
-          </Modal.Title>
-        </Modal.Header>
         <Modal.Body>
-          <input
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
-            type="text"
-            placeholder="Add a reason"
-            className={`notes-modal-input${darkModeStatus ? "-dark" : ""}`}
-            value={noteValue}
-            onChange={(e) => {
-              setNoteValue(e.target.value);
-            }}
-            // Admittedly not the best way to do this but suffices for now
-            onKeyDown={async (e) => {
-              if (e.key === "Enter") {
-                await handleFeelingsNoteModify(showInputModal);
-                setNoteValue("");
-                handleInputClose();
-              }
-            }}
-          />
-        </Modal.Body>
-        <Modal.Footer>
+          <p className="popupModal-title">Want to tell more about it? </p>
+          <div>
+            <textarea
+              rows={4}
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
+              placeholder="Write here..."
+              className="notes-modal-input"
+              value={noteValue}
+              onChange={(e) => {
+                setNoteValue(e.target.value);
+              }}
+              // Admittedly not the best way to do this but suffices for now
+              onKeyDown={async (e) => {
+                if (e.key === "Enter") {
+                  await handleFeelingsNoteModify(showInputModal);
+                  setNoteValue("");
+                  handleInputClose();
+                }
+              }}
+            />
+          </div>
           <button
             type="submit"
+            style={{ float: "right" }}
             onClick={async () => {
               await handleFeelingsNoteModify(showInputModal);
               setNoteValue("");
               handleInputClose();
             }}
-            className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
+            className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
+
+            // className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
           >
-            Done
+            Save Note
           </button>
-        </Modal.Footer>
+        </Modal.Body>
       </Modal>
       <Modal
         show={showNotesModal !== -1}
@@ -148,7 +148,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         className={darkModeStatus ? "notes-modal-dark" : "notes-modal-light"}
       >
         <Modal.Body>
-          <textarea readOnly className={`show-feeling__note-textarea${darkModeStatus ? "-dark" : ""}`} rows={5} cols={32} value={selectedFeelingNote} />
+          <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />
         </Modal.Body>
         <Modal.Footer>
           <button
@@ -170,7 +170,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
               setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
               handleNotesClose();
             }}
-            className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
+            className="feelingsModal-btn"
           >
             Delete
           </button>
