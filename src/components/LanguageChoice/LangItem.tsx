@@ -9,8 +9,6 @@ import { ILanguage } from "@src/Interfaces/ILanguage";
 import { languageSelectionState } from "@store";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
 
-import "./LanguageChoice.scss";
-
 export const LangItem = ({ lang }: { lang: ILanguage }) => {
   const navigate = useNavigate();
   const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
@@ -25,55 +23,14 @@ export const LangItem = ({ lang }: { lang: ILanguage }) => {
 
   return (
     <div className="containerLang">
-      {remainder === 1 ? (
-        <Button
-          variant={(lang.selected) ? "dark-peach" : "light-peach"}
-          size="lg"
-          className={(lang.selected) ? "lang-btn1 selected" : "lang-btn1"}
-          onClick={() => {
-            handleClick(lang.langId);
-          }}
-        >
-          {lang.title}
-          <input type="radio" checked={lang.selected} readOnly />
-        </Button>
-      ) : remainder === 2 ? (
-        <Button
-          variant={(lang.selected) ? "dark-peach" : "light-peach"}
-          size="lg"
-          className={(lang.selected) ? "lang-btn1 selected" : "lang-btn1"}
-          onClick={() => {
-            handleClick(lang.langId);
-          }}
-        >
-          {lang.title}
-          <input type="radio" checked={lang.selected} readOnly />
-        </Button>
-      ) : remainder === 3 ? (
-        <Button
-          variant={(lang.selected) ? "dark-peach" : "light-peach"}
-          size="lg"
-          className={(lang.selected) ? "lang-btn2 selected" : "lang-btn1"}
-          onClick={() => {
-            handleClick(lang.langId);
-          }}
-        >
-          {lang.title}
-          <input type="radio" checked={lang.selected} readOnly />
-        </Button>
-      ) : (
-        <Button
-          variant={(lang.selected) ? "dark-peach" : "light-peach"}
-          size="lg"
-          className={(lang.selected) ? "lang-btn2 selected" : "lang-btn1"}
-          onClick={() => {
-            handleClick(lang.langId);
-          }}
-        >
-          {lang.title}
-          <input type="radio" checked={lang.selected} readOnly />
-        </Button>
-      )}
+      <button
+        type="button"
+        className={(lang.selected) ? "lang-btn1 selected" : "lang-btn1"}
+        onClick={() => { handleClick(lang.langId); }}
+      >
+        {lang.title}
+        <input type="radio" checked={lang.selected} readOnly />
+      </button>
     </div>
   );
 };

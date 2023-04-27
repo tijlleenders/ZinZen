@@ -9,9 +9,12 @@ import { ILanguage } from "@src/Interfaces";
 import { i18n } from "@src/translations/i18n";
 
 import "./LandingPage.scss";
+import { useRecoilValue } from "recoil";
+import { darkModeState } from "@src/store";
 
 export const LandingPage = () => {
   const { t } = useTranslation();
+  const darkModeStatus = useRecoilValue(darkModeState);
   const [, setPosition] = useState(1);
   const langSelected = (lang: string, newPos: number) => {
     if ((i18n.language.includes(lang))) {
@@ -82,21 +85,14 @@ export const LandingPage = () => {
   }, []);
 
   return (
-    <div id="landing-container">
-      <div id="landing-left-panel">
-        <div> <img src={ZinZen} alt="ZinZen Text Logo" id="landing-textLogo" /> </div>
-        <div>
-          <p className="landing-about">
-            <span> Better </span>
-            <span> together</span>
-            <br style={{ marginTop: "5px" }} />
-          </p>
-        </div>
-      </div>
-      <div id="landing-right-panel">
-        <p id="landing-langChoice">{t("langchoice")}</p>
-        <LanguagesList languages={Languages} />
-      </div>
+    <div className="landing-container">
+      <img width={40} src={ZinZen} alt="ZinZen Text Logo" id="landing-textLogo" />
+      <p className="landing-about">
+        <span> Better </span>
+        <span> together</span>
+      </p>
+      <p className="subheading">{t("langchoice")}</p>
+      <LanguagesList languages={Languages} />
     </div>
   );
 };

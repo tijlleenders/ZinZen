@@ -1,39 +1,62 @@
-#landing-left-panel > div, #landing-right-panel {
-    display: flex;
-    justify-content: center;
+.landing-container {
+  text-align: center;
+  p, span {
+    font-weight: 500;
+    font-size: 1.143em;
+  }
+  span {
+    color: #CD6E51 !important;  
+  }
 }
+
 #landing-textLogo {
-    width: 135px;
-    margin-top: 23px;
+  width: 135px;
+  height: 75px;
+  margin-top: 23px;
 }
 
-.landing-about, .landing-about-dark {
-    font-family: 'Montserrat';
-    font-weight: 600;
-    font-size: 25px;
-    text-align: center;
-    color: #CD6E51 !important;
-    margin-top: 50px;
-}
-.landing-about-dark {
-    color: rgba(112, 91, 188, 1) !important;
+.subheading {
+  color: #C6441D !important;
+  margin-top: 24px !important;
 }
 
-#landing-right-panel {
-    flex-direction: column;
+.containerLang {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 300px;
+  width: 100%;
+  background: transparent;
+  border-radius: 0.5rem;
+  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.25);
+  margin-top: 8px;
 
-    #landing-langChoice {
-        margin-top: 30px;
-        font-weight: 700;
-        font-size: 17px;
-        line-height: 17px;
-        color: #C6441D !important;
-        align-self: center;
-    }
-}
+  button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 20px;
+    align-items: center;
+    border: none;
+    height: 55px;
+    font-weight: 500;
+    background: var(--bottom-nav-color);
+    border-bottom: 1px solid var(--default-border-color);
+  }
 
-@media (max-width: 500px) {
-    .landing-about {
-        font-size: 15px;
-    }
+  input[type="radio"] {
+    accent-color: #CD6E51 !important;
+  }
+
+  .selected {
+    background: var(--selection-color);
+  }
+
+  button:first-child {
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  button:last-child {
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
 }
