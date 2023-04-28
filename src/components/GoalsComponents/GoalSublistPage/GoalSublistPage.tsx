@@ -6,6 +6,7 @@ import { Breadcrumb, Container } from "react-bootstrap";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { homeIcon } from "@src/assets";
+import ZAccordion from "@src/common/Accordion";
 import { GoalItem } from "@src/models/GoalItem";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
@@ -16,7 +17,6 @@ import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsM
 
 import MyGoal from "../MyGoal";
 import GoalConfigModal from "../GoalConfigModal/GoalConfigModal";
-import ArchivedAccordion from "../ArchivedAccordion/ArchivedAccordion";
 
 import "./GoalSublistPage.scss";
 
@@ -119,18 +119,28 @@ export const GoalSublist = () => {
                 />
               </>
             ))}
-            { archivedChildren.length > 0 && (
-            <ArchivedAccordion name="Archived" totalItems={archivedChildren.length}>
-              {archivedChildren.map((goal: GoalItem) => (
-                <MyGoal
-                  key={`goal-${goal.id}`}
-                  goal={goal}
-                  showActions={showActions}
-                  setShowActions={setShowActions}
+            <div className="archived-drawer">
+              { archivedChildren.length > 0 && (
+                <ZAccordion
+                  showCount
+                  style={{
+                    border: "none",
+                    background: darkModeStatus ? "var(--secondary-background)" : "transparent"
+                  }}
+                  panels={[{
+                    header: "Archived",
+                    body: archivedChildren.map((goal: GoalItem) => (
+                      <MyGoal
+                        key={`goal-${goal.id}`}
+                        goal={goal}
+                        showActions={showActions}
+                        setShowActions={setShowActions}
+                      />
+                    ))
+                  }]}
                 />
-              ))}
-            </ArchivedAccordion>
-            )}
+              )}
+            </div>
           </Container>
         </div>
       </div>
