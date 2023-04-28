@@ -175,6 +175,12 @@ img {
 }
 
 /* Accordion */
+.ant-collapse-header {
+  flex-direction: row-reverse;
+  text-align: left;
+  font-weight: 600;
+}
+
 .accordion-body {
   padding: 1em 0 !important;
 }
