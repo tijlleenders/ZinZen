@@ -31,15 +31,15 @@ import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import GoalConfigModal from "@components/GoalsComponents/GoalConfigModal/GoalConfigModal";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
-import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion/ArchivedAccordion";
 import { darkModeState, displayInbox, displayToast, lastAction, searchActive } from "@src/store";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import "./MyGoalsPage.scss";
 import Header from "@components/Header/Header";
 import BottomNavbar from "@components/BottomNavbar/BottomNavbar";
-import * as serviceWorkerRegistration from "../../service-worker/serviceWorkerRegistration";
 import AppLayout from "@src/layouts/AppLayout";
+import ZAccordion from "@src/common/Accordion";
+import * as serviceWorkerRegistration from "../../service-worker/serviceWorkerRegistration";
 
 export const MyGoalsPage = () => {
   const { t } = useTranslation();
@@ -207,8 +207,8 @@ export const MyGoalsPage = () => {
               )} */}
               { showAddGoal && (<GoalConfigModal goal={createGoalObjectFromTags({})} />)}
               <div>
-                { openInbox && isUpdgradeAvailable && (
-                  <ArchivedAccordion name="Notifications" totalItems={1}>
+                {/* { openInbox && isUpdgradeAvailable && (
+                  <ZAccordion showCount name="Notifications" totalItems={1}>
                     <div className={`notification-item user-goal${darkModeStatus ? "-dark" : ""}`}>
                       <p>Upgrade Available !!</p>
                       <button
@@ -227,8 +227,8 @@ export const MyGoalsPage = () => {
                       >Upgrade Now
                       </button>
                     </div>
-                  </ArchivedAccordion>
-                )}
+                  </ZAccordion>
+                )} */}
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   {activeGoals.map((goal: GoalItem) => (
                     <>
@@ -241,8 +241,8 @@ export const MyGoalsPage = () => {
                     </>
                   ))}
                 </div>
-                { archivedGoals.length > 0 && (
-                  <ArchivedAccordion name="Archived" totalItems={archivedGoals.length}>
+                {/* { archivedGoals.length > 0 && (
+                  <ZAccordion showCount name="Archived" totalItems={archivedGoals.length}>
                     {archivedGoals.map((goal: GoalItem) => (
                       <MyGoal
                         key={`goal-${goal.id}`}
@@ -251,8 +251,8 @@ export const MyGoalsPage = () => {
                         setShowActions={setShowActions}
                       />
                     ))}
-                  </ArchivedAccordion>
-                )}
+                  </ZAccordion>
+                )} */}
               </div>
             </div>
           )
