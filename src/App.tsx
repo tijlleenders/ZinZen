@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { darkModeState, languageSelectionState, displayToast, lastAction, showConfirmation, backupRestoreModal } from "@store";
 
-import { QueryPage } from "@pages/QueryPage/QueryPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
@@ -20,19 +19,20 @@ import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 
 import BackupRestoreModal from "@components/BackupRestoreModal/BackupRestoreModal";
+
 import { GoalItem } from "./models/GoalItem";
-import { handleIncomingChanges } from "./helpers/InboxProcessor";
-import { getContactSharedGoals } from "./services/contact.service";
+import { findTypeOfSub } from "./api/PubSubAPI";
 import { addSharedWMGoal } from "./api/SharedWMAPI";
 import { syncGroupPolls } from "./api/PublicGroupsAPI";
+import { getTheme, themeState } from "./store/ThemeState";
+import { handleIncomingChanges } from "./helpers/InboxProcessor";
+import { getContactSharedGoals } from "./services/contact.service";
 import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
 
 import "./global.scss";
 import "./customize.scss";
 import "@fontsource/montserrat";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { findTypeOfSub } from "./api/PubSubAPI";
-import { getTheme, themeState } from "./store/ThemeState";
 
 const App = () => {
   const [theme, setTheme] = useRecoilState(themeState);
@@ -115,7 +115,6 @@ const App = () => {
             <Route path="/MyGroups" element={<MyGroupsPage />} />
             <Route path="/MyJournal" element={<ShowFeelingsPage />} />
             <Route path="*" element={<NotFoundPage />} />
-            <Route path="/QueryZinZen" element={<QueryPage />} />
             <Route path="/ZinZenFAQ" element={<FAQPage />} />
             <Route path="/invite/:id" element={<InvitePage />} />
             <Route path="/Invest" element={<InvestPage />} />
