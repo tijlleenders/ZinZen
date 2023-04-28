@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
+import { unarchiveIcon } from "@src/assets";
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 
@@ -153,22 +154,16 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       </OverlayTrigger>
       )}
       { archived && (
-      <button
-        type="button"
-        className="contact-icon"
-        style={{
-          width: "35px",
-          height: "45px",
-          position: "absolute",
-          right: "18px",
-          top: "5px",
-          ...(darkModeStatus ? {
-            background: "transparent",
-            filter: "invert(1)" } : {}) }}
-        onClickCapture={async () => { await unarchiveUserGoal(goal); setLastAction("unarchived"); }}
-      >
-        <img alt="archived goal" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB4ElEQVR4nGNgIAmwWEAwbYA8KyvHOxAGsaltOAcLK8cNE+uwP2a2EX9ZWDluMzAwcBKrOZqBgeEMDjwFpICFjXO5srrl1+C4zv8grKxu+Z2VlWMdVP9UPPqjQAo6GRgYyhkYGJSwYBEmJpYsfgHJT4ExbWDDQTgotv2/gJDMJyYWliyQGhx6y6Fmg4kkHL4zY2Pn+uwdUg03HIZ9wmr/s7Fzf2JgYLDGoTeJkAViLCxsr62dEv/7RjSAXQ0zHOQbkBhIjoWV/TVILRkWMEWysLK/AhnAzML6UVHVDB4HIDZIDCQHUgNSS44PkIG/jIL+B5gFIDZIjICeUQsYRoOISqmIiZFxExc7y0tBHo67yJiLnTURSbEXCwvbN25e4XcgDGIzMDB4wiRBajH1s7xkYmTcyMDLxTatKtzk/8kJ4XC8tz3oPz8X20cGBgZlqBlMDAwMikjljCJUDASU+bnZPoL0IJsBMhNkNsiCSf1pdv9fLEtBwdOyHf7xc7FfQjIIG2Di42Y7Nz3b8S+6fpCZILNxWgDCPuaKnzjYWL7jwyA12PQSZQElmCgLpuc4/vc1V8SLQWrItuDKjOj/u1oD8OKrM2IIWxBmq/q/O8WGqhhkJtgCFhYGax4O1gm0wCCzAT7lGEfIoQ9QAAAAAElFTkSuQmCC" />
-      </button>
+      <div className="contact-button">
+        <button
+          type="button"
+          className="contact-icon"
+          style={{ padding: 0, background: "transparent", filter: darkModeStatus ? "invert(1)" : "none" }}
+          onClickCapture={async () => { await unarchiveUserGoal(goal); setLastAction("unarchived"); }}
+        >
+          <img alt="archived goal" src={unarchiveIcon} style={{ width: 18, height: 18 }} />
+        </button>
+      </div>
       )}
       { showActions.open === goal.id && showActions.click > 0 && !archived && (
         <MyGoalActions
