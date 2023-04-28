@@ -1,90 +1,60 @@
 /* eslint-disable no-unused-expressions */
 import React from "react";
-import { useRecoilValue } from "recoil";
-import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { ArrowRightShort } from "react-bootstrap-icons";
 
-import peopleIllustration from "@assets/images/peopleIllustration.svg";
-
-import { darkModeState } from "@store";
-import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
+import ZAccordion from "@src/common/Accordion";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
+import OnboardingLayout from "@src/layouts/OnboardingLayout";
 
-import "./FAQPage.scss";
 import "@translations/i18n";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+const customStyle = {
+  border: "none",
+  background: "var(--selection-color)",
+  borderRadius: 8,
+  padding: 8,
+  fontSize: "0.875rem",
+  fontWeight: 500,
+  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
+  marginTop: 14
+};
 
 export const FAQPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const darkModeStatus = useRecoilValue(darkModeState);
+  const QnA = [
+    { header: t("Qwhatiszinzen"), body: t("AnsWhatiszinzen") },
+    { header: t("Qiszinzenprivate"), body: t("Ansiszinzenprivate") },
+    { header: t("Qiszinzenexpensive"), body: t("Ansiszinzenexpensive") },
+    { header: t("Qtoogoodtobetrue"), body: t("Anstoogoodtobetrue") }
+  ];
+
+  const handleClick = () => {
+    localStorage.setItem("checkedIn", "yes");
+    const invite = localStorage.getItem("pendingInvite");
+    localStorage.removeItem("pendingInvite");
+    (vibrateWorks) ? navigator.vibrate(100) : null;
+    if (invite && invite !== "none") {
+      navigate(`/invite/${invite}`);
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
-    <div className="slide" style={{ display: "flex", justifyContent: "center" }}>
-      <div id="faq-container">
-        <LandingHeader avatar={localStorage.getItem("checkedIn") === "yes" ? "back" : null} />
-        <img
-          className="faq-illustration"
-          alt="twopeopleillustration"
-          src={peopleIllustration}
-        />
-        <div>
-          <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
-            {t("Qwhatiszinzen")}
-          </h3>
-          <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>{t("AnsWhatiszinzen")}</p>
-        </div>
-        <div>
-          <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
-            {t("Qiszinzenprivate")}
-          </h3>
-          <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>{t("Ansiszinzenprivate")}</p>
-        </div>
-        <div>
-          <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
-            {t("Qiszinzenexpensive")}
-          </h3>
-          <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>
-            {t("Ansiszinzenexpensive")}
-          </p>
-        </div>
-        <div>
-          <h3 className={darkModeStatus ? "faq-question-text-dark" : "faq-question-text-light"}>
-            {t("Qtoogoodtobetrue")}
-          </h3>
-          <p className={darkModeStatus ? "faq-answer-text-dark" : "faq-answer-text-light"}>{t("Anstoogoodtobetrue")}</p>
-        </div>
-        <div>
-          <button
-            type="button"
-            className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
-            onClick={() => {
-              localStorage.setItem("checkedIn", "yes");
-              (vibrateWorks) ? navigator.vibrate(100) : null;
-              navigate("/Feedback");
-            }}
-          >
-            {t("ihavedifferentquestions")}
-          </button>
-          <button
-            type="button"
-            className={darkModeStatus ? "faq-choice-dark" : "faq-choice-light"}
-            onClick={() => {
-              localStorage.setItem("checkedIn", "yes");
-              const invite = localStorage.getItem("pendingInvite");
-              localStorage.removeItem("pendingInvite");
-              (vibrateWorks) ? navigator.vibrate(100) : null;
-              if (invite && invite !== "none") {
-                navigate(`/invite/${invite}`);
-              } else {
-                navigate("/");
-              }
-            }}
-          >
-            {t("ihavenomorequestions")}
-          </button>
-        </div>
+    <OnboardingLayout>
+      <div style={{ marginTop: 8, width: "100%" }}>
+        <ZAccordion panels={QnA} showCount={false} />
+        <button
+          style={customStyle}
+          type="button"
+          onClick={handleClick}
+        > Continue <ArrowRightShort width={24} height={24} />
+        </button>
       </div>
-    </div>
+    </OnboardingLayout>
   );
 };
