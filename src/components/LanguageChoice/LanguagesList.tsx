@@ -17,7 +17,7 @@ export const LanguagesList = (props: ILanguageListProps) => {
     setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
     localStorage.setItem("language", JSON.stringify(langId));
-    navigate("/QueryZinZen");
+    navigate("/ZinZenFAQ");
   };
   return (
     <div className="containerLang">

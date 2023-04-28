@@ -11,6 +11,8 @@ import { i18n } from "@src/translations/i18n";
 import "./LandingPage.scss";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
+import OnboardingLayout from "@src/layouts/OnboardingLayout";
+import { QueryPage } from "@pages/QueryPage/QueryPage";
 
 export const LandingPage = () => {
   const { t } = useTranslation();
@@ -85,14 +87,16 @@ export const LandingPage = () => {
   }, []);
 
   return (
-    <div className="landing-container">
-      <img width={40} src={ZinZen} alt="ZinZen Text Logo" id="landing-textLogo" />
-      <p className="landing-about">
-        <span> Better </span>
-        <span> together</span>
+    <OnboardingLayout>
+      <p className={`landing-about${darkModeStatus ? "-dark" : ""}`}>
+        <span> a platform for </span>
+        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>self-actualization </span>
+        <br style={{ marginTop: "5px" }} />
+        <span>and </span>
+        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>collaboration</span>
       </p>
       <p className="subheading">{t("langchoice")}</p>
       <LanguagesList languages={Languages} />
-    </div>
+    </OnboardingLayout>
   );
 };
