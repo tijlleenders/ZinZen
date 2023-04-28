@@ -47,7 +47,14 @@ export const FAQPage = () => {
   return (
     <OnboardingLayout>
       <div style={{ marginTop: 8, width: "100%" }}>
-        <ZAccordion panels={QnA} showCount={false} />
+        <ZAccordion
+          showCount={false}
+          style={{ background: "var(--secondary-background)" }}
+          panels={QnA.map((ele) => ({
+            header: ele.header,
+            body: <p style={{ textAlign: "left", fontWeight: 500 }}>{ele.body}</p>
+          }))}
+        />
         <button
           style={customStyle}
           type="button"
