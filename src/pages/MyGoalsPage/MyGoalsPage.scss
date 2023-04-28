@@ -247,3 +247,19 @@
     font-size: 0.875em;
   }
 }
+
+.archived-drawer {
+  margin-top: 32px;
+  .ant-collapse-header, .ant-collapse-item, .ant-collapse-content {
+    border: none !important;
+  }
+  .ant-collapse-content {
+    background: transparent;
+  }
+  .ant-collapse-content-box {
+    padding: 0 !important;
+  }
+  .ant-collapse-header {
+    padding: 0 16 !important;
+  }
+}

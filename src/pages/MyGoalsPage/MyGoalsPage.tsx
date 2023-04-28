@@ -6,15 +6,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import publicGoals from "@assets/images/publicGoals.svg";
-import ArrowIcon from "@assets/images/ArrowIcon.svg";
-
 import Search from "@src/common/Search";
-import Loader from "@src/common/Loader";
 import { GoalItem } from "@src/models/GoalItem";
 import { getActiveGoals, getGoal } from "@api/GoalsAPI";
 import { ILocationProps } from "@src/Interfaces/IPages";
-import { getPublicGoals } from "@src/services/goal.service";
 import {
   displayAddGoal,
   displayChangesModal,
@@ -24,22 +19,17 @@ import {
   displayUpdateGoal,
   goalsHistory,
   popFromGoalsHistory } from "@src/store/GoalsState";
-import { getAllContacts } from "@src/api/ContactsAPI";
 import MyGoal from "@components/GoalsComponents/MyGoal";
 import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import GoalConfigModal from "@components/GoalsComponents/GoalConfigModal/GoalConfigModal";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { darkModeState, displayInbox, displayToast, lastAction, searchActive } from "@src/store";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import "./MyGoalsPage.scss";
-import Header from "@components/Header/Header";
-import BottomNavbar from "@components/BottomNavbar/BottomNavbar";
 import AppLayout from "@src/layouts/AppLayout";
 import ZAccordion from "@src/common/Accordion";
-import * as serviceWorkerRegistration from "../../service-worker/serviceWorkerRegistration";
 
 export const MyGoalsPage = () => {
   const { t } = useTranslation();
@@ -241,18 +231,28 @@ export const MyGoalsPage = () => {
                     </>
                   ))}
                 </div>
-                {/* { archivedGoals.length > 0 && (
-                  <ZAccordion showCount name="Archived" totalItems={archivedGoals.length}>
-                    {archivedGoals.map((goal: GoalItem) => (
-                      <MyGoal
-                        key={`goal-${goal.id}`}
-                        goal={goal}
-                        showActions={showActions}
-                        setShowActions={setShowActions}
-                      />
-                    ))}
-                  </ZAccordion>
-                )} */}
+                <div className="archived-drawer">
+                  { archivedGoals.length > 0 && (
+                    <ZAccordion
+                      showCount
+                      style={{
+                        border: "none",
+                        background: darkModeStatus ? "var(--secondary-background)" : "transparent"
+                      }}
+                      panels={[{
+                        header: "Archived",
+                        body: archivedGoals.map((goal: GoalItem) => (
+                          <MyGoal
+                            key={`goal-${goal.id}`}
+                            goal={goal}
+                            showActions={showActions}
+                            setShowActions={setShowActions}
+                          />
+                        ))
+                      }]}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           )
