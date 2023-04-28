@@ -9,13 +9,17 @@ img {
   height: 24px;
 }
 
+span, p , div, button, h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat";
+}
+
 .App-light, .App-dark {  
   display: flex;
   flex-direction: column;
   place-items: center;
-  font-family: "Montserrat";
   font-weight: bolder;
   height: 100vh;
+  overflow: scroll;
   background: var(--app-background);
   p, button, span, div, h1, h2, h3, h4, h5, h6 {
     color: black;
