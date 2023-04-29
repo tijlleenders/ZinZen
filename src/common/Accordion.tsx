@@ -1,12 +1,7 @@
-import React, { ReactNode, useState } from "react";
+import React from "react";
 import { Collapse } from "antd";
+import { ZAccordionProps } from "@src/Interfaces/ICommon";
 
-export interface ZAccordionProps {
-  style: React.CSSProperties | undefined,
-  panels: { header: string, body: ReactNode | ReactNode[] }[]
-  showCount: boolean,
-  defaultActiveKey: string[] | undefined
-}
 const ZAccordion : React.FC<ZAccordionProps> = ({ panels, style, showCount, defaultActiveKey }) => (
   <Collapse defaultActiveKey={defaultActiveKey} style={style}>
     {panels.map((panel, index) => (
