@@ -50,7 +50,7 @@ export const FAQPage = () => {
         <ZAccordion
           defaultActiveKey={["1"]}
           showCount={false}
-          style={{ background: "var(--secondary-background)" }}
+          style={{ background: "var(--bottom-nav-color)" }}
           panels={QnA.map((ele) => ({
             header: ele.header,
             body: (
