@@ -89,11 +89,7 @@ export const LandingPage = () => {
   return (
     <OnboardingLayout>
       <p className={`landing-about${darkModeStatus ? "-dark" : ""}`}>
-        <span> a platform for </span>
-        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>self-actualization </span>
-        <br style={{ marginTop: "5px" }} />
-        <span>and </span>
-        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>collaboration</span>
+        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>Better Together </span>
       </p>
       <p className="subheading">{t("langchoice")}</p>
       <LanguagesList languages={Languages} />
