@@ -48,11 +48,19 @@ export const FAQPage = () => {
     <OnboardingLayout>
       <div style={{ marginTop: 8, width: "100%" }}>
         <ZAccordion
+          defaultActiveKey={["1"]}
           showCount={false}
           style={{ background: "var(--secondary-background)" }}
           panels={QnA.map((ele) => ({
             header: ele.header,
-            body: <p style={{ textAlign: "left", fontWeight: 500 }}>{ele.body}</p>
+            body: (
+              <p style={{ textAlign: "left", fontWeight: 500 }}>{
+                ele.body.split(" ")[0].includes("ZinZen") ? (
+                  <> ZinZen<sup>®</sup> {ele.body.split(" ").slice(1).join(" ")} </>
+                ) : ele.body
+              }
+              </p>
+            )
           }))}
         />
         <button
