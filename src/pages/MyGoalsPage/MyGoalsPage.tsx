@@ -126,12 +126,11 @@ export const MyGoalsPage = () => {
   });
 
   return (
-    <AppLayout title="My Goals">
+    <AppLayout title="My Goals" debounceSearch={debounceSearch}>
       <div className="myGoals-container">
         {
           selectedGoalId === "root" ? (
             <div className="my-goals-content">
-              { displaySearch && <Search debounceSearch={debounceSearch} />}
               {/* { !displaySearch && (
               <div className="sec-header">
                 { showAddGoal || showUpdateGoal ? (
@@ -235,7 +234,6 @@ export const MyGoalsPage = () => {
                   { archivedGoals.length > 0 && (
                     <ZAccordion
                       showCount
-                      defaultActiveKey={undefined}
                       style={{
                         border: "none",
                         background: darkModeStatus ? "var(--secondary-background)" : "transparent"
