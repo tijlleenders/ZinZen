@@ -6,7 +6,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import archiveTune from "@assets/archive.mp3";
 import forgetTune from "@assets/forget.mp3";
-import chevronDownIcon from "@assets/images/chevronDown.svg";
+import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { ITask } from "@src/Interfaces/Task";
 import { TaskItem } from "@src/models/TaskItem";
@@ -126,7 +126,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     type="button"
                     onClick={() => setDisplayOptionsIndex("")}
                     className="MyTime-expand-btw task-dropdown"
-                  > <div><img src={chevronDownIcon} className="chevronDown" alt="zinzen schedule" /></div>
+                  > <div><img src={chevronLeftIcon} className="chevronDown" alt="zinzen schedule" /></div>
                   </button>
                 )}
               </div>
