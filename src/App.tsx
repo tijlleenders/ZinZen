@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Toast from "react-bootstrap/Toast";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, languageSelectionState, displayToast, lastAction, showConfirmation, backupRestoreModal } from "@store";
+import { darkModeState, languageSelectionState, displayToast, lastAction, showConfirmation, backupRestoreModal, inboxAvailable } from "@store";
 
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import Contacts from "@pages/ContactsPage/Contacts";
@@ -37,6 +37,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const App = () => {
   const [theme, setTheme] = useRecoilState(themeState);
   const language = useRecoilValue(languageSelectionState);
+  const setInboxAvailable = useSetRecoilState(inboxAvailable);
   const darkModeEnabled = useRecoilValue(darkModeState);
   const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
   const isLanguageChosen = language !== "No language chosen.";
@@ -64,6 +65,7 @@ const App = () => {
                   goalWithChildrens.slice(1).forEach((goal) => {
                     addSharedWMGoal(goal).catch((err) => console.log(`Failed to add in inbox ${goal.title}`, err));
                   });
+                  setInboxAvailable(true);
                 }).catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
               } else if (["shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
                 let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
@@ -90,7 +92,7 @@ const App = () => {
       localStorage.setItem("darkMode", "off");
       localStorage.setItem("theme", JSON.stringify(getTheme()));
     } else {
-      // init();
+      init();
     }
     if ((!isLanguageChosen) && window.location.pathname !== "/" && window.location.pathname.toLowerCase() !== "/invest") { window.open("/", "_self"); }
   }, []);
@@ -121,7 +123,7 @@ const App = () => {
           </Routes>
         </BrowserRouter>
         <button
-          style={{ position: "absolute", right: 10, bottom: 200, background: "transparent", border: "none" }}
+          style={{ position: "absolute", right: 10, bottom: 200, background: "transparent", display: "none" }}
           type="button"
           onClick={() => {
             if (theme) {
@@ -135,7 +137,7 @@ const App = () => {
         >
           Change
         </button>
-        <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id={`toast${darkModeEnabled ? "-dark" : ""}`}>
+        <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id="zinzen-toast">
           <Toast.Body>
             <p id="toast-message" style={showToast.extra === "" ? { margin: 0 } : {}}>{showToast.message}</p>
             { showToast.extra !== "" && <p id="extra-message">{showToast.extra}</p> }

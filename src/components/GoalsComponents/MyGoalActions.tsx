@@ -6,19 +6,19 @@ import correct from "@assets/images/correct.svg";
 import pencil from "@assets/images/pencil.svg";
 import share from "@assets/images/share.svg";
 import deleteIcon from "@assets/images/deleteIcon.svg";
-import collaborateSvg from "@assets/images/collaborate.svg";
+import { handshakeIcon } from "@src/assets";
 import archiveSound from "@assets/archive.mp3";
 
 import { colorPalleteList } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
-import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalController";
-import { darkModeState, displayInbox, displayToast, lastAction, showConfirmation } from "@src/store";
 import { addInGoalsHistory, displayAddGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
+import { archiveSharedWMGoal, convertSharedWMGoalToColab, getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
+import { darkModeState, displayInbox, displayToast, inboxAvailable, lastAction, showConfirmation } from "@src/store";
 
-const eyeSvg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABkklEQVR4nO2WvUoDQRSFPwsjoomk8wHEUpNgL9aKnVjYii/hT2FEIwgS8hBKgp1gY6ddYpGHWPNjKRKrRAZuYBj3zu5iRIs9cJs7557D3Duzs5AixT/AGlAGHoEOMJDoSO4UKE3ScBt4AUYxowls/cRwGXhIYOjGPbCU1HQX+AgR6wGHQAGYkygCR7Lm8t+BnTiGU8A5MAwRqQNZT61Za4TUGa0z0VZNa0rb6r5CRyPMfARUNY0rpaAXsVMXOaCvaF265APPITEztZERgVcgACqSs3Hs0dsfk1aBTw/RrNuohHBMzkbRozcAVgypFXEt3DYHIRyTs5GN0GwZUvsXjHMRmm1D2lCuzzgKMVp9kaDVQ2B9TKx6iObjYCMj5oHncJ149K5dsecJXacF4E3RegKm3YK8Z96NBB+QO89c81rhorwumnkuYqeaaVO0vZgFbhWBvnwczLs7L1GSmWrtvRHNWDAt21OuTtwIRCPOiL4hKy+LthutK+WEB1LFDLApr5c5/V3r16cruZpwDDdFCv4MXw/YJO5+W1zLAAAAAElFTkSuQmCC";
+const eyeSvg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC7klEQVR4nO2YSWhUQRCGv6gRERVXXBA8GRcIincFQQ8akoMIgjGQHPUgLgcJguPJZLp6JglxIZi4gIh4EKMRTcSroBIQUfAoSJR4iFnPkZKOPB8vTr/JSybg+6GgZ6ar6q/q6q7ugRQpUqRIkeJ/h8AWA8ct5AWeCXwUGBAYdaLjDwZ6LFgLx5phc0lJZ2GTwAWBNwITRcprgfOtsH7OiLfADgt3XGYnEpJhA50WKmaNuIW1Bq4JjEUQGBLoFmgUONQC21pg5UNYmIFFOtbABaoMXNRSEvgZYUeT0toEq5ImXyPwNcKhlk/dVVgW12YbrLBQL9AftmvgSxYOz5i4Zk83XQTx5znYP2MHwCSUWTgo0Bf2Y6FZV7Eow5pVt9RBowMGTjALmIQygQaB7yGfjzOwNJaxLCy38Cpk6NFcnBZ52GjgSch3b8a3TDOw2J3lwZps91lKnaP7RU8UgfcCP5zo+KZAdQYWeJbujVAQ3R1QXjAAgeshxUafwAX2CbwrdGQaeJuHvZ4ldSmk3/pPJe2QIWdXPMmfitkXRgyc9LFtwYR0j0ZO1Pp2LX9q4lOfsrFQW2wDs1BfyL5y0I0cPEjaYF1UFm8HDH/S5uNBvmKahuQrQ1nYWshPDlYLfA5URmd4QqWB8UAANYWMuqAfJHCNuO/p60hAR28DO4M/3gtE98LHoIEN01wr4sqY7/EcanZ3/5y7uqkc+XEDuz2NNSRAfsJ3LyiysCegN/w7cANn4mbfBdCUVAACTTH89gb0TusXLwOZqPU15JpVUgF0xQigLqDXh+uU+mGkHdb4GnKvr6RKKO/rVzlOlbyFQc1kxsCgdj1fIy6AcwmuwNk4vgUu2yI4/4Uc7EoqgBxUUgpEPUaKkP6SkHcBVCcQQBWlhIFbxZI34StBKZCBJeH3gyf5HtVlPkAfGu7a63OlHtW3rj5amG9wf510CXyLID7g/vvZznxHB5TrbdHAARUdez0HU6RIkSJFihQpmFP8Akw1EIG66+t0AAAAAElFTkSuQmCC";
 interface MyGoalActionsProps {
   goal: GoalItem,
   setShowShareModal: React.Dispatch<React.SetStateAction<string>>,
@@ -38,6 +38,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
   const setShowToast = useSetRecoilState(displayToast);
   const setShowAddGoal = useSetRecoilState(displayAddGoal);
   const setColorIndex = useSetRecoilState(selectedColorIndex);
+  const setShowInboxOption = useSetRecoilState(inboxAvailable);
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
@@ -50,7 +51,11 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
 
   const removeThisGoal = async () => {
     if (openInbox) {
-      await deleteSharedGoal(goal);
+      await deleteSharedGoal(goal).then(() => {
+        getActiveSharedWMGoals().then((res) => {
+          setShowInboxOption(res && res.length > 0);
+        });
+      });
     } else { await deleteGoal(goal, subGoalsHistory.length); }
     setLastAction("Delete");
   };
@@ -62,7 +67,11 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
       await mySound.play();
       await archiveThisGoal();
     } else if (action === "colabRequest") {
-      await convertSharedWMGoalToColab(goal);
+      await convertSharedWMGoalToColab(goal).then(() => {
+        getActiveSharedWMGoals().then((res) => {
+          setShowInboxOption(res && res.length > 0);
+        });
+      });
       setOpenInbox(false);
     }
     setConfirmationAction(null);
@@ -135,7 +144,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
         >
           <img
             alt="share goal"
-            src={openInbox ? collaborateSvg : share}
+            src={openInbox ? handshakeIcon : share}
             className={`${darkModeStatus ? "dark-svg" : ""}`}
             style={{ cursor: "pointer", ...(openInbox && !darkModeStatus ? { filter: "none" } : {}) }}
 
@@ -154,8 +163,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
           alt="Update Goal"
           src={openInbox ? eyeSvg : pencil}
           style={{ cursor: "pointer" }}
-          className={`${darkModeStatus ? "dark" : `${openInbox ? "light" : ""}`}-svg`}
-
+          className={`${darkModeStatus ? "dark-svg" : ""}`}
         />
         <p>{openInbox ? "View" : "Edit"}</p>
       </div>

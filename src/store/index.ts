@@ -51,6 +51,11 @@ export const displayInbox = atom({
   default: false as boolean
 });
 
+export const inboxAvailable = atom({
+  key: "inboxAvailable",
+  default: false as boolean
+});
+
 export const displayToast = atom({
   key: "displayToast",
   default: { open: false, message: "Awww... no hints today. We'll keep looking!", extra: "" }

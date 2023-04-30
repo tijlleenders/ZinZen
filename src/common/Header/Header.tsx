@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown, Switch } from "antd";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, displayInbox, displayToast, searchActive } from "@src/store";
+import { darkModeState, displayInbox, displayToast, inboxAvailable, lastAction, searchActive } from "@src/store";
 import type { MenuProps } from "antd/es/menu/menu";
 
 import searchIcon from "@assets/images/searchIcon.svg";
@@ -12,7 +12,7 @@ import { themeState } from "@src/store/ThemeState";
 
 import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import Search from "../Search";
-import { inboxIcon } from "../../assets";
+import { inboxIcon, openEnvelopeIcon } from "../../assets";
 
 import "./Header.scss";
 
@@ -80,10 +80,11 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   );
 };
 const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
+  const action = useRecoilValue(lastAction);
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
-  const [showInboxOption, setShowInboxOption] = useState(false);
+  const [showInboxOption, setShowInboxOption] = useRecoilState(inboxAvailable);
 
   useEffect(() => {
     getActiveSharedWMGoals().then((res) => {
@@ -91,17 +92,17 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
         setShowInboxOption(true);
       }
     });
-  });
+  }, []);
   return (
     <div className="header" style={{ background: darkModeStatus ? "var(--selection-color)" : "transparent" }}>
       { displaySearch && debounceSearch ?
         <Search debounceSearch={debounceSearch} />
         : (
           <>
-            <h6>{title}</h6>
+            <h6>{openInbox ? "Inbox" : title}</h6>
             <div className="header-items">
               { ["My Goals", "Inbox"].includes(title) && <HeaderBtn path={searchIcon} alt="zinzen search" /> }
-              { showInboxOption && <HeaderBtn path={inboxIcon} alt="zinzen inbox" /> }
+              { showInboxOption && <HeaderBtn path={openInbox ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" /> }
               {/* { title === "My Time" && (
                 <p style={{
                   fontSize: 26,
