@@ -10,9 +10,10 @@ import verticalDots from "@assets/images/verticalDots.svg";
 
 import { IHeader } from "@src/Interfaces/ICommon";
 import { themeState } from "@src/store/ThemeState";
+import { goalsHistory } from "@src/store/GoalsState";
+import { inboxIcon, openEnvelopeIcon } from "../../assets";
 
 import Search from "../Search";
-import { inboxIcon, openEnvelopeIcon } from "../../assets";
 
 import "./Header.scss";
 
@@ -85,8 +86,9 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
 const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const openInbox = useRecoilValue(displayInbox);
   const displaySearch = useRecoilValue(searchActive);
+  const subGoalHistory = useRecoilValue(goalsHistory);
   const darkModeStatus = useRecoilValue(darkModeState);
-
+console.log(subGoalHistory)
   return (
     <div className="header" style={{ background: darkModeStatus ? "var(--selection-color)" : "transparent" }}>
       { displaySearch && debounceSearch ?
@@ -96,7 +98,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
             <h6>{openInbox ? "Inbox" : title}</h6>
             <div className="header-items">
               { ["My Goals", "Inbox"].includes(title) && <HeaderBtn path={searchIcon} alt="zinzen search" /> }
-              { ["My Goals", "Inbox"].includes(title) && <HeaderBtn path={openInbox ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" /> }
+              { ["My Goals", "Inbox"].includes(title) && subGoalHistory.length === 0 && <HeaderBtn path={openInbox ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" /> }
               <HeaderBtn path={verticalDots} alt="zinzen settings" />
             </div>
           </>
