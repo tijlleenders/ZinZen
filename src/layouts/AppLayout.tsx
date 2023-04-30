@@ -5,9 +5,9 @@ import BottomNavbar from "@components/BottomNavbar/BottomNavbar";
 
 import Header from "../common/Header/Header";
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children, title }) => (
+const AppLayout: React.FC<AppLayoutProps> = ({ children, title, debounceSearch }) => (
   <>
-    <Header title={title} />
+    <Header title={title} debounceSearch={debounceSearch} />
     <div style={{
       maxWidth: 600,
       minWidth: 236,
