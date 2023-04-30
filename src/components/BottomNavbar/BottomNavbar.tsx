@@ -5,10 +5,10 @@ import { useNavigate } from "react-router";
 import goalsIcon from "@assets/images/goalsIcon.svg";
 import calendarIcon from "@assets/images/calendarIcon.svg";
 import journalIcon from "@assets/images/journalIcon.svg";
-import { darkModeState, displayInbox } from "@src/store";
 
 import { getOrdinalSuffix } from "@src/utils";
 import GlobalAddBtn from "@components/GlobalAddBtn";
+import { darkModeState, displayInbox } from "@src/store";
 
 import "./BottomNavbar.scss";
 
@@ -35,7 +35,7 @@ const BottomNavbar = ({ title }: { title: string}) => {
         <img className="secondary-icon" style={{ width: 24 }} src={calendarIcon} alt="My Time" />
         <p>{date}<sup>{getOrdinalSuffix(Number(date))}</sup>{` ${month}`}</p>
       </button>
-      <button type="button" onClick={() => { handleClick("MyGoals"); }} className={`bottom-nav-item ${currentPage === "MyGoals" && openInbox ? "active" : ""}`}>
+      <button type="button" onClick={() => { handleClick("MyGoals"); }} className={`bottom-nav-item ${currentPage === "MyGoals" || openInbox ? "active" : ""}`}>
         <img className="secondary-icon" src={goalsIcon} alt="My Goals" />
         <p>Goals</p>
       </button>

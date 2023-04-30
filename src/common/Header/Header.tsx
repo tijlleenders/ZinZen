@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Dropdown, Switch } from "antd";
+import { useNavigate } from "react-router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, displayInbox, displayToast, inboxAvailable, lastAction, searchActive } from "@src/store";
+import { darkModeState, displayInbox, displayToast, searchActive } from "@src/store";
 import type { MenuProps } from "antd/es/menu/menu";
 
 import searchIcon from "@assets/images/searchIcon.svg";
@@ -10,14 +11,15 @@ import verticalDots from "@assets/images/verticalDots.svg";
 import { IHeader } from "@src/Interfaces/ICommon";
 import { themeState } from "@src/store/ThemeState";
 
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import Search from "../Search";
 import { inboxIcon, openEnvelopeIcon } from "../../assets";
 
 import "./Header.scss";
 
 const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
+  const navigate = useNavigate();
   const theme = useRecoilValue(themeState);
+  const currentPage = window.location.pathname.split("/")[1];
 
   const setShowToast = useSetRecoilState(displayToast);
   const setDisplaySearch = useSetRecoilState(searchActive);
@@ -58,6 +60,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     } else if (alt === "zinzen search") {
       setDisplaySearch(true);
     } else if (alt === "zinzen inbox") {
+      if (currentPage !== "MyGoals") navigate("/MyGoals");
       setOpenInbox(!openInbox);
     }
     // setLoading(false);
@@ -80,19 +83,10 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   );
 };
 const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
-  const action = useRecoilValue(lastAction);
+  const openInbox = useRecoilValue(displayInbox);
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
-  const [showInboxOption, setShowInboxOption] = useRecoilState(inboxAvailable);
 
-  useEffect(() => {
-    getActiveSharedWMGoals().then((res) => {
-      if (res && res.length > 0) {
-        setShowInboxOption(true);
-      }
-    });
-  }, []);
   return (
     <div className="header" style={{ background: darkModeStatus ? "var(--selection-color)" : "transparent" }}>
       { displaySearch && debounceSearch ?
@@ -102,17 +96,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
             <h6>{openInbox ? "Inbox" : title}</h6>
             <div className="header-items">
               { ["My Goals", "Inbox"].includes(title) && <HeaderBtn path={searchIcon} alt="zinzen search" /> }
-              { showInboxOption && <HeaderBtn path={openInbox ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" /> }
-              {/* { title === "My Time" && (
-                <p style={{
-                  fontSize: 26,
-                  position: "absolute",
-                  top: 10,
-                  right: 78,
-                  fontWeight: 500
-                }}>D
-                </p>
-              ) } */}
+              { ["My Goals", "Inbox"].includes(title) && <HeaderBtn path={openInbox ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" /> }
               <HeaderBtn path={verticalDots} alt="zinzen settings" />
             </div>
           </>
