@@ -79,6 +79,33 @@ export const GoalSublist = () => {
       .then((parent) => setParentGoal(parent));
   }, [goalID]);
 
+  // This function is called when the back button is pressed
+  const onBackButtonEvent = (event) => {
+    // Prevent the default behavior of the browser
+    if (subGoalHistory.length > 0) {
+      event.preventDefault();
+      // Reset the URL so that the user remains on the same page
+      window.history.pushState(null, null, window.location.pathname);
+      handleBackClick();
+    }
+  };
+
+  useEffect(() => {
+    console.log("ss", subGoalHistory)
+    // Prevent the user from leaving the page when the back button is pressed
+    if (subGoalHistory.length > 0) {
+      window.history.pushState(null, null, window.location.pathname);
+    }
+
+    // Add an event listener to the window object
+    window.addEventListener("popstate", onBackButtonEvent);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("popstate", onBackButtonEvent);
+    };
+  }, []);
+
   useEffect(() => {
     (openInbox ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID))
       .then((fetchedGoals) => { handleChildrenGoals(fetchedGoals); });
