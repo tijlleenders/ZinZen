@@ -8,7 +8,7 @@ const NotificationSymbol = ({ color }:{color: string}) => (
     borderRadius: "50%",
     position: "absolute",
     left: "33px",
-    top: "28px"
+    top: "33px"
   }}
   />
 );
