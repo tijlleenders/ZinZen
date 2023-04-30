@@ -160,7 +160,7 @@ export const MyGoalsPage = () => {
                       ) }]}
                   />
                 )}
-                { openInbox && activeGoals.length === 0 && <Empty /> }
+                { openInbox && !isUpdgradeAvailable && activeGoals.length === 0 && <Empty /> }
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   {activeGoals.map((goal: GoalItem) => (
                     <>
