@@ -57,6 +57,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
     } else { setDue(value); }
   };
   const handleFilterChange = (filterName: string, value: string) => {
+    console.log(selectedFilter);
     setSelectedFilter({ ...selectedFilter, [filterName]: value });
     handleChange({ [`${filterName.toLowerCase()}${filterName === "On" ? "" : "Time"}`]: filterName === "On" ? value !== "-" ? value : null : Number(value) });
   };
@@ -75,7 +76,7 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
     setStart(changes.start ? new Date(changes.start).toISOString().slice(0, 10) : "");
     setBudget({ duration: changes.timeBudget?.duration || "", period: changes.timeBudget?.duration || "day" });
     setOtherTagValues({ duration: `${changes.duration || "-"}`, habit: changes.habit || "-" });
-    setSelectedFilter({ active: "On", On: changes.on || "-", Before: `${changes.beforeTime || "-"}`, After: `${changes.afterTime || "-"}` });
+    setSelectedFilter({ active: selectedFilter.active, On: changes.on || "-", Before: `${changes.beforeTime || "-"}`, After: `${changes.afterTime || "-"}` });
   }, [changes]);
   return (
     <>
