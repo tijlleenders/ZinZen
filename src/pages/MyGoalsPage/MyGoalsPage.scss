@@ -20,24 +20,6 @@
     opacity: 1;
   }
 }
-#goal-searchBar, #goal-searchBar-dark {
-  
-  border: none;
-  border-radius: 7px;
-  
-  font-size: 1.4em;
-  font-family: "Montserrat";
-  font-weight: bolder;
-  height: 47px;
-  margin: 5px 0 13px 7%;
-  padding: 0 18px;
-  width: 90%;
-}
-
-#goal-searchBar-dark {
-  
-  
-}
 
 .myGoals_title, .myGoals_title-dark {
   margin: 7px 18px 0 18px;
@@ -45,10 +27,6 @@
   font-weight: bolder;
   font-size: 1.429em;
   opacity: 0.6;
-}
-
-.myGoals_title-dark {
-  
 }
 
 #myGoals-list {
