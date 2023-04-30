@@ -1,6 +1,7 @@
-import { ReactNode } from "react";
+import { ChangeEvent, ReactNode } from "react";
 
 export interface AppLayoutProps {
     title: string,
-    children: ReactNode
+    children: ReactNode,
+    debounceSearch?: (event: ChangeEvent<HTMLInputElement>) => void
 }

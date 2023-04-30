@@ -16,3 +16,9 @@ export interface ColorPaletteProps {
     colorIndex: number,
     setColorIndex: SetterOrUpdater<number>
 }
+
+export interface ISubHeaderProps {
+    title: string,
+    leftNav: () => void,
+    rightNav: () => void
+}
