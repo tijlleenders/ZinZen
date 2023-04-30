@@ -87,12 +87,12 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
 }
 
 /* Toast */
-#toast, #toast-dark {
+#zinzen-toast {
   position: absolute;
   width: 95vw;
   max-width: 600px;
   top: 100px;
-  
+  background: var(--selection-color);
   z-index: 9999;
   text-align: center;
   #toast-message {
@@ -133,8 +133,11 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: space-between;
   place-self: flex-end;
+  background: var(--selection-color);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  font-size: 0.875em;
   img {
-      margin-right: 10px;
+    margin-right: 10px;
   }
 }
 .default-btn-dark {
@@ -143,9 +146,20 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* Subheader*/
+.subheader-title {
+  font-size: 1.286em;
+  font-weight: 500;
+  text-align: center;
+  font-style: italic;
+  white-space: nowrap;
+  padding-bottom: 5px;
+}
+
+
 /* Popup Modals */
 .popupModal, .popupModal-dark {
-  input {
+  input[type="text"] {
     font-size: 1em;
     font-weight: 400;
     padding: 8px 16px; 
