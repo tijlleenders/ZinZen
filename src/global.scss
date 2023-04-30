@@ -114,8 +114,10 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
-.ordinary-btn {
+.ordinary-element {
   border: none;
+  background: transparent;
+  outline: none;
 }
 
 /* button */
@@ -235,6 +237,19 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 50px;
   height: 50px;
+}
+
+.chevronDown, .chevronLeft, .chevronRight {
+  width: 12px;
+  height: 12px;
+}
+
+.chevronDown {
+  transform: rotate(270deg);
+}
+
+.chevronRight {
+  transform: scaleX(-1)
 }
 
 @media (max-width: 600px) {
