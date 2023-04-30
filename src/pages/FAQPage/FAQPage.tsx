@@ -2,7 +2,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ArrowRightShort } from "react-bootstrap-icons";
+
+import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import ZAccordion from "@src/common/Accordion";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
@@ -67,7 +68,7 @@ export const FAQPage = () => {
           style={customStyle}
           type="button"
           onClick={handleClick}
-        > Continue <ArrowRightShort width={24} height={24} />
+        > Continue <img className="chevronRight" src={chevronLeftIcon} alt="zinzen faq" style={{ marginLeft: 6, paddingBottom: 2 }} />
         </button>
       </div>
     </OnboardingLayout>

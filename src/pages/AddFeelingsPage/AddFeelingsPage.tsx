@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { ArrowRightShort } from "react-bootstrap-icons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+
+import backIcon from "@assets/images/backIcon.svg";
 
 import { darkModeState } from "@store";
 import { getJustDate } from "@utils";
@@ -71,7 +72,7 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate })
                     onClick={() => {
                       setSelectedCategory(category);
                     }}
-                  > <ArrowRightShort width={24} height={24} />
+                  > <img alt="add feeling" src={backIcon} className="chevronRight" />
                   </button>
                 </div>
               ))}

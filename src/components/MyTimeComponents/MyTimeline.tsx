@@ -2,11 +2,11 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown } from "react-bootstrap-icons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import archiveTune from "@assets/archive.mp3";
 import forgetTune from "@assets/forget.mp3";
+import chevronDownIcon from "@assets/images/chevronDown.svg";
 
 import { ITask } from "@src/Interfaces/Task";
 import { TaskItem } from "@src/models/TaskItem";
@@ -126,7 +126,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     type="button"
                     onClick={() => setDisplayOptionsIndex("")}
                     className="MyTime-expand-btw task-dropdown"
-                  > <div><ChevronDown /></div>
+                  > <div><img src={chevronDownIcon} className="chevronDown" alt="zinzen schedule" /></div>
                   </button>
                 )}
               </div>

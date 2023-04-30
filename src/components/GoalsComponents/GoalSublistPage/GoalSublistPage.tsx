@@ -123,7 +123,6 @@ export const GoalSublist = () => {
               { archivedChildren.length > 0 && (
                 <ZAccordion
                   showCount
-                  defaultActiveKey={undefined}
                   style={{
                     border: "none",
                     background: darkModeStatus ? "var(--secondary-background)" : "transparent"

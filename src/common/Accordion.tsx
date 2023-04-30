@@ -1,9 +1,16 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from "react";
 import { Collapse } from "antd";
 import { ZAccordionProps } from "@src/Interfaces/ICommon";
 
+import chevronLeftIcon from "@assets/images/chevronLeft.svg";
+
 const ZAccordion : React.FC<ZAccordionProps> = ({ panels, style, showCount, defaultActiveKey }) => (
-  <Collapse defaultActiveKey={defaultActiveKey} style={style}>
+  <Collapse
+    expandIcon={({ isActive }) => (<img alt="zinzen about" className={isActive ? "chevronDown" : "chevronRight"} src={chevronLeftIcon} />)}
+    defaultActiveKey={defaultActiveKey}
+    style={style}
+  >
     {panels.map((panel, index) => (
       <Collapse.Panel
         key={`${index + 1}`}
