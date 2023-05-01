@@ -7,28 +7,25 @@
 
 #feedback-line-1,
 #feedback-line-4 {
+  font-weight: 600;
   font-style: italic;
 }
 
 #feedback-line-2,
 #feedback-line-3 {
-  font-weight: 700;
-  font-size: 1.286em;
+  font-weight: 400;
+  font-size: 0.875em;
 }
 
-#userRating-btn {
-  
+.userRating-btn {
+  background: transparent;
   border: none;
   outline: none;
   cursor: pointer;
 }
 
-.decided {
-  color: coral;
-}
-
-.notDecided {
-  
+.decided > span {
+  color: var(--bottom-nav-text-color) !important;
 }
 
 .star {
@@ -36,23 +33,15 @@
 }
 
 #feedback-textbox, #feedback-textbox-dark {
-  
   border-radius: 10px;
   height: 200px;
   width: 100%;
   padding: 10px;
-  
-}
-#feedback-textbox-dark {
-  
-}
-#feedback-textbox-dark::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+  outline: none;
 }
 
 #feedback-submit-btn {
-  
-  
-  font-weight: bold;
+  padding: 8px 16px;
+  background-color: var(--selection-color);
 }
 
