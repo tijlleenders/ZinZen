@@ -9,10 +9,10 @@ import searchIcon from "@assets/images/searchIcon.svg";
 import verticalDots from "@assets/images/verticalDots.svg";
 
 import { IHeader } from "@src/Interfaces/ICommon";
-import { themeState } from "@src/store/ThemeState";
+import { themeState, themeSelectionMode } from "@src/store/ThemeState";
 import { goalsHistory } from "@src/store/GoalsState";
-import { inboxIcon, openEnvelopeIcon } from "../../assets";
 
+import { inboxIcon, openEnvelopeIcon } from "../../assets";
 import Search from "../Search";
 
 import "./Header.scss";
@@ -20,18 +20,23 @@ import "./Header.scss";
 const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   const navigate = useNavigate();
   const theme = useRecoilValue(themeState);
+
   const currentPage = window.location.pathname.split("/")[1];
 
   const setShowToast = useSetRecoilState(displayToast);
   const setDisplaySearch = useSetRecoilState(searchActive);
+  const setThemeSelection = useSetRecoilState(themeSelectionMode);
 
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const items: MenuProps["items"] = [
-    ...["Inbox", "Donate", "Feedback"].map((ele, index) => ({
+    ...["Donate", "Feedback", "Change Theme"].map((ele, index) => ({
       label: ele,
-      key: `${index}`
+      key: `${index}`,
+      onClick: () => {
+        if (ele === "Change Theme") { setThemeSelection(true); }
+      }
     })),
     {
       label: (
@@ -88,7 +93,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const displaySearch = useRecoilValue(searchActive);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const darkModeStatus = useRecoilValue(darkModeState);
-console.log(subGoalHistory)
+
   return (
     <div className="header" style={{ background: darkModeStatus ? "var(--selection-color)" : "transparent" }}>
       { displaySearch && debounceSearch ?
