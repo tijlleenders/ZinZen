@@ -1,19 +1,53 @@
-/*Main body and App*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-.App-light, .App-dark {
-  background: linear-gradient(180deg, #FFEEEE 0%, #EEA791 100%);
-  background-attachment: fixed;
-  font-family: "Montserrat";
-  font-weight: bolder;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  color: #343434 !important;
+div::-webkit-scrollbar {
+  display: none;
 }
-.App-dark {
-  background: linear-gradient(180deg, #121212 49.07%, #291B5C 100%);
-  background-attachment: fixed;
-  color: white !important;
+
+img {
+  width: 24px;
+  height: 24px;
+}
+
+span, p , div, button, h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat";
+}
+
+.App-light, .App-dark {  
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  font-weight: bolder;
+  height: 100vh;
+  overflow: scroll;
+  background: var(--app-background);
+  p, button, span, div, h1, h2, h3, h4, h5, h6 {
+    color: black;
+  }
+  p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+  }
+}
+.App-dark { 
+  background: var(--secondary-background);
+}
+.App-dark, .popupModal-dark {
+
+  p, button, span, div, h1, h2, h3, h4, h5, h6 {
+    color: white;
+  }
+  .theme-icon {
+    filter: invert(1);
+  }
+  .secondary-icon {
+    filter: invert(53%) sepia(70%) saturate(11%) hue-rotate(322deg) brightness(104%) contrast(89%)
+  }
+}
+
+.submit-btn-dark {
+  img {
+    filter: brightness(0) invert(1);
+  }
 }
 
 .publicGoal {
@@ -38,70 +72,27 @@
     margin: 0 !important;
   }
 }
-.light-svg-bg {
-  background: radial-gradient(50% 50% at 50% 50%, #FEF2EF 72.51%, #CD6E51 100%);
-}
-
-.dark-svg-bg {
-  background: radial-gradient(50% 50% at 50% 50%, #121212 72.51%, #705BBC 100%);
-}
 
 .light-svg {
   filter: invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%);
 }
 
 .dark-svg {
-  filter: invert(46%) sepia(94%) saturate(3349%) hue-rotate(231deg) brightness(80%) contrast(78%);
+  filter: invert(100%) sepia(66%) saturate(2%) hue-rotate(89deg) brightness(111%) contrast(100%)  
 }
 
-/* Sidebar */
-.sidebar {
-  z-index: 10;
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  top: 70px;
-  left: calc(calc(100vw - 600px)/2 + 290px);
-  gap: 20px;
-  
+.zinzen-textLogo {
+  width: 135px;
+  height: 75px;
 }
 
-.sidebar-item, .sidebar-item-dark {   
-  background: white;
-  color: black;
-  border: none;
-  z-index: 11;
-  position: relative;
-  font-size: 16px;
-  padding: 6px 25px 6px 38px;
-  border-radius: 8px;
-  font-weight: 700;
-  text-align: left;
-  
-  button {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    top: -2px;
-    left: -10px;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    place-items: center;
-    justify-content: center;
-  }
-}
-.sidebar-item-dark {
-  background: rgb(18,18,18, 0.7);
-  color: white
-}
 /* Toast */
-#toast, #toast-dark {
+#zinzen-toast {
   position: absolute;
   width: 95vw;
   max-width: 600px;
   top: 100px;
-  background-color: rgba(255, 255, 255);
+  background: var(--selection-color);
   z-index: 9999;
   text-align: center;
   #toast-message {
@@ -113,33 +104,26 @@
     font-weight: 600;
   }
 }
-#toast-dark {
-  background-color: #5468ff;
-}
 
 /* input field */
 .default-input, .default-input-dark {
-  background: #EEB8A7;
   border-radius: 7px;
   border: none;
   padding: 8px; 
   font-size: 1.143em !important;
   font-weight: 700;
 }
-.default-input-dark {
-  background: #343434 !important;
-  color: white !important;
-}
 
-.ordinary-btn {
-  background: transparent;
+.ordinary-element {
   border: none;
+  background: transparent;
+  outline: none;
 }
 
 /* button */
 .default-btn, .default-btn-dark {
   font-weight: 600 !important;
-  background: #CD6E51;
+  background: transparent;
   border-radius: 5px;
   padding: 8px 15px;
   border: none;
@@ -149,62 +133,85 @@
   align-items: center;
   justify-content: space-between;
   place-self: flex-end;
+  background: var(--selection-color);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  font-size: 0.875em;
   img {
-      margin-right: 10px;
+    margin-right: 10px;
   }
 }
 .default-btn-dark {
-  color: white;
-  background:#9984E4;
   img {
       filter: brightness(0) invert(1);
   }
 }
 
+/* Subheader*/
+.subheader-title {
+  font-size: 1.286em;
+  font-weight: 500;
+  text-align: center;
+  font-style: italic;
+  white-space: nowrap;
+  padding-bottom: 5px;
+}
+
+
 /* Popup Modals */
 .popupModal, .popupModal-dark {
+  input[type="text"] {
+    font-size: 1em;
+    font-weight: 400;
+    padding: 8px 16px; 
+    border-radius: 8px;
+    outline: none;
+    border: none;
+  }
   .popupModal-title {
     font-size: 1.286em;
-    font-weight: 700;
+    font-weight: 500;
+    margin-bottom: 10px;
   }
+  
   .modal-dialog {
     margin-top: 18%;
   }
+  
   .modal-content {
+    background: var(--secondary-background);    
     margin-top: auto;
-    background: #FFEBEB;
   }
+
   .modal-body {
-    background: #FFEBEB;
     border-radius: 10px;
-    padding: 33px;
+    padding: 23px;
   }
 }
+
 .popupModal-dark {
-  input {
-    background: #343434 !important;
-    color: white !important;
-  }
   .modal-content {
-    background: #121212;
-  }
-  .modal-body {
-    background: #121212;
-    color: white;
+    background: var(--modal-bg-color);
   }
 }
 
 /* Accordion */
+.ant-collapse-header {
+  flex-direction: row-reverse;
+  text-align: left;
+  font-weight: 600;
+}
+
 .accordion-body {
   padding: 1em 0 !important;
 }
 .accordion-item, .accordion-header, .accordion-button {
-  background: transparent !important;
+  background: transparent;
   border: none !important;
   box-shadow: none !important;
 }
 .accordion-button {
   padding: 0;
+  background: transparent !important;
 }
 .Accordion { 
   .accordion-button::after {
@@ -223,7 +230,7 @@
   overflow-x: scroll;
   overflow-y: hidden;
   margin: 10px 0;
-  background: rgba(246, 246, 246, 0.4);
+  
   padding: 10px 20px;
   width: 465px;
   border-radius: 10px;
@@ -236,9 +243,7 @@
     font-size: 1em;
   }
 }
-.colorPallette-dark {
-  background-color: rgba(57, 57, 57, 0.4);
-}
+
 /* Loader */
 .loader {
   position: absolute;
@@ -247,6 +252,20 @@
   width: 50px;
   height: 50px;
 }
+
+.chevronDown, .chevronLeft, .chevronRight {
+  width: 12px;
+  height: 12px;
+}
+
+.chevronDown {
+  transform: rotate(270deg);
+}
+
+.chevronRight {
+  transform: scaleX(-1)
+}
+
 @media (max-width: 600px) {
   .loader {
       left: 18px;

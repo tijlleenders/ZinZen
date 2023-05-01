@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { SetterOrUpdater, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 import { colorPalleteList } from "@src/utils";
+import { ColorPaletteProps } from "@src/Interfaces/ICommon";
 
-interface ColorPaletteProps {
-    colorIndex: number,
-    setColorIndex: SetterOrUpdater<number>
-}
 const ColorPalette: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [open, setOpen] = useState(false);

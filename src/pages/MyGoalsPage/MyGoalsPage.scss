@@ -1,8 +1,7 @@
 .myGoals-container {
-  max-width: 600px;
-  min-width: 236px;
-  width: 100%;
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .sec-header {
   display: flex;
@@ -13,31 +12,13 @@
     margin-left: 7%;
   }
   button { 
-    background-color: transparent;
+    
     border: none;
   }
   .activeTab { 
     text-decoration: underline;
     opacity: 1;
   }
-}
-#goal-searchBar, #goal-searchBar-dark {
-  background-color: rgba(255, 255, 255, 0.4);
-  border: none;
-  border-radius: 7px;
-  color: black;
-  font-size: 1.4em;
-  font-family: "Montserrat";
-  font-weight: bolder;
-  height: 47px;
-  margin: 5px 0 13px 7%;
-  padding: 0 18px;
-  width: 90%;
-}
-
-#goal-searchBar-dark {
-  background-color: rgba(112, 112, 112, 0.6);;
-  color: white;
 }
 
 .myGoals_title, .myGoals_title-dark {
@@ -46,10 +27,6 @@
   font-weight: bolder;
   font-size: 1.429em;
   opacity: 0.6;
-}
-
-.myGoals_title-dark {
-  color: white;
 }
 
 #myGoals-list {
@@ -75,9 +52,10 @@
       font-size: 0.875em;
     }
   }
-  img { 
+  img, svg { 
     width: 20px;
     height: 20px;
+    opacity: 0.6;
   }
 }
 
@@ -85,18 +63,13 @@
   color: rgb(205, 110, 81)
 }
 
-.interactables-dark > div > p {
-  color: rgb(112, 91, 188);
-}
-
-.interactables > img, .exceptional-img {
+.interactables > img, .interactables > svg, .exceptional-img {
   font-size: 22px;
 }
 
 .user-goal, .user-goal-dark {
   word-break: break-all;
-  background: rgba(246, 246, 246, 0.4);
-  margin-top: 4%;
+  padding: 8px 0;
   min-height: 61.19px;
   text-align: left;
   overflow: hidden;
@@ -105,58 +78,47 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  border-bottom: 1px solid var(--default-border-color);
+  background: transparent;
   .user-goal-main {
-    background: transparent;
-    border: none;
-    color: inherit;
     display: flex;
     height: 100%;
     width: 100%;
     padding: 15px 4% 15px 50px;
   }
   .contact-button {
-    align-self: center;
-    color: inherit;
-    display: flex;
-    align-items: center;
     position: absolute;
-    top: 18px;
     right: 28px;
+    top: 23px;
     .contact-icon {
-      width: 25px;
-      height: 25px;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
       font-size: 1em;
     }
   }
 }
-.user-goal-dark {
-  background: rgba(57, 57, 57, 0.4);
-  color: white;
-}
 
-  .user-goal:first-child, .user-goal-dark:first-child {
-    margin: 0;
-  }
-  .goal-dd-inner, .goal-dd-outer {
-    width: 55px;
-    height: 92%;
-    border-radius: 57px;
-    position: absolute;
-    left: -37px;
-    top: 1px;
-  }
-  .goal-dd-inner {
-    width: 55px;
-    top: 6px;
-    height: 96%;
-  }
-  .goal-dd-outer {  
-    border: 1.4px solid;
-    width: 61px;
-    top: 0.5px;
-    height: 100%;
-    background: transparent;
-  }
+.goal-dd-inner, .goal-dd-outer {
+  width: 55px;
+  height: 92%;
+  border-radius: 57px;
+  position: absolute;
+  left: -37px;
+  top: 1px;
+}
+.goal-dd-inner {
+  width: 55px;
+  top: 15px;
+  height: 45px;
+}
+.goal-dd-outer {  
+  border: solid;
+  border-width: 1.4px;
+  width: 60px;
+  top: 9.3px;    
+}
 
 #addGoal-btn {
   position: fixed;
@@ -168,11 +130,10 @@
 .goal-title {
   align-items: center;
   border: none;
-  background: transparent;
   display: flex;
   font-family: "Montserrat";
-  font-weight: bold;
-  font-size: 1.3em;
+  font-weight: 400;
+  font-size: 1.143em;
   text-align: left !important;
   max-width: unset;
   white-space: nowrap;
@@ -188,13 +149,12 @@
 .goal-link {
   // width: 100%;
   border: none;
-  background-color: transparent;
+  
   font-weight: bold;
   font-size: 1em;
 }
 
 .my-goals-content {
-  margin-top: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -263,5 +223,21 @@
     place-self: initial;
     padding: 8px 12px;
     font-size: 0.875em;
+  }
+}
+
+.archived-drawer {
+  margin-top: 32px;
+  .ant-collapse-header, .ant-collapse-item, .ant-collapse-content {
+    border: none !important;
+  }
+  .ant-collapse-content {
+    background: transparent;
+  }
+  .ant-collapse-content-box {
+    padding: 0 !important;
+  }
+  .ant-collapse-header {
+    padding: 0 16 !important;
   }
 }

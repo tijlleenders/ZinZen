@@ -59,7 +59,6 @@ export const PageHighlighter = () => {
     <div
       style={{
         display: selected ? "hidden" : "block",
-        background: darkModeStatus ? "#705BBC" : "#CD6E51",
         height: "3px",
         width: "20vw",
         maxWidth: "120px",

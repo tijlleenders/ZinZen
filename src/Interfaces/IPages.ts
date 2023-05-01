@@ -4,7 +4,6 @@ import { IFeelingItem } from "@src/models";
 /* Add Feelings Page */
 export interface AddFeelingsPageProps {
   feelingDate: Date | null;
-  setShowAddFeelingsModal: React.Dispatch<React.SetStateAction<Date | null>>;
 }
 
 export interface AddFeelingTemplate {

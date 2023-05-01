@@ -5,7 +5,8 @@
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
+
+import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
@@ -17,6 +18,8 @@ import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { colorPalleteList, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
+import AppLayout from "@src/layouts/AppLayout";
+import SubHeader from "@src/common/SubHeader";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
@@ -33,6 +36,7 @@ export const MyTimePage = () => {
 
   const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } }}>({});
   const [devMode, setDevMode] = useState(false);
+  const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
   const [tasksStatus, setTasksStatus] = useState<{[goalId: string]: TaskItem}>({});
@@ -67,11 +71,11 @@ export const MyTimePage = () => {
     const dayOfMonth = devMode ? fakeThursday.getDate() : today.getDate();
     const suffix = getOrdinalSuffix(dayOfMonth);
     return (
-      <div key={day} className={`MyTime_day-${darkModeStatus ? "dark" : "light"}`}>
+      <div key={day} className="MyTime_day">
         <button
           type="button"
-          className="MyTime_navRow"
-          style={showTasks.includes(day) ? { boxShadow: `0px 2px 3px rgba(${darkModeStatus ? "255, 255, 255" : "0, 0, 0"}, 0.25)` } : {}}
+          className={`MyTime_navRow ${showTasks.includes(day) ? "selected" : ""}`}
+          style={showTasks.includes(day) ? { boxShadow: `0px 1px 3px rgba(${darkModeStatus ? "255, 255, 255" : "0, 0, 0"}, 0.25)` } : {}}
           onClick={() => {
             handleShowTasks(day);
           }}
@@ -87,10 +91,10 @@ export const MyTimePage = () => {
             )}
           </h3>
           <button
-            className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""}`}
+            className="MyTime-expand-btw"
             type="button"
           >
-            <div> { showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <ChevronRight /> } </div>
+            <div> { showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <img src={chevronLeftIcon} className="chevronRight theme-icon" /> } </div>
           </button>
         </button>
         {showTasks.includes(day) ? getTimeline(day) :
@@ -227,21 +231,22 @@ export const MyTimePage = () => {
   }, [devMode, action]);
 
   return (
-    <div className="slide MyTime_container">
-      <MainHeaderDashboard />
-      <div id="MyTime_days_container">
-        {getDayComponent("Today")}
-        {getDayComponent("Tomorrow")}
-        {
-          [...Array(6).keys()].map((i) => {
-            const thisDay = devMode ? new Date(fakeThursday) : new Date(today);
-            thisDay.setDate(thisDay.getDate() + i + 1);
-            if (i >= 1) {
-              return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
-            }
-          })
-        }
-      </div>
-    </div>
+    <AppLayout title="My Time">
+      <SubHeader
+        title={dailyView ? "Today" : "This Week"}
+        leftNav={() => { setDailyView(!dailyView); }}
+        rightNav={() => { setDailyView(!dailyView); }}
+      />
+      {getDayComponent("Today")}
+      { !dailyView && getDayComponent("Tomorrow")}
+      { !dailyView &&
+        [...Array(6).keys()].map((i) => {
+          const thisDay = devMode ? new Date(fakeThursday) : new Date(today);
+          thisDay.setDate(thisDay.getDate() + i + 1);
+          if (i >= 1) {
+            return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
+          }
+        })}
+    </AppLayout>
   );
 };

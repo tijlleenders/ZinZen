@@ -1,20 +1,23 @@
-import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router";
 import React, { useEffect, useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { darkModeState } from "@src/store";
+import { darkModeState, displayToast } from "@src/store";
 import { addContact } from "@src/api/ContactsAPI";
-import { queryStyle } from "@src/constants/booleanScreen";
 import { acceptRelationship } from "@src/services/contact.service";
-import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
+import OnboardingLayout from "@src/layouts/OnboardingLayout";
 
 const InvitePage = () => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
+
+  const setShowToast = useSetRecoilState(displayToast);
+
   const [newContactName, setNewContactName] = useState("");
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    if (newContactName.trim() === "") { setShowToast({ open: true, message: "Please name this contact", extra: "" }); return; }
     const res = await acceptRelationship();
     if (res.success) {
       await addContact(newContactName, res.response?.relId, true);
@@ -33,14 +36,13 @@ const InvitePage = () => {
     }
   }, []);
   return (
-    <form style={{ ...queryStyle.main, padding: "100px 28px 0 28px" }} onSubmit={handleSubmit}>
-      <LandingHeader avatar={null} />
-      <p style={{ margin: "0 0 20px 0", color: darkModeStatus ? "rgb(171, 158, 216)" : "#CD6E51" }}>
+    <OnboardingLayout>
+      <p style={{ textAlign: "left", margin: "20px 0 20px 0", fontWeight: 600 }}>
         Welcome to ZinZen!<br />
         The sender of this message wants to connect with you here.
         <br />Add them to your contact list.
       </p>
-      <input onChange={(e) => setNewContactName(e.target.value)} className={`default-input${darkModeStatus ? "-dark" : ""}`} placeholder="Contact name" />
+      <input style={{ width: "100%", fontWeight: 500 }} onChange={(e) => setNewContactName(e.target.value)} className={`default-input${darkModeStatus ? "-dark" : ""}`} placeholder="Contact name" />
       <button
         type="button"
         className={`default-btn${darkModeStatus ? "-dark" : ""}`}
@@ -48,7 +50,7 @@ const InvitePage = () => {
         onClick={handleSubmit}
       > Add to my contacts
       </button>
-    </form>
+    </OnboardingLayout>
   );
 };
 

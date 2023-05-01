@@ -6,6 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 import { getGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { themeState } from "@src/store/ThemeState";
 import { typeOfChange } from "@src/models/InboxItem";
 import { displayChangesModal } from "@src/store/GoalsState";
 import { findGoalTagChanges } from "@src/helpers/GoalProcessor";
@@ -18,6 +19,7 @@ import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
 
 const DisplayChangesModal = () => {
+  const theme = useRecoilValue(themeState)
   const darkModeStatus = useRecoilValue(darkModeState);
   const [activeGoal, setActiveGoal] = useState<GoalItem>();
   const [updateList, setUpdateList] = useState<ITagsChanges>({ schemaVersion: { }, prettierVersion: { } });
@@ -98,8 +100,8 @@ const DisplayChangesModal = () => {
 
   return (
     <Modal
-      className={`popupModal${darkModeStatus ? "-dark" : ""}`}
-      style={{ maxWidth: "410px", width: "calc(100vw - 15px)" }}
+      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      style={{ maxWidth: "410px" }}
       show={!!showChangesModal}
       onHide={() => { setShowChangesModal(null); }}
     >
