@@ -100,8 +100,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   type="button"
                   className="MTL-circle"
                   style={{ backgroundColor: `${task.goalColor}` }}
-                >.
-                </button>
+                />
                 <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
                   <button
                     type="button"
