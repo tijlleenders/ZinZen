@@ -8,3 +8,8 @@ export const themeState = atom({
   key: "themeState",
   default: getTheme() as { light: number, dark: number },
 });
+
+export const themeSelectionMode = atom({
+  key: "themeSelectionMode",
+  default: false
+});
