@@ -29,7 +29,7 @@ const BottomNavbar = ({ title }: { title: string}) => {
 
   const themeChange = (nav: -1 | 1) => {
     let choice = theme[darkModeStatus ? "dark" : "light"] + nav;
-    if (choice === 10) { choice = 1; } else if (choice === 0) { choice = 10; }
+    if (choice === 10) { choice = 1; } else if (choice === 0) { choice = 9; }
     const newTheme = { ...theme, [darkModeStatus ? "dark" : "light"]: choice };
     localStorage.setItem("theme", JSON.stringify(newTheme));
     setTheme({ ...newTheme });
@@ -60,7 +60,7 @@ const BottomNavbar = ({ title }: { title: string}) => {
           src={themeSelection ? backIcon : calendarIcon}
           alt="My Time"
         />
-        {themeSelection ? <p>Prev</p> : <p>{date}<sup>{getOrdinalSuffix(Number(date))}</sup>{` ${month}`}</p>}
+        {themeSelection ? <p>Prev</p> : <p>{Number(date)}<sup>{getOrdinalSuffix(Number(date))}</sup>{` ${month}`}</p>}
       </button>
       <button
         type="button"
