@@ -35,7 +35,9 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
       label: ele,
       key: `${index}`,
       onClick: () => {
-        if (ele === "Change Theme") { setThemeSelection(true);
+        if (ele === "Change Theme") {
+          setThemeSelection(true);
+          if (currentPage !== "MyGoals") { navigate("/MyGoals"); }
         } else if (ele === "Donate") {
           window.open("https://donate.stripe.com/6oE4jK1iPcPT1m89AA", "_self");
         } else if (ele === "Feedback") {
