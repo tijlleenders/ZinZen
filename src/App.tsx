@@ -35,7 +35,7 @@ import "@fontsource/montserrat";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
-  const [theme, setTheme] = useRecoilState(themeState);
+  const theme = useRecoilValue(themeState);
   const language = useRecoilValue(languageSelectionState);
   const darkModeEnabled = useRecoilValue(darkModeState);
   const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
@@ -120,21 +120,6 @@ const App = () => {
             <Route path="/Invest" element={<InvestPage />} />
           </Routes>
         </BrowserRouter>
-        <button
-          style={{ position: "absolute", right: 10, bottom: 200, background: "transparent", display: "none" }}
-          type="button"
-          onClick={() => {
-            if (theme) {
-              let choice = theme[darkModeEnabled ? "dark" : "light"] + 1;
-              if (choice === 10) { choice = 1; }
-              const newTheme = { ...theme, [darkModeEnabled ? "dark" : "light"]: choice };
-              localStorage.setItem("theme", JSON.stringify(newTheme));
-              setTheme({ ...newTheme });
-            }
-          }}
-        >
-          Change
-        </button>
         <Toast autohide delay={5000} show={showToast.open} onClose={() => setShowToast({ ...showToast, open: false })} id="zinzen-toast">
           <Toast.Body>
             <p id="toast-message" style={showToast.extra === "" ? { margin: 0 } : {}}>{showToast.message}</p>
