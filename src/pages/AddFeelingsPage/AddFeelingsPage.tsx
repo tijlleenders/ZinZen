@@ -72,7 +72,7 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate })
                     onClick={() => {
                       setSelectedCategory(category);
                     }}
-                  > <img alt="add feeling" src={backIcon} className="chevronRight" />
+                  > <img alt="add feeling" src={backIcon} className="chevronRight theme-icon" />
                   </button>
                 </div>
               ))}

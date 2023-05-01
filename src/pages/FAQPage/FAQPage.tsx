@@ -55,7 +55,7 @@ export const FAQPage = () => {
           panels={QnA.map((ele) => ({
             header: ele.header,
             body: (
-              <p style={{ textAlign: "left", fontWeight: 500 }}>{
+              <p style={{ textAlign: "left", fontWeight: 500, color: "#000" }}>{
                 ele.body.split(" ")[0].includes("ZinZen") ? (
                   <> ZinZen<sup>®</sup> {ele.body.split(" ").slice(1).join(" ")} </>
                 ) : ele.body
@@ -68,7 +68,7 @@ export const FAQPage = () => {
           style={customStyle}
           type="button"
           onClick={handleClick}
-        > Continue <img className="chevronRight" src={chevronLeftIcon} alt="zinzen faq" style={{ marginLeft: 6, paddingBottom: 2 }} />
+        > Continue <img className="chevronRight theme-icon" src={chevronLeftIcon} alt="zinzen faq" style={{ marginLeft: 6, paddingBottom: 2 }} />
         </button>
       </div>
     </OnboardingLayout>

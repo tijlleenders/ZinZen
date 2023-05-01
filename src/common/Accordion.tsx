@@ -7,7 +7,7 @@ import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 const ZAccordion : React.FC<ZAccordionProps> = ({ panels, style, showCount, defaultActiveKey }) => (
   <Collapse
-    expandIcon={({ isActive }) => (<img alt="zinzen about" className={isActive ? "chevronDown" : "chevronRight"} src={chevronLeftIcon} />)}
+    expandIcon={({ isActive }) => (<img alt="zinzen about" className={`${isActive ? "chevronDown" : "chevronRight"} theme-icon`} src={chevronLeftIcon} />)}
     defaultActiveKey={defaultActiveKey}
     style={style}
   >

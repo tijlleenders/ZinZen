@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
@@ -42,6 +43,10 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
 
   const handleActionClick = async (actionName: "Forget" | "Reschedule" | "Done", task: ITask) => {
     if (day === "Today") {
+      if (actionName === "Reschedule") {
+        setShowToast({ open: true, message: "Consider Donating 😇", extra: "Coming soon" });
+        return;
+      }
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
         // @ts-ignore
@@ -125,7 +130,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     type="button"
                     onClick={() => setDisplayOptionsIndex("")}
                     className="MyTime-expand-btw task-dropdown"
-                  > <div><img src={chevronLeftIcon} className="chevronDown" alt="zinzen schedule" /></div>
+                  > <div><img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" /></div>
                   </button>
                 )}
               </div>

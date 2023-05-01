@@ -84,7 +84,7 @@ export const FeelingTemplate: React.FC<AddFeelingTemplate> = ({
                 }}
               >
                 <div>
-                  <img src={chevronLeftIcon} className="chevronLeft" alt="add feeling" />
+                  <img src={chevronLeftIcon} className="chevronLeft theme-icon" alt="add feeling" />
                 </div>
               </button>
             </div>

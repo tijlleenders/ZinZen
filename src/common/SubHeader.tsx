@@ -13,7 +13,7 @@ const NavBtn = ({ className, handleClick } : { className: string, handleClick: (
 
 const SubHeader: React.FC<ISubHeaderProps> = ({ leftNav, rightNav, title }) => (
   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: 10 }}>
-    <NavBtn className="chevronLeft" handleClick={leftNav} />
+    <NavBtn className="chevronLeft theme-icon" handleClick={leftNav} />
     <p style={{ padding: "15px 0", margin: "0px 15px", flex: 2 }} className="subheader-title">
       <span
         role="button"
@@ -23,7 +23,7 @@ const SubHeader: React.FC<ISubHeaderProps> = ({ leftNav, rightNav, title }) => (
         {title}
       </span>
     </p>
-    <NavBtn className="chevronRight" handleClick={rightNav} />
+    <NavBtn className="chevronRight theme-icon" handleClick={rightNav} />
   </div>
 
 );

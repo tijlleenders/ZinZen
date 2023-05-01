@@ -94,7 +94,7 @@ export const MyTimePage = () => {
             className="MyTime-expand-btw"
             type="button"
           >
-            <div> { showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <img src={chevronLeftIcon} className="chevronRight" /> } </div>
+            <div> { showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <img src={chevronLeftIcon} className="chevronRight theme-icon" /> } </div>
           </button>
         </button>
         {showTasks.includes(day) ? getTimeline(day) :
