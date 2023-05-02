@@ -9,7 +9,7 @@ export const confirmationHeaders = {
       note: "You won't be able to recover it again."
     },
     shareAnonymously: {
-      header: "Do you want to share this goal anonymously?",
+      header: "Do you want to share this goal pseudo anonymously?",
       note: "Only this goal and its time related properties will be shared publicly :)"
     },
     shareWithOne: {

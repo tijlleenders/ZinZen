@@ -15,7 +15,7 @@ const InvestPage = () => {
       <div id="invest-container">
         <LandingHeader avatar={null} />
         <p><span>ZinZen</span> is a <span>social life planner.</span></p>
-        <p>You write down your life goals and share them with others - or anonymously.</p>
+        <p>You write down your life goals and share them with others - or pseudo anonymously.</p>
         <p>The tips you get back can be scheduled on your calendar - with one click!</p>
         <p><span>Harvard Business Review says it&apos;s worth billions!</span></p>
         <p>
