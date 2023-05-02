@@ -1,6 +1,13 @@
 import { atom } from "recoil";
 
+export const getDarkModeValue = () => {
+  const mode = localStorage.getItem("darkMode");
+  if (mode && (mode === "on" || mode === "off")) {
+    return mode;
+  }
+  return "off";
+};
 export const darkModeState = atom({
   key: "darkModeState",
-  default: localStorage.getItem("darkMode") ? localStorage.getItem("darkMode") === "on" : false,
+  default: getDarkModeValue() === "on"
 });
