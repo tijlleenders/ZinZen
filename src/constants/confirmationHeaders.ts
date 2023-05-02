@@ -2,7 +2,7 @@ export const confirmationHeaders = {
   goal: {
     archive: {
       header: "Do you want to mark this goal completed?",
-      note: "This goal will be moved to archive along with the subgoals."
+      note: "This goal will be moved to archive along with the subgoals. You can restore it from archive anytime."
     },
     delete: {
       header: "Do you want to delete this goal?",
