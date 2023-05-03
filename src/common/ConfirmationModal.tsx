@@ -15,6 +15,24 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
   const [displayModal, setDisplayModal] = useRecoilState(showConfirmation);
   // @ts-ignore
   const { header, note } = confirmationHeaders[actionCategory][actionName];
+  const getConfirmButtonText = () => {
+    let confirmButtonText = "Confirm";
+    switch (actionName) {
+      case "archive":
+        confirmButtonText = `${confirmButtonText} goal`;
+        break;
+      case "shareAnonymously":
+      case "shareWithOne":
+      case "colabRequest":
+        confirmButtonText = `${confirmButtonText} sharing goal`;
+        break;
+      default:
+        break;
+    }
+
+    return confirmButtonText;
+  };
+
   const getChoiceButton = (choice: string) => (
     <button
       type="button"
@@ -59,7 +77,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
           /> Don&apos;t ask again for this action?
         </div>
         <div style={{ display: "flex", justifyContent: "space-around" }}>
-          { getChoiceButton("Confirm") }
+          { getChoiceButton(getConfirmButtonText()) }
           { getChoiceButton("Cancel") }
         </div>
       </Modal.Body>
