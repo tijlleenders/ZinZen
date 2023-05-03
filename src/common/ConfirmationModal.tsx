@@ -19,15 +19,21 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
     let confirmButtonText = "Confirm";
     switch (actionName) {
       case "archive":
-        confirmButtonText = `${confirmButtonText} goal`;
+        confirmButtonText = "Complete goal";
+        break;
+      case "delete":
+        confirmButtonText = "Delete goal";
         break;
       case "shareAnonymously":
+        confirmButtonText = "Share goal";
+        break;
       case "shareWithOne":
+        confirmButtonText = "Share goal 1:1";
+        break;
       case "colabRequest":
-        confirmButtonText = `${confirmButtonText} sharing goal`;
+        confirmButtonText = "Collaborate on goal";
         break;
       default:
-        break;
     }
 
     return confirmButtonText;
