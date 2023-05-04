@@ -93,12 +93,12 @@ export const MyTimePage = () => {
             <div> { showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <ChevronRight /> } </div>
           </button>
         </button>
-        {showTasks.includes(day) ? getTimeline(day) :
-          (
-            <div className="MyTime_colorPalette">
-              {tasks[day]?.colorBands.map((ele) => getColorComponent(ele.colorWidth, ele.color))}
-            </div>
-          )}
+        <div>
+          <div className={`MyTime_colorPalette ${showTasks.includes(day) ? "active" : ""}`}>
+            {tasks[day]?.colorBands.map((ele) => getColorComponent(ele.colorWidth, ele.color))}
+          </div>
+          {showTasks.includes(day) && getTimeline(day)}
+        </div>
       </div>
     );
   };
