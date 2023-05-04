@@ -26,3 +26,26 @@ export const getHeadingOfTag = (tagName: string, warningMessage = false) => {
   }
   return heading;
 };
+
+export const getConfirmButtonText = (actionName: string) => {
+  let confirmButtonText = "Confirm";
+  switch (actionName) {
+    case "archive":
+      confirmButtonText = "Complete goal";
+      break;
+    case "delete":
+      confirmButtonText = "Delete goal";
+      break;
+    case "shareAnonymously":
+      confirmButtonText = "Share goal";
+      break;
+    case "shareWithOne":
+      confirmButtonText = "Share goal 1:1";
+      break;
+    case "colabRequest":
+      confirmButtonText = "Collaborate on goal";
+      break;
+    default:
+  }
+  return confirmButtonText;
+};
