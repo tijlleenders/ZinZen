@@ -47,7 +47,13 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     })),
     {
       label: (
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop:12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop:12 }}  onClick={
+          () => {
+                  
+                    localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
+                    setDarkModeStatus(!darkModeStatus);
+                  
+        }}>
           <p>Dark Mode</p>
           <Switch
             checked={darkModeStatus}
