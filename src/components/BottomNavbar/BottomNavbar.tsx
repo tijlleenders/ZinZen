@@ -60,7 +60,7 @@ const BottomNavbar = ({ title }: { title: string}) => {
           src={themeSelection ? backIcon : calendarIcon}
           alt="My Time"
         />
-        {themeSelection ? <p>Prev</p> : <p>{Number(date)}<sup>{getOrdinalSuffix(Number(date))}</sup>{` ${month}`}</p>}
+        {themeSelection ? <p>Prev</p> : <p>Schedule</p>}
       </button>
       <button
         type="button"
