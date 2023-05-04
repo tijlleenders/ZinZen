@@ -9,7 +9,7 @@ export const shareGoal = async (goal: object) => {
       },
       body: JSON.stringify(goal),
     });
-    return { success: res.ok, response: res.ok ? "Thank you for sharing anonymously!" : "Let's focus on happy path" };
+    return { success: res.ok, response: res.ok ? "Thank you for sharing pseudo anonymously!" : "Let's focus on happy path" };
   } catch (err) {
     return { success: false, response: "Let's focus on happy path" };
   }

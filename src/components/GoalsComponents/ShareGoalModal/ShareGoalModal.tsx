@@ -25,7 +25,7 @@ import AddContactModal from "./AddContactModal";
 
 import "./ShareGoalModal.scss";
 
-const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
+const ShareGoalModal: React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
   const minContacts = 1;
 
   const theme = useRecoilValue(themeState);
@@ -67,9 +67,9 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           setLoading({ ...loading, S: false });
         }}
       >
-        { name === "" ? <img alt="add contact" className="global-addBtn-img" width={25} src={GlobalAddIcon} /> : name[0]}
+        {name === "" ? <img alt="add contact" className="global-addBtn-img" width={25} src={GlobalAddIcon} /> : name[0]}
       </button>
-      { name !== "" && <p style={{ margin: 0 }}>{name}</p> }
+      {name !== "" && <p style={{ margin: 0 }}>{name}</p>}
     </div>
   );
 
@@ -120,10 +120,10 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
       style={showAddContactModal ? { zIndex: 1 } : {}}
     >
       <Modal.Body id="share-modal-body">
-        { confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} /> }
+        {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
         <h4>{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</h4>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          { displaySubmenu === "groups" ? (
+          {displaySubmenu === "groups" ? (
             <SubMenu>
               {userGroups.map((grp) => <SubMenuItem key={grp.id} group={grp} goal={goal} />)}
             </SubMenu>
@@ -138,9 +138,9 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                 className="shareOptions-btn"
               >
                 <div className="share-Options">
-                  <div> <img className="secondary-icon" alt="share goal anonymously" src={shareAnonymous} /> </div>
-                  <p className="shareOption-name">Share Anonymously</p>
-                  { loading.A && <Loader /> }
+                  <div> <img className="secondary-icon" alt="share goal pseudo anonymously" src={shareAnonymous} /> </div>
+                  <p className="shareOption-name">Share pseudo anonymously</p>
+                  {loading.A && <Loader />}
                 </div>
               </button>
 
@@ -155,7 +155,8 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                     setShowToast({
                       open: true,
                       message: "Sorry, You don't have any groups.",
-                      extra: "Create or Join a group on My Groups page" });
+                      extra: "Create or Join a group on My Groups page"
+                    });
                   }
                 }}
               >
@@ -167,7 +168,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                   />
                   </div>
                   <p className="shareOption-name">Share in Public Group</p>
-                  { loading.P && <Loader /> }
+                  {loading.P && <Loader />}
                 </div>
               </button>
 
@@ -185,22 +186,22 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
                     {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
                     {goal.typeOfGoal === "collaboration" && ` - Goal is in collaboration with ${goal.collaboration.collaborators[0].name}`}
                   </p>
-                  { loading.S && <Loader /> }
+                  {loading.S && <Loader />}
                 </div>
-                { (goal.typeOfGoal === "myGoal") && displaySubmenu === "contacts" && (
-                <div className="shareWithContacts">
-                  {contacts.length === 0 &&
-                    <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
-                  { contacts.length > 0 &&
-                    <p className="share-warning"> Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact </p>}
-                  <div id="modal-contact-list" style={contacts.length <= minContacts ? { justifyContent: "flex-start" } : {}}>
-                    { contacts.length > 0 &&
-                      contacts.slice(0, Math.min(minContacts, contacts.length)).map((ele) => (
-                        getContactBtn(ele.relId, ele.name, ele.accepted)
-                      ))}
-                    { contacts.length === 0 && getContactBtn() }
+                {(goal.typeOfGoal === "myGoal") && displaySubmenu === "contacts" && (
+                  <div className="shareWithContacts">
+                    {contacts.length === 0 &&
+                      <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
+                    {contacts.length > 0 &&
+                      <p className="share-warning"> Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact </p>}
+                    <div id="modal-contact-list" style={contacts.length <= minContacts ? { justifyContent: "flex-start" } : {}}>
+                      {contacts.length > 0 &&
+                        contacts.slice(0, Math.min(minContacts, contacts.length)).map((ele) => (
+                          getContactBtn(ele.relId, ele.name, ele.accepted)
+                        ))}
+                      {contacts.length === 0 && getContactBtn()}
+                    </div>
                   </div>
-                </div>
                 )}
               </button>
 
@@ -208,7 +209,7 @@ const ShareGoalModal : React.FC<IShareGoalModalProps> = ({ goal, showShareModal,
           )}
         </div>
       </Modal.Body>
-      { showAddContactModal && <AddContactModal showAddContactModal={showAddContactModal} setShowAddContactModal={setShowAddContactModal} /> }
+      {showAddContactModal && <AddContactModal showAddContactModal={showAddContactModal} setShowAddContactModal={setShowAddContactModal} />}
     </Modal>
   );
 };
