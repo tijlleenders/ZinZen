@@ -40,7 +40,7 @@ export const getConfirmButtonText = (actionName: string) => {
       confirmButtonText = "Share goal";
       break;
     case "shareWithOne":
-      confirmButtonText = "Share goal 1:1";
+      confirmButtonText = "Choose contact";
       break;
     case "colabRequest":
       confirmButtonText = "Collaborate on goal";
