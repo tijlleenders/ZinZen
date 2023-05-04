@@ -5,46 +5,36 @@
     box-shadow: inset -2px -2px 4px 0.5px rgba(0, 0, 0, 0.25);
     width: 50%;
     padding: 18px;
-    background: #FFCEBF;
-    font-weight: 500;
-    color: #636363;
   }
   .activeView {
-    background: transparent;
     box-shadow: none;
     font-weight: 700;
-    color: #000;
   }
 }
 .timeline-view-dark {
   button {
     border: none;
-    background: rgba(112, 91, 188, 0.4);
     box-shadow: inset 2px -2px 4px 0.5px rgba(0, 0, 0, 0.5);
     width: 50%;
     padding: 18px;
     font-weight: 500;
-    color: #E1E1E1;
   }
   .activeView {
-    background: transparent;
     box-shadow: none;
     font-weight: 700;
-    color: #FFFFFF;
   }
 }
 
-.MTL-display, .MTL-display-dark {
+.MTL-display {
   display: flex;
   flex-direction: column;
   .MTL-taskTitle {
-    color: #343434;
+    font-size: 1.143rem;
+    font-weight: 500;
   }
   .MTL-goalTiming {
     border: none;
-    background-color: transparent;
-    color: #343434;
-    font-weight: 500;
+    font-weight: 400;
     margin-top: 4px;
     margin-bottom: 0;
     line-height: 16px;
@@ -53,34 +43,23 @@
   }
 }
 
-.MTL-display-dark {
-  .MTL-goalTiming, .MTL-taskTitle {
-    color: #E4E4E4;
-  }
-}
-
-.MTL-display > button, .MTL-display-dark > button  {
+.MTL-display > button {
   line-height: 22px;
   padding: 0.7em 4%;
   line-height: 22px;
   padding-bottom: 0.7em;
-  border: none;
-  border-bottom: 0.5px solid #303030;
   background: transparent;
-  color: inherit
+  border: none;
+  border-bottom: 0.5px solid var(--default-border-color);
 } 
-.MTL-display-dark > button {
-  border-bottom: 0.5px solid #E4E4E4;
-}
 
-.MTL-display > button:first-child, .MTL-display-dark > button:first-child {
+.MTL-display > button:first-child {
   padding-top: 1.4em;
 }
 
-.MTL-display > button:last-child, .MTL-display-dark > button:last-child {
+.MTL-display > button:last-child {
   border: none;
   margin-bottom: 0 !important;
-
 }
 
 .MTL-circle {
@@ -88,10 +67,13 @@
   width: 15px;
   border-radius: 50%;
   display: inline-block;
-  background-color: transparent;
   margin-top: 4px;
 }
 
+.MyTime-expand-btw {
+  border: none;
+  background: transparent;
+}
 
 .MTL-taskTitle {
   width: 100%;
@@ -100,12 +82,11 @@
   border: none;
   text-overflow: ellipsis;
   margin-top: 1.5px;
-  background: none;
-  font-weight: 700;
   text-align: left;
-  color: inherit;
-  font-size: 1.286em;
-  line-height: 22px
+  font-size: 1.143em;
+  line-height: 22px;
+  background: transparent;
+  padding: 0;
 }
 
 .MTL-circle {
@@ -116,6 +97,7 @@
 .MTL-options {
   display: flex;
   margin-top: 0.7em;
+  margin-left: 18px;
 }
 
 .MTL-options > button {
@@ -123,18 +105,18 @@
   border: 0px;
   border-right: 1px solid;
   padding: 0.5vw 2vw;
-  font-weight: bolder;
-  color: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
-.task-dropdown, .task-dropdown-dark {
+.task-dropdown {
   position: absolute;
   top: 0;
   right: 0;
 }
 
 .completedTask {
-  background: #EEA791;
+  
   opacity: 0.4;
   pointer-events: none;
   .MTL-taskTitle {

@@ -1,27 +1,6 @@
-.MyTime_container {
-    max-width: 600px;
-    min-width: 236px;
-    width: 100%;    
-    position: relative;
-}
-
-#MyTime_days_container {
-    margin-top: 100px;
-}
-
-#MyTime_title{
-    font-size: xx-large;
-    font-weight: bolder;
-}
-
-.MyTime_day-dark, .MyTime_day-light {
-    margin-top: 3vh;
-    padding-bottom: 3%;
-    background: rgba(246, 246, 246, 0.4);
-}
-
-.MyTime_day-dark {
-    background: rgba(57, 57, 57, 0.4);
+.MyTime_day {
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--default-border-color);
 }
 
 .MyTime_navRow{
@@ -30,25 +9,18 @@
     padding: 3% 4% 0 4%;
     padding-bottom: 0.5em;
     width: 100%;
-    background: transparent;
     border: none;
-    color: inherit;
+    background: transparent;
+}
+
+.MyTime_navRow.selected{
+    background: var(--bottom-nav-color);
 }
 
 .MyTime_dayTitle{
-    font-size: larger;
-    font-weight: bolder;
-    margin: 0;
+    font-size: 1.143rem;
+    font-weight: 500;
 }
-
-.MyTime-expand-btw, .MyTime-expand-btw-dark {
-    background: transparent;
-    border: none;
-}
-.MyTime-expand-btw-dark {
-    color: white;
-}
-
 
 .MyTime_colorPalette {
     display: flex;

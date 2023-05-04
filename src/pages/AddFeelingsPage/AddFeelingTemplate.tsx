@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { ChevronRight } from "react-bootstrap-icons";
 import { Button, Navbar, Container, Modal } from "react-bootstrap";
+
+import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { addFeeling, addFeelingWithNote } from "@api/FeelingsAPI";
 import { AddFeelingTemplate } from "@src/Interfaces/IPages";
@@ -83,7 +84,7 @@ export const FeelingTemplate: React.FC<AddFeelingTemplate> = ({
                 }}
               >
                 <div>
-                  <ChevronRight />
+                  <img src={chevronLeftIcon} className="chevronLeft theme-icon" alt="add feeling" />
                 </div>
               </button>
             </div>

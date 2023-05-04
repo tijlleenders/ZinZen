@@ -1,11 +1,11 @@
 import { addContact } from "@src/api/ContactsAPI";
+import { shareInvitation } from "@src/assets";
 import { initRelationship } from "@src/services/contact.service";
 import { darkModeState } from "@src/store";
+import { themeState } from "@src/store/ThemeState";
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useRecoilValue } from "recoil";
-
-const shareInvitation = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA30lEQVR4nOXUvUoDQRTF8d9WEay20EKbNH5EfKBY2FrrY/gAEXwFG+0FU9ha2oakiWin+ADKwBWmWNlZXUH0wIHhnnv/MMwH5VrHmp61gwc8Yb9v6Fu4F/gIj1jgPryIWsq+rDPMMcR1eBi1yXfAK1iN9QdY1FLWWZs4xBEGDeBBZKlnoxS6h5fssOoGcJ3lz9gtAZ/iFVsBqBrAVWTb0ZtmWnWOWUM9B+eaxcw/Al/h8ifAdXZDegV/pj8MnmDZAbws/ZAO4qne4KLF0+gdl4ArnOAWdy1OPccddveL9Q7lolSRwSaqJAAAAABJRU5ErkJggg==";
 
 interface AddContactModalProps {
     showAddContactModal: boolean
@@ -13,6 +13,7 @@ interface AddContactModalProps {
 }
 const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, setShowAddContactModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
+  const theme = useRecoilValue(themeState);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const handleCloseAddContact = () => setShowAddContactModal(false);
 
@@ -38,7 +39,7 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
   return (
 
     <Modal
-      className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""}`}
+      className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       show={showAddContactModal}
       onHide={() => {
         setNewContact(null);
@@ -66,12 +67,14 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
             }
           }}
         />
+        <br />
         <button
           type="button"
           onClick={async () => { await addNewContact(); }}
-          className={`addContact-btn${darkModeStatus ? "-dark" : ""}`}
+          style={{ float: "right" }}
+          className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
         >
-          <img alt="add contact" src={shareInvitation} />Share invitation
+          <img alt="add contact" className="theme-icon" src={shareInvitation} />Share invitation
         </button>
       </Modal.Body>
     </Modal>

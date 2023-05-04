@@ -8,49 +8,51 @@
 
 #editTagModal {
     .modal-content {
-        position: absolute;
-        bottom: 0;
-        border-radius: 0.5rem 0.5rem 0 0;
-        
-        .selected {
-            background: rgba(205, 110, 81, 0.5);
-        }
-        .selected-dark {
-            background:#9984E4;
-        }
+      position: absolute;
+      bottom: 0;
+      border-radius: 0.5rem 0.5rem 0 0;
+      
+      .selected, .selected-dark {
+        background: var(--selection-color);
+      }
     }
-    .modal-header {
-        gap: 10px;
+    .modal-header { 
+      gap: 10px;
+      border: none;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      padding-left: 12px;
+      font-size: 1.429em;
+      font-weight: 700;
+      background: var(--selection-color);
+      border-bottom: 1px solid var(--default-border-color);
+      box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+      z-index: 1;
+
+      #inputGoalField {
+        background: transparent;
         border: none;
-        display: flex;
-        justify-content: space-between;
-        padding: 20px;
-        padding-left: 12px;
-        font-size: 1.429em;
-        font-weight: 700;
-        background-color: rgba(205, 110, 81, 0.4);
-        border-bottom: 2px solid rgba(205, 110, 81, 0.4);
-        #inputGoalField {
-            background: transparent;
-            border: none;
-            outline: none;
-            width: 100%;
-            font-size: 0.8em;
-        }
-        button {
-            border: none;
-        }
+        outline: none;
+        width: 100%;
+        font-size: 0.8em;
+      }
+      
+      button {
+        border: none;
+      }
     }
+
     .modal-body {
-        padding: 0;
-        display: flex;
+      padding: 0;
+      display: flex;
     }
 }
 
 .inboxCall {
     .modal-content {
-        border-radius: 0.5rem !important;
-        bottom: 50% !important;
+      border-radius: 0.5rem !important;
+      bottom: 50% !important;
     }
 }
 
@@ -58,7 +60,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: rgba(205, 110, 81, 0.2);
+    background: var(--bottom-nav-color);
 }
 
 .tagOption, .tagOption-dark {
@@ -69,77 +71,93 @@
     font-weight: 600;
 }
 
-.tagOption-dark {
-    color: #FFF;
-}
-
-#editSection {
+.editSection, .editSection-dark {
     padding: 1em 1em 0 1em;
     width: 100%;
     text-align: center;
-    .datepicker, .dropdown, .dropdown-dark, .filter > div > * {
-        text-align: left;
-        border: none;
-        padding: 0.5em 0.5em;
-        border-radius: 0.475em;
+
+    .datepicker, .dropdown, .filter > div > * {
+      text-align: left;
+      border: none;
+      padding: 0.5em 0.5em;
+      border-radius: 0.475em;
+      box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.25);
     }
-    .dropdown, .dropdown-dark {
-        max-width: 120px !important;
-        text-align: center;
-        margin: auto;
-        max-height: 200px;
-        background: white;
-        list-style: none;
-        overflow-y: scroll;
-        li {
-            border-radius: 0.375rem;
-            padding: 0.4em;
+
+    .dropdown {
+      max-width: 120px !important;
+      text-align: center;
+      margin: auto;
+      max-height: 200px;
+      background: var(--bottom-nav-color);
+      list-style: none;
+      overflow-y: scroll;
+      li {
+        border-radius: 0.375rem;
+        padding: 0.4em;
         button {
-            width: 100%;
-            border: none;
-            background: transparent;
+          width: 100%;
+          border: none;
+          background: transparent;
         }
-        }
+      }
     }
 }
+.editSection-dark {
+    .datepicker, .dropdown, .filter > div > * {
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4);
+    }
+    input {
+        background: var(--bottom-nav-color);
+    }
+    * {
+        color: white;
+    }
+}
+
 .tag-heading {
     font-size: 0.875em;
     font-weight: 700;
     text-align: center;
 }
+
 .filter {
     display: flex;
     gap: 10px;
     flex-direction: column;
     justify-content: center;
+    
     select {
-        border-right: 6px solid transparent !important;
-        padding-left: 1.7em;
+      border-right: 6px solid transparent !important;
+      padding-left: 1.7em;
     }
+    
     p {
-        text-align: right;
-        margin: 0;
+      text-align: right;
+      margin: 0;
     }
+
     .dropdown, .dropdown-dark {
-        min-width: 120px;
-        max-height: 160px !important;
+      min-width: 120px;
+      max-height: 160px !important;
     }
 }
-.filter > div {
+
+  .filter > div {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    
+        
     div {
-        display: flex;
-        justify-content: space-between;
-        background: #fff;
-        width: 120px;
-        svg {
-            align-self: center;
-        }
+      display: flex;
+      justify-content: space-between;    
+      width: 120px;
+      svg {
+        align-self: center;
+      }
     }
-}
+  }
+
 .budget {
     margin-top: 20px;
     display: flex;
@@ -174,10 +192,6 @@
     width: 475px;
 }
 
-#saveGoal {
-    background: transparent;
-}
-
 .hintsBtn {
     position: relative;
     border-radius: 50%;
@@ -185,14 +199,16 @@
     height: 40px;
     display: flex;
     align-items: center;
+    
     img {
-        height: 22px;
+      height: 22px;
     }
+    
     .loader {
-        width: 40px !important;
-        height: 40px !important;
-        top: 0;
-        left: 0 !important;
+      width: 40px !important;
+      height: 40px !important;
+      top: 0;
+      left: 0 !important;
     }
 }
 #config-actions {
@@ -213,22 +229,21 @@
         filter: invert(1);
     }
     .modal-header { 
-        background-color: #343434 !important;
-        border-color: #121212 !important;
+        
     }
     #tagsList {
-        background-color: #343434 !important;
+        
     }
     #editSection {
-        background-color: rgba(52, 52, 52, 0.4) !important;
+        
     }
 }
 .dropdown-dark {
-    background: #343434 !important;
-    color: white;
-    li, button {
-        color: white
-    }
+    
+    
+    // li, button {
+    //     color: white
+    // }
 }
 
 @media (max-width: 600px) {

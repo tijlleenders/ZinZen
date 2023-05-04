@@ -31,28 +31,28 @@
   height: 36px;
   padding: 0;
   line-height: 36px;
-  color: #fff;
+  
   font-weight: bold;
   box-sizing: border-box;
 }
 .inner:before {
   content: "YES";
   padding-left: 10px;
-  background-color: #060;
-  color: #fff;
+  
+  
 }
 .inner:after {
   content: "NO";
   padding-right: 10px;
-  background-color: #bbb;
-  color: #fff;
+  
+  
   text-align: right;
 }
 .switch {
   display: block;
   width: 24px;
   margin: 5px;
-  background: #fff;
+  
   position: absolute;
   top: 0;
   bottom: 0;

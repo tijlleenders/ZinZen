@@ -1,12 +1,13 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronDown } from "react-bootstrap-icons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import archiveTune from "@assets/archive.mp3";
 import forgetTune from "@assets/forget.mp3";
+import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { ITask } from "@src/Interfaces/Task";
 import { TaskItem } from "@src/models/TaskItem";
@@ -42,6 +43,10 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
 
   const handleActionClick = async (actionName: "Forget" | "Reschedule" | "Done", task: ITask) => {
     if (day === "Today") {
+      if (actionName === "Reschedule") {
+        setShowToast({ open: true, message: "Consider Donating 😇", extra: "Coming soon" });
+        return;
+      }
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
         // @ts-ignore
@@ -78,7 +83,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>Impossible</button>
         </div>
       )}
-      <div className={`MTL-display${darkModeStatus ? "-dark" : ""}`}>
+      <div className="MTL-display">
         { myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
@@ -100,8 +105,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   type="button"
                   className="MTL-circle"
                   style={{ backgroundColor: `${task.goalColor}` }}
-                >.
-                </button>
+                />
                 <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
                   <button
                     type="button"
@@ -125,8 +129,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   <button
                     type="button"
                     onClick={() => setDisplayOptionsIndex("")}
-                    className={`MyTime-expand-btw${darkModeStatus ? "-dark" : ""} task-dropdown${darkModeStatus ? "-dark" : ""}`}
-                  > <div><ChevronDown /></div>
+                    className="MyTime-expand-btw task-dropdown"
+                  > <div><img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" /></div>
                   </button>
                 )}
               </div>

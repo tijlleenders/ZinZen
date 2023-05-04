@@ -41,7 +41,7 @@ const AddGroup = () => {
           type="button"
           style={{
             backgroundColor: colorPalleteList[colorIndex],
-            color: "inherit"
+            
           }}
           className="language"
         >

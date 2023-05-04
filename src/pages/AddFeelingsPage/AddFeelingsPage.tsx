@@ -1,12 +1,15 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import { ChevronRight } from "react-bootstrap-icons";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+
+import backIcon from "@assets/images/backIcon.svg";
 
 import { darkModeState } from "@store";
 import { getJustDate } from "@utils";
+import { themeState } from "@src/store/ThemeState";
+import { displayAddFeeling } from "@src/store/FeelingsState";
 import { AddFeelingsPageProps } from "@src/Interfaces/IPages";
 import { addFeelingWithNote, addFeeling } from "@src/api/FeelingsAPI";
 import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
@@ -14,7 +17,7 @@ import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/Feelin
 import "@translations/i18n";
 import "./AddFeelingsPage.scss";
 
-export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, setShowAddFeelingsModal }) => {
+export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const date = feelingDate
@@ -25,6 +28,9 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
   const [selectedCategory, setSelectedCategory] = useState("");
   const [choice, setChoice] = useState(0);
   const [customFeeling, setCustomFeeling] = useState<string>("");
+  const theme = useRecoilValue(themeState);
+
+  const setShowAddFeelingsModal = useSetRecoilState(displayAddFeeling);
 
   const addThisFeeling = async (directAdd = "") => {
     if (directAdd !== "") {
@@ -38,38 +44,36 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
     setCustomFeeling("");
     setFeelingNote("");
     setChoice(0);
-    setShowAddFeelingsModal(null);
+    setShowAddFeelingsModal(false);
   };
   return (
     <Modal
-      className={`popupModal${darkModeStatus ? "-dark" : ""}`}
+      className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       show={!!feelingDate}
-      onHide={() => { setShowAddFeelingsModal(null); setSelectedCategory(""); }}
+      onHide={() => { setShowAddFeelingsModal(false); setSelectedCategory(""); }}
     >
       { selectedCategory === "" ? (
         <Modal.Body>
           <div id="addFeelings-container">
-            <h1>
+            <p className="popupModal-title">
               {date.getTime() === getJustDate(new Date()).getTime()
                 ? t("feelingsmessage")
                 : `${t("feelingsMessagePast")} ${date.toDateString()}`}
-            </h1>
-            <div>
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {feelingsCategories.map((category: string) => (
-                <div key={`feeling-${category}`} className="feelings-menu-mobile">
-                  <div className={`feelings-category${darkModeStatus ? "-dark" : ""}`}>
-                    <button type="button" onClick={async () => { await addThisFeeling(category); }}>
-                      {feelingsEmojis[category]}&nbsp;&nbsp;
-                      {t(category)}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedCategory(category);
-                      }}
-                    > <ChevronRight />
-                    </button>
-                  </div>
+                <div key={`feeling-${category}`} className={`feelings-category${darkModeStatus ? "-dark" : ""}`}>
+                  <button type="button" onClick={async () => { await addThisFeeling(category); }}>
+                    {feelingsEmojis[category]}&nbsp;&nbsp;
+                    {t(category)}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategory(category);
+                    }}
+                  > <img alt="add feeling" src={backIcon} className="chevronRight theme-icon" />
+                  </button>
                 </div>
               ))}
             </div>
@@ -78,45 +82,39 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate, s
       )
         :
         (
-          <>
-            <Modal.Body id={`feeling-modal-body${darkModeStatus ? "-dark" : ""}`}>
-              <p className="heading">{`You feel ${customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling}`}</p>
-              <div id={`feelingOptions${darkModeStatus ? "-dark" : ""}`}>
-                { selectedCategory !== "" && feelingsList[selectedCategory].map((feeling, index) => (
-                  <button
-                    type="button"
-                    className={`feelingOption${choice === index ? "-selected" : ""}`}
-                    key={`feelingOption-${feeling}`}
-                    onClick={() => { setChoice(index); setCustomFeeling(""); }}
-                  >
-                    {t(feeling)}
-                  </button>
-                ))}
-                <input
-                  type="text"
-                  placeholder="New Feeling? Write here..."
-                  id="myfeelings-custom-feeling-input"
-                  onChange={(e) => { setCustomFeeling(e.target.value); setChoice(e.target.value === "" ? 0 : -1); }}
-                  value={customFeeling}
-                />
-              </div>
+          <Modal.Body id={`feeling-modal-body${darkModeStatus ? "-dark" : ""}`}>
+            <p className="popupModal-title">{`You feel ${customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling}`}</p>
+            <div id="feelingOptions">
+              { selectedCategory !== "" && feelingsList[selectedCategory].map((feeling, index) => (
+                <button
+                  type="button"
+                  className={`feelingOption${choice === index ? "-selected" : ""}`}
+                  key={`feelingOption-${feeling}`}
+                  onClick={() => { setChoice(index); setCustomFeeling(""); }}
+                >
+                  {t(feeling)}
+                </button>
+              ))}
               <input
                 type="text"
-                placeholder="Add Note"
-                id="myfeelings-note-input"
-                onChange={(e) => { setFeelingNote(e.target.value); }}
+                placeholder="New Feeling? Write here..."
+                onChange={(e) => { setCustomFeeling(e.target.value); setChoice(e.target.value === "" ? 0 : -1); }}
+                value={customFeeling}
               />
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                type="submit"
-                onClick={async () => { await addThisFeeling(); }}
-                className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
-              >
-                Done
-              </button>
-            </Modal.Footer>
-          </>
+            </div>
+            <input
+              type="text"
+              placeholder="Add Note"
+              onChange={(e) => { setFeelingNote(e.target.value); }}
+            />
+            <button
+              type="button"
+              onClick={async () => { await addThisFeeling(); }}
+              style={{ float: "right", padding: "8px 14px" }}
+              className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
+            > Save
+            </button>
+          </Modal.Body>
         )}
     </Modal>
   );

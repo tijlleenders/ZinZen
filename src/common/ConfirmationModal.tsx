@@ -1,6 +1,8 @@
 import { confirmationHeaders } from "@src/constants/confirmationHeaders";
+import { getConfirmButtonText } from "@src/constants/myGoals";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
 import { darkModeState, showConfirmation } from "@src/store";
+import { themeState } from "@src/store/ThemeState";
 import React, { useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -8,6 +10,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
   const { actionCategory, actionName } = action;
   const darkModeStatus = useRecoilValue(darkModeState);
+  const theme = useRecoilValue(themeState);
+
   const [neverShowAgain, setNeverShowAgain] = useState(false);
   const [displayModal, setDisplayModal] = useRecoilState(showConfirmation);
   // @ts-ignore
@@ -15,8 +19,11 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
   const getChoiceButton = (choice: string) => (
     <button
       type="button"
-      style={choice === "Cancel" ? { backgroundColor: "rgba(115, 115, 115, 0.6)" } : {}}
       className={`default-btn${darkModeStatus ? "-dark" : ""}`}
+      style={{
+        boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
+        background: choice === "Confirm" ? "var(--primary-background)" : "transparent"
+      }}
       onClick={async () => {
         if (neverShowAgain) {
           const actionChange = { ...displayModal[actionCategory] };
@@ -35,7 +42,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
   );
   return (
     <Modal
-      className={`popupModal${darkModeStatus ? "-dark" : ""}`}
+      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       style={{ maxWidth: "410px", width: "calc(100vw - 15px)" }}
       show={displayModal.open}
       onHide={() => { setDisplayModal({ ...displayModal, open: false }); }}
@@ -53,7 +60,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
           /> Don&apos;t ask again for this action?
         </div>
         <div style={{ display: "flex", justifyContent: "space-around" }}>
-          { getChoiceButton("Confirm") }
+          { getChoiceButton(getConfirmButtonText(actionName)) }
           { getChoiceButton("Cancel") }
         </div>
       </Modal.Body>

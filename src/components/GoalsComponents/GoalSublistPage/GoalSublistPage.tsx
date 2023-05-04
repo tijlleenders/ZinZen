@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb, Container } from "react-bootstrap";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import ArrowIcon from "@assets/images/ArrowIcon.svg";
-
+import { homeIcon } from "@src/assets";
+import ZAccordion from "@src/common/Accordion";
 import { GoalItem } from "@src/models/GoalItem";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
@@ -15,9 +15,8 @@ import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI"
 import { darkModeState, displayInbox, lastAction, searchActive } from "@src/store";
 import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 
-import GoalConfigModal from "../GoalConfigModal/GoalConfigModal";
 import MyGoal from "../MyGoal";
-import ArchivedAccordion from "../ArchivedAccordion/ArchivedAccordion";
+import GoalConfigModal from "../GoalConfigModal/GoalConfigModal";
 
 import "./GoalSublistPage.scss";
 
@@ -80,6 +79,33 @@ export const GoalSublist = () => {
       .then((parent) => setParentGoal(parent));
   }, [goalID]);
 
+  // This function is called when the back button is pressed
+  const onBackButtonEvent = (event) => {
+    // Prevent the default behavior of the browser
+    if (subGoalHistory.length > 0) {
+      event.preventDefault();
+      // Reset the URL so that the user remains on the same page
+      window.history.pushState(null, null, window.location.pathname);
+      handleBackClick();
+    }
+  };
+
+  useEffect(() => {
+    console.log("ss", subGoalHistory)
+    // Prevent the user from leaving the page when the back button is pressed
+    if (subGoalHistory.length > 0) {
+      window.history.pushState(null, null, window.location.pathname);
+    }
+
+    // Add an event listener to the window object
+    window.addEventListener("popstate", onBackButtonEvent);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("popstate", onBackButtonEvent);
+    };
+  }, []);
+
   useEffect(() => {
     (openInbox ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID))
       .then((fetchedGoals) => { handleChildrenGoals(fetchedGoals); });
@@ -87,10 +113,10 @@ export const GoalSublist = () => {
 
   return (
     <div className="sublist-container">
-      <Breadcrumb style={{ marginTop: "56px", padding: "0 18px" }}>
+      <Breadcrumb style={{ padding: "25px 18px 10px 18px" }}>
         {/* @ts-ignore */ }
         <Breadcrumb.Item onClick={() => callResetHistory()}>
-          <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: darkModeStatus ? "#393939" : "#EDC7B7" }}>My Goals</span>
+          <span style={{ color: darkModeStatus ? "white" : "black", backgroundColor: darkModeStatus ? "#393939" : "#EDC7B7" }}><img src={homeIcon} alt="my goals" /></span>
         </Breadcrumb.Item>
         {
           subGoalHistory.length <= 3 ? getBreadcrumbs(subGoalHistory.slice(0, 3)) : (
@@ -107,17 +133,7 @@ export const GoalSublist = () => {
       </Breadcrumb>
       <div className="sublist-content-container">
         <div className="sublist-content">
-
-          <div className="sublist-title">
-            <button
-              type="button"
-              className="nav-icon"
-              onClick={() => { handleBackClick(); }}
-            >
-              <img alt="zinzen my goals" src={ArrowIcon} />
-            </button>
-            <p>  {parentGoal?.title}</p>
-          </div>
+          <p className="sublist-title">{parentGoal?.title}</p>
           <Container fluid className="sublist-list-container">
             { showAddGoal && <GoalConfigModal goal={createGoalObjectFromTags({})} /> }
             {childrenGoals?.map((goal: GoalItem) => (
@@ -130,18 +146,28 @@ export const GoalSublist = () => {
                 />
               </>
             ))}
-            { archivedChildren.length > 0 && (
-            <ArchivedAccordion name="Archived" totalItems={archivedChildren.length}>
-              {archivedChildren.map((goal: GoalItem) => (
-                <MyGoal
-                  key={`goal-${goal.id}`}
-                  goal={goal}
-                  showActions={showActions}
-                  setShowActions={setShowActions}
+            <div className="archived-drawer">
+              { archivedChildren.length > 0 && (
+                <ZAccordion
+                  showCount
+                  style={{
+                    border: "none",
+                    background: darkModeStatus ? "var(--secondary-background)" : "transparent"
+                  }}
+                  panels={[{
+                    header: "Archived",
+                    body: archivedChildren.map((goal: GoalItem) => (
+                      <MyGoal
+                        key={`goal-${goal.id}`}
+                        goal={goal}
+                        showActions={showActions}
+                        setShowActions={setShowActions}
+                      />
+                    ))
+                  }]}
                 />
-              ))}
-            </ArchivedAccordion>
-            )}
+              )}
+            </div>
           </Container>
         </div>
       </div>
