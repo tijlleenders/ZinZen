@@ -182,7 +182,7 @@ export const MyGoalsPage = () => {
                         background: darkModeStatus ? "var(--secondary-background)" : "transparent"
                       }}
                       panels={[{
-                        header: "Archived",
+                        header: "Done",
                         body: archivedGoals.map((goal: GoalItem) => (
                           <MyGoal
                             key={`goal-${goal.id}`}
