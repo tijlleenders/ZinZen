@@ -36,7 +36,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   };
 
   const items: MenuProps["items"] = [
-    ...["Donate", "Feedback", "Change Theme"].map((ele, index) => ({
+    ...["Donate", "Feedback", "Blog", "Change Theme"].map((ele, index) => ({
       label: ele,
       key: `${index}`,
       onClick: () => {
@@ -47,6 +47,8 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
           window.open("https://donate.stripe.com/6oE4jK1iPcPT1m89AA", "_self");
         } else if (ele === "Feedback") {
           navigate("/Feedback");
+        } else if (ele === "Blog") {
+          window.open("https://blog.zinzen.me", "_self");
         }
       }
     })),
