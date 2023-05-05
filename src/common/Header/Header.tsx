@@ -30,6 +30,11 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
+  const toggleDarkModeStatus = () => {
+    localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
+    setDarkModeStatus(!darkModeStatus);
+  };
+
   const items: MenuProps["items"] = [
     ...["Donate", "Feedback", "Change Theme"].map((ele, index) => ({
       label: ele,
@@ -47,17 +52,10 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     })),
     {
       label: (
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop:12 }}  onClick={
-          () => {
-                  
-                    localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
-                    setDarkModeStatus(!darkModeStatus);
-                  
-        }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }} onClickCapture={toggleDarkModeStatus}>
           <p>Dark Mode</p>
           <Switch
             checked={darkModeStatus}
-            onChange={() => { localStorage.setItem("darkMode", darkModeStatus ? "off" : "on"); setDarkModeStatus(!darkModeStatus); }}
           />
         </div>
       ),
