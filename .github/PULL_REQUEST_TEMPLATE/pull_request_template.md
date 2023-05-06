@@ -1,8 +1,9 @@
 Resolves #
 
 ### Standard stuff
-- [x] if no issue is referenced, my changes are simple and summarized in max three sentences here.  
-If not please make an issue - so need for change is validated  
+- [x] The PR title is of form 'issue_title #issue_number'
+- [x] If no issue is referenced, my changes are simple and summarized in title - and in max three sentences in the description.  
+If not please make an issue - so need for change is validated.  
 - [x] I'll be patient as I understand responses can take days.  
 - [x] I have formatted according to project guidelines.
 - [x] I have not introduced any new failing lints or tests.
