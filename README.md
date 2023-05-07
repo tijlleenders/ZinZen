@@ -71,7 +71,7 @@ Also see our overall guiding principle: [Be good.](https://blog.zinzen.me/2021/1
 
 https://opensource.guide/how-to-contribute/
 ... and read code of conduct and FAQ's.
-We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/2). Have a look!
+We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
 
 ## ...or [sponsor me with coffee!](https://github.com/sponsors/tijlleenders)
 
