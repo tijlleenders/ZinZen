@@ -14,11 +14,13 @@ interface AddContactModalProps {
 const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, setShowAddContactModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeState);
+  const [loading, setLoading] = useState(false);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const handleCloseAddContact = () => setShowAddContactModal(false);
 
   const addNewContact = async () => {
     let link = "";
+    setLoading(true);
     if (newContact && newContact.relId === "") {
       const res = await initRelationship();
       if (res.success) {
@@ -35,6 +37,7 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         handleCloseAddContact();
       });
     }
+    setLoading(false);
   };
   return (
 
@@ -70,6 +73,7 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         <br />
         <button
           type="button"
+          disabled={loading}
           onClick={async () => { await addNewContact(); }}
           style={{ float: "right" }}
           className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
