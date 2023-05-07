@@ -73,7 +73,7 @@ https://opensource.guide/how-to-contribute/
 ... and read code of conduct and FAQ's.
 We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
 
-## ...or [sponsor me with coffee!](https://github.com/sponsors/tijlleenders)
+## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
 
 ...or [give a suggestion to improve](https://www.zinzen.me/contact.html)
 ...or talk about ZinZen® to someone else
