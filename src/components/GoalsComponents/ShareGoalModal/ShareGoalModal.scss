@@ -136,3 +136,13 @@
   }
 }
 
+#addContact-btn {
+  position: relative;
+  .loader {
+    position: absolute;
+    top: 3px;
+    left: 3.5px;
+    width: 33.5px;
+    height: 33.5px;
+  }
+}
