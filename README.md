@@ -68,15 +68,18 @@ Also see our overall guiding principle: [Be good.](https://blog.zinzen.me/2021/1
 - SS6. No ads as these introduce security risks (and negatively affect user experience).
 
 ## How to contribute?
+There are many ways to contribute... not only code!  
+https://opensource.guide/how-to-contribute/  
+Please mind the code of conduct.  
 
-https://opensource.guide/how-to-contribute/
-... and read code of conduct and FAQ's.
 We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
 
 ## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
 
-...or [give a suggestion to improve](https://www.zinzen.me/contact.html)
-...or talk about ZinZen® to someone else
+- [Donate](https://donate.stripe.com/6oE4jK1iPcPT1m89AA)  
+- [Give anonymous feedback](https://zinzen.me/Feedback)  
+- ✨Star✨ this repo  
+- Tell a friend!    
 
 <br />
 <br />
