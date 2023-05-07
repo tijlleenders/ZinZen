@@ -1,11 +1,12 @@
 import { addContact } from "@src/api/ContactsAPI";
 import { shareInvitation } from "@src/assets";
+import Loader from "@src/common/Loader";
 import { initRelationship } from "@src/services/contact.service";
-import { darkModeState } from "@src/store";
+import { darkModeState, displayToast } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface AddContactModalProps {
     showAddContactModal: boolean
@@ -17,20 +18,23 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
   const [loading, setLoading] = useState(false);
   const [newContact, setNewContact] = useState<{ contactName: string, relId: string } | null>(null);
   const handleCloseAddContact = () => setShowAddContactModal(false);
+  const setShowToast = useSetRecoilState(displayToast);
 
   const addNewContact = async () => {
     let link = "";
     setLoading(true);
-    if (newContact && newContact.relId === "") {
-      const res = await initRelationship();
-      if (res.success) {
-        await addContact(newContact?.contactName, res.response?.relId);
-        setNewContact({ ...newContact, relId: res.response?.relId });
+    if (newContact) {
+      if (newContact.relId === "") {
+        const res = await initRelationship();
+        if (res.success && res.response.relId && res.response.relId.length > 0) {
+          await addContact(newContact?.contactName, res.response.relId);
+          setNewContact({ ...newContact, relId: res.response.relId });
+          link = `${window.location.origin}/invite/${res.response.relId}`;
+        } else { setShowToast({ open: true, message: "Sorry, we are unable to create new contact", extra: "Please submit you query via feedback if this issue persist" }); }
+      } else {
         link = `${window.location.origin}/invite/${newContact?.relId}`;
       }
-    } else {
-      link = `${window.location.origin}/invite/${newContact?.relId}`;
-    }
+    } else { setShowToast({ open: true, message: "Please give a name to this contact", extra: "" }); }
     if (link !== "") {
       navigator.share({ text: link }).then(() => {
         setNewContact(null);
@@ -74,10 +78,12 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         <button
           type="button"
           disabled={loading}
-          onClick={async () => { await addNewContact(); }}
+          id="addContact-btn"
           style={{ float: "right" }}
-          className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
+          onClick={async () => { await addNewContact(); }}
+          className={`addContact-btn action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
         >
+          { loading && <Loader /> }
           <img alt="add contact" className="theme-icon" src={shareInvitation} />Share invitation
         </button>
       </Modal.Body>
