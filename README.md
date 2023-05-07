@@ -86,12 +86,12 @@ We plan our work on the [ZinZen® project board](https://github.com/users/tijlle
 
 ## Frameworks used
 
-UI : react-bootstrap
-Testing : Cypress
-CI/CD : GithubActions and Vercel
-Internationalization : i18next
-Progressive Web App : workbox
-Animations : none
+UI : ~~react-bootstrap~~ antd  
+Testing : Cypress  
+CI/CD : GithubActions and Vercel  
+Internationalization : i18next  
+Progressive Web App : workbox  
+Animations : just CSS  
 
 ## Legal stuff
 
