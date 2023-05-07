@@ -16,7 +16,7 @@ import { darkModeState, lastAction } from "@src/store";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
-import { colorPalleteList, getDiffInHours, getOrdinalSuffix } from "@src/utils";
+import { colorPalleteList, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import AppLayout from "@src/layouts/AppLayout";
 import SubHeader from "@src/common/SubHeader";
@@ -214,7 +214,7 @@ export const MyTimePage = () => {
         if (ele.habit) obj.repeat = ele.habit.toLowerCase();
         if (ele.timeBudget) obj.budgets = [{ budget_type: ele.timeBudget.period === "day" ? "Daily" : "Weekly", min: Number(ele.timeBudget.duration) }];
         if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
-        if (ele.on) obj.filters.on_days = ele.on.charAt(0).toUpperCase() + ele.on.slice(1);
+        if (ele.on) obj.filters.on_days = convertOnFilterToArray(ele.on);
         if (Object.keys(obj.filters).length === 0) { delete obj.filters; }
         // obj.parentGoalId = ele.parentGoalId;
         schedulerInput.goals.push(obj);
