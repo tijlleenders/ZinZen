@@ -88,10 +88,19 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
       <div>
         {title === "Due date" && <input type="date" className="datepicker" value={due} onChange={(e) => handleDates(e.target.value)} name={title} />}
         {title === "Start date" && <input type="date" className="datepicker" value={start} onChange={(e) => handleDates(e.target.value)} name={title} />}
-        { (title === "Duration" || title === "Habit") && (
-          <ul className={`dropdown ${title === "Duration" ? durationEditable ? "" : "restricted" : ""}`}>
+        {title === "Duration" && (
+        <input
+          type="number"
+          placeholder="0"
+          className={`default-input ${durationEditable ? "" : "restricted"}`}
+          value={otherTagValues.duration}
+          onChange={(e) => { handleOtherTags(e.target.value); }}
+        />
+        )}
+        {title === "Habit" && (
+          <ul className="dropdown">
             {options.map((ele) => (
-              <li className={otherTagValues[title.toLowerCase()] === `${ele}` ? `selected${darkModeStatus ? "-dark" : ""}` : ""} key={ele}>
+              <li className={otherTagValues.habit === `${ele}` ? `selected${darkModeStatus ? "-dark" : ""}` : ""} key={ele}>
                 <button type="button" onClick={() => { handleOtherTags(`${ele}`); }}>{ele}</button>
               </li>
             ))}
