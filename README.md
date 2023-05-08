@@ -48,7 +48,7 @@ Also see our overall guiding principle: [Be good.](https://blog.zinzen.me/2021/1
 - E.1 One person in a team/family/group can use ZinZen® as their primary todo-tool without negatively affecting the others, even if they use a different tool.
 - E.2 No tutorials up-front, but as-you-go: when buttons/actions are first used a quick explanation is shown and connected preferences can be set after using the feature a few times (not on first use).
 - E.3 Fast touch/click feedback (<100ms) so cause-effect connection between user action and interface response is clear. Offline-first makes this easy.
-- E.4 Undo button always present (and clickable as much as possible) so users are not afraid to make mistakes. Redo not implemented as it complicates user understanding and backend.
+- E.4 Easy to correct mistakes so undo/redo button not required.  
 - E.5 No complicated config menu's but a simple list with clear explanation/example of settings.
 - E.6 Non-intrusive tips/reminders on features the user never seems to use.
 - E.7 Suggestions for more efficient way when app detects user doing same (inefficient) thing more than x times.
@@ -68,27 +68,30 @@ Also see our overall guiding principle: [Be good.](https://blog.zinzen.me/2021/1
 - SS6. No ads as these introduce security risks (and negatively affect user experience).
 
 ## How to contribute?
+There are many ways to contribute... not only code!  
+https://opensource.guide/how-to-contribute/  
+Please mind the code of conduct.  
 
-https://opensource.guide/how-to-contribute/
-... and read code of conduct and FAQ's.
-We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/2). Have a look!
+We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
 
-## ...or [sponsor me with coffee!](https://github.com/sponsors/tijlleenders)
+## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
 
-...or [give a suggestion to improve](https://www.zinzen.me/contact.html)
-...or talk about ZinZen® to someone else
+- [Donate](https://donate.stripe.com/6oE4jK1iPcPT1m89AA)  
+- [Give anonymous feedback](https://zinzen.me/Feedback)  
+- ✨Star✨ this repo  
+- Tell a friend!    
 
 <br />
 <br />
 
 ## Frameworks used
 
-UI : react-bootstrap
-Testing : Cypress
-CI/CD : GithubActions and Vercel
-Internationalization : i18next
-Progressive Web App : workbox
-Animations : none
+UI : ~~react-bootstrap~~ antd  
+Testing : Cypress  
+CI/CD : GithubActions and Vercel  
+Internationalization : i18next  
+Progressive Web App : workbox  
+Animations : just CSS  
 
 ## Legal stuff
 
