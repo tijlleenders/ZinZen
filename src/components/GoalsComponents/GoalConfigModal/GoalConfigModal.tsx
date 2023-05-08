@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import pencil from "@assets/images/pencil.svg";
+import correct from "@assets/images/correct.svg";
 import correctLight from "@assets/images/correctLight.svg";
 import correctDark from "@assets/images/correctDark.svg";
 import publicGoals from "@assets/images/publicGoals.svg";
@@ -223,7 +224,39 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
       show={!!showAddGoal || !!showUpdateGoal}
     >
       <Modal.Header>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", paddingTop: "10px" }}>
+          <button
+            onClick={() => handleSave()}
+            type="button"
+            style={{
+              position: "absolute",
+              borderRadius: "50%",
+              border: "none",
+              background: "var(--primary-background)",
+              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
+              width: 50,
+              height: 50,
+              right: 10,
+              top: -60
+            }}
+          >
+            <img
+              alt="Save Goal"
+              src={correct}
+              style={{ cursor: "Pointer" }}
+              className={`${darkModeStatus ? "dark-svg" : ""}`}
+            />
+          </button>
+          <div
+            style={{ display: "flex",
+              width: "100%",
+              justifyContent: "center",
+              position: "absolute",
+              top: 0,
+              right: 0 }}
+          >
+            <hr style={{ width: 80, border: "solid 1px" }} />
+          </div>
           <img
             style={{ alignSelf: "flex-start", marginTop: "5px" }}
             src={pencil}
