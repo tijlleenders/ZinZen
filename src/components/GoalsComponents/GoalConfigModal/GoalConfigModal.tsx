@@ -11,16 +11,16 @@ import publicGoals from "@assets/images/publicGoals.svg";
 import Loader from "@src/common/Loader";
 import { getGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { themeState } from "@src/store/ThemeState";
 import ColorPalette from "@src/common/ColorPalette";
-import { darkModeState, displayInbox, displayToast } from "@src/store";
 import { getPublicGoals } from "@src/services/goal.service";
 import { createGoal, modifyGoal } from "@src/helpers/GoalController";
+import { darkModeState, displayInbox, displayToast } from "@src/store";
 import { getHeadingOfTag, goalConfigTags } from "@src/constants/myGoals";
 import { colorPalleteList, convertNumberToHr, getDateInText } from "@src/utils";
 import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 
 import "./GoalConfigModal.scss";
-import { themeState } from "@src/store/ThemeState";
 
 export interface EditTagSectionProps {
   title: string,
@@ -39,7 +39,6 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
   const [budget, setBudget] = useState({ duration: changes.timeBudget?.duration || "", period: changes.timeBudget?.duration || "day" });
   const [otherTagValues, setOtherTagValues] = useState({ duration: `${changes.duration || "-"}`, habit: changes.habit || "-" });
   const [selectedFilter, setSelectedFilter] = useState({ active: "On", On: changes.on || "-", Before: `${changes.beforeTime || "-"}`, After: `${changes.afterTime || "-"}` });
-  const [budgetPeriod, setBudgetPeriod] = useState("day");
   const budgetEditable = !(changes.duration);
   const durationEditable = title === "Duration" && !changes.timeBudget;
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -67,15 +66,15 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
     period: string;
   }) => {
     setBudget({ ...newBudget });
-    setBudgetPeriod(newBudget.period);
+    // setBudgetPeriod(newBudget.period);
     handleChange({ timeBudget: newBudget });
   };
 
   useEffect(() => {
     setDue(changes.due ? new Date(changes.due).toISOString().slice(0, 10) : "");
     setStart(changes.start ? new Date(changes.start).toISOString().slice(0, 10) : "");
-    setBudget({ duration: changes.timeBudget?.duration || "", period: changes.timeBudget?.duration || "day" });
-    setOtherTagValues({ duration: `${changes.duration || "-"}`, habit: changes.habit || "-" });
+    setBudget({ duration: changes.timeBudget?.duration || "", period: changes.timeBudget?.period || "day" });
+    setOtherTagValues({ duration: `${changes.duration || ""}`, habit: changes.habit || "-" });
     setSelectedFilter({ active: selectedFilter.active, On: changes.on || "-", Before: `${changes.beforeTime || "-"}`, After: `${changes.afterTime || "-"}` });
   }, [changes]);
   return (
@@ -131,13 +130,14 @@ const EditTagSection: React.FC<EditTagSectionProps> = ({ title, changes, handleC
               aria-describedby="inputGroup-sizing-sm"
               value={budget.duration}
               placeholder="0"
+              type="number"
               onChange={(e) => {
                 const { value } = e.target;
-                handleBudgetChange({ duration: value, period: Number(value) > 24 ? "week" : budgetPeriod });
+                handleBudgetChange({ duration: value, period: Number(value) > 24 ? "week" : budget.period });
               }}
             />
             <p>hrs per</p>
-            <select value={budgetPeriod} className="dropdown" onChange={(e) => handleBudgetChange({ ...budget, period: e.target.value })}>
+            <select value={budget.period} className="dropdown" onChange={(e) => { handleBudgetChange({ ...budget, period: Number(budget.duration) > 24 ? "week" : e.target.value }); }}>
               {
                 ["day", "week"].map((ele) => <option key={`budget-${ele}`} value={ele}>{ele}</option>)
               }
