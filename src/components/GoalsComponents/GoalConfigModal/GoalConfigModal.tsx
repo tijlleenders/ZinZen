@@ -213,6 +213,12 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
       setShowUpdateGoal(null);
     }
   };
+
+  const handleClose = () => {
+    setShowAddGoal(null);
+    setShowUpdateGoal(null);
+  };
+
   useEffect(() => {
     if (showAddGoal?.open) { document.getElementById("inputGoalField")?.focus(); }
   }, []);
@@ -255,7 +261,9 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
               top: 0,
               right: 0 }}
           >
-            <hr style={{ width: 80, border: "solid 1px" }} />
+            <div aria-hidden role="button" style={{ padding: "0px 20px" }} onTouchMove={() => handleClose()}>
+              <hr style={{ width: 80, border: "solid 1px" }} />
+            </div>
           </div>
           <img
             style={{ alignSelf: "flex-start", marginTop: "5px" }}
