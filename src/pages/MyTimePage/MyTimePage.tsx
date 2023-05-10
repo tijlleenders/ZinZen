@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/no-relative-packages */
 // @ts-nocheck
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 
@@ -15,7 +15,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem } from "@src/models/TaskItem";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { getAllTasks } from "@src/api/TasksAPI";
-import { darkModeState, lastAction } from "@src/store";
+import { darkModeState, lastAction, openDevMode } from "@src/store";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { colorPalleteList, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
@@ -34,9 +34,9 @@ export const MyTimePage = () => {
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const [devMode, setDevMode] = useRecoilState(openDevMode);
 
   const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } }}>({});
-  const [devMode, setDevMode] = useState(false);
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
@@ -164,15 +164,6 @@ export const MyTimePage = () => {
     });
     return res;
   };
-  useEffect(() => {
-    const checkDevMode = async () => {
-      const isDevMode = await checkMagicGoal();
-      if (!devMode && isDevMode) {
-        setDevMode(isDevMode);
-      }
-    };
-    checkDevMode();
-  }, []);
   useEffect(() => {
     const initialCall = async () => {
       let activeGoals: GoalItem[] = await getAllGoals();

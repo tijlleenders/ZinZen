@@ -11,7 +11,8 @@ import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { ITask } from "@src/Interfaces/Task";
 import { TaskItem } from "@src/models/TaskItem";
-import { darkModeState, displayToast } from "@src/store";
+import { displayReschedule } from "@src/store/TaskState";
+import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./MyTimeline.scss";
@@ -34,17 +35,25 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const navigate = useNavigate();
   const doneSound = new Audio(archiveTune);
   const forgetSound = new Audio(forgetTune);
+
+  const devMode = useRecoilValue(openDevMode);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const setShowToast = useSetRecoilState(displayToast);
+  const setOpenReschedule = useSetRecoilState(displayReschedule);
+
   const [showScheduled, setShowScheduled] = useState(true);
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
-  const setShowToast = useSetRecoilState(displayToast);
 
   const handleView = () => { setShowScheduled(!showScheduled); };
-
+  // console.log(devMode);
   const handleActionClick = async (actionName: "Forget" | "Reschedule" | "Done", task: ITask) => {
     if (day === "Today") {
       if (actionName === "Reschedule") {
-        setShowToast({ open: true, message: "Consider Donating 😇", extra: "Coming soon" });
+        if (devMode) {
+          setOpenReschedule(true);
+        } else {
+          setShowToast({ open: true, message: "Consider Donating 😇", extra: "Coming soon" });
+        }
         return;
       }
       const taskItem = await getTaskByGoalId(task.goalid);

@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import React, { useEffect, useState } from "react";
 
 import { darkModeState } from "@src/store";
@@ -9,6 +9,7 @@ import { themeState } from "@src/store/ThemeState";
 import { convertDateToDay } from "@src/utils/SchedulerUtils";
 
 import "./Reschedule.scss";
+import { displayReschedule } from "@src/store/TaskState";
 
 const Reschedule = () => {
   const currHr = new Date().getHours();
@@ -16,7 +17,7 @@ const Reschedule = () => {
   const currMonth = new Date().getMonth();
   const lastDate = new Date(2023, currMonth + 1, 0).getDate();
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useRecoilState(displayReschedule);
   const [selectedHr, setSelectedHr] = useState(currHr);
   const [monthIndex, setMonthIndex] = useState(currMonth);
   const [selectedDay, setSelectedDay] = useState(currDate);
@@ -38,8 +39,8 @@ const Reschedule = () => {
   ));
 
   useEffect(() => {
-    document.getElementsByClassName("slot-card")[currHr].scrollIntoView({ inline: "center" });
-  }, []);
+    if (open) document.getElementsByClassName("slot-card")[currHr].scrollIntoView({ inline: "center" });
+  }, [open]);
   return (
     <Modal
       open={open}
