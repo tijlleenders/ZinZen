@@ -8,18 +8,19 @@ import React, { useEffect, useState } from "react";
 
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
+import SubHeader from "@src/common/SubHeader";
+import AppLayout from "@src/layouts/AppLayout";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
-import { getAllTasks } from "@src/api/TasksAPI";
 import { TaskItem } from "@src/models/TaskItem";
-import { darkModeState, lastAction } from "@src/store";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
+import { getAllTasks } from "@src/api/TasksAPI";
+import { darkModeState, lastAction } from "@src/store";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { colorPalleteList, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import AppLayout from "@src/layouts/AppLayout";
-import SubHeader from "@src/common/SubHeader";
+import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
@@ -233,6 +234,8 @@ export const MyTimePage = () => {
   return (
     <AppLayout title="My Time">
       <SubHeader
+        showLeftNav={!dailyView}
+        showRightNav={dailyView}
         title={dailyView ? "Today" : "This Week"}
         leftNav={() => { setDailyView(!dailyView); }}
         rightNav={() => { setDailyView(!dailyView); }}
@@ -247,6 +250,7 @@ export const MyTimePage = () => {
             return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
           }
         })}
+      <Reschedule />
     </AppLayout>
   );
 };
