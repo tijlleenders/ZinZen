@@ -16,7 +16,7 @@ import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalController";
 import { addInGoalsHistory, displayAddGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
-import { darkModeState, displayInbox, displayToast, lastAction, showConfirmation } from "@src/store";
+import { darkModeState, displayInbox, displayToast, lastAction, openDevMode, showConfirmation } from "@src/store";
 
 const eyeSvg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC7klEQVR4nO2YSWhUQRCGv6gRERVXXBA8GRcIincFQQ8akoMIgjGQHPUgLgcJguPJZLp6JglxIZi4gIh4EKMRTcSroBIQUfAoSJR4iFnPkZKOPB8vTr/JSybg+6GgZ6ar6q/q6q7ugRQpUqRIkeJ/h8AWA8ct5AWeCXwUGBAYdaLjDwZ6LFgLx5phc0lJZ2GTwAWBNwITRcprgfOtsH7OiLfADgt3XGYnEpJhA50WKmaNuIW1Bq4JjEUQGBLoFmgUONQC21pg5UNYmIFFOtbABaoMXNRSEvgZYUeT0toEq5ImXyPwNcKhlk/dVVgW12YbrLBQL9AftmvgSxYOz5i4Zk83XQTx5znYP2MHwCSUWTgo0Bf2Y6FZV7Eow5pVt9RBowMGTjALmIQygQaB7yGfjzOwNJaxLCy38Cpk6NFcnBZ52GjgSch3b8a3TDOw2J3lwZps91lKnaP7RU8UgfcCP5zo+KZAdQYWeJbujVAQ3R1QXjAAgeshxUafwAX2CbwrdGQaeJuHvZ4ldSmk3/pPJe2QIWdXPMmfitkXRgyc9LFtwYR0j0ZO1Pp2LX9q4lOfsrFQW2wDs1BfyL5y0I0cPEjaYF1UFm8HDH/S5uNBvmKahuQrQ1nYWshPDlYLfA5URmd4QqWB8UAANYWMuqAfJHCNuO/p60hAR28DO4M/3gtE98LHoIEN01wr4sqY7/EcanZ3/5y7uqkc+XEDuz2NNSRAfsJ3LyiysCegN/w7cANn4mbfBdCUVAACTTH89gb0TusXLwOZqPU15JpVUgF0xQigLqDXh+uU+mGkHdb4GnKvr6RKKO/rVzlOlbyFQc1kxsCgdj1fIy6AcwmuwNk4vgUu2yI4/4Uc7EoqgBxUUgpEPUaKkP6SkHcBVCcQQBWlhIFbxZI34StBKZCBJeH3gyf5HtVlPkAfGu7a63OlHtW3rj5amG9wf510CXyLID7g/vvZznxHB5TrbdHAARUdez0HU6RIkSJFihQpmFP8Akw1EIG66+t0AAAAAElFTkSuQmCC";
 interface MyGoalActionsProps {
@@ -40,6 +40,7 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
   const setColorIndex = useSetRecoilState(selectedColorIndex);
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
+  const setDevMode = useSetRecoilState(openDevMode);
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
   const [displayConfirmation, setDisplayConfirmation] = useRecoilState(showConfirmation);
 
@@ -51,7 +52,10 @@ const MyGoalActions: React.FC<MyGoalActionsProps> = ({ goal, setShowShareModal, 
   const removeThisGoal = async () => {
     if (openInbox) {
       await deleteSharedGoal(goal);
-    } else { await deleteGoal(goal, subGoalsHistory.length); }
+    } else {
+      if (goal.title === "magic") { setDevMode(false); }
+      await deleteGoal(goal, subGoalsHistory.length);
+    }
     setLastAction("Delete");
   };
 
