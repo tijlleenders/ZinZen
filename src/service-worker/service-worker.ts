@@ -13,7 +13,7 @@ import { clientsClaim } from "workbox-core";
 import { ExpirationPlugin } from "workbox-expiration";
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
-import { CacheFirst } from "workbox-strategies";
+import { CacheFirst, StaleWhileRevalidate } from "workbox-strategies";
 
 // eslint-disable-next-line no-undef
 declare const self: ServiceWorkerGlobalScope;
@@ -74,13 +74,17 @@ registerRoute(
 );
 registerRoute(
   ({ url }) => url.origin === self.location.origin && url.pathname.endsWith(".wasm"),
-  new CacheFirst({
+  new StaleWhileRevalidate({
     cacheName: "scheduler",
     plugins: [
-      new ExpirationPlugin({ maxEntries: 50 }),
+      new ExpirationPlugin({
+        maxEntries: 7,
+        maxAgeSeconds: 60 * 60 * 24, // Cache for 1 day
+      }),
     ],
   })
 );
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener("message", (event) => {
