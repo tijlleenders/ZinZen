@@ -21,4 +21,6 @@ export interface ISubHeaderProps {
     title: string,
     leftNav: () => void,
     rightNav: () => void
+    showLeftNav: boolean,
+    showRightNav: boolean,
 }

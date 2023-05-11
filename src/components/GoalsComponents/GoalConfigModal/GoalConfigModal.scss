@@ -7,7 +7,7 @@
 }
 
 #editTagModal {
-    .modal-content {
+    .modal-content, .ant-modal-content {
       position: absolute;
       bottom: 0;
       border-radius: 0.5rem 0.5rem 0 0;
@@ -50,7 +50,7 @@
 }
 
 .inboxCall {
-    .modal-content {
+    .modal-content, .ant-modal-content {
       border-radius: 0.5rem !important;
       bottom: 50% !important;
     }
