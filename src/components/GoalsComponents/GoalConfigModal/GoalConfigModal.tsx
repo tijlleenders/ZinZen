@@ -250,7 +250,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
               disabled={openInbox}
               value={newTitle}
               id="inputGoalField"
-              style={{ color: darkModeStatus ? "white" : "black" }}
+              style={{ color: darkModeStatus ? "white" : "black", caretColor: colorPalleteList[colorIndex] }}
               placeholder={t("addGoalPlaceholder")}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
