@@ -12,8 +12,8 @@ import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 import { ITask } from "@src/Interfaces/Task";
 import { TaskItem } from "@src/models/TaskItem";
 import { displayReschedule } from "@src/store/TaskState";
-import { darkModeState, displayToast, openDevMode } from "@src/store";
-import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { darkModeState, displayToast, lastAction, openDevMode } from "@src/store";
+import { addBlockedSlot, addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./MyTimeline.scss";
 
@@ -39,6 +39,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const devMode = useRecoilValue(openDevMode);
   const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
+  const setLastAction = useSetRecoilState(lastAction);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
 
   const [showScheduled, setShowScheduled] = useState(true);
@@ -48,12 +49,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   // console.log(devMode);
   const handleActionClick = async (actionName: "Forget" | "Reschedule" | "Done", task: ITask) => {
     if (day === "Today") {
-      if (actionName === "Reschedule") {
-        if (devMode) {
-          setOpenReschedule(true);
-        } else {
-          setShowToast({ open: true, message: "Consider Donating 😇", extra: "Coming soon" });
-        }
+      if (actionName === "Reschedule" && devMode) {
+        setOpenReschedule(true);
         return;
       }
       const taskItem = await getTaskByGoalId(task.goalid);
@@ -66,18 +63,23 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           hoursSpent: actionName !== "Reschedule" ? Number(task.duration) : 0,
           lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
           lastForget: actionName === "Forget" ? new Date().toLocaleDateString() : "",
+          blockedSlots: actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : []
         });
       } else if (actionName === "Done") {
         await completeTask(taskItem.id, Number(task.duration));
       } else if (actionName === "Forget") {
         await forgetTask(taskItem.id, Number(task.duration));
+      } else if (actionName === "Reschedule") {
+        await addBlockedSlot(task.goalid, { start: task.start, end: task.deadline });
       }
       if (actionName === "Done") {
         await doneSound.play();
         setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastCompleted: new Date().toLocaleDateString() } });
-      } else {
+      } else if (actionName === "Forget") {
         await forgetSound.play();
         setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastForget: new Date().toLocaleDateString() } });
+      } else {
+        setLastAction("TaskRescheduled");
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
