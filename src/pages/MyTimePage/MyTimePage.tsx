@@ -9,18 +9,19 @@ import React, { useEffect, useState } from "react";
 import rescheduleTune from "@assets/reschedule.mp3";
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
+import SubHeader from "@src/common/SubHeader";
+import AppLayout from "@src/layouts/AppLayout";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
-import { getAllBlockedTasks, getAllTasks } from "@src/api/TasksAPI";
 import { TaskItem } from "@src/models/TaskItem";
-import { darkModeState, lastAction } from "@src/store";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
-import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
-import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
-import { colorPalleteList, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import AppLayout from "@src/layouts/AppLayout";
-import SubHeader from "@src/common/SubHeader";
+import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
+import { darkModeState, lastAction, openDevMode } from "@src/store";
+import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
+import { getAllBlockedTasks, getAllTasks, getAllTasks } from "@src/api/TasksAPI";
+import { colorPalleteList, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
+import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
@@ -35,9 +36,9 @@ export const MyTimePage = () => {
   const rescheduleSound = new Audio(rescheduleTune);
   const darkModeStatus = useRecoilValue(darkModeState);
   const [action, setLastAction] = useRecoilState(lastAction);
+  const [devMode, setDevMode] = useRecoilState(openDevMode);
 
   const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } }}>({});
-  const [devMode, setDevMode] = useState(false);
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
@@ -238,6 +239,8 @@ export const MyTimePage = () => {
   return (
     <AppLayout title="My Time">
       <SubHeader
+        showLeftNav={!dailyView}
+        showRightNav={dailyView}
         title={dailyView ? "Today" : "This Week"}
         leftNav={() => { setDailyView(!dailyView); }}
         rightNav={() => { setDailyView(!dailyView); }}
@@ -252,6 +255,7 @@ export const MyTimePage = () => {
             return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
           }
         })}
+      <Reschedule />
     </AppLayout>
   );
 };

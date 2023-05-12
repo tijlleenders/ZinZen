@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Toast from "react-bootstrap/Toast";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, languageSelectionState, displayToast, lastAction, showConfirmation, backupRestoreModal } from "@store";
+import { darkModeState, languageSelectionState, displayToast, lastAction, showConfirmation, backupRestoreModal, openDevMode } from "@store";
 
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import Contacts from "@pages/ContactsPage/Contacts";
@@ -22,8 +22,9 @@ import BackupRestoreModal from "@components/BackupRestoreModal/BackupRestoreModa
 
 import { GoalItem } from "./models/GoalItem";
 import { findTypeOfSub } from "./api/PubSubAPI";
-import { addSharedWMGoal } from "./api/SharedWMAPI";
+import { checkMagicGoal } from "./api/GoalsAPI";
 import { syncGroupPolls } from "./api/PublicGroupsAPI";
+import { addSharedWMGoal } from "./api/SharedWMAPI";
 import { getTheme, themeState } from "./store/ThemeState";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
@@ -38,9 +39,11 @@ const App = () => {
   const theme = useRecoilValue(themeState);
   const language = useRecoilValue(languageSelectionState);
   const darkModeEnabled = useRecoilValue(darkModeState);
-  const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
   const isLanguageChosen = language !== "No language chosen.";
   const confirmationState = useRecoilValue(showConfirmation);
+  const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
+
+  const [devMode, setDevMode] = useRecoilState(openDevMode);
   const [showToast, setShowToast] = useRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
 
@@ -90,7 +93,7 @@ const App = () => {
       localStorage.setItem("darkMode", "off");
       localStorage.setItem("theme", JSON.stringify(getTheme()));
     } else {
-      init();
+      // init();
     }
     if ((!isLanguageChosen) && window.location.pathname !== "/" && window.location.pathname.toLowerCase() !== "/invest") { window.open("/", "_self"); }
   }, []);
@@ -98,6 +101,16 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem("confirmationState", JSON.stringify(confirmationState));
   }, [confirmationState]);
+  useEffect(() => {
+    const checkDevMode = async () => {
+      const isDevMode = await checkMagicGoal();
+      if (!devMode && isDevMode) {
+        setDevMode(isDevMode);
+      }
+    };
+    checkDevMode();
+  }, []);
+  console.log(devMode)
   return (
     <div className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`}>
       <div className={`App-${darkModeEnabled ? "dark" : "light"}`}>

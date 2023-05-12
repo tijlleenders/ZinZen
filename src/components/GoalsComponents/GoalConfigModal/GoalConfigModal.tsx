@@ -15,7 +15,7 @@ import { themeState } from "@src/store/ThemeState";
 import ColorPalette from "@src/common/ColorPalette";
 import { getPublicGoals } from "@src/services/goal.service";
 import { createGoal, modifyGoal } from "@src/helpers/GoalController";
-import { darkModeState, displayInbox, displayToast } from "@src/store";
+import { darkModeState, displayInbox, displayToast, openDevMode } from "@src/store";
 import { getHeadingOfTag, goalConfigTags } from "@src/constants/myGoals";
 import { colorPalleteList, convertNumberToHr, getDateInText } from "@src/utils";
 import { addInGoalsHistory, displayAddGoal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
@@ -158,6 +158,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalsHistory = useRecoilValue(goalsHistory);
 
+  const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
   const addInHistory = useSetRecoilState(addInGoalsHistory);
 
@@ -206,7 +207,10 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
     const { parentGoal } = await createGoal(showAddGoal.goalId, changes, newTitle, colorPalleteList[colorIndex], subGoalsHistory.length);
     // @ts-ignore
     if (parentGoal && selectedGoalId !== parentGoal.id) { addInHistory(parentGoal); }
-    if (!parentGoal && newTitle === "magic") { setShowToast({ open: true, message: "Congratulations, you activated DEV mode", extra: "Explore what's hidden" }); }
+    if (!parentGoal && newTitle === "magic") {
+      setDevMode(true);
+      setShowToast({ open: true, message: "Congratulations, you activated DEV mode", extra: "Explore what's hidden" }); 
+    }
   };
   const updateThisGoal = async () => {
     if (!showUpdateGoal || isTitleEmpty()) { return; }
@@ -246,7 +250,7 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
               disabled={openInbox}
               value={newTitle}
               id="inputGoalField"
-              style={{ color: darkModeStatus ? "white" : "black" }}
+              style={{ color: darkModeStatus ? "white" : "black", caretColor: colorPalleteList[colorIndex] }}
               placeholder={t("addGoalPlaceholder")}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
