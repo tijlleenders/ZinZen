@@ -52,3 +52,19 @@ export const getAllTasks = async () => {
   allGoals.reverse();
   return allGoals;
 };
+
+export const getAllBlockedTasks = async () => {
+  const tasks = await getAllTasks();
+  return tasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr.blockedSlots }), {});
+};
+
+export const addBlockedSlot = async (goalId: string, slot: { start: string, end: string }) => {
+  db.transaction("rw", db.taskCollection, async () => {
+    await db.taskCollection.where("goalId").equals(goalId)
+      .modify((obj: TaskItem) => {
+        obj.blockedSlots.push(slot);
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};

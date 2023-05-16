@@ -2,24 +2,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/no-relative-packages */
 // @ts-nocheck
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 
+import rescheduleTune from "@assets/reschedule.mp3";
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
+import SubHeader from "@src/common/SubHeader";
+import AppLayout from "@src/layouts/AppLayout";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
-import { getAllTasks } from "@src/api/TasksAPI";
 import { TaskItem } from "@src/models/TaskItem";
-import { darkModeState, lastAction } from "@src/store";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
-import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
-import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
-import { colorPalleteList, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
-import AppLayout from "@src/layouts/AppLayout";
-import SubHeader from "@src/common/SubHeader";
+import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
+import { darkModeState, lastAction, openDevMode } from "@src/store";
+import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
+import { getAllBlockedTasks, getAllTasks, getAllTasks } from "@src/api/TasksAPI";
+import { colorPalleteList, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
+import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
@@ -31,11 +33,12 @@ export const MyTimePage = () => {
   const today = new Date();
 
   const { t } = useTranslation();
-  const action = useRecoilValue(lastAction);
+  const rescheduleSound = new Audio(rescheduleTune);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const [action, setLastAction] = useRecoilState(lastAction);
+  const [devMode, setDevMode] = useRecoilState(openDevMode);
 
   const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } }}>({});
-  const [devMode, setDevMode] = useState(false);
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
@@ -97,12 +100,12 @@ export const MyTimePage = () => {
             <div> { showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <img src={chevronLeftIcon} className="chevronRight theme-icon" /> } </div>
           </button>
         </button>
-        {showTasks.includes(day) ? getTimeline(day) :
-          (
-            <div className="MyTime_colorPalette">
-              {tasks[day]?.colorBands.map((ele) => getColorComponent(ele.colorWidth, ele.color))}
-            </div>
-          )}
+        <div>
+          <div className={`MyTime_colorPalette ${showTasks.includes(day) ? "active" : ""}`}>
+            {tasks[day]?.colorBands.map((ele) => getColorComponent(ele.colorWidth, ele.color))}
+          </div>
+          {showTasks.includes(day) && getTimeline(day)}
+        </div>
       </div>
     );
   };
@@ -163,76 +166,81 @@ export const MyTimePage = () => {
     });
     return res;
   };
-  useEffect(() => {
-    const checkDevMode = async () => {
-      const isDevMode = await checkMagicGoal();
-      if (!devMode && isDevMode) {
-        setDevMode(isDevMode);
+
+  const initialCall = async () => {
+    let activeGoals: GoalItem[] = await getAllGoals();
+    if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
+    console.log(activeGoals);
+    getAllTasks().then((dbTasks) => {
+      setTasksStatus(dbTasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {}));
+    });
+    const blockedSlots = await getAllBlockedTasks();
+    await init();
+    const _today = devMode ? new Date(fakeThursday) : new Date();
+    // _today.setDate(_today.getDate() + 1);
+    const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
+    const endDate = `${new Date(_today.setDate(_today.getDate() + 7)).toISOString().slice(0, 10)}T00:00:00`;
+
+    const schedulerInput = {
+      startDate,
+      endDate,
+      goals: []
+    };
+    const noDurationGoals = [];
+    activeGoals = [...activeGoals.filter((ele) => {
+      if (!ele.duration && !ele.timeBudget) noDurationGoals.push(ele.id);
+      return !!(ele.duration) || ele.timeBudget;
+    })];
+    activeGoals.forEach((ele) => {
+      const obj = { id: ele.id, title: ele.title, filters: {} };
+      const slotsNotallowed = blockedSlots[ele.id];
+      if (ele.duration) obj.min_duration = Number(ele.duration);
+      if (ele.start) {
+        const start = new Date(ele.start);
+        start.setDate(start.getDate() + 1);
+        obj.start = `${start?.toISOString().slice(0, 10)}T${start?.toTimeString().slice(0, 8)}`;
       }
-    };
-    checkDevMode();
-  }, []);
+      if (ele.due) {
+        const due = new Date(ele.due);
+        due.setDate(due.getDate() + 1);
+        obj.deadline = `${due?.toISOString().slice(0, 10)}T${due?.toTimeString().slice(0, 8)}`;
+      }
+      if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
+      if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;
+      if (ele.habit) obj.repeat = ele.habit.toLowerCase();
+      if (ele.timeBudget) obj.budgets = [{ budget_type: ele.timeBudget.period === "day" ? "Daily" : "Weekly", min: Number(ele.timeBudget.duration) }];
+      if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
+      if (ele.on) obj.filters.on_days = convertOnFilterToArray(ele.on);
+      if (slotsNotallowed && slotsNotallowed.length > 0) { obj.filters.not_on = [...slotsNotallowed]; }
+      if (Object.keys(obj.filters).length === 0) { delete obj.filters; }
+      // obj.parentGoalId = ele.parentGoalId;
+      schedulerInput.goals.push(obj);
+    });
+    schedulerInput.goals = schedulerInput.goals.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+    console.log("input", JSON.stringify(schedulerInput));
+    const res = schedule(schedulerInput);
+    console.log("output", res);
+    const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
+    // console.log(processedOutput);
+    setTasks({ ...processedOutput });
+  };
+
   useEffect(() => {
-    const initialCall = async () => {
-      let activeGoals: GoalItem[] = await getAllGoals();
-      if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
-      console.log(activeGoals);
-      getAllTasks().then((dbTasks) => {
-        setTasksStatus(dbTasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {}));
-      });
-      await init();
-      const _today = devMode ? new Date(fakeThursday) : new Date();
-      // _today.setDate(_today.getDate() + 1);
-      const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
-      const endDate = `${new Date(_today.setDate(_today.getDate() + 7)).toISOString().slice(0, 10)}T00:00:00`;
-
-      const schedulerInput = {
-        startDate,
-        endDate,
-        goals: []
-      };
-      const noDurationGoals = [];
-      activeGoals = [...activeGoals.filter((ele) => {
-        if (!ele.duration && !ele.timeBudget) noDurationGoals.push(ele.id);
-        return !!(ele.duration) || ele.timeBudget;
-      })];
-      activeGoals.forEach((ele) => {
-        const obj = { id: ele.id, title: ele.title, filters: {} };
-        if (ele.duration) obj.min_duration = Number(ele.duration);
-        if (ele.start) {
-          const start = new Date(ele.start);
-          start.setDate(start.getDate() + 1);
-          obj.start = `${start?.toISOString().slice(0, 10)}T${start?.toTimeString().slice(0, 8)}`;
-        }
-        if (ele.due) {
-          const due = new Date(ele.due);
-          due.setDate(due.getDate() + 1);
-          obj.deadline = `${due?.toISOString().slice(0, 10)}T${due?.toTimeString().slice(0, 8)}`;
-        }
-        if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
-        if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;
-        if (ele.habit) obj.repeat = ele.habit.toLowerCase();
-        if (ele.timeBudget) obj.budgets = [{ budget_type: ele.timeBudget.period === "day" ? "Daily" : "Weekly", min: Number(ele.timeBudget.duration) }];
-        if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
-        if (ele.on) obj.filters.on_days = ele.on.charAt(0).toUpperCase() + ele.on.slice(1);
-        if (Object.keys(obj.filters).length === 0) { delete obj.filters; }
-        // obj.parentGoalId = ele.parentGoalId;
-        schedulerInput.goals.push(obj);
-      });
-      schedulerInput.goals = schedulerInput.goals.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
-      console.log("input", schedulerInput);
-      const res = schedule(schedulerInput);
-      console.log("output", res);
-      const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
-      // console.log(processedOutput);
-      setTasks({ ...processedOutput });
-    };
     initialCall();
-  }, [devMode, action]);
-
+  }, [devMode]);
+  useEffect(() => {
+    if (action === "TaskRescheduled") {
+      rescheduleSound.play();
+      initialCall().then(async () => {
+        setLastAction("none");
+      });
+    }
+  }, [action]);
   return (
     <AppLayout title="My Time">
       <SubHeader
+        showLeftNav={!dailyView}
+        showRightNav={dailyView}
         title={dailyView ? "Today" : "This Week"}
         leftNav={() => { setDailyView(!dailyView); }}
         rightNav={() => { setDailyView(!dailyView); }}
@@ -247,6 +255,7 @@ export const MyTimePage = () => {
             return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
           }
         })}
+      <Reschedule />
     </AppLayout>
   );
 };

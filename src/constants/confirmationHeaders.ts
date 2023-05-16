@@ -2,14 +2,14 @@ export const confirmationHeaders = {
   goal: {
     archive: {
       header: "Do you want to mark this goal completed?",
-      note: "This goal will be moved to archive along with the subgoals."
+      note: "This goal will be moved to archive along with the subgoals. You can restore it from archive anytime."
     },
     delete: {
       header: "Do you want to delete this goal?",
       note: "You won't be able to recover it again."
     },
     shareAnonymously: {
-      header: "Do you want to share this goal anonymously?",
+      header: "Do you want to share this goal pseudo anonymously?",
       note: "Only this goal and its time related properties will be shared publicly :)"
     },
     shareWithOne: {

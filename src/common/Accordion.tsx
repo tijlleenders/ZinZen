@@ -10,6 +10,7 @@ const ZAccordion : React.FC<ZAccordionProps> = ({ panels, style, showCount, defa
     expandIcon={({ isActive }) => (<img alt="zinzen about" className={`${isActive ? "chevronDown" : "chevronRight"} theme-icon`} src={chevronLeftIcon} />)}
     defaultActiveKey={defaultActiveKey}
     style={style}
+    accordion
   >
     {panels.map((panel, index) => (
       <Collapse.Panel

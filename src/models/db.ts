@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import Dexie, { Table } from "dexie";
 import { IFeelingItem } from "./FeelingItem";
 import { GoalItem } from "./GoalItem";
@@ -7,6 +8,8 @@ import { PubSubItem } from "./PubSubItem";
 import { InboxItem } from "./InboxItem";
 import { PublicGroupItem } from "./PublicGroupItem";
 import { TaskItem } from "./TaskItem";
+
+export const dexieVersion = 2;
 
 export class ZinZenDB extends Dexie {
   feelingsCollection!: Table<IFeelingItem, number>;
@@ -29,7 +32,7 @@ export class ZinZenDB extends Dexie {
 
   constructor() {
     super("ZinZenDB");
-    this.version(1).stores({
+    this.version(2).stores({
       feelingsCollection: "++id, content, category, date, note",
       goalsCollection: "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
       sharedWMCollection: "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
@@ -38,7 +41,12 @@ export class ZinZenDB extends Dexie {
       inboxCollection: "id, goalChanges",
       pubSubCollection: "id, subscribers",
       publicGroupsCollection: "id, title, polls, language, groupColor, createdAt",
-      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, lastForget"
+      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, lastForget, blockedSlots"
+    }).upgrade((trans) => {
+      const taskCollection = trans.table("taskCollection");
+      return taskCollection.toCollection().modify((task: TaskItem) => {
+        task.blockedSlots = [];
+      });
     });
   }
 }

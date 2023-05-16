@@ -7,7 +7,7 @@
 }
 
 #editTagModal {
-    .modal-content {
+    .modal-content, .ant-modal-content {
       position: absolute;
       bottom: 0;
       border-radius: 0.5rem 0.5rem 0 0;
@@ -50,7 +50,7 @@
 }
 
 .inboxCall {
-    .modal-content {
+    .modal-content, .ant-modal-content {
       border-radius: 0.5rem !important;
       bottom: 50% !important;
     }
@@ -76,6 +76,11 @@
     width: 100%;
     text-align: center;
 
+    .default-input {
+      max-width: 180px;
+      text-align: center;
+      color: black !important;
+    }
     .datepicker, .dropdown, .filter > div > * {
       text-align: left;
       border: none;
@@ -107,9 +112,9 @@
     .datepicker, .dropdown, .filter > div > * {
         box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4);
     }
-    input {
-        background: var(--bottom-nav-color);
-    }
+    .datepicker {
+      color: black !important
+    }    
     * {
         color: white;
     }
@@ -226,7 +231,7 @@
 
 .popupModal-dark {
     .datepicker::-webkit-calendar-picker-indicator {
-        filter: invert(1);
+        // filter: invert(1);
     }
     .modal-header { 
         

@@ -5,7 +5,7 @@
   width: 100vw !important;
   max-width: 600px;
   
-  .modal-content {
+  .modal-content, .ant-modal-content {
    margin-top: auto;
    border: 0;
    
@@ -13,7 +13,7 @@
  }
 }
 #suggestions-modal-dark {
-  .modal-content {
+  .modal-content, .ant-modal-content {
     
     
   }

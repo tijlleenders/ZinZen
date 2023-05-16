@@ -3,11 +3,11 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
+import AppLayout from "@src/layouts/AppLayout";
+import SubHeader from "@src/common/SubHeader";
 import { getDates } from "@utils";
 import { IFeelingItem } from "@models";
-import SubHeader from "@src/common/SubHeader";
 import { feelingListType } from "@src/global";
-import AppLayout from "@src/layouts/AppLayout";
 import { getAllFeelings } from "@api/FeelingsAPI";
 import { darkModeState, displayToast } from "@store";
 import { displayAddFeeling } from "@src/store/FeelingsState";
@@ -70,6 +70,8 @@ export const ShowFeelingsPage = () => {
         {feelingsList && date && (
           <div key={date}>
             <SubHeader
+              showLeftNav={selectedDate > 0}
+              showRightNav={selectedDate < journalDates.length - 1}
               title={new Date(date).toDateString() === new Date().toDateString()
                 ? "Today"
                 : new Date(date).toDateString()}

@@ -13,7 +13,7 @@ import { clientsClaim } from "workbox-core";
 import { ExpirationPlugin } from "workbox-expiration";
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
-import { CacheFirst } from "workbox-strategies";
+import { CacheFirst, StaleWhileRevalidate } from "workbox-strategies";
 
 // eslint-disable-next-line no-undef
 declare const self: ServiceWorkerGlobalScope;
@@ -69,6 +69,18 @@ registerRoute(
       // Ensure that once this runtime cache reaches a maximum size the
       // least-recently used images are removed.
       new ExpirationPlugin({ maxEntries: 50 }),
+    ],
+  })
+);
+registerRoute(
+  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith(".wasm"),
+  new StaleWhileRevalidate({
+    cacheName: "scheduler",
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 7,
+        maxAgeSeconds: 60 * 60 * 24, // Cache for 1 day
+      }),
     ],
   })
 );

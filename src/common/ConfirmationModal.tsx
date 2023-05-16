@@ -1,4 +1,5 @@
 import { confirmationHeaders } from "@src/constants/confirmationHeaders";
+import { getConfirmButtonText } from "@src/constants/myGoals";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
 import { darkModeState, showConfirmation } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
@@ -59,7 +60,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
           /> Don&apos;t ask again for this action?
         </div>
         <div style={{ display: "flex", justifyContent: "space-around" }}>
-          { getChoiceButton("Confirm") }
+          { getChoiceButton(getConfirmButtonText(actionName)) }
           { getChoiceButton("Cancel") }
         </div>
       </Modal.Body>

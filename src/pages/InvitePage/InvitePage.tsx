@@ -42,7 +42,7 @@ const InvitePage = () => {
         The sender of this message wants to connect with you here.
         <br />Add them to your contact list.
       </p>
-      <input style={{ width: "100%", fontWeight: 500 }} onChange={(e) => setNewContactName(e.target.value)} className={`default-input${darkModeStatus ? "-dark" : ""}`} placeholder="Contact name" />
+      <input style={{ width: "100%", fontWeight: 500 }} onChange={(e) => setNewContactName(e.target.value)} className="default-input" placeholder="Contact name" />
       <button
         type="button"
         className={`default-btn${darkModeStatus ? "-dark" : ""}`}
