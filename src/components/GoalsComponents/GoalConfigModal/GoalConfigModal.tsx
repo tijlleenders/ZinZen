@@ -244,38 +244,12 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
     >
       <Modal.Header>
         <div style={{ display: "flex", gap: "10px", paddingTop: "10px" }}>
-          <button
-            onClick={() => handleSave()}
-            type="button"
-            style={{
-              position: "absolute",
-              borderRadius: "50%",
-              border: "none",
-              background: "var(--primary-background)",
-              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-              width: 50,
-              height: 50,
-              right: 10,
-              top: -60
-            }}
-          >
-            <img
-              alt="Save Goal"
-              src={correct}
-              style={{ cursor: "Pointer" }}
-              className={`${darkModeStatus ? "dark-svg" : ""}`}
-            />
+         <button onClick={handleSave} type="button" className="saveButton">
+            <img alt="Save Goal" src={correct} className={`${darkModeStatus ? "dark-svg" : ""}`} />
           </button>
-          <div
-            style={{ display: "flex",
-              width: "100%",
-              justifyContent: "center",
-              position: "absolute",
-              top: 0,
-              right: 0 }}
-          >
-            <div aria-hidden role="button" style={{ padding: "0px 20px" }} onTouchMove={() => handleClose()}>
-              <hr style={{ width: 80, border: "solid 1px" }} />
+          <div className="sliderContainer">
+            <div aria-hidden role="button" className="slider" onTouchMove={handleClose}>
+              <hr className="sliderLine" />
             </div>
           </div>
           <img
