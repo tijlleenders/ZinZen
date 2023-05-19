@@ -57,7 +57,9 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
             name="confirmation"
             className={`default-checkbox${darkModeStatus ? "-dark" : ""}`}
             type="checkbox"
-          /> Don&apos;t ask again for this action?
+            id="neverShowAgainCheckbox"
+            label="Don&apos;t ask again for this action?"
+          />
         </div>
         <div style={{ display: "flex", justifyContent: "space-around" }}>
           { getChoiceButton(getConfirmButtonText(actionName)) }
