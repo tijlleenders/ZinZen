@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import pencil from "@assets/images/pencil.svg";
+import correct from "@assets/images/correct.svg";
 import correctLight from "@assets/images/correctLight.svg";
 import correctDark from "@assets/images/correctDark.svg";
 import publicGoals from "@assets/images/publicGoals.svg";
@@ -225,6 +226,12 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
       setShowUpdateGoal(null);
     }
   };
+
+  const handleClose = () => {
+    setShowAddGoal(null);
+    setShowUpdateGoal(null);
+  };
+
   useEffect(() => {
     if (showAddGoal?.open) { document.getElementById("inputGoalField")?.focus(); }
   }, []);
@@ -236,7 +243,15 @@ const GoalConfigModal = ({ goal }: { goal : GoalItem }) => {
       show={!!showAddGoal || !!showUpdateGoal}
     >
       <Modal.Header>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", paddingTop: "10px" }}>
+         <button onClick={handleSave} type="button" className="saveButton">
+            <img alt="Save Goal" src={correct} className={`${darkModeStatus ? "dark-svg" : ""}`} />
+          </button>
+          <div className="sliderContainer">
+            <div aria-hidden role="button" className="slider" onTouchMove={handleClose}>
+              <hr className="sliderLine" />
+            </div>
+          </div>
           <img
             style={{ alignSelf: "flex-start", marginTop: "5px" }}
             src={pencil}
