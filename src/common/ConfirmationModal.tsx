@@ -4,7 +4,8 @@ import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
 import { darkModeState, showConfirmation } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import React, { useState } from "react";
-import { Form, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
+
 import { useRecoilState, useRecoilValue } from "recoil";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
@@ -42,10 +43,12 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
   );
   return (
     <Modal
-      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      open={displayModal.open}
+      closable={false}
+      footer={null}
       style={{ maxWidth: "410px", width: "calc(100vw - 15px)" }}
-      show={displayModal.open}
-      onHide={() => { setDisplayModal({ ...displayModal, open: false }); }}
+      onCancel={() => { setDisplayModal({ ...displayModal, open: false }); }}
+      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <Modal.Body>
         <h5>{header}</h5>
