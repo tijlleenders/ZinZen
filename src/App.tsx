@@ -94,7 +94,7 @@ const App = () => {
       localStorage.setItem("darkMode", "off");
       localStorage.setItem("theme", JSON.stringify(getTheme()));
     } else {
-      // init();
+      init();
     }
     if ((!isLanguageChosen) && window.location.pathname !== "/" && window.location.pathname.toLowerCase() !== "/invest") { window.open("/", "_self"); }
   }, []);
