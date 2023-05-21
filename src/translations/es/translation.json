@@ -105,5 +105,41 @@
   "Dinner 🍽️": "Cena 🍽️",
   "Walk 🚶🏽": "Andar 🚶🏽",
   "Water the plants 🪴 indoors": "regar las plantas 🪴 de interior",
-  "Me time 🧘🏽😌": "Tiempo para mi 🧘🏽😌"
+  "Me time 🧘🏽😌": "Tiempo para mi 🧘🏽😌",
+  "completegoal": "Objetivo completo",
+  "cancel": "Canceler",
+  "dontaskagain": "¿No vuelves a pedir esta acción?",
+  "goal": {
+    "archive": {
+      "header": "¿Deseas marcar esta meta como completada?",
+      "note": "Esta meta se moverá al archivo junto con las submetas. Puedes restaurarla desde el archivo en cualquier momento."
+    },
+    "delete": {
+      "header": "¿Deseas eliminar esta meta?",
+      "note": "No podrás recuperarla nuevamente."
+    },
+    "shareAnonymously": {
+      "header": "¿Deseas compartir esta meta de forma pseudo anónima?",
+      "note": "Solo esta meta y sus propiedades relacionadas con el tiempo se compartirán públicamente :)"
+    },
+    "shareWithOne": {
+      "header": "¿Deseas compartir esta meta con uno de tus contactos?",
+      "note": "Cualquier cambio que realices en esta meta o debajo de ella se compartirá con esa persona."
+    }
+  },
+  "collaboration": {
+    "colabRequest": {
+      "header": "¿Deseas colaborar?",
+      "note": "Durante la colaboración, esta meta se agregará a tus MyGoals, y cualquier cambio que realices se comunicará a la otra persona."
+    },
+    "delete": {
+      "header": "¿Deseas eliminar esta meta?",
+      "note": "Esto finalizará la colaboración y no recibirás ninguna actualización."
+    },
+    "archive": {
+      "header": "¿Deseas archivar esta meta?",
+      "note": "Esto finalizará la colaboración y no recibirás ninguna actualización."
+    }
+  }
+
 }
