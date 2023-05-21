@@ -242,7 +242,7 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
       <div className="goal-sent">
         <p>
           {tags.duration ? `${tags.duration}h ` : ""}
-          {tags.beforeTime !== "" && tags.afterTime !== "" ? `between ${tags.beforeTime}-${tags.afterTime} ` :
+          {tags.beforeTime !== "" && tags.afterTime !== "" ? `between ${tags.afterTime}-${tags.beforeTime} ` :
             tags.beforeTime !== "" ? `before ${tags.beforeTime} ` :
               tags.afterTime !== "" ? `after ${tags.afterTime} ` : ""}
           {tags.on !== "" && `on ${tags.on} `}
@@ -274,13 +274,13 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
             <div className="timings">
               <div className="tag-input">
                 <span>{["after", "before", "between"].includes(selectedTag) && selectedTag}</span>
-                {(isPerSelected || selectedTag === "between") && getInputField(isPerSelected ? "budgetDuration" : "beforeTime")}
+                {(isPerSelected || selectedTag === "between") && getInputField(isPerSelected ? "budgetDuration" : "afterTime")}
 
                 {selectedTag === "between" && <span>-</span>}
                 {isPerSelected && <span>{selectedTag}</span>}
 
                 {(["before", "after", "between"].includes(selectedTag)) && (
-                  getInputField(selectedTag === "between" ? "afterTime" : `${selectedTag}Time`)
+                  getInputField(selectedTag === "between" ? "beforeTime" : `${selectedTag}Time`)
                 )}
 
                 {selectedTag === "on" && getRadioGroup(["weekdays", "weekend"], tags.on)}
