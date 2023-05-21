@@ -6,8 +6,10 @@ import { themeState } from "@src/store/ThemeState";
 import React, { useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
+  const { t } = useTranslation();
   const { actionCategory, actionName } = action;
   const darkModeStatus = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeState);
@@ -15,7 +17,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
   const [neverShowAgain, setNeverShowAgain] = useState(false);
   const [displayModal, setDisplayModal] = useRecoilState(showConfirmation);
   // @ts-ignore
-  const { header, note } = confirmationHeaders[actionCategory][actionName];
+  const [headerKey, noteKey] = [`${actionCategory}.${actionName}.header`, `${actionCategory}.${actionName}.note`];
   const getChoiceButton = (choice: string) => (
     <button
       type="button"
@@ -48,8 +50,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       onHide={() => { setDisplayModal({ ...displayModal, open: false }); }}
     >
       <Modal.Body>
-        <h5>{header}</h5>
-        <p>Note: {note}</p>
+        <h5>{t(headerKey)}</h5>
+        <p>Note: {t(noteKey)}</p>
         <div style={{ display: "flex", gap: "5px" }}>
           <Form.Check
             onChange={() => { setNeverShowAgain(!neverShowAgain); }}
@@ -58,7 +60,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
             className={`default-checkbox${darkModeStatus ? "-dark" : ""}`}
             type="checkbox"
             id="neverShowAgainCheckbox"
-            label="Don&apos;t ask again for this action?"
+            label={t("dontaskagain")}
           />
         </div>
         <div style={{ display: "flex", justifyContent: "space-around" }}>
