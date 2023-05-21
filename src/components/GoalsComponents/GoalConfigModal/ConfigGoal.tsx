@@ -229,8 +229,10 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
       open={open}
       closable={false}
       footer={null}
-      onCancel={() => {
-        if (showAddGoal) {
+      onCancel={async () => {
+        if (title !== "") {
+          await handleSave();
+        } else if (showAddGoal) {
           setShowAddGoal(null);
         } else if (showUpdateGoal) {
           setShowUpdateGoal(null);
