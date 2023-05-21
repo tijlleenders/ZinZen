@@ -26,7 +26,7 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
 
-  const [open, setOpen] = useState(true);
+  const open = !!showAddGoal || !!showUpdateGoal;
   const [title, setTitle] = useState(goal.title);
   const [isDetailsActive, setIsDetailsActive] = useState(true);
 
@@ -66,7 +66,6 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
     } else if (selectedTag === "after" || selectedTag === "between") {
       deletion.afterTime = "";
     }
-    console.log(deletion)
     setTags({ ...tags, ...deletion });
     setSelectedTag("");
   };
@@ -230,7 +229,13 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
       open={open}
       closable={false}
       footer={null}
-      onCancel={() => setOpen(false)}
+      onCancel={() => {
+        if (showAddGoal) {
+          setShowAddGoal(null);
+        } else if (showUpdateGoal) {
+          setShowUpdateGoal(null);
+        }
+      }}
       className={`configModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <div style={{ textAlign: "left" }} className="header-title"><h4>{title === "" ? "Goal Title" : title}</h4></div>
