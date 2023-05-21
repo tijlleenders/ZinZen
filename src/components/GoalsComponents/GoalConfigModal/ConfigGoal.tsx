@@ -240,7 +240,9 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
       }}
       className={`configModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
-      <div style={{ textAlign: "left" }} className="header-title"><h4>{title === "" ? "Goal Title" : title}</h4></div>
+      <div style={{ textAlign: "left" }} className="header-title">
+        <input className="ordinary-element" placeholder="Goal Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+      </div>
       <Row gutter={24} className="goal-dates">
         { getDateField("From") }
         { getDateField("To", { justifyContent: "flex-end" }) }
