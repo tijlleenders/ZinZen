@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useNavigate } from "react-router";
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Container } from "react-bootstrap";
+import { Breadcrumb } from "antd";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { homeIcon } from "@src/assets";
@@ -16,7 +16,7 @@ import { darkModeState, displayInbox, lastAction, searchActive } from "@src/stor
 import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 
 import MyGoal from "../MyGoal";
-import GoalConfigModal from "../GoalConfigModal/GoalConfigModal";
+import ConfigGoal from "../GoalConfigModal/ConfigGoal";
 
 import "./GoalSublistPage.scss";
 
@@ -134,11 +134,11 @@ export const GoalSublist = () => {
       <div className="sublist-content-container">
         <div className="sublist-content">
           <p className="sublist-title">{parentGoal?.title}</p>
-          <Container fluid className="sublist-list-container">
-            { showAddGoal && <GoalConfigModal goal={createGoalObjectFromTags({})} /> }
+          <div className="sublist-list-container">
+            { showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} /> }
             {childrenGoals?.map((goal: GoalItem) => (
               <>
-                { showUpdateGoal?.goalId === goal.id && <GoalConfigModal goal={goal} /> }
+                { showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} /> }
                 <MyGoal
                   goal={goal}
                   showActions={showActions}
@@ -168,7 +168,7 @@ export const GoalSublist = () => {
                 />
               )}
             </div>
-          </Container>
+          </div>
         </div>
       </div>
     </div>
