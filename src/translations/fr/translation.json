@@ -105,5 +105,38 @@
   "Dinner 🍽️": "Dîner 🍽️",
   "Walk 🚶🏽": "Marcher 🚶🏽",
   "Water the plants 🪴 indoors": "Arroser les plantes 🪴 à l'intérieur",
-  "Me time 🧘🏽😌": "Du temps pour moi 🧘🏽😌"
+  "Me time 🧘🏽😌": "Du temps pour moi 🧘🏽😌",
+  "dontaskagain": "Ne plus demander pour cette action ?",
+  "goal": {
+    "archive": {
+      "header": "Voulez-vous marquer cette cible comme terminée ?",
+      "note": "Cette cible sera déplacée vers les archives avec les sous-cibles. Vous pouvez la restaurer à tout moment depuis les archives."
+    },
+    "delete": {
+      "header": "Voulez-vous supprimer cette cible ?",
+      "note": "Vous ne pourrez pas la récupérer par la suite."
+    },
+    "shareAnonymously": {
+      "header": "Voulez-vous partager cette cible de manière pseudo-anonyme ?",
+      "note": "Seule cette cible et ses propriétés liées au temps seront partagées publiquement :)"
+    },
+    "shareWithOne": {
+      "header": "Voulez-vous partager cette cible avec l'un de vos contacts ?",
+      "note": "Tous les changements que vous apportez à cette cible ou en dessous seront partagés avec cette personne."
+    }
+  },
+  "collaboration": {
+    "colabRequest": {
+      "header": "Souhaitez-vous collaborer ?",
+      "note": "Pendant la collaboration, cette cible sera ajoutée à vos MyGoals, et toutes les modifications que vous apportez seront communiquées à l'autre personne."
+    },
+    "delete": {
+      "header": "Voulez-vous supprimer cette cible ?",
+      "note": "Cela mettra fin à la collaboration et vous ne recevrez plus aucune mise à jour."
+    },
+    "archive": {
+      "header": "Voulez-vous archiver cette cible ?",
+      "note": "Cela mettra fin à la collaboration et vous ne recevrez plus aucune mise à jour."
+    }
+  }
 }
