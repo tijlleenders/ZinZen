@@ -1,4 +1,3 @@
-import { confirmationHeaders } from "@src/constants/confirmationHeaders";
 import { getConfirmButtonText } from "@src/constants/myGoals";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
 import { darkModeState, showConfirmation } from "@src/store";
@@ -51,7 +50,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
     >
       <Modal.Body>
         <h5>{t(headerKey)}</h5>
-        <p>{t("Note")}: {t(noteKey)}</p>
+        <p>{t("note")}: {t(noteKey)}</p>
         <div style={{ display: "flex", gap: "5px" }}>
           <Form.Check
             onChange={() => { setNeverShowAgain(!neverShowAgain); }}
@@ -60,12 +59,12 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
             className={`default-checkbox${darkModeStatus ? "-dark" : ""}`}
             type="checkbox"
             id="neverShowAgainCheckbox"
-            label={t("dontaskagain")}
+            label={t("dontAskAgain")}
           />
         </div>
         <div style={{ display: "flex", justifyContent: "space-around" }}>
           { getChoiceButton(t(getConfirmButtonText(actionName))) }
-          { getChoiceButton(t("Cancel")) }
+          { getChoiceButton(t("cancel")) }
         </div>
       </Modal.Body>
 

@@ -28,22 +28,22 @@ export const getHeadingOfTag = (tagName: string, warningMessage = false) => {
 };
 
 export const getConfirmButtonText = (actionName: string) => {
-  let confirmButtonText = "Confirm";
+  let confirmButtonText = "confirm";
   switch (actionName) {
     case "archive":
-      confirmButtonText = "Complete goal";
+      confirmButtonText = "completeGoal";
       break;
     case "delete":
-      confirmButtonText = "Delete goal";
+      confirmButtonText = "deleteGoal";
       break;
     case "shareAnonymously":
-      confirmButtonText = "Share goal";
+      confirmButtonText = "shareGoal";
       break;
     case "shareWithOne":
-      confirmButtonText = "Choose contact";
+      confirmButtonText = "chooseContact";
       break;
     case "colabRequest":
-      confirmButtonText = "Collaborate on goal";
+      confirmButtonText = "collaborateOnGoal";
       break;
     default:
   }
