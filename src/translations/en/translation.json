@@ -107,6 +107,14 @@
   "Water the plants 🪴 indoors": "Water the plants 🪴 indoors",
   "Me time 🧘🏽😌": "Me time 🧘🏽😌",
   "dontaskagain": "Don't ask again for this action?",
+  "Note": "Note",
+  "Complete goal": "Complete goal",
+  "Delete goal": "Delete goal",
+  "Share goal": "Share goal",
+  "Choose contact": "Choose contact",
+  "Collaborate on goal": "Collaborate on goal",
+  "Confirm": "Confirm",
+  "Cancel": "Cancel",
   "goal": {
     "archive": {
       "header": "Do you want to mark this goal completed?",

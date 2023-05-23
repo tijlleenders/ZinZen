@@ -109,6 +109,14 @@
   "completegoal": "Objetivo completo",
   "cancel": "Canceler",
   "dontaskagain": "¿No vuelves a pedir esta acción?",
+  "Note": "Nota",
+  "Complete goal": "Completar objetivo",
+  "Delete goal": "Eliminar objetivo",
+  "Share goal": "Compartir objetivo",
+  "Choose contact": "Elegir contacto",
+  "Collaborate on goal": "Colaborar en objetivo",
+  "Confirm": "Confirmar",
+  "Cancel": "Cancelar",
   "goal": {
     "archive": {
       "header": "¿Deseas marcar esta meta como completada?",

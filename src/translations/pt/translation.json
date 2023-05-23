@@ -91,6 +91,14 @@
   "Water the plants 🪴 indoors" : "regar as plantas 🪴 dentro de casa",
   "Me time 🧘🏽😌": "Tempo para mim 🧘🏽😌",
   "dontaskagain": "Não perguntar novamente para esta ação?",
+  "Note": "Nota",
+  "Complete goal": "Completar objetivo",
+  "Delete goal": "Excluir objetivo",
+  "Share goal": "Compartilhar objetivo",
+  "Choose contact": "Escolher contato",
+  "Collaborate on goal": "Colaborar no objetivo",
+  "Confirm": "Confirmar",
+  "Cancel": "Cancelar",
   "goal": {
     "archive": {
       "header": "Deseja marcar esta meta como concluída?",

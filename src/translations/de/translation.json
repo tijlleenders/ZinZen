@@ -97,6 +97,14 @@
   "Water the plants 🪴 indoors" : "Wasserpflanzen 🪴 drinnen",
   "Me time 🧘🏽😌": "Zeit für mich 🧘🏽😌",
   "dontaskagain": "Nicht erneut nach dieser Aktion fragen?",
+  "Note": "Notiz",
+  "Complete goal": "Ziel abschließen",
+  "Delete goal": "Ziel löschen",
+  "Share goal": "Ziel teilen",
+  "Choose contact": "Kontakt auswählen",
+  "Collaborate on goal": "Bei Ziel zusammenarbeiten",
+  "Confirm": "Bestätigen",
+  "Cancel": "Abbrechen",
   "goal": {
     "archive": {
       "header": "Möchten Sie dieses Ziel als abgeschlossen markieren?",
