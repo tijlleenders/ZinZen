@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown, Switch } from "antd";
 import { useNavigate } from "react-router";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, displayInbox, displayToast, searchActive } from "@src/store";
+import { darkModeState, displayInbox, displayToast, searchActive, backupRestoreModal } from "@src/store";
 import type { MenuProps } from "antd/es/menu/menu";
 
 import searchIcon from "@assets/images/searchIcon.svg";
@@ -26,7 +26,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   const setShowToast = useSetRecoilState(displayToast);
   const setDisplaySearch = useSetRecoilState(searchActive);
   const setThemeSelection = useSetRecoilState(themeSelectionMode);
-
+  const setDisplayBackupRestoreModal = useSetRecoilState(backupRestoreModal);
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
@@ -36,7 +36,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   };
 
   const items: MenuProps["items"] = [
-    ...["Donate", "Feedback", "Blog", "Change Theme"].map((ele, index) => ({
+    ...["Donate", "Feedback", "Blog", "Backup", "Change Theme"].map((ele, index) => ({
       label: ele,
       key: `${index}`,
       onClick: () => {
@@ -49,6 +49,8 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
           navigate("/Feedback");
         } else if (ele === "Blog") {
           window.open("https://blog.zinzen.me", "_self");
+        } else if("Backup") {
+          setDisplayBackupRestoreModal(true);
         }
       }
     })),

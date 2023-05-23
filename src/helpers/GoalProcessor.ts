@@ -9,12 +9,24 @@ import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/mod
 import { getDefaultValueOfShared, getDefaultValueOfCollab } from "@src/utils/defaultGenerators";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
+export const createSentFromTags = (goal: GoalItem) => (`
+${goal.duration ? `${goal.duration}h ` : ""}
+${goal.start ? `From ${new Date(goal.start).toDateString().slice(4)}` : ""}
+${goal.due ? `Upto ${new Date(goal.due).toDateString().slice(4)}` : ""}
+  ${goal.beforeTime && goal.afterTime ? `between ${goal.afterTime}-${goal.beforeTime} ` :
+    goal.beforeTime ? `before ${goal.beforeTime} ` :
+      goal.afterTime ? `after ${goal.afterTime} ` : ""}
+  ${goal.on ? `on ${goal.on} ` : ""}
+  ${goal.habit ? `every ${goal.habit === "daily" ? "day" : "week"} ` : ""}
+  ${goal.timeBudget ? `${goal.timeBudget.duration}h per ${goal.timeBudget.period}` : ""}
+`);
+
 export const formatTagsToText = (_goal: GoalItem) => {
   const goal = { ..._goal };
   if (goal.start) { goal.start = new Date(goal.start); }
   if (goal.due) { goal.due = new Date(goal.due); }
 
-  const response = { title: "", duration: "", start: "", due: "", habit: "", on: "", timeBudget: "" ,timing: "", link: "", language: goal.language, goalColor: goal.goalColor };
+  const response = { title: "", duration: "", start: "", due: "", habit: "", on: "", timeBudget: "", timing: "", link: "", language: goal.language, goalColor: goal.goalColor };
   if ((goal.afterTime || goal.afterTime === 0) && goal.beforeTime) {
     response.timing = ` ${goal.afterTime}-${goal.beforeTime}`;
   } else if ((goal.afterTime || goal.afterTime === 0)) {

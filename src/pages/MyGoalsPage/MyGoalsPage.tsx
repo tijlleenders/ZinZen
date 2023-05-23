@@ -29,6 +29,7 @@ import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal
 
 import "./MyGoalsPage.scss";
 import Empty from "@src/common/Empty";
+import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 
 export const MyGoalsPage = () => {
   const location = useLocation();
@@ -128,7 +129,7 @@ export const MyGoalsPage = () => {
         {
           selectedGoalId === "root" ? (
             <div className="my-goals-content">
-              { showAddGoal && (<GoalConfigModal goal={createGoalObjectFromTags({})} />)}
+              { showAddGoal && (<ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />)}
               <div>
                 { openInbox && isUpdgradeAvailable && (
                   <ZAccordion
@@ -164,7 +165,7 @@ export const MyGoalsPage = () => {
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   {activeGoals.map((goal: GoalItem) => (
                     <>
-                      { showUpdateGoal?.goalId === goal.id && <GoalConfigModal goal={goal} /> }
+                      { showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} /> }
                       <MyGoal
                         goal={goal}
                         showActions={showActions}

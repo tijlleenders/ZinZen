@@ -1,0 +1,59 @@
+.App-light, .popupModal {
+  .checkbox {
+    .ant-radio-checked .ant-radio-inner{
+      border-color: #CD6E51 !important ;
+      background-color: #CD6E51 !important;
+    }
+    .ant-radio:hover .ant-radio-inner {
+      border-color: #CD6E51 !important;
+    }
+    .ant-radio-checked .ant-radio-inner:focus{
+      border-color: #CD6E51 !important;
+    }
+  }
+}
+.App-dark, .popupModal-dark {
+  .checkbox {
+    .ant-radio-checked .ant-radio-inner{
+      border-color: var(--selection-color) !important ;
+      background-color: var(--selection-color) !important;
+    }
+    .ant-radio:hover .ant-radio-inner {
+      border-color: var(--selection-color) !important;
+    }
+    .ant-radio-checked .ant-radio-inner:focus{
+      border-color: var(--selection-color) !important;
+    }
+  }
+}
+
+  
+/* Accordion */
+.ant-collapse-header {
+  flex-direction: row-reverse;
+  text-align: left;
+  font-weight: 600;
+}
+.accordion-body {
+  padding: 1em 0 !important;
+}
+.accordion-item, .accordion-header, .accordion-button {
+  background: transparent;
+  border: none !important;
+  box-shadow: none !important;
+}
+.accordion-button {
+  padding: 0;
+  background: transparent !important;
+}
+.Accordion { 
+  .accordion-button::after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000000'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+  }  
+}
+.Accordion-dark { 
+  .accordion-button::after {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+  }
+}
+  

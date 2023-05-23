@@ -160,6 +160,7 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
 
 /* Popup Modals */
 .popupModal, .popupModal-dark {
+  border: none;
   input[type="text"] {
     font-size: 1em;
     font-weight: 400;
@@ -173,76 +174,54 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
     margin-bottom: 10px;
   }
-  
+  .header-title {
+    padding: 24px;
+    text-align: center;
+    border-radius: 28px 28px 0 0!important;
+    background: var(--primary-background);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+
+    h4 { 
+      margin: 0;
+    }
+  }
   .modal-dialog {
     margin-top: 18%;
   }
   
-  .modal-content, .ant-modal-content {
+  .ant-modal-content {
+    border: none !important;
     background: var(--secondary-background) !important;    
     margin-top: auto;
   }
 
-  .modal-body {
+  .ant-modal-body {
     border-radius: 10px;
-    padding: 23px;
   }
 }
 
 .popupModal-dark {
-  .modal-content, .ant-modal-content {
+  .ant-modal-content {
     background: var(--modal-bg-color) !important;
   }
 }
 
-/* Accordion */
-.ant-collapse-header {
-  flex-direction: row-reverse;
-  text-align: left;
-  font-weight: 600;
-}
-
-.accordion-body {
-  padding: 1em 0 !important;
-}
-.accordion-item, .accordion-header, .accordion-button {
-  background: transparent;
-  border: none !important;
-  box-shadow: none !important;
-}
-.accordion-button {
-  padding: 0;
-  background: transparent !important;
-}
-.Accordion { 
-  .accordion-button::after {
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000000'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
-  }  
-}
-.Accordion-dark { 
-  .accordion-button::after {
-    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
-  }
-}
-
-.colorPallette, .colorPallette-dark {
+.colorPallette {
   display: flex;
-  gap: 25px;
+  gap: 20px;
   overflow-x: scroll;
   overflow-y: hidden;
-  margin: 10px 0;
-  
-  padding: 10px 20px;
-  width: 465px;
+  padding: 0px 8px;
+  width: 200px;
   border-radius: 10px;
-  button {
-    border: none;    
-    min-width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    text-align: center;
-    font-size: 1em;
-  }
+}
+.color-btn {
+  border: none;    
+  min-width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 1em;
 }
 
 /* Loader */
@@ -267,11 +246,12 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   transform: scaleX(-1)
 }
 
+
 @media (max-width: 600px) {
   .loader {
       left: 18px;
   }
-  .colorPallette, .colorPallette-dark{
-    width: 65vw;
-  }
+  // .colorPallette, .colorPallette-dark{
+  //   width: 60vw;
+  // }
 }

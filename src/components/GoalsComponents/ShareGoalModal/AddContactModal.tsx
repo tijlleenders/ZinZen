@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 import { addContact } from "@src/api/ContactsAPI";
 import { shareInvitation } from "@src/assets";
 import Loader from "@src/common/Loader";
@@ -5,7 +6,7 @@ import { initRelationship } from "@src/services/contact.service";
 import { darkModeState, displayToast } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import React, { useState } from "react";
-import { Modal } from "react-bootstrap";
+import { Modal } from "antd";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface AddContactModalProps {
@@ -46,47 +47,44 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
   return (
 
     <Modal
-      className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      show={showAddContactModal}
-      onHide={() => {
+      closable={false}
+      footer={null}
+      centered
+      open={showAddContactModal}
+      onCancel={() => {
         setNewContact(null);
         handleCloseAddContact();
       }}
-      centered
-      autoFocus={false}
+      className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
-      <Modal.Body>
-        <p className="popupModal-title"> Add a contact name </p>
-        <input
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus
-          disabled={newContact ? newContact.relId !== "" : false}
-          type="text"
-          placeholder="Name"
-          className="show-feelings__note-input"
-          value={newContact?.contactName || ""}
-          onChange={(e) => {
-            setNewContact({ contactName: e.target.value, relId: newContact?.relId || "" });
-          }}
-          onKeyDown={async (e) => {
-            if (e.key === "Enter") {
-              await addNewContact();
-            }
-          }}
-        />
-        <br />
-        <button
-          type="button"
-          disabled={loading}
-          id="addContact-btn"
-          style={{ float: "right" }}
-          onClick={async () => { await addNewContact(); }}
-          className={`addContact-btn action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
-        >
-          { loading && <Loader /> }
-          <img alt="add contact" className="theme-icon" src={shareInvitation} />Share invitation
-        </button>
-      </Modal.Body>
+      <p className="popupModal-title"> Add a contact name </p>
+      <input
+        autoFocus
+        disabled={newContact ? newContact.relId !== "" : false}
+        type="text"
+        placeholder="Name"
+        className="show-feelings__note-input"
+        value={newContact?.contactName || ""}
+        onChange={(e) => {
+          setNewContact({ contactName: e.target.value, relId: newContact?.relId || "" });
+        }}
+        onKeyDown={async (e) => {
+          if (e.key === "Enter") {
+            await addNewContact();
+          }
+        }}
+      />
+      <br />
+      <button
+        type="button"
+        disabled={loading}
+        id="addContact-btn"
+        onClick={async () => { await addNewContact(); }}
+        className={`addContact-btn action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
+      >
+        { loading && <Loader /> }
+        <img alt="add contact" className="theme-icon" src={shareInvitation} />Share invitation
+      </button>
     </Modal>
   );
 };

@@ -1,19 +1,18 @@
-import { darkModeState } from "@src/store";
 import React from "react";
-import Spinner from "react-bootstrap/Spinner";
+import { Spin } from "antd";
 import { useRecoilValue } from "recoil";
+
+import { darkModeState } from "@src/store";
 
 const Loader = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
-    <Spinner
+    <Spin
       className="loader"
-      animation="border"
-      role="status"
       style={{ color: darkModeStatus ? "#705BBC" : "#CD6E51" }}
     >
       <span className="visually-hidden">Loading...</span>
-    </Spinner>
+    </Spin>
 
   );
 };
