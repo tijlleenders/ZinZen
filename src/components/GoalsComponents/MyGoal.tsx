@@ -10,7 +10,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { darkModeState, lastAction, searchActive } from "@src/store";
-import { getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
+import { createSentFromTags, getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 import MyGoalActions from "./MyGoalActions";
 import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
@@ -119,8 +119,10 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           className="goal-title"
           suppressContentEditableWarning
         >
-          <div>{goal.title}</div>&nbsp;
-          { goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
+          <div>
+            {goal.title}&nbsp;{ goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
+            { showActions.open === goal.id && showActions.click > 0 && <p className="goal-desc">{createSentFromTags(goal)}</p>}
+          </div>
         </div>
       </div>
 

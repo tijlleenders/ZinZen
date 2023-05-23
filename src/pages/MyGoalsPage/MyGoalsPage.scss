@@ -136,14 +136,18 @@
   font-size: 1.143em;
   text-align: left !important;
   max-width: unset;
-  white-space: nowrap;
   overflow: scroll;
 
   -ms-overflow-style: none;  
   scrollbar-width: none;
+
 }
 .goal-title::-webkit-scrollbar {
   display: none;
+}
+.goal-desc {
+  font-size: 0.875em;
+  font-weight: 300;
 }
 
 .goal-link {
