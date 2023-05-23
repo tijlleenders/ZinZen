@@ -51,7 +51,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
     >
       <Modal.Body>
         <h5>{t(headerKey)}</h5>
-        <p>Note: {t(noteKey)}</p>
+        <p>{t("Note")}: {t(noteKey)}</p>
         <div style={{ display: "flex", gap: "5px" }}>
           <Form.Check
             onChange={() => { setNeverShowAgain(!neverShowAgain); }}
@@ -64,8 +64,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
           />
         </div>
         <div style={{ display: "flex", justifyContent: "space-around" }}>
-          { getChoiceButton(getConfirmButtonText(actionName)) }
-          { getChoiceButton("Cancel") }
+          { getChoiceButton(t(getConfirmButtonText(actionName))) }
+          { getChoiceButton(t("Cancel")) }
         </div>
       </Modal.Body>
 
