@@ -245,7 +245,7 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
       className={`configModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <div style={{ textAlign: "left" }} className="header-title">
-        <input className="ordinary-element" placeholder="Goal Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input className="ordinary-element" id="title-field" placeholder="Goal Title" value={title} onChange={(e) => setTitle(e.target.value)} />
       </div>
       <Row gutter={24} className="goal-dates">
         { getDateField("From") }
@@ -271,10 +271,6 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
         {
           isDetailsActive ? (
             <div className="details">
-              <div>
-                <p>Title: </p>
-                <input type="text" id="title-field" className="default-input" placeholder="Goal Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-              </div>
               <div style={{ display: "flex", gap: 8, margin: "12px 0" }}>
                 <div style={{ width: 75 }}>
                   <p>Duration: </p>
