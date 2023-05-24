@@ -10,7 +10,6 @@ import { vibrateWorks } from "@src/constants/vibrateCheck";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
 
 import "@translations/i18n";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const customStyle = {
   border: "none",
