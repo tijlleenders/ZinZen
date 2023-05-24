@@ -1,4 +1,4 @@
-.breadcrumb-item + .breadcrumb-item::before {
+.ant-breadcrumb + .ant-breadcrumb-item::before {
   content: var(--bs-breadcrumb-divider, ">") !important;
 }
 .sublist-container, .sublist-content {
@@ -8,7 +8,7 @@
   padding-top: 10;
 }
 
-.breadcrumb li {
+.ant-breadcrumb li {
   padding-top: 16px;
   a {
    text-decoration: none;

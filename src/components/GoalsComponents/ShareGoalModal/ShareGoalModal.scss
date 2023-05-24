@@ -1,18 +1,20 @@
 /* Share Modal */
-#share-modal, #share-modal-dark {
-  margin: auto;
-  max-width: 600px;
-  min-width: 236px;
-  width: 100%;
-  height: 100%;
-
-  .modal-content, .ant-modal-content {
-    margin-top: auto;
+.share-modal, #share-modal-dark {
+  vertical-align: bottom !important;
+  width: 100% !important;
+  max-width: 600px !important;
+  .ant-modal-content {
     border-radius: 0.5rem 0.5rem 0 0;
+  }
+  .icon {
+    margin-right: 3%;
+  }
+  h4 {
+    margin-bottom: 16px;
   }
 } 
 
-#share-modal-body {
+.ant-modal-body {
   display: flex;
   flex-direction: column;
   padding: var(--bs-modal-padding) 0;
@@ -28,7 +30,7 @@
   }
 }
 
-#share-modal-body > * {
+.ant-modal-body > * {
   padding: 0 var(--bs-modal-padding);
 }
 
@@ -50,6 +52,7 @@
 .share-Options > div {
   position: relative;
   border-radius: 50%;
+  
   img, svg {
     position: absolute;
     top: 0;
@@ -112,7 +115,7 @@
 
 .shareOption-name {
   margin: 0;
-  margin-left: 3%;
+  // margin-left: 3%;
   align-self: center;
   font-weight: 600;
   text-align: left;
@@ -128,7 +131,10 @@
   .modal-content, .ant-modal-content {
     margin: auto !important;
     .action-btn {
+      width: fit-content;
       background: var(--selection-color);
+      margin: 0;
+      margin-left: auto;
       img {
         margin-right: 10px;
       }

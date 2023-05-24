@@ -18,7 +18,7 @@ import { NotFoundPage } from "@pages/NotFoundPage/NotFoundPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 
-import BackupRestoreModal from "@components/BackupRestoreModal/BackupRestoreModal";
+import BackupRestoreModal from "@components/BackupRestoreModal";
 
 import { GoalItem } from "./models/GoalItem";
 import { findTypeOfSub } from "./api/PubSubAPI";
@@ -32,6 +32,7 @@ import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAP
 
 import "./global.scss";
 import "./customize.scss";
+import "./override.scss";
 import "@fontsource/montserrat";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -93,7 +94,7 @@ const App = () => {
       localStorage.setItem("darkMode", "off");
       localStorage.setItem("theme", JSON.stringify(getTheme()));
     } else {
-      // init();
+      init();
     }
     if ((!isLanguageChosen) && window.location.pathname !== "/" && window.location.pathname.toLowerCase() !== "/invest") { window.open("/", "_self"); }
   }, []);
@@ -110,7 +111,6 @@ const App = () => {
     };
     checkDevMode();
   }, []);
-  console.log(devMode)
   return (
     <div className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`}>
       <div className={`App-${darkModeEnabled ? "dark" : "light"}`}>

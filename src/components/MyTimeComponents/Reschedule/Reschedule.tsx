@@ -49,7 +49,7 @@ const Reschedule = () => {
       onCancel={() => setOpen(false)}
       className={`rescheduleModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
-      <div className="task"><h4>Walking</h4></div>
+      <div className="header-title"><h4>Walking</h4></div>
       <SubHeader
         showLeftNav={monthIndex > 0}
         showRightNav={monthIndex < 11}
