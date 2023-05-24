@@ -1,5 +1,5 @@
+import { Tooltip } from "antd";
 import React, { useEffect } from "react";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { unarchiveIcon } from "@src/assets";
@@ -95,13 +95,13 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         { goal.sublist.length > 0 && (
           <div
             className="goal-dd-outer"
-            style={{ height: showActions.open === goal.id && showActions.click > 0 ? 96 : 55, borderColor: goal.goalColor, top: showActions.open === goal.id ? 11.5 : 9 }}
+            style={{ height: showActions.open === goal.id && showActions.click > 0 ? "calc(100% - 50px)" : 54, borderColor: goal.goalColor, top: showActions.open === goal.id ? 11.5 : 10 }}
           />
         )}
         <div
           className="goal-dd-inner"
           style={{
-            height: showActions.open === goal.id && showActions.click > 0 ? 90 : 44,
+            height: showActions.open === goal.id && showActions.click > 0 ? archived ? "calc(100% - 20px)" : 90 : 44,
             background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`
           }}
         />
@@ -127,11 +127,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       </div>
 
       { (goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root") && (
-      <OverlayTrigger
-        trigger="click"
-        placement="top"
-        overlay={<Tooltip id="tooltip-disabled"> {sharedWithContact || collabWithContact } </Tooltip>}
-      >
+      <Tooltip placement="top" title={sharedWithContact || collabWithContact}>
         <div
           className="contact-button"
           style={archived ? { right: "78px" } : {}}
@@ -153,7 +149,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           </button>
         </div>
 
-      </OverlayTrigger>
+      </Tooltip>
       )}
       { archived && (
       <div className="contact-button">
