@@ -1,10 +1,10 @@
-import React, { ReactNode } from "react";
-import { Accordion } from "react-bootstrap";
+import { Collapse } from "antd";
 import { useRecoilValue } from "recoil";
+import React, { ReactNode } from "react";
 
 import { darkModeState } from "@src/store";
 
-const commonStyle = {
+const commonStyle : React.CSSProperties = {
   margin: 0,
   fontWeight: "bolder",
   fontSize: "1.143em",
@@ -23,20 +23,20 @@ export interface ArchivedAccordionProps {
 const ArchivedAccordion: React.FC<ArchivedAccordionProps> = ({ name, totalItems, children }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
-    <Accordion id={`${name}-accordion`} className={`Accordion${darkModeStatus ? "-dark" : ""}`} style={{ margin: "1.5em 0" }}>
-      <Accordion.Item eventKey="0">
-        <Accordion.Header>
+    <Collapse className={`${name}-accordion Accordion${darkModeStatus ? "-dark" : ""}`} style={{ margin: "1.5em 0" }}>
+      <Collapse.Panel
+        key="0"
+        header={(
           <p style={{
             ...commonStyle,
             ...(darkModeStatus ? darkCommonStyle : {}) }}
           > {`${name} (${totalItems})`}
           </p>
-        </Accordion.Header>
-        <Accordion.Body>
-          {children}
-        </Accordion.Body>
-      </Accordion.Item>
-    </Accordion>
+      )}
+      >
+        {children}
+      </Collapse.Panel>
+    </Collapse>
   );
 };
 
