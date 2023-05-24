@@ -121,12 +121,12 @@ const App = () => {
     checkDevMode();
   }, []);
 
-  useEffect(() => {
-    if (showToast) {
-      openNotification();
-      setShowToast({ ...showToast, open: false });
-    }
-  }, [showToast]);
+  // useEffect(() => {
+  //   if (showToast.open) {
+  //     openNotification();
+  //     setShowToast({ ...showToast, open: false });
+  //   }
+  // }, [showToast]);
 
   return (
     <div className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`}>
