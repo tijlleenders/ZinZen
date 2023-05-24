@@ -120,7 +120,7 @@ const ShareGoalModal: React.FC<IShareGoalModalProps> = ({ goal, showShareModal, 
       className={`share-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
-      <h4>{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</h4>
+      <p className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</p>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {displaySubmenu === "groups" ? (
           <SubMenu>
