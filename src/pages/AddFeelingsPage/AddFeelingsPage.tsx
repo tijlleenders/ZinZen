@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { Modal } from "react-bootstrap";
+import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -48,44 +48,44 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate })
   };
   return (
     <Modal
+      footer={null}
+      closable={false}
+      open={!!feelingDate}
       className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      show={!!feelingDate}
-      onHide={() => { setShowAddFeelingsModal(false); setSelectedCategory(""); }}
+      onCancel={() => { setShowAddFeelingsModal(false); setSelectedCategory(""); }}
     >
       { selectedCategory === "" ? (
-        <Modal.Body>
-          <div id="addFeelings-container">
-            <p className="popupModal-title">
-              {date.getTime() === getJustDate(new Date()).getTime()
-                ? t("feelingsmessage")
-                : `${t("feelingsMessagePast")} ${date.toDateString()}`}
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {feelingsCategories.map((category: string) => (
-                <div key={`feeling-${category}`} className={`feelings-category${darkModeStatus ? "-dark" : ""}`}>
-                  <button type="button" onClick={async () => { await addThisFeeling(category); }}>
-                    {feelingsEmojis[category]}&nbsp;&nbsp;
-                    {t(category)}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedCategory(category);
-                    }}
-                  > <img alt="add feeling" src={backIcon} className="chevronRight theme-icon" />
-                  </button>
-                </div>
-              ))}
-            </div>
+        <>
+          <p className="popupModal-title">
+            {date.getTime() === getJustDate(new Date()).getTime()
+              ? t("feelingsmessage")
+              : `${t("feelingsMessagePast")} ${date.toDateString()}`}
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {feelingsCategories.map((category: string) => (
+              <div key={`feeling-${category}`} className="feelings-category">
+                <button type="button" onClick={async () => { await addThisFeeling(category); }}>
+                  {feelingsEmojis[category]}&nbsp;&nbsp;
+                  {t(category)}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(category);
+                  }}
+                > <img alt="add feeling" src={backIcon} className="chevronRight theme-icon" />
+                </button>
+              </div>
+            ))}
           </div>
-        </Modal.Body>
+        </>
       )
         :
         (
-          <Modal.Body id={`feeling-modal-body${darkModeStatus ? "-dark" : ""}`}>
+          <div id="addFeelings-container">
             <p className="popupModal-title">{`You feel ${customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling}`}</p>
             <div id="feelingOptions">
-              { selectedCategory !== "" && feelingsList[selectedCategory].map((feeling, index) => (
+              {selectedCategory !== "" && feelingsList[selectedCategory].map((feeling, index) => (
                 <button
                   type="button"
                   className={`feelingOption${choice === index ? "-selected" : ""}`}
@@ -95,13 +95,13 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate })
                   {t(feeling)}
                 </button>
               ))}
-              <input
-                type="text"
-                placeholder="New Feeling? Write here..."
-                onChange={(e) => { setCustomFeeling(e.target.value); setChoice(e.target.value === "" ? 0 : -1); }}
-                value={customFeeling}
-              />
             </div>
+            <input
+              type="text"
+              placeholder="New Feeling? Write here..."
+              onChange={(e) => { setCustomFeeling(e.target.value); setChoice(e.target.value === "" ? 0 : -1); }}
+              value={customFeeling}
+            />
             <input
               type="text"
               placeholder="Add Note"
@@ -110,11 +110,10 @@ export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate })
             <button
               type="button"
               onClick={async () => { await addThisFeeling(); }}
-              style={{ float: "right", padding: "8px 14px" }}
               className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
             > Save
             </button>
-          </Modal.Body>
+          </div>
         )}
     </Modal>
   );
