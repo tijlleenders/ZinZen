@@ -1,13 +1,12 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import backIcon from "@assets/images/backIcon.svg";
 import goalsIcon from "@assets/images/goalsIcon.svg";
 import calendarIcon from "@assets/images/calendarIcon.svg";
 import journalIcon from "@assets/images/journalIcon.svg";
 
-import { getOrdinalSuffix } from "@src/utils";
 import GlobalAddBtn from "@components/GlobalAddBtn";
 import { darkModeState, displayInbox } from "@src/store";
 
@@ -18,14 +17,12 @@ import { moonIcon, sunIcon } from "@src/assets";
 const BottomNavbar = ({ title }: { title: string}) => {
   const navigate = useNavigate();
   const openInbox = useRecoilValue(displayInbox);
+  const themeSelection = useRecoilValue(themeSelectionMode);
 
   const [theme, setTheme] = useRecoilState(themeState);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const currentPage = window.location.pathname.split("/")[1];
-  const [month, date] = new Date().toDateString().split(" ").slice(1, 3);
-
-  const themeSelection = useRecoilValue(themeSelectionMode);
 
   const themeChange = (nav: -1 | 1) => {
     let choice = theme[darkModeStatus ? "dark" : "light"] + nav;
