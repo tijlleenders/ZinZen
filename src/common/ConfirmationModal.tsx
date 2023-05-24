@@ -22,7 +22,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       className={`default-btn${darkModeStatus ? "-dark" : ""}`}
       style={{
         boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
-        background: choice === "Confirm" ? "var(--primary-background)" : "transparent"
+        background: choice !== "Cancel" ? "var(--primary-background)" : "transparent"
       }}
       onClick={async () => {
         if (neverShowAgain) {
