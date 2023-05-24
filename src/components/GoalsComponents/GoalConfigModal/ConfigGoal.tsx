@@ -9,7 +9,7 @@ import ColorPalette from "@src/common/ColorPalette";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
-import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
+import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory, displayGoalId } from "@src/store/GoalsState";
 import { colorPalleteList, days } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -17,6 +17,7 @@ import "./ConfigGoal.scss";
 const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: GoalItem }) => {
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalsHistory = useRecoilValue(goalsHistory);
 
   const setDevMode = useSetRecoilState(openDevMode);
