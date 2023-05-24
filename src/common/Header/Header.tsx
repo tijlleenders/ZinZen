@@ -1,6 +1,6 @@
 import React from "react";
 import { Dropdown, Switch } from "antd";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { darkModeState, displayInbox, displayToast, searchActive, backupRestoreModal } from "@src/store";
 import type { MenuProps } from "antd/es/menu/menu";
@@ -12,8 +12,8 @@ import { IHeader } from "@src/Interfaces/ICommon";
 import { themeState, themeSelectionMode } from "@src/store/ThemeState";
 import { goalsHistory } from "@src/store/GoalsState";
 
-import { inboxIcon, openEnvelopeIcon } from "../../assets";
 import Search from "../Search";
+import { inboxIcon, openEnvelopeIcon } from "../../assets";
 
 import "./Header.scss";
 
@@ -49,7 +49,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
           navigate("/Feedback");
         } else if (ele === "Blog") {
           window.open("https://blog.zinzen.me", "_self");
-        } else if("Backup") {
+        } else if (ele === "Backup") {
           setDisplayBackupRestoreModal(true);
         }
       }
