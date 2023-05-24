@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-import { Form, Modal } from "react-bootstrap";
+import { Checkbox, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
@@ -31,14 +31,12 @@ const DisplayChangesModal = () => {
   const getEditChangesList = () => {
     const { prettierVersion } = updateList;
     return (
-      <Form className={`changes-list${darkModeStatus ? "-dark" : ""}`}>
+      <div className={`changes-list${darkModeStatus ? "-dark" : ""}`}>
         { Object.keys(prettierVersion).map((k) => (
           <div key={`${k}-edit`}>
-            <Form.Check
-              type="checkbox"
-              name="TagsChanges"
+            <Checkbox
               checked={!unselectedChanges.includes(k)}
-              className={`default-checkbox${darkModeStatus ? "-dark" : ""}`}
+              className="checkbox"
               onChange={(e) => {
                 setUnselectedChanges([...(e.target.checked ? unselectedChanges.filter((tag) => tag !== k) : [...unselectedChanges, k])]);
               }}
@@ -50,20 +48,18 @@ const DisplayChangesModal = () => {
             </p>
           </div>
         ))}
-      </Form>
+      </div>
     );
   };
 
   const getSubgoalsList = () => showChangesModal?.goals.map((ele) => (
     <div key={`${ele.id}-subgoal`} style={{ display: "flex" }}>
-      <Form.Check
+      <Checkbox
         checked={!unselectedChanges.includes(ele.id)}
         onChange={(e) => {
           setUnselectedChanges([...(e.target.checked ? unselectedChanges.filter((id) => id !== ele.id) : [...unselectedChanges, ele.id])]);
         }}
-        className={`default-checkbox${darkModeStatus ? "-dark" : ""}`}
-        name="NewSubgoals"
-        type="checkbox"
+        className="checkbox"
       /> <p>&nbsp;{ele.title}</p>
     </div>
   ));
@@ -101,17 +97,18 @@ const DisplayChangesModal = () => {
   return (
     <Modal
       className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      style={{ maxWidth: "410px" }}
-      show={!!showChangesModal}
-      onHide={() => { setShowChangesModal(null); }}
+      open={!!showChangesModal}
+      onCancel={() => { setShowChangesModal(null); }}
+      closable={false}
+      footer={null}
     >
       { showChangesModal && activeGoal && (
-        <Modal.Body>
-          { activeGoal && <h2><Header contactName={activeContact} title={activeGoal.title} currentDisplay={currentDisplay} /></h2> }
+        <>
+          { activeGoal && <p className="popupModal-title"><Header contactName={activeContact} title={activeGoal.title} currentDisplay={currentDisplay} /></p> }
           {getChanges()}
           <AcceptBtn goal={activeGoal} acceptChanges={acceptChanges} showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} />
           <IgnoreBtn goal={activeGoal} showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} />
-        </Modal.Body>
+        </>
       )}
     </Modal>
   );
