@@ -28,7 +28,7 @@ $theme-colors: (
   "dark-purple": #612854,
 );
 
-.global-addBtn-img { filter: brightness(0) invert(1); }
+.global-addBtn-img { padding: 2px 0 0 0 !important; filter: brightness(0) invert(1); }
 
 .App-light, .modal-content {
   --bottom-nav-text-color: #CD6E51;
