@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { darkModeState, languageSelectionState, displayToast, lastAction, showConfirmation, backupRestoreModal, openDevMode } from "@store";
 
+import lightAvatar from "@assets/images/mainAvatarLight.svg";
+import darkAvatar from "@assets/images/mainAvatarDark.svg";
+
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
@@ -50,10 +53,11 @@ const App = () => {
 
   const openNotification = () => {
     api.info({
+      icon: <img src={ darkModeEnabled ? darkAvatar : lightAvatar} alt="zinzen message" />,
+      closeIcon: null,
       message: `${showToast.message}`,
       description: <Context.Consumer>{() => `${showToast.extra}`}</Context.Consumer>,
       placement: "top",
-      duration: 4
     });
   };
 
@@ -121,12 +125,12 @@ const App = () => {
     checkDevMode();
   }, []);
 
-  // useEffect(() => {
-  //   if (showToast.open) {
-  //     openNotification();
-  //     setShowToast({ ...showToast, open: false });
-  //   }
-  // }, [showToast]);
+  useEffect(() => {
+    if (showToast.open) {
+      openNotification();
+      setShowToast({ ...showToast, open: false });
+    }
+  }, [showToast]);
 
   return (
     <div className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`}>
