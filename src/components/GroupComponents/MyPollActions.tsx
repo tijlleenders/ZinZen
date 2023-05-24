@@ -1,6 +1,6 @@
 import React from "react";
+import { Tooltip } from "antd";
 import { useRecoilValue } from "recoil";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import vote from "@assets/images/vote.svg";
 import correct from "@assets/images/correct.svg";
@@ -24,11 +24,7 @@ const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll, handleClick }) => {
     return "";
   };
   const getActionImg = (typeOfAction: PollActionType, imgSrc: string, definition: string, exceptional = false, customStyle = {}) => (
-    <OverlayTrigger
-      trigger={typeOfAction.includes("Votes") ? "hover" : "click"}
-      placement="top"
-      overlay={<Tooltip id="poll-metrics"> { getHelperText(typeOfAction) } </Tooltip>}
-    >
+    <Tooltip id="poll-metrics" placement="top" title={getHelperText(typeOfAction)}>
       <button
         type="button"
         onClick={async () => { if (typeOfAction.includes("Votes")) await handleClick(typeOfAction); }}
@@ -41,7 +37,7 @@ const MyPollActions: React.FC<MyGoalActionsProps> = ({ poll, handleClick }) => {
           style={{ cursor: "pointer", ...customStyle }}
         />&nbsp;&nbsp;&nbsp;{`${poll.metrics[typeOfAction]}`}
       </button>
-    </OverlayTrigger>
+    </Tooltip>
   );
   return (
     <div className={`interactables${darkModeStatus ? "-dark" : ""}`}>
