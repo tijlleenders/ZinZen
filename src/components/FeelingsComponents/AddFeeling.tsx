@@ -10,14 +10,13 @@ import { darkModeState } from "@store";
 import { getJustDate } from "@utils";
 import { themeState } from "@src/store/ThemeState";
 import { displayAddFeeling } from "@src/store/FeelingsState";
-import { AddFeelingsPageProps } from "@src/Interfaces/IPages";
 import { addFeelingWithNote, addFeeling } from "@src/api/FeelingsAPI";
 import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
 
 import "@translations/i18n";
-import "./AddFeelingsPage.scss";
+import "./AddFeeling.scss";
 
-export const AddFeelingsPage: React.FC<AddFeelingsPageProps> = ({ feelingDate }) => {
+export const AddFeeling = ({ feelingDate } : {feelingDate: Date | null}) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const date = feelingDate
