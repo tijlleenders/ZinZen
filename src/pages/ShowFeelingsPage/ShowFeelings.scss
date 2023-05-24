@@ -1,11 +1,3 @@
-#myFeelings-title, #myFeelings-title-dark {
-  font-size: 1.5em;
-  font-weight: 700;
-  font-style: italic;
-  padding-left: 20px;
-  padding-top: 100px;
-}
-
 .feelingOfDay, .feelingOfDay-dark {
   display: flex;
   justify-content: space-between;
@@ -50,7 +42,7 @@
   margin-top: 1rem;
 }
 
-.notes-modal-dark .modal-content, .ant-modal-content {
+.notes-modal-dark.ant-modal-content {
   border: 3px solid #3a2a22 !important;
 }
 
