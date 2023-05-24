@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "antd";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
