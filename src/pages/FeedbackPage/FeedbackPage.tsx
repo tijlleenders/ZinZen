@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Container, Button } from "react-bootstrap";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { darkModeState, displayLoader, displayToast } from "@store";
 import { submitFeedback } from "@src/api/FeedbackAPI";
-import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
+import OnboardingLayout from "@src/layouts/OnboardingLayout";
+import { darkModeState, displayLoader, displayToast } from "@store";
 
 import "@translations/i18n";
 import "./feedbackpage.scss";
-import AppLayout from "@src/layouts/AppLayout";
-import OnboardingLayout from "@src/layouts/OnboardingLayout";
 
 export const FeedbackPage = () => {
   const [userRating, setUserRating] = useState(3);
