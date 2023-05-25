@@ -105,46 +105,5 @@
   "Dinner 🍽️": "Avondeten 🍽️",
   "Walk 🚶🏽": "Rondje lopen 🚶🏽",
   "Water the plants 🪴 indoors": "Planten 🪴 binnen water geven",
-  "Me time 🧘🏽😌": "Tijd voor mezelf 🧘🏽😌",
-  "dontAskAgain": "Niet opnieuw vragen voor deze actie?",
-  "note": "Notitie",
-  "completeGoal": "Doel voltooien",
-  "deleteGoal": "Doel verwijderen",
-  "shareGoal": "Doel delen",
-  "chooseContact": "Contactpersoon kiezen",
-  "collaborateOnGoal": "Samenwerken aan doel",
-  "confirm": "Bevestigen",
-  "cancel": "Annuleren",
-  "goal": {
-    "archive": {
-      "header": "Wil je deze doelstelling als voltooid markeren?",
-      "note": "Deze doelstelling wordt samen met de subdoelstellingen naar het archief verplaatst. Je kunt deze op elk moment herstellen vanuit het archief."
-    },
-    "delete": {
-      "header": "Wil je deze doelstelling verwijderen?",
-      "note": "Je kunt deze niet meer herstellen."
-    },
-    "shareAnonymously": {
-      "header": "Wil je deze doelstelling pseudo-anoniem delen?",
-      "note": "Alleen deze doelstelling en de bijbehorende tijdsgerelateerde eigenschappen worden openbaar gedeeld :)"
-    },
-    "shareWithOne": {
-      "header": "Wil je deze doelstelling delen met een van je contacten?",
-      "note": "Elke wijziging die je aanbrengt op of onder deze doelstelling wordt gedeeld met die persoon."
-    }
-  },
-  "collaboration": {
-    "colabRequest": {
-      "header": "Wil je samenwerken?",
-      "note": "Tijdens de samenwerking wordt deze doelstelling toegevoegd aan je MijnDoelen en worden alle wijzigingen die je aanbrengt gecommuniceerd naar de andere persoon."
-    },
-    "delete": {
-      "header": "Wil je deze doelstelling verwijderen?",
-      "note": "Dit beëindigt de samenwerking en je zult geen updates meer ontvangen."
-    },
-    "archive": {
-      "header": "Wil je deze doelstelling archiveren?",
-      "note": "Dit beëindigt de samenwerking en je zult geen updates meer ontvangen."
-    }
-  }
+  "Me time 🧘🏽😌": "Tijd voor mezelf 🧘🏽😌"
 }

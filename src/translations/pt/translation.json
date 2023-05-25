@@ -89,46 +89,5 @@
   "Dinner 🍽️":"Jantar 🍽️",
   "Walk 🚶🏽":"Andar 🚶🏽",
   "Water the plants 🪴 indoors" : "regar as plantas 🪴 dentro de casa",
-  "Me time 🧘🏽😌": "Tempo para mim 🧘🏽😌",
-  "dontAskAgain": "Não perguntar novamente para esta ação?",
-  "note": "Nota",
-  "completeGoal": "Completar objetivo",
-  "deleteGoal": "Excluir objetivo",
-  "shareGoal": "Compartilhar objetivo",
-  "chooseContact": "Escolher contato",
-  "collaborateOnGoal": "Colaborar no objetivo",
-  "confirm": "Confirmar",
-  "cancel": "Cancelar",
-  "goal": {
-    "archive": {
-      "header": "Deseja marcar esta meta como concluída?",
-      "note": "Esta meta será movida para o arquivo junto com as submetas. Você poderá restaurá-la a qualquer momento a partir do arquivo."
-    },
-    "delete": {
-      "header": "Deseja excluir esta meta?",
-      "note": "Você não poderá recuperá-la novamente."
-    },
-    "shareAnonymously": {
-      "header": "Deseja compartilhar esta meta de forma pseudo anônima?",
-      "note": "Apenas esta meta e suas propriedades relacionadas ao tempo serão compartilhadas publicamente :)"
-    },
-    "shareWithOne": {
-      "header": "Deseja compartilhar esta meta com um dos seus contatos?",
-      "note": "Todas as alterações que você fizer nesta meta ou abaixo dela serão compartilhadas com essa pessoa."
-    }
-  },
-  "collaboration": {
-    "colabRequest": {
-      "header": "Deseja colaborar?",
-      "note": "Durante a colaboração, esta meta será adicionada às suas Minhas Metas, e quaisquer alterações que você fizer serão comunicadas à outra pessoa."
-    },
-    "delete": {
-      "header": "Deseja excluir esta meta?",
-      "note": "Isso encerrará a colaboração e você não receberá mais atualizações."
-    },
-    "archive": {
-      "header": "Deseja arquivar esta meta?",
-      "note": "Isso encerrará a colaboração e você não receberá mais atualizações."
-    }
-  }
+  "Me time 🧘🏽😌": "Tempo para mim 🧘🏽😌"
 }
