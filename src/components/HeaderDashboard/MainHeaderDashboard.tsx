@@ -32,7 +32,7 @@ import { displaySidebar } from "@src/store/SidebarState";
 import { createUserGroup } from "@src/helpers/GroupsProcessor";
 import { areGoalTagsValid } from "@src/validators/GoalValidators";
 import { createGoal, modifyGoal } from "@src/helpers/GoalController";
-import SuggestionModal from "@components/GoalsComponents/SuggestionModal/SuggestionModal";
+// import SuggestionModal from "@components/GoalsComponents/SuggestionModal/SuggestionModal";
 import { displayAddPublicGroup, displayExploreGroups, newGroupTitle } from "@src/store/GroupsState";
 import { inputGoalTags, extractedTitle, displayAddGoal, displayGoalId, displayUpdateGoal, selectedColorIndex, goalsHistory } from "@src/store/GoalsState";
 
@@ -42,7 +42,7 @@ import { getGoal } from "@src/api/GoalsAPI";
 
 export const PageHighlighter = () => {
   const [selected, setSelected] = useState(0);
-  const darkModeStatus = useRecoilValue(darkModeState);
+  // const darkModeStatus = useRecoilValue(darkModeState);
   useEffect(() => {
     const currentPage = window.location.pathname.split("/")[1];
     if (currentPage === "") {
@@ -75,7 +75,7 @@ export const MainHeaderDashboard = () => {
   const navigate = useNavigate();
 
   const currentPage = window.location.pathname.split("/")[1];
-  const goalID = useRecoilValue(displayGoalId);
+  // const goalID = useRecoilValue(displayGoalId);
   const colorIndex = useRecoilValue(selectedColorIndex);
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalsHistory = useRecoilValue(goalsHistory);
@@ -223,7 +223,7 @@ export const MainHeaderDashboard = () => {
         { currentPage !== "MyGroups" && <PageHighlighter /> }
         <div />
       </div>
-      <SuggestionModal goalID={goalID} />
+      {/* <SuggestionModal goalID={goalID} /> */}
     </div>
 
   );

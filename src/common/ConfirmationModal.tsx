@@ -1,11 +1,13 @@
-import { getConfirmButtonText } from "@src/constants/myGoals";
-import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
-import { darkModeState, showConfirmation } from "@src/store";
-import { themeState } from "@src/store/ThemeState";
+import { Checkbox, Modal } from "antd";
 import React, { useState } from "react";
-import { Form, Modal } from "react-bootstrap";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
+
+import { themeState } from "@src/store/ThemeState";
+import { darkModeState, showConfirmation } from "@src/store";
+import { getConfirmButtonText } from "@src/constants/myGoals";
+import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
+import { confirmationHeaders } from "@src/constants/confirmationHeaders";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
   const { t } = useTranslation();
@@ -23,7 +25,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       className={`default-btn${darkModeStatus ? "-dark" : ""}`}
       style={{
         boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
-        background: choice === "Confirm" ? "var(--primary-background)" : "transparent"
+        background: choice !== "Cancel" ? "var(--primary-background)" : "transparent"
       }}
       onClick={async () => {
         if (neverShowAgain) {
@@ -43,31 +45,28 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
   );
   return (
     <Modal
+      open={displayModal.open}
+      closable={false}
+      footer={null}
+      centered
+      onCancel={() => { setDisplayModal({ ...displayModal, open: false }); }}
       className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      style={{ maxWidth: "410px", width: "calc(100vw - 15px)" }}
-      show={displayModal.open}
-      onHide={() => { setDisplayModal({ ...displayModal, open: false }); }}
     >
-      <Modal.Body>
-        <h5>{t(headerKey)}</h5>
-        <p>{t("note")}: {t(noteKey)}</p>
-        <div style={{ display: "flex", gap: "5px" }}>
-          <Form.Check
-            onChange={() => { setNeverShowAgain(!neverShowAgain); }}
-            checked={neverShowAgain}
-            name="confirmation"
-            className={`default-checkbox${darkModeStatus ? "-dark" : ""}`}
-            type="checkbox"
-            id="neverShowAgainCheckbox"
-            label={t("dontAskAgain")}
-          />
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-around" }}>
-          { getChoiceButton(t(getConfirmButtonText(actionName))) }
-          { getChoiceButton(t("cancel")) }
-        </div>
-      </Modal.Body>
 
+      <h5>{header}</h5>
+      <p>Note: {note}</p>
+      <div style={{ display: "flex", gap: "5px" }}>
+        <Checkbox
+          checked={neverShowAgain}
+          className="checkbox"
+          onChange={() => { setNeverShowAgain(!neverShowAgain); }}
+        > Don&apos;t ask again for this action?
+        </Checkbox>
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        { getChoiceButton(getConfirmButtonText(actionName)) }
+        { getChoiceButton("Cancel") }
+      </div>
     </Modal>
   );
 };

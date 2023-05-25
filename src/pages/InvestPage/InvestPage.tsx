@@ -6,7 +6,6 @@ import download from "@assets/images/download.svg";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
 import "./InvestPage.scss";
-import "@fontsource/montserrat";
 
 const InvestPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);

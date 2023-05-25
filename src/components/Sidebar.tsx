@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import myGroupsIcon from "@assets/images/myGroupsIconLight.svg";
 import myGroupsIconFilledLight from "@assets/images/myGroupsIconFilledLight.svg";
 import myGroupsIconIconFilledDark from "@assets/images/myGroupsIconFilledDark.svg";

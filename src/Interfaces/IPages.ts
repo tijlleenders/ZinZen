@@ -1,17 +1,6 @@
 import { feelingListType } from "@src/global";
 import { IFeelingItem } from "@src/models";
 
-/* Add Feelings Page */
-export interface AddFeelingsPageProps {
-  feelingDate: Date | null;
-}
-
-export interface AddFeelingTemplate {
-    feelingCategory: string;
-    feelingsList: string[];
-    feelingDate: Date;
-  }
-
 /* Show Feelings Page */
 
 export interface ISetFeelingsListObject {

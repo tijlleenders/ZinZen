@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 
 import AppLayout from "@src/layouts/AppLayout";
 import SubHeader from "@src/common/SubHeader";
@@ -9,18 +7,15 @@ import { getDates } from "@utils";
 import { IFeelingItem } from "@models";
 import { feelingListType } from "@src/global";
 import { getAllFeelings } from "@api/FeelingsAPI";
-import { darkModeState, displayToast } from "@store";
+import { displayToast } from "@store";
 import { displayAddFeeling } from "@src/store/FeelingsState";
-import { AddFeelingsPage } from "@pages/AddFeelingsPage/AddFeelingsPage";
+import { AddFeeling } from "@components/FeelingsComponents/AddFeeling";
 
 import { ShowFeelingTemplate } from "./ShowFeelingTemplate";
 
 import "./ShowFeelings.scss";
 
 export const ShowFeelingsPage = () => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const darkModeStatus = useRecoilValue(darkModeState);
   const showAddFeelingsModal = useRecoilValue(displayAddFeeling);
 
   const setShowToast = useSetRecoilState(displayToast);
@@ -89,7 +84,7 @@ export const ShowFeelingsPage = () => {
           </div>
         )}
       </div>
-      {showAddFeelingsModal && <AddFeelingsPage feelingDate={new Date()} />}
+      {showAddFeelingsModal && <AddFeeling feelingDate={new Date()} />}
     </AppLayout>
   );
 };
