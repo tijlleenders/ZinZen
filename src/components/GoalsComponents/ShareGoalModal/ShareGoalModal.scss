@@ -125,9 +125,6 @@
 
 .addContact-modal {
   padding: 15px !important;
-  input {
-    width: 100%;
-  }
   .modal-content, .ant-modal-content {
     margin: auto !important;
     .action-btn {
@@ -135,6 +132,8 @@
       background: var(--selection-color);
       margin: 0;
       margin-left: auto;
+      padding: 0 12px;
+      display: flex;
       img {
         margin-right: 10px;
       }
@@ -144,6 +143,7 @@
 
 #addContact-btn {
   position: relative;
+  padding: 8px 12px;
   .loader {
     position: absolute;
     top: 3px;

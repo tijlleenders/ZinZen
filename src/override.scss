@@ -1,27 +1,27 @@
 .App-light, .popupModal {
   .checkbox {
-    .ant-radio-checked .ant-radio-inner{
+    .ant-radio-checked .ant-radio-inner, .ant-checkbox-checked .ant-checkbox-inner {
       border-color: #CD6E51 !important ;
       background-color: #CD6E51 !important;
     }
-    .ant-radio:hover .ant-radio-inner {
+    .ant-radio:hover .ant-radio-inner, .ant-checkbox:hover .ant-checkbox-inner, .ant-checkbox-checked:after {
       border-color: #CD6E51 !important;
     }
-    .ant-radio-checked .ant-radio-inner:focus{
+    .ant-radio-checked .ant-radio-inner:focus, .ant-checkbox-checked .ant-checkbox-inner:focus{
       border-color: #CD6E51 !important;
     }
   }
 }
 .App-dark, .popupModal-dark {
   .checkbox {
-    .ant-radio-checked .ant-radio-inner{
+    .ant-radio-checked .ant-radio-inner, .ant-checkbox-checked .ant-checkbox-inner {
       border-color: var(--selection-color) !important ;
       background-color: var(--selection-color) !important;
     }
-    .ant-radio:hover .ant-radio-inner {
+    .ant-radio:hover .ant-radio-inner, .ant-checkbox:hover .ant-checkbox-inner, .ant-checkbox-checked:after {
       border-color: var(--selection-color) !important;
     }
-    .ant-radio-checked .ant-radio-inner:focus{
+    .ant-radio-checked .ant-radio-inner:focus, .ant-checkbox-checked .ant-checkbox-inner:focus{
       border-color: var(--selection-color) !important;
     }
   }

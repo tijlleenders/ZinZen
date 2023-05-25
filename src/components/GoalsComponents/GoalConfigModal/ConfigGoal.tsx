@@ -119,7 +119,7 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
   const getInputField = (key: string) => (
     <input
       type="number"
-      style={{ width: 55, textAlign: "center" }}
+      style={{ textAlign: "center", maxWidth: 25 }}
       className="default-input"
       placeholder="0"
       value={tags[key]}
@@ -272,10 +272,10 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
         {
           isDetailsActive ? (
             <div className="details">
-              <div style={{ display: "flex", gap: 8, margin: "12px 0" }}>
-                <div style={{ width: 75 }}>
+              <div style={{ display: "flex", gap: 15, padding: "12px 0" }}>
+                <div>
                   <p>Duration: </p>
-                  <input type="number" className="default-input" value={tags.duration} onChange={(e) => { handleFieldChange("duration", e.target.value); }} />
+                  <input style={{ width: 45 }} type="number" className="default-input" value={tags.duration} onChange={(e) => { handleFieldChange("duration", e.target.value); }} />
                 </div>
                 <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
               </div>
