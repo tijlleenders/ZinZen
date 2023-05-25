@@ -52,7 +52,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
 
-      <h5>{t(headerKey)}</h5>
+      <p className="popupModal-title" style={{ margin: 0 }}>{t(headerKey)}</p>
       <p>{t("note")}: {t(noteKey)}</p>
       <div style={{ display: "flex", gap: "5px" }}>
         <Checkbox
