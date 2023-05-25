@@ -5,9 +5,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
+import Empty from "@src/common/Empty";
 import { GoalItem } from "@src/models/GoalItem";
-import { getActiveGoals, getGoal } from "@api/GoalsAPI";
 import { ILocationProps } from "@src/Interfaces/IPages";
+import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
+import { getActiveGoals, getGoal } from "@api/GoalsAPI";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import {
   displayAddGoal,
   displayChangesModal,
@@ -19,17 +22,14 @@ import {
   popFromGoalsHistory } from "@src/store/GoalsState";
 import MyGoal from "@components/GoalsComponents/MyGoal";
 import AppLayout from "@src/layouts/AppLayout";
+import GoalsList from "@components/GoalsComponents/GoalsList";
 import ZAccordion from "@src/common/Accordion";
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
-import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import GoalConfigModal from "@components/GoalsComponents/GoalConfigModal/GoalConfigModal";
+import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
+import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
 import { darkModeState, displayInbox, displayToast, lastAction, searchActive } from "@src/store";
-import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import "./MyGoalsPage.scss";
-import Empty from "@src/common/Empty";
-import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 
 export const MyGoalsPage = () => {
   const location = useLocation();
@@ -163,16 +163,12 @@ export const MyGoalsPage = () => {
                 )}
                 { openInbox && !isUpdgradeAvailable && activeGoals.length === 0 && <Empty /> }
                 <div style={{ display: "flex", flexDirection: "column" }}>
-                  {activeGoals.map((goal: GoalItem) => (
-                    <>
-                      { showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} /> }
-                      <MyGoal
-                        goal={goal}
-                        showActions={showActions}
-                        setShowActions={setShowActions}
-                      />
-                    </>
-                  ))}
+                  <GoalsList
+                    goals={activeGoals}
+                    showActions={showActions}
+                    setShowActions={setShowActions}
+                    setGoals={setActiveGoals}
+                  />
                 </div>
                 <div className="archived-drawer">
                   { archivedGoals.length > 0 && (

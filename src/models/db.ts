@@ -8,8 +8,11 @@ import { PubSubItem } from "./PubSubItem";
 import { InboxItem } from "./InboxItem";
 import { PublicGroupItem } from "./PublicGroupItem";
 import { TaskItem } from "./TaskItem";
+import { GCustomItem } from "./GCustomItem";
 
-export const dexieVersion = 2;
+export const dexieVersion = 3;
+
+localStorage.setItem("dexieVersion", `${dexieVersion}`);
 
 export class ZinZenDB extends Dexie {
   feelingsCollection!: Table<IFeelingItem, number>;
@@ -30,9 +33,11 @@ export class ZinZenDB extends Dexie {
 
   taskCollection! : Table<TaskItem, string>;
 
+  customizationCollection! : Table<GCustomItem, number>;
+
   constructor() {
     super("ZinZenDB");
-    this.version(2).stores({
+    this.version(3).stores({
       feelingsCollection: "++id, content, category, date, note",
       goalsCollection: "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
       sharedWMCollection: "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
@@ -41,7 +46,8 @@ export class ZinZenDB extends Dexie {
       inboxCollection: "id, goalChanges",
       pubSubCollection: "id, subscribers",
       publicGroupsCollection: "id, title, polls, language, groupColor, createdAt",
-      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, lastForget, blockedSlots"
+      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, lastForget, blockedSlots",
+      customizationCollection: "++id, goalId, posIndex"
     }).upgrade((trans) => {
       const taskCollection = trans.table("taskCollection");
       return taskCollection.toCollection().modify((task: TaskItem) => {

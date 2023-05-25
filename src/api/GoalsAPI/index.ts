@@ -3,6 +3,7 @@ import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { shareGoal } from "@src/services/goal.service";
 import { getDefaultValueOfCollab, getDefaultValueOfShared } from "@src/utils/defaultGenerators";
+import { sortGoalsByProps } from "../GCustomAPI";
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.goalsCollection, async () => {
@@ -37,7 +38,8 @@ export const getGoal = async (goalId: string) => {
 export const getChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals: GoalItem[] = await db.goalsCollection.where("parentGoalId").equals(parentGoalId).sortBy("createdAt");
   childrenGoals.reverse();
-  return childrenGoals;
+  const sortedGoals = await sortGoalsByProps(childrenGoals);
+  return sortedGoals;
 };
 
 export const getAllGoals = async (includeArchived = "false") => {
@@ -57,7 +59,8 @@ export const getActiveGoals = async (includeArchived = "false") => {
     .and((goal) => (includeArchived === "true" ? true : goal.parentGoalId === "root"))
     .sortBy("createdAt");
   activeGoals.reverse();
-  return activeGoals;
+  const sortedGoals = await sortGoalsByProps(activeGoals);
+  return sortedGoals;
 };
 
 export const updateGoal = async (id: string, changes: object) => {
