@@ -1,7 +1,6 @@
 import { Checkbox, Modal } from "antd";
 import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useTranslation } from "react-i18next";
 
 import { themeState } from "@src/store/ThemeState";
 import { darkModeState, showConfirmation } from "@src/store";
@@ -10,7 +9,6 @@ import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
 import { confirmationHeaders } from "@src/constants/confirmationHeaders";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
-  const { t } = useTranslation();
   const { actionCategory, actionName } = action;
   const darkModeStatus = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeState);
@@ -18,7 +16,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
   const [neverShowAgain, setNeverShowAgain] = useState(false);
   const [displayModal, setDisplayModal] = useRecoilState(showConfirmation);
   // @ts-ignore
-  const [headerKey, noteKey] = [`${actionCategory}.${actionName}.header`, `${actionCategory}.${actionName}.note`];
+  const { header, note } = confirmationHeaders[actionCategory][actionName];
   const getChoiceButton = (choice: string) => (
     <button
       type="button"
@@ -52,7 +50,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       onCancel={() => { setDisplayModal({ ...displayModal, open: false }); }}
       className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
-
       <h5>{header}</h5>
       <p>Note: {note}</p>
       <div style={{ display: "flex", gap: "5px" }}>
