@@ -7,7 +7,6 @@ import { themeState } from "@src/store/ThemeState";
 import { darkModeState, showConfirmation } from "@src/store";
 import { getConfirmButtonText } from "@src/constants/myGoals";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
-import { confirmationHeaders } from "@src/constants/confirmationHeaders";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
   const { t } = useTranslation();
@@ -25,7 +24,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       className={`default-btn${darkModeStatus ? "-dark" : ""}`}
       style={{
         boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
-        background: choice !== "Cancel" ? "var(--primary-background)" : "transparent"
+        background: choice !== t("cancel") ? "var(--primary-background)" : "transparent"
       }}
       onClick={async () => {
         if (neverShowAgain) {
@@ -38,9 +37,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
           console.log(newDisplayModal);
           setDisplayModal({ ...newDisplayModal, open: false });
         }
-        await handleClick(choice === "Cancel" ? choice : actionName);
+        await handleClick(choice === t("cancel") ? choice : actionName);
       }}
-    >{choice}
+    >
+      {t(choice)}
     </button>
   );
   return (
@@ -53,19 +53,19 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
 
-      <h5>{header}</h5>
-      <p>Note: {note}</p>
+      <p className="popupModal-title" style={{ margin: 0 }}>{t(headerKey)}</p>
+      <p>{t("note")}: {t(noteKey)}</p>
       <div style={{ display: "flex", gap: "5px" }}>
         <Checkbox
           checked={neverShowAgain}
           className="checkbox"
           onChange={() => { setNeverShowAgain(!neverShowAgain); }}
-        > Don&apos;t ask again for this action?
+        > {t("dontAskAgain")}
         </Checkbox>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
-        { getChoiceButton(getConfirmButtonText(actionName)) }
-        { getChoiceButton("Cancel") }
+        { getChoiceButton(t(getConfirmButtonText(actionName))) }
+        { getChoiceButton(t("cancel")) }
       </div>
     </Modal>
   );
