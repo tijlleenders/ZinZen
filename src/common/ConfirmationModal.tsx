@@ -7,7 +7,6 @@ import { themeState } from "@src/store/ThemeState";
 import { darkModeState, showConfirmation } from "@src/store";
 import { getConfirmButtonText } from "@src/constants/myGoals";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
-import { confirmationHeaders } from "@src/constants/confirmationHeaders";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
   const { t } = useTranslation();
@@ -53,19 +52,19 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
 
-      <h5>{header}</h5>
-      <p>Note: {note}</p>
+      <h5>{t(headerKey)}</h5>
+      <p>{t("note")}: {t(noteKey)}</p>
       <div style={{ display: "flex", gap: "5px" }}>
         <Checkbox
           checked={neverShowAgain}
           className="checkbox"
           onChange={() => { setNeverShowAgain(!neverShowAgain); }}
-        > Don&apos;t ask again for this action?
+        > {t("dontAskAgain")}
         </Checkbox>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
-        { getChoiceButton(getConfirmButtonText(actionName)) }
-        { getChoiceButton("Cancel") }
+        { getChoiceButton(t(getConfirmButtonText(actionName))) }
+        { getChoiceButton(t("cancel")) }
       </div>
     </Modal>
   );
