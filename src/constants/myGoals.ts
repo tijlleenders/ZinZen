@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 export const goalConfigTags = ["Duration", "Due date", "Filter", "Habit", "Time budget", "Start date"];
 
 export const getHeadingOfTag = (tagName: string, warningMessage = false) => {
@@ -28,22 +30,24 @@ export const getHeadingOfTag = (tagName: string, warningMessage = false) => {
 };
 
 export const getConfirmButtonText = (actionName: string) => {
+  const { t } = useTranslation();
+
   let confirmButtonText = "confirm";
   switch (actionName) {
     case "archive":
-      confirmButtonText = "completeGoal";
+      confirmButtonText = t("completeGoal");
       break;
     case "delete":
-      confirmButtonText = "deleteGoal";
+      confirmButtonText = t("deleteGoal");
       break;
     case "shareAnonymously":
-      confirmButtonText = "shareGoal";
+      confirmButtonText = t("shareGoal");
       break;
     case "shareWithOne":
-      confirmButtonText = "chooseContact";
+      confirmButtonText = t("chooseContact");
       break;
     case "colabRequest":
-      confirmButtonText = "collaborateOnGoal";
+      confirmButtonText = t("collaborateOnGoal");
       break;
     default:
   }

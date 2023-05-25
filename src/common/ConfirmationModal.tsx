@@ -24,7 +24,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       className={`default-btn${darkModeStatus ? "-dark" : ""}`}
       style={{
         boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
-        background: choice !== "Cancel" ? "var(--primary-background)" : "transparent"
+        background: choice !== t("cancel") ? "var(--primary-background)" : "transparent"
       }}
       onClick={async () => {
         if (neverShowAgain) {
@@ -37,9 +37,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
           console.log(newDisplayModal);
           setDisplayModal({ ...newDisplayModal, open: false });
         }
-        await handleClick(choice === "Cancel" ? choice : actionName);
+        await handleClick(choice === t("cancel") ? choice : actionName);
       }}
-    >{choice}
+    >
+      {t(choice)}
     </button>
   );
   return (
