@@ -16,6 +16,7 @@ import { darkModeState, displayInbox, lastAction, searchActive } from "@src/stor
 import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal, goalsHistory, ISubGoalHistory, popFromGoalsHistory, resetGoalsHistory } from "@src/store/GoalsState";
 
 import MyGoal from "../MyGoal";
+import GoalsList from "../GoalsList";
 import ConfigGoal from "../GoalConfigModal/ConfigGoal";
 
 import "./GoalSublistPage.scss";
@@ -136,16 +137,12 @@ export const GoalSublist = () => {
           <p className="sublist-title">{parentGoal?.title}</p>
           <div className="sublist-list-container">
             { showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} /> }
-            {childrenGoals?.map((goal: GoalItem) => (
-              <>
-                { showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} /> }
-                <MyGoal
-                  goal={goal}
-                  showActions={showActions}
-                  setShowActions={setShowActions}
-                />
-              </>
-            ))}
+            <GoalsList
+              goals={childrenGoals}
+              showActions={showActions}
+              setGoals={setChildrenGoals}
+              setShowActions={setShowActions}
+            />
             <div className="archived-drawer">
               { archivedChildren.length > 0 && (
                 <ZAccordion
