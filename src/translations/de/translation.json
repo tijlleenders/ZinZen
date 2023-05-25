@@ -95,5 +95,46 @@
   "Dinner 🍽️":"Abendessen 🍽️",
   "Walk 🚶🏽":"Laufen 🚶🏽",
   "Water the plants 🪴 indoors" : "Wasserpflanzen 🪴 drinnen",
-  "Me time 🧘🏽😌": "Zeit für mich 🧘🏽😌"
+  "Me time 🧘🏽😌": "Zeit für mich 🧘🏽😌",
+  "dontAskAgain": "Nicht erneut nach dieser Aktion fragen?",
+  "note": "Notiz",
+  "completeGoal": "Ziel abschließen",
+  "deleteGoal": "Ziel löschen",
+  "shareGoal": "Ziel teilen",
+  "chooseContact": "Kontakt auswählen",
+  "collaborateOnGoal": "Bei Ziel zusammenarbeiten",
+  "confirm": "Bestätigen",
+  "cancel": "Abbrechen",
+  "goal": {
+    "archive": {
+      "header": "Möchten Sie dieses Ziel als abgeschlossen markieren?",
+      "note": "Dieses Ziel wird zusammen mit den Teilverfolgungen ins Archiv verschoben. Sie können es jederzeit aus dem Archiv wiederherstellen."
+    },
+    "delete": {
+      "header": "Möchten Sie dieses Ziel löschen?",
+      "note": "Sie können es nicht wiederherstellen."
+    },
+    "shareAnonymously": {
+      "header": "Möchten Sie dieses Ziel pseudonym teilen?",
+      "note": "Nur dieses Ziel und seine zeitbezogenen Eigenschaften werden öffentlich geteilt :)"
+    },
+    "shareWithOne": {
+      "header": "Möchten Sie dieses Ziel mit einem Ihrer Kontakte teilen?",
+      "note": "Jede Änderung, die Sie an diesem Ziel oder darunter vornehmen, wird mit dieser Person geteilt."
+    }
+  },
+  "collaboration": {
+    "colabRequest": {
+      "header": "Möchten Sie zusammenarbeiten?",
+      "note": "Während der Zusammenarbeit wird dieses Ziel zu Ihren Meine Ziele hinzugefügt und alle von Ihnen vorgenommenen Änderungen werden an die andere Person übermittelt."
+    },
+    "delete": {
+      "header": "Möchten Sie dieses Ziel löschen?",
+      "note": "Dies beendet die Zusammenarbeit und Sie erhalten keine weiteren Aktualisierungen."
+    },
+    "archive": {
+      "header": "Möchten Sie dieses Ziel archivieren?",
+      "note": "Dies beendet die Zusammenarbeit und Sie erhalten keine weiteren Aktualisierungen."
+    }
+  }
 }
