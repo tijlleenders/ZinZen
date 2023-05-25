@@ -26,9 +26,10 @@ const DragAndDrop : React.FC<DadProps> = ({
     onDragEnter={() => handleDragEnter(index)}
     onDragEnd={handleDragEnd}
     style={{
-      opacity: dragging && thisItem ? 0.5 : 1,
+      opacity: dragging && thisItem ? 0.8 : 1,
       cursor: "move",
-      transition: "opacity 0.3s ease",
+      transition: "opacity 0.8s ease",
+      background: dragging && thisItem ? "var(--selection-color)" : "transparent"
     }}
   >
     {children}
