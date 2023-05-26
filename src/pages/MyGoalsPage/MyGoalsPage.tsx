@@ -141,7 +141,7 @@ export const MyGoalsPage = () => {
                     panels={[{ header: "Notifications",
                       body: (
                         <div className={`notification-item user-goal${darkModeStatus ? "-dark" : ""}`}>
-                          <p>Upgrade Available !!</p>
+                          <p style={{ color: "#000" }}>Update Available !!</p>
                           <button
                             type="button"
                             onClick={async () => {
@@ -155,7 +155,7 @@ export const MyGoalsPage = () => {
                                 });
                             }}
                             className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-                          >Upgrade Now
+                          >Update Now
                           </button>
                         </div>
                       ) }]}
