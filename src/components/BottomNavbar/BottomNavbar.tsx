@@ -23,6 +23,7 @@ const BottomNavbar = ({ title }: { title: string}) => {
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const currentPage = window.location.pathname.split("/")[1];
+  const isUpdgradeAvailable = localStorage.getItem("updateAvailable") === "true";
 
   const themeChange = (nav: -1 | 1) => {
     let choice = theme[darkModeStatus ? "dark" : "light"] + nav;
@@ -80,7 +81,7 @@ const BottomNavbar = ({ title }: { title: string}) => {
           alt="My Journal"
         />
         {themeSelection ? <p>Next</p> : <p>Journal</p> }
-        { title !== "My Time" && <GlobalAddBtn add={title} /> }
+        { title !== "My Time" && !isUpdgradeAvailable && <GlobalAddBtn add={title} /> }
       </button>
     </div>
   );
