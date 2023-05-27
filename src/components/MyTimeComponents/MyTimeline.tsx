@@ -88,7 +88,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
 
   return (
     <>
-      {myTasks.impossible.length > 0 && (
+      { myTasks.impossible.length > 0 && (
         <div className={`timeline-view${darkModeStatus ? "-dark" : ""}`}>
           <button type="button" className={`${showScheduled && "activeView"}`} onClick={handleView}>Scheduled</button>
           <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>Impossible</button>
