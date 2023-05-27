@@ -69,7 +69,7 @@ export const FAQPage = () => {
           style={customStyle}
           type="button"
           onClick={handleClick}
-        > Continue <img className="chevronRight theme-icon" src={chevronLeftIcon} alt="zinzen faq" style={{ marginLeft: 6, paddingBottom: 2 }} />
+        > {t("continue")} <img className="chevronRight theme-icon" src={chevronLeftIcon} alt="zinzen faq" style={{ marginLeft: 6, paddingBottom: 2 }} />
         </button>
       </div>
     </OnboardingLayout>
