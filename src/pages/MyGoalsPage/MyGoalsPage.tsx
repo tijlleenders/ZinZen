@@ -39,7 +39,7 @@ export const MyGoalsPage = () => {
 
   const [loading, setLoading] = useState(false);
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
-  const [doneGoals, setDoneGoals] = useState<GoalItem[]>([]);
+  const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
   const showAddGoal = useRecoilValue(displayAddGoal);
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -61,7 +61,7 @@ export const MyGoalsPage = () => {
 
   const handleUserGoals = (goals: GoalItem[]) => {
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
-    setDoneGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
+    setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
   };
   const refreshActiveGoals = async () => {
     const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals("true");
@@ -171,7 +171,7 @@ export const MyGoalsPage = () => {
                   />
                 </div>
                 <div className="archived-drawer">
-                  { doneGoals.length > 0 && (
+                  { archivedGoals.length > 0 && (
                     <ZAccordion
                       showCount
                       style={{
@@ -180,7 +180,7 @@ export const MyGoalsPage = () => {
                       }}
                       panels={[{
                         header: "Done",
-                        body: doneGoals.map((goal: GoalItem) => (
+                        body: archivedGoals.map((goal: GoalItem) => (
                           <MyGoal
                             key={`goal-${goal.id}`}
                             goal={goal}
