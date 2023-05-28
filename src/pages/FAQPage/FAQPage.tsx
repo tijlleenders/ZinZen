@@ -12,6 +12,8 @@ import OnboardingLayout from "@src/layouts/OnboardingLayout";
 import "@translations/i18n";
 
 const customStyle = {
+  display: "flex",
+  alignItems: "flex-end",
   border: "none",
   background: "var(--selection-color)",
   borderRadius: 8,
@@ -19,7 +21,7 @@ const customStyle = {
   fontSize: "0.875rem",
   fontWeight: 500,
   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-  marginTop: 14
+  margin: "14px auto 0"
 };
 
 export const FAQPage = () => {
@@ -67,7 +69,7 @@ export const FAQPage = () => {
           style={customStyle}
           type="button"
           onClick={handleClick}
-        > Continue <img className="chevronRight theme-icon" src={chevronLeftIcon} alt="zinzen faq" style={{ marginLeft: 6, paddingBottom: 2 }} />
+        > {t("continue")} <img className="chevronRight theme-icon" src={chevronLeftIcon} alt="zinzen faq" style={{ marginLeft: 6, paddingBottom: 2 }} />
         </button>
       </div>
     </OnboardingLayout>
