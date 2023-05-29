@@ -12,6 +12,7 @@ import NotificationSymbol from "@src/common/NotificationSymbol";
 import { darkModeState, lastAction, searchActive } from "@src/store";
 import { createSentFromTags, getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
+import { useLocation, useNavigate } from "react-router-dom";
 import MyGoalActions from "./MyGoalActions";
 import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
 
@@ -33,15 +34,16 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
   const collabWithContact = goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
 
+  const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
   const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
+  const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
 
   const setLastAction = useSetRecoilState(lastAction);
-  const setSubGoalHistory = useSetRecoilState(goalsHistory);
   const addInHistory = useSetRecoilState(addInGoalsHistory);
 
   const handleGoalClick = () => {
@@ -52,7 +54,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     } else {
       if (displaySearch) setDisplaySearch(false);
       // @ts-ignore
-      addInHistory(goal);
+      navigate("/MyGoals", { state: {
+        activeGoalId: goal.id,
+        goalsHistory: [...subGoalHistory, {
+          goalID: goal.id || "root",
+          goalColor: goal.goalColor || "#ffffff",
+          goalTitle: goal.title || "",
+        }] }
+      });
     }
   };
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -80,6 +89,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       setShowActions(defaultTap);
     }
   }, [showChangesModal, showUpdateGoal, selectedGoalId]);
+
   return (
     <div
       key={String(`goal-${goal.id}`)}

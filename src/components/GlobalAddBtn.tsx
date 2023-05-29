@@ -3,48 +3,31 @@ import React from "react";
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
 
-import { displayAddGoal, displayGoalId, selectedColorIndex } from "@src/store/GoalsState";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { getGoal } from "@src/api/GoalsAPI";
-import { colorPalleteList } from "@src/utils";
-import { darkModeState, lastAction } from "@src/store";
-import { displayAddPublicGroup, displayExploreGroups } from "@src/store/GroupsState";
+import { darkModeState } from "@src/store";
+import { displayAddPublicGroup } from "@src/store/GroupsState";
 import { displayAddFeeling } from "@src/store/FeelingsState";
 import { themeSelectionMode } from "@src/store/ThemeState";
+import useGoalStore from "@src/hooks/useGoalStore";
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
-  const selectedGoalId = useRecoilValue(displayGoalId);
-  const darkModeStatus = useRecoilValue(darkModeState);
-  const [themeSelection, setThemeSelection] = useRecoilState(themeSelectionMode);
+  const { handleAddGoal } = useGoalStore();
 
-  const setLastAction = useSetRecoilState(lastAction);
-  const setColorIndex = useSetRecoilState(selectedColorIndex);
-  const setShowAddGoal = useSetRecoilState(displayAddGoal);
-  const setOpenExploreGroups = useSetRecoilState(displayExploreGroups);
+  const darkModeStatus = useRecoilValue(darkModeState);
   const setShowAddFeelingsModal = useSetRecoilState(displayAddFeeling);
 
-  const [openAddGroup, setOpenAddGroup] = useRecoilState(displayAddPublicGroup);
+  const [themeSelection, setThemeSelection] = useRecoilState(themeSelectionMode);
+
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (themeSelection) { setThemeSelection(false); return; }
     if (add === "My Goals") {
-      if (selectedGoalId === "root") {
-        setColorIndex(Math.floor((Math.random() * colorPalleteList.length) + 1));
-      } else {
-        await getGoal(selectedGoalId).then((goal) => { if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor)); });
-      }
-      setShowAddGoal({ open: true, goalId: selectedGoalId });
-    } else if (add === "My Groups") {
-      if (openAddGroup) {
-        setLastAction("groupadded");
-      } else {
-        setOpenExploreGroups(false);
-        setOpenAddGroup(true);
-      }
+      await handleAddGoal();
     } else if (add === "My Journal") {
       setShowAddFeelingsModal(true);
     }
   };
+
   return (
     <button
       type="button"
