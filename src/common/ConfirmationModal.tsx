@@ -4,18 +4,18 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
 import { themeState } from "@src/store/ThemeState";
-import { darkModeState, showConfirmation } from "@src/store";
+import { darkModeState, displayConfirmation } from "@src/store";
 import { getConfirmButtonText } from "@src/constants/myGoals";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
   const { t } = useTranslation();
-  const { actionCategory, actionName } = action;
-  const darkModeStatus = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeState);
+  const darkModeStatus = useRecoilValue(darkModeState);
 
+  const { actionCategory, actionName } = action;
   const [neverShowAgain, setNeverShowAgain] = useState(false);
-  const [displayModal, setDisplayModal] = useRecoilState(showConfirmation);
+  const [displayModal, setDisplayModal] = useRecoilState(displayConfirmation);
   // @ts-ignore
   const [headerKey, noteKey] = [`${actionCategory}.${actionName}.header`, `${actionCategory}.${actionName}.note`];
   const getChoiceButton = (choice: string) => (
@@ -49,7 +49,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       closable={false}
       footer={null}
       centered
-      onCancel={() => { setDisplayModal({ ...displayModal, open: false }); }}
+      onCancel={() => { window.history.back(); }}
       className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
 
