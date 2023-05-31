@@ -16,8 +16,9 @@ import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { themeState } from "@src/store/ThemeState";
-import { darkModeState, displayToast, showConfirmation } from "@src/store";
-import { confirmAction, IShareGoalModalProps } from "@src/Interfaces/IPopupModals";
+import { darkModeState, displayToast, displayConfirmation } from "@src/store";
+import { confirmAction } from "@src/Interfaces/IPopupModals";
+import { displayShareModal } from "@src/store/GoalsState";
 import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import { convertIntoSharedGoal, getAllLevelGoalsOfId, getGoal, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import SubMenu, { SubMenuItem } from "./SubMenu";
@@ -25,7 +26,7 @@ import AddContactModal from "./AddContactModal";
 
 import "./ShareGoalModal.scss";
 
-const ShareGoalModal: React.FC<IShareGoalModalProps> = ({ goal, showShareModal, setShowShareModal }) => {
+const ShareGoalModal = ({ goal }) => {
   const minContacts = 1;
 
   const theme = useRecoilValue(themeState);
@@ -38,7 +39,8 @@ const ShareGoalModal: React.FC<IShareGoalModalProps> = ({ goal, showShareModal, 
   const [displaySubmenu, setDisplaySubmenu] = useState("");
   const [showAddContactModal, setShowAddContactModal] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
-  const [displayConfirmation, setDisplayConfirmation] = useRecoilState(showConfirmation);
+  const [showConfirmation, setDisplayConfirmation] = useRecoilState(displayConfirmation);
+  const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
 
   const handleShowAddContact = () => setShowAddContactModal(true);
 
@@ -91,12 +93,12 @@ const ShareGoalModal: React.FC<IShareGoalModalProps> = ({ goal, showShareModal, 
 
   const openConfirmationPopUp = async (action: confirmAction) => {
     const { actionCategory, actionName } = action;
-    if (actionCategory === "collaboration" && displayConfirmation.collaboration[actionName]) {
+    if (actionCategory === "collaboration" && showConfirmation.collaboration[actionName]) {
       setConfirmationAction({ ...action });
-      setDisplayConfirmation({ ...displayConfirmation, open: true });
+      setDisplayConfirmation({ ...showConfirmation, open: true });
     } else if (actionCategory === "goal" && displayConfirmation.goal[action.actionName]) {
       setConfirmationAction({ ...action });
-      setDisplayConfirmation({ ...displayConfirmation, open: true, });
+      setDisplayConfirmation({ ...showConfirmation, open: true, });
     } else {
       await handleActionClick(actionName);
     }
@@ -111,12 +113,12 @@ const ShareGoalModal: React.FC<IShareGoalModalProps> = ({ goal, showShareModal, 
   }, [showAddContactModal]);
   return (
     <Modal
-      open={showShareModal !== ""}
+      open={!!showShareModal}
       closable={false}
       footer={null}
       centered
       style={showAddContactModal ? { zIndex: 1 } : {}}
-      onCancel={() => setShowShareModal("")}
+      onCancel={() => window.history.back()}
       className={`share-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}

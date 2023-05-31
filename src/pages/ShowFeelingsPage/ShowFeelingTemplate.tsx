@@ -2,10 +2,11 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 // @ts-nocheck
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
 import { Modal } from "antd";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import deleteIcon from "@assets/images/deleteIcon.svg";
 import noteIcon from "@assets/images/noteIcon.svg";
@@ -25,6 +26,8 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
   currentFeelingsList,
 }) => {
   const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showInputModal, setShowInputModal] = useState(-1);
   const [showNotesModal, setShowNotesModal] = useState(-1);
@@ -57,9 +60,11 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
 
   const handleJournalClick = (id: number) => {
     if (feelingsListObject[id].note) {
+      navigate("/MyJournal", { state: { ...location.state, displayNoteModal: feelingsListObject[id].id } });
       setSelectedFeelingNote(feelingsListObject[id].note);
-      handleNotesShow(feelingsListObject[id].id);
-    } else handleInputShow(feelingsListObject[id].id);
+    } else {
+      navigate("/MyJournal", { state: { ...location.state, displayInputNoteModal: feelingsListObject[id].id } });
+    }
   };
 
   const handleTrashClick = (id: number) => {
@@ -72,6 +77,26 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
     );
     setFeelingsListObject.setFeelingsList({ ...newFeelingsList });
   };
+
+  const handleLocationChange = () => {
+    const locationState : ILocationState = location.state || {};
+    console.log(locationState, showNotesModal, showInputModal)
+    if (showNotesModal !== -1) {
+      handleNotesClose();
+    } else if (locationState.displayNoteModal) {
+      handleNotesShow(locationState.displayNoteModal);
+    }
+    if (showInputModal !== -1) {
+      handleInputClose();
+    } else if (locationState.displayInputNoteModal) {
+      handleInputShow(locationState.displayInputNoteModal);
+    }
+  };
+
+  useEffect(() => {
+    handleLocationChange();
+  }, [location]);
+
   return (
     <>
       <div>
@@ -100,7 +125,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         open={showInputModal !== -1}
         closable={false}
         footer={null}
-        onCancel={handleInputClose}
+        onCancel={() => window.history.back()}
         className={`${darkModeStatus ? "notes-modal-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       >
         <p className="popupModal-title">Want to tell more about it? </p>
@@ -142,7 +167,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         open={showNotesModal !== -1}
         closable={false}
         footer={null}
-        onCancel={handleNotesClose}
+        onCancel={() => window.history.back()}
         className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       >
         <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />

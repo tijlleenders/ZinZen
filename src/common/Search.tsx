@@ -11,7 +11,7 @@ const Search = ({ debounceSearch }: { debounceSearch: (event: ChangeEvent<HTMLIn
   const setDisplaySearch = useSetRecoilState(searchActive);
   return (
     <div className="header-search-container" style={{ display: "flex", gap: "10px" }}>
-      <button type="button" style={{ padding: 0 }} className="ordinary-element" onClick={() => { setDisplaySearch(false); }}>
+      <button type="button" style={{ display: "flex", padding: 0 }} className="ordinary-element" onClick={() => { setDisplaySearch(false); }}>
         <img src={backIcon} alt="zinzen search" />
       </button>
       <input

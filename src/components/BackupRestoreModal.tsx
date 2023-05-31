@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "antd";
-import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { db } from "@models";
 import { themeState } from "@src/store/ThemeState";
@@ -14,10 +14,10 @@ const restoreImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAA
 
 const BackupRestoreModal = () => {
   const theme = useRecoilValue(themeState);
+  const open = useRecoilValue(backupRestoreModal);
   const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
-  const [open, setBackupRestoreModal] = useRecoilState(backupRestoreModal);
 
   const backupData = async () => {
     const file = await db.export({ prettyJson: true });
@@ -33,7 +33,7 @@ const BackupRestoreModal = () => {
 
   const importSuccessfull = () => {
     setLastAction("goalsRestored");
-    setBackupRestoreModal(false);
+    window.history.back();
     setShowToast({ open: true, message: "Data Restored Successfully", extra: "" });
   };
 
@@ -73,7 +73,7 @@ const BackupRestoreModal = () => {
       onClick={async () => {
         if (text === "Backup") {
           await backupData();
-          setBackupRestoreModal(false);
+          window.history.back();
         } else { document.getElementById("backupFileInput")?.click(); }
       }}
     >
@@ -87,7 +87,7 @@ const BackupRestoreModal = () => {
       closable={false}
       footer={null}
       centered
-      onCancel={() => setBackupRestoreModal(false)}
+      onCancel={() => window.history.back()}
       className={`backupRestoreModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <p className="popupModal-title" style={{ textAlign: "center" }}> Choose an option from below</p>

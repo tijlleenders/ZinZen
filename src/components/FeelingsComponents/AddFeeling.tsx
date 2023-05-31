@@ -51,7 +51,7 @@ export const AddFeeling = ({ feelingDate } : {feelingDate: Date | null}) => {
       closable={false}
       open={!!feelingDate}
       className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      onCancel={() => { setShowAddFeelingsModal(false); setSelectedCategory(""); }}
+      onCancel={() => { window.history.back(); }}
     >
       { selectedCategory === "" ? (
         <>

@@ -1,27 +1,20 @@
 .timeline-view,.timeline-view-dark {
   display: flex;
+  background: var(--bottom-nav-color);
+  padding: 10px 20px;
   button {
     border: none;
-    box-shadow: inset -2px -2px 4px 0.5px rgba(0, 0, 0, 0.25);
     width: 50%;
-    padding: 18px;
+    padding: 12px 18px;
+    color: var(--bottom-nav-text-color) !important;
+    background: transparent;
   }
   .activeView {
     box-shadow: none;
-    font-weight: 700;
-  }
-}
-.timeline-view-dark {
-  button {
-    border: none;
-    box-shadow: inset 2px -2px 4px 0.5px rgba(0, 0, 0, 0.5);
-    width: 50%;
-    padding: 18px;
-    font-weight: 500;
-  }
-  .activeView {
-    box-shadow: none;
-    font-weight: 700;
+    font-weight: 600;
+    background: var(--selection-color);
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
   }
 }
 

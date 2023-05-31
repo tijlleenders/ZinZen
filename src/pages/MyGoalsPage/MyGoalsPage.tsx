@@ -30,6 +30,7 @@ import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSub
 import { darkModeState, displayInbox, displayToast, lastAction, searchActive } from "@src/store";
 
 import "./MyGoalsPage.scss";
+import { displayGroup, displayAddPublicGroup } from "@src/store/GroupsState";
 
 export const MyGoalsPage = () => {
   const location = useLocation();
@@ -41,7 +42,7 @@ export const MyGoalsPage = () => {
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
-  const showAddGoal = useRecoilValue(displayAddGoal);
+  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
@@ -51,8 +52,11 @@ export const MyGoalsPage = () => {
   const setShowToast = useSetRecoilState(displayToast);
   const setShowSuggestionsModal = useSetRecoilState(displaySuggestionsModal);
 
-  const setSubGoalHistory = useSetRecoilState(goalsHistory);
+  const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
   const popFromHistory = useSetRecoilState(popFromGoalsHistory);
+
+  const [selectedGroup, setSelectedGroup] = useRecoilState(displayGroup);
+  const [openAddGroup, setOpenAddGroup] = useRecoilState(displayAddPublicGroup);
 
   const [action, setLastAction] = useRecoilState(lastAction);
   const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
@@ -76,12 +80,6 @@ export const MyGoalsPage = () => {
     debounceTimeout = setTimeout(() => { search(event.target.value); }, 300);
   };
 
-  const handleBackClick = () => {
-    if (!showAddGoal && !showUpdateGoal) {
-      navigate(-1);
-    } else { popFromHistory(-1); }
-  };
-
   useEffect(() => {
     if (action !== "none") {
       setLastAction("none");
@@ -95,33 +93,53 @@ export const MyGoalsPage = () => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId, displaySearch]);
 
+  // const handleBackClick = () => {
+  //   const locationState = location.state || {};
+  //   if (showAddGoal || "displayAddGoal" in locationState) {
+  //     setShowAddGoal(showAddGoal ? null : { open: true, goalId: locationState.displayAddGoal });
+  //   } if (subGoalHistory.length > 0 ||
+  //     ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
+  //     setSubGoalHistory([...(locationState.goalsHistory || [])]);
+  //     setSelectedGoalId(locationState.activeGoalId || "root");
+  //   }
+  //   // else if (selectedGroup || "selectedGroup" in locationState) {
+  //   //   setSelectedGroup(null);
+  //   // } else if (openAddGroup || "openAddGroup" in locationState) {
+  //   //   setOpenAddGroup(false);
+  //   // }
+  // };
+
+  // useEffect(() => {
+  //   handleBackClick();
+  // }, [location]);
+
   /* Usefull if navigation is from MyTimePage or external page/component */
-  useEffect(() => {
-    (async () => {
-      const state = location.state as ILocationProps | null | undefined;
-      if (state) {
-        const { isRootGoal } = state;
-        let { openGoalOfId } = state;
-        if (!isRootGoal && openGoalOfId) {
-          const tmpHistory = [];
-          while (openGoalOfId !== "root") {
-            const tmpGoal: GoalItem = await getGoal(openGoalOfId);
-            tmpHistory.push(({
-              goalID: tmpGoal.id || "root",
-              goalColor: tmpGoal.goalColor || "#ffffff",
-              goalTitle: tmpGoal.title || "",
-              display: null
-            }));
-            openGoalOfId = tmpGoal.parentGoalId;
-          }
-          tmpHistory.reverse();
-          setSubGoalHistory([...tmpHistory]);
-          setSelectedGoalId(state.openGoalOfId);
-        }
-        location.state = null;
-      }
-    })();
-  });
+  // useEffect(() => {
+  //   (async () => {
+  //     const state = location.state as ILocationProps | null | undefined;
+  //     if (state) {
+  //       const { isRootGoal } = state;
+  //       let { openGoalOfId } = state;
+  //       if (!isRootGoal && openGoalOfId) {
+  //         const tmpHistory = [];
+  //         while (openGoalOfId !== "root") {
+  //           const tmpGoal: GoalItem = await getGoal(openGoalOfId);
+  //           tmpHistory.push(({
+  //             goalID: tmpGoal.id || "root",
+  //             goalColor: tmpGoal.goalColor || "#ffffff",
+  //             goalTitle: tmpGoal.title || "",
+  //             display: null
+  //           }));
+  //           openGoalOfId = tmpGoal.parentGoalId;
+  //         }
+  //         tmpHistory.reverse();
+  //         setSubGoalHistory([...tmpHistory]);
+  //         setSelectedGoalId(state.openGoalOfId);
+  //       }
+  //       location.state = null;
+  //     }
+  //   })();
+  // });
 
   return (
     <AppLayout title="My Goals" debounceSearch={debounceSearch}>
@@ -141,7 +159,7 @@ export const MyGoalsPage = () => {
                     panels={[{ header: "Notifications",
                       body: (
                         <div className={`notification-item user-goal${darkModeStatus ? "-dark" : ""}`}>
-                          <p>Upgrade Available !!</p>
+                          <p style={{ color: "#000" }}>Update Available !!</p>
                           <button
                             type="button"
                             onClick={async () => {
@@ -155,7 +173,7 @@ export const MyGoalsPage = () => {
                                 });
                             }}
                             className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-                          >Upgrade Now
+                          >Update Now
                           </button>
                         </div>
                       ) }]}

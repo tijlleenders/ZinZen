@@ -22,7 +22,7 @@ export const displayChangesModal = atom({
 
 export const displayShareModal = atom(({
   key: "displayShareModal",
-  default: ""
+  default: null as string | null
 }));
 
 export const displaySuggestionsModal = atom({

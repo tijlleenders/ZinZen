@@ -1,38 +1,38 @@
 .MyTime_day {
-    padding-bottom: 18px;
-    border-bottom: 2px solid var(--default-border-color);
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--default-border-color);
 }
 
 .MyTime_navRow{
-    display: flex;
-    justify-content: space-between;
-    padding: 3% 4% 0 4%;
-    padding-bottom: 0.5em;
-    width: 100%;
-    border: none;
-    background: transparent;
+  display: flex;
+  justify-content: space-between;
+  padding: 3% 4% 0 4%;
+  padding-bottom: 0.5em;
+  width: 100%;
+  border: none;
+  background: transparent;
 }
 
 .MyTime_navRow.selected{
-    background: var(--bottom-nav-color);
+  background: var(--bottom-nav-color);
 }
 
 .MyTime_dayTitle{
-    font-size: 1.143rem;
-    font-weight: 500;
+  font-size: 1.143rem;
+  font-weight: 500;
 }
 
 .MyTime_colorPalette {
-    display: flex;
-    padding: 0 4%;
-    div:first-child{
-        border-radius: 8px 0px 0px 8px;
-    }
-    div:last-child{
-        border-radius: 0px 8px 8px 0px;
-    }
-}
-.MyTime_colorPalette.active {
-    margin-top: 10px;
+  display: flex;
+  padding: 10px 4%;
+  div:first-child{
+    border-radius: 8px 0px 0px 8px;
   }
-  
+  div:last-child{
+    border-radius: 0px 8px 8px 0px;
+  }
+}
+
+.MyTime_colorPalette.active {
+  background: var(--bottom-nav-color);
+}

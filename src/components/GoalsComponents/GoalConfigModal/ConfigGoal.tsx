@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Checkbox, Col, Modal, Radio, Row } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
@@ -15,6 +16,9 @@ import { colorPalleteList, days } from "../../../utils";
 import "./ConfigGoal.scss";
 
 const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: GoalItem }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const selectedGoalId = useRecoilValue(displayGoalId);
@@ -203,10 +207,8 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
   const handleSave = async () => {
     if (showAddGoal) {
       await addThisGoal();
-      setShowAddGoal(null);
     } else if (showUpdateGoal) {
       await updateThisGoal();
-      setShowUpdateGoal(null);
     }
   };
 
@@ -235,13 +237,8 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
       closable={false}
       footer={null}
       onCancel={async () => {
-        if (title !== "") {
-          await handleSave();
-        } else if (showAddGoal) {
-          setShowAddGoal(null);
-        } else if (showUpdateGoal) {
-          setShowUpdateGoal(null);
-        }
+        if (title !== "") { await handleSave(); }
+        window.history.back();
       }}
       className={`configModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
