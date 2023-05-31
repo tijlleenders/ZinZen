@@ -2,15 +2,16 @@ import React, { useEffect } from "react";
 import { Dropdown, Switch } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, displayInbox, displayToast, searchActive, backupRestoreModal } from "@src/store";
+import { darkModeState, displayInbox, displayToast, searchActive } from "@src/store";
 import type { MenuProps } from "antd/es/menu/menu";
 
 import searchIcon from "@assets/images/searchIcon.svg";
 import verticalDots from "@assets/images/verticalDots.svg";
 
+import useGlobalStore from "@src/hooks/useGlobalStore";
 import { IHeader } from "@src/Interfaces/ICommon";
-import { themeState, themeSelectionMode } from "@src/store/ThemeState";
 import { goalsHistory } from "@src/store/GoalsState";
+import { themeState, themeSelectionMode } from "@src/store/ThemeState";
 
 import Search from "../Search";
 import { inboxIcon, openEnvelopeIcon } from "../../assets";
@@ -21,10 +22,10 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   const navigate = useNavigate();
   const theme = useRecoilValue(themeState);
   const currentPage = window.location.pathname.split("/")[1];
-
+  const { handleBackResModal } = useGlobalStore();
   const setShowToast = useSetRecoilState(displayToast);
   const setThemeSelection = useSetRecoilState(themeSelectionMode);
-  const setDisplayBackupRestoreModal = useSetRecoilState(backupRestoreModal);
+
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const toggleDarkModeStatus = () => {
@@ -47,7 +48,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
         } else if (ele === "Blog") {
           window.open("https://blog.zinzen.me", "_self");
         } else if (ele === "Backup") {
-          setDisplayBackupRestoreModal(true);
+          handleBackResModal();
         }
       }
     })),
@@ -109,7 +110,6 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
 
   const handlePopState = () => {
     const locationState = location.state || {};
-    console.log(locationState);
     if (openInbox || "openInbox" in locationState) {
       setOpenInbox(locationState?.openInbox || false);
     } else if (displaySearch || "displaySearch" in locationState) {
