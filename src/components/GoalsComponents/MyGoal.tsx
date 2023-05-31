@@ -6,13 +6,14 @@ import { unarchiveIcon } from "@src/assets";
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
 
+import useGoalStore from "@src/hooks/useGoalStore";
+import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import NotificationSymbol from "@src/common/NotificationSymbol";
 import { darkModeState, lastAction, searchActive } from "@src/store";
 import { createSentFromTags, getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
-import { displayGoalId, addInGoalsHistory, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
-import { useLocation, useNavigate } from "react-router-dom";
+import { displayGoalId, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
+import { useNavigate } from "react-router-dom";
 import MyGoalActions from "./MyGoalActions";
 import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
 
@@ -35,6 +36,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const collabWithContact = goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
 
   const navigate = useNavigate();
+  const { handleDisplayChanges } = useGoalStore();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
@@ -44,7 +46,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
 
   const setLastAction = useSetRecoilState(lastAction);
-  const addInHistory = useSetRecoilState(addInGoalsHistory);
 
   const handleGoalClick = () => {
     if (goal.sublist.length === 0) {
@@ -70,6 +71,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     if (showActions.open === goal.id && showActions.click > 0) {
       setShowActions(defaultTap);
     } else if ((goal.collaboration.newUpdates && goal.typeOfGoal === "collaboration") || goal.shared.conversionRequests.status) {
+      handleDisplayChanges();
       if (goal.shared.conversionRequests.status) {
         setShowChangesModal({ typeAtPriority: "conversionRequest", parentId: goal.id, goals: [] });
       } else {
@@ -111,7 +113,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         <div
           className="goal-dd-inner"
           style={{
-            height: showActions.open === goal.id && showActions.click > 0 ? archived ? "calc(100% - 20px)" : 90 : 44,
+            height: showActions.open === goal.id && showActions.click > 0 ? archived ? "calc(100% - 20px)" : "calc(100% - 58px)" : 44,
             background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`
           }}
         />
@@ -174,18 +176,10 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       </div>
       )}
       { showActions.open === goal.id && showActions.click > 0 && !archived && (
-        <MyGoalActions
-          goal={goal}
-          setShowShareModal={setShowShareModal}
-          setShowUpdateGoal={setShowUpdateGoal}
-        />
+        <MyGoalActions goal={goal} />
       )}
       {showShareModal === goal.id && (
-        <ShareGoalModal
-          goal={goal}
-          showShareModal={showShareModal}
-          setShowShareModal={setShowShareModal}
-        />
+        <ShareGoalModal goal={goal} />
       )}
     </div>
   );
