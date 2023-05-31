@@ -1,20 +1,22 @@
 import React from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
+
 import myGroupsIcon from "@assets/images/myGroupsIconLight.svg";
 import myGroupsIconFilledLight from "@assets/images/myGroupsIconFilledLight.svg";
 import myGroupsIconIconFilledDark from "@assets/images/myGroupsIconFilledDark.svg";
 
 import { t } from "i18next";
-import { backupRestoreModal, darkModeState } from "@src/store";
+import { darkModeState } from "@src/store";
 import { displaySidebar } from "@src/store/SidebarState";
+import useGlobalStore from "@src/hooks/useGlobalStore";
 
 import "@translations/i18n";
 
 const Sidebar = () => {
   const currentPage = window.location.pathname.split("/")[1];
   const navigate = useNavigate();
-  const setBackupRestoreModal = useSetRecoilState(backupRestoreModal);
+  const { handleBackResModal } = useGlobalStore();
   const setShowSidebar = useSetRecoilState(displaySidebar);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const list = [
@@ -51,7 +53,7 @@ const Sidebar = () => {
               if (ele.name === "Theme") {
                 toggleTheme();
               } else if (ele.name === "Backup / Restore") {
-                setBackupRestoreModal(true);
+                handleBackResModal();
               } else if (ele.link) {
                 if (ele.link.includes("http")) {
                   window.open(ele.link, "_self");

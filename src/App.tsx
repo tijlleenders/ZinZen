@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, languageSelectionState, displayToast, lastAction, showConfirmation, backupRestoreModal, openDevMode } from "@store";
+import { darkModeState, languageSelectionState, displayToast, lastAction, displayConfirmation, backupRestoreModal, openDevMode } from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
@@ -43,7 +43,7 @@ const App = () => {
   const language = useRecoilValue(languageSelectionState);
   const darkModeEnabled = useRecoilValue(darkModeState);
   const isLanguageChosen = language !== "No language chosen.";
-  const confirmationState = useRecoilValue(showConfirmation);
+  const confirmationState = useRecoilValue(displayConfirmation);
   const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
 
   const [devMode, setDevMode] = useRecoilState(openDevMode);

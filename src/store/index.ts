@@ -3,8 +3,8 @@ import { confirmActionState } from "@src/Interfaces/IPopupModals";
 import { darkModeState } from "./DarkModeState";
 import { languageSelectionState } from "./LanguageSelectionState";
 
-export const showConfirmation = atom({
-  key: "showConfirmation",
+export const displayConfirmation = atom({
+  key: "displayConfirmation",
   default: JSON.parse(localStorage.getItem("confirmationState") || JSON.stringify({
     open: false,
     goal: {

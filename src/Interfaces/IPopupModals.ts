@@ -33,8 +33,3 @@ export interface ConfirmationModalProps {
 export type confirmCategory = "goal" | "collaboration";
 export type confirmAction = confirmGoalAction | confirmColabGoalAction;
 
-export interface IShareGoalModalProps {
-    goal: GoalItem
-    showShareModal: string,
-    setShowShareModal: React.Dispatch<React.SetStateAction<string>>
-}

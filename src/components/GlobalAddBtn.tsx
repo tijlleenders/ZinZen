@@ -3,18 +3,16 @@ import React from "react";
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { darkModeState } from "@src/store";
-import { displayAddPublicGroup } from "@src/store/GroupsState";
-import { displayAddFeeling } from "@src/store/FeelingsState";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { themeSelectionMode } from "@src/store/ThemeState";
 import useGoalStore from "@src/hooks/useGoalStore";
+import useFeelingStore from "@src/hooks/useFeelingStore";
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
   const { handleAddGoal } = useGoalStore();
-
+  const { handleAddFeeling } = useFeelingStore();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const setShowAddFeelingsModal = useSetRecoilState(displayAddFeeling);
 
   const [themeSelection, setThemeSelection] = useRecoilState(themeSelectionMode);
 
@@ -24,7 +22,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     if (add === "My Goals") {
       await handleAddGoal();
     } else if (add === "My Journal") {
-      setShowAddFeelingsModal(true);
+      handleAddFeeling();
     }
   };
 
