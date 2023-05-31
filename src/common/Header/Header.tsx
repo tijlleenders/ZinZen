@@ -81,7 +81,6 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     } else if (alt === "zinzen inbox") {
       navigate("/MyGoals", { state: { openInbox: true } });
     }
-    // setLoading(false);
   };
   return (
     <div style={{ alignSelf: "center", display: "flex" }}>
