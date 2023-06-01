@@ -15,4 +15,5 @@ export interface ILocationState {
     displayAddFeeling?: boolean // show add feeling modal
     displayNoteModal?: number // show saved note of feeling id
     displayInputNoteModal?: number // show input modal for adding note for id
+    changeTheme?: boolean // theme changer mode
 }
