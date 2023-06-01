@@ -11,7 +11,7 @@ import verticalDots from "@assets/images/verticalDots.svg";
 import useGlobalStore from "@src/hooks/useGlobalStore";
 import { IHeader } from "@src/Interfaces/ICommon";
 import { goalsHistory } from "@src/store/GoalsState";
-import { themeState, themeSelectionMode } from "@src/store/ThemeState";
+import { themeState } from "@src/store/ThemeState";
 
 import Search from "../Search";
 import { inboxIcon, openEnvelopeIcon } from "../../assets";
@@ -19,13 +19,11 @@ import { inboxIcon, openEnvelopeIcon } from "../../assets";
 import "./Header.scss";
 
 const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
-  const navigate = useNavigate();
   const theme = useRecoilValue(themeState);
-  const currentPage = window.location.pathname.split("/")[1];
-  const { handleBackResModal } = useGlobalStore();
-  const setShowToast = useSetRecoilState(displayToast);
-  const setThemeSelection = useSetRecoilState(themeSelectionMode);
+  const navigate = useNavigate();
+  const { handleChangeTheme, handleBackResModal } = useGlobalStore();
 
+  const setShowToast = useSetRecoilState(displayToast);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const toggleDarkModeStatus = () => {
@@ -39,8 +37,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
       key: `${index}`,
       onClick: () => {
         if (ele === "Change Theme") {
-          setThemeSelection(true);
-          if (currentPage !== "MyGoals") { navigate("/MyGoals"); }
+          handleChangeTheme();
         } else if (ele === "Donate") {
           window.open("https://donate.stripe.com/6oE4jK1iPcPT1m89AA", "_self");
         } else if (ele === "Feedback") {
