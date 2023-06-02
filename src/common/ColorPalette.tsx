@@ -23,7 +23,7 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }
         Change Color:
       </p>
       {open ? (
-        <div className={`colorPallette${darkModeStatus ? "-dark" : ""}`}>
+        <div className="colorPallette">
           {colorPalleteList.map((color, index) => (getBtn(color, index)))}
         </div>
       ) :
