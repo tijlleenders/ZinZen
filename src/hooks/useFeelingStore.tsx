@@ -24,7 +24,9 @@ function useFeelingStore() {
   };
 
   useEffect(() => {
-    handleLocationChange();
+    if (location && location.pathname === "/MyJournal") {
+      handleLocationChange();
+    }
   }, [location]);
 
   return {

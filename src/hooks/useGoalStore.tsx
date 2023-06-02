@@ -23,6 +23,7 @@ function useGoalStore() {
   const setColorIndex = useSetRecoilState(selectedColorIndex);
   const handleLocationChange = () => {
     const locationState : ILocationState = location.state || {};
+    console.log(location);
     if (subGoalHistory.length > 0 ||
       ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
       setSubGoalHistory([...(locationState.goalsHistory || [])]);
@@ -100,7 +101,9 @@ function useGoalStore() {
   };
 
   useEffect(() => {
-    handleLocationChange();
+    if (location && location.pathname === "/MyGoals") {
+      handleLocationChange();
+    }
   }, [location]);
 
   return {
