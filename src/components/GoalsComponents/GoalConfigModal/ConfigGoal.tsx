@@ -228,7 +228,7 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
   }, [selectedTag]);
 
   useEffect(() => {
-    if (showAddGoal) { document.getElementById("title-field")?.focus(); }
+    document.getElementById("title-field")?.focus();
   }, []);
 
   return (
