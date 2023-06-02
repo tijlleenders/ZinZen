@@ -1,7 +1,10 @@
 .configModal {
   width: 400px;
+  input {
+    color: inherit;
+  }
   p {
-      margin: 0;
+    margin: 0;
   }
   .ant-modal-content {
     padding: 0 0 24px 0 !important;
