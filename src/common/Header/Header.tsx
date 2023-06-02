@@ -19,8 +19,9 @@ import { inboxIcon, openEnvelopeIcon } from "../../assets";
 import "./Header.scss";
 
 const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
-  const theme = useRecoilValue(themeState);
   const navigate = useNavigate();
+  const theme = useRecoilValue(themeState);
+  const openInbox = useRecoilValue(displayInbox);
   const { handleChangeTheme, handleBackResModal } = useGlobalStore();
 
   const setShowToast = useSetRecoilState(displayToast);
@@ -76,7 +77,9 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     } else if (alt === "zinzen search") {
       navigate("/MyGoals", { state: { displaySearch: true } });
     } else if (alt === "zinzen inbox") {
-      navigate("/MyGoals", { state: { openInbox: true } });
+      if (openInbox) { window.history.back(); } else {
+        navigate("/MyGoals", { state: { openInbox: true } });
+      }
     }
   };
   return (
