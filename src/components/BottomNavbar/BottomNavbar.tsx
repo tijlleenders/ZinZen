@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import backIcon from "@assets/images/backIcon.svg";
 import goalsIcon from "@assets/images/goalsIcon.svg";
@@ -16,6 +16,7 @@ import { moonIcon, sunIcon } from "@src/assets";
 
 const BottomNavbar = ({ title }: { title: string}) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const openInbox = useRecoilValue(displayInbox);
   const themeSelection = useRecoilValue(themeSelectionMode);
 
@@ -37,11 +38,11 @@ const BottomNavbar = ({ title }: { title: string}) => {
     if (themeSelection) {
       setDarkModeStatus(!darkModeStatus);
     } if (to === "MyTime") {
-      if (currentPage !== "") navigate("/");
+      if (currentPage !== "") navigate("/", { state: location.state });
     } else if (to === "MyGoals") {
-      if (currentPage !== "MyGoals") navigate("/MyGoals");
+      if (currentPage !== "MyGoals") navigate("/MyGoals", { state: location.state });
     } else if (currentPage !== "MyJournal") {
-      navigate("/MyJournal");
+      navigate("/MyJournal", { state: location.state });
     }
   };
 

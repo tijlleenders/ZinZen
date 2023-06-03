@@ -11,12 +11,6 @@ describe("Inbox component", () => {
       .click();
   });
   it("should render the upgrade message when an upgrade is available", () => {
-    cy.visit("/MyGoals");
-
-    cy.get(".header-items")
-      .find(".header-icon[alt='zinzen inbox']")
-      .click();
-
     // Assert that the upgrade message is displayed
     cy.contains("Notifications").click();
 
