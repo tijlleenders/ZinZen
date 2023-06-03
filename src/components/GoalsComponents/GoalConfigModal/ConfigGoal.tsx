@@ -205,11 +205,12 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
   };
 
   const handleSave = async () => {
-    if (showAddGoal) {
+    if (showAddGoal?.open) {
       await addThisGoal();
-    } else if (showUpdateGoal) {
+    } else if (showUpdateGoal?.open) {
       await updateThisGoal();
     }
+    window.history.back();
   };
 
   useEffect(() => {
@@ -237,8 +238,11 @@ const ConfigGoal = ({ goal, action } : { action: "Update" | "Create", goal: Goal
       closable={false}
       footer={null}
       onCancel={async () => {
-        if (title !== "") { await handleSave(); }
-        window.history.back();
+        if (title !== "") {
+          await handleSave();
+        } else {
+          window.history.back();
+        }
       }}
       className={`configModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
