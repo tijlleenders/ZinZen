@@ -47,6 +47,28 @@ describe("Header component", () => {
     cy.get(".header-dropdown").should("not.be.visible");
   });
 
+  it("should toggle dark mode when Switch Mode button is clicked", () => {
+    cy.get(".header-items")
+      .find(".header-icon[alt='zinzen settings']")
+      .click();
+
+    cy.contains("Dark Mode").click();
+
+    // Assert that dark mode is enabled
+    cy.get(".App-dark").should("be.visible");
+    cy.get(".App-light").should("not.exist");
+
+    cy.get(".header-items")
+      .find(".header-icon[alt='zinzen settings']")
+      .click();
+
+    cy.contains("Dark Mode").click();
+
+    // Assert that dark mode is disabled and light mode is enabled
+    cy.get(".App-dark").should("not.exist");
+    cy.get(".App-light").should("be.visible");
+  });
+
   it("should only display Zinzen settings on MyJournal or My Time page", () => {
     const checkHeaderItems = () => {
       cy.get(".header-items .header-icon[alt='zinzen settings']").should("be.visible");
