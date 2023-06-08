@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, languageSelectionState, displayToast, lastAction, displayConfirmation, backupRestoreModal, openDevMode } from "@store";
+import { darkModeState, languageSelectionState, displayToast, lastAction, displayConfirmation, backupRestoreModal, openDevMode, anyUpdates } from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
@@ -46,14 +46,15 @@ const App = () => {
   const confirmationState = useRecoilValue(displayConfirmation);
   const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
 
+  const [api, contextHolder] = notification.useNotification();
   const [devMode, setDevMode] = useRecoilState(openDevMode);
   const [showToast, setShowToast] = useRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
-  const [api, contextHolder] = notification.useNotification();
+  const setIsUpgradeAvailable = useSetRecoilState(anyUpdates);
 
   const openNotification = () => {
     api.info({
-      icon: <img src={ darkModeEnabled ? darkAvatar : lightAvatar} alt="zinzen message" />,
+      icon: <img src={darkModeEnabled ? darkAvatar : lightAvatar} alt="zinzen message" />,
       closeIcon: null,
       message: `${showToast.message}`,
       description: <Context.Consumer>{() => `${showToast.extra}`}</Context.Consumer>,
@@ -122,6 +123,11 @@ const App = () => {
         setDevMode(isDevMode);
       }
     };
+    const checkUpdates = async () => {
+      const updateExist = !!(await navigator.serviceWorker.register("./service-worker.js").then((registration) => registration.waiting).catch(() => false));
+      setIsUpgradeAvailable(updateExist);
+    };
+    checkUpdates();
     checkDevMode();
   }, []);
 

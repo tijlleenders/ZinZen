@@ -61,4 +61,9 @@ export const openDevMode = atom({
   default: false
 });
 
+export const anyUpdates = atom({
+  key: "anyUpdates",
+  default: false
+});
+
 export { darkModeState, languageSelectionState };

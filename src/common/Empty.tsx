@@ -1,16 +1,19 @@
+/* eslint-disable react/require-default-props */
 import React from "react";
 
 import emptyIllustration from "@assets/images/emptySvg.svg";
 
-const isUpdgradeAvailable = localStorage.getItem("updateAvailable") === "true";
+interface EmptyProps {
+  subText?: string
+}
 
-const Empty = () => (
+const Empty: React.FC<EmptyProps> = ({ subText }) => (
   <div style={{ textAlign: "center" }}>
     <img alt="Zinzen Empty" src={emptyIllustration} style={{ width: 300, height: 300 }} />
     <p>😇 It&apos;s empty today 😇
-      { isUpdgradeAvailable && (
+      { subText && (
       <>
-        <br />But ZinZen brought new updates for you
+        <br />{subText}
       </>
       )}
     </p>

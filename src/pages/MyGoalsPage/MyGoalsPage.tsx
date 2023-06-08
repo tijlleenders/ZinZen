@@ -1,15 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-await-in-loop */
-import { useLocation, useNavigate } from "react-router-dom";
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import Empty from "@src/common/Empty";
 import { GoalItem } from "@src/models/GoalItem";
-import { ILocationProps } from "@src/Interfaces/IPages";
 import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
-import { getActiveGoals, getGoal } from "@api/GoalsAPI";
+import { getActiveGoals } from "@api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import {
   displayAddGoal,
@@ -18,8 +16,7 @@ import {
   displayShareModal,
   displaySuggestionsModal,
   displayUpdateGoal,
-  goalsHistory,
-  popFromGoalsHistory } from "@src/store/GoalsState";
+} from "@src/store/GoalsState";
 import MyGoal from "@components/GoalsComponents/MyGoal";
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
@@ -27,41 +24,29 @@ import ZAccordion from "@src/common/Accordion";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
-import { darkModeState, displayInbox, displayToast, lastAction, searchActive } from "@src/store";
+import { anyUpdates, darkModeState, displayInbox, lastAction, searchActive } from "@src/store";
 
 import "./MyGoalsPage.scss";
-import { displayGroup, displayAddPublicGroup } from "@src/store/GroupsState";
 
 export const MyGoalsPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const isUpdgradeAvailable = localStorage.getItem("updateAvailable") === "true";
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
-  const [loading, setLoading] = useState(false);
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
-  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+
+  const openInbox = useRecoilValue(displayInbox);
+  const showAddGoal = useRecoilValue(displayAddGoal);
+  const displaySearch = useRecoilValue(searchActive);
+  const selectedGoalId = useRecoilValue(displayGoalId);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
-  const setShowToast = useSetRecoilState(displayToast);
-  const setShowSuggestionsModal = useSetRecoilState(displaySuggestionsModal);
-
-  const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
-  const popFromHistory = useSetRecoilState(popFromGoalsHistory);
-
-  const [selectedGroup, setSelectedGroup] = useRecoilState(displayGroup);
-  const [openAddGroup, setOpenAddGroup] = useRecoilState(displayAddPublicGroup);
-
   const [action, setLastAction] = useRecoilState(lastAction);
-  const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
-  const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
-  const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
+  const [isUpdgradeAvailable, setIsUpgradeAvailable] = useRecoilState(anyUpdates);
 
   const handleUserGoals = (goals: GoalItem[]) => {
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
@@ -92,7 +77,6 @@ export const MyGoalsPage = () => {
   useEffect(() => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId, displaySearch]);
-
   // const handleBackClick = () => {
   //   const locationState = location.state || {};
   //   if (showAddGoal || "displayAddGoal" in locationState) {
@@ -167,7 +151,7 @@ export const MyGoalsPage = () => {
                                 .then((registration) => {
                                   if (registration.waiting) {
                                     registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-                                    localStorage.setItem("updateAvailable", "false");
+                                    setIsUpgradeAvailable(false);
                                     window.location.reload();
                                   }
                                 });
@@ -179,7 +163,7 @@ export const MyGoalsPage = () => {
                       ) }]}
                   />
                 )}
-                { openInbox && !isUpdgradeAvailable && activeGoals.length === 0 && <Empty /> }
+                { openInbox && !isUpdgradeAvailable && activeGoals.length === 0 && <Empty subText="But ZinZen brought new updates for you" /> }
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <GoalsList
                     goals={activeGoals}
