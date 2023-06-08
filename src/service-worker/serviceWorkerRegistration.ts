@@ -44,7 +44,6 @@ function registerValidSW(swUrl: string, config?: Config) {
                 "New content is available and will be used when all " +
                   "tabs for this page are closed. See https://cra.link/PWA."
               );
-              localStorage.setItem("updateAvailable", "true");
 
               // Execute callback
               if (config && config.onUpdate) {

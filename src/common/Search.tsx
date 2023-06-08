@@ -1,17 +1,14 @@
 /* eslint-disable jsx-a11y/no-autofocus */
-import { searchActive } from "@src/store";
 import React, { ChangeEvent } from "react";
-import { useSetRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
 
 import backIcon from "@assets/images/backIcon.svg";
 
 const Search = ({ debounceSearch }: { debounceSearch: (event: ChangeEvent<HTMLInputElement>) => void}) => {
   const { t } = useTranslation();
-  const setDisplaySearch = useSetRecoilState(searchActive);
   return (
     <div className="header-search-container" style={{ display: "flex", gap: "10px" }}>
-      <button type="button" style={{ display: "flex", padding: 0 }} className="ordinary-element" onClick={() => { setDisplaySearch(false); }}>
+      <button type="button" style={{ display: "flex", padding: 0 }} className="theme-icon ordinary-element" onClick={() => { window.history.back(); }}>
         <img src={backIcon} alt="zinzen search" />
       </button>
       <input

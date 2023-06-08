@@ -17,14 +17,12 @@ import { moonIcon, sunIcon } from "@src/assets";
 const BottomNavbar = ({ title }: { title: string}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const openInbox = useRecoilValue(displayInbox);
   const themeSelection = useRecoilValue(themeSelectionMode);
 
   const [theme, setTheme] = useRecoilState(themeState);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const currentPage = window.location.pathname.split("/")[1];
-  const isUpdgradeAvailable = localStorage.getItem("updateAvailable") === "true";
 
   const themeChange = (nav: -1 | 1) => {
     let choice = theme[darkModeStatus ? "dark" : "light"] + nav;
@@ -64,7 +62,7 @@ const BottomNavbar = ({ title }: { title: string}) => {
       <button
         type="button"
         onClick={() => { handleClick("MyGoals"); }}
-        className={`bottom-nav-item ${currentPage === "MyGoals" || openInbox || themeSelection ? "active" : ""}`}
+        className={`bottom-nav-item ${currentPage === "MyGoals" || themeSelection ? "active" : ""}`}
       >
         <img className="secondary-icon" src={themeSelection ? darkModeStatus ? moonIcon : sunIcon : goalsIcon} alt="My Goals" />
         {themeSelection ? <p>Switch Mode</p> : <p>Goals</p> }
@@ -82,7 +80,7 @@ const BottomNavbar = ({ title }: { title: string}) => {
           alt="My Journal"
         />
         {themeSelection ? <p>Next</p> : <p>Journal</p> }
-        { title !== "My Time" && !isUpdgradeAvailable && <GlobalAddBtn add={title} /> }
+        { title !== "My Time" && title !== "Inbox" && <GlobalAddBtn add={title} /> }
       </button>
     </div>
   );
