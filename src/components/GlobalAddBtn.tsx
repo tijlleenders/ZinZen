@@ -4,7 +4,7 @@ import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
 
 import { darkModeState } from "@src/store";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { themeSelectionMode } from "@src/store/ThemeState";
 import useGoalStore from "@src/hooks/useGoalStore";
 import useFeelingStore from "@src/hooks/useFeelingStore";
@@ -14,12 +14,14 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const { handleAddFeeling } = useFeelingStore();
   const darkModeStatus = useRecoilValue(darkModeState);
 
-  const [themeSelection, setThemeSelection] = useRecoilState(themeSelectionMode);
+  const themeSelection = useRecoilValue(themeSelectionMode);
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
-    if (themeSelection) { setThemeSelection(false); return; }
-    if (add === "My Goals") {
+    if (themeSelection) { 
+      window.history.back();
+    } 
+    else if (add === "My Goals") {
       await handleAddGoal();
     } else if (add === "My Journal") {
       handleAddFeeling();
