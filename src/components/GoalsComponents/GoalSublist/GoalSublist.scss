@@ -8,17 +8,6 @@
   padding-top: 10;
 }
 
-.ant-breadcrumb li {
-  padding-top: 16px;
-  a {
-   text-decoration: none;
-   span {
-     border-radius: 5px;
-     padding: 6px;
-   }
- }
-}
-
 .sublist-title {
   margin-left: -10px;
   text-transform: capitalize;
@@ -48,3 +37,6 @@
   }
 }
 
+.ant-breadcrumb > ol {
+  align-items: center;
+}

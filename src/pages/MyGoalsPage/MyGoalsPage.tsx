@@ -1,13 +1,14 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable no-await-in-loop */
+
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import Empty from "@src/common/Empty";
 import { GoalItem } from "@src/models/GoalItem";
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
+import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveGoals } from "@api/GoalsAPI";
+import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import {
   displayAddGoal,
@@ -23,7 +24,7 @@ import GoalsList from "@components/GoalsComponents/GoalsList";
 import ZAccordion from "@src/common/Accordion";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
-import { GoalSublist } from "@components/GoalsComponents/GoalSublistPage/GoalSublistPage";
+
 import { anyUpdates, darkModeState, displayInbox, lastAction, searchActive } from "@src/store";
 
 import "./MyGoalsPage.scss";
@@ -77,21 +78,6 @@ export const MyGoalsPage = () => {
   useEffect(() => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId, displaySearch]);
-  // const handleBackClick = () => {
-  //   const locationState = location.state || {};
-  //   if (showAddGoal || "displayAddGoal" in locationState) {
-  //     setShowAddGoal(showAddGoal ? null : { open: true, goalId: locationState.displayAddGoal });
-  //   } if (subGoalHistory.length > 0 ||
-  //     ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
-  //     setSubGoalHistory([...(locationState.goalsHistory || [])]);
-  //     setSelectedGoalId(locationState.activeGoalId || "root");
-  //   }
-  //   // else if (selectedGroup || "selectedGroup" in locationState) {
-  //   //   setSelectedGroup(null);
-  //   // } else if (openAddGroup || "openAddGroup" in locationState) {
-  //   //   setOpenAddGroup(false);
-  //   // }
-  // };
 
   // useEffect(() => {
   //   handleBackClick();
