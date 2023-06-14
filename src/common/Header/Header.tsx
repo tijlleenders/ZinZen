@@ -54,7 +54,10 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
           if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(() => {
-              setDeferredPrompt(null);
+              if (choiceResult.outcome === "accepted") {
+                setDropdownOptions([...dropdownOptions.filter((option) => option !== "Install")]);
+                setDeferredPrompt(null);
+              }
             });
           }
         }
@@ -77,7 +80,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
       setDeferredPrompt(event);
-      setDropdownOptions(prevOptions => [...prevOptions, "Install"]);
+      setDropdownOptions((prevOptions) => [...prevOptions, "Install"]);
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
