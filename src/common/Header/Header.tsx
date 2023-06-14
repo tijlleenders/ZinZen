@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Switch } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -25,7 +25,10 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   const { handleChangeTheme, handleBackResModal } = useGlobalStore();
 
   const setShowToast = useSetRecoilState(displayToast);
+
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [dropdownOptions, setDropdownOptions] = useState<string[]>(["Donate", "Feedback", "Blog", "Backup", "Change Theme"]);
 
   const toggleDarkModeStatus = () => {
     localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
@@ -33,7 +36,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   };
 
   const items: MenuProps["items"] = [
-    ...["Donate", "Feedback", "Blog", "Backup", "Change Theme"].map((ele, index) => ({
+    ...dropdownOptions.map((ele, index) => ({
       label: ele,
       key: `${index}`,
       onClick: () => {
@@ -47,6 +50,16 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
           window.open("https://blog.zinzen.me", "_self");
         } else if (ele === "Backup") {
           handleBackResModal();
+        } else if (ele === "Install") {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(() => {
+              if (choiceResult.outcome === "accepted") {
+                setDropdownOptions([...dropdownOptions.filter((option) => option !== "Install")]);
+                setDeferredPrompt(null);
+              }
+            });
+          }
         }
       }
     })),
@@ -63,17 +76,24 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     },
   ];
 
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      setDeferredPrompt(event);
+      setDropdownOptions((prevOptions) => [...prevOptions, "Install"]);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    };
+  }, []);
+
   const handleClick = async () => {
     // setLoading(true);
     if (alt === "zinzen hints") {
       setShowToast({ open: true, message: "Coming soon...", extra: "" });
-      // const res = await getPublicGoals(selectedGoalId === "root" ? "root" : (await getGoal(selectedGoalId))?.title || "root");
-      // if (res.status && res.data?.length > 0) {
-      //   const tmpPG = [...res.data];
-      //   setShowSuggestionsModal({ selected: "Public", goals: [...tmpPG] });
-      // } else {
-      //   setShowToast({ open: true, message: "Awww... no hints today. We'll keep looking!", extra: "" });
-      // }
     } else if (alt === "zinzen search") {
       navigate("/MyGoals", { state: { displaySearch: true } });
     } else if (alt === "zinzen inbox") {
@@ -82,6 +102,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
       }
     }
   };
+
   return (
     <div style={{ alignSelf: "center", display: "flex" }}>
       { alt === "zinzen settings" ? (
