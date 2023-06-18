@@ -124,8 +124,13 @@ const App = () => {
       }
     };
     const checkUpdates = async () => {
-      const updateExist = !!(await navigator.serviceWorker.register("./service-worker.js").then((registration) => registration.waiting).catch(() => false));
-      setIsUpgradeAvailable(updateExist);
+      navigator.serviceWorker.register("./service-worker.js")
+        .then((registration) => {
+          if (registration.waiting) {
+            registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+            window.location.reload();
+          }
+        }).catch((err) => console.log(err));
     };
     checkUpdates();
     checkDevMode();
