@@ -28,7 +28,8 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
 
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [dropdownOptions, setDropdownOptions] = useState<string[]>(["Donate", "Feedback", "Blog", "Backup", "Change Theme"]);
+  const [showInstall, setShowInstall] = useState(false);
+  const dropdownOptions = ["Donate", "Feedback", "Blog", "Backup", "Change Theme"];
 
   const toggleDarkModeStatus = () => {
     localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
@@ -36,7 +37,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
   };
 
   const items: MenuProps["items"] = [
-    ...dropdownOptions.map((ele, index) => ({
+    ...[...dropdownOptions, ...(showInstall ? ["Install"] : [])].map((ele, index) => ({
       label: ele,
       key: `${index}`,
       onClick: () => {
@@ -55,7 +56,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(() => {
               if (choiceResult.outcome === "accepted") {
-                setDropdownOptions([...dropdownOptions.filter((option) => option !== "Install")]);
+                setShowInstall(false);
                 setDeferredPrompt(null);
               }
             });
@@ -67,9 +68,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
       label: (
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onClickCapture={toggleDarkModeStatus}>
           <p>Dark Mode</p>
-          <Switch
-            checked={darkModeStatus}
-          />
+          <Switch checked={darkModeStatus} />
         </div>
       ),
       key: "7",
@@ -80,7 +79,7 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
       setDeferredPrompt(event);
-      setDropdownOptions((prevOptions) => [...prevOptions, "Install"]);
+      setShowInstall(true);
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
