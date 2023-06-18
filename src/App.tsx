@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, languageSelectionState, displayToast, lastAction, displayConfirmation, backupRestoreModal, openDevMode, anyUpdates } from "@store";
+import { darkModeState, languageSelectionState, displayToast, lastAction, displayConfirmation, backupRestoreModal, openDevMode } from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
@@ -38,6 +38,8 @@ import "./override.scss";
 
 const Context = React.createContext({ name: "Default" });
 
+const exceptionRoutes = ["/", "/invest", "/feedback"];
+
 const App = () => {
   const theme = useRecoilValue(themeState);
   const language = useRecoilValue(languageSelectionState);
@@ -50,7 +52,6 @@ const App = () => {
   const [devMode, setDevMode] = useRecoilState(openDevMode);
   const [showToast, setShowToast] = useRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
-  const setIsUpgradeAvailable = useSetRecoilState(anyUpdates);
 
   const openNotification = () => {
     api.info({
@@ -110,12 +111,16 @@ const App = () => {
     } else {
       init();
     }
-    if ((!isLanguageChosen) && window.location.pathname !== "/" && window.location.pathname.toLowerCase() !== "/invest") { window.open("/", "_self"); }
+    const currentPath = window.location.pathname.toLowerCase();
+    if ((!isLanguageChosen) && !exceptionRoutes.includes(currentPath)) {
+        window.open("/", "_self");
+      }
   }, []);
 
   useEffect(() => {
     localStorage.setItem("confirmationState", JSON.stringify(confirmationState));
   }, [confirmationState]);
+
   useEffect(() => {
     const checkDevMode = async () => {
       const isDevMode = await checkMagicGoal();
