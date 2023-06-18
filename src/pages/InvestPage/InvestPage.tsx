@@ -6,13 +6,13 @@ import download from "@assets/images/download.svg";
 import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
 import "./InvestPage.scss";
+import OnboardingLayout from "@src/layouts/OnboardingLayout";
 
 const InvestPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
-    <div className="slide" style={{ display: "flex", justifyContent: "center" }}>
+    <OnboardingLayout>
       <div id="invest-container">
-        <LandingHeader avatar={null} />
         <p><span>ZinZen</span> is a <span>social life planner.</span></p>
         <p>You write down your life goals and share them with others - or pseudo anonymously.</p>
         <p>The tips you get back can be scheduled on your calendar - with one click!</p>
@@ -45,7 +45,7 @@ const InvestPage = () => {
           <img alt="download zinzen pitch" src={download} className={darkModeStatus ? "dark-svg" : ""} />Download ZinZen pitch deck
         </button>
       </div>
-    </div>
+    </OnboardingLayout>
   );
 };
 
