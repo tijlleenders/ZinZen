@@ -10,10 +10,7 @@ const Loader = () => {
     <Spin
       className="loader"
       style={{ color: darkModeStatus ? "#705BBC" : "#CD6E51" }}
-    >
-      <span className="visually-hidden">Loading...</span>
-    </Spin>
-
+    />
   );
 };
 
