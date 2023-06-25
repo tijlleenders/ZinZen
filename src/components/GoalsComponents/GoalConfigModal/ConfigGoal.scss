@@ -14,7 +14,10 @@
   .goal-dates {
     display: flex;
     justify-content: space-between;
-    padding: 24px; 
+    padding: 24px;
+    margin: 0 !important;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.4);
+
     .date-div {
       display: flex;
       gap: 0.875em;
@@ -67,6 +70,7 @@
   }
   .action-btn {
     margin-top: 0;
+    padding: 10px 24px;
   }
   .datepicker {
     text-align: left;
@@ -93,7 +97,7 @@
         padding: 8px 4px;
         background: transparent;
       }
-      .selected { 
+      .selected {
         background: var(--selection-color);
       }
     }
@@ -101,8 +105,8 @@
   .goal-config {
     border-radius: 8px;
     margin: 0 10px;
-    padding: 24px 0;
-  
+    padding-top: 24px;
+
     .tag-input {
       display: flex;
       gap: 15px;
@@ -116,11 +120,11 @@
         height: 18px;
       }
     }
-    .details, .timings {
+    .timings {
       box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.4);
       padding: 12px;
     }
-  
+
     .config-tabs {
       div {
         border: 1px solid rgba(0, 0, 0, 0.25);
@@ -137,7 +141,7 @@
     }
   }
   input[type="radio"] {
-    accent-color: #CD6E51 !important;
+    accent-color: #cd6e51 !important;
   }
 }
 @media (max-width: 475px) {
@@ -146,7 +150,7 @@
     justify-content: flex-start;
     gap: 0px !important;
     p {
-        width: 100%;
+      width: 100%;
     }
   }
 }
