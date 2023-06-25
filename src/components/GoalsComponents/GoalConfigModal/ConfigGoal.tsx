@@ -278,6 +278,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   return (
     <Modal
+      className={`configModal popupModal${darkModeStatus ? "-dark" : ""} 
+        ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       open={open}
       closable={false}
       footer={null}
@@ -288,12 +290,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           window.history.back();
         }
       }}
-      className={`configModal popupModal${darkModeStatus ? "-dark" : ""} 
-        ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]
-        }`}
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <input
+          onFocus={() => { console.log("HERE"); setShowAllSettings(false); }}
           className="ordinary-element"
           id="title-field"
           placeholder="Goal Title"
