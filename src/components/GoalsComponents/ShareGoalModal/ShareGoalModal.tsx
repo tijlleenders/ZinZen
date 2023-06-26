@@ -16,6 +16,7 @@ import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { themeState } from "@src/store/ThemeState";
+import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState, displayToast, displayConfirmation } from "@src/store";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { displayShareModal } from "@src/store/GoalsState";
@@ -26,22 +27,22 @@ import AddContactModal from "./AddContactModal";
 
 import "./ShareGoalModal.scss";
 
-const ShareGoalModal = ({ goal }) => {
+const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
   const minContacts = 1;
 
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const setShowToast = useSetRecoilState(displayToast);
+  const showShareModal = useRecoilValue(displayShareModal);
 
   const [loading, setLoading] = useState({ P: false, A: false, S: false });
   const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [userGroups, setUserGroups] = useState<PublicGroupItem[]>([]);
   const [displaySubmenu, setDisplaySubmenu] = useState("");
-  const [showAddContactModal, setShowAddContactModal] = useState(false);
-  const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
   const [showConfirmation, setDisplayConfirmation] = useRecoilState(displayConfirmation);
-  const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
+  const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
+  const [showAddContactModal, setShowAddContactModal] = useState(false);
 
+  const setShowToast = useSetRecoilState(displayToast);
   const handleShowAddContact = () => setShowAddContactModal(true);
 
   const getContactBtn = (relId = "", name = "", accepted = false) => (
@@ -76,7 +77,6 @@ const ShareGoalModal = ({ goal }) => {
   );
 
   const handleActionClick = async (action: string) => {
-    console.log(action);
     if (action === "shareAnonymously") {
       let parentGoalTitle = "root";
       setLoading({ ...loading, A: true });
@@ -96,7 +96,7 @@ const ShareGoalModal = ({ goal }) => {
     if (actionCategory === "collaboration" && showConfirmation.collaboration[actionName]) {
       setConfirmationAction({ ...action });
       setDisplayConfirmation({ ...showConfirmation, open: true });
-    } else if (actionCategory === "goal" && displayConfirmation.goal[action.actionName]) {
+    } else if (actionCategory === "goal" && showConfirmation.goal[action.actionName]) {
       setConfirmationAction({ ...action });
       setDisplayConfirmation({ ...showConfirmation, open: true, });
     } else {
@@ -144,7 +144,7 @@ const ShareGoalModal = ({ goal }) => {
                     <img className="secondary-icon" alt="share goal pseudo anonymously" src={shareAnonymous} />
                   </div>
                 )}
-                <p className="shareOption-name">Share pseudo anonymously</p>
+                <p className={`shareOption-name ${loading.A ? "loading" : ""}`}>Share pseudo anonymously</p>
               </div>
             </button>
 
@@ -173,7 +173,7 @@ const ShareGoalModal = ({ goal }) => {
                   />
                   </div>
                 )}
-                <p className="shareOption-name">Share in Public Group</p>
+                <p className={`shareOption-name ${loading.P ? "loading" : ""}`}>Share in Public Group</p>
               </div>
             </button>
 
@@ -190,26 +190,26 @@ const ShareGoalModal = ({ goal }) => {
                     <img className="secondary-icon" alt="share with friend" src={shareWithFriend} />
                   </div>
                 )}
-                <p className="shareOption-name">
+                <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>
                   Share 1:1 <br />
                   {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
                   {goal.typeOfGoal === "collaboration" && ` - Goal is in collaboration with ${goal.collaboration.collaborators[0].name}`}
                 </p>
               </div>
               {(goal.typeOfGoal === "myGoal") && displaySubmenu === "contacts" && (
-              <div className="shareWithContacts">
-                {contacts.length === 0 &&
-                <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
-                {contacts.length > 0 &&
-                <p className="share-warning"> Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact </p>}
-                <div id="modal-contact-list" style={contacts.length <= minContacts ? { justifyContent: "flex-start" } : {}}>
+                <div className="shareWithContacts">
+                  {contacts.length === 0 &&
+                    <p className="share-warning"> You don&apos;t have a contact yet.<br />Add one! </p>}
                   {contacts.length > 0 &&
-                        contacts.slice(0, Math.min(minContacts, contacts.length)).map((ele) => (
-                          getContactBtn(ele.relId, ele.name, ele.accepted)
-                        ))}
-                  {contacts.length === 0 && getContactBtn()}
+                    <p className="share-warning"> Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact </p>}
+                  <div id="modal-contact-list" style={contacts.length <= minContacts ? { justifyContent: "flex-start" } : {}}>
+                    {contacts.length > 0 &&
+                      contacts.slice(0, Math.min(minContacts, contacts.length)).map((ele) => (
+                        getContactBtn(ele.relId, ele.name, ele.accepted)
+                      ))}
+                    {contacts.length === 0 && getContactBtn()}
+                  </div>
                 </div>
-              </div>
               )}
             </button>
 
