@@ -10,8 +10,8 @@ import { Modal } from "antd";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface AddContactModalProps {
-    showAddContactModal: boolean
-    setShowAddContactModal: React.Dispatch<React.SetStateAction<boolean>>
+  showAddContactModal: boolean
+  setShowAddContactModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, setShowAddContactModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -82,8 +82,9 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         onClick={async () => { await addNewContact(); }}
         className={`addContact-btn action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
       >
-        { loading && <Loader /> }
-        <img alt="add contact" className="theme-icon" src={shareInvitation} />Share invitation
+        {loading ? <Loader />
+          : <img alt="add contact" className="theme-icon" src={shareInvitation} />}
+        <span style={loading ? { marginLeft: 28 } : {}}>Share invitation</span>
       </button>
     </Modal>
   );
