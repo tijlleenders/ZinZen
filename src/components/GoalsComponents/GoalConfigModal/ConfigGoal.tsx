@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Checkbox, Col, Modal, Radio, Row } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
@@ -22,6 +23,7 @@ import { colorPalleteList, days } from "../../../utils";
 import "./ConfigGoal.scss";
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
+  const { t } = useTranslation();
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const selectedGoalId = useRecoilValue(displayGoalId);
@@ -125,7 +127,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const getDateField = (type: string, style: object = {}) => (
     <Col span={12}>
       <div className="date-div" style={style}>
-        <p>{type}: </p>
+        <p>{t(type)}: </p>
         <input
           type="date"
           value={type === "From" ? start : due}
@@ -179,7 +181,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               handleTagClick(ele);
             }}
           >
-            {ele}
+            {t(ele)}
           </button>
         </li>
       ))}
@@ -190,7 +192,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     <Radio.Group onChange={(e) => handleRadioClick(e.target.value)} value={selectedValue}>
       {options.map((ele) => (
         <Radio className="checkbox" key={ele} value={ele}>
-          {ele}
+          {t(ele)}
         </Radio>
       ))}
     </Radio.Group>
@@ -296,7 +298,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           onFocus={() => { console.log("HERE"); setShowAllSettings(false); }}
           className="ordinary-element"
           id="title-field"
-          placeholder="Goal Title"
+          placeholder={t("Goal Title")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -307,7 +309,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       <div style={{ padding: "0 24px" }}>
         <div style={{ display: "flex", gap: 15, padding: "12px 0" }}>
           <div>
-            <p>Duration: </p>
+            <p>{t("Duration")}: </p>
             <input
               style={{ width: 45 }}
               type="number"
@@ -327,21 +329,21 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             <p>
               {tags.duration ? `${tags.duration}h ` : ""}
               {tags.beforeTime !== "" && tags.afterTime !== ""
-                ? `between ${tags.afterTime}-${tags.beforeTime} `
+                ? `${t("between")} ${tags.afterTime}-${tags.beforeTime} `
                 : tags.beforeTime !== ""
-                  ? `before ${tags.beforeTime} `
+                  ? `${t("before")} ${tags.beforeTime} `
                   : tags.afterTime !== ""
-                    ? `after ${tags.afterTime} `
+                    ? `${t("after")} ${tags.afterTime} `
                     : ""}
-              {tags.on !== "" && `on ${tags.on} `}
-              {tags.every !== "" && `every ${tags.every} `}
+              {tags.on !== "" && `${t("on")} ${tags.on} `}
+              {tags.every !== "" && `${t("every")} ${tags.every} `}
               {tags.budgetDuration !== "" && `${tags.budgetDuration}h per ${tags.budgetPeriod}`}
             </p>
           </div>
           <div className="goal-config">
             <Row className="config-tabs">
               <Col
-                style={{ borderRadius: "8px 0px 0px 0px" }}
+                style={{ borderRadius: "8px 0px 0px 0px", cursor: "pointer" }}
                 className={isDetailsActive ? "selected" : ""}
                 onClick={() => {
                   if (!isDetailsActive) {
@@ -350,10 +352,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 }}
                 span={12}
               >
-                Period
+                {t("Period")}
               </Col>
               <Col
-                style={{ borderRadius: "0px 8px 0px 0px" }}
+                style={{ borderRadius: "0px 8px 0px 0px", cursor: "pointer" }}
                 className={isDetailsActive ? "" : "selected"}
                 onClick={() => {
                   if (isDetailsActive) {
@@ -362,7 +364,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 }}
                 span={12}
               >
-                Timings
+                {t("Timings")}
               </Col>
             </Row>
             {isDetailsActive ? (
@@ -373,12 +375,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             ) : (
               <div className="timings">
                 <div className="tag-input">
-                  <span>{["after", "before", "between"].includes(selectedTag) && selectedTag}</span>
+                  <span>{["after", "before", "between"].includes(selectedTag) && t(selectedTag)}</span>
                   {(isPerSelected || selectedTag === "between") &&
                     getInputField(isPerSelected ? "budgetDuration" : "afterTime")}
 
-                  {selectedTag === "between" && <span>-</span>}
-                  {isPerSelected && <span>{selectedTag}</span>}
+                  {selectedTag === t("between") && <span>-</span>}
+                  {isPerSelected && <span>{t(selectedTag)}</span>}
 
                   {["before", "after", "between"].includes(selectedTag) &&
                     getInputField(selectedTag === "between" ? "beforeTime" : `${selectedTag}Time`)}
@@ -403,8 +405,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       )}
       <div style={{ marginTop: 14, textAlign: "center" }}>
         <button type="button" className="action-btn" onClick={handleSave}>
-          {" "}
-          {action} Goal{" "}
+          {t(`${action} Goal`)}
         </button>
       </div>
     </Modal>

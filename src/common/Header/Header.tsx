@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
 import { Dropdown, Switch } from "antd";
+import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from "react";
+import type { MenuProps } from "antd/es/menu/menu";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { darkModeState, displayInbox, displayToast, openInbox, searchActive } from "@src/store";
-import type { MenuProps } from "antd/es/menu/menu";
 
 import searchIcon from "@assets/images/searchIcon.svg";
 import verticalDots from "@assets/images/verticalDots.svg";
@@ -126,6 +127,7 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
 };
 const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const location = useLocation();
+  const { t } = useTranslation();
   const [isInboxOpen, setIsInboxOpen] = useRecoilState(openInbox);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const showInbox = useRecoilValue(displayInbox);
@@ -150,10 +152,10 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
         <Search debounceSearch={debounceSearch} />
         : (
           <>
-            <h6>{isInboxOpen ? "Inbox" : title}</h6>
+            <h6>{isInboxOpen ? "Inbox" : t(title)}</h6>
             <div className="header-items">
-              {["My Goals", "Inbox"].includes(title) && !isInboxOpen && <HeaderBtn path={searchIcon} alt="zinzen search" />}
-              {["My Goals", "Inbox"].includes(title) && showInbox && <HeaderBtn path={isInboxOpen ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" />}
+              {["mygoals", "Inbox"].includes(title) && !isInboxOpen && <HeaderBtn path={searchIcon} alt="zinzen search" />}
+              {["mygoals", "Inbox"].includes(title) && showInbox && <HeaderBtn path={isInboxOpen ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" />}
               <HeaderBtn path={verticalDots} alt="zinzen settings" />
             </div>
           </>

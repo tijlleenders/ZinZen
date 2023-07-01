@@ -18,12 +18,11 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
-    if (themeSelection) { 
+    if (themeSelection) {
       window.history.back();
-    } 
-    else if (add === "My Goals") {
+    } else if (add === "mygoals") {
       await handleAddGoal();
-    } else if (add === "My Journal") {
+    } else if (add === "MyJournal") {
       handleAddFeeling();
     }
   };

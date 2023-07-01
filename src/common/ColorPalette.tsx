@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { darkModeState } from "@src/store";
 import { colorPalleteList } from "@src/utils";
 import { ColorPaletteProps } from "@src/Interfaces/ICommon";
+import { useTranslation } from "react-i18next";
 
 const ColorPalette: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }) => {
-  const darkModeStatus = useRecoilValue(darkModeState);
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const getBtn = (color: string, index: number, style = {}) => (
     <button
@@ -14,13 +13,13 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }
       style={{ backgroundColor: color, ...style }}
       className="color-btn"
       onClick={() => { if (!open) { setOpen(true); } else { setOpen(false); setColorIndex(index); } }}
-    > { colorIndex === index ? "✔" : ""}
+    > {colorIndex === index ? "✔" : ""}
     </button>
   );
   return (
     <div>
       <p>
-        Change Color:
+        {t("Change Color")}:
       </p>
       {open ? (
         <div className="colorPallette">

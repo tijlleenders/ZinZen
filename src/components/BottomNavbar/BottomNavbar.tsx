@@ -7,15 +7,17 @@ import goalsIcon from "@assets/images/goalsIcon.svg";
 import calendarIcon from "@assets/images/calendarIcon.svg";
 import journalIcon from "@assets/images/journalIcon.svg";
 
-import GlobalAddBtn from "@components/GlobalAddBtn";
 import { darkModeState } from "@src/store";
+import Backdrop from "@src/common/Backdrop";
+import { moonIcon, sunIcon } from "@src/assets";
+import GlobalAddBtn from "@components/GlobalAddBtn";
+import { themeSelectionMode, themeState } from "@src/store/ThemeState";
 
 import "./BottomNavbar.scss";
-import { themeSelectionMode, themeState } from "@src/store/ThemeState";
-import { moonIcon, sunIcon } from "@src/assets";
-import Backdrop from "@src/common/Backdrop";
+import { useTranslation } from "react-i18next";
 
 const BottomNavbar = ({ title }: { title: string }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const themeSelection = useRecoilValue(themeSelectionMode);
@@ -68,7 +70,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
             src={themeSelection ? backIcon : calendarIcon}
             alt="My Time"
           />
-          {themeSelection ? <p>Prev</p> : <p>Schedule</p>}
+          {themeSelection ? <p>Prev</p> : <p>{t("Schedule")}</p>}
         </button>
         <button
           type="button"
@@ -82,7 +84,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
             src={themeSelection ? (darkModeStatus ? moonIcon : sunIcon) : goalsIcon}
             alt="My Goals"
           />
-          {themeSelection ? <p>Switch Mode</p> : <p>Goals</p>}
+          {themeSelection ? <p>Switch Mode</p> : <p>{t("Goals")}</p>}
         </button>
         <button
           type="button"
@@ -99,7 +101,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
             src={themeSelection ? backIcon : journalIcon}
             alt="My Journal"
           />
-          {themeSelection ? <p>Next</p> : <p>Journal</p>}
+          {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
           {title !== "My Time" && title !== "Inbox" && <GlobalAddBtn add={title} />}
         </button>
       </div>
