@@ -61,7 +61,7 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
       await archiveThisGoal();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
-      setIsInboxOpen(false);
+      window.history.back();
     }
     setConfirmationAction(null);
   };
