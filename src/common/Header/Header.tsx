@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dropdown, Switch } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, displayInbox, displayToast, searchActive } from "@src/store";
+import { darkModeState, displayInbox, displayToast, openInbox, searchActive } from "@src/store";
 import type { MenuProps } from "antd/es/menu/menu";
 
 import searchIcon from "@assets/images/searchIcon.svg";
@@ -10,7 +10,6 @@ import verticalDots from "@assets/images/verticalDots.svg";
 
 import useGlobalStore from "@src/hooks/useGlobalStore";
 import { IHeader } from "@src/Interfaces/ICommon";
-import { goalsHistory } from "@src/store/GoalsState";
 import { themeState } from "@src/store/ThemeState";
 
 import Search from "../Search";
@@ -18,10 +17,11 @@ import { inboxIcon, openEnvelopeIcon } from "../../assets";
 
 import "./Header.scss";
 
-const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
+const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const theme = useRecoilValue(themeState);
-  const openInbox = useRecoilValue(displayInbox);
+  const isInboxOpen = useRecoilValue(openInbox);
   const { handleChangeTheme, handleBackResModal } = useGlobalStore();
 
   const setShowToast = useSetRecoilState(displayToast);
@@ -94,17 +94,22 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
     if (alt === "zinzen hints") {
       setShowToast({ open: true, message: "Coming soon...", extra: "" });
     } else if (alt === "zinzen search") {
-      navigate("/MyGoals", { state: { displaySearch: true } });
+      navigate("/MyGoals", { state: { ...state, displaySearch: true } });
     } else if (alt === "zinzen inbox") {
-      if (openInbox) { window.history.back(); } else {
-        navigate("/MyGoals", { state: { openInbox: true } });
+      if (isInboxOpen) {
+        window.history.go(-((state?.goalsHistory?.length || 0) + 1));
+      } else {
+        const newState = { ...state };
+        if (newState.goalsHistory) { delete newState.goalsHistory; }
+        if (newState.activeGoalId) { delete newState.activeGoalId; }
+        navigate("/MyGoals", { state: { ...newState, goalsHistory: [], isInboxOpen: true } });
       }
     }
   };
 
   return (
     <div style={{ alignSelf: "center", display: "flex" }}>
-      { alt === "zinzen settings" ? (
+      {alt === "zinzen settings" ? (
         <Dropdown rootClassName={`header-dropdown${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`} overlayStyle={{ width: 175 }} menu={{ items }} trigger={["click"]}>
           <img className="theme-icon header-icon settings-icon" src={path} alt={alt} />
         </Dropdown>
@@ -121,17 +126,17 @@ const HeaderBtn = ({ path, alt } : {path: string, alt: string}) => {
 };
 const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const location = useLocation();
-  const [openInbox, setOpenInbox] = useRecoilState(displayInbox);
+  const [isInboxOpen, setIsInboxOpen] = useRecoilState(openInbox);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
-
-  const subGoalHistory = useRecoilValue(goalsHistory);
+  const showInbox = useRecoilValue(displayInbox);
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const handlePopState = () => {
     const locationState = location.state || {};
-    if (openInbox || "openInbox" in locationState) {
-      setOpenInbox(locationState?.openInbox || false);
-    } else if (displaySearch || "displaySearch" in locationState) {
+    if (isInboxOpen || "isInboxOpen" in locationState) {
+      setIsInboxOpen(locationState?.isInboxOpen || false);
+    }
+    if (displaySearch || locationState?.displaySearch) {
       setDisplaySearch(locationState?.displaySearch || false);
     }
   };
@@ -139,17 +144,16 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   useEffect(() => {
     handlePopState();
   }, [location]);
-
   return (
     <div className="header" style={{ background: darkModeStatus ? "var(--selection-color)" : "transparent" }}>
-      { displaySearch && debounceSearch ?
+      {displaySearch && debounceSearch ?
         <Search debounceSearch={debounceSearch} />
         : (
           <>
-            <h6>{openInbox ? "Inbox" : title}</h6>
+            <h6>{isInboxOpen ? "Inbox" : title}</h6>
             <div className="header-items">
-              { ["My Goals", "Inbox"].includes(title) && <HeaderBtn path={searchIcon} alt="zinzen search" /> }
-              { ["My Goals", "Inbox"].includes(title) && subGoalHistory.length === 0 && <HeaderBtn path={openInbox ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" /> }
+              {["My Goals", "Inbox"].includes(title) && !isInboxOpen && <HeaderBtn path={searchIcon} alt="zinzen search" />}
+              {["My Goals", "Inbox"].includes(title) && showInbox && <HeaderBtn path={isInboxOpen ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" />}
               <HeaderBtn path={verticalDots} alt="zinzen settings" />
             </div>
           </>

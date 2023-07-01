@@ -25,7 +25,7 @@ import ZAccordion from "@src/common/Accordion";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
-import { anyUpdates, darkModeState, displayInbox, lastAction, searchActive } from "@src/store";
+import { anyUpdates, darkModeState, lastAction, openInbox, searchActive } from "@src/store";
 
 import "./MyGoalsPage.scss";
 
@@ -36,7 +36,7 @@ export const MyGoalsPage = () => {
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
 
-  const openInbox = useRecoilValue(displayInbox);
+  const isInboxOpen = useRecoilValue(openInbox);
   const showAddGoal = useRecoilValue(displayAddGoal);
   const displaySearch = useRecoilValue(searchActive);
   const selectedGoalId = useRecoilValue(displayGoalId);
@@ -54,11 +54,11 @@ export const MyGoalsPage = () => {
     setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
   };
   const refreshActiveGoals = async () => {
-    const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals("true");
+    const goals: GoalItem[] = isInboxOpen ? await getActiveSharedWMGoals() : await getActiveGoals("true");
     handleUserGoals(goals);
   };
   const search = async (text: string) => {
-    const goals: GoalItem[] = openInbox ? await getActiveSharedWMGoals() : await getActiveGoals("true");
+    const goals: GoalItem[] = isInboxOpen ? await getActiveSharedWMGoals() : await getActiveGoals("true");
     handleUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
   };
   const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +74,7 @@ export const MyGoalsPage = () => {
   }, [action]);
   useEffect(() => {
     refreshActiveGoals();
-  }, [showShareModal, openInbox, showAddGoal, showChangesModal, showUpdateGoal, showSuggestionModal, showChangesModal]);
+  }, [showShareModal, isInboxOpen, showAddGoal, showChangesModal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId, displaySearch]);
@@ -117,16 +117,17 @@ export const MyGoalsPage = () => {
         {
           selectedGoalId === "root" ? (
             <div className="my-goals-content">
-              { showAddGoal && (<ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />)}
+              {showAddGoal && (<ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />)}
               <div>
-                { openInbox && isUpdgradeAvailable && (
+                {isInboxOpen && isUpdgradeAvailable && (
                   <ZAccordion
                     showCount={false}
                     style={{
                       border: "none",
                       background: darkModeStatus ? "var(--secondary-background)" : "transparent"
                     }}
-                    panels={[{ header: "Notifications",
+                    panels={[{
+                      header: "Notifications",
                       body: (
                         <div className={`notification-item user-goal${darkModeStatus ? "-dark" : ""}`}>
                           <p style={{ color: "#000" }}>Update Available !!</p>
@@ -146,10 +147,11 @@ export const MyGoalsPage = () => {
                           >Update Now
                           </button>
                         </div>
-                      ) }]}
+                      )
+                    }]}
                   />
                 )}
-                { openInbox && !isUpdgradeAvailable && activeGoals.length === 0 && <Empty subText="But ZinZen brought new updates for you" /> }
+                {isInboxOpen && !isUpdgradeAvailable && activeGoals.length === 0 && <Empty subText="But ZinZen brought new updates for you" />}
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <GoalsList
                     goals={activeGoals}
@@ -159,7 +161,7 @@ export const MyGoalsPage = () => {
                   />
                 </div>
                 <div className="archived-drawer">
-                  { archivedGoals.length > 0 && (
+                  {archivedGoals.length > 0 && (
                     <ZAccordion
                       showCount
                       style={{
@@ -186,7 +188,7 @@ export const MyGoalsPage = () => {
             :
             (<GoalSublist />)
         }
-        { showChangesModal && <DisplayChangesModal /> }
+        {showChangesModal && <DisplayChangesModal />}
       </div>
     </AppLayout>
   );

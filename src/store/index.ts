@@ -48,6 +48,11 @@ export const displayFromOptions = atom({
 
 export const displayInbox = atom({
   key: "displayInbox",
+  default: false
+});
+
+export const openInbox = atom({
+  key: "openInbox",
   default: false as boolean
 });
 
