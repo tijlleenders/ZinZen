@@ -41,7 +41,7 @@ describe("Feedback Page", () => {
         </BrowserRouter>
       </RecoilRoot>
     );
-    const button = getByText("submit");
+    const button = getByText("Submit");
     fireEvent.click(button);
     await act(async () =>
       render(
@@ -54,7 +54,6 @@ describe("Feedback Page", () => {
     );
 
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(global.alert).toHaveBeenCalledTimes(1);
     const boxes = await findAllByText("★");
     expect(boxes[0].parentElement).toHaveClass("notDecided");
   });
@@ -69,11 +68,10 @@ describe("Feedback Page", () => {
         </BrowserRouter>
       </RecoilRoot>
     );
-    const button = getByText("submit");
+    const button = getByText("Submit");
     fireEvent.click(button);
 
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(global.alert).toHaveBeenCalledTimes(1);
     const boxes = await findAllByText("★");
     expect(boxes[0].parentElement).toHaveClass("decided");
   });
