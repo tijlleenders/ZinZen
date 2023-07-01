@@ -18,10 +18,12 @@ import { goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalController";
 import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { darkModeState, displayToast, lastAction, openDevMode, displayConfirmation, openInbox } from "@src/store";
+import { useTranslation } from "react-i18next";
 
 const eyeSvg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC7klEQVR4nO2YSWhUQRCGv6gRERVXXBA8GRcIincFQQ8akoMIgjGQHPUgLgcJguPJZLp6JglxIZi4gIh4EKMRTcSroBIQUfAoSJR4iFnPkZKOPB8vTr/JSybg+6GgZ6ar6q/q6q7ugRQpUqRIkeJ/h8AWA8ct5AWeCXwUGBAYdaLjDwZ6LFgLx5phc0lJZ2GTwAWBNwITRcprgfOtsH7OiLfADgt3XGYnEpJhA50WKmaNuIW1Bq4JjEUQGBLoFmgUONQC21pg5UNYmIFFOtbABaoMXNRSEvgZYUeT0toEq5ImXyPwNcKhlk/dVVgW12YbrLBQL9AftmvgSxYOz5i4Zk83XQTx5znYP2MHwCSUWTgo0Bf2Y6FZV7Eow5pVt9RBowMGTjALmIQygQaB7yGfjzOwNJaxLCy38Cpk6NFcnBZ52GjgSch3b8a3TDOw2J3lwZps91lKnaP7RU8UgfcCP5zo+KZAdQYWeJbujVAQ3R1QXjAAgeshxUafwAX2CbwrdGQaeJuHvZ4ldSmk3/pPJe2QIWdXPMmfitkXRgyc9LFtwYR0j0ZO1Pp2LX9q4lOfsrFQW2wDs1BfyL5y0I0cPEjaYF1UFm8HDH/S5uNBvmKahuQrQ1nYWshPDlYLfA5URmd4QqWB8UAANYWMuqAfJHCNuO/p60hAR28DO4M/3gtE98LHoIEN01wr4sqY7/EcanZ3/5y7uqkc+XEDuz2NNSRAfsJ3LyiysCegN/w7cANn4mbfBdCUVAACTTH89gb0TusXLwOZqPU15JpVUgF0xQigLqDXh+uU+mGkHdb4GnKvr6RKKO/rVzlOlbyFQc1kxsCgdj1fIy6AcwmuwNk4vgUu2yI4/4Uc7EoqgBxUUgpEPUaKkP6SkHcBVCcQQBWlhIFbxZI34StBKZCBJeH3gyf5HtVlPkAfGu7a63OlHtW3rj5amG9wf510CXyLID7g/vvZznxHB5TrbdHAARUdez0HU6RIkSJFihQpmFP8Akw1EIG66+t0AAAAAElFTkSuQmCC";
 
 const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
+  const { t } = useTranslation();
   const mySound = new Audio(archiveSound);
   const { handleAddGoal, handleShareGoal, handleUpdateGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "collaboration" && goal.parentGoalId === "root" ? "collaboration" : "goal";
@@ -96,7 +98,7 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
             style={{ cursor: "pointer" }}
             className={`${darkModeStatus ? "dark-svg" : ""}`}
           />
-          <p>Add</p>
+          <p>{t("Add")}</p>
         </div>
       )}
       <div
@@ -112,7 +114,7 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
           className={`${darkModeStatus ? "dark-svg" : ""}`}
           style={{ cursor: "pointer" }}
         />
-        <p>Delete</p>
+        <p>{t("Delete")}</p>
       </div>
 
       {((isInboxOpen && goal.parentGoalId === "root") || !isInboxOpen) && (
@@ -136,7 +138,7 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
             style={{ cursor: "pointer", ...(isInboxOpen && !darkModeStatus ? { filter: "none" } : {}) }}
 
           />
-          <p>{isInboxOpen ? "Collaborate" : "Share"}</p>
+          <p>{t(isInboxOpen ? "Collaborate" : "Share")}</p>
         </div>
       )}
       <div
@@ -149,7 +151,7 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
           style={{ cursor: "pointer" }}
           className={`${darkModeStatus ? "dark-svg" : ""}`}
         />
-        <p>{isInboxOpen ? "View" : "Edit"}</p>
+        <p>{t(isInboxOpen ? "View" : "Edit")}</p>
       </div>
 
       {!isInboxOpen && (
@@ -166,7 +168,7 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
             style={{ cursor: "Pointer" }}
             className={`${darkModeStatus ? "dark-svg" : ""}`}
           />
-          <p>Done</p>
+          <p>{t("Done")}</p>
         </div>
       )}
     </div>
