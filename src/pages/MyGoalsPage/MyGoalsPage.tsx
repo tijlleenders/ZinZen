@@ -112,7 +112,7 @@ export const MyGoalsPage = () => {
   // });
 
   return (
-    <AppLayout title="My Goals" debounceSearch={debounceSearch}>
+    <AppLayout title="mygoals" debounceSearch={debounceSearch}>
       <div className="myGoals-container">
         {
           selectedGoalId === "root" ? (
