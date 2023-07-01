@@ -19,16 +19,6 @@ describe("Header component", () => {
     cy.go("back");
   });
 
-  it("should navigate to inbox when inbox icon is clicked", () => {
-    cy.get(".header-items")
-      .find(".header-icon[alt='zinzen inbox']")
-      .click();
-
-    cy.contains("Inbox");
-    cy.get("img[alt='Zinzen Empty']").should("be.visible");
-    cy.contains("It's empty today");
-  });
-
   it("should open settings dropdown when settings icon is clicked", () => {
     cy.get(".header-items")
       .find(".header-icon[alt='zinzen settings']")

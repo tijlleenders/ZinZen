@@ -1,7 +1,8 @@
 import { ILocationState } from "@src/Interfaces";
 import { getGoal } from "@src/api/GoalsAPI";
+import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayConfirmation } from "@src/store";
+import { displayConfirmation, displayInbox } from "@src/store";
 import { displayAddGoal, displayChangesModal, displayGoalId, displayShareModal, displayUpdateGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 import { colorPalleteList } from "@src/utils";
 import React, { useEffect } from "react";
@@ -12,6 +13,7 @@ function useGoalStore() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
+  const [showInbox, setShowInbox] = useRecoilState(displayInbox);
 
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
@@ -22,8 +24,13 @@ function useGoalStore() {
 
   const setColorIndex = useSetRecoilState(selectedColorIndex);
   const handleLocationChange = () => {
-    const locationState : ILocationState = location.state || {};
+    const locationState: ILocationState = location.state || {};
     console.log(location);
+    getActiveSharedWMGoals().then((items) => {
+      if (items && items.length > 0) {
+        if (!showInbox) { setShowInbox(true); }
+      } else if (showInbox) { setShowInbox(false); }
+    });
     if (subGoalHistory.length > 0 ||
       ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
       setSubGoalHistory([...(locationState.goalsHistory || [])]);
@@ -52,7 +59,7 @@ function useGoalStore() {
   };
 
   const handleAddGoal = async (goal: GoalItem | null = null) => {
-    let newLocationState : ILocationState = { displayAddGoal: selectedGoalId };
+    let newLocationState: ILocationState = { displayAddGoal: selectedGoalId };
     if (selectedGoalId === "root") {
       setColorIndex(Math.floor((Math.random() * colorPalleteList.length) + 1));
     } else if (goal) {
@@ -65,23 +72,29 @@ function useGoalStore() {
         goalsHistory: [...subGoalHistory, {
           goalID: goal.id || "root",
           goalColor: goal.goalColor || "#ffffff",
-          goalTitle: goal.title || "" },
+          goalTitle: goal.title || ""
+        },
         ],
         activeGoalId: goal.id
       };
     }
     newLocationState.displayAddGoal = goal ? goal.id : selectedGoalId;
-    navigate("/MyGoals", { state: { ...location.state,
-      ...(goal ? {
-        goalsHistory: [...subGoalHistory, {
-          goalID: goal.id || "root",
-          goalColor: goal.goalColor || "#ffffff",
-          goalTitle: goal.title || "" },
-        ],
-        activeGoalId: goal.id }
-        : {}),
-      displayAddGoal: goal ? goal.id : selectedGoalId
-    } });
+    navigate("/MyGoals", {
+      state: {
+        ...location.state,
+        ...(goal ? {
+          goalsHistory: [...subGoalHistory, {
+            goalID: goal.id || "root",
+            goalColor: goal.goalColor || "#ffffff",
+            goalTitle: goal.title || ""
+          },
+          ],
+          activeGoalId: goal.id
+        }
+          : {}),
+        displayAddGoal: goal ? goal.id : selectedGoalId
+      }
+    });
   };
 
   const handleUpdateGoal = (id: string) => {
@@ -100,6 +113,10 @@ function useGoalStore() {
     navigate("/MyGoals", { state: location.state });
   };
 
+  const handleOpenInbox = () => {
+    navigate("/MyGoals", { state: { ...location.state, displayInbox: true } });
+  };
+
   useEffect(() => {
     if (location && location.pathname === "/MyGoals") {
       handleLocationChange();
@@ -110,6 +127,7 @@ function useGoalStore() {
     handleAddGoal,
     handleShareGoal,
     handleUpdateGoal,
+    handleOpenInbox,
     handleConfirmation,
     handleDisplayChanges
   };

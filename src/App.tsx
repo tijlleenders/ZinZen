@@ -73,10 +73,10 @@ const App = () => {
         Object.keys(resObject).forEach(async (relId: string) => {
           const contactItem = await getContactByRelId(relId);
           if (contactItem) {
-          // @ts-ignore
+            // @ts-ignore
             resObject[relId].forEach(async (ele) => {
               if (ele.type === "shareMessage") {
-                const { goalWithChildrens } : { goalWithChildrens: GoalItem[] } = ele;
+                const { goalWithChildrens }: { goalWithChildrens: GoalItem[] } = ele;
                 const rootGoal = goalWithChildrens[0];
                 rootGoal.shared.contacts.push({ name: contactItem.name, relId });
                 addSharedWMGoal(rootGoal).then(() => {
@@ -113,8 +113,8 @@ const App = () => {
     }
     const currentPath = window.location.pathname.toLowerCase();
     if ((!isLanguageChosen) && !exceptionRoutes.includes(currentPath)) {
-        window.open("/", "_self");
-      }
+      window.open("/", "_self");
+    }
   }, []);
 
   useEffect(() => {
@@ -171,7 +171,7 @@ const App = () => {
             <Route path="/Invest" element={<InvestPage />} />
           </Routes>
         </BrowserRouter>
-        { displayBackupRestoreModal && <BackupRestoreModal /> }
+        {displayBackupRestoreModal && <BackupRestoreModal />}
       </div>
     </div>
   );

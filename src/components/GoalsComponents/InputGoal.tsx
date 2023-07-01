@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { getDateInText } from "@src/utils";
-import { darkModeState, displayInbox } from "@src/store";
+import { darkModeState, openInbox } from "@src/store";
 import { TagsExtractor } from "@src/helpers/TagsExtractor";
 import { extractedTitle, inputGoalTags } from "@src/store/GoalsState";
 import ITagExtractor, { ITagIndices } from "@src/Interfaces/ITagExtractor";
@@ -22,7 +22,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
   const { t } = useTranslation();
 
   const darkModeStatus = useRecoilValue(darkModeState);
-  const openInbox = useRecoilValue(displayInbox);
+  const isInboxOpen = useRecoilValue(openInbox);
   const [formInputData, setFormInputData] = useState(goalInput);
   const [, setMagicIndices] = useState<ITagIndices[]>([]);
   const [goalTitle, setGoalTitle] = useRecoilState(extractedTitle);
@@ -52,7 +52,7 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
       type="button"
       style={{ backgroundColor: selectedColor }}
       className="form-tag"
-      onClick={() => { if (content && !openInbox) { handleTagClick(tagName); } }}
+      onClick={() => { if (content && !isInboxOpen) { handleTagClick(tagName); } }}
     >
       {content}
     </button>
@@ -83,8 +83,8 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
           value={formInputData}
           id="goalInputField"
           style={{ borderColor: selectedColor }}
-          contentEditable={!openInbox}
-          disabled={openInbox}
+          contentEditable={!isInboxOpen}
+          disabled={isInboxOpen}
           // eslint-disable-next-line jsx-a11y/no-autofocus
           onChange={(e) => setFormInputData(e.target.value)}
         />
@@ -102,25 +102,25 @@ const InputGoal: React.FC<IGoalTagsProps> = ({
           {goalLang}
         </button>
 
-        { goalTags?.start?.value &&
+        {goalTags?.start?.value &&
           getTag("start", `Start ${getDateInText(goalTags.start.value)} ${goalTags?.afterTime?.value ? "" : `, ${goalTags?.start?.value?.toTimeString().slice(0, 5)}`}`)}
 
-        { (goalTags?.afterTime?.value || goalTags?.afterTime?.value === 0) &&
+        {(goalTags?.afterTime?.value || goalTags?.afterTime?.value === 0) &&
           getTag("afterTime", `After ${goalTags.afterTime.value}:00`)}
 
-        { goalTags?.due?.value &&
+        {goalTags?.due?.value &&
           getTag("due", `Due ${getDateInText(goalTags.due.value)}${goalTags?.beforeTime?.value ? "" : `, ${goalTags?.due?.value?.toTimeString().slice(0, 5)}`}`)}
 
-        { (goalTags?.beforeTime?.value || goalTags?.beforeTime?.value === 0) &&
+        {(goalTags?.beforeTime?.value || goalTags?.beforeTime?.value === 0) &&
           getTag("beforeTime", `Before ${goalTags.beforeTime.value}:00`)}
 
-        { goalTags?.duration?.value &&
+        {goalTags?.duration?.value &&
           getTag("duration", `${goalTags.duration.value}h`)}
 
-        { goalTags?.repeats?.value &&
+        {goalTags?.repeats?.value &&
           getTag("repeats", goalTags.repeats.value)}
 
-        { goalTags?.link?.value &&
+        {goalTags?.link?.value &&
           getTag("link", "URL")}
       </div>
     </>
