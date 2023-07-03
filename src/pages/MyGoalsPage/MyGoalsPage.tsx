@@ -4,6 +4,9 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
+import ZinZen from "@assets/images/checklist.svg";
+import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
+
 import Empty from "@src/common/Empty";
 import { GoalItem } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
@@ -189,6 +192,13 @@ export const MyGoalsPage = () => {
             (<GoalSublist />)
         }
         {showChangesModal && <DisplayChangesModal />}
+        {activeGoals?.length === 0 && (
+          <>
+            <img style={{ width: 350, height: 350 }} src={ZinZen} alt="Zinzen" />
+            <p style={{ textAlign: "center", color: "#CD6E51", fontSize: "1.5em" }}>Welcome to Zinzen</p>
+          </>
+        )}
+
       </div>
     </AppLayout>
   );
