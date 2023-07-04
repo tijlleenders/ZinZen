@@ -193,10 +193,7 @@ export const MyGoalsPage = () => {
         }
         {showChangesModal && <DisplayChangesModal />}
         {activeGoals?.length === 0 && (
-          <>
-            <img style={{ width: 350, height: 350 }} src={ZinZen} alt="Zinzen" />
-            <p style={{ textAlign: "center", color: "#CD6E51", fontSize: "1.5em" }}>Welcome to Zinzen</p>
-          </>
+          <img style={{ width: 350, height: 350, opacity: 0.3 }} src={ZinZenTextLight} alt="Zinzen" />
         )}
 
       </div>
