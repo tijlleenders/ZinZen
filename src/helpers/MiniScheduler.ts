@@ -37,67 +37,110 @@ var myDays: ISchedulerOutputSlot[][] = [[], [], [], [], [], [], [], []];
 var buffer: { [goalId: string]: { nextBuffer: number; availableBuffer: number }[] } = {};
 var { scheduled, impossible }: ISchedulerOutput = { scheduled: [], impossible: [] };
 
-const schProcessor = (goals: { [id: string]: ISchedulerInputGoal }, tmpStart: Date) => {
+const schProcessor = (goals: { [id: string]: ISchedulerInputGoal }, tmpStart: Date, goal: ISchedulerInputGoal) => {
+  blockingSlots[goal.id] = [[], [], [], [], [], [], [], []];
+  // const goalStartDate = goal.start ? new Date(goal.start) : new Date();
+  const deadline = goal.deadline ? new Date(goal.deadline) : null;
+  let totalDuration = goal.min_duration;
+  const { after_time = 0, before_time = 24, on_days = calDays, not_on = [] } = goal.filters || {};
+  const slot = {
+    goalid: goal.id,
+    taskid: uuidv4(),
+    title: goal.title,
+  };
+  const validDays = on_days.filter((ele) => !not_on.includes(ele));
+  if (goal.repeat || goal.filters?.on_days) {
+    if (goal.repeat === "daily") {
+      for (let key = 0; key < 7; key += 1) {
+        myDays[key + 1] = [...myDays[key + 1], {
+          ...slot,
+          start: after_time,
+          deadline: before_time,
+          duration: totalDuration,
+        }];
+      }
+    } else if (!goal.budgets) {
+      weeklyGoals.push({
+        slot: {
+          ...slot,
+          start: after_time,
+          deadline: before_time,
+          duration: totalDuration,
+        },
+        validDays,
+      });
+    } else {
+      let tmp = new Date(tmpStart);
+      const { min } = goal.budgets[0];
+      for (let i = 0; i < 7; i += 1) {
+        if (deadline && deadline < tmp) {
+          break;
+        }
+        if (validDays.includes(convertDateToDay(tmp))) {
+          const slotD = min > totalDuration ? totalDuration : min;
+          myDays[i + 1] = [...myDays[i + 1], {
+            ...slot,
+            start: after_time,
+            deadline: before_time,
+            duration: slotD,
+          }];
+          if (min > totalDuration) {
+            if (!buffer[goal.id]) {
+              buffer[goal.id] = [];
+            }
+            buffer[goal.id].push({ nextBuffer: i + 1, availableBuffer: min - totalDuration });
+          }
+          if (totalDuration > 0) {
+            totalDuration -= min > totalDuration ? totalDuration : min;
+          }
+        }
+        tmp = new Date(tmp.setDate(tmp.getDate() + 1));
+        // if (totalDuration <= 0) { break; }
+      }
+    }
+  } else {
+    let tmp = new Date(tmpStart);
+    const min = totalDuration;
+    for (let i = 0; i < 7; i += 1) {
+      if (deadline && deadline < tmp) {
+        break;
+      }
+      const slotD = min > totalDuration ? totalDuration : min;
+      myDays[i + 1] = [...myDays[i + 1], {
+        ...slot,
+        start: after_time,
+        deadline: before_time,
+        duration: slotD,
+      }];
+      if (min > totalDuration) {
+        if (!buffer[goal.id]) {
+          buffer[goal.id] = [];
+        }
+        buffer[goal.id].push({ nextBuffer: i + 1, availableBuffer: min - totalDuration });
+      }
+      if (totalDuration > 0) {
+        totalDuration -= min > totalDuration ? totalDuration : min;
+      }
+      tmp = new Date(tmp.setDate(tmp.getDate() + 1));
+    }
+    // if (totalDuration <= 0) { break; }
+  }
+};
+const schManager = (goals: { [id: string]: ISchedulerInputGoal }, tmpStart: Date) => {
   for (let index = 0; index < Object.keys(goals).length; index += 1) {
     const id = Object.keys(goals)[index];
     const goal = goals[id];
-    blockingSlots[goal.id] = [[], [], [], [], [], [], [], []];
-    // const goalStartDate = goal.start ? new Date(goal.start) : new Date();
-    let totalDuration = goal.min_duration;
-    const { after_time = 0, before_time = 24, on_days = calDays, not_on = [] } = goal.filters || {};
-    const slot = {
-      goalid: id,
-      taskid: uuidv4(),
-      title: goal.title,
-    };
-    const validDays = on_days.filter((ele) => !not_on.includes(ele));
-    if (goal.repeat || goal.filters?.on_days) {
-      if (goal.repeat === "daily") {
-        for (let key = 0; key < 7; key += 1) {
-          myDays[key + 1] = [...myDays[key + 1], {
-            ...slot,
-            start: after_time,
-            deadline: before_time,
-            duration: totalDuration,
-          }];
-        }
-      } else if (!goal.budgets) {
-        weeklyGoals.push({
-          slot: {
-            ...slot,
-            start: after_time,
-            deadline: before_time,
-            duration: totalDuration,
-          },
-          validDays,
-        });
-      } else {
-        let tmp = new Date(tmpStart);
-        const { min } = goal.budgets[0];
-        for (let i = 0; i < 7; i += 1) {
-          if (validDays.includes(convertDateToDay(tmp))) {
-            const slotD = min > totalDuration ? totalDuration : min;
-            myDays[i + 1] = [...myDays[i + 1], {
-              ...slot,
-              start: after_time,
-              deadline: before_time,
-              duration: slotD,
-            }];
-            if (min > totalDuration) {
-              if (!buffer[goal.id]) {
-                buffer[goal.id] = [];
-              }
-              buffer[goal.id].push({ nextBuffer: i + 1, availableBuffer: min - totalDuration });
-            }
-            if (totalDuration > 0) {
-              totalDuration -= min > totalDuration ? totalDuration : min;
-            }
-          }
-          tmp = new Date(tmp.setDate(tmp.getDate() + 1));
-          // if (totalDuration <= 0) { break; }
-        }
-      }
-    }
+    // let splittedGoal = false;
+    // if(goal.filters) {
+    //   if(goal.filters.after_time > goal.filters.before_time) {
+    //     splittedGoal = true;
+    //     schProcessor(goals,tmpStart, {
+    //       ...goal,
+    //       deadline: 0
+    //     });
+    //   }
+    // }
+    schProcessor(goals, tmpStart, goal);
   }
 };
 
@@ -189,9 +232,9 @@ const operator = (item: number, tmpStart: Date, defaultHrs: number[]) => {
     // if (["project a", "work"].includes(title)) console.log("🚀 ~ file: MiniScheduler.ts:182 ~ operator ~ arrItr:", arrItr);
     // if (["project a", "work"].includes(title)) { console.log(title, duration, dueTaskHrs[goalid]); }
     if (dueTaskHrs[goalid] && dueTaskHrs[goalid] > 0) {
-      console.log("due exist");
+      // console.log("due exist");
       if (buffer[goalid] && buffer[goalid].length > 0) {
-        console.log("found buffer", buffer[goalid][0]);
+        // console.log("found buffer", buffer[goalid][0]);
         if (buffer[goalid][0].nextBuffer === selectedDay) {
           const pastDue = dueTaskHrs[goalid];
           const bufferForToday = buffer[goalid][0].availableBuffer;
@@ -230,7 +273,8 @@ export const callMiniScheduler = (inputObj: {
   const { startDate, endDate, goals } = inputObj;
   const tmpStart = new Date(startDate);
   const soloGoals = breakTheTree(goals);
-  schProcessor(soloGoals, tmpStart);
+  schManager(soloGoals, tmpStart);
+  console.log(weeklyGoals, myDays);
   for (let ele = 0; ele < 7; ele += 1) {
     scheduled[ele + 1] = { day: `${ele + 1}`, outputs: [] };
     impossible[ele + 1] = { day: `${ele + 1}`, outputs: [] };
@@ -240,6 +284,10 @@ export const callMiniScheduler = (inputObj: {
     let hrsOfDay = [...Array(24).keys()].map(() => -1);
     hrsOfDay = [...operator(item, tmpStart, hrsOfDay)];
     for (let wgi = 0; wgi < weeklyGoals.length; wgi += 1) {
+      const { deadline: actualGoalDeadline, title } = goals[weeklyGoals[wgi].slot.goalid];
+      if (actualGoalDeadline && new Date(actualGoalDeadline) < tmpDate) {
+        continue;
+      }
       if (weeklyGoals[wgi].validDays.includes(convertDateToDay(tmpDate))) {
         const task = { ...weeklyGoals[wgi].slot };
         const dueDuration = dueTaskHrs[task.goalid] || task.duration;
