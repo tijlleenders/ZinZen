@@ -260,6 +260,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   };
 
   useEffect(() => {
+    if (goal.goalColor) {
+      setColorIndex(colorPalleteList.indexOf(goal.goalColor));
+    }
     if (selectedTag === "") {
       setShowDeleteIcon(false);
     } else if (
