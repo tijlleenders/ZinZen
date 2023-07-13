@@ -218,7 +218,7 @@ export const MyTimePage = () => {
     });
     schedulerInput.goals = schedulerInput.goals.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
     console.log("input", JSON.stringify(schedulerInput));
-    const res = schedule(schedulerInput);
+    const res = devMode ? callMiniScheduler(schedulerInput) : schedule(schedulerInput);
     console.log("output", res);
     const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
     // console.log(processedOutput);
