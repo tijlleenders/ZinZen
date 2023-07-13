@@ -30,7 +30,7 @@ import "@translations/i18n";
 
 export const MyTimePage = () => {
   const fakeThursday = new Date();
-  fakeThursday.setDate(fakeThursday.getDate() + (fakeThursday.getDate() === 28 ? 2 : 1));
+  // fakeThursday.setDate(fakeThursday.getDate() + (fakeThursday.getDate() === 28 ? 2 : 1));
   const today = new Date();
 
   const { t } = useTranslation();
