@@ -19,7 +19,7 @@ import { themeState } from "@src/store/ThemeState";
 import ColorPalette from "@src/common/ColorPalette";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 
-import { colorPalleteList, days } from "../../../utils";
+import { colorPalleteList, calDays } from "../../../utils";
 import "./ConfigGoal.scss";
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
@@ -40,7 +40,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [title, setTitle] = useState(goal.title);
   const [isDetailsActive, setIsDetailsActive] = useState(true);
 
-  const [daysGroup, setDaysGroup] = useState(days);
+  const [daysGroup, setDaysGroup] = useState(calDays);
   const [selectedTag, setSelectedTag] = useState("");
   const [isPerSelected, setIsPerSelected] = useState(false);
   const [showDeleteIcon, setShowDeleteIcon] = useState(false);
@@ -153,7 +153,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const getWeekdaysGroup = () => (
     <Row>
-      {days.map((ele) => (
+      {calDays.map((ele) => (
         <Col key={ele} span={6}>
           <Checkbox
             value={ele}
@@ -260,6 +260,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   };
 
   useEffect(() => {
+    if (goal.goalColor) {
+      setColorIndex(colorPalleteList.indexOf(goal.goalColor));
+    }
     if (selectedTag === "") {
       setShowDeleteIcon(false);
     } else if (

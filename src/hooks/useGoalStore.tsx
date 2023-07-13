@@ -3,16 +3,15 @@ import { getGoal } from "@src/api/GoalsAPI";
 import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayConfirmation, displayInbox } from "@src/store";
-import { displayAddGoal, displayChangesModal, displayGoalId, displayShareModal, displayUpdateGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
+import { displayAddGoal, displayGoalId, displayShareModal, displayUpdateGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 import { colorPalleteList } from "@src/utils";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 function useGoalStore() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [showInbox, setShowInbox] = useRecoilState(displayInbox);
 
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
@@ -25,7 +24,6 @@ function useGoalStore() {
   const setColorIndex = useSetRecoilState(selectedColorIndex);
   const handleLocationChange = () => {
     const locationState: ILocationState = location.state || {};
-    console.log(location);
     getActiveSharedWMGoals().then((items) => {
       if (items && items.length > 0) {
         if (!showInbox) { setShowInbox(true); }

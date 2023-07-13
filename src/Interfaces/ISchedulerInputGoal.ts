@@ -1,31 +1,39 @@
-export interface ISchedulerInputGoal{
-    id: string;
-    title: string;
-    duration: string;
-    start: string;
-    deadline: string;
-}
-
-export interface IMSInputGoal {
-    after_time: number | undefined,
-    before_time: number | undefined,
-    children: string[],
-    duration: number,
-    id: string,
-    start: string | undefined,
-    deadline: string | undefined,
-    repeat: string,
-    title: string
-}
-
-export interface I24Slots {
-    bookedBy: string;
-    booked: boolean;
-}
-
-export interface schedulerSlot {
+export interface ISchedulerOutputSlot {
+    goalid: string,
+    taskid: string,
     start: number,
     deadline: number,
     duration: number,
+    title: string
+}
+
+export interface IFinalOutputSlot {
     goalid: string,
-    title: string }
+    taskid: string,
+    start: string,
+    deadline: string,
+    duration: number,
+    title: string
+}
+
+export interface ISchedulerOutput {
+    scheduled: { day: string, outputs: IFinalOutputSlot[] }[],
+    impossible: { day: string, outputs: IFinalOutputSlot[] }[],
+}
+
+export interface ISchedulerInputGoal {
+    id: string,
+    title: string
+    min_duration: number,
+    start?: string,
+    deadline?: string,
+    filters?: {
+        after_time: number,
+        before_time: number,
+        on_days: string[],
+        not_on: string[],
+    },
+    repeat?: string,
+    budgets: { budget_type: "Daily" | "Weekly", min: number }[]
+    children: string[],
+}

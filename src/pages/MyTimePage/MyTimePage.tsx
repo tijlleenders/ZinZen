@@ -15,6 +15,7 @@ import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem } from "@src/models/TaskItem";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
+import { callMiniScheduler } from "@src/helpers/MiniScheduler";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { darkModeState, lastAction, openDevMode } from "@src/store";
@@ -38,12 +39,12 @@ export const MyTimePage = () => {
   const [action, setLastAction] = useRecoilState(lastAction);
   const [devMode, setDevMode] = useRecoilState(openDevMode);
 
-  const [tasks, setTasks] = useState<{[day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } }}>({});
+  const [tasks, setTasks] = useState<{ [day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } } }>({});
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
-  const [colorBands, setColorBands] = useState<{[day: string]: number}>({});
-  const [tasksStatus, setTasksStatus] = useState<{[goalId: string]: TaskItem}>({});
-  const [impossibleTasks, setImpossibleTasks] = useState<{[day: string]: ITask[]}>({});
+  const [colorBands, setColorBands] = useState<{ [day: string]: number }>({});
+  const [tasksStatus, setTasksStatus] = useState<{ [goalId: string]: TaskItem }>({});
+  const [impossibleTasks, setImpossibleTasks] = useState<{ [day: string]: ITask[] }>({});
   const [unplannedIndices, setUnplannedIndices] = useState<number[]>([]);
   const [goalOfMaxDuration, setGoalOfMaxDuration] = useState(0);
   const [unplannedDurations, setUnplannedDurations] = useState<number[]>([]);
@@ -56,7 +57,7 @@ export const MyTimePage = () => {
   };
   const getColorWidth = (duration: number, totalSlots: number) => (duration * (100 / (totalSlots)));
 
-  const getColorComponent = (colorWidth:number, color: string) => (
+  const getColorComponent = (colorWidth: number, color: string) => (
     <div
       style={{
         width: `${colorWidth}%`,
@@ -97,7 +98,7 @@ export const MyTimePage = () => {
             className="MyTime-expand-btw"
             type="button"
           >
-            <div> { showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <img src={chevronLeftIcon} className="chevronRight theme-icon" /> } </div>
+            <div> {showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <img src={chevronLeftIcon} className="chevronRight theme-icon" />} </div>
           </button>
         </button>
         <div>
@@ -117,16 +118,18 @@ export const MyTimePage = () => {
     });
   };
 
-  const handleSchedulerOutput = (_schedulerOutput, activeGoals:GoalItem[]) => {
-    const obj = { };
-    const res = { };
+  const handleSchedulerOutput = (_schedulerOutput, activeGoals: GoalItem[]) => {
+    const obj = {};
+    const res = {};
     const scheduled = _schedulerOutput.scheduled.map((ele) => ({
       day: ele.day,
-      outputs: ele.outputs.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] })) }
+      outputs: ele.outputs.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] }))
+    }
     ));
     const impossible = _schedulerOutput.impossible.map((ele) => ({
       day: ele.day,
-      outputs: ele.outputs.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] })) }
+      outputs: ele.outputs.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] }))
+    }
     ));
     activeGoals.forEach((goal) => {
       obj[goal.id] = { parentGoalId: goal.parentGoalId, goalColor: goal.goalColor };
@@ -218,7 +221,7 @@ export const MyTimePage = () => {
     });
     schedulerInput.goals = schedulerInput.goals.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
     console.log("input", JSON.stringify(schedulerInput));
-    const res = schedule(schedulerInput);
+    const res = devMode ? callMiniScheduler(schedulerInput) : schedule(schedulerInput);
     console.log("output", res);
     const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
     // console.log(processedOutput);
@@ -246,8 +249,8 @@ export const MyTimePage = () => {
         rightNav={() => { setDailyView(!dailyView); }}
       />
       {getDayComponent("Today")}
-      { !dailyView && getDayComponent("Tomorrow")}
-      { !dailyView &&
+      {!dailyView && getDayComponent("Tomorrow")}
+      {!dailyView &&
         [...Array(6).keys()].map((i) => {
           const thisDay = devMode ? new Date(fakeThursday) : new Date(today);
           thisDay.setDate(thisDay.getDate() + i + 1);

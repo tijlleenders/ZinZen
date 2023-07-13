@@ -1,7 +1,7 @@
 import { GoalItem } from "@src/models/GoalItem";
 import { languagesFullForms } from "@src/translations/i18n";
 
-export async function createContactRequest(url: string, body : object | null = null, method = "POST") {
+export async function createContactRequest(url: string, body: object | null = null, method = "POST") {
   try {
     const res = await fetch(url, {
       method,
@@ -20,7 +20,7 @@ export async function createContactRequest(url: string, body : object | null = n
   }
 }
 
-export async function createGroupRequest(url: string, body : object | null = null, method = "POST") {
+export async function createGroupRequest(url: string, body: object | null = null, method = "POST") {
   try {
     const res = await fetch(url, {
       method,
@@ -66,7 +66,7 @@ export const getDates = (startDate: Date, stopDate: Date) => {
   return dateArray;
 };
 
-export const getDiffInHours = (date1 : Date, date2: Date) => {
+export const getDiffInHours = (date1: Date, date2: Date) => {
   let diff = date1.getTime() - date2.getTime();
   diff = Math.round(Math.abs(diff / 36e5));
   return diff;
@@ -79,7 +79,8 @@ export const colorPalleteList = [
   "#FD5B78", "#FF007C"
 ];
 
-export const fixDateVlauesInGoalObject = (goal: GoalItem) => ({ ...goal,
+export const fixDateVlauesInGoalObject = (goal: GoalItem) => ({
+  ...goal,
   start: goal.start ? new Date(goal.start) : null,
   due: goal.due ? new Date(goal.due) : null
 });
@@ -90,6 +91,11 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   if (!goal.due) { goal.due = parentGoal.due; }
   if (!(goal.beforeTime || goal.beforeTime === 0)) { goal.beforeTime = parentGoal.beforeTime; }
   if (!(goal.afterTime || goal.afterTime === 0)) { goal.afterTime = parentGoal.afterTime; }
+  if (!goal.on) { goal.on = parentGoal.on; }
+  if (!goal.habit) { goal.habit = parentGoal.habit; }
+  if (!goal.timeBudget) { goal.timeBudget = parentGoal.timeBudget; }
+  if (!goal.on) { goal.on = parentGoal.on; }
+
   goal.rootGoalId = parentGoal.rootGoalId;
   goal.typeOfGoal = parentGoal.typeOfGoal;
   return goal;
@@ -126,7 +132,7 @@ export function getOrdinalSuffix(dayOfMonth: number): string {
   return "th";
 }
 
-export const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+export const calDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export function convertOnFilterToArray(on: "weekdays" | "weekends") {
   return on === "weekdays" ? ["Mon", "Tue", "Wed", "Thu", "Fri"] : ["Sat", "Sun"];
