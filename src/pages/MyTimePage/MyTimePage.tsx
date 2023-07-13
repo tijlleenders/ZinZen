@@ -200,12 +200,12 @@ export const MyTimePage = () => {
       if (ele.duration) obj.min_duration = Number(ele.duration);
       if (ele.start) {
         const start = new Date(ele.start);
-        start.setDate(start.getDate() + 1);
+        // start.setDate(start.getDate() + 1);
         obj.start = `${start?.toISOString().slice(0, 10)}T${start?.toTimeString().slice(0, 8)}`;
       }
       if (ele.due) {
         const due = new Date(ele.due);
-        due.setDate(due.getDate() + 1);
+        // due.setDate(due.getDate() + 1);
         obj.deadline = `${due?.toISOString().slice(0, 10)}T${due?.toTimeString().slice(0, 8)}`;
       }
       if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
