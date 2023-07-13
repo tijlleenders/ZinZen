@@ -46,6 +46,6 @@ export const breakTheTree = (goals: incomingGoals) => {
       soloGoals[goal.id] = goal;
     }
   }
-  console.log("🚀 ~ file: SchedulerUtils.ts:50 ~ breakTheTree ~ soloGoals:", soloGoals)
+  // console.log("🚀 ~ file: SchedulerUtils.ts:50 ~ breakTheTree ~ soloGoals:", soloGoals)
   return { ...soloGoals };
 };
