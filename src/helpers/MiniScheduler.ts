@@ -296,7 +296,7 @@ export const callMiniScheduler = (inputObj: {
   const resSchedule: { day: string; outputs: IFinalOutputSlot[] }[] = [];
   const resImpossible: { day: string; outputs: IFinalOutputSlot[] }[] = [];
   for (let item = 0; item < 7; item += 1) {
-    const thisDate = new Date(tmpStart.setDate(tmpStart.getDate() + item));
+    const thisDate = new Date(tmpStart.setDate(tmpStart.getDate() + 1));
     scheduled[item + 1].outputs.sort((a, b) => {
       const s1 = Number(a.start.slice(11, 13));
       const s2 = Number(b.start.slice(11, 13));
