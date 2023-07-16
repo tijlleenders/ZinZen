@@ -22,9 +22,9 @@ function traverseTheTree(id: string, goals: incomingGoals) {
 
   for (let i = 0; i < children.length; i += 1) {
     const occupied = traverseTheTree(children[i], goals);
-    parentDuration -= occupied;
+    if (parentDuration) parentDuration -= occupied;
   }
-  if (parentDuration > 0) {
+  if (parentDuration && parentDuration > 0) {
     soloGoals[id] = { ...goals[id], title: `${parent.title} filler`, min_duration: parentDuration };
   }
 
