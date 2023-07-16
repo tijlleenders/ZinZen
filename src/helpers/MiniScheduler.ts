@@ -130,17 +130,32 @@ const schManager = (goals: { [id: string]: ISchedulerInputGoal }, tmpStart: Date
   for (let index = 0; index < Object.keys(goals).length; index += 1) {
     const id = Object.keys(goals)[index];
     const goal = goals[id];
-    // let splittedGoal = false;
-    // if(goal.filters) {
-    //   if(goal.filters.after_time > goal.filters.before_time) {
-    //     splittedGoal = true;
-    //     schProcessor(goals,tmpStart, {
-    //       ...goal,
-    //       deadline: 0
-    //     });
-    //   }
-    // }
-    schProcessor(goals, tmpStart, goal);
+    let splittedGoal = false;
+    if (goal.filters) {
+      if (goal.filters.after_time > goal.filters.before_time) {
+        splittedGoal = true;
+        schProcessor(tmpStart, {
+          ...goal,
+          min_duration: 24 - goal.filters.after_time,
+          filters: {
+            ...goal.filters,
+            before_time: 24
+          }
+        });
+      }
+      schProcessor(tmpStart, {
+        ...goal,
+        ...(splittedGoal ? {
+          min_duration: goal.min_duration - (24 - goal.filters.after_time),
+          filters: {
+            ...goal.filters,
+            after_time: 0
+          }
+        } : {})
+      });
+    } else {
+      schProcessor(tmpStart, goal);
+    }
   }
 };
 
