@@ -353,6 +353,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           <div className="goal-sent">
             <p>
               {tags.duration ? `${tags.duration}h ` : ""}
+              {tags.on !== "" && `${t("on")} ${tags.on} `}
+              {tags.every !== "" && `${t("every")} ${tags.every} `}
+              {tags.budgetDuration !== "" && `(${tags.budgetDuration}h / ${tags.budgetPeriod}) `}
               {tags.beforeTime !== "" && tags.afterTime !== ""
                 ? `${t("between")} ${tags.afterTime}-${tags.beforeTime} `
                 : tags.beforeTime !== ""
@@ -360,9 +363,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   : tags.afterTime !== ""
                     ? `${t("after")} ${tags.afterTime} `
                     : ""}
-              {tags.on !== "" && `${t("on")} ${tags.on} `}
-              {tags.every !== "" && `${t("every")} ${tags.every} `}
-              {tags.budgetDuration !== "" && `${tags.budgetDuration}h per ${tags.budgetPeriod}`}
             </p>
           </div>
           <div className="goal-config">
