@@ -312,20 +312,42 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       <div style={{ padding: "0 24px" }}>
         <div style={{ display: "flex", gap: 15, padding: "12px 0" }}>
           <div>
-            <p>{t("Duration")}: </p>
+            <p>{showAllSettings ? "Budget" : t("Duration")}: </p>
             <input
               style={{ width: 45 }}
               type="number"
+              placeholder="in hrs"
               className="default-input"
-              value={tags.duration}
+              value={showAllSettings ? tags.duration : tags.budgetDuration}
               onChange={(e) => {
+                if (showAllSettings) {
                 handleFieldChange("duration", e.target.value);
+                } else {
+                  setTags({ ...tags, budgetDuration: e.target.value });
+                }
               }}
             />
           </div>
           <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
         </div>
       </div>
+      {!showAllSettings && (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Radio.Group
+            options={["once", "per day", "per week"]}
+            onChange={(e) => {
+              const { value } = e.target;
+              if (value === "once") {
+                setTags({ ...tags, budgetPeriod: "once" });
+              } else {
+                setTags({ ...tags, budgetPeriod: value.split(" ")[1] });
+              }
+            }}
+            value={tags.budgetPeriod !== "once" ? `per ${tags.budgetPeriod}` : "once"}
+          />
+        </div>
+      )}
+
       {showAllSettings && (
         <>
           <div className="goal-sent">
