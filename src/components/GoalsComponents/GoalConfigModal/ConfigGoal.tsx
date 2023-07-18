@@ -42,6 +42,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const [daysGroup, setDaysGroup] = useState(calDays);
   const [selectedTag, setSelectedTag] = useState("");
+  const [activeTags, setActiveTags] = useState<string[]>([]);
   const [isPerSelected, setIsPerSelected] = useState(false);
   const [showDeleteIcon, setShowDeleteIcon] = useState(false);
 
@@ -56,7 +57,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     afterTime: goal.afterTime ? `${goal.afterTime}` : "",
     beforeTime: goal.beforeTime ? `${goal.beforeTime}` : "",
     budgetDuration: goal.timeBudget?.duration || "",
-    budgetPeriod: goal.timeBudget?.period || "day",
+    budgetPeriod: goal.timeBudget?.period || "once",
   });
 
   const handleDateChange = (type: "From" | "To", value: string) => {
@@ -176,8 +177,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         <li key={ele}>
           <button
             type="button"
-            className={ele === selectedTag ? "selected" : ""}
+            className={ele === selectedTag || activeTags.includes(ele) ? "selected" : ""}
             onClick={() => {
+              setActiveTags([...activeTags.filter((activeTag) => !items.includes(activeTag)), ele])
               handleTagClick(ele);
             }}
           >
@@ -281,6 +283,28 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     document.getElementById("title-field")?.focus();
   }, []);
 
+  useEffect(() => {
+    const currentTags = getFinalTags();
+    const updatedActiveTags = [];
+    if (currentTags.on && currentTags.on !== "") {
+      updatedActiveTags.push("on");
+    } else if (goal.habit && goal.habit !== "") {
+      updatedActiveTags.push("every");
+    }
+    if (currentTags.afterTime && currentTags.afterTime >= 0
+      && currentTags.beforeTime && currentTags.beforeTime >= 0) {
+      updatedActiveTags.push("between");
+    } else if (currentTags.afterTime && currentTags.afterTime >= 0) {
+      updatedActiveTags.push("after");
+    } else if (currentTags.beforeTime && currentTags.beforeTime >= 0) {
+      updatedActiveTags.push("before");
+    }
+    if ((currentTags.timeBudget?.duration || 0) > 0 && currentTags.timeBudget?.period !== "once") {
+      updatedActiveTags.push(`hrs / ${currentTags.timeBudget?.period}`);
+    }
+    setActiveTags([...updatedActiveTags]);
+  }, [tags]);
+
   return (
     <Modal
       className={`configModal popupModal${darkModeStatus ? "-dark" : ""} 
@@ -298,7 +322,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <input
-          onFocus={() => { console.log("HERE"); setShowAllSettings(false); }}
+          onFocus={() => { setShowAllSettings(false); }}
           className="ordinary-element"
           id="title-field"
           placeholder={t("Goal Title")}
@@ -321,7 +345,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               value={showAllSettings ? tags.duration : tags.budgetDuration}
               onChange={(e) => {
                 if (showAllSettings) {
-                handleFieldChange("duration", e.target.value);
+                  handleFieldChange("duration", e.target.value);
                 } else {
                   setTags({ ...tags, budgetDuration: e.target.value });
                 }
@@ -419,9 +443,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   )}
                 </div>
                 <div className="sent-tags">
-                  {getTagSelector(["after", "before", "between"])}
                   {getTagSelector(["on", "every"])}
                   {getTagSelector(["hrs / day", "hrs / week"])}
+                  {getTagSelector(["after", "before", "between"])}
                 </div>
               </div>
             )}
