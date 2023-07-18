@@ -42,13 +42,17 @@ const BottomNavbar = ({ title }: { title: string }) => {
   const handleClick = (to: string) => {
     if (themeSelection) {
       setDarkModeStatus(!darkModeStatus);
+      return;
     }
-    if (to === "MyTime") {
-      if (currentPage !== "") navigate("/", { state: location.state });
-    } else if (to === "MyGoals") {
-      if (currentPage !== "MyGoals") navigate("/MyGoals", { state: location.state });
-    } else if (currentPage !== "MyJournal") {
-      navigate("/MyJournal", { state: location.state });
+    if (location.state?.from === to) { window.history.back(); } else {
+      const newLocationState = { ...location.state, from: currentPage };
+      if (to === "MyTime") {
+        if (currentPage !== "") navigate("/", { state: newLocationState });
+      } else if (to === "MyGoals") {
+        if (currentPage !== "MyGoals") navigate("/MyGoals", { state: newLocationState });
+      } else if (currentPage !== "MyJournal") {
+        navigate("/MyJournal", { state: newLocationState });
+      }
     }
   };
 
