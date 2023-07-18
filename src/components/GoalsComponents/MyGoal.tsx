@@ -48,6 +48,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   const setLastAction = useSetRecoilState(lastAction);
 
+  const goalSent = createSentFromTags(goal);
+  const timingTagName = goal.afterTime ? goal.beforeTime ? "between" : "after" : goal.beforeTime ? "before" : "";
   const handleGoalClick = () => {
     if (goal.sublist.length === 0) {
       if (showActions.open === goal.id && showActions.click > 0) {
@@ -137,7 +139,17 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         >
           <div>
             {goal.title}&nbsp;{goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
-            {showActions.open === goal.id && showActions.click > 0 && <p className="goal-desc">{createSentFromTags(goal)}</p>}
+            {showActions.open === goal.id && showActions.click > 0 && (
+              <p className="goal-desc">
+                {timingTagName !== "" ? (
+                  <>
+                    {goalSent.split(timingTagName)[0]}
+                    <br />
+                    {`${timingTagName} ${goalSent.split(timingTagName)[1]}`}
+                  </>
+                ) : goalSent}
+              </p>
+            )}
           </div>
         </div>
       </div>
