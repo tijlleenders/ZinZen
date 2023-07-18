@@ -7,21 +7,21 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 21px;
-  .back { 
+  .back {
     width: unset;
     margin-left: 7%;
   }
-  button { 
-    
+  button {
     border: none;
   }
-  .activeTab { 
+  .activeTab {
     text-decoration: underline;
     opacity: 1;
   }
 }
 
-.myGoals_title, .myGoals_title-dark {
+.myGoals_title,
+.myGoals_title-dark {
   margin: 7px 18px 0 18px;
   font-family: "Montserrat";
   font-weight: bolder;
@@ -39,20 +39,22 @@
   display: none;
 }
 
-.interactables, .interactables-dark {
+.interactables,
+.interactables-dark {
   display: flex;
   padding-top: 15px;
   padding-bottom: 1.25%;
   justify-content: space-evenly;
   div {
     text-align: center;
-    p { 
+    p {
       font-weight: 500;
       margin: 0;
       font-size: 0.875em;
     }
   }
-  img, svg { 
+  img,
+  svg {
     width: 20px;
     height: 20px;
     opacity: 0.6;
@@ -60,14 +62,17 @@
 }
 
 .interactables > div > p {
-  color: rgb(205, 110, 81)
+  color: rgb(205, 110, 81);
 }
 
-.interactables > img, .interactables > svg, .exceptional-img {
+.interactables > img,
+.interactables > svg,
+.exceptional-img {
   font-size: 22px;
 }
 
-.user-goal, .user-goal-dark {
+.user-goal,
+.user-goal-dark {
   word-break: break-all;
   padding: 8px 0;
   min-height: 61.19px;
@@ -100,7 +105,8 @@
   }
 }
 
-.goal-dd-inner, .goal-dd-outer {
+.goal-dd-inner,
+.goal-dd-outer {
   width: 55px;
   height: 92%;
   border-radius: 57px;
@@ -113,11 +119,11 @@
   top: 15px;
   height: 45px;
 }
-.goal-dd-outer {  
+.goal-dd-outer {
   border: solid;
   border-width: 1.4px;
   width: 60px;
-  top: 9.3px;    
+  top: 9.3px;
 }
 
 #addGoal-btn {
@@ -138,9 +144,8 @@
   max-width: unset;
   overflow: scroll;
 
-  -ms-overflow-style: none;  
+  -ms-overflow-style: none;
   scrollbar-width: none;
-
 }
 .goal-title::-webkit-scrollbar {
   display: none;
@@ -148,12 +153,13 @@
 .goal-desc {
   font-size: 0.875em;
   font-weight: 300;
+  margin-right: 56px;
 }
 
 .goal-link {
   // width: 100%;
   border: none;
-  
+
   font-weight: bold;
   font-size: 1em;
 }
@@ -162,7 +168,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;  
+  width: 100%;
 }
 
 .goal-dropdown {
@@ -177,16 +183,18 @@
   width: 38px;
 }
 
-#addGoalForm{
-  .mygoalsbutton-dark, .mygoalsbutton-light {
+#addGoalForm {
+  .mygoalsbutton-dark,
+  .mygoalsbutton-light {
     display: none;
-  }  
+  }
 
   .todo-form {
     margin-bottom: 24px !important;
   }
 
-  .addtask-light , .addtask-dark {   
+  .addtask-light,
+  .addtask-dark {
     margin: 0 !important;
     padding: 3% 4% !important;
     width: 100% !important;
@@ -195,15 +203,17 @@
 }
 
 #updateGoalForm {
-  .mygoalsbutton-dark, .mygoalsbutton-light {
+  .mygoalsbutton-dark,
+  .mygoalsbutton-light {
     display: none;
-  }  
+  }
 
   .todo-form {
     margin-bottom: 24px !important;
   }
 
-  .addtask-light , .addtask-dark {   
+  .addtask-light,
+  .addtask-dark {
     margin: 10px 0px 0px 0px !important;
     padding: 3% 4% !important;
     width: 100% !important;
@@ -232,7 +242,9 @@
 
 .archived-drawer {
   margin-top: 32px;
-  .ant-collapse-header, .ant-collapse-item, .ant-collapse-content {
+  .ant-collapse-header,
+  .ant-collapse-item,
+  .ant-collapse-content {
     border: none !important;
   }
   .ant-collapse-content {
