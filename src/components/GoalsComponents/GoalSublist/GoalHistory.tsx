@@ -1,6 +1,7 @@
 import React from "react";
 import { Breadcrumb } from "antd";
 import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
 
 import { homeIcon } from "@src/assets";
 
@@ -19,6 +20,7 @@ const breadcrumbStyle: React.CSSProperties = {
 };
 const GoalHistory = () => {
   const subGoalHistory = useRecoilValue(goalsHistory);
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -27,7 +29,7 @@ const GoalHistory = () => {
         items={[
           {
             title: <img src={homeIcon} alt="my goals" />,
-            onClick: () => { window.history.go(-subGoalHistory.length); }
+            onClick: () => { navigate("/MyGoals"); }
           },
           ...(subGoalHistory.length <= 3 ?
             subGoalHistory.map((goal: ISubGoalHistory, index) => ({
