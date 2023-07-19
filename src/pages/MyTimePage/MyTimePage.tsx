@@ -211,7 +211,10 @@ export const MyTimePage = () => {
       if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
       if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;
       if (ele.habit) obj.repeat = ele.habit.toLowerCase();
-      if (ele.timeBudget) obj.budgets = [{ budget_type: ele.timeBudget.period === "day" ? "Daily" : "Weekly", min: Number(ele.timeBudget.duration) }];
+      if (ele.timeBudget) {
+        obj.budgets = [{ budget_type: ele.timeBudget.period === "day" ? "Daily" : "Weekly", min: Number(ele.timeBudget.duration) }];
+        if (!ele.duration) { obj.min_duration = ele.timeBudget.duration; }
+      }
       if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoals.includes(id));
       if (ele.on) obj.filters.on_days = convertOnFilterToArray(ele.on);
       if (slotsNotallowed && slotsNotallowed.length > 0) { obj.filters.not_on = [...slotsNotallowed]; }
