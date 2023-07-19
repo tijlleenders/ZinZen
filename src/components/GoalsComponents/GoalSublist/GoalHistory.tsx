@@ -2,6 +2,7 @@ import React from "react";
 import { Breadcrumb } from "antd";
 import { useRecoilValue } from "recoil";
 
+import { darkModeState } from "@src/store";
 import { homeIcon } from "@src/assets";
 
 import { ISubGoalHistory, goalsHistory } from "@src/store/GoalsState";
@@ -19,14 +20,16 @@ const breadcrumbStyle: React.CSSProperties = {
 };
 const GoalHistory = () => {
   const subGoalHistory = useRecoilValue(goalsHistory);
+  const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
     <div>
       <Breadcrumb
         style={{ margin: "24px 0px" }}
+        separator={<span style={{ color: darkModeStatus ? "rgba(255, 255, 255, 0.45)" : "inherit" }}>/</span>}
         items={[
           {
-            title: <img src={homeIcon} alt="my goals" />,
+            title: <img src={homeIcon} className={`${darkModeStatus ? "dark-svg" : ""}`} alt="my goals" />,
             onClick: () => { window.history.go(-subGoalHistory.length); }
           },
           ...(subGoalHistory.length <= 3 ?
