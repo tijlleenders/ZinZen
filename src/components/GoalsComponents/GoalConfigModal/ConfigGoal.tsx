@@ -288,7 +288,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     const updatedActiveTags = [];
     if (currentTags.on && currentTags.on !== "") {
       updatedActiveTags.push("on");
-    } else if (goal.habit && goal.habit !== "") {
+    } else if (currentTags.habit && currentTags.habit !== "") {
       updatedActiveTags.push("every");
     }
     if (currentTags.afterTime && currentTags.afterTime >= 0
