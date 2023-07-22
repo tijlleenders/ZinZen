@@ -64,8 +64,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
         </Checkbox>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
-        { getChoiceButton(t(getConfirmButtonText(actionName))) }
         { getChoiceButton(t("cancel")) }
+        { getChoiceButton(t(getConfirmButtonText(actionName))) }
       </div>
     </Modal>
   );
