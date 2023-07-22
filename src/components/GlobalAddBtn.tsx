@@ -22,7 +22,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       window.history.back();
     } else if (add === "mygoals") {
       await handleAddGoal();
-    } else if (add === "MyJournal") {
+    } else if (add === "My Journal") {
       handleAddFeeling();
     }
   };
