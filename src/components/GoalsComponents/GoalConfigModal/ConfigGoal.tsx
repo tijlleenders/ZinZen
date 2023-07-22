@@ -179,7 +179,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             type="button"
             className={ele === selectedTag || activeTags.includes(ele) ? "selected" : ""}
             onClick={() => {
-              setActiveTags([...activeTags.filter((activeTag) => !items.includes(activeTag)), ele])
+              setActiveTags([...activeTags.filter((activeTag) => !items.includes(activeTag)), ele]);
               handleTagClick(ele);
             }}
           >
@@ -288,7 +288,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     const updatedActiveTags = [];
     if (currentTags.on && currentTags.on !== "") {
       updatedActiveTags.push("on");
-    } else if (goal.habit && goal.habit !== "") {
+    } else if (currentTags.habit && currentTags.habit !== "") {
       updatedActiveTags.push("every");
     }
     if (currentTags.afterTime && currentTags.afterTime >= 0
@@ -342,13 +342,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               type="number"
               placeholder="in hrs"
               className="default-input"
-              value={showAllSettings ? tags.duration : tags.budgetDuration}
+              value={tags.duration}
               onChange={(e) => {
-                if (showAllSettings) {
-                  handleFieldChange("duration", e.target.value);
-                } else {
-                  setTags({ ...tags, budgetDuration: e.target.value });
-                }
+                handleFieldChange("duration", e.target.value);
               }}
             />
           </div>
@@ -359,15 +355,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Radio.Group
             options={["once", "per day", "per week"]}
+            value={["day", "week"].includes(tags.every) ? `per ${tags.every}` : "once"}
             onChange={(e) => {
               const { value } = e.target;
               if (value === "once") {
-                setTags({ ...tags, budgetPeriod: "once" });
+                setTags({ ...tags, every: "" });
               } else {
-                setTags({ ...tags, budgetPeriod: value.split(" ")[1] });
+                const period = value.split(" ")[1];
+                setTags({ ...tags, every: period });
               }
             }}
-            value={tags.budgetPeriod !== "once" ? `per ${tags.budgetPeriod}` : "once"}
           />
         </div>
       )}

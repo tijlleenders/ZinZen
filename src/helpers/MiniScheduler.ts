@@ -48,6 +48,7 @@ const schProcessor = (tmpStart: Date, goal: ISchedulerInputGoal) => {
     taskid: uuidv4(),
     title: goal.title,
   };
+  // if(goal.title === "sleep") { console.log(goal)}
   const validDays = on_days.filter((ele) => !not_on.includes(ele));
   if (goal.repeat || goal.filters?.on_days) {
     if (goal.repeat === "daily") {
@@ -69,6 +70,7 @@ const schProcessor = (tmpStart: Date, goal: ISchedulerInputGoal) => {
         },
         validDays,
       });
+      // console.log("🚀 ~ file: MiniScheduler.ts:73 ~ schProcessor ~ weeklyGoals:", weeklyGoals);
     } else {
       let tmp = new Date(tmpStart);
       const { min } = goal.budgets[0];
@@ -242,12 +244,14 @@ const operator = (item: number, tmpStart: Date, defaultHrs: number[]) => {
   let currentHrs = [...defaultHrs];
   const selectedDay = item + 1;
   const arr = [...myDays[selectedDay]];
-  arr.sort((a, b) => (a.duration === b.duration
-    ? a.start === b.start
-      ? a.deadline - b.deadline
-      : a.start - b.start
-    : a.duration - b.duration)
-  );
+  arr.sort((a, b) => ((a.deadline - a.start === b.deadline - b.start) ?
+    a.duration === b.duration
+      ? a.start === b.start
+        ? a.deadline - b.deadline
+        : a.start - b.start
+      : a.duration - b.duration
+    :
+    ((a.deadline - a.start) - (b.deadline - b.start))));
   for (let arrItr = 0; arrItr < arr.length; arrItr += 1) {
     // console.log("");
     const { goalid } = arr[arrItr];
@@ -297,7 +301,7 @@ export const callMiniScheduler = (inputObj: {
   const tmpStart = new Date(startDate);
   const soloGoals = breakTheTree(goals);
   schManager(soloGoals, tmpStart);
-  // console.log(weeklyGoals, myDays);
+  // console.log(myDays);
   for (let ele = 0; ele < 7; ele += 1) {
     scheduled[ele + 1] = { day: `${ele + 1}`, outputs: [] };
     impossible[ele + 1] = { day: `${ele + 1}`, outputs: [] };
