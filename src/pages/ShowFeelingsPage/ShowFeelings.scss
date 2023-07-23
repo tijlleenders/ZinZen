@@ -1,4 +1,5 @@
-.feelingOfDay, .feelingOfDay-dark {
+.feelingOfDay,
+.feelingOfDay-dark {
   display: flex;
   justify-content: space-between;
   padding: 18px 21px;
@@ -33,11 +34,13 @@
   background: var(--secondary-background);
 }
 
-.feelingOfDay:last-child, .feelingOfDay-dark:last-child {
+.feelingOfDay:last-child,
+.feelingOfDay-dark:last-child {
   border: none;
 }
 
-.addFeeling-btn, .addFeeling-btn-dark {
+.addFeeling-btn,
+.addFeeling-btn-dark {
   margin-left: 20px;
   border-radius: 50%;
   border: none;
@@ -54,7 +57,9 @@
   width: 100%;
 }
 
-.notes-modal-input, .show-feeling__note-textarea, .feelingsModal-btn {
+.notes-modal-input,
+.show-feeling__note-textarea,
+.feelingsModal-btn {
   border: none;
   padding: 8px;
   outline: none;
@@ -66,3 +71,9 @@
   padding: 8px 14px;
 }
 
+.show-feeling-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
