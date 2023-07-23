@@ -2,21 +2,20 @@
 import React, { useState } from "react";
 import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import backIcon from "@assets/images/backIcon.svg";
 
 import { darkModeState } from "@store";
 import { getJustDate } from "@utils";
 import { themeState } from "@src/store/ThemeState";
-import { displayAddFeeling } from "@src/store/FeelingsState";
 import { addFeelingWithNote, addFeeling } from "@src/api/FeelingsAPI";
 import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
 
 import "@translations/i18n";
 import "./AddFeeling.scss";
 
-export const AddFeeling = ({ feelingDate } : {feelingDate: Date | null}) => {
+export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
   const date = feelingDate
@@ -29,7 +28,6 @@ export const AddFeeling = ({ feelingDate } : {feelingDate: Date | null}) => {
   const [customFeeling, setCustomFeeling] = useState<string>("");
   const theme = useRecoilValue(themeState);
 
-  const setShowAddFeelingsModal = useSetRecoilState(displayAddFeeling);
 
   const addThisFeeling = async (directAdd = "") => {
     if (directAdd !== "") {
@@ -39,11 +37,7 @@ export const AddFeeling = ({ feelingDate } : {feelingDate: Date | null}) => {
     } else {
       await addFeeling(customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling, selectedCategory, date);
     }
-    setSelectedCategory("");
-    setCustomFeeling("");
-    setFeelingNote("");
-    setChoice(0);
-    setShowAddFeelingsModal(false);
+    window.history.back();
   };
   return (
     <Modal
@@ -53,7 +47,7 @@ export const AddFeeling = ({ feelingDate } : {feelingDate: Date | null}) => {
       className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       onCancel={() => { window.history.back(); }}
     >
-      { selectedCategory === "" ? (
+      {selectedCategory === "" ? (
         <>
           <p className="popupModal-title">
             {date.getTime() === getJustDate(new Date()).getTime()
