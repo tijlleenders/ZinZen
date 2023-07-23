@@ -80,7 +80,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
 
   const handleLocationChange = () => {
     const locationState : ILocationState = location.state || {};
-    console.log(locationState, showNotesModal, showInputModal)
+    console.log(locationState, showNotesModal, showInputModal);
     if (showNotesModal !== -1) {
       handleNotesClose();
     } else if (locationState.displayNoteModal) {
@@ -111,7 +111,11 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
               >
                 <div className="feelingOfDay-name">
                   {feelingsEmojis[feelingsListObject[feelingId].category]}&nbsp;
-                  <span>{t(feelingsListObject[feelingId].content)}</span>
+                  <div>
+                    <span>{t(feelingsListObject[feelingId].content)}</span>
+                    <br />
+                    <span style={{ fontSize: "1rem", opacity: "0.8" }}>{t(feelingsListObject[feelingId].note)}</span>
+                  </div>
                 </div>
                 <div className="feelingOfDaty-options">
                   <img alt="add note to feeling" className={`${darkModeStatus ? "dark-svg" : ""}`} src={noteIcon} onClick={() => handleJournalClick(feelingId)} />

@@ -13,6 +13,10 @@
   .feelingOfDay-name {
     font-size: 1.143rem;
     font-weight: 600;
+    display: flex;
+    justify-content: start;
+    text-align: left;
+    align-items: center;
   }
   .feelingOfDaty-options {
     display: flex;
