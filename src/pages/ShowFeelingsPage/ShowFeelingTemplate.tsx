@@ -177,6 +177,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       >
         <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />
+        <div className="show-feeling-actions">
         <button
           type="button"
           onClick={async () => {
@@ -194,19 +195,26 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
               {}
             );
             setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
-            handleNotesClose();
+              window.history.back();
           }}
           className="feelingsModal-btn"
+            style={{
+              background: "transparent", boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
+            }}
         >
           Delete
         </button>
         <button
           type="button"
-          onClick={handleNotesClose}
+            onClick={() => { window.history.back(); }}
           className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
+            style={{
+              background: "var(--primary-background)", boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
+            }}
         >
           Done
         </button>
+        </div>
       </Modal>
     </>
   );
