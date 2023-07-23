@@ -117,10 +117,10 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
               >
                 <div className="feelingOfDay-name">
                   {feelingsEmojis[feelingsListObject[feelingId].category]}&nbsp;
-                  <div>
+                  <div className="feelingOfDay-content">
                     <span>{t(feelingsListObject[feelingId].content)}</span>
                     <br />
-                    <span style={{ fontSize: "1rem", opacity: "0.8" }}>{t(feelingsListObject[feelingId].note)}</span>
+                    <span style={{ fontSize: "0.875rem", opacity: "0.8", wordBreak: "break-word" }}>{t(feelingsListObject[feelingId].note)}</span>
                   </div>
                 </div>
                 <div className="feelingOfDaty-options">
