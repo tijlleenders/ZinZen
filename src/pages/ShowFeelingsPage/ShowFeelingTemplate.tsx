@@ -60,8 +60,13 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
 
   const handleJournalClick = (id: number) => {
     if (feelingsListObject[id].note) {
-      navigate("/MyJournal", { state: { ...location.state, displayNoteModal: feelingsListObject[id].id } });
-      setSelectedFeelingNote(feelingsListObject[id].note);
+      navigate("/MyJournal", {
+        state: {
+          ...location.state,
+          displayNoteModal: feelingsListObject[id].id,
+          note: feelingsListObject[id].note
+        }
+      });
     } else {
       navigate("/MyJournal", { state: { ...location.state, displayInputNoteModal: feelingsListObject[id].id } });
     }
