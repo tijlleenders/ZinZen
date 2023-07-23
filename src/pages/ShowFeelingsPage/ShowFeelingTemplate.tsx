@@ -84,15 +84,16 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
   };
 
   const handleLocationChange = () => {
-    const locationState : ILocationState = location.state || {};
-    console.log(locationState, showNotesModal, showInputModal)
+    const locationState: ILocationState = location.state || {};
     if (showNotesModal !== -1) {
       handleNotesClose();
     } else if (locationState.displayNoteModal) {
       handleNotesShow(locationState.displayNoteModal);
+      setSelectedFeelingNote(locationState.note);
     }
     if (showInputModal !== -1) {
       handleInputClose();
+      setNoteValue("");
     } else if (locationState.displayInputNoteModal) {
       handleInputShow(locationState.displayInputNoteModal);
     }
