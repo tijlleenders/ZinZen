@@ -69,7 +69,7 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
     {
       label: (
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onClickCapture={toggleDarkModeStatus}>
-          <p>Dark Mode</p>
+          <p>{t("Dark Mode")}</p>
           <Switch checked={darkModeStatus} />
         </div>
       ),
