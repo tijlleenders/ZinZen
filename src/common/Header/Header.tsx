@@ -24,13 +24,14 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
   const theme = useRecoilValue(themeState);
   const isInboxOpen = useRecoilValue(openInbox);
   const { handleChangeTheme, handleBackResModal } = useGlobalStore();
+  const { t } = useTranslation();
 
   const setShowToast = useSetRecoilState(displayToast);
 
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstall, setShowInstall] = useState(false);
-  const dropdownOptions = ["Donate", "Feedback", "Blog", "Backup", "Change Theme"];
+  const dropdownOptions = [t("donate"), t("feedback"), t("blog"), t("backup"), t("changeTheme")];
 
   const toggleDarkModeStatus = () => {
     localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
@@ -42,17 +43,17 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
       label: ele,
       key: `${index}`,
       onClick: () => {
-        if (ele === "Change Theme") {
+        if (ele === t("changeTheme")) {
           handleChangeTheme();
-        } else if (ele === "Donate") {
+        } else if (ele === t("donate")) {
           window.open("https://donate.stripe.com/6oE4jK1iPcPT1m89AA", "_self");
-        } else if (ele === "Feedback") {
+        } else if (ele === t("feedback")) {
           navigate("/Feedback");
-        } else if (ele === "Blog") {
+        } else if (ele === t("blog")) {
           window.open("https://blog.zinzen.me", "_self");
-        } else if (ele === "Backup") {
+        } else if (ele === t("backup")) {
           handleBackResModal();
-        } else if (ele === "Install") {
+        } else if (ele === t("Install")) {
           if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then(() => {
@@ -68,7 +69,7 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
     {
       label: (
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onClickCapture={toggleDarkModeStatus}>
-          <p>Dark Mode</p>
+          <p>{t("Dark Mode")}</p>
           <Switch checked={darkModeStatus} />
         </div>
       ),
