@@ -47,7 +47,7 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
           handleChangeTheme();
         } else if (ele === t("donate")) {
           window.open("https://donate.stripe.com/6oE4jK1iPcPT1m89AA", "_self");
-        } else if (ele === t("Feedback")) {
+        } else if (ele === t("feedback")) {
           navigate("/Feedback");
         } else if (ele === t("blog")) {
           window.open("https://blog.zinzen.me", "_self");
