@@ -60,8 +60,13 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
 
   const handleJournalClick = (id: number) => {
     if (feelingsListObject[id].note) {
-      navigate("/MyJournal", { state: { ...location.state, displayNoteModal: feelingsListObject[id].id } });
-      setSelectedFeelingNote(feelingsListObject[id].note);
+      navigate("/MyJournal", {
+        state: {
+          ...location.state,
+          displayNoteModal: feelingsListObject[id].id,
+          note: feelingsListObject[id].note
+        }
+      });
     } else {
       navigate("/MyJournal", { state: { ...location.state, displayInputNoteModal: feelingsListObject[id].id } });
     }
@@ -79,15 +84,16 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
   };
 
   const handleLocationChange = () => {
-    const locationState : ILocationState = location.state || {};
-    console.log(locationState, showNotesModal, showInputModal)
+    const locationState: ILocationState = location.state || {};
     if (showNotesModal !== -1) {
       handleNotesClose();
     } else if (locationState.displayNoteModal) {
       handleNotesShow(locationState.displayNoteModal);
+      setSelectedFeelingNote(locationState.note);
     }
     if (showInputModal !== -1) {
       handleInputClose();
+      setNoteValue("");
     } else if (locationState.displayInputNoteModal) {
       handleInputShow(locationState.displayInputNoteModal);
     }
@@ -132,7 +138,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         <div>
           <textarea
             rows={4}
-              // eslint-disable-next-line jsx-a11y/no-autofocus
+            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             placeholder="Write here..."
             className="notes-modal-input"
@@ -140,12 +146,11 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
             onChange={(e) => {
               setNoteValue(e.target.value);
             }}
-              // Admittedly not the best way to do this but suffices for now
+            // Admittedly not the best way to do this but suffices for now
             onKeyDown={async (e) => {
               if (e.key === "Enter") {
                 await handleFeelingsNoteModify(showInputModal);
-                setNoteValue("");
-                handleInputClose();
+                window.history.back();
               }
             }}
           />
@@ -155,8 +160,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
           style={{ marginLeft: "auto", width: "fit-content" }}
           onClick={async () => {
             await handleFeelingsNoteModify(showInputModal);
-            setNoteValue("");
-            handleInputClose();
+            window.history.back();
           }}
           className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
         >
@@ -171,36 +175,44 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       >
         <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />
-        <button
-          type="button"
-          onClick={async () => {
-            const newFeelingsList = await removeFeelingNote(showNotesModal);
-            const feelingsByDates: feelingListType[] = newFeelingsList!.reduce(
-              (dates: Date[], feeling: IFeelingItem) => {
-                if (dates[feeling.date]) {
-                  dates[feeling.date].push(feeling);
-                } else {
-                  // eslint-disable-next-line no-param-reassign
-                  dates[feeling.date] = [feeling];
-                }
-                return dates;
-              },
-              {}
-            );
-            setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
-            handleNotesClose();
-          }}
-          className="feelingsModal-btn"
-        >
-          Delete
-        </button>
-        <button
-          type="button"
-          onClick={handleNotesClose}
-          className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
-        >
-          Done
-        </button>
+        <div className="show-feeling-actions">
+          <button
+            type="button"
+            onClick={async () => {
+              const newFeelingsList = await removeFeelingNote(showNotesModal);
+              const feelingsByDates: feelingListType[] = newFeelingsList!.reduce(
+                (dates: Date[], feeling: IFeelingItem) => {
+                  if (dates[feeling.date]) {
+                    dates[feeling.date].push(feeling);
+                  } else {
+                    // eslint-disable-next-line no-param-reassign
+                    dates[feeling.date] = [feeling];
+                  }
+                  return dates;
+                },
+                {}
+              );
+              setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
+              window.history.back();
+            }}
+            className="feelingsModal-btn"
+            style={{
+              background: "transparent", boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            onClick={() => { window.history.back(); }}
+            className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
+            style={{
+              background: "var(--primary-background)", boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
+            }}
+          >
+            Done
+          </button>
+        </div>
       </Modal>
     </>
   );

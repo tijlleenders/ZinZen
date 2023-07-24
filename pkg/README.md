@@ -3,7 +3,7 @@
 If you like Rust and scheduling algorithms you've come to the right place :) We
 can talk big-O, add features or optimize hot loops.
 
-> Please contact me tijl.leenders@gmail.com or open an issue.
+> Please contact me tijl@zinzen.me or open an issue.
 
 ## Getting started
 1. Clone repo

@@ -1,7 +1,7 @@
 {
   "name": "zinzen",
   "description": "Algorithm for auto-scheduling time-constrained tasks on a timeline",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
     "LICENSE.md"
   ],
   "module": "scheduler.js",
-  "homepage": "https://github.com/tijlleenders/ZinZen-scheduler/wiki",
+  "homepage": "https://github.com/tijlleenders/ZinZen-scheduler",
   "types": "scheduler.d.ts",
   "sideEffects": [
     "./snippets/*"
