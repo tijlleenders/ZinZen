@@ -117,7 +117,11 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
               >
                 <div className="feelingOfDay-name">
                   {feelingsEmojis[feelingsListObject[feelingId].category]}&nbsp;
-                  <span>{t(feelingsListObject[feelingId].content)}</span>
+                  <div className="feelingOfDay-content">
+                    <span>{t(feelingsListObject[feelingId].content)}</span>
+                    <br />
+                    <span style={{ fontSize: "0.875rem", opacity: "0.8", wordBreak: "break-word" }}>{t(feelingsListObject[feelingId].note)}</span>
+                  </div>
                 </div>
                 <div className="feelingOfDaty-options">
                   <img alt="add note to feeling" className={`${darkModeStatus ? "dark-svg" : ""}`} src={noteIcon} onClick={() => handleJournalClick(feelingId)} />
