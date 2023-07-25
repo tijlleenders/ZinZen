@@ -104,3 +104,13 @@ const goalProcessor = (tmpStart: Date, goal: ISchedulerInputGoal) => {
   }
 };
 
+export const taskGenerator = (goals: { [id: string]: ISchedulerInputGoal }, tmpStart: Date) => {
+  for (let index = 0; index < Object.keys(goals).length; index += 1) {
+    const id = Object.keys(goals)[index];
+    const goal = goals[id];
+    const splittedGoals: ISchedulerInputGoal[] = goalSplitter(goal);
+    splittedGoals.forEach((sGoal: ISchedulerInputGoal) => {
+      goalProcessor(tmpStart, sGoal);
+    });
+  }
+};
