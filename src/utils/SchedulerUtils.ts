@@ -30,6 +30,7 @@ function traverseTheTree(id: string, goals: incomingGoals) {
 
   return parent.min_duration;
 }
+
 export const breakTheTree = (goals: incomingGoals) => {
   visited = [];
   soloGoals = {};
@@ -49,3 +50,52 @@ export const breakTheTree = (goals: incomingGoals) => {
   // console.log("🚀 ~ file: SchedulerUtils.ts:50 ~ breakTheTree ~ soloGoals:", soloGoals)
   return { ...soloGoals };
 };
+
+export const goalSplitter = (goal: ISchedulerInputGoal) => {
+  const res = [];
+  if (goal.filters) {
+    let splittedGoal = false;
+    if (goal.filters.after_time > goal.filters.before_time) {
+      splittedGoal = true;
+      res.push({
+        ...goal,
+        min_duration: 24 - goal.filters.after_time,
+        filters: {
+          ...goal.filters,
+          before_time: 24
+        }
+      });
+    }
+    res.push({
+      ...goal,
+      ...(splittedGoal ? {
+        min_duration: goal.min_duration - (24 - goal.filters.after_time),
+        filters: {
+          ...goal.filters,
+          after_time: 0
+        }
+      } : {})
+    });
+  } else {
+    res.push(goal);
+  }
+  return res;
+};
+
+export function formatDate(date: number, hour: number) {
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth() + 1;
+  const formattedDateString = `${year}-${month.toString().padStart(2, "0")}-${date.toString().padStart(2, "0")}T${hour
+    .toString()
+    .padStart(2, "0")}:00:00`;
+  return formattedDateString;
+}
+
+export function replaceHrInDateString(str: string, hr: number) {
+  const [fh, sh] = str.split("T");
+  return `${fh}T${hr > 9 ? "" : "0"}${hr}${sh.slice(2)}`;
+}
+
+export function getHrFromDateString(str: string) {
+  return Number(str.slice(11, 13));
+}
