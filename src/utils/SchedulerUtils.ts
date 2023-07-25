@@ -49,3 +49,34 @@ export const breakTheTree = (goals: incomingGoals) => {
   // console.log("🚀 ~ file: SchedulerUtils.ts:50 ~ breakTheTree ~ soloGoals:", soloGoals)
   return { ...soloGoals };
 };
+export const goalSplitter = (goal: ISchedulerInputGoal) => {
+  const res = [];
+  if (goal.filters) {
+    let splittedGoal = false;
+    if (goal.filters.after_time > goal.filters.before_time) {
+      splittedGoal = true;
+      res.push({
+        ...goal,
+        min_duration: 24 - goal.filters.after_time,
+        filters: {
+          ...goal.filters,
+          before_time: 24
+        }
+      });
+    }
+    res.push({
+      ...goal,
+      ...(splittedGoal ? {
+        min_duration: goal.min_duration - (24 - goal.filters.after_time),
+        filters: {
+          ...goal.filters,
+          after_time: 0
+        }
+      } : {})
+    });
+  } else {
+    res.push(goal);
+  }
+  return res;
+};
+
