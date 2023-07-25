@@ -63,3 +63,44 @@ const processBudgetGoal = (
   }
 };
 
+const goalProcessor = (tmpStart: Date, goal: ISchedulerInputGoal) => {
+  initImplSlotsOfGoalId(goal.id);
+  // const goalStartDate = goal.start ? new Date(goal.start) : new Date();
+  const totalDuration = goal.min_duration;
+  const { after_time = 0, before_time = 24, on_days = calDays, not_on = [] } = goal.filters || {};
+  const slot = {
+    goalid: goal.id,
+    taskid: uuidv4(),
+    title: goal.title,
+  };
+  // if(goal.title === "sleep") { console.log(goal)}
+  const validDays = on_days.filter((ele) => !not_on.includes(ele));
+  if (goal.repeat || goal.filters?.on_days) {
+    if (goal.repeat === "daily") {
+      for (let key = 0; key < 7; key += 1) {
+        pushTaskToMyDays(key + 1, {
+          ...slot,
+          start: after_time,
+          deadline: before_time,
+          duration: totalDuration,
+        });
+      }
+    } else if (!goal.budgets) {
+      pushTaskToFlexibleArr(
+        validDays,
+        {
+          ...slot,
+          start: after_time,
+          deadline: before_time,
+          duration: totalDuration,
+        }
+      );
+      // console.log("🚀 ~ file: MiniScheduler.ts:73 ~ schProcessor ~ weeklyGoals:", weeklyGoals);
+    } else {
+      processBudgetGoal(goal, validDays, totalDuration, goal.budgets[0].min, tmpStart);
+    }
+  } else {
+    processBudgetGoal(goal, validDays, totalDuration, totalDuration, tmpStart);
+  }
+};
+
