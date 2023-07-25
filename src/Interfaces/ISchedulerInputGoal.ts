@@ -36,4 +36,7 @@ export interface ISchedulerInputGoal {
     repeat?: string,
     budgets: { budget_type: "Daily" | "Weekly", min: number }[]
     children: string[],
+    createdAt: string,
 }
+
+export type TBufferValue = { nextBuffer: number, availableBuffer: number }[]
