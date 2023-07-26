@@ -23,6 +23,7 @@ import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { getAllBlockedTasks, getAllTasks, getAllTasks } from "@src/api/TasksAPI";
 import { colorPalleteList, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
+import { callJsScheduler } from "@src/scheduler/miniScheduler";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
@@ -123,12 +124,12 @@ export const MyTimePage = () => {
     const res = {};
     const scheduled = _schedulerOutput.scheduled.map((ele) => ({
       day: ele.day,
-      outputs: ele.outputs.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] }))
+      tasks: ele.tasks.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] }))
     }
     ));
     const impossible = _schedulerOutput.impossible.map((ele) => ({
       day: ele.day,
-      outputs: ele.outputs.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] }))
+      tasks: ele.tasks.map((item) => ({ ...item, goalid: item.goalid.split("-filler")[0] }))
     }
     ));
     activeGoals.forEach((goal) => {
@@ -138,11 +139,11 @@ export const MyTimePage = () => {
     scheduled.forEach((dayOutput, index) => {
       const { day } = dayOutput;
       const thisDay = { freeHrsOfDay: 0, scheduledHrs: 0, scheduled: [], impossible: [], colorBands: [] };
-      impossible[index].outputs.forEach((ele) => {
+      impossible[index].tasks.forEach((ele) => {
         const { goalColor, parentGoalId } = obj[ele.goalid];
         thisDay.impossible.push({ ...ele, goalColor, parentGoalId });
       });
-      dayOutput.outputs.forEach((ele) => {
+      dayOutput.tasks.forEach((ele) => {
         if (ele.title !== "free" && obj[ele.goalid]) {
           const { goalColor, parentGoalId } = obj[ele.goalid];
           thisDay.scheduledHrs += ele.duration;
@@ -151,8 +152,8 @@ export const MyTimePage = () => {
           thisDay.freeHrsOfDay += ele.duration;
         }
       });
-      const totalSlots = dayOutput.outputs.length;
-      dayOutput.outputs.forEach((ele) => {
+      const totalSlots = dayOutput.tasks.length;
+      dayOutput.tasks.forEach((ele) => {
         const colorWidth = getColorWidth(ele.duration, totalSlots);
         thisDay.colorBands.push({
           colorWidth: (ele.duration / 24) * (1 / totalSlots) * 100 * 100,
@@ -224,7 +225,7 @@ export const MyTimePage = () => {
     });
     schedulerInput.goals = schedulerInput.goals.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
     console.log("input", JSON.stringify(schedulerInput));
-    const res = devMode ? callMiniScheduler(schedulerInput) : schedule(schedulerInput);
+    const res = devMode ? callJsScheduler(schedulerInput) : schedule(schedulerInput);
     console.log("output", res);
     const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
     // console.log(processedOutput);
