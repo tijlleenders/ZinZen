@@ -52,7 +52,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [start, setStart] = useState(goal.start ? new Date(goal.start).toISOString().slice(0, 10) : "");
   const [tags, setTags] = useState({
     on: goal.on || "",
-    every: goal.habit ? (goal.habit === "daily" ? "day" : "week") : "",
+    every: goal.habit ? (goal.habit === "once" ? "once" : goal.habit === "daily" ? "day" : "week") : "",
     duration: goal.duration || "",
     afterTime: goal.afterTime ? `${goal.afterTime}` : "",
     beforeTime: goal.beforeTime ? `${goal.beforeTime}` : "",
@@ -218,11 +218,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     duration: tags.duration !== "" ? `${tags.duration}` : null,
     afterTime: tags.afterTime !== "" ? Number(tags.afterTime) : null,
     beforeTime: tags.beforeTime !== "" ? Number(tags.beforeTime) : null,
-    habit: tags.every !== "" ? (tags.every === "day" ? "daily" : "weekly") : null,
+    habit: tags.every ? (tags.every === "once" ? "once" : tags.every === "day" ? "daily" : "weekly") : null,
     on: tags.on !== "" ? (tags.on === "weekend" ? "weekends" : "weekdays") : null,
     timeBudget:
       tags.budgetDuration !== "" ? { duration: Number(tags.budgetDuration), period: tags.budgetPeriod } : null,
   });
+  console.log("🚀 ~ file: ConfigGoal.tsx:223 ~ getFinalTags ~ tags:", tags)
 
   const updateThisGoal = async () => {
     if (!showUpdateGoal || isTitleEmpty()) {
@@ -359,7 +360,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             onChange={(e) => {
               const { value } = e.target;
               if (value === "once") {
-                setTags({ ...tags, every: "" });
+                setTags({ ...tags, every: "once" });
               } else {
                 const period = value.split(" ")[1];
                 setTags({ ...tags, every: period });
