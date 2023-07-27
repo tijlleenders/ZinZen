@@ -1,9 +1,11 @@
 import { ISchedulerOutputSlot, ISchedulerInputGoal, IFinalOutputSlot } from "@src/Interfaces/ISchedulerInputGoal";
-
+import { v4 as uuidv4 } from "uuid";
 import { formatDate, breakTheTree, convertDateToDay } from "@src/utils/SchedulerUtils";
 import { fillUpImpSlotsForGoalId } from "./ImpSlotManager";
 import { taskGenerator } from "./TaskGenerator";
-import { addGoalDueHrs, generateAndPushImpSlot, getAllDueTasks, getBufferValue, getDueHrs, getFlexibleWeeklyGoals, getImpossibleObj, getScheduledObj, getTasksOfDay, initImpossible, initScheduled, pushToScheduled, resetAll, updateBufferOfGoal, updateBufferOfTheDay, updateDueHrs } from ".";
+import { addGoalDueHrs, generateAndPushImpSlot, getAllDueTasks, getBufferValue, getDueHrs, getFlexibleWeeklyGoals, getImpossibleObj, getScheduledObj, getTasksOfDay, getWeekEndOfGoal, initImpossible, initScheduled, pushToScheduled, resetAll, updateBufferOfGoal, updateBufferOfTheDay, updateDueHrs } from ".";
+
+let impossibleHandled: { [key: string]: boolean } = { };
 
 const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpStart: Date, currentHrs: number[]) => {
   const { start, deadline, duration, ...task } = taskObj;
@@ -57,12 +59,12 @@ const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpSt
       if (tmpD !== 0) {
         if (["project a", "work"].includes(task.title)) { console.log("Incomplete Duration", task.title, tmpD); }
         addGoalDueHrs(task.goalid, tmpD);
-      }
-      else if (["project a", "work"].includes(task.title)) { console.log("Duration completed"); }
+      } else if (["project a", "work"].includes(task.title)) { console.log("Duration completed"); }
     }
   }
   return defaultHrs;
 };
+
 const operator = (item: number, tmpStart: Date, defaultHrs: number[]) => {
   let currentHrs = [...defaultHrs];
   const selectedDay = item + 1;
@@ -79,6 +81,12 @@ const operator = (item: number, tmpStart: Date, defaultHrs: number[]) => {
     // console.log("");
     const { goalid } = arr[arrItr];
     let { duration } = arr[arrItr];
+    const today = new Date(new Date(tmpStart).setDate(tmpStart.getDate() + (selectedDay - 1)));
+    // if (arr[arrItr].title === "work") console.log(duration, getDueHrs(goalid));
+    if (getWeekEndOfGoal(goalid) === convertDateToDay(today) && !impossibleHandled[goalid]) {
+      fillUpImpSlotsForGoalId(goalid, selectedDay);
+      impossibleHandled[goalid] = true;
+    }
     // if (["project a", "work"].includes(title)) console.log("🚀 ~ file: MiniScheduler.ts:182 ~ operator ~ arrItr:", arrItr);
     // if (["project a", "work"].includes(title)) { console.log(title, duration, dueTaskHrs[goalid]); }
     const pastDue = getDueHrs(goalid);
@@ -117,11 +125,12 @@ export const callJsScheduler = (inputObj: {
   goals: { [id: string]: ISchedulerInputGoal }
 }) => {
   resetAll();
+  impossibleHandled = {};
   const { startDate, endDate, goals } = inputObj;
   const tmpStart = new Date(startDate);
   const soloGoals = breakTheTree(goals);
   taskGenerator(soloGoals, tmpStart);
-  console.log(getTasksOfDay(1));
+  // console.log(getBufferValue("2c33e46b-625d-45b1-9946-0141a3df9392"));
   for (let ele = 0; ele < 7; ele += 1) {
     initScheduled(ele + 1);
     initImpossible(ele + 1);
@@ -132,7 +141,9 @@ export const callJsScheduler = (inputObj: {
     let hrsOfDay = [...Array(24).keys()].map(() => -1);
     hrsOfDay = [...operator(item, tmpStart, hrsOfDay)];
     const flexibleWeeklyGoals = getFlexibleWeeklyGoals();
+
     for (let wgi = 0; wgi < flexibleWeeklyGoals.length; wgi += 1) {
+      const createdOn = convertDateToDay(new Date(soloGoals[flexibleWeeklyGoals[wgi].slot.goalid].createdAt));
       const { deadline: actualGoalDeadline, title } = goals[flexibleWeeklyGoals[wgi].slot.goalid];
       if (actualGoalDeadline && new Date(actualGoalDeadline) < tmpDate) {
         continue;
@@ -140,6 +151,9 @@ export const callJsScheduler = (inputObj: {
       if (flexibleWeeklyGoals[wgi].validDays.includes(convertDateToDay(tmpDate))) {
         const task = { ...flexibleWeeklyGoals[wgi].slot };
         const pastDue = getDueHrs(task.goalid);
+        if (pastDue === 0 && createdOn !== convertDateToDay(tmpDate)) {
+          continue;
+        }
         const dueDuration = pastDue || task.duration;
         updateDueHrs(task.goalid, 0);
         if (task.duration !== 0) {
@@ -156,7 +170,9 @@ export const callJsScheduler = (inputObj: {
   // console.log("🚀 ~ file: MiniScheduler.ts:251 ~ dueTasks:", blockingSlots);
   for (let dti = 0; dti < dueTasks.length; dti += 1) {
     const dueGoalId = dueTasks[dti];
-    fillUpImpSlotsForGoalId(dueGoalId, 8);
+    if (!impossibleHandled[dueGoalId]) {
+      fillUpImpSlotsForGoalId(dueGoalId, 8);
+    }
   }
   const resSchedule: { day: string; tasks: IFinalOutputSlot[] }[] = [];
   const resImpossible: { day: string; tasks: IFinalOutputSlot[] }[] = [];
@@ -186,11 +202,11 @@ export const callJsScheduler = (inputObj: {
     });
     resSchedule.push({
       day: thisDate.toISOString().slice(0, 10),
-      tasks: scheduled[item + 1].outputs,
+      tasks: [...scheduled[item + 1].outputs.map((ele) => ({ ...ele, taskid: uuidv4() }))],
     });
     resImpossible.push({
       day: thisDate.toISOString().slice(0, 10),
-      tasks: impossible[item + 1].outputs,
+      tasks: [...impossible[item + 1].outputs.map((ele) => ({ ...ele, taskid: uuidv4() }))],
     });
   }
   return {
