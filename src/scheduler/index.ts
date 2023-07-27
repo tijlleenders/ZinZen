@@ -14,9 +14,18 @@ var { scheduled, impossible }: ISchedulerOutput = { scheduled: [], impossible: [
 
 const blockingSlots: { [goalId: string]: IFinalOutputSlot[][] } = {};
 const usedBlockers: { [id: string]: { [day: number]: number[] } } = {};
+const goalWeekEnd:{ [id :string] : string } = { };
 
 export const initImplSlotsOfGoalId = (goalId: string) => {
   blockingSlots[goalId] = [[], [], [], [], [], [], [], []];
+};
+
+export const getWeekEndOfGoal = (goalId: string) => (
+  goalWeekEnd[goalId]
+);
+
+export const setWeekEndOfGoal = (goalId: string, value: string) => {
+  goalWeekEnd[goalId] = value;
 };
 
 export const pushTaskToMyDays = (selectedDay: number, slot: ISchedulerOutputSlot) => {
