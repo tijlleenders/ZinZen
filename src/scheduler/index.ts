@@ -35,7 +35,7 @@ export const pushTaskToMyDays = (selectedDay: number, slot: ISchedulerOutputSlot
 export const pushTaskToFlexibleArr = (validDays: string[], slot: ISchedulerOutputSlot) => {
   flexibleWeeklyGoals.push({
     slot: { ...slot },
-    validDays: { ...validDays }
+    validDays: [...validDays]
   });
 };
 
@@ -60,6 +60,7 @@ export const getBufferValue = (goalId: string) => buffer[goalId];
 export const getBlockingSlotsOfTheDayForGoalId = (goalId: string, day: number) => blockingSlots[goalId][day];
 
 export const getAllDueTasks = () => ({ ...dueTaskHrs });
+
 export const getDueHrs = (goalId: string) => (dueTaskHrs[goalId]);
 
 export const getUsedBlockers = (goalId: string) => (usedBlockers[goalId]);
@@ -159,4 +160,4 @@ export const resetAll = () => {
   scheduled = [];
   impossible = [];
   flexibleWeeklyGoals = [];
-}
+};
