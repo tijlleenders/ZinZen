@@ -60,24 +60,24 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
-          hoursSpent: actionName !== "Reschedule" ? Number(task.duration) : 0,
-          lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
+          forgotToday: actionName === "Forget" ? [task.taskid] : [],
+          completedToday: actionName === "Done" ? Number(task.duration) : 0,
           lastForget: actionName === "Forget" ? new Date().toLocaleDateString() : "",
+          lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
+          hoursSpent: actionName !== "Reschedule" ? Number(task.duration) : 0,
           blockedSlots: actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : []
         });
       } else if (actionName === "Done") {
-        await completeTask(taskItem.id, Number(task.duration));
+        await completeTask(taskItem.id, task.taskid, Number(task.duration));
       } else if (actionName === "Forget") {
-        await forgetTask(taskItem.id, Number(task.duration));
+        await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
       } else if (actionName === "Reschedule") {
         await addBlockedSlot(task.goalid, { start: task.start, end: task.deadline });
       }
       if (actionName === "Done") {
         await doneSound.play();
-        setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastCompleted: new Date().toLocaleDateString() } });
       } else if (actionName === "Forget") {
         await forgetSound.play();
-        setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastForget: new Date().toLocaleDateString() } });
       } else {
         setLastAction("TaskRescheduled");
       }
