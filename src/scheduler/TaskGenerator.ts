@@ -14,7 +14,7 @@ const processBudgetGoal = (
 ) => {
   let tmp = new Date(tmpStart);
   let totalDuration = inputDuration - (goal.hoursSpent || 0);
-  // console.log("🚀 ~ file: TaskGenerator.ts:17 ~ totalDuration:", totalDuration, goal.hoursSpent);
+  // console.log("🚀 ~ file: TaskGenerator.ts:17 ~ totalDuration:", goal.title, totalDuration, goal.hoursSpent);
   const min = minDuration;
   const createdAt = new Date(goal.createdAt);
   const createdOn = convertDateToDay(createdAt);
@@ -27,8 +27,8 @@ const processBudgetGoal = (
     }
     const dayItr = convertDateToDay(tmp);
     if (validDays.includes(dayItr)) {
-      // if (goal.title === "work") { console.log(dayItr, createdOn); }
-      if (dayItr === createdOn) {
+      if (goal.title === "project A") { console.log(dayItr, createdOn); }
+      if (dayItr === createdOn && i !== 0) {
         if (totalDuration >= 0) {
           addGoalDueHrs(goal.id, totalDuration);
         }
