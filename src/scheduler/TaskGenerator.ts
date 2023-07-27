@@ -3,21 +3,21 @@ import { ISchedulerInputGoal } from "@src/Interfaces/ISchedulerInputGoal";
 import { calDays } from "@src/utils";
 import { convertDateToDay, goalSplitter } from "@src/utils/SchedulerUtils";
 
-import { v4 as uuidv4 } from "uuid";
-import { addGoalDueHrs, getBufferValue, initImplSlotsOfGoalId, pushTaskToFlexibleArr, pushTaskToMyDays, updateBufferOfGoal } from ".";
+import { addGoalDueHrs, getBufferValue, initImplSlotsOfGoalId, pushTaskToFlexibleArr, pushTaskToMyDays, setWeekEndOfGoal, updateBufferOfGoal } from ".";
 
 const processBudgetGoal = (
   goal: ISchedulerInputGoal,
   validDays: string[],
   inputDuration: number,
   minDuration: number,
-  tmpStart: Date) => {
+  tmpStart: Date
+) => {
   let tmp = new Date(tmpStart);
-  let totalDuration = inputDuration;
+  let totalDuration = inputDuration - (goal.hoursSpent || 0);
+  // console.log("🚀 ~ file: TaskGenerator.ts:17 ~ totalDuration:", totalDuration, goal.hoursSpent);
   const min = minDuration;
   const createdAt = new Date(goal.createdAt);
   const createdOn = convertDateToDay(createdAt);
-
   const deadline = goal.deadline ? new Date(goal.deadline) : null;
   const { after_time = 0, before_time = 24 } = goal.filters || {};
 
@@ -27,9 +27,16 @@ const processBudgetGoal = (
     }
     const dayItr = convertDateToDay(tmp);
     if (validDays.includes(dayItr)) {
+      // if (goal.title === "work") { console.log(dayItr, createdOn); }
+      if (dayItr === createdOn) {
+        if (totalDuration >= 0) {
+          addGoalDueHrs(goal.id, totalDuration);
+        }
+        totalDuration = inputDuration;
+        setWeekEndOfGoal(goal.id, dayItr);
+      }
       const slot = {
         goalid: goal.id,
-        taskid: uuidv4(),
         title: goal.title,
       };
       const slotD = min > totalDuration ? totalDuration : min;
@@ -53,13 +60,7 @@ const processBudgetGoal = (
         totalDuration -= min > totalDuration ? totalDuration : min;
       }
     }
-    // if (dayItr === createdOn) {
-    //   totalDuration = inputDuration;
-    // }
     tmp = new Date(tmp.setDate(tmp.getDate() + 1));
-  }
-  if (totalDuration >= 0) {
-    addGoalDueHrs(goal.id, totalDuration);
   }
 };
 
@@ -70,11 +71,11 @@ const goalProcessor = (tmpStart: Date, goal: ISchedulerInputGoal) => {
   const { after_time = 0, before_time = 24, on_days = calDays, not_on = [] } = goal.filters || {};
   const slot = {
     goalid: goal.id,
-    taskid: uuidv4(),
     title: goal.title,
   };
   // if(goal.title === "sleep") { console.log(goal)}
   const validDays = on_days.filter((ele) => !not_on.includes(ele));
+  // if (goal.title === "Report") { console.log("🚀 ~ file: TaskGenerator.ts:78 ~ goalProcessor ~ validDays:", validDays); }
   if (goal.repeat || goal.filters?.on_days) {
     if (goal.repeat === "daily") {
       for (let key = 0; key < 7; key += 1) {
@@ -92,7 +93,7 @@ const goalProcessor = (tmpStart: Date, goal: ISchedulerInputGoal) => {
           ...slot,
           start: after_time,
           deadline: before_time,
-          duration: totalDuration,
+          duration: totalDuration - (goal.hoursSpent || 0),
         }
       );
       // console.log("🚀 ~ file: MiniScheduler.ts:73 ~ schProcessor ~ weeklyGoals:", weeklyGoals);
