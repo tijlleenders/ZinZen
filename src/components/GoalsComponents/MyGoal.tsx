@@ -134,11 +134,12 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       >
         <div
           aria-hidden
-          className="goal-title"
+          className="goal-tile"
           suppressContentEditableWarning
         >
-          <div>
-            {goal.title}&nbsp;{goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
+          <div style={{ overflow: "hidden" }}>
+              ))}&nbsp;{goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
+            </div>
             {showActions.open === goal.id && showActions.click > 0 && (
               <p className="goal-desc">
                 {timingTagName !== "" ? (
