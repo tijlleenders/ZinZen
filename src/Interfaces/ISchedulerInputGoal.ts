@@ -1,6 +1,5 @@
 export interface ISchedulerOutputSlot {
     goalid: string,
-    taskid: string,
     start: number,
     deadline: number,
     duration: number,
@@ -9,7 +8,6 @@ export interface ISchedulerOutputSlot {
 
 export interface IFinalOutputSlot {
     goalid: string,
-    taskid: string,
     start: string,
     deadline: string,
     duration: number,
