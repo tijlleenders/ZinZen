@@ -376,7 +376,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             <p>
               {tags.duration ? `${tags.duration}h ` : ""}
               {tags.on !== "" && `${t("on")} ${tags.on} `}
-              {tags.every !== "" && `${t("every")} ${tags.every} `}
+              {tags.every !== "" && `${tags.every === "once" ? "" : t("every")} ${tags.every} `}
               {tags.budgetDuration !== "" && `(${tags.budgetDuration}h / ${tags.budgetPeriod}) `}
               {tags.beforeTime !== "" && tags.afterTime !== ""
                 ? `${t("between")} ${tags.afterTime}-${tags.beforeTime} `
