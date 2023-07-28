@@ -175,9 +175,10 @@ export const MyTimePage = () => {
     let activeGoals: GoalItem[] = await getAllGoals();
     if (activeGoals.length === 0) { await createDummyGoals(); activeGoals = await getActiveGoals(); }
     console.log(activeGoals);
-    getAllTasks().then((dbTasks) => {
-      setTasksStatus(dbTasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {}));
-    });
+    let dbTasks = await getAllTasks();
+    dbTasks = dbTasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {});
+    setTasksStatus({ ...dbTasks });
+
     const blockedSlots = await getAllBlockedTasks();
     await init();
     const _today = devMode ? new Date(fakeThursday) : new Date();
@@ -196,8 +197,9 @@ export const MyTimePage = () => {
       return !!(ele.duration) || ele.timeBudget;
     })];
     activeGoals.forEach((ele) => {
-      const obj = { id: ele.id, title: ele.title, filters: {} };
+      const obj = { id: ele.id, title: ele.title, filters: {}, createdAt: ele.createdAt };
       const slotsNotallowed = blockedSlots[ele.id];
+      if (dbTasks[ele.id]?.hoursSpent) { obj.hoursSpent = dbTasks[ele.id].hoursSpent; }
       if (ele.duration) obj.min_duration = Number(ele.duration);
       if (ele.start) {
         const start = new Date(ele.start);

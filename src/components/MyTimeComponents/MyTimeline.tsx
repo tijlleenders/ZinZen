@@ -14,12 +14,13 @@ import { TaskItem } from "@src/models/TaskItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { darkModeState, displayToast, lastAction, openDevMode } from "@src/store";
 import { addBlockedSlot, addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 
 import "./MyTimeline.scss";
 
 interface MyTimelineProps {
   day: string,
-  taskDetails: { [goalid: string] : TaskItem},
+  taskDetails: { [goalid: string]: TaskItem },
   setTaskDetails: React.Dispatch<React.SetStateAction<{
     [goalid: string]: TaskItem;
   }>>
@@ -43,6 +44,11 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const setOpenReschedule = useSetRecoilState(displayReschedule);
 
   const [showScheduled, setShowScheduled] = useState(true);
+  const tasksDone: { [id: string]: number } = {};
+  Object.keys(taskDetails).forEach((ele) => {
+    tasksDone[taskDetails[ele].goalId] = taskDetails[ele].completedToday;
+  });
+
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
 
   const handleView = () => { setShowScheduled(!showScheduled); };
@@ -60,24 +66,24 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
-          hoursSpent: actionName !== "Reschedule" ? Number(task.duration) : 0,
-          lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
+          forgotToday: actionName === "Forget" ? [task.taskid] : [],
+          completedToday: actionName === "Done" ? Number(task.duration) : 0,
           lastForget: actionName === "Forget" ? new Date().toLocaleDateString() : "",
+          lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
+          hoursSpent: actionName !== "Reschedule" ? Number(task.duration) : 0,
           blockedSlots: actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : []
         });
       } else if (actionName === "Done") {
-        await completeTask(taskItem.id, Number(task.duration));
+        await completeTask(taskItem.id, task.taskid, Number(task.duration));
       } else if (actionName === "Forget") {
-        await forgetTask(taskItem.id, Number(task.duration));
+        await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
       } else if (actionName === "Reschedule") {
         await addBlockedSlot(task.goalid, { start: task.start, end: task.deadline });
       }
       if (actionName === "Done") {
         await doneSound.play();
-        setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastCompleted: new Date().toLocaleDateString() } });
       } else if (actionName === "Forget") {
         await forgetSound.play();
-        setTaskDetails({ ...taskDetails, [task.goalid]: { ...taskDetails[task.goalid], lastForget: new Date().toLocaleDateString() } });
       } else {
         setLastAction("TaskRescheduled");
       }
@@ -88,26 +94,31 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
 
   return (
     <>
-      { myTasks.impossible.length > 0 && (
+      {myTasks.impossible.length > 0 && (
         <div className={`timeline-view${darkModeStatus ? "-dark" : ""}`}>
           <button type="button" className={`${showScheduled && "activeView"}`} onClick={handleView}>Scheduled</button>
           <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>Impossible</button>
         </div>
       )}
       <div className="MTL-display">
-        { myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
+        {myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
-          const completedToday = taskDetails[task.goalid] ? taskDetails[task.goalid].lastCompleted === new Date().toLocaleDateString() : false;
+          // const completedToday = taskDetails[task.goalid] ? taskDetails[task.goalid].lastCompleted === new Date().toLocaleDateString() : false;
           const forgotToday = taskDetails[task.goalid] ? taskDetails[task.goalid].lastForget === new Date().toLocaleDateString() : false;
+          let markDone = false;
+          if (showScheduled && tasksDone[task.goalid] > 0) {
+            tasksDone[task.goalid] -= Number(task.duration);
+            markDone = true;
+          }
           return (day === "Today" ? !forgotToday : true) && (
             <button
-              className={`${day === "Today" ? completedToday ? "completedTask" : forgotToday ? "forgot" : "" : ""}`}
+              className={`${day === "Today" ? markDone ? "completedTask" : forgotToday ? "forgot" : "" : ""}`}
               type="button"
-              style={displayOptionsIndex !== task.goalid ? { cursor: "pointer" } : {}}
+              style={displayOptionsIndex !== task.taskid ? { cursor: "pointer" } : {}}
               onClick={() => {
-                if (displayOptionsIndex !== task.goalid) {
-                  setDisplayOptionsIndex(task.goalid);
+                if (displayOptionsIndex !== task.taskid) {
+                  setDisplayOptionsIndex(task.taskid);
                 } else setDisplayOptionsIndex("");
               }}
             >
@@ -123,8 +134,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     className="MTL-taskTitle"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setDisplayOptionsIndex(task.goalid);
-                      if (displayOptionsIndex === task.goalid) {
+                      setDisplayOptionsIndex(task.taskid);
+                      if (displayOptionsIndex === task.taskid) {
                         navigate("/MyGoals", { state: { isRootGoal: task.parentGoalId === "root", openGoalOfId: task.goalid } });
                       }
                     }}
@@ -136,7 +147,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   </p>
                 </div>
 
-                { displayOptionsIndex === task.goalid && (
+                {displayOptionsIndex === task.taskid && (
                   <button
                     type="button"
                     onClick={() => setDisplayOptionsIndex("")}
@@ -145,7 +156,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   </button>
                 )}
               </div>
-              { displayOptionsIndex === task.goalid ? (
+              {displayOptionsIndex === task.taskid ? (
                 <div className="MTL-options">
                   <button type="button" onClick={() => handleActionClick("Forget", task)}> Forget</button><div />
                   <button type="button" onClick={() => handleActionClick("Reschedule", task)}> Reschedule</button><div />

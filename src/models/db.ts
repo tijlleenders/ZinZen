@@ -10,7 +10,7 @@ import { PublicGroupItem } from "./PublicGroupItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 
-export const dexieVersion = 3;
+export const dexieVersion = 4;
 
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
 
@@ -37,7 +37,7 @@ export class ZinZenDB extends Dexie {
 
   constructor() {
     super("ZinZenDB");
-    this.version(3).stores({
+    this.version(4).stores({
       feelingsCollection: "++id, content, category, date, note",
       goalsCollection: "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
       sharedWMCollection: "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
@@ -46,12 +46,14 @@ export class ZinZenDB extends Dexie {
       inboxCollection: "id, goalChanges",
       pubSubCollection: "id, subscribers",
       publicGroupsCollection: "id, title, polls, language, groupColor, createdAt",
-      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, lastForget, blockedSlots",
+      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
       customizationCollection: "++id, goalId, posIndex"
     }).upgrade((trans) => {
       const taskCollection = trans.table("taskCollection");
       return taskCollection.toCollection().modify((task: TaskItem) => {
         task.blockedSlots = [];
+        task.forgotToday = [];
+        task.completedToday = 0;
       });
     });
   }

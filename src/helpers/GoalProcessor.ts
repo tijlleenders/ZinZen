@@ -14,7 +14,7 @@ ${goal.duration ? `${goal.duration}h ` : ""}
 ${goal.start ? `From ${new Date(goal.start).toDateString().slice(4)}` : ""}
 ${goal.due ? `Upto ${new Date(goal.due).toDateString().slice(4)}` : ""}
 ${goal.on ? `on ${goal.on} ` : ""}
-${goal.habit ? `every ${goal.habit === "daily" ? "day" : "week"} ` : ""}
+${goal.habit ? goal.habit === "once" ? "once " : `every ${goal.habit === "daily" ? "day" : "week"} ` : ""}
 ${goal.timeBudget ? `(${goal.timeBudget.duration}h / ${goal.timeBudget.period})` : ""}
 ${goal.beforeTime && goal.afterTime ? `between ${goal.afterTime}-${goal.beforeTime} ` :
     goal.beforeTime ? `before ${goal.beforeTime} ` :

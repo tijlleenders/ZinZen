@@ -23,24 +23,41 @@ export const getTaskByGoalId = async (goalId: string) => {
   }
 };
 
-export const completeTask = async (id: string, duration: number) => {
+export const completeTask = async (id: string, taskId: string, duration: number) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection.where("id").equals(id)
       .modify((obj: TaskItem) => {
-        obj.lastCompleted = new Date().toLocaleDateString();
-        obj.hoursSpent += duration;
+        const today = new Date().toLocaleDateString();
+        if (obj.lastCompleted !== today) {
+          obj.hoursSpent += obj.completedToday;
+          obj.completedToday = duration;
+          obj.lastCompleted = today;
+        } else {
+          obj.completedToday += duration;
+        }
       });
   }).catch((e) => {
     console.log(e.stack || e);
   });
 };
 
-export const forgetTask = async (id: string, duration: number) => {
+export const forgetTask = async (id: string, period: string) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection.where("id").equals(id)
       .modify((obj: TaskItem) => {
-        obj.lastForget = new Date().toLocaleDateString();
-        obj.hoursSpent += duration;
+        const today = new Date().toLocaleDateString();
+        if (obj.lastForget !== today) {
+          let yesterdaysCount = 0;
+          obj.forgotToday.forEach((slot) => {
+            const [start, end] = slot.split("-");
+            yesterdaysCount += (Number(end) - Number(start));
+          });
+          obj.hoursSpent += yesterdaysCount;
+          obj.forgotToday = [period];
+          obj.lastForget = new Date().toLocaleDateString();
+        } else {
+          obj.forgotToday.push(period);
+        }
       });
   }).catch((e) => {
     console.log(e.stack || e);
