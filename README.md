@@ -20,6 +20,7 @@ See ... for some ideas.
 
 ...or run a pure local copy:
 
+First, make sure you have installed [Nodejs](https://nodejs.org/en) version 18+  
 ```
 git clone https://github.com/tijlleenders/ZinZen.git
 cd ZinZen
