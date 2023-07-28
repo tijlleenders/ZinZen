@@ -10,7 +10,8 @@ import useGoalStore from "@src/hooks/useGoalStore";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import { darkModeState, lastAction, searchActive } from "@src/store";
+import { darkModeState, lastAction } from "@src/store";
+import { replaceUrlsWithText } from "@src/utils/patterns";
 import { createSentFromTags, getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import { displayGoalId, displayUpdateGoal, displayShareModal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -39,16 +40,17 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const { state } = useLocation();
   const { handleDisplayChanges } = useGoalStore();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
+  const showShareModal = useRecoilValue(displayShareModal);
+  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
-  const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
-  const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
 
   const setLastAction = useSetRecoilState(lastAction);
 
   const goalSent = createSentFromTags(goal);
+  const { urlsWithIndexes, replacedString } = replaceUrlsWithText(goal.title);
+
   const timingTagName = goal.afterTime ? goal.beforeTime ? "between" : "after" : goal.beforeTime ? "before" : "";
   const handleGoalClick = () => {
     if (goal.sublist.length === 0) {
@@ -134,11 +136,25 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       >
         <div
           aria-hidden
-          className="goal-title"
+          className="goal-tile"
           suppressContentEditableWarning
         >
-          <div>
-            {goal.title}&nbsp;{goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
+          <div style={{ overflow: "hidden" }}>
+            <div className="goal-title">
+              {replacedString.split(" ").map((ele) => (
+                <span
+                  key={`${goal.id}-${ele}`}
+                  style={ele.includes("zURL-") ? { cursor: "pointer", textDecoration: "underline" } : {}}
+                  onClickCapture={() => {
+                    if (ele.includes("zURL-")) {
+                      const urlIndex = Number(ele.split("-")[1]);
+                      window.open(urlsWithIndexes[urlIndex], "_blank");
+                    }
+                  }}
+                >{`${ele.includes("zURL-") ? "URL" : ele} `}
+                </span>
+              ))}&nbsp;{goal.link && <a className="goal-link" href={goal.link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">URL</a>}
+            </div>
             {showActions.open === goal.id && showActions.click > 0 && (
               <p className="goal-desc">
                 {timingTagName !== "" ? (

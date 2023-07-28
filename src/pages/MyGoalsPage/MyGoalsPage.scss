@@ -133,7 +133,7 @@
   cursor: pointer;
 }
 
-.goal-title {
+.goal-tile {
   align-items: center;
   border: none;
   display: flex;
@@ -142,14 +142,17 @@
   font-size: 1.143em;
   text-align: left !important;
   max-width: unset;
-  overflow: scroll;
-
-  -ms-overflow-style: none;
+  overflow: hidden;
+}
+.goal-title {
+  white-space: nowrap;
+  overflow-x: scroll;
   scrollbar-width: none;
 }
 .goal-title::-webkit-scrollbar {
   display: none;
 }
+
 .goal-desc {
   font-size: 0.875em;
   font-weight: 300;
