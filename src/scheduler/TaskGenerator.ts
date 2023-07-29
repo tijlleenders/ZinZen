@@ -14,7 +14,7 @@ interface ISlot {
 
 const processBudgetGoal = (
   goal: ISchedulerInputGoal,
-  slot: ISlot,
+  currSlot: ISlot,
   validDays: string[],
   inputDuration: number,
   minDuration: number,
@@ -22,6 +22,8 @@ const processBudgetGoal = (
   startDayItr: number
 ) => {
   let goalStart = new Date(iGoalStart);
+  const { after_time = 0 } = goal.filters || {};
+  const slot = { ...currSlot };
   let totalDuration = inputDuration - (goal.hoursSpent || 0);
   // console.log("🚀 ~ file: TaskGenerator.ts:17 ~ totalDuration:", goal.title, totalDuration, goal.hoursSpent);
   const min = minDuration;
@@ -62,6 +64,9 @@ const processBudgetGoal = (
       }
     }
     goalStart = new Date(goalStart.setDate(goalStart.getDate() + 1));
+    if (goalStart.getDate() === new Date().getDate()) {
+      slot.start = after_time;
+    }
   }
 };
 
