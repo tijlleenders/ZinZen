@@ -399,7 +399,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 }}
                 span={12}
               >
-                {t("Period")}
+                {t("Timings")}
               </Col>
               <Col
                 style={{ borderRadius: "0px 8px 0px 0px", cursor: "pointer" }}
@@ -411,10 +411,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 }}
                 span={12}
               >
-                {t("Timings")}
+                {t("Period")}
               </Col>
             </Row>
-            {isDetailsActive ? (
+            {!isDetailsActive ? (
               <Row gutter={24} className="goal-dates">
                 {getDateField("From")}
                 {getDateField("To", { justifyContent: "flex-end" })}
