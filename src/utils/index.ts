@@ -41,11 +41,6 @@ export async function createGroupRequest(url: string, body: object | null = null
 
 export const myNameSpace = "c95256dc-aa03-11ed-afa1-0242ac120002";
 
-export const formatDate = () => {
-  const newDate = new Date();
-  return newDate;
-};
-
 export const getJustDate = (fullDate: Date) => new Date(fullDate.toDateString());
 
 export const truncateContent = (content: string, maxLength = 20) => {
@@ -70,6 +65,23 @@ export const getDiffInHours = (date1: Date, date2: Date) => {
   let diff = date1.getTime() - date2.getTime();
   diff = Math.round(Math.abs(diff / 36e5));
   return diff;
+};
+
+export const getDiffInDates = (date1: Date, date2: Date, resetTime = true) => {
+  const a = new Date(date1);
+  const b = new Date(date2);
+  if (resetTime) {
+    a.setHours(0, 0, 0, 0);
+    b.setHours(0, 0, 0, 0);
+  }
+  // Convert both dates to milliseconds
+  const date1MS = a.getTime();
+  const date2MS = b.getTime();
+  // Calculate the difference in milliseconds
+  const differenceMS = Math.abs(date2MS - date1MS);
+  // Convert the difference to days
+  const daysDifference = Math.ceil(differenceMS / (1000 * 60 * 60 * 24));
+  return daysDifference;
 };
 
 export const colorPalleteList = [
