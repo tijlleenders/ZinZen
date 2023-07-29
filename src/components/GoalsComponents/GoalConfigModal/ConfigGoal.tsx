@@ -52,12 +52,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [start, setStart] = useState(goal.start ? new Date(goal.start).toISOString().slice(0, 10) : "");
   const [tags, setTags] = useState({
     on: goal.on || "",
-    every: goal.habit ? (goal.habit === "once" ? "once" : goal.habit === "daily" ? "day" : "week") : "",
+    every: goal.habit ? (goal.habit === "once" ? "once" : goal.habit === "daily" ? "day" : "week") : "once",
     duration: goal.duration || "",
     afterTime: goal.afterTime ? `${goal.afterTime}` : "",
     beforeTime: goal.beforeTime ? `${goal.beforeTime}` : "",
     budgetDuration: goal.timeBudget?.duration || "",
-    budgetPeriod: goal.timeBudget?.period || "once",
+    budgetPeriod: goal.timeBudget?.period || "",
   });
 
   const handleDateChange = (type: "From" | "To", value: string) => {
@@ -223,7 +223,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     timeBudget:
       tags.budgetDuration !== "" ? { duration: Number(tags.budgetDuration), period: tags.budgetPeriod } : null,
   });
-  console.log("🚀 ~ file: ConfigGoal.tsx:223 ~ getFinalTags ~ tags:", tags)
 
   const updateThisGoal = async () => {
     if (!showUpdateGoal || isTitleEmpty()) {
