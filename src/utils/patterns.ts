@@ -7,7 +7,7 @@ export function replaceUrlsWithText(inputString: string) {
   const replacedString = inputString.replace(urlRegex, (url, index) => {
     let modifiedUrl = url;
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      modifiedUrl = `http://${url}`;
+      modifiedUrl = `https://${url}`;
     }
     urlsWithIndexes[index] = modifiedUrl;
     return `zURL-${index}`;
