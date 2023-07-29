@@ -69,9 +69,8 @@ const processBudgetGoal = (
   }
 };
 
-const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date) => {
+const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: boolean) => {
   initImplSlotsOfGoalId(goal.id);
-  // const goalStartDate = goal.start ? new Date(goal.start) : new Date();
   const totalDuration = goal.min_duration;
   const { after_time = 0, before_time = 24, on_days = calDays, not_on = [] } = goal.filters || {};
   const slot = {
@@ -80,21 +79,19 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date) => {
     start: after_time,
     deadline: before_time,
   };
-  // if(goal.title === "sleep") { console.log(goal)}
-  // if (goal.title === "Report") { console.log("🚀 ~ file: TaskGenerator.ts:78 ~ goalProcessor ~ validDays:", validDays); }
+  const createdAt = new Date(goal.createdAt);
   let goalStart = new Date(goal.start || goal.createdAt);
-  let validDays = [...on_days];
 
-  let startingDay = goalStart > weekStart ? getDiffInDates(goalStart, weekStart) : 0;
-  if (goalStart.toDateString() === weekStart.toDateString() && after_time <= new Date().getHours()) {
-    slot.start = new Date().getHours() + 1;
-    if (slot.start === 24) {
-      goalStart = new Date(goalStart.setDate(goalStart.getDate() + 1));
-      slot.start = after_time;
-      startingDay += 1;
+  if (createdAt.toDateString() === weekStart.toDateString() && goalStart.toDateString() === createdAt.toDateString()) {
+    if (after_time <= createdAt.getHours()) {
+      slot.start = createdAt.getHours() + 1;
+      if (slot.start === 24) {
+        goalStart = new Date(goalStart.setDate(goalStart.getDate() + 1));
+      }
     }
   }
-
+  let validDays = [...on_days];
+  const startingDay = (goalStart > weekStart ? getDiffInDates(goalStart, weekStart) : 0) + (pushToNext ? 1 : 0);
   if (goalStart > weekStart) {
     const startDayIndex = on_days.indexOf(convertDateToDay(goalStart));
     const today = on_days.indexOf(convertDateToDay(weekStart));
@@ -106,25 +103,26 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date) => {
   }
 
   validDays = validDays.filter((ele) => !not_on.includes(ele));
+
   if (goal.repeat || goal.filters?.on_days) {
     if (goal.repeat === "daily") {
       for (let key = startingDay; key < 7; key += 1) {
         pushTaskToMyDays(key + 1, {
           ...slot,
-          start: key > startingDay ? after_time : slot.start,
           duration: totalDuration,
         });
         slot.start = after_time;
       }
     } else if (!goal.budgets) {
+      const newSlot = {
+        ...slot,
+        start: after_time,
+        duration: totalDuration - (goal.hoursSpent || 0),
+      };
       pushTaskToFlexibleArr(
         validDays,
-        {
-          ...slot,
-          duration: totalDuration - (goal.hoursSpent || 0),
-        }
+        newSlot
       );
-      // console.log("🚀 ~ file: MiniScheduler.ts:73 ~ schProcessor ~ weeklyGoals:", weeklyGoals);
     } else {
       processBudgetGoal(goal, slot, validDays, totalDuration, goal.budgets[0].min, goalStart, startingDay);
     }
@@ -139,9 +137,10 @@ export const taskGenerator = (goals: { [id: string]: ISchedulerInputGoal }, week
     const goal = goals[id];
     if (new Date(goal.start || goal.createdAt) < weekEnd) {
       const splittedGoals: ISchedulerInputGoal[] = goalSplitter(goal);
-      splittedGoals.forEach((sGoal: ISchedulerInputGoal) => {
-        goalProcessor(sGoal, weekStart);
-      });
+      goalProcessor(splittedGoals[0], weekStart, false);
+      if (splittedGoals.length === 2) {
+        goalProcessor(splittedGoals[1], weekStart, true);
+      }
     }
   }
 };

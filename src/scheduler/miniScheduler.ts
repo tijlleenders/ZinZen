@@ -9,8 +9,8 @@ let impossibleHandled: { [key: string]: boolean } = { };
 let soloGoals: {[x: string]: ISchedulerInputGoal} = { };
 
 const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpStart: Date, currentHrs: number[]) => {
-  const { start, deadline, duration, ...task } = taskObj;
   const defaultHrs = [...currentHrs];
+  const { start, deadline, duration, ...task } = taskObj;
   // if(task.title === "Report")
   // console.log(task.title, duration, defaultHrs);
   if (duration !== 0) {
@@ -18,7 +18,7 @@ const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpSt
     let startHr = start;
 
     while (defaultHrs[startHr] !== -1) {
-      if (startHr > 23) {
+      if (startHr > 23 || startHr >= deadline) {
         startHrFound = false;
         break;
       }
@@ -26,8 +26,8 @@ const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpSt
       generateAndPushImpSlot({ ...taskObj, duration }, tmpStart, selectedDay, startHr, defaultHrs[startHr]);
       startHr = defaultHrs[startHr];
     }
+    let tmpD = duration;
     if (startHrFound) {
-      let tmpD = duration;
       let tmpS = startHr;
       let ptr = startHr;
       while (ptr <= deadline && tmpS !== deadline) {
@@ -59,11 +59,10 @@ const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpSt
           }
         }
       }
-      if (tmpD !== 0) {
-        // if (["project a", "work", "Report"].includes(task.title)) { console.log("Incomplete Duration", task.title, tmpD); }
-        addGoalDueHrs(task.goalid, tmpD);
-      }
-      // else if (["project a", "work"].includes(task.title)) { console.log("Duration completed"); }
+    }
+    if (tmpD !== 0) {
+      // if (["project a", "work", "Report"].includes(task.title)) { console.log("Incomplete Duration", task.title, tmpD); }
+      addGoalDueHrs(task.goalid, tmpD);
     }
   }
   return defaultHrs;
@@ -159,37 +158,29 @@ export const callJsScheduler = (inputObj: {
     // console.log("🚀 ~ file: miniScheduler.ts:157 ~ flexibleWeeklyGoals:", flexibleWeeklyGoals)
 
     for (let wgi = 0; wgi < flexibleWeeklyGoals.length; wgi += 1) {
-      const { createdAt, start } = soloGoals[flexibleWeeklyGoals[wgi].slot.goalid];
-      const startedOn = convertDateToDay(new Date(start || createdAt));
+      const createdOn = convertDateToDay(new Date(soloGoals[flexibleWeeklyGoals[wgi].slot.goalid].createdAt));
       const goalHabit = soloGoals[flexibleWeeklyGoals[wgi].slot.goalid].repeat;
-      const { deadline: actualGoalDeadline } = goals[flexibleWeeklyGoals[wgi].slot.goalid];
+      const { deadline: actualGoalDeadline, title } = goals[flexibleWeeklyGoals[wgi].slot.goalid];
       if (actualGoalDeadline && new Date(actualGoalDeadline) < tmpDate) {
         continue;
       }
       if (flexibleWeeklyGoals[wgi].validDays.includes(convertDateToDay(tmpDate))) {
         const task = { ...flexibleWeeklyGoals[wgi].slot };
-
-        if (tmpStart.toDateString() === tmpDate.toDateString()) {
-          task.start = new Date().getHours() >= task.start ? new Date().getHours() + 1 : task.start;
-          if (task.start === 24) {
-            continue;
-          }
-        }
         const pastDue = getDueHrs(task.goalid);
-        if (pastDue === 0 && (startedOn !== convertDateToDay(tmpDate) || goalHabit === "once")) {
+        if (pastDue === 0 && (createdOn !== convertDateToDay(tmpDate) || goalHabit === "once")) {
           continue;
         }
         const dueDuration = pastDue || task.duration;
         updateDueHrs(task.goalid, 0);
         if (task.duration !== 0) {
-          hrsOfDay = [...taskScheduler(
-            {
-              ...task,
-              duration: dueDuration,
-            },
-            item + 1,
-            tmpStart,
-            hrsOfDay)];
+          const createdAt = new Date(soloGoals[flexibleWeeklyGoals[wgi].slot.goalid].createdAt);
+          let { start } = task;
+          if (createdAt.toDateString() === tmpDate.toDateString()) {
+            if (task.start <= createdAt.getHours()) {
+              if (createdAt.getHours() + 1 === 24) { continue; } else start = createdAt.getHours() + 1;
+            }
+          }
+          hrsOfDay = [...taskScheduler({ ...task, duration: dueDuration, start }, item + 1, tmpStart, hrsOfDay)];
           flexibleWeeklyGoals[wgi] = { ...flexibleWeeklyGoals[wgi], slot: { ...task, duration: dueDuration } };
         }
       }
