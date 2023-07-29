@@ -133,6 +133,14 @@ export function getDateInText(date: Date) {
   return dateInText;
 }
 
+export function convertDateToString(date: Date, resetTime = true) {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const time = date.toTimeString();
+  return `${year}-${month < 10 ? "0" : ""}${month}-${day < 10 ? "0" : ""}${day}T${resetTime ? "00" : time.slice(0, 2)}:00:00`;
+}
+
 export function getOrdinalSuffix(dayOfMonth: number): string {
   if (dayOfMonth % 10 === 1 && dayOfMonth !== 11) {
     return "st";
