@@ -142,8 +142,9 @@ export const callJsScheduler = (inputObj: {
   impossibleHandled = {};
   const { startDate, endDate, goals } = inputObj;
   const tmpStart = new Date(startDate);
+  const tmpEnd = new Date(endDate);
   soloGoals = breakTheTree(goals);
-  taskGenerator(soloGoals, tmpStart);
+  taskGenerator(soloGoals, tmpStart, tmpEnd);
   // console.log(getBufferValue("2c33e46b-625d-45b1-9946-0141a3df9392"));
   for (let ele = 0; ele < 7; ele += 1) {
     initScheduled(ele + 1);
@@ -158,22 +159,37 @@ export const callJsScheduler = (inputObj: {
     // console.log("🚀 ~ file: miniScheduler.ts:157 ~ flexibleWeeklyGoals:", flexibleWeeklyGoals)
 
     for (let wgi = 0; wgi < flexibleWeeklyGoals.length; wgi += 1) {
-      const createdOn = convertDateToDay(new Date(soloGoals[flexibleWeeklyGoals[wgi].slot.goalid].createdAt));
+      const { createdAt, start } = soloGoals[flexibleWeeklyGoals[wgi].slot.goalid];
+      const startedOn = convertDateToDay(new Date(start || createdAt));
       const goalHabit = soloGoals[flexibleWeeklyGoals[wgi].slot.goalid].repeat;
-      const { deadline: actualGoalDeadline, title } = goals[flexibleWeeklyGoals[wgi].slot.goalid];
+      const { deadline: actualGoalDeadline } = goals[flexibleWeeklyGoals[wgi].slot.goalid];
       if (actualGoalDeadline && new Date(actualGoalDeadline) < tmpDate) {
         continue;
       }
       if (flexibleWeeklyGoals[wgi].validDays.includes(convertDateToDay(tmpDate))) {
         const task = { ...flexibleWeeklyGoals[wgi].slot };
+
+        if (tmpStart.getDate() === tmpDate.getDate()) {
+          task.start = new Date().getHours() >= task.start ? new Date().getHours() + 1 : task.start;
+          if (task.start === 24) {
+            continue;
+          }
+        }
         const pastDue = getDueHrs(task.goalid);
-        if (pastDue === 0 && (createdOn !== convertDateToDay(tmpDate) || goalHabit === "once")) {
+        if (pastDue === 0 && (startedOn !== convertDateToDay(tmpDate) || goalHabit === "once")) {
           continue;
         }
         const dueDuration = pastDue || task.duration;
         updateDueHrs(task.goalid, 0);
         if (task.duration !== 0) {
-          hrsOfDay = [...taskScheduler({ ...task, duration: dueDuration }, item + 1, tmpStart, hrsOfDay)];
+          hrsOfDay = [...taskScheduler(
+            {
+              ...task,
+              duration: dueDuration,
+            },
+            item + 1,
+            tmpStart,
+            hrsOfDay)];
           flexibleWeeklyGoals[wgi] = { ...flexibleWeeklyGoals[wgi], slot: { ...task, duration: dueDuration } };
         }
       }
