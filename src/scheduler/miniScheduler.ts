@@ -169,7 +169,7 @@ export const callJsScheduler = (inputObj: {
       if (flexibleWeeklyGoals[wgi].validDays.includes(convertDateToDay(tmpDate))) {
         const task = { ...flexibleWeeklyGoals[wgi].slot };
 
-        if (tmpStart.getDate() === tmpDate.getDate()) {
+        if (tmpStart.toDateString() === tmpDate.toDateString()) {
           task.start = new Date().getHours() >= task.start ? new Date().getHours() + 1 : task.start;
           if (task.start === 24) {
             continue;

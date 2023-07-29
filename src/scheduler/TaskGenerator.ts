@@ -29,7 +29,6 @@ const processBudgetGoal = (
   const min = minDuration;
   const startedOn = convertDateToDay(iGoalStart);
   const deadline = goal.deadline ? new Date(goal.deadline) : null;
-
   for (let i = startDayItr; i < 7; i += 1) {
     if (deadline && deadline < goalStart) {
       break;
@@ -63,10 +62,10 @@ const processBudgetGoal = (
         totalDuration -= min > totalDuration ? totalDuration : min;
       }
     }
-    goalStart = new Date(goalStart.setDate(goalStart.getDate() + 1));
-    if (goalStart.getDate() === new Date().getDate()) {
+    if (goalStart.toDateString() === new Date().toDateString()) {
       slot.start = after_time;
     }
+    goalStart = new Date(goalStart.setDate(goalStart.getDate() + 1));
   }
 };
 
@@ -86,15 +85,16 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date) => {
   let goalStart = new Date(goal.start || goal.createdAt);
   let validDays = [...on_days];
 
-  if (goalStart.getDate() === weekStart.getDate() && after_time <= new Date().getHours()) {
+  let startingDay = goalStart > weekStart ? getDiffInDates(goalStart, weekStart) : 0;
+  if (goalStart.toDateString() === weekStart.toDateString() && after_time <= new Date().getHours()) {
     slot.start = new Date().getHours() + 1;
     if (slot.start === 24) {
-      goalStart = new Date(goalStart.setDate(goalStart.getDate() + 1))
+      goalStart = new Date(goalStart.setDate(goalStart.getDate() + 1));
       slot.start = after_time;
+      startingDay += 1;
     }
   }
 
-  const startingDay = goalStart > weekStart ? getDiffInDates(goalStart, weekStart) : 0;
   if (goalStart > weekStart) {
     const startDayIndex = on_days.indexOf(convertDateToDay(goalStart));
     const today = on_days.indexOf(convertDateToDay(weekStart));
