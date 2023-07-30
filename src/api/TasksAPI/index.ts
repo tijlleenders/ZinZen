@@ -58,6 +58,11 @@ export const forgetTask = async (id: string, period: string) => {
         } else {
           obj.forgotToday.push(period);
         }
+        if (obj.forgotToday.length > 1) {
+          obj.forgotToday.sort((a, b) => (
+            Number(a.split("-")[0]) - Number(b.split("-")[0])
+          ));
+        }
       });
   }).catch((e) => {
     console.log(e.stack || e);
