@@ -106,10 +106,11 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: b
 
   if (goal.repeat || goal.filters?.on_days) {
     if (goal.repeat === "daily") {
-      for (let key = startingDay; key < 7; key += 1) {
+      const skipToday = totalDuration - (goal.hoursSpent || 0) === 0;
+      for (let key = (startingDay + Number(skipToday)); key < 7; key += 1) {
         pushTaskToMyDays(key + 1, {
           ...slot,
-          duration: totalDuration,
+          duration: totalDuration - (skipToday ? 0 : goal.hoursSpent || 0),
         });
         slot.start = after_time;
       }
