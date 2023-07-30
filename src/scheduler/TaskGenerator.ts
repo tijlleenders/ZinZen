@@ -25,7 +25,6 @@ const processBudgetGoal = (
   const { after_time = 0 } = goal.filters || {};
   const slot = { ...currSlot };
   let totalDuration = inputDuration - (goal.hoursSpent || 0);
-  // console.log("🚀 ~ file: TaskGenerator.ts:17 ~ totalDuration:", goal.title, totalDuration, goal.hoursSpent);
   const min = minDuration;
   const startedOn = convertDateToDay(iGoalStart);
   const deadline = goal.deadline ? new Date(goal.deadline) : null;
@@ -35,7 +34,6 @@ const processBudgetGoal = (
     }
     const dayItr = convertDateToDay(goalStart);
     if (validDays.includes(dayItr)) {
-      if (goal.title === "project A") { console.log(dayItr, startedOn); }
       if (dayItr === startedOn && i !== 0) {
         if (totalDuration >= 0) {
           addGoalDueHrs(goal.id, totalDuration);
@@ -138,7 +136,6 @@ export const taskGenerator = (goals: { [id: string]: ISchedulerInputGoal }, week
     const goal = goals[id];
     if (new Date(goal.start || goal.createdAt) < weekEnd) {
       const splittedGoals: ISchedulerInputGoal[] = goalSplitter(goal);
-      console.log("🚀 ~ file: TaskGenerator.ts:141 ~ taskGenerator ~ splittedGoals:", splittedGoals);
       goalProcessor(splittedGoals[0], weekStart, false);
       if (splittedGoals.length === 2) {
         goalProcessor(splittedGoals[1], weekStart, true);
