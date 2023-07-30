@@ -21,7 +21,7 @@ import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { darkModeState, lastAction, openDevMode } from "@src/store";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { getAllBlockedTasks, getAllTasks, getAllTasks } from "@src/api/TasksAPI";
-import { colorPalleteList, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
+import { colorPalleteList, convertDateToString, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
 import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 import { callJsScheduler } from "@src/scheduler/miniScheduler";
 
@@ -30,8 +30,6 @@ import "./MyTimePage.scss";
 import "@translations/i18n";
 
 export const MyTimePage = () => {
-  const fakeThursday = new Date();
-  // fakeThursday.setDate(fakeThursday.getDate() + (fakeThursday.getDate() === 28 ? 2 : 1));
   const today = new Date();
 
   const { t } = useTranslation();
@@ -73,7 +71,7 @@ export const MyTimePage = () => {
   const getDayComponent = (day: string) => {
     const colorIndex = -1;
     const freeHours = tasks[day]?.freeHrsOfDay;
-    const dayOfMonth = devMode ? fakeThursday.getDate() : today.getDate();
+    const dayOfMonth = today.getDate();
     const suffix = getOrdinalSuffix(dayOfMonth);
     return (
       <div key={day} className="MyTime_day">
@@ -88,7 +86,7 @@ export const MyTimePage = () => {
           <h3 className="MyTime_dayTitle">
             {day === "Today" ? (
               <>
-                {(devMode ? fakeThursday : today).toLocaleString("default", { weekday: "long" })} {dayOfMonth}
+                {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
                 <sup>{suffix}</sup>
               </>
             ) : (
@@ -135,7 +133,7 @@ export const MyTimePage = () => {
     activeGoals.forEach((goal) => {
       obj[goal.id] = { parentGoalId: goal.parentGoalId, goalColor: goal.goalColor };
     });
-    const _today = devMode ? new Date(fakeThursday) : new Date();
+    const _today = new Date();
     scheduled.forEach((dayOutput, index) => {
       const { day } = dayOutput;
       const thisDay = { freeHrsOfDay: 0, scheduledHrs: 0, scheduled: [], impossible: [], colorBands: [] };
@@ -181,11 +179,9 @@ export const MyTimePage = () => {
 
     const blockedSlots = await getAllBlockedTasks();
     await init();
-    const _today = devMode ? new Date(fakeThursday) : new Date();
-    // _today.setDate(_today.getDate() + 1);
-    const startDate = `${_today?.toISOString().slice(0, 10)}T00:00:00`;
-    const endDate = `${new Date(_today.setDate(_today.getDate() + 7)).toISOString().slice(0, 10)}T00:00:00`;
-
+    const _today = new Date();
+    const startDate = convertDateToString(new Date(_today));
+    const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
     const schedulerInput = {
       startDate,
       endDate,
@@ -203,14 +199,10 @@ export const MyTimePage = () => {
       if (dbTasks[ele.id]?.forgotToday) { obj.skippedToday = dbTasks[ele.id].forgotToday; }
       if (ele.duration) obj.min_duration = Number(ele.duration);
       if (ele.start) {
-        const start = new Date(ele.start);
-        // start.setDate(start.getDate() + 1);
-        obj.start = `${start?.toISOString().slice(0, 10)}T${start?.toTimeString().slice(0, 8)}`;
+        obj.start = convertDateToString(new Date(ele.start));
       }
       if (ele.due) {
-        const due = new Date(ele.due);
-        // due.setDate(due.getDate() + 1);
-        obj.deadline = `${due?.toISOString().slice(0, 10)}T${due?.toTimeString().slice(0, 8)}`;
+        obj.deadline = convertDateToString(new Date(ele.due));
       }
       if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
       if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;
@@ -228,6 +220,7 @@ export const MyTimePage = () => {
     });
     schedulerInput.goals = schedulerInput.goals.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
     console.log("input", JSON.stringify(schedulerInput));
+    console.log(schedulerInput);
     const res = !devMode ? callJsScheduler(schedulerInput) : schedule(schedulerInput);
     console.log("output", res);
     const processedOutput = handleSchedulerOutput(res, activeGoals, devMode);
@@ -239,8 +232,8 @@ export const MyTimePage = () => {
     initialCall();
   }, [devMode]);
   useEffect(() => {
-    if (action === "TaskRescheduled") {
-      rescheduleSound.play();
+    if (action === "TaskRescheduled" || action === "TaskSkipped") {
+      if (action === "TaskRescheduled") rescheduleSound.play();
       initialCall().then(async () => {
         setLastAction("none");
       });
