@@ -25,7 +25,7 @@ function traverseTheTree(id: string, goals: incomingGoals) {
     if (parentDuration) parentDuration -= occupied;
   }
   if (parentDuration && parentDuration > 0) {
-    soloGoals[id] = { ...goals[id], title: `${parent.title} filler`, min_duration: parentDuration };
+    soloGoals[id] = { ...goals[id], min_duration: parentDuration };
   }
 
   return parent.min_duration;
