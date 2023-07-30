@@ -25,7 +25,6 @@ const processBudgetGoal = (
   const { after_time = 0 } = goal.filters || {};
   const slot = { ...currSlot };
   let totalDuration = inputDuration - (goal.hoursSpent || 0);
-  // console.log("🚀 ~ file: TaskGenerator.ts:17 ~ totalDuration:", goal.title, totalDuration, goal.hoursSpent);
   const min = minDuration;
   const startedOn = convertDateToDay(iGoalStart);
   const deadline = goal.deadline ? new Date(goal.deadline) : null;
@@ -35,7 +34,6 @@ const processBudgetGoal = (
     }
     const dayItr = convertDateToDay(goalStart);
     if (validDays.includes(dayItr)) {
-      if (goal.title === "project A") { console.log(dayItr, startedOn); }
       if (dayItr === startedOn && i !== 0) {
         if (totalDuration >= 0) {
           addGoalDueHrs(goal.id, totalDuration);
@@ -82,7 +80,7 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: b
   const createdAt = new Date(goal.createdAt);
   let goalStart = new Date(goal.start || goal.createdAt);
 
-  if (createdAt.toDateString() === weekStart.toDateString() && goalStart.toDateString() === createdAt.toDateString()) {
+  if (!pushToNext && createdAt.toDateString() === weekStart.toDateString() && goalStart.toDateString() === createdAt.toDateString()) {
     if (after_time <= createdAt.getHours()) {
       slot.start = createdAt.getHours() + 1;
       if (slot.start === 24) {
@@ -92,7 +90,7 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: b
   }
   let validDays = [...on_days];
   const startingDay = (goalStart > weekStart ? getDiffInDates(goalStart, weekStart) : 0) + (pushToNext ? 1 : 0);
-  if (goalStart > weekStart) {
+  if (goalStart > weekStart && !pushToNext) {
     const startDayIndex = on_days.indexOf(convertDateToDay(goalStart));
     const today = on_days.indexOf(convertDateToDay(weekStart));
     validDays = [
@@ -107,7 +105,7 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: b
   if (goal.repeat || goal.filters?.on_days) {
     if (goal.repeat === "daily") {
       const skipToday = totalDuration - (goal.hoursSpent || 0) === 0;
-      for (let key = (startingDay + Number(skipToday)); key < 7; key += 1) {
+      for (let key = startingDay; key < 7; key += 1) {
         pushTaskToMyDays(key + 1, {
           ...slot,
           duration: totalDuration - (skipToday ? 0 : goal.hoursSpent || 0),
