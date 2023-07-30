@@ -200,6 +200,7 @@ export const MyTimePage = () => {
       const obj = { id: ele.id, title: ele.title, filters: {}, createdAt: ele.createdAt };
       const slotsNotallowed = blockedSlots[ele.id];
       if (dbTasks[ele.id]?.hoursSpent) { obj.hoursSpent = dbTasks[ele.id].hoursSpent; }
+      if (dbTasks[ele.id]?.forgotToday) { obj.skippedToday = dbTasks[ele.id].forgotToday; }
       if (ele.duration) obj.min_duration = Number(ele.duration);
       if (ele.start) {
         const start = new Date(ele.start);

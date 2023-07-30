@@ -36,6 +36,7 @@ export interface ISchedulerInputGoal {
     children: string[],
     createdAt: string,
     hoursSpent: number,
+    skippedToday: string[]
 }
 
 export type TBufferValue = { nextBuffer: number, availableBuffer: number }[]
