@@ -23,7 +23,7 @@ export const getTaskByGoalId = async (goalId: string) => {
   }
 };
 
-export const completeTask = async (id: string, taskId: string, duration: number) => {
+export const completeTask = async (id: string, duration: number) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection.where("id").equals(id)
       .modify((obj: TaskItem) => {
