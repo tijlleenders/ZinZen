@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Checkbox, Col, Modal, Radio, Row } from "antd";
+import { Checkbox, Col, Modal, Radio, Row, message } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -75,7 +75,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       deletion.budgetPeriod = "";
       setIsPerSelected(false);
     } else if (["on", "every"].includes(selectedTag)) {
-      deletion[selectedTag] = "";
+      deletion[selectedTag] = selectedTag === "every" ? "once" : "";
     } else if (selectedTag === "before" || selectedTag === "between") {
       deletion.beforeTime = "";
     } else if (selectedTag === "after" || selectedTag === "between") {
@@ -120,7 +120,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     if (selectedTag === "on") {
       setTags({ ...tags, on: val, every: "" });
     } else if (selectedTag === "every") {
-      setTags({ ...tags, every: val, on: "" });
+      setTags({
+        ...tags,
+        every: val,
+        on: "",
+        ...(val === "day" ? { budgetDuration: "", budgetPeriod: "" } : {}),
+      });
     }
     setShowDeleteIcon(true);
   };
@@ -179,6 +184,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             type="button"
             className={ele === selectedTag || activeTags.includes(ele) ? "selected" : ""}
             onClick={() => {
+              if (ele === "hrs / day" && tags.every === "day") {
+                setShowToast({ open: true, message: "You can't use this for a daily goal", extra: "" });
+                return;
+              }
               setActiveTags([...activeTags.filter((activeTag) => !items.includes(activeTag)), ele]);
               handleTagClick(ele);
             }}
@@ -354,15 +363,19 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       {!showAllSettings && (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Radio.Group
-            options={["once", "per day", "per week"]}
-            value={["day", "week"].includes(tags.every) ? `per ${tags.every}` : "once"}
+            options={["once", "every day", "every week"]}
+            value={["day", "week"].includes(tags.every) ? `every ${tags.every}` : "once"}
             onChange={(e) => {
               const { value } = e.target;
               if (value === "once") {
                 setTags({ ...tags, every: "once" });
               } else {
                 const period = value.split(" ")[1];
-                setTags({ ...tags, every: period });
+                setTags({
+                  ...tags,
+                  ...(period === "day" ? { budgetDuration: "", budgetPeriod: "" } : {}),
+                  every: period,
+                });
               }
             }}
           />
@@ -440,9 +453,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   )}
                 </div>
                 <div className="sent-tags">
-                  {getTagSelector(["on", "every"])}
-                  {getTagSelector(["hrs / day", "hrs / week"])}
                   {getTagSelector(["after", "before", "between"])}
+                  {getTagSelector(["on", "every"])}
+                  {getTagSelector(["hrs / day"])}
                 </div>
               </div>
             )}
