@@ -9,31 +9,51 @@ let impossibleHandled: { [key: string]: boolean } = { };
 let soloGoals: {[x: string]: ISchedulerInputGoal} = { };
 
 const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpStart: Date, currentHrs: number[]) => {
-  const { start, deadline, duration, ...task } = taskObj;
   const defaultHrs = [...currentHrs];
+  const { start, deadline, duration, ...task } = taskObj;
   // if(task.title === "Report")
   // console.log(task.title, duration, defaultHrs);
   if (duration !== 0) {
     let startHrFound = true;
     let startHr = start;
+    const { skippedToday = [] } = soloGoals[task.goalid];
+    let [badStart, badEnd] = (skippedToday.length ? skippedToday[0] : "25-25").split("-").map((ele) => Number(ele));
+    if (badStart === 25) {
+      badStart = -1;
+      badEnd = -1;
+    }
+    let isThisBadPoint = selectedDay === 1 && badStart !== -1 && startHr >= badStart;
 
-    while (defaultHrs[startHr] !== -1) {
-      if (startHr > 23) {
+    while (defaultHrs[startHr] !== -1 || isThisBadPoint) {
+      if (startHr > 23 || startHr >= deadline) {
         startHrFound = false;
         break;
       }
-      // if (taskObj.title.includes("project")) console.log(startHr, defaultHrs);
-      generateAndPushImpSlot({ ...taskObj, duration }, tmpStart, selectedDay, startHr, defaultHrs[startHr]);
+      if (isThisBadPoint) {
+        generateAndPushImpSlot({ ...taskObj, duration }, tmpStart, selectedDay, startHr, badEnd);
+        startHr = badEnd;
+        skippedToday.shift();
+        if (skippedToday.length > 0) {
+          [badStart, badEnd] = skippedToday[0].split("-").map((ele) => Number(ele));
+        } else { badStart = -1; badEnd = -1; }
+      } else {
+        generateAndPushImpSlot({ ...taskObj, duration }, tmpStart, selectedDay, startHr, defaultHrs[startHr]);
+      }
+      if (defaultHrs[startHr] === -1) {
+        break;
+      }
       startHr = defaultHrs[startHr];
+      isThisBadPoint = selectedDay === 1 && badStart !== -1 && startHr >= badStart;
     }
+    let tmpD = duration;
     if (startHrFound) {
-      let tmpD = duration;
       let tmpS = startHr;
       let ptr = startHr;
       while (ptr <= deadline && tmpS !== deadline) {
         tmpD -= 1;
         ptr += 1;
-        if (defaultHrs[ptr] !== -1 || tmpD === 0 || ptr === deadline) {
+        isThisBadPoint = selectedDay === 1 && badStart !== -1 && ptr >= badStart;
+        if (defaultHrs[ptr] !== -1 || tmpD === 0 || ptr === deadline || isThisBadPoint) {
           const nextAvailable = ptr;
           defaultHrs.splice(tmpS, ptr - tmpS, ...[...Array(ptr - tmpS).keys()].map(() => nextAvailable));
           pushToScheduled(selectedDay, {
@@ -46,9 +66,22 @@ const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpSt
             if (ptr > 23) {
               break;
             }
+            if (isThisBadPoint) {
+              generateAndPushImpSlot({ ...taskObj, duration: tmpD }, tmpStart, selectedDay, ptr, badEnd);
+              ptr = badEnd;
+              skippedToday.shift();
+              if (skippedToday.length > 0) {
+                [badStart, badEnd] = skippedToday[0].split("-").map((ele) => Number(ele));
+              } else { badStart = -1; badEnd = -1; }
+            } else {
+              generateAndPushImpSlot({ ...taskObj, duration: tmpD }, tmpStart, selectedDay, ptr, defaultHrs[ptr]);
+            }
+            if (defaultHrs[ptr] === -1) {
+              break;
+            }
             // if (taskObj.title.includes("project")) console.log(ptr, defaultHrs[ptr], defaultHrs);
-            generateAndPushImpSlot({ ...taskObj, duration: tmpD }, tmpStart, selectedDay, ptr, defaultHrs[ptr]);
             ptr = defaultHrs[ptr];
+            isThisBadPoint = selectedDay === 1 && badStart !== -1 && ptr >= badStart;
           }
           if (ptr > 23) {
             break;
@@ -59,11 +92,10 @@ const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpSt
           }
         }
       }
-      if (tmpD !== 0) {
-        // if (["project a", "work", "Report"].includes(task.title)) { console.log("Incomplete Duration", task.title, tmpD); }
-        addGoalDueHrs(task.goalid, tmpD);
-      }
-      // else if (["project a", "work"].includes(task.title)) { console.log("Duration completed"); }
+    }
+    if (tmpD !== 0) {
+      // if (["project a", "work", "Report"].includes(task.title)) { console.log("Incomplete Duration", task.title, tmpD); }
+      addGoalDueHrs(task.goalid, tmpD);
     }
   }
   return defaultHrs;
@@ -142,8 +174,9 @@ export const callJsScheduler = (inputObj: {
   impossibleHandled = {};
   const { startDate, endDate, goals } = inputObj;
   const tmpStart = new Date(startDate);
+  const tmpEnd = new Date(endDate);
   soloGoals = breakTheTree(goals);
-  taskGenerator(soloGoals, tmpStart);
+  taskGenerator(soloGoals, tmpStart, tmpEnd);
   // console.log(getBufferValue("2c33e46b-625d-45b1-9946-0141a3df9392"));
   for (let ele = 0; ele < 7; ele += 1) {
     initScheduled(ele + 1);
@@ -173,7 +206,14 @@ export const callJsScheduler = (inputObj: {
         const dueDuration = pastDue || task.duration;
         updateDueHrs(task.goalid, 0);
         if (task.duration !== 0) {
-          hrsOfDay = [...taskScheduler({ ...task, duration: dueDuration }, item + 1, tmpStart, hrsOfDay)];
+          const createdAt = new Date(soloGoals[flexibleWeeklyGoals[wgi].slot.goalid].createdAt);
+          let { start } = task;
+          if (createdAt.toDateString() === tmpDate.toDateString()) {
+            if (task.start <= createdAt.getHours()) {
+              if (createdAt.getHours() + 1 === 24) { continue; } else start = createdAt.getHours() + 1;
+            }
+          }
+          hrsOfDay = [...taskScheduler({ ...task, duration: dueDuration, start }, item + 1, tmpStart, hrsOfDay)];
           flexibleWeeklyGoals[wgi] = { ...flexibleWeeklyGoals[wgi], slot: { ...task, duration: dueDuration } };
         }
       }
