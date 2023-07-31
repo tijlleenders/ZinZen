@@ -113,7 +113,6 @@
   "completegoal": "Objetivo completo",
   "dontAskAgain": "¿No vuelves a pedir esta acción?",
   "note": "Nota",
-  "completeGoal": "Completar objetivo",
   "deleteGoal": "Eliminar objetivo",
   "shareGoal": "Compartir objetivo",
   "chooseContact": "Elegir contacto",
@@ -152,5 +151,4 @@
       "note": "Esto finalizará la colaboración y no recibirás ninguna actualización."
     }
   }
-
 }
