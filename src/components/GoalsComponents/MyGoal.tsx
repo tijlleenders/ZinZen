@@ -104,10 +104,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     <div
       key={String(`goal-${goal.id}`)}
       className={`user-goal${darkModeStatus ? "-dark" : ""}`}
+      onMouseEnter={(e) => { handleDropDown(e) }}
+      onMouseLeave={(e) => { handleDropDown(e) }}
     >
       <div
         className="goal-dropdown"
-        onClickCapture={(e) => { handleDropDown(e); }}
       >
         {(
           goal.collaboration.newUpdates || goal.shared.conversionRequests.status
@@ -128,7 +129,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       </div>
       <div
         className="user-goal-main"
-        onClickCapture={() => { handleGoalClick(); }}
+        onClickCapture={() => { handleGoalClick() }}
         style={{
           ...(showActions.open === goal.id) ? { paddingBottom: 0 } : {},
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {})
