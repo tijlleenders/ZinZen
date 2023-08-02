@@ -53,11 +53,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   const timingTagName = goal.afterTime ? goal.beforeTime ? "between" : "after" : goal.beforeTime ? "before" : "";
   const handleGoalClick = () => {
-    if (goal.sublist.length === 0) {
-      if (showActions.open === goal.id && showActions.click > 0) {
-        setShowActions(defaultTap);
-      } else { setShowActions({ open: goal.id, click: 1 }); }
-    } else {
+    if (goal.sublist.length != 0) {
       // if (displaySearch) setDisplaySearch(false);
       // @ts-ignore
       navigate("/MyGoals", {
