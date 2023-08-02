@@ -4,6 +4,7 @@ import { formatDate, breakTheTree, convertDateToDay } from "@src/utils/Scheduler
 import { fillUpImpSlotsForGoalId } from "./ImpSlotManager";
 import { taskGenerator } from "./TaskGenerator";
 import { addGoalDueHrs, generateAndPushImpSlot, getAllDueTasks, getBufferValue, getDueHrs, getFlexibleWeeklyGoals, getImpossibleObj, getScheduledObj, getTasksOfDay, getWeekEndOfGoal, initImpossible, initScheduled, pushToScheduled, resetAll, updateBufferOfGoal, updateBufferOfTheDay, updateDueHrs } from ".";
+import { fillUpFreeSlots } from "./freeSlotsManager";
 
 let impossibleHandled: { [key: string]: boolean } = { };
 let soloGoals: {[x: string]: ISchedulerInputGoal} = { };
@@ -258,7 +259,9 @@ export const callJsScheduler = (inputObj: {
     });
     resSchedule.push({
       day: thisDate.toISOString().slice(0, 10),
-      tasks: [...scheduled[item + 1].outputs.map((ele) => ({ ...ele, taskid: uuidv4() }))],
+      tasks: fillUpFreeSlots(scheduled[item + 1].outputs).map((ele) => ({
+        ...ele, taskid: uuidv4()
+      })),
     });
     resImpossible.push({
       day: thisDate.toISOString().slice(0, 10),
