@@ -38,7 +38,15 @@ export const MyTimePage = () => {
   const [action, setLastAction] = useRecoilState(lastAction);
   const [devMode, setDevMode] = useRecoilState(openDevMode);
 
-  const [tasks, setTasks] = useState<{ [day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } } }>({});
+  const [tasks, setTasks] = useState<{
+    [day: string]: {
+      scheduled: ITask[],
+      impossible: ITask[],
+      freeHrsOfDay: number,
+      scheduledHrs: number,
+      colorBands: CSSProperties
+    }
+  }>({});
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const [colorBands, setColorBands] = useState<{ [day: string]: number }>({});
@@ -98,11 +106,13 @@ export const MyTimePage = () => {
             type="button"
           >
             <div> {showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <img src={chevronLeftIcon} className="chevronRight theme-icon" />} </div>
+              <img src={chevronLeftIcon} className="chevronRight theme-icon" />
+            </div>
           </button>
         </button>
         <div>
           <div className={`MyTime_colorPalette ${showTasks.includes(day) ? "active" : ""}`}>
-            {tasks[day]?.colorBands.map((ele) => getColorComponent(ele.colorWidth, ele.color))}
+            {tasks[day]?.colorBands.map((ele) => (<div key={uuidv4()} style={{ height: 10, ...ele }} />))}
           </div>
           {showTasks.includes(day) && getTimeline(day)}
         </div>
@@ -154,8 +164,9 @@ export const MyTimePage = () => {
       dayOutput.tasks.forEach((ele) => {
         const colorWidth = getColorWidth(ele.duration, totalSlots);
         thisDay.colorBands.push({
-          colorWidth: (ele.duration / 24) * (1 / totalSlots) * 100 * 100,
-          color: ele.title === "free" ? "rgba(115, 115, 115, 0.2)" : obj[ele.goalid].goalColor
+          boxShadow: ele.title === "free" ? "rgba(0, 0, 0, 0.2) 0px 0px 6px 1px inset" : "rgba(0, 0, 0, 0.2) 0 0",
+          width: `${(ele.duration / 24) * (1 / totalSlots) * 100 * 100}%`,
+          background: ele.title === "free" ? "rgba(115, 115, 115, 0.2)" : obj[ele.goalid].goalColor
         });
       });
       if (index === 0) {
