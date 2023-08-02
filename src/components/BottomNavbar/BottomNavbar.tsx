@@ -61,36 +61,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
       {themeSelection && <Backdrop opacity={0} onClick={() => { window.history.back(); }} />}
       <div className={`bottom-navbar${darkModeStatus ? "-dark" : ""}`}>
         <button
-          type="button"
-          onClick={() => {
-            if (themeSelection) themeChange(-1);
-            else handleClick("MyTime");
-          }}
-          className={`bottom-nav-item ${currentPage === "" && !themeSelection ? "active" : ""}`}
-        >
-          <img
-            className={`secondary-icon ${themeSelection && !darkModeStatus ? "theme-selector-option" : ""}`}
-            style={{ width: 24 }}
-            src={themeSelection ? backIcon : calendarIcon}
-            alt="My Time"
-          />
-          {themeSelection ? <p>Prev</p> : <p>{t("Schedule")}</p>}
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            handleClick("MyGoals");
-          }}
-          className={`bottom-nav-item ${currentPage === "MyGoals" || themeSelection ? "active" : ""}`}
-        >
-          <img
-            className="secondary-icon"
-            src={themeSelection ? (darkModeStatus ? moonIcon : sunIcon) : goalsIcon}
-            alt="My Goals"
-          />
-          {themeSelection ? <p>Switch Mode</p> : <p>{t("Goals")}</p>}
-        </button>
-        <button
+          id="chevron"
           type="button"
           onClick={() => {
             if (themeSelection) themeChange(1);
@@ -107,6 +78,37 @@ const BottomNavbar = ({ title }: { title: string }) => {
           />
           {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
           {title !== "My Time" && title !== "Inbox" && <GlobalAddBtn add={title} />}
+        </button>
+        <button
+          id="chevron"
+          type="button"
+          onClick={() => {
+            handleClick("MyGoals");
+          }}
+          className={`bottom-nav-item ${currentPage === "MyGoals" || themeSelection ? "active" : ""}`}
+        >
+          <img
+            className="secondary-icon"
+            src={themeSelection ? (darkModeStatus ? moonIcon : sunIcon) : goalsIcon}
+            alt="My Goals"
+          />
+          {themeSelection ? <p>Switch Mode</p> : <p>{t("Goals")}</p>}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            if (themeSelection) themeChange(-1);
+            else handleClick("MyTime");
+          }}
+          className={`bottom-nav-item ${currentPage === "" && !themeSelection ? "active" : ""}`}
+        >
+          <img
+            className={`secondary-icon ${themeSelection && !darkModeStatus ? "theme-selector-option" : ""}`}
+            style={{ width: 24 }}
+            src={themeSelection ? backIcon : calendarIcon}
+            alt="My Time"
+          />
+          {themeSelection ? <p>Prev</p> : <p>{t("Schedule")}</p>}
         </button>
       </div>
     </>
