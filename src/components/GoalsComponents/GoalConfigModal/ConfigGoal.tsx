@@ -1,6 +1,7 @@
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Checkbox, Col, Modal, Radio, Row, message } from "antd";
+import { Checkbox, Col, Modal, Radio, Row } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -25,6 +26,7 @@ import "./ConfigGoal.scss";
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
   const { t } = useTranslation();
   const theme = useRecoilValue(themeState);
+  const today = moment(new Date()).format("YYYY-MM-DD");
   const darkModeStatus = useRecoilValue(darkModeState);
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalsHistory = useRecoilValue(goalsHistory);
@@ -130,13 +132,17 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     setShowDeleteIcon(true);
   };
 
-  const getDateField = (type: string, style: object = {}) => (
+  const getDateField = (type: "From" | "To", style: object = {}) => (
     <Col span={12}>
       <div className="date-div" style={style}>
         <p>{t(type)}: </p>
         <input
           type="date"
-          value={type === "From" ? start : due}
+          value={type === "From" ?
+            start ? moment(start).format("YYYY-MM-DD")
+              : (goal?.createdAt ? moment(goal.createdAt).format("YYYY-MM-DD")
+                : today)
+            : due}
           onChange={(e) => {
             handleDateChange(type, e.target.value);
           }}
