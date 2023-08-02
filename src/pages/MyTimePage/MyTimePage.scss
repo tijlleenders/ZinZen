@@ -27,16 +27,11 @@
   display: flex;
   padding: 10px 4%;
   position: relative;
-  // div:first-child {
-  //   border-radius: 8px 0px 0px 8px;
-  // }
-  // div:last-child {
-  //   border-radius: 0px 8px 8px 0px;
-  // }
+  max-width: 508px;
+  width: calc(100vw - 15%);
 }
 
 .MyTime_colorPalette.active {
-  position: relative;
   background: var(--bottom-nav-color);
 }
 
