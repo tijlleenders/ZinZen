@@ -104,9 +104,15 @@ export const MyTimePage = () => {
             </div>
           </button>
         </button>
-        <div>
-          <div className={`MyTime_colorPalette ${showTasks.includes(day) ? "active" : ""}`}>
-            {tasks[day]?.colorBands.map((ele) => (<div key={uuidv4()} style={{ height: 10, ...ele }} />))}
+        <div style={{ background: "var(--bottom-nav-color)" }}>
+          <div style={{ width: 508 }} className={`MyTime_colorPalette ${showTasks.includes(day) ? "active" : ""}`}>
+            {tasks[day]?.colorBands.map((ele, index) => (
+              <div
+                className="colorBand"
+                key={uuidv4()}
+                style={{ zIndex: 30 - index, height: 10, ...ele }}
+              />
+            ))}
           </div>
           {showTasks.includes(day) && getTimeline(day)}
         </div>
@@ -155,12 +161,13 @@ export const MyTimePage = () => {
         }
       });
       const totalSlots = dayOutput.tasks.length;
+      let durationAcc = 0;
       dayOutput.tasks.forEach((ele) => {
         const colorWidth = getColorWidth(ele.duration, totalSlots);
+        durationAcc += ele.duration;
         thisDay.colorBands.push({
-          boxShadow: ele.title === "free" ? "rgba(0, 0, 0, 0.2) 0px 0px 6px 1px inset" : "rgba(0, 0, 0, 0.2) 0 0",
-          width: `${(ele.duration / 24) * (1 / totalSlots) * 100 * 100}%`,
-          background: ele.title === "free" ? "rgba(115, 115, 115, 0.2)" : obj[ele.goalid].goalColor
+          width: `${(durationAcc / 24) * 100}%`,
+          background: ele.title === "free" ? "#d9cccc" : obj[ele.goalid].goalColor
         });
       });
       if (index === 0) {
