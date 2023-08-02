@@ -1,29 +1,30 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/no-relative-packages */
 // @ts-nocheck
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 
+import { v4 as uuidv4 } from "uuid";
 import rescheduleTune from "@assets/reschedule.mp3";
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
+import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem } from "@src/models/TaskItem";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
-import { callMiniScheduler } from "@src/helpers/MiniScheduler";
+import { callJsScheduler } from "@src/scheduler/miniScheduler";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { darkModeState, lastAction, openDevMode } from "@src/store";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { getAllBlockedTasks, getAllTasks, getAllTasks } from "@src/api/TasksAPI";
 import { colorPalleteList, convertDateToString, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
-import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
-import { callJsScheduler } from "@src/scheduler/miniScheduler";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
@@ -38,7 +39,15 @@ export const MyTimePage = () => {
   const [action, setLastAction] = useRecoilState(lastAction);
   const [devMode, setDevMode] = useRecoilState(openDevMode);
 
-  const [tasks, setTasks] = useState<{ [day: string]: { scheduled: ITask[], impossible: ITask[], freeHrsOfDay: number, scheduledHrs: number, colorBands: { colorWidth: number, color: string } } }>({});
+  const [tasks, setTasks] = useState<{
+    [day: string]: {
+      scheduled: ITask[],
+      impossible: ITask[],
+      freeHrsOfDay: number,
+      scheduledHrs: number,
+      colorBands: CSSProperties
+    }
+  }>({});
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const [colorBands, setColorBands] = useState<{ [day: string]: number }>({});
@@ -54,17 +63,9 @@ export const MyTimePage = () => {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
     } else { setShowTasks([...showTasks, dayName]); }
   };
+
   const getColorWidth = (duration: number, totalSlots: number) => (duration * (100 / (totalSlots)));
 
-  const getColorComponent = (colorWidth: number, color: string) => (
-    <div
-      style={{
-        width: `${colorWidth}%`,
-        height: "10px",
-        backgroundColor: `${color}`
-      }}
-    />
-  );
   const getTimeline = (day: string) => (
     tasks[day] ? <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} /> : <div />
   );
@@ -97,12 +98,15 @@ export const MyTimePage = () => {
             className="MyTime-expand-btw"
             type="button"
           >
-            <div> {showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <img src={chevronLeftIcon} className="chevronRight theme-icon" />} </div>
+            <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+              <p>{`${freeHours || ""} hours free`}</p>
+              <img src={chevronLeftIcon} className="chevronRight theme-icon" />
+            </div>
           </button>
         </button>
         <div>
           <div className={`MyTime_colorPalette ${showTasks.includes(day) ? "active" : ""}`}>
-            {tasks[day]?.colorBands.map((ele) => getColorComponent(ele.colorWidth, ele.color))}
+            {tasks[day]?.colorBands.map((ele) => (<div key={uuidv4()} style={{ height: 10, ...ele }} />))}
           </div>
           {showTasks.includes(day) && getTimeline(day)}
         </div>
@@ -154,8 +158,9 @@ export const MyTimePage = () => {
       dayOutput.tasks.forEach((ele) => {
         const colorWidth = getColorWidth(ele.duration, totalSlots);
         thisDay.colorBands.push({
-          colorWidth: (ele.duration / 24) * (1 / totalSlots) * 100 * 100,
-          color: ele.title === "free" ? "rgba(115, 115, 115, 0.2)" : obj[ele.goalid].goalColor
+          boxShadow: ele.title === "free" ? "rgba(0, 0, 0, 0.2) 0px 0px 6px 1px inset" : "rgba(0, 0, 0, 0.2) 0 0",
+          width: `${(ele.duration / 24) * (1 / totalSlots) * 100 * 100}%`,
+          background: ele.title === "free" ? "rgba(115, 115, 115, 0.2)" : obj[ele.goalid].goalColor
         });
       });
       if (index === 0) {
