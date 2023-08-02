@@ -61,7 +61,6 @@ const BottomNavbar = ({ title }: { title: string }) => {
       {themeSelection && <Backdrop opacity={0} onClick={() => { window.history.back(); }} />}
       <div className={`bottom-navbar${darkModeStatus ? "-dark" : ""}`}>
         <button
-          id="chevron"
           type="button"
           onClick={() => {
             if (themeSelection) themeChange(1);
@@ -80,7 +79,6 @@ const BottomNavbar = ({ title }: { title: string }) => {
           {title !== "My Time" && title !== "Inbox" && <GlobalAddBtn add={title} />}
         </button>
         <button
-          id="chevron"
           type="button"
           onClick={() => {
             handleClick("MyGoals");

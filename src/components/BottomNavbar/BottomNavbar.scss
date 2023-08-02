@@ -40,20 +40,6 @@
         font-weight: 500;
     }
 }
-#chevron::after {
-    position: absolute;
-    top: 26px;
-    left: 195px;
-    content: "";
-    display: inline-block;
-    width: 0.4em;
-    height: 0.4em;
-    border-right: 0.2em solid rgba(205, 110, 81, 1);
-    border-top: 0.2em solid rgba(205, 110, 81, 1);
-    transform: rotate(45deg);
-    margin-right: 0.5em;
-    z-index: 1;
-}
 .theme-selector-option {
     filter: invert(54%) sepia(26%) saturate(3157%) hue-rotate(333deg) brightness(94%) contrast(69%);
     
