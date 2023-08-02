@@ -3,21 +3,22 @@
   border-bottom: 2px solid var(--default-border-color);
 }
 
-.MyTime_navRow{
+.MyTime_navRow {
   display: flex;
   justify-content: space-between;
   padding: 3% 4% 0 4%;
   padding-bottom: 0.5em;
   width: 100%;
   border: none;
+  align-items: center;
   background: transparent;
 }
 
-.MyTime_navRow.selected{
+.MyTime_navRow.selected {
   background: var(--bottom-nav-color);
 }
 
-.MyTime_dayTitle{
+.MyTime_dayTitle {
   font-size: 1.143rem;
   font-weight: 500;
 }
@@ -25,10 +26,10 @@
 .MyTime_colorPalette {
   display: flex;
   padding: 10px 4%;
-  div:first-child{
+  div:first-child {
     border-radius: 8px 0px 0px 8px;
   }
-  div:last-child{
+  div:last-child {
     border-radius: 0px 8px 8px 0px;
   }
 }

@@ -1,29 +1,30 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/no-relative-packages */
 // @ts-nocheck
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 
+import { v4 as uuidv4 } from "uuid";
 import rescheduleTune from "@assets/reschedule.mp3";
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
+import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 import { ITask } from "@src/Interfaces/Task";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem } from "@src/models/TaskItem";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
-import { callMiniScheduler } from "@src/helpers/MiniScheduler";
+import { callJsScheduler } from "@src/scheduler/miniScheduler";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 import { addStarterGoal, starterGoals } from "@src/constants/starterGoals";
 import { darkModeState, lastAction, openDevMode } from "@src/store";
 import { checkMagicGoal, getActiveGoals, getAllGoals } from "@src/api/GoalsAPI";
 import { getAllBlockedTasks, getAllTasks, getAllTasks } from "@src/api/TasksAPI";
 import { colorPalleteList, convertDateToString, convertOnFilterToArray, getDiffInHours, getOrdinalSuffix } from "@src/utils";
-import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
-import { callJsScheduler } from "@src/scheduler/miniScheduler";
 
 import init, { schedule } from "../../../pkg/scheduler";
 import "./MyTimePage.scss";
@@ -62,17 +63,9 @@ export const MyTimePage = () => {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
     } else { setShowTasks([...showTasks, dayName]); }
   };
+
   const getColorWidth = (duration: number, totalSlots: number) => (duration * (100 / (totalSlots)));
 
-  const getColorComponent = (colorWidth: number, color: string) => (
-    <div
-      style={{
-        width: `${colorWidth}%`,
-        height: "10px",
-        backgroundColor: `${color}`
-      }}
-    />
-  );
   const getTimeline = (day: string) => (
     tasks[day] ? <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} /> : <div />
   );
@@ -105,7 +98,8 @@ export const MyTimePage = () => {
             className="MyTime-expand-btw"
             type="button"
           >
-            <div> {showTasks.includes(day) ? freeHours ? `${freeHours} hours free` : "" : <img src={chevronLeftIcon} className="chevronRight theme-icon" />} </div>
+            <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+              <p>{`${freeHours || ""} hours free`}</p>
               <img src={chevronLeftIcon} className="chevronRight theme-icon" />
             </div>
           </button>
