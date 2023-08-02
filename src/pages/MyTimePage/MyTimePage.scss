@@ -26,14 +26,22 @@
 .MyTime_colorPalette {
   display: flex;
   padding: 10px 4%;
-  div:first-child {
-    border-radius: 8px 0px 0px 8px;
-  }
-  div:last-child {
-    border-radius: 0px 8px 8px 0px;
-  }
+  position: relative;
+  // div:first-child {
+  //   border-radius: 8px 0px 0px 8px;
+  // }
+  // div:last-child {
+  //   border-radius: 0px 8px 8px 0px;
+  // }
 }
 
 .MyTime_colorPalette.active {
+  position: relative;
   background: var(--bottom-nav-color);
+}
+
+.colorBand {
+  position: absolute;
+  left: 4%;
+  border-radius: 8px;
 }
