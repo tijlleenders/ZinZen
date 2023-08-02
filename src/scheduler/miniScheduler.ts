@@ -1,13 +1,14 @@
-import { ISchedulerOutputSlot, ISchedulerInputGoal, IFinalOutputSlot } from "@src/Interfaces/ISchedulerInputGoal";
+/* eslint-disable no-continue */
 import { v4 as uuidv4 } from "uuid";
+import { ISchedulerOutputSlot, ISchedulerInputGoal, IFinalOutputSlot } from "@src/Interfaces/ISchedulerInputGoal";
 import { formatDate, breakTheTree, convertDateToDay } from "@src/utils/SchedulerUtils";
 import { fillUpImpSlotsForGoalId } from "./ImpSlotManager";
 import { taskGenerator } from "./TaskGenerator";
 import { addGoalDueHrs, generateAndPushImpSlot, getAllDueTasks, getBufferValue, getDueHrs, getFlexibleWeeklyGoals, getImpossibleObj, getScheduledObj, getTasksOfDay, getWeekEndOfGoal, initImpossible, initScheduled, pushToScheduled, resetAll, updateBufferOfGoal, updateBufferOfTheDay, updateDueHrs } from ".";
 import { fillUpFreeSlots } from "./freeSlotsManager";
 
-let impossibleHandled: { [key: string]: boolean } = { };
-let soloGoals: {[x: string]: ISchedulerInputGoal} = { };
+let impossibleHandled: { [key: string]: boolean } = {};
+let soloGoals: { [x: string]: ISchedulerInputGoal } = {};
 
 const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpStart: Date, currentHrs: number[]) => {
   const defaultHrs = [...currentHrs];
@@ -194,7 +195,7 @@ export const callJsScheduler = (inputObj: {
     for (let wgi = 0; wgi < flexibleWeeklyGoals.length; wgi += 1) {
       const createdOn = convertDateToDay(new Date(soloGoals[flexibleWeeklyGoals[wgi].slot.goalid].createdAt));
       const goalHabit = soloGoals[flexibleWeeklyGoals[wgi].slot.goalid].repeat;
-      const { deadline: actualGoalDeadline, title } = goals[flexibleWeeklyGoals[wgi].slot.goalid];
+      const { deadline: actualGoalDeadline } = goals[flexibleWeeklyGoals[wgi].slot.goalid];
       if (actualGoalDeadline && new Date(actualGoalDeadline) < tmpDate) {
         continue;
       }
