@@ -22,6 +22,7 @@ import {
   displayUpdateGoal,
 } from "@src/store/GoalsState";
 import MyGoal from "@components/GoalsComponents/MyGoal";
+import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ZAccordion from "@src/common/Accordion";
@@ -34,7 +35,6 @@ import "./MyGoalsPage.scss";
 
 export const MyGoalsPage = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
-
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
@@ -116,6 +116,7 @@ export const MyGoalsPage = () => {
 
   return (
     <AppLayout title="mygoals" debounceSearch={debounceSearch}>
+      <GoalLocStateHandler />
       <div className="myGoals-container">
         {
           selectedGoalId === "root" ? (
