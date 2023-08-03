@@ -104,7 +104,7 @@ export const MyTimePage = () => {
             </div>
           </button>
         </button>
-        <div style={{ background: "var(--bottom-nav-color)" }}>
+        <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
           <div className={`MyTime_colorPalette ${showTasks.includes(day) ? "active" : ""}`}>
             {tasks[day]?.colorBands.map((ele, index) => (
               <div
