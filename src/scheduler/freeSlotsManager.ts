@@ -24,21 +24,23 @@ export const fillUpFreeSlots = (scheduleOfTheDay: IFinalOutputSlot[]) => {
     });
     prev = getHrFromDateString(scheduleOfTheDay[j].deadline);
   }
-  const last = finalSchedule.slice(-1)[0];
-  const deadline = getHrFromDateString(last.deadline);
-  if (deadline !== 24) {
-    finalSchedule.push({
-      duration: 24 - deadline,
-      goalid: "free",
-      start: last.deadline,
-      deadline: replaceHrInDateString(last.deadline, 0),
-      title: "free",
-    });
-  } else {
-    finalSchedule[finalSchedule.length - 1] = {
-      ...last,
-      deadline: replaceHrInDateString(last.deadline, 0),
-    };
+  if (finalSchedule.length > 0) {
+    const last = finalSchedule.slice(-1)[0];
+    const deadline = getHrFromDateString(last.deadline);
+    if (deadline !== 24) {
+      finalSchedule.push({
+        duration: 24 - deadline,
+        goalid: "free",
+        start: last.deadline,
+        deadline: replaceHrInDateString(last.deadline, 0),
+        title: "free",
+      });
+    } else {
+      finalSchedule[finalSchedule.length - 1] = {
+        ...last,
+        deadline: replaceHrInDateString(last.deadline, 0),
+      };
+    }
   }
   return finalSchedule;
 };
