@@ -37,7 +37,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
           console.log(newDisplayModal);
           setDisplayModal({ ...newDisplayModal, open: false });
         }
-        await handleClick(choice === t("cancel") ? choice : actionName);
+        await handleClick(choice === "cancel" ? choice : actionName);
       }}
     >
       {t(choice)}
@@ -64,8 +64,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
         </Checkbox>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
-        { getChoiceButton(t("cancel")) }
-        { getChoiceButton(t(getConfirmButtonText(actionName))) }
+        {getChoiceButton("cancel")}
+        {getChoiceButton(getConfirmButtonText(actionName))}
       </div>
     </Modal>
   );
