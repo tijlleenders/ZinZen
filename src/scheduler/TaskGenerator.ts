@@ -101,8 +101,6 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: b
   }
 
   validDays = validDays.filter((ele) => !not_on.includes(ele));
-  if (slot.title === "Work") console.log("🚀 ~ file: TaskGenerator.ts:92 ~ goalProcessor ~ validDays:", validDays)
-
   if (goal.repeat || goal.filters?.on_days) {
     if (goal.repeat === "daily") {
       const skipToday = totalDuration - (goal.hoursSpent || 0) === 0;
