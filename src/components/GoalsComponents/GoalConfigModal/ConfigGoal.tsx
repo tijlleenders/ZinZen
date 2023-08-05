@@ -120,12 +120,11 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const handleRadioClick = (val: string) => {
     if (selectedTag === "on") {
-      setTags({ ...tags, on: val, every: "" });
+      setTags({ ...tags, on: val });
     } else if (selectedTag === "every") {
       setTags({
         ...tags,
         every: val,
-        on: "",
         ...(val === "day" ? { budgetDuration: "", budgetPeriod: "" } : {}),
       });
     }
@@ -276,6 +275,23 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     window.history.back();
   };
 
+  const getEvery = () => (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Radio.Group
+        className="checkbox"
+        options={["once", "every day", "every week"]}
+        value={["day", "week"].includes(tags.every) ? `every ${tags.every}` : "once"}
+        onChange={(e) => {
+          const { value } = e.target;
+          setTags({
+            ...tags,
+            every: value === "once" ? "once" : value.split(" ")[1],
+          });
+        }}
+      />
+    </div>
+  );
+
   useEffect(() => {
     if (goal.goalColor) {
       setColorIndex(colorPalleteList.indexOf(goal.goalColor));
@@ -366,35 +382,14 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
         </div>
       </div>
-      {!showAllSettings && (
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Radio.Group
-            options={["once", "every day", "every week"]}
-            value={["day", "week"].includes(tags.every) ? `every ${tags.every}` : "once"}
-            onChange={(e) => {
-              const { value } = e.target;
-              if (value === "once") {
-                setTags({ ...tags, every: "once" });
-              } else {
-                const period = value.split(" ")[1];
-                setTags({
-                  ...tags,
-                  ...(period === "day" ? { budgetDuration: "", budgetPeriod: "" } : {}),
-                  every: period,
-                });
-              }
-            }}
-          />
-        </div>
-      )}
+      {!showAllSettings && getEvery()}
 
       {showAllSettings && (
         <>
           <div className="goal-sent">
             <p>
               {tags.duration ? `${tags.duration}h ` : ""}
-              {tags.on !== "" && `${t("on")} ${tags.on} `}
-              {tags.every !== "" && `${tags.every === "once" ? "" : t("every")} ${tags.every} `}
+              {tags.on !== "" && `${t("on")} ${tags.every !== "" && `${tags.every === "once" ? "" : t("every")}`} ${tags.on} `}
               {tags.budgetDuration !== "" && `(${tags.budgetDuration}h / ${tags.budgetPeriod}) `}
               {tags.beforeTime !== "" && tags.afterTime !== ""
                 ? `${t("between")} ${tags.afterTime}-${tags.beforeTime} `
@@ -463,6 +458,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   {getTagSelector(["on"])}
                   {getTagSelector(["hrs / day"])}
                 </div>
+                {getEvery()}
               </div>
             )}
           </div>
