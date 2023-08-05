@@ -1,8 +1,9 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import archiveTune from "@assets/archive.mp3";
@@ -10,11 +11,13 @@ import forgetTune from "@assets/forget.mp3";
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { ITask } from "@src/Interfaces/Task";
+import { getGoal } from "@src/api/GoalsAPI";
 import { TaskItem } from "@src/models/TaskItem";
+import { GoalItem } from "@src/models/GoalItem";
 import { displayReschedule } from "@src/store/TaskState";
+import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import { darkModeState, displayToast, lastAction, openDevMode } from "@src/store";
 import { addBlockedSlot, addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
-import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 
 import "./MyTimeline.scss";
 
@@ -37,6 +40,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const doneSound = new Audio(archiveTune);
   const forgetSound = new Audio(forgetTune);
 
+  const { state: locationState } = useLocation();
   const devMode = useRecoilValue(openDevMode);
   const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
@@ -100,7 +104,32 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
-
+  const handleOpenGoal = async (goalId: string) => {
+    const goalsHistory = [];
+    let tmpGoal: GoalItem | null = await getGoal(goalId);
+    let openGoalId = tmpGoal?.parentGoalId;
+    const parentGoalId = openGoalId;
+    if (!openGoalId) { return; }
+    while (openGoalId !== "root") {
+      tmpGoal = await getGoal(openGoalId);
+      if (!tmpGoal) { break; }
+      goalsHistory.push(({
+        goalID: tmpGoal.id || "root",
+        goalColor: tmpGoal.goalColor || "#ffffff",
+        goalTitle: tmpGoal.title || "",
+      }));
+      openGoalId = tmpGoal.parentGoalId;
+    }
+    goalsHistory.reverse();
+    navigate("/MyGoals", {
+      state: {
+        ...locationState,
+        from: "",
+        goalsHistory,
+        activeGoalId: parentGoalId
+      }
+    });
+  };
   return (
     <>
       {myTasks.impossible.length > 0 && (
@@ -145,7 +174,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                       e.stopPropagation();
                       setDisplayOptionsIndex(task.taskid);
                       if (displayOptionsIndex === task.taskid) {
-                        navigate("/MyGoals", { state: { isRootGoal: task.parentGoalId === "root", openGoalOfId: task.goalid } });
+                        handleOpenGoal(task.goalid);
                       }
                     }}
                   >
