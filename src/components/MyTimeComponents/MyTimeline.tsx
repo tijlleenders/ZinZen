@@ -126,7 +126,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         ...locationState,
         from: "",
         goalsHistory,
-        activeGoalId: parentGoalId
+        activeGoalId: parentGoalId,
+        expandedGoalId: goalId
       }
     });
   };
