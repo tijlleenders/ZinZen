@@ -37,7 +37,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const collabWithContact = goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
 
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const location = useLocation();
   const { handleDisplayChanges } = useGoalStore();
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
@@ -62,7 +62,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       // @ts-ignore
       navigate("/MyGoals", {
         state: {
-          ...state,
+          ...location.state,
           activeGoalId: goal.id,
           goalsHistory: [...subGoalHistory, {
             goalID: goal.id || "root",
@@ -100,6 +100,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     }
   }, [showChangesModal, showUpdateGoal, selectedGoalId]);
 
+  useEffect(() => {
+    if (location && location.pathname === "/MyGoals") {
+      const { expandedGoalId } = location.state;
+      if (expandedGoalId && showActions.open !== expandedGoalId) {
+        setShowActions({ open: location.state.expandedGoalId, click: 1 });
+      }
+    }
+  }, [location]);
   return (
     <div
       key={String(`goal-${goal.id}`)}
