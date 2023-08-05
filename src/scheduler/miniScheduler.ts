@@ -1,6 +1,6 @@
 /* eslint-disable no-continue */
 import { v4 as uuidv4 } from "uuid";
-import { ISchedulerOutputSlot, ISchedulerInputGoal, IFinalOutputSlot } from "@src/Interfaces/ISchedulerInputGoal";
+import { ISchedulerOutputSlot, ISchedulerInputGoal, IFinalOutputSlot } from "@src/Interfaces/IScheduler";
 import { formatDate, breakTheTree, convertDateToDay } from "@src/utils/SchedulerUtils";
 import { fillUpImpSlotsForGoalId } from "./ImpSlotManager";
 import { taskGenerator } from "./TaskGenerator";
@@ -238,7 +238,7 @@ export const callJsScheduler = (inputObj: {
   const impossible = getImpossibleObj();
   for (let item = 0; item < 7; item += 1) {
     const thisDate = new Date(tmpStart.setDate(tmpStart.getDate() + 1));
-    scheduled[item + 1].outputs.sort((a, b) => {
+    scheduled[item + 1].tasks.sort((a, b) => {
       const s1 = Number(a.start.slice(11, 13));
       const s2 = Number(b.start.slice(11, 13));
       const e1 = Number(a.start.slice(14, 16));
@@ -248,7 +248,7 @@ export const callJsScheduler = (inputObj: {
       }
       return s1 - s2;
     });
-    impossible[item + 1].outputs.sort((a, b) => {
+    impossible[item + 1].tasks.sort((a, b) => {
       const s1 = Number(a.start.slice(11, 13));
       const s2 = Number(b.start.slice(11, 13));
       const e1 = Number(a.start.slice(14, 16));
@@ -260,13 +260,13 @@ export const callJsScheduler = (inputObj: {
     });
     resSchedule.push({
       day: thisDate.toISOString().slice(0, 10),
-      tasks: fillUpFreeSlots(scheduled[item + 1].outputs).map((ele) => ({
+      tasks: fillUpFreeSlots(scheduled[item + 1].tasks).map((ele) => ({
         ...ele, taskid: uuidv4()
       })),
     });
     resImpossible.push({
       day: thisDate.toISOString().slice(0, 10),
-      tasks: [...impossible[item + 1].outputs.map((ele) => ({ ...ele, taskid: uuidv4() }))],
+      tasks: [...impossible[item + 1].tasks.map((ele) => ({ ...ele, taskid: uuidv4() }))],
     });
   }
   return {

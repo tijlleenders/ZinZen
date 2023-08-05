@@ -1,20 +1,20 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-var */
-import { IFinalOutputSlot, ISchedulerOutput, ISchedulerOutputSlot, TBufferValue } from "@src/Interfaces/ISchedulerInputGoal";
+import { IFinalOutputSlot, ISchedulerOutput, ISchedulerOutputSlot, TBufferValue } from "@src/Interfaces/IScheduler";
 import { formatDate, getHrFromDateString, replaceHrInDateString } from "@src/utils/SchedulerUtils";
 
 var flexibleWeeklyGoals: {
-    slot: ISchedulerOutputSlot;
-    validDays: string[];
+  slot: ISchedulerOutputSlot;
+  validDays: string[];
 }[] = [];
 var dueTaskHrs: { [goalId: string]: number } = {};
-var buffer: { [goalId: string]: TBufferValue} = {};
+var buffer: { [goalId: string]: TBufferValue[] } = {};
 var myDays: ISchedulerOutputSlot[][] = [[], [], [], [], [], [], [], []];
 var { scheduled, impossible }: ISchedulerOutput = { scheduled: [], impossible: [] };
 
 const blockingSlots: { [goalId: string]: IFinalOutputSlot[][] } = {};
 const usedBlockers: { [id: string]: { [day: number]: number[] } } = {};
-const goalWeekEnd:{ [id :string] : string } = { };
+const goalWeekEnd: { [id: string]: string } = {};
 
 export const initImplSlotsOfGoalId = (goalId: string) => {
   blockingSlots[goalId] = [[], [], [], [], [], [], [], []];
@@ -47,11 +47,11 @@ export const updateDueHrs = (goalId: string, hrs: number) => {
   dueTaskHrs[goalId] = hrs;
 };
 
-export const updateBufferOfGoal = (goalId: string, value: TBufferValue) => {
+export const updateBufferOfGoal = (goalId: string, value: TBufferValue[]) => {
   buffer[goalId] = [...value];
 };
 
-export const updateBufferOfTheDay = (goalId: string, day: number, value) => {
+export const updateBufferOfTheDay = (goalId: string, day: number, value: TBufferValue) => {
   buffer[goalId][day] = { ...value };
 };
 
@@ -68,12 +68,12 @@ export const getUsedBlockers = (goalId: string) => (usedBlockers[goalId]);
 export const initBlockers = (goalId: string, dayItr: number, value: number) => {
   usedBlockers[goalId] = { [dayItr]: [value] };
 };
-export const updateBlockers = (goalId : string, day: number, value: number[]) => {
+export const updateBlockers = (goalId: string, day: number, value: number[]) => {
   usedBlockers[goalId][day] = [...value];
 };
 
 export const pushToImpossible = (day: number, slot: IFinalOutputSlot) => {
-  impossible[day].outputs.push(slot);
+  impossible[day].tasks.push(slot);
 };
 
 export const createImpossibleSlot = (task: ISchedulerOutputSlot, tmpStartDate: Date, selectedDay: number, start: number, end: number) => {
@@ -134,15 +134,15 @@ export const fillUpImpSlotsForGoalId = (goalId: string, lastDay: number) => {
 };
 
 export const initScheduled = (day: number) => {
-  scheduled[day] = { day: `${day}`, outputs: [] };
+  scheduled[day] = { day: `${day}`, tasks: [] };
 };
 
 export const initImpossible = (day: number) => {
-  impossible[day] = { day: `${day}`, outputs: [] };
+  impossible[day] = { day: `${day}`, tasks: [] };
 };
 
 export const pushToScheduled = (selectedDay: number, task: IFinalOutputSlot) => {
-  scheduled[selectedDay].outputs.push({ ...task });
+  scheduled[selectedDay].tasks.push({ ...task });
 };
 
 export const getFlexibleWeeklyGoals = () => [...flexibleWeeklyGoals];

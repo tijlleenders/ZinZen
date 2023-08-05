@@ -1,5 +1,5 @@
 /* eslint-disable no-continue */
-import { ISchedulerOutputSlot } from "@src/Interfaces/ISchedulerInputGoal";
+import { ISchedulerOutputSlot } from "@src/Interfaces/IScheduler";
 import { formatDate, getHrFromDateString, replaceHrInDateString } from "@src/utils/SchedulerUtils";
 import { getBlockingSlotsOfTheDayForGoalId, getDueHrs, getUsedBlockers, initBlockers, pushToImpossible, updateBlockers } from ".";
 
