@@ -1,5 +1,5 @@
 import { getHrFromDateString, replaceHrInDateString, } from "@src/utils/SchedulerUtils";
-import { IFinalOutputSlot } from "@src/Interfaces/ISchedulerInputGoal";
+import { IFinalOutputSlot } from "@src/Interfaces/IScheduler";
 
 export const fillUpFreeSlots = (scheduleOfTheDay: IFinalOutputSlot[]) => {
   let finalSchedule: IFinalOutputSlot[] = [];

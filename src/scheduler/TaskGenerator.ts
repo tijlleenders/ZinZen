@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { ISchedulerInputGoal } from "@src/Interfaces/ISchedulerInputGoal";
+import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
 import { calDays, getDiffInDates } from "@src/utils";
 import { convertDateToDay, goalSplitter } from "@src/utils/SchedulerUtils";
 
@@ -69,8 +69,8 @@ const processBudgetGoal = (
 
 const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: boolean) => {
   initImplSlotsOfGoalId(goal.id);
-  const totalDuration = goal.min_duration;
-  const { after_time = 0, before_time = 24, on_days = calDays, not_on = [] } = goal.filters || {};
+  const totalDuration = goal.min_duration || 0;
+  const { after_time = 0, before_time = 24, on_days = calDays } = goal.filters || {};
   const slot = {
     goalid: goal.id,
     title: goal.title,
@@ -100,7 +100,7 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: b
     ];
   }
 
-  validDays = validDays.filter((ele) => !not_on.includes(ele));
+  // validDays = validDays.filter((ele) => !not_on.includes(ele));
   if (goal.repeat || goal.filters?.on_days) {
     if (goal.repeat === "daily") {
       const skipToday = totalDuration - (goal.hoursSpent || 0) === 0;

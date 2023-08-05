@@ -1,5 +1,6 @@
+/* eslint-disable camelcase */
 /* eslint-disable vars-on-top */
-import { ISchedulerInputGoal } from "@src/Interfaces/ISchedulerInputGoal";
+import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
 
 /* eslint-disable no-var */
 export const convertDateToDay = (date: Date) => `${date.toLocaleDateString("en-us", { weekday: "long" })}`.slice(0, 3);
@@ -22,7 +23,7 @@ function traverseTheTree(id: string, goals: incomingGoals) {
 
   for (let i = 0; i < children.length; i += 1) {
     const occupied = traverseTheTree(children[i], goals);
-    if (parentDuration) parentDuration -= occupied;
+    if (parentDuration) parentDuration -= occupied || 0;
   }
   if (parentDuration && parentDuration > 0) {
     soloGoals[id] = { ...goals[id], min_duration: parentDuration };
@@ -54,12 +55,13 @@ export const breakTheTree = (goals: incomingGoals) => {
 export const goalSplitter = (goal: ISchedulerInputGoal) => {
   const res = [];
   if (goal.filters) {
+    const { after_time = 0, before_time = 24 } = goal.filters;
     let splittedGoal = false;
-    if (goal.filters.after_time > goal.filters.before_time) {
+    if (after_time > before_time) {
       splittedGoal = true;
       res.push({
         ...goal,
-        min_duration: 24 - goal.filters.after_time,
+        min_duration: 24 - after_time,
         filters: {
           ...goal.filters,
           before_time: 24
@@ -69,7 +71,7 @@ export const goalSplitter = (goal: ISchedulerInputGoal) => {
     res.push({
       ...goal,
       ...(splittedGoal ? {
-        min_duration: goal.min_duration - (24 - goal.filters.after_time),
+        min_duration: (goal.min_duration || 0) - (24 - after_time),
         filters: {
           ...goal.filters,
           after_time: 0
