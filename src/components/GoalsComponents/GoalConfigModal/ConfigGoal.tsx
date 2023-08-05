@@ -460,7 +460,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 </div>
                 <div className="sent-tags">
                   {getTagSelector(["after", "before", "between"])}
-                  {getTagSelector(["on", "every"])}
+                  {getTagSelector(["on"])}
                   {getTagSelector(["hrs / day"])}
                 </div>
               </div>
