@@ -40,3 +40,63 @@ export const transformIntoSchInputGoals = (
   });
   return inputGoalsArr;
 };
+
+export const handleSchedulerOutput = (_schedulerOutput: ISchedulerOutput, activeGoals: GoalItem[]) => {
+  const obj: {
+      [goalid: string]: {
+        parentGoalId: string,
+        goalColor: string,
+      }
+    } = {};
+  const res: { [dayName: string]: ITaskOfDay } = {};
+  const { scheduled, impossible } = _schedulerOutput;
+  activeGoals.forEach((goal) => {
+    obj[goal.id] = {
+      parentGoalId: goal.parentGoalId, goalColor: goal.goalColor
+    };
+  });
+  const _today = new Date();
+  scheduled.forEach((dayOutput: IScheduleOfTheDay, index: number) => {
+    const thisDay: ITaskOfDay = {
+      freeHrsOfDay: 0,
+      scheduledHrs: 0,
+      scheduled: [],
+      impossible: [],
+      colorBands: []
+    };
+    impossible[index].tasks.forEach((ele: ISchedulerOutputGoal) => {
+      const { goalColor, parentGoalId } = obj[ele.goalid];
+      thisDay.impossible.push({ ...ele, goalColor, parentGoalId });
+    });
+    dayOutput.tasks.forEach((ele: ISchedulerOutputGoal) => {
+      if (ele.title !== "free" && obj[ele.goalid]) {
+        const { goalColor, parentGoalId } = obj[ele.goalid];
+        thisDay.scheduledHrs += ele.duration;
+        thisDay.scheduled.push({
+          ...ele,
+          goalColor,
+          parentGoalId,
+          duration: ele.duration
+        });
+      } else {
+        thisDay.freeHrsOfDay += ele.duration;
+      }
+    });
+    let durationAcc = 0;
+    dayOutput.tasks.forEach((ele) => {
+      durationAcc += ele.duration;
+      thisDay.colorBands.push({
+        width: `${(durationAcc / 24) * 100}%`,
+        background: ele.title === "free" ? "#d9cccc" : obj[ele.goalid].goalColor
+      });
+    });
+    if (index === 0) {
+      res.Today = thisDay;
+    } else if (index === 1) {
+      res.Tomorrow = thisDay;
+    } else res[`${_today.toLocaleDateString("en-us", { weekday: "long" })}`] = thisDay;
+    _today.setDate(_today.getDate() + 1);
+    thisDay.freeHrsOfDay = 24 - thisDay.scheduledHrs;
+  });
+  return res;
+};
