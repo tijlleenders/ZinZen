@@ -1,3 +1,8 @@
+export interface blockedSlotOfTask {
+    start: string,
+    end: string
+}
+
 export interface TaskItem {
     id: string,
     goalId: string,
@@ -7,8 +12,5 @@ export interface TaskItem {
     forgotToday: string[],
     lastCompleted: string, // date
     lastForget: string // date
-    blockedSlots: {
-        start: string,
-        end: string
-    }[]
+    blockedSlots: blockedSlotOfTask[]
 }
