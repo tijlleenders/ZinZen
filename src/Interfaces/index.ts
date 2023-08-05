@@ -16,4 +16,5 @@ export interface ILocationState {
     displayNoteModal?: number // show saved note of feeling id
     displayInputNoteModal?: number // show input modal for adding note for id
     changeTheme?: boolean // theme changer mode
+    expandedGoalId?: string // id of goal to be expanded
 }

@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
@@ -81,38 +80,6 @@ export const MyGoalsPage = () => {
   useEffect(() => {
     if (selectedGoalId === "root") { refreshActiveGoals(); }
   }, [selectedGoalId, displaySearch]);
-
-  // useEffect(() => {
-  //   handleBackClick();
-  // }, [location]);
-
-  /* Usefull if navigation is from MyTimePage or external page/component */
-  // useEffect(() => {
-  //   (async () => {
-  //     const state = location.state as ILocationProps | null | undefined;
-  //     if (state) {
-  //       const { isRootGoal } = state;
-  //       let { openGoalOfId } = state;
-  //       if (!isRootGoal && openGoalOfId) {
-  //         const tmpHistory = [];
-  //         while (openGoalOfId !== "root") {
-  //           const tmpGoal: GoalItem = await getGoal(openGoalOfId);
-  //           tmpHistory.push(({
-  //             goalID: tmpGoal.id || "root",
-  //             goalColor: tmpGoal.goalColor || "#ffffff",
-  //             goalTitle: tmpGoal.title || "",
-  //             display: null
-  //           }));
-  //           openGoalOfId = tmpGoal.parentGoalId;
-  //         }
-  //         tmpHistory.reverse();
-  //         setSubGoalHistory([...tmpHistory]);
-  //         setSelectedGoalId(state.openGoalOfId);
-  //       }
-  //       location.state = null;
-  //     }
-  //   })();
-  // });
 
   return (
     <AppLayout title="mygoals" debounceSearch={debounceSearch}>
