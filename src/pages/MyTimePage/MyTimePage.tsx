@@ -57,7 +57,7 @@ export const MyTimePage = () => {
             type="button"
           >
             <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-              <p>{`${freeHours || ""} hours free`}</p>
+              {freeHours > 0 && <p>{`${freeHours}h free`}</p>}
               <img src={chevronLeftIcon} className="chevronRight theme-icon" />
             </div>
           </button>
