@@ -178,11 +178,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                         handleOpenGoal(task.goalid);
                       }
                     }}
-                  >
+                  >  
                     {task.title}
                   </button>
                   <p className="MTL-goalTiming">
-                    {startTime ? `${startTime}:00` : ""}-{endTime ? `${endTime}:00` : ""}
+                    {/* {startTime ? `${parseInt(startTime, 10)}:00` : ""}-{endTime ? `${parseInt(endTime, 10)}:00` : ""} */}{/*only removed leading zeros*/}
+                    {startTime ? <>{parseInt(startTime, 10)}<sup>00</sup></> : ""}-{endTime ?  <>{parseInt(endTime, 10)}<sup>00</sup></> : ""}{/*removed leading zeros with superscript minute values*/}
                   </p>
                 </div>
 
