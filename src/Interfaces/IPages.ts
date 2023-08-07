@@ -23,3 +23,12 @@ export interface ILocationProps {
     openGoalOfId: string,
     isRootGoal: boolean
 }
+
+/* MyTime Page */
+export interface ITaskProgress {
+  [goalId: string] : {
+    total: number,
+    completed: number,
+    goalColor: string
+  }
+}

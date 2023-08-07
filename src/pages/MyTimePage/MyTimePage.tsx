@@ -1,15 +1,13 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
-
-import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { darkModeState } from "@src/store";
 import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
+import ColorBands from "@components/MyTimeComponents/ColorBands";
 import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 import useScheduler from "@src/hooks/useScheduler";
 
@@ -20,7 +18,6 @@ export const MyTimePage = () => {
   const today = new Date();
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
   const darkModeStatus = useRecoilValue(darkModeState);
-
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
 
@@ -57,26 +54,29 @@ export const MyTimePage = () => {
             type="button"
           >
             <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-              {freeHours > 0 && <p>{`${freeHours}h free`}</p>}
-              <img src={chevronLeftIcon} className="chevronRight theme-icon" />
+              <p>{`${freeHours || ""} hours free`}</p>
             </div>
           </button>
         </button>
         <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
-          <div className={`MyTime_colorPalette ${showTasks.includes(day) ? "active" : ""}`}>
-            {tasks[day]?.colorBands.map((ele, index) => (
-              <div
-                className="colorBand"
-                key={uuidv4()}
-                style={{ zIndex: 30 - index, height: 10, ...ele }}
+          {tasks[day] && (
+            <ColorBands
+              list={tasks[day]}
+              day={day}
+              tasksStatus={tasksStatus}
+              active={showTasks.includes(day)}
+            />
+          )}
+          {showTasks.includes(day) && tasks[day]
+            ? (
+              <MyTimeline
+                day={day}
+                myTasks={tasks[day]}
+                taskDetails={tasksStatus}
+                setTaskDetails={setTasksStatus}
               />
-            ))}
-          </div>
-          {
-            showTasks.includes(day) && tasks[day]
-              ? <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} />
-              : <div />
-          }
+            )
+            : <div />}
         </div>
       </div>
     );
