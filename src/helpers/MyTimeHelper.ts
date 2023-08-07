@@ -86,8 +86,12 @@ export const handleSchedulerOutput = (_schedulerOutput: ISchedulerOutput, active
     dayOutput.tasks.forEach((ele) => {
       durationAcc += ele.duration;
       thisDay.colorBands.push({
+        goalId: ele.goalid,
+        duration: ele.duration,
+        style: {
         width: `${(durationAcc / 24) * 100}%`,
-        background: ele.title === "free" ? "#d9cccc" : obj[ele.goalid].goalColor
+          background: ele.title === "free" ? "#d9cccc" : obj[ele.goalid].goalColor,
+        },
       });
     });
     if (index === 0) {
