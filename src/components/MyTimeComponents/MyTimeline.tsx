@@ -19,7 +19,7 @@ import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import { darkModeState, displayToast, lastAction, openDevMode } from "@src/store";
 import { addBlockedSlot, addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
-import "./MyTimeline.scss";
+import "./index.scss";
 
 interface MyTimelineProps {
   day: string,
