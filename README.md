@@ -68,12 +68,18 @@ Also see our overall guiding principle: [Be good.](https://blog.zinzen.me/2021/1
 - SS5. If you want to help improve ZinZen® you can turn on pseudonimized user statistics. This option is turned off by default.
 - SS6. No ads as these introduce security risks (and negatively affect user experience).
 
+
+## Scheduling Algorithm
+The implementation of the ZinZen® scheduling algorithm can be found at [the ZinZen-scheduler GitHub page](https://github.com/tijlleenders/ZinZen-scheduler).
+
 ## How to contribute?
 There are many ways to contribute... not only code!  
 https://opensource.guide/how-to-contribute/  
 Please mind the code of conduct.  
 
 We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
+
+if Rust, WASM and scheduling algorithms are your domains of interest, please consider contributing to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
 
 ## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
 
