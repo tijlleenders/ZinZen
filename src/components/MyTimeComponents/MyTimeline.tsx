@@ -169,6 +169,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                 />
                 <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
                   <button
+                    style={{ textDecorationColor: task.goalColor }}
                     type="button"
                     className="MTL-taskTitle"
                     onClick={(e) => {
