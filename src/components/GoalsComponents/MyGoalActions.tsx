@@ -7,6 +7,7 @@ import pencil from "@assets/images/pencil.svg";
 import share from "@assets/images/share.svg";
 import deleteIcon from "@assets/images/deleteIcon.svg";
 import archiveSound from "@assets/archive.mp3";
+import pageCrumplingSound from "@assets/page-crumpling-sound.mp3"
 import { handshakeIcon } from "@src/assets";
 
 import useGoalStore from "@src/hooks/useGoalStore";
@@ -25,6 +26,7 @@ const eyeSvg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAv
 const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
   const mySound = new Audio(archiveSound);
+  const pageCrumple = new Audio(pageCrumplingSound);
   const { handleAddGoal, handleShareGoal, handleUpdateGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "collaboration" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
@@ -57,6 +59,7 @@ const MyGoalActions = ({ goal }: { goal: GoalItem }) => {
 
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
+      await pageCrumple.play();
       await removeThisGoal();
     } else if (action === "archive") {
       await mySound.play();
