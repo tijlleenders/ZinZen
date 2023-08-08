@@ -148,35 +148,6 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
               </div>
             </button>
 
-            {/* Share in a public group */}
-            <button
-              type="button"
-              className="shareOptions-btn"
-              onClick={() => {
-                if (userGroups.length > 0) {
-                  setDisplaySubmenu("groups");
-                } else {
-                  setShowToast({
-                    open: true,
-                    message: "Sorry, You don't have any groups.",
-                    extra: "Create or Join a group on My Groups page"
-                  });
-                }
-              }}
-            >
-              <div className="share-Options">
-                {loading.P ? <Loader /> : (
-                  <div className="icon"> <img
-                    className="secondary-icon"
-                    alt="share goal public"
-                    src={darkModeStatus ? myGroupsIconFilledDark : myGroupsIconFilledLight}
-                  />
-                  </div>
-                )}
-                <p className={`shareOption-name ${loading.P ? "loading" : ""}`}>Share in Public Group</p>
-              </div>
-            </button>
-
             {/* Share 1:1 */}
             <button
               disabled={goal.typeOfGoal !== "myGoal"}
