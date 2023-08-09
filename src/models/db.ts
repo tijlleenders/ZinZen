@@ -11,7 +11,7 @@ import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
 
-export const dexieVersion = 5;
+export const dexieVersion = 6;
 
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
 
@@ -40,23 +40,20 @@ export class ZinZenDB extends Dexie {
 
   constructor() {
     super("ZinZenDB");
-    this.version(5)
+    this.version(dexieVersion)
       .stores({
         feelingsCollection: "++id, content, category, date, note",
         goalsCollection:
           "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
         sharedWMCollection:
           "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
-        contactsCollection:
-          "id, name, collaborativeGoals, sharedGoals, relId, accepted, createdAt",
-        outboxCollection:
-          "++id, relId, goalId, subgoals, updates, deleted, completed, anyUpdates",
+        contactsCollection: "id, name, collaborativeGoals, sharedGoals, relId, accepted, createdAt",
+        outboxCollection: "++id, relId, goalId, subgoals, updates, deleted, completed, anyUpdates",
         inboxCollection: "id, goalChanges",
         pubSubCollection: "id, subscribers",
-        publicGroupsCollection:
-          "id, title, polls, language, groupColor, createdAt",
+        publicGroupsCollection: "id, title, polls, language, groupColor, createdAt",
         taskCollection:
-          "id, goalId, title, hoursSpent, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
+          "id, goalId, title, hoursSpent, completedTodayIds, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
         customizationCollection: "++id, goalId, posIndex",
         dumpboxCollection: "id, key, value",
       })
@@ -66,6 +63,7 @@ export class ZinZenDB extends Dexie {
           task.blockedSlots = [];
           task.forgotToday = [];
           task.completedToday = 0;
+          task.completedTodayIds = [];
         });
       });
   }

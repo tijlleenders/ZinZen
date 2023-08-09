@@ -9,6 +9,7 @@ export interface TaskItem {
     title: string,
     hoursSpent: number,
     completedToday: number,
+    completedTodayIds: string[],
     forgotToday: string[],
     lastCompleted: string, // date
     lastForget: string // date
