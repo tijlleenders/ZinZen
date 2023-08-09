@@ -1,6 +1,11 @@
 /* eslint-disable camelcase */
 /* eslint-disable vars-on-top */
 import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
+import sha256 from 'crypto-js/sha256';
+
+export const generateUniqueIdForSchInput = (inputString: string) => {
+  return sha256(inputString).toString();
+}
 
 /* eslint-disable no-var */
 export const convertDateToDay = (date: Date) => `${date.toLocaleDateString("en-us", { weekday: "long" })}`.slice(0, 3);
