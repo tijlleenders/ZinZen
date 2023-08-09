@@ -9,8 +9,9 @@ import { InboxItem } from "./InboxItem";
 import { PublicGroupItem } from "./PublicGroupItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
+import { DumpboxItem } from "./DumpboxItem";
 
-export const dexieVersion = 4;
+export const dexieVersion = 5;
 
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
 
@@ -31,31 +32,42 @@ export class ZinZenDB extends Dexie {
 
   publicGroupsCollection!: Table<PublicGroupItem, string>;
 
-  taskCollection! : Table<TaskItem, string>;
+  taskCollection!: Table<TaskItem, string>;
 
-  customizationCollection! : Table<GCustomItem, number>;
+  customizationCollection!: Table<GCustomItem, number>;
+
+  dumpboxCollection!: Table<DumpboxItem, string>;
 
   constructor() {
     super("ZinZenDB");
-    this.version(4).stores({
-      feelingsCollection: "++id, content, category, date, note",
-      goalsCollection: "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
-      sharedWMCollection: "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
-      contactsCollection: "id, name, collaborativeGoals, sharedGoals, relId, accepted, createdAt",
-      outboxCollection: "++id, relId, goalId, subgoals, updates, deleted, completed, anyUpdates",
-      inboxCollection: "id, goalChanges",
-      pubSubCollection: "id, subscribers",
-      publicGroupsCollection: "id, title, polls, language, groupColor, createdAt",
-      taskCollection: "id, goalId, title, hoursSpent, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
-      customizationCollection: "++id, goalId, posIndex"
-    }).upgrade((trans) => {
-      const taskCollection = trans.table("taskCollection");
-      return taskCollection.toCollection().modify((task: TaskItem) => {
-        task.blockedSlots = [];
-        task.forgotToday = [];
-        task.completedToday = 0;
+    this.version(5)
+      .stores({
+        feelingsCollection: "++id, content, category, date, note",
+        goalsCollection:
+          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
+        sharedWMCollection:
+          "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, collaboration, shared, rootGoalId, timeBudget, typeOfGoal",
+        contactsCollection:
+          "id, name, collaborativeGoals, sharedGoals, relId, accepted, createdAt",
+        outboxCollection:
+          "++id, relId, goalId, subgoals, updates, deleted, completed, anyUpdates",
+        inboxCollection: "id, goalChanges",
+        pubSubCollection: "id, subscribers",
+        publicGroupsCollection:
+          "id, title, polls, language, groupColor, createdAt",
+        taskCollection:
+          "id, goalId, title, hoursSpent, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
+        customizationCollection: "++id, goalId, posIndex",
+        dumpboxCollection: "id, key, value",
+      })
+      .upgrade((trans) => {
+        const taskCollection = trans.table("taskCollection");
+        return taskCollection.toCollection().modify((task: TaskItem) => {
+          task.blockedSlots = [];
+          task.forgotToday = [];
+          task.completedToday = 0;
+        });
       });
-    });
   }
 }
 
