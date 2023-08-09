@@ -61,6 +61,15 @@ export const getDates = (startDate: Date, stopDate: Date) => {
   return dateArray;
 };
 
+export const getLastDayDate = (dayIndex: number) => {
+  const today = new Date();
+  const currentDay = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+  const daysUntilLastDay = (currentDay + 7 - dayIndex) % 7; // Offset to get to the specified day
+
+  today.setDate(today.getDate() - daysUntilLastDay);
+  return today;
+};
+
 export const getDiffInHours = (date1: Date, date2: Date) => {
   let diff = date1.getTime() - date2.getTime();
   diff = Math.round(Math.abs(diff / 36e5));
