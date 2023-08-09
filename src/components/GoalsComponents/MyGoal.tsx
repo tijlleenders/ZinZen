@@ -102,7 +102,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   useEffect(() => {
     if (location && location.pathname === "/MyGoals") {
-      const { expandedGoalId } = location.state;
+      const { expandedGoalId } = location.state || {};
       if (expandedGoalId && showActions.open !== expandedGoalId) {
         setShowActions({ open: location.state.expandedGoalId, click: 1 });
       }
