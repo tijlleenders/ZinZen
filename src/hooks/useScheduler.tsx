@@ -9,12 +9,13 @@ import { ITaskOfDay } from "@src/Interfaces/Task";
 import { callJsScheduler } from "@src/scheduler/miniScheduler";
 import { createDummyGoals } from "@src/helpers/NewUserController";
 import { convertDateToString } from "@src/utils";
-import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
 import { lastAction, openDevMode } from "@src/store";
 import { getAllGoals, getActiveGoals } from "@src/api/GoalsAPI";
 import { TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
+import { generateUniqueIdForSchInput } from "@src/utils/SchedulerUtils";
 import { getAllTasks, getAllBlockedTasks } from "@src/api/TasksAPI";
-import { handleSchedulerOutput, transformIntoSchInputGoals } from "@src/helpers/MyTimeHelper";
+import { ISchedulerInputGoal, ISchedulerOutput } from "@src/Interfaces/IScheduler";
+import { getCachedSchedule, handleSchedulerOutput, putSchedulerRes, transformIntoSchInputGoals } from "@src/helpers/MyTimeHelper";
 
 import init, { schedule } from "../../pkg/scheduler";
 
@@ -65,18 +66,34 @@ function useScheduler() {
     console.log("input", JSON.stringify(schedulerInput));
     console.log(schedulerInput);
 
-    const res = !devMode ? callJsScheduler(schedulerInput) : schedule(schedulerInput);
+    const generatedInputId = generateUniqueIdForSchInput(JSON.stringify(schedulerInput));
+    console.log("🚀 ~ file: useScheduler.tsx:70 ~ initialCall ~ generatedInputId:", generatedInputId)
+    const cachedRes = await getCachedSchedule(generatedInputId);
+
+    let res: ISchedulerOutput;
+    console.log("🚀 ~ file: useScheduler.tsx:75 ~ initialCall ~ cachedRes.code:", cachedRes.code)
+    if (cachedRes.code === "found") {
+      res = cachedRes.output;
+    } else {
+      res = !devMode ? callJsScheduler(schedulerInput) : schedule(schedulerInput);
+    }
+    if (cachedRes.code !== "found") {
+      putSchedulerRes(cachedRes.code, generatedInputId, JSON.stringify(res))
+        .then(() => console.log("schedule saved"))
+        .catch(() => console.log("failed to save scheduler output"));
+    }
     console.log("output", res);
 
     const processedOutput = handleSchedulerOutput(res, activeGoals);
     setTasks({ ...processedOutput });
+
   };
 
   useEffect(() => {
     initialCall();
   }, [devMode]);
   useEffect(() => {
-    if (action === "TaskRescheduled" || action === "TaskSkipped") {
+    if (action.includes("Task")) {
       if (action === "TaskRescheduled") rescheduleSound.play();
       initialCall().then(async () => {
         setLastAction("none");

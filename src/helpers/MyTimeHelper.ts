@@ -5,6 +5,7 @@ import {
   ISchedulerOutputGoal,
 } from "@src/Interfaces/IScheduler";
 import { ITaskOfDay } from "@src/Interfaces/Task";
+import { addSchedulerRes, getFromOutbox, updateSchedulerCachedRes } from "@src/api/DumpboxAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString, convertOnFilterToArray } from "@src/utils";
@@ -122,3 +123,24 @@ export const handleSchedulerOutput = (_schedulerOutput: ISchedulerOutput, active
   });
   return res;
 };
+
+export const getCachedSchedule = async (generatedInputId: string) => {
+  const schedulerCachedRes = await getFromOutbox("scheduler");
+  if(!schedulerCachedRes) {
+    return { code: "not-exist"};
+  }
+  const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
+  return uniqueId === generatedInputId ? 
+    { 
+      code: "found",
+      output: JSON.parse(output)
+    }
+    : { code: "expired" }; 
+}
+
+export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {  
+  return await ( code === "expired" 
+    ? updateSchedulerCachedRes(generatedInputId, output)
+    : addSchedulerRes(generatedInputId, output)
+  );
+}
