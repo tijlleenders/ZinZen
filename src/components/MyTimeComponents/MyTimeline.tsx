@@ -48,11 +48,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const setOpenReschedule = useSetRecoilState(displayReschedule);
 
   const [showScheduled, setShowScheduled] = useState(true);
-  const tasksDone: { [id: string]: number } = {};
-
-  Object.keys(taskDetails).forEach((ele) => {
-    tasksDone[taskDetails[ele].goalId] = taskDetails[ele].completedToday;
-  });
 
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
 
@@ -71,6 +66,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
+          completedTodayIds: [task.taskid],
           forgotToday: actionName === "Skip" ? [`${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`] : [],
           completedToday: actionName === "Done" ? Number(task.duration) : 0,
           lastForget: actionName === "Skip" ? new Date().toLocaleDateString() : "",
@@ -79,7 +75,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           blockedSlots: actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : []
         });
       } else if (actionName === "Done") {
-        await completeTask(taskItem.id, Number(task.duration));
+        await completeTask(taskItem.id, Number(task.duration), task.taskid);
       } else if (actionName === "Skip") {
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
       } else if (actionName === "Reschedule") {
@@ -87,7 +83,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       }
       if (actionName === "Done") {
         await doneSound.play();
-        const updatedTask = { ...await getTaskByGoalId(task.goalid) };
+        const updatedTask = await getTaskByGoalId(task.goalid);
         if (updatedTask) {
           setTaskDetails({
             ...taskDetails,
@@ -143,13 +139,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         {myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
-          let markDone = false;
-          if (showScheduled) {
-            if (tasksDone[task.goalid] > 0) {
-              tasksDone[task.goalid] -= Number(task.duration);
-              markDone = true;
-            }
-          }
+          const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
           return (
             <button
               className={`${day === "Today" && markDone ? "completedTask" : ""}`}
