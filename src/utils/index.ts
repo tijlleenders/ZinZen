@@ -9,7 +9,7 @@ export async function createContactRequest(url: string, body: object | null = nu
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body || {})
+      body: JSON.stringify(body || {}),
     });
     return { success: res.ok, response: await res.json() };
   } catch (err) {
@@ -28,7 +28,7 @@ export async function createGroupRequest(url: string, body: object | null = null
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body || {})
+      body: JSON.stringify(body || {}),
     });
     return { success: res.ok, response: await res.json() };
   } catch (err) {
@@ -94,28 +94,51 @@ export const getDiffInDates = (date1: Date, date2: Date, resetTime = true) => {
 };
 
 export const colorPalleteList = [
-  "#A963B9", "#6B6EFF", "#4793E1",
-  "#4CA46B", "#87FF2A", "#FFFF66",
-  "#FFCC33", "#FF7A00", "#FC0909",
-  "#FD5B78", "#FF007C"
+  "#A963B9",
+  "#6B6EFF",
+  "#4793E1",
+  "#4CA46B",
+  "#87FF2A",
+  "#FFFF66",
+  "#FFCC33",
+  "#FF7A00",
+  "#FC0909",
+  "#FD5B78",
+  "#FF007C",
 ];
 
 export const fixDateVlauesInGoalObject = (goal: GoalItem) => ({
   ...goal,
   start: goal.start ? new Date(goal.start) : null,
-  due: goal.due ? new Date(goal.due) : null
+  due: goal.due ? new Date(goal.due) : null,
 });
 
 export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   const goal = { ...newGoal };
-  if (!goal.start) { goal.start = parentGoal.start; }
-  if (!goal.due) { goal.due = parentGoal.due; }
-  if (!(goal.beforeTime || goal.beforeTime === 0)) { goal.beforeTime = parentGoal.beforeTime; }
-  if (!(goal.afterTime || goal.afterTime === 0)) { goal.afterTime = parentGoal.afterTime; }
-  if (!goal.on) { goal.on = parentGoal.on; }
-  if (!goal.habit) { goal.habit = parentGoal.habit; }
-  if (!goal.timeBudget) { goal.timeBudget = parentGoal.timeBudget; }
-  if (!goal.on) { goal.on = parentGoal.on; }
+  if (!goal.start) {
+    goal.start = parentGoal.start;
+  }
+  if (!goal.due) {
+    goal.due = parentGoal.due;
+  }
+  if (!(goal.beforeTime || goal.beforeTime === 0)) {
+    goal.beforeTime = parentGoal.beforeTime;
+  }
+  if (!(goal.afterTime || goal.afterTime === 0)) {
+    goal.afterTime = parentGoal.afterTime;
+  }
+  if (!goal.on) {
+    goal.on = parentGoal.on;
+  }
+  if (!goal.habit) {
+    goal.habit = parentGoal.habit;
+  }
+  if (!goal.timeBudget) {
+    goal.timeBudget = parentGoal.timeBudget;
+  }
+  if (!goal.on) {
+    goal.on = parentGoal.on;
+  }
 
   goal.rootGoalId = parentGoal.rootGoalId;
   goal.typeOfGoal = parentGoal.typeOfGoal;
@@ -124,7 +147,9 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
 
 export const convertNumberToHr = (hr: number) => `${hr > 9 ? "" : "0"}${hr} : 00`;
 
-export function getInstallId() { return localStorage.getItem("installId"); }
+export function getInstallId() {
+  return localStorage.getItem("installId");
+}
 
 export function getSelectedLanguage() {
   const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
@@ -135,7 +160,9 @@ export function getSelectedLanguage() {
 export function getDateInText(date: Date) {
   const dateInText = date.toLocaleDateString();
   const today = new Date();
-  if (today.toLocaleDateString() === dateInText) { return "Today"; }
+  if (today.toLocaleDateString() === dateInText) {
+    return "Today";
+  }
   if (new Date(today.setDate(today.getDate() + 1)).toLocaleDateString() === dateInText) {
     return "Tomorrow";
   }
@@ -147,27 +174,45 @@ export function convertDateToString(date: Date, resetTime = true) {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const time = date.toTimeString();
-  return `${year}-${month < 10 ? "0" : ""}${month}-${day < 10 ? "0" : ""}${day}T${resetTime ? "00" : time.slice(0, 2)}:00:00`;
+  return `${year}-${month < 10 ? "0" : ""}${month}-${day < 10 ? "0" : ""}${day}T${
+    resetTime ? "00" : time.slice(0, 2)
+  }:00:00`;
 }
 
 export function getOrdinalSuffix(dayOfMonth: number): string {
   if (dayOfMonth % 10 === 1 && dayOfMonth !== 11) {
     return "st";
-  } if (dayOfMonth % 10 === 2 && dayOfMonth !== 12) {
+  }
+  if (dayOfMonth % 10 === 2 && dayOfMonth !== 12) {
     return "nd";
-  } if (dayOfMonth % 10 === 3 && dayOfMonth !== 13) {
+  }
+  if (dayOfMonth % 10 === 3 && dayOfMonth !== 13) {
     return "rd";
   }
   return "th";
 }
 
-export const calDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+// do not change the order
+export const calDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function convertOnFilterToArray(on: "weekdays" | "weekends") {
   return on === "weekdays" ? ["Mon", "Tue", "Wed", "Thu", "Fri"] : ["Sat", "Sun"];
 }
 
 export const getMonthByIndex = (index: number) => {
-  const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const month = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   return month[index];
 };
