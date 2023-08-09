@@ -122,3 +122,18 @@ export const handleSchedulerOutput = (_schedulerOutput: ISchedulerOutput, active
   });
   return res;
 };
+
+export const getCachedSchedule = async (generatedInputId: string) => {
+  const schedulerCachedRes = await getFromOutbox("scheduler");
+  if(!schedulerCachedRes) {
+    return { code: "not-exist"};
+  }
+  const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
+  return uniqueId === generatedInputId ? 
+    { 
+      code: "found",
+      output: JSON.parse(output)
+    }
+    : { code: "expired" }; 
+}
+
