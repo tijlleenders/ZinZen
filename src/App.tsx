@@ -19,18 +19,17 @@ import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
-
 import BackupRestoreModal from "@components/BackupRestoreModal";
-
 import { GoalItem } from "./models/GoalItem";
-import { findTypeOfSub } from "./api/PubSubAPI";
-import { checkMagicGoal } from "./api/GoalsAPI";
-import { syncGroupPolls } from "./api/PublicGroupsAPI";
-import { addSharedWMGoal } from "./api/SharedWMAPI";
+import { findTypeOfSub } from "@api/PubSubAPI";
+import { checkMagicGoal } from "@api/GoalsAPI";
+import { syncGroupPolls } from "@api/PublicGroupsAPI";
+import { addSharedWMGoal } from "@api/SharedWMAPI";
 import { getTheme, themeState } from "./store/ThemeState";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
-import { getContactByRelId, updateAllUnacceptedContacts } from "./api/ContactsAPI";
+import { getContactByRelId, updateAllUnacceptedContacts } from "@api/ContactsAPI";
+import { refreshTaskCollection } from "@api/TasksAPI";
 
 import "./global.scss";
 import "./customize.scss";
@@ -139,6 +138,17 @@ const App = () => {
     checkUpdates();
     checkDevMode();
   }, []);
+
+  useEffect(() => {
+    const lastRefresh = localStorage.getItem("lastRefresh");
+    const today = new Date().toLocaleDateString();
+    if (lastRefresh !== today) {
+      refreshTaskCollection().then(() => {
+        localStorage.setItem("lastRefresh", today);
+        setLastAction("TaskCollectionRefreshed");
+      });
+    }
+  }, [])
 
   useEffect(() => {
     if (showToast.open) {

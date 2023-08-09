@@ -1,6 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { TaskItem } from "@src/models/TaskItem";
+import { getGoal } from "../GoalsAPI";
+import { GoalItem } from "@src/models/GoalItem";
+import { calDays, getLastDayDate } from "@src/utils";
+import { convertDateToDay } from "@src/utils/SchedulerUtils";
 
 export const addTask = async (taskDetails: TaskItem) => {
   let newTaskId;
@@ -23,18 +27,66 @@ export const getTaskByGoalId = async (goalId: string) => {
   }
 };
 
+export const getForgetHrsCount = (task: TaskItem) => {
+  let yesterdaysCount = 0;
+  task.forgotToday.forEach((slot) => {
+    const [start, end] = slot.split("-");
+    yesterdaysCount += Number(end) - Number(start);
+  });
+  return yesterdaysCount;
+};
+
+export const refreshTaskCollection = async () => {
+  const tasks = await db.taskCollection.toArray();
+  const goals: { [key: string]: GoalItem } = (await Promise.all(tasks.map((ele) => getGoal(ele.goalId)))).reduce(
+    (acc, curr) => {
+      return curr ? { ...acc, [curr.id]: { ...curr } } : acc;
+    },
+    {}
+  );
+  try {
+    await db.transaction("rw", db.taskCollection, async () => {
+      const updatedRows = tasks.map((_task) => {
+        const task = { ..._task };
+        const goal: GoalItem = goals[task.goalId];
+        const startDate = new Date(goal.start || goal.createdAt);
+        if (goal.habit === "daily") {
+          task.hoursSpent = 0;
+        } else if (goal.habit === "weekly") {
+          const dayIndex = calDays.indexOf(convertDateToDay(startDate));
+          const lastReset = getLastDayDate(dayIndex);
+          const lastAction = new Date(
+            new Date(task.lastForget) < new Date(task.lastCompleted) ? task.lastCompleted : task.lastForget
+          );
+          if (lastAction < lastReset) {
+            task.hoursSpent = 0;
+          } else {
+            task.hoursSpent += task.completedToday + getForgetHrsCount(task);
+          }
+        } else {
+          task.hoursSpent += task.completedToday + getForgetHrsCount(task);
+        }
+        task.completedToday = 0;
+        task.forgotToday = [];
+        task.lastCompleted = new Date().toLocaleDateString();
+        task.lastForget = new Date().toLocaleDateString();
+        return task;
+      });
+
+      // Bulk update the rows
+      await db.taskCollection.bulkPut(updatedRows);
+    });
+  } catch (error) {
+    console.error("Error updating field:", error);
+  }
+};
 export const completeTask = async (id: string, duration: number) => {
   db.transaction("rw", db.taskCollection, async () => {
-    await db.taskCollection.where("id").equals(id)
+    await db.taskCollection
+      .where("id")
+      .equals(id)
       .modify((obj: TaskItem) => {
-        const today = new Date().toLocaleDateString();
-        if (obj.lastCompleted !== today) {
-          obj.hoursSpent += obj.completedToday;
-          obj.completedToday = duration;
-          obj.lastCompleted = today;
-        } else {
-          obj.completedToday += duration;
-        }
+        obj.completedToday += duration;
       });
   }).catch((e) => {
     console.log(e.stack || e);
@@ -43,25 +95,13 @@ export const completeTask = async (id: string, duration: number) => {
 
 export const forgetTask = async (id: string, period: string) => {
   db.transaction("rw", db.taskCollection, async () => {
-    await db.taskCollection.where("id").equals(id)
+    await db.taskCollection
+      .where("id")
+      .equals(id)
       .modify((obj: TaskItem) => {
-        const today = new Date().toLocaleDateString();
-        if (obj.lastForget !== today) {
-          let yesterdaysCount = 0;
-          obj.forgotToday.forEach((slot) => {
-            const [start, end] = slot.split("-");
-            yesterdaysCount += (Number(end) - Number(start));
-          });
-          obj.hoursSpent += yesterdaysCount;
-          obj.forgotToday = [period];
-          obj.lastForget = new Date().toLocaleDateString();
-        } else {
-          obj.forgotToday.push(period);
-        }
+        obj.forgotToday.push(period);
         if (obj.forgotToday.length > 1) {
-          obj.forgotToday.sort((a, b) => (
-            Number(a.split("-")[0]) - Number(b.split("-")[0])
-          ));
+          obj.forgotToday.sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
         }
       });
   }).catch((e) => {
@@ -80,9 +120,11 @@ export const getAllBlockedTasks = async () => {
   return tasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr.blockedSlots }), {});
 };
 
-export const addBlockedSlot = async (goalId: string, slot: { start: string, end: string }) => {
+export const addBlockedSlot = async (goalId: string, slot: { start: string; end: string }) => {
   db.transaction("rw", db.taskCollection, async () => {
-    await db.taskCollection.where("goalId").equals(goalId)
+    await db.taskCollection
+      .where("goalId")
+      .equals(goalId)
       .modify((obj: TaskItem) => {
         obj.blockedSlots.push(slot);
       });
