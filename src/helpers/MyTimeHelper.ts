@@ -5,6 +5,7 @@ import {
   ISchedulerOutputGoal,
 } from "@src/Interfaces/IScheduler";
 import { ITaskOfDay } from "@src/Interfaces/Task";
+import { addSchedulerRes, getFromOutbox, updateSchedulerCachedRes } from "@src/api/DumpboxAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString, convertOnFilterToArray } from "@src/utils";
@@ -137,3 +138,9 @@ export const getCachedSchedule = async (generatedInputId: string) => {
     : { code: "expired" }; 
 }
 
+export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {  
+  return await ( code === "expired" 
+    ? updateSchedulerCachedRes(generatedInputId, output)
+    : addSchedulerRes(generatedInputId, output)
+  );
+}
