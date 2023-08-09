@@ -135,7 +135,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>Impossible</button>
         </div>
       )}
-      <div className="MTL-display">
+      <div className="MTL-display" style={{paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}`}}>
         {myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
