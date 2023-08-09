@@ -6,6 +6,8 @@ import {
 } from "@src/Interfaces/IScheduler";
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { addSchedulerRes, getFromOutbox, updateSchedulerCachedRes } from "@src/api/DumpboxAPI";
+import { getAllGoals } from "@src/api/GoalsAPI";
+import { getAllTasks, getAllBlockedTasks } from "@src/api/TasksAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString, convertOnFilterToArray } from "@src/utils";
@@ -20,12 +22,8 @@ export const transformIntoSchInputGoals = (
   activeGoals.forEach(async (ele) => {
     const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, createdAt: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
-    if (dbTasks[ele.id]?.hoursSpent) {
-      obj.hoursSpent = dbTasks[ele.id].hoursSpent;
-    }
-    if (dbTasks[ele.id]?.forgotToday) {
-      obj.skippedToday = dbTasks[ele.id].forgotToday;
-    }
+    obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
+    obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
     if (ele.duration) obj.min_duration = Number(ele.duration);
     if (ele.start) {
       obj.start = convertDateToString(new Date(ele.start));
@@ -59,7 +57,8 @@ export const transformIntoSchInputGoals = (
   return inputGoalsArr;
 };
 
-export const handleSchedulerOutput = (_schedulerOutput: ISchedulerOutput, activeGoals: GoalItem[]) => {
+export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) => {
+  const activeGoals = await getAllGoals();
   const obj: {
     [goalid: string]: {
       parentGoalId: string;
@@ -123,6 +122,37 @@ export const handleSchedulerOutput = (_schedulerOutput: ISchedulerOutput, active
   });
   return res;
 };
+
+
+export const organizeDataForInptPrep = async (activeGoals: GoalItem[]) => {
+    const _today = new Date();
+    const noDurationGoalIds: string[] = [];
+    const startDate = convertDateToString(new Date(_today));
+    const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
+
+    const schedulerInput: {
+      startDate: string,
+      endDate: string,
+      goals: { [goalid: string]: ISchedulerInputGoal }
+    } = {
+      startDate,
+      endDate,
+      goals: {}
+    };
+    const dbTasks: { [goalid: string]: TaskItem } = (await getAllTasks()).reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {});
+    const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
+
+    activeGoals = [...activeGoals.filter((ele) => {
+      if (!ele.duration && !ele.timeBudget) noDurationGoalIds.push(ele.id);
+      return !!(ele.duration) || ele.timeBudget;
+    })];
+
+    const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(
+      dbTasks, activeGoals, noDurationGoalIds, blockedSlots
+    );
+    schedulerInput.goals = inputGoalsArr.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+    return { dbTasks, schedulerInput };
+  }
 
 export const getCachedSchedule = async (generatedInputId: string) => {
   const schedulerCachedRes = await getFromOutbox("scheduler");
