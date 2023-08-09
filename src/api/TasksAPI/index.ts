@@ -36,6 +36,29 @@ export const getForgetHrsCount = (task: TaskItem) => {
   return yesterdaysCount;
 };
 
+export const resetProgressOfToday = async () => {
+    const tasks = await db.taskCollection.toArray();
+try {
+    await db.transaction("rw", db.taskCollection, async () => {
+      const updatedRows = tasks.map((_task) => {
+        const task = { ..._task };
+        task.completedToday = 0;
+        task.completedTodayIds = [];
+        task.forgotToday = [];
+        task.lastCompleted = new Date().toLocaleDateString();
+        task.lastForget = new Date().toLocaleDateString();
+        task.blockedSlots = [];
+        return task;
+      });
+
+      // Bulk update the rows
+      await db.taskCollection.bulkPut(updatedRows);
+    });
+  } catch (error) {
+    console.error("Error updating field:", error);
+  }
+}
+
 export const refreshTaskCollection = async () => {
   const tasks = await db.taskCollection.toArray();
   const goals: { [key: string]: GoalItem } = (await Promise.all(tasks.map((ele) => getGoal(ele.goalId)))).reduce(
@@ -67,6 +90,7 @@ export const refreshTaskCollection = async () => {
           task.hoursSpent += task.completedToday + getForgetHrsCount(task);
         }
         task.completedToday = 0;
+        task.completedTodayIds = [];
         task.forgotToday = [];
         task.lastCompleted = new Date().toLocaleDateString();
         task.lastForget = new Date().toLocaleDateString();
@@ -80,13 +104,14 @@ export const refreshTaskCollection = async () => {
     console.error("Error updating field:", error);
   }
 };
-export const completeTask = async (id: string, duration: number) => {
+export const completeTask = async (id: string, duration: number, taskId: string) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection
       .where("id")
       .equals(id)
       .modify((obj: TaskItem) => {
         obj.completedToday += duration;
+        obj.completedTodayIds.push(taskId);
       });
   }).catch((e) => {
     console.log(e.stack || e);
