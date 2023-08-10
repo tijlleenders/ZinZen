@@ -36,6 +36,11 @@ export const backupRestoreModal = atom({
   default: false
 });
 
+export const languageChangeModal = atom({
+  key: "languageChangeModal",
+  default: false
+});
+
 export const displayLoader = atom({
   key: "displayLoader",
   default: false as boolean

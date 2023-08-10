@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { ILocationState } from "@src/Interfaces";
-import { backupRestoreModal } from "@src/store";
+import { backupRestoreModal, languageChangeModal } from "@src/store";
 import { themeSelectionMode } from "@src/store/ThemeState";
 
 function useGlobalStore() {
@@ -11,9 +11,10 @@ function useGlobalStore() {
   const navigate = useNavigate();
   const [openBackupModal, setBackupRestoreModal] = useRecoilState(backupRestoreModal);
   const [themeSelection, setThemeSelection] = useRecoilState(themeSelectionMode);
+  const [langChangeModal, setLangChangeModal] = useRecoilState(languageChangeModal);
 
   const handleLocationChange = () => {
-    const locationState : ILocationState = location.state || {};
+    const locationState: ILocationState = location.state || {};
     if (openBackupModal) {
       setBackupRestoreModal(false);
     } else if (locationState.displayBackResModal) {
@@ -25,11 +26,25 @@ function useGlobalStore() {
     } else if (locationState.changeTheme) {
       setThemeSelection(locationState.changeTheme);
     }
+
+    if (langChangeModal) {
+      setLangChangeModal(false);
+    } else if (locationState.displayLangChangeModal) {
+      setLangChangeModal(locationState.displayLangChangeModal);
+    }
   };
 
-  const handleBackResModal = () => { navigate(window.location.pathname, { state: { displayBackResModal: true } }); };
+  const handleBackResModal = () => {
+    navigate(window.location.pathname, { state: { displayBackResModal: true } });
+  };
 
-  const handleChangeTheme = () => { navigate("/MyGoals", { state: { ...location.state, changeTheme: true } }); };
+  const handleLangChangeModal = () => {
+    navigate(window.location.pathname, { state: { displayLangChangeModal: true } });
+  };
+
+  const handleChangeTheme = () => {
+    navigate("/MyGoals", { state: { ...location.state, changeTheme: true } });
+  };
 
   useEffect(() => {
     handleLocationChange();
@@ -37,7 +52,8 @@ function useGlobalStore() {
 
   return {
     handleBackResModal,
-    handleChangeTheme
+    handleChangeTheme,
+    handleLangChangeModal,
   };
 }
 

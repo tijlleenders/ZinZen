@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, languageSelectionState, displayToast, lastAction, displayConfirmation, backupRestoreModal, openDevMode } from "@store";
+import { darkModeState, languageSelectionState, displayToast, lastAction, displayConfirmation, backupRestoreModal, openDevMode, languageChangeModal } from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
@@ -20,6 +20,8 @@ import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import BackupRestoreModal from "@components/BackupRestoreModal";
+import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
+
 import { GoalItem } from "./models/GoalItem";
 import { findTypeOfSub } from "@api/PubSubAPI";
 import { checkMagicGoal } from "@api/GoalsAPI";
@@ -36,7 +38,7 @@ import "./customize.scss";
 import "./override.scss";
 
 const Context = React.createContext({ name: "Default" });
-
+const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback"];
 
 const App = () => {
@@ -46,6 +48,7 @@ const App = () => {
   const isLanguageChosen = language !== "No language chosen.";
   const confirmationState = useRecoilValue(displayConfirmation);
   const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
+  const displayLanguageChangeModal = useRecoilValue(languageChangeModal);
   const [api, contextHolder] = notification.useNotification();
   const [devMode, setDevMode] = useRecoilState(openDevMode);
   const [showToast, setShowToast] = useRecoilState(displayToast);
@@ -113,7 +116,7 @@ const App = () => {
     if ((!isLanguageChosen) && !exceptionRoutes.includes(currentPath)) {
       window.open("/", "_self");
     }
-  }, []);
+  }, [langFromStorage]);
 
   useEffect(() => {
     localStorage.setItem("confirmationState", JSON.stringify(confirmationState));
@@ -188,6 +191,7 @@ const App = () => {
           </Routes>
         </BrowserRouter>
         {displayBackupRestoreModal && <BackupRestoreModal />}
+        {displayLanguageChangeModal && <LanguageChangeModal />}
       </div>
     </div>
   );

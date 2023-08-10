@@ -23,7 +23,7 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
   const { state } = useLocation();
   const theme = useRecoilValue(themeState);
   const isInboxOpen = useRecoilValue(openInbox);
-  const { handleChangeTheme, handleBackResModal } = useGlobalStore();
+  const { handleChangeTheme, handleBackResModal, handleLangChangeModal } = useGlobalStore();
   const { t } = useTranslation();
 
   const setShowToast = useSetRecoilState(displayToast);
@@ -31,7 +31,7 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstall, setShowInstall] = useState(false);
-  const dropdownOptions = [t("donate"), t("feedback"), t("blog"), t("backup"), t("changeTheme")];
+  const dropdownOptions = [t("donate"), t("feedback"), t("blog"), t("backup"), t("changeLanguage"), t("changeTheme")];
 
   const toggleDarkModeStatus = () => {
     localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
@@ -53,6 +53,8 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
           window.open("https://blog.zinzen.me", "_self");
         } else if (ele === t("backup")) {
           handleBackResModal();
+        } else if (ele === t("changeLanguage")) {
+          handleLangChangeModal();
         } else if (ele === t("Install")) {
           if (deferredPrompt) {
             deferredPrompt.prompt();

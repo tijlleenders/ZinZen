@@ -1,0 +1,27 @@
+.languageChangeModal {
+    
+
+    .languageListWrapper {
+        display: "flex";
+        flex-direction: column;
+        width: "100%";
+        align-items: start;
+
+        .languageListButton {
+            width: 100%;
+            text-align: start;
+            background-color: transparent;
+            padding-block: 5px;
+            border: none;
+            border-bottom: 1px solid var(--default-border-color); 
+        }
+
+        .languageListButton:last-child {
+            border: none;
+        }
+    }
+}
+
+.ant-modal .ant-modal-content {
+    padding: 0% !important;
+}
