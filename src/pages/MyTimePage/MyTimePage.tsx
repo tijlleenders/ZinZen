@@ -24,7 +24,9 @@ export const MyTimePage = () => {
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
       setShowTasks([...showTasks.filter((day: string) => day !== dayName)]);
-    } else { setShowTasks([...showTasks, dayName]); }
+    } else {
+      setShowTasks([...showTasks, dayName]);
+    }
   };
 
   const getDayComponent = (day: string) => {
@@ -36,8 +38,14 @@ export const MyTimePage = () => {
         <button
           type="button"
           className={`MyTime_navRow ${showTasks.includes(day) ? "selected" : ""}`}
-          style={showTasks.includes(day) ? { boxShadow: `0px 1px 3px rgba(${darkModeStatus ? "255, 255, 255" : "0, 0, 0"}, 0.25)` } : {}}
-          onClick={() => { handleShowTasks(day); }}
+          style={
+            showTasks.includes(day)
+              ? { boxShadow: `0px 1px 3px rgba(${darkModeStatus ? "255, 255, 255" : "0, 0, 0"}, 0.25)` }
+              : {}
+          }
+          onClick={() => {
+            handleShowTasks(day);
+          }}
         >
           <h3 className="MyTime_dayTitle">
             {day === "Today" ? (
@@ -49,10 +57,7 @@ export const MyTimePage = () => {
               day
             )}
           </h3>
-          <button
-            className="MyTime-expand-btw"
-            type="button"
-          >
+          <button className="MyTime-expand-btw" type="button">
             <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
               <p>{`${freeHours || ""} hours free`}</p>
             </div>
@@ -60,23 +65,13 @@ export const MyTimePage = () => {
         </button>
         <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
           {tasks[day] && (
-            <ColorBands
-              list={tasks[day]}
-              day={day}
-              tasksStatus={tasksStatus}
-              active={showTasks.includes(day)}
-            />
+            <ColorBands list={tasks[day]} day={day} tasksStatus={tasksStatus} active={showTasks.includes(day)} />
           )}
-          {showTasks.includes(day) && tasks[day]
-            ? (
-              <MyTimeline
-                day={day}
-                myTasks={tasks[day]}
-                taskDetails={tasksStatus}
-                setTaskDetails={setTasksStatus}
-              />
-            )
-            : <div />}
+          {showTasks.includes(day) && tasks[day] ? (
+            <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} />
+          ) : (
+            <div />
+          )}
         </div>
       </div>
     );
@@ -88,8 +83,12 @@ export const MyTimePage = () => {
         showLeftNav={!dailyView}
         showRightNav={dailyView}
         title={dailyView ? "Today" : "This Week"}
-        leftNav={() => { setDailyView(!dailyView); }}
-        rightNav={() => { setDailyView(!dailyView); }}
+        leftNav={() => {
+          setDailyView(!dailyView);
+        }}
+        rightNav={() => {
+          setDailyView(!dailyView);
+        }}
       />
       {getDayComponent("Today")}
       {!dailyView && getDayComponent("Tomorrow")}
