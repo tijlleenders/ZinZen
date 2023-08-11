@@ -59,7 +59,7 @@ export const MyTimePage = () => {
             </h3>
             <div className="MyTime-expand-btw">
               <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-                <p>{`${freeHours || ""} hours free`}</p>
+                {freeHours>0 && <p>{`${freeHours} hours free`}</p>}
               </div>
             </div>
           </div>
