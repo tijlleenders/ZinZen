@@ -16,7 +16,7 @@ export const transformIntoSchInputGoals = (
   dbTasks: { [goalid: string]: TaskItem },
   activeGoals: GoalItem[],
   noDurationGoalIds: string[],
-  blockedSlots: { [goalid: string]: blockedSlotOfTask[] }
+  blockedSlots: { [goalid: string]: blockedSlotOfTask[] },
 ) => {
   const inputGoalsArr: ISchedulerInputGoal[] = [];
   activeGoals.forEach(async (ele) => {
@@ -123,54 +123,61 @@ export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) 
   return res;
 };
 
+export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
+  let activeGoals = [...inputGoals];
+  const _today = new Date();
+  const noDurationGoalIds: string[] = [];
+  const startDate = convertDateToString(new Date(_today));
+  const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
 
-export const organizeDataForInptPrep = async (activeGoals: GoalItem[]) => {
-    const _today = new Date();
-    const noDurationGoalIds: string[] = [];
-    const startDate = convertDateToString(new Date(_today));
-    const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
+  const schedulerInput: {
+    startDate: string;
+    endDate: string;
+    goals: { [goalid: string]: ISchedulerInputGoal };
+  } = {
+    startDate,
+    endDate,
+    goals: {},
+  };
+  const dbTasks: { [goalid: string]: TaskItem } = (await getAllTasks()).reduce(
+    (acc, curr) => ({ ...acc, [curr.goalId]: curr }),
+    {},
+  );
+  const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
 
-    const schedulerInput: {
-      startDate: string,
-      endDate: string,
-      goals: { [goalid: string]: ISchedulerInputGoal }
-    } = {
-      startDate,
-      endDate,
-      goals: {}
-    };
-    const dbTasks: { [goalid: string]: TaskItem } = (await getAllTasks()).reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr }), {});
-    const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
-
-    activeGoals = [...activeGoals.filter((ele) => {
+  activeGoals = [
+    ...activeGoals.filter((ele) => {
       if (!ele.duration && !ele.timeBudget) noDurationGoalIds.push(ele.id);
-      return !!(ele.duration) || ele.timeBudget;
-    })];
+      return !!ele.duration || ele.timeBudget;
+    }),
+  ];
 
-    const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(
-      dbTasks, activeGoals, noDurationGoalIds, blockedSlots
-    );
-    schedulerInput.goals = inputGoalsArr.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
-    return { dbTasks, schedulerInput };
-  }
+  const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(
+    dbTasks,
+    activeGoals,
+    noDurationGoalIds,
+    blockedSlots,
+  );
+  schedulerInput.goals = inputGoalsArr.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+  return { dbTasks, schedulerInput };
+};
 
 export const getCachedSchedule = async (generatedInputId: string) => {
   const schedulerCachedRes = await getFromOutbox("scheduler");
-  if(!schedulerCachedRes) {
-    return { code: "not-exist"};
+  if (!schedulerCachedRes) {
+    return { code: "not-exist" };
   }
   const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
-  return uniqueId === generatedInputId ? 
-    { 
-      code: "found",
-      output: JSON.parse(output)
-    }
-    : { code: "expired" }; 
-}
+  return uniqueId === generatedInputId
+    ? {
+        code: "found",
+        output: JSON.parse(output),
+      }
+    : { code: "expired" };
+};
 
-export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {  
-  return await ( code === "expired" 
+export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {
+  return code === "expired"
     ? updateSchedulerCachedRes(generatedInputId, output)
-    : addSchedulerRes(generatedInputId, output)
-  );
-}
+    : addSchedulerRes(generatedInputId, output);
+};

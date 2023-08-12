@@ -13,6 +13,7 @@ import useScheduler from "@src/hooks/useScheduler";
 
 import "./MyTimePage.scss";
 import "@translations/i18n";
+import { displayReschedule } from "@src/store/TaskState";
 
 export const MyTimePage = () => {
   const today = new Date();
@@ -20,6 +21,7 @@ export const MyTimePage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
+  const openReschedule = useRecoilValue(displayReschedule);
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
@@ -101,7 +103,7 @@ export const MyTimePage = () => {
           }
           return null;
         })}
-      <Reschedule />
+      {openReschedule && <Reschedule />}
     </AppLayout>
   );
 };

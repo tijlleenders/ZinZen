@@ -1,4 +1,4 @@
-import { getHrFromDateString, replaceHrInDateString, } from "@src/utils/SchedulerUtils";
+import { getHrFromDateString, replaceHrInDateString } from "@src/utils/SchedulerUtils";
 import { IFinalOutputSlot } from "@src/Interfaces/IScheduler";
 
 export const fillUpFreeSlots = (scheduleOfTheDay: IFinalOutputSlot[]) => {
@@ -9,14 +9,15 @@ export const fillUpFreeSlots = (scheduleOfTheDay: IFinalOutputSlot[]) => {
     next = getHrFromDateString(scheduleOfTheDay[j].start);
     if (next !== prev) {
       const freeStart = `${scheduleOfTheDay[j].start}`;
-      finalSchedule = [...finalSchedule,
+      finalSchedule = [
+        ...finalSchedule,
         {
           goalid: "free",
           title: "free",
           duration: next - prev,
-          deadline: replaceHrInDateString(freeStart, prev),
-          start: replaceHrInDateString(freeStart, next),
-        }
+          deadline: replaceHrInDateString(freeStart, next),
+          start: replaceHrInDateString(freeStart, prev),
+        },
       ];
     }
     finalSchedule.push({
