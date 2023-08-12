@@ -1,16 +1,23 @@
 .MyTime_day {
-  padding-bottom: 18px;
   border-bottom: 2px solid var(--default-border-color);
+}
+
+.MyTime_button {
+  width: 100%;
+  overflow: hidden;
+  border: none;
+  padding-bottom: 18px;
+  background-color: var(--bottom-nav-color);
 }
 
 .MyTime_navRow {
   display: flex;
   justify-content: space-between;
-  padding: 3% 4% 0 4%;
+  padding: 3% 2% 0 4%;
   padding-bottom: 0.5em;
-  width: 100%;
   border: none;
-  align-items: center;
+  width: auto;
+  align-items: flex-start;
   background: transparent;
 }
 
