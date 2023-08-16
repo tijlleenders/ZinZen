@@ -87,9 +87,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     setSelectedTag("");
   };
 
-  const handleFieldChange = (key: string, value: string) => {
+  const handleFieldChange = (key: string, value: string) => { 
     if (key === "duration") {
       setTags({ ...tags, duration: value });
+      if(value === ""){
+        setShowAllSettings(false);
+      }
       return;
     }
     if (isPerSelected) {
@@ -360,9 +363,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <button type="button" style={{ position: "absolute", top: 29, right: 24 }} className="ordinary-element" onClick={() => setShowAllSettings(!showAllSettings)}>
-          <img src={expandIcon} alt="maximize edit window" style={{ width: 18, height: 18 }} />
-        </button>
       </div>
       <div style={{ padding: "0 24px" }}>
         <div style={{ display: "flex", gap: 15, padding: "12px 0" }}>
@@ -468,6 +468,11 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         <button type="button" className="action-btn" onClick={handleSave}>
           {t(`${action} Goal`)}
         </button>
+        {tags.duration &&
+          <button type="button" className="action-btn options-btn" onClick={() => setShowAllSettings(!showAllSettings)}>
+            Options   <img src={expandIcon} alt="maximize edit window" style={{width: 12, height: 12 }} />
+          </button>
+        }
       </div>
     </Modal>
   );
