@@ -10,12 +10,12 @@ import { i18n } from "@src/translations/i18n";
 import { themeState } from "@src/store/ThemeState";
 import { languageChangeModal, languageSelectionState, darkModeState } from "@src/store";
 import "./index.scss";
-import { getLanguages } from "@src/utils";
 import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
+import { getLanguages } from "@src/constants/languages";
 
 export const LanguageChangeModal = () => {
   const [, setPosition] = useState(1);
-  const open = useRecoilValue(languageChangeModal);
+  const [open, close] = useRecoilState(languageChangeModal);
   const darkModeStatus = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeState);
   const [IsLanguageChosen] = useRecoilState(languageSelectionState);
@@ -49,11 +49,11 @@ export const LanguageChangeModal = () => {
       closable={false}
       footer={null}
       centered
-      onCancel={() => window.history.back()}
+      onCancel={() => close(!open)}
       width={200}
-      className={`languageChangeModal popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`languageChangeModal ${darkModeStatus ? "dark" : "light"}-theme${
+        theme[darkModeStatus ? "dark" : "light"]
+      }`}
     >
       <LanguagesList languages={Languages} type="modal" />
     </Modal>

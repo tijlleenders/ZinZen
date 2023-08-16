@@ -1,5 +1,4 @@
 .languageChangeModal {
-    
 
     .languageListWrapper {
         display: "flex";
@@ -13,7 +12,7 @@
             background-color: transparent;
             padding-block: 5px;
             border: none;
-            border-bottom: 1px solid var(--default-border-color); 
+            border-bottom: 1px solid var(--default-border-color);
         }
 
         .languageListButton:last-child {
@@ -22,6 +21,6 @@
     }
 }
 
-.ant-modal .ant-modal-content {
+.languageChangeModal .ant-modal-content {
     padding: 0% !important;
 }

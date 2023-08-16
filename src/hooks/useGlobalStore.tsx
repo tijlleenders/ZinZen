@@ -26,12 +26,6 @@ function useGlobalStore() {
     } else if (locationState.changeTheme) {
       setThemeSelection(locationState.changeTheme);
     }
-
-    if (langChangeModal) {
-      setLangChangeModal(false);
-    } else if (locationState.displayLangChangeModal) {
-      setLangChangeModal(locationState.displayLangChangeModal);
-    }
   };
 
   const handleBackResModal = () => {
@@ -39,7 +33,11 @@ function useGlobalStore() {
   };
 
   const handleLangChangeModal = () => {
-    navigate(window.location.pathname, { state: { displayLangChangeModal: true } });
+    if (langChangeModal) {
+      setLangChangeModal(false);
+    } else {
+      setLangChangeModal(!langChangeModal);
+    }
   };
 
   const handleChangeTheme = () => {

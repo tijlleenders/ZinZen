@@ -4,11 +4,13 @@ import i18n from "i18next";
 import { useRecoilState } from "recoil";
 import { ILanguageListProps, ILanguage } from "@src/Interfaces/ILanguage";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
-import { languageSelectionState } from "@src/store";
+import { languageChangeModal, languageSelectionState } from "@src/store";
 
 export const LanguagesList = (props: ILanguageListProps) => {
   const { languages, navigationCallback, type } = props;
   const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
+
+  const [open, close] = useRecoilState(languageChangeModal);
 
   const handleClick = (langId: string) => {
     vibrateWorks ? navigator.vibrate(100) : null;
@@ -16,6 +18,7 @@ export const LanguagesList = (props: ILanguageListProps) => {
     i18n.changeLanguage(langId);
     localStorage.setItem("language", JSON.stringify(langId));
     if (type === "fragment" && navigationCallback) navigationCallback("/ZinZenFAQ");
+    else close(!open)
   };
   return (
     <div className="containerLang">

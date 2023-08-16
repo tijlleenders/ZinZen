@@ -10,7 +10,7 @@ import { i18n } from "@src/translations/i18n";
 import "./LandingPage.scss";
 import { darkModeState } from "@src/store";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
-import { getLanguages } from "@src/utils";
+import { getLanguages } from "@src/constants/languages";
 
 export const LandingPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
