@@ -17,7 +17,7 @@ import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalCont
 import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { darkModeState, displayToast, lastAction, openDevMode, displayConfirmation, openInbox } from "@src/store";
 import { useTranslation } from "react-i18next";
-import { Modal, Tooltip } from "antd";
+import { Col, Modal, Row, Tooltip } from "antd";
 import { themeState } from "@src/store/ThemeState";
 import "./MyGoalActions.scss";
 
@@ -118,13 +118,19 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
         }}
       >
-        <img
-          alt="delete goal"
-          src={deleteIcon}
-          className={`${darkModeStatus ? "dark-svg" : ""}`}
-          style={{ cursor: "pointer" }}
-        />
-        <p>{t("Delete")}</p>
+        <Row>
+          <Col span={6}>
+            <img
+              alt="delete goal"
+              src={deleteIcon}
+              className={`${darkModeStatus ? "dark-svg" : ""}`}
+              style={{ cursor: "pointer" }}
+            />
+          </Col>
+          <Col span={18}>
+            <p>{t("Delete")}</p>
+          </Col>
+        </Row>
       </div>
 
       {((isInboxOpen && goal.parentGoalId === "root") || !isInboxOpen) && (
@@ -147,13 +153,19 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
             }
           }}
         >
-          <img
-            alt="share goal"
-            src={isInboxOpen ? handshakeIcon : share}
-            className={`${darkModeStatus ? "dark-svg" : ""}`}
-            style={{ cursor: "pointer", ...(isInboxOpen && !darkModeStatus ? { filter: "none" } : {}) }}
-          />
-          <p>{t(isInboxOpen ? "Collaborate" : "Share")}</p>
+          <Row>
+            <Col span={6}>
+              <img
+                alt="share goal"
+                src={isInboxOpen ? handshakeIcon : share}
+                className={`${darkModeStatus ? "dark-svg" : ""}`}
+                style={{ cursor: "pointer", ...(isInboxOpen && !darkModeStatus ? { filter: "none" } : {}) }}
+              />
+            </Col>
+            <Col span={18}>
+              <p>{t(isInboxOpen ? "Collaborate" : "Share")}</p>
+            </Col>
+          </Row>
         </div>
       )}
       {!isInboxOpen && (
@@ -164,13 +176,19 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
             await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
           }}
         >
-          <img
-            alt="archive Goal"
-            src={correct}
-            style={{ cursor: "Pointer" }}
-            className={`${darkModeStatus ? "dark-svg" : ""}`}
-          />
-          <p>{t("Done")}</p>
+          <Row>
+            <Col span={6}>
+              <img
+                alt="archive Goal"
+                src={correct}
+                style={{ cursor: "Pointer" }}
+                className={`${darkModeStatus ? "dark-svg" : ""}`}
+              />{" "}
+            </Col>
+            <Col span={18}>
+              <p>{t("Done")}</p>
+            </Col>
+          </Row>
         </div>
       )}
     </Modal>
