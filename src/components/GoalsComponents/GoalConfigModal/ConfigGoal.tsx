@@ -5,7 +5,6 @@ import { Checkbox, Modal } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-
 import {
   displayAddGoal,
   selectedColorIndex,
@@ -39,7 +38,7 @@ const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleCh
   />
 );
 
-const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalItem }) => {
+const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
   const { t } = useTranslation();
   const theme = useRecoilValue(themeState);
   const today = moment(new Date()).format("YYYY-MM-DD");
@@ -256,8 +255,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalI
               start
                 ? moment(start).format("YYYY-MM-DD")
                 : goal?.createdAt
-                  ? moment(goal.createdAt).format("YYYY-MM-DD")
-                  : today
+                ? moment(goal.createdAt).format("YYYY-MM-DD")
+                : today
             }
             timeValue={startTime}
           />
