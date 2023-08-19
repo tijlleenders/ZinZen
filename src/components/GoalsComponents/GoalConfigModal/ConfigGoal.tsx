@@ -1,11 +1,10 @@
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Checkbox, Col, Modal, Radio, Row } from "antd";
+import { Checkbox, Modal } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import deleteIcon from "@assets/images/deleteIcon.svg";
 
 import {
   displayAddGoal,
@@ -14,16 +13,33 @@ import {
   goalsHistory,
   displayGoalId,
 } from "@src/store/GoalsState";
-import { expandIcon } from "@src/assets";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
-import ColorPalette from "@src/common/ColorPalette";
+import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 
-import { colorPalleteList, calDays } from "../../../utils";
+import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 import "./ConfigGoal.scss";
+import ConfigOption from "./ConfigOption";
+import CustomDatePicker from "./CustomDatePicker";
+import ColorPalette from "@src/common/ColorPalette";
 
-const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
+const onDays = [...calDays.slice(1), "Sun"];
+
+const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleChange, style }) => (
+  <input
+    type="number"
+    placeholder={placeholder || ""}
+    style={{ textAlign: "center", maxWidth: 25, ...(style || {}) }}
+    className="default-input"
+    value={value}
+    onChange={(e) => {
+      handleChange(e.target.value);
+    }}
+  />
+);
+
+const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalItem }) => {
   const { t } = useTranslation();
   const theme = useRecoilValue(themeState);
   const today = moment(new Date()).format("YYYY-MM-DD");
@@ -40,182 +56,20 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const open = !!showAddGoal || !!showUpdateGoal;
   const [title, setTitle] = useState(goal.title);
-  const [isDetailsActive, setIsDetailsActive] = useState(true);
-
-  const [daysGroup, setDaysGroup] = useState(calDays);
-  const [selectedTag, setSelectedTag] = useState("");
-  const [activeTags, setActiveTags] = useState<string[]>([]);
-  const [isPerSelected, setIsPerSelected] = useState(false);
-  const [showDeleteIcon, setShowDeleteIcon] = useState(false);
-
-  const [showAllSettings, setShowAllSettings] = useState(false);
-
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
-  const [start, setStart] = useState(goal.start ? new Date(goal.start).toISOString().slice(0, 10) : "");
+  const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
+  const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
+  const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
+
   const [tags, setTags] = useState({
-    on: goal.on || "",
-    every: goal.habit ? (goal.habit === "once" ? "once" : goal.habit === "daily" ? "day" : "week") : "once",
+    on: goal.on || convertOnFilterToArray("weekdays"),
+    repeatWeekly: goal.habit === "weekly",
     duration: goal.duration || "",
-    afterTime: goal.afterTime ? `${goal.afterTime}` : "",
-    beforeTime: goal.beforeTime ? `${goal.beforeTime}` : "",
-    budgetDuration: goal.timeBudget?.duration || "",
-    budgetPeriod: goal.timeBudget?.period || "",
+    afterTime: `${goal.afterTime || ""}`,
+    beforeTime: `${goal.beforeTime || ""}`,
+    perDay: goal.timeBudget?.perDay || "",
+    perWeek: goal.timeBudget?.perWeek || "",
   });
-
-  const handleDateChange = (type: "From" | "To", value: string) => {
-    if (type === "From") {
-      setStart(value);
-    } else {
-      setDue(value);
-    }
-  };
-
-  const deleteTag = () => {
-    const deletion = {};
-    if (isPerSelected) {
-      deletion.budgetDuration = "";
-      deletion.budgetPeriod = "";
-      setIsPerSelected(false);
-    } else if (["on", "every"].includes(selectedTag)) {
-      deletion[selectedTag] = selectedTag === "every" ? "once" : "";
-    } else if (selectedTag === "before" || selectedTag === "between") {
-      deletion.beforeTime = "";
-    } else if (selectedTag === "after" || selectedTag === "between") {
-      deletion.afterTime = "";
-    }
-    setTags({ ...tags, ...deletion });
-    setSelectedTag("");
-  };
-
-  const handleFieldChange = (key: string, value: string) => { 
-    if (key === "duration") {
-      setTags({ ...tags, duration: value });
-      if(value === ""){
-        setShowAllSettings(false);
-      }
-      return;
-    }
-    if (isPerSelected) {
-      const obj = { budgetDuration: value, budgetPeriod: tags.budgetPeriod };
-      if (Number(value) > 24) {
-        obj.budgetPeriod = "week";
-        setSelectedTag("hrs / week");
-      }
-      setTags({ ...tags, ...obj });
-    } else if (selectedTag === "before" || key === "beforeTime") {
-      setTags({ ...tags, beforeTime: value });
-    } else if (selectedTag === "after" || key === "afterTime") {
-      setTags({ ...tags, afterTime: value });
-    }
-    setShowDeleteIcon(true);
-  };
-
-  const handleTagClick = (value: string) => {
-    const isPer = value.includes("/");
-    if (isPer) {
-      setTags({ ...tags, budgetPeriod: value.split(" / ")[1] });
-      setIsPerSelected(true);
-    } else if (isPerSelected) {
-      setIsPerSelected(false);
-    }
-    setSelectedTag(value);
-  };
-
-  const handleRadioClick = (val: string) => {
-    if (selectedTag === "on") {
-      setTags({ ...tags, on: val });
-    } else if (selectedTag === "every") {
-      setTags({
-        ...tags,
-        every: val,
-        ...(val === "day" ? { budgetDuration: "", budgetPeriod: "" } : {}),
-      });
-    }
-    setShowDeleteIcon(true);
-  };
-
-  const getDateField = (type: "From" | "To", style: object = {}) => (
-    <Col span={12}>
-      <div className="date-div" style={style}>
-        <p>{t(type)}: </p>
-        <input
-          type="date"
-          value={type === "From" ?
-            start ? moment(start).format("YYYY-MM-DD")
-              : (goal?.createdAt ? moment(goal.createdAt).format("YYYY-MM-DD")
-                : today)
-            : due}
-          onChange={(e) => {
-            handleDateChange(type, e.target.value);
-          }}
-          className="datepicker"
-        />
-      </div>
-    </Col>
-  );
-
-  const getInputField = (key: string) => (
-    <input
-      type="number"
-      style={{ textAlign: "center", maxWidth: 25 }}
-      className="default-input"
-      placeholder="0"
-      value={tags[key]}
-      onChange={(e) => handleFieldChange(key, e.target.value)}
-    />
-  );
-
-  const getWeekdaysGroup = () => (
-    <Row>
-      {calDays.map((ele) => (
-        <Col key={ele} span={6}>
-          <Checkbox
-            value={ele}
-            checked={daysGroup.includes(ele)}
-            onChange={() => {
-              setDaysGroup([...daysGroup.filter((d) => d !== ele)]);
-            }}
-            style={{ margin: "4px 0" }}
-          >
-            {ele}
-          </Checkbox>
-        </Col>
-      ))}
-    </Row>
-  );
-
-  const getTagSelector = (items: string[]) => (
-    <ul className="dropdown">
-      {items.map((ele) => (
-        <li key={ele}>
-          <button
-            type="button"
-            className={ele === selectedTag || activeTags.includes(ele) ? "selected" : ""}
-            onClick={() => {
-              if (ele === "hrs / day" && tags.every === "day") {
-                setShowToast({ open: true, message: "You can't use this for a daily goal", extra: "" });
-                return;
-              }
-              setActiveTags([...activeTags.filter((activeTag) => !items.includes(activeTag)), ele]);
-              handleTagClick(ele);
-            }}
-          >
-            {t(ele)}
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
-
-  const getRadioGroup = (options: string[], selectedValue: string) => (
-    <Radio.Group onChange={(e) => handleRadioClick(e.target.value)} value={selectedValue}>
-      {options.map((ele) => (
-        <Radio className="checkbox" key={ele} value={ele}>
-          {t(ele)}
-        </Radio>
-      ))}
-    </Radio.Group>
-  );
 
   const isTitleEmpty = () => {
     if (title.length === 0) {
@@ -235,10 +89,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     duration: tags.duration !== "" ? `${tags.duration}` : null,
     afterTime: tags.afterTime !== "" ? Number(tags.afterTime) : null,
     beforeTime: tags.beforeTime !== "" ? Number(tags.beforeTime) : null,
-    habit: tags.every ? (tags.every === "once" ? "once" : tags.every === "day" ? "daily" : "weekly") : null,
-    on: tags.on !== "" ? (tags.on === "weekend" ? "weekends" : "weekdays") : null,
-    timeBudget:
-      tags.budgetDuration !== "" ? { duration: Number(tags.budgetDuration), period: tags.budgetPeriod } : null,
+    habit: tags.repeatWeekly ? "weekly" : null,
+    on: calDays.filter((ele) => tags.on.includes(ele)),
+    timeBudget: {
+      perDay: tags.perDay || null,
+      perWeek: tags.perWeek || null,
+    },
   });
 
   const updateThisGoal = async () => {
@@ -257,7 +113,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       getFinalTags(),
       title,
       colorPalleteList[colorIndex],
-      subGoalsHistory.length
+      subGoalsHistory.length,
     );
     // @ts-ignore
     if (parentGoal && selectedGoalId !== parentGoal.id) {
@@ -278,72 +134,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     window.history.back();
   };
 
-  const getEvery = () => (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <Radio.Group
-        className="checkbox"
-        options={["once", "every day", "every week"]}
-        value={["day", "week"].includes(tags.every) ? `every ${tags.every}` : "once"}
-        onChange={(e) => {
-          const { value } = e.target;
-          setTags({
-            ...tags,
-            every: value === "once" ? "once" : value.split(" ")[1],
-          });
-        }}
-      />
-    </div>
-  );
-
-  useEffect(() => {
-    if (goal.goalColor) {
-      setColorIndex(colorPalleteList.indexOf(goal.goalColor));
-    }
-    if (selectedTag === "") {
-      setShowDeleteIcon(false);
-    } else if (
-      (isPerSelected && tags.budgetDuration !== "") ||
-      (selectedTag === "on" && tags.on !== "") ||
-      (selectedTag === "every" && tags.every !== "") ||
-      (selectedTag === "before" && tags.beforeTime !== "") ||
-      (selectedTag === "after" && tags.afterTime !== "") ||
-      (selectedTag === "between" && tags.beforeTime !== "" && tags.afterTime)
-    ) {
-      setShowDeleteIcon(true);
-    }
-  }, [selectedTag]);
-
   useEffect(() => {
     document.getElementById("title-field")?.focus();
   }, []);
-
-  useEffect(() => {
-    const currentTags = getFinalTags();
-    const updatedActiveTags = [];
-    if (currentTags.on && currentTags.on !== "") {
-      updatedActiveTags.push("on");
-    } else if (currentTags.habit && currentTags.habit !== "") {
-      updatedActiveTags.push("every");
-    }
-    if (currentTags.afterTime && currentTags.afterTime >= 0
-      && currentTags.beforeTime && currentTags.beforeTime >= 0) {
-      updatedActiveTags.push("between");
-    } else if (currentTags.afterTime && currentTags.afterTime >= 0) {
-      updatedActiveTags.push("after");
-    } else if (currentTags.beforeTime && currentTags.beforeTime >= 0) {
-      updatedActiveTags.push("before");
-    }
-    if ((currentTags.timeBudget?.duration || 0) > 0 && currentTags.timeBudget?.period !== "once") {
-      updatedActiveTags.push(`hrs / ${currentTags.timeBudget?.period}`);
-    }
-    setActiveTags([...updatedActiveTags]);
-  }, [tags]);
 
   return (
     <Modal
       className={`configModal popupModal${darkModeStatus ? "-dark" : ""} 
         ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       open={open}
+      width={360}
       closable={false}
       footer={null}
       onCancel={async () => {
@@ -356,7 +156,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <input
-          onFocus={() => { setShowAllSettings(false); }}
           className="ordinary-element"
           id="title-field"
           placeholder={t("Goal Title")}
@@ -364,115 +163,130 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-      <div style={{ padding: "0 24px" }}>
-        <div style={{ display: "flex", gap: 15, padding: "12px 0" }}>
-          <div>
-            <p>{showAllSettings ? "Budget" : t("Duration")}: </p>
-            <input
-              style={{ width: 45 }}
-              type="number"
-              placeholder="in hrs"
-              className="default-input"
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 20,
+          marginTop: 24,
+          paddingLeft: 18,
+        }}
+      >
+        <ConfigOption
+          label={
+            <CustomInput
               value={tags.duration}
-              onChange={(e) => {
-                handleFieldChange("duration", e.target.value);
+              handleChange={(value: string) => {
+                setTags({ ...tags, duration: value });
               }}
+              style={{}}
+            />
+          }
+        >
+          hours
+        </ConfigOption>
+        <ConfigOption label="on">
+          {onDays.map((d) => (
+            <span
+              onClickCapture={() => {
+                setTags({
+                  ...tags,
+                  on: tags.on.includes(d) ? [...tags.on.filter((ele) => ele !== d)] : [...tags.on, d],
+                });
+              }}
+              className={`on_day ${tags.on.includes(d) ? "selected" : ""}`}
+              key={d}
+            >
+              {d[0]}
+            </span>
+          ))}
+        </ConfigOption>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", alignItems: "center", marginRight: 25 }}>
+          <div>between</div>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <CustomInput
+              value={tags.afterTime}
+              handleChange={(value: string) => {
+                setTags({ ...tags, afterTime: value });
+              }}
+              style={{}}
+            />
+            <span>-</span>
+            <CustomInput
+              value={tags.beforeTime}
+              handleChange={(value: string) => {
+                setTags({ ...tags, beforeTime: value });
+              }}
+              style={{}}
             />
           </div>
-          <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
         </div>
-      </div>
-      {!showAllSettings && getEvery()}
-
-      {showAllSettings && (
-        <>
-          <div className="goal-sent">
-            <p>
-              {tags.duration ? `${tags.duration}h ` : ""}
-              {tags.on !== "" && `${t("on")} ${tags.every !== "" && `${tags.every === "once" ? "" : t("every")}`} ${tags.on} `}
-              {tags.budgetDuration !== "" && `(${tags.budgetDuration}h / ${tags.budgetPeriod}) `}
-              {tags.beforeTime !== "" && tags.afterTime !== ""
-                ? `${t("between")} ${tags.afterTime}-${tags.beforeTime} `
-                : tags.beforeTime !== ""
-                  ? `${t("before")} ${tags.beforeTime} `
-                  : tags.afterTime !== ""
-                    ? `${t("after")} ${tags.afterTime} `
-                    : ""}
-            </p>
-          </div>
-          <div className="goal-config">
-            <Row className="config-tabs">
-              <Col
-                style={{ borderRadius: "8px 0px 0px 0px", cursor: "pointer" }}
-                className={isDetailsActive ? "selected" : ""}
-                onClick={() => {
-                  if (!isDetailsActive) {
-                    setIsDetailsActive(true);
-                  }
+        <ConfigOption label="max">
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <CustomInput
+                value={tags.perDay}
+                handleChange={(value: string) => {
+                  setTags({ ...tags, perDay: value });
                 }}
-                span={12}
-              >
-                {t("Timings")}
-              </Col>
-              <Col
-                style={{ borderRadius: "0px 8px 0px 0px", cursor: "pointer" }}
-                className={isDetailsActive ? "" : "selected"}
-                onClick={() => {
-                  if (isDetailsActive) {
-                    setIsDetailsActive(false);
-                  }
+                style={{}}
+              />
+              <span>hours / day</span>
+            </div>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <CustomInput
+                value={tags.perWeek}
+                handleChange={(value: string) => {
+                  setTags({ ...tags, perWeek: value });
                 }}
-                span={12}
-              >
-                {t("Period")}
-              </Col>
-            </Row>
-            {!isDetailsActive ? (
-              <Row gutter={24} className="goal-dates">
-                {getDateField("From")}
-                {getDateField("To", { justifyContent: "flex-end" })}
-              </Row>
-            ) : (
-              <div className="timings">
-                <div className="tag-input">
-                  <span>{["after", "before", "between"].includes(selectedTag) && t(selectedTag)}</span>
-                  {(isPerSelected || selectedTag === "between") &&
-                    getInputField(isPerSelected ? "budgetDuration" : "afterTime")}
-
-                  {selectedTag === t("between") && <span>-</span>}
-                  {isPerSelected && <span>{t(selectedTag)}</span>}
-
-                  {["before", "after", "between"].includes(selectedTag) &&
-                    getInputField(selectedTag === "between" ? "beforeTime" : `${selectedTag}Time`)}
-
-                  {selectedTag === "on" && getRadioGroup(["weekdays", "weekend"], tags.on)}
-                  {selectedTag === "every" && getRadioGroup(["day", "week"], tags.every)}
-                  {showDeleteIcon && (
-                    <button type="button" className="ordinary-element" onClick={deleteTag}>
-                      <img alt="delete tag" className={`${darkModeStatus ? "dark-svg" : ""}`} src={deleteIcon} />
-                    </button>
-                  )}
-                </div>
-                <div className="sent-tags">
-                  {getTagSelector(["after", "before", "between"])}
-                  {getTagSelector(["on"])}
-                  {getTagSelector(["hrs / day"])}
-                </div>
-                {getEvery()}
-              </div>
-            )}
+                style={{}}
+              />
+              <span>hours / week</span>
+            </div>
           </div>
-        </>
-      )}
-      <div style={{ marginTop: 14, textAlign: "center" }}>
-        <button type="button" className="action-btn" onClick={handleSave}>
-          {t(`${action} Goal`)}
-        </button>
-        {tags.duration &&
-          <button type="button" className="action-btn options-btn" onClick={() => setShowAllSettings(!showAllSettings)}>
-            Options   <img src={expandIcon} alt="maximize edit window" style={{width: 12, height: 12 }} />
+        </ConfigOption>
+        <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
+          <CustomDatePicker
+            handleDateChange={(value) => {
+              setStart(value);
+            }}
+            handleTimeChange={(value) => setStartTime(value)}
+            label="starts"
+            dateValue={
+              start
+                ? moment(start).format("YYYY-MM-DD")
+                : goal?.createdAt
+                  ? moment(goal.createdAt).format("YYYY-MM-DD")
+                  : today
+            }
+            timeValue={startTime}
+          />
+          <CustomDatePicker
+            handleDateChange={(value) => {
+              setDue(value);
+            }}
+            handleTimeChange={(value) => setEndTime(value)}
+            label="ends"
+            dateValue={due}
+            timeValue={endTime}
+          />
+        </div>
+        <Checkbox
+          className="checkbox"
+          checked={tags.repeatWeekly}
+          onChange={(e) => {
+            setTags({ ...tags, repeatWeekly: e.target.checked });
+          }}
+        >
+          repeats weekly
+        </Checkbox>
+        <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
+
+        <div style={{ marginTop: 14, textAlign: "center" }}>
+          <button type="button" className="action-btn" onClick={handleSave}>
+            {t(`${action} Goal`)}
           </button>
-        }
+        </div>
       </div>
     </Modal>
   );

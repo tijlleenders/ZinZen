@@ -11,7 +11,7 @@ import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
 
-export const dexieVersion = 6;
+export const dexieVersion = 7;
 
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
 
@@ -58,8 +58,23 @@ export class ZinZenDB extends Dexie {
         dumpboxCollection: "id, key, value",
       })
       .upgrade((trans) => {
+        const goalsCollection = trans.table("goalsCollection");
+        goalsCollection.toCollection().modify((goal: GoalItem) => {
+          if (goal.on === "weekends") {
+            goal.on = ["Saturday", "Sunday"];
+          } else {
+            goal.on = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+          }
+          if (goal.habit !== "weekly") {
+            goal.habit = null;
+          }
+          goal.timeBudget = {
+            perDay: goal.timeBudget?.period === "day" ? `${goal.timeBudget?.duration}` : null,
+            perWeek: goal.timeBudget?.period === "week" ? `${goal.timeBudget?.duration}` : null,
+          };
+        });
         const taskCollection = trans.table("taskCollection");
-        return taskCollection.toCollection().modify((task: TaskItem) => {
+        taskCollection.toCollection().modify((task: TaskItem) => {
           task.blockedSlots = [];
           task.forgotToday = [];
           task.completedToday = 0;

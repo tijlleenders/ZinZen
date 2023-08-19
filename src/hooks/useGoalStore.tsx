@@ -75,13 +75,18 @@ function useGoalStore() {
     navigate("/MyGoals", { state: { ...location.state, displayInbox: true } });
   };
 
+  const handleGoalActions = (id: string) => {
+    navigate("/MyGoals", { state: { ...location.state, showGoalActions: id } });
+  };
+
   return {
     handleAddGoal,
     handleShareGoal,
-    handleUpdateGoal,
     handleOpenInbox,
+    handleUpdateGoal,
+    handleGoalActions,
     handleConfirmation,
-    handleDisplayChanges
+    handleDisplayChanges,
   };
 }
 
