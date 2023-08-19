@@ -240,7 +240,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                     }
                   }}
                 >
-                  {`${ele.includes("zURL-") ? "URL" : ele}`}
+                  {`${ele.includes("zURL-") ? "URL" : ` ${ele} `}`}
                 </span>
               ))}
               &nbsp;
