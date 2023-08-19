@@ -1,5 +1,6 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { goalsHistory } from "@src/store/GoalsState";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import backIcon from "@assets/images/backIcon.svg";
@@ -26,6 +27,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const currentPage = window.location.pathname.split("/")[1];
+  const subGoalHistory = useRecoilValue(goalsHistory);
 
   const themeChange = (nav: -1 | 1) => {
     let choice = theme[darkModeStatus ? "dark" : "light"] + nav;
@@ -49,7 +51,13 @@ const BottomNavbar = ({ title }: { title: string }) => {
       if (to === "MyTime") {
         if (currentPage !== "") navigate("/", { state: newLocationState });
       } else if (to === "MyGoals") {
-        if (currentPage !== "MyGoals") navigate("/MyGoals", { state: newLocationState });
+        if (currentPage !== "MyGoals") {
+          navigate("/MyGoals", { state: newLocationState })
+        } else {
+          if (subGoalHistory.length > 0) {
+            window.history.go(-subGoalHistory.length)
+          }
+        };
       } else if (currentPage !== "MyJournal") {
         navigate("/MyJournal", { state: newLocationState });
       }

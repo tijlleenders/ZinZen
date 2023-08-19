@@ -13,7 +13,6 @@ import useScheduler from "@src/hooks/useScheduler";
 
 import "./MyTimePage.scss";
 import "@translations/i18n";
-import { displayReschedule } from "@src/store/TaskState";
 
 export const MyTimePage = () => {
   const today = new Date();
@@ -21,7 +20,6 @@ export const MyTimePage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
-  const openReschedule = useRecoilValue(displayReschedule);
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
@@ -39,36 +37,37 @@ export const MyTimePage = () => {
       <div key={day} className="MyTime_day">
         <button
           type="button"
-          className={`MyTime_navRow ${showTasks.includes(day) ? "selected" : ""}`}
-          style={
-            showTasks.includes(day)
-              ? { boxShadow: `0px 1px 3px rgba(${darkModeStatus ? "255, 255, 255" : "0, 0, 0"}, 0.25)` }
-              : {}
-          }
-          onClick={() => {
-            handleShowTasks(day);
-          }}
+          className="MyTime_button"
+          style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}
+          onClick={() => handleShowTasks(day)}
         >
-          <h3 className="MyTime_dayTitle">
-            {day === "Today" ? (
-              <>
-                {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
-                <sup>{suffix}</sup>
-              </>
-            ) : (
-              day
-            )}
-          </h3>
-          <button className="MyTime-expand-btw" type="button">
-            <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-              <p>{`${freeHours || ""} hours free`}</p>
+          <div
+            style={{
+              background: "var(--bottom-nav-color)",
+            }}
+            className={`MyTime_navRow ${showTasks.includes(day) ? "selected" : ""}`}
+          >
+            <h3 className="MyTime_dayTitle">
+              {day === "Today" ? (
+                <>
+                  {today.toLocaleString("default", { weekday: "long" })} {dayOfMonth}
+                  <sup>{suffix}</sup>
+                </>
+              ) : (
+                day
+              )}
+            </h3>
+            <div className="MyTime-expand-btw">
+              <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+                {freeHours>0 && <p>{`${freeHours} hours free`}</p>}
+              </div>
             </div>
-          </button>
-        </button>
-        <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
+          </div>
           {tasks[day] && (
             <ColorBands list={tasks[day]} day={day} tasksStatus={tasksStatus} active={showTasks.includes(day)} />
           )}
+        </button>
+        <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
           {showTasks.includes(day) && tasks[day] ? (
             <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} />
           ) : (
@@ -103,7 +102,7 @@ export const MyTimePage = () => {
           }
           return null;
         })}
-      {openReschedule && <Reschedule />}
+      <Reschedule />
     </AppLayout>
   );
 };

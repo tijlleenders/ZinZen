@@ -72,6 +72,10 @@
   .action-btn {
     margin-top: 0;
     padding: 10px 24px;
+
+    &.options-btn{
+      margin-left: 10px;
+    }
   }
   .datepicker {
     text-align: left;
