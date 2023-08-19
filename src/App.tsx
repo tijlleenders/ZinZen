@@ -4,7 +4,15 @@ import { v4 as uuidv4 } from "uuid";
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, languageSelectionState, displayToast, lastAction, displayConfirmation, backupRestoreModal, openDevMode } from "@store";
+import {
+  darkModeState,
+  languageSelectionState,
+  displayToast,
+  lastAction,
+  displayConfirmation,
+  backupRestoreModal,
+  openDevMode,
+} from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
@@ -20,16 +28,16 @@ import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import BackupRestoreModal from "@components/BackupRestoreModal";
-import { GoalItem } from "./models/GoalItem";
 import { findTypeOfSub } from "@api/PubSubAPI";
 import { checkMagicGoal } from "@api/GoalsAPI";
 import { syncGroupPolls } from "@api/PublicGroupsAPI";
 import { addSharedWMGoal } from "@api/SharedWMAPI";
+import { getContactByRelId, updateAllUnacceptedContacts } from "@api/ContactsAPI";
+import { refreshTaskCollection } from "@api/TasksAPI";
 import { getTheme, themeState } from "./store/ThemeState";
 import { handleIncomingChanges } from "./helpers/InboxProcessor";
 import { getContactSharedGoals } from "./services/contact.service";
-import { getContactByRelId, updateAllUnacceptedContacts } from "@api/ContactsAPI";
-import { refreshTaskCollection } from "@api/TasksAPI";
+import { GoalItem } from "./models/GoalItem";
 
 import "./global.scss";
 import "./customize.scss";
@@ -37,7 +45,7 @@ import "./override.scss";
 
 const Context = React.createContext({ name: "Default" });
 
-const exceptionRoutes = ["/", "/invest", "/feedback"];
+const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
 
 const App = () => {
   const theme = useRecoilValue(themeState);
@@ -66,7 +74,10 @@ const App = () => {
       updateAllUnacceptedContacts();
       const res = await getContactSharedGoals();
       // @ts-ignore
-      const resObject = res.response.reduce((acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }), {});
+      const resObject = res.response.reduce(
+        (acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }),
+        {},
+      );
       if (res.success) {
         Object.keys(resObject).forEach(async (relId: string) => {
           const contactItem = await getContactByRelId(relId);
@@ -77,11 +88,13 @@ const App = () => {
                 const { goalWithChildrens }: { goalWithChildrens: GoalItem[] } = ele;
                 const rootGoal = goalWithChildrens[0];
                 rootGoal.shared.contacts.push({ name: contactItem.name, relId });
-                addSharedWMGoal(rootGoal).then(() => {
-                  goalWithChildrens.slice(1).forEach((goal) => {
-                    addSharedWMGoal(goal).catch((err) => console.log(`Failed to add in inbox ${goal.title}`, err));
-                  });
-                }).catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
+                addSharedWMGoal(rootGoal)
+                  .then(() => {
+                    goalWithChildrens.slice(1).forEach((goal) => {
+                      addSharedWMGoal(goal).catch((err) => console.log(`Failed to add in inbox ${goal.title}`, err));
+                    });
+                  })
+                  .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
               } else if (["shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
                 let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
                 if (ele.type === "collaborationInvite") {
@@ -110,7 +123,7 @@ const App = () => {
       init();
     }
     const currentPath = window.location.pathname.toLowerCase();
-    if ((!isLanguageChosen) && !exceptionRoutes.includes(currentPath)) {
+    if (!isLanguageChosen && !exceptionRoutes.includes(currentPath)) {
       window.open("/", "_self");
     }
   }, []);
@@ -127,13 +140,15 @@ const App = () => {
       }
     };
     const checkUpdates = async () => {
-      navigator.serviceWorker.register("./service-worker.js")
+      navigator.serviceWorker
+        .register("./service-worker.js")
         .then((registration) => {
           if (registration.waiting) {
             registration.waiting?.postMessage({ type: "SKIP_WAITING" });
             window.location.reload();
           }
-        }).catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
     };
     checkUpdates();
     checkDevMode();
@@ -148,7 +163,7 @@ const App = () => {
         setLastAction("TaskCollectionRefreshed");
       });
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (showToast.open) {
@@ -181,7 +196,7 @@ const App = () => {
             <Route
               path="/donate"
               Component={() => {
-                window.location.href = "https://checkout.stripe.com/c/pay/cs_live_a1IIEst2kB7X7mq8TD1eTTZ05OgKfm7ImVhj9LNS1Qw64ckbhqjEzvezI1#fidkdWxOYHwnPyd1blppbHNgWjA0SVxAbG1JfHBHVUJJSUBfMUtza01BZGZvNk1qRlxnTzVxbzZ8U0d8b0dRR09uUn9VZlVAaTRkYmtcTlBycWp9QHNyY0RTNTdQR3M8UW9QYz08Z0JJTzdSNTVrTWBJZzVISCcpJ3VpbGtuQH11anZgYUxhJz8nM2pAMW9ONGxVZlVRNGg9PEREJyknd2BjYHd3YHdKd2xibGsnPydtcXF1PyoqaWpmZGltanZxPzY1NTUqJ3gl";
+                window.location.href = "https://donate.stripe.com/6oE4jK1iPcPT1m89AA"
                 return null;
               }}
             />
