@@ -51,9 +51,8 @@ export const LanguageChangeModal = () => {
       centered
       onCancel={() => window.history.back()}
       width={200}
-      className={`languageChangeModal ${darkModeStatus ? "dark" : "light"}-theme${
-        theme[darkModeStatus ? "dark" : "light"]
-      }`}
+      className={`languageChangeModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+
     >
       <LanguagesList languages={Languages} type="modal" />
     </Modal>
