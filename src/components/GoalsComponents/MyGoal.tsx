@@ -198,6 +198,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               <div
                 className="goal-dd-outer"
                 style={{
+                  top: showActions.open === goal.id && showActions.click > 0 ? -2.3 : -2.5,
                   borderColor: goal.goalColor,
                 }}
               />
@@ -227,7 +228,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           )}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <div style={{ overflow: "hidden", width: "100%", marginTop: "auto" }}>
+          <div style={{ overflow: "hidden", width: "100%" }}>
             <div className="goal-title">
               {replacedString.split(" ").map((ele) => (
                 <span
