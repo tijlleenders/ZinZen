@@ -278,7 +278,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalI
             setTags({ ...tags, repeatWeekly: e.target.checked });
           }}
         >
-          Repeats Weekly
+          repeats weekly
         </Checkbox>
         <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
 
