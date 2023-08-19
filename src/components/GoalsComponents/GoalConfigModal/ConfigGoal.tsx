@@ -89,7 +89,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const handleFieldChange = (key: string, value: string) => { 
     if (key === "duration") {
-      setTags({ ...tags, duration: value });
+      setTags({ ...tags, duration: Number(Math.max(Math.round( value ), 1)) });
       if(value === ""){
         setShowAllSettings(false);
       }
