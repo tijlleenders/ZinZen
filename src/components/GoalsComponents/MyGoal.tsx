@@ -110,15 +110,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(goal.title);
 
   const handleGoalClick = () => {
-    if (goal.sublist.length === 0) {
-      if (showActions.open === goal.id && showActions.click > 0) {
-        setShowActions(defaultTap);
-      } else {
-        setShowActions({ open: goal.id, click: 1 });
-      }
-    } else {
-      // if (displaySearch) setDisplaySearch(false);
-      // @ts-ignore
+    if (showActions.open === goal.id && showActions.click > 0) {
       navigate("/MyGoals", {
         state: {
           ...location.state,
@@ -133,6 +125,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           ],
         },
       });
+    } else {
+      setShowActions({ open: goal.id, click: 1 });
     }
   };
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -190,7 +184,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div style={{ marginLeft: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ marginLeft: 20, display: "flex", flexDirection: "column", gap: 20 }}>
           <div
             className="goal-dropdown"
             onClickCapture={(e) => {
@@ -226,7 +220,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               <img
                 alt="Update Goal"
                 src={isInboxOpen ? eyeSvg : pencil}
-                style={{ cursor: "pointer", width: 16, height: 16 }}
+                style={{ cursor: "pointer", width: 24, height: 24 }}
                 className={`${darkModeStatus ? "dark-svg" : ""}`}
               />
             </div>
