@@ -196,8 +196,7 @@ const App = () => {
             <Route
               path="/donate"
               Component={() => {
-                window.location.href =
-                  "https://checkout.stripe.com/c/pay/cs_live_a1IIEst2kB7X7mq8TD1eTTZ05OgKfm7ImVhj9LNS1Qw64ckbhqjEzvezI1#fidkdWxOYHwnPyd1blppbHNgWjA0SVxAbG1JfHBHVUJJSUBfMUtza01BZGZvNk1qRlxnTzVxbzZ8U0d8b0dRR09uUn9VZlVAaTRkYmtcTlBycWp9QHNyY0RTNTdQR3M8UW9QYz08Z0JJTzdSNTVrTWBJZzVISCcpJ3VpbGtuQH11anZgYUxhJz8nM2pAMW9ONGxVZlVRNGg9PEREJyknd2BjYHd3YHdKd2xibGsnPydtcXF1PyoqaWpmZGltanZxPzY1NTUqJ3gl";
+                window.location.href = "https://donate.stripe.com/6oE4jK1iPcPT1m89AA"
                 return null;
               }}
             />
