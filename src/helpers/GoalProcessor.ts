@@ -75,7 +75,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     title: "",
     language: "English",
     habit: null,
-    on: [],
+    on: ["Mon", "Tue", "Wed", "Thu", "Fri"],
     timeBudget: {
       perDay: null,
       perWeek: null,
