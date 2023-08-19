@@ -1,5 +1,12 @@
 .configModal {
   width: 400px;
+  .checkbox {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    span {
+      padding-left: 0 !important;
+    }
+  }
   input {
     color: inherit;
   }
