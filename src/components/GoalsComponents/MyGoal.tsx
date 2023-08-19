@@ -47,6 +47,9 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
   const onLength = goal.on.length;
   const onWeekdays = onLength === 5 && !goal.on.includes("Sat") && !goal.on.includes("Sun");
   const onWeekends = onLength === 2 && goal.on.includes("Sat") && goal.on.includes("Sun");
+
+  const hasStarted = !!goal.start && new Date(goal.start).getTime() < new Date().getTime();
+  const showStart = !!goal.due || !hasStarted;
   return (
     <>
       <div>
@@ -80,7 +83,11 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
           <span>{`${goal.timeBudget.perDay ? ", " : ""}${goal.timeBudget.perWeek} h / week`}</span>
         )}
       </div>
-      <div>{goal.start && `starts ${new Date(goal.start).toDateString().slice(4)}`}</div>
+      {showStart && !!goal.start && (
+        <div>
+          {hasStarted ? "started" : "starts"} {new Date(goal.start).toDateString().slice(4)}
+        </div>
+      )}
       <div>{goal.due && `end ${new Date(goal.due).toDateString().slice(4)}`}</div>
       <div>{goal.habit === "weekly" && "every week"}</div>
     </>
