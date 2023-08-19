@@ -39,49 +39,12 @@
   display: none;
 }
 
-.interactables,
-.interactables-dark {
-  display: flex;
-  padding-top: 15px;
-  padding-bottom: 1.25%;
-  justify-content: space-evenly;
-  div {
-    text-align: center;
-    p {
-      font-weight: 500;
-      margin: 0;
-      font-size: 0.875em;
-    }
-  }
-  img,
-  svg {
-    width: 20px;
-    height: 20px;
-    opacity: 0.6;
-  }
-}
-
-.interactables > div > p {
-  color: rgb(205, 110, 81);
-}
-
-.interactables > img,
-.interactables > svg,
-.exceptional-img {
-  font-size: 22px;
-}
-
 .user-goal,
 .user-goal-dark {
-  word-break: break-all;
-  padding: 8px 0;
-  min-height: 61.19px;
-  text-align: left;
-  overflow: hidden;
   position: relative;
+  word-break: break-all;
+  text-align: left;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
   width: 100%;
   border-bottom: 1px solid var(--default-border-color);
   background: transparent;
@@ -89,7 +52,8 @@
     display: flex;
     height: 100%;
     width: 100%;
-    padding: 15px 4% 15px 50px;
+    padding: 20px 0;
+    gap: 16px;
   }
   .contact-button {
     position: absolute;
@@ -105,25 +69,27 @@
   }
 }
 
-.goal-dd-inner,
-.goal-dd-outer {
-  width: 55px;
-  height: 92%;
-  border-radius: 57px;
-  position: absolute;
-  left: -37px;
-  top: 1px;
+.goal-dropdown {
+  position: relative;
+  margin-top: 2px;
 }
+
 .goal-dd-inner {
-  width: 55px;
-  top: 15px;
-  height: 45px;
+  width: 16px;
+  height: 16px;
+  margin-top: 2.7px;
+  margin-left: 2.2px;
+  border-radius: 50%;
 }
 .goal-dd-outer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 19px;
+  height: 19px;
   border: solid;
   border-width: 1.4px;
-  width: 60px;
-  top: 9.3px;
+  border-radius: 50%;
 }
 
 #addGoal-btn {
@@ -140,6 +106,7 @@
   font-family: "Montserrat";
   font-weight: 400;
   font-size: 1.143em;
+  width: 100%;
   text-align: left !important;
   max-width: unset;
   overflow: hidden;
@@ -154,9 +121,10 @@
 }
 
 .goal-desc {
+  white-space: pre-line;
   font-size: 0.875em;
   font-weight: 300;
-  margin-right: 56px;
+  margin-top: 7px !important;
 }
 
 .goal-link {
@@ -172,18 +140,6 @@
   flex-direction: column;
   justify-content: center;
   width: 100%;
-}
-
-.goal-dropdown {
-  align-self: center;
-  padding-left: 2%;
-  position: absolute;
-  height: 100%;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  left: 0;
-  width: 38px;
 }
 
 #addGoalForm {
