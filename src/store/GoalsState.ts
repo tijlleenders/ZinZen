@@ -5,57 +5,62 @@ import { GoalItem } from "@src/models/GoalItem";
 import { atom, selector } from "recoil";
 
 export interface ISubGoalHistory {
-  goalID: string,
-  goalColor: string,
-  goalTitle: string,
+  goalID: string;
+  goalColor: string;
+  goalTitle: string;
 }
+
+export const displayGoalActions = atom({
+  key: "displayGoalActions",
+  default: null as GoalItem | null,
+});
 
 export const displayGoalConfigModal = atom({
   key: "displayGoalConfigModal",
-  default: null as {open: boolean, goalId: string} | null
+  default: null as { open: boolean; goalId: string } | null,
 });
 
 export const displayChangesModal = atom({
   key: "displayChangesModal",
-  default: null as IDisplayChangesModal | null
+  default: null as IDisplayChangesModal | null,
 });
 
-export const displayShareModal = atom(({
+export const displayShareModal = atom({
   key: "displayShareModal",
-  default: null as string | null
-}));
+  default: null as string | null,
+});
 
 export const displaySuggestionsModal = atom({
   key: "displaySuggestionsModal",
-  default: { goals: [], selected: "" } as { goals: GoalItem[], selected: string }
+  default: { goals: [], selected: "" } as { goals: GoalItem[]; selected: string },
 });
 
 export const inputGoalTags = atom({
   key: "inputGoalTags",
-  default: {} as ITags
+  default: {} as ITags,
 });
 
 export const extractedTitle = atom({
   key: "extractedTitle",
-  default: "" as string
+  default: "" as string,
 });
 
 export const selectedColorIndex = atom({
   key: "selectedColorIndex",
-  default: 0 as number
+  default: 0 as number,
 });
 
 export const displayGoalId = atom({
   key: "displayGoalId",
-  default: "root"
+  default: "root",
 });
 export const displayAddGoal = atom({
   key: "displayAddGoal",
-  default: null as {open: boolean, goalId: string} | null
+  default: null as { open: boolean; goalId: string } | null,
 });
 export const displayUpdateGoal = atom({
   key: "displayUpdateGoal",
-  default: null as {open: boolean, goalId: string} | null
+  default: null as { open: boolean; goalId: string } | null,
 });
 export const goalsHistory = atom({
   key: "goalsHistory",
@@ -66,13 +71,16 @@ export const addInGoalsHistory = selector({
   key: "addGoalInGoalsHistory",
   get: ({ get }) => get(goalsHistory),
   set: ({ get, set }, goal) => {
-    set(goalsHistory, [...get(goalsHistory), ({
-      goalID: goal.id || "root",
-      goalColor: goal.goalColor || "#ffffff",
-      goalTitle: goal.title || "",
-    })]);
+    set(goalsHistory, [
+      ...get(goalsHistory),
+      {
+        goalID: goal.id || "root",
+        goalColor: goal.goalColor || "#ffffff",
+        goalTitle: goal.title || "",
+      },
+    ]);
     set(displayGoalId, goal.id || "root");
-  }
+  },
 });
 
 export const resetGoalsHistory = selector({
@@ -81,7 +89,7 @@ export const resetGoalsHistory = selector({
   set: ({ set }) => {
     set(goalsHistory, []);
     set(displayGoalId, "root");
-  }
+  },
 });
 
 export const popFromGoalsHistory = selector({
@@ -104,5 +112,5 @@ export const popFromGoalsHistory = selector({
       }
       set(goalsHistory, [...currentState]);
     }
-  }
+  },
 });
