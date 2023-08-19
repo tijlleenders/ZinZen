@@ -9,50 +9,65 @@ import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/mod
 import { getDefaultValueOfShared, getDefaultValueOfCollab } from "@src/utils/defaultGenerators";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
-export const createSentFromTags = (goal: GoalItem) => (`
-${goal.duration ? `${goal.duration}h ` : ""}
-${goal.start ? `From ${new Date(goal.start).toDateString().slice(4)}` : ""}
-${goal.due ? `Upto ${new Date(goal.due).toDateString().slice(4)}` : ""}
-${goal.on ? `on ${goal.on} ` : ""}
-${goal.habit ? goal.habit === "once" ? "once " : `every ${goal.habit === "daily" ? "day" : "week"} ` : ""}
-${goal.timeBudget ? `(${goal.timeBudget.duration}h / ${goal.timeBudget.period})` : ""}
-${goal.beforeTime && goal.afterTime ? `between ${goal.afterTime}-${goal.beforeTime} ` :
-    goal.beforeTime ? `before ${goal.beforeTime} ` :
-      goal.afterTime ? `after ${goal.afterTime} ` : ""}
-`);
+// export const createSentFromTags = (goal: GoalItem) =>
+//   `${goal.duration ? `${goal.duration} hours ` : ""} ${goal.on.length > 0 ? `on ${goal.on.join(" ")}\n` : ""}${
+//     goal.beforeTime && goal.afterTime
+//       ? `between ${goal.afterTime}-${goal.beforeTime} `
+//       : goal.beforeTime
+//       ? `before ${goal.beforeTime} `
+//       : goal.afterTime
+//       ? `after ${goal.afterTime} `
+//       : ""
+//   }${goal.timeBudget.perDay ? `${goal.timeBudget.perDay} h / day ` : ""} ${
+//     goal.timeBudget.perWeek ? `${goal.timeBudget.perDay ? "," : ""}${goal.timeBudget.perWeek} h / week` : ""
+//   }${goal.start ? `starts ${new Date(goal.start).toDateString().slice(4)}\n` : ""} ${
+//     goal.due ? `end ${new Date(goal.due).toDateString().slice(4)}\n` : ""
+//   }${goal.habit && goal.habit === "weekly" ? "every week\n" : ""}`;
 
-export const formatTagsToText = (_goal: GoalItem) => {
-  const goal = { ..._goal };
-  if (goal.start) { goal.start = new Date(goal.start); }
-  if (goal.due) { goal.due = new Date(goal.due); }
+// export const formatTagsToText = (_goal: GoalItem) => {
+//   const goal = { ..._goal };
+//   if (goal.start) {
+//     goal.start = new Date(goal.start);
+//   }
+//   if (goal.due) {
+//     goal.due = new Date(goal.due);
+//   }
 
-  const response = { title: "", duration: "", start: "", due: "", habit: "", on: "", timeBudget: "", timing: "", link: "", language: goal.language, goalColor: goal.goalColor };
-  if ((goal.afterTime || goal.afterTime === 0) && goal.beforeTime) {
-    response.timing = ` ${goal.afterTime}-${goal.beforeTime}`;
-  } else if ((goal.afterTime || goal.afterTime === 0)) {
-    response.timing = ` after ${goal.afterTime}`;
-  } else if (goal.beforeTime) {
-    response.timing = ` before ${goal.beforeTime}`;
-  }
-  response.title = goal.title;
-  response.duration = goal.duration ? ` ${goal.duration}h` : "";
-  response.start = goal.start ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1} @${goal.start.getHours()}` : "";
-  response.due = goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1} @${goal.due.getHours()}` : "";
-  response.habit = goal.habit ? ` ${goal.habit}` : "";
-  response.on = goal.on ? `${goal.on}` : "";
-  response.timeBudget = goal.timeBudget ? `${goal.timeBudget.duration}hr${Number(goal.timeBudget.duration) > 1 ? "s" : ""} / ${goal.timeBudget.period}` : "";
-  response.link = goal.link ? ` ${goal.link}` : "";
-  const { title,
-    duration,
-    start,
-    due,
-    habit,
-    on,
-    timeBudget,
-    link,
-    timing } = response;
-  return { inputText: title + duration + start + due + timing + on + timeBudget + habit + link, ...response };
-};
+//   const response = {
+//     title: "",
+//     duration: "",
+//     start: "",
+//     due: "",
+//     habit: "",
+//     on: "",
+//     timeBudget: "",
+//     timing: "",
+//     link: "",
+//     language: goal.language,
+//     goalColor: goal.goalColor,
+//   };
+//   if ((goal.afterTime || goal.afterTime === 0) && goal.beforeTime) {
+//     response.timing = ` ${goal.afterTime}-${goal.beforeTime}`;
+//   } else if (goal.afterTime || goal.afterTime === 0) {
+//     response.timing = ` after ${goal.afterTime}`;
+//   } else if (goal.beforeTime) {
+//     response.timing = ` before ${goal.beforeTime}`;
+//   }
+//   response.title = goal.title;
+//   response.duration = goal.duration ? ` ${goal.duration}h` : "";
+//   response.start = goal.start
+//     ? ` start ${goal.start.getDate()}/${goal.start.getMonth() + 1} @${goal.start.getHours()}`
+//     : "";
+//   response.due = goal.due ? ` due ${goal.due.getDate()}/${goal.due.getMonth() + 1} @${goal.due.getHours()}` : "";
+//   response.habit = goal.habit ? ` ${goal.habit}` : "";
+//   response.on = goal.on ? `${goal.on}` : "";
+//   response.timeBudget = goal.timeBudget
+//     ? `${goal.timeBudget.duration}hr${Number(goal.timeBudget.duration) > 1 ? "s" : ""} / ${goal.timeBudget.period}`
+//     : "";
+//   response.link = goal.link ? ` ${goal.link}` : "";
+//   const { title, duration, start, due, habit, on, timeBudget, link, timing } = response;
+//   return { inputText: title + duration + start + due + timing + on + timeBudget + habit + link, ...response };
+// };
 
 export const createGoalObjectFromTags = (obj: object) => {
   const newGoal: GoalItem = {
@@ -60,8 +75,11 @@ export const createGoalObjectFromTags = (obj: object) => {
     title: "",
     language: "English",
     habit: null,
-    on: null,
-    timeBudget: null,
+    on: [],
+    timeBudget: {
+      perDay: null,
+      perWeek: null,
+    },
     duration: null,
     start: null,
     due: null,
@@ -78,7 +96,9 @@ export const createGoalObjectFromTags = (obj: object) => {
     typeOfGoal: "myGoal",
     ...obj,
   };
-  if (newGoal.rootGoalId === "root") { newGoal.rootGoalId = newGoal.id; }
+  if (newGoal.rootGoalId === "root") {
+    newGoal.rootGoalId = newGoal.id;
+  }
   return newGoal;
 };
 
@@ -88,8 +108,8 @@ export const extractFromGoalTags = (goalTags: ITags) => ({
   link: goalTags.link ? goalTags.link.value?.trim() : null,
   start: goalTags.start ? goalTags.start.value : null,
   due: goalTags.due ? goalTags.due.value : null,
-  afterTime: (goalTags.afterTime || goalTags.afterTime === 0) ? goalTags.afterTime.value : null,
-  beforeTime: (goalTags.beforeTime || goalTags.beforeTime === 0) ? goalTags.beforeTime.value : null,
+  afterTime: goalTags.afterTime || goalTags.afterTime === 0 ? goalTags.afterTime.value : null,
+  beforeTime: goalTags.beforeTime || goalTags.beforeTime === 0 ? goalTags.beforeTime.value : null,
 });
 
 export const getHistoryUptoGoal = async (id: string) => {
@@ -97,12 +117,12 @@ export const getHistoryUptoGoal = async (id: string) => {
   let openGoalOfId = id;
   while (openGoalOfId !== "root") {
     const tmpGoal: GoalItem = await getGoal(openGoalOfId);
-    history.push(({
+    history.push({
       goalID: tmpGoal.id || "root",
       goalColor: tmpGoal.goalColor || "#ffffff",
       goalTitle: tmpGoal.title || "",
-      display: null
-    }));
+      display: null,
+    });
     openGoalOfId = tmpGoal.parentGoalId;
   }
   history.reverse();
@@ -110,7 +130,7 @@ export const getHistoryUptoGoal = async (id: string) => {
 };
 
 export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
-  let typeAtPriority :typeOfChange | "none" = "none";
+  let typeAtPriority: typeOfChange | "none" = "none";
   if (goalChanges.subgoals.length > 0) {
     typeAtPriority = "subgoals";
   } else if (goalChanges.modifiedGoals.length > 0) {
@@ -125,17 +145,20 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
 
 export const jumpToLowestChanges = async (id: string) => {
   const inbox: InboxItem = await getInboxItem(id);
-  let typeAtPriority : typeOfChange | "none" = "none";
+  let typeAtPriority: typeOfChange | "none" = "none";
   if (inbox) {
     const { goalChanges } = inbox;
     typeAtPriority = getTypeAtPriority(goalChanges).typeAtPriority;
     if (typeAtPriority !== "none") {
-      goalChanges[typeAtPriority].sort((a: { level: number; }, b: { level: number; }) => a.level - b.level);
+      goalChanges[typeAtPriority].sort((a: { level: number }, b: { level: number }) => a.level - b.level);
       let goals: GoalItem[] = [];
       const goalAtPriority = goalChanges[typeAtPriority][0];
-      const parentId = "id" in goalAtPriority
-        ? goalAtPriority.id : typeAtPriority === "subgoals"
-          ? goalAtPriority.goal.parentGoalId : goalAtPriority.goal.id;
+      const parentId =
+        "id" in goalAtPriority
+          ? goalAtPriority.id
+          : typeAtPriority === "subgoals"
+          ? goalAtPriority.goal.parentGoalId
+          : goalAtPriority.goal.id;
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
         return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
       }
@@ -157,16 +180,31 @@ export const jumpToLowestChanges = async (id: string) => {
       return {
         typeAtPriority,
         parentId,
-        goals
+        goals,
       };
     }
-  } else { console.log("inbox item doesn't exist"); }
+  } else {
+    console.log("inbox item doesn't exist");
+  }
   return { typeAtPriority, parentId: "", goals: [] };
 };
 
 export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
-  const tags: ITagsAllowedToDisplay[] = ["title", "duration", "habit", "on", "timeBudget", "start", "due", "afterTime", "beforeTime", "goalColor", "language", "link"];
-  const res:ITagsChanges = { schemaVersion: { }, prettierVersion: { } };
+  const tags: ITagsAllowedToDisplay[] = [
+    "title",
+    "duration",
+    "habit",
+    "on",
+    "timeBudget",
+    "start",
+    "due",
+    "afterTime",
+    "beforeTime",
+    "goalColor",
+    "language",
+    "link",
+  ];
+  const res: ITagsChanges = { schemaVersion: {}, prettierVersion: {} };
   const goal1Tags = formatTagsToText(goal1);
   const goal2Tags = formatTagsToText(goal2);
   console.log(goal1Tags, goal2Tags);
