@@ -50,18 +50,28 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       closable={false}
       footer={null}
       centered
-      onCancel={() => { window.history.back(); }}
-      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      onCancel={() => {
+        window.history.back();
+      }}
+      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
+        theme[darkModeStatus ? "dark" : "light"]
+      }`}
     >
-
-      <p className="popupModal-title" style={{ margin: 0 }}>{t(headerKey)}</p>
-      <p>{t("note")}: {t(noteKey)}</p>
+      <p className="popupModal-title" style={{ margin: 0 }}>
+        {t(headerKey)}
+      </p>
+      <p>
+        {t("note")}: {t(noteKey)}
+      </p>
       <div style={{ display: "flex", gap: "5px" }}>
         <Checkbox
           checked={neverShowAgain}
           className="checkbox"
-          onChange={() => { setNeverShowAgain(!neverShowAgain); }}
-        > {t("dontAskAgain")}
+          onChange={() => {
+            setNeverShowAgain(!neverShowAgain);
+          }}
+        >
+          {t("dontAskAgain")}
         </Checkbox>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
