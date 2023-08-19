@@ -14,7 +14,12 @@ import { createDummyGoals } from "@src/helpers/NewUserController";
 import { resetProgressOfToday } from "@src/api/TasksAPI";
 import { lastAction, openDevMode } from "@src/store";
 import { generateUniqueIdForSchInput } from "@src/utils/SchedulerUtils";
-import { getCachedSchedule, handleSchedulerOutput, organizeDataForInptPrep, putSchedulerRes } from "@src/helpers/MyTimeHelper";
+import {
+  getCachedSchedule,
+  handleSchedulerOutput,
+  organizeDataForInptPrep,
+  putSchedulerRes,
+} from "@src/helpers/MyTimeHelper";
 
 import init, { schedule } from "../../pkg/scheduler";
 
@@ -34,33 +39,33 @@ function useScheduler() {
     }
     console.log(activeGoals);
     return activeGoals;
-  }
+  };
 
   const getInputForScheduler = async () => {
     const activeGoals = await getInputGoals();
-    const { dbTasks, schedulerInput } = await organizeDataForInptPrep(activeGoals)
+    const { dbTasks, schedulerInput } = await organizeDataForInptPrep(activeGoals);
     setTasksStatus({ ...dbTasks });
     return schedulerInput;
-  }
+  };
 
   const generateSchedule = async () => {
     const schedulerInput = await getInputForScheduler();
     const generatedInputId = generateUniqueIdForSchInput(JSON.stringify(schedulerInput));
     const cachedRes = await getCachedSchedule(generatedInputId);
     return { generatedInputId, schedulerInput, cachedRes };
-  }
+  };
 
   const logIO = (schedulerInput: string, schedulerOutput: ISchedulerOutput) => {
     console.log("parsedInput", JSON.parse(schedulerInput));
     console.log("input", schedulerInput);
     console.log("output", schedulerOutput);
-  }
+  };
 
   const initialCall = async () => {
     const { schedulerInput: schedulerInputV1, cachedRes } = await generateSchedule();
     let newGeneratedInputId = "";
     let res: ISchedulerOutput;
-    console.log("🚀 ~ file: useScheduler.tsx:75 ~ initialCall ~ cachedRes.code:", cachedRes.code)
+    console.log("🚀 ~ file: useScheduler.tsx:75 ~ initialCall ~ cachedRes.code:", cachedRes.code);
     if (cachedRes.code === "found") {
       res = cachedRes.output;
       logIO(JSON.stringify(schedulerInputV1), res);
@@ -69,7 +74,7 @@ function useScheduler() {
       const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
       newGeneratedInputId = generatedInputId;
       if (!devMode) {
-        res = callJsScheduler(schedulerInputV2)
+        res = callJsScheduler(schedulerInputV2);
         logIO(JSON.stringify(schedulerInputV2), res);
       } else {
         await init();
@@ -81,7 +86,6 @@ function useScheduler() {
       .catch(() => console.log("failed to save scheduler output"));
     const processedOutput = await handleSchedulerOutput(res);
     setTasks({ ...processedOutput });
-
   };
 
   useEffect(() => {
@@ -99,7 +103,7 @@ function useScheduler() {
   return {
     tasks,
     tasksStatus,
-    setTasksStatus
+    setTasksStatus,
   };
 }
 

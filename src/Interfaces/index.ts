@@ -1,4 +1,5 @@
 import { ISubGoalHistory } from "@src/store/GoalsState";
+import { GoalItem } from "@src/models/GoalItem";
 import { ILanguage, ILanguageListProps } from "./ILanguage";
 import { confirmActionState } from "./IPopupModals";
 
@@ -18,4 +19,5 @@ export interface ILocationState {
   displayInputNoteModal?: number; // show input modal for adding note for id
   changeTheme?: boolean; // theme changer mode
   expandedGoalId?: string; // id of goal to be expanded
+  displayGoalActions?: GoalItem; // id of goal whose actions have to be opened
 }

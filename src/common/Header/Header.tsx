@@ -18,12 +18,12 @@ import { inboxIcon, openEnvelopeIcon } from "../../assets";
 
 import "./Header.scss";
 
-const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
+const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const theme = useRecoilValue(themeState);
   const isInboxOpen = useRecoilValue(openInbox);
-  const { handleChangeTheme, handleBackResModal, handleLangChangeModal } = useGlobalStore();
+  const { handleChangeTheme, handleBackResModal, handleBackLangModal } = useGlobalStore();
   const { t } = useTranslation();
 
   const setShowToast = useSetRecoilState(displayToast);
@@ -54,7 +54,7 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
         } else if (ele === t("backup")) {
           handleBackResModal();
         } else if (ele === t("changeLanguage")) {
-          handleLangChangeModal();
+          handleBackLangModal();
         } else if (ele === t("Install")) {
           if (deferredPrompt) {
             deferredPrompt.prompt();
@@ -66,11 +66,14 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
             });
           }
         }
-      }
+      },
     })),
     {
       label: (
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onClickCapture={toggleDarkModeStatus}>
+        <div
+          style={{ display: "flex", justifyContent: "space-between", marginTop: 12, alignItems: "center" }}
+          onClickCapture={toggleDarkModeStatus}
+        >
           <p>{t("Dark Mode")}</p>
           <Switch checked={darkModeStatus} />
         </div>
@@ -104,8 +107,12 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
         window.history.go(-((state?.goalsHistory?.length || 0) + 1));
       } else {
         const newState = { ...state };
-        if (newState.goalsHistory) { delete newState.goalsHistory; }
-        if (newState.activeGoalId) { delete newState.activeGoalId; }
+        if (newState.goalsHistory) {
+          delete newState.goalsHistory;
+        }
+        if (newState.activeGoalId) {
+          delete newState.activeGoalId;
+        }
         navigate("/MyGoals", { state: { ...newState, goalsHistory: [], isInboxOpen: true } });
       }
     }
@@ -114,16 +121,18 @@ const HeaderBtn = ({ path, alt }: { path: string, alt: string }) => {
   return (
     <div style={{ alignSelf: "center", display: "flex" }}>
       {alt === "zinzen settings" ? (
-        <Dropdown rootClassName={`header-dropdown${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`} overlayStyle={{ width: 175 }} menu={{ items }} trigger={["click"]}>
+        <Dropdown
+          rootClassName={`header-dropdown${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
+            theme[darkModeStatus ? "dark" : "light"]
+          }`}
+          overlayStyle={{ width: 175 }}
+          menu={{ items }}
+          trigger={["click"]}
+        >
           <img className="theme-icon header-icon settings-icon" src={path} alt={alt} />
         </Dropdown>
       ) : (
-        <img
-          onClickCapture={handleClick}
-          className="theme-icon header-icon"
-          src={path}
-          alt={alt}
-        />
+        <img onClickCapture={handleClick} className="theme-icon header-icon" src={path} alt={alt} />
       )}
     </div>
   );
@@ -151,18 +160,22 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   }, [location]);
   return (
     <div className="header" style={{ background: darkModeStatus ? "var(--selection-color)" : "transparent" }}>
-      {displaySearch && debounceSearch ?
+      {displaySearch && debounceSearch ? (
         <Search debounceSearch={debounceSearch} />
-        : (
-          <>
-            <h6>{isInboxOpen ? "Inbox" : t(title)}</h6>
-            <div className="header-items">
-              {["mygoals", "Inbox"].includes(title) && !isInboxOpen && <HeaderBtn path={searchIcon} alt="zinzen search" />}
-              {["mygoals", "Inbox"].includes(title) && showInbox && <HeaderBtn path={isInboxOpen ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" />}
-              <HeaderBtn path={verticalDots} alt="zinzen settings" />
-            </div>
-          </>
-        )}
+      ) : (
+        <>
+          <h6>{isInboxOpen ? "Inbox" : t(title)}</h6>
+          <div className="header-items">
+            {["mygoals", "Inbox"].includes(title) && !isInboxOpen && (
+              <HeaderBtn path={searchIcon} alt="zinzen search" />
+            )}
+            {["mygoals", "Inbox"].includes(title) && showInbox && (
+              <HeaderBtn path={isInboxOpen ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" />
+            )}
+            <HeaderBtn path={verticalDots} alt="zinzen settings" />
+          </div>
+        </>
+      )}
     </div>
   );
 };

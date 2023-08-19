@@ -17,22 +17,24 @@ import { GoalItem } from "@src/models/GoalItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import { darkModeState, displayToast, lastAction, openDevMode } from "@src/store";
-import { addBlockedSlot, addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
 
 interface MyTimelineProps {
-  day: string,
-  taskDetails: { [goalid: string]: TaskItem },
-  setTaskDetails: React.Dispatch<React.SetStateAction<{
-    [goalid: string]: TaskItem;
-  }>>
+  day: string;
+  taskDetails: { [goalid: string]: TaskItem };
+  setTaskDetails: React.Dispatch<
+    React.SetStateAction<{
+      [goalid: string]: TaskItem;
+    }>
+  >;
   myTasks: {
-    scheduled: ITask[],
-    impossible: ITask[],
-    freeHrsOfDay: number,
-    scheduledHrs: number
-  }
+    scheduled: ITask[];
+    impossible: ITask[];
+    freeHrsOfDay: number;
+    scheduledHrs: number;
+  };
 }
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetails, setTaskDetails }) => {
@@ -51,14 +53,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
 
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
 
-  const handleView = () => { setShowScheduled(!showScheduled); };
+  const handleView = () => {
+    setShowScheduled(!showScheduled);
+  };
   // console.log(devMode);
   const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done", task: ITask) => {
     if (day === "Today") {
-      if (actionName === "Reschedule" && devMode) {
-        setOpenReschedule(true);
-        return;
-      }
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
         // @ts-ignore
@@ -67,19 +67,23 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           goalId: task.goalid,
           title: task.title,
           completedTodayIds: [task.taskid],
-          forgotToday: actionName === "Skip" ? [`${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`] : [],
+          forgotToday:
+            actionName === "Skip" ? [`${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`] : [],
           completedToday: actionName === "Done" ? Number(task.duration) : 0,
           lastForget: actionName === "Skip" ? new Date().toLocaleDateString() : "",
           lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
           hoursSpent: 0,
-          blockedSlots: actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : []
+          blockedSlots: [], // actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : [],
         });
+        // if (actionName === "Reschedule") {
+        //   setOpenReschedule({ ...task });
+        // }
       } else if (actionName === "Done") {
         await completeTask(taskItem.id, Number(task.duration), task.taskid);
       } else if (actionName === "Skip") {
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
       } else if (actionName === "Reschedule") {
-        await addBlockedSlot(task.goalid, { start: task.start, end: task.deadline });
+        // setOpenReschedule({ ...task });
       }
       if (actionName === "Done") {
         await doneSound.play();
@@ -87,14 +91,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         if (updatedTask) {
           setTaskDetails({
             ...taskDetails,
-            [task.goalid]: updatedTask
+            [task.goalid]: updatedTask,
           });
         }
       } else if (actionName === "Skip") {
         await forgetSound.play();
         setLastAction("TaskSkipped");
-      } else {
-        setLastAction("TaskRescheduled");
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
@@ -105,15 +107,19 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     let tmpGoal: GoalItem | null = await getGoal(goalId);
     let openGoalId = tmpGoal?.parentGoalId;
     const parentGoalId = openGoalId;
-    if (!openGoalId) { return; }
+    if (!openGoalId) {
+      return;
+    }
     while (openGoalId !== "root") {
       tmpGoal = await getGoal(openGoalId);
-      if (!tmpGoal) { break; }
-      goalsHistory.push(({
+      if (!tmpGoal) {
+        break;
+      }
+      goalsHistory.push({
         goalID: tmpGoal.id || "root",
         goalColor: tmpGoal.goalColor || "#ffffff",
         goalTitle: tmpGoal.title || "",
-      }));
+      });
       openGoalId = tmpGoal.parentGoalId;
     }
     goalsHistory.reverse();
@@ -123,19 +129,23 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         from: "",
         goalsHistory,
         activeGoalId: parentGoalId,
-        expandedGoalId: goalId
-      }
+        expandedGoalId: goalId,
+      },
     });
   };
   return (
     <>
       {myTasks.impossible.length > 0 && (
         <div className={`timeline-view${darkModeStatus ? "-dark" : ""}`}>
-          <button type="button" className={`${showScheduled && "activeView"}`} onClick={handleView}>Scheduled</button>
-          <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>Impossible</button>
+          <button type="button" className={`${showScheduled && "activeView"}`} onClick={handleView}>
+            Scheduled
+          </button>
+          <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>
+            Impossible
+          </button>
         </div>
       )}
-      <div className="MTL-display" style={{paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}`}}>
+      <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
         {myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
@@ -152,11 +162,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
               }}
             >
               <div style={{ display: "flex", position: "relative" }}>
-                <button
-                  type="button"
-                  className="MTL-circle"
-                  style={{ backgroundColor: `${task.goalColor}` }}
-                />
+                <button type="button" className="MTL-circle" style={{ backgroundColor: `${task.goalColor}` }} />
                 <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
                   <button
                     style={{ textDecorationColor: task.goalColor }}
@@ -182,15 +188,27 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     type="button"
                     onClick={() => setDisplayOptionsIndex("")}
                     className="MyTime-expand-btw task-dropdown"
-                  > <div><img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" /></div>
+                  >
+                    <div>
+                      <img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" />
+                    </div>
                   </button>
                 )}
               </div>
               {displayOptionsIndex === task.taskid ? (
                 <div className="MTL-options">
-                  <button type="button" onClick={() => handleActionClick("Skip", task)}> Skip</button><div />
-                  <button type="button" onClick={() => handleActionClick("Reschedule", task)}> Reschedule</button><div />
-                  <button type="button" onClick={() => handleActionClick("Done", task)}> Done</button><div />
+                  <button type="button" onClick={() => handleActionClick("Skip", task)}>
+                    Skip
+                  </button>
+                  <div />
+                  <button type="button" onClick={() => handleActionClick("Reschedule", task)}>
+                    Reschedule
+                  </button>
+                  <div />
+                  <button type="button" onClick={() => handleActionClick("Done", task)}>
+                    Done
+                  </button>
+                  <div />
                 </div>
               ) : null}
             </button>

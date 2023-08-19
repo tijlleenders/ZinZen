@@ -21,6 +21,12 @@ function useGlobalStore() {
       setBackupRestoreModal(locationState.displayBackResModal);
     }
 
+    if (langChangeModal) {
+      setLangChangeModal(false);
+    } else if (locationState.displayLangChangeModal) {
+      setLangChangeModal(locationState.displayLangChangeModal);
+    }
+
     if (themeSelection) {
       setThemeSelection(false);
     } else if (locationState.changeTheme) {
@@ -30,6 +36,10 @@ function useGlobalStore() {
 
   const handleBackResModal = () => {
     navigate(window.location.pathname, { state: { displayBackResModal: true } });
+  };
+
+  const handleBackLangModal = () => {
+    navigate(window.location.pathname, { state: { displayLangChangeModal: true } });
   };
 
   const handleLangChangeModal = () => {
@@ -52,6 +62,7 @@ function useGlobalStore() {
     handleBackResModal,
     handleChangeTheme,
     handleLangChangeModal,
+    handleBackLangModal,
   };
 }
 

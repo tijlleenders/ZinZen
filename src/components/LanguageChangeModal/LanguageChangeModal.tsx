@@ -15,7 +15,7 @@ import { getLanguages } from "@src/constants/languages";
 
 export const LanguageChangeModal = () => {
   const [, setPosition] = useState(1);
-  const [open, close] = useRecoilState(languageChangeModal);
+  const open = useRecoilValue(languageChangeModal);
   const darkModeStatus = useRecoilValue(darkModeState);
   const theme = useRecoilValue(themeState);
   const [IsLanguageChosen] = useRecoilState(languageSelectionState);
@@ -45,11 +45,11 @@ export const LanguageChangeModal = () => {
 
   return (
     <Modal
-      open={open}
+      open={!!open}
       closable={false}
       footer={null}
       centered
-      onCancel={() => close(!open)}
+      onCancel={() => window.history.back()}
       width={200}
       className={`languageChangeModal ${darkModeStatus ? "dark" : "light"}-theme${
         theme[darkModeStatus ? "dark" : "light"]

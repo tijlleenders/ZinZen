@@ -191,7 +191,7 @@ const App = () => {
           </Routes>
         </BrowserRouter>
         {displayBackupRestoreModal && <BackupRestoreModal />}
-        <LanguageChangeModal />
+        {languageChangeModal && <LanguageChangeModal />}
       </div>
     </div>
   );

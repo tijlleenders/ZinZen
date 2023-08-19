@@ -23,7 +23,7 @@ const GoalHistory = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
-    <div>
+    <div style={{ padding: "0 12px" }}>
       <Breadcrumb
         style={{ margin: "24px 0px" }}
         separator={<span style={{ color: darkModeStatus ? "rgba(255, 255, 255, 0.45)" : "inherit" }}>/</span>}

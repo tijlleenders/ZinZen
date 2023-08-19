@@ -4,7 +4,14 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { ILocationState } from "@src/Interfaces";
 import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { displayInbox, displayConfirmation } from "@src/store";
-import { displayAddGoal, displayGoalId, goalsHistory, displayUpdateGoal, displayShareModal } from "@src/store/GoalsState";
+import {
+  displayAddGoal,
+  displayGoalId,
+  goalsHistory,
+  displayUpdateGoal,
+  displayShareModal,
+  displayGoalActions,
+} from "@src/store/GoalsState";
 
 const GoalLocStateHandler = () => {
   const location = useLocation();
@@ -16,18 +23,27 @@ const GoalLocStateHandler = () => {
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
   const [showConfirmation, setShowConfirmation] = useRecoilState(displayConfirmation);
+  const [showGoalActions, setShowGoalActions] = useRecoilState(displayGoalActions);
 
   const handleLocationChange = () => {
     const locationState: ILocationState = location.state || {};
     getActiveSharedWMGoals().then((items) => {
       if (items && items.length > 0) {
-        if (!showInbox) { setShowInbox(true); }
-      } else if (showInbox) { setShowInbox(false); }
+        if (!showInbox) {
+          setShowInbox(true);
+        }
+      } else if (showInbox) {
+        setShowInbox(false);
+      }
     });
-    if (subGoalHistory.length > 0 ||
-      ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
+    if (subGoalHistory.length > 0 || ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
       setSubGoalHistory([...(locationState.goalsHistory || [])]);
       setSelectedGoalId(locationState.activeGoalId || "root");
+    }
+    if (showGoalActions && !locationState.displayGoalActions) {
+      setShowGoalActions(null);
+    } else if (locationState.displayGoalActions) {
+      setShowGoalActions(locationState.displayGoalActions);
     }
     if (showAddGoal && !locationState.displayAddGoal) {
       setShowAddGoal(null);
