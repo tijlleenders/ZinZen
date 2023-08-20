@@ -174,7 +174,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         <div
           style={{
             display: "flex",
-            width: "100%",
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
