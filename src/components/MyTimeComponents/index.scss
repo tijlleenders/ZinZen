@@ -1,4 +1,5 @@
-.timeline-view,.timeline-view-dark {
+.timeline-view,
+.timeline-view-dark {
   display: flex;
   background: var(--bottom-nav-color);
   padding: 10px 20px;
@@ -44,7 +45,7 @@
   background: transparent;
   border: none;
   border-bottom: 0.5px solid var(--default-border-color);
-} 
+}
 
 .MTL-display > button:first-child {
   padding-top: 1.4em;
@@ -71,6 +72,7 @@
 .MTL-taskTitle {
   width: 100%;
   overflow: hidden;
+  cursor: pointer;
   white-space: nowrap;
   border: none;
   text-overflow: ellipsis;
@@ -109,15 +111,24 @@
 }
 
 .completedTask {
-  
   opacity: 0.4;
   pointer-events: none;
   .MTL-taskTitle {
     text-decoration: line-through;
+    text-decoration-thickness: 2px;
   }
 }
 
-.forgot {
+.skipped {
   display: none;
   transition: opacity 0.5s ease-out;
+}
+
+.task-progress {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 3%;
+  padding-top: 12px;
+  font-weight: 400;
+  font-size: 0.875em;
 }

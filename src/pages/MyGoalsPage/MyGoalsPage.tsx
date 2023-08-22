@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
@@ -16,12 +15,14 @@ import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import {
   displayAddGoal,
   displayChangesModal,
+  displayGoalActions,
   displayGoalId,
   displayShareModal,
   displaySuggestionsModal,
   displayUpdateGoal,
 } from "@src/store/GoalsState";
 import MyGoal from "@components/GoalsComponents/MyGoal";
+import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ZAccordion from "@src/common/Accordion";
@@ -31,10 +32,10 @@ import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal
 import { anyUpdates, darkModeState, lastAction, openInbox, searchActive } from "@src/store";
 
 import "./MyGoalsPage.scss";
+import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 
 export const MyGoalsPage = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
-
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
@@ -46,6 +47,7 @@ export const MyGoalsPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const showGoalActions = useRecoilValue(displayGoalActions);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
@@ -65,8 +67,12 @@ export const MyGoalsPage = () => {
     handleUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
   };
   const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    if (debounceTimeout) { clearTimeout(debounceTimeout); }
-    debounceTimeout = setTimeout(() => { search(event.target.value); }, 300);
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+    debounceTimeout = setTimeout(() => {
+      search(event.target.value);
+    }, 300);
   };
 
   useEffect(() => {
@@ -77,59 +83,39 @@ export const MyGoalsPage = () => {
   }, [action]);
   useEffect(() => {
     refreshActiveGoals();
-  }, [showShareModal, isInboxOpen, showAddGoal, showChangesModal, showUpdateGoal, showSuggestionModal, showChangesModal]);
+  }, [
+    showShareModal,
+    isInboxOpen,
+    showAddGoal,
+    showChangesModal,
+    showUpdateGoal,
+    showSuggestionModal,
+    showChangesModal,
+  ]);
   useEffect(() => {
-    if (selectedGoalId === "root") { refreshActiveGoals(); }
+    if (selectedGoalId === "root") {
+      refreshActiveGoals();
+    }
   }, [selectedGoalId, displaySearch]);
-
-  // useEffect(() => {
-  //   handleBackClick();
-  // }, [location]);
-
-  /* Usefull if navigation is from MyTimePage or external page/component */
-  // useEffect(() => {
-  //   (async () => {
-  //     const state = location.state as ILocationProps | null | undefined;
-  //     if (state) {
-  //       const { isRootGoal } = state;
-  //       let { openGoalOfId } = state;
-  //       if (!isRootGoal && openGoalOfId) {
-  //         const tmpHistory = [];
-  //         while (openGoalOfId !== "root") {
-  //           const tmpGoal: GoalItem = await getGoal(openGoalOfId);
-  //           tmpHistory.push(({
-  //             goalID: tmpGoal.id || "root",
-  //             goalColor: tmpGoal.goalColor || "#ffffff",
-  //             goalTitle: tmpGoal.title || "",
-  //             display: null
-  //           }));
-  //           openGoalOfId = tmpGoal.parentGoalId;
-  //         }
-  //         tmpHistory.reverse();
-  //         setSubGoalHistory([...tmpHistory]);
-  //         setSelectedGoalId(state.openGoalOfId);
-  //       }
-  //       location.state = null;
-  //     }
-  //   })();
-  // });
 
   return (
     <AppLayout title="mygoals" debounceSearch={debounceSearch}>
+      <GoalLocStateHandler />
+      {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
       <div className="myGoals-container">
-        {
-          selectedGoalId === "root" ? (
-            <div className="my-goals-content">
-              {showAddGoal && (<ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />)}
-              <div>
-                {isInboxOpen && isUpdgradeAvailable && (
-                  <ZAccordion
-                    showCount={false}
-                    style={{
-                      border: "none",
-                      background: darkModeStatus ? "var(--secondary-background)" : "transparent"
-                    }}
-                    panels={[{
+        {selectedGoalId === "root" ? (
+          <div className="my-goals-content">
+            {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
+            <div>
+              {isInboxOpen && isUpdgradeAvailable && (
+                <ZAccordion
+                  showCount={false}
+                  style={{
+                    border: "none",
+                    background: darkModeStatus ? "var(--secondary-background)" : "transparent",
+                  }}
+                  panels={[
+                    {
                       header: "Notifications",
                       body: (
                         <div className={`notification-item user-goal${darkModeStatus ? "-dark" : ""}`}>
@@ -137,41 +123,45 @@ export const MyGoalsPage = () => {
                           <button
                             type="button"
                             onClick={async () => {
-                              navigator.serviceWorker.register("../../service-worker.js")
-                                .then((registration) => {
-                                  if (registration.waiting) {
-                                    registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-                                    setIsUpgradeAvailable(false);
-                                    window.location.reload();
-                                  }
-                                });
+                              navigator.serviceWorker.register("../../service-worker.js").then((registration) => {
+                                if (registration.waiting) {
+                                  registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+                                  setIsUpgradeAvailable(false);
+                                  window.location.reload();
+                                }
+                              });
                             }}
                             className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-                          >Update Now
+                          >
+                            Update Now
                           </button>
                         </div>
-                      )
-                    }]}
-                  />
-                )}
-                {isInboxOpen && !isUpdgradeAvailable && activeGoals.length === 0 && <Empty subText="But ZinZen brought new updates for you" />}
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <GoalsList
-                    goals={activeGoals}
-                    showActions={showActions}
-                    setShowActions={setShowActions}
-                    setGoals={setActiveGoals}
-                  />
-                </div>
-                <div className="archived-drawer">
-                  {archivedGoals.length > 0 && (
-                    <ZAccordion
-                      showCount
-                      style={{
-                        border: "none",
-                        background: darkModeStatus ? "var(--secondary-background)" : "transparent"
-                      }}
-                      panels={[{
+                      ),
+                    },
+                  ]}
+                />
+              )}
+              {isInboxOpen && !isUpdgradeAvailable && activeGoals.length === 0 && (
+                <Empty subText="But ZinZen brought new updates for you" />
+              )}
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <GoalsList
+                  goals={activeGoals}
+                  showActions={showActions}
+                  setShowActions={setShowActions}
+                  setGoals={setActiveGoals}
+                />
+              </div>
+              <div className="archived-drawer">
+                {archivedGoals.length > 0 && (
+                  <ZAccordion
+                    showCount
+                    style={{
+                      border: "none",
+                      background: darkModeStatus ? "var(--secondary-background)" : "transparent",
+                    }}
+                    panels={[
+                      {
                         header: "Done",
                         body: archivedGoals.map((goal: GoalItem) => (
                           <MyGoal
@@ -180,22 +170,25 @@ export const MyGoalsPage = () => {
                             showActions={showActions}
                             setShowActions={setShowActions}
                           />
-                        ))
-                      }]}
-                    />
-                  )}
-                </div>
+                        )),
+                      },
+                    ]}
+                  />
+                )}
               </div>
             </div>
-          )
-            :
-            (<GoalSublist />)
-        }
+          </div>
+        ) : (
+          <GoalSublist />
+        )}
         {showChangesModal && <DisplayChangesModal />}
         {activeGoals?.length === 0 && (
-          <img style={{ width: 350, height: 350, opacity: 0.3 }} src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight} alt="Zinzen" />
+          <img
+            style={{ width: 350, height: 350, opacity: 0.3 }}
+            src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+            alt="Zinzen"
+          />
         )}
-
       </div>
     </AppLayout>
   );

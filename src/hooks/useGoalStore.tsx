@@ -1,60 +1,20 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ILocationState } from "@src/Interfaces";
 import { getGoal } from "@src/api/GoalsAPI";
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayConfirmation, displayInbox } from "@src/store";
-import { displayAddGoal, displayGoalId, displayShareModal, displayUpdateGoal, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
+import { displayConfirmation } from "@src/store";
+import { displayGoalId, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 import { colorPalleteList } from "@src/utils";
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
 
 function useGoalStore() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [showInbox, setShowInbox] = useRecoilState(displayInbox);
-
-  const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
-  const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
-  const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
-  const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
-  const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
-  const [showConfirmation, setShowConfirmation] = useRecoilState(displayConfirmation);
+  const selectedGoalId = useRecoilValue(displayGoalId);
+  const subGoalHistory = useRecoilValue(goalsHistory);
+  const showConfirmation = useRecoilValue(displayConfirmation);
 
   const setColorIndex = useSetRecoilState(selectedColorIndex);
-  const handleLocationChange = () => {
-    const locationState: ILocationState = location.state || {};
-    getActiveSharedWMGoals().then((items) => {
-      if (items && items.length > 0) {
-        if (!showInbox) { setShowInbox(true); }
-      } else if (showInbox) { setShowInbox(false); }
-    });
-    if (subGoalHistory.length > 0 ||
-      ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
-      setSubGoalHistory([...(locationState.goalsHistory || [])]);
-      setSelectedGoalId(locationState.activeGoalId || "root");
-    }
-    if (showAddGoal) {
-      setShowAddGoal(null);
-    } else if (locationState.displayAddGoal) {
-      setShowAddGoal({ open: true, goalId: locationState.displayAddGoal });
-    }
-    if (showUpdateGoal) {
-      setShowUpdateGoal(null);
-    } else if (locationState.displayUpdateGoal) {
-      setShowUpdateGoal({ open: true, goalId: locationState.displayUpdateGoal });
-    }
-    if (showShareModal) {
-      setShowShareModal(null);
-    } else if (locationState.displayShareModal) {
-      setShowShareModal(locationState.displayShareModal);
-    }
-    if (showConfirmation.open) {
-      setShowConfirmation({ ...showConfirmation, open: false });
-    } else if (locationState.displayConfirmation) {
-      setShowConfirmation(locationState.displayConfirmation);
-    }
-  };
 
   const handleAddGoal = async (goal: GoalItem | null = null) => {
     let newLocationState: ILocationState = { displayAddGoal: selectedGoalId };
@@ -115,19 +75,18 @@ function useGoalStore() {
     navigate("/MyGoals", { state: { ...location.state, displayInbox: true } });
   };
 
-  useEffect(() => {
-    if (location && location.pathname === "/MyGoals") {
-      handleLocationChange();
-    }
-  }, [location]);
+  const handleGoalActions = (id: string) => {
+    navigate("/MyGoals", { state: { ...location.state, showGoalActions: id } });
+  };
 
   return {
     handleAddGoal,
     handleShareGoal,
-    handleUpdateGoal,
     handleOpenInbox,
+    handleUpdateGoal,
+    handleGoalActions,
     handleConfirmation,
-    handleDisplayChanges
+    handleDisplayChanges,
   };
 }
 

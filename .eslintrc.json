@@ -24,7 +24,8 @@
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "globals": {
     "cy": true
@@ -49,7 +50,14 @@
   },
   "plugins": ["react", "@typescript-eslint", "import"],
   "rules": {
-    "quotes": [2, "double", { "avoidEscape": true }],
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
+    "quotes": [
+      2,
+      "double",
+      {
+        "avoidEscape": true
+      }
+    ],
     "implicit-arrow-linebreak": "off",
     "function-paren-newline": "off",
     "comma-dangle": "off",
@@ -82,7 +90,17 @@
     ],
     "no-nested-ternary": "off",
     "no-console": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".ts"] }],
-    "react/function-component-definition": [2, { "namedComponents": "arrow-function" }]
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".tsx", ".ts"]
+      }
+    ],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function"
+      }
+    ]
   }
 }

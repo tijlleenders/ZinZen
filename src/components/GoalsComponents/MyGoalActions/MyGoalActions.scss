@@ -1,0 +1,41 @@
+.interactables-modal {
+  .ant-modal-content {
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 28px !important;
+  }
+  .goal-action {
+    width: unset !important;
+    border: none !important;
+    border-radius: 0 !important;
+    cursor: pointer;
+  }
+  .goal-action:last-child {
+    border-radius: 0 0 28px 28px !important;
+  }
+  div {
+    text-align: center;
+    p {
+      font-weight: 500;
+      margin: 0;
+      font-size: 0.875em;
+      text-align: left;
+    }
+  }
+  img,
+  svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+  }
+}
+
+.interactables > div > p {
+  color: rgb(205, 110, 81);
+}
+
+.interactables > img,
+.interactables > svg,
+.exceptional-img {
+  font-size: 22px;
+}
