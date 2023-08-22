@@ -198,7 +198,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               <div
                 className="goal-dd-outer"
                 style={{
-                  top: showActions.open === goal.id && showActions.click > 0 ? -2.3 : -2.5,
                   borderColor: goal.goalColor,
                 }}
               />

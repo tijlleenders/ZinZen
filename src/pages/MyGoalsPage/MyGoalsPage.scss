@@ -71,21 +71,22 @@
 
 .goal-dropdown {
   position: relative;
+  width: 28px;
+  height: 28px;
 }
 
 .goal-dd-inner {
-  width: 24px;
-  height: 24px;
-  // margin-top: 2.8px;
-  // margin-left: 2.6px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-}
-.goal-dd-outer {
   position: absolute;
-     top: -2.5px;
-    left: -2.1px;
-    width: 27px;
-    height: 27px;
+  top: 4px;
+  left: 4px;
+}
+
+.goal-dd-outer {
+  width: 28px;
+  height: 28px;
   border: solid;
   border-width: 1.4px;
   border-radius: 50%;
