@@ -26,6 +26,16 @@ For a quick set-up guide see the [Development Setup page](documentation/technica
 
 ## How to contribute?
 There are many ways to contribute... not only code!  
+https://opensource.guide/how-to-contribute/  
+Please mind the code of conduct.  
+
+We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
+
+if Rust, WASM and scheduling algorithms are your domains of interest, please consider contributing to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
+
+## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
+
+- [Donate](https://donate.stripe.com/6oE4jK1iPcPT1m89AA)  
 - [Donate via Stripe](https://donate.stripe.com/6oE4jK1iPcPT1m89AA) or [GitHub sponsors](https://github.com/sponsors/tijlleenders)  
 - [Give anonymous feedback](https://zinzen.me/Feedback)  
 - ✨Star✨ this repo  
