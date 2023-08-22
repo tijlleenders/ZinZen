@@ -38,7 +38,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
           setDisplayModal({ ...newDisplayModal, open: false });
         }
         await handleClick(choice === "cancel" ? choice : actionName);
-        window.history.back();
       }}
     >
       {t(choice)}
@@ -53,9 +52,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       onCancel={() => {
         window.history.back();
       }}
-      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
-        theme[darkModeStatus ? "dark" : "light"]
-      }`}
+      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]
+        }`}
     >
       <p className="popupModal-title" style={{ margin: 0 }}>
         {t(headerKey)}

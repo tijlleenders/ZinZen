@@ -61,6 +61,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   };
 
   const handleActionClick = async (action: string) => {
+    // setConfirmationAction(null);
     if (action === "delete") {
       await pageCrumple.play();
       await removeThisGoal();
@@ -69,9 +70,10 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       await archiveThisGoal();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
+    } else {
+      return;
     }
-    setConfirmationAction(null);
-    window.history.back();
+    window.history.go(confirmationAction ? -2 : -1);
   };
 
   const openConfirmationPopUp = async (action: confirmAction) => {
@@ -95,16 +97,15 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       centered
       width={200}
       onCancel={() => window.history.back()}
-      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
+        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <Tooltip placement="top" title={goal.title}>
           <p
             className="ordinary-element"
             id="title-field"
-            // onChange={(e) => setTitle(e.target.value)}
+          // onChange={(e) => setTitle(e.target.value)}
           >
             {goal.title}
           </p>
