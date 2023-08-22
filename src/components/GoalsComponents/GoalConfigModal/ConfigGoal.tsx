@@ -171,19 +171,33 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           paddingLeft: 18,
         }}
       >
-        <ConfigOption
-          label={
-            <CustomInput
-              value={tags.duration}
-              handleChange={(value: string) => {
-                setTags({ ...tags, duration: value });
-              }}
-              style={{}}
-            />
-          }
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          hours
-        </ConfigOption>
+          <ConfigOption
+            label={
+              <CustomInput
+                value={tags.duration}
+                handleChange={(value: string) => {
+                  setTags({ ...tags, duration: value });
+                }}
+                style={{}}
+              />
+            }
+          >
+            <span style={{marginLeft : 25}}>hours</span>
+          </ConfigOption>
+
+          <button type="button" className="action-btn" onClick={handleSave} style={{ marginRight: 25 }}>
+            {t(`${action} Goal`)}
+          </button>
+        </div>
+
         <ConfigOption label="on">
           {onDays.map((d) => (
             <span
@@ -200,7 +214,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             </span>
           ))}
         </ConfigOption>
-        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", alignItems: "center", marginRight: 25 }}>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-start", alignItems: "center", marginRight: 25 }}>
           <div>between</div>
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <CustomInput
@@ -280,12 +294,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           repeats weekly
         </Checkbox>
         <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
-
-        <div style={{ marginTop: 14, textAlign: "center" }}>
-          <button type="button" className="action-btn" onClick={handleSave}>
-            {t(`${action} Goal`)}
-          </button>
-        </div>
       </div>
     </Modal>
   );
