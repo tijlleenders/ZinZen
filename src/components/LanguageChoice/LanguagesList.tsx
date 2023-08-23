@@ -10,15 +10,13 @@ export const LanguagesList = (props: ILanguageListProps) => {
   const { languages, navigationCallback, type } = props;
   const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
 
-  const [open, close] = useRecoilState(languageChangeModal);
-
   const handleClick = (langId: string) => {
     vibrateWorks ? navigator.vibrate(100) : null;
     setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
     localStorage.setItem("language", JSON.stringify(langId));
     if (type === "fragment" && navigationCallback) navigationCallback("/ZinZenFAQ");
-    else close(!open)
+    else window.history.back();
   };
   return (
     <div className="containerLang">
