@@ -198,7 +198,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           </button>
         </div>
 
-        <ConfigOption label="on">
+        <ConfigOption label={t("on")}>
           {onDays.map((d) => (
             <span
               onClickCapture={() => {
@@ -214,8 +214,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             </span>
           ))}
         </ConfigOption>
-        <div style={{ display: "flex", gap: 8, justifyContent: "flex-start", alignItems: "center", marginRight: 25 }}>
-          <div>between</div>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", alignItems: "center", marginRight: 25 }}>
+          <div>
+            {t("between")} {t("hours")}
+          </div>
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <CustomInput
               value={tags.afterTime}
@@ -264,13 +266,13 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               setStart(value);
             }}
             handleTimeChange={(value) => setStartTime(value)}
-            label="starts"
+            label={t("starts")}
             dateValue={
               start
                 ? moment(start).format("YYYY-MM-DD")
                 : goal?.createdAt
-                ? moment(goal.createdAt).format("YYYY-MM-DD")
-                : today
+                  ? moment(goal.createdAt).format("YYYY-MM-DD")
+                  : today
             }
             timeValue={startTime}
           />
@@ -279,7 +281,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               setDue(value);
             }}
             handleTimeChange={(value) => setEndTime(value)}
-            label="ends"
+            label={t("ends")}
             dateValue={due}
             timeValue={endTime}
           />
