@@ -2,7 +2,8 @@
   width: 400px;
   .checkbox {
     flex-direction: row-reverse;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-top: 2px;
     span {
       padding-left: 0 !important;
     }

@@ -12,16 +12,16 @@ import {
   goalsHistory,
   displayGoalId,
 } from "@src/store/GoalsState";
+import ColorPalette from "@src/common/ColorPalette";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
 import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
-
-import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
-import "./ConfigGoal.scss";
 import ConfigOption from "./ConfigOption";
 import CustomDatePicker from "./CustomDatePicker";
-import ColorPalette from "@src/common/ColorPalette";
+import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
+
+import "./ConfigGoal.scss";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -29,7 +29,7 @@ const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleCh
   <input
     type="number"
     placeholder={placeholder || ""}
-    style={{ textAlign: "center", maxWidth: 25, ...(style || {}) }}
+    style={{ textAlign: "center", maxWidth: 30, ...(style || {}) }}
     className="default-input"
     value={value}
     onChange={(e) => {
@@ -66,8 +66,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     duration: goal.duration || "",
     afterTime: `${goal.afterTime || ""}`,
     beforeTime: `${goal.beforeTime || ""}`,
-    perDay: goal.timeBudget?.perDay || "",
-    perWeek: goal.timeBudget?.perWeek || "",
+    perDay: goal.timeBudget?.perDay
+      ? goal.timeBudget.perDay.includes("-")
+        ? goal.timeBudget.perDay
+        : `${goal.timeBudget.perDay}-`
+      : "-",
+    perWeek: goal.timeBudget?.perWeek
+      ? goal.timeBudget.perWeek.includes("-")
+        ? goal.timeBudget.perWeek
+        : `${goal.timeBudget.perWeek}-`
+      : "-",
   });
 
   const isTitleEmpty = () => {
@@ -190,7 +198,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               />
             }
           >
-            <span style={{marginLeft : 25}}>hours</span>
+            <span style={{ marginLeft: 25 }}>{t("hours")}</span>
           </ConfigOption>
 
           <button type="button" className="action-btn" onClick={handleSave} style={{ marginRight: 25 }}>
@@ -236,27 +244,55 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             />
           </div>
         </div>
-        <ConfigOption label="max">
+        <ConfigOption label="">
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <CustomInput
-                value={tags.perDay}
+                value={tags.perDay.split("-")[0]}
                 handleChange={(value: string) => {
-                  setTags({ ...tags, perDay: value });
+                  setTags({ ...tags, perDay: `${value}-${tags.perDay.split("-")[1]}` });
                 }}
                 style={{}}
+                placeholder="min"
               />
-              <span>hours / day</span>
+              -
+              <span>
+                <CustomInput
+                  value={tags.perDay.split("-")[1]}
+                  handleChange={(value: string) => {
+                    setTags({ ...tags, perDay: `${tags.perDay.split("-")[0]}-${value}` });
+                  }}
+                  style={{}}
+                  placeholder="max"
+                />
+              </span>
+              <span>
+                {t("hours")} / {t("day")}
+              </span>
             </div>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <CustomInput
-                value={tags.perWeek}
+                value={tags.perWeek.split("-")[0]}
                 handleChange={(value: string) => {
-                  setTags({ ...tags, perWeek: value });
+                  setTags({ ...tags, perWeek: `${value}-${tags.perWeek.split("-")[1]}` });
                 }}
                 style={{}}
+                placeholder="min"
               />
-              <span>hours / week</span>
+              -
+              <span>
+                <CustomInput
+                  value={tags.perWeek.split("-")[1]}
+                  handleChange={(value: string) => {
+                    setTags({ ...tags, perWeek: `${tags.perWeek.split("-")[0]}-${value}` });
+                  }}
+                  style={{}}
+                  placeholder="max"
+                />
+              </span>
+              <span>
+                {t("hours")} / {t("week")}
+              </span>
             </div>
           </div>
         </ConfigOption>
