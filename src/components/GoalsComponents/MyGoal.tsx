@@ -31,13 +31,13 @@ const eyeSvg =
 interface MyGoalProps {
   goal: GoalItem;
   showActions: {
-    open: string,
-    click: number,
+    open: string;
+    click: number;
   };
   setShowActions: React.Dispatch<
     React.SetStateAction<{
-      open: string,
-      click: number,
+      open: string;
+      click: number;
       // eslint-disable-next-line prettier/prettier
     }>
   >;
@@ -75,13 +75,6 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
             : goal.afterTime
               ? `after ${goal.afterTime}`
               : ""}
-      </div>
-      <div>
-        <span>{(goal.timeBudget.perDay || goal.timeBudget.perWeek) && "max "}</span>
-        {goal.timeBudget.perDay && <span>{goal.timeBudget.perDay} h / day</span>}
-        {goal.timeBudget.perWeek && (
-          <span>{`${goal.timeBudget.perDay ? ", " : ""}${goal.timeBudget.perWeek} h / week`}</span>
-        )}
       </div>
       {showStart && !!goal.start && (
         <div>
