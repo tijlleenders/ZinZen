@@ -23,6 +23,7 @@ import {
   displayChangesModal,
 } from "@src/store/GoalsState";
 
+import { useTranslation } from "react-i18next";
 import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
 
 const eyeSvg =
@@ -31,19 +32,20 @@ const eyeSvg =
 interface MyGoalProps {
   goal: GoalItem;
   showActions: {
-    open: string,
-    click: number,
+    open: string;
+    click: number;
   };
   setShowActions: React.Dispatch<
     React.SetStateAction<{
-      open: string,
-      click: number,
+      open: string;
+      click: number;
       // eslint-disable-next-line prettier/prettier
     }>
   >;
 }
 
 const GoalSent = ({ goal }: { goal: GoalItem }) => {
+  const { t } = useTranslation();
   const onLength = goal.on.length;
   const onWeekdays = onLength === 5 && !goal.on.includes("Sat") && !goal.on.includes("Sun");
   const onWeekends = onLength === 2 && goal.on.includes("Sat") && goal.on.includes("Sun");
@@ -55,41 +57,34 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
       <div>
         {goal.duration && (
           <span>
-            {goal.duration} hour{Number(goal.duration) > 1 && "s"}
+            {goal.duration} {t(`hour${Number(goal.duration) > 1 ? "s" : ""}`)}
           </span>
         )}
         <span>
           {onLength > 0 &&
             !onWeekdays &&
             !onWeekends &&
-            (onLength === 7 ? " on any day of week" : ` on ${goal.on.join(" ")}`)}
-          {onWeekdays && " on weekdays"}
+            (onLength === 7 ? ` ${t("on any day of week")}` : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
+          {onWeekdays && ` ${t("on")} ${t("weekdays")}`}
           {onWeekends && " on weekends"}
         </span>
       </div>
       <div>
         {goal.beforeTime && goal.afterTime
-          ? `between ${goal.afterTime}-${goal.beforeTime}`
+          ? `${t("between")} ${goal.afterTime}-${goal.beforeTime}`
           : goal.beforeTime
-            ? `before ${goal.beforeTime}`
+            ? `${t("before")} ${goal.beforeTime}`
             : goal.afterTime
-              ? `after ${goal.afterTime}`
+              ? `${t("after")} ${goal.afterTime}`
               : ""}
-      </div>
-      <div>
-        <span>{(goal.timeBudget.perDay || goal.timeBudget.perWeek) && "max "}</span>
-        {goal.timeBudget.perDay && <span>{goal.timeBudget.perDay} h / day</span>}
-        {goal.timeBudget.perWeek && (
-          <span>{`${goal.timeBudget.perDay ? ", " : ""}${goal.timeBudget.perWeek} h / week`}</span>
-        )}
       </div>
       {showStart && !!goal.start && (
         <div>
-          {hasStarted ? "started" : "starts"} {new Date(goal.start).toDateString().slice(4)}
+          {hasStarted ? t("started") : t("starts")} {new Date(goal.start).toDateString().slice(4)}
         </div>
       )}
-      <div>{goal.due && `end ${new Date(goal.due).toDateString().slice(4)}`}</div>
-      <div>{goal.habit === "weekly" && "every week"}</div>
+      <div>{goal.due && `${t("ends")} ${new Date(goal.due).toDateString().slice(4)}`}</div>
+      <div>{goal.habit === "weekly" && `${t("every")} week`}</div>
     </>
   );
 };
