@@ -157,7 +157,11 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
               style={displayOptionsIndex !== task.taskid ? { cursor: "pointer" } : {}}
               onClick={() => {
                 if (displayOptionsIndex !== task.taskid) {
-                  setDisplayOptionsIndex(task.taskid);
+                  if (markDone) {
+                    handleOpenGoal(task.goalid);
+                  } else {
+                    setDisplayOptionsIndex(task.taskid);
+                  }
                 } else setDisplayOptionsIndex("");
               }}
             >
@@ -171,7 +175,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     onClick={(e) => {
                       e.stopPropagation();
                       setDisplayOptionsIndex(task.taskid);
-                      if (displayOptionsIndex === task.taskid) {
+                      if (displayOptionsIndex === task.taskid || markDone) {
                         handleOpenGoal(task.goalid);
                       }
                     }}
@@ -195,7 +199,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   </button>
                 )}
               </div>
-              {displayOptionsIndex === task.taskid ? (
+              {!markDone && displayOptionsIndex === task.taskid ? (
                 <div className="MTL-options">
                   <button type="button" onClick={() => handleActionClick("Skip", task)}>
                     Skip
