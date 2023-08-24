@@ -13,6 +13,7 @@ export interface ILocationState {
   displayShareModal?: string; // show share modal
   displayConfirmation?: confirmActionState; // show confirmation modal
   displayBackResModal?: boolean; // show backup restore modal
+  displayLangChangeModal?: boolean; // show language change modal
   displayAddFeeling?: boolean; // show add feeling modal
   displayNoteModal?: number; // show saved note of feeling id
   displayInputNoteModal?: number; // show input modal for adding note for id

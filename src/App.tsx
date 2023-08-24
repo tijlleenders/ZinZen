@@ -12,6 +12,7 @@ import {
   displayConfirmation,
   backupRestoreModal,
   openDevMode,
+  languageChangeModal,
 } from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
@@ -28,6 +29,8 @@ import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import BackupRestoreModal from "@components/BackupRestoreModal";
+import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
+
 import { findTypeOfSub } from "@api/PubSubAPI";
 import { checkMagicGoal } from "@api/GoalsAPI";
 import { syncGroupPolls } from "@api/PublicGroupsAPI";
@@ -44,6 +47,7 @@ import "./customize.scss";
 import "./override.scss";
 
 const Context = React.createContext({ name: "Default" });
+const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
 
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
 
@@ -54,6 +58,7 @@ const App = () => {
   const isLanguageChosen = language !== "No language chosen.";
   const confirmationState = useRecoilValue(displayConfirmation);
   const displayBackupRestoreModal = useRecoilValue(backupRestoreModal);
+  const displayLanguageChangeModal = useRecoilValue(languageChangeModal);
   const [api, contextHolder] = notification.useNotification();
   const [devMode, setDevMode] = useRecoilState(openDevMode);
   const [showToast, setShowToast] = useRecoilState(displayToast);
@@ -126,7 +131,7 @@ const App = () => {
     if (!isLanguageChosen && !exceptionRoutes.includes(currentPath)) {
       window.open("/", "_self");
     }
-  }, []);
+  }, [langFromStorage]);
 
   useEffect(() => {
     localStorage.setItem("confirmationState", JSON.stringify(confirmationState));
@@ -196,13 +201,14 @@ const App = () => {
             <Route
               path="/donate"
               Component={() => {
-                window.location.href = "https://donate.stripe.com/6oE4jK1iPcPT1m89AA"
+                window.location.href = "https://donate.stripe.com/6oE4jK1iPcPT1m89AA";
                 return null;
               }}
             />
           </Routes>
         </BrowserRouter>
         {displayBackupRestoreModal && <BackupRestoreModal />}
+        {displayLanguageChangeModal && <LanguageChangeModal />}
       </div>
     </div>
   );

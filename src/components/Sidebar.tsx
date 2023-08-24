@@ -16,7 +16,7 @@ import "@translations/i18n";
 const Sidebar = () => {
   const currentPage = window.location.pathname.split("/")[1];
   const navigate = useNavigate();
-  const { handleBackResModal } = useGlobalStore();
+  const { handleBackResModal, handleBackLangModal  } = useGlobalStore();
   const setShowSidebar = useSetRecoilState(displaySidebar);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
   const list = [
@@ -54,6 +54,8 @@ const Sidebar = () => {
                 toggleTheme();
               } else if (ele.name === "Backup / Restore") {
                 handleBackResModal();
+              } else if (ele.name === t("changeLanguage")) {
+                handleBackLangModal();
               } else if (ele.link) {
                 if (ele.link.includes("http")) {
                   window.open(ele.link, "_self");
