@@ -5,7 +5,6 @@ import { Checkbox, Modal } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-
 import {
   displayAddGoal,
   selectedColorIndex,
@@ -13,16 +12,16 @@ import {
   goalsHistory,
   displayGoalId,
 } from "@src/store/GoalsState";
+import ColorPalette from "@src/common/ColorPalette";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
 import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
-
-import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
-import "./ConfigGoal.scss";
 import ConfigOption from "./ConfigOption";
 import CustomDatePicker from "./CustomDatePicker";
-import ColorPalette from "@src/common/ColorPalette";
+import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
+
+import "./ConfigGoal.scss";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -30,7 +29,7 @@ const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleCh
   <input
     type="number"
     placeholder={placeholder || ""}
-    style={{ textAlign: "center", maxWidth: 25, ...(style || {}) }}
+    style={{ textAlign: "center", maxWidth: 30, ...(style || {}) }}
     className="default-input"
     value={value}
     onChange={(e) => {
@@ -39,7 +38,7 @@ const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleCh
   />
 );
 
-const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalItem }) => {
+const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
   const { t } = useTranslation();
   const theme = useRecoilValue(themeState);
   const today = moment(new Date()).format("YYYY-MM-DD");
@@ -67,8 +66,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalI
     duration: goal.duration || "",
     afterTime: `${goal.afterTime || ""}`,
     beforeTime: `${goal.beforeTime || ""}`,
-    perDay: goal.timeBudget?.perDay || "",
-    perWeek: goal.timeBudget?.perWeek || "",
+    perDay: goal.timeBudget?.perDay
+      ? goal.timeBudget.perDay.includes("-")
+        ? goal.timeBudget.perDay
+        : `${goal.timeBudget.perDay}-`
+      : "-",
+    perWeek: goal.timeBudget?.perWeek
+      ? goal.timeBudget.perWeek.includes("-")
+        ? goal.timeBudget.perWeek
+        : `${goal.timeBudget.perWeek}-`
+      : "-",
   });
 
   const isTitleEmpty = () => {
@@ -172,20 +179,34 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalI
           paddingLeft: 18,
         }}
       >
-        <ConfigOption
-          label={
-            <CustomInput
-              value={tags.duration}
-              handleChange={(value: string) => {
-                setTags({ ...tags, duration: value });
-              }}
-              style={{}}
-            />
-          }
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          hours
-        </ConfigOption>
-        <ConfigOption label="on">
+          <ConfigOption
+            label={
+              <CustomInput
+                value={tags.duration}
+                handleChange={(value: string) => {
+                  setTags({ ...tags, duration: value });
+                }}
+                style={{}}
+              />
+            }
+          >
+            <span style={{ marginLeft: 25 }}>{t("hours")}</span>
+          </ConfigOption>
+
+          <button type="button" className="action-btn" onClick={handleSave} style={{ marginRight: 25 }}>
+            {t(`${action} Goal`)}
+          </button>
+        </div>
+
+        <ConfigOption label={t("on")}>
           {onDays.map((d) => (
             <span
               onClickCapture={() => {
@@ -197,12 +218,14 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalI
               className={`on_day ${tags.on.includes(d) ? "selected" : ""}`}
               key={d}
             >
-              {d[0]}
+              {t(d)[0]}
             </span>
           ))}
         </ConfigOption>
         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", alignItems: "center", marginRight: 25 }}>
-          <div>between</div>
+          <div>
+            {t("between")} {t("hours")}
+          </div>
           <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <CustomInput
               value={tags.afterTime}
@@ -221,27 +244,55 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalI
             />
           </div>
         </div>
-        <ConfigOption label="max">
+        <ConfigOption label="">
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <CustomInput
-                value={tags.perDay}
+                value={tags.perDay.split("-")[0]}
                 handleChange={(value: string) => {
-                  setTags({ ...tags, perDay: value });
+                  setTags({ ...tags, perDay: `${value}-${tags.perDay.split("-")[1]}` });
                 }}
                 style={{}}
+                placeholder="min"
               />
-              <span>hours / day</span>
+              -
+              <span>
+                <CustomInput
+                  value={tags.perDay.split("-")[1]}
+                  handleChange={(value: string) => {
+                    setTags({ ...tags, perDay: `${tags.perDay.split("-")[0]}-${value}` });
+                  }}
+                  style={{}}
+                  placeholder="max"
+                />
+              </span>
+              <span>
+                {t("hours")} / {t("day")}
+              </span>
             </div>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <CustomInput
-                value={tags.perWeek}
+                value={tags.perWeek.split("-")[0]}
                 handleChange={(value: string) => {
-                  setTags({ ...tags, perWeek: value });
+                  setTags({ ...tags, perWeek: `${value}-${tags.perWeek.split("-")[1]}` });
                 }}
                 style={{}}
+                placeholder="min"
               />
-              <span>hours / week</span>
+              -
+              <span>
+                <CustomInput
+                  value={tags.perWeek.split("-")[1]}
+                  handleChange={(value: string) => {
+                    setTags({ ...tags, perWeek: `${tags.perWeek.split("-")[0]}-${value}` });
+                  }}
+                  style={{}}
+                  placeholder="max"
+                />
+              </span>
+              <span>
+                {t("hours")} / {t("week")}
+              </span>
             </div>
           </div>
         </ConfigOption>
@@ -251,7 +302,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalI
               setStart(value);
             }}
             handleTimeChange={(value) => setStartTime(value)}
-            label="starts"
+            label={t("starts")}
             dateValue={
               start
                 ? moment(start).format("YYYY-MM-DD")
@@ -266,7 +317,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalI
               setDue(value);
             }}
             handleTimeChange={(value) => setEndTime(value)}
-            label="ends"
+            label={t("ends")}
             dateValue={due}
             timeValue={endTime}
           />
@@ -278,15 +329,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create", goal: GoalI
             setTags({ ...tags, repeatWeekly: e.target.checked });
           }}
         >
-          repeats weekly
+          {t("repeats weekly")}
         </Checkbox>
         <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
-
-        <div style={{ marginTop: 14, textAlign: "center" }}>
-          <button type="button" className="action-btn" onClick={handleSave}>
-            {t(`${action} Goal`)}
-          </button>
-        </div>
       </div>
     </Modal>
   );

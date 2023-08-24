@@ -24,7 +24,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       className={`default-btn${darkModeStatus ? "-dark" : ""}`}
       style={{
         boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
-        background: choice !== t("cancel") ? "var(--primary-background)" : "transparent"
+        background: choice !== "cancel" ? "var(--primary-background)" : "transparent",
       }}
       onClick={async () => {
         if (neverShowAgain) {
@@ -49,18 +49,27 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       closable={false}
       footer={null}
       centered
-      onCancel={() => { window.history.back(); }}
-      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      onCancel={() => {
+        window.history.back();
+      }}
+      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]
+        }`}
     >
-
-      <p className="popupModal-title" style={{ margin: 0 }}>{t(headerKey)}</p>
-      <p>{t("note")}: {t(noteKey)}</p>
+      <p className="popupModal-title" style={{ margin: 0 }}>
+        {t(headerKey)}
+      </p>
+      <p>
+        {t("note")}: {t(noteKey)}
+      </p>
       <div style={{ display: "flex", gap: "5px" }}>
         <Checkbox
           checked={neverShowAgain}
           className="checkbox"
-          onChange={() => { setNeverShowAgain(!neverShowAgain); }}
-        > {t("dontAskAgain")}
+          onChange={() => {
+            setNeverShowAgain(!neverShowAgain);
+          }}
+        >
+          {t("dontAskAgain")}
         </Checkbox>
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>

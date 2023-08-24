@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 div::-webkit-scrollbar {
   display: none;
@@ -9,11 +9,21 @@ img {
   height: 24px;
 }
 
-span, p , div, button, h1, h2, h3, h4, h5, h6 {
+span,
+p,
+div,
+button,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Montserrat";
 }
 
-.App-light, .App-dark {  
+.App-light,
+.App-dark {
   display: flex;
   flex-direction: column;
   place-items: center;
@@ -21,26 +31,50 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   height: 100vh;
   overflow: scroll;
   background: var(--app-background);
-  p, button, span, div, h1, h2, h3, h4, h5, h6 {
+  p,
+  button,
+  span,
+  div,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: black;
   }
-  p, h1, h2, h3, h4, h5, h6 {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin: 0;
   }
 }
-.App-dark { 
+.App-dark {
   background: var(--secondary-background);
 }
-.App-dark, .popupModal-dark {
-
-  p, button, span, div, h1, h2, h3, h4, h5, h6 {
+.App-dark,
+.popupModal-dark {
+  p,
+  button,
+  span,
+  div,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: white;
   }
   .theme-icon {
     filter: invert(1);
   }
   .secondary-icon {
-    filter: invert(53%) sepia(70%) saturate(11%) hue-rotate(322deg) brightness(104%) contrast(89%)
+    filter: invert(53%) sepia(70%) saturate(11%) hue-rotate(322deg) brightness(104%) contrast(89%);
   }
 }
 
@@ -78,7 +112,7 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
 }
 
 .dark-svg {
-  filter: invert(100%) sepia(66%) saturate(2%) hue-rotate(89deg) brightness(111%) contrast(100%)  
+  filter: invert(100%) sepia(66%) saturate(2%) hue-rotate(89deg) brightness(111%) contrast(100%);
 }
 
 .zinzen-textLogo {
@@ -107,12 +141,13 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
 
 /* input field */
 .default-input {
-    font-size: 1em;
-    font-weight: 400;
-    padding: 8px 16px; 
-    border-radius: 8px;
-    outline: none;
-    border: none;
+  font-size: 1em;
+  font-weight: 400;
+  padding: 8px 16px;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  color: black;
 }
 
 .ordinary-element {
@@ -122,7 +157,8 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
 }
 
 /* button */
-.default-btn, .default-btn-dark {
+.default-btn,
+.default-btn-dark {
   font-weight: 600 !important;
   background: transparent;
   border-radius: 5px;
@@ -143,7 +179,7 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
 }
 .default-btn-dark {
   img {
-      filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
   }
 }
 
@@ -157,14 +193,14 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   padding-bottom: 5px;
 }
 
-
 /* Popup Modals */
-.popupModal, .popupModal-dark {
+.popupModal,
+.popupModal-dark {
   border: none;
   input[type="text"] {
     font-size: 1em;
     font-weight: 400;
-    padding: 8px 16px; 
+    padding: 8px 16px;
     border-radius: 8px;
     outline: none;
     border: none;
@@ -178,21 +214,21 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   .header-title {
     padding: 24px;
     text-align: center;
-    border-radius: 28px 28px 0 0!important;
+    border-radius: 28px 28px 0 0 !important;
     background: var(--primary-background);
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
 
-    h4 { 
+    h4 {
       margin: 0;
     }
   }
   .modal-dialog {
     margin-top: 18%;
   }
-  
+
   .ant-modal-content {
     border: none !important;
-    background: var(--secondary-background) !important;    
+    background: var(--secondary-background) !important;
     margin-top: auto;
   }
 
@@ -217,7 +253,7 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   border-radius: 10px;
 }
 .color-btn {
-  border: none;    
+  border: none;
   min-width: 32px;
   height: 32px;
   border-radius: 4px;
@@ -234,7 +270,9 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
   height: 50px;
 }
 
-.chevronDown, .chevronLeft, .chevronRight {
+.chevronDown,
+.chevronLeft,
+.chevronRight {
   width: 12px;
   height: 12px;
 }
@@ -244,13 +282,12 @@ span, p , div, button, h1, h2, h3, h4, h5, h6 {
 }
 
 .chevronRight {
-  transform: scaleX(-1)
+  transform: scaleX(-1);
 }
-
 
 @media (max-width: 600px) {
   .loader {
-      left: 18px;
+    left: 18px;
   }
   // .colorPallette, .colorPallette-dark{
   //   width: 60vw;

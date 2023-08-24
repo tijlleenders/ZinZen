@@ -1,5 +1,13 @@
 .configModal {
   width: 400px;
+  .checkbox {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    margin-top: 2px;
+    span {
+      padding-left: 0 !important;
+    }
+  }
   input {
     color: inherit;
   }
@@ -10,6 +18,9 @@
     padding: 0 0 24px 0 !important;
     border: none !important;
     border-radius: 28px !important;
+  }
+  .ant-select-selection-item {
+    color: black;
   }
   .goal-dates {
     display: flex;
@@ -73,12 +84,13 @@
     margin-top: 0;
     padding: 10px 24px;
 
-    &.options-btn{
+    &.options-btn {
       margin-left: 10px;
     }
   }
   .datepicker {
     text-align: left;
+    color: #000;
     border: none;
     padding: 0.5em 0.5em;
     border-radius: 4px;
@@ -150,18 +162,18 @@
   }
 }
 .on_day {
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.45);
   width: 30px;
   height: 30px;
   display: flex;
+  cursor: pointer;
+  border-radius: 50%;
   align-items: center;
   place-content: center;
-  cursor: pointer;
+  background: var(--bottom-nav-color);
 }
 .on_day.selected {
   border: none;
-  background: var(--bottom-nav-color);
+  background: var(--primary-background);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 @media (max-width: 475px) {
