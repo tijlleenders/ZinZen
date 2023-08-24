@@ -15,7 +15,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, debounceSearch }
       width: "100%",
       marginTop: 57,
       height: "calc(100vh - 112px)",
-      position: "relative",
+      position: "sticky",
     }}
     > {children}
     </div>
