@@ -1,5 +1,6 @@
 import { Select } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ICustomDatePicker {
   label: string;
@@ -15,6 +16,7 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
   handleDateChange,
   handleTimeChange,
 }) => {
+  const { t } = useTranslation();
   return (
     <div
       style={{
@@ -42,7 +44,7 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
         }}
         className="datepicker"
       />
-      <span>at</span>
+      <span>{t("at")}</span>
       <Select
         value={timeValue || 0}
         placeholder="Select Time"
