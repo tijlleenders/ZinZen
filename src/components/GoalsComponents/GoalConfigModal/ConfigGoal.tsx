@@ -64,8 +64,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     on: goal.on || convertOnFilterToArray("weekdays"),
     repeatWeekly: goal.habit === "weekly",
     duration: goal.duration || "",
-    afterTime: `${goal.afterTime || ""}`,
-    beforeTime: `${goal.beforeTime || ""}`,
+    afterTime: `${showUpdateGoal ? goal.afterTime : "9"}`,
+    beforeTime: `${showUpdateGoal ? goal.beforeTime : "18"}`,
     perDay: goal.timeBudget?.perDay
       ? goal.timeBudget.perDay.includes("-")
         ? goal.timeBudget.perDay
