@@ -5,6 +5,8 @@ import { Checkbox, Modal } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
+import plingSound from "@assets/pling.mp3";
+
 import {
   displayAddGoal,
   selectedColorIndex,
@@ -40,6 +42,7 @@ const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleCh
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
   const { t } = useTranslation();
+  const mySound = new Audio(plingSound);
   const theme = useRecoilValue(themeState);
   const today = moment(new Date()).format("YYYY-MM-DD");
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -130,6 +133,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       setDevMode(true);
       setShowToast({ open: true, message: "Congratulations, you activated DEV mode", extra: "Explore what's hidden" });
     }
+    await mySound.play();
   };
 
   const handleSave = async () => {
