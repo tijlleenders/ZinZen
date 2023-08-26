@@ -38,6 +38,10 @@ const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleCh
   />
 );
 
+const roundOffHours = (hrsValue: string) => {
+  return String(Math.min(Math.max(Math.round(Number(hrsValue)), 1), 24));
+};
+
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
   const { t } = useTranslation();
   const theme = useRecoilValue(themeState);
@@ -192,7 +196,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <CustomInput
                 value={tags.duration}
                 handleChange={(value: string) => {
-                  setTags({ ...tags, duration: value });
+                  setTags({ ...tags, duration: roundOffHours(value) });
                 }}
                 style={{}}
               />
@@ -230,7 +234,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             <CustomInput
               value={tags.afterTime}
               handleChange={(value: string) => {
-                setTags({ ...tags, afterTime: value });
+                setTags({ ...tags, afterTime: roundOffHours(value) });
               }}
               style={{}}
             />
@@ -238,7 +242,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             <CustomInput
               value={tags.beforeTime}
               handleChange={(value: string) => {
-                setTags({ ...tags, beforeTime: value });
+                setTags({ ...tags, beforeTime: roundOffHours(value) });
               }}
               style={{}}
             />
@@ -250,7 +254,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <CustomInput
                 value={tags.perDay.split("-")[0]}
                 handleChange={(value: string) => {
-                  setTags({ ...tags, perDay: `${value}-${tags.perDay.split("-")[1]}` });
+                  console.log(tags.perDay);
+
+                  setTags({ ...tags, perDay: `${roundOffHours(value)}-${tags.perDay.split("-")[1]}` });
                 }}
                 style={{}}
                 placeholder="min"
@@ -260,7 +266,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 <CustomInput
                   value={tags.perDay.split("-")[1]}
                   handleChange={(value: string) => {
-                    setTags({ ...tags, perDay: `${tags.perDay.split("-")[0]}-${value}` });
+                    console.log(`${tags.perDay.split("-")[0]}-${value}`);
+
+                    setTags({ ...tags, perDay: `${tags.perDay.split("-")[0]}-${roundOffHours(value)}` });
                   }}
                   style={{}}
                   placeholder="max"
@@ -274,7 +282,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <CustomInput
                 value={tags.perWeek.split("-")[0]}
                 handleChange={(value: string) => {
-                  setTags({ ...tags, perWeek: `${value}-${tags.perWeek.split("-")[1]}` });
+                  setTags({ ...tags, perWeek: `${roundOffHours(value)}-${tags.perWeek.split("-")[1]}` });
                 }}
                 style={{}}
                 placeholder="min"
@@ -284,7 +292,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 <CustomInput
                   value={tags.perWeek.split("-")[1]}
                   handleChange={(value: string) => {
-                    setTags({ ...tags, perWeek: `${tags.perWeek.split("-")[0]}-${value}` });
+                    setTags({ ...tags, perWeek: `${tags.perWeek.split("-")[0]}-${roundOffHours(value)}` });
                   }}
                   style={{}}
                   placeholder="max"
@@ -307,8 +315,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               start
                 ? moment(start).format("YYYY-MM-DD")
                 : goal?.createdAt
-                  ? moment(goal.createdAt).format("YYYY-MM-DD")
-                  : today
+                ? moment(goal.createdAt).format("YYYY-MM-DD")
+                : today
             }
             timeValue={startTime}
           />
