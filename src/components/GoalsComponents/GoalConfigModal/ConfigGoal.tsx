@@ -39,7 +39,7 @@ const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleCh
 );
 
 const roundOffHours = (hrsValue: string) => {
-  return String(Math.max(Math.round(Number(hrsValue)), 1));
+  return hrsValue === "" ? "" : String(Math.max(Math.round(Number(hrsValue)), 0));
 };
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
@@ -254,8 +254,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <CustomInput
                 value={tags.perDay.split("-")[0]}
                 handleChange={(value: string) => {
-                  console.log(tags.perDay);
-
                   setTags({ ...tags, perDay: `${roundOffHours(value)}-${tags.perDay.split("-")[1]}` });
                 }}
                 style={{}}
