@@ -186,7 +186,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div style={{ marginLeft: 20, display: "flex", flexDirection: "column", gap: 20 }}>
+        <div style={{ marginLeft: 20, display: "flex", flexDirection: "column", gap: 10 }}>
           <div
             className="goal-dropdown"
             onClickCapture={(e) => {
@@ -229,7 +229,16 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           )}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <div style={{ overflow: "hidden", width: "100%" }}>
+          <div
+            style={{
+              overflow: "hidden",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              gap: 6,
+            }}
+          >
             <div className="goal-title">
               {replacedString.split(" ").map((ele) => (
                 <span
