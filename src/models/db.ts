@@ -61,9 +61,9 @@ export class ZinZenDB extends Dexie {
         const goalsCollection = trans.table("goalsCollection");
         goalsCollection.toCollection().modify((goal: GoalItem) => {
           if (goal.on === "weekends") {
-            goal.on = ["Saturday", "Sunday"];
+            goal.on = ["Sat", "Sun"];
           } else {
-            goal.on = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            goal.on = ["Mon", "Tue", "Wed", "Thu", "Fri"];
           }
           if (goal.habit !== "weekly") {
             goal.habit = null;
