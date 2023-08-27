@@ -264,8 +264,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 <CustomInput
                   value={tags.perDay.split("-")[1]}
                   handleChange={(value: string) => {
-                    console.log(`${tags.perDay.split("-")[0]}-${value}`);
-
                     setTags({ ...tags, perDay: `${tags.perDay.split("-")[0]}-${roundOffHours(value)}` });
                   }}
                   style={{}}
