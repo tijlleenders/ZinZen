@@ -15,7 +15,7 @@ import "@translations/i18n";
 import "./HeaderDashboard.scss";
 
 export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
 
