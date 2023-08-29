@@ -120,6 +120,9 @@
   "collaborateOnGoal": "Colaborar no objetivo",
   "confirm": "Confirmar",
   "cancel": "Cancelar",
+  "Goals" : "Metas",
+  "Schedule" : "Agendar",
+  "Journal" : "Diária",
   "goal": {
     "archive": {
       "header": "Deseja marcar esta meta como concluída?",
