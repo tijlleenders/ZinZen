@@ -70,6 +70,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       await archiveThisGoal();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
+      window.history.back();
     } else {
       return;
     }
