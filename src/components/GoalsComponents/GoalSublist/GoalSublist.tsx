@@ -8,8 +8,14 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
-import { darkModeState, lastAction, openInbox } from "@src/store";
-import { displayAddGoal, displayChangesModal, displayGoalId, displaySuggestionsModal, displayUpdateGoal } from "@src/store/GoalsState";
+import { darkModeState, displayPartner, lastAction, openInbox } from "@src/store";
+import {
+  displayAddGoal,
+  displayChangesModal,
+  displayGoalId,
+  displaySuggestionsModal,
+  displayUpdateGoal,
+} from "@src/store/GoalsState";
 
 import MyGoal from "../MyGoal";
 import GoalsList from "../GoalsList";
@@ -27,7 +33,7 @@ export const GoalSublist = () => {
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
-
+  const showPartnerGoals = useRecoilValue(displayPartner);
   const [parentGoal, setParentGoal] = useState<GoalItem>();
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
@@ -39,13 +45,17 @@ export const GoalSublist = () => {
   };
 
   useEffect(() => {
-    (isInboxOpen ? getSharedWMGoal(goalID) : getGoal(goalID))
-      .then((parent) => setParentGoal(parent));
+    (isInboxOpen || showPartnerGoals ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) =>
+      setParentGoal(parent),
+    );
   }, [goalID]);
 
   useEffect(() => {
-    (isInboxOpen ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID))
-      .then((fetchedGoals) => { handleChildrenGoals(fetchedGoals); });
+    (isInboxOpen || showPartnerGoals ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID)).then(
+      (fetchedGoals) => {
+        handleChildrenGoals(fetchedGoals);
+      },
+    );
   }, [action, parentGoal, showAddGoal, showSuggestionModal, showChangesModal, showUpdateGoal]);
 
   return (
@@ -68,19 +78,21 @@ export const GoalSublist = () => {
                   showCount
                   style={{
                     border: "none",
-                    background: darkModeStatus ? "var(--secondary-background)" : "transparent"
+                    background: darkModeStatus ? "var(--secondary-background)" : "transparent",
                   }}
-                  panels={[{
-                    header: "Archived",
-                    body: archivedChildren.map((goal: GoalItem) => (
-                      <MyGoal
-                        key={`goal-${goal.id}`}
-                        goal={goal}
-                        showActions={showActions}
-                        setShowActions={setShowActions}
-                      />
-                    ))
-                  }]}
+                  panels={[
+                    {
+                      header: "Archived",
+                      body: archivedChildren.map((goal: GoalItem) => (
+                        <MyGoal
+                          key={`goal-${goal.id}`}
+                          goal={goal}
+                          showActions={showActions}
+                          setShowActions={setShowActions}
+                        />
+                      )),
+                    },
+                  ]}
                 />
               )}
             </div>

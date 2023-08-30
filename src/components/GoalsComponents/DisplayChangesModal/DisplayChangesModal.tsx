@@ -19,10 +19,10 @@ import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
 
 const DisplayChangesModal = () => {
-  const theme = useRecoilValue(themeState)
+  const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const [activeGoal, setActiveGoal] = useState<GoalItem>();
-  const [updateList, setUpdateList] = useState<ITagsChanges>({ schemaVersion: { }, prettierVersion: { } });
+  const [updateList, setUpdateList] = useState<ITagsChanges>({ schemaVersion: {}, prettierVersion: {} });
   const [activeContact, setActiveContact] = useState("");
   const [currentDisplay, setCurrentDisplay] = useState<typeOfChange | "none" | "conversionRequest">("none");
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
@@ -32,13 +32,15 @@ const DisplayChangesModal = () => {
     const { prettierVersion } = updateList;
     return (
       <div className={`changes-list${darkModeStatus ? "-dark" : ""}`}>
-        { Object.keys(prettierVersion).map((k) => (
+        {Object.keys(prettierVersion).map((k) => (
           <div key={`${k}-edit`}>
             <Checkbox
               checked={!unselectedChanges.includes(k)}
               className="checkbox"
               onChange={(e) => {
-                setUnselectedChanges([...(e.target.checked ? unselectedChanges.filter((tag) => tag !== k) : [...unselectedChanges, k])]);
+                setUnselectedChanges([
+                  ...(e.target.checked ? unselectedChanges.filter((tag) => tag !== k) : [...unselectedChanges, k]),
+                ]);
               }}
             />
             <p>
@@ -52,17 +54,21 @@ const DisplayChangesModal = () => {
     );
   };
 
-  const getSubgoalsList = () => showChangesModal?.goals.map((ele) => (
-    <div key={`${ele.id}-subgoal`} style={{ display: "flex" }}>
-      <Checkbox
-        checked={!unselectedChanges.includes(ele.id)}
-        onChange={(e) => {
-          setUnselectedChanges([...(e.target.checked ? unselectedChanges.filter((id) => id !== ele.id) : [...unselectedChanges, ele.id])]);
-        }}
-        className="checkbox"
-      /> <p>&nbsp;{ele.title}</p>
-    </div>
-  ));
+  const getSubgoalsList = () =>
+    showChangesModal?.goals.map((ele) => (
+      <div key={`${ele.id}-subgoal`} style={{ display: "flex" }}>
+        <Checkbox
+          checked={!unselectedChanges.includes(ele.id)}
+          onChange={(e) => {
+            setUnselectedChanges([
+              ...(e.target.checked ? unselectedChanges.filter((id) => id !== ele.id) : [...unselectedChanges, ele.id]),
+            ]);
+          }}
+          className="checkbox"
+        />
+        <span>&nbsp;{ele.title}</span>
+      </div>
+    ));
 
   const acceptChanges = async () => {
     if (showChangesModal) {
@@ -70,10 +76,14 @@ const DisplayChangesModal = () => {
     }
     setUnselectedChanges([]);
   };
-  const getChanges = () => (
-    currentDisplay === "archived" || currentDisplay === "deleted" ? <div /> :
-      currentDisplay === "modifiedGoals" ? getEditChangesList() : getSubgoalsList()
-  );
+  const getChanges = () =>
+    currentDisplay === "archived" || currentDisplay === "deleted" ? (
+      <div />
+    ) : currentDisplay === "modifiedGoals" ? (
+      getEditChangesList()
+    ) : (
+      getSubgoalsList()
+    );
   useEffect(() => {
     const getInbox = async () => {
       if (showChangesModal) {
@@ -81,9 +91,11 @@ const DisplayChangesModal = () => {
         const rootGoal = await getGoal(goal.rootGoalId);
         if (showChangesModal.typeAtPriority === "conversionRequest") {
           setActiveContact(rootGoal.shared.contacts[0].name);
-        } else { setActiveContact(rootGoal.collaboration.collaborators[0].name); }
+        } else {
+          setActiveContact(rootGoal.collaboration.collaborators[0].name);
+        }
         if (showChangesModal.typeAtPriority === "modifiedGoals") {
-          const incGoal: GoalItem = { ...(showChangesModal.goals[0]) };
+          const incGoal: GoalItem = { ...showChangesModal.goals[0] };
           const currGoal = await getGoal(showChangesModal.parentId);
           setUpdateList({ ...findGoalTagChanges(currGoal, incGoal) });
         }
@@ -96,17 +108,29 @@ const DisplayChangesModal = () => {
 
   return (
     <Modal
-      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]
+        }`}
       open={!!showChangesModal}
-      onCancel={() => { setShowChangesModal(null); }}
+      onCancel={() => {
+        setShowChangesModal(null);
+      }}
       closable={false}
       footer={null}
     >
-      { showChangesModal && activeGoal && (
+      {showChangesModal && activeGoal && (
         <>
-          { activeGoal && <p className="popupModal-title"><Header contactName={activeContact} title={activeGoal.title} currentDisplay={currentDisplay} /></p> }
+          {activeGoal && (
+            <p className="popupModal-title">
+              <Header contactName={activeContact} title={activeGoal.title} currentDisplay={currentDisplay} />
+            </p>
+          )}
           {getChanges()}
-          <AcceptBtn goal={activeGoal} acceptChanges={acceptChanges} showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} />
+          <AcceptBtn
+            goal={activeGoal}
+            acceptChanges={acceptChanges}
+            showChangesModal={showChangesModal}
+            setShowChangesModal={setShowChangesModal}
+          />
           <IgnoreBtn goal={activeGoal} showChangesModal={showChangesModal} setShowChangesModal={setShowChangesModal} />
         </>
       )}

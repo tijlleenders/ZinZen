@@ -7,7 +7,7 @@ import { getAllContacts } from "@src/api/ContactsAPI";
 import { MainHeaderDashboard } from "@components/HeaderDashboard/MainHeaderDashboard";
 
 import "./Contacts.scss";
-import "@pages/MyGoalsPage/MyGoalsPage.scss";
+import "@pages/GoalsPage/GoalsPage.scss";
 
 const Contacts = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -15,10 +15,7 @@ const Contacts = () => {
 
   const getContactBtn = (letter: string) => (
     <div className="contact-button">
-      <button
-        type="button"
-        className="contact-icon"
-      >
+      <button type="button" className="contact-icon">
         {letter[0]}
       </button>
     </div>
@@ -35,36 +32,22 @@ const Contacts = () => {
     <>
       <MainHeaderDashboard />
       <div id="my-contacts">
-        <input
-          id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"}
-          placeholder="Search"
-        />
+        <input id={darkModeStatus ? "goal-searchBar-dark" : "goal-searchBar"} placeholder="Search" />
         <div id="contact-list">
-          <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"}>
-            Recent Contacts
-          </h1>
+          <h1 id={darkModeStatus ? "myGoals_title-dark" : "myGoals_title"}>Recent Contacts</h1>
 
           {contacts.map((ele) => (
             <>
-              <div
-                aria-hidden
-                key={String(`contact-${ele.id}`)}
-                className="contact-tile"
-                style={{ cursor: "pointer" }}
-              >
+              <div aria-hidden key={String(`contact-${ele.id}`)} className="contact-tile" style={{ cursor: "pointer" }}>
                 {getContactBtn(ele.name)}
-                <span>
-                  { ele.name}
-                </span>
+                <span>{ele.name}</span>
               </div>
               <hr />
             </>
-
           ))}
         </div>
       </div>
     </>
-
   );
 };
 

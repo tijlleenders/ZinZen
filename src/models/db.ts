@@ -10,8 +10,9 @@ import { PublicGroupItem } from "./PublicGroupItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
+import { PartnerItem } from "./PartnerItem";
 
-export const dexieVersion = 7;
+export const dexieVersion = 8;
 
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
 
@@ -38,6 +39,8 @@ export class ZinZenDB extends Dexie {
 
   dumpboxCollection!: Table<DumpboxItem, string>;
 
+  partnersCollection!: Table<PartnerItem, string>;
+
   constructor() {
     super("ZinZenDB");
     this.version(dexieVersion)
@@ -56,6 +59,7 @@ export class ZinZenDB extends Dexie {
           "id, goalId, title, hoursSpent, completedTodayIds, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
         customizationCollection: "++id, goalId, posIndex",
         dumpboxCollection: "id, key, value",
+        partnersCollection: "++id, relId, name, goals",
       })
       .upgrade((trans) => {
         const goalsCollection = trans.table("goalsCollection");

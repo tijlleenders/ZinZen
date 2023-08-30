@@ -11,9 +11,9 @@ import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
 import { changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
 
 interface IgnoreBtnProps {
-    goal: GoalItem,
-    showChangesModal: IDisplayChangesModal,
-    setShowChangesModal: React.Dispatch<React.SetStateAction<IDisplayChangesModal | null>>
+  goal: GoalItem;
+  showChangesModal: IDisplayChangesModal;
+  setShowChangesModal: React.Dispatch<React.SetStateAction<IDisplayChangesModal | null>>;
 }
 const IgnoreBtn = ({ showChangesModal, goal, setShowChangesModal }: IgnoreBtnProps) => {
   const { typeAtPriority } = showChangesModal;
@@ -27,7 +27,9 @@ const IgnoreBtn = ({ showChangesModal, goal, setShowChangesModal }: IgnoreBtnPro
       convertSharedGoalToColab(goal.id, false);
     } else {
       const removeChanges = showChangesModal.goals.map((colabGoal: GoalItem) => colabGoal.id);
-      if (typeAtPriority !== "none") { await deleteGoalChangesInID(goal.rootGoalId, typeAtPriority, removeChanges); }
+      if (typeAtPriority !== "none") {
+        await deleteGoalChangesInID(goal.rootGoalId, typeAtPriority, removeChanges);
+      }
     }
     const inbox = await getInboxItem(goal.rootGoalId);
     if (deleteInbox || getTypeAtPriority(inbox.goalChanges).typeAtPriority === "none") {
@@ -37,18 +39,19 @@ const IgnoreBtn = ({ showChangesModal, goal, setShowChangesModal }: IgnoreBtnPro
     setShowChangesModal(null);
   };
   return (
-
     <button
       type="button"
-      style={{ backgroundColor: "rgba(115, 115, 115, 0.6)", width: "100%", justifyContent: "flex-start" }}
+      style={{
+        padding: "8px 15px",
+        backgroundColor: "rgba(115, 115, 115, 0.6)",
+        width: "100%",
+        justifyContent: "flex-start",
+      }}
       className={`default-btn${darkModeStatus ? "-dark" : ""}`}
       onClick={handleClick}
     >
-      <img
-        alt="add changes"
-        src={ignore}
-        width={25}
-      />&nbsp;{ isConversionRequest ? "Keep separate" : "Ignore all"}
+      <img alt="add changes" src={ignore} width={25} />
+      &nbsp;{isConversionRequest ? "Keep separate" : "Ignore all"}
     </button>
   );
 };
