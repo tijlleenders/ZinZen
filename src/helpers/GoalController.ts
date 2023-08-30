@@ -94,13 +94,14 @@ export const deleteGoal = async (goal: GoalItem, level: number) => {
 };
 
 export const deleteSharedGoal = async (goal: GoalItem) => {
-  await removeSharedWMChildrenGoals(goal.id);
-  await removeSharedWMGoal(goal.id);
+  await Promise.all([removeSharedWMChildrenGoals(goal.id), removeGoalFromPartner(goal.shared.contacts[0].relId, goal)]);
   if (goal.parentGoalId !== "root") {
     getSharedWMGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;
       const childGoalIndex = parentGoalSublist.indexOf(goal.id);
-      if (childGoalIndex !== -1) { parentGoalSublist.splice(childGoalIndex, 1); }
+      if (childGoalIndex !== -1) {
+        parentGoalSublist.splice(childGoalIndex, 1);
+      }
       await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
     });
   }
