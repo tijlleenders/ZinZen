@@ -3,8 +3,13 @@ import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { PartnerItem } from "@src/models/PartnerItem";
 
-export const getPartner = async (relId: string) => {
+export const getPartnerByRelId = async (relId: string) => {
   const partner: PartnerItem[] = await db.partnersCollection.where("relId").equals(relId).toArray();
+  return partner.length > 0 ? partner[0] : null;
+};
+
+export const getMyPartner = async () => {
+  const partner: PartnerItem[] = await db.partnersCollection.toArray();
   return partner.length > 0 ? partner[0] : null;
 };
 
@@ -20,7 +25,7 @@ export const createPartner = async (relId: string, name: string) => {
   });
 };
 
-export const addGoalToPartner = (relId: string, goal: GoalItem) => {
+export const addGoalToPartner = async  (relId: string, goal: GoalItem) => {
   db.transaction("rw", db.partnersCollection, async () => {
     await db.partnersCollection
       .where("relId")
@@ -33,7 +38,7 @@ export const addGoalToPartner = (relId: string, goal: GoalItem) => {
   });
 };
 
-export const removeGoalFromPartner = (relId: string, goal: GoalItem) => {
+export const removeGoalFromPartner = async (relId: string, goal: GoalItem) => {
   db.transaction("rw", db.partnersCollection, async () => {
     await db.partnersCollection
       .where("relId")
