@@ -24,13 +24,14 @@ import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import MyGroupsPage from "@pages/MyGroupsPage/MyGroupsPage";
-import { MyGoalsPage } from "@pages/MyGoalsPage/MyGoalsPage";
+
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import BackupRestoreModal from "@components/BackupRestoreModal";
 import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
 
+import GoalsPage from "@pages/GoalsPage/GoalsPage";
 import { findTypeOfSub } from "@api/PubSubAPI";
 import { checkMagicGoal } from "@api/GoalsAPI";
 import { syncGroupPolls } from "@api/PublicGroupsAPI";
@@ -191,10 +192,10 @@ const App = () => {
             )}
             <Route path="/Feedback" element={<FeedbackPage />} />
             <Route path="/Contacts" element={<Contacts />} />
-            <Route path="/MyGoals" element={<MyGoalsPage />} />
+            <Route path="/MyGoals" element={<GoalsPage />} />
             <Route path="/MyGroups" element={<MyGroupsPage />} />
             <Route path="/MyJournal" element={<ShowFeelingsPage />} />
-            <Route path="*" element={<MyGoalsPage />} />
+            <Route path="*" element={<GoalsPage />} />
             <Route path="/ZinZenFAQ" element={<FAQPage />} />
             <Route path="/invite/:id" element={<InvitePage />} />
             <Route path="/Invest" element={<InvestPage />} />

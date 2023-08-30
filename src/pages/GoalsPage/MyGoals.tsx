@@ -31,10 +31,9 @@ import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal
 
 import { anyUpdates, darkModeState, lastAction, openInbox, searchActive } from "@src/store";
 
-import "./MyGoalsPage.scss";
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 
-export const MyGoalsPage = () => {
+export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
