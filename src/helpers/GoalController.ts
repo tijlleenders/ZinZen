@@ -3,17 +3,30 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getPublicGroup } from "@src/api/PublicGroupsAPI";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
-import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
+import {
+  getSharedWMGoal,
+  removeSharedWMChildrenGoals,
+  removeSharedWMGoal,
+  updateSharedWMGoal,
+} from "@src/api/SharedWMAPI";
 import { getGoal, addGoal, updateGoal, archiveUserGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
+import { addGoalToPartner, removeGoalFromPartner } from "@src/api/PartnerAPI";
 import { sendUpdatesOfThisPoll } from "./GroupsProcessor";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 
 export const createGoal = async (
-  parentGoalId: string, goalTags: GoalItem, goalTitle: string, goalColor: string, level: number
+  parentGoalId: string,
+  goalTags: GoalItem,
+  goalTitle: string,
+  goalColor: string,
+  level: number,
 ) => {
   let newGoal = createGoalObjectFromTags({
     ...goalTags,
-    title: goalTitle.split(" ").filter((ele:string) => ele !== "").join(" "),
+    title: goalTitle
+      .split(" ")
+      .filter((ele: string) => ele !== "")
+      .join(" "),
     language: getSelectedLanguage(),
     parentGoalId,
     goalColor,
@@ -27,9 +40,12 @@ export const createGoal = async (
     if (pub && pub.subscribers.length > 0 && newGoalId) {
       pub.subscribers.forEach(async (sub) => {
         if (sub.type === "collaboration" || sub.type === "shared") {
-          sendUpdatesToSubscriber(sub, parentGoal.rootGoalId, "subgoals", [{
-            level, goal: { ...newGoal, id: newGoalId } }])
-            .then(() => console.log("update sent"));
+          sendUpdatesToSubscriber(sub, parentGoal.rootGoalId, "subgoals", [
+            {
+              level,
+              goal: { ...newGoal, id: newGoalId },
+            },
+          ]).then(() => console.log("update sent"));
         }
       });
     }
@@ -41,10 +57,19 @@ export const createGoal = async (
   return { parentGoal: null };
 };
 
-export const modifyGoal = async (goalId: string, goalTags: GoalItem, goalTitle: string, goalColor: string, level: number) => {
+export const modifyGoal = async (
+  goalId: string,
+  goalTags: GoalItem,
+  goalTitle: string,
+  goalColor: string,
+  level: number,
+) => {
   await updateGoal(goalId, {
     ...goalTags,
-    title: goalTitle.split(" ").filter((ele:string) => ele !== "").join(" "),
+    title: goalTitle
+      .split(" ")
+      .filter((ele: string) => ele !== "")
+      .join(" "),
     goalColor,
   });
   const goal = await getGoal(goalId);
@@ -53,8 +78,9 @@ export const modifyGoal = async (goalId: string, goalTags: GoalItem, goalTitle: 
     if (pub && pub.subscribers.length > 0) {
       pub.subscribers.forEach(async (sub) => {
         if (sub.type === "collaboration" || sub.type === "shared") {
-          sendUpdatesToSubscriber(sub, goal.rootGoalId, "modifiedGoals", [{ level, goal }])
-            .then(() => console.log("update sent"));
+          sendUpdatesToSubscriber(sub, goal.rootGoalId, "modifiedGoals", [{ level, goal }]).then(() =>
+            console.log("update sent"),
+          );
         }
       });
     }
@@ -66,8 +92,9 @@ export const archiveGoal = async (goal: GoalItem, level: number) => {
   if (pub && pub.subscribers.length > 0) {
     pub.subscribers.forEach(async (sub) => {
       if (sub.type === "collaboration" || sub.type === "shared") {
-        sendUpdatesToSubscriber(sub, goal.rootGoalId, "archived", [{ level, id: goal.id }])
-          .then(() => console.log("update sent"));
+        sendUpdatesToSubscriber(sub, goal.rootGoalId, "archived", [{ level, id: goal.id }]).then(() =>
+          console.log("update sent"),
+        );
       } else if (sub.type === "publicGroup") {
         const group = await getPublicGroup(sub.subId);
         const poll = group.polls.find((ele) => ele.goal.id === goal.id);
@@ -85,8 +112,9 @@ export const deleteGoal = async (goal: GoalItem, level: number) => {
   if (pub && pub.subscribers.length > 0) {
     pub.subscribers.forEach(async (sub) => {
       if (sub.type === "collaboration" || sub.type === "shared") {
-        sendUpdatesToSubscriber(sub, goal.rootGoalId, "deleted", [{ level, id: goal.id }])
-          .then(() => console.log("update sent"));
+        sendUpdatesToSubscriber(sub, goal.rootGoalId, "deleted", [{ level, id: goal.id }]).then(() =>
+          console.log("update sent"),
+        );
       }
     });
   }
