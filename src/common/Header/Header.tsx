@@ -4,8 +4,10 @@ import React, { useEffect, useState } from "react";
 import type { MenuProps } from "antd/es/menu/menu";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { darkModeState, displayInbox, displayToast, openInbox, searchActive } from "@src/store";
+import { darkModeState, displayInbox, displayPartner, displayToast, openInbox, searchActive } from "@src/store";
 
+import zinzenDarkLogo from "@assets/images/zinzenDarkLogo.svg";
+import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
 import searchIcon from "@assets/images/searchIcon.svg";
 import verticalDots from "@assets/images/verticalDots.svg";
 
@@ -139,12 +141,21 @@ const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
 };
 const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [isInboxOpen, setIsInboxOpen] = useRecoilState(openInbox);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const showInbox = useRecoilValue(displayInbox);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const [showPartner, setShowPartner] = useRecoilState(displayPartner);
 
+  const handlePartner = () => {
+    navigate("/MyGoals", {
+      state: {
+        displayPartner: true,
+      },
+    });
+  };
   const handlePopState = () => {
     const locationState = location.state || {};
     if (isInboxOpen || "isInboxOpen" in locationState) {
@@ -152,6 +163,8 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
     }
     if (displaySearch || locationState?.displaySearch) {
       setDisplaySearch(locationState?.displaySearch || false);
+    } else if (showPartner || locationState?.displayPartner) {
+      setShowPartner(locationState?.displayPartner || false)
     }
   };
 
@@ -164,7 +177,10 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
         <Search debounceSearch={debounceSearch} />
       ) : (
         <>
-          <h6>{isInboxOpen ? "Inbox" : t(title)}</h6>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <img onClickCapture={handlePartner} src={darkModeStatus ? zinzenDarkLogo : zinzenLightLogo} alt="ZinZen" />
+            <h6>{isInboxOpen ? "Inbox" : t(title)}</h6>
+          </div>
           <div className="header-items">
             {["mygoals", "Inbox"].includes(title) && !isInboxOpen && (
               <HeaderBtn path={searchIcon} alt="zinzen search" />
