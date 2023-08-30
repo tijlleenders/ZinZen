@@ -73,7 +73,10 @@ export const openDevMode = atom({
 
 export const anyUpdates = atom({
   key: "anyUpdates",
-  default: false
+
+export const displayPartner = atom({
+  key: "displayPartner",
+  default: null as PartnerItem | null,
 });
 
 export { darkModeState, languageSelectionState };
