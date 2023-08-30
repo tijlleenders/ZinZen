@@ -13,9 +13,17 @@ import ConfirmationModal from "@src/common/ConfirmationModal";
 import { GoalItem } from "@src/models/GoalItem";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { goalsHistory } from "@src/store/GoalsState";
-import { archiveGoal, deleteGoal, deleteSharedGoal } from "@src/helpers/GoalController";
+import { archiveGoal, deleteGoal, deleteSharedGoal, moveToPartner } from "@src/helpers/GoalController";
 import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
-import { darkModeState, displayToast, lastAction, openDevMode, displayConfirmation, openInbox } from "@src/store";
+import {
+  darkModeState,
+  displayToast,
+  lastAction,
+  openDevMode,
+  displayConfirmation,
+  openInbox,
+  displayPartner,
+} from "@src/store";
 import { useTranslation } from "react-i18next";
 import { Col, Modal, Row, Tooltip } from "antd";
 import { themeState } from "@src/store/ThemeState";
@@ -34,12 +42,14 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
-
+  const showPartner = useRecoilValue(displayPartner);
   const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
+
+  const isSharedGoal = isInboxOpen || showPartner;
 
   const archiveThisGoal = async () => {
     if (isInboxOpen) {
@@ -50,6 +60,8 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
 
   const removeThisGoal = async () => {
     if (isInboxOpen) {
+      await moveToPartner(goal);
+    } else if (showPartner) {
       await deleteSharedGoal(goal);
     } else {
       if (goal.title === "magic") {
@@ -98,16 +110,13 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       centered
       width={200}
       onCancel={() => window.history.back()}
-      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${
+        darkModeStatus ? "dark" : "light"
+      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <Tooltip placement="top" title={goal.title}>
-          <p
-            className="ordinary-element"
-            id="title-field"
-          // onChange={(e) => setTitle(e.target.value)}
-          >
+          <p className="ordinary-element" id="title-field">
             {goal.title}
           </p>
         </Tooltip>
@@ -130,17 +139,16 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
             />
           </Col>
           <Col span={18}>
-            <p>{t("Delete")}</p>
+            <p>{t(isInboxOpen ? "Rmove From here" : "Delete")}</p>
           </Col>
         </Row>
       </div>
-
-      {((isInboxOpen && goal.parentGoalId === "root") || !isInboxOpen) && (
+      {((isSharedGoal && goal.parentGoalId === "root") || !isSharedGoal) && (
         <div
           className="goal-action shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            if (!isInboxOpen) {
+            if (!isSharedGoal) {
               if (goal.typeOfGoal !== "myGoal" && goal.parentGoalId !== "root") {
                 setShowToast({
                   message: "Sorry, you are not allowed to share",
@@ -159,18 +167,18 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
             <Col span={6}>
               <img
                 alt="share goal"
-                src={isInboxOpen ? handshakeIcon : share}
+                src={isSharedGoal ? handshakeIcon : share}
                 className={`${darkModeStatus ? "dark-svg" : ""}`}
-                style={{ cursor: "pointer", ...(isInboxOpen && !darkModeStatus ? { filter: "none" } : {}) }}
+                style={{ cursor: "pointer", ...(isSharedGoal && !darkModeStatus ? { filter: "none" } : {}) }}
               />
             </Col>
             <Col span={18}>
-              <p>{t(isInboxOpen ? "Collaborate" : "Share")}</p>
+              <p>{t(isSharedGoal ? "Collaborate" : "Share")}</p>
             </Col>
           </Row>
         </div>
       )}
-      {!isInboxOpen && (
+      {!isSharedGoal && (
         <div
           className="goal-action shareOptions-btn"
           onClickCapture={async (e) => {

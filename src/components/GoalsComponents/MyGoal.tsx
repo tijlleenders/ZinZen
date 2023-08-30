@@ -12,7 +12,7 @@ import useGoalStore from "@src/hooks/useGoalStore";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import { darkModeState, lastAction, openInbox } from "@src/store";
+import { darkModeState, displayPartner, lastAction, openInbox } from "@src/store";
 import { replaceUrlsWithText } from "@src/utils/patterns";
 import { getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import {
@@ -106,7 +106,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
   const isInboxOpen = useRecoilValue(openInbox);
-
+  const showPartner = useRecoilValue(displayPartner);
   const setLastAction = useSetRecoilState(lastAction);
 
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(goal.title);
@@ -153,7 +153,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         }
         setShowChangesModal(res);
       }
-    } else {
+    }
+    else {
       navigate("/MyGoals", {
         state: {
           ...location.state,
@@ -211,7 +212,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               }}
             />
           </div>
-          {!archived && showActions.open === goal.id && showActions.click > 0 && (
+          {!archived && !isInboxOpen && !showPartner && showActions.open === goal.id && showActions.click > 0 && (
             <div
               className="goal-action"
               onClickCapture={() => {
@@ -221,7 +222,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
             >
               <img
                 alt="Update Goal"
-                src={isInboxOpen ? eyeSvg : pencil}
+                src={pencil}
                 style={{ cursor: "pointer", width: 24, height: 24 }}
                 className={`${darkModeStatus ? "dark-svg" : ""}`}
               />
