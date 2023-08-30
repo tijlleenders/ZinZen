@@ -105,3 +105,10 @@ export const deleteSharedGoal = async (goal: GoalItem) => {
     });
   }
 };
+
+export const moveToPartner = async (goal: GoalItem) => {
+  const { relId } = goal.shared.contacts[0];
+  await Promise.all([addGoalToPartner(relId, goal), removeSharedWMGoal(goal.id)]).catch((err) => {
+    console.log("Failed to move the goal into partner", err);
+  });
+};
