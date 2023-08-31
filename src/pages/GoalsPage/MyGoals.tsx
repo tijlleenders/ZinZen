@@ -6,7 +6,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import Empty from "@src/common/Empty";
 import { GoalItem } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveGoals } from "@api/GoalsAPI";
@@ -21,17 +20,16 @@ import {
   displaySuggestionsModal,
   displayUpdateGoal,
 } from "@src/store/GoalsState";
-import MyGoal from "@components/GoalsComponents/MyGoal";
 import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
-import ZAccordion from "@src/common/Accordion";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import { darkModeState, lastAction, openInbox, searchActive } from "@src/store";
 
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
+import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -113,30 +111,11 @@ export const MyGoals = () => {
                   setGoals={setActiveGoals}
                 />
               </div>
-              <div className="archived-drawer">
-                {archivedGoals.length > 0 && (
-                  <ZAccordion
-                    showCount
-                    style={{
-                      border: "none",
-                      background: darkModeStatus ? "var(--secondary-background)" : "transparent",
-                    }}
-                    panels={[
-                      {
-                        header: "Done",
-                        body: archivedGoals.map((goal: GoalItem) => (
-                          <MyGoal
-                            key={`goal-${goal.id}`}
-                            goal={goal}
-                            showActions={showActions}
-                            setShowActions={setShowActions}
-                          />
-                        )),
-                      },
-                    ]}
-                  />
-                )}
-              </div>
+              <ArchivedAccordion
+                archivedGoals={archivedGoals}
+                showActions={showActions}
+                setShowActions={setShowActions}
+              />
             </div>
           </div>
         ) : (

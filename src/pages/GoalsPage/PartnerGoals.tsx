@@ -17,6 +17,7 @@ import ZAccordion from "@src/common/Accordion";
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 
 import { darkModeState, lastAction, searchActive } from "@src/store";
+import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
 
 const PartnerGoals = ({
   partnerGoals,
@@ -89,30 +90,11 @@ const PartnerGoals = ({
                   setGoals={setActiveGoals}
                 />
               </div>
-              <div className="archived-drawer">
-                {archivedGoals.length > 0 && (
-                  <ZAccordion
-                    showCount
-                    style={{
-                      border: "none",
-                      background: darkModeStatus ? "var(--secondary-background)" : "transparent",
-                    }}
-                    panels={[
-                      {
-                        header: "Done",
-                        body: archivedGoals.map((goal: GoalItem) => (
-                          <MyGoal
-                            key={`goal-${goal.id}`}
-                            goal={goal}
-                            showActions={showActions}
-                            setShowActions={setShowActions}
-                          />
-                        )),
-                      },
-                    ]}
-                  />
-                )}
-              </div>
+              <ArchivedAccordion
+                archivedGoals={archivedGoals}
+                showActions={showActions}
+                setShowActions={setShowActions}
+              />
             </div>
           </div>
         ) : (
