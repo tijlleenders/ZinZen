@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { darkModeState, displayInbox, displayPartner, displayToast, openInbox, searchActive } from "@src/store";
 
-import zinzenDarkLogo from "@assets/images/zinzenDarkLogo.svg";
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
 import searchIcon from "@assets/images/searchIcon.svg";
 import verticalDots from "@assets/images/verticalDots.svg";
@@ -178,7 +177,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       ) : (
         <>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <img onClickCapture={handlePartner} src={darkModeStatus ? zinzenDarkLogo : zinzenLightLogo} alt="ZinZen" />
+            <img onClickCapture={handlePartner} src={zinzenLightLogo} alt="ZinZen" />
             <h6>{isInboxOpen ? "Inbox" : t(title)}</h6>
           </div>
           <div className="header-items">
