@@ -5,15 +5,15 @@ import { displayPartner } from "@src/store";
 
 import { getMyPartner } from "@src/api/PartnerAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
+
 import { MyGoals } from "./MyGoals";
 import PartnerGoals from "./PartnerGoals";
 import "./GoalsPage.scss";
 
 const GoalsPage = () => {
   const partner = useRecoilValue(displayPartner);
-  console.log("🚀 ~ file: GoalsPage.tsx:14 ~ GoalsPage ~ partner:", partner)
   const [partnerGoals, setPartnerGoals] = useState<GoalItem[]>([]);
-  console.log("🚀 ~ file: GoalsPage.tsx:15 ~ GoalsPage ~ partnerGoals:", partnerGoals)
   const getPartnerGoals = async () => {
     const myPartner = await getMyPartner();
     if (myPartner) {
@@ -24,7 +24,12 @@ const GoalsPage = () => {
     getPartnerGoals();
   }, [partner]);
 
-  return partner ? <PartnerGoals partnerGoals={partnerGoals} refreshGoals={getPartnerGoals} /> : <MyGoals />;
+  return (
+    <>
+      <GoalLocStateHandler />
+      {partner ? <PartnerGoals partnerGoals={partnerGoals} refreshGoals={getPartnerGoals} /> : <MyGoals />}
+    </>
+  );
 };
 
 export default GoalsPage;

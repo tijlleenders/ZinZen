@@ -23,7 +23,6 @@ import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { darkModeState, lastAction, openInbox, searchActive } from "@src/store";
 
 import AppLayout from "@src/layouts/AppLayout";
-import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
@@ -96,7 +95,6 @@ export const MyGoals = () => {
 
   return (
     <AppLayout title="mygoals" debounceSearch={debounceSearch}>
-      <GoalLocStateHandler />
       {showShareModal && <ShareGoalModal goal={showShareModal} />}
       {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
       <div className="myGoals-container">
