@@ -1,14 +1,11 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
-import ZAccordion from "@src/common/Accordion";
 import { GoalItem } from "@src/models/GoalItem";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
-import { darkModeState, displayPartner, lastAction, openInbox } from "@src/store";
+import { displayPartner, lastAction, openInbox } from "@src/store";
 import {
   displayAddGoal,
   displayChangesModal,
@@ -17,24 +14,23 @@ import {
   displayUpdateGoal,
 } from "@src/store/GoalsState";
 
-import MyGoal from "../MyGoal";
 import GoalsList from "../GoalsList";
 import ConfigGoal from "../GoalConfigModal/ConfigGoal";
 
 import "./GoalSublist.scss";
 import GoalHistory from "./GoalHistory";
+import ArchivedAccordion from "../ArchivedAccordion";
 
 export const GoalSublist = () => {
   const action = useRecoilValue(lastAction);
   const goalID = useRecoilValue(displayGoalId);
   const isInboxOpen = useRecoilValue(openInbox);
   const showAddGoal = useRecoilValue(displayAddGoal);
-  const darkModeStatus = useRecoilValue(darkModeState);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
   const showPartnerGoals = useRecoilValue(displayPartner);
-  const [parentGoal, setParentGoal] = useState<GoalItem>();
+  const [parentGoal, setParentGoal] = useState<GoalItem | null>(null);
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
@@ -72,30 +68,11 @@ export const GoalSublist = () => {
               setGoals={setChildrenGoals}
               setShowActions={setShowActions}
             />
-            <div className="archived-drawer">
-              {archivedChildren.length > 0 && (
-                <ZAccordion
-                  showCount
-                  style={{
-                    border: "none",
-                    background: darkModeStatus ? "var(--secondary-background)" : "transparent",
-                  }}
-                  panels={[
-                    {
-                      header: "Archived",
-                      body: archivedChildren.map((goal: GoalItem) => (
-                        <MyGoal
-                          key={`goal-${goal.id}`}
-                          goal={goal}
-                          showActions={showActions}
-                          setShowActions={setShowActions}
-                        />
-                      )),
-                    },
-                  ]}
-                />
-              )}
-            </div>
+            <ArchivedAccordion
+              archivedGoals={archivedChildren}
+              showActions={showActions}
+              setShowActions={setShowActions}
+            />
           </div>
         </div>
       </div>
