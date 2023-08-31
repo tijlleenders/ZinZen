@@ -25,9 +25,10 @@ import {
   displayPartner,
 } from "@src/store";
 import { useTranslation } from "react-i18next";
-import { Col, Modal, Row, Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import { themeState } from "@src/store/ThemeState";
 import "./MyGoalActions.scss";
+import ActionDiv from "./ActionDiv";
 
 const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
@@ -129,19 +130,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
         }}
       >
-        <Row>
-          <Col span={6}>
-            <img
-              alt="delete goal"
-              src={deleteIcon}
-              className={`${darkModeStatus ? "dark-svg" : ""}`}
-              style={{ cursor: "pointer" }}
-            />
-          </Col>
-          <Col span={18}>
-            <p>{t(isInboxOpen ? "Rmove From here" : "Delete")}</p>
-          </Col>
-        </Row>
+        <ActionDiv label={t(isInboxOpen ? "Rmove From here" : "Delete")} icon={deleteIcon} />
       </div>
       {((isSharedGoal && goal.parentGoalId === "root") || !isSharedGoal) && (
         <div
@@ -163,19 +152,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
             }
           }}
         >
-          <Row>
-            <Col span={6}>
-              <img
-                alt="share goal"
-                src={isSharedGoal ? handshakeIcon : share}
-                className={`${darkModeStatus ? "dark-svg" : ""}`}
-                style={{ cursor: "pointer", ...(isSharedGoal && !darkModeStatus ? { filter: "none" } : {}) }}
-              />
-            </Col>
-            <Col span={18}>
-              <p>{t(isSharedGoal ? "Collaborate" : "Share")}</p>
-            </Col>
-          </Row>
+          <ActionDiv label={t(isSharedGoal ? "Collaborate" : "Share")} icon={isSharedGoal ? handshakeIcon : share} />
         </div>
       )}
       {!isSharedGoal && (
@@ -186,19 +163,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
             await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
           }}
         >
-          <Row>
-            <Col span={6}>
-              <img
-                alt="archive Goal"
-                src={correct}
-                style={{ cursor: "Pointer" }}
-                className={`${darkModeStatus ? "dark-svg" : ""}`}
-              />{" "}
-            </Col>
-            <Col span={18}>
-              <p>{t("Done")}</p>
-            </Col>
-          </Row>
+          <ActionDiv label={t("Done")} icon={correct} />
         </div>
       )}
     </Modal>
