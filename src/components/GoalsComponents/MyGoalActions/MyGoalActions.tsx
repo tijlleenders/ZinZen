@@ -156,7 +156,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
                   extra: "Shared or Collaborated subgoals cannot be shared again ",
                 });
               } else {
-                handleShareGoal(goal.id);
+                handleShareGoal(goal);
               }
             } else {
               await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
