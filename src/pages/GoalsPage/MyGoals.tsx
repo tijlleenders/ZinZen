@@ -29,7 +29,7 @@ import ZAccordion from "@src/common/Accordion";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
-import { anyUpdates, darkModeState, lastAction, openInbox, searchActive } from "@src/store";
+import { darkModeState, lastAction, openInbox, searchActive } from "@src/store";
 
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 
@@ -51,7 +51,6 @@ export const MyGoals = () => {
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const [action, setLastAction] = useRecoilState(lastAction);
-  const [isUpdgradeAvailable, setIsUpgradeAvailable] = useRecoilState(anyUpdates);
 
   const handleUserGoals = (goals: GoalItem[]) => {
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
@@ -106,43 +105,6 @@ export const MyGoals = () => {
           <div className="my-goals-content">
             {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
             <div>
-              {isInboxOpen && isUpdgradeAvailable && (
-                <ZAccordion
-                  showCount={false}
-                  style={{
-                    border: "none",
-                    background: darkModeStatus ? "var(--secondary-background)" : "transparent",
-                  }}
-                  panels={[
-                    {
-                      header: "Notifications",
-                      body: (
-                        <div className={`notification-item user-goal${darkModeStatus ? "-dark" : ""}`}>
-                          <p style={{ color: "#000" }}>Update Available !!</p>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              navigator.serviceWorker.register("../../service-worker.js").then((registration) => {
-                                if (registration.waiting) {
-                                  registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-                                  setIsUpgradeAvailable(false);
-                                  window.location.reload();
-                                }
-                              });
-                            }}
-                            className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-                          >
-                            Update Now
-                          </button>
-                        </div>
-                      ),
-                    },
-                  ]}
-                />
-              )}
-              {isInboxOpen && !isUpdgradeAvailable && activeGoals.length === 0 && (
-                <Empty subText="But ZinZen brought new updates for you" />
-              )}
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <GoalsList
                   goals={activeGoals}
