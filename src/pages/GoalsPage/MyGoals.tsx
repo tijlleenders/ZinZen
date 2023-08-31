@@ -6,11 +6,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import { GoalItem } from "@src/models/GoalItem";
-import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
-import { getActiveGoals } from "@api/GoalsAPI";
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
-import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import {
   displayAddGoal,
   displayChangesModal,
@@ -20,16 +15,21 @@ import {
   displaySuggestionsModal,
   displayUpdateGoal,
 } from "@src/store/GoalsState";
-import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
-import AppLayout from "@src/layouts/AppLayout";
-import GoalsList from "@components/GoalsComponents/GoalsList";
-import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
-import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
-
+import { GoalItem } from "@src/models/GoalItem";
+import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
+import { getActiveGoals } from "@api/GoalsAPI";
+import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { darkModeState, lastAction, openInbox, searchActive } from "@src/store";
 
+import AppLayout from "@src/layouts/AppLayout";
+import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
+import GoalsList from "@components/GoalsComponents/GoalsList";
+import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
+import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
+import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -97,6 +97,7 @@ export const MyGoals = () => {
   return (
     <AppLayout title="mygoals" debounceSearch={debounceSearch}>
       <GoalLocStateHandler />
+      {showShareModal && <ShareGoalModal goal={showShareModal} />}
       {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
       <div className="myGoals-container">
         {selectedGoalId === "root" ? (

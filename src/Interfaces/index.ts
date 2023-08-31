@@ -10,7 +10,7 @@ export interface ILocationState {
   displayUpdateGoal?: string; // id of goal to be updated
   activeGoalId?: string; // selected goal id
   displayAddGoal?: string; // parent id of the goal to be added
-  displayShareModal?: string; // show share modal
+  displayShareModal?: GoalItem; // show share modal
   displayConfirmation?: confirmActionState; // show confirmation modal
   displayBackResModal?: boolean; // show backup restore modal
   displayLangChangeModal?: boolean; // show language change modal
@@ -20,5 +20,5 @@ export interface ILocationState {
   changeTheme?: boolean; // theme changer mode
   expandedGoalId?: string; // id of goal to be expanded
   displayGoalActions?: GoalItem; // id of goal whose actions have to be opened
-  displayPartner: boolean; // whether or not to display the partner goals
+  displayPartner?: boolean; // whether or not to display the partner goals
 }

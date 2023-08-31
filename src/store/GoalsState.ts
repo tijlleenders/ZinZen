@@ -27,7 +27,7 @@ export const displayChangesModal = atom({
 
 export const displayShareModal = atom({
   key: "displayShareModal",
-  default: null as string | null,
+  default: null as GoalItem | null,
 });
 
 export const displaySuggestionsModal = atom({

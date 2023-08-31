@@ -15,19 +15,9 @@ import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { darkModeState, displayPartner, lastAction, openInbox } from "@src/store";
 import { replaceUrlsWithText } from "@src/utils/patterns";
 import { getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
-import {
-  displayGoalId,
-  displayUpdateGoal,
-  displayShareModal,
-  goalsHistory,
-  displayChangesModal,
-} from "@src/store/GoalsState";
+import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 
 import { useTranslation } from "react-i18next";
-import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
-
-const eyeSvg =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC7klEQVR4nO2YSWhUQRCGv6gRERVXXBA8GRcIincFQQ8akoMIgjGQHPUgLgcJguPJZLp6JglxIZi4gIh4EKMRTcSroBIQUfAoSJR4iFnPkZKOPB8vTr/JSybg+6GgZ6ar6q/q6q7ugRQpUqRIkeJ/h8AWA8ct5AWeCXwUGBAYdaLjDwZ6LFgLx5phc0lJZ2GTwAWBNwITRcprgfOtsH7OiLfADgt3XGYnEpJhA50WKmaNuIW1Bq4JjEUQGBLoFmgUONQC21pg5UNYmIFFOtbABaoMXNRSEvgZYUeT0toEq5ImXyPwNcKhlk/dVVgW12YbrLBQL9AftmvgSxYOz5i4Zk83XQTx5znYP2MHwCSUWTgo0Bf2Y6FZV7Eow5pVt9RBowMGTjALmIQygQaB7yGfjzOwNJaxLCy38Cpk6NFcnBZ52GjgSch3b8a3TDOw2J3lwZps91lKnaP7RU8UgfcCP5zo+KZAdQYWeJbujVAQ3R1QXjAAgeshxUafwAX2CbwrdGQaeJuHvZ4ldSmk3/pPJe2QIWdXPMmfitkXRgyc9LFtwYR0j0ZO1Pp2LX9q4lOfsrFQW2wDs1BfyL5y0I0cPEjaYF1UFm8HDH/S5uNBvmKahuQrQ1nYWshPDlYLfA5URmd4QqWB8UAANYWMuqAfJHCNuO/p60hAR28DO4M/3gtE98LHoIEN01wr4sqY7/EcanZ3/5y7uqkc+XEDuz2NNSRAfsJ3LyiysCegN/w7cANn4mbfBdCUVAACTTH89gb0TusXLwOZqPU15JpVUgF0xQigLqDXh+uU+mGkHdb4GnKvr6RKKO/rVzlOlbyFQc1kxsCgdj1fIy6AcwmuwNk4vgUu2yI4/4Uc7EoqgBxUUgpEPUaKkP6SkHcBVCcQQBWlhIFbxZI34StBKZCBJeH3gyf5HtVlPkAfGu7a63OlHtW3rj5amG9wf510CXyLID7g/vvZznxHB5TrbdHAARUdez0HU6RIkSJFihQpmFP8Akw1EIG66+t0AAAAAElFTkSuQmCC";
 
 interface MyGoalProps {
   goal: GoalItem;
@@ -73,10 +63,10 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
         {goal.beforeTime && goal.afterTime
           ? `${t("between")} ${goal.afterTime}-${goal.beforeTime}`
           : goal.beforeTime
-          ? `${t("before")} ${goal.beforeTime}`
-          : goal.afterTime
-          ? `${t("after")} ${goal.afterTime}`
-          : ""}
+            ? `${t("before")} ${goal.beforeTime}`
+            : goal.afterTime
+              ? `${t("after")} ${goal.afterTime}`
+              : ""}
       </div>
       {showStart && !!goal.start && (
         <div>
@@ -100,7 +90,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const location = useLocation();
   const { handleDisplayChanges, handleUpdateGoal } = useGoalStore();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showShareModal = useRecoilValue(displayShareModal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
@@ -313,7 +302,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           </button>
         </div>
       )}
-      {showShareModal === goal.id && <ShareGoalModal goal={goal} />}
     </div>
   );
 };
