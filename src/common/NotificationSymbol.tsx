@@ -3,13 +3,10 @@ import React from "react";
 const NotificationSymbol = ({ color }: { color: string }) => (
   <div
     style={{
-      width: 7,
-      height: 7,
+      width: 6,
+      height: 6,
       background: color,
       borderRadius: "50%",
-      position: "absolute",
-      left: "40%",
-      top: "40%",
     }}
   />
 );

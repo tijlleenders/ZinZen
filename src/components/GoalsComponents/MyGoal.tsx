@@ -73,10 +73,10 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
         {goal.beforeTime && goal.afterTime
           ? `${t("between")} ${goal.afterTime}-${goal.beforeTime}`
           : goal.beforeTime
-            ? `${t("before")} ${goal.beforeTime}`
-            : goal.afterTime
-              ? `${t("after")} ${goal.afterTime}`
-              : ""}
+          ? `${t("before")} ${goal.beforeTime}`
+          : goal.afterTime
+          ? `${t("after")} ${goal.afterTime}`
+          : ""}
       </div>
       {showStart && !!goal.start && (
         <div>
@@ -153,8 +153,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         }
         setShowChangesModal(res);
       }
-    }
-    else {
+    } else {
       navigate("/MyGoals", {
         state: {
           ...location.state,
@@ -194,23 +193,23 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               handleDropDown(e);
             }}
           >
-            {(goal.collaboration.newUpdates || goal.shared.conversionRequests.status) && (
-              <NotificationSymbol color={goal.goalColor} />
-            )}
-            {goal.sublist.length > 0 && (
-              <div
-                className="goal-dd-outer"
-                style={{
-                  borderColor: goal.goalColor,
-                }}
-              />
-            )}
             <div
-              className="goal-dd-inner"
+              className="goal-dd-outer"
               style={{
-                background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`,
+                borderColor: goal.sublist.length > 0 ? goal.goalColor : "transparent",
               }}
-            />
+            >
+              <div
+                className="goal-dd-inner"
+                style={{
+                  background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`,
+                }}
+              >
+                {(goal.collaboration.newUpdates || goal.shared.conversionRequests.status) && (
+                  <NotificationSymbol color={goal.goalColor} />
+                )}
+              </div>
+            </div>
           </div>
           {!archived && !isInboxOpen && !showPartner && showActions.open === goal.id && showActions.click > 0 && (
             <div
