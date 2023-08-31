@@ -1,20 +1,16 @@
+import { Modal, Tooltip } from "antd";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import correct from "@assets/images/correct.svg";
 import share from "@assets/images/share.svg";
 import deleteIcon from "@assets/images/deleteIcon.svg";
-import archiveSound from "@assets/archive.mp3";
-import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
 import { handshakeIcon } from "@src/assets";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
-import { GoalItem } from "@src/models/GoalItem";
-import { confirmAction } from "@src/Interfaces/IPopupModals";
-import { goalsHistory } from "@src/store/GoalsState";
-import { archiveGoal, deleteGoal, deleteSharedGoal, moveToPartner } from "@src/helpers/GoalController";
-import { archiveSharedWMGoal, convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
+
 import {
   darkModeState,
   displayToast,
@@ -24,16 +20,18 @@ import {
   openInbox,
   displayPartner,
 } from "@src/store";
-import { useTranslation } from "react-i18next";
-import { Modal, Tooltip } from "antd";
+import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
-import "./MyGoalActions.scss";
+import { goalsHistory } from "@src/store/GoalsState";
+import { confirmAction } from "@src/Interfaces/IPopupModals";
+import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
+import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
+
 import ActionDiv from "./ActionDiv";
+import "./MyGoalActions.scss";
 
 const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
-  const mySound = new Audio(archiveSound);
-  const pageCrumple = new Audio(pageCrumplingSound);
   const { handleShareGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory =
     goal.typeOfGoal === "collaboration" && goal.parentGoalId === "root" ? "collaboration" : "goal";
@@ -52,35 +50,16 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
 
   const isSharedGoal = isInboxOpen || showPartner;
 
-  const archiveThisGoal = async () => {
-    if (isInboxOpen) {
-      await archiveSharedWMGoal(goal);
-    } else await archiveGoal(goal, subGoalsHistory.length);
-    setLastAction("Archive");
-  };
-
-  const removeThisGoal = async () => {
-    if (isInboxOpen) {
-      await moveToPartner(goal);
-    } else if (showPartner) {
-      await deleteSharedGoal(goal);
-    } else {
+  const handleActionClick = async (action: string) => {
+    if (action === "delete") {
       if (goal.title === "magic") {
         setDevMode(false);
       }
-      await deleteGoal(goal, subGoalsHistory.length);
-    }
-    setLastAction("Delete");
-  };
-
-  const handleActionClick = async (action: string) => {
-    // setConfirmationAction(null);
-    if (action === "delete") {
-      await pageCrumple.play();
-      await removeThisGoal();
+      await removeThisGoal(goal, subGoalsHistory.length, isInboxOpen, !!showPartner);
+      setLastAction("Delete");
     } else if (action === "archive") {
-      await mySound.play();
-      await archiveThisGoal();
+      await archiveThisGoal(goal, subGoalsHistory.length, isInboxOpen);
+      setLastAction("Archive");
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
       window.history.back();
