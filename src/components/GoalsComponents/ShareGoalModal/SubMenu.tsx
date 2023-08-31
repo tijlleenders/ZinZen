@@ -8,7 +8,7 @@ import { addPollsInPublicGroup } from "@src/api/PublicGroupsAPI";
 import { sendUpdateOfNewPoll } from "@src/services/group.service";
 import { IPoll, PublicGroupItem } from "@src/models/PublicGroupItem";
 
-export const SubMenuItem = ({ goal, group }: { goal: GoalItem, group: PublicGroupItem }) => {
+export const SubMenuItem = ({ goal, group }: { goal: GoalItem; group: PublicGroupItem }) => {
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
   return (
@@ -18,7 +18,7 @@ export const SubMenuItem = ({ goal, group }: { goal: GoalItem, group: PublicGrou
         border: "none",
         borderBottom: "0.4px solid #4A4A4A",
         padding: "10px",
-        width: "100%"
+        width: "100%",
       }}
       type="button"
       className="share-Options"
@@ -33,12 +33,14 @@ export const SubMenuItem = ({ goal, group }: { goal: GoalItem, group: PublicGrou
         }
       }}
     >
-      <div style={{ fontSize: "1.4em", fontWeight: "500", marginRight: "15px", alignSelf: "center" }}>{group.title[0]}</div>
+      <div style={{ fontSize: "1.4em", fontWeight: "500", marginRight: "15px", alignSelf: "center" }}>
+        {group.title[0]}
+      </div>
       <p style={{ alignSelf: "center", margin: 0, fontWeight: "500" }}>{group.title}</p>
     </button>
   );
 };
 
-const SubMenu = ({ children } : {children :ReactNode}) => <div>{children}</div>;
+const SubMenu = ({ children }: { children: ReactNode }) => <div>{children}</div>;
 
 export default SubMenu;
