@@ -29,7 +29,7 @@ export const GoalSublist = () => {
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
-  const showPartnerGoals = useRecoilValue(displayPartner);
+  const showPartner = useRecoilValue(displayPartner);
   const [parentGoal, setParentGoal] = useState<GoalItem | null>(null);
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
@@ -41,17 +41,13 @@ export const GoalSublist = () => {
   };
 
   useEffect(() => {
-    (isInboxOpen || showPartnerGoals ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) =>
-      setParentGoal(parent),
-    );
+    (isInboxOpen || showPartner ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) => setParentGoal(parent));
   }, [goalID]);
 
   useEffect(() => {
-    (isInboxOpen || showPartnerGoals ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID)).then(
-      (fetchedGoals) => {
-        handleChildrenGoals(fetchedGoals);
-      },
-    );
+    (isInboxOpen || showPartner ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID)).then((fetchedGoals) => {
+      handleChildrenGoals(fetchedGoals);
+    });
   }, [action, parentGoal, showAddGoal, showSuggestionModal, showChangesModal, showUpdateGoal]);
 
   return (

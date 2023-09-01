@@ -55,7 +55,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       if (goal.title === "magic") {
         setDevMode(false);
       }
-      await removeThisGoal(goal, subGoalsHistory.length, isInboxOpen, !!showPartner);
+      await removeThisGoal(goal, subGoalsHistory.length, isInboxOpen, showPartner);
       setLastAction("Delete");
     } else if (action === "archive") {
       await archiveThisGoal(goal, subGoalsHistory.length, isInboxOpen);
