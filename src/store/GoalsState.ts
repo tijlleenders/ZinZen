@@ -25,6 +25,11 @@ export const displayChangesModal = atom({
   default: null as IDisplayChangesModal | null,
 });
 
+export const displayAddContact = atom({
+  key: "displayAddContact",
+  default: false,
+});
+
 export const displayShareModal = atom({
   key: "displayShareModal",
   default: null as GoalItem | null,
