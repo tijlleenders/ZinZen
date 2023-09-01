@@ -77,6 +77,11 @@ export const openDevMode = atom({
 
 export const displayPartner = atom({
   key: "displayPartner",
+  default: false,
+});
+
+export const partnerDetails = atom({
+  key: "partnerDetails",
   default: null as PartnerItem | null,
 });
 
