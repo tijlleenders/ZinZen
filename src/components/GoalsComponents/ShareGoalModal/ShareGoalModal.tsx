@@ -1,4 +1,5 @@
 import { Modal } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -21,7 +22,7 @@ import { themeState } from "@src/store/ThemeState";
 import { addSubInPub } from "@src/api/PubSubAPI";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { PublicGroupItem } from "@src/models/PublicGroupItem";
-import { displayShareModal } from "@src/store/GoalsState";
+import { displayAddContact, displayShareModal } from "@src/store/GoalsState";
 import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { darkModeState, displayToast, displayConfirmation } from "@src/store";
@@ -33,7 +34,8 @@ import "./ShareGoalModal.scss";
 
 const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
   const minContacts = 1;
-
+  const navigate = useNavigate();
+  const { state } = useLocation();
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
@@ -44,10 +46,12 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
   const [displaySubmenu, setDisplaySubmenu] = useState("");
   const [showConfirmation, setDisplayConfirmation] = useRecoilState(displayConfirmation);
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
-  const [showAddContactModal, setShowAddContactModal] = useState(false);
+  const [showAddContactModal, setShowAddContactModal] = useRecoilState(displayAddContact);
 
   const setShowToast = useSetRecoilState(displayToast);
-  const handleShowAddContact = () => setShowAddContactModal(true);
+  const handleShowAddContact = () => {
+    navigate("/MyGoals", { state: { ...state, displayAddContact: true } });
+  };
 
   const getContactBtn = (relId = "", name = "", accepted = false) => (
     <div className="contact-icon">

@@ -19,7 +19,9 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
   const theme = useRecoilValue(themeState);
   const [loading, setLoading] = useState(false);
   const [newContact, setNewContact] = useState<{ contactName: string; relId: string } | null>(null);
-  const handleCloseAddContact = () => setShowAddContactModal(false);
+  const handleCloseAddContact = () => {
+    window.history.back();
+  };
   const setShowToast = useSetRecoilState(displayToast);
 
   const addNewContact = async () => {
@@ -64,8 +66,9 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         setNewContact(null);
         handleCloseAddContact();
       }}
-      className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""} ${
+        darkModeStatus ? "dark" : "light"
+      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <p className="popupModal-title"> Add a contact name </p>
       <input
