@@ -182,9 +182,25 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   >
                     {task.title}
                   </button>
-                  <p className="MTL-goalTiming">
-                    {startTime ? `${startTime}:00` : ""}-{endTime ? `${endTime}:00` : ""}
-                  </p>
+                  <div className="MTL-goalTiming">
+                    {startTime ? (
+                      <>
+                        <span>{parseInt(startTime, 10)}</span>
+                        <sup>00</sup>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    <span>&nbsp;-&nbsp;</span>
+                    {endTime ? (
+                      <>
+                        <span>{parseInt(endTime, 10)}</span>
+                        <sup>00</sup>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
 
                 {displayOptionsIndex === task.taskid && (
