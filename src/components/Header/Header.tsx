@@ -1,26 +1,36 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { darkModeState, displayInbox, displayPartner, openInbox, searchActive } from "@src/store";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
+import { inboxIcon, openEnvelopeIcon } from "@assets/index";
 import zinzenDarkLogo from "@assets/images/zinzenDarkLogo.svg";
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
 import searchIcon from "@assets/images/searchIcon.svg";
 
+import {
+  darkModeState,
+  displayInbox,
+  displayPartner,
+  displayToast,
+  openInbox,
+  partnerDetails,
+  searchActive,
+} from "@src/store";
 import { IHeader } from "@src/Interfaces/ICommon";
 
-import { inboxIcon, openEnvelopeIcon } from "@assets/index";
+import HeaderBtn from "./HeaderBtn";
 import Search from "../../common/Search";
 
 import "./Header.scss";
-import HeaderBtn from "./HeaderBtn";
 
 const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const setShowToast = useSetRecoilState(displayToast);
 
+  const partner = useRecoilValue(partnerDetails);
   const showInbox = useRecoilValue(displayInbox);
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -28,7 +38,11 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const [showPartner, setShowPartner] = useRecoilState(displayPartner);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
 
-  const handlePartner = () => {
+  const handlePartner = async () => {
+    if (!partner) {
+      setShowToast({ open: true, message: "You don't have a partner ?", extra: "Try sharing a goal with someone!" });
+      return;
+    }
     navigate("/MyGoals", {
       state: {
         displayPartner: true,

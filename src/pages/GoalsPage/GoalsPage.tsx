@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 
 import { getMyPartner } from "@src/api/PartnerAPI";
 import { displayShareModal } from "@src/store/GoalsState";
-import { displayPartner, parntnerDetails } from "@src/store";
+import { displayPartner, partnerDetails } from "@src/store";
 import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 
 import { MyGoals } from "./MyGoals";
@@ -11,7 +11,7 @@ import PartnerGoals from "./PartnerGoals";
 import "./GoalsPage.scss";
 
 const GoalsPage = () => {
-  const [partner, setPartner] = useRecoilState(parntnerDetails);
+  const [partner, setPartner] = useRecoilState(partnerDetails);
   const showPartner = useRecoilValue(displayPartner);
   const showShareModal = useRecoilValue(displayShareModal);
 
