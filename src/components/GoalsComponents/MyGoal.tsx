@@ -175,7 +175,15 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div style={{ marginLeft: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+        <div
+          style={{
+            padding: "20px 0",
+            marginLeft: 20,
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
           <div
             className="goal-dropdown"
             onClickCapture={(e) => {

@@ -52,7 +52,6 @@
     display: flex;
     height: 100%;
     width: 100%;
-    padding: 20px 0;
     gap: 16px;
   }
   .contact-button {
@@ -69,13 +68,16 @@
   }
 }
 
-.goal-dropdown,.goal-dd-inner,.goal-dd-outer {
+.goal-dropdown,
+.goal-dd-inner,
+.goal-dd-outer {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.goal-dd-inner, .goal-dd-outer {
+.goal-dd-inner,
+.goal-dd-outer {
   border-radius: 11px;
   width: 21px;
   height: 20px;
@@ -86,6 +88,10 @@
   height: 28px;
   border-radius: 22px;
   border: 1px solid;
+}
+
+.goal-title {
+  padding: 20px 0;
 }
 
 #addGoal-btn {
