@@ -21,4 +21,5 @@ export interface ILocationState {
   expandedGoalId?: string; // id of goal to be expanded
   displayGoalActions?: GoalItem; // id of goal whose actions have to be opened
   displayPartner?: boolean; // whether or not to display the partner goals
+  displayAddContact?: boolean; // whether or not to display the add contact form
 }
