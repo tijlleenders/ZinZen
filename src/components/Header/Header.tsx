@@ -43,11 +43,16 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       setShowToast({ open: true, message: "You don't have a partner ?", extra: "Try sharing a goal with someone!" });
       return;
     }
-    navigate("/MyGoals", {
-      state: {
-        displayPartner: true,
-      },
-    });
+    if (showPartner) {
+      window.history.back();
+    }
+    if (partner) {
+      navigate("/MyGoals", {
+        state: {
+          displayPartner: true,
+        },
+      });
+    }
   };
   const handlePopState = () => {
     const locationState = location.state || {};
