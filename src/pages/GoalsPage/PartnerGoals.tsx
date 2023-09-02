@@ -7,25 +7,22 @@ import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
 import { GoalItem } from "@src/models/GoalItem";
+import { PartnerItem } from "@src/models/PartnerItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { displayGoalActions, displayGoalId } from "@src/store/GoalsState";
-import MyGoal from "@components/GoalsComponents/MyGoal";
+import { darkModeState, lastAction, searchActive } from "@src/store";
+
+import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
 import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
-import ZAccordion from "@src/common/Accordion";
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 
-import { darkModeState, lastAction, searchActive } from "@src/store";
-
-const PartnerGoals = ({
-  partnerGoals,
-  refreshGoals,
-}: {
-  partnerGoals: GoalItem[];
-  refreshGoals: () => Promise<void>;
-}) => {
+const PartnerGoals = ({ partner, refreshGoals }: { partner: PartnerItem; refreshGoals: () => Promise<void> }) => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
+  const { goals: partnerGoals, name } = partner;
+  const partnerName = name.charAt(0).toUpperCase() + name.slice(0, 4);
+
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
@@ -70,11 +67,10 @@ const PartnerGoals = ({
   }, [selectedGoalId, displaySearch]);
 
   useEffect(() => {
-    handleUserGoals(partnerGoals)
-  }, [partnerGoals])
-
+    handleUserGoals(partnerGoals);
+  }, [partnerGoals]);
   return (
-    <AppLayout title="mygoals" debounceSearch={debounceSearch}>
+    <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
       <GoalLocStateHandler />
       {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
       <div className="myGoals-container">
@@ -89,30 +85,11 @@ const PartnerGoals = ({
                   setGoals={setActiveGoals}
                 />
               </div>
-              <div className="archived-drawer">
-                {archivedGoals.length > 0 && (
-                  <ZAccordion
-                    showCount
-                    style={{
-                      border: "none",
-                      background: darkModeStatus ? "var(--secondary-background)" : "transparent",
-                    }}
-                    panels={[
-                      {
-                        header: "Done",
-                        body: archivedGoals.map((goal: GoalItem) => (
-                          <MyGoal
-                            key={`goal-${goal.id}`}
-                            goal={goal}
-                            showActions={showActions}
-                            setShowActions={setShowActions}
-                          />
-                        )),
-                      },
-                    ]}
-                  />
-                )}
-              </div>
+              <ArchivedAccordion
+                archivedGoals={archivedGoals}
+                showActions={showActions}
+                setShowActions={setShowActions}
+              />
             </div>
           </div>
         ) : (

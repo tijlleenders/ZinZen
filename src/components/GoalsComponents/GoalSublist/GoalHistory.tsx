@@ -16,7 +16,7 @@ const breadcrumbStyle: React.CSSProperties = {
   whiteSpace: "nowrap",
   textOverflow: "ellipsis",
   overflow: "hidden",
-  textAlign: "center"
+  textAlign: "center",
 };
 const GoalHistory = () => {
   const subGoalHistory = useRecoilValue(goalsHistory);
@@ -30,28 +30,37 @@ const GoalHistory = () => {
         items={[
           {
             title: <img src={homeIcon} className={`${darkModeStatus ? "dark-svg" : ""}`} alt="my goals" />,
-            onClick: () => { window.history.go(-subGoalHistory.length); }
+            onClick: () => {
+              window.history.go(-subGoalHistory.length);
+            },
           },
-          ...(subGoalHistory.length <= 3 ?
-            subGoalHistory.map((goal: ISubGoalHistory, index) => ({
-              title: <span style={{ ...breadcrumbStyle, background: goal.goalColor }}>{goal.goalTitle}</span>,
-              onClick: () => { window.history.go((index + 1) - subGoalHistory.length); }
-            })) :
-            [
-              ...subGoalHistory.slice(0, 2).map((goal: ISubGoalHistory, index) => ({
+          ...(subGoalHistory.length <= 3
+            ? subGoalHistory.map((goal: ISubGoalHistory, index) => ({
                 title: <span style={{ ...breadcrumbStyle, background: goal.goalColor }}>{goal.goalTitle}</span>,
-                onClick: () => { window.history.go((index + 1) - subGoalHistory.length); }
-              })),
-              {
-                title: <span style={{ ...breadcrumbStyle, background: "#d9d9d9" }}>...</span>,
-                onClick: () => { window.history.back(); }
-              },
-              ...subGoalHistory.slice(subGoalHistory.length - 1).map((goal: ISubGoalHistory, index) => ({
-                title: <span style={{ ...breadcrumbStyle, background: goal.goalColor }}>{goal.goalTitle}</span>,
-                onClick: () => { window.history.go((index + 1) - subGoalHistory.length); }
-              })),
-            ]
-          )
+                onClick: () => {
+                  window.history.go(index + 1 - subGoalHistory.length);
+                },
+              }))
+            : [
+                ...subGoalHistory.slice(0, 2).map((goal: ISubGoalHistory, index) => ({
+                  title: <span style={{ ...breadcrumbStyle, background: goal.goalColor }}>{goal.goalTitle}</span>,
+                  onClick: () => {
+                    window.history.go(index + 1 - subGoalHistory.length);
+                  },
+                })),
+                {
+                  title: <span style={{ ...breadcrumbStyle, background: "#d9d9d9" }}>...</span>,
+                  onClick: () => {
+                    window.history.back();
+                  },
+                },
+                ...subGoalHistory.slice(subGoalHistory.length - 1).map((goal: ISubGoalHistory, index) => ({
+                  title: <span style={{ ...breadcrumbStyle, background: goal.goalColor }}>{goal.goalTitle}</span>,
+                  onClick: () => {
+                    window.history.go(index + 1 - subGoalHistory.length);
+                  },
+                })),
+              ]),
         ]}
       />
     </div>

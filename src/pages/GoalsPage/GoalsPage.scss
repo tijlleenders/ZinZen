@@ -52,7 +52,6 @@
     display: flex;
     height: 100%;
     width: 100%;
-    padding: 20px 0;
     gap: 16px;
   }
   .contact-button {
@@ -69,27 +68,26 @@
   }
 }
 
-.goal-dropdown {
-  position: relative;
-  width: 28px;
-  height: 28px;
+.goal-dropdown,
+.goal-dd-inner,
+.goal-dd-outer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.goal-dd-inner {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  position: absolute;
-  top: 3.5px;
-  left: 3.5px;
+.goal-dd-inner,
+.goal-dd-outer {
+  border-radius: 11px;
+  width: 21px;
+  height: 20px;
 }
 
 .goal-dd-outer {
   width: 28px;
   height: 28px;
-  border: solid;
-  border-width: 1.4px;
-  border-radius: 50%;
+  border-radius: 22px;
+  border: 1px solid;
 }
 
 #addGoal-btn {
@@ -104,12 +102,18 @@
   display: flex;
   font-family: "Montserrat";
   font-weight: 400;
-  font-size: 1.143em;
+  font-size: 18px;
   width: 100%;
   text-align: left !important;
   max-width: unset;
   overflow: hidden;
+  padding: 20px 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 6px;
+  line-height: 31px;
 }
+
 .goal-title {
   white-space: nowrap;
   overflow-x: scroll;

@@ -6,12 +6,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import Empty from "@src/common/Empty";
-import { GoalItem } from "@src/models/GoalItem";
-import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
-import { getActiveGoals } from "@api/GoalsAPI";
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
-import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import {
   displayAddGoal,
   displayChangesModal,
@@ -21,17 +15,20 @@ import {
   displaySuggestionsModal,
   displayUpdateGoal,
 } from "@src/store/GoalsState";
-import MyGoal from "@components/GoalsComponents/MyGoal";
-import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
+import { GoalItem } from "@src/models/GoalItem";
+import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
+import { getActiveGoals } from "@api/GoalsAPI";
+import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import { darkModeState, lastAction, openInbox, searchActive } from "@src/store";
+
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
-import ZAccordion from "@src/common/Accordion";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
-import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
-
-import { anyUpdates, darkModeState, lastAction, openInbox, searchActive } from "@src/store";
-
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
+import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
+import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
+import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -51,7 +48,6 @@ export const MyGoals = () => {
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const [action, setLastAction] = useRecoilState(lastAction);
-  const [isUpdgradeAvailable, setIsUpgradeAvailable] = useRecoilState(anyUpdates);
 
   const handleUserGoals = (goals: GoalItem[]) => {
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
@@ -99,50 +95,13 @@ export const MyGoals = () => {
 
   return (
     <AppLayout title="mygoals" debounceSearch={debounceSearch}>
-      <GoalLocStateHandler />
+      {showShareModal && <ShareGoalModal goal={showShareModal} />}
       {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
       <div className="myGoals-container">
         {selectedGoalId === "root" ? (
           <div className="my-goals-content">
             {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
             <div>
-              {isInboxOpen && isUpdgradeAvailable && (
-                <ZAccordion
-                  showCount={false}
-                  style={{
-                    border: "none",
-                    background: darkModeStatus ? "var(--secondary-background)" : "transparent",
-                  }}
-                  panels={[
-                    {
-                      header: "Notifications",
-                      body: (
-                        <div className={`notification-item user-goal${darkModeStatus ? "-dark" : ""}`}>
-                          <p style={{ color: "#000" }}>Update Available !!</p>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              navigator.serviceWorker.register("../../service-worker.js").then((registration) => {
-                                if (registration.waiting) {
-                                  registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-                                  setIsUpgradeAvailable(false);
-                                  window.location.reload();
-                                }
-                              });
-                            }}
-                            className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-                          >
-                            Update Now
-                          </button>
-                        </div>
-                      ),
-                    },
-                  ]}
-                />
-              )}
-              {isInboxOpen && !isUpdgradeAvailable && activeGoals.length === 0 && (
-                <Empty subText="But ZinZen brought new updates for you" />
-              )}
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <GoalsList
                   goals={activeGoals}
@@ -151,30 +110,11 @@ export const MyGoals = () => {
                   setGoals={setActiveGoals}
                 />
               </div>
-              <div className="archived-drawer">
-                {archivedGoals.length > 0 && (
-                  <ZAccordion
-                    showCount
-                    style={{
-                      border: "none",
-                      background: darkModeStatus ? "var(--secondary-background)" : "transparent",
-                    }}
-                    panels={[
-                      {
-                        header: "Done",
-                        body: archivedGoals.map((goal: GoalItem) => (
-                          <MyGoal
-                            key={`goal-${goal.id}`}
-                            goal={goal}
-                            showActions={showActions}
-                            setShowActions={setShowActions}
-                          />
-                        )),
-                      },
-                    ]}
-                  />
-                )}
-              </div>
+              <ArchivedAccordion
+                archivedGoals={archivedGoals}
+                showActions={showActions}
+                setShowActions={setShowActions}
+              />
             </div>
           </div>
         ) : (

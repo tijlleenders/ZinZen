@@ -29,11 +29,19 @@
   .MTL-goalTiming {
     border: none;
     font-weight: 400;
-    margin-top: 4px;
+    margin-top: 8px;
     margin-bottom: 0;
     line-height: 16px;
     white-space: nowrap;
     width: 80px;
+    display: flex;
+    span {
+      font-size: 14px;
+    }
+    sup {
+      font-size: 8.5px;
+      line-height: 12px;
+    }
   }
 }
 

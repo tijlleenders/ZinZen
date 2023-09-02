@@ -75,13 +75,13 @@ export const openDevMode = atom({
   default: false,
 });
 
-export const anyUpdates = atom({
-  key: "anyUpdates",
+export const displayPartner = atom({
+  key: "displayPartner",
   default: false,
 });
 
-export const displayPartner = atom({
-  key: "displayPartner",
+export const partnerDetails = atom({
+  key: "partnerDetails",
   default: null as PartnerItem | null,
 });
 

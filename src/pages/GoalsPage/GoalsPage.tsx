@@ -1,30 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
-
-import { displayPartner } from "@src/store";
+import React, { useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import { getMyPartner } from "@src/api/PartnerAPI";
-import { GoalItem } from "@src/models/GoalItem";
+import { displayShareModal } from "@src/store/GoalsState";
+import { displayPartner, partnerDetails } from "@src/store";
+import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
+
 import { MyGoals } from "./MyGoals";
 import PartnerGoals from "./PartnerGoals";
 import "./GoalsPage.scss";
 
 const GoalsPage = () => {
-  const partner = useRecoilValue(displayPartner);
-  console.log("🚀 ~ file: GoalsPage.tsx:14 ~ GoalsPage ~ partner:", partner)
-  const [partnerGoals, setPartnerGoals] = useState<GoalItem[]>([]);
-  console.log("🚀 ~ file: GoalsPage.tsx:15 ~ GoalsPage ~ partnerGoals:", partnerGoals)
+  const [partner, setPartner] = useRecoilState(partnerDetails);
+  const showPartner = useRecoilValue(displayPartner);
+  const showShareModal = useRecoilValue(displayShareModal);
+
   const getPartnerGoals = async () => {
     const myPartner = await getMyPartner();
     if (myPartner) {
-      setPartnerGoals([...myPartner.goals]);
+      setPartner(JSON.parse(JSON.stringify(myPartner)));
     }
   };
   useEffect(() => {
     getPartnerGoals();
-  }, [partner]);
+  }, [showPartner, showShareModal]);
 
-  return partner ? <PartnerGoals partnerGoals={partnerGoals} refreshGoals={getPartnerGoals} /> : <MyGoals />;
+  return (
+    <>
+      <GoalLocStateHandler />
+      {showPartner && partner ? <PartnerGoals partner={partner} refreshGoals={getPartnerGoals} /> : <MyGoals />}
+    </>
+  );
 };
 
 export default GoalsPage;
