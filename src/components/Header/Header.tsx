@@ -40,7 +40,11 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
 
   const handlePartner = async () => {
     if (!partner) {
-      setShowToast({ open: true, message: "You don't have a partner ?", extra: "Try sharing a goal with someone!" });
+      setShowToast({
+        open: true,
+        message: "Do you have a partner?",
+        extra: "Try sharing a goal 1:1 from goal actions to setup a sharing relationship",
+      });
       return;
     }
     if (showPartner) {
