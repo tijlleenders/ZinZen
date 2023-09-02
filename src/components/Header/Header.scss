@@ -1,13 +1,13 @@
-.header { 
+.header {
   position: fixed;
   display: flex;
   justify-content: space-between;
   padding: 16px 0;
   width: 100%;
   max-width: 600px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25); 
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
   > :first-child {
-    margin-left: 16px !important;
+    margin-left: 22px !important;
   }
   h6 {
     line-height: 27px;
@@ -54,7 +54,8 @@
   width: 100%;
 }
 
-.header-dropdown, .header-dropdown-dark {
+.header-dropdown,
+.header-dropdown-dark {
   ul {
     background-color: var(--bottom-nav-color) !important;
   }

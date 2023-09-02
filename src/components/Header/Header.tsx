@@ -76,7 +76,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       ) : (
         <>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <img onClickCapture={handlePartner} src={darkModeStatus ? zinzenDarkLogo : zinzenLightLogo} alt="ZinZen" />
+            <img onClickCapture={handlePartner} src={zinzenLightLogo} alt="ZinZen" />
             <h6>{isInboxOpen ? "Inbox" : t(title)}</h6>
           </div>
           <div className="header-items">
