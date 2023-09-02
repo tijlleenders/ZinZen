@@ -120,6 +120,9 @@
   "collaborateOnGoal": "Bei Ziel zusammenarbeiten",
   "confirm": "Bestätigen",
   "cancel": "Abbrechen",
+  "Schedule" : "Zeitplan",
+  "Goals" : "Ziele",
+  "Journal" : "Tagebuch",
   "goal": {
     "archive": {
       "header": "Möchten Sie dieses Ziel als abgeschlossen markieren?",
