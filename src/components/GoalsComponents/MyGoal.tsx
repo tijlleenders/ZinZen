@@ -226,50 +226,39 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           )}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <div
-            style={{
-              overflow: "hidden",
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              gap: 6,
-            }}
-          >
-            <div className="goal-title">
-              {replacedString.split(" ").map((ele) => (
-                <span
-                  key={`${goal.id}-${ele}`}
-                  style={ele.includes("zURL-") ? { cursor: "pointer", textDecoration: "underline" } : {}}
-                  onClickCapture={() => {
-                    if (ele.includes("zURL-")) {
-                      const urlIndex = Number(ele.split("-")[1]);
-                      window.open(urlsWithIndexes[urlIndex], "_blank");
-                    }
-                  }}
-                >
-                  {`${ele.includes("zURL-") ? "URL" : ` ${ele} `}`}
-                </span>
-              ))}
-              &nbsp;
-              {goal.link && (
-                <a
-                  className="goal-link"
-                  href={goal.link}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noreferrer"
-                >
-                  URL
-                </a>
-              )}
-            </div>
-            {showActions.open === goal.id && showActions.click > 0 && (
-              <p className="goal-desc">
-                <GoalSent goal={goal} />
-              </p>
+          <div className="goal-title">
+            {replacedString.split(" ").map((ele) => (
+              <span
+                key={`${goal.id}-${ele}`}
+                style={ele.includes("zURL-") ? { cursor: "pointer", textDecoration: "underline" } : {}}
+                onClickCapture={() => {
+                  if (ele.includes("zURL-")) {
+                    const urlIndex = Number(ele.split("-")[1]);
+                    window.open(urlsWithIndexes[urlIndex], "_blank");
+                  }
+                }}
+              >
+                {`${ele.includes("zURL-") ? "URL" : ` ${ele} `}`}
+              </span>
+            ))}
+            &nbsp;
+            {goal.link && (
+              <a
+                className="goal-link"
+                href={goal.link}
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+                rel="noreferrer"
+              >
+                URL
+              </a>
             )}
           </div>
+          {showActions.open === goal.id && showActions.click > 0 && (
+            <p className="goal-desc">
+              <GoalSent goal={goal} />
+            </p>
+          )}
         </div>
       </div>
       {goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" && (
