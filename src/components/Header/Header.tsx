@@ -18,6 +18,7 @@ import {
   searchActive,
 } from "@src/store";
 import { IHeader } from "@src/Interfaces/ICommon";
+import { goalsHistory } from "@src/store/GoalsState";
 
 import HeaderBtn from "./HeaderBtn";
 import Search from "../../common/Search";
@@ -33,6 +34,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const partner = useRecoilValue(partnerDetails);
   const showInbox = useRecoilValue(displayInbox);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const subGoalHistory = useRecoilValue(goalsHistory);
 
   const [isInboxOpen, setIsInboxOpen] = useRecoilState(openInbox);
   const [showPartner, setShowPartner] = useRecoilState(displayPartner);
@@ -73,6 +75,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   useEffect(() => {
     handlePopState();
   }, [location]);
+
   return (
     <div className="header" style={{ background: darkModeStatus ? "var(--selection-color)" : "transparent" }}>
       {displaySearch && debounceSearch ? (
@@ -81,7 +84,16 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
         <>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
             <img onClickCapture={handlePartner} src={zinzenLightLogo} alt="ZinZen" />
-            <h6>{isInboxOpen ? "Inbox" : t(title)}</h6>
+            <h6
+              style={{ cursor: "pointer" }}
+              onClickCapture={() => {
+                if (["mygoals", "Inbox"].includes(title)) {
+                  window.history.go(-subGoalHistory.length);
+                }
+              }}
+            >
+              {isInboxOpen ? "Inbox" : t(title)}
+            </h6>
           </div>
           <div className="header-items">
             {["mygoals", "Inbox"].includes(title) && !isInboxOpen && (
