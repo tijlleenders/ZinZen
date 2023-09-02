@@ -17,7 +17,20 @@ const breadcrumbStyle: React.CSSProperties = {
   textOverflow: "ellipsis",
   overflow: "hidden",
   textAlign: "center",
+  cursor: "pointer",
 };
+
+const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => (
+  <span
+    style={{
+      ...breadcrumbStyle,
+      border: `1px solid ${goal.goalColor}`,
+      background: `${goal.goalColor}33`,
+    }}
+  >
+    {goal.goalTitle}
+  </span>
+);
 const GoalHistory = () => {
   const subGoalHistory = useRecoilValue(goalsHistory);
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -25,7 +38,9 @@ const GoalHistory = () => {
   return (
     <div style={{ padding: "0 12px" }}>
       <Breadcrumb
-        style={{ margin: "24px 0px" }}
+        style={{
+          margin: "24px 0px",
+        }}
         separator={<span style={{ color: darkModeStatus ? "rgba(255, 255, 255, 0.45)" : "inherit" }}>/</span>}
         items={[
           {
@@ -36,28 +51,39 @@ const GoalHistory = () => {
           },
           ...(subGoalHistory.length <= 3
             ? subGoalHistory.map((goal: ISubGoalHistory, index) => ({
-                title: <span style={{ ...breadcrumbStyle, background: goal.goalColor }}>{goal.goalTitle}</span>,
+                title: <BreadcrumbItem goal={goal} />,
                 onClick: () => {
+                  if (index === subGoalHistory.length - 1) {
+                    return;
+                  }
                   window.history.go(index + 1 - subGoalHistory.length);
                 },
               }))
             : [
                 ...subGoalHistory.slice(0, 2).map((goal: ISubGoalHistory, index) => ({
-                  title: <span style={{ ...breadcrumbStyle, background: goal.goalColor }}>{goal.goalTitle}</span>,
+                  title: <BreadcrumbItem goal={goal} />,
                   onClick: () => {
                     window.history.go(index + 1 - subGoalHistory.length);
                   },
                 })),
                 {
-                  title: <span style={{ ...breadcrumbStyle, background: "#d9d9d9" }}>...</span>,
+                  title: (
+                    <span style={{ ...breadcrumbStyle, border: "1px solid #d9d9d9", background: "#d9d9d933" }}>
+                      ...
+                    </span>
+                  ),
                   onClick: () => {
                     window.history.back();
                   },
                 },
                 ...subGoalHistory.slice(subGoalHistory.length - 1).map((goal: ISubGoalHistory, index) => ({
-                  title: <span style={{ ...breadcrumbStyle, background: goal.goalColor }}>{goal.goalTitle}</span>,
+                  title: <BreadcrumbItem goal={goal} />,
                   onClick: () => {
-                    window.history.go(index + 1 - subGoalHistory.length);
+                    const count = index + 1 - subGoalHistory.length;
+                    if (-count === subGoalHistory.length - 1) {
+                      return;
+                    }
+                    window.history.go(count);
                   },
                 })),
               ]),
