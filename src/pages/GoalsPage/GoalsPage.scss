@@ -90,10 +90,6 @@
   border: 1px solid;
 }
 
-.goal-title {
-  padding: 20px 0;
-}
-
 #addGoal-btn {
   position: fixed;
   bottom: 20px;
@@ -106,12 +102,18 @@
   display: flex;
   font-family: "Montserrat";
   font-weight: 400;
-  font-size: 1.143em;
+  font-size: 18px;
   width: 100%;
   text-align: left !important;
   max-width: unset;
   overflow: hidden;
+  padding: 20px 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 6px;
+  line-height: 30px;
 }
+
 .goal-title {
   white-space: nowrap;
   overflow-x: scroll;

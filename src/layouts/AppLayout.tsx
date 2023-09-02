@@ -14,7 +14,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, debounceSearch }
         minWidth: 236,
         overflow: "scroll",
         width: "100%",
-        marginTop: 57,
+        marginTop: 60,
         height: "calc(100vh - 112px)",
         position: "sticky",
       }}
