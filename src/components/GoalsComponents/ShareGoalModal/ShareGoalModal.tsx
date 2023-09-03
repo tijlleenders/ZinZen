@@ -1,14 +1,15 @@
 import { Modal } from "antd";
-import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
 import shareWithFriend from "@assets/images/shareWithFriend.svg";
 
-import { confirmAction } from "@src/Interfaces/IPopupModals";
-import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
+import Loader from "@src/common/Loader";
+import ContactItem from "@src/models/ContactItem";
+import ConfirmationModal from "@src/common/ConfirmationModal";
 import {
   convertIntoSharedGoal,
   getAllLevelGoalsOfId,
@@ -16,19 +17,18 @@ import {
   shareMyGoalAnonymously,
   updateSharedStatusOfGoal,
 } from "@src/api/GoalsAPI";
-import { addSubInPub } from "@src/api/PubSubAPI";
-import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
-import ConfirmationModal from "@src/common/ConfirmationModal";
-import Loader from "@src/common/Loader";
-import ContactItem from "@src/models/ContactItem";
 import { GoalItem } from "@src/models/GoalItem";
-import { PublicGroupItem } from "@src/models/PublicGroupItem";
-import { shareGoalWithContact } from "@src/services/contact.service";
-import { darkModeState, displayConfirmation, displayToast } from "@src/store";
-import { displayAddContact, displayShareModal } from "@src/store/GoalsState";
 import { themeState } from "@src/store/ThemeState";
-import AddContactModal from "./AddContactModal";
+import { addSubInPub } from "@src/api/PubSubAPI";
+import { confirmAction } from "@src/Interfaces/IPopupModals";
+import { PublicGroupItem } from "@src/models/PublicGroupItem";
+import { displayAddContact, displayShareModal } from "@src/store/GoalsState";
+import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
+import { shareGoalWithContact } from "@src/services/contact.service";
+import { darkModeState, displayToast, displayConfirmation } from "@src/store";
+import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import SubMenu, { SubMenuItem } from "./SubMenu";
+import AddContactModal from "./AddContactModal";
 
 import "./ShareGoalModal.scss";
 
