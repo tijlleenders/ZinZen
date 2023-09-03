@@ -17,7 +17,7 @@ A lot of things in life can be managed by making lists (of lists...) with constr
 See ... for some ideas.
 
 ## Getting started
-All documentation can be found in the folder [documentation](documentation/Readme.md).
+We have simple [documentation](documentation/Readme.md).
 
 ## How to contribute?
 There are many ways to contribute... not only code!  
