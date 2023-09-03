@@ -18,11 +18,6 @@ See ... for some ideas.
 
 ## Getting started
 All documentation can be found in the folder [documentation](documentation/Readme.md).
-In this folder you will find a [technical know-how base](documentation/technical/Readme.md),
-as well as all the necessary [functional documentation](documentation/functional/Readme.md) to understand the concepts used in the ZinZen&reg; frontend.
-
-For a quick set-up guide see the [Development Setup page](documentation/technical/Development-Setup.md).
-
 
 ## How to contribute?
 There are many ways to contribute... not only code!  
