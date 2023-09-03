@@ -30,7 +30,6 @@ if Rust, WASM and scheduling algorithms are your domains of interest, please con
 
 ## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
 
-- [Donate](https://donate.stripe.com/6oE4jK1iPcPT1m89AA)  
 - [Donate via Stripe](https://donate.stripe.com/6oE4jK1iPcPT1m89AA) or [GitHub sponsors](https://github.com/sponsors/tijlleenders)  
 - [Give anonymous feedback](https://zinzen.me/Feedback)  
 - ✨Star✨ this repo  
