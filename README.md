@@ -26,7 +26,7 @@ Please mind the code of conduct.
 
 We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
 
-if Rust, WASM and scheduling algorithms are your domains of interest, please consider contributing to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
+If Rust, WASM and scheduling algorithms are your domains of interest, please consider contributing to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
 
 ## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
 
