@@ -189,7 +189,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
                   </div>
                 )}
                 <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>
-                  Share 1:1 <br />
+                  Share privately <br />
                   {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
                   {goal.typeOfGoal === "collaboration" &&
                     ` - Goal is in collaboration with ${goal.collaboration.collaborators[0].name}`}
