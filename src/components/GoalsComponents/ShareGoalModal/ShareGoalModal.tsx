@@ -1,15 +1,14 @@
 import { Modal } from "antd";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import shareAnonymous from "@assets/images/shareAnonymous.svg";
 import shareWithFriend from "@assets/images/shareWithFriend.svg";
 
-import Loader from "@src/common/Loader";
-import ContactItem from "@src/models/ContactItem";
-import ConfirmationModal from "@src/common/ConfirmationModal";
+import { confirmAction } from "@src/Interfaces/IPopupModals";
+import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import {
   convertIntoSharedGoal,
   getAllLevelGoalsOfId,
@@ -17,18 +16,19 @@ import {
   shareMyGoalAnonymously,
   updateSharedStatusOfGoal,
 } from "@src/api/GoalsAPI";
-import { GoalItem } from "@src/models/GoalItem";
-import { themeState } from "@src/store/ThemeState";
 import { addSubInPub } from "@src/api/PubSubAPI";
-import { confirmAction } from "@src/Interfaces/IPopupModals";
-import { PublicGroupItem } from "@src/models/PublicGroupItem";
-import { displayAddContact, displayShareModal } from "@src/store/GoalsState";
 import { getAllPublicGroups } from "@src/api/PublicGroupsAPI";
+import ConfirmationModal from "@src/common/ConfirmationModal";
+import Loader from "@src/common/Loader";
+import ContactItem from "@src/models/ContactItem";
+import { GoalItem } from "@src/models/GoalItem";
+import { PublicGroupItem } from "@src/models/PublicGroupItem";
 import { shareGoalWithContact } from "@src/services/contact.service";
-import { darkModeState, displayToast, displayConfirmation } from "@src/store";
-import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
-import SubMenu, { SubMenuItem } from "./SubMenu";
+import { darkModeState, displayConfirmation, displayToast } from "@src/store";
+import { displayAddContact, displayShareModal } from "@src/store/GoalsState";
+import { themeState } from "@src/store/ThemeState";
 import AddContactModal from "./AddContactModal";
+import SubMenu, { SubMenuItem } from "./SubMenu";
 
 import "./ShareGoalModal.scss";
 
@@ -189,7 +189,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
                   </div>
                 )}
                 <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>
-                  Share 1:1 <br />
+                  Share privately <br />
                   {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
                   {goal.typeOfGoal === "collaboration" &&
                     ` - Goal is in collaboration with ${goal.collaboration.collaborators[0].name}`}
