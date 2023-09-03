@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
 
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
-import { darkModeState } from "@src/store";
 import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
@@ -17,7 +15,6 @@ import "@translations/i18n";
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
-  const darkModeStatus = useRecoilValue(darkModeState);
   const [dailyView, setDailyView] = useState(false);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
 
