@@ -242,11 +242,13 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                       window.open(originalUrl, "_blank");
                     }}
                   >
-                    {summarizedUrl}
+                    {index === 0 ? summarizedUrl : ` ${summarizedUrl}`}
                   </span>
                 );
               } else {
-                return <span key={`${goal.id}-${ele}`}>{ele}</span>;
+                return <span key={`${goal.id}-${ele}`}>
+                {index === 0 ? ele : ` ${ele}`} {}
+              </span>
               }
             })}
             &nbsp;
