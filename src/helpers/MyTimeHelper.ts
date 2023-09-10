@@ -10,7 +10,7 @@ import { getAllGoals } from "@src/api/GoalsAPI";
 import { getAllTasks, getAllBlockedTasks } from "@src/api/TasksAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
-import { convertDateToString, convertOnFilterToArray } from "@src/utils";
+import { convertDateToString } from "@src/utils";
 
 export const transformIntoSchInputGoals = (
   dbTasks: { [goalid: string]: TaskItem },
@@ -20,10 +20,10 @@ export const transformIntoSchInputGoals = (
 ) => {
   const inputGoalsArr: ISchedulerInputGoal[] = [];
   activeGoals.forEach(async (ele) => {
-    const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, createdAt: ele.createdAt };
+    const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, created_at: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
-    obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
-    obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
+    // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
+    // obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
     if (ele.duration) obj.min_duration = Number(ele.duration);
     if (ele.start) {
       obj.start = convertDateToString(new Date(ele.start));
@@ -34,18 +34,30 @@ export const transformIntoSchInputGoals = (
     if (obj.filters) {
       if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
       if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;
-      if (ele.on) obj.filters.on_days = convertOnFilterToArray(ele.on);
+      if (ele.on) obj.filters.on_days = ele.on;
       if (slotsNotallowed && slotsNotallowed.length > 0) {
         obj.filters.not_on = [...slotsNotallowed];
       }
     }
-    if (ele.habit) obj.repeat = ele.habit.toLowerCase();
+    if (ele.habit) obj.repeat = "weekly";
     if (ele.timeBudget) {
-      obj.budgets = [
-        { budget_type: ele.timeBudget.period === "day" ? "Daily" : "Weekly", min: Number(ele.timeBudget.duration) },
-      ];
-      if (!ele.duration) {
-        obj.min_duration = Number(ele.timeBudget.duration);
+      const { perDay, perWeek } = ele.timeBudget;
+      obj.budgets = [];
+      if (perDay && perDay !== "-") {
+        const [min, max] = perDay.split("-");
+        obj.budgets.push({
+          budget_type: "Daily",
+          ...(min !== "" ? { min: Number(min) } : {}),
+          ...(min !== "" ? { max: Number(max) } : {}),
+        });
+      }
+      if (perWeek && perWeek !== "-") {
+        const [min, max] = perWeek.split("-");
+        obj.budgets.push({
+          budget_type: "Weekly",
+          ...(min !== "" ? { min: Number(min) } : {}),
+          ...(min !== "" ? { max: Number(max) } : {}),
+        });
       }
     }
     if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoalIds.includes(id));
@@ -147,8 +159,8 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
 
   activeGoals = [
     ...activeGoals.filter((ele) => {
-      if (!ele.duration && !ele.timeBudget) noDurationGoalIds.push(ele.id);
-      return !!ele.duration || ele.timeBudget;
+      if (!ele.duration) noDurationGoalIds.push(ele.id);
+      return !!ele.duration;
     }),
   ];
 

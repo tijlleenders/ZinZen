@@ -5,48 +5,26 @@ can talk big-O, add features or optimize hot loops.
 
 > Please contact me tijl@zinzen.me or open an issue.
 
+
+## ZinZen&reg;
+ZinZen&reg; is a platform for stress-free life planning. It works by defining life goals with constraints and dependencies.
+An automatic scheduler then schedules tasks in a calendar to reach these goals, auto-magically updating the schedule when
+goals or constraints change.
+
+This repository contains the ZinZen&reg;-scheduler. The scheduler consists of a WASM-module written in Rust
+that can be called from the React-based UI application.
+
+The ZinZen&reg; UI application can be found here: [ZinZen&reg; Github](https://github.com/tijlleenders/ZinZen)
+
+
+
 ## Getting started
-1. Clone repo
-   ```shell
-   # Go to Home Directory
-   cd ~ 
+All documentation can be found in the folder [documentation](documentation/Readme.md).
+In this folder you will find a [technical know-how base](documentation/technical/Readme.md),
+as well as all the necessary [functional documentation](documentation/functional/Readme.md) to understand the
+scheduling algorithms and all the concepts introduced in the ZinZen&reg;-scheduler.
 
-   # You can clone into home directory or different directory
-   git clone https://github.com/tijlleenders/ZinZen-scheduler.git
-   ```  
-
-2. [Install Rust](https://www.rust-lang.org/tools/install)
-
-3. Add target for wasm:
-
-   ```shell
-   rustup target add wasm32-unknown-unknown  
-
-   # Go to project directory
-   cd ~/ZinZen-scheduler/
-   ```
-
-4. Install WASM dependencies 
-   ```shell
-   cargo install wasm-bindgen-cli 
-   ```
-   - Or [Install wasm-bindgen command line interface](https://rustwasm.github.io/wasm-bindgen/reference/cli.html) with any dependencies
-   - If it fails (openssl, pkg-config) or
-   ```shell
-   sudo apt-get install wabt binaryen
-   # [... or DIY](https://github.com/WebAssembly/wabt)
-   ```
-   
-5. [Install deno](https://deno.land/manual/getting_started/installation)
-
-6. You can now run the test from javascript/deno or from `cargo` as below:
-   ```shell
-   # Run tests by deno 
-   ./deno_test.sh
-
-   # Run tests by cargo
-   cargo test
-   ```
+For a quick set-up guide see the [Development Setup page](documentation/technical/Development-Setup.md).
 
 ## Legal stuff
 
