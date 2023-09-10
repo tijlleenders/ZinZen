@@ -38,11 +38,15 @@ const App = () => {
   const displayLanguageChangeModal = useRecoilValue(languageChangeModal);
   const openNotification = () => {
     api.info({
+      style: {
+        backgroundColor: "var(--secondary-background)",
+      },
       icon: <img src={darkModeEnabled ? darkAvatar : lightAvatar} alt="zinzen message" />,
       closeIcon: null,
       message: `${showToast.message}`,
       description: <Context.Consumer>{() => `${showToast.extra}`}</Context.Consumer>,
       placement: "top",
+      className: `toast-${darkModeEnabled ? "dark" : "light"} ${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`,
     });
   };
   useEffect(() => {
