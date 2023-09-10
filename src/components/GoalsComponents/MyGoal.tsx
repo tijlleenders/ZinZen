@@ -13,7 +13,7 @@ import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { darkModeState, displayPartner, lastAction, openInbox } from "@src/store";
-import { replaceUrlsWithText } from "@src/utils/patterns";
+import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
 import { getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 
@@ -227,20 +227,30 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <div className="goal-title">
-            {replacedString.split(" ").map((ele) => (
-              <span
-                key={`${goal.id}-${ele}`}
-                style={ele.includes("zURL-") ? { cursor: "pointer", textDecoration: "underline" } : {}}
-                onClickCapture={() => {
-                  if (ele.includes("zURL-")) {
-                    const urlIndex = Number(ele.split("-")[1]);
-                    window.open(urlsWithIndexes[urlIndex], "_blank");
-                  }
-                }}
-              >
-                {`${ele.includes("zURL-") ? "URL" : ` ${ele} `}`}
+            {replacedString.split(" ").map((ele, index) => {
+              if (ele.includes("zURL-")) {
+                const urlIndex = Number(ele.split("-")[1]);
+                const originalUrl = urlsWithIndexes[urlIndex];
+                const summarizedUrl = summarizeUrl(originalUrl);
+                console.log(originalUrl)
+
+                return (
+                  <span
+                    key={`${goal.id}-${ele}`}
+                    style={{ cursor: "pointer", textDecoration: "underline" }}
+                    onClickCapture={() => {
+                      window.open(originalUrl, "_blank");
+                    }}
+                  >
+                    {index === 0 ? summarizedUrl : ` ${summarizedUrl}`}
+                  </span>
+                );
+              } else {
+                return <span key={`${goal.id}-${ele}`}>
+                {index === 0 ? ele : ` ${ele}`} {}
               </span>
-            ))}
+              }
+            })}
             &nbsp;
             {goal.link && (
               <a
