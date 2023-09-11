@@ -54,6 +54,11 @@ function useScheduler() {
     const { schedulerInput: schedulerInputV1, cachedRes } = await generateSchedule();
     let newGeneratedInputId = "";
     let res: ISchedulerOutput;
+    console.log(
+      "🚀 ~ file: useScheduler.tsx:58 ~ initialCall ~ JSON.stringify(schedulerInputV1), res:",
+      JSON.stringify(schedulerInputV1),
+      schedulerInputV1,
+    );
     console.log("🚀 ~ file: useScheduler.tsx:75 ~ initialCall ~ cachedRes.code:", cachedRes.code);
     if (cachedRes.code === "found") {
       res = cachedRes.output;
@@ -62,7 +67,7 @@ function useScheduler() {
       await resetProgressOfToday();
       const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
       newGeneratedInputId = generatedInputId;
-      if (!devMode) {
+      if (devMode) {
         res = callJsScheduler(schedulerInputV2);
         logIO(JSON.stringify(schedulerInputV2), res);
       } else {
