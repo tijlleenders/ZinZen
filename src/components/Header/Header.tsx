@@ -45,7 +45,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       setShowToast({
         open: true,
         message: "Do you have a partner?",
-        extra: "Try sharing a goal 1:1 from goal actions to setup a sharing relationship",
+        extra: "Try sharing a goal privately. Click on a goal circle to start.",
       });
       return;
     }
