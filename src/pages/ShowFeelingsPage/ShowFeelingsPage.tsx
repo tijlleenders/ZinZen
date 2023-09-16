@@ -60,7 +60,7 @@ export const ShowFeelingsPage = () => {
   };
   const date = journalDates.length > 0 ? journalDates[selectedDate] : null;
   return (
-    <AppLayout title="My Journal">
+    <AppLayout title="myJournal">
       <div>
         {feelingsList && date && (
           <div key={date}>

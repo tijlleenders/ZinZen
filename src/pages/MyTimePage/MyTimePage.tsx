@@ -76,7 +76,7 @@ export const MyTimePage = () => {
   };
 
   return (
-    <AppLayout title="My Time">
+    <AppLayout title="mytime">
       <SubHeader
         showLeftNav={!dailyView}
         showRightNav={dailyView}
