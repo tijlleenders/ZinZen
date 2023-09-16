@@ -151,7 +151,7 @@ export const MainHeaderDashboard = () => {
           setLastAction("addGroup");
         } else { setOpenAddGroup(true); setOpenExploreGroups(false); }
       } else if (!showAddGoal && !showUpdateGoal) {
-        if (selectedGoalId === "root") { setColorIndex(Math.floor((Math.random() * colorPalleteList.length) + 1)); }
+        if (selectedGoalId === "root") { setColorIndex(Math.floor(Math.random() * colorPalleteList.length)); }
         else { await getGoal(selectedGoalId).then((goal) => setColorIndex(colorPalleteList.indexOf(goal.goalColor))); }
         setShowAddGoal({ open: true, goalId: selectedGoalId });
         if (currentPage !== "MyGoals") { navigate("/MyGoals"); }

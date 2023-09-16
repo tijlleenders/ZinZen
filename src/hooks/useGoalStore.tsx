@@ -19,7 +19,7 @@ const useGoalStore = () => {
   const handleAddGoal = async (goal: GoalItem | null = null) => {
     let newLocationState: ILocationState = { displayAddGoal: selectedGoalId };
     if (selectedGoalId === "root") {
-      setColorIndex(Math.floor(Math.random() * colorPalleteList.length + 1));
+      setColorIndex(Math.floor(Math.random() * colorPalleteList.length));
     } else if (goal) {
       setColorIndex(colorPalleteList.indexOf(goal.goalColor));
     } else {
