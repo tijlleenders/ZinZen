@@ -114,7 +114,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
             alt="My Journal"
           />
           {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
-          {title !== "My Time" && title !== "Inbox" && <GlobalAddBtn add={title} />}
+          {title !== "mytime" && title !== "Inbox" && <GlobalAddBtn add={title} />}
         </button>
       </div>
     </>
