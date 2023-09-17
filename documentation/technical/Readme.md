@@ -19,3 +19,8 @@ CI/CD : GithubActions and Vercel
 Internationalization : i18next  
 Progressive Web App : workbox  
 Animations : just CSS  
+
+## Architectural decisions  
+
+If an important architectural decision is made, it is best practice to document it as an ADR (Architectural Decision Record).
+This way there is always a reference of what architectural decisions are already made. You can find them in [the ADR folder](../ADR).
