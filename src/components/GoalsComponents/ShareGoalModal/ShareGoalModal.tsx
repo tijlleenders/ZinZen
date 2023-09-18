@@ -135,9 +135,8 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       centered
       style={showAddContactModal ? { zIndex: 1 } : {}}
       onCancel={() => window.history.back()}
-      className={`share-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`share-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
+        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
       <p className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</p>
@@ -188,12 +187,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
                     <img className="secondary-icon" alt="share with friend" src={shareWithFriend} />
                   </div>
                 )}
-                <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>
-                  Share privately <br />
-                  {goal.typeOfGoal === "shared" && ` - Goal is shared with ${goal.shared.contacts[0].name}`}
-                  {goal.typeOfGoal === "collaboration" &&
-                    ` - Goal is in collaboration with ${goal.collaboration.collaborators[0].name}`}
-                </p>
+                <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>Share privately</p>
               </div>
               {goal.typeOfGoal === "myGoal" && displaySubmenu === "contacts" && (
                 <div className="shareWithContacts">

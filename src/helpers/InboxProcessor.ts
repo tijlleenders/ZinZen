@@ -58,8 +58,8 @@ export const handleIncomingChanges = async (payload) => {
     }
   } else if (payload.type === "collaborationInvite") {
     notifyNewColabRequest(payload.goal.id, payload.relId).catch(() => console.log("failed to notify about new colab"));
-  } else if (payload.type === "collaboration") {
-    const { rootGoalId, changes, changeType } = payload;
+  } else if (["collaboration", "suggestion"].includes(payload.type)) {
+    const { rootGoalId, changes, changeType, relId } = payload;
     const rootGoal = await getGoal(rootGoalId);
     if (rootGoal) {
       let inbox: InboxItem = await getInboxItem(rootGoalId);
@@ -76,7 +76,7 @@ export const handleIncomingChanges = async (payload) => {
       // });
       changeNewUpdatesStatus(true, rootGoalId).catch((err) => console.log(err));
       // @ts-ignore
-      await addGoalChangesInID(rootGoalId, defaultChanges);
+      await addGoalChangesInID(rootGoalId, defaultChanges, relId);
     }
   }
 };

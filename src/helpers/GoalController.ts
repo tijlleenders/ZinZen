@@ -34,10 +34,16 @@ export const createGoal = async (
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
+    if (!parentGoal) return { parentGoal: null };
     newGoal = inheritParentProps(newGoal, parentGoal);
     const newGoalId = await addGoal(newGoal);
     const pub = await getPubById(parentGoal.rootGoalId);
-    if (pub && pub.subscribers.length > 0 && newGoalId) {
+    if (!pub) return { parentGoal: null };
+    const { subscribers } = pub;
+    if (subscribers.length === 0 && newGoal.shared.contacts.length > 0) {
+      subscribers.push({ subId: newGoal.shared.contacts[0].relId, type: "shared" });
+    }
+    if (subscribers.length > 0 && newGoalId) {
       pub.subscribers.forEach(async (sub) => {
         if (sub.type === "collaboration" || sub.type === "shared") {
           sendUpdatesToSubscriber(sub, parentGoal.rootGoalId, "subgoals", [

@@ -186,24 +186,24 @@ export const updateSharedStatusOfGoal = async (id: string, relId: string, name: 
   });
 };
 
-export const convertSharedGoalToColab = async (id: string, accepted = true) => {
-  db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection
-      .where("id")
-      .equals(id)
-      .modify((obj: GoalItem) => {
-        if (accepted) {
-          obj.collaboration.collaborators.push(obj.shared.contacts[0]);
-          obj.typeOfGoal = "collaboration";
-          obj.shared = getDefaultValueOfShared();
-        } else {
-          obj.shared.conversionRequests = getDefaultValueOfShared().conversionRequests;
-        }
-      });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
-};
+// export const convertSharedGoalToColab = async (id: string, accepted = true) => {
+//   db.transaction("rw", db.goalsCollection, async () => {
+//     await db.goalsCollection
+//       .where("id")
+//       .equals(id)
+//       .modify((obj: GoalItem) => {
+//         if (accepted) {
+//           obj.collaboration.collaborators.push(obj.shared.contacts[0]);
+//           obj.typeOfGoal = "collaboration";
+//           obj.shared = getDefaultValueOfShared();
+//         } else {
+//           obj.shared.conversionRequests = getDefaultValueOfShared().conversionRequests;
+//         }
+//       });
+//   }).catch((e) => {
+//     console.log(e.stack || e);
+//   });
+// };
 
 export const notifyNewColabRequest = async (id: string, relId: string) => {
   db.transaction("rw", db.goalsCollection, async () => {
@@ -218,22 +218,22 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
   });
 };
 
-export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string) => {
-  db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection
-      .where("id")
-      .equals(goalId)
-      .modify(async (obj: GoalItem) => {
-        obj.collaboration = {
-          ...obj.collaboration,
-          newUpdates,
-          allowed: false,
-        };
-      });
-  }).catch((e) => {
-    console.log(e.stack || e, goalId);
-  });
-};
+// export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string) => {
+//   db.transaction("rw", db.goalsCollection, async () => {
+//     await db.goalsCollection
+//       .where("id")
+//       .equals(goalId)
+//       .modify(async (obj: GoalItem) => {
+//         obj.collaboration = {
+//           ...obj.collaboration,
+//           newUpdates,
+//           allowed: false,
+//         };
+//       });
+//   }).catch((e) => {
+//     console.log(e.stack || e, goalId);
+//   });
+// };
 
 export const removeGoalWithChildrens = async (goal: GoalItem) => {
   await removeChildrenGoals(goal.id);

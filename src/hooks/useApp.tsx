@@ -53,12 +53,12 @@ function useApp() {
                     });
                   })
                   .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
-              } else if (["shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
+              } else if (["suggestion", "shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
                 let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
                 if (ele.type === "collaborationInvite") {
                   typeOfSub = "collaborationInvite";
-                } else if (ele.type === "collaboration") {
-                  typeOfSub = "collaboration";
+                } else if (["collaboration", "suggestion"].includes(ele.type)) {
+                  typeOfSub = ele.type;
                 } else if (ele.type === "shared") {
                   typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
                 }

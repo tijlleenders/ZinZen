@@ -134,22 +134,22 @@ export const transferToMyGoals = async (id: string) => {
   });
 };
 
-export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
-  const { relId, name } = goal.shared.contacts[0];
-  collaborateWithContact(relId, goal).then((res) =>
-    console.log(res.success ? "colab inv sent" : "failed to sent invite"),
-  );
-  addSubInPub(goal.id, relId, "collaboration").catch((err) => console.log("failed to add sub in pub", err));
-  await transferToMyGoals(goal.id)
-    .then(async () => {
-      await removeGoalFromPartner(relId, goal);
-      const collaboration = JSON.parse(JSON.stringify(goal.collaboration));
-      collaboration.collaborators.push({ relId, name });
-      addGoal({ ...goal, typeOfGoal: "collaboration", collaboration, shared: getDefaultValueOfShared() })
-        .then(async () => {
-          removeSharedWMGoal(goal.id);
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
-};
+// export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
+//   const { relId, name } = goal.shared.contacts[0];
+//   collaborateWithContact(relId, goal).then((res) =>
+//     console.log(res.success ? "colab inv sent" : "failed to sent invite"),
+//   );
+//   addSubInPub(goal.id, relId, "collaboration").catch((err) => console.log("failed to add sub in pub", err));
+//   await transferToMyGoals(goal.id)
+//     .then(async () => {
+//       await removeGoalFromPartner(relId, goal);
+//       const collaboration = JSON.parse(JSON.stringify(goal.collaboration));
+//       collaboration.collaborators.push({ relId, name });
+//       addGoal({ ...goal, typeOfGoal: "collaboration", collaboration, shared: getDefaultValueOfShared() })
+//         .then(async () => {
+//           removeSharedWMGoal(goal.id);
+//         })
+//         .catch((err) => console.log(err));
+//     })
+//     .catch((err) => console.log(err));
+// };
