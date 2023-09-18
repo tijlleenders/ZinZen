@@ -1,13 +1,30 @@
 /* eslint-disable no-continue */
 import { ISchedulerOutputSlot } from "@src/Interfaces/IScheduler";
 import { formatDate, getHrFromDateString, replaceHrInDateString } from "@src/utils/SchedulerUtils";
-import { getBlockingSlotsOfTheDayForGoalId, getDueHrs, getUsedBlockers, initBlockers, pushToImpossible, updateBlockers } from ".";
+import {
+  getBlockingSlotsOfTheDayForGoalId,
+  getDueHrs,
+  getUsedBlockers,
+  initBlockers,
+  pushToImpossible,
+  updateBlockers,
+} from ".";
 
-export const createImpossibleSlot = (task: ISchedulerOutputSlot, tmpStartDate: Date, selectedDay: number, start: number, end: number) => {
+export const createImpossibleSlot = (
+  task: ISchedulerOutputSlot,
+  tmpStartDate: Date,
+  selectedDay: number,
+  start: number,
+  end: number,
+) => {
   const predictedDeadline = start + task.duration;
-  const actualDeadline = task.deadline < predictedDeadline && task.deadline < end ?
-    task.deadline : predictedDeadline > end ?
-      end > task.deadline ? task.deadline : end
+  const actualDeadline =
+    task.deadline < predictedDeadline && task.deadline < end
+      ? task.deadline
+      : predictedDeadline > end
+      ? end > task.deadline
+        ? task.deadline
+        : end
       : predictedDeadline;
 
   return {
@@ -40,8 +57,10 @@ export const fillUpImpSlotsForGoalId = (goalId: string, startDay: number, lastDa
             pushToImpossible(dayItr, {
               ...thisSlot,
               duration: dueHrs,
-              deadline: replaceHrInDateString(thisSlot.deadline,
-                getHrFromDateString(thisSlot.start) + (thisSlot.duration - dueHrs))
+              deadline: replaceHrInDateString(
+                thisSlot.deadline,
+                getHrFromDateString(thisSlot.start) + (thisSlot.duration - dueHrs),
+              ),
             });
             dueHrs = 0;
           } else {

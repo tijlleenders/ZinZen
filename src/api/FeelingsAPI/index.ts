@@ -35,7 +35,12 @@ export const getFeelingsOnDate = async (date: Date) => {
   return feelingsList;
 };
 
-export const addFeelingWithNote = async (feelingName: string, feelingCategory: string, feelingDate: Date, feelingNote: string) => {
+export const addFeelingWithNote = async (
+  feelingName: string,
+  feelingCategory: string,
+  feelingDate: Date,
+  feelingNote: string,
+) => {
   // const currentDate = getJustDate(new Date());
   const feelingDateFormatted = getJustDate(feelingDate);
   const currentDateFeelings = await getFeelingsOnDate(feelingDate);
@@ -44,10 +49,12 @@ export const addFeelingWithNote = async (feelingName: string, feelingCategory: s
     return;
   }
   db.transaction("rw", db.feelingsCollection, async () => {
-    await db.feelingsCollection.add({ content: feelingName,
+    await db.feelingsCollection.add({
+      content: feelingName,
       date: feelingDateFormatted,
       category: feelingCategory,
-      note: feelingNote });
+      note: feelingNote,
+    });
   }).catch((e) => {
     console.log(e.stack || e);
   });

@@ -32,7 +32,8 @@
   font-size: xxx-large;
 }
 
-#feedback-textbox, #feedback-textbox-dark {
+#feedback-textbox,
+#feedback-textbox-dark {
   border-radius: 10px;
   height: 200px;
   width: 100%;
@@ -44,4 +45,3 @@
   padding: 8px 16px;
   background-color: var(--selection-color);
 }
-

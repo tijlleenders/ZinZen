@@ -19,7 +19,7 @@ Also see our overall guiding principle: [Be good.](https://blog.zinzen.me/2021/1
 - E.1 One person in a team/family/group can use ZinZen® as their primary todo-tool without negatively affecting the others, even if they use a different tool.
 - E.2 No tutorials up-front, but as-you-go: when buttons/actions are first used a quick explanation is shown and connected preferences can be set after using the feature a few times (not on first use).
 - E.3 Fast touch/click feedback (<100ms) so cause-effect connection between user action and interface response is clear. Offline-first makes this easy.
-- E.4 Easy to correct mistakes so undo/redo button not required.  
+- E.4 Easy to correct mistakes so undo/redo button not required.
 - E.5 No complicated config menu's but a simple list with clear explanation/example of settings.
 - E.6 Non-intrusive tips/reminders on features the user never seems to use.
 - E.7 Suggestions for more efficient way when app detects user doing same (inefficient) thing more than x times.

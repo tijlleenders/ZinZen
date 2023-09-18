@@ -17,12 +17,18 @@ export const getInboxItem = async (id: string) => {
 };
 
 export const removeGoalInbox = async (id: string) => {
-  await db.inboxCollection.where("id").equals(id).delete().catch((err) => console.log("failed to delete", err));
+  await db.inboxCollection
+    .where("id")
+    .equals(id)
+    .delete()
+    .catch((err) => console.log("failed to delete", err));
 };
 
 export const addGoalChangesInID = async (id: string, newChanges: IChangesInGoal) => {
   db.transaction("rw", db.inboxCollection, async () => {
-    await db.inboxCollection.where("id").equals(id)
+    await db.inboxCollection
+      .where("id")
+      .equals(id)
       .modify((obj: InboxItem) => {
         Object.keys(newChanges).forEach((changeType: typeOfChange) => {
           // @ts-ignore
@@ -34,14 +40,16 @@ export const addGoalChangesInID = async (id: string, newChanges: IChangesInGoal)
   });
 };
 
-export const deleteGoalChangesInID = async (id:string, categoryOfChange:typeOfChange, changes: string[]) => {
+export const deleteGoalChangesInID = async (id: string, categoryOfChange: typeOfChange, changes: string[]) => {
   db.transaction("rw", db.inboxCollection, async () => {
-    await db.inboxCollection.where("id").equals(id)
+    await db.inboxCollection
+      .where("id")
+      .equals(id)
       .modify((obj: InboxItem) => {
         const arr = [...obj.goalChanges[categoryOfChange]];
         // @ts-ignore
-        obj.goalChanges[categoryOfChange] = arr.filter((ele) =>
-          !changes.includes("goal" in ele ? ele.goal.id : ele.id)
+        obj.goalChanges[categoryOfChange] = arr.filter(
+          (ele) => !changes.includes("goal" in ele ? ele.goal.id : ele.id),
         );
       });
   }).catch((e) => {

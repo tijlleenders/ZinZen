@@ -63,10 +63,10 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
         {goal.beforeTime && goal.afterTime
           ? `${t("between")} ${goal.afterTime}-${goal.beforeTime}`
           : goal.beforeTime
-            ? `${t("before")} ${goal.beforeTime}`
-            : goal.afterTime
-              ? `${t("after")} ${goal.afterTime}`
-              : ""}
+          ? `${t("before")} ${goal.beforeTime}`
+          : goal.afterTime
+          ? `${t("after")} ${goal.afterTime}`
+          : ""}
       </div>
       {showStart && !!goal.start && (
         <div>
@@ -232,7 +232,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                 const urlIndex = Number(ele.split("-")[1]);
                 const originalUrl = urlsWithIndexes[urlIndex];
                 const summarizedUrl = summarizeUrl(originalUrl);
-                console.log(originalUrl)
+                console.log(originalUrl);
 
                 return (
                   <span
@@ -246,9 +246,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                   </span>
                 );
               } else {
-                return <span key={`${goal.id}-${ele}`}>
-                {index === 0 ? ele : ` ${ele}`} {}
-              </span>
+                return (
+                  <span key={`${goal.id}-${ele}`}>
+                    {index === 0 ? ele : ` ${ele}`} {}
+                  </span>
+                );
               }
             })}
             &nbsp;

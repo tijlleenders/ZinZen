@@ -4,7 +4,25 @@ import { ISchedulerOutputSlot, ISchedulerInputGoal, IFinalOutputSlot } from "@sr
 import { formatDate, breakTheTree, convertDateToDay } from "@src/utils/SchedulerUtils";
 import { fillUpImpSlotsForGoalId } from "./ImpSlotManager";
 import { taskGenerator } from "./TaskGenerator";
-import { addGoalDueHrs, generateAndPushImpSlot, getAllDueTasks, getBufferValue, getDueHrs, getFlexibleWeeklyGoals, getImpossibleObj, getScheduledObj, getTasksOfDay, getWeekEndOfGoal, initImpossible, initScheduled, pushToScheduled, resetAll, updateBufferOfGoal, updateBufferOfTheDay, updateDueHrs } from ".";
+import {
+  addGoalDueHrs,
+  generateAndPushImpSlot,
+  getAllDueTasks,
+  getBufferValue,
+  getDueHrs,
+  getFlexibleWeeklyGoals,
+  getImpossibleObj,
+  getScheduledObj,
+  getTasksOfDay,
+  getWeekEndOfGoal,
+  initImpossible,
+  initScheduled,
+  pushToScheduled,
+  resetAll,
+  updateBufferOfGoal,
+  updateBufferOfTheDay,
+  updateDueHrs,
+} from ".";
 import { fillUpFreeSlots } from "./freeSlotsManager";
 
 let impossibleHandled: { [key: string]: boolean } = {};
@@ -37,7 +55,10 @@ const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpSt
         skippedToday.shift();
         if (skippedToday.length > 0) {
           [badStart, badEnd] = skippedToday[0].split("-").map((ele) => Number(ele));
-        } else { badStart = -1; badEnd = -1; }
+        } else {
+          badStart = -1;
+          badEnd = -1;
+        }
       } else {
         generateAndPushImpSlot({ ...taskObj, duration }, tmpStart, selectedDay, startHr, defaultHrs[startHr]);
       }
@@ -74,7 +95,10 @@ const taskScheduler = (taskObj: ISchedulerOutputSlot, selectedDay: number, tmpSt
               skippedToday.shift();
               if (skippedToday.length > 0) {
                 [badStart, badEnd] = skippedToday[0].split("-").map((ele) => Number(ele));
-              } else { badStart = -1; badEnd = -1; }
+              } else {
+                badStart = -1;
+                badEnd = -1;
+              }
             } else {
               generateAndPushImpSlot({ ...taskObj, duration: tmpD }, tmpStart, selectedDay, ptr, defaultHrs[ptr]);
             }
@@ -107,14 +131,15 @@ const operator = (item: number, tmpStart: Date, defaultHrs: number[]) => {
   let currentHrs = [...defaultHrs];
   const selectedDay = item + 1;
   const arr = getTasksOfDay(selectedDay);
-  arr.sort((a, b) => ((a.deadline - a.start === b.deadline - b.start) ?
-    a.duration === b.duration
-      ? a.start === b.start
-        ? a.deadline - b.deadline
-        : a.start - b.start
-      : a.duration - b.duration
-    :
-    ((a.deadline - a.start) - (b.deadline - b.start))));
+  arr.sort((a, b) =>
+    a.deadline - a.start === b.deadline - b.start
+      ? a.duration === b.duration
+        ? a.start === b.start
+          ? a.deadline - b.deadline
+          : a.start - b.start
+        : a.duration - b.duration
+      : a.deadline - a.start - (b.deadline - b.start),
+  );
   for (let arrItr = 0; arrItr < arr.length; arrItr += 1) {
     // console.log("");
     const { goalid } = arr[arrItr];
@@ -122,7 +147,7 @@ const operator = (item: number, tmpStart: Date, defaultHrs: number[]) => {
     const goalHabit = soloGoals[goalid].repeat;
     const today = new Date(new Date(tmpStart).setDate(tmpStart.getDate() + (selectedDay - 1)));
     // if (arr[arrItr].title === "work") console.log(duration, getDueHrs(goalid));
-    if (goalHabit === "weekly" && (getWeekEndOfGoal(goalid) === convertDateToDay(today) && !impossibleHandled[goalid])) {
+    if (goalHabit === "weekly" && getWeekEndOfGoal(goalid) === convertDateToDay(today) && !impossibleHandled[goalid]) {
       fillUpImpSlotsForGoalId(goalid, 1, selectedDay);
       updateDueHrs(goalid, 0);
       impossibleHandled[goalid] = true;
@@ -143,8 +168,7 @@ const operator = (item: number, tmpStart: Date, defaultHrs: number[]) => {
           } else {
             duration += pastDue;
             updateDueHrs(goalid, 0);
-            updateBufferOfTheDay(goalid, 0, { ...currentBuffer[0], availableBuffer: bufferForToday - pastDue }
-            );
+            updateBufferOfTheDay(goalid, 0, { ...currentBuffer[0], availableBuffer: bufferForToday - pastDue });
           }
         }
       }
@@ -168,9 +192,9 @@ const operator = (item: number, tmpStart: Date, defaultHrs: number[]) => {
 };
 
 export const callJsScheduler = (inputObj: {
-  startDate: string,
-  endDate: string,
-  goals: { [id: string]: ISchedulerInputGoal }
+  startDate: string;
+  endDate: string;
+  goals: { [id: string]: ISchedulerInputGoal };
 }) => {
   resetAll();
   impossibleHandled = {};
@@ -212,7 +236,9 @@ export const callJsScheduler = (inputObj: {
           let { start } = task;
           if (createdAt.toDateString() === tmpDate.toDateString()) {
             if (task.start <= createdAt.getHours()) {
-              if (createdAt.getHours() + 1 === 24) { continue; } else start = createdAt.getHours() + 1;
+              if (createdAt.getHours() + 1 === 24) {
+                continue;
+              } else start = createdAt.getHours() + 1;
             }
           }
           hrsOfDay = [...taskScheduler({ ...task, duration: dueDuration, start }, item + 1, tmpStart, hrsOfDay)];
@@ -261,7 +287,8 @@ export const callJsScheduler = (inputObj: {
     resSchedule.push({
       day: thisDate.toISOString().slice(0, 10),
       tasks: fillUpFreeSlots(scheduled[item + 1].tasks).map((ele) => ({
-        ...ele, taskid: uuidv4()
+        ...ele,
+        taskid: uuidv4(),
       })),
     });
     resImpossible.push({

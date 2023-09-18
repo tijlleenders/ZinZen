@@ -12,7 +12,12 @@ export const createUserGroup = async (title: string) => {
   await sendNewPublicGroup(newGroup.id, newGroup.title, language, newGroup.groupColor);
 };
 
-export const sendUpdatesOfThisPoll = async (groupId: string, pollId: string, newMetricsState: IMyMetrics, typeOfAction: PollActionType) => {
+export const sendUpdatesOfThisPoll = async (
+  groupId: string,
+  pollId: string,
+  newMetricsState: IMyMetrics,
+  typeOfAction: PollActionType,
+) => {
   sendReactionOnPoll(groupId, pollId, newMetricsState);
   await updatePollMetrics(groupId, pollId, typeOfAction, 1);
   await updateMyMetric(groupId, pollId, newMetricsState);

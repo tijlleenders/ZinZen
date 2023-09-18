@@ -67,7 +67,7 @@ export const formatTagsToText = (_goal: GoalItem) => {
   }`;
   response.link = goal.link ? ` ${goal.link}` : "";
   const { title, duration, start, due, habit, on, timeBudget, link, timing } = response;
-  console.log("🚀 ~ file: GoalProcessor.ts:68 ~ formatTagsToText ~ timeBudget:", timeBudget)
+  console.log("🚀 ~ file: GoalProcessor.ts:68 ~ formatTagsToText ~ timeBudget:", timeBudget);
   return { inputText: title + duration + start + due + timing + on + timeBudget + habit + link, ...response };
 };
 

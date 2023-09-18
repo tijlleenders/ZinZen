@@ -24,7 +24,9 @@ export const updatePositionIndex = async (goalId: string, posIndex: number) => {
   const res = await getGoalFancyProps(goalId);
   if (res) {
     db.transaction("rw", db.customizationCollection, async () => {
-      await db.customizationCollection.where("goalId").equals(goalId)
+      await db.customizationCollection
+        .where("goalId")
+        .equals(goalId)
         .modify((obj) => {
           obj.posIndex = posIndex;
         });
@@ -39,7 +41,7 @@ export const updatePositionIndex = async (goalId: string, posIndex: number) => {
 export const sortGoalsByProps = async (goals: GoalItem[]) => {
   const ids = goals.map((ele) => ele.id);
   const customCollection: GCustomItem[] = await db.customizationCollection.where("goalId").anyOf(ids).toArray();
-  const posIndexMap : { [key: string]: number } = customCollection.reduce((map: { [key: string]: number }, item) => {
+  const posIndexMap: { [key: string]: number } = customCollection.reduce((map: { [key: string]: number }, item) => {
     map[item.goalId] = item.posIndex;
     return map;
   }, {});

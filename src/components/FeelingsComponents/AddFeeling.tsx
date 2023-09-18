@@ -18,9 +18,7 @@ import "./AddFeeling.scss";
 export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const date = feelingDate
-    ? getJustDate(feelingDate)
-    : getJustDate(new Date());
+  const date = feelingDate ? getJustDate(feelingDate) : getJustDate(new Date());
 
   const [feelingNote, setFeelingNote] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -28,14 +26,22 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
   const [customFeeling, setCustomFeeling] = useState<string>("");
   const theme = useRecoilValue(themeState);
 
-
   const addThisFeeling = async (directAdd = "") => {
     if (directAdd !== "") {
       await addFeeling(directAdd, directAdd, date);
     } else if (feelingNote && feelingNote !== "") {
-      await addFeelingWithNote(customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling, selectedCategory, date, feelingNote);
+      await addFeelingWithNote(
+        customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling,
+        selectedCategory,
+        date,
+        feelingNote,
+      );
     } else {
-      await addFeeling(customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling, selectedCategory, date);
+      await addFeeling(
+        customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling,
+        selectedCategory,
+        date,
+      );
     }
     window.history.back();
   };
@@ -44,8 +50,12 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
       footer={null}
       closable={false}
       open={!!feelingDate}
-      className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      onCancel={() => { window.history.back(); }}
+      className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
+        darkModeStatus ? "dark" : "light"
+      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      onCancel={() => {
+        window.history.back();
+      }}
     >
       {selectedCategory === "" ? (
         <>
@@ -57,7 +67,12 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {feelingsCategories.map((category: string) => (
               <div key={`feeling-${category}`} className="feelings-category">
-                <button type="button" onClick={async () => { await addThisFeeling(category); }}>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await addThisFeeling(category);
+                  }}
+                >
                   {feelingsEmojis[category]}&nbsp;&nbsp;
                   {t(category)}
                 </button>
@@ -66,48 +81,63 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
                   onClick={() => {
                     setSelectedCategory(category);
                   }}
-                > <img alt="add feeling" src={backIcon} className="chevronRight theme-icon" />
+                >
+                  {" "}
+                  <img alt="add feeling" src={backIcon} className="chevronRight theme-icon" />
                 </button>
               </div>
             ))}
           </div>
         </>
-      )
-        :
-        (
-          <div id="addFeelings-container">
-            <p className="popupModal-title">{`You feel ${customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling}`}</p>
-            <div id="feelingOptions">
-              {selectedCategory !== "" && feelingsList[selectedCategory].map((feeling, index) => (
+      ) : (
+        <div id="addFeelings-container">
+          <p className="popupModal-title">{`You feel ${
+            customFeeling === "" ? t(feelingsList[selectedCategory][choice]) : customFeeling
+          }`}</p>
+          <div id="feelingOptions">
+            {selectedCategory !== "" &&
+              feelingsList[selectedCategory].map((feeling, index) => (
                 <button
                   type="button"
                   className={`feelingOption${choice === index ? "-selected" : ""}`}
                   key={`feelingOption-${feeling}`}
-                  onClick={() => { setChoice(index); setCustomFeeling(""); }}
+                  onClick={() => {
+                    setChoice(index);
+                    setCustomFeeling("");
+                  }}
                 >
                   {t(feeling)}
                 </button>
               ))}
-            </div>
-            <input
-              type="text"
-              placeholder="New Feeling? Write here..."
-              onChange={(e) => { setCustomFeeling(e.target.value); setChoice(e.target.value === "" ? 0 : -1); }}
-              value={customFeeling}
-            />
-            <input
-              type="text"
-              placeholder="Add Note"
-              onChange={(e) => { setFeelingNote(e.target.value); }}
-            />
-            <button
-              type="button"
-              onClick={async () => { await addThisFeeling(); }}
-              className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
-            > Save
-            </button>
           </div>
-        )}
+          <input
+            type="text"
+            placeholder="New Feeling? Write here..."
+            onChange={(e) => {
+              setCustomFeeling(e.target.value);
+              setChoice(e.target.value === "" ? 0 : -1);
+            }}
+            value={customFeeling}
+          />
+          <input
+            type="text"
+            placeholder="Add Note"
+            onChange={(e) => {
+              setFeelingNote(e.target.value);
+            }}
+          />
+          <button
+            type="button"
+            onClick={async () => {
+              await addThisFeeling();
+            }}
+            className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
+          >
+            {" "}
+            Save
+          </button>
+        </div>
+      )}
     </Modal>
   );
 };

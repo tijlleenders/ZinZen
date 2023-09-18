@@ -26,10 +26,7 @@ export default defineConfig({
       workbox: {
         cleanupOutdatedCaches: true, // default is true but added to make it explicit
         ignoreURLParametersMatching: [],
-        globPatterns: [
-          "**/*.{js,css,html,png,jpg,svg,json,wasm}",
-          "assets/**/*.{svg,png,jpg,mp3}"
-        ],
+        globPatterns: ["**/*.{js,css,html,png,jpg,svg,json,wasm}", "assets/**/*.{svg,png,jpg,mp3}"],
       },
       registerType: "autoUpdate",
       strategies: "injectManifest",

@@ -11,26 +11,20 @@ describe("Header component", () => {
   });
 
   it("should show search input when search icon is clicked", () => {
-    cy.get(".header-items")
-      .find(".header-icon[alt='zinzen search']")
-      .click();
+    cy.get(".header-items").find(".header-icon[alt='zinzen search']").click();
 
     cy.get(".header-search").should("be.visible");
     cy.go("back");
   });
 
   it("should open settings dropdown when settings icon is clicked", () => {
-    cy.get(".header-items")
-      .find(".header-icon[alt='zinzen settings']")
-      .click();
+    cy.get(".header-items").find(".header-icon[alt='zinzen settings']").click();
 
     cy.get(".header-dropdown").should("be.visible");
   });
 
   it("should close settings dropdown when clicked outside", () => {
-    cy.get(".header-items")
-      .find(".header-icon[alt='zinzen settings']")
-      .click();
+    cy.get(".header-items").find(".header-icon[alt='zinzen settings']").click();
 
     cy.get("body").click("bottom"); // Click outside the dropdown
 
@@ -38,9 +32,7 @@ describe("Header component", () => {
   });
 
   it("should toggle dark mode when Switch Mode button is clicked", () => {
-    cy.get(".header-items")
-      .find(".header-icon[alt='zinzen settings']")
-      .click();
+    cy.get(".header-items").find(".header-icon[alt='zinzen settings']").click();
 
     cy.contains("Dark Mode").click();
 
@@ -48,9 +40,7 @@ describe("Header component", () => {
     cy.get(".App-dark").should("be.visible");
     cy.get(".App-light").should("not.exist");
 
-    cy.get(".header-items")
-      .find(".header-icon[alt='zinzen settings']")
-      .click();
+    cy.get(".header-items").find(".header-icon[alt='zinzen settings']").click();
 
     cy.contains("Dark Mode").click();
 

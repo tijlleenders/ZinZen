@@ -3,7 +3,15 @@ import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
 import { calDays, getDiffInDates } from "@src/utils";
 import { convertDateToDay, goalSplitter } from "@src/utils/SchedulerUtils";
 
-import { addGoalDueHrs, getBufferValue, initImplSlotsOfGoalId, pushTaskToFlexibleArr, pushTaskToMyDays, setWeekEndOfGoal, updateBufferOfGoal } from ".";
+import {
+  addGoalDueHrs,
+  getBufferValue,
+  initImplSlotsOfGoalId,
+  pushTaskToFlexibleArr,
+  pushTaskToMyDays,
+  setWeekEndOfGoal,
+  updateBufferOfGoal,
+} from ".";
 
 interface ISlot {
   goalid: string;
@@ -19,7 +27,7 @@ const processBudgetGoal = (
   inputDuration: number,
   minDuration: number,
   iGoalStart: Date,
-  startDayItr: number
+  startDayItr: number,
 ) => {
   let goalStart = iGoalStart < new Date() ? new Date() : new Date(iGoalStart);
   const { after_time = 0 } = goal.filters || {};
@@ -52,8 +60,9 @@ const processBudgetGoal = (
           updateBufferOfGoal(goal.id, []);
         }
 
-        updateBufferOfGoal(goal.id, [...currentBufferValue,
-          { nextBuffer: i + 1, availableBuffer: min - totalDuration }
+        updateBufferOfGoal(goal.id, [
+          ...currentBufferValue,
+          { nextBuffer: i + 1, availableBuffer: min - totalDuration },
         ]);
       }
       if (totalDuration > 0) {
@@ -80,7 +89,11 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: b
   const createdAt = new Date(goal.createdAt);
   let goalStart = new Date(goal.start || goal.createdAt);
 
-  if (!pushToNext && createdAt.toDateString() === weekStart.toDateString() && goalStart.toDateString() === createdAt.toDateString()) {
+  if (
+    !pushToNext &&
+    createdAt.toDateString() === weekStart.toDateString() &&
+    goalStart.toDateString() === createdAt.toDateString()
+  ) {
     if (after_time <= createdAt.getHours()) {
       slot.start = createdAt.getHours() + 1;
       if (slot.start === 24) {
@@ -94,9 +107,8 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: b
     const startDayIndex = on_days.indexOf(convertDateToDay(goalStart));
     const today = on_days.indexOf(convertDateToDay(weekStart));
     validDays = [
-      ...on_days.slice(...(
-        today > startDayIndex ? [startDayIndex, today] : [startDayIndex])),
-      ...(today <= startDayIndex ? on_days.slice(0, today) : [])
+      ...on_days.slice(...(today > startDayIndex ? [startDayIndex, today] : [startDayIndex])),
+      ...(today <= startDayIndex ? on_days.slice(0, today) : []),
     ];
   }
 
@@ -117,10 +129,7 @@ const goalProcessor = (goal: ISchedulerInputGoal, weekStart: Date, pushToNext: b
         start: after_time,
         duration: totalDuration - (goal.hoursSpent || 0),
       };
-      pushTaskToFlexibleArr(
-        validDays,
-        newSlot
-      );
+      pushTaskToFlexibleArr(validDays, newSlot);
     } else {
       processBudgetGoal(goal, slot, validDays, totalDuration, goal.budgets[0].min, goalStart, startingDay);
     }

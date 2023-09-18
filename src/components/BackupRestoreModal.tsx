@@ -123,8 +123,9 @@ const BackupRestoreModal = () => {
       footer={null}
       centered
       onCancel={() => window.history.back()}
-      className={`backupRestoreModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`backupRestoreModal popupModal${darkModeStatus ? "-dark" : ""} ${
+        darkModeStatus ? "dark" : "light"
+      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <p className="popupModal-title" style={{ textAlign: "center" }}>
         {" "}

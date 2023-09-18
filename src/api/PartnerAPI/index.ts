@@ -25,7 +25,7 @@ export const createPartner = async (relId: string, name: string) => {
   });
 };
 
-export const addGoalToPartner = async  (relId: string, goal: GoalItem) => {
+export const addGoalToPartner = async (relId: string, goal: GoalItem) => {
   db.transaction("rw", db.partnersCollection, async () => {
     await db.partnersCollection
       .where("relId")

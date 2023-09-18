@@ -3,20 +3,20 @@ import { atom } from "recoil";
 
 export const newGroupTitle = atom({
   key: "newGroupTitle",
-  default: ""
+  default: "",
 });
 
 export const displayExploreGroups = atom({
   key: "displayExploreGroups",
-  default: false as boolean
+  default: false as boolean,
 });
 
 export const displayGroup = atom({
   key: "displayGroup",
-  default: null as PublicGroupItem | null
+  default: null as PublicGroupItem | null,
 });
 
 export const displayAddPublicGroup = atom({
   key: "displayAddPublicGroup",
-  default: false
+  default: false,
 });

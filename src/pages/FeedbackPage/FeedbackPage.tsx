@@ -33,10 +33,7 @@ export const FeedbackPage = () => {
     <OnboardingLayout>
       <div style={{ color: `${darkModeStatus ? "white" : "black"}` }}>
         <p id="feedback-line-1">{t("opinion")}</p>
-        <p id="feedback-line-2">
-          {" "}
-          {t("rate")}
-        </p>
+        <p id="feedback-line-2"> {t("rate")}</p>
         <div className="rating">
           {[...Array(5).keys()].map((index) => {
             const idx = index + 1;
@@ -45,12 +42,15 @@ export const FeedbackPage = () => {
                 type="button"
                 key={idx}
                 className={`userRating-btn ${idx <= userRating ? "decided" : "notDecided"}`}
-                onClick={() => { setUserRating(idx); }}
+                onClick={() => {
+                  setUserRating(idx);
+                }}
               >
                 <span
                   style={idx > userRating ? { color: `${darkModeStatus ? "#2e2e2e" : "#f1f1f1"}` } : {}}
                   className="star"
-                >&#9733;
+                >
+                  &#9733;
                 </span>
               </button>
             );
@@ -60,11 +60,20 @@ export const FeedbackPage = () => {
         <textarea
           id={`feedback-textbox${darkModeStatus ? "-dark" : ""}`}
           value={userFeedback}
-          onChange={(e) => { setUserFeedback(e.target.value); }}
+          onChange={(e) => {
+            setUserFeedback(e.target.value);
+          }}
           placeholder={t("feedbackPlaceholder")}
         />
         <p id="feedback-line-4">{t("anonymousFeedback")}</p>
-        <button type="button" className="action-btn" id="feedback-submit-btn" onClick={() => { submitToAPI(userFeedback); }}>
+        <button
+          type="button"
+          className="action-btn"
+          id="feedback-submit-btn"
+          onClick={() => {
+            submitToAPI(userFeedback);
+          }}
+        >
           {" "}
           {t("submit")}
         </button>

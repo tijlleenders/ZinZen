@@ -97,7 +97,7 @@
   "ansTooGoodToBeTrue": "Ne nous croyez pas sur parole, essayez !",
   "iHaveDifferentQuestions": "J'ai une question différente.",
   "iHaveNoMoreQuestions": "Je n'ai plus de questions pour l'instant.",
-  "continue" : "Continuer",
+  "continue": "Continuer",
   "privacy": "Confidentialité",
   "search": "Chercher",
   "sharedWithMe": "Partagé avec moi",
@@ -121,9 +121,9 @@
   "collaborateOnGoal": "Collaborer sur l'objectif",
   "confirm": "Confirmer",
   "cancel": "Annuler",
-  "Schedule" : "Calendrier",
-  "Goals" : "Objectifs",
-  "Journal" : "Journal",
+  "Schedule": "Calendrier",
+  "Goals": "Objectifs",
+  "Journal": "Journal",
   "goal": {
     "archive": {
       "header": "Voulez-vous marquer cette cible comme terminée ?",

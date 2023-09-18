@@ -7,24 +7,29 @@ export const areGoalTagsValid = (goalTags: ITags) => {
   let maxDurationPerDay = 24;
   if (duration) {
     const durationValue = Number(duration.value.includes("-") ? duration.value.split("-")[1] : duration.value);
-    if (afterTime?.value || afterTime?.value === 0) { maxDurationPerDay -= afterTime.value; }
-    if (beforeTime?.value || beforeTime?.value === 0) { maxDurationPerDay -= 24 - beforeTime.value; }
+    if (afterTime?.value || afterTime?.value === 0) {
+      maxDurationPerDay -= afterTime.value;
+    }
+    if (beforeTime?.value || beforeTime?.value === 0) {
+      maxDurationPerDay -= 24 - beforeTime.value;
+    }
     maxDurationPerDay = Math.abs(maxDurationPerDay);
     reason = `Impossible. Current max duration per day = ${maxDurationPerDay}h.`;
     if (repeats) {
       const repeatsValue = repeats.value.toLowerCase();
       if (repeatsValue === "daily" && durationValue > maxDurationPerDay) {
         valid = false;
-      } else if (repeatsValue === "weekly" && durationValue > (maxDurationPerDay * 7)) {
+      } else if (repeatsValue === "weekly" && durationValue > maxDurationPerDay * 7) {
         valid = false;
-      } else if (repeatsValue === "monthly" && durationValue > (maxDurationPerDay * 30)) {
+      } else if (repeatsValue === "monthly" && durationValue > maxDurationPerDay * 30) {
         valid = false;
       } else {
         reason = "none";
       }
     }
     if (valid && due?.value) {
-      const daysLeft = (due.value.getTime() - (start?.value ? start.value : new Date()).getTime()) / (1000 * 60 * 60 * 24);
+      const daysLeft =
+        (due.value.getTime() - (start?.value ? start.value : new Date()).getTime()) / (1000 * 60 * 60 * 24);
       console.log(daysLeft, maxDurationPerDay);
       if (durationValue > daysLeft * maxDurationPerDay) {
         valid = false;
