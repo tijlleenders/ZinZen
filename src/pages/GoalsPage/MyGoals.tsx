@@ -94,7 +94,7 @@ export const MyGoals = () => {
   }, [selectedGoalId, displaySearch]);
 
   return (
-    <AppLayout title="mygoals" debounceSearch={debounceSearch}>
+    <AppLayout title="myGoals" debounceSearch={debounceSearch}>
       {showShareModal && <ShareGoalModal goal={showShareModal} />}
       {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
       <div className="myGoals-container">

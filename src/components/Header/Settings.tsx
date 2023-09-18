@@ -61,7 +61,7 @@ const Settings = () => {
           style={{ display: "flex", justifyContent: "space-between", marginTop: 12, alignItems: "center" }}
           onClickCapture={toggleDarkModeStatus}
         >
-          <p>{t("Dark Mode")}</p>
+          <p>{t("darkMode")}</p>
           <Switch checked={darkModeStatus} />
         </div>
       ),

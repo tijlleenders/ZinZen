@@ -23,7 +23,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     e.stopPropagation();
     if (themeSelection) {
       window.history.back();
-    } else if (add === "mygoals" || state.displayPartner) {
+    } else if (add === "myGoals" || state.displayPartner) {
       await handleAddGoal();
     } else if (add === "myJournal") {
       handleAddFeeling();

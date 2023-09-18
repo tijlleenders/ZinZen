@@ -87,7 +87,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
             <h6
               style={{ cursor: "pointer" }}
               onClickCapture={() => {
-                if (["mygoals", "Inbox"].includes(title)) {
+                if (["myGoals", "Inbox"].includes(title)) {
                   window.history.go(-subGoalHistory.length);
                 }
               }}
@@ -96,10 +96,10 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
             </h6>
           </div>
           <div className="header-items">
-            {["mygoals", "Inbox"].includes(title) && !isInboxOpen && (
+            {["myGoals", "Inbox"].includes(title) && !isInboxOpen && (
               <HeaderBtn path={searchIcon} alt="zinzen search" />
             )}
-            {["mygoals", "Inbox"].includes(title) && showInbox && (
+            {["myGoals", "Inbox"].includes(title) && showInbox && (
               <HeaderBtn path={isInboxOpen ? openEnvelopeIcon : inboxIcon} alt="zinzen inbox" />
             )}
             <HeaderBtn path="" alt="zinzen settings" />

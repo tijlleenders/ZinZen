@@ -51,7 +51,7 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
         <>
           <p className="popupModal-title">
             {date.getTime() === getJustDate(new Date()).getTime()
-              ? t("feelingsmessage")
+              ? t("feelingsMessage")
               : `${t("feelingsMessagePast")} ${date.toDateString()}`}
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
