@@ -28,10 +28,10 @@ export const FAQPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const QnA = [
-    { header: t("Qwhatiszinzen"), body: t("AnsWhatiszinzen") },
-    { header: t("Qiszinzenprivate"), body: t("Ansiszinzenprivate") },
-    { header: t("Qiszinzenexpensive"), body: t("Ansiszinzenexpensive") },
-    { header: t("Qtoogoodtobetrue"), body: t("Anstoogoodtobetrue") }
+    { header: t("qWhatIsZinZen"), body: t("ansWhatIsZinZen") },
+    { header: t("qIsZinZenPrivate"), body: t("AnsIsZinZenPrivate") },
+    { header: t("qIsZinZenExpensive"), body: t("ansIsZinZenExpensive") },
+    { header: t("qTooGoodToBeTrue"), body: t("ansTooGoodToBeTrue") }
   ];
 
   const handleClick = () => {

@@ -20,7 +20,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     e.stopPropagation();
     if (themeSelection) {
       window.history.back();
-    } else if (add === "mygoals") {
+    } else if (add === "myGoals") {
       await handleAddGoal();
     } else if (add === "myJournal") {
       handleAddFeeling();
