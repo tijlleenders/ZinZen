@@ -34,7 +34,15 @@ import { areGoalTagsValid } from "@src/validators/GoalValidators";
 import { createGoal, modifyGoal } from "@src/helpers/GoalController";
 // import SuggestionModal from "@components/GoalsComponents/SuggestionModal/SuggestionModal";
 import { displayAddPublicGroup, displayExploreGroups, newGroupTitle } from "@src/store/GroupsState";
-import { inputGoalTags, extractedTitle, displayAddGoal, displayGoalId, displayUpdateGoal, selectedColorIndex, goalsHistory } from "@src/store/GoalsState";
+import {
+  inputGoalTags,
+  extractedTitle,
+  displayAddGoal,
+  displayGoalId,
+  displayUpdateGoal,
+  selectedColorIndex,
+  goalsHistory,
+} from "@src/store/GoalsState";
 
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
@@ -95,29 +103,59 @@ export const MainHeaderDashboard = () => {
   const setOpenExploreGroups = useSetRecoilState(displayExploreGroups);
 
   const isTitleEmpty = () => {
-    if (goalTitle.length === 0) { setShowToast({ open: true, message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`, extra: "" }); }
+    if (goalTitle.length === 0) {
+      setShowToast({
+        open: true,
+        message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`,
+        extra: "",
+      });
+    }
     return goalTitle.length === 0;
   };
   const resetCurrentStates = () => {
-    if (showAddGoal) { setShowAddGoal(null); } else if (showUpdateGoal) { setShowUpdateGoal(null); }
+    if (showAddGoal) {
+      setShowAddGoal(null);
+    } else if (showUpdateGoal) {
+      setShowUpdateGoal(null);
+    }
     // @ts-ignore
     setGoalTags({});
     setGoalTitle("");
   };
   const addThisGoal = async () => {
-    if (!showAddGoal || isTitleEmpty()) { return; }
+    if (!showAddGoal || isTitleEmpty()) {
+      return;
+    }
     const { valid, reason } = areGoalTagsValid(goalTags);
-    if (!valid) { setShowToast({ open: true, message: reason, extra: "" }); return; }
-    const { parentGoal } = await createGoal(showAddGoal.goalId, goalTags, goalTitle, colorPalleteList[colorIndex], subGoalsHistory.length);
+    if (!valid) {
+      setShowToast({ open: true, message: reason, extra: "" });
+      return;
+    }
+    const { parentGoal } = await createGoal(
+      showAddGoal.goalId,
+      goalTags,
+      goalTitle,
+      colorPalleteList[colorIndex],
+      subGoalsHistory.length,
+    );
     // @ts-ignore
-    if (parentGoal && selectedGoalId !== parentGoal.id) { addInHistory(parentGoal); }
-    if (!parentGoal && goalTitle === "magic") { setShowToast({ open: true, message: "Congratulations, you activated DEV mode", extra: "Explore what's hidden" }); }
+    if (parentGoal && selectedGoalId !== parentGoal.id) {
+      addInHistory(parentGoal);
+    }
+    if (!parentGoal && goalTitle === "magic") {
+      setShowToast({ open: true, message: "Congratulations, you activated DEV mode", extra: "Explore what's hidden" });
+    }
     resetCurrentStates();
   };
   const updateThisGoal = async () => {
-    if (!showUpdateGoal || isTitleEmpty()) { return; }
+    if (!showUpdateGoal || isTitleEmpty()) {
+      return;
+    }
     const { valid, reason } = areGoalTagsValid(goalTags);
-    if (!valid) { setShowToast({ open: true, message: reason, extra: "" }); return; }
+    if (!valid) {
+      setShowToast({ open: true, message: reason, extra: "" });
+      return;
+    }
     await modifyGoal(showUpdateGoal.goalId, goalTags, goalTitle, colorPalleteList[colorIndex], subGoalsHistory.length);
     resetCurrentStates();
   };
@@ -149,12 +187,20 @@ export const MainHeaderDashboard = () => {
       if (currentPage === "MyGroups") {
         if (openAddGroup) {
           setLastAction("addGroup");
-        } else { setOpenAddGroup(true); setOpenExploreGroups(false); }
+        } else {
+          setOpenAddGroup(true);
+          setOpenExploreGroups(false);
+        }
       } else if (!showAddGoal && !showUpdateGoal) {
-        if (selectedGoalId === "root") { setColorIndex(Math.floor(Math.random() * colorPalleteList.length)); }
-        else { await getGoal(selectedGoalId).then((goal) => setColorIndex(colorPalleteList.indexOf(goal.goalColor))); }
+        if (selectedGoalId === "root") {
+          setColorIndex(Math.floor(Math.random() * colorPalleteList.length));
+        } else {
+          await getGoal(selectedGoalId).then((goal) => setColorIndex(colorPalleteList.indexOf(goal.goalColor)));
+        }
         setShowAddGoal({ open: true, goalId: selectedGoalId });
-        if (currentPage !== "MyGoals") { navigate("/MyGoals"); }
+        if (currentPage !== "MyGoals") {
+          navigate("/MyGoals");
+        }
       } else if (showAddGoal) {
         setLastAction("addGoal");
       } else if (showUpdateGoal) {
@@ -162,7 +208,13 @@ export const MainHeaderDashboard = () => {
       }
     }
     if (to !== "save action") {
-      if (showAddGoal) { setShowAddGoal(null); } else if (showUpdateGoal) { setShowUpdateGoal(null); } else if (openAddGroup) { setOpenAddGroup(false); }
+      if (showAddGoal) {
+        setShowAddGoal(null);
+      } else if (showUpdateGoal) {
+        setShowUpdateGoal(null);
+      } else if (openAddGroup) {
+        setOpenAddGroup(false);
+      }
     }
   };
 
@@ -173,13 +225,22 @@ export const MainHeaderDashboard = () => {
       <button
         type="button"
         className={`nav-icon ${to === "Menu" ? "" : imgCustomClass}`}
-        onClick={() => { handleNavClick(to); }}
+        onClick={() => {
+          handleNavClick(to);
+        }}
       >
         <img alt={to} style={customStyle} src={imageVariable} />
-        <p style={{ color: !darkModeStatus ? "#CD6E51" : "#705BBC" }} className={pageName === currentPage ? "selected" : ""}>{
-          to === "save action" ? (!showAddGoal && !showUpdateGoal && !openAddGroup)
-            ? "Add" : "Save" : (to.includes("My") ? to.split(" ")[1] : to)
-          }
+        <p
+          style={{ color: !darkModeStatus ? "#CD6E51" : "#705BBC" }}
+          className={pageName === currentPage ? "selected" : ""}
+        >
+          {to === "save action"
+            ? !showAddGoal && !showUpdateGoal && !openAddGroup
+              ? "Add"
+              : "Save"
+            : to.includes("My")
+            ? to.split(" ")[1]
+            : to}
         </p>
       </button>
     );
@@ -200,31 +261,43 @@ export const MainHeaderDashboard = () => {
     <div className={`positioning${!darkModeStatus ? "-light" : "-dark"}`} style={{ height: "5em" }}>
       <div className="nav-layer">
         {getNavIcon(
-          (currentPage !== "" ? myTimeIcon :
-            darkModeStatus ? myTimeIconFilledDark : myTimeIconFilledLight),
+          currentPage !== "" ? myTimeIcon : darkModeStatus ? myTimeIconFilledDark : myTimeIconFilledLight,
           "My Time",
-          { paddingTop: "4px", width: "32px" })}
-        {getNavIcon((currentPage !== "MyGoals" ? myGoalsIcon :
-          darkModeStatus ? myGoalsIconFilledDark : myGoalsIconFilledLight), "My Goals", { paddingTop: "4px" })}
+          { paddingTop: "4px", width: "32px" },
+        )}
+        {getNavIcon(
+          currentPage !== "MyGoals" ? myGoalsIcon : darkModeStatus ? myGoalsIconFilledDark : myGoalsIconFilledLight,
+          "My Goals",
+          { paddingTop: "4px" },
+        )}
         {getNavIcon(darkModeStatus ? mainAvatarDark : mainAvatarLight, "Menu")}
 
         <div className={showSidebar ? "overlay" : ""} onClick={() => setShowSidebar(false)}>
-          {showSidebar && (<Sidebar />)}
+          {showSidebar && <Sidebar />}
         </div>
         {getNavIcon(
-          (currentPage !== "MyJournal" ? myFeelingsIcon :
-            darkModeStatus ? myFeelingsIconFilledDark : myFeelingsIconFilledLight),
-          "My Journal")}
-        {getNavIcon(!showAddGoal && !showUpdateGoal && !openAddGroup ?
-          (darkModeStatus ? addDark : addLight)
-          : (darkModeStatus ? correctDark : correctLight),
-        "save action",
-        { width: "30px" })}
-        { currentPage !== "MyGroups" && <PageHighlighter /> }
+          currentPage !== "MyJournal"
+            ? myFeelingsIcon
+            : darkModeStatus
+            ? myFeelingsIconFilledDark
+            : myFeelingsIconFilledLight,
+          "My Journal",
+        )}
+        {getNavIcon(
+          !showAddGoal && !showUpdateGoal && !openAddGroup
+            ? darkModeStatus
+              ? addDark
+              : addLight
+            : darkModeStatus
+            ? correctDark
+            : correctLight,
+          "save action",
+          { width: "30px" },
+        )}
+        {currentPage !== "MyGroups" && <PageHighlighter />}
         <div />
       </div>
       {/* <SuggestionModal goalID={goalID} /> */}
     </div>
-
   );
 };

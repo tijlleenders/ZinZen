@@ -31,7 +31,8 @@
   gap: 8px;
 }
 
-.feelingOption, .feelingOption-selected {
+.feelingOption,
+.feelingOption-selected {
   border: none;
   border-radius: 7px;
   padding: 7px 20px;
@@ -41,7 +42,7 @@
 }
 
 .feelingOption-selected {
-  background: var(--selection-color);        
+  background: var(--selection-color);
 }
 
 #addFeelings-container {

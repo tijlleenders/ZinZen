@@ -62,6 +62,6 @@ const languagesFullForms: { [key: string]: string } = {
   es: "español",
   fr: "français",
   hi: "हिन्दी",
-  nl: "Nederlands"
+  nl: "Nederlands",
 };
 export { i18n, languagesAvailable, languagesFullForms };

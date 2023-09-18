@@ -83,7 +83,12 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       ) : (
         <>
           <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-            <img style={{ height: 30, width: 30 ,cursor: "pointer" }} onClickCapture={handlePartner} src={zinzenLightLogo} alt="ZinZen" />
+            <img
+              style={{ height: 30, width: 30, cursor: "pointer" }}
+              onClickCapture={handlePartner}
+              src={zinzenLightLogo}
+              alt="ZinZen"
+            />
             <h6
               style={{ cursor: "pointer" }}
               onClickCapture={() => {

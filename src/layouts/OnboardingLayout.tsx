@@ -6,21 +6,22 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 
-const OnboardingLayout = ({ children }: {children: React.ReactNode}) => {
+const OnboardingLayout = ({ children }: { children: React.ReactNode }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
-    <div style={{
-      textAlign: "center",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      background: "transparent",
-      paddingBottom: 16,
-      borderRadius: "1.275em",
-      maxWidth: 320,
-      paddingTop: 16,
-      width: "100%",
-    }}
+    <div
+      style={{
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        background: "transparent",
+        paddingBottom: 16,
+        borderRadius: "1.275em",
+        maxWidth: 320,
+        paddingTop: 16,
+        width: "100%",
+      }}
     >
       <img
         role="presentation"

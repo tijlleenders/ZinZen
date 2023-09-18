@@ -13,8 +13,8 @@ export const findPublicGroupsOnline = async (searchKeyword = "") => {
       commandType: "getPublicGroups",
       installId: getInstallId(),
       publicGroupIds: [],
-      ...(searchKeyword !== "" ? { searchKeyword } : {})
-    }
+      ...(searchKeyword !== "" ? { searchKeyword } : {}),
+    },
   });
   if (res.success) {
     res.response = res.response.map((ele) =>
@@ -24,7 +24,7 @@ export const findPublicGroupsOnline = async (searchKeyword = "") => {
         polls: ele.polls,
         language: ele.language,
         groupColor: ele.color,
-      })
+      }),
     );
   }
   return res;
@@ -40,16 +40,15 @@ export const sendUpdateOfNewPoll = async (publicGroupId: string, poll: IPoll) =>
       commandType: "addPollInPublicGroup",
       installId: getInstallId(),
       publicGroupId,
-      publicGroupPoll
-    }
+      publicGroupPoll,
+    },
   };
   console.log(JSON.stringify(body));
   const res = await createGroupRequest(groupServiceUrl, body);
   return res;
 };
 
-export const sendNewPublicGroup = async (publicGroupId: string, title: string, language: string, color: string
-) => {
+export const sendNewPublicGroup = async (publicGroupId: string, title: string, language: string, color: string) => {
   const res = await createGroupRequest(groupServiceUrl, {
     debugKey,
     eventType: "command",
@@ -57,9 +56,12 @@ export const sendNewPublicGroup = async (publicGroupId: string, title: string, l
       commandType: "createPublicGroup",
       installId: getInstallId(),
       publicGroup: {
-        publicGroupId, title, language, color
-      }
-    }
+        publicGroupId,
+        title,
+        language,
+        color,
+      },
+    },
   });
   return res;
 };
@@ -73,8 +75,8 @@ export const sendReactionOnPoll = async (publicGroupId: string, publicGroupPollI
       installId: getInstallId(),
       publicGroupId,
       publicGroupPollId,
-      pollUpdate: metrics
-    }
+      pollUpdate: metrics,
+    },
   });
   return res;
 };

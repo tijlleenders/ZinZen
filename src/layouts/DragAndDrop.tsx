@@ -1,16 +1,16 @@
 import React, { ReactNode } from "react";
 
 interface DadProps {
-  index: number,
-  dragging: boolean,
-  children: ReactNode,
-  thisItem: boolean,
-  handleDragStart: (e: any, index: number) => void
-  handleDragEnter: (index: number) => void,
-  handleDragEnd: () => void
+  index: number;
+  dragging: boolean;
+  children: ReactNode;
+  thisItem: boolean;
+  handleDragStart: (e: any, index: number) => void;
+  handleDragEnter: (index: number) => void;
+  handleDragEnd: () => void;
 }
 
-const DragAndDrop : React.FC<DadProps> = ({
+const DragAndDrop: React.FC<DadProps> = ({
   index,
   dragging,
   children,
@@ -29,7 +29,7 @@ const DragAndDrop : React.FC<DadProps> = ({
       opacity: dragging && thisItem ? 0.8 : 1,
       cursor: "move",
       transition: "opacity 0.8s ease",
-      background: dragging && thisItem ? "var(--selection-color)" : "transparent"
+      background: dragging && thisItem ? "var(--selection-color)" : "transparent",
     }}
   >
     {children}

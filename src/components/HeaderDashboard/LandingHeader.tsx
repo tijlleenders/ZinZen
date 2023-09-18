@@ -14,14 +14,14 @@ import { displaySidebar } from "@src/store/SidebarState";
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
 
-export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
+export const LandingHeader = ({ avatar }: { avatar: string | null }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
   const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
 
   return (
     <>
-      { avatar === "back" ? (
+      {avatar === "back" ? (
         <img
           role="presentation"
           src={ArrowIcon}
@@ -37,7 +37,9 @@ export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
               } else {
                 navigate("/");
               }
-            } else { navigate(-1); }
+            } else {
+              navigate(-1);
+            }
           }}
         />
       ) : avatar === "sidebar" ? (
@@ -49,15 +51,13 @@ export const LandingHeader = ({ avatar }:{ avatar: string | null }) => {
           id="main-header-homeLogo"
           onClick={() => setShowSidebar(true)}
         />
-      )
-        : null}
+      ) : null}
       <img
         role="presentation"
         src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
         alt="ZinZen Text Logo"
         className="main-header-TextLogo"
       />
-
     </>
   );
 };

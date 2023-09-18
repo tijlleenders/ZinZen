@@ -14,7 +14,7 @@ export const createPublicGroupObject = (params: object) => {
     language: "English",
     groupColor: colorPalleteList[0],
     createdAt: new Date().toISOString(),
-    ...params
+    ...params,
   };
   groupItem.id = uuidv5(groupItem.title, myNameSpace);
   return groupItem;
@@ -27,7 +27,7 @@ export const createPollObject = (goal: GoalItem, params: object = {}) => ({
     upVotes: 0,
     downVotes: 0,
     inMyGoals: 0,
-    completed: 0
+    completed: 0,
   },
   myMetrics: {
     voteScore: 0,
@@ -35,7 +35,7 @@ export const createPollObject = (goal: GoalItem, params: object = {}) => ({
     completed: false,
   },
   createdAt: new Date().toISOString(),
-  ...params
+  ...params,
 });
 
 export function getDefaultValueOfGoalChanges() {
@@ -43,7 +43,7 @@ export function getDefaultValueOfGoalChanges() {
     subgoals: [],
     modifiedGoals: [],
     archived: [],
-    deleted: []
+    deleted: [],
   };
 }
 
@@ -51,7 +51,7 @@ export function getDefaultValueOfCollab() {
   const value: ICollaboration = {
     newUpdates: false,
     collaborators: [],
-    allowed: true
+    allowed: true,
   };
   return value;
 }

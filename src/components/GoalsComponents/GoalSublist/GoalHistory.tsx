@@ -10,7 +10,7 @@ import { ISubGoalHistory, goalsHistory } from "@src/store/GoalsState";
 const breadcrumbStyle: React.CSSProperties = {
   fontWeight: 500,
   borderRadius: 30,
-  padding: '0 3px 3px 3px',
+  padding: "0 3px 3px 3px",
   display: "block",
   width: 100,
   whiteSpace: "nowrap",

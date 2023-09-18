@@ -39,7 +39,7 @@ describe("Feedback Page", () => {
         <BrowserRouter>
           <FeedbackPage />
         </BrowserRouter>
-      </RecoilRoot>
+      </RecoilRoot>,
     );
     const button = getByText("Submit");
     fireEvent.click(button);
@@ -49,8 +49,8 @@ describe("Feedback Page", () => {
           <BrowserRouter>
             <FeedbackPage />
           </BrowserRouter>
-        </RecoilRoot>
-      )
+        </RecoilRoot>,
+      ),
     );
 
     expect(fetch).toHaveBeenCalledTimes(1);
@@ -66,7 +66,7 @@ describe("Feedback Page", () => {
         <BrowserRouter>
           <FeedbackPage />
         </BrowserRouter>
-      </RecoilRoot>
+      </RecoilRoot>,
     );
     const button = getByText("Submit");
     fireEvent.click(button);

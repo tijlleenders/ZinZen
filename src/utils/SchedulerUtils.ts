@@ -1,16 +1,16 @@
 /* eslint-disable camelcase */
 /* eslint-disable vars-on-top */
 import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
-import sha256 from 'crypto-js/sha256';
+import sha256 from "crypto-js/sha256";
 
 export const generateUniqueIdForSchInput = (inputString: string) => {
   return sha256(inputString).toString();
-}
+};
 
 /* eslint-disable no-var */
 export const convertDateToDay = (date: Date) => `${date.toLocaleDateString("en-us", { weekday: "long" })}`.slice(0, 3);
 
-type incomingGoals = { [id: string]: ISchedulerInputGoal }
+type incomingGoals = { [id: string]: ISchedulerInputGoal };
 
 var visited: string[] = [];
 var soloGoals: incomingGoals = {};
@@ -69,19 +69,21 @@ export const goalSplitter = (goal: ISchedulerInputGoal) => {
         min_duration: 24 - after_time,
         filters: {
           ...goal.filters,
-          before_time: 24
-        }
+          before_time: 24,
+        },
       });
     }
     res.push({
       ...goal,
-      ...(splittedGoal ? {
-        min_duration: (goal.min_duration || 0) - (24 - after_time),
-        filters: {
-          ...goal.filters,
-          after_time: 0
-        }
-      } : {})
+      ...(splittedGoal
+        ? {
+            min_duration: (goal.min_duration || 0) - (24 - after_time),
+            filters: {
+              ...goal.filters,
+              after_time: 0,
+            },
+          }
+        : {}),
     });
   } else {
     res.push(goal);

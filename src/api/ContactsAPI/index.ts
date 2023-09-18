@@ -12,7 +12,15 @@ export const getAllContacts = async () => {
 export const addContact = async (contactName: string, relId: string, accepted = false) => {
   const name = `${contactName.charAt(0).toUpperCase() + contactName.slice(1)}`;
   const currentDate = new Date();
-  const newContact: ContactItem = { id: uuidv4(), name, relId, sharedGoals: [], collaborativeGoals: [], createdAt: currentDate, accepted };
+  const newContact: ContactItem = {
+    id: uuidv4(),
+    name,
+    relId,
+    sharedGoals: [],
+    collaborativeGoals: [],
+    createdAt: currentDate,
+    accepted,
+  };
   let newContactId;
   await db
     .transaction("rw", db.contactsCollection, async () => {
@@ -41,15 +49,21 @@ export const getContactGoalById = async (id: string) => {
 
 export const updateStatusOfContact = async (relId: string, accepted: boolean) => {
   db.transaction("rw", db.contactsCollection, async () => {
-    await db.contactsCollection.where("relId").equals(relId)
-      .modify((obj) => { obj.accepted = accepted; });
+    await db.contactsCollection
+      .where("relId")
+      .equals(relId)
+      .modify((obj) => {
+        obj.accepted = accepted;
+      });
   }).catch((e) => {
     console.log(e.stack || e);
   });
 };
 
 export const checkAndUpdateRelationshipStatus = async (relId: string) => {
-  if (relId === "") { return false; }
+  if (relId === "") {
+    return false;
+  }
   const res = await getRelationshipStatus(relId);
   if (res.success) {
     await updateStatusOfContact(relId, res.response.status !== "pending");
@@ -60,5 +74,9 @@ export const checkAndUpdateRelationshipStatus = async (relId: string) => {
 
 export const updateAllUnacceptedContacts = async () => {
   const allContacts = await db.contactsCollection.toArray();
-  allContacts.forEach(async (ele) => { if (!ele.accepted) { checkAndUpdateRelationshipStatus(ele.relId); } });
+  allContacts.forEach(async (ele) => {
+    if (!ele.accepted) {
+      checkAndUpdateRelationshipStatus(ele.relId);
+    }
+  });
 };

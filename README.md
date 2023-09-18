@@ -17,12 +17,14 @@ A lot of things in life can be managed by making lists (of lists...) with constr
 See ... for some ideas.
 
 ## Getting started
+
 We have simple [documentation](documentation/Readme.md).
 
 ## How to contribute?
+
 There are many ways to contribute... not only code!  
 https://opensource.guide/how-to-contribute/  
-Please mind the code of conduct.  
+Please mind the code of conduct.
 
 We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
 
@@ -30,16 +32,14 @@ If Rust, WASM and scheduling algorithms are your domains of interest, please con
 
 ## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
 
-- [Donate via Stripe](https://donate.stripe.com/6oE4jK1iPcPT1m89AA) or [GitHub sponsors](https://github.com/sponsors/tijlleenders)  
-- [Give anonymous feedback](https://zinzen.me/Feedback)  
-- ✨Star✨ this repo  
-- Tell a friend!  
-- Pick an issue on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4) and do let us know before you start working on it. ;)  
-
+- [Donate via Stripe](https://donate.stripe.com/6oE4jK1iPcPT1m89AA) or [GitHub sponsors](https://github.com/sponsors/tijlleenders)
+- [Give anonymous feedback](https://zinzen.me/Feedback)
+- ✨Star✨ this repo
+- Tell a friend!
+- Pick an issue on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4) and do let us know before you start working on it. ;)
 
 https://opensource.guide/how-to-contribute/  
-Please mind the code of conduct.  
-
+Please mind the code of conduct.
 
 ## Legal stuff
 

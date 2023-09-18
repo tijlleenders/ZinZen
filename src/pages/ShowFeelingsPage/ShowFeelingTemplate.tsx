@@ -64,8 +64,8 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         state: {
           ...location.state,
           displayNoteModal: feelingsListObject[id].id,
-          note: feelingsListObject[id].note
-        }
+          note: feelingsListObject[id].note,
+        },
       });
     } else {
       navigate("/MyJournal", { state: { ...location.state, displayInputNoteModal: feelingsListObject[id].id } });
@@ -74,11 +74,15 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
 
   const handleTrashClick = (id: number) => {
     const numFeelingId = feelingsListObject[id].id;
-    if (numFeelingId) { removeFeeling(numFeelingId); } else { console.log("Attempting to remove feeling not in the database"); }
+    if (numFeelingId) {
+      removeFeeling(numFeelingId);
+    } else {
+      console.log("Attempting to remove feeling not in the database");
+    }
     const newFeelingsList = currentFeelingsList;
     const feelingDate = feelingsListObject[id].date;
     newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
-      (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId
+      (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId,
     );
     setFeelingsListObject.setFeelingsList({ ...newFeelingsList });
   };
@@ -120,12 +124,24 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
                   <div className="feelingOfDay-content">
                     <span>{t(feelingsListObject[feelingId].content)}</span>
                     <br />
-                    <span style={{ fontSize: "0.875rem", opacity: "0.8", wordBreak: "break-word" }}>{t(feelingsListObject[feelingId].note)}</span>
+                    <span style={{ fontSize: "0.875rem", opacity: "0.8", wordBreak: "break-word" }}>
+                      {t(feelingsListObject[feelingId].note)}
+                    </span>
                   </div>
                 </div>
                 <div className="feelingOfDaty-options">
-                  <img alt="add note to feeling" className={`${darkModeStatus ? "dark-svg" : ""}`} src={noteIcon} onClick={() => handleJournalClick(feelingId)} />
-                  <img alt="delete feeling" className={`${darkModeStatus ? "dark-svg" : ""}`} src={deleteIcon} onClick={() => handleTrashClick(feelingId)} />
+                  <img
+                    alt="add note to feeling"
+                    className={`${darkModeStatus ? "dark-svg" : ""}`}
+                    src={noteIcon}
+                    onClick={() => handleJournalClick(feelingId)}
+                  />
+                  <img
+                    alt="delete feeling"
+                    className={`${darkModeStatus ? "dark-svg" : ""}`}
+                    src={deleteIcon}
+                    onClick={() => handleTrashClick(feelingId)}
+                  />
                 </div>
               </button>
             );
@@ -136,7 +152,9 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         closable={false}
         footer={null}
         onCancel={() => window.history.back()}
-        className={`${darkModeStatus ? "notes-modal-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+        className={`${darkModeStatus ? "notes-modal-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
+          darkModeStatus ? "dark" : "light"
+        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       >
         <p className="popupModal-title">Want to tell more about it? </p>
         <div>
@@ -176,7 +194,9 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         closable={false}
         footer={null}
         onCancel={() => window.history.back()}
-        className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+        className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
+          darkModeStatus ? "dark" : "light"
+        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
       >
         <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />
         <div className="show-feeling-actions">
@@ -194,24 +214,28 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
                   }
                   return dates;
                 },
-                {}
+                {},
               );
               setFeelingsListObject.setFeelingsList({ ...feelingsByDates });
               window.history.back();
             }}
             className="feelingsModal-btn"
             style={{
-              background: "transparent", boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
+              background: "transparent",
+              boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
             }}
           >
             Delete
           </button>
           <button
             type="button"
-            onClick={() => { window.history.back(); }}
+            onClick={() => {
+              window.history.back();
+            }}
             className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
             style={{
-              background: "var(--primary-background)", boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
+              background: "var(--primary-background)",
+              boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
             }}
           >
             Done

@@ -108,8 +108,9 @@ const DisplayChangesModal = () => {
 
   return (
     <Modal
-      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]
-        }`}
+      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
+        theme[darkModeStatus ? "dark" : "light"]
+      }`}
       open={!!showChangesModal}
       onCancel={() => {
         setShowChangesModal(null);

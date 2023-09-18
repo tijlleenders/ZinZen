@@ -48,8 +48,9 @@ const Reschedule = () => {
         type="button"
         key={uuidv4()}
         onClick={() => setSelectedHr(hr)}
-        className={`slot-card ${hr > selectedHr && hr < task.duration + selectedHr ? "booked" : ""} ${hr === selectedHr ? "selected" : ""
-          }`}
+        className={`slot-card ${hr > selectedHr && hr < task.duration + selectedHr ? "booked" : ""} ${
+          hr === selectedHr ? "selected" : ""
+        }`}
       >
         <p style={hr === selectedHr ? { color: !darkModeStatus ? "#CD6E51" : "#9E9E9E" } : {}}>
           {hr}
@@ -96,8 +97,9 @@ const Reschedule = () => {
       footer={null}
       onCancel={() => setOpen(null)}
       // eslint-disable-next-line prettier/prettier
-      className={`rescheduleModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`rescheduleModal popupModal${darkModeStatus ? "-dark" : ""} ${
+        darkModeStatus ? "dark" : "light"
+      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <div className="header-title">
         <h4>{task.title}</h4>
