@@ -1,26 +1,29 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
 
 import { darkModeState } from "@src/store";
-import { useRecoilValue } from "recoil";
 import { themeSelectionMode } from "@src/store/ThemeState";
+
 import useGoalStore from "@src/hooks/useGoalStore";
 import useFeelingStore from "@src/hooks/useFeelingStore";
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
+  const { state } = useLocation();
   const { handleAddGoal } = useGoalStore();
   const { handleAddFeeling } = useFeelingStore();
-  const darkModeStatus = useRecoilValue(darkModeState);
 
+  const darkModeStatus = useRecoilValue(darkModeState);
   const themeSelection = useRecoilValue(themeSelectionMode);
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (themeSelection) {
       window.history.back();
-    } else if (add === "mygoals") {
+    } else if (add === "mygoals" || state.displayPartner) {
       await handleAddGoal();
     } else if (add === "My Journal") {
       handleAddFeeling();
@@ -31,7 +34,9 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     <button
       type="button"
       id="global-addBtn"
-      onClick={(e) => { handleClick(e); }}
+      onClick={(e) => {
+        handleClick(e);
+      }}
       style={{
         position: "fixed",
         borderRadius: "50%",
@@ -41,9 +46,14 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         width: 56,
         height: 56,
         right: 34,
-        bottom: 74
+        bottom: 74,
       }}
-    > <img className={`global-addBtn-img ${themeSelection && !darkModeStatus ? "theme-selector-option" : ""}`} src={themeSelection ? correct : GlobalAddIcon} alt="add goal | add feeling | add group" />
+    >
+      <img
+        className={`global-addBtn-img ${themeSelection && !darkModeStatus ? "theme-selector-option" : ""}`}
+        src={themeSelection ? correct : GlobalAddIcon}
+        alt="add goal | add feeling | add group"
+      />
     </button>
   );
 };
