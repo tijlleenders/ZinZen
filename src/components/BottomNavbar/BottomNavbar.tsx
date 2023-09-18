@@ -1,6 +1,7 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
 import { goalsHistory } from "@src/store/GoalsState";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import backIcon from "@assets/images/backIcon.svg";
@@ -9,13 +10,13 @@ import calendarIcon from "@assets/images/calendarIcon.svg";
 import journalIcon from "@assets/images/journalIcon.svg";
 
 import { darkModeState } from "@src/store";
-import Backdrop from "@src/common/Backdrop";
 import { moonIcon, sunIcon } from "@src/assets";
-import GlobalAddBtn from "@components/GlobalAddBtn";
 import { themeSelectionMode, themeState } from "@src/store/ThemeState";
 
+import Backdrop from "@src/common/Backdrop";
+import GlobalAddBtn from "@components/GlobalAddBtn";
+
 import "./BottomNavbar.scss";
-import { useTranslation } from "react-i18next";
 
 const BottomNavbar = ({ title }: { title: string }) => {
   const { t } = useTranslation();
@@ -46,18 +47,18 @@ const BottomNavbar = ({ title }: { title: string }) => {
       setDarkModeStatus(!darkModeStatus);
       return;
     }
-    if (location.state?.from === to) { window.history.back(); } else {
+    if (location.state?.from === to) {
+      window.history.back();
+    } else {
       const newLocationState = { ...location.state, from: currentPage };
       if (to === "MyTime") {
         if (currentPage !== "") navigate("/", { state: newLocationState });
       } else if (to === "MyGoals") {
         if (currentPage !== "MyGoals") {
-          navigate("/MyGoals", { state: newLocationState })
-        } else {
-          if (subGoalHistory.length > 0) {
-            window.history.go(-subGoalHistory.length)
-          }
-        };
+          navigate("/MyGoals", { state: newLocationState });
+        } else if (subGoalHistory.length > 0) {
+          window.history.go(-subGoalHistory.length);
+        }
       } else if (currentPage !== "MyJournal") {
         navigate("/MyJournal", { state: newLocationState });
       }
@@ -66,7 +67,14 @@ const BottomNavbar = ({ title }: { title: string }) => {
 
   return (
     <>
-      {themeSelection && <Backdrop opacity={0} onClick={() => { window.history.back(); }} />}
+      {themeSelection && (
+        <Backdrop
+          opacity={0}
+          onClick={() => {
+            window.history.back();
+          }}
+        />
+      )}
       <div className={`bottom-navbar${darkModeStatus ? "-dark" : ""}`}>
         <button
           type="button"
