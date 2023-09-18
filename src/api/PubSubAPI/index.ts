@@ -23,19 +23,25 @@ export const addSubInPub = async (goalId: string, subId: string, type: typeOfSub
   const pubId = await getPubById(goalId);
   if (pubId) {
     db.transaction("rw", db.pubSubCollection, async () => {
-      await db.pubSubCollection.where("id").equals(goalId)
+      await db.pubSubCollection
+        .where("id")
+        .equals(goalId)
         .modify((obj: PubSubItem) => {
           obj.subscribers.push({ subId, type });
         });
     }).catch((e) => {
       console.log(e.stack || e);
     });
-  } else { await addPub(goalId, [{ subId, type }]); }
+  } else {
+    await addPub(goalId, [{ subId, type }]);
+  }
 };
 
 export const convertTypeOfSub = async (goalId: string, subId: string, newType: typeOfSub) => {
   db.transaction("rw", db.pubSubCollection, async () => {
-    await db.pubSubCollection.where("id").equals(goalId)
+    await db.pubSubCollection
+      .where("id")
+      .equals(goalId)
       .modify((obj: PubSubItem) => {
         const { subscribers } = obj;
         const ind = subscribers.findIndex((ele) => ele.subId === subId);
@@ -52,6 +58,8 @@ export const convertTypeOfSub = async (goalId: string, subId: string, newType: t
 
 export const findTypeOfSub = async (goalId: string) => {
   const goal = await db.pubSubCollection.where("id").equals(goalId).toArray();
-  if (goal && goal.length > 0) { return goal[0].subscribers[0].type; }
+  if (goal && goal.length > 0) {
+    return goal[0].subscribers[0].type;
+  }
   return "none";
 };

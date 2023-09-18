@@ -2,28 +2,26 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Checkbox, Modal } from "antd";
-import { darkModeState, displayToast, openDevMode } from "@src/store";
+import { darkModeState, displayToast, openDevMode, partnerDetails } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useLocation } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
-import {
-  displayAddGoal,
-  selectedColorIndex,
-  displayUpdateGoal,
-  goalsHistory,
-  displayGoalId,
-} from "@src/store/GoalsState";
+import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
 import ColorPalette from "@src/common/ColorPalette";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
 import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
-import ConfigOption from "./ConfigOption";
-import CustomDatePicker from "./CustomDatePicker";
+import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
+import ConfigOption from "./ConfigOption";
+import CustomDatePicker from "./CustomDatePicker";
 import "./ConfigGoal.scss";
+import { ILocationState } from "@src/Interfaces";
+import { getSharedWMGoal } from "@src/api/SharedWMAPI";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -46,11 +44,13 @@ const roundOffHours = (hrsValue: string) => {
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
   const { t } = useTranslation();
+  const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
   const theme = useRecoilValue(themeState);
   const today = moment(new Date()).format("YYYY-MM-DD");
+
+  const partner = useRecoilValue(partnerDetails);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalsHistory = useRecoilValue(goalsHistory);
 
   const setDevMode = useSetRecoilState(openDevMode);
@@ -115,27 +115,43 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     if (!showUpdateGoal || isTitleEmpty()) {
       return;
     }
-    await modifyGoal(goal.id, getFinalTags(), title, colorPalleteList[colorIndex], subGoalsHistory.length);
+    const goalColor = colorPalleteList[colorIndex];
+    if (state.displayPartner) {
+      // suggestChanges(getFinalTags(), title, goalColor, subGoalsHistory.length);
+    } else {
+      await modifyGoal(goal.id, getFinalTags(), title, goalColor, subGoalsHistory.length);
+    }
   };
 
   const addThisGoal = async () => {
     if (!showAddGoal || isTitleEmpty()) {
       return;
     }
-    const { parentGoal } = await createGoal(
-      showAddGoal.goalId,
-      getFinalTags(),
-      title,
-      colorPalleteList[colorIndex],
-      subGoalsHistory.length,
-    );
-    // @ts-ignore
-    if (parentGoal && selectedGoalId !== parentGoal.id) {
-      addInHistory(parentGoal);
-    }
-    if (!parentGoal && title === "magic") {
-      setDevMode(true);
-      setShowToast({ open: true, message: "Congratulations, you activated DEV mode", extra: "Explore what's hidden" });
+    if (state.displayPartner && partner && state.goalsHistory) {
+      // const parentId = state.goalsHistory.slice(-1)[0].goalID;
+      // const rootGoalId = state.goalsHistory[0].goalID;
+      // const rootGoal = partner.goals.find((ele) => ele.id === rootGoalId);
+      // const parentGoal = parentId === rootGoalId ? rootGoal : await getSharedWMGoal(parentId);
+      // if (!parentGoal || !rootGoal) {
+      //   return;
+      // }
+      // suggestNewGoal(rootGoal, parentGoal, getFinalTags(), title, colorPalleteList[colorIndex], subGoalsHistory.length);
+    } else {
+      const { parentGoal } = await createGoal(
+        showAddGoal.goalId,
+        getFinalTags(),
+        title,
+        colorPalleteList[colorIndex],
+        subGoalsHistory.length,
+      );
+      if (!parentGoal && title === "magic") {
+        setDevMode(true);
+        setShowToast({
+          open: true,
+          message: "Congratulations, you activated DEV mode",
+          extra: "Explore what's hidden",
+        });
+      }
     }
     await mySound.play();
   };
@@ -315,8 +331,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               start
                 ? moment(start).format("YYYY-MM-DD")
                 : goal?.createdAt
-                ? moment(goal.createdAt).format("YYYY-MM-DD")
-                : today
+                  ? moment(goal.createdAt).format("YYYY-MM-DD")
+                  : today
             }
             timeValue={startTime}
           />
