@@ -167,6 +167,10 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     }
   }, [location]);
 
+  const isActionVisible = () => {
+    return !archived && !isInboxOpen && !showPartner && showActions.open === goal.id && showActions.click > 0;
+  };
+
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
       <div
@@ -181,7 +185,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
             marginLeft: 20,
             display: "flex",
             flexDirection: "column",
-            gap: 10,
+            gap: 3,
           }}
         >
           <div
@@ -208,13 +212,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               </div>
             </div>
           </div>
-          {!archived && !isInboxOpen && !showPartner && showActions.open === goal.id && showActions.click > 0 && (
+          {isActionVisible() && <span className="goal-menu-subtext">Actions</span>}
+          {isActionVisible() && (
             <div
               className="goal-action"
               onClickCapture={() => {
                 handleUpdateGoal(goal.id);
               }}
-              style={{ textAlign: "right" }}
+              style={{ textAlign: "center", height: 24 }}
             >
               <img
                 alt="Update Goal"
@@ -224,6 +229,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               />
             </div>
           )}
+          {isActionVisible() && <span className="goal-menu-subtext">Edit</span>}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <div className="goal-title">
