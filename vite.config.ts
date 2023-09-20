@@ -37,7 +37,7 @@ export default defineConfig({
         name: "ZinZen: Deliver purpose",
         icons: [
           {
-            src: "pwa-192x192-new.png",
+            src: "pwa-192x192.png",
             sizes: "192x192",
             type: "image/png",
           },
