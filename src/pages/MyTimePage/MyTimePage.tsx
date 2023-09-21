@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
+import { useRecoilState } from "recoil";
 
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { getOrdinalSuffix } from "@src/utils";
@@ -8,6 +9,7 @@ import AppLayout from "@src/layouts/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
 import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 import useScheduler from "@src/hooks/useScheduler";
+import { dailyViewAtom } from "@src/store";
 
 import "./MyTimePage.scss";
 import "@translations/i18n";
@@ -15,7 +17,7 @@ import "@translations/i18n";
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
-  const [dailyView, setDailyView] = useState(false);
+  const [dailyView, setDailyView] = useRecoilState(dailyViewAtom);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
 
   const handleShowTasks = (dayName: string) => {
