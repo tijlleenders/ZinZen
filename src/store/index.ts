@@ -85,8 +85,8 @@ export const partnerDetails = atom({
   default: null as PartnerItem | null,
 });
 
-export const selectedView = atom({
-  key: "selectedView",
+export const selectedMyTimeView = atom({
+  key: "selectedMyTimeView",
   default: "today",
 });
 

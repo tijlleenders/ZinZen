@@ -9,7 +9,7 @@ import AppLayout from "@src/layouts/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
 import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 import useScheduler from "@src/hooks/useScheduler";
-import { selectedView } from "@src/store";
+import { selectedMyTimeView } from "@src/store";
 
 import "./MyTimePage.scss";
 import "@translations/i18n";
@@ -17,7 +17,7 @@ import "@translations/i18n";
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
-  const [currentView, setCurrentView] = useRecoilState(selectedView);
+  const [currentView, setCurrentView] = useRecoilState(selectedMyTimeView);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
 
   const handleShowTasks = (dayName: string) => {
