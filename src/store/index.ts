@@ -85,9 +85,9 @@ export const partnerDetails = atom({
   default: null as PartnerItem | null,
 });
 
-export const dailyViewAtom = atom({
-  key: "dailyViewAtom",
-  default: true,
+export const selectedView = atom({
+  key: "selectedView",
+  default: "today",
 });
 
 export { darkModeState, languageSelectionState };

@@ -9,7 +9,7 @@ import AppLayout from "@src/layouts/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
 import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 import useScheduler from "@src/hooks/useScheduler";
-import { dailyViewAtom } from "@src/store";
+import { selectedView } from "@src/store";
 
 import "./MyTimePage.scss";
 import "@translations/i18n";
@@ -17,7 +17,7 @@ import "@translations/i18n";
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
-  const [dailyView, setDailyView] = useRecoilState(dailyViewAtom);
+  const [currentView, setCurrentView] = useRecoilState(selectedView);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
 
   const handleShowTasks = (dayName: string) => {
@@ -80,19 +80,19 @@ export const MyTimePage = () => {
   return (
     <AppLayout title="myTime">
       <SubHeader
-        showLeftNav={!dailyView}
-        showRightNav={dailyView}
-        title={dailyView ? "Today" : "This Week"}
+        showLeftNav={currentView === "thisWeek"}
+        showRightNav={currentView === "today"}
+        title={currentView === "today" ? "Today" : "This Week"}
         leftNav={() => {
-          setDailyView(!dailyView);
+          setCurrentView("today");
         }}
         rightNav={() => {
-          setDailyView(!dailyView);
+          setCurrentView("thisWeek");
         }}
       />
       {getDayComponent("Today")}
-      {!dailyView && getDayComponent("Tomorrow")}
-      {!dailyView &&
+      {currentView === "thisWeek" && getDayComponent("Tomorrow")}
+      {currentView === "thisWeek" &&
         [...Array(6).keys()].map((i) => {
           const thisDay = new Date(today);
           thisDay.setDate(thisDay.getDate() + i + 1);
