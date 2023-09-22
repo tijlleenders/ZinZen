@@ -293,3 +293,7 @@ h6 {
   //   width: 60vw;
   // }
 }
+
+.goals-icon-history {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(66%) saturate(2%) hue-rotate(89deg) brightness(111%) contrast(100%);
+}
