@@ -3,7 +3,7 @@ import { Breadcrumb } from "antd";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState } from "@src/store";
-import { homeIcon } from "@src/assets";
+import goalsIcon from "@assets/images/goalsIcon.svg";
 
 import { ISubGoalHistory, goalsHistory } from "@src/store/GoalsState";
 
@@ -37,7 +37,7 @@ const GoalHistory = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
-    <div style={{ padding: "0 12px" }}>
+    <div style={{ padding: "0 23px" }}>
       <Breadcrumb
         style={{
           margin: "24px 0px",
@@ -45,7 +45,14 @@ const GoalHistory = () => {
         separator={<span style={{ color: darkModeStatus ? "rgba(255, 255, 255, 0.45)" : "inherit" }}>/</span>}
         items={[
           {
-            title: <img src={homeIcon} className={`${darkModeStatus ? "dark-svg" : ""}`} alt="my goals" />,
+            title: (
+              <img
+                src={goalsIcon}
+                style={{ marginTop: "5px" }}
+                className={`${darkModeStatus ? "goals-icon-history" : ""}`}
+                alt="my goals"
+              />
+            ),
             onClick: () => {
               window.history.go(-subGoalHistory.length);
             },
