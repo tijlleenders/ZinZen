@@ -85,4 +85,9 @@ export const partnerDetails = atom({
   default: null as PartnerItem | null,
 });
 
+export const selectedMyTimeView = atom({
+  key: "selectedMyTimeView",
+  default: "today",
+});
+
 export { darkModeState, languageSelectionState };
