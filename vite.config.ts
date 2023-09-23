@@ -29,7 +29,6 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,png,jpg,svg,json,wasm,mp3}", "assets/**/*.{svg,png,jpg,mp3}"],
       },
       registerType: "autoUpdate",
-      strategies: "injectManifest",
       srcDir: "src/service-worker",
       filename: "service-worker.ts",
       manifest: {
