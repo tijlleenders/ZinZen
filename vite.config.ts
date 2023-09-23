@@ -27,6 +27,23 @@ export default defineConfig({
         cleanupOutdatedCaches: true, // default is true but added to make it explicit
         ignoreURLParametersMatching: [],
         globPatterns: ["**/*.{js,css,html,png,jpg,svg,json,wasm,mp3}", "assets/**/*.{svg,png,jpg,mp3}"],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) =>
+              url.origin === self.location.origin &&
+              (url.pathname.endsWith(".jpg") ||
+                url.pathname.endsWith(".jpeg") ||
+                url.pathname.endsWith(".svg") ||
+                url.pathname.endsWith(".woff2")),
+            handler: "CacheFirst",
+            options: {
+              cacheName: "images",
+              expiration: {
+                maxEntries: 50,
+              },
+            },
+          },
+        ],
       },
       registerType: "autoUpdate",
       srcDir: "src/service-worker",
