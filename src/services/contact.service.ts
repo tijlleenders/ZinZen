@@ -1,6 +1,5 @@
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
-import { ISubscriber } from "@src/models/PubSubItem";
 import { createContactRequest, getInstallId } from "@src/utils";
 
 export const initRelationship = async () => {
@@ -66,17 +65,18 @@ export const getRelationshipStatus = async (relationshipId: string) => {
 };
 
 export const sendUpdatesToSubscriber = async (
-  sub: ISubscriber,
+  sub: IParticipant,
   rootGoalId: string,
   changeType: typeOfChange,
   changes: { level: number; goal: GoalItem }[] | { level: number; id: string }[],
 ) => {
   const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
-  const { subId, type } = sub;
+  const { relId, type } = sub;
   const requestBody = {
     method: "shareMessage",
     installId: getInstallId(),
-    relId: subId,
+    relId,
+    debugKey: "82098435-380a-43ec-9122-0662870a5ea5",
     event: {
       type,
       changeType,

@@ -243,11 +243,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                   </span>
                 );
               }
-              return (
-                <span key={`${goal.id}-${ele}`}>
-                  {index === 0 ? ele : ` ${ele}`} { }
-                </span>
-              );
+              return <span key={`${goal.id}-${ele}`}>{index === 0 ? ele : ` ${ele}`}</span>;
             })}
             &nbsp;
             {goal.link && (
@@ -269,10 +265,10 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           )}
         </div>
       </div>
-      {/* {goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" && (
-        <Tooltip placement="top" title={sharedWithContact || collabWithContact}>
+      {goal.participants.length > 0 && (
+        <Tooltip placement="top" title={goal.participants[0].name}>
           <div className="contact-button" style={archived ? { right: "78px" } : {}}>
-            {goal.typeOfGoal === "collaboration" && (
+            {goal.participants[0].type === "collaborator" && (
               <img
                 alt="collaborate goal"
                 width={25}
@@ -287,11 +283,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                 background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)`,
               }}
             >
-              {sharedWithContact?.charAt(0) || collabWithContact?.charAt(0) || ""}
+              {goal.participants[0].name.charAt(0)}
             </button>
           </div>
         </Tooltip>
-      )} */}
+      )}
       {archived && (
         <div className="contact-button">
           <button

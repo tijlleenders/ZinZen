@@ -5,7 +5,6 @@ import { colorPalleteList } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
 import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
-import { getDefaultValueOfShared, getDefaultValueOfCollab } from "@src/utils/defaultGenerators";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
 // export const createSentFromTags = (goal: GoalItem) =>
@@ -92,8 +91,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     link: null,
     sublist: [],
     goalColor: colorPalleteList[Math.floor(Math.random() * 11)],
-    shared: getDefaultValueOfShared(),
-    collaboration: getDefaultValueOfCollab(),
+    participants: [],
     typeOfGoal: "myGoal",
     ...obj,
   };

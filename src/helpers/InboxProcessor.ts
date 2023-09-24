@@ -6,7 +6,7 @@ import {
   addGoal,
   addIntoSublist,
   archiveUserGoal,
-  changeNewUpdatesStatus,
+  // changeNewUpdatesStatus,
   getGoal,
   notifyNewColabRequest,
   removeGoalWithChildrens,
@@ -25,7 +25,7 @@ import { IDisplayChangesModal, ITagChangesSchemaVersion, ITagsChanges } from "@s
 import { fixDateVlauesInGoalObject } from "@src/utils";
 
 export const handleIncomingChanges = async (payload) => {
-  if (payload.type === "shared") {
+  if (payload.type === "sharer") {
     if (payload.changeType === "subgoals") {
       const changes = [
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
@@ -74,7 +74,7 @@ export const handleIncomingChanges = async (payload) => {
       //   console.log(ele)
       //   changeNewUpdatesStatus(true, goalItemExist ? ele.goal.parentGoalId : ele.id).catch(() => console.log("failed parent notification", ele));
       // });
-      changeNewUpdatesStatus(true, rootGoalId).catch((err) => console.log(err));
+      // changeNewUpdatesStatus(true, rootGoalId).catch((err) => console.log(err));
       // @ts-ignore
       await addGoalChangesInID(rootGoalId, defaultChanges, relId);
     }
