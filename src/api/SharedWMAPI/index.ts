@@ -2,11 +2,7 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { collaborateWithContact } from "@src/services/contact.service";
-import { getDefaultValueOfShared } from "@src/utils/defaultGenerators";
 import { addGoal } from "../GoalsAPI";
-import { addSubInPub } from "../PubSubAPI";
-import { removeGoalFromPartner } from "../PartnerAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -83,7 +79,7 @@ export const archiveGoal = async (goal: GoalItem) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
     await db.sharedWMCollection.update(goal.id, { archived: "true" });
   });
-  if (goal.parentGoalId !== "root" && !["collaboration", "shared"].includes(goal.typeOfGoal)) {
+  if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getSharedWMGoal(goal.parentGoalId);
     db.transaction("rw", db.sharedWMCollection, async () => {
       await db.sharedWMCollection.update(goal.parentGoalId, {
