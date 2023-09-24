@@ -2,7 +2,6 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { shareGoal } from "@src/services/goal.service";
-import { getDefaultValueOfCollab, getDefaultValueOfShared } from "@src/utils/defaultGenerators";
 import { sortGoalsByProps } from "../GCustomAPI";
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
@@ -81,7 +80,7 @@ export const archiveGoal = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, { archived: "true" });
   });
-  if (goal.parentGoalId !== "root" && !["collaboration", "shared"].includes(goal.typeOfGoal)) {
+  if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
       await db.goalsCollection.update(goal.parentGoalId, {
@@ -110,7 +109,7 @@ export const unarchiveGoal = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, { archived: "false" });
   });
-  if (goal.parentGoalId !== "root" && !["collaboration", "shared"].includes(goal.typeOfGoal)) {
+  if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
       await db.goalsCollection.update(goal.parentGoalId, { sublist: [...parentGoal.sublist, goal.id] });
@@ -178,12 +177,19 @@ export const updateSharedStatusOfGoal = async (id: string, relId: string, name: 
       .where("id")
       .equals(id)
       .modify((obj: GoalItem) => {
-        obj.typeOfGoal = "shared";
-        obj.shared.contacts = [...obj.shared.contacts, { relId, name }];
+        obj.participants.push({ relId, name, type: "sharer" });
       });
   }).catch((e) => {
     console.log(e.stack || e);
   });
+};
+
+export const getParticipantsOfGoals = async (ids: string[]) => {
+  const goals = await db.goalsCollection
+    .where("id")
+    .anyOf(...ids)
+    .toArray();
+  return goals.flatMap((goal) => goal.participants.map((participant) => ({ sub: participant, rootGoalId: goal.id })));
 };
 
 // export const convertSharedGoalToColab = async (id: string, accepted = true) => {
@@ -250,12 +256,6 @@ export const removeGoalWithChildrens = async (goal: GoalItem) => {
   }
 };
 
-export const convertIntoSharedGoal = (goal: GoalItem) => ({
-  ...goal,
-  shared: getDefaultValueOfShared(),
-  collaboration: getDefaultValueOfCollab(),
-});
-
 export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false) => {
   const goalsAcc: GoalItem[] = [];
   const root = await getGoal(id);
@@ -263,7 +263,7 @@ export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false
     let queue: GoalItem[] = [root];
     while (queue.length > 0) {
       const front = queue[0];
-      goalsAcc.push(resetSharedStatus ? convertIntoSharedGoal(front) : front);
+      goalsAcc.push(resetSharedStatus ? { ...front, participants: [] } : front);
       queue.shift();
       queue = [...queue, ...(await getChildrenGoals(front.id))];
     }

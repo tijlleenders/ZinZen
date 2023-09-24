@@ -9,7 +9,7 @@ const doneSound = new Audio(archiveSound);
 
 export const removeThisGoal = async (
   goal: GoalItem,
-  historyLen: number,
+  ancestors: string[],
   isInboxOpen: boolean,
   showPartner: boolean,
 ) => {
@@ -19,13 +19,13 @@ export const removeThisGoal = async (
   } else if (showPartner) {
     await deleteSharedGoal(goal);
   } else {
-    await deleteGoal(goal, historyLen);
+    await deleteGoal(goal, ancestors);
   }
 };
 
-export const archiveThisGoal = async (goal: GoalItem, historyLen: number, isInboxOpen: boolean) => {
+export const archiveThisGoal = async (goal: GoalItem, ancestors: string[], isInboxOpen: boolean) => {
   await doneSound.play();
   if (isInboxOpen) {
     await archiveSharedWMGoal(goal);
-  } else await archiveGoal(goal, historyLen);
+  } else await archiveGoal(goal, ancestors);
 };

@@ -52,6 +52,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const partner = useRecoilValue(partnerDetails);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
+  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
   const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
@@ -119,7 +120,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     if (state.displayPartner) {
       // suggestChanges(getFinalTags(), title, goalColor, subGoalsHistory.length);
     } else {
-      await modifyGoal(goal.id, getFinalTags(), title, goalColor, subGoalsHistory.length);
+      await modifyGoal(goal.id, getFinalTags(), title, goalColor, ancestors);
     }
   };
 
@@ -142,7 +143,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         getFinalTags(),
         title,
         colorPalleteList[colorIndex],
-        subGoalsHistory.length,
+        ancestors,
       );
       if (!parentGoal && title === "magic") {
         setDevMode(true);
@@ -331,8 +332,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               start
                 ? moment(start).format("YYYY-MM-DD")
                 : goal?.createdAt
-                ? moment(goal.createdAt).format("YYYY-MM-DD")
-                : today
+                  ? moment(goal.createdAt).format("YYYY-MM-DD")
+                  : today
             }
             timeValue={startTime}
           />
