@@ -57,8 +57,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     setShowScheduled(!showScheduled);
   };
   // console.log(devMode);
-  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done", task: ITask) => {
-    if (day === "Today") {
+  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
+    if (!(day === "Today")) {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
         // @ts-ignore
@@ -84,6 +84,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
       } else if (actionName === "Reschedule") {
         // setOpenReschedule({ ...task });
+      } else if (actionName === "Focus") {
+        // navigate(`/Focus?taskTitle=${encodeURIComponent(task.title)}`);
+        handleOpenGoal(task.goalid, "/Focus");
       }
       if (actionName === "Done") {
         await doneSound.play();
@@ -102,7 +105,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
-  const handleOpenGoal = async (goalId: string) => {
+  const handleOpenGoal = async (goalId: string, target: string) => {
     const goalsHistory = [];
     let tmpGoal: GoalItem | null = await getGoal(goalId);
     let openGoalId = tmpGoal?.parentGoalId;
@@ -123,7 +126,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       openGoalId = tmpGoal.parentGoalId;
     }
     goalsHistory.reverse();
-    navigate("/MyGoals", {
+    navigate(target, {
       state: {
         ...locationState,
         from: "",
@@ -158,7 +161,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
               onClick={() => {
                 if (displayOptionsIndex !== task.taskid) {
                   if (markDone) {
-                    handleOpenGoal(task.goalid);
+                    handleOpenGoal(task.goalid, "/MyGoals");
                   } else {
                     setDisplayOptionsIndex(task.taskid);
                   }
@@ -227,6 +230,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   <div />
                   <button type="button" onClick={() => handleActionClick("Done", task)}>
                     Done
+                  </button>
+                  <button type="button" onClick={() => handleActionClick("Focus", task)}>
+                    Focus
                   </button>
                   <div />
                 </div>

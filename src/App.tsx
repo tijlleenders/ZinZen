@@ -12,6 +12,7 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
+import { FocusPage } from "@pages/FocusPage.tsx/FocusPage";
 import GoalsPage from "@pages/GoalsPage/GoalsPage";
 import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
@@ -73,6 +74,7 @@ const App = () => {
             <Route path="/Contacts" element={<Contacts />} />
             <Route path="/MyGoals" element={<GoalsPage />} />
             <Route path="/MyJournal" element={<ShowFeelingsPage />} />
+            <Route path="/Focus" element={<FocusPage />} />
             <Route path="*" element={<GoalsPage />} />
             <Route path="/ZinZenFAQ" element={<FAQPage />} />
             <Route path="/invite/:id" element={<InvitePage />} />
