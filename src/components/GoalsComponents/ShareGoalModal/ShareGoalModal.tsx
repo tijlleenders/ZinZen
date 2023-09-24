@@ -42,7 +42,6 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
 
   const [loading, setLoading] = useState({ P: false, A: false, S: false });
   const [contacts, setContacts] = useState<ContactItem[]>([]);
-  const [userGroups, setUserGroups] = useState<PublicGroupItem[]>([]);
   const [displaySubmenu, setDisplaySubmenu] = useState("");
   const [showConfirmation, setDisplayConfirmation] = useRecoilState(displayConfirmation);
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
@@ -122,8 +121,6 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
   useEffect(() => {
     (async () => {
       const userContacts = await getAllContacts();
-      const groups = await getAllPublicGroups();
-      setUserGroups([...groups]);
       setContacts([...userContacts]);
     })();
   }, [showAddContactModal]);
@@ -141,33 +138,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
       <p className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</p>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {displaySubmenu === "groups" ? (
-          <SubMenu>
-            {userGroups.map((grp) => (
-              <SubMenuItem key={grp.id} group={grp} goal={goal} />
-            ))}
-          </SubMenu>
-        ) : (
-          <>
-            {/* Share Anonymously */}
-            <button
-              onClick={async () => {
-                await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareAnonymously" });
-              }}
-              type="button"
-              className="shareOptions-btn"
-            >
-              <div className="share-Options">
-                {loading.A ? (
-                  <Loader />
-                ) : (
-                  <div className="icon">
-                    <img className="secondary-icon" alt="share goal pseudo anonymously" src={shareAnonymous} />
-                  </div>
-                )}
-                <p className={`shareOption-name ${loading.A ? "loading" : ""}`}>Share pseudo anonymously</p>
-              </div>
-            </button>
+        {/* Share Anonymously */}
 
             {/* Share 1:1 */}
             <button
