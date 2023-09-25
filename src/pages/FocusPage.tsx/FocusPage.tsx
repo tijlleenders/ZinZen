@@ -8,27 +8,20 @@ import { useLocation } from "react-router-dom";
 import { Progress } from "antd";
 
 import "./focusPage.scss";
+import { formatTimeDisplay } from "@src/utils";
 
 export const FocusPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const location = useLocation();
   const taskTitle = location.state?.taskTitle || "Task";
 
-  const [initialTime] = useState(0.5 * 60); // Default initial time in seconds
+  const [initialTime] = useState(25 * 60); // Default initial time in seconds
   const [time, setTime] = useState<number>(initialTime);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [newTime, setNewTime] = useState<string>("");
   const [userEnteredTime, setUserEnteredTime] = useState<number | null>(null);
   const [timeFormat, setTimeFormat] = useState<string>("MM");
-
-  const formatTimeDisplay = (timeInSeconds: number) => {
-    const hours = Math.floor(timeInSeconds / 3600);
-    const minutes = Math.floor((timeInSeconds % 3600) / 60);
-    const seconds = timeInSeconds % 60;
-
-    return { hours, minutes, seconds };
-  };
 
   useEffect(() => {
     let interval;
