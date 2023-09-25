@@ -15,12 +15,20 @@ export const FocusPage = () => {
   const taskTitle = location.state?.taskTitle || "Task";
 
   const [initialTime] = useState(0.5 * 60); // Default initial time in seconds
-  const [time, setTime] = useState(initialTime);
-  const [isActive, setIsActive] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [newTime, setNewTime] = useState("");
-  const [userEnteredTime, setUserEnteredTime] = useState(null);
-  const [timeFormat, setTimeFormat] = useState("MM");
+  const [time, setTime] = useState<number>(initialTime);
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const [newTime, setNewTime] = useState<string>("");
+  const [userEnteredTime, setUserEnteredTime] = useState<number | null>(null);
+  const [timeFormat, setTimeFormat] = useState<string>("MM");
+
+  const formatTimeDisplay = (timeInSeconds: number) => {
+    const hours = Math.floor(timeInSeconds / 3600);
+    const minutes = Math.floor((timeInSeconds % 3600) / 60);
+    const seconds = timeInSeconds % 60;
+
+    return { hours, minutes, seconds };
+  };
 
   useEffect(() => {
     let interval;
@@ -45,9 +53,7 @@ export const FocusPage = () => {
   };
 
   const percentage = ((initialTime - time) / initialTime) * 100;
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time % 3600) / 60);
-  const seconds = time % 60;
+  const { hours, minutes, seconds } = formatTimeDisplay(time);
 
   const handleEditClick = () => {
     setEditMode(true);
