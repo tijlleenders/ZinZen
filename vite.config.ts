@@ -26,9 +26,10 @@ export default defineConfig({
       workbox: {
         cleanupOutdatedCaches: true, // default is true but added to make it explicit
         ignoreURLParametersMatching: [],
-        globPatterns: ["**/*.{js,css,html,png,jpg,svg,json,wasm,mp3}", "assets/**/*.{svg,png,jpg,mp3}"],
+        globPatterns: ["**/*.{js,css,html,png,jpg,svg,json,wasm}", "assets/**/*.{svg,png,jpg}"],
       },
       registerType: "autoUpdate",
+      strategies: "injectManifest",
       srcDir: "src/service-worker",
       filename: "service-worker.ts",
       manifest: {
@@ -65,7 +66,10 @@ export default defineConfig({
         theme_color: "#3367D6",
         description: "ZinZen for purpose",
       },
-      injectManifest: {},
+      injectManifest: {
+        globDirectory: "./dist",
+        globPatterns: ["**/*.{js,css,html,mp3}"],
+      },
     }),
   ],
 });
