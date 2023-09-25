@@ -98,7 +98,12 @@ export const FocusPage = () => {
             <button className="action-btn" type="button" onClick={reset}>
               Reset
             </button>
-            <button className="action-btn" type="button" onClick={handleEditClick}>
+            <button
+              className="action-btn"
+              type="button"
+              onClick={handleEditClick}
+              style={{ display: time === initialTime || time === 0 ? "block" : "none" }}
+            >
               Edit Time
             </button>
           </div>
