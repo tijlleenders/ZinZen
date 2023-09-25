@@ -58,7 +58,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   };
   // console.log(devMode);
   const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
-    if (!(day === "Today")) {
+    if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
         // @ts-ignore
@@ -85,8 +85,11 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Reschedule") {
         // setOpenReschedule({ ...task });
       } else if (actionName === "Focus") {
-        // navigate(`/Focus?taskTitle=${encodeURIComponent(task.title)}`);
-        handleOpenGoal(task.goalid, "/Focus");
+        navigate("/Focus", {
+          state: {
+            taskTitle: task.title,
+          },
+        });
       }
       if (actionName === "Done") {
         await doneSound.play();

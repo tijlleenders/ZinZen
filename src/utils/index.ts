@@ -218,3 +218,14 @@ export const getMonthByIndex = (index: number) => {
   ];
   return month[index];
 };
+
+export function formatTime(timeInSeconds: number) {
+  const minutes = Math.floor(timeInSeconds / 60);
+  const seconds = (timeInSeconds % 60).toFixed();
+  return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+}
+
+export function formatInMinute(timeInSeconds: number) {
+  const minutes = Math.floor(timeInSeconds / 60);
+  return `${minutes.toString()}`;
+}
