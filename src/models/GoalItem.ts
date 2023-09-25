@@ -1,5 +1,10 @@
-import { ICollaboration } from "@src/Interfaces/ICollaboration";
-import { IShared } from "@src/Interfaces/IShared";
+export type typeOfSub = "sharer" | "collaborator" | "assignee";
+
+export interface IParticipant {
+  relId: string;
+  name: string;
+  type: typeOfSub;
+}
 
 export interface GoalItem {
   id: string;
@@ -18,12 +23,11 @@ export interface GoalItem {
   goalColor: string;
   language: string;
   link: string | null;
-  collaboration: ICollaboration;
-  shared: IShared;
+  participants: IParticipant[];
   rootGoalId: string;
   timeBudget: {
     perDay: string | null;
     perWeek: string | null;
   };
-  typeOfGoal: "myGoal" | "shared" | "collaboration";
+  typeOfGoal: "myGoal" | "shared";
 }

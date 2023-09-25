@@ -14,5 +14,7 @@ export interface IChangesInGoal {
 
 export interface InboxItem {
   id: string;
-  goalChanges: IChangesInGoal;
+  changes: {
+    [relId: string]: IChangesInGoal;
+  };
 }

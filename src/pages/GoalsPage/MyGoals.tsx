@@ -120,7 +120,7 @@ export const MyGoals = () => {
         ) : (
           <GoalSublist />
         )}
-        {showChangesModal && <DisplayChangesModal />}
+        {/* {showChangesModal && <DisplayChangesModal />} */}
         {activeGoals?.length === 0 && (
           <img
             style={{ width: 350, height: 350, opacity: 0.3 }}

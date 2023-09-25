@@ -24,7 +24,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
 import { goalsHistory } from "@src/store/GoalsState";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
-import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
+// import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
 
 import ActionDiv from "./ActionDiv";
@@ -33,8 +33,7 @@ import "./MyGoalActions.scss";
 const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
   const { handleShareGoal, handleConfirmation } = useGoalStore();
-  const confirmActionCategory =
-    goal.typeOfGoal === "collaboration" && goal.parentGoalId === "root" ? "collaboration" : "goal";
+  const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
   const theme = useRecoilValue(themeState);
   const isInboxOpen = useRecoilValue(openInbox);
@@ -45,6 +44,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
+  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
@@ -55,13 +55,13 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       if (goal.title === "magic") {
         setDevMode(false);
       }
-      await removeThisGoal(goal, subGoalsHistory.length, isInboxOpen, showPartner);
+      await removeThisGoal(goal, ancestors, isInboxOpen, showPartner);
       setLastAction("Delete");
     } else if (action === "archive") {
-      await archiveThisGoal(goal, subGoalsHistory.length, isInboxOpen);
+      await archiveThisGoal(goal, ancestors, isInboxOpen);
       setLastAction("Archive");
     } else if (action === "colabRequest") {
-      await convertSharedWMGoalToColab(goal);
+      // await convertSharedWMGoalToColab(goal);
       window.history.back();
     } else {
       return;
@@ -90,9 +90,8 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       centered
       width={200}
       onCancel={() => window.history.back()}
-      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
+        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <Tooltip placement="top" title={goal.title}>

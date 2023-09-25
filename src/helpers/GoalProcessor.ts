@@ -4,9 +4,7 @@ import { getGoal } from "@src/api/GoalsAPI";
 import { colorPalleteList } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
-import { ITags } from "@src/Interfaces/ITagExtractor";
 import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
-import { getDefaultValueOfShared, getDefaultValueOfCollab } from "@src/utils/defaultGenerators";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
 // export const createSentFromTags = (goal: GoalItem) =>
@@ -93,8 +91,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     link: null,
     sublist: [],
     goalColor: colorPalleteList[Math.floor(Math.random() * 11)],
-    shared: getDefaultValueOfShared(),
-    collaboration: getDefaultValueOfCollab(),
+    participants: [],
     typeOfGoal: "myGoal",
     ...obj,
   };
@@ -103,16 +100,6 @@ export const createGoalObjectFromTags = (obj: object) => {
   }
   return newGoal;
 };
-
-export const extractFromGoalTags = (goalTags: ITags) => ({
-  duration: goalTags.duration ? goalTags.duration.value : null,
-  repeat: goalTags.repeats ? goalTags.repeats.value : null,
-  link: goalTags.link ? goalTags.link.value?.trim() : null,
-  start: goalTags.start ? goalTags.start.value : null,
-  due: goalTags.due ? goalTags.due.value : null,
-  afterTime: goalTags.afterTime || goalTags.afterTime === 0 ? goalTags.afterTime.value : null,
-  beforeTime: goalTags.beforeTime || goalTags.beforeTime === 0 ? goalTags.beforeTime.value : null,
-});
 
 export const getHistoryUptoGoal = async (id: string) => {
   const history = [];

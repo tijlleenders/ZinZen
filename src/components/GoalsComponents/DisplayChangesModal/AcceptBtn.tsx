@@ -7,7 +7,6 @@ import plus from "@assets/images/plus.svg";
 
 import { darkModeState, lastAction } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
-import { convertTypeOfSub } from "@src/api/PubSubAPI";
 import { getTypeAtPriority } from "@src/helpers/GoalProcessor";
 import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
 import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
@@ -28,7 +27,7 @@ const AcceptBtn = ({ showChangesModal, goal, acceptChanges, setShowChangesModal 
 
   const handleClick = async () => {
     if (isConversionRequest) {
-      await convertTypeOfSub(goal.rootGoalId, goal.shared.contacts[0].relId, "collaboration");
+      // await convertTypeOfSub(goal.rootGoalId, goal.shared.contacts[0].relId, "collaboration");
       await convertSharedGoalToColab(goal.id);
       setShowChangesModal(null);
     } else {
