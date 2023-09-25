@@ -63,10 +63,10 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
         {goal.beforeTime && goal.afterTime
           ? `${t("between")} ${goal.afterTime}-${goal.beforeTime}`
           : goal.beforeTime
-          ? `${t("before")} ${goal.beforeTime}`
-          : goal.afterTime
-          ? `${t("after")} ${goal.afterTime}`
-          : ""}
+            ? `${t("before")} ${goal.beforeTime}`
+            : goal.afterTime
+              ? `${t("after")} ${goal.afterTime}`
+              : ""}
       </div>
       {showStart && !!goal.start && (
         <div>
@@ -82,9 +82,9 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
   const defaultTap = { open: "root", click: 1 };
   const archived = goal.archived === "true";
-  const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
-  const collabWithContact =
-    goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
+  // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
+  // const collabWithContact =
+  //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -125,32 +125,29 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     if (archived) {
       return;
     }
-    if (
-      (goal.collaboration.newUpdates && goal.typeOfGoal === "collaboration") ||
-      goal.shared.conversionRequests.status
-    ) {
-      handleDisplayChanges();
-      if (goal.shared.conversionRequests.status) {
-        setShowChangesModal({ typeAtPriority: "conversionRequest", parentId: goal.id, goals: [] });
-      } else {
-        const res = await jumpToLowestChanges(goal.rootGoalId);
-        const pathToGoal = await getHistoryUptoGoal(res.parentId);
-        if (pathToGoal.length > 1) {
-          pathToGoal.pop();
-          setSubGoalHistory([...pathToGoal]);
-          setSelectedGoalId(pathToGoal.slice(-1)[0].goalID);
-        }
-        setShowChangesModal(res);
-      }
-    } else {
-      navigate("/MyGoals", {
-        state: {
-          ...location.state,
-          from: "",
-          displayGoalActions: goal,
-        },
-      });
-    }
+    // if (goal.collaboration.newUpdates || goal.shared.conversionRequests.status) {
+    //   handleDisplayChanges();
+    //   if (goal.shared.conversionRequests.status) {
+    //     setShowChangesModal({ typeAtPriority: "conversionRequest", parentId: goal.id, goals: [] });
+    //   } else {
+    //     const res = await jumpToLowestChanges(goal.rootGoalId);
+    //     const pathToGoal = await getHistoryUptoGoal(res.parentId);
+    //     if (pathToGoal.length > 1) {
+    //       pathToGoal.pop();
+    //       setSubGoalHistory([...pathToGoal]);
+    //       setSelectedGoalId(pathToGoal.slice(-1)[0].goalID);
+    //     }
+    //     setShowChangesModal(res);
+    //   }
+    // } else {
+    navigate("/MyGoals", {
+      state: {
+        ...location.state,
+        from: "",
+        displayGoalActions: goal,
+      },
+    });
+    // }
   }
   useEffect(() => {
     if (showActions !== defaultTap) {
@@ -206,9 +203,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                   background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`,
                 }}
               >
-                {(goal.collaboration.newUpdates || goal.shared.conversionRequests.status) && (
+                {/* {(goal.collaboration.newUpdates || goal.shared.conversionRequests.status) && (
                   <NotificationSymbol color={goal.goalColor} />
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -251,13 +248,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                     {index === 0 ? summarizedUrl : ` ${summarizedUrl}`}
                   </span>
                 );
-              } else {
-                return (
-                  <span key={`${goal.id}-${ele}`}>
-                    {index === 0 ? ele : ` ${ele}`} {}
-                  </span>
-                );
               }
+              return <span key={`${goal.id}-${ele}`}>{index === 0 ? ele : ` ${ele}`}</span>;
             })}
             &nbsp;
             {goal.link && (
@@ -279,10 +271,10 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           )}
         </div>
       </div>
-      {goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" && (
-        <Tooltip placement="top" title={sharedWithContact || collabWithContact}>
+      {goal.participants.length > 0 && (
+        <Tooltip placement="top" title={goal.participants[0].name}>
           <div className="contact-button" style={archived ? { right: "78px" } : {}}>
-            {goal.typeOfGoal === "collaboration" && (
+            {goal.participants[0].type === "collaborator" && (
               <img
                 alt="collaborate goal"
                 width={25}
@@ -297,7 +289,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                 background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)`,
               }}
             >
-              {sharedWithContact?.charAt(0) || collabWithContact?.charAt(0) || ""}
+              {goal.participants[0].name.charAt(0)}
             </button>
           </div>
         </Tooltip>

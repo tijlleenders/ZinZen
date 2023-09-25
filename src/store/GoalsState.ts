@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { atom } from "recoil";
-import { ITags } from "@src/Interfaces/ITagExtractor";
 import { GoalItem } from "@src/models/GoalItem";
 import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
 
@@ -38,11 +37,6 @@ export const displayShareModal = atom({
 export const displaySuggestionsModal = atom({
   key: "displaySuggestionsModal",
   default: { goals: [], selected: "" } as { goals: GoalItem[]; selected: string },
-});
-
-export const inputGoalTags = atom({
-  key: "inputGoalTags",
-  default: {} as ITags,
 });
 
 export const extractedTitle = atom({

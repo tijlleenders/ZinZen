@@ -4,9 +4,7 @@ import { useEffect } from "react";
 import { lastAction, displayConfirmation, openDevMode, languageSelectionState } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
 import { GoalItem } from "@src/models/GoalItem";
-import { findTypeOfSub } from "@src/api/PubSubAPI";
 import { checkMagicGoal } from "@src/api/GoalsAPI";
-import { syncGroupPolls } from "@src/api/PublicGroupsAPI";
 import { addSharedWMGoal } from "@src/api/SharedWMAPI";
 import { createDefaultGoals } from "@src/helpers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
@@ -42,10 +40,11 @@ function useApp() {
           if (contactItem) {
             // @ts-ignore
             resObject[relId].forEach(async (ele) => {
+              console.log("🚀 ~ file: useApp.tsx:45 ~ resObject[relId].forEach ~ ele:", ele);
               if (ele.type === "shareMessage") {
                 const { goalWithChildrens }: { goalWithChildrens: GoalItem[] } = ele;
                 const rootGoal = goalWithChildrens[0];
-                rootGoal.shared.contacts.push({ name: contactItem.name, relId });
+                rootGoal.participants.push({ name: contactItem.name, relId, type: "sharer" });
                 addSharedWMGoal(rootGoal)
                   .then(() => {
                     goalWithChildrens.slice(1).forEach((goal) => {
@@ -53,24 +52,26 @@ function useApp() {
                     });
                   })
                   .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
-              } else if (["shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
-                let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
-                if (ele.type === "collaborationInvite") {
-                  typeOfSub = "collaborationInvite";
-                } else if (ele.type === "collaboration") {
-                  typeOfSub = "collaboration";
-                } else if (ele.type === "shared") {
-                  typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
-                }
-                if (typeOfSub !== "none") {
-                  handleIncomingChanges({ ...ele, type: typeOfSub }).then(() => setLastAction("goalNewUpdates"));
-                }
+              } else if (ele.type === "sharer") {
+                handleIncomingChanges(ele).then(() => setLastAction("goalNewUpdates"));
               }
+              // else if (["suggestion", "shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
+              //   let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
+              //   if (ele.type === "collaborationInvite") {
+              //     typeOfSub = "collaborationInvite";
+              //   } else if (["collaboration", "suggestion"].includes(ele.type)) {
+              //     typeOfSub = ele.type;
+              //   } else if (ele.type === "shared") {
+              //     typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
+              //   }
+              //   if (typeOfSub !== "none") {
+              //     handleIncomingChanges({ ...ele, type: typeOfSub }).then(() => setLastAction("goalNewUpdates"));
+              //   }
+              // }
             });
           }
         });
       }
-      syncGroupPolls().then(() => setLastAction("groupSync"));
     };
     const installId = localStorage.getItem("installId");
     if (!installId) {

@@ -13,7 +13,6 @@ import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import GoalsPage from "@pages/GoalsPage/GoalsPage";
-import Contacts from "@pages/ContactsPage/Contacts";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
 import BackupRestoreModal from "@components/BackupRestoreModal";
@@ -46,9 +45,8 @@ const App = () => {
       message: `${showToast.message}`,
       description: <Context.Consumer>{() => `${showToast.extra}`}</Context.Consumer>,
       placement: "top",
-      className: `toast-${darkModeEnabled ? "dark" : "light"} ${darkModeEnabled ? "dark" : "light"}-theme${
-        theme[darkModeEnabled ? "dark" : "light"]
-      }`,
+      className: `toast-${darkModeEnabled ? "dark" : "light"} ${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]
+        }`,
     });
   };
   useEffect(() => {
@@ -70,7 +68,6 @@ const App = () => {
               <Route path="/" element={<MyTimePage />} />
             )}
             <Route path="/Feedback" element={<FeedbackPage />} />
-            <Route path="/Contacts" element={<Contacts />} />
             <Route path="/MyGoals" element={<GoalsPage />} />
             <Route path="/MyJournal" element={<ShowFeelingsPage />} />
             <Route path="*" element={<GoalsPage />} />
