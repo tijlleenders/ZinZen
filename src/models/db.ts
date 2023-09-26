@@ -9,7 +9,7 @@ import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
 import { PartnerItem } from "./PartnerItem";
 
-export const dexieVersion = 11;
+export const dexieVersion = 12;
 
 const currentVersion = localStorage.getItem("dexieVersion") || dexieVersion;
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -80,7 +80,7 @@ export class ZinZenDB extends Dexie {
             task.completedTodayIds = [];
           });
         }
-        if (currentVersion < 10) {
+        if (currentVersion < 12) {
           console.log("processing updates for 10th version");
           const sharedWMCollection = trans.table("sharedWMCollection");
           const partnersCollection = trans.table("partnersCollection");
