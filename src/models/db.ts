@@ -9,7 +9,7 @@ import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
 import { PartnerItem } from "./PartnerItem";
 
-export const dexieVersion = 10;
+export const dexieVersion = 11;
 
 const currentVersion = localStorage.getItem("dexieVersion") || dexieVersion;
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -91,6 +91,7 @@ export class ZinZenDB extends Dexie {
           goalsCollection.toCollection().modify((goal: GoalItem) => {
             delete goal.shared;
             delete goal.collaboration;
+            goal.participants = [];
           });
         }
       });
