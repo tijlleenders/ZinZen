@@ -63,7 +63,7 @@ export default defineConfig({
       },
       injectManifest: {
         globDirectory: "./dist",
-        globPatterns: ["**/*.{js,css,html,mp3,jpg,png,svg}"],
+        globPatterns: ["**/*.{js,css,html,mp3,jpg,png,svg,wasm}"],
       },
     }),
   ],
