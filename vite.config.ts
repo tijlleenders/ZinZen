@@ -23,11 +23,6 @@ export default defineConfig({
   },
   plugins: [
     VitePWA({
-      workbox: {
-        cleanupOutdatedCaches: true, // default is true but added to make it explicit
-        ignoreURLParametersMatching: [],
-        globPatterns: ["**/*.{js,css,html,png,jpg,svg,json,wasm}", "assets/**/*.{svg,png,jpg}"],
-      },
       registerType: "autoUpdate",
       strategies: "injectManifest",
       srcDir: "src/service-worker",
@@ -68,7 +63,7 @@ export default defineConfig({
       },
       injectManifest: {
         globDirectory: "./dist",
-        globPatterns: ["**/*.{js,css,html,mp3}"],
+        globPatterns: ["**/*.{js,css,html,mp3,jpg,png,svg}"],
       },
     }),
   ],
