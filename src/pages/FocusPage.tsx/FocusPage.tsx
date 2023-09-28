@@ -20,7 +20,6 @@ export const FocusPage = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [newTime, setNewTime] = useState<string>("");
-  const [userEnteredTime, setUserEnteredTime] = useState<number | null>(null);
   const [timeFormat, setTimeFormat] = useState<string>("MM");
 
   useEffect(() => {
@@ -40,7 +39,7 @@ export const FocusPage = () => {
     setIsActive(!isActive);
   };
   const reset = () => {
-    const resetTime = userEnteredTime !== null ? userEnteredTime : initialTime;
+    const resetTime = initialTime;
     setTime(resetTime);
     setIsActive(false);
   };
