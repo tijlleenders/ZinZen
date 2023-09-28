@@ -20,7 +20,6 @@ export const FocusPage = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [newTime, setNewTime] = useState<string>("");
-  const [timeFormat, setTimeFormat] = useState<string>("MM");
 
   useEffect(() => {
     let interval;
@@ -45,24 +44,16 @@ export const FocusPage = () => {
   };
 
   const percentage = ((initialTime - time) / initialTime) * 100;
-  const { hours, minutes, seconds } = formatTimeDisplay(time);
+  const { minutes, seconds } = formatTimeDisplay(time);
 
   const handleEditClick = () => {
     setEditMode(!editMode);
   };
 
   const handleSaveClick = () => {
-    const timeParts = newTime.split(":");
-    let newTimeInSeconds;
-    if (timeParts.length === 2) {
-      // HH:MM format
-      newTimeInSeconds = parseInt(timeParts[0], 10) * 60 * 60 + parseInt(timeParts[1], 10) * 60;
-      setTimeFormat("HH:MM");
-    } else {
-      // MM format
-      newTimeInSeconds = parseInt(timeParts[0], 10) * 60;
-      setTimeFormat("MM");
-    }
+    // MM format
+    const newTimeInSeconds = parseInt(newTime, 10) * 60;
+
     if (!Number.isNaN(newTimeInSeconds)) {
       setInitialTime(newTimeInSeconds);
       setTime(newTimeInSeconds);
@@ -82,20 +73,17 @@ export const FocusPage = () => {
           type="circle"
           percent={percentage}
           success={{ percent: 0, strokeColor: darkModeStatus ? "white" : "black" }}
-          format={() =>
-            timeFormat === "HH:MM"
-              ? `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${
-                  seconds < 10 ? "0" : ""
-                }${seconds}`
-              : `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`
-          }
+          format={() => {
+            const formattedMinutes = `${minutes < 10 ? "0" : ""}${minutes}`;
+            return `${formattedMinutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+          }}
         />
         {editMode ? (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <input
               className="default-input"
               style={{ textAlign: "center", maxWidth: 100 }}
-              placeholder="HH:MM or MM"
+              placeholder="minutes"
               value={newTime}
               onChange={(e) => setNewTime(e.target.value)}
             />
