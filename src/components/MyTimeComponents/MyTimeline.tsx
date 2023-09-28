@@ -234,6 +234,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   <button type="button" onClick={() => handleActionClick("Done", task)}>
                     Done
                   </button>
+                  <div />
                   <button type="button" onClick={() => handleActionClick("Focus", task)}>
                     Focus
                   </button>

@@ -15,7 +15,7 @@ export const FocusPage = () => {
   const location = useLocation();
   const taskTitle = location.state?.taskTitle || "Task";
 
-  const [initialTime] = useState(25 * 60); // Default initial time in seconds
+  const [initialTime, setInitialTime] = useState(25 * 60); // Default initial time in seconds
   const [time, setTime] = useState<number>(initialTime);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -49,7 +49,7 @@ export const FocusPage = () => {
   const { hours, minutes, seconds } = formatTimeDisplay(time);
 
   const handleEditClick = () => {
-    setEditMode(true);
+    setEditMode(!editMode);
   };
 
   const handleSaveClick = () => {
@@ -65,7 +65,7 @@ export const FocusPage = () => {
       setTimeFormat("MM");
     }
     if (!Number.isNaN(newTimeInSeconds)) {
-      setUserEnteredTime(newTimeInSeconds);
+      setInitialTime(newTimeInSeconds);
       setTime(newTimeInSeconds);
       setEditMode(false);
     } else setEditMode(false);
