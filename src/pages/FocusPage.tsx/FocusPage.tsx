@@ -1,9 +1,9 @@
+import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
-import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Progress } from "antd";
 
@@ -15,7 +15,7 @@ export const FocusPage = () => {
   const location = useLocation();
   const taskTitle = location.state?.taskTitle || "Task";
 
-  const [initialTime, setInitialTime] = useState(25 * 60); // Default initial time in seconds
+  const [initialTime, setInitialTime] = useState(25 * 60);
   const [time, setTime] = useState<number>(initialTime);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -23,7 +23,6 @@ export const FocusPage = () => {
 
   useEffect(() => {
     let interval;
-
     if (isActive && time > 0) {
       interval = setInterval(() => {
         setTime((prevTime) => prevTime - 1);
@@ -51,9 +50,7 @@ export const FocusPage = () => {
   };
 
   const handleSaveClick = () => {
-    // MM format
     const newTimeInSeconds = parseInt(newTime, 10) * 60;
-
     if (!Number.isNaN(newTimeInSeconds)) {
       setInitialTime(newTimeInSeconds);
       setTime(newTimeInSeconds);
@@ -87,7 +84,6 @@ export const FocusPage = () => {
               value={newTime}
               onChange={(e) => setNewTime(e.target.value)}
             />
-
             <button className="action-btn" type="button" onClick={handleSaveClick}>
               Save
             </button>
