@@ -84,12 +84,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
       } else if (actionName === "Reschedule") {
         // setOpenReschedule({ ...task });
-      } else if (actionName === "Focus") {
-        navigate("/Focus", {
-          state: {
-            taskTitle: task.title,
-          },
-        });
       }
       if (actionName === "Done") {
         await doneSound.play();
@@ -103,6 +97,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Skip") {
         await forgetSound.play();
         setLastAction("TaskSkipped");
+      } else if (actionName === "Focus") {
+        navigate("/Focus", {
+          state: {
+            taskTitle: task.title,
+          },
+        });
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
