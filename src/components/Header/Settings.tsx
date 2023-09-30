@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Dropdown, MenuProps, Switch } from "antd";
 import React, { useEffect, useState } from "react";
@@ -10,6 +11,7 @@ import useGlobalStore from "@src/hooks/useGlobalStore";
 
 const Settings = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { handleChangeTheme, handleBackResModal, handleBackLangModal } = useGlobalStore();
 
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
