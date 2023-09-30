@@ -46,6 +46,7 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
       />
       <span>{t("at")}</span>
       <Select
+        className="timepicker"
         value={timeValue || 0}
         placeholder="Select Time"
         onChange={handleTimeChange}
