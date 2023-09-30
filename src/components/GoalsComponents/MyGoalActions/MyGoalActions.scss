@@ -9,6 +9,7 @@
     border: none !important;
     border-radius: 0 !important;
     cursor: pointer;
+    background: transparent !important;
   }
   .goal-action:last-child {
     border-radius: 0 0 28px 28px !important;
@@ -43,4 +44,8 @@
   font-size: 6px;
   text-align: center;
   font-weight: 500;
-  }
+}
+.header-title {
+  background: var(--bottom-nav-color) !important;
+  border-bottom: 1px solid var(--default-border-color);
+}
