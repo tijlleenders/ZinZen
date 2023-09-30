@@ -2,7 +2,7 @@ import { notification } from "antd";
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { darkModeState, languageSelectionState, displayToast, backupRestoreModal, languageChangeModal } from "@store";
+import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
