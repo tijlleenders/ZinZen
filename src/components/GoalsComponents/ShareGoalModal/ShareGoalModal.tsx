@@ -21,6 +21,7 @@ import { getGoal, getAllLevelGoalsOfId, shareMyGoalAnonymously, updateSharedStat
 
 import AddContactModal from "./AddContactModal";
 import "./ShareGoalModal.scss";
+import Icon from "../../../common/Icon";
 
 const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
   const minContacts = 3;
@@ -147,7 +148,8 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
               <Loader />
             ) : (
               <div className="icon">
-                <img className="secondary-icon" alt="share goal pseudo anonymously" src={shareAnonymous} />
+                <Icon active={true} title="SingleAvatar" />
+                {/* <img className="secondary-icon" alt="share goal pseudo anonymously" src={shareAnonymous} /> */}
               </div>
             )}
             <p className={`shareOption-name ${loading.A ? "loading" : ""}`}>Share pseudo anonymously</p>
@@ -169,21 +171,22 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
               <Loader />
             ) : (
               <div className="icon">
-                <img className="secondary-icon" alt="share with friend" src={shareWithFriend} />
+                <Icon active={true} title="TwoAvatars" />
+
               </div>
             )}
             <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>Share privately</p>
           </div>
           {goal.typeOfGoal === "myGoal" && displaySubmenu === "contacts" && (
             <div className="shareWithContacts">
-              {contacts.length === 0 && (
+              {contacts.length === minContacts && (
                 <p className="share-warning">
                   You don&apos;t have a contact yet.
                   <br />
                   Add one!
                 </p>
               )}
-              {contacts.length > 0 && (
+              {contacts.length >= minContacts && (
                 <p className="share-warning">
                   Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact
                 </p>

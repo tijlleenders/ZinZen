@@ -21,13 +21,11 @@
   padding: var(--bs-modal-padding) 0;
 
   .shareOptions-btn {
-    background: var(--bottom-nav-color);
+    background: var(--secondary-background);
     border: none;
-    border-bottom: 1px solid var(--default-border-color);
     padding: 18px;
     width: 100%;
     border-radius: 8px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   }
 }
 
@@ -63,7 +61,6 @@
     bottom: 0;
     margin: auto;
     width: 28px;
-    filter: brightness(0);
   }
   svg {
     left: 3px;
@@ -78,6 +75,7 @@
 
 #modal-contact-list {
   display: flex;
+  gap: 25px;
   flex-direction: row;
   overflow-x: hidden;
   justify-content: space-around;
@@ -86,7 +84,6 @@
   .contact-icon {
     width: fit-content;
     text-align: center;
-    margin-left: 2.5%;
     position: relative;
 
     button {
@@ -98,8 +95,8 @@
       text-align: center;
       border: none;
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-      background: var(--primary-background);
-
+      background: var(--selection-color);
+      color: #fff;
       img {
         position: absolute;
         transform: translate(-50%, -50%);
@@ -109,7 +106,7 @@
 }
 
 .share-warning {
-  font-weight: 600;
+  font-weight: 500;
   font-style: italic;
   margin: 0% 2%;
   margin-bottom: 3%;
@@ -118,7 +115,7 @@
 .shareOption-name {
   margin: 0;
   align-self: center;
-  font-weight: 600;
+  font-weight: 500;
   text-align: left;
 }
 
