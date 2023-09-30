@@ -84,9 +84,8 @@ const Settings = () => {
   }, []);
   return (
     <Dropdown
-      rootClassName={`header-dropdown${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
-        theme[darkModeStatus ? "dark" : "light"]
-      }`}
+      rootClassName={`header-dropdown${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]
+        }`}
       overlayStyle={{ width: 175 }}
       menu={{ items }}
       trigger={["click"]}
