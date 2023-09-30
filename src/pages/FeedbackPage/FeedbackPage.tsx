@@ -74,7 +74,6 @@ export const FeedbackPage = () => {
             submitToAPI(userFeedback);
           }}
         >
-          {" "}
           {t("submit")}
         </button>
       </div>

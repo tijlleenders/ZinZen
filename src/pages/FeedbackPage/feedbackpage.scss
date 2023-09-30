@@ -25,7 +25,7 @@
 }
 
 .decided > span {
-  color: var(--bottom-nav-text-color) !important;
+  color: var(--icon-grad-2) !important;
 }
 
 .star {
@@ -39,6 +39,10 @@
   width: 100%;
   padding: 10px;
   outline: none;
+  background: var(--secondary-background);
+}
+#feedback-textbox-dark {
+  color: white;
 }
 
 #feedback-submit-btn {
