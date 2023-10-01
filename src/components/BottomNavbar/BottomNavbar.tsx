@@ -27,10 +27,10 @@ const BottomNavbar = ({ title }: { title: string }) => {
 
   const themeChange = (nav: -1 | 1) => {
     let choice = theme[darkModeStatus ? "dark" : "light"] + nav;
-    if (choice === 10) {
+    if (choice >= 8) {
       choice = 1;
     } else if (choice === 0) {
-      choice = 9;
+      choice = 8;
     }
     const newTheme = { ...theme, [darkModeStatus ? "dark" : "light"]: choice };
     localStorage.setItem("theme", JSON.stringify(newTheme));
