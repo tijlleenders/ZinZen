@@ -12,7 +12,6 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
-import { FocusPage } from "@components/MyTimeComponents/Focus.tsx/Focus";
 import GoalsPage from "@pages/GoalsPage/GoalsPage";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
@@ -46,8 +45,9 @@ const App = () => {
       message: `${showToast.message}`,
       description: <Context.Consumer>{() => `${showToast.extra}`}</Context.Consumer>,
       placement: "top",
-      className: `toast-${darkModeEnabled ? "dark" : "light"} ${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]
-        }`,
+      className: `toast-${darkModeEnabled ? "dark" : "light"} ${darkModeEnabled ? "dark" : "light"}-theme${
+        theme[darkModeEnabled ? "dark" : "light"]
+      }`,
     });
   };
   useEffect(() => {
@@ -71,7 +71,6 @@ const App = () => {
             <Route path="/Feedback" element={<FeedbackPage />} />
             <Route path="/MyGoals" element={<GoalsPage />} />
             <Route path="/MyJournal" element={<ShowFeelingsPage />} />
-            <Route path="/Focus" element={<FocusPage />} />
             <Route path="*" element={<GoalsPage />} />
             <Route path="/ZinZenFAQ" element={<FAQPage />} />
             <Route path="/invite/:id" element={<InvitePage />} />
