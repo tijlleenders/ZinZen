@@ -16,7 +16,15 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
-import { darkModeState, displayToast, lastAction, openDevMode, selectedMyTimeView } from "@src/store";
+import {
+  darkModeState,
+  displayToast,
+  lastAction,
+  openDevMode,
+  selectedMyTimeView,
+  isActiveState,
+  focusTaskTitle,
+} from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
@@ -48,7 +56,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
-  const [currentView, setCurrentView] = useRecoilState(selectedMyTimeView);
+  const setCurrentView = useSetRecoilState(selectedMyTimeView);
+  const setTaskTitle = useSetRecoilState(focusTaskTitle);
 
   const [showScheduled, setShowScheduled] = useState(true);
 
@@ -99,18 +108,14 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         await forgetSound.play();
         setLastAction("TaskSkipped");
       } else if (actionName === "Focus") {
-        navigate("/", {
-          state: {
-            taskTitle: task.title,
-          },
-        })
+        setTaskTitle(task.title);
         setCurrentView("focus");
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
-  const handleOpenGoal = async (goalId: string, target: string) => {
+  const handleOpenGoal = async (goalId: string) => {
     const goalsHistory = [];
     let tmpGoal: GoalItem | null = await getGoal(goalId);
     let openGoalId = tmpGoal?.parentGoalId;
@@ -131,7 +136,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       openGoalId = tmpGoal.parentGoalId;
     }
     goalsHistory.reverse();
-    navigate(target, {
+    navigate("/MyGoals", {
       state: {
         ...locationState,
         from: "",
@@ -141,6 +146,22 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       },
     });
   };
+  const currentHour = new Date().getHours();
+  const currentActiveTask = myTasks.scheduled.filter((task) => {
+    if (task.start) {
+      const startHour = parseInt(task.start.split("T")[1].slice(0, 2), 10);
+      if (startHour < currentHour) {
+        return false;
+      }
+    }
+    return true;
+  });
+  if (currentActiveTask.length) {
+    setTaskTitle(currentActiveTask[0]?.title);
+  } else {
+    setTaskTitle("No Scheduled Task");
+  }
+  console.log("currentActiveTask", currentActiveTask[0]);
   return (
     <>
       {myTasks.impossible.length > 0 && (
@@ -158,6 +179,14 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
           const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
+          // const startHour = startTime ? parseInt(startTime, 10) : null;
+          // const endHour = endTime ? parseInt(endTime, 10) : null;
+          // const isActive = startHour !== null && endHour !== null && currentHour >= startHour && currentHour < endHour;
+          // const isActiveText = isActive ? task.title : "";
+          // if (isActive) {
+          //   setTaskTitle(isActiveText);
+          // }
+          // console.log(isActiveText);
           return (
             <button
               className={`${day === "Today" && markDone ? "completedTask" : ""}`}
@@ -166,7 +195,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
               onClick={() => {
                 if (displayOptionsIndex !== task.taskid) {
                   if (markDone) {
-                    handleOpenGoal(task.goalid, "/MyGoals");
+                    handleOpenGoal(task.goalid);
                   } else {
                     setDisplayOptionsIndex(task.taskid);
                   }

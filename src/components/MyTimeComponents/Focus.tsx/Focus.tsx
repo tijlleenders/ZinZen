@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useRecoilValue } from "recoil";
-import { darkModeState } from "@src/store";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { darkModeState, isActiveState, focusTaskTitle } from "@src/store";
 
 import { Progress } from "antd";
 
 import "./focus.scss";
 import { formatTimeDisplay } from "@src/utils";
+import { useLocation } from "react-router-dom";
 
 export const Focus = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -15,6 +16,10 @@ export const Focus = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [newTime, setNewTime] = useState<string>("");
+  const [taskTitle, setTaskTitle] = useRecoilState(focusTaskTitle);
+  const isActiveTitle = useRecoilValue(isActiveState);
+  const location = useLocation();
+  //const taskTitle = location.state?.taskTitle || "No Scheduled Task";
 
   useEffect(() => {
     let interval;
@@ -55,6 +60,7 @@ export const Focus = () => {
 
   return (
     <div className="Focus">
+      <h6>{isActiveTitle === "" ? taskTitle : isActiveTitle}</h6>
       <Progress
         className={`progress-${darkModeStatus ? "dark" : ""}`}
         size={200}
