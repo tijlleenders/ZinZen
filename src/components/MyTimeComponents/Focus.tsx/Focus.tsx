@@ -66,8 +66,10 @@ export const Focus = () => {
         percent={percentage}
         success={{ percent: 0, strokeColor: darkModeStatus ? "white" : "black" }}
         format={() => {
-          const formattedMinutes = `${minutes < 10 ? "0" : ""}${minutes}`;
-          return `${formattedMinutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+          if (minutes >= 1) {
+            return `${minutes} min`;
+          }
+          return `${seconds} sec`;
         }}
       />
       {editMode ? (

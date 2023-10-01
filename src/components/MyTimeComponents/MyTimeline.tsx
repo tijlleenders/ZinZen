@@ -153,7 +153,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   } else {
     setTaskTitle(currentActiveTask[0]?.title);
   }
-  console.log("currentActiveTask", currentActiveTask[0]);
   return (
     <>
       {myTasks.impossible.length > 0 && (
