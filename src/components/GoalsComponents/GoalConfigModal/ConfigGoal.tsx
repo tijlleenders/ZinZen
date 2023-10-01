@@ -158,6 +158,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   };
 
   const handleSave = async () => {
+    
     if (isTitleEmpty()) {
       setShowToast({
         open: true,
