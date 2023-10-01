@@ -45,8 +45,9 @@ const App = () => {
       message: `${showToast.message}`,
       description: <Context.Consumer>{() => `${showToast.extra}`}</Context.Consumer>,
       placement: "top",
-      className: `toast-${darkModeEnabled ? "dark" : "light"} ${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]
-        }`,
+      className: `toast-${darkModeEnabled ? "dark" : "light"} ${darkModeEnabled ? "dark" : "light"}-theme${
+        theme[darkModeEnabled ? "dark" : "light"]
+      }`,
     });
   };
   useEffect(() => {

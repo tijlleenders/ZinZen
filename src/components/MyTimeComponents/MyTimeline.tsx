@@ -4,7 +4,7 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import archiveTune from "@assets/archive.mp3";
 import forgetTune from "@assets/forget.mp3";
@@ -16,7 +16,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
-import { darkModeState, displayToast, lastAction, openDevMode } from "@src/store";
+import { darkModeState, displayToast, lastAction, openDevMode, selectedMyTimeView, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
@@ -48,6 +48,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
+  const setCurrentView = useSetRecoilState(selectedMyTimeView);
+  const setTaskTitle = useSetRecoilState(focusTaskTitle);
 
   const [showScheduled, setShowScheduled] = useState(true);
 
@@ -57,7 +59,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     setShowScheduled(!showScheduled);
   };
   // console.log(devMode);
-  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done", task: ITask) => {
+  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
@@ -97,6 +99,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Skip") {
         await forgetSound.play();
         setLastAction("TaskSkipped");
+      } else if (actionName === "Focus") {
+        setTaskTitle(task.title);
+        setCurrentView("focus");
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
@@ -133,6 +138,21 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       },
     });
   };
+  const currentHour = new Date().getHours();
+  const currentActiveTask = myTasks.scheduled.filter((task) => {
+    if (task.start) {
+      const startHour = parseInt(task.start.split("T")[1].slice(0, 2), 10);
+      if (startHour < currentHour) {
+        return false;
+      }
+    }
+    return true;
+  });
+  if (currentActiveTask[0] === undefined) {
+    setTaskTitle("No Scheduled Tasks");
+  } else {
+    setTaskTitle(currentActiveTask[0]?.title);
+  }
   return (
     <>
       {myTasks.impossible.length > 0 && (
@@ -227,6 +247,10 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   <div />
                   <button type="button" onClick={() => handleActionClick("Done", task)}>
                     Done
+                  </button>
+                  <div />
+                  <button type="button" onClick={() => handleActionClick("Focus", task)}>
+                    Focus
                   </button>
                   <div />
                 </div>
