@@ -37,7 +37,9 @@ export const ShowFeelingsPage = () => {
       }, {});
       const dateArr = Object.keys(feelingsByDates).map((date) => date);
       const dateRangeArr = getDates(new Date(dateArr[0]), new Date());
-      if (dateRangeArr.length === 0) { dateRangeArr.push(new Date()); }
+      if (dateRangeArr.length === 0) {
+        dateRangeArr.push(new Date());
+      }
       setJournalDates([...dateRangeArr]);
       setSelectedDate(dateRangeArr.length - 1);
       setFeelingsList(feelingsByDates);
@@ -60,26 +62,26 @@ export const ShowFeelingsPage = () => {
   };
   const date = journalDates.length > 0 ? journalDates[selectedDate] : null;
   return (
-    <AppLayout title="My Journal">
+    <AppLayout title="myJournal">
       <div>
         {feelingsList && date && (
           <div key={date}>
             <SubHeader
               showLeftNav={selectedDate > 0}
               showRightNav={selectedDate < journalDates.length - 1}
-              title={new Date(date).toDateString() === new Date().toDateString()
-                ? "Today"
-                : new Date(date).toDateString()}
+              title={
+                new Date(date).toDateString() === new Date().toDateString() ? "Today" : new Date(date).toDateString()
+              }
               leftNav={() => handleNavigation("left")}
               rightNav={() => handleNavigation("right")}
             />
             {feelingsList[date] && feelingsList[date].length > 0 && (
-            <ShowFeelingTemplate
-              key={date}
-              feelingsListObject={feelingsList[date]}
-              setFeelingsListObject={{ feelingsList, setFeelingsList }}
-              currentFeelingsList={feelingsList}
-            />
+              <ShowFeelingTemplate
+                key={date}
+                feelingsListObject={feelingsList[date]}
+                setFeelingsListObject={{ feelingsList, setFeelingsList }}
+                currentFeelingsList={feelingsList}
+              />
             )}
           </div>
         )}

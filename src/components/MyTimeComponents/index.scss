@@ -7,7 +7,7 @@
     border: none;
     width: 50%;
     padding: 12px 18px;
-    color: var(--bottom-nav-text-color) !important;
+    color: var(--icon-grad-2) !important;
     background: transparent;
   }
   .activeView {
@@ -29,11 +29,19 @@
   .MTL-goalTiming {
     border: none;
     font-weight: 400;
-    margin-top: 4px;
+    margin-top: 8px;
     margin-bottom: 0;
     line-height: 16px;
     white-space: nowrap;
     width: 80px;
+    display: flex;
+    span {
+      font-size: 14px;
+    }
+    sup {
+      font-size: 8.5px;
+      line-height: 12px;
+    }
   }
 }
 

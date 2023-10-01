@@ -53,15 +53,19 @@ registerRoute(
     // Return true to signal that we want to use the handler.
     return true;
   },
-  createHandlerBoundToURL("/index.html")
+  createHandlerBoundToURL("/index.html"),
 );
 
 // An example runtime caching route for requests that aren't handled by the
 // precache, in this case same-origin .png requests like those from in public/
 registerRoute(
   // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && (url.pathname.endsWith(".jpg") || url.pathname.endsWith(".jpeg")
-  || url.pathname.endsWith(".svg") || url.pathname.endsWith(".woff2")),
+  ({ url }) =>
+    url.origin === self.location.origin &&
+    (url.pathname.endsWith(".jpg") ||
+      url.pathname.endsWith(".jpeg") ||
+      url.pathname.endsWith(".svg") ||
+      url.pathname.endsWith(".woff2")),
   // Customize this strategy as needed, e.g., by changing to CacheFirst.
   new CacheFirst({
     cacheName: "images",
@@ -70,7 +74,7 @@ registerRoute(
       // least-recently used images are removed.
       new ExpirationPlugin({ maxEntries: 50 }),
     ],
-  })
+  }),
 );
 registerRoute(
   ({ url }) => url.origin === self.location.origin && url.pathname.endsWith(".wasm"),
@@ -82,7 +86,7 @@ registerRoute(
         maxAgeSeconds: 60 * 60 * 24, // Cache for 1 day
       }),
     ],
-  })
+  }),
 );
 
 // This allows the web app to trigger skipWaiting via

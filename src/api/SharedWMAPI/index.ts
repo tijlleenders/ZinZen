@@ -2,14 +2,13 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { collaborateWithContact } from "@src/services/contact.service";
-import { getDefaultValueOfShared } from "@src/utils/defaultGenerators";
 import { addGoal } from "../GoalsAPI";
-import { addSubInPub } from "../PubSubAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
-    await db.sharedWMCollection.where("id").equals(parentGoalId)
+    await db.sharedWMCollection
+      .where("id")
+      .equals(parentGoalId)
       .modify((obj: GoalItem) => {
         obj.sublist = [...obj.sublist, ...goalIds];
       });
@@ -23,10 +22,14 @@ export const addSharedWMGoal = async (goalDetails: object) => {
   await db
     .transaction("rw", db.sharedWMCollection, async () => {
       await db.sharedWMCollection.add(newGoal);
-    }).then(async () => {
+    })
+    .then(async () => {
       const { parentGoalId } = newGoal;
-      if (parentGoalId !== "root") { await addSharedWMSublist(parentGoalId, [newGoal.id]); }
-    }).catch((e) => {
+      if (parentGoalId !== "root") {
+        await addSharedWMSublist(parentGoalId, [newGoal.id]);
+      }
+    })
+    .catch((e) => {
       console.log(e.stack || e);
     });
   return newGoal.id;
@@ -44,7 +47,10 @@ export const getSharedWMGoal = async (goalId: string) => {
 };
 
 export const getSharedWMChildrenGoals = async (parentGoalId: string) => {
-  const childrenGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals(parentGoalId).sortBy("createdAt");
+  const childrenGoals: GoalItem[] = await db.sharedWMCollection
+    .where("parentGoalId")
+    .equals(parentGoalId)
+    .sortBy("createdAt");
   childrenGoals.reverse();
   return childrenGoals;
 };
@@ -73,10 +79,12 @@ export const archiveGoal = async (goal: GoalItem) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
     await db.sharedWMCollection.update(goal.id, { archived: "true" });
   });
-  if (goal.parentGoalId !== "root" && !["collaboration", "shared"].includes(goal.typeOfGoal)) {
+  if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getSharedWMGoal(goal.parentGoalId);
     db.transaction("rw", db.sharedWMCollection, async () => {
-      await db.sharedWMCollection.update(goal.parentGoalId, { sublist: parentGoal.sublist.filter((ele) => ele !== goal.id) });
+      await db.sharedWMCollection.update(goal.parentGoalId, {
+        sublist: parentGoal.sublist.filter((ele) => ele !== goal.id),
+      });
     });
   }
 };
@@ -102,7 +110,9 @@ export const removeSharedWMGoal = async (goalId: string) => {
 
 export const removeSharedWMChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals = await getSharedWMChildrenGoals(parentGoalId);
-  if (childrenGoals.length === 0) { return; }
+  if (childrenGoals.length === 0) {
+    return;
+  }
   childrenGoals.forEach((goal) => {
     removeSharedWMChildrenGoals(goal.id);
     removeSharedWMGoal(goal.id);
@@ -111,23 +121,31 @@ export const removeSharedWMChildrenGoals = async (parentGoalId: string) => {
 
 export const transferToMyGoals = async (id: string) => {
   const childrenGoals = await getSharedWMChildrenGoals(id);
-  if (childrenGoals.length === 0) { return; }
+  if (childrenGoals.length === 0) {
+    return;
+  }
   childrenGoals.forEach((goal) => {
     transferToMyGoals(goal.id);
     addGoal(goal).then(async () => removeSharedWMGoal(goal.id));
   });
 };
 
-export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
-  const { relId, name } = goal.shared.contacts[0];
-  collaborateWithContact(relId, goal)
-    .then((res) => console.log(res.success ? "colab inv sent" : "failed to sent invite"));
-  addSubInPub(goal.id, relId, "collaboration").catch((err) => console.log("failed to add sub in pub", err));
-  await transferToMyGoals(goal.id).then(async () => {
-    const { collaboration } = goal;
-    collaboration.collaborators.push({ relId, name });
-    addGoal({ ...goal, typeOfGoal: "collaboration", collaboration, shared: getDefaultValueOfShared() }).then(async () => {
-      removeSharedWMGoal(goal.id);
-    }).catch((err) => console.log(err));
-  }).catch((err) => console.log(err));
-};
+// export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
+//   const { relId, name } = goal.shared.contacts[0];
+//   collaborateWithContact(relId, goal).then((res) =>
+//     console.log(res.success ? "colab inv sent" : "failed to sent invite"),
+//   );
+//   addSubInPub(goal.id, relId, "collaboration").catch((err) => console.log("failed to add sub in pub", err));
+//   await transferToMyGoals(goal.id)
+//     .then(async () => {
+//       await removeGoalFromPartner(relId, goal);
+//       const collaboration = JSON.parse(JSON.stringify(goal.collaboration));
+//       collaboration.collaborators.push({ relId, name });
+//       addGoal({ ...goal, typeOfGoal: "collaboration", collaboration, shared: getDefaultValueOfShared() })
+//         .then(async () => {
+//           removeSharedWMGoal(goal.id);
+//         })
+//         .catch((err) => console.log(err));
+//     })
+//     .catch((err) => console.log(err));
+// };

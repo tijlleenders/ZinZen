@@ -22,12 +22,10 @@ describe("BottomNavbar", () => {
   });
 
   it("should toggle dark mode when Switch Mode button is clicked", () => {
-    cy.get(".header-items")
-      .find(".header-icon[alt='zinzen settings']")
-      .click();
+    cy.get(".header-items").find(".header-icon[alt='Settings']").click();
 
     // Click on the "Switch Mode" button to toggle the mode
-    cy.contains("Change Theme").click();
+    cy.contains("Change theme").click();
   });
 
   it("should change to next theme when Next button is clicked", () => {

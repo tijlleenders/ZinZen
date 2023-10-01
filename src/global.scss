@@ -148,6 +148,7 @@ h6 {
   outline: none;
   border: none;
   color: black;
+  background: var(--secondary-background);
 }
 
 .ordinary-element {
@@ -197,13 +198,14 @@ h6 {
 .popupModal,
 .popupModal-dark {
   border: none;
-  input[type="text"] {
+  input {
     font-size: 1em;
     font-weight: 400;
     padding: 8px 16px;
     border-radius: 8px;
     outline: none;
     border: none;
+    background: var(--secondary-background);
   }
   .popupModal-title {
     font-size: 1.286em;
@@ -212,10 +214,10 @@ h6 {
     margin-top: 0;
   }
   .header-title {
-    padding: 24px;
+    padding: 24px 12px;
     text-align: center;
     border-radius: 28px 28px 0 0 !important;
-    background: var(--primary-background);
+    background: var(--secondary-background);
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
 
     h4 {
@@ -228,18 +230,12 @@ h6 {
 
   .ant-modal-content {
     border: none !important;
-    background: var(--secondary-background) !important;
+    background: var(--primary-background) !important;
     margin-top: auto;
   }
 
   .ant-modal-body {
     border-radius: 10px;
-  }
-}
-
-.popupModal-dark {
-  .ant-modal-content {
-    background: var(--modal-bg-color) !important;
   }
 }
 
@@ -292,4 +288,9 @@ h6 {
   // .colorPallette, .colorPallette-dark{
   //   width: 60vw;
   // }
+}
+
+.goals-icon-history {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(66%) saturate(2%) hue-rotate(89deg) brightness(111%)
+    contrast(100%);
 }

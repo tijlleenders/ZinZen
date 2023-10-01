@@ -37,8 +37,8 @@ export const getForgetHrsCount = (task: TaskItem) => {
 };
 
 export const resetProgressOfToday = async () => {
-    const tasks = await db.taskCollection.toArray();
-try {
+  const tasks = await db.taskCollection.toArray();
+  try {
     await db.transaction("rw", db.taskCollection, async () => {
       const updatedRows = tasks.map((_task) => {
         const task = { ..._task };
@@ -57,7 +57,7 @@ try {
   } catch (error) {
     console.error("Error updating field:", error);
   }
-}
+};
 
 export const refreshTaskCollection = async () => {
   const tasks = await db.taskCollection.toArray();
@@ -65,7 +65,7 @@ export const refreshTaskCollection = async () => {
     (acc, curr) => {
       return curr ? { ...acc, [curr.id]: { ...curr } } : acc;
     },
-    {}
+    {},
   );
   try {
     await db.transaction("rw", db.taskCollection, async () => {
@@ -79,7 +79,7 @@ export const refreshTaskCollection = async () => {
           const dayIndex = calDays.indexOf(convertDateToDay(startDate));
           const lastReset = getLastDayDate(dayIndex);
           const lastAction = new Date(
-            new Date(task.lastForget) < new Date(task.lastCompleted) ? task.lastCompleted : task.lastForget
+            new Date(task.lastForget) < new Date(task.lastCompleted) ? task.lastCompleted : task.lastForget,
           );
           if (lastAction < lastReset) {
             task.hoursSpent = 0;

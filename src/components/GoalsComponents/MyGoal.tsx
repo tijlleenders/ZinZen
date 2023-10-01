@@ -12,22 +12,12 @@ import useGoalStore from "@src/hooks/useGoalStore";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import { darkModeState, lastAction, openInbox } from "@src/store";
-import { replaceUrlsWithText } from "@src/utils/patterns";
+import { darkModeState, displayPartner, lastAction, openInbox } from "@src/store";
+import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
 import { getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
-import {
-  displayGoalId,
-  displayUpdateGoal,
-  displayShareModal,
-  goalsHistory,
-  displayChangesModal,
-} from "@src/store/GoalsState";
+import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 
 import { useTranslation } from "react-i18next";
-import ShareGoalModal from "./ShareGoalModal/ShareGoalModal";
-
-const eyeSvg =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC7klEQVR4nO2YSWhUQRCGv6gRERVXXBA8GRcIincFQQ8akoMIgjGQHPUgLgcJguPJZLp6JglxIZi4gIh4EKMRTcSroBIQUfAoSJR4iFnPkZKOPB8vTr/JSybg+6GgZ6ar6q/q6q7ugRQpUqRIkeJ/h8AWA8ct5AWeCXwUGBAYdaLjDwZ6LFgLx5phc0lJZ2GTwAWBNwITRcprgfOtsH7OiLfADgt3XGYnEpJhA50WKmaNuIW1Bq4JjEUQGBLoFmgUONQC21pg5UNYmIFFOtbABaoMXNRSEvgZYUeT0toEq5ImXyPwNcKhlk/dVVgW12YbrLBQL9AftmvgSxYOz5i4Zk83XQTx5znYP2MHwCSUWTgo0Bf2Y6FZV7Eow5pVt9RBowMGTjALmIQygQaB7yGfjzOwNJaxLCy38Cpk6NFcnBZ52GjgSch3b8a3TDOw2J3lwZps91lKnaP7RU8UgfcCP5zo+KZAdQYWeJbujVAQ3R1QXjAAgeshxUafwAX2CbwrdGQaeJuHvZ4ldSmk3/pPJe2QIWdXPMmfitkXRgyc9LFtwYR0j0ZO1Pp2LX9q4lOfsrFQW2wDs1BfyL5y0I0cPEjaYF1UFm8HDH/S5uNBvmKahuQrQ1nYWshPDlYLfA5URmd4QqWB8UAANYWMuqAfJHCNuO/p60hAR28DO4M/3gtE98LHoIEN01wr4sqY7/EcanZ3/5y7uqkc+XEDuz2NNSRAfsJ3LyiysCegN/w7cANn4mbfBdCUVAACTTH89gb0TusXLwOZqPU15JpVUgF0xQigLqDXh+uU+mGkHdb4GnKvr6RKKO/rVzlOlbyFQc1kxsCgdj1fIy6AcwmuwNk4vgUu2yI4/4Uc7EoqgBxUUgpEPUaKkP6SkHcBVCcQQBWlhIFbxZI34StBKZCBJeH3gyf5HtVlPkAfGu7a63OlHtW3rj5amG9wf510CXyLID7g/vvZznxHB5TrbdHAARUdez0HU6RIkSJFihQpmFP8Akw1EIG66+t0AAAAAElFTkSuQmCC";
 
 interface MyGoalProps {
   goal: GoalItem;
@@ -92,21 +82,20 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
   const defaultTap = { open: "root", click: 1 };
   const archived = goal.archived === "true";
-  const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
-  const collabWithContact =
-    goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
+  // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
+  // const collabWithContact =
+  //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
 
   const navigate = useNavigate();
   const location = useLocation();
   const { handleDisplayChanges, handleUpdateGoal } = useGoalStore();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showShareModal = useRecoilValue(displayShareModal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
   const isInboxOpen = useRecoilValue(openInbox);
-
+  const showPartner = useRecoilValue(displayPartner);
   const setLastAction = useSetRecoilState(lastAction);
 
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(goal.title);
@@ -136,32 +125,29 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     if (archived) {
       return;
     }
-    if (
-      (goal.collaboration.newUpdates && goal.typeOfGoal === "collaboration") ||
-      goal.shared.conversionRequests.status
-    ) {
-      handleDisplayChanges();
-      if (goal.shared.conversionRequests.status) {
-        setShowChangesModal({ typeAtPriority: "conversionRequest", parentId: goal.id, goals: [] });
-      } else {
-        const res = await jumpToLowestChanges(goal.rootGoalId);
-        const pathToGoal = await getHistoryUptoGoal(res.parentId);
-        if (pathToGoal.length > 1) {
-          pathToGoal.pop();
-          setSubGoalHistory([...pathToGoal]);
-          setSelectedGoalId(pathToGoal.slice(-1)[0].goalID);
-        }
-        setShowChangesModal(res);
-      }
-    } else {
-      navigate("/MyGoals", {
-        state: {
-          ...location.state,
-          from: "",
-          displayGoalActions: goal,
-        },
-      });
-    }
+    // if (goal.collaboration.newUpdates || goal.shared.conversionRequests.status) {
+    //   handleDisplayChanges();
+    //   if (goal.shared.conversionRequests.status) {
+    //     setShowChangesModal({ typeAtPriority: "conversionRequest", parentId: goal.id, goals: [] });
+    //   } else {
+    //     const res = await jumpToLowestChanges(goal.rootGoalId);
+    //     const pathToGoal = await getHistoryUptoGoal(res.parentId);
+    //     if (pathToGoal.length > 1) {
+    //       pathToGoal.pop();
+    //       setSubGoalHistory([...pathToGoal]);
+    //       setSelectedGoalId(pathToGoal.slice(-1)[0].goalID);
+    //     }
+    //     setShowChangesModal(res);
+    //   }
+    // } else {
+    navigate("/MyGoals", {
+      state: {
+        ...location.state,
+        from: "",
+        displayGoalActions: goal,
+      },
+    });
+    // }
   }
   useEffect(() => {
     if (showActions !== defaultTap) {
@@ -178,6 +164,10 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     }
   }, [location]);
 
+  const isActionVisible = () => {
+    return !archived && !isInboxOpen && !showPartner && showActions.open === goal.id && showActions.click > 0;
+  };
+
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
       <div
@@ -186,99 +176,105 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div style={{ marginLeft: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+        <div
+          style={{
+            padding: "20px 0",
+            marginLeft: 20,
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+          }}
+        >
           <div
             className="goal-dropdown"
             onClickCapture={(e) => {
               handleDropDown(e);
             }}
           >
-            {(goal.collaboration.newUpdates || goal.shared.conversionRequests.status) && (
-              <NotificationSymbol color={goal.goalColor} />
-            )}
-            {goal.sublist.length > 0 && (
-              <div
-                className="goal-dd-outer"
-                style={{
-                  borderColor: goal.goalColor,
-                }}
-              />
-            )}
             <div
-              className="goal-dd-inner"
+              className="goal-dd-outer"
               style={{
-                background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`,
+                borderColor: goal.sublist.length > 0 ? goal.goalColor : "transparent",
               }}
-            />
+            >
+              <div
+                className="goal-dd-inner"
+                style={{
+                  background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`,
+                }}
+              >
+                {/* {(goal.collaboration.newUpdates || goal.shared.conversionRequests.status) && (
+                  <NotificationSymbol color={goal.goalColor} />
+                )} */}
+              </div>
+            </div>
           </div>
-          {!archived && showActions.open === goal.id && showActions.click > 0 && (
+          {isActionVisible() && <span className="goal-menu-subtext">Actions</span>}
+          {isActionVisible() && (
             <div
               className="goal-action"
               onClickCapture={() => {
                 handleUpdateGoal(goal.id);
               }}
-              style={{ textAlign: "right" }}
+              style={{ textAlign: "center", height: 24 }}
             >
               <img
                 alt="Update Goal"
-                src={isInboxOpen ? eyeSvg : pencil}
+                src={pencil}
                 style={{ cursor: "pointer", width: 24, height: 24 }}
                 className={`${darkModeStatus ? "dark-svg" : ""}`}
               />
             </div>
           )}
+          {isActionVisible() && <span className="goal-menu-subtext">Edit</span>}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <div
-            style={{
-              overflow: "hidden",
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              gap: 6,
-            }}
-          >
-            <div className="goal-title">
-              {replacedString.split(" ").map((ele) => (
-                <span
-                  key={`${goal.id}-${ele}`}
-                  style={ele.includes("zURL-") ? { cursor: "pointer", textDecoration: "underline" } : {}}
-                  onClickCapture={() => {
-                    if (ele.includes("zURL-")) {
-                      const urlIndex = Number(ele.split("-")[1]);
-                      window.open(urlsWithIndexes[urlIndex], "_blank");
-                    }
-                  }}
-                >
-                  {`${ele.includes("zURL-") ? "URL" : ` ${ele} `}`}
-                </span>
-              ))}
-              &nbsp;
-              {goal.link && (
-                <a
-                  className="goal-link"
-                  href={goal.link}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noreferrer"
-                >
-                  URL
-                </a>
-              )}
-            </div>
-            {showActions.open === goal.id && showActions.click > 0 && (
-              <p className="goal-desc">
-                <GoalSent goal={goal} />
-              </p>
+          <div className="goal-title">
+            {replacedString.split(" ").map((ele, index) => {
+              if (ele.includes("zURL-")) {
+                const urlIndex = Number(ele.split("-")[1]);
+                const originalUrl = urlsWithIndexes[urlIndex];
+                const summarizedUrl = summarizeUrl(originalUrl);
+                console.log(originalUrl);
+
+                return (
+                  <span
+                    key={`${goal.id}-${ele}`}
+                    style={{ cursor: "pointer", textDecoration: "underline" }}
+                    onClickCapture={() => {
+                      window.open(originalUrl, "_blank");
+                    }}
+                  >
+                    {index === 0 ? summarizedUrl : ` ${summarizedUrl}`}
+                  </span>
+                );
+              }
+              return <span key={`${goal.id}-${ele}`}>{index === 0 ? ele : ` ${ele}`}</span>;
+            })}
+            &nbsp;
+            {goal.link && (
+              <a
+                className="goal-link"
+                href={goal.link}
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+                rel="noreferrer"
+              >
+                URL
+              </a>
             )}
           </div>
+          {showActions.open === goal.id && showActions.click > 0 && (
+            <p className="goal-desc">
+              <GoalSent goal={goal} />
+            </p>
+          )}
         </div>
       </div>
-      {goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" && (
-        <Tooltip placement="top" title={sharedWithContact || collabWithContact}>
+      {goal.participants.length > 0 && (
+        <Tooltip placement="top" title={goal.participants[0].name}>
           <div className="contact-button" style={archived ? { right: "78px" } : {}}>
-            {goal.typeOfGoal === "collaboration" && (
+            {goal.participants[0].type === "collaborator" && (
               <img
                 alt="collaborate goal"
                 width={25}
@@ -293,7 +289,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                 background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)`,
               }}
             >
-              {sharedWithContact?.charAt(0) || collabWithContact?.charAt(0) || ""}
+              {goal.participants[0].name.charAt(0)}
             </button>
           </div>
         </Tooltip>
@@ -313,7 +309,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           </button>
         </div>
       )}
-      {showShareModal === goal.id && <ShareGoalModal goal={goal} />}
     </div>
   );
 };

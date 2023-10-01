@@ -10,7 +10,6 @@ import { ITaskOfDay } from "@src/Interfaces/Task";
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { callJsScheduler } from "@src/scheduler/miniScheduler";
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
-import { createDummyGoals } from "@src/helpers/NewUserController";
 import { resetProgressOfToday } from "@src/api/TasksAPI";
 import { lastAction, openDevMode } from "@src/store";
 import { generateUniqueIdForSchInput } from "@src/utils/SchedulerUtils";
@@ -31,18 +30,8 @@ function useScheduler() {
   const [tasks, setTasks] = useState<{ [day: string]: ITaskOfDay }>({});
   const [action, setLastAction] = useRecoilState(lastAction);
 
-  const getInputGoals = async () => {
-    let activeGoals: GoalItem[] = await getAllGoals();
-    if (activeGoals.length === 0) {
-      await createDummyGoals();
-      activeGoals = await getAllGoals();
-    }
-    console.log(activeGoals);
-    return activeGoals;
-  };
-
   const getInputForScheduler = async () => {
-    const activeGoals = await getInputGoals();
+    const activeGoals: GoalItem[] = await getAllGoals();
     const { dbTasks, schedulerInput } = await organizeDataForInptPrep(activeGoals);
     setTasksStatus({ ...dbTasks });
     return schedulerInput;
@@ -65,6 +54,11 @@ function useScheduler() {
     const { schedulerInput: schedulerInputV1, cachedRes } = await generateSchedule();
     let newGeneratedInputId = "";
     let res: ISchedulerOutput;
+    console.log(
+      "🚀 ~ file: useScheduler.tsx:58 ~ initialCall ~ JSON.stringify(schedulerInputV1), res:",
+      JSON.stringify(schedulerInputV1),
+      schedulerInputV1,
+    );
     console.log("🚀 ~ file: useScheduler.tsx:75 ~ initialCall ~ cachedRes.code:", cachedRes.code);
     if (cachedRes.code === "found") {
       res = cachedRes.output;
@@ -73,7 +67,7 @@ function useScheduler() {
       await resetProgressOfToday();
       const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
       newGeneratedInputId = generatedInputId;
-      if (!devMode) {
+      if (devMode) {
         res = callJsScheduler(schedulerInputV2);
         logIO(JSON.stringify(schedulerInputV2), res);
       } else {

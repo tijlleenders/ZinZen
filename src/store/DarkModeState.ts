@@ -9,5 +9,5 @@ export const getDarkModeValue = () => {
 };
 export const darkModeState = atom({
   key: "darkModeState",
-  default: getDarkModeValue() === "on"
+  default: getDarkModeValue() === "on",
 });

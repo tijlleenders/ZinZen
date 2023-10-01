@@ -25,23 +25,27 @@
 }
 
 .decided > span {
-  color: var(--bottom-nav-text-color) !important;
+  color: var(--icon-grad-2) !important;
 }
 
 .star {
   font-size: xxx-large;
 }
 
-#feedback-textbox, #feedback-textbox-dark {
+#feedback-textbox,
+#feedback-textbox-dark {
   border-radius: 10px;
   height: 200px;
   width: 100%;
   padding: 10px;
   outline: none;
+  background: var(--secondary-background);
+}
+#feedback-textbox-dark {
+  color: white;
 }
 
 #feedback-submit-btn {
   padding: 8px 16px;
   background-color: var(--selection-color);
 }
-

@@ -1,19 +1,32 @@
-import { getPubById } from "@src/api/PubSubAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { getPublicGroup } from "@src/api/PublicGroupsAPI";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
-import { getSharedWMGoal, removeSharedWMChildrenGoals, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
-import { getGoal, addGoal, updateGoal, archiveUserGoal, removeGoalWithChildrens } from "@src/api/GoalsAPI";
-import { sendUpdatesOfThisPoll } from "./GroupsProcessor";
+import { getSharedWMGoal, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
+import {
+  getGoal,
+  addGoal,
+  updateGoal,
+  archiveUserGoal,
+  removeGoalWithChildrens,
+  getParticipantsOfGoals,
+} from "@src/api/GoalsAPI";
+import { addGoalToPartner } from "@src/api/PartnerAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 
 export const createGoal = async (
-  parentGoalId: string, goalTags: GoalItem, goalTitle: string, goalColor: string, level: number
+  parentGoalId: string,
+  goalTags: GoalItem,
+  goalTitle: string,
+  goalColor: string,
+  ancestors: string[],
 ) => {
+  const level = ancestors.length;
   let newGoal = createGoalObjectFromTags({
     ...goalTags,
-    title: goalTitle.split(" ").filter((ele:string) => ele !== "").join(" "),
+    title: goalTitle
+      .split(" ")
+      .filter((ele: string) => ele !== "")
+      .join(" "),
     language: getSelectedLanguage(),
     parentGoalId,
     goalColor,
@@ -21,16 +34,18 @@ export const createGoal = async (
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
+    if (!parentGoal) return { parentGoal: null };
     newGoal = inheritParentProps(newGoal, parentGoal);
     const newGoalId = await addGoal(newGoal);
-    const pub = await getPubById(parentGoal.rootGoalId);
-    if (pub && pub.subscribers.length > 0 && newGoalId) {
-      pub.subscribers.forEach(async (sub) => {
-        if (sub.type === "collaboration" || sub.type === "shared") {
-          sendUpdatesToSubscriber(sub, parentGoal.rootGoalId, "subgoals", [{
-            level, goal: { ...newGoal, id: newGoalId } }])
-            .then(() => console.log("update sent"));
-        }
+    const subscribers = await getParticipantsOfGoals(ancestors);
+    if (newGoalId) {
+      subscribers.map(async ({ sub, rootGoalId }) => {
+        sendUpdatesToSubscriber(sub, rootGoalId, "subgoals", [
+          {
+            level,
+            goal: { ...newGoal, id: newGoalId },
+          },
+        ]).then(() => console.log("update sent"));
       });
     }
     const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
@@ -41,67 +56,76 @@ export const createGoal = async (
   return { parentGoal: null };
 };
 
-export const modifyGoal = async (goalId: string, goalTags: GoalItem, goalTitle: string, goalColor: string, level: number) => {
+export const modifyGoal = async (
+  goalId: string,
+  goalTags: GoalItem,
+  goalTitle: string,
+  goalColor: string,
+  ancestors: string[],
+) => {
+  const level = ancestors.length;
   await updateGoal(goalId, {
     ...goalTags,
-    title: goalTitle.split(" ").filter((ele:string) => ele !== "").join(" "),
+    title: goalTitle
+      .split(" ")
+      .filter((ele: string) => ele !== "")
+      .join(" "),
     goalColor,
   });
   const goal = await getGoal(goalId);
+  const subscribers = await getParticipantsOfGoals(ancestors);
   if (goal) {
-    const pub = await getPubById(goal.rootGoalId);
-    if (pub && pub.subscribers.length > 0) {
-      pub.subscribers.forEach(async (sub) => {
-        if (sub.type === "collaboration" || sub.type === "shared") {
-          sendUpdatesToSubscriber(sub, goal.rootGoalId, "modifiedGoals", [{ level, goal }])
-            .then(() => console.log("update sent"));
-        }
-      });
-    }
+    subscribers.forEach(async ({ sub, rootGoalId }) => {
+      sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [{ level, goal }]).then(() =>
+        console.log("update sent"),
+      );
+    });
   }
 };
 
-export const archiveGoal = async (goal: GoalItem, level: number) => {
-  const pub = await getPubById(goal.rootGoalId);
-  if (pub && pub.subscribers.length > 0) {
-    pub.subscribers.forEach(async (sub) => {
-      if (sub.type === "collaboration" || sub.type === "shared") {
-        sendUpdatesToSubscriber(sub, goal.rootGoalId, "archived", [{ level, id: goal.id }])
-          .then(() => console.log("update sent"));
-      } else if (sub.type === "publicGroup") {
-        const group = await getPublicGroup(sub.subId);
-        const poll = group.polls.find((ele) => ele.goal.id === goal.id);
-        if (poll && !poll.myMetrics.completed) {
-          sendUpdatesOfThisPoll(group.id, poll.id, { ...poll.myMetrics, completed: true }, "completed");
-        }
-      }
-    });
-  }
+export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {
+  const level = ancestors.length;
+  const subscribers = await getParticipantsOfGoals(ancestors);
+  subscribers.forEach(async ({ sub, rootGoalId }) => {
+    sendUpdatesToSubscriber(sub, rootGoalId, "archived", [{ level, id: goal.id }]).then(() =>
+      console.log("update sent"),
+    );
+  });
   await archiveUserGoal(goal);
 };
 
-export const deleteGoal = async (goal: GoalItem, level: number) => {
-  const pub = await getPubById(goal.rootGoalId);
-  if (pub && pub.subscribers.length > 0) {
-    pub.subscribers.forEach(async (sub) => {
-      if (sub.type === "collaboration" || sub.type === "shared") {
-        sendUpdatesToSubscriber(sub, goal.rootGoalId, "deleted", [{ level, id: goal.id }])
-          .then(() => console.log("update sent"));
-      }
-    });
-  }
+export const deleteGoal = async (goal: GoalItem, ancestors: string[]) => {
+  const level = ancestors.length;
+  const subscribers = await getParticipantsOfGoals(ancestors);
+  subscribers.forEach(async ({ sub, rootGoalId }) => {
+    sendUpdatesToSubscriber(sub, rootGoalId, "deleted", [{ level, id: goal.id }]).then(() =>
+      console.log("update sent"),
+    );
+  });
   await removeGoalWithChildrens(goal);
 };
 
 export const deleteSharedGoal = async (goal: GoalItem) => {
-  await removeSharedWMChildrenGoals(goal.id);
-  await removeSharedWMGoal(goal.id);
+  // await Promise.all([removeSharedWMChildrenGoals(goal.id), removeGoalFromPartner(goal.shared.contacts[0].relId, goal)]);
   if (goal.parentGoalId !== "root") {
     getSharedWMGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;
       const childGoalIndex = parentGoalSublist.indexOf(goal.id);
-      if (childGoalIndex !== -1) { parentGoalSublist.splice(childGoalIndex, 1); }
+      if (childGoalIndex !== -1) {
+        parentGoalSublist.splice(childGoalIndex, 1);
+      }
       await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
     });
   }
+};
+
+export const moveToPartner = async (goal: GoalItem) => {
+  const relId = localStorage.getItem("partner");
+  if (!relId) {
+    return false;
+  }
+  await Promise.all([addGoalToPartner(relId, goal), removeSharedWMGoal(goal.id)]).catch((err) => {
+    console.log("Failed to move the goal into partner", err);
+  });
+  return true;
 };

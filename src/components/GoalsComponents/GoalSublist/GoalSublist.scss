@@ -1,7 +1,8 @@
 .ant-breadcrumb + .ant-breadcrumb-item::before {
   content: var(--bs-breadcrumb-divider, ">") !important;
 }
-.sublist-container, .sublist-content {
+.sublist-container,
+.sublist-content {
   max-width: 600px;
   min-width: 236px;
   width: 100%;
@@ -28,10 +29,11 @@
   flex-direction: column;
   justify-content: center;
 
-  .mygoalsbutton-dark, .mygoalsbutton-light {
+  .mygoalsbutton-dark,
+  .mygoalsbutton-light {
     display: none;
-  }  
-  
+  }
+
   .todo-form {
     margin-bottom: 24px !important;
   }

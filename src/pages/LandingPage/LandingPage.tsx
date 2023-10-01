@@ -52,7 +52,7 @@ export const LandingPage = () => {
       <p className={`landing-about${darkModeStatus ? "-dark" : ""}`}>
         <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>Better Together </span>
       </p>
-      <p className="subheading">{t("langchoice")}</p>
+      <p className="subheading">{t("langChoice")}</p>
       <LanguagesList languages={Languages} navigationCallback={(path) => handleNavigateToFaq(path)} type="fragment" />
     </OnboardingLayout>
   );

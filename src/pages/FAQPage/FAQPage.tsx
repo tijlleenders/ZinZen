@@ -21,24 +21,24 @@ const customStyle = {
   fontSize: "0.875rem",
   fontWeight: 500,
   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-  margin: "14px auto 0"
+  margin: "14px auto 0",
 };
 
 export const FAQPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const QnA = [
-    { header: t("Qwhatiszinzen"), body: t("AnsWhatiszinzen") },
-    { header: t("Qiszinzenprivate"), body: t("Ansiszinzenprivate") },
-    { header: t("Qiszinzenexpensive"), body: t("Ansiszinzenexpensive") },
-    { header: t("Qtoogoodtobetrue"), body: t("Anstoogoodtobetrue") }
+    { header: t("qWhatIsZinZen"), body: t("ansWhatIsZinZen") },
+    { header: t("qIsZinZenPrivate"), body: t("AnsIsZinZenPrivate") },
+    { header: t("qIsZinZenExpensive"), body: t("ansIsZinZenExpensive") },
+    { header: t("qTooGoodToBeTrue"), body: t("ansTooGoodToBeTrue") },
   ];
 
   const handleClick = () => {
     localStorage.setItem("checkedIn", "yes");
     const invite = localStorage.getItem("pendingInvite");
     localStorage.removeItem("pendingInvite");
-    (vibrateWorks) ? navigator.vibrate(100) : null;
+    vibrateWorks ? navigator.vibrate(100) : null;
     if (invite && invite !== "none") {
       navigate(`/invite/${invite}`);
     } else {
@@ -56,20 +56,28 @@ export const FAQPage = () => {
           panels={QnA.map((ele) => ({
             header: ele.header,
             body: (
-              <p style={{ textAlign: "left", fontWeight: 500, color: "#000" }}>{
-                ele.body.split(" ")[0].includes("ZinZen") ? (
-                  <> ZinZen<sup>®</sup> {ele.body.split(" ").slice(1).join(" ")} </>
-                ) : ele.body
-              }
+              <p style={{ textAlign: "left", fontWeight: 500, color: "#000" }}>
+                {ele.body.split(" ")[0].includes("ZinZen") ? (
+                  <>
+                    {" "}
+                    ZinZen<sup>®</sup> {ele.body.split(" ").slice(1).join(" ")}{" "}
+                  </>
+                ) : (
+                  ele.body
+                )}
               </p>
-            )
+            ),
           }))}
         />
-        <button
-          style={customStyle}
-          type="button"
-          onClick={handleClick}
-        > {t("continue")} <img className="chevronRight theme-icon" src={chevronLeftIcon} alt="zinzen faq" style={{ marginLeft: 6, paddingBottom: 2 }} />
+        <button style={customStyle} type="button" onClick={handleClick}>
+          {" "}
+          {t("continue")}{" "}
+          <img
+            className="chevronRight theme-icon"
+            src={chevronLeftIcon}
+            alt="zinzen faq"
+            style={{ marginLeft: 6, paddingBottom: 2 }}
+          />
         </button>
       </div>
     </OnboardingLayout>

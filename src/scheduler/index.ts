@@ -20,9 +20,7 @@ export const initImplSlotsOfGoalId = (goalId: string) => {
   blockingSlots[goalId] = [[], [], [], [], [], [], [], []];
 };
 
-export const getWeekEndOfGoal = (goalId: string) => (
-  goalWeekEnd[goalId]
-);
+export const getWeekEndOfGoal = (goalId: string) => goalWeekEnd[goalId];
 
 export const setWeekEndOfGoal = (goalId: string, value: string) => {
   goalWeekEnd[goalId] = value;
@@ -35,7 +33,7 @@ export const pushTaskToMyDays = (selectedDay: number, slot: ISchedulerOutputSlot
 export const pushTaskToFlexibleArr = (validDays: string[], slot: ISchedulerOutputSlot) => {
   flexibleWeeklyGoals.push({
     slot: { ...slot },
-    validDays: [...validDays]
+    validDays: [...validDays],
   });
 };
 
@@ -61,9 +59,9 @@ export const getBlockingSlotsOfTheDayForGoalId = (goalId: string, day: number) =
 
 export const getAllDueTasks = () => ({ ...dueTaskHrs });
 
-export const getDueHrs = (goalId: string) => (dueTaskHrs[goalId]);
+export const getDueHrs = (goalId: string) => dueTaskHrs[goalId];
 
-export const getUsedBlockers = (goalId: string) => (usedBlockers[goalId]);
+export const getUsedBlockers = (goalId: string) => usedBlockers[goalId];
 
 export const initBlockers = (goalId: string, dayItr: number, value: number) => {
   usedBlockers[goalId] = { [dayItr]: [value] };
@@ -76,11 +74,21 @@ export const pushToImpossible = (day: number, slot: IFinalOutputSlot) => {
   impossible[day].tasks.push(slot);
 };
 
-export const createImpossibleSlot = (task: ISchedulerOutputSlot, tmpStartDate: Date, selectedDay: number, start: number, end: number) => {
+export const createImpossibleSlot = (
+  task: ISchedulerOutputSlot,
+  tmpStartDate: Date,
+  selectedDay: number,
+  start: number,
+  end: number,
+) => {
   const predictedDeadline = start + task.duration;
-  const actualDeadline = task.deadline < predictedDeadline && task.deadline < end ?
-    task.deadline : predictedDeadline > end ?
-      end > task.deadline ? task.deadline : end
+  const actualDeadline =
+    task.deadline < predictedDeadline && task.deadline < end
+      ? task.deadline
+      : predictedDeadline > end
+      ? end > task.deadline
+        ? task.deadline
+        : end
       : predictedDeadline;
 
   return {
@@ -91,7 +99,13 @@ export const createImpossibleSlot = (task: ISchedulerOutputSlot, tmpStartDate: D
   };
 };
 
-export const generateAndPushImpSlot = (task: ISchedulerOutputSlot, tmpStartDate: Date, selectedDay: number, start: number, end: number) => {
+export const generateAndPushImpSlot = (
+  task: ISchedulerOutputSlot,
+  tmpStartDate: Date,
+  selectedDay: number,
+  start: number,
+  end: number,
+) => {
   const impSlot = createImpossibleSlot(task, tmpStartDate, selectedDay, start, end);
   blockingSlots[task.goalid][selectedDay].push(impSlot);
 };
@@ -119,8 +133,10 @@ export const fillUpImpSlotsForGoalId = (goalId: string, lastDay: number) => {
             pushToImpossible(dayItr, {
               ...thisSlot,
               duration: dueHrs,
-              deadline: replaceHrInDateString(thisSlot.deadline,
-                getHrFromDateString(thisSlot.start) + (thisSlot.duration - dueHrs))
+              deadline: replaceHrInDateString(
+                thisSlot.deadline,
+                getHrFromDateString(thisSlot.start) + (thisSlot.duration - dueHrs),
+              ),
             });
             dueHrs = 0;
           } else {

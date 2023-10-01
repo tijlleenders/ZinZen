@@ -5,20 +5,22 @@ import { colorPalleteList } from "@src/utils";
 export const addStarterGoal = async (
   goalTitle: string,
   goalTags: {
-    habit: string | null,
-    duration: string | null,
-    start: string | null,
-    due: string | null,
-    afterTime: number | null,
-    beforeTime: number | null,
+    habit: string | null;
+    duration: string | null;
+    start: string | null;
+    due: string | null;
+    afterTime: number | null;
+    beforeTime: number | null;
   },
-  colorIndex: number
+  colorIndex: number,
 ) => {
-  await addGoal(createGoalObjectFromTags({
-    title: goalTitle,
-    ...goalTags,
-    goalColor: colorPalleteList[colorIndex],
-  }));
+  await addGoal(
+    createGoalObjectFromTags({
+      title: goalTitle,
+      ...goalTags,
+      goalColor: colorPalleteList[colorIndex],
+    }),
+  );
 };
 export const starterGoals = [
   {
@@ -31,7 +33,7 @@ export const starterGoals = [
       link: null,
       duration: "6",
       habit: "daily",
-    }
+    },
   },
   {
     title: "Breakfast 🥐🥣",
@@ -43,7 +45,7 @@ export const starterGoals = [
       link: null,
       duration: "1",
       habit: "daily",
-    }
+    },
   },
   {
     title: "Lunch 🥪",
@@ -55,7 +57,7 @@ export const starterGoals = [
       link: null,
       duration: "1",
       habit: "daily",
-    }
+    },
   },
   {
     title: "Dinner 🍽️",
@@ -67,7 +69,7 @@ export const starterGoals = [
       link: null,
       duration: "1",
       habit: "daily",
-    }
+    },
   },
   {
     title: "Walk 🚶🏽",
@@ -79,7 +81,7 @@ export const starterGoals = [
       link: null,
       duration: "1",
       habit: "daily",
-    }
+    },
   },
   {
     title: "Me time 🧘🏽😌",
@@ -91,6 +93,6 @@ export const starterGoals = [
       link: null,
       duration: "1",
       habit: "daily",
-    }
+    },
   },
 ];

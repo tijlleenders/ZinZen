@@ -17,35 +17,29 @@ A lot of things in life can be managed by making lists (of lists...) with constr
 See ... for some ideas.
 
 ## Getting started
-All documentation can be found in the folder [documentation](documentation/Readme.md).
-In this folder you will find a [technical know-how base](documentation/technical/Readme.md),
-as well as all the necessary [functional documentation](documentation/functional/Readme.md) to understand the concepts used in the ZinZen&reg; frontend.
 
-For a quick set-up guide see the [Development Setup page](documentation/technical/Development-Setup.md).
-
+We have simple [documentation](documentation/Readme.md).
 
 ## How to contribute?
+
 There are many ways to contribute... not only code!  
 https://opensource.guide/how-to-contribute/  
-Please mind the code of conduct.  
+Please mind the code of conduct.
 
 We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
 
-if Rust, WASM and scheduling algorithms are your domains of interest, please consider contributing to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
+If Rust, WASM and scheduling algorithms are your domains of interest, please consider contributing to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
 
 ## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
 
-- [Donate](https://donate.stripe.com/6oE4jK1iPcPT1m89AA)  
-- [Donate via Stripe](https://donate.stripe.com/6oE4jK1iPcPT1m89AA) or [GitHub sponsors](https://github.com/sponsors/tijlleenders)  
-- [Give anonymous feedback](https://zinzen.me/Feedback)  
-- ✨Star✨ this repo  
-- Tell a friend!  
-- Pick an issue on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4) and do let us know before you start working on it. ;)  
-
+- [Donate via Stripe](https://donate.stripe.com/6oE4jK1iPcPT1m89AA) or [GitHub sponsors](https://github.com/sponsors/tijlleenders)
+- [Give anonymous feedback](https://zinzen.me/Feedback)
+- ✨Star✨ this repo
+- Tell a friend!
+- Pick an issue on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4) and do let us know before you start working on it. ;)
 
 https://opensource.guide/how-to-contribute/  
-Please mind the code of conduct.  
-
+Please mind the code of conduct.
 
 ## Legal stuff
 

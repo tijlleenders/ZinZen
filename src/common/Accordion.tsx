@@ -5,9 +5,15 @@ import { ZAccordionProps } from "@src/Interfaces/ICommon";
 
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
-const ZAccordion : React.FC<ZAccordionProps> = ({ panels, style, showCount, defaultActiveKey }) => (
+const ZAccordion: React.FC<ZAccordionProps> = ({ panels, style, showCount, defaultActiveKey }) => (
   <Collapse
-    expandIcon={({ isActive }) => (<img alt="zinzen about" className={`${isActive ? "chevronDown" : "chevronRight"} theme-icon`} src={chevronLeftIcon} />)}
+    expandIcon={({ isActive }) => (
+      <img
+        alt="zinzen about"
+        className={`${isActive ? "chevronDown" : "chevronRight"} theme-icon`}
+        src={chevronLeftIcon}
+      />
+    )}
     defaultActiveKey={defaultActiveKey}
     style={style}
     accordion
@@ -18,7 +24,9 @@ const ZAccordion : React.FC<ZAccordionProps> = ({ panels, style, showCount, defa
         style={{ flexDirection: "row-reverse" }}
         // @ts-ignore
         header={`${panel.header} ${showCount ? `(${panel.body?.length})` : ""}`}
-      > {panel.body}
+      >
+        {" "}
+        {panel.body}
       </Collapse.Panel>
     ))}
   </Collapse>

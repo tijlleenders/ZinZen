@@ -15,3 +15,22 @@ export function replaceUrlsWithText(inputString: string) {
 
   return { replacedString, urlsWithIndexes };
 }
+
+export function summarizeUrl(url: string) {
+  const match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/im);
+  if (match) {
+    const domain = match[1];
+    const domainParts = domain.split(".");
+    if (domainParts.length > 1) {
+      const extractedDomain = domainParts[domainParts.length - 2];
+      if (extractedDomain.length > 7) {
+        const firstPart = extractedDomain.substring(0, 4);
+        const lastPart = extractedDomain.slice(-3);
+        return `${firstPart}..${lastPart}`;
+      }
+      return extractedDomain;
+    }
+    return "";
+  }
+  return "";
+}

@@ -8,16 +8,18 @@ import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal";
 
 interface GoalsListProps {
-  goals: GoalItem[],
+  goals: GoalItem[];
   showActions: {
     open: string;
     click: number;
-  },
-  setGoals: React.Dispatch<React.SetStateAction<GoalItem[]>>
-  setShowActions: React.Dispatch<React.SetStateAction<{
-    open: string;
-    click: number;
-  }>>,
+  };
+  setGoals: React.Dispatch<React.SetStateAction<GoalItem[]>>;
+  setShowActions: React.Dispatch<
+    React.SetStateAction<{
+      open: string;
+      click: number;
+    }>
+  >;
 }
 
 const GoalsList: React.FC<GoalsListProps> = ({ goals, showActions, setGoals, setShowActions }) => {
@@ -50,7 +52,7 @@ const GoalsList: React.FC<GoalsListProps> = ({ goals, showActions, setGoals, set
     <>
       {goals.map((goal: GoalItem, index: number) => (
         <>
-          { showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} /> }
+          {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
           <DragAndDrop
             thisItem={goal.id === draggedItem?.id}
             index={index}
@@ -59,11 +61,7 @@ const GoalsList: React.FC<GoalsListProps> = ({ goals, showActions, setGoals, set
             handleDragEnter={handleDragEnter}
             handleDragEnd={handleDragEnd}
           >
-            <MyGoal
-              goal={goal}
-              showActions={showActions}
-              setShowActions={setShowActions}
-            />
+            <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} />
           </DragAndDrop>
         </>
       ))}

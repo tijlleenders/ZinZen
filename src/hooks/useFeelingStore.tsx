@@ -11,7 +11,7 @@ function useFeelingStore() {
   const [showAddFeelingsModal, setShowAddFeelingsModal] = useRecoilState(displayAddFeeling);
 
   const handleLocationChange = () => {
-    const locationState : ILocationState = location.state || {};
+    const locationState: ILocationState = location.state || {};
     if (showAddFeelingsModal) {
       setShowAddFeelingsModal(false);
     } else if (locationState.displayAddFeeling) {
@@ -30,7 +30,7 @@ function useFeelingStore() {
   }, [location]);
 
   return {
-    handleAddFeeling
+    handleAddFeeling,
   };
 }
 

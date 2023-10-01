@@ -1,15 +1,15 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
-import { darkModeState } from "@src/store";
 import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
 import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 import useScheduler from "@src/hooks/useScheduler";
+import { selectedMyTimeView } from "@src/store";
 
 import "./MyTimePage.scss";
 import "@translations/i18n";
@@ -17,8 +17,7 @@ import "@translations/i18n";
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
-  const darkModeStatus = useRecoilValue(darkModeState);
-  const [dailyView, setDailyView] = useState(false);
+  const [currentView, setCurrentView] = useRecoilState(selectedMyTimeView);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
 
   const handleShowTasks = (dayName: string) => {
@@ -59,7 +58,7 @@ export const MyTimePage = () => {
             </h3>
             <div className="MyTime-expand-btw">
               <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-                {freeHours>0 && <p>{`${freeHours} hours free`}</p>}
+                {freeHours > 0 && <p>{`${freeHours} hours free`}</p>}
               </div>
             </div>
           </div>
@@ -79,21 +78,21 @@ export const MyTimePage = () => {
   };
 
   return (
-    <AppLayout title="My Time">
+    <AppLayout title="myTime">
       <SubHeader
-        showLeftNav={!dailyView}
-        showRightNav={dailyView}
-        title={dailyView ? "Today" : "This Week"}
+        showLeftNav={currentView === "thisWeek"}
+        showRightNav={currentView === "today"}
+        title={currentView === "today" ? "Today" : "This Week"}
         leftNav={() => {
-          setDailyView(!dailyView);
+          setCurrentView("today");
         }}
         rightNav={() => {
-          setDailyView(!dailyView);
+          setCurrentView("thisWeek");
         }}
       />
       {getDayComponent("Today")}
-      {!dailyView && getDayComponent("Tomorrow")}
-      {!dailyView &&
+      {currentView === "thisWeek" && getDayComponent("Tomorrow")}
+      {currentView === "thisWeek" &&
         [...Array(6).keys()].map((i) => {
           const thisDay = new Date(today);
           thisDay.setDate(thisDay.getDate() + i + 1);

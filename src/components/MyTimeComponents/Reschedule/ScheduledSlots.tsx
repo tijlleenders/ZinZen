@@ -46,8 +46,9 @@ const ScheduledSlots = ({
           }}
           type="button"
           key={uuidv4()}
-          className={`slot-card ${index > selectedHr && index < targetDuration + selectedHr ? "booked" : ""} ${index === selectedHr ? "selected" : ""
-            }`}
+          className={`slot-card ${index > selectedHr && index < targetDuration + selectedHr ? "booked" : ""} ${
+            index === selectedHr ? "selected" : ""
+          }`}
         >
           <p style={index === selectedHr ? { color: !darkModeStatus ? "#CD6E51" : "#9E9E9E" } : {}}>
             {index}
