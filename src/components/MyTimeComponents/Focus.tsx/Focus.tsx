@@ -7,7 +7,7 @@ import { Progress } from "antd";
 import "./focus.scss";
 import { formatTimeDisplay } from "@src/utils";
 
-export const FocusPage = () => {
+export const Focus = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const [initialTime, setInitialTime] = useState(25 * 60);
@@ -54,12 +54,12 @@ export const FocusPage = () => {
   };
 
   return (
-    <div className="FocusPage">
+    <div className="Focus">
       <Progress
         className={`progress-${darkModeStatus ? "dark" : ""}`}
         size={200}
-        strokeColor={darkModeStatus ? "white" : "var(--header-color)"}
-        trailColor="var(--selection-color)"
+        strokeColor="var(--icon-grad-2)"
+        trailColor={darkModeStatus ? "#7e7e7e" : "var(--secondary-background)"}
         type="circle"
         percent={percentage}
         success={{ percent: 0, strokeColor: darkModeStatus ? "white" : "black" }}
