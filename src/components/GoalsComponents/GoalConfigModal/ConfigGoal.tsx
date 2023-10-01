@@ -83,14 +83,14 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   });
 
   const isTitleEmpty = () => {
-    if (title.length === 0) {
+    if (title.length === 0 || title.trim() === "") {
       setShowToast({
         open: true,
         message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`,
         extra: "",
       });
     }
-    return title.length === 0;
+    return title.length === 0 || title.trim() === "";
   };
 
   const getFinalTags = () => ({
@@ -109,14 +109,14 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   });
 
   const updateThisGoal = async () => {
-    if (!showUpdateGoal || isTitleEmpty()) {
+    if (!showUpdateGoal) {
       return;
     }
     await modifyGoal(goal.id, getFinalTags(), title, colorPalleteList[colorIndex], subGoalsHistory.length);
   };
 
   const addThisGoal = async () => {
-    if (!showAddGoal || isTitleEmpty()) {
+    if (!showAddGoal) {
       return;
     }
     const { parentGoal } = await createGoal(
@@ -137,6 +137,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   };
 
   const handleSave = async () => {
+    if (isTitleEmpty()) {
+      setShowToast({
+        open: true,
+        message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`,
+        extra: "",
+      });
+      return;
+    }
+
     if (showAddGoal?.open) {
       await addThisGoal();
     } else if (showUpdateGoal?.open) {
