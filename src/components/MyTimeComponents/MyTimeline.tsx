@@ -16,15 +16,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
-import {
-  darkModeState,
-  displayToast,
-  lastAction,
-  openDevMode,
-  selectedMyTimeView,
-  isActiveState,
-  focusTaskTitle,
-} from "@src/store";
+import { darkModeState, displayToast, lastAction, openDevMode, selectedMyTimeView, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
@@ -156,10 +148,10 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     }
     return true;
   });
-  if (currentActiveTask.length) {
-    setTaskTitle(currentActiveTask[0]?.title);
+  if (currentActiveTask[0] === undefined) {
+    setTaskTitle("No Scheduled Tasks");
   } else {
-    setTaskTitle("No Scheduled Task");
+    setTaskTitle(currentActiveTask[0]?.title);
   }
   console.log("currentActiveTask", currentActiveTask[0]);
   return (
@@ -179,14 +171,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
           const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
-          // const startHour = startTime ? parseInt(startTime, 10) : null;
-          // const endHour = endTime ? parseInt(endTime, 10) : null;
-          // const isActive = startHour !== null && endHour !== null && currentHour >= startHour && currentHour < endHour;
-          // const isActiveText = isActive ? task.title : "";
-          // if (isActive) {
-          //   setTaskTitle(isActiveText);
-          // }
-          // console.log(isActiveText);
           return (
             <button
               className={`${day === "Today" && markDone ? "completedTask" : ""}`}
