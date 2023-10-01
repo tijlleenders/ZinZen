@@ -3,9 +3,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import correct from "@assets/images/correct.svg";
-import share from "@assets/images/share.svg";
-import deleteIcon from "@assets/images/deleteIcon.svg";
 import { handshakeIcon } from "@src/assets";
 
 import useGoalStore from "@src/hooks/useGoalStore";
@@ -108,7 +105,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
         }}
       >
-        <ActionDiv label={t(isInboxOpen ? "Rmove From here" : "Delete")} icon={deleteIcon} />
+        <ActionDiv label={t(isInboxOpen ? "Rmove From here" : "Delete")} icon="Delete" />
       </div>
       {((isSharedGoal && goal.parentGoalId === "root") || !isSharedGoal) && (
         <div
@@ -130,7 +127,10 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
             }
           }}
         >
-          <ActionDiv label={t(isSharedGoal ? "Collaborate" : "Share")} icon={isSharedGoal ? handshakeIcon : share} />
+          <ActionDiv
+            label={t(isSharedGoal ? "Collaborate" : "Share")}
+            icon={isSharedGoal ? "Collaborate" : "SingleAvatar"}
+          />
         </div>
       )}
       {!isSharedGoal && (
@@ -141,7 +141,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
             await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
           }}
         >
-          <ActionDiv label={t("Done")} icon={correct} />
+          <ActionDiv label={t("Done")} icon="Correct" />
         </div>
       )}
     </Modal>

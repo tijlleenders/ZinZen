@@ -1,7 +1,6 @@
 import React from "react";
 import { Row, Col } from "antd";
-import { useRecoilValue } from "recoil";
-import { darkModeState } from "@src/store";
+import Icon from "@src/common/Icon";
 
 interface IActionDivProps {
   label: string;
@@ -9,16 +8,10 @@ interface IActionDivProps {
 }
 
 const ActionDiv: React.FC<IActionDivProps> = ({ icon, label }) => {
-  const darkModeStatus = useRecoilValue(darkModeState);
   return (
     <Row>
       <Col span={6}>
-        <img
-          alt="delete goal"
-          src={icon}
-          className={`${darkModeStatus ? "dark-svg" : ""}`}
-          style={{ cursor: "pointer" }}
-        />
+        <Icon active title={icon} />
       </Col>
       <Col span={18}>
         <p>{label}</p>

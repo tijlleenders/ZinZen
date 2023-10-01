@@ -77,7 +77,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   }, [location]);
 
   return (
-    <div className="header" style={{ background: darkModeStatus ? "var(--selection-color)" : "transparent" }}>
+    <div className="header">
       {displaySearch && debounceSearch ? (
         <Search debounceSearch={debounceSearch} />
       ) : (

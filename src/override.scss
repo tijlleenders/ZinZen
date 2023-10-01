@@ -3,17 +3,17 @@
   .checkbox {
     .ant-radio-checked .ant-radio-inner,
     .ant-checkbox-checked .ant-checkbox-inner {
-      border-color: #cd6e51 !important ;
-      background-color: #cd6e51 !important;
+      border: 2px solid var(--Linear, var(--icon-grad-1)) !important ;
+      background-color: var(--icon-grad-1) !important;
     }
     .ant-radio:hover .ant-radio-inner,
     .ant-checkbox:hover .ant-checkbox-inner,
     .ant-checkbox-checked:after {
-      border-color: #cd6e51 !important;
+      border: 2px solid var(--Linear, var(--icon-grad-1)) !important ;
     }
     .ant-radio-checked .ant-radio-inner:focus,
     .ant-checkbox-checked .ant-checkbox-inner:focus {
-      border-color: #cd6e51 !important;
+      border: 2px solid var(--Linear, var(--icon-grad-1)) !important ;
     }
   }
 }
@@ -35,6 +35,10 @@
       border-color: var(--selection-color) !important;
     }
   }
+}
+
+.ant-modal-mask {
+  background-color: rgba(87, 87, 87, 0.4) !important;
 }
 
 /* Accordion */

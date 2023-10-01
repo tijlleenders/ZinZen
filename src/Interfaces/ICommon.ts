@@ -6,6 +6,11 @@ export interface IHeader {
   debounceSearch?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
+export interface IBackdrop {
+  opacity: number;
+  onClick: () => void;
+  customStyle?: React.CSSProperties;
+}
 export interface ZAccordionProps {
   style: React.CSSProperties | undefined;
   panels: { header: string; body: ReactNode | ReactNode[] }[];
