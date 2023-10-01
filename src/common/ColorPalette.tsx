@@ -21,7 +21,6 @@ const ColorPalette: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }
         }
       }}
     >
-      {" "}
       {colorIndex === index ? "✔" : ""}
     </button>
   );

@@ -41,7 +41,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         position: "fixed",
         borderRadius: "50%",
         border: "none",
-        background: "var(--primary-background)",
+        background: "var(--selection-color)",
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
         width: 56,
         height: 56,
@@ -50,7 +50,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       }}
     >
       <img
-        className={`global-addBtn-img ${themeSelection && !darkModeStatus ? "theme-selector-option" : ""}`}
+        className="global-addBtn-img"
         src={themeSelection ? correct : GlobalAddIcon}
         alt="add goal | add feeling | add group"
       />

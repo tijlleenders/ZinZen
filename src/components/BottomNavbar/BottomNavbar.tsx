@@ -4,19 +4,14 @@ import { goalsHistory } from "@src/store/GoalsState";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import backIcon from "@assets/images/backIcon.svg";
-import goalsIcon from "@assets/images/goalsIcon.svg";
-import calendarIcon from "@assets/images/calendarIcon.svg";
-import journalIcon from "@assets/images/journalIcon.svg";
-
 import { darkModeState } from "@src/store";
-import { moonIcon, sunIcon } from "@src/assets";
 import { themeSelectionMode, themeState } from "@src/store/ThemeState";
 
 import Backdrop from "@src/common/Backdrop";
 import GlobalAddBtn from "@components/GlobalAddBtn";
 
 import "./BottomNavbar.scss";
+import Icon from "@src/common/Icon";
 
 const BottomNavbar = ({ title }: { title: string }) => {
   const { t } = useTranslation();
@@ -32,10 +27,10 @@ const BottomNavbar = ({ title }: { title: string }) => {
 
   const themeChange = (nav: -1 | 1) => {
     let choice = theme[darkModeStatus ? "dark" : "light"] + nav;
-    if (choice === 10) {
+    if (choice >= 8) {
       choice = 1;
     } else if (choice === 0) {
-      choice = 9;
+      choice = 8;
     }
     const newTheme = { ...theme, [darkModeStatus ? "dark" : "light"]: choice };
     localStorage.setItem("theme", JSON.stringify(newTheme));
@@ -84,12 +79,16 @@ const BottomNavbar = ({ title }: { title: string }) => {
           }}
           className={`bottom-nav-item ${currentPage === "" && !themeSelection ? "active" : ""}`}
         >
-          <img
-            className={`secondary-icon ${themeSelection && !darkModeStatus ? "theme-selector-option" : ""}`}
-            style={{ width: 24 }}
-            src={themeSelection ? backIcon : calendarIcon}
-            alt="My Time"
-          />
+          <div
+            style={{
+              transform: themeSelection ? "scaleX(-1)" : "none",
+            }}
+          >
+            <Icon
+              active={currentPage === "" && !themeSelection}
+              title={themeSelection ? "ArrowIcon" : "CalendarIcon"}
+            />
+          </div>
           {themeSelection ? <p>Prev</p> : <p>{t("Schedule")}</p>}
         </button>
         <button
@@ -99,11 +98,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
           }}
           className={`bottom-nav-item ${currentPage === "MyGoals" || themeSelection ? "active" : ""}`}
         >
-          <img
-            className="secondary-icon"
-            src={themeSelection ? (darkModeStatus ? moonIcon : sunIcon) : goalsIcon}
-            alt="My Goals"
-          />
+          <Icon active={currentPage === "MyGoals" || themeSelection} title="GoalsIcon" />
           {themeSelection ? <p>Switch Mode</p> : <p>{t("Goals")}</p>}
         </button>
         <button
@@ -112,14 +107,15 @@ const BottomNavbar = ({ title }: { title: string }) => {
             if (themeSelection) themeChange(1);
             else handleClick("MyJournal");
           }}
-          style={{ gap: 10 }}
+          style={{
+            paddingTop: 3,
+            gap: 10,
+          }}
           className={`bottom-nav-item ${currentPage === "MyJournal" && !themeSelection ? "active" : ""}`}
         >
-          <img
-            style={{ transform: themeSelection ? "scaleX(-1)" : "none", paddingTop: 3 }}
-            className={`secondary-icon ${themeSelection && !darkModeStatus ? "theme-selector-option" : ""}`}
-            src={themeSelection ? backIcon : journalIcon}
-            alt="My Journal"
+          <Icon
+            active={currentPage === "MyJournal" && !themeSelection}
+            title={themeSelection ? "ArrowIcon" : "JournalIcon"}
           />
           {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
           {title !== "myTime" && title !== "Inbox" && <GlobalAddBtn add={title} />}
