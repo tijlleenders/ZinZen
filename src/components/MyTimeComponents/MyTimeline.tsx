@@ -4,7 +4,7 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import archiveTune from "@assets/archive.mp3";
 import forgetTune from "@assets/forget.mp3";
@@ -16,7 +16,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
-import { darkModeState, displayToast, lastAction, openDevMode } from "@src/store";
+import { darkModeState, displayToast, lastAction, openDevMode, selectedMyTimeView } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
@@ -48,6 +48,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
+  const [currentView, setCurrentView] = useRecoilState(selectedMyTimeView);
 
   const [showScheduled, setShowScheduled] = useState(true);
 
@@ -98,11 +99,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         await forgetSound.play();
         setLastAction("TaskSkipped");
       } else if (actionName === "Focus") {
-        navigate("/Focus", {
+        navigate("/", {
           state: {
             taskTitle: task.title,
           },
-        });
+        })
+        setCurrentView("focus");
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });

@@ -13,9 +13,13 @@ import { selectedMyTimeView } from "@src/store";
 
 import "./MyTimePage.scss";
 import "@translations/i18n";
+import { useLocation } from "react-router-dom";
+import { FocusPage } from "@components/MyTimeComponents/Focus.tsx/Focus";
 
 export const MyTimePage = () => {
   const today = new Date();
+  const location = useLocation();
+  const taskTitle = location.state?.taskTitle || "Task";
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
   const [currentView, setCurrentView] = useRecoilState(selectedMyTimeView);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
@@ -80,17 +84,17 @@ export const MyTimePage = () => {
   return (
     <AppLayout title="myTime">
       <SubHeader
-        showLeftNav={currentView === "thisWeek"}
-        showRightNav={currentView === "today"}
-        title={currentView === "today" ? "Today" : "This Week"}
+        showLeftNav={currentView === "thisWeek" || currentView === "today"}
+        showRightNav={currentView === "today" || currentView === "focus"}
+        title={currentView === "today" ? "Today" : currentView === "thisWeek" ? "This Week" : `${taskTitle}`}
         leftNav={() => {
-          setCurrentView("today");
+          setCurrentView(currentView === "thisWeek" ? "today" : "focus");
         }}
         rightNav={() => {
-          setCurrentView("thisWeek");
+          setCurrentView(currentView === "today" ? "thisWeek" : "today");
         }}
       />
-      {getDayComponent("Today")}
+      {currentView === "today" && getDayComponent("Today")}
       {currentView === "thisWeek" && getDayComponent("Tomorrow")}
       {currentView === "thisWeek" &&
         [...Array(6).keys()].map((i) => {
@@ -101,6 +105,7 @@ export const MyTimePage = () => {
           }
           return null;
         })}
+      {currentView === "focus" && <FocusPage />}
       <Reschedule />
     </AppLayout>
   );

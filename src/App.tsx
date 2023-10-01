@@ -12,7 +12,7 @@ import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
-import { FocusPage } from "@pages/FocusPage.tsx/FocusPage";
+import { FocusPage } from "@components/MyTimeComponents/Focus.tsx/Focus";
 import GoalsPage from "@pages/GoalsPage/GoalsPage";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
