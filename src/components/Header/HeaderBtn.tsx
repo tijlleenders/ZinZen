@@ -1,7 +1,7 @@
 import React from "react";
-import { openInbox, displayToast } from "@src/store";
+import { openInbox, displayToast, darkModeState } from "@src/store";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import Settings from "./Settings";
 
 const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
@@ -9,6 +9,7 @@ const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
   const navigate = useNavigate();
   const isInboxOpen = useRecoilValue(openInbox);
   const setShowToast = useSetRecoilState(displayToast);
+  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const handleClick = async () => {
     if (alt === "zinzen hints") {
@@ -28,7 +29,13 @@ const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
         }
         navigate("/MyGoals", { state: { ...newState, goalsHistory: [], isInboxOpen: true } });
       }
-    }
+    } else if (alt === "light mode") {
+      localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
+      setDarkModeStatus(!darkModeStatus);
+    } else if (alt == "dark mode") {
+      localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
+      setDarkModeStatus(!darkModeStatus);
+    } 
   };
 
   return (
