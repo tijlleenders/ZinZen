@@ -78,9 +78,8 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
     handlePopState();
   }, [location]);
 
-    // Calculate whether it's nighttime (between 18:00 and 6:00)
-    const currentHour = new Date().getHours();
-    const isNighttime = currentHour >= 18 || currentHour < 6;
+  const currentHour = new Date().getHours();
+  const isNighttime = currentHour >= 18 || currentHour < 6;
 
   return (
     <div className="header">
@@ -110,7 +109,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
             {isNighttime && !darkModeStatus ? (
               <HeaderBtn path={darkModeIcon} alt="dark mode" />
             ) : !isNighttime && darkModeStatus ? (
-                <HeaderBtn path={lightModeIcon} alt="light mode" />
+              <HeaderBtn path={lightModeIcon} alt="light mode" />
             ) : null}
             {["myGoals", "Inbox"].includes(title) && !isInboxOpen && (
               <HeaderBtn path={searchIcon} alt="zinzen search" />
