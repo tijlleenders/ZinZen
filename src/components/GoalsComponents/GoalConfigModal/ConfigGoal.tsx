@@ -158,13 +158,13 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   };
 
   const handleSave = async () => {
-    
     if (isTitleEmpty()) {
       setShowToast({
         open: true,
         message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`,
         extra: "",
       });
+      setTitle("");
       return;
     }
 
@@ -342,8 +342,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               start
                 ? moment(start).format("YYYY-MM-DD")
                 : goal?.createdAt
-                  ? moment(goal.createdAt).format("YYYY-MM-DD")
-                  : today
+                ? moment(goal.createdAt).format("YYYY-MM-DD")
+                : today
             }
             timeValue={startTime}
           />
