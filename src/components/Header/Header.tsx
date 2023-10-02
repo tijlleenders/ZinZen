@@ -7,6 +7,8 @@ import { inboxIcon, openEnvelopeIcon } from "@assets/index";
 import zinzenDarkLogo from "@assets/images/zinzenDarkLogo.svg";
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
 import searchIcon from "@assets/images/searchIcon.svg";
+import darkModeIcon from "@assets/images/darkModeIcon.svg";
+import lightModeIcon from "@assets/images/lightModeIcon.svg";
 
 import {
   darkModeState,
@@ -76,6 +78,9 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
     handlePopState();
   }, [location]);
 
+  const currentHour = new Date().getHours();
+  const isNighttime = currentHour >= 18 || currentHour < 6;
+
   return (
     <div className="header">
       {displaySearch && debounceSearch ? (
@@ -101,6 +106,11 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
             </h6>
           </div>
           <div className="header-items">
+            {isNighttime && !darkModeStatus ? (
+              <HeaderBtn path={darkModeIcon} alt="dark mode" />
+            ) : !isNighttime && darkModeStatus ? (
+              <HeaderBtn path={lightModeIcon} alt="light mode" />
+            ) : null}
             {["myGoals", "Inbox"].includes(title) && !isInboxOpen && (
               <HeaderBtn path={searchIcon} alt="zinzen search" />
             )}

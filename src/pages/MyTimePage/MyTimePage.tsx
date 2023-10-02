@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
+import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
+
 import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
@@ -80,17 +82,17 @@ export const MyTimePage = () => {
   return (
     <AppLayout title="myTime">
       <SubHeader
-        showLeftNav={currentView === "thisWeek"}
-        showRightNav={currentView === "today"}
-        title={currentView === "today" ? "Today" : "This Week"}
+        showLeftNav={currentView === "thisWeek" || currentView === "today"}
+        showRightNav={currentView === "today" || currentView === "focus"}
+        title={currentView === "today" ? "Today" : currentView === "thisWeek" ? "This Week" : "Focus"}
         leftNav={() => {
-          setCurrentView("today");
+          setCurrentView(currentView === "thisWeek" ? "today" : "focus");
         }}
         rightNav={() => {
-          setCurrentView("thisWeek");
+          setCurrentView(currentView === "today" ? "thisWeek" : "today");
         }}
       />
-      {getDayComponent("Today")}
+      {currentView === "today" && getDayComponent("Today")}
       {currentView === "thisWeek" && getDayComponent("Tomorrow")}
       {currentView === "thisWeek" &&
         [...Array(6).keys()].map((i) => {
@@ -101,6 +103,7 @@ export const MyTimePage = () => {
           }
           return null;
         })}
+      {currentView === "focus" && <Focus />}
       <Reschedule />
     </AppLayout>
   );

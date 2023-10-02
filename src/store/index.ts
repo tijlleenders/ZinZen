@@ -90,4 +90,14 @@ export const selectedMyTimeView = atom({
   default: "today",
 });
 
+export const currentScheduledTask = atom({
+  key: "currentScheduledTask",
+  default: "",
+});
+
+export const focusTaskTitle = atom({
+  key: "focusTaskTitle",
+  default: "No Task Scheduled",
+});
+
 export { darkModeState, languageSelectionState };
