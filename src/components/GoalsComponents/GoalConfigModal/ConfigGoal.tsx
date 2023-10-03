@@ -87,14 +87,14 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   });
 
   const isTitleEmpty = () => {
-    if (title.length === 0) {
+    if (title.length === 0 || title.trim() === "") {
       setShowToast({
         open: true,
         message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`,
         extra: "",
       });
     }
-    return title.length === 0;
+    return title.length === 0 || title.trim() === "";
   };
 
   const getFinalTags = () => ({
@@ -113,7 +113,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   });
 
   const updateThisGoal = async () => {
-    if (!showUpdateGoal || isTitleEmpty()) {
+    if (!showUpdateGoal) {
       return;
     }
     const goalColor = colorPalleteList[colorIndex];
@@ -125,7 +125,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   };
 
   const addThisGoal = async () => {
-    if (!showAddGoal || isTitleEmpty()) {
+    if (!showAddGoal) {
       return;
     }
     if (state.displayPartner && partner && state.goalsHistory) {
@@ -158,6 +158,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   };
 
   const handleSave = async () => {
+    if (isTitleEmpty()) {
+      setShowToast({
+        open: true,
+        message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`,
+        extra: "",
+      });
+      setTitle("");
+      return;
+    }
+
     if (showAddGoal?.open) {
       await addThisGoal();
     } else if (showUpdateGoal?.open) {
@@ -332,8 +342,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               start
                 ? moment(start).format("YYYY-MM-DD")
                 : goal?.createdAt
-                  ? moment(goal.createdAt).format("YYYY-MM-DD")
-                  : today
+                ? moment(goal.createdAt).format("YYYY-MM-DD")
+                : today
             }
             timeValue={startTime}
           />
