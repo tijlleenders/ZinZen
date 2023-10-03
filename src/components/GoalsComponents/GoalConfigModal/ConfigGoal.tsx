@@ -39,7 +39,7 @@ const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleCh
 );
 
 const roundOffHours = (hrsValue: string) => {
-  return hrsValue === "" ? "" : String(Math.max(Math.round(Number(hrsValue)), 0));
+  return hrsValue === "" ? "" : String(Math.min(Math.max(Math.round(Number(hrsValue)), 0), 99));
 };
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
