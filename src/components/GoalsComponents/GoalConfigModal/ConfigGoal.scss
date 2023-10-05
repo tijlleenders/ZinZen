@@ -22,9 +22,15 @@
   .ant-select-selection-item {
     color: black;
   }
+  .header-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .header-title > input {
     font-size: 1.5rem;
     font-weight: 500;
+    width: 100%;
   }
   .action-btn {
     padding: 8px 18px;
