@@ -57,18 +57,10 @@ test.describe("Goal Sharing Feature", () => {
     await userOnePage.getByRole("button", { name: "U", exact: true }).click();
     await userOnePage.waitForSelector(".ant-notification-notice");
   });
-
   test("check inbox in user 2", async () => {
-    await userTwoPage.getByRole("button", { name: "Schedule" }).click();
-    await userTwoPage.waitForTimeout(2000);
-    await userTwoPage.reload();
-    await userTwoPage.waitForTimeout(2000);
     await userTwoPage.getByRole("button", { name: "Goals" }).click();
-    await userTwoPage.getByRole("button", { name: "Schedule" }).click();
     await userTwoPage.reload();
-    await userTwoPage.getByRole("button", { name: "Goals" }).click();
     await userTwoPage.getByRole("img", { name: "zinzen inbox" }).click();
-
     await expect(userTwoPage.locator(".user-goal-main")).toBeVisible();
   });
 });
