@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { useEffect } from "react";
 
-import { lastAction, displayConfirmation, openDevMode, languageSelectionState } from "@src/store";
+import { lastAction, displayConfirmation, openDevMode, languageSelectionState, displayInbox } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
 import { GoalItem } from "@src/models/GoalItem";
 import { checkMagicGoal } from "@src/api/GoalsAPI";
@@ -17,6 +17,7 @@ const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
 
 function useApp() {
+  const setShowInbox = useSetRecoilState(displayInbox);
   const language = useRecoilValue(languageSelectionState);
   const isLanguageChosen = language !== "No language chosen.";
 
@@ -46,12 +47,19 @@ function useApp() {
                 const rootGoal = goalWithChildrens[0];
                 rootGoal.participants.push({ name: contactItem.name, relId, type: "sharer" });
                 addSharedWMGoal(rootGoal)
-                  .then(() => {
-                    goalWithChildrens.slice(1).forEach((goal) => {
-                      addSharedWMGoal(goal).catch((err) => console.log(`Failed to add in inbox ${goal.title}`, err));
-                    });
+                  .then(async () => {
+                    await Promise.all(
+                      goalWithChildrens
+                        .slice(1)
+                        .map((goal) =>
+                          addSharedWMGoal(goal).catch((err) =>
+                            console.log(`Failed to add in inbox ${goal.title}`, err),
+                          ),
+                        ),
+                    );
                   })
                   .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
+                setShowInbox(true);
               } else if (ele.type === "sharer") {
                 handleIncomingChanges(ele).then(() => setLastAction("goalNewUpdates"));
               }
