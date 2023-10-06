@@ -1,13 +1,7 @@
 import { Page } from "@playwright/test";
 
 export async function shareGoalPrivately(userOnePage: Page) {
-  await userOnePage.locator(".goal-tile").first().click();
-  await userOnePage
-    .locator("div")
-    .filter({ hasText: /^ActionsEdit$/ })
-    .locator("div")
-    .nth(2)
-    .click();
+  await userOnePage.locator(".goal-dd-inner").first().click();
   await userOnePage
     .locator("div")
     .filter({ hasText: /^Share$/ })
