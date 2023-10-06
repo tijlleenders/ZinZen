@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { darkModeState } from "@src/store";
 import { themeSelectionMode, themeState } from "@src/store/ThemeState";
+import BottomNavLayout from "@src/layouts/BottomNavLayout";
 
 import Backdrop from "@src/common/Backdrop";
 import GlobalAddBtn from "@components/GlobalAddBtn";
@@ -70,7 +71,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
           }}
         />
       )}
-      <div className={`bottom-navbar${darkModeStatus ? "-dark" : ""}`}>
+      <BottomNavLayout>
         <button
           type="button"
           onClick={() => {
@@ -120,7 +121,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
           {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
           {title !== "myTime" && title !== "Inbox" && title !== "Focus" && <GlobalAddBtn add={title} />}
         </button>
-      </div>
+      </BottomNavLayout>
     </>
   );
 };
