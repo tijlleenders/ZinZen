@@ -8,9 +8,8 @@ export const getPartnerByRelId = async (relId: string) => {
   return partner.length > 0 ? partner[0] : null;
 };
 
-export const getMyPartner = async () => {
-  const partner: PartnerItem[] = await db.partnersCollection.toArray();
-  return partner.length > 0 ? partner[0] : null;
+export const getPartnersCount = async () => {
+  return db.partnersCollection.count();
 };
 
 export const createPartner = async (relId: string, name: string) => {
