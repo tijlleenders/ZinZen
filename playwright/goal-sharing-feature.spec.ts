@@ -2,7 +2,7 @@
 import { test, expect, Page } from "@playwright/test";
 import { shareGoalPrivately } from "./lib/testUtils";
 
-const url = "https://n65hkx5nehmmkzy5wp6ijyarka0qujrj.lambda-url.eu-west-1.on.aws/";
+const apiServerUrl = "https://n65hkx5nehmmkzy5wp6ijyarka0qujrj.lambda-url.eu-west-1.on.aws/";
 
 test.describe.configure({ mode: "serial" });
 
@@ -11,7 +11,7 @@ test.describe("Goal Sharing Feature", () => {
   let userTwoContext;
   let userOnePage: Page;
   let userTwoPage: Page;
-  let link: string;
+  let inviationLink: string;
 
   test.beforeAll(async ({ browser }) => {
     userOneContext = await browser.newContext({
@@ -26,7 +26,7 @@ test.describe("Goal Sharing Feature", () => {
   });
 
   test("add contact in user 1", async () => {
-    await userOnePage.goto("http://localhost:3000/");
+    await userOnePage.goto("http://127.0.0.1:3000/");
     await userOnePage.getByRole("button", { name: "Goals" }).click();
     await shareGoalPrivately(userOnePage);
     await userOnePage.getByPlaceholder("Name").click();
@@ -36,9 +36,9 @@ test.describe("Goal Sharing Feature", () => {
       userOnePage.waitForResponse(
         (res) =>
           res.status() === 200 &&
-          res.url().includes(url) &&
-          res.body().then((b) => {
-            return b.includes("relId");
+          res.url().includes(apiServerUrl) &&
+          res.body().then((responseBody) => {
+            return responseBody.includes("relId");
           }),
       ),
     ]);
@@ -48,21 +48,21 @@ test.describe("Goal Sharing Feature", () => {
       userOnePage.waitForResponse(
         (res) =>
           res.status() === 200 &&
-          res.url().includes("url") &&
-          res.body().then((b) => {
-            return b.includes("relationshipId");
+          res.url().includes(apiServerUrl) &&
+          res.body().then((responseBody) => {
+            return responseBody.includes("relationshipId");
           }),
       ),
     ]);
     await userOnePage.waitForSelector(".ant-notification-notice");
-    link = await userOnePage.evaluate("navigator.clipboard.readText()");
-    await userOnePage.goto("http://localhost:3000/");
+    inviationLink = await userOnePage.evaluate("navigator.clipboard.readText()");
+    await userOnePage.goto("http://127.0.0.1:3000/");
     await userOnePage.getByRole("button", { name: "Goals" }).click();
     await shareGoalPrivately(userOnePage);
   });
 
   test("add contact in user 2", async () => {
-    await userTwoPage.goto(`${link}`);
+    await userTwoPage.goto(`${inviationLink}`);
     await userTwoPage.getByPlaceholder("Contact name").click();
     await userTwoPage.getByPlaceholder("Contact name").fill("User 1");
     await userTwoPage.getByRole("button", { name: "Add to my contacts" }).click();
@@ -70,9 +70,9 @@ test.describe("Goal Sharing Feature", () => {
       userTwoPage.waitForResponse(
         (res) =>
           res.status() === 200 &&
-          res.url().includes("url") &&
-          res.body().then((b) => {
-            return b.includes("accepted");
+          res.url().includes(apiServerUrl) &&
+          res.body().then((responseBody) => {
+            return responseBody.includes("accepted");
           }),
       ),
     ]);
