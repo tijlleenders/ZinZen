@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { handshakeIcon } from "@src/assets";
-
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 
@@ -15,7 +13,7 @@ import {
   openDevMode,
   displayConfirmation,
   openInbox,
-  displayPartner,
+  displayPartnerMode,
 } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
@@ -37,7 +35,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
-  const showPartner = useRecoilValue(displayPartner);
+  const showPartnerMode = useRecoilValue(displayPartnerMode);
   const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
@@ -45,14 +43,14 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
-  const isSharedGoal = isInboxOpen || showPartner;
+  const isSharedGoal = isInboxOpen || showPartnerMode;
 
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
       if (goal.title === "magic") {
         setDevMode(false);
       }
-      await removeThisGoal(goal, ancestors, isInboxOpen, showPartner);
+      await removeThisGoal(goal, ancestors, isInboxOpen, showPartnerMode);
       setLastAction("Delete");
     } else if (action === "archive") {
       await archiveThisGoal(goal, ancestors, isInboxOpen);
@@ -87,8 +85,9 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       centered
       width={200}
       onCancel={() => window.history.back()}
-      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${
+        darkModeStatus ? "dark" : "light"
+      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <Tooltip placement="top" title={goal.title}>

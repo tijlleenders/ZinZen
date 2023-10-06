@@ -32,10 +32,10 @@ const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
     } else if (alt === "light mode") {
       localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
       setDarkModeStatus(!darkModeStatus);
-    } else if (alt == "dark mode") {
+    } else if (alt === "dark mode") {
       localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
       setDarkModeStatus(!darkModeStatus);
-    } 
+    }
   };
 
   return (

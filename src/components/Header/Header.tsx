@@ -10,17 +10,10 @@ import searchIcon from "@assets/images/searchIcon.svg";
 import darkModeIcon from "@assets/images/darkModeIcon.svg";
 import lightModeIcon from "@assets/images/lightModeIcon.svg";
 
-import {
-  darkModeState,
-  displayInbox,
-  displayPartner,
-  displayToast,
-  openInbox,
-  partnerDetails,
-  searchActive,
-} from "@src/store";
 import { IHeader } from "@src/Interfaces/ICommon";
 import { goalsHistory } from "@src/store/GoalsState";
+import { getPartnersCount } from "@src/api/PartnerAPI";
+import { darkModeState, displayInbox, displayPartnerMode, displayToast, openInbox, searchActive } from "@src/store";
 
 import HeaderBtn from "./HeaderBtn";
 import Search from "../../common/Search";
@@ -33,17 +26,17 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const navigate = useNavigate();
   const setShowToast = useSetRecoilState(displayToast);
 
-  const partner = useRecoilValue(partnerDetails);
   const showInbox = useRecoilValue(displayInbox);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalHistory = useRecoilValue(goalsHistory);
 
   const [isInboxOpen, setIsInboxOpen] = useRecoilState(openInbox);
-  const [showPartner, setShowPartner] = useRecoilState(displayPartner);
+  const [showPartnerMode, setShowPartnerMode] = useRecoilState(displayPartnerMode);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
 
   const handlePartner = async () => {
-    if (!partner) {
+    const doesParnterExist = await getPartnersCount();
+    if (!doesParnterExist) {
       setShowToast({
         open: true,
         message: "Do you have a partner?",
@@ -51,13 +44,12 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       });
       return;
     }
-    if (showPartner) {
+    if (showPartnerMode) {
       window.history.back();
-    }
-    if (partner) {
+    } else {
       navigate("/MyGoals", {
         state: {
-          displayPartner: true,
+          displayPartnerMode: true,
         },
       });
     }
@@ -69,8 +61,8 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
     }
     if (displaySearch || locationState?.displaySearch) {
       setDisplaySearch(locationState?.displaySearch || false);
-    } else if (showPartner || locationState?.displayPartner) {
-      setShowPartner(locationState?.displayPartner || false);
+    } else if (showPartnerMode || locationState?.displayPartnerMode) {
+      setShowPartnerMode(locationState?.displayPartnerMode || false);
     }
   };
 
