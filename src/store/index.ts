@@ -75,14 +75,9 @@ export const openDevMode = atom({
   default: false,
 });
 
-export const displayPartner = atom({
-  key: "displayPartner",
+export const displayPartnerMode = atom({
+  key: "displayPartnerMode",
   default: false,
-});
-
-export const partnerDetails = atom({
-  key: "partnerDetails",
-  default: null as PartnerItem | null,
 });
 
 export const selectedMyTimeView = atom({
