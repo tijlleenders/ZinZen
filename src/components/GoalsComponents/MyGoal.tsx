@@ -1,23 +1,20 @@
-import { Tooltip } from "antd";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import pencil from "@assets/images/pencil.svg";
-import mainAvatarDark from "@assets/images/mainAvatarDark.svg";
-import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
 import { unarchiveIcon } from "@src/assets";
 
-import useGoalStore from "@src/hooks/useGoalStore";
-import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
+import { getSvgForGoalPps } from "@src/utils";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import { darkModeState, displayPartner, lastAction, openInbox } from "@src/store";
 import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
-import { getHistoryUptoGoal, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
+import { darkModeState, displayPartnerMode, lastAction, openInbox } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
+import useGoalStore from "@src/hooks/useGoalStore";
 
-import { useTranslation } from "react-i18next";
+import GoalAvatar from "./GoalAvatar";
 
 interface MyGoalProps {
   goal: GoalItem;
@@ -63,10 +60,10 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
         {goal.beforeTime && goal.afterTime
           ? `${t("between")} ${goal.afterTime}-${goal.beforeTime}`
           : goal.beforeTime
-            ? `${t("before")} ${goal.beforeTime}`
-            : goal.afterTime
-              ? `${t("after")} ${goal.afterTime}`
-              : ""}
+          ? `${t("before")} ${goal.beforeTime}`
+          : goal.afterTime
+          ? `${t("after")} ${goal.afterTime}`
+          : ""}
       </div>
       {showStart && !!goal.start && (
         <div>
@@ -85,17 +82,17 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
   // const collabWithContact =
   //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
-
+  const participantsSvg = getSvgForGoalPps(goal.participants.length);
   const navigate = useNavigate();
   const location = useLocation();
-  const { handleDisplayChanges, handleUpdateGoal } = useGoalStore();
+  const { handleUpdateGoal } = useGoalStore();
   const darkModeStatus = useRecoilValue(darkModeState);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
   const isInboxOpen = useRecoilValue(openInbox);
-  const showPartner = useRecoilValue(displayPartner);
+  const showPartnerMode = useRecoilValue(displayPartnerMode);
   const setLastAction = useSetRecoilState(lastAction);
 
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(goal.title);
@@ -165,7 +162,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   }, [location]);
 
   const isActionVisible = () => {
-    return !archived && !isInboxOpen && !showPartner && showActions.open === goal.id && showActions.click > 0;
+    return !archived && !isInboxOpen && !showPartnerMode && showActions.open === goal.id && showActions.click > 0;
   };
 
   return (
@@ -271,29 +268,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           )}
         </div>
       </div>
-      {goal.participants.length > 0 && (
-        <Tooltip placement="top" title={goal.participants[0].name}>
-          <div className="contact-button" style={archived ? { right: "78px" } : {}}>
-            {goal.participants[0].type === "collaborator" && (
-              <img
-                alt="collaborate goal"
-                width={25}
-                src={darkModeStatus ? mainAvatarDark : mainAvatarLight}
-                style={{ position: "absolute", right: "18px" }}
-              />
-            )}
-            <button
-              type="button"
-              className="contact-icon"
-              style={{
-                background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 20% 79.17%, ${goal.goalColor} 100%)`,
-              }}
-            >
-              {goal.participants[0].name.charAt(0)}
-            </button>
-          </div>
-        </Tooltip>
-      )}
+      {goal.participants.length > 0 && <GoalAvatar goal={goal} />}
       {archived && (
         <div className="contact-button">
           <button
