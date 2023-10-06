@@ -29,3 +29,10 @@ export interface ISubHeaderProps {
   showLeftNav: boolean;
   showRightNav: boolean;
 }
+
+export interface IconProps {
+  title: string;
+  active?: boolean;
+  c1?: string;
+  c2?: string;
+}

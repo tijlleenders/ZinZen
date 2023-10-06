@@ -1,10 +1,11 @@
+import { IconProps } from "@src/Interfaces/ICommon";
 import React from "react";
 
-const Icon = ({ title, active }: { title: string; active: boolean }) => {
+const Icon: React.FC<IconProps> = ({ title, active, c1, c2 }) => {
   const color1 = active ? "var(--icon-grad-1)" : "#B1B1B1";
+  // console.log("🚀 ~ file: Icon.tsx:6 ~ color1:", color1)
   const color2 = active ? "var(--icon-grad-2)" : "#B1B1B1";
-  console.log("🚀 ~ file: Icon.tsx:5 ~ Icon ~ color1:", color1);
-  console.log("🚀 ~ file: Icon.tsx:7 ~ Icon ~ color2:", color2);
+  // console.log("🚀 ~ file: Icon.tsx:8 ~ color2:", color2)
   switch (title) {
     case "GoalsIcon":
       return (
@@ -242,6 +243,103 @@ const Icon = ({ title, active }: { title: string; active: boolean }) => {
           />
           <defs>
             <linearGradient id="paint0_linear_754_316" x1="12" y1="7" x2="12" y2="19" gradientUnits="userSpaceOnUse">
+              <stop stopColor={color1} />
+              <stop offset="1" stopColor={color2} />
+            </linearGradient>
+          </defs>
+        </svg>
+      );
+    case "ThreeAvatars":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="15" viewBox="0 0 20 15" fill="none">
+          <path
+            d="M6.05844 2.89646C6.05844 4.4964 5.09757 5.79326 3.91242 5.79326C2.72727 5.79326 1.7666 4.4964 1.7666 2.89646C1.7666 1.29664 2.72727 0 3.91242 0C5.09757 0 6.05844 1.29675 6.05844 2.89646Z"
+            fill="url(#paint0_linear_882_5130)"
+          />
+          <path
+            d="M6.35834 8.00471C6.51323 7.89671 6.68483 7.82643 6.86242 7.79283C6.50184 7.21137 6.24634 6.58762 6.09875 5.84114C6.05835 5.56835 5.73157 5.53635 5.48858 5.76263C5.03409 6.18615 4.50372 6.46957 3.91224 6.46957C3.30926 6.46957 2.75458 6.19541 2.3098 5.73657C2.16791 5.58995 1.95881 5.56789 1.79562 5.68183C0.951252 6.27118 0.312179 7.2068 0.0333903 8.31761C-0.0414067 8.61554 0.0110923 8.93713 0.174486 9.18501C0.338179 9.43254 0.59367 9.57848 0.865059 9.57848H4.73181C5.19449 8.96833 5.74077 8.43566 6.35834 8.00471Z"
+            fill="url(#paint1_linear_882_5130)"
+          />
+          <path
+            d="M13.9414 2.89646C13.9414 4.4964 14.9024 5.79326 16.0875 5.79326C17.2727 5.79326 18.2334 4.4964 18.2334 2.89646C18.2334 1.29664 17.2727 0 16.0875 0C14.9024 0 13.9414 1.29675 13.9414 2.89646Z"
+            fill="url(#paint2_linear_882_5130)"
+          />
+          <path
+            d="M13.6417 8.00471C13.4868 7.89671 13.3153 7.82643 13.1377 7.79283C13.4982 7.21137 13.7537 6.58762 13.9014 5.84114C13.9418 5.56835 14.2687 5.53635 14.5116 5.76263C14.9661 6.18615 15.4965 6.46957 16.088 6.46957C16.6909 6.46957 17.2455 6.19541 17.6903 5.73657C17.8323 5.58995 18.0413 5.56789 18.2046 5.68183C19.0489 6.27118 19.6879 7.2068 19.9668 8.31761C20.0416 8.61565 19.989 8.93713 19.8256 9.18501C19.6621 9.43254 19.4064 9.57848 19.1351 9.57848H15.2684C14.8055 8.96833 14.2593 8.43566 13.6417 8.00471Z"
+            fill="url(#paint3_linear_882_5130)"
+          />
+          <path
+            d="M15.8456 12.7827C15.4258 11.1081 14.4736 9.69211 13.213 8.78392C12.9643 8.60484 12.6415 8.63387 12.4209 8.85603C11.7444 9.53692 10.9074 9.94239 9.9984 9.94239C9.07164 9.94239 8.21938 9.52115 7.5359 8.81604C7.31781 8.5909 6.99662 8.55696 6.74583 8.73215C5.44819 9.63783 4.46592 11.0755 4.03774 12.7828C3.92264 13.2409 4.00334 13.7347 4.25433 14.1157C4.50592 14.4961 4.8986 14.7203 5.31579 14.7203H14.5675C14.9848 14.7203 15.3778 14.4969 15.6293 14.1157C15.8804 13.7346 15.9607 13.2412 15.8456 12.7827Z"
+            fill="url(#paint4_linear_882_5130)"
+          />
+          <path
+            d="M13.2968 4.45137C13.2968 6.90979 11.8202 8.90319 9.99894 8.90319C8.17771 8.90319 6.70117 6.9099 6.70117 4.45137C6.70117 1.99261 8.17761 0 9.99894 0C11.8203 0 13.2968 1.99261 13.2968 4.45137Z"
+            fill="url(#paint5_linear_882_5130)"
+          />
+          <defs>
+            <linearGradient
+              id="paint0_linear_882_5130"
+              x1="3.91252"
+              y1="0"
+              x2="3.91252"
+              y2="5.79326"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor={color1} />
+              <stop offset="1" stopColor={color2} />
+            </linearGradient>
+            <linearGradient
+              id="paint1_linear_882_5130"
+              x1="3.43121"
+              y1="5.60938"
+              x2="3.43121"
+              y2="9.57848"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor={color1} />
+              <stop offset="1" stopColor={color2} />
+            </linearGradient>
+            <linearGradient
+              id="paint2_linear_882_5130"
+              x1="16.0874"
+              y1="0"
+              x2="16.0874"
+              y2="5.79326"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor={color1} />
+              <stop offset="1" stopColor={color2} />
+            </linearGradient>
+            <linearGradient
+              id="paint3_linear_882_5130"
+              x1="16.5689"
+              y1="5.60938"
+              x2="16.5689"
+              y2="9.57848"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor={color1} />
+              <stop offset="1" stopColor={color2} />
+            </linearGradient>
+            <linearGradient
+              id="paint4_linear_882_5130"
+              x1="9.9417"
+              y1="8.62073"
+              x2="9.9417"
+              y2="14.7203"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor={color1} />
+              <stop offset="1" stopColor={color2} />
+            </linearGradient>
+            <linearGradient
+              id="paint5_linear_882_5130"
+              x1="9.99899"
+              y1="0"
+              x2="9.99899"
+              y2="8.90319"
+              gradientUnits="userSpaceOnUse"
+            >
               <stop stopColor={color1} />
               <stop offset="1" stopColor={color2} />
             </linearGradient>

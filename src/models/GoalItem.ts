@@ -4,6 +4,7 @@ export interface IParticipant {
   relId: string;
   name: string;
   type: typeOfSub;
+  following: boolean;
 }
 
 export interface GoalItem {

@@ -2,7 +2,7 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Checkbox, Modal } from "antd";
-import { darkModeState, displayToast, openDevMode, partnerDetails } from "@src/store";
+import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
@@ -49,7 +49,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const theme = useRecoilValue(themeState);
   const today = moment(new Date()).format("YYYY-MM-DD");
 
-  const partner = useRecoilValue(partnerDetails);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
@@ -117,7 +116,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       return;
     }
     const goalColor = colorPalleteList[colorIndex];
-    if (state.displayPartner) {
+    if (state.displayPartnerMode) {
       // suggestChanges(getFinalTags(), title, goalColor, subGoalsHistory.length);
     } else {
       await modifyGoal(goal.id, getFinalTags(), title, goalColor, ancestors);
@@ -128,32 +127,32 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     if (!showAddGoal) {
       return;
     }
-    if (state.displayPartner && partner && state.goalsHistory) {
-      // const parentId = state.goalsHistory.slice(-1)[0].goalID;
-      // const rootGoalId = state.goalsHistory[0].goalID;
-      // const rootGoal = partner.goals.find((ele) => ele.id === rootGoalId);
-      // const parentGoal = parentId === rootGoalId ? rootGoal : await getSharedWMGoal(parentId);
-      // if (!parentGoal || !rootGoal) {
-      //   return;
-      // }
-      // suggestNewGoal(rootGoal, parentGoal, getFinalTags(), title, colorPalleteList[colorIndex], subGoalsHistory.length);
-    } else {
-      const { parentGoal } = await createGoal(
-        showAddGoal.goalId,
-        getFinalTags(),
-        title,
-        colorPalleteList[colorIndex],
-        ancestors,
-      );
-      if (!parentGoal && title === "magic") {
-        setDevMode(true);
-        setShowToast({
-          open: true,
-          message: "Congratulations, you activated DEV mode",
-          extra: "Explore what's hidden",
-        });
-      }
+    // if (state.displayPartnerMode && partner && state.goalsHistory) {
+    //   // const parentId = state.goalsHistory.slice(-1)[0].goalID;
+    //   // const rootGoalId = state.goalsHistory[0].goalID;
+    //   // const rootGoal = partner.goals.find((ele) => ele.id === rootGoalId);
+    //   // const parentGoal = parentId === rootGoalId ? rootGoal : await getSharedWMGoal(parentId);
+    //   // if (!parentGoal || !rootGoal) {
+    //   //   return;
+    //   // }
+    //   // suggestNewGoal(rootGoal, parentGoal, getFinalTags(), title, colorPalleteList[colorIndex], subGoalsHistory.length);
+    // } else {
+    const { parentGoal } = await createGoal(
+      showAddGoal.goalId,
+      getFinalTags(),
+      title,
+      colorPalleteList[colorIndex],
+      ancestors,
+    );
+    if (!parentGoal && title === "magic") {
+      setDevMode(true);
+      setShowToast({
+        open: true,
+        message: "Congratulations, you activated DEV mode",
+        extra: "Explore what's hidden",
+      });
     }
+    // }
     await mySound.play();
   };
 

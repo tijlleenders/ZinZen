@@ -24,8 +24,12 @@ import {
 import { IDisplayChangesModal, ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { fixDateVlauesInGoalObject } from "@src/utils";
 
-export const handleIncomingChanges = async (payload) => {
+export const handleIncomingChanges = async (payload, relId) => {
   if (payload.type === "sharer") {
+    const goal = await getGoal(payload.rootGoalId);
+    if (!goal || goal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
+      return;
+    }
     if (payload.changeType === "subgoals") {
       const changes = [
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),

@@ -11,12 +11,12 @@ export const removeThisGoal = async (
   goal: GoalItem,
   ancestors: string[],
   isInboxOpen: boolean,
-  showPartner: boolean,
+  showPartnerMode: boolean,
 ) => {
   await pageCrumple.play();
   if (isInboxOpen) {
     await moveToPartner(goal);
-  } else if (showPartner) {
+  } else if (showPartnerMode) {
     await deleteSharedGoal(goal);
   } else {
     await deleteGoal(goal, ancestors);

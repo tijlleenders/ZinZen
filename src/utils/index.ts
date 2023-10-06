@@ -225,3 +225,14 @@ export const formatTimeDisplay = (timeInSeconds: number) => {
 
   return { minutes, seconds };
 };
+
+export const getSvgForGoalPps = (count: number) => {
+  switch (count) {
+    case 1:
+      return "SingleAvatar";
+    case 3:
+      return "TwoAvatars";
+    default:
+      return "ThreeAvatars";
+  }
+};
