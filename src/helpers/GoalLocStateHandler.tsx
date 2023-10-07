@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { ILocationState } from "@src/Interfaces";
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
-import { displayInbox, displayConfirmation } from "@src/store";
+import { displayConfirmation } from "@src/store";
 import {
   displayAddGoal,
   displayGoalId,
@@ -17,8 +16,6 @@ import {
 
 const GoalLocStateHandler = () => {
   const location = useLocation();
-  const [showInbox, setShowInbox] = useRecoilState(displayInbox);
-
   const setSelectedGoalId = useSetRecoilState(displayGoalId);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
   const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
@@ -31,15 +28,6 @@ const GoalLocStateHandler = () => {
 
   const handleLocationChange = () => {
     const locationState: ILocationState = location.state || {};
-    getActiveSharedWMGoals().then((items) => {
-      if (items && items.length > 0) {
-        if (!showInbox) {
-          setShowInbox(true);
-        }
-      } else if (showInbox) {
-        setShowInbox(false);
-      }
-    });
     if (subGoalHistory.length > 0 || ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
       setSubGoalHistory([...(locationState.goalsHistory || [])]);
       setSelectedGoalId(locationState.activeGoalId || "root");

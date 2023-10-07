@@ -7,10 +7,9 @@ import pencil from "@assets/images/pencil.svg";
 import { unarchiveIcon } from "@src/assets";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { getSvgForGoalPps } from "@src/utils";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
-import { darkModeState, displayPartnerMode, lastAction, openInbox } from "@src/store";
+import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 import useGoalStore from "@src/hooks/useGoalStore";
 
@@ -82,7 +81,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
   // const collabWithContact =
   //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
-  const participantsSvg = getSvgForGoalPps(goal.participants.length);
   const navigate = useNavigate();
   const location = useLocation();
   const { handleUpdateGoal } = useGoalStore();
@@ -91,7 +89,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
-  const isInboxOpen = useRecoilValue(openInbox);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const setLastAction = useSetRecoilState(lastAction);
 
@@ -162,7 +159,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   }, [location]);
 
   const isActionVisible = () => {
-    return !archived && !isInboxOpen && !showPartnerMode && showActions.open === goal.id && showActions.click > 0;
+    return !archived && !showPartnerMode && showActions.open === goal.id && showActions.click > 0;
   };
 
   return (
@@ -268,7 +265,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           )}
         </div>
       </div>
-      {goal.participants.length > 0 && <GoalAvatar goal={goal} />}
+      {!showPartnerMode && goal.participants.length > 0 && <GoalAvatar goal={goal} />}
       {archived && (
         <div className="contact-button">
           <button

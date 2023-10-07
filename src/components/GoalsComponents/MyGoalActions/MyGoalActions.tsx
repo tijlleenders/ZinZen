@@ -12,7 +12,6 @@ import {
   lastAction,
   openDevMode,
   displayConfirmation,
-  openInbox,
   displayPartnerMode,
 } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
@@ -31,11 +30,10 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
   const theme = useRecoilValue(themeState);
-  const isInboxOpen = useRecoilValue(openInbox);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
-  const showPartnerMode = useRecoilValue(displayPartnerMode);
+  const isPartnerGoal = useRecoilValue(displayPartnerMode);
   const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
@@ -43,17 +41,15 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
-  const isSharedGoal = isInboxOpen || showPartnerMode;
-
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
       if (goal.title === "magic") {
         setDevMode(false);
       }
-      await removeThisGoal(goal, ancestors, isInboxOpen, showPartnerMode);
+      await removeThisGoal(goal, ancestors, isPartnerGoal);
       setLastAction("Delete");
     } else if (action === "archive") {
-      await archiveThisGoal(goal, ancestors, isInboxOpen);
+      await archiveThisGoal(goal, ancestors);
       setLastAction("Archive");
     } else if (action === "colabRequest") {
       // await convertSharedWMGoalToColab(goal);
@@ -104,14 +100,14 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
         }}
       >
-        <ActionDiv label={t(isInboxOpen ? "Rmove From here" : "Delete")} icon="Delete" />
+        <ActionDiv label={t(isPartnerGoal ? "Rmove From here" : "Delete")} icon="Delete" />
       </div>
-      {((isSharedGoal && goal.parentGoalId === "root") || !isSharedGoal) && (
+      {((isPartnerGoal && goal.parentGoalId === "root") || !isPartnerGoal) && (
         <div
           className="goal-action shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            if (!isSharedGoal) {
+            if (!isPartnerGoal) {
               if (goal.typeOfGoal !== "myGoal" && goal.parentGoalId !== "root") {
                 setShowToast({
                   message: "Sorry, you are not allowed to share",
@@ -127,12 +123,12 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           }}
         >
           <ActionDiv
-            label={t(isSharedGoal ? "Collaborate" : "Share")}
-            icon={isSharedGoal ? "Collaborate" : "SingleAvatar"}
+            label={t(isPartnerGoal ? "Collaborate" : "Share")}
+            icon={isPartnerGoal ? "Collaborate" : "SingleAvatar"}
           />
         </div>
       )}
-      {!isSharedGoal && (
+      {!isPartnerGoal && (
         <div
           className="goal-action shareOptions-btn"
           onClickCapture={async (e) => {

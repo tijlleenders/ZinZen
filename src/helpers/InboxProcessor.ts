@@ -26,8 +26,8 @@ import { fixDateVlauesInGoalObject } from "@src/utils";
 
 export const handleIncomingChanges = async (payload, relId) => {
   if (payload.type === "sharer") {
-    const goal = await getGoal(payload.rootGoalId);
-    if (!goal || goal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
+    const incGoal = await getGoal(payload.rootGoalId);
+    if (!incGoal || incGoal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
       return;
     }
     if (payload.changeType === "subgoals") {

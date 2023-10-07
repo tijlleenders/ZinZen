@@ -77,11 +77,6 @@ const useGoalStore = () => {
   const handleDisplayChanges = () => {
     navigate("/MyGoals", { state: location.state });
   };
-
-  const handleOpenInbox = () => {
-    navigate("/MyGoals", { state: { ...location.state, displayInbox: true } });
-  };
-
   const handleGoalActions = (id: string) => {
     navigate("/MyGoals", { state: { ...location.state, showGoalActions: id } });
   };
@@ -89,7 +84,6 @@ const useGoalStore = () => {
   return {
     handleAddGoal,
     handleShareGoal,
-    handleOpenInbox,
     handleUpdateGoal,
     handleGoalActions,
     handleConfirmation,
