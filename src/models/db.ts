@@ -51,7 +51,7 @@ export class ZinZenDB extends Dexie {
           "id, goalId, title, hoursSpent, completedTodayIds, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
         customizationCollection: "++id, goalId, posIndex",
         dumpboxCollection: "id, key, value",
-        partnersCollection: "++id, relId, name, goals",
+        partnersCollection: null,
       })
       .upgrade((trans) => {
         console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
