@@ -16,8 +16,6 @@ export const addContact = async (contactName: string, relId: string, accepted = 
     id: uuidv4(),
     name,
     relId,
-    sharedGoals: [],
-    collaborativeGoals: [],
     createdAt: currentDate,
     accepted,
   };
