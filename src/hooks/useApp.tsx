@@ -44,7 +44,12 @@ function useApp() {
               if (ele.type === "shareMessage") {
                 const { goalWithChildrens }: { goalWithChildrens: GoalItem[] } = ele;
                 const rootGoal = goalWithChildrens[0];
-                rootGoal.participants.push({ name: contactItem.name, relId, type: "sharer" });
+                rootGoal.participants.push({
+                  name: contactItem.name,
+                  relId,
+                  type: "sharer",
+                  following: false,
+                });
                 addSharedWMGoal(rootGoal)
                   .then(() => {
                     goalWithChildrens.slice(1).forEach((goal) => {
@@ -53,7 +58,7 @@ function useApp() {
                   })
                   .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
               } else if (ele.type === "sharer") {
-                handleIncomingChanges(ele).then(() => setLastAction("goalNewUpdates"));
+                handleIncomingChanges(ele, relId).then(() => setLastAction("goalNewUpdates"));
               }
               // else if (["suggestion", "shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
               //   let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
