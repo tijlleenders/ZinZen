@@ -18,9 +18,8 @@ import {
 import { GoalItem } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveGoals } from "@api/GoalsAPI";
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { darkModeState, lastAction, openInbox, searchActive } from "@src/store";
+import { darkModeState, lastAction, searchActive } from "@src/store";
 
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
@@ -36,7 +35,6 @@ export const MyGoals = () => {
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
 
-  const isInboxOpen = useRecoilValue(openInbox);
   const showAddGoal = useRecoilValue(displayAddGoal);
   const displaySearch = useRecoilValue(searchActive);
   const selectedGoalId = useRecoilValue(displayGoalId);
@@ -54,11 +52,11 @@ export const MyGoals = () => {
     setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
   };
   const refreshActiveGoals = async () => {
-    const goals: GoalItem[] = isInboxOpen ? await getActiveSharedWMGoals() : await getActiveGoals("true");
+    const goals: GoalItem[] = await getActiveGoals("true");
     handleUserGoals(goals);
   };
   const search = async (text: string) => {
-    const goals: GoalItem[] = isInboxOpen ? await getActiveSharedWMGoals() : await getActiveGoals("true");
+    const goals: GoalItem[] = await getActiveGoals("true");
     handleUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
   };
   const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -78,15 +76,7 @@ export const MyGoals = () => {
   }, [action]);
   useEffect(() => {
     refreshActiveGoals();
-  }, [
-    showShareModal,
-    isInboxOpen,
-    showAddGoal,
-    showChangesModal,
-    showUpdateGoal,
-    showSuggestionModal,
-    showChangesModal,
-  ]);
+  }, [showShareModal, showAddGoal, showChangesModal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
     if (selectedGoalId === "root") {
       refreshActiveGoals();
