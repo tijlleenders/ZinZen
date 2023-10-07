@@ -1,9 +1,7 @@
 import { useRecoilValue } from "recoil";
 import React, { useEffect, useState } from "react";
 
-import { PartnerItem } from "@src/models/PartnerItem";
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { getPartnerByRelId } from "@src/api/PartnerAPI";
 import { displayPartnerMode } from "@src/store";
 import { displayParticipants } from "@src/store/GoalsState";
 
@@ -20,34 +18,25 @@ const GoalsPage = () => {
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const showParticipants = useRecoilValue(displayParticipants);
 
-  const [activePartner, setActivePartner] = useState<string>("");
-  const [partner, setPartner] = useState<PartnerItem | null>(null);
+  const [activePartner, setActivePartner] = useState<ContactItem | null>(null);
   const [partnersList, setPartnersList] = useState<ContactItem[]>([]);
 
-  const getPartnerDetails = async () => {
-    let activeRelId;
-    if (partnersList.length > 0) {
-      activeRelId = partnersList[0].relId;
-    } else {
-      const list = await getAllContacts();
-      activeRelId = list[0].relId;
-      setPartnersList([...list]);
-    }
-    setActivePartner(activeRelId);
-    setPartner(await getPartnerByRelId(activeRelId));
-  };
-
   useEffect(() => {
-    getPartnerDetails();
-  }, [showPartnerMode, activePartner]);
+    const switchMode = async () => {
+      const list = await getAllContacts();
+      setActivePartner(list[0]);
+      setPartnersList([...list]);
+    };
+    switchMode();
+  }, [showPartnerMode]);
 
   return (
     <>
       <GoalLocStateHandler />
       {showParticipants && <Participants list={showParticipants} />}
-      {showPartnerMode && partner ? (
+      {showPartnerMode && activePartner ? (
         <>
-          <PartnerGoals partner={partner} refreshGoals={getPartnerDetails} />
+          <PartnerGoals partner={activePartner} />
           <ParticipantsNavbar list={partnersList} activePartner={activePartner} setActivePartner={setActivePartner} />
         </>
       ) : (

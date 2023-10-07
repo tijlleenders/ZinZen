@@ -119,7 +119,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
             title={themeSelection ? "ArrowIcon" : "JournalIcon"}
           />
           {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
-          {title !== "myTime" && title !== "Inbox" && title !== "Focus" && <GlobalAddBtn add={title} />}
+          {title !== "myTime" && title !== "Focus" && <GlobalAddBtn add={title} />}
         </button>
       </BottomNavLayout>
     </>

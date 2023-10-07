@@ -32,7 +32,7 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         const res = await initRelationship();
         if (res.success && res.response.relId && res.response.relId.length > 0) {
           const { relId } = res.response;
-          await Promise.all([addContact(newContact?.contactName, relId), createPartner(relId, newContact.contactName)]);
+          await addContact(newContact?.contactName, relId);
           setNewContact({ ...newContact, relId });
           const defaultPartner = localStorage.getItem("defaultPartner");
           if (!defaultPartner) {
@@ -70,8 +70,9 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         setNewContact(null);
         handleCloseAddContact();
       }}
-      className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""} ${
+        darkModeStatus ? "dark" : "light"
+      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <p className="popupModal-title"> Add a contact name </p>
       <input

@@ -48,7 +48,6 @@ export const suggestNewGoal = async (
   newGoal.createdAt = `${new Date()}`;
   newGoal = inheritParentProps(newGoal, parentGoal);
   const subscribers = extractSubs(rootGoal);
-  console.log("🚀 ~ file: PartnerController.ts:55 ~ subscribers:", subscribers);
   await Promise.all(sendUpdate(subscribers, rootGoal.id, "subgoals", [{ level, goal: newGoal }]));
 };
 

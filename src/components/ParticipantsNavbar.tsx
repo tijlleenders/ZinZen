@@ -8,8 +8,8 @@ const ParticipantsNavbar = ({
   setActivePartner,
 }: {
   list: ContactItem[];
-  setActivePartner: React.Dispatch<React.SetStateAction<string>>;
-  activePartner: string;
+  activePartner: ContactItem;
+  setActivePartner: React.Dispatch<React.SetStateAction<ContactItem>>;
 }) => {
   return (
     <BottomNavLayout>
@@ -18,9 +18,9 @@ const ParticipantsNavbar = ({
           key={contact.relId}
           type="button"
           onClick={() => {
-            setActivePartner(contact.relId);
+            setActivePartner(contact);
           }}
-          className={`bottom-nav-item ${activePartner === contact.relId ? "active" : ""}`}
+          className={`bottom-nav-item ${activePartner.relId === contact.relId ? "active" : ""}`}
         >
           <p>{contact.name}</p>
         </button>

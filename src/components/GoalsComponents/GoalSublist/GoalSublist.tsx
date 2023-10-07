@@ -5,7 +5,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
-import { displayPartnerMode, lastAction, openInbox } from "@src/store";
+import { displayPartnerMode, lastAction } from "@src/store";
 import {
   displayAddGoal,
   displayChangesModal,
@@ -24,7 +24,6 @@ import ArchivedAccordion from "../ArchivedAccordion";
 export const GoalSublist = () => {
   const action = useRecoilValue(lastAction);
   const goalID = useRecoilValue(displayGoalId);
-  const isInboxOpen = useRecoilValue(openInbox);
   const showAddGoal = useRecoilValue(displayAddGoal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showChangesModal = useRecoilValue(displayChangesModal);
@@ -41,17 +40,13 @@ export const GoalSublist = () => {
   };
 
   useEffect(() => {
-    (isInboxOpen || showPartnerMode ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) =>
-      setParentGoal(parent),
-    );
+    (showPartnerMode ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) => setParentGoal(parent));
   }, [goalID]);
 
   useEffect(() => {
-    (isInboxOpen || showPartnerMode ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID)).then(
-      (fetchedGoals) => {
-        handleChildrenGoals(fetchedGoals);
-      },
-    );
+    (showPartnerMode ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID)).then((fetchedGoals) => {
+      handleChildrenGoals(fetchedGoals);
+    });
   }, [action, parentGoal, showAddGoal, showSuggestionModal, showChangesModal, showUpdateGoal]);
 
   return (
