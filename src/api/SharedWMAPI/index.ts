@@ -67,6 +67,16 @@ export const getActiveSharedWMGoals = async () => {
   return activeGoals;
 };
 
+export const getRootGoalsOfPartner = async (relId: string) => {
+  return (
+    await db.sharedWMCollection
+      .where("parentGoalId")
+      .equals("root")
+      .and((x) => x.participants[0].relId === relId)
+      .sortBy("createdAt")
+  ).reverse();
+};
+
 export const updateSharedWMGoal = async (id: string, changes: object) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
     await db.sharedWMCollection.update(id, changes).then((updated) => updated);
