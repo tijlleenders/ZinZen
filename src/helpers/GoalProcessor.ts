@@ -91,9 +91,9 @@ export const createGoalObjectFromTags = (obj: object) => {
     link: null,
     sublist: [],
     goalColor: colorPalleteList[Math.floor(Math.random() * 11)],
-    participants: [],
     typeOfGoal: "myGoal",
     ...obj,
+    participants: [],
   };
   if (newGoal.rootGoalId === "root") {
     newGoal.rootGoalId = newGoal.id;
