@@ -81,7 +81,7 @@ export const modifyGoal = async (
   if (goal) {
     const { participants, ...changes } = goal;
     subscribers.forEach(async ({ sub, rootGoalId }) => {
-      sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [{ level, changes }]).then(() =>
+      sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [{ level, goal: changes }]).then(() =>
         console.log("update sent"),
       );
     });

@@ -57,7 +57,7 @@ function useApp() {
                     });
                   })
                   .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
-              } else if (ele.type === "sharer") {
+              } else if (["sharer", "suggestion"].includes(ele.type)) {
                 handleIncomingChanges(ele, relId).then(() => setLastAction("goalNewUpdates"));
               }
               // else if (["suggestion", "shared", "collaboration", "collaborationInvite"].includes(ele.type)) {

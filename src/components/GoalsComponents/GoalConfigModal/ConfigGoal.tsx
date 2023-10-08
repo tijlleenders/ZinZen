@@ -2,7 +2,7 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Checkbox, Modal } from "antd";
-import { darkModeState, displayToast, openDevMode } from "@src/store";
+import { darkModeState, displayPartner, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
@@ -12,6 +12,8 @@ import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } f
 import ColorPalette from "@src/common/ColorPalette";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
+import { ILocationState } from "@src/Interfaces";
+import { getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
@@ -20,8 +22,6 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 import ConfigOption from "./ConfigOption";
 import CustomDatePicker from "./CustomDatePicker";
 import "./ConfigGoal.scss";
-import { ILocationState } from "@src/Interfaces";
-import { getSharedWMGoal } from "@src/api/SharedWMAPI";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -46,9 +46,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
-  const theme = useRecoilValue(themeState);
   const today = moment(new Date()).format("YYYY-MM-DD");
 
+  const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
@@ -61,11 +61,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
 
   const open = !!showAddGoal || !!showUpdateGoal;
+
   const [title, setTitle] = useState(goal.title);
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
   const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
-  const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
   const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
+  const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
 
   const [tags, setTags] = useState({
     on: goal.on || convertOnFilterToArray("weekdays"),
@@ -116,10 +117,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       return;
     }
     const goalColor = colorPalleteList[colorIndex];
-    if (state.displayPartnerMode) {
-      // suggestChanges(getFinalTags(), title, goalColor, subGoalsHistory.length);
+    if (state.displayPartnerMode && state.goalsHistory) {
+      const rootGoalId = state.goalsHistory[0].goalID;
+      const rootGoal = await getSharedWMGoal(rootGoalId);
+      suggestChanges(rootGoal, getFinalTags(), title, goalColor, subGoalsHistory.length);
     } else {
-      await modifyGoal(goal.id, getFinalTags(), title, goalColor, ancestors);
+      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id]);
     }
   };
 
@@ -127,32 +130,32 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     if (!showAddGoal) {
       return;
     }
-    // if (state.displayPartnerMode && partner && state.goalsHistory) {
-    //   // const parentId = state.goalsHistory.slice(-1)[0].goalID;
-    //   // const rootGoalId = state.goalsHistory[0].goalID;
-    //   // const rootGoal = partner.goals.find((ele) => ele.id === rootGoalId);
-    //   // const parentGoal = parentId === rootGoalId ? rootGoal : await getSharedWMGoal(parentId);
-    //   // if (!parentGoal || !rootGoal) {
-    //   //   return;
-    //   // }
-    //   // suggestNewGoal(rootGoal, parentGoal, getFinalTags(), title, colorPalleteList[colorIndex], subGoalsHistory.length);
-    // } else {
-    const { parentGoal } = await createGoal(
-      showAddGoal.goalId,
-      getFinalTags(),
-      title,
-      colorPalleteList[colorIndex],
-      ancestors,
-    );
-    if (!parentGoal && title === "magic") {
-      setDevMode(true);
-      setShowToast({
-        open: true,
-        message: "Congratulations, you activated DEV mode",
-        extra: "Explore what's hidden",
-      });
+    if (state.displayPartnerMode && state.goalsHistory) {
+      const parentId = state.goalsHistory.slice(-1)[0].goalID;
+      const rootGoalId = state.goalsHistory[0].goalID;
+      const rootGoal = await getSharedWMGoal(rootGoalId);
+      const parentGoal = parentId === rootGoalId ? rootGoal : await getSharedWMGoal(parentId);
+      if (!parentGoal || !rootGoal) {
+        return;
+      }
+      suggestNewGoal(rootGoal, parentGoal, getFinalTags(), title, colorPalleteList[colorIndex], subGoalsHistory.length);
+    } else {
+      const { parentGoal } = await createGoal(
+        showAddGoal.goalId,
+        getFinalTags(),
+        title,
+        colorPalleteList[colorIndex],
+        ancestors,
+      );
+      if (!parentGoal && title === "magic") {
+        setDevMode(true);
+        setShowToast({
+          open: true,
+          message: "Congratulations, you activated DEV mode",
+          extra: "Explore what's hidden",
+        });
+      }
     }
-    // }
     await mySound.play();
   };
 
