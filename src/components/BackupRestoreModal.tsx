@@ -52,38 +52,74 @@ const BackupRestoreModal = () => {
       reader.onload = async () => {
         if (reader.result) {
           const { data } = JSON.parse(reader.result);
-          console.log(data);
+          const currentVersion = data.databaseVersion;
           await Promise.all(
             data.data.map(async (table: { tableName: string; rows: readonly any[] }) => {
-              const dbTable = db.table(table.tableName);
-              if (table.tableName === "goalsCollection") {
+              try {
+                const dbTable = db.table(table.tableName);
                 await dbTable.bulkPut(table.rows.map((ele) => (ele.$ ? ele.$ : ele))).catch((err) => console.log(err));
-              } else {
-                await dbTable.bulkPut(table.rows).catch((err) => console.log(err));
+              } catch (err) {
+                console.log(err);
               }
             }),
           );
 
-          await db.goalsCollection.toCollection().modify((goal: GoalItem) => {
-            if (goal.on === "weekends") {
-              goal.on = ["Sat", "Sun"];
-            } else {
-              goal.on = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-            }
-            if (goal.habit !== "weekly") {
-              goal.habit = null;
-            }
-            goal.timeBudget = {
-              perDay: goal.timeBudget?.period === "day" ? `${goal.timeBudget?.duration}` : null,
-              perWeek: goal.timeBudget?.period === "week" ? `${goal.timeBudget?.duration}` : null,
-            };
-          });
-          await db.taskCollection.toCollection().modify((task: TaskItem) => {
-            task.blockedSlots = [];
-            task.forgotToday = [];
-            task.completedToday = 0;
-            task.completedTodayIds = [];
-          });
+          console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
+          if (currentVersion < 9) {
+            console.log("processing updates for 9th version");
+            const goalsCollection = db.table("goalsCollection");
+            goalsCollection.toCollection().modify((goal) => {
+              if (goal.on === "weekends") {
+                goal.on = ["Sat", "Sun"];
+              } else {
+                goal.on = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+              }
+              if (goal.habit !== "weekly") {
+                goal.habit = null;
+              }
+              goal.timeBudget = {
+                perDay: goal.timeBudget?.period === "day" ? `${goal.timeBudget?.duration}` : null,
+                perWeek: goal.timeBudget?.period === "week" ? `${goal.timeBudget?.duration}` : null,
+              };
+            });
+            const taskCollection = db.table("taskCollection");
+            taskCollection.toCollection().modify((task: TaskItem) => {
+              task.blockedSlots = [];
+              task.forgotToday = [];
+              task.completedToday = 0;
+              task.completedTodayIds = [];
+            });
+          }
+          if (currentVersion < 12) {
+            console.log("processing updates for 12th version");
+            const sharedWMCollection = db.table("sharedWMCollection");
+            sharedWMCollection.clear();
+
+            const goalsCollection = db.table("goalsCollection");
+            goalsCollection.toCollection().modify((goal) => {
+              delete goal.shared;
+              delete goal.collaboration;
+              goal.participants = [];
+            });
+          }
+          if (currentVersion < 13) {
+            console.log("processing updates for 13th version");
+            const sharedWMCollection = db.table("sharedWMCollection");
+            const goalsCollection = db.table("goalsCollection");
+            sharedWMCollection.toCollection().modify((goal: GoalItem) => {
+              goal.participants = goal.participants.map((ele) => ({ ...ele, following: true }));
+            });
+            goalsCollection.toCollection().modify((goal: GoalItem) => {
+              goal.participants = goal.participants.map((ele) => ({ ...ele, following: true }));
+            });
+          }
+          if (currentVersion < 14) {
+            const contactsCollection = db.table("contactsCollection");
+            contactsCollection.toCollection().modify((contact) => {
+              delete contact.collaborativeGoals;
+              delete contact.sharedGoals;
+            });
+          }
           importSuccessfull();
         } else {
           setShowToast({

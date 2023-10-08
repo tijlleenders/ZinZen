@@ -78,10 +78,8 @@ export class ZinZenDB extends Dexie {
           });
         }
         if (currentVersion < 12) {
-          console.log("processing updates for 10th version");
+          console.log("processing updates for 12th version");
           const sharedWMCollection = trans.table("sharedWMCollection");
-          const partnersCollection = trans.table("partnersCollection");
-          partnersCollection.clear();
           sharedWMCollection.clear();
 
           const goalsCollection = trans.table("goalsCollection");
@@ -92,7 +90,7 @@ export class ZinZenDB extends Dexie {
           });
         }
         if (currentVersion < 13) {
-          console.log("processing updates for 10th version");
+          console.log("processing updates for 13th version");
           const sharedWMCollection = trans.table("sharedWMCollection");
           const goalsCollection = trans.table("goalsCollection");
           sharedWMCollection.toCollection().modify((goal: GoalItem) => {
@@ -103,6 +101,7 @@ export class ZinZenDB extends Dexie {
           });
         }
         if (currentVersion < 14) {
+          console.log("processing updates for 14th version");
           const contactsCollection = trans.table("contactsCollection");
           contactsCollection.toCollection().modify((contact) => {
             delete contact.collaborativeGoals;
