@@ -11,7 +11,7 @@ const GoalAvatar = ({ goal }: { goal: GoalItem }) => {
   const participantsSvg = getSvgForGoalPps(participants.length);
 
   return (
-    <div className="contact-button" style={goal.archived ? { right: "78px" } : {}}>
+    <div className="contact-button" style={goal.archived ? { right: 60 } : {}}>
       <button
         type="button"
         className="contact-icon pps-icon"
