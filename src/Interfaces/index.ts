@@ -22,5 +22,5 @@ export interface ILocationState {
   displayGoalActions?: GoalItem; // id of goal whose actions have to be opened
   displayPartnerMode?: boolean; // whether or not to display the partner goals
   displayAddContact?: boolean; // whether or not to display the add contact form
-  displayParticipants?: IParticipant[]; // whether or not to display the participants
+  displayParticipants?: string; // id of goal whose participants have to be displayed
 }

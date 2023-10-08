@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const GoalAvatar = ({ goal }: { goal: GoalItem }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { participants, goalColor } = goal;
+  const { id, participants, goalColor } = goal;
   const participantsSvg = getSvgForGoalPps(participants.length);
 
   return (
@@ -23,7 +23,7 @@ const GoalAvatar = ({ goal }: { goal: GoalItem }) => {
           navigate("/MyGoals", {
             state: {
               ...location.state,
-              displayParticipants: goal.participants,
+              displayParticipants: id,
             },
           });
         }}

@@ -33,7 +33,7 @@ const GoalsPage = () => {
   return (
     <>
       <GoalLocStateHandler />
-      {showParticipants && <Participants list={showParticipants} />}
+      {showParticipants && <Participants goalId={showParticipants} />}
       {showPartnerMode && activePartner ? (
         <>
           <PartnerGoals partner={activePartner} />

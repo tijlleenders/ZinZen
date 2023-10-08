@@ -60,7 +60,7 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   };
 
   useEffect(() => {
-    if (action !== "none") {
+    if (action !== "none" && action.includes("goal")) {
       setLastAction("none");
       refreshActiveGoals();
     }

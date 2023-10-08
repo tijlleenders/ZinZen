@@ -48,7 +48,7 @@ function useApp() {
                   name: contactItem.name,
                   relId,
                   type: "sharer",
-                  following: false,
+                  following: true,
                 });
                 addSharedWMGoal(rootGoal)
                   .then(() => {
