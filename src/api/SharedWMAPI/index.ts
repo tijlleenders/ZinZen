@@ -18,7 +18,9 @@ export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]
 };
 
 export const addSharedWMGoal = async (goalDetails: object) => {
+  const { participants } = goalDetails;
   const newGoal = createGoalObjectFromTags({ ...goalDetails, typeOfGoal: "shared" });
+  if (participants) newGoal.participants = participants;
   await db
     .transaction("rw", db.sharedWMCollection, async () => {
       await db.sharedWMCollection.add(newGoal);
