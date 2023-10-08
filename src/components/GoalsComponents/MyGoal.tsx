@@ -5,13 +5,13 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import pencil from "@assets/images/pencil.svg";
 import { unarchiveIcon } from "@src/assets";
+import useGoalStore from "@src/hooks/useGoalStore";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
-import useGoalStore from "@src/hooks/useGoalStore";
 
 import GoalAvatar from "./GoalAvatar";
 
@@ -76,21 +76,23 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
 };
 
 const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
-  const defaultTap = { open: "root", click: 1 };
   const archived = goal.archived === "true";
-  // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
-  // const collabWithContact =
-  //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
+  const defaultTap = { open: "root", click: 1 };
+  const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
+
   const navigate = useNavigate();
   const location = useLocation();
   const { handleUpdateGoal } = useGoalStore();
+  // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
+  // const collabWithContact =
+  //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
+  const setLastAction = useSetRecoilState(lastAction);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
-  const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
-  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
-  const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
-  const setLastAction = useSetRecoilState(lastAction);
+  const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
+  const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
+  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
 
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(goal.title);
 
@@ -116,7 +118,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   };
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.stopPropagation();
-    if (archived) {
+    if (archived || (showPartnerMode && goal.parentGoalId !== "root")) {
       return;
     }
     // if (goal.collaboration.newUpdates || goal.shared.conversionRequests.status) {
@@ -157,10 +159,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       }
     }
   }, [location]);
-
-  const isActionVisible = () => {
-    return !archived && !showPartnerMode && showActions.open === goal.id && showActions.click > 0;
-  };
 
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
@@ -203,8 +201,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               </div>
             </div>
           </div>
-          {isActionVisible() && <span className="goal-menu-subtext">Actions</span>}
-          {isActionVisible() && (
+          {isActionVisible && <span className="goal-menu-subtext">Actions</span>}
+          {isActionVisible && (
             <div
               className="goal-action"
               onClickCapture={() => {
@@ -220,7 +218,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               />
             </div>
           )}
-          {isActionVisible() && <span className="goal-menu-subtext">Edit</span>}
+          {isActionVisible && <span className="goal-menu-subtext">Edit</span>}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <div className="goal-title">
@@ -274,7 +272,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
             style={{ padding: 0, background: "transparent", filter: darkModeStatus ? "invert(1)" : "none" }}
             onClickCapture={async () => {
               await unarchiveUserGoal(goal);
-              setLastAction("unarchived");
+              setLastAction("goalUnarchived");
             }}
           >
             <img alt="archived goal" src={unarchiveIcon} style={{ width: 18, height: 18 }} />
