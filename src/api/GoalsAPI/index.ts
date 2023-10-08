@@ -177,7 +177,9 @@ export const updateSharedStatusOfGoal = async (id: string, relId: string, name: 
       .where("id")
       .equals(id)
       .modify((obj: GoalItem) => {
-        obj.participants.push({ relId, name, type: "sharer", following: true });
+        if (!obj.participants.find((ele) => ele.relId === relId)) {
+          obj.participants.push({ relId, name, type: "sharer", following: true });
+        }
       });
   }).catch((e) => {
     console.log(e.stack || e);
