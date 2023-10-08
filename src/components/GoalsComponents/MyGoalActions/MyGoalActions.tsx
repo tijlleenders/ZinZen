@@ -47,10 +47,10 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
         setDevMode(false);
       }
       await removeThisGoal(goal, ancestors, isPartnerGoal);
-      setLastAction("Delete");
+      setLastAction("goalDeleted");
     } else if (action === "archive") {
       await archiveThisGoal(goal, ancestors);
-      setLastAction("Archive");
+      setLastAction("goalArchived");
     } else if (action === "colabRequest") {
       // await convertSharedWMGoalToColab(goal);
       window.history.back();
@@ -100,7 +100,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
         }}
       >
-        <ActionDiv label={t(isPartnerGoal ? "Rmove From here" : "Delete")} icon="Delete" />
+        <ActionDiv label={t("Delete")} icon="Delete" />
       </div>
       {((isPartnerGoal && goal.parentGoalId === "root") || !isPartnerGoal) && (
         <div
