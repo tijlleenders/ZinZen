@@ -1,13 +1,33 @@
+import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { followContactOnGoal, getGoal } from "@src/api/GoalsAPI";
 import { IParticipant } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import { Modal } from "antd";
-import React from "react";
-import { useRecoilValue } from "recoil";
 
-const Participants = ({ list }: { list: IParticipant[] }) => {
+const Participants = ({ goalId }: { goalId: string }) => {
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
+
+  const [list, setList] = useState<IParticipant[]>([]);
+
+  const getParticipants = async () => {
+    const goal = await getGoal(goalId);
+    if (goal) {
+      setList([...goal.participants]);
+    }
+  };
+
+  const handleFollow = async (following: boolean, participant: IParticipant) => {
+    await followContactOnGoal(goalId, { ...participant, following });
+    getParticipants();
+  };
+
+  useEffect(() => {
+    getParticipants();
+  }, []);
+
   return (
     <Modal
       className={`configModal popupModal${darkModeStatus ? "-dark" : ""} 
@@ -38,7 +58,14 @@ const Participants = ({ list }: { list: IParticipant[] }) => {
             key={`${participant.relId}-${participant.name}`}
           >
             <p style={{ fontSize: 16 }}>{participant.name}</p>
-            <button className="default-btn" style={{ padding: 8, margin: 0 }} type="button">
+            <button
+              type="button"
+              onClick={async () => {
+                await handleFollow(!participant.following, participant);
+              }}
+              className="default-btn"
+              style={{ padding: 8, margin: 0 }}
+            >
               {participant.following ? "Following" : "Follow"}
             </button>
           </div>

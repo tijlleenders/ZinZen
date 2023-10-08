@@ -1,10 +1,11 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import React, { useEffect, useState } from "react";
 
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { displayPartnerMode } from "@src/store";
+import { displayPartner, displayPartnerMode } from "@src/store";
 import { displayParticipants } from "@src/store/GoalsState";
 
+import { useLocation, useNavigate } from "react-router-dom";
 import ContactItem from "@src/models/ContactItem";
 import Participants from "@components/GoalsComponents/Participants";
 import ParticipantsNavbar from "@components/ParticipantsNavbar";
@@ -15,16 +16,21 @@ import PartnerGoals from "./PartnerGoals";
 import "./GoalsPage.scss";
 
 const GoalsPage = () => {
+  const navigate = useNavigate();
+  const { state } = useLocation();
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const showParticipants = useRecoilValue(displayParticipants);
 
-  const [activePartner, setActivePartner] = useState<ContactItem | null>(null);
+  const activePartner = useRecoilValue(displayPartner);
   const [partnersList, setPartnersList] = useState<ContactItem[]>([]);
+
+  const handleActivePartner = (partner: ContactItem) => {
+    navigate("/MyGoals", { state: { ...state, displayPartner: partner }, replace: true });
+  };
 
   useEffect(() => {
     const switchMode = async () => {
       const list = await getAllContacts();
-      setActivePartner(list[0]);
       setPartnersList([...list]);
     };
     switchMode();
@@ -33,11 +39,15 @@ const GoalsPage = () => {
   return (
     <>
       <GoalLocStateHandler />
-      {showParticipants && <Participants list={showParticipants} />}
+      {showParticipants && <Participants goalId={showParticipants} />}
       {showPartnerMode && activePartner ? (
         <>
           <PartnerGoals partner={activePartner} />
-          <ParticipantsNavbar list={partnersList} activePartner={activePartner} setActivePartner={setActivePartner} />
+          <ParticipantsNavbar
+            list={partnersList}
+            activePartner={activePartner}
+            handleActivePartner={handleActivePartner}
+          />
         </>
       ) : (
         <MyGoals />

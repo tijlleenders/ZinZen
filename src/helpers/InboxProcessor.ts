@@ -26,8 +26,9 @@ import { fixDateVlauesInGoalObject } from "@src/utils";
 
 export const handleIncomingChanges = async (payload, relId) => {
   if (payload.type === "sharer") {
-    const incGoal = await getGoal(payload.rootGoalId);
+    const incGoal = await getSharedWMGoal(payload.rootGoalId);
     if (!incGoal || incGoal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
+      console.log("Changes ignored");
       return;
     }
     if (payload.changeType === "subgoals") {
@@ -68,7 +69,7 @@ export const handleIncomingChanges = async (payload, relId) => {
     if (rootGoal) {
       let inbox: InboxItem = await getInboxItem(rootGoalId);
       const defaultChanges = getDefaultValueOfGoalChanges();
-      defaultChanges[changeType] = [...changes];
+      defaultChanges[changeType] = [...changes.map((ele) => ({ ...ele, intent: payload.type }))];
       if (!inbox) {
         await createEmptyInboxItem(rootGoalId);
         inbox = await getInboxItem(rootGoalId);

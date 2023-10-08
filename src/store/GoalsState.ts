@@ -36,7 +36,7 @@ export const displayShareModal = atom({
 
 export const displayParticipants = atom({
   key: "displayParticipants",
-  default: null as IParticipant[] | null,
+  default: null as string | null,
 });
 
 export const displaySuggestionsModal = atom({

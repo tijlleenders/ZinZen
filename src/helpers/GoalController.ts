@@ -1,7 +1,12 @@
 import { GoalItem } from "@src/models/GoalItem";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
-import { getSharedWMGoal, removeSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
+import {
+  getSharedWMGoal,
+  removeSharedWMChildrenGoals,
+  removeSharedWMGoal,
+  updateSharedWMGoal,
+} from "@src/api/SharedWMAPI";
 import {
   getGoal,
   addGoal,
@@ -10,7 +15,6 @@ import {
   removeGoalWithChildrens,
   getParticipantsOfGoals,
 } from "@src/api/GoalsAPI";
-import { addGoalToPartner } from "@src/api/PartnerAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 
 export const createGoal = async (
@@ -75,8 +79,9 @@ export const modifyGoal = async (
   const goal = await getGoal(goalId);
   const subscribers = await getParticipantsOfGoals(ancestors);
   if (goal) {
+    const { participants, ...changes } = goal;
     subscribers.forEach(async ({ sub, rootGoalId }) => {
-      sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [{ level, goal }]).then(() =>
+      sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [{ level, goal: changes }]).then(() =>
         console.log("update sent"),
       );
     });
@@ -106,7 +111,7 @@ export const deleteGoal = async (goal: GoalItem, ancestors: string[]) => {
 };
 
 export const deleteSharedGoal = async (goal: GoalItem) => {
-  // await Promise.all([removeSharedWMChildrenGoals(goal.id), removeGoalFromPartner(goal.shared.contacts[0].relId, goal)]);
+  await removeSharedWMChildrenGoals(goal.id);
   if (goal.parentGoalId !== "root") {
     getSharedWMGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;
