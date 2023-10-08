@@ -5,11 +5,11 @@ import React from "react";
 const ParticipantsNavbar = ({
   list,
   activePartner,
-  setActivePartner,
+  handleActivePartner,
 }: {
   list: ContactItem[];
   activePartner: ContactItem;
-  setActivePartner: React.Dispatch<React.SetStateAction<ContactItem>>;
+  handleActivePartner: (partner: ContactItem) => void;
 }) => {
   return (
     <BottomNavLayout>
@@ -18,7 +18,7 @@ const ParticipantsNavbar = ({
           key={contact.relId}
           type="button"
           onClick={() => {
-            setActivePartner(contact);
+            handleActivePartner(contact);
           }}
           className={`bottom-nav-item ${activePartner.relId === contact.relId ? "active" : ""}`}
         >

@@ -11,7 +11,7 @@ import lightModeIcon from "@assets/images/lightModeIcon.svg";
 
 import { IHeader } from "@src/Interfaces/ICommon";
 import { goalsHistory } from "@src/store/GoalsState";
-import { getPartnersCount } from "@src/api/ContactsAPI";
+import { getAllContacts } from "@src/api/ContactsAPI";
 import { darkModeState, displayPartnerMode, displayToast, searchActive } from "@src/store";
 
 import HeaderBtn from "./HeaderBtn";
@@ -32,8 +32,8 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
 
   const handlePartner = async () => {
-    const doesParnterExist = await getPartnersCount();
-    if (!doesParnterExist) {
+    const list = await getAllContacts();
+    if (list.length === 0) {
       setShowToast({
         open: true,
         message: "Do you have a partner?",
@@ -47,6 +47,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       navigate("/MyGoals", {
         state: {
           displayPartnerMode: true,
+          displayPartner: list[0],
         },
       });
     }

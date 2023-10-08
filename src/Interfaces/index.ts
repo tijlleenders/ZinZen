@@ -1,5 +1,6 @@
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
+import ContactItem from "@src/models/ContactItem";
 import { ILanguage, ILanguageListProps } from "./ILanguage";
 import { confirmActionState } from "./IPopupModals";
 
@@ -23,4 +24,5 @@ export interface ILocationState {
   displayPartnerMode?: boolean; // whether or not to display the partner goals
   displayAddContact?: boolean; // whether or not to display the add contact form
   displayParticipants?: string; // id of goal whose participants have to be displayed
+  displayPartner?: ContactItem; // to show this partner
 }

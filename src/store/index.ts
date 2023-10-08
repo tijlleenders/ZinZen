@@ -2,6 +2,7 @@ import { atom } from "recoil";
 import { confirmActionState } from "@src/Interfaces/IPopupModals";
 import { darkModeState } from "./DarkModeState";
 import { languageSelectionState } from "./LanguageSelectionState";
+import ContactItem from "@src/models/ContactItem";
 
 export const displayConfirmation = atom({
   key: "displayConfirmation",
@@ -72,6 +73,11 @@ export const displayToast = atom({
 export const openDevMode = atom({
   key: "openDevMode",
   default: false,
+});
+
+export const displayPartner = atom({
+  key: "showPartner",
+  default: null as ContactItem | null,
 });
 
 export const displayPartnerMode = atom({
