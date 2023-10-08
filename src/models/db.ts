@@ -8,7 +8,7 @@ import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
 
-export const dexieVersion = 14;
+export const dexieVersion = 15;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -36,9 +36,9 @@ export class ZinZenDB extends Dexie {
       .stores({
         feelingsCollection: "++id, content, category, date, note",
         goalsCollection:
-          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         sharedWMCollection:
-          "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+          "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         contactsCollection: "id, name, relId, accepted, createdAt",
         outboxCollection: null,
         inboxCollection: "id, goalChanges",
@@ -96,10 +96,10 @@ export class ZinZenDB extends Dexie {
           const sharedWMCollection = trans.table("sharedWMCollection");
           const goalsCollection = trans.table("goalsCollection");
           sharedWMCollection.toCollection().modify((goal: GoalItem) => {
-            goal.participants = goal.participants.map((ele) => ({ ...ele, following: false }));
+            goal.participants = goal.participants.map((ele) => ({ ...ele, following: true }));
           });
           goalsCollection.toCollection().modify((goal: GoalItem) => {
-            goal.participants = goal.participants.map((ele) => ({ ...ele, following: false }));
+            goal.participants = goal.participants.map((ele) => ({ ...ele, following: true }));
           });
         }
         if (currentVersion < 14) {
