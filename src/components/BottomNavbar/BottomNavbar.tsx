@@ -60,7 +60,8 @@ const BottomNavbar = ({ title }: { title: string }) => {
       }
     }
   };
-
+  const { displayPartnerMode, activeGoalId } = location.state || {};
+  const isAddBtnVisible = title !== "myTime" && title !== "Focus" && (displayPartnerMode ? !!activeGoalId : true);
   return (
     <>
       {themeSelection && (
@@ -119,7 +120,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
             title={themeSelection ? "ArrowIcon" : "JournalIcon"}
           />
           {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
-          {title !== "myTime" && title !== "Focus" && <GlobalAddBtn add={title} />}
+          {isAddBtnVisible && <GlobalAddBtn add={title} />}
         </button>
       </BottomNavLayout>
     </>
