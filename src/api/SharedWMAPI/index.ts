@@ -18,7 +18,9 @@ export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]
 };
 
 export const addSharedWMGoal = async (goalDetails: object) => {
+  const { participants } = goalDetails;
   const newGoal = createGoalObjectFromTags({ ...goalDetails, typeOfGoal: "shared" });
+  if (participants) newGoal.participants = participants;
   await db
     .transaction("rw", db.sharedWMCollection, async () => {
       await db.sharedWMCollection.add(newGoal);
@@ -65,6 +67,16 @@ export const getActiveSharedWMGoals = async () => {
   const activeGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals("root").sortBy("createdAt");
   activeGoals.reverse();
   return activeGoals;
+};
+
+export const getRootGoalsOfPartner = async (relId: string) => {
+  return (
+    await db.sharedWMCollection
+      .where("parentGoalId")
+      .equals("root")
+      .and((x) => x.participants[0].relId === relId)
+      .sortBy("createdAt")
+  ).reverse();
 };
 
 export const updateSharedWMGoal = async (id: string, changes: object) => {

@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 import { confirmActionState } from "@src/Interfaces/IPopupModals";
-import { PartnerItem } from "@src/models/PartnerItem";
 import { darkModeState } from "./DarkModeState";
 import { languageSelectionState } from "./LanguageSelectionState";
+import ContactItem from "@src/models/ContactItem";
 
 export const displayConfirmation = atom({
   key: "displayConfirmation",
@@ -76,13 +76,13 @@ export const openDevMode = atom({
 });
 
 export const displayPartner = atom({
-  key: "displayPartner",
-  default: false,
+  key: "showPartner",
+  default: null as ContactItem | null,
 });
 
-export const partnerDetails = atom({
-  key: "partnerDetails",
-  default: null as PartnerItem | null,
+export const displayPartnerMode = atom({
+  key: "displayPartnerMode",
+  default: false,
 });
 
 export const selectedMyTimeView = atom({

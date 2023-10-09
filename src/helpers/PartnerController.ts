@@ -1,20 +1,12 @@
-import { GoalItem } from "@src/models/GoalItem";
-import { ISubscriber } from "@src/models/PubSubItem";
+import { GoalItem, IParticipant } from "@src/models/GoalItem";
+
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 
 import { createGoalObjectFromTags } from "./GoalProcessor";
 
-const extractSubs = (goal: GoalItem) => {
-  const subscribers: ISubscriber[] = [];
-  if (subscribers.length === 0 && goal.shared.contacts.length > 0) {
-    subscribers.push({ subId: goal.shared.contacts[0].relId, type: "suggestion" });
-  }
-  return subscribers;
-};
-
 const sendUpdate = (
-  subscribers: ISubscriber[],
+  subscribers: IParticipant[],
   rootGoalId: string,
   type: "subgoals" | "modifiedGoals",
   obj: {
@@ -23,7 +15,7 @@ const sendUpdate = (
   }[],
 ) => {
   return subscribers.map(async (sub) =>
-    sendUpdatesToSubscriber(sub, rootGoalId, type, obj).then(() => console.log("update sent")),
+    sendUpdatesToSubscriber(sub, rootGoalId, type, obj, "suggestion").then(() => console.log("update sent")),
   );
 };
 
@@ -47,9 +39,7 @@ export const suggestNewGoal = async (
   });
   newGoal.createdAt = `${new Date()}`;
   newGoal = inheritParentProps(newGoal, parentGoal);
-  const subscribers = extractSubs(rootGoal);
-  console.log("🚀 ~ file: PartnerController.ts:55 ~ subscribers:", subscribers);
-  await Promise.all(sendUpdate(subscribers, rootGoal.id, "subgoals", [{ level, goal: newGoal }]));
+  await Promise.all(sendUpdate(rootGoal.participants, rootGoal.id, "subgoals", [{ level, goal: newGoal }]));
 };
 
 export const suggestChanges = async (
@@ -67,6 +57,6 @@ export const suggestChanges = async (
       .join(" "),
     goalColor,
   };
-  const subscribers = extractSubs(rootGoal);
-  sendUpdate(subscribers, rootGoal.id, "modifiedGoals", [{ level, goal }]);
+  const { participants, ...changes } = goal;
+  sendUpdate(rootGoal.participants, rootGoal.id, "modifiedGoals", [{ level, changes }]);
 };

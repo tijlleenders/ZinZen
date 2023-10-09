@@ -7,11 +7,10 @@ import { InboxItem } from "./InboxItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
-import { PartnerItem } from "./PartnerItem";
 
-export const dexieVersion = 12;
+export const dexieVersion = 15;
 
-const currentVersion = localStorage.getItem("dexieVersion") || dexieVersion;
+const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
 
 export class ZinZenDB extends Dexie {
@@ -31,18 +30,16 @@ export class ZinZenDB extends Dexie {
 
   dumpboxCollection!: Table<DumpboxItem, string>;
 
-  partnersCollection!: Table<PartnerItem, string>;
-
   constructor() {
     super("ZinZenDB");
     this.version(dexieVersion)
       .stores({
         feelingsCollection: "++id, content, category, date, note",
         goalsCollection:
-          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         sharedWMCollection:
-          "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-        contactsCollection: "id, name, collaborativeGoals, sharedGoals, relId, accepted, createdAt",
+          "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+        contactsCollection: "id, name, relId, accepted, createdAt",
         outboxCollection: null,
         inboxCollection: "id, goalChanges",
         pubSubCollection: "id, subscribers",
@@ -51,14 +48,14 @@ export class ZinZenDB extends Dexie {
           "id, goalId, title, hoursSpent, completedTodayIds, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
         customizationCollection: "++id, goalId, posIndex",
         dumpboxCollection: "id, key, value",
-        partnersCollection: "++id, relId, name, goals",
+        partnersCollection: null,
       })
       .upgrade((trans) => {
         console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
         if (currentVersion < 9) {
           console.log("processing updates for 9th version");
           const goalsCollection = trans.table("goalsCollection");
-          goalsCollection.toCollection().modify((goal: GoalItem) => {
+          goalsCollection.toCollection().modify((goal) => {
             if (goal.on === "weekends") {
               goal.on = ["Sat", "Sun"];
             } else {
@@ -81,17 +78,34 @@ export class ZinZenDB extends Dexie {
           });
         }
         if (currentVersion < 12) {
-          console.log("processing updates for 10th version");
+          console.log("processing updates for 12th version");
           const sharedWMCollection = trans.table("sharedWMCollection");
-          const partnersCollection = trans.table("partnersCollection");
-          partnersCollection.clear();
           sharedWMCollection.clear();
 
           const goalsCollection = trans.table("goalsCollection");
-          goalsCollection.toCollection().modify((goal: GoalItem) => {
+          goalsCollection.toCollection().modify((goal) => {
             delete goal.shared;
             delete goal.collaboration;
             goal.participants = [];
+          });
+        }
+        if (currentVersion < 13) {
+          console.log("processing updates for 13th version");
+          const sharedWMCollection = trans.table("sharedWMCollection");
+          const goalsCollection = trans.table("goalsCollection");
+          sharedWMCollection.toCollection().modify((goal: GoalItem) => {
+            goal.participants = goal.participants.map((ele) => ({ ...ele, following: true }));
+          });
+          goalsCollection.toCollection().modify((goal: GoalItem) => {
+            goal.participants = goal.participants.map((ele) => ({ ...ele, following: true }));
+          });
+        }
+        if (currentVersion < 14) {
+          console.log("processing updates for 14th version");
+          const contactsCollection = trans.table("contactsCollection");
+          contactsCollection.toCollection().modify((contact) => {
+            delete contact.collaborativeGoals;
+            delete contact.sharedGoals;
           });
         }
       });

@@ -6,7 +6,6 @@ import { darkModeState, displayToast } from "@src/store";
 import { addContact } from "@src/api/ContactsAPI";
 import { acceptRelationship } from "@src/services/contact.service";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
-import { createPartner } from "@src/api/PartnerAPI";
 
 const InvitePage = () => {
   const navigate = useNavigate();
@@ -25,7 +24,7 @@ const InvitePage = () => {
     const res = await acceptRelationship();
     if (res.success && res.response?.relId) {
       const { relId } = res.response;
-      await Promise.all([addContact(newContactName, relId, true), createPartner(relId, newContactName)]);
+      await addContact(newContactName, relId, true);
       setNewContactName("");
     }
     navigate("/");

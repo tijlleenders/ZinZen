@@ -1,5 +1,6 @@
 import { ISubGoalHistory } from "@src/store/GoalsState";
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, IParticipant } from "@src/models/GoalItem";
+import ContactItem from "@src/models/ContactItem";
 import { ILanguage, ILanguageListProps } from "./ILanguage";
 import { confirmActionState } from "./IPopupModals";
 
@@ -20,6 +21,8 @@ export interface ILocationState {
   changeTheme?: boolean; // theme changer mode
   expandedGoalId?: string; // id of goal to be expanded
   displayGoalActions?: GoalItem; // id of goal whose actions have to be opened
-  displayPartner?: boolean; // whether or not to display the partner goals
+  displayPartnerMode?: boolean; // whether or not to display the partner goals
   displayAddContact?: boolean; // whether or not to display the add contact form
+  displayParticipants?: string; // id of goal whose participants have to be displayed
+  displayPartner?: ContactItem; // to show this partner
 }

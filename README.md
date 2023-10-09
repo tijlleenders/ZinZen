@@ -9,8 +9,17 @@ ZinZen® gives you the peace of mind to live in the now by making sure that:
 
 It is also a way to collaborate efficiently with others to achieve shared goals.
 
+Explain ZinZen like I'm:
+
+- a developer: "ZinZen is git - but for personal goals instead of code - and with a UI that anyone understands."
+- five: "ZinZen tells the world about your dreams - and then people come and help you."
+- a project manager: "ZinZen is a global multi-project management platform for individuals."
+- an investor: "ZinZen will never be for sale - but we offer decent ROI on loans."
+
+Phases:
+
 - The first phase is a **smart** todo-app for a single individual.
-- The second phase will be collaborative.
+- The second phase is be collaborative.
 
 A lot of things in life can be managed by making lists (of lists...) with constraints and dependencies between them.
 

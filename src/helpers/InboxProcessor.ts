@@ -24,8 +24,13 @@ import {
 import { IDisplayChangesModal, ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { fixDateVlauesInGoalObject } from "@src/utils";
 
-export const handleIncomingChanges = async (payload) => {
+export const handleIncomingChanges = async (payload, relId) => {
   if (payload.type === "sharer") {
+    const incGoal = await getSharedWMGoal(payload.rootGoalId);
+    if (!incGoal || incGoal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
+      console.log("Changes ignored");
+      return;
+    }
     if (payload.changeType === "subgoals") {
       const changes = [
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
@@ -64,7 +69,7 @@ export const handleIncomingChanges = async (payload) => {
     if (rootGoal) {
       let inbox: InboxItem = await getInboxItem(rootGoalId);
       const defaultChanges = getDefaultValueOfGoalChanges();
-      defaultChanges[changeType] = [...changes];
+      defaultChanges[changeType] = [...changes.map((ele) => ({ ...ele, intent: payload.type }))];
       if (!inbox) {
         await createEmptyInboxItem(rootGoalId);
         inbox = await getInboxItem(rootGoalId);

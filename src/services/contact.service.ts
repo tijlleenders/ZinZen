@@ -69,6 +69,7 @@ export const sendUpdatesToSubscriber = async (
   rootGoalId: string,
   changeType: typeOfChange,
   changes: { level: number; goal: GoalItem }[] | { level: number; id: string }[],
+  customEventType = "",
 ) => {
   const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
   const { relId, type } = sub;
@@ -78,7 +79,7 @@ export const sendUpdatesToSubscriber = async (
     relId,
     debugKey: "82098435-380a-43ec-9122-0662870a5ea5",
     event: {
-      type,
+      type: customEventType !== "" ? customEventType : type,
       changeType,
       rootGoalId,
       changes,

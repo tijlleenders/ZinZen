@@ -4,8 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
-import shareAnonymous from "@assets/images/shareAnonymous.svg";
-import shareWithFriend from "@assets/images/shareWithFriend.svg";
 
 import Loader from "@src/common/Loader";
 import ContactItem from "@src/models/ContactItem";
@@ -61,7 +59,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
                   ...ele,
                   participants: [],
                   parentGoalId: ele.id === goal.id ? "root" : ele.parentGoalId,
-                  rootGoalId: ele.id === goal.id ? "root" : goal.id,
+                  rootGoalId: goal.id,
                 })),
               ]);
               setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });
@@ -129,8 +127,9 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       centered
       style={showAddContactModal ? { zIndex: 1 } : {}}
       onCancel={() => window.history.back()}
-      className={`share-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`share-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
+        darkModeStatus ? "dark" : "light"
+      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
       <p className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</p>
@@ -148,7 +147,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
               <Loader />
             ) : (
               <div className="icon">
-                <Icon active={true} title="SingleAvatar" />
+                <Icon active title="SingleAvatar" />
                 {/* <img className="secondary-icon" alt="share goal pseudo anonymously" src={shareAnonymous} /> */}
               </div>
             )}
@@ -171,8 +170,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
               <Loader />
             ) : (
               <div className="icon">
-                <Icon active={true} title="TwoAvatars" />
-
+                <Icon active title="TwoAvatars" />
               </div>
             )}
             <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>Share privately</p>

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { atom } from "recoil";
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
 
 export interface ISubGoalHistory {
@@ -32,6 +32,11 @@ export const displayAddContact = atom({
 export const displayShareModal = atom({
   key: "displayShareModal",
   default: null as GoalItem | null,
+});
+
+export const displayParticipants = atom({
+  key: "displayParticipants",
+  default: null as string | null,
 });
 
 export const displaySuggestionsModal = atom({

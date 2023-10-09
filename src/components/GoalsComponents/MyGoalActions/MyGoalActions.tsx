@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { handshakeIcon } from "@src/assets";
-
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 
@@ -14,8 +12,7 @@ import {
   lastAction,
   openDevMode,
   displayConfirmation,
-  openInbox,
-  displayPartner,
+  displayPartnerMode,
 } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
@@ -33,11 +30,10 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
   const theme = useRecoilValue(themeState);
-  const isInboxOpen = useRecoilValue(openInbox);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
-  const showPartner = useRecoilValue(displayPartner);
+  const isPartnerGoal = useRecoilValue(displayPartnerMode);
   const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
@@ -45,18 +41,16 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
-  const isSharedGoal = isInboxOpen || showPartner;
-
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
       if (goal.title === "magic") {
         setDevMode(false);
       }
-      await removeThisGoal(goal, ancestors, isInboxOpen, showPartner);
-      setLastAction("Delete");
+      await removeThisGoal(goal, ancestors, isPartnerGoal);
+      setLastAction("goalDeleted");
     } else if (action === "archive") {
-      await archiveThisGoal(goal, ancestors, isInboxOpen);
-      setLastAction("Archive");
+      await archiveThisGoal(goal, ancestors);
+      setLastAction("goalArchived");
     } else if (action === "colabRequest") {
       // await convertSharedWMGoalToColab(goal);
       window.history.back();
@@ -87,8 +81,9 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       centered
       width={200}
       onCancel={() => window.history.back()}
-      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${
+        darkModeStatus ? "dark" : "light"
+      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <Tooltip placement="top" title={goal.title}>
@@ -105,14 +100,14 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
         }}
       >
-        <ActionDiv label={t(isInboxOpen ? "Rmove From here" : "Delete")} icon="Delete" />
+        <ActionDiv label={t("Delete")} icon="Delete" />
       </div>
-      {((isSharedGoal && goal.parentGoalId === "root") || !isSharedGoal) && (
+      {((isPartnerGoal && goal.parentGoalId === "root") || !isPartnerGoal) && (
         <div
           className="goal-action shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            if (!isSharedGoal) {
+            if (!isPartnerGoal) {
               if (goal.typeOfGoal !== "myGoal" && goal.parentGoalId !== "root") {
                 setShowToast({
                   message: "Sorry, you are not allowed to share",
@@ -128,12 +123,12 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           }}
         >
           <ActionDiv
-            label={t(isSharedGoal ? "Collaborate" : "Share")}
-            icon={isSharedGoal ? "Collaborate" : "SingleAvatar"}
+            label={t(isPartnerGoal ? "Collaborate" : "Share")}
+            icon={isPartnerGoal ? "Collaborate" : "SingleAvatar"}
           />
         </div>
       )}
-      {!isSharedGoal && (
+      {!isPartnerGoal && (
         <div
           className="goal-action shareOptions-btn"
           onClickCapture={async (e) => {

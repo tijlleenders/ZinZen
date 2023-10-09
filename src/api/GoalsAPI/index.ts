@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { shareGoal } from "@src/services/goal.service";
 import { sortGoalsByProps } from "../GCustomAPI";
 
@@ -177,7 +177,23 @@ export const updateSharedStatusOfGoal = async (id: string, relId: string, name: 
       .where("id")
       .equals(id)
       .modify((obj: GoalItem) => {
-        obj.participants.push({ relId, name, type: "sharer" });
+        if (!obj.participants.find((ele) => ele.relId === relId)) {
+          obj.participants.push({ relId, name, type: "sharer", following: true });
+        }
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
+
+export const followContactOnGoal = async (id: string, participant: IParticipant) => {
+  console.log(id, participant);
+  db.transaction("rw", db.goalsCollection, async () => {
+    await db.goalsCollection
+      .where("id")
+      .equals(id)
+      .modify((obj: GoalItem) => {
+        obj.participants = [...obj.participants.filter((ele) => ele.relId !== participant.relId), participant];
       });
   }).catch((e) => {
     console.log(e.stack || e);

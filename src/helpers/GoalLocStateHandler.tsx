@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { ILocationState } from "@src/Interfaces";
-import { getActiveSharedWMGoals } from "@src/api/SharedWMAPI";
-import { displayInbox, displayConfirmation } from "@src/store";
+import { displayConfirmation, displayPartner } from "@src/store";
 import {
   displayAddGoal,
   displayGoalId,
@@ -12,35 +11,37 @@ import {
   displayShareModal,
   displayGoalActions,
   displayAddContact,
+  displayParticipants,
 } from "@src/store/GoalsState";
 
 const GoalLocStateHandler = () => {
   const location = useLocation();
-  const [showInbox, setShowInbox] = useRecoilState(displayInbox);
-
   const setSelectedGoalId = useSetRecoilState(displayGoalId);
   const [showAddGoal, setShowAddGoal] = useRecoilState(displayAddGoal);
+  const [activePartner, setActivePartner] = useRecoilState(displayPartner);
   const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
   const [showGoalActions, setShowGoalActions] = useRecoilState(displayGoalActions);
+  const [showParticipants, setShowParticipants] = useRecoilState(displayParticipants);
   const [showConfirmation, setShowConfirmation] = useRecoilState(displayConfirmation);
   const [showAddContactModal, setShowAddContactModal] = useRecoilState(displayAddContact);
 
   const handleLocationChange = () => {
     const locationState: ILocationState = location.state || {};
-    getActiveSharedWMGoals().then((items) => {
-      if (items && items.length > 0) {
-        if (!showInbox) {
-          setShowInbox(true);
-        }
-      } else if (showInbox) {
-        setShowInbox(false);
-      }
-    });
     if (subGoalHistory.length > 0 || ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
       setSubGoalHistory([...(locationState.goalsHistory || [])]);
       setSelectedGoalId(locationState.activeGoalId || "root");
+    }
+    if (activePartner && !locationState.displayPartner) {
+      setActivePartner(null);
+    } else if (locationState.displayPartner) {
+      setActivePartner(locationState.displayPartner);
+    }
+    if (showParticipants && !locationState.displayParticipants) {
+      setShowParticipants(null);
+    } else if (locationState.displayParticipants) {
+      setShowParticipants(locationState.displayParticipants);
     }
     if (showGoalActions && !locationState.displayGoalActions) {
       setShowGoalActions(null);
