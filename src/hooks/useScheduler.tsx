@@ -8,7 +8,6 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { getAllGoals } from "@src/api/GoalsAPI";
-import { callJsScheduler } from "@src/scheduler/miniScheduler";
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
 import { resetProgressOfToday } from "@src/api/TasksAPI";
 import { lastAction, openDevMode } from "@src/store";
@@ -67,13 +66,8 @@ function useScheduler() {
       await resetProgressOfToday();
       const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
       newGeneratedInputId = generatedInputId;
-      if (devMode) {
-        res = callJsScheduler(schedulerInputV2);
-        logIO(JSON.stringify(schedulerInputV2), res);
-      } else {
-        await init();
-        res = schedule(schedulerInputV2);
-      }
+      await init();
+      res = schedule(schedulerInputV2);
     }
     putSchedulerRes(cachedRes.code, newGeneratedInputId, JSON.stringify(res))
       .then(() => console.log("schedule saved"))
