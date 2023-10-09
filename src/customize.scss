@@ -20,6 +20,8 @@ code {
 .popupModal {
   --primary-background: #fff;
   --default-border-color: #f1e7dd;
+  --app-background: #D3D3D3;
+  --header-background: #F5F5F5;
   --not-active: rgba(255, 255, 255, 0.9);
   --bottom-nav-color: #fff;
 }
@@ -28,8 +30,10 @@ code {
 .popupModal-dark {
   --primary-background: #181919;
   --default-border-color: #2e2e2e;
+  --header-background: #333333;
+  --app-background: #121212;
   --not-active: rgba(255, 255, 255, 0.5);
-  --bottom-nav-color: #252728;
+  --bottom-nav-color: #000000;
 }
 
 .light-theme1,
