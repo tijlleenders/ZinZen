@@ -11,6 +11,7 @@ const BottomNavLayout = ({ children }: { children: React.ReactNode }) => (
       maxWidth: 600,
       height: 56,
       boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",
+      borderRadius: 8,
     }}
   >
     {children}
