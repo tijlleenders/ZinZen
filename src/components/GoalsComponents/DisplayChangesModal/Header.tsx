@@ -9,44 +9,31 @@ const Header = ({
 }: {
   title: string;
   contactName: string;
-  currentDisplay: typeOfChange | "none" | "conversionRequest";
+  currentDisplay: typeOfChange | "none";
 }) => {
-  if (currentDisplay === "conversionRequest") {
-    return (
-      <>
-        {" "}
-        {contactName} is also working on {title}. Do you want to collaborate?
-      </>
-    );
-  }
-
   switch (currentDisplay) {
     case "subgoals":
       return (
         <>
-          {" "}
-          {contactName} added to {title}.<br /> Add as well ?
+          {contactName} added to {title}.&nbsp; &nbsp; Add as well ?
         </>
       );
     case "modifiedGoals":
       return (
         <>
-          {" "}
-          {contactName} made changes in {title}.<br /> Make changes ?{" "}
+          {contactName} made changes in {title}.&nbsp; &nbsp; Make changes ?
         </>
       );
     case "deleted":
       return (
         <>
-          {" "}
-          {contactName} deleted {title}.{" "}
+          {contactName} deleted {title}.
         </>
       );
     case "archived":
       return (
         <>
-          {" "}
-          {contactName} completed {title}{" "}
+          {contactName} completed {title}.
         </>
       );
     default:
