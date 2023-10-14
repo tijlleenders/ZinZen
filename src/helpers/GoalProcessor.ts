@@ -4,7 +4,7 @@ import { getGoal } from "@src/api/GoalsAPI";
 import { colorPalleteList } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
-import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange } from "@src/models/InboxItem";
+import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
 // export const createSentFromTags = (goal: GoalItem) =>
@@ -132,16 +132,17 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
   return { typeAtPriority };
 };
 
-export const jumpToLowestChanges = async (id: string) => {
+export const jumpToLowestChanges = async (id: string, relId: string) => {
   const inbox: InboxItem = await getInboxItem(id);
   let typeAtPriority: typeOfChange | "none" = "none";
   if (inbox) {
-    const { goalChanges } = inbox;
+    const goalChanges = inbox.changes[relId];
     typeAtPriority = getTypeAtPriority(goalChanges).typeAtPriority;
     if (typeAtPriority !== "none") {
       goalChanges[typeAtPriority].sort((a: { level: number }, b: { level: number }) => a.level - b.level);
-      let goals: GoalItem[] = [];
+      let goals: { intent: typeOfIntent; goal: GoalItem }[] = [];
       const goalAtPriority = goalChanges[typeAtPriority][0];
+      console.log("🚀 ~ file: GoalProcessor.ts:145 ~ jumpToLowestChanges ~ goalAtPriority:", goalAtPriority);
       const parentId =
         "id" in goalAtPriority
           ? goalAtPriority.id
@@ -152,18 +153,20 @@ export const jumpToLowestChanges = async (id: string) => {
         return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
       }
       if (typeAtPriority === "subgoals") {
-        goalChanges.subgoals.forEach((ele: changesInGoal) => {
-          if (ele.goal.parentGoalId === parentId) goals.push(ele.goal);
+        goalChanges.subgoals.forEach(({ intent, goal }) => {
+          if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });
       }
       if (typeAtPriority === "modifiedGoals") {
-        let goal = createGoalObjectFromTags({});
-        goalChanges.modifiedGoals.forEach((ele) => {
-          if (ele.goal.id === parentId) {
-            goal = { ...goal, ...ele.goal };
+        let modifiedGoal = createGoalObjectFromTags({});
+        let goalIntent;
+        goalChanges.modifiedGoals.forEach(({ goal, intent }) => {
+          if (goal.id === parentId) {
+            modifiedGoal = { ...modifiedGoal, ...goal };
+            goalIntent = intent;
           }
         });
-        goals = [goal];
+        goals = [{ intent: goalIntent, goal: modifiedGoal }];
       }
 
       return {
@@ -191,7 +194,6 @@ export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
     "beforeTime",
     "goalColor",
     "language",
-    "link",
   ];
   const res: ITagsChanges = { schemaVersion: {}, prettierVersion: {} };
   const goal1Tags = formatTagsToText(goal1);
