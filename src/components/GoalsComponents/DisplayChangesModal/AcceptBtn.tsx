@@ -10,68 +10,49 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getTypeAtPriority } from "@src/helpers/GoalProcessor";
 import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
 import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
-import { changeNewUpdatesStatus, convertSharedGoalToColab } from "@src/api/GoalsAPI";
+import { typeOfChange } from "@src/models/InboxItem";
 
 interface AcceptBtnProps {
   goal: GoalItem;
   acceptChanges: () => Promise<void>;
-  showChangesModal: IDisplayChangesModal;
-  setShowChangesModal: React.Dispatch<React.SetStateAction<IDisplayChangesModal | null>>;
+  typeAtPriority: typeOfChange | "none";
 }
 
-const AcceptBtn = ({ showChangesModal, goal, acceptChanges, setShowChangesModal }: AcceptBtnProps) => {
-  const { typeAtPriority } = showChangesModal;
-  const isConversionRequest = typeAtPriority === "conversionRequest";
+const AcceptBtn = ({ typeAtPriority, goal, acceptChanges }: AcceptBtnProps) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const setLastAction = useSetRecoilState(lastAction);
 
   const handleClick = async () => {
-    if (isConversionRequest) {
-      // await convertTypeOfSub(goal.rootGoalId, goal.shared.contacts[0].relId, "collaboration");
-      await convertSharedGoalToColab(goal.id);
-      setShowChangesModal(null);
-    } else {
-      await acceptChanges();
-      const removeChanges =
-        typeAtPriority === "subgoals" ? showChangesModal.goals.map((ele) => ele.id) : [showChangesModal.goals[0].id];
-      if (typeAtPriority !== "none") {
-        await deleteGoalChangesInID(goal.rootGoalId, typeAtPriority, removeChanges);
-      }
-    }
+    await acceptChanges();
+
     const inbox = await getInboxItem(goal.rootGoalId);
-    if (getTypeAtPriority(inbox.goalChanges).typeAtPriority === "none") {
-      changeNewUpdatesStatus(false, goal.rootGoalId)
-        .then(() => {
-          setLastAction("goalUpdates");
-        })
-        .catch((err) => console.log(err));
-    }
-    setShowChangesModal(null);
+    // if (getTypeAtPriority(inbox.goalChanges).typeAtPriority === "none") {
+    // changeNewUpdatesStatus(false, goal.rootGoalId)
+    //   .then(() => {
+    //     setLastAction("goalUpdates");
+    //   })
+    //   .catch((err) => console.log(err));
+    // }
   };
   return (
     <button
       type="button"
-      style={{ width: "100%", padding: "8px 15px", justifyContent: "flex-start" }}
+      style={{ padding: "8px 15px", justifyContent: "flex-start" }}
       className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-      onClick={handleClick}
+      onClick={async () => {
+        await acceptChanges();
+      }}
     >
       <img
         alt="add changes"
-        src={isConversionRequest ? collaborateSvg : typeAtPriority === "deleted" ? deleteIcon : plus}
+        src={typeAtPriority === "deleted" ? deleteIcon : plus}
         width={25}
         style={!darkModeStatus ? { filter: "brightness(0)" } : {}}
       />
       &nbsp;
-      {isConversionRequest ? (
-        `Collaborate with ${goal.shared.contacts[0].name}`
-      ) : (
-        <>
-          {typeAtPriority === "archived" && "Complete for me too"}
-          {typeAtPriority === "deleted" && "Delete for me too"}
-          {typeAtPriority === "subgoals" && "Add all checked"}
-          {typeAtPriority === "modifiedGoals" && "Make all checked changes"}
-        </>
-      )}
+      {typeAtPriority === "archived" && "Complete for me too"}
+      {typeAtPriority === "deleted" && "Delete for me too"}
+      {typeAtPriority === "subgoals" && "Add all checked"}
+      {typeAtPriority === "modifiedGoals" && "Make all checked changes"}
     </button>
   );
 };
