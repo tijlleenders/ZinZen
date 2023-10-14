@@ -86,20 +86,12 @@ export const handleIncomingChanges = async (payload, relId) => {
   }
 };
 
-export const acceptSelectedSubgoals = async (
-  unselectedGoalIds: string[],
-  showChangesModal: IDisplayChangesModal,
-  parentGoal: GoalItem,
-) => {
+export const acceptSelectedSubgoals = async (selectedGoals: GoalItem[], parentGoal: GoalItem) => {
   try {
     const childrens: string[] = [];
-    showChangesModal.goals.forEach(async (colabGoal: GoalItem) => {
-      if (!unselectedGoalIds.includes(colabGoal.id)) {
-        addGoal({
-          ...fixDateVlauesInGoalObject(colabGoal),
-        }).catch((err) => console.log(err));
-        childrens.push(colabGoal.id);
-      }
+    selectedGoals.forEach(async (goal: GoalItem) => {
+      addGoal(fixDateVlauesInGoalObject(goal)).catch((err) => console.log(err));
+      childrens.push(goal.id);
     });
     await addIntoSublist(parentGoal.id, childrens);
     return "Done!!";
