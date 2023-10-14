@@ -56,7 +56,8 @@ export const suggestChanges = async (
       .filter((ele: string) => ele !== "")
       .join(" "),
     goalColor,
+    newUpdates: false,
   };
   const { participants, ...changes } = goal;
-  sendUpdate(rootGoal.participants, rootGoal.id, "modifiedGoals", [{ level, changes }]);
+  sendUpdate(rootGoal.participants, rootGoal.id, "modifiedGoals", [{ level, goal: changes }]);
 };
