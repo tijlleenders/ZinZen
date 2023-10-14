@@ -21,7 +21,7 @@ export const displayGoalConfigModal = atom({
 
 export const displayChangesModal = atom({
   key: "displayChangesModal",
-  default: null as IDisplayChangesModal | null,
+  default: null as GoalItem | null,
 });
 
 export const displayAddContact = atom({
