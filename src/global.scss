@@ -238,7 +238,11 @@ h6 {
     border-radius: 10px;
   }
 }
-
+.popupModal-dark {
+  input {
+    color: white;
+  }
+}
 .colorPallette {
   display: flex;
   gap: 20px;
