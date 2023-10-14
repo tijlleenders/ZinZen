@@ -129,21 +129,3 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     due: finalChanges.due ? new Date(finalChanges.due) : null,
   });
 };
-
-export const acceptChangesOf = async (
-  unselectedChanges: string[],
-  showChangesModal: IDisplayChangesModal,
-  updateList: ITagsChanges,
-  activeGoal: GoalItem | undefined,
-) => {
-  const goal = showChangesModal.goals[0];
-  if (showChangesModal.typeAtPriority === "subgoals" && activeGoal) {
-    await acceptSelectedSubgoals(unselectedChanges, showChangesModal, activeGoal);
-  } else if (showChangesModal.typeAtPriority === "modifiedGoals" && updateList) {
-    await acceptSelectedTags(unselectedChanges, updateList, goal);
-  } else if (showChangesModal.typeAtPriority === "deleted") {
-    await removeGoalWithChildrens(goal);
-  } else if (showChangesModal.typeAtPriority === "archived") {
-    await archiveUserGoal(goal);
-  }
-};
