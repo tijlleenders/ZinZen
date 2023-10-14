@@ -18,7 +18,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
 import { goalsHistory } from "@src/store/GoalsState";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
-// import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
+import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
 
 import ActionDiv from "./ActionDiv";
@@ -52,7 +52,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       await archiveThisGoal(goal, ancestors);
       setLastAction("goalArchived");
     } else if (action === "colabRequest") {
-      // await convertSharedWMGoalToColab(goal);
+      await convertSharedWMGoalToColab(goal);
       window.history.back();
     } else {
       return;
