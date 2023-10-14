@@ -5,7 +5,7 @@ import { getDefaultValueOfGoalChanges } from "@src/utils/defaultGenerators";
 
 export const createEmptyInboxItem = async (id: string) => {
   db.transaction("rw", db.inboxCollection, async () => {
-    await db.inboxCollection.add({ id, goalChanges: getDefaultValueOfGoalChanges() });
+    await db.inboxCollection.add({ id, changes: {} });
   }).catch((e) => {
     console.log(e);
   });
@@ -24,33 +24,38 @@ export const removeGoalInbox = async (id: string) => {
     .catch((err) => console.log("failed to delete", err));
 };
 
-export const addGoalChangesInID = async (id: string, newChanges: IChangesInGoal) => {
+export const addGoalChangesInID = async (id: string, relId: string, newChanges: IChangesInGoal) => {
   db.transaction("rw", db.inboxCollection, async () => {
     await db.inboxCollection
       .where("id")
       .equals(id)
       .modify((obj: InboxItem) => {
-        Object.keys(newChanges).forEach((changeType: typeOfChange) => {
-          // @ts-ignore
-          obj.goalChanges[changeType] = [...obj.goalChanges[changeType], ...newChanges[changeType]];
+        const currentState = obj.changes[relId] || getDefaultValueOfGoalChanges();
+        Object.keys(currentState).forEach((changeType: typeOfChange) => {
+          currentState[changeType] = [...currentState[changeType], ...newChanges[changeType]];
         });
+        obj.changes[relId] = { ...currentState };
       });
   }).catch((e) => {
     console.log(e.stack || e);
   });
 };
 
-export const deleteGoalChangesInID = async (id: string, categoryOfChange: typeOfChange, changes: string[]) => {
+export const deleteGoalChangesInID = async (
+  id: string,
+  relId: string,
+  categoryOfChange: typeOfChange,
+  changes: string[],
+) => {
   db.transaction("rw", db.inboxCollection, async () => {
     await db.inboxCollection
       .where("id")
       .equals(id)
       .modify((obj: InboxItem) => {
-        const arr = [...obj.goalChanges[categoryOfChange]];
-        // @ts-ignore
-        obj.goalChanges[categoryOfChange] = arr.filter(
+        const goalChanges = obj.changes[relId][categoryOfChange].filter(
           (ele) => !changes.includes("goal" in ele ? ele.goal.id : ele.id),
         );
+        obj.changes[relId][categoryOfChange] = [...goalChanges];
       });
   }).catch((e) => {
     console.log(e.stack || e);
