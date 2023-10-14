@@ -5,14 +5,16 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import pencil from "@assets/images/pencil.svg";
 import { unarchiveIcon } from "@src/assets";
-import useGoalStore from "@src/hooks/useGoalStore";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
+import useGoalStore from "@src/hooks/useGoalStore";
+import NotificationSymbol from "@src/common/NotificationSymbol";
 
+import { jumpToLowestChanges, getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import GoalAvatar from "./GoalAvatar";
 
 interface MyGoalProps {
@@ -121,29 +123,13 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     if (archived || (showPartnerMode && goal.parentGoalId !== "root")) {
       return;
     }
-    // if (goal.collaboration.newUpdates || goal.shared.conversionRequests.status) {
-    //   handleDisplayChanges();
-    //   if (goal.shared.conversionRequests.status) {
-    //     setShowChangesModal({ typeAtPriority: "conversionRequest", parentId: goal.id, goals: [] });
-    //   } else {
-    //     const res = await jumpToLowestChanges(goal.rootGoalId);
-    //     const pathToGoal = await getHistoryUptoGoal(res.parentId);
-    //     if (pathToGoal.length > 1) {
-    //       pathToGoal.pop();
-    //       setSubGoalHistory([...pathToGoal]);
-    //       setSelectedGoalId(pathToGoal.slice(-1)[0].goalID);
-    //     }
-    //     setShowChangesModal(res);
-    //   }
-    // } else {
-    navigate("/MyGoals", {
-      state: {
-        ...location.state,
-        from: "",
-        displayGoalActions: goal,
-      },
-    });
-    // }
+    const navState = { ...location.state, from: "" };
+    if (goal.newUpdates) {
+      navState.displayChanges = goal;
+    } else {
+      navState.displayGoalActions = goal;
+    }
+    navigate("/MyGoals", { state: navState });
   }
   useEffect(() => {
     if (showActions !== defaultTap) {
@@ -195,9 +181,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
                   background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`,
                 }}
               >
-                {/* {(goal.collaboration.newUpdates || goal.shared.conversionRequests.status) && (
-                  <NotificationSymbol color={goal.goalColor} />
-                )} */}
+                {goal.newUpdates && <NotificationSymbol color={goal.goalColor} />}
               </div>
             </div>
           </div>

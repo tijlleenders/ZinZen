@@ -12,6 +12,7 @@ import {
   displayGoalActions,
   displayAddContact,
   displayParticipants,
+  displayChangesModal,
 } from "@src/store/GoalsState";
 
 const GoalLocStateHandler = () => {
@@ -23,6 +24,7 @@ const GoalLocStateHandler = () => {
   const [showUpdateGoal, setShowUpdateGoal] = useRecoilState(displayUpdateGoal);
   const [showShareModal, setShowShareModal] = useRecoilState(displayShareModal);
   const [showGoalActions, setShowGoalActions] = useRecoilState(displayGoalActions);
+  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
   const [showParticipants, setShowParticipants] = useRecoilState(displayParticipants);
   const [showConfirmation, setShowConfirmation] = useRecoilState(displayConfirmation);
   const [showAddContactModal, setShowAddContactModal] = useRecoilState(displayAddContact);
@@ -32,6 +34,11 @@ const GoalLocStateHandler = () => {
     if (subGoalHistory.length > 0 || ("goalsHistory" in locationState && "activeGoalId" in locationState)) {
       setSubGoalHistory([...(locationState.goalsHistory || [])]);
       setSelectedGoalId(locationState.activeGoalId || "root");
+    }
+    if (showChangesModal && !locationState.displayChanges) {
+      setShowChangesModal(null);
+    } else if (locationState.displayChanges) {
+      setShowChangesModal(locationState.displayChanges);
     }
     if (activePartner && !locationState.displayPartner) {
       setActivePartner(null);

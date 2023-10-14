@@ -8,7 +8,7 @@ import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
 
-export const dexieVersion = 15;
+export const dexieVersion = 16;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -106,6 +106,17 @@ export class ZinZenDB extends Dexie {
           contactsCollection.toCollection().modify((contact) => {
             delete contact.collaborativeGoals;
             delete contact.sharedGoals;
+          });
+        }
+        if (currentVersion < 16) {
+          console.log("processing updates for 16th version");
+          const sharedWMCollection = trans.table("sharedWMCollection");
+          const goalsCollection = trans.table("goalsCollection");
+          sharedWMCollection.toCollection().modify((goal: GoalItem) => {
+            goal.newUpdates = false;
+          });
+          goalsCollection.toCollection().modify((goal: GoalItem) => {
+            goal.newUpdates = false;
           });
         }
       });

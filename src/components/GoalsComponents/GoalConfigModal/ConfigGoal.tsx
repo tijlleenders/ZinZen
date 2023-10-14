@@ -117,9 +117,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       return;
     }
     const goalColor = colorPalleteList[colorIndex];
-    if (state.displayPartnerMode && state.goalsHistory) {
-      const rootGoalId = state.goalsHistory[0].goalID;
-      const rootGoal = await getSharedWMGoal(rootGoalId);
+    if (state.displayPartnerMode) {
+      let rootGoal = goal;
+      if (state.goalsHistory && state.goalsHistory.length > 0) {
+        const rootGoalId = state.goalsHistory[0].goalID;
+        rootGoal = await getSharedWMGoal(rootGoalId);
+      }
       suggestChanges(rootGoal, getFinalTags(), title, goalColor, subGoalsHistory.length);
     } else {
       await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id]);

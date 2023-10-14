@@ -87,6 +87,7 @@ export const MyGoals = () => {
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
       {showShareModal && <ShareGoalModal goal={showShareModal} />}
       {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
+      {showChangesModal && <DisplayChangesModal />}
       <div className="myGoals-container">
         {selectedGoalId === "root" ? (
           <div className="my-goals-content">
@@ -110,7 +111,6 @@ export const MyGoals = () => {
         ) : (
           <GoalSublist />
         )}
-        {/* {showChangesModal && <DisplayChangesModal />} */}
         {activeGoals?.length === 0 && (
           <img
             style={{ width: 350, height: 350, opacity: 0.3 }}

@@ -1,6 +1,11 @@
 .App-light,
-.popupModal {
+.popupModal,
+.App-dark,
+.popupModal-dark {
   .checkbox {
+    .ant-checkbox {
+      background: transparent !important;
+    }
     .ant-radio-checked .ant-radio-inner,
     .ant-checkbox-checked .ant-checkbox-inner {
       border: 2px solid var(--Linear, var(--icon-grad-1)) !important ;
@@ -17,25 +22,25 @@
     }
   }
 }
-.App-dark,
-.popupModal-dark {
-  .checkbox {
-    .ant-radio-checked .ant-radio-inner,
-    .ant-checkbox-checked .ant-checkbox-inner {
-      border-color: var(--selection-color) !important ;
-      background-color: var(--selection-color) !important;
-    }
-    .ant-radio:hover .ant-radio-inner,
-    .ant-checkbox:hover .ant-checkbox-inner,
-    .ant-checkbox-checked:after {
-      border-color: var(--selection-color) !important;
-    }
-    .ant-radio-checked .ant-radio-inner:focus,
-    .ant-checkbox-checked .ant-checkbox-inner:focus {
-      border-color: var(--selection-color) !important;
-    }
-  }
-}
+// .App-dark,
+// .popupModal-dark {
+//   .checkbox {
+//     .ant-radio-checked .ant-radio-inner,
+//     .ant-checkbox-checked .ant-checkbox-inner {
+//       border-color: var(--selection-color) !important ;
+//       background-color: var(--selection-color) !important;
+//     }
+//     .ant-radio:hover .ant-radio-inner,
+//     .ant-checkbox:hover .ant-checkbox-inner,
+//     .ant-checkbox-checked:after {
+//       border-color: var(--selection-color) !important;
+//     }
+//     .ant-radio-checked .ant-radio-inner:focus,
+//     .ant-checkbox-checked .ant-checkbox-inner:focus {
+//       border-color: var(--selection-color) !important;
+//     }
+//   }
+// }
 
 .ant-modal-mask {
   background-color: rgba(87, 87, 87, 0.4) !important;
@@ -85,7 +90,6 @@
 /*ProgressBar*/
 .progress-dark {
   .ant-progress-text {
-    color: white!important;
+    color: white !important;
   }
 }
-

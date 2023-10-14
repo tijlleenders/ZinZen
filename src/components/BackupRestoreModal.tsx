@@ -120,6 +120,17 @@ const BackupRestoreModal = () => {
               delete contact.sharedGoals;
             });
           }
+          if (currentVersion < 16) {
+            console.log("processing updates for 16th version");
+            const sharedWMCollection = db.table("sharedWMCollection");
+            const goalsCollection = db.table("goalsCollection");
+            sharedWMCollection.toCollection().modify((goal: GoalItem) => {
+              goal.newUpdates = false;
+            });
+            goalsCollection.toCollection().modify((goal: GoalItem) => {
+              goal.newUpdates = false;
+            });
+          }
           importSuccessfull();
         } else {
           setShowToast({

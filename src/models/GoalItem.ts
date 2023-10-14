@@ -31,4 +31,5 @@ export interface GoalItem {
     perWeek: string | null;
   };
   typeOfGoal: "myGoal" | "shared";
+  newUpdates: boolean;
 }
