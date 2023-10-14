@@ -5,11 +5,8 @@ import { getDefaultValueOfGoalChanges } from "@src/utils/defaultGenerators";
 import {
   addGoal,
   addIntoSublist,
-  archiveUserGoal,
   // changeNewUpdatesStatus,
   getGoal,
-  notifyNewColabRequest,
-  removeGoalWithChildrens,
   updateGoal,
 } from "@src/api/GoalsAPI";
 import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
@@ -21,11 +18,11 @@ import {
   removeSharedWMGoal,
   updateSharedWMGoal,
 } from "@src/api/SharedWMAPI";
-import { IDisplayChangesModal, ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
+import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { fixDateVlauesInGoalObject } from "@src/utils";
 
 export const handleIncomingChanges = async (payload, relId) => {
-  if (payload.type === "sharer") {
+  if (payload.type === "sharer" && (await getSharedWMGoal(payload.rootGoalId))) {
     const incGoal = await getSharedWMGoal(payload.rootGoalId);
     if (!incGoal || incGoal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
       console.log("Changes ignored");
@@ -61,10 +58,8 @@ export const handleIncomingChanges = async (payload, relId) => {
         archiveSharedWMGoal(goal).catch((err) => console.log(err, "failed to archive")),
       );
     }
-  } else if (payload.type === "collaborationInvite") {
-    notifyNewColabRequest(payload.goal.id, payload.relId).catch(() => console.log("failed to notify about new colab"));
-  } else if (["collaboration", "suggestion"].includes(payload.type)) {
-    const { rootGoalId, changes, changeType, relId } = payload;
+  } else if (["sharer", "suggestion"].includes(payload.type)) {
+    const { rootGoalId, changes, changeType } = payload;
     const rootGoal = await getGoal(rootGoalId);
     if (rootGoal) {
       let inbox: InboxItem = await getInboxItem(rootGoalId);
@@ -74,6 +69,10 @@ export const handleIncomingChanges = async (payload, relId) => {
         await createEmptyInboxItem(rootGoalId);
         inbox = await getInboxItem(rootGoalId);
       }
+      await Promise.all([
+        updateGoal(rootGoalId, { newUpdates: true }),
+        await addGoalChangesInID(rootGoalId, relId, defaultChanges),
+      ]);
       // const goalItemExist = changeType === "subgoals" || changeType === "modifiedGoals";
       // changes.forEach(async (ele) => {
       //   console.log(ele)
@@ -81,7 +80,6 @@ export const handleIncomingChanges = async (payload, relId) => {
       // });
       // changeNewUpdatesStatus(true, rootGoalId).catch((err) => console.log(err));
       // @ts-ignore
-      await addGoalChangesInID(rootGoalId, defaultChanges, relId);
     }
   }
 };
