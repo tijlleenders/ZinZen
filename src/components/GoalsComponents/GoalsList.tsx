@@ -48,25 +48,21 @@ const GoalsList: React.FC<GoalsListProps> = ({ goals, showActions, setGoals, set
     const posIndexPromises = goals.map(async (ele, index) => updatePositionIndex(ele.id, index));
     Promise.all(posIndexPromises).catch((err) => console.log("error in sorting", err));
   };
-  return (
-    <>
-      {goals.map((goal: GoalItem, index: number) => (
-        <React.Fragment key={goal.id}>
-          {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
-          <DragAndDrop
-            thisItem={goal.id === draggedItem?.id}
-            index={index}
-            dragging={dragging}
-            handleDragStart={handleDragStart}
-            handleDragEnter={handleDragEnter}
-            handleDragEnd={handleDragEnd}
-          >
-            <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} />
-          </DragAndDrop>
-        </React.Fragment>
-      ))}
-    </>
-  );
+  return goals.map((goal: GoalItem, index: number) => (
+    <React.Fragment key={goal.id}>
+      {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
+      <DragAndDrop
+        thisItem={goal.id === draggedItem?.id}
+        index={index}
+        dragging={dragging}
+        handleDragStart={handleDragStart}
+        handleDragEnter={handleDragEnter}
+        handleDragEnd={handleDragEnd}
+      >
+        <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} />
+      </DragAndDrop>
+    </React.Fragment>
+  ));
 };
 
 export default GoalsList;
