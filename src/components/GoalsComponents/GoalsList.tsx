@@ -51,7 +51,7 @@ const GoalsList: React.FC<GoalsListProps> = ({ goals, showActions, setGoals, set
   return (
     <>
       {goals.map((goal: GoalItem, index: number) => (
-        <>
+        <React.Fragment key={goal.id}>
           {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
           <DragAndDrop
             thisItem={goal.id === draggedItem?.id}
@@ -63,7 +63,7 @@ const GoalsList: React.FC<GoalsListProps> = ({ goals, showActions, setGoals, set
           >
             <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} />
           </DragAndDrop>
-        </>
+        </React.Fragment>
       ))}
     </>
   );
