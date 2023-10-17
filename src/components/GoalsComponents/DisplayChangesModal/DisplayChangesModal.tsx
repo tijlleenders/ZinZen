@@ -135,6 +135,10 @@ const DisplayChangesModal = () => {
       await acceptSelectedTags(unselectedChanges, updateList, activeGoal);
       setUnselectedChanges([]);
       setUpdateList({ schemaVersion: {}, prettierVersion: {} });
+    } else if (currentDisplay === "deleted") {
+      await removeGoalWithChildrens(activeGoal);
+    } else if (currentDisplay === "archived") {
+      await archiveUserGoal(activeGoal);
     }
     setCurrentDisplay("none");
   };
