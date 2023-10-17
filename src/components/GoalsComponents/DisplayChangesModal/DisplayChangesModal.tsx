@@ -8,7 +8,7 @@ import { themeState } from "@src/store/ThemeState";
 import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { darkModeState } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { displayChangesModal } from "@src/store/GoalsState";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
@@ -40,24 +40,34 @@ const DisplayChangesModal = () => {
     const { prettierVersion } = updateList;
     return (
       <div className={`changes-list${darkModeStatus ? "-dark" : ""}`}>
-        {Object.keys(prettierVersion).map((k) => (
-          <div key={`${k}-edit`}>
-            <Checkbox
-              checked={!unselectedChanges.includes(k)}
-              className="checkbox"
-              onChange={(e) => {
-                setUnselectedChanges([
-                  ...(e.target.checked ? unselectedChanges.filter((tag) => tag !== k) : [...unselectedChanges, k]),
-                ]);
-              }}
-            />
-            <p>
-              &nbsp;{k}:&nbsp;
-              <span className="existingChange">{prettierVersion[k].oldVal}</span>&nbsp;
-              <span className="incomingChange">{prettierVersion[k].newVal}</span>
-            </p>
-          </div>
-        ))}
+        {Object.keys(prettierVersion).map((k) => {
+          const { oldVal } = prettierVersion[k];
+          const { newVal } = prettierVersion[k];
+          // if (k === "timeBudget") {
+          //   const oldParsed = JSON.parse(oldVal);
+          //   const newParsed = JSON.parse(newVal);
+          //   oldVal = `${oldParsed.perDay}/day, ${oldParsed.perWeek}/week`;
+          //   newVal = `${newParsed.perDay}/day, ${newParsed.perWeek}/week`;
+          // }
+          return (
+            <div key={`${k}-edit`}>
+              <Checkbox
+                checked={!unselectedChanges.includes(k)}
+                className="checkbox"
+                onChange={(e) => {
+                  setUnselectedChanges([
+                    ...(e.target.checked ? unselectedChanges.filter((tag) => tag !== k) : [...unselectedChanges, k]),
+                  ]);
+                }}
+              />
+              <p>
+                &nbsp;{k}:&nbsp;
+                <span className="existingChange">{oldVal}</span>&nbsp;
+                <span className="incomingChange">{newVal}</span>
+              </p>
+            </div>
+          );
+        })}
       </div>
     );
   };
