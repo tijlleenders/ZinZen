@@ -186,23 +186,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
             </div>
           </div>
           {isActionVisible && <span className="goal-menu-subtext">Actions</span>}
-          {isActionVisible && (
-            <div
-              className="goal-action"
-              onClickCapture={() => {
-                handleUpdateGoal(goal.id);
-              }}
-              style={{ textAlign: "center", height: 24 }}
-            >
-              <img
-                alt="Update Goal"
-                src={pencil}
-                style={{ cursor: "pointer", width: 24, height: 24 }}
-                className={`${darkModeStatus ? "dark-svg" : ""}`}
-              />
-            </div>
-          )}
-          {isActionVisible && <span className="goal-menu-subtext">Edit</span>}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <div className="goal-title">
