@@ -80,14 +80,8 @@
 .goal-dd-inner,
 .goal-dd-outer {
   display: flex;
-  flex-direction: column;
   align-items: center;
-}
-
-.goal-dropdown {
-  padding-top: 5px;
-  width: 100%;
-  height: 100%;
+  justify-content: center;
 }
 
 .goal-dd-inner,
