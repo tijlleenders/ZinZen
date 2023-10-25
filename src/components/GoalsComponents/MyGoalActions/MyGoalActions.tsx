@@ -29,6 +29,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { handleShareGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
+  const { handleUpdateGoal } = useGoalStore();
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
@@ -139,6 +140,14 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           <ActionDiv label={t("Done")} icon="Correct" />
         </div>
       )}
+      <div
+        className="goal-action shareOptions-btn"
+        onClickCapture={() => {
+          handleUpdateGoal(goal.id);
+        }}
+      >
+        <ActionDiv label={t("Edit")} icon="Edit" />
+      </div>
     </Modal>
   );
 };
