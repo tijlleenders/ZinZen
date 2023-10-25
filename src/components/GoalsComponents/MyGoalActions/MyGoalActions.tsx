@@ -1,8 +1,8 @@
 import { Modal, Tooltip } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
@@ -28,9 +28,11 @@ import "./MyGoalActions.scss";
 const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const { handleShareGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
+  const [isEditClicked, setIsEditClicked] = useState(false);
   const { handleUpdateGoal } = useGoalStore();
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -75,6 +77,13 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       await handleActionClick(actionName);
     }
   };
+
+  useEffect(() => {
+    if (isEditClicked && !location.state.displayGoalActions) {
+      handleUpdateGoal(goal.id);
+      setIsEditClicked(false);
+    }
+  }, [location.state.displayGoalActions]);
 
   return (
     <Modal
@@ -145,9 +154,8 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       <div
         className="goal-action shareOptions-btn"
         onClickCapture={() => {
-          location.state.displayGoalActions = null;
-          handleUpdateGoal(goal.id);
-          console.log("in mygoalAction, displayGoalActions: ", location.state.displayGoalActions);
+          setIsEditClicked(true);
+          navigate("/MyGoals", { state: { ...location.state, displayGoalActions: null } });
         }}
       >
         <ActionDiv label={t("Edit")} icon="Edit" />
