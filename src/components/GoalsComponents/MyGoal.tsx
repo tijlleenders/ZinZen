@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import pencil from "@assets/images/pencil.svg";
 import { unarchiveIcon } from "@src/assets";
 
 import { GoalItem } from "@src/models/GoalItem";
@@ -11,7 +10,6 @@ import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
-import useGoalStore from "@src/hooks/useGoalStore";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 
 import { jumpToLowestChanges, getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
@@ -84,7 +82,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { handleUpdateGoal } = useGoalStore();
   // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
   // const collabWithContact =
   //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
@@ -128,6 +125,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       navState.displayChanges = goal;
     } else {
       navState.displayGoalActions = goal;
+      console.log("in navstate, displayGoalActions: ", navState);
     }
     navigate("/MyGoals", { state: navState });
   }
@@ -162,13 +160,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
             flexDirection: "column",
             gap: 3,
           }}
+          onClickCapture={(e) => {
+            handleDropDown(e);
+          }}
         >
-          <div
-            className="goal-dropdown"
-            onClickCapture={(e) => {
-              handleDropDown(e);
-            }}
-          >
+          <div className="goal-dropdown">
             <div
               className="goal-dd-outer"
               style={{
@@ -186,23 +182,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
             </div>
           </div>
           {isActionVisible && <span className="goal-menu-subtext">Actions</span>}
-          {isActionVisible && (
-            <div
-              className="goal-action"
-              onClickCapture={() => {
-                handleUpdateGoal(goal.id);
-              }}
-              style={{ textAlign: "center", height: 24 }}
-            >
-              <img
-                alt="Update Goal"
-                src={pencil}
-                style={{ cursor: "pointer", width: 24, height: 24 }}
-                className={`${darkModeStatus ? "dark-svg" : ""}`}
-              />
-            </div>
-          )}
-          {isActionVisible && <span className="goal-menu-subtext">Edit</span>}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <div className="goal-title">
