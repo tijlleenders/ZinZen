@@ -125,6 +125,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       navState.displayChanges = goal;
     } else {
       navState.displayGoalActions = goal;
+      console.log("in navstate, displayGoalActions: ", navState);
     }
     navigate("/MyGoals", { state: navState });
   }

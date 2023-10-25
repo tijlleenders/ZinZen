@@ -2,6 +2,7 @@ import { Modal, Tooltip } from "antd";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useLocation } from "react-router-dom";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
@@ -26,6 +27,7 @@ import "./MyGoalActions.scss";
 
 const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
+  const location = useLocation();
   const { handleShareGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
@@ -143,7 +145,9 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       <div
         className="goal-action shareOptions-btn"
         onClickCapture={() => {
+          location.state.displayGoalActions = null;
           handleUpdateGoal(goal.id);
+          console.log("in mygoalAction, displayGoalActions: ", location.state.displayGoalActions);
         }}
       >
         <ActionDiv label={t("Edit")} icon="Edit" />
