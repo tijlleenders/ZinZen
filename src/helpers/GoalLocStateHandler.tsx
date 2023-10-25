@@ -52,12 +52,8 @@ const GoalLocStateHandler = () => {
     }
     if (showGoalActions && !locationState.displayGoalActions) {
       setShowGoalActions(null);
-      console.log("1: showGoalActions: ", showGoalActions);
-      console.log("2: displayGoalActions: ", locationState.displayGoalActions);
     } else if (locationState.displayGoalActions) {
       setShowGoalActions(locationState.displayGoalActions);
-      console.log("2: showGoalActions: ", showGoalActions);
-      console.log("2: displayGoalActions: ", locationState.displayGoalActions);
     }
     if (showAddGoal && !locationState.displayAddGoal) {
       setShowAddGoal(null);
