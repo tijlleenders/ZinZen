@@ -16,8 +16,9 @@ const useGoalStore = () => {
 
   const setColorIndex = useSetRecoilState(selectedColorIndex);
 
-  const handleAddGoal = async (goal: GoalItem | null = null) => {
-    let newLocationState: ILocationState = { displayAddGoal: selectedGoalId };
+  const handleAddGoal = async (type: "Budget" | "Goal", goal: GoalItem | null = null) => {
+    let newLocationState: ILocationState = { ...location.state, displayAddGoal: selectedGoalId };
+    delete newLocationState.displayAddGoalOptions;
     if (selectedGoalId === "root") {
       setColorIndex(Math.floor(Math.random() * colorPalleteList.length));
     } else if (goal) {
@@ -43,27 +44,17 @@ const useGoalStore = () => {
     newLocationState.displayAddGoal = goal ? goal.id : selectedGoalId;
     navigate("/MyGoals", {
       state: {
-        ...location.state,
-        ...(goal
-          ? {
-              goalsHistory: [
-                ...subGoalHistory,
-                {
-                  goalID: goal.id || "root",
-                  goalColor: goal.goalColor || "#ffffff",
-                  goalTitle: goal.title || "",
-                },
-              ],
-              activeGoalId: goal.id,
-            }
-          : {}),
-        displayAddGoal: goal ? goal.id : selectedGoalId,
+        ...newLocationState,
+        goalType: type,
       },
+      replace: true,
     });
   };
 
-  const handleUpdateGoal = (id: string) => {
-    navigate("/MyGoals", { state: { ...location.state, displayUpdateGoal: id } });
+  const handleUpdateGoal = (id: string, isBudget: boolean) => {
+    navigate("/MyGoals", {
+      state: { ...location.state, displayUpdateGoal: id, goalType: isBudget ? "Budget" : "Goal" },
+    });
   };
 
   const handleShareGoal = (goal: GoalItem) => {
