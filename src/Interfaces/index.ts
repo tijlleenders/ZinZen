@@ -26,4 +26,5 @@ export interface ILocationState {
   displayParticipants?: string; // id of goal whose participants have to be displayed
   displayPartner?: ContactItem; // to show this partner
   displayChanges?: GoalItem; // to show the changes under goal
+  displayAddGoalOptions: boolean; // whether to show the add goal options
 }
