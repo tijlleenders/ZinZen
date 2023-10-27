@@ -190,7 +190,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
             <div
               className="goal-action"
               onClickCapture={() => {
-                handleUpdateGoal(goal.id);
+                handleUpdateGoal(goal.id, !!goal.timeBudget.perDay);
               }}
               style={{ textAlign: "center", height: 24 }}
             >
