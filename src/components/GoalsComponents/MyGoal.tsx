@@ -144,6 +144,18 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     }
   }, [location]);
 
+  const hasSubGoals = goal.sublist.length > 0;
+
+  const outerBackground = hasSubGoals
+    ? "transparent"
+    : `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`;
+
+  const innerBackground = hasSubGoals
+    ? `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`
+    : "transparent";
+
+  const innerBorderColor = hasSubGoals ? goal.goalColor : "transparent";
+
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
       <div
@@ -167,16 +179,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           <div className="goal-dropdown">
             <div
               className="goal-dd-outer"
-              style={{
-                borderColor: goal.sublist.length > 0 ? goal.goalColor : "transparent",
-              }}
+              style={{ background: outerBackground, border: `1px solid ${goal.goalColor}` }}
             >
-              <div
-                className="goal-dd-inner"
-                style={{
-                  background: `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`,
-                }}
-              >
+              <div className="goal-dd-inner" style={{ background: innerBackground, borderColor: innerBorderColor }}>
                 {goal.newUpdates && <NotificationSymbol color={goal.goalColor} />}
               </div>
             </div>
