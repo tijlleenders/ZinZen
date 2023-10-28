@@ -52,8 +52,11 @@ const useGoalStore = () => {
   };
 
   const handleUpdateGoal = (id: string, isBudget: boolean) => {
+    const newLocationState: ILocationState = { ...location.state };
+    delete newLocationState.displayGoalActions;
     navigate("/MyGoals", {
-      state: { ...location.state, displayUpdateGoal: id, goalType: isBudget ? "Budget" : "Goal" },
+      state: { ...newLocationState, displayUpdateGoal: id, goalType: isBudget ? "Budget" : "Goal" },
+      replace: true,
     });
   };
 
