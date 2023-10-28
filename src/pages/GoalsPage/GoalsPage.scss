@@ -86,14 +86,14 @@
 
 .goal-dd-inner,
 .goal-dd-outer {
-  border-radius: 11px;
-  width: 21px;
-  height: 20px;
-}
-
-.goal-dd-outer {
+  border-radius: 22px;
   width: 28px;
   height: 28px;
+}
+
+.goal-dd-inner {
+  width: 16px;
+  height: 16px;
   border-radius: 22px;
   border: 1px solid;
 }
