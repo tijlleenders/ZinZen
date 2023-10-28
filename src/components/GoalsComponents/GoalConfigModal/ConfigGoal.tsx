@@ -1,14 +1,14 @@
-import moment from "moment";
+import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Checkbox, Modal } from "antd";
-import { darkModeState, displayPartner, displayToast, openDevMode } from "@src/store";
+import { Modal, Slider } from "antd";
+import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
-import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
+import ZAccordion from "@src/common/Accordion";
 import ColorPalette from "@src/common/ColorPalette";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
@@ -17,10 +17,9 @@ import { getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
+import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
-import ConfigOption from "./ConfigOption";
-import CustomDatePicker from "./CustomDatePicker";
 import "./ConfigGoal.scss";
 
 const onDays = [...calDays.slice(1), "Sun"];
@@ -46,7 +45,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
-  const today = moment(new Date()).format("YYYY-MM-DD");
 
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -63,28 +61,35 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const open = !!showAddGoal || !!showUpdateGoal;
 
   const [title, setTitle] = useState(goal.title);
-  const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
-  const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
-  const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
-  const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
-
+  // const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
+  // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
+  // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
+  // const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
   const [tags, setTags] = useState({
     on: goal.on || convertOnFilterToArray("weekdays"),
     repeatWeekly: goal.habit === "weekly",
     duration: goal.duration || "",
-    afterTime: `${showUpdateGoal ? goal.afterTime : "9"}`,
-    beforeTime: `${showUpdateGoal ? goal.beforeTime : "18"}`,
-    perDay: goal.timeBudget?.perDay
-      ? goal.timeBudget.perDay.includes("-")
-        ? goal.timeBudget.perDay
-        : `${goal.timeBudget.perDay}-`
-      : "-",
-    perWeek: goal.timeBudget?.perWeek
-      ? goal.timeBudget.perWeek.includes("-")
-        ? goal.timeBudget.perWeek
-        : `${goal.timeBudget.perWeek}-`
-      : "-",
   });
+  const numberOfDays = tags.on.length;
+
+  const [afterTime, setAfterTime] = useState(showUpdateGoal ? goal.afterTime || 9 : 9);
+  const [beforeTime, setBeforeTime] = useState(showUpdateGoal ? goal.beforeTime || 18 : 18);
+  const timeDiff = beforeTime - afterTime;
+  const perDayBudget = (goal.timeBudget.perDay?.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
+    .split("-")
+    .map((ele) => Number(ele));
+  const perWeekBudget = (
+    goal.timeBudget.perWeek?.includes("-")
+      ? goal.timeBudget.perWeek
+      : `${timeDiff * numberOfDays}-${timeDiff * numberOfDays}`
+  )
+    .split("-")
+    .map((ele) => Number(ele));
+
+  const [perDayHrs, setPerDayHrs] = useState(perDayBudget);
+  const [perWeekHrs, setPerWeekHrs] = useState(perWeekBudget);
+
+  const marks: SliderMarks = { 0: "0", 24: "24" };
 
   const isTitleEmpty = () => {
     if (title.length === 0 || title.trim() === "") {
@@ -99,16 +104,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const getFinalTags = () => ({
     ...goal,
-    due: due && due !== "" ? new Date(due).toString() : null,
-    start: start && start !== "" ? new Date(start).toString() : null,
+    // due: due && due !== "" ? new Date(due).toString() : null,
+    // start: start && start !== "" ? new Date(start).toString() : null,
     duration: tags.duration !== "" ? `${tags.duration}` : null,
-    afterTime: tags.afterTime !== "" ? Number(tags.afterTime) : null,
-    beforeTime: tags.beforeTime !== "" ? Number(tags.beforeTime) : null,
+    afterTime,
+    beforeTime,
     habit: tags.repeatWeekly ? "weekly" : null,
     on: calDays.filter((ele) => tags.on.includes(ele)),
     timeBudget: {
-      perDay: tags.perDay || null,
-      perWeek: tags.perWeek || null,
+      perDay: state.goalType === "Budget" ? perDayHrs.join("-") : null,
+      perWeek: state.goalType === "Budget" ? perWeekHrs.join("-") : null,
     },
   });
 
@@ -182,6 +187,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   };
 
   useEffect(() => {
+    if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
     document.getElementById("title-field")?.focus();
   }, []);
 
@@ -205,7 +211,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         <input
           className="ordinary-element"
           id="title-field"
-          placeholder={t("Goal Title")}
+          placeholder={t(`${state.goalType !== "Budget" ? "Goal" : "Budget"} title`)}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -216,162 +222,137 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           flexDirection: "column",
           gap: 20,
           marginTop: 24,
-          paddingLeft: 18,
+          padding: "0 18px",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <ConfigOption
-            label={
-              <CustomInput
-                value={tags.duration}
-                handleChange={(value: string) => {
-                  setTags({ ...tags, duration: roundOffHours(value) });
+        {state.goalType === "Budget" ? (
+          <>
+            <div>
+              <span>Between</span>
+              <Slider
+                min={0}
+                max={24}
+                marks={{
+                  ...marks,
+                  [afterTime]: `${afterTime}`,
+                  [beforeTime]: `${beforeTime}`,
                 }}
-                style={{}}
+                range
+                defaultValue={[afterTime, beforeTime]}
+                onAfterChange={(val) => {
+                  setAfterTime(val[0]);
+                  setBeforeTime(val[1]);
+                }}
               />
-            }
-          >
-            <span style={{ marginLeft: 25 }}>{t("hours")}</span>
-          </ConfigOption>
-
-          <button type="button" className="action-btn" onClick={handleSave} style={{ marginRight: 25 }}>
-            {t(`${action} Goal`)}
-          </button>
-        </div>
-
-        <ConfigOption label={t("on")}>
-          {onDays.map((d) => (
-            <span
-              onClickCapture={() => {
-                setTags({
-                  ...tags,
-                  on: tags.on.includes(d) ? [...tags.on.filter((ele) => ele !== d)] : [...tags.on, d],
-                });
+            </div>
+            <ZAccordion
+              showCount={false}
+              style={{
+                border: "none",
+                background: "var(--secondary-background)",
               }}
-              className={`on_day ${tags.on.includes(d) ? "selected" : ""}`}
-              key={d}
+              panels={[
+                {
+                  header: "Set Your Budget",
+                  body: (
+                    <div>
+                      <div>
+                        <span>
+                          {perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`} hrs / day
+                        </span>
+                        <Slider
+                          min={1}
+                          max={beforeTime - afterTime}
+                          marks={{
+                            1: "1",
+                            [perDayHrs[0]]: `${perDayHrs[0]}`,
+                            [perDayHrs[1]]: `${perDayHrs[1]}`,
+                            [beforeTime - afterTime]: `${beforeTime - afterTime}`,
+                          }}
+                          range
+                          defaultValue={perDayHrs}
+                          onAfterChange={(val) => {
+                            setPerDayHrs(val);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <span>
+                          {perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`} hrs
+                          / week
+                        </span>
+                        <Slider
+                          min={1}
+                          max={(beforeTime - afterTime) * numberOfDays}
+                          marks={{
+                            1: "1",
+                            [perWeekHrs[0]]: `${perWeekHrs[0]}`,
+                            [perWeekHrs[1]]: `${perWeekHrs[1]}`,
+                            [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
+                          }}
+                          range
+                          defaultValue={perWeekHrs}
+                          onAfterChange={(val) => {
+                            setPerWeekHrs(val);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+
+            <div
+              style={{
+                display: "flex",
+                gap: 6,
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
-              {t(d)[0]}
-            </span>
-          ))}
-        </ConfigOption>
-        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", alignItems: "center", marginRight: 25 }}>
-          <div>
-            {t("between")} {t("hours")}
-          </div>
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-            <CustomInput
-              value={tags.afterTime}
-              handleChange={(value: string) => {
-                setTags({ ...tags, afterTime: roundOffHours(value) });
-              }}
-              style={{}}
-            />
-            <span>-</span>
-            <CustomInput
-              value={tags.beforeTime}
-              handleChange={(value: string) => {
-                setTags({ ...tags, beforeTime: roundOffHours(value) });
-              }}
-              style={{}}
-            />
-          </div>
-        </div>
-        <ConfigOption label="">
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-              <CustomInput
-                value={tags.perDay.split("-")[0]}
-                handleChange={(value: string) => {
-                  setTags({ ...tags, perDay: `${roundOffHours(value)}-${tags.perDay.split("-")[1]}` });
-                }}
-                style={{}}
-                placeholder="min"
-              />
-              -
-              <span>
-                <CustomInput
-                  value={tags.perDay.split("-")[1]}
-                  handleChange={(value: string) => {
-                    setTags({ ...tags, perDay: `${tags.perDay.split("-")[0]}-${roundOffHours(value)}` });
+              {onDays.map((d) => (
+                <span
+                  onClickCapture={() => {
+                    setTags({
+                      ...tags,
+                      on: tags.on.includes(d) ? [...tags.on.filter((ele) => ele !== d)] : [...tags.on, d],
+                    });
                   }}
-                  style={{}}
-                  placeholder="max"
-                />
-              </span>
-              <span>
-                {t("hours")} / {t("day")}
-              </span>
+                  className={`on_day ${tags.on.includes(d) ? "selected" : ""}`}
+                  key={d}
+                >
+                  {t(d)[0]}
+                </span>
+              ))}
             </div>
-            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-              <CustomInput
-                value={tags.perWeek.split("-")[0]}
-                handleChange={(value: string) => {
-                  setTags({ ...tags, perWeek: `${roundOffHours(value)}-${tags.perWeek.split("-")[1]}` });
-                }}
-                style={{}}
-                placeholder="min"
-              />
-              -
-              <span>
-                <CustomInput
-                  value={tags.perWeek.split("-")[1]}
-                  handleChange={(value: string) => {
-                    setTags({ ...tags, perWeek: `${tags.perWeek.split("-")[0]}-${roundOffHours(value)}` });
-                  }}
-                  style={{}}
-                  placeholder="max"
-                />
-              </span>
-              <span>
-                {t("hours")} / {t("week")}
-              </span>
-            </div>
+          </>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              gap: 20,
+              alignItems: "center",
+            }}
+          >
+            <span>Duration</span>
+            <CustomInput
+              value={tags.duration}
+              handleChange={(value: string) => {
+                setTags({ ...tags, duration: roundOffHours(value) });
+              }}
+              style={{
+                maxWidth: 50,
+                boxShadow: "var(--shadow)",
+              }}
+            />
           </div>
-        </ConfigOption>
-        <div style={{ display: "flex", gap: 8, flexDirection: "column" }}>
-          <CustomDatePicker
-            handleDateChange={(value) => {
-              setStart(value);
-            }}
-            handleTimeChange={(value) => setStartTime(value)}
-            label={t("starts")}
-            dateValue={
-              start
-                ? moment(start).format("YYYY-MM-DD")
-                : goal?.createdAt
-                ? moment(goal.createdAt).format("YYYY-MM-DD")
-                : today
-            }
-            timeValue={startTime}
-          />
-          <CustomDatePicker
-            handleDateChange={(value) => {
-              setDue(value);
-            }}
-            handleTimeChange={(value) => setEndTime(value)}
-            label={t("ends")}
-            dateValue={due}
-            timeValue={endTime}
-          />
-        </div>
-        <Checkbox
-          className="checkbox"
-          checked={tags.repeatWeekly}
-          onChange={(e) => {
-            setTags({ ...tags, repeatWeekly: e.target.checked });
-          }}
-        >
-          {t("repeats weekly")}
-        </Checkbox>
+        )}
         <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
+        <button type="button" className="action-btn" onClick={handleSave}>
+          {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+        </button>
       </div>
     </Modal>
   );

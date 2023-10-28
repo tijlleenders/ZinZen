@@ -76,6 +76,15 @@
   input[type="radio"] {
     accent-color: #cd6e51 !important;
   }
+  .ant-collapse-content {
+    background: var(--secondary-background);
+  }
+  .ant-slider-track {
+    background: var(--selection-color);
+  }
+  .ant-collapse-header-text {
+    font-weight: 400 !important;
+  }
 }
 .on_day {
   width: 30px;
