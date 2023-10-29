@@ -146,7 +146,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   const hasSubGoals = goal.sublist.length > 0;
   const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 89.585%, ${
-    goal.timeBudget.perDay != null ? "rgba(255, 255, 255)" : goal.goalColor
+    goal.timeBudget.perDay != null ? "transparent" : goal.goalColor
   } 100%)`;
   const outerBorderStyle =
     goal.timeBudget.perDay == null ? `1px solid ${goal.goalColor}` : `2px dashed ${goal.goalColor}`;
