@@ -145,7 +145,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   }, [location]);
 
   const hasSubGoals = goal.sublist.length > 0;
-  const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 79.17%, ${goal.goalColor} 100%)`;
+  const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 89.585%, ${goal.goalColor} 100%)`;
   const innerBorderColor = hasSubGoals ? goal.goalColor : "transparent";
 
   return (
