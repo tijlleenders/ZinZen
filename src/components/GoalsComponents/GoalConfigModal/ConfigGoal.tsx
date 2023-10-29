@@ -216,7 +216,11 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              handleSave();
+              if (state.goalType === "Goal") {
+                handleSave();
+              } else {
+                document.getElementById("title-field")?.blur();
+              }
             }
           }}
         />
