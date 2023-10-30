@@ -214,6 +214,18 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           placeholder={t(`${state.goalType !== "Budget" ? "Goal" : "Budget"} title`)}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          onKeyDownCapture={async (e) => {
+            if (e.key === "Enter") {
+              if (state.goalType === "Goal") {
+                e.preventDefault();
+                await handleSave();
+              } else {
+                e.preventDefault();
+                document.getElementById("title-field")?.blur();
+              }
+            }
+          }}
+          inputMode="text"
         />
       </div>
       <div
