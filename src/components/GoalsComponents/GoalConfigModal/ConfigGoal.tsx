@@ -218,7 +218,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             if (e.key === "Enter") {
               if (state.goalType === "Goal") {
                 handleSave();
-                document.getElementById("title-field")?.blur();
               } else {
                 document.getElementById("title-field")?.blur();
               }
