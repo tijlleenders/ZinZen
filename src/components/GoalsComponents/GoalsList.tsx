@@ -49,7 +49,8 @@ const GoalsList: React.FC<GoalsListProps> = ({ goals, showActions, setGoals, set
     Promise.all(posIndexPromises).catch((err) => console.log("error in sorting", err));
   };
   return goals.map((goal: GoalItem, index: number) => (
-    <React.Fragment key={goal.id}>
+    // eslint-disable-next-line react/no-array-index-key
+    <React.Fragment key={index}>
       {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
       <DragAndDrop
         thisItem={goal.id === draggedItem?.id}
