@@ -102,30 +102,20 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     return title.length === 0 || title.trim() === "";
   };
 
-  const getFinalTags = () => {
-    if (state.goalType === "Goal") {
-      return {
-        ...goal,
-        duration: tags.duration !== "" ? `${tags.duration}` : null,
-      };
-    }
-
-    if (state.goalType === "Budget") {
-      return {
-        ...goal,
-        afterTime,
-        beforeTime,
-        habit: tags.repeatWeekly ? "weekly" : null,
-        on: calDays.filter((ele) => tags.on.includes(ele)),
-        timeBudget: {
-          perDay: perDayHrs.join("-"),
-          perWeek: perWeekHrs.join("-"),
-        },
-      };
-    }
-
-    return goal;
-  };
+  const getFinalTags = () => ({
+    ...goal,
+    // due: due && due !== "" ? new Date(due).toString() : null,
+    // start: start && start !== "" ? new Date(start).toString() : null,
+    duration: tags.duration !== "" ? `${tags.duration}` : null,
+    afterTime: state.goalType === "Budget" ? afterTime : null,
+    beforeTime: state.goalType === "Budget" ? beforeTime : null,
+    habit: tags.repeatWeekly ? "weekly" : null,
+    on: calDays.filter((ele) => tags.on.includes(ele)),
+    timeBudget: {
+      perDay: state.goalType === "Budget" ? perDayHrs.join("-") : null,
+      perWeek: state.goalType === "Budget" ? perWeekHrs.join("-") : null,
+    },
+  });
 
   const updateThisGoal = async () => {
     if (!showUpdateGoal) {
