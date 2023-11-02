@@ -16,6 +16,7 @@ export interface ZAccordionProps {
   panels: { header: string; body: ReactNode | ReactNode[] }[];
   showCount: boolean;
   defaultActiveKey?: string[];
+  onChange: () => void;
 }
 export interface ColorPaletteProps {
   colorIndex: number;

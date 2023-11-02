@@ -5,7 +5,7 @@ import { ZAccordionProps } from "@src/Interfaces/ICommon";
 
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
-const ZAccordion: React.FC<ZAccordionProps> = ({ panels, style, showCount, defaultActiveKey }) => (
+const ZAccordion: React.FC<ZAccordionProps> = ({ panels, style, showCount, defaultActiveKey, onChange }) => (
   <Collapse
     expandIcon={({ isActive }) => (
       <img
@@ -16,6 +16,7 @@ const ZAccordion: React.FC<ZAccordionProps> = ({ panels, style, showCount, defau
     )}
     defaultActiveKey={defaultActiveKey}
     style={style}
+    onChange={onChange}
     accordion
   >
     {panels.map((panel, index) => (

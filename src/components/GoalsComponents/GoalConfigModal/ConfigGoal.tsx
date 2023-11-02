@@ -74,6 +74,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const [afterTime, setAfterTime] = useState(showUpdateGoal ? goal.afterTime || 9 : 9);
   const [beforeTime, setBeforeTime] = useState(showUpdateGoal ? goal.beforeTime || 18 : 18);
+  const [budgetPanelIsOpen, setBudgetPanelIsOpen] = useState(false);
   const timeDiff = beforeTime - afterTime;
   const perDayBudget = (goal.timeBudget.perDay?.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
     .split("-")
@@ -252,6 +253,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 range
                 defaultValue={[afterTime, beforeTime]}
                 onAfterChange={(val) => {
+                  if (!budgetPanelIsOpen) {
+                    const calculatedDayBudget = Number([val[1] - val[0]]);
+                    const calculatedWeekBudget = Number([val[1] - val[0]]) * numberOfDays;
+                    setPerDayHrs([calculatedDayBudget, calculatedDayBudget]);
+                    setPerWeekHrs([calculatedWeekBudget, calculatedWeekBudget]);
+                  }
                   setAfterTime(val[0]);
                   setBeforeTime(val[1]);
                 }}
@@ -262,6 +269,11 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               style={{
                 border: "none",
                 background: "var(--secondary-background)",
+              }}
+              onChange={() => {
+                if (!budgetPanelIsOpen) {
+                  setBudgetPanelIsOpen(true);
+                }
               }}
               panels={[
                 {
