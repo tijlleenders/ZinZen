@@ -41,19 +41,26 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
   return (
     <>
       <div>
-        {goal.duration && (
+        {goal.timeBudget.perDay === null &&
+          (goal.duration !== null ? (
+            <span>
+              {goal.duration} {t(`hour${Number(goal.duration) > 1 ? "s" : ""}`)}
+            </span>
+          ) : (
+            <span>no duration</span>
+          ))}
+        {goal.timeBudget.perDay && (
           <span>
-            {goal.duration} {t(`hour${Number(goal.duration) > 1 ? "s" : ""}`)}
+            {onLength > 0 &&
+              !onWeekdays &&
+              !onWeekends &&
+              (onLength === 7
+                ? ` ${t("on any day of week")}`
+                : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
+            {onWeekdays && ` ${t("on")} ${t("weekdays")}`}
+            {onWeekends && " on weekends"}
           </span>
         )}
-        <span>
-          {onLength > 0 &&
-            !onWeekdays &&
-            !onWeekends &&
-            (onLength === 7 ? ` ${t("on any day of week")}` : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
-          {onWeekdays && ` ${t("on")} ${t("weekdays")}`}
-          {onWeekends && " on weekends"}
-        </span>
       </div>
       <div>
         {goal.beforeTime && goal.afterTime

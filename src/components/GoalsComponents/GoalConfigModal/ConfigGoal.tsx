@@ -107,8 +107,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     // due: due && due !== "" ? new Date(due).toString() : null,
     // start: start && start !== "" ? new Date(start).toString() : null,
     duration: tags.duration !== "" ? `${tags.duration}` : null,
-    afterTime,
-    beforeTime,
+    afterTime: state.goalType === "Budget" ? afterTime : null,
+    beforeTime: state.goalType === "Budget" ? beforeTime : null,
     habit: tags.repeatWeekly ? "weekly" : null,
     on: calDays.filter((ele) => tags.on.includes(ele)),
     timeBudget: {
