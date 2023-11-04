@@ -236,3 +236,14 @@ export const getSvgForGoalPps = (count: number) => {
       return "ThreeAvatars";
   }
 };
+
+export const formatBudgetHrsToText = (hours: string | null) => {
+  if (hours === null) {
+    return "";
+  }
+  const parts = hours.split("-").map(Number);
+  if (parts.length === 2 && parts[0] === parts[1]) {
+    return `${parts[0]} hour${parts[0] > 1 ? "s" : ""}`;
+  }
+  return `${hours} hours`;
+};
