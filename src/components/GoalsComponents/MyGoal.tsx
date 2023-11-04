@@ -8,7 +8,7 @@ import { unarchiveIcon } from "@src/assets";
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
-import { formatHoursText } from "@src/utils";
+import { formatBudgetHrsToText } from "@src/utils";
 
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
@@ -41,8 +41,8 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
   const hasStarted = !!goal.start && new Date(goal.start).getTime() < new Date().getTime();
   const showStart = !!goal.due || !hasStarted;
 
-  const hoursPerDayText = formatHoursText(goal.timeBudget.perDay);
-  const hoursPerWeekText = formatHoursText(goal.timeBudget.perWeek);
+  const hoursPerDayText = formatBudgetHrsToText(goal.timeBudget.perDay);
+  const hoursPerWeekText = formatBudgetHrsToText(goal.timeBudget.perWeek);
 
   return (
     <>

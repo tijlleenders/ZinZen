@@ -237,7 +237,7 @@ export const getSvgForGoalPps = (count: number) => {
   }
 };
 
-export const formatHoursText = (hours: string | null) => {
+export const formatBudgetHrsToText = (hours: string | null) => {
   if (hours === null) {
     return "";
   }
