@@ -8,6 +8,8 @@ import { unarchiveIcon } from "@src/assets";
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
+import { formatHoursText } from "@src/utils";
+
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 import NotificationSymbol from "@src/common/NotificationSymbol";
@@ -38,6 +40,10 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
 
   const hasStarted = !!goal.start && new Date(goal.start).getTime() < new Date().getTime();
   const showStart = !!goal.due || !hasStarted;
+
+  const hoursPerDayText = formatHoursText(goal.timeBudget.perDay);
+  const hoursPerWeekText = formatHoursText(goal.timeBudget.perWeek);
+
   return (
     <>
       <div>
@@ -49,6 +55,7 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
           ) : (
             <span>no duration</span>
           ))}
+        {goal.timeBudget.perDay && <span>{hoursPerDayText}</span>}
         {goal.timeBudget.perDay && (
           <span>
             {onLength > 0 &&
@@ -71,6 +78,7 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
           ? `${t("after")} ${goal.afterTime}`
           : ""}
       </div>
+      <div>{goal.timeBudget.perWeek && <span>{`${hoursPerWeekText} per week`}</span>}</div>
       {showStart && !!goal.start && (
         <div>
           {hasStarted ? t("started") : t("starts")} {new Date(goal.start).toDateString().slice(4)}
