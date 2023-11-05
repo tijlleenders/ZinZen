@@ -201,7 +201,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               </div>
             </div>
           </div>
-          {isActionVisible && <span className="goal-menu-subtext">Actions</span>}
+          {isActionVisible && (
+            <span className="goal-menu-subtext" style={{ color: goal.goalColor }}>
+              . . .
+            </span>
+          )}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <div className="goal-title">
