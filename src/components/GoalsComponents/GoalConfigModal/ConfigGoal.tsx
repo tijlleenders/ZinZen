@@ -259,6 +259,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             </div>
             <ZAccordion
               showCount={false}
+              defaultActiveKey={["1"]}
               style={{
                 border: "none",
                 background: "var(--secondary-background)",
