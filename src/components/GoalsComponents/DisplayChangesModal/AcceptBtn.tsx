@@ -1,38 +1,19 @@
 import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
-import collaborateSvg from "@assets/images/collaborate.svg";
 import deleteIcon from "@assets/images/deleteIcon.svg";
 import plus from "@assets/images/plus.svg";
 
-import { darkModeState, lastAction } from "@src/store";
-import { GoalItem } from "@src/models/GoalItem";
-import { getTypeAtPriority } from "@src/helpers/GoalProcessor";
-import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
-import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
+import { darkModeState } from "@src/store";
 import { typeOfChange } from "@src/models/InboxItem";
 
 interface AcceptBtnProps {
-  goal: GoalItem;
   acceptChanges: () => Promise<void>;
   typeAtPriority: typeOfChange | "none";
 }
 
-const AcceptBtn = ({ typeAtPriority, goal, acceptChanges }: AcceptBtnProps) => {
+const AcceptBtn = ({ typeAtPriority, acceptChanges }: AcceptBtnProps) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-
-  const handleClick = async () => {
-    await acceptChanges();
-
-    const inbox = await getInboxItem(goal.rootGoalId);
-    // if (getTypeAtPriority(inbox.goalChanges).typeAtPriority === "none") {
-    // changeNewUpdatesStatus(false, goal.rootGoalId)
-    //   .then(() => {
-    //     setLastAction("goalUpdates");
-    //   })
-    //   .catch((err) => console.log(err));
-    // }
-  };
   return (
     <button
       type="button"
