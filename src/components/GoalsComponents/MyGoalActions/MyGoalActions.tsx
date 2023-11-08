@@ -109,15 +109,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           onClickCapture={async (e) => {
             e.stopPropagation();
             if (!isPartnerGoal) {
-              if (goal.typeOfGoal !== "myGoal" && goal.parentGoalId !== "root") {
-                setShowToast({
-                  message: "Sorry, you are not allowed to share",
-                  open: true,
-                  extra: "Shared or Collaborated subgoals cannot be shared again ",
-                });
-              } else {
-                handleShareGoal(goal);
-              }
+              handleShareGoal(goal);
             } else {
               await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
             }

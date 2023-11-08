@@ -6,12 +6,14 @@ import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
 import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
+import { sendNewGoals } from "@src/helpers/BatchPublisher";
 import { darkModeState } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
+import { sendUpdatedGoal } from "@src/helpers/PubSubController";
 import { displayChangesModal } from "@src/store/GoalsState";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
-import { deleteGoalChangesInID, getInboxItem } from "@src/api/InboxAPI";
+import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
+import { deleteGoalChangesInID, getInboxItem, removeGoalInbox, removePPTFromInboxOfGoal } from "@src/api/InboxAPI";
 import { findGoalTagChanges, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import { acceptSelectedSubgoals, acceptSelectedTags } from "@src/helpers/InboxProcessor";
 import SubHeader from "@src/common/SubHeader";
@@ -27,6 +29,7 @@ const DisplayChangesModal = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const showChangesModal = useRecoilValue(displayChangesModal);
 
+  const [updatesIntent, setUpdatesIntent] = useState<typeOfIntent>("shared");
   const [newGoals, setNewGoals] = useState<{ intent: typeOfIntent; goal: GoalItem }[]>([]);
   const [activePPT, setActivePPT] = useState(-1);
   const [updateList, setUpdateList] = useState<ITagsChanges>({ schemaVersion: {}, prettierVersion: {} });
@@ -72,35 +75,36 @@ const DisplayChangesModal = () => {
     );
   };
 
-  const getSubgoalsList = () => (
-    <div
-      style={{
-        background: "var(--secondary-background)",
-        borderRadius: 8,
-      }}
-    >
-      {newGoals.map(({ goal, intent }) => (
-        <div
-          key={`${goal.id}-subgoal`}
-          style={{
-            padding: "22px 22px",
-            border: "1px solid var(--default-border-color)",
-            display: "flex",
-          }}
-        >
-          <Checkbox
-            checked={!unselectedChanges.includes(goal.id)}
-            onChange={(e) => {
-              setUnselectedChanges([
-                ...(e.target.checked
-                  ? unselectedChanges.filter((id) => id !== goal.id)
-                  : [...unselectedChanges, goal.id]),
-              ]);
+  const getSubgoalsList = () => {
+    return (
+      <div
+        style={{
+          background: "var(--secondary-background)",
+          borderRadius: 8,
+        }}
+      >
+        {newGoals.map(({ goal, intent }) => (
+          <div
+            key={`${goal.id}-subgoal`}
+            style={{
+              padding: "22px 22px",
+              border: "1px solid var(--default-border-color)",
+              display: "flex",
             }}
-            className="checkbox"
-          />
-          <span style={{ marginLeft: 12 }}>{goal.title}</span>
-          {/* <span
+          >
+            <Checkbox
+              checked={!unselectedChanges.includes(goal.id)}
+              onChange={(e) => {
+                setUnselectedChanges([
+                  ...(e.target.checked
+                    ? unselectedChanges.filter((id) => id !== goal.id)
+                    : [...unselectedChanges, goal.id]),
+                ]);
+              }}
+              className="checkbox"
+            />
+            <span style={{ marginLeft: 12 }}>{goal.title}</span>
+            {/* <span
             className="intent"
             style={{
               border: `1px solid ${goal.goalColor}`,
@@ -112,18 +116,19 @@ const DisplayChangesModal = () => {
           >
             {intent}
           </span> */}
-        </div>
-      ))}
-    </div>
-  );
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   const deleteChanges = async () => {
-    if (!activeGoal) {
+    if (!activeGoal || !showChangesModal) {
       return;
     }
     const removeChanges = currentDisplay === "subgoals" ? newGoals.map(({ goal }) => goal.id) : [activeGoal.id];
     if (currentDisplay !== "none") {
-      await deleteGoalChangesInID(activeGoal.rootGoalId, participants[activePPT].relId, currentDisplay, removeChanges);
+      await deleteGoalChangesInID(showChangesModal.id, participants[activePPT].relId, currentDisplay, removeChanges);
     }
     setCurrentDisplay("none");
   };
@@ -135,14 +140,19 @@ const DisplayChangesModal = () => {
       await deleteChanges();
     }
     if (currentDisplay === "subgoals") {
-      await acceptSelectedSubgoals(
-        newGoals.filter(({ goal }) => !unselectedChanges.includes(goal.id)).map(({ goal }) => goal),
-        activeGoal,
-      );
+      const goalsToBeSelected = newGoals
+        .filter(({ goal }) => !unselectedChanges.includes(goal.id))
+        .map(({ goal }) => goal);
+      await acceptSelectedSubgoals(goalsToBeSelected, activeGoal);
+      if (goalsToBeSelected.length > 0) {
+        const { intent } = newGoals[0];
+        await sendNewGoals(goalsToBeSelected, [], true, intent === "suggestion" ? [] : [participants[activePPT].relId]);
+      }
       setUnselectedChanges([]);
       setNewGoals([]);
     } else if (currentDisplay === "modifiedGoals") {
       await acceptSelectedTags(unselectedChanges, updateList, activeGoal);
+      await sendUpdatedGoal(activeGoal.id, [], true, [participants[activePPT].relId]);
       setUnselectedChanges([]);
       setUpdateList({ schemaVersion: {}, prettierVersion: {} });
     } else if (currentDisplay === "deleted") {
@@ -159,10 +169,18 @@ const DisplayChangesModal = () => {
         showChangesModal.id,
         participants[activePPT].relId,
       );
-
       if (typeAtPriority === "none") {
-        await updateGoal(showChangesModal.rootGoalId, { newUpdates: false });
-        window.history.back();
+        // remove participant from inbox
+        if (participants.length === 1) {
+          await removeGoalInbox(showChangesModal.id);
+          await updateGoal(showChangesModal.id, { newUpdates: false });
+          window.history.back();
+          return;
+        }
+        await removePPTFromInboxOfGoal(showChangesModal.id, participants[activePPT].relId);
+        const currPPT = participants[activePPT].relId;
+        setActivePPT(0);
+        setParticipants([...participants.filter((ele) => ele.relId !== currPPT)]);
       }
       const changedGoal = await getGoal(parentId);
       if (changedGoal) {
@@ -170,6 +188,7 @@ const DisplayChangesModal = () => {
         if (typeAtPriority === "subgoals") {
           setNewGoals(goals || []);
         } else if (typeAtPriority === "modifiedGoals") {
+          setUpdatesIntent(goals[0].intent);
           const incGoal: GoalItem = { ...goals[0].goal };
           setUpdateList({ ...findGoalTagChanges(changedGoal, incGoal) });
         }
@@ -190,7 +209,6 @@ const DisplayChangesModal = () => {
         return;
       }
       const inbox = await getInboxItem(showChangesModal.id);
-      console.log("🚀 ~ file: DisplayChangesModal.tsx:190 ~ init ~ inbox:", inbox);
       const ppsList = (await getAllContacts()).filter((ele) => Object.keys(inbox.changes).includes(ele.relId));
       setParticipants([...ppsList]);
       setActivePPT(0);
@@ -226,20 +244,24 @@ const DisplayChangesModal = () => {
             style={{
               display: "flex",
               height: 36,
+              gap: 5,
               background: "var(--bottom-nav-color)",
             }}
           >
-            {participants.map((ele) => (
+            {participants.map((ele, index) => (
               <button
                 type="button"
                 style={{
                   width: 100,
                   borderRadius: 4,
-                  background: "var(--secondary-background)",
+                  // background: "var(--secondary-background)",
                   color: "var(--icon-grad-1)",
                   fontWeight: 500,
                   fontSize: "1.143em",
-                  // background: `var(--${activePPT === index ? "selection-color" : "bottom-nav-color"})`,
+                  background: `var(--${activePPT === index ? "selection-color" : "bottom-nav-color"})`,
+                }}
+                onClick={() => {
+                  setActivePPT(index);
                 }}
                 key={ele.id}
                 className="ordinary-element"
@@ -257,7 +279,6 @@ const DisplayChangesModal = () => {
               />
             </p>
           )}
-          {/* )} */}
           {(currentDisplay === "archived" || currentDisplay === "deleted") && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
           {currentDisplay === "subgoals" && getSubgoalsList()}
@@ -265,7 +286,7 @@ const DisplayChangesModal = () => {
             {activeGoal && (
               <>
                 <IgnoreBtn deleteChanges={deleteChanges} />
-                <AcceptBtn goal={activeGoal} acceptChanges={acceptChanges} typeAtPriority={currentDisplay} />
+                <AcceptBtn acceptChanges={acceptChanges} typeAtPriority={currentDisplay} />
               </>
             )}
           </div>

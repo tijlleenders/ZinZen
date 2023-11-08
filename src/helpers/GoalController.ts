@@ -1,12 +1,7 @@
 import { GoalItem } from "@src/models/GoalItem";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
-import {
-  getSharedWMGoal,
-  removeSharedWMChildrenGoals,
-  removeSharedWMGoal,
-  updateSharedWMGoal,
-} from "@src/api/SharedWMAPI";
+import { getSharedWMGoal, removeSharedWMChildrenGoals, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import {
   getGoal,
   addGoal,
@@ -16,6 +11,7 @@ import {
   getParticipantsOfGoals,
 } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
+import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
 export const createGoal = async (
   parentGoalId: string,
@@ -67,7 +63,6 @@ export const modifyGoal = async (
   goalColor: string,
   ancestors: string[],
 ) => {
-  const level = ancestors.length;
   await updateGoal(goalId, {
     ...goalTags,
     title: goalTitle
@@ -76,36 +71,19 @@ export const modifyGoal = async (
       .join(" "),
     goalColor,
   });
-  const goal = await getGoal(goalId);
-  const subscribers = await getParticipantsOfGoals(ancestors);
-  if (goal) {
-    const { participants, ...changes } = goal;
-    subscribers.forEach(async ({ sub, rootGoalId }) => {
-      sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [{ level, goal: changes }]).then(() =>
-        console.log("update sent"),
-      );
-    });
-  }
+  sendUpdatedGoal(goalId, ancestors);
 };
 
 export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {
-  const level = ancestors.length;
-  const subscribers = await getParticipantsOfGoals(ancestors);
-  subscribers.forEach(async ({ sub, rootGoalId }) => {
-    sendUpdatesToSubscriber(sub, rootGoalId, "archived", [{ level, id: goal.id }]).then(() =>
-      console.log("update sent"),
-    );
+  sendFinalUpdateOnGoal(goal.id, "archived", ancestors, false).then(() => {
+    console.log("Update Sent");
   });
   await archiveUserGoal(goal);
 };
 
 export const deleteGoal = async (goal: GoalItem, ancestors: string[]) => {
-  const level = ancestors.length;
-  const subscribers = await getParticipantsOfGoals(ancestors);
-  subscribers.forEach(async ({ sub, rootGoalId }) => {
-    sendUpdatesToSubscriber(sub, rootGoalId, "deleted", [{ level, id: goal.id }]).then(() =>
-      console.log("update sent"),
-    );
+  sendFinalUpdateOnGoal(goal.id, "deleted", ancestors, false).then(() => {
+    console.log("Update Sent");
   });
   await removeGoalWithChildrens(goal);
 };

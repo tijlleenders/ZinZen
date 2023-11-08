@@ -52,7 +52,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
           if (name === "") handleShowAddContact();
           else {
             const status = accepted ? true : await checkAndUpdateRelationshipStatus(relId);
-            if (goal.typeOfGoal === "myGoal" && status) {
+            if (status) {
               const goalWithChildrens = await getAllLevelGoalsOfId(goal.id, true);
               await shareGoalWithContact(relId, [
                 ...goalWithChildrens.map((ele) => ({
@@ -157,7 +157,6 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
 
         {/* Share 1:1 */}
         <button
-          disabled={goal.typeOfGoal !== "myGoal"}
           type="button"
           onClick={async () => {
             if (displaySubmenu !== "contacts")
@@ -175,7 +174,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
             )}
             <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>Share privately</p>
           </div>
-          {goal.typeOfGoal === "myGoal" && displaySubmenu === "contacts" && (
+          {displaySubmenu === "contacts" && (
             <div className="shareWithContacts">
               {contacts.length === minContacts && (
                 <p className="share-warning">

@@ -88,7 +88,7 @@ export const acceptSelectedSubgoals = async (selectedGoals: GoalItem[], parentGo
   try {
     const childrens: string[] = [];
     selectedGoals.forEach(async (goal: GoalItem) => {
-      addGoal(fixDateVlauesInGoalObject(goal)).catch((err) => console.log(err));
+      addGoal(fixDateVlauesInGoalObject({ ...goal, participants: [] })).catch((err) => console.log(err));
       childrens.push(goal.id);
     });
     await addIntoSublist(parentGoal.id, childrens);
