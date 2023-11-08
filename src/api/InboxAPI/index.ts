@@ -61,3 +61,16 @@ export const deleteGoalChangesInID = async (
     console.log(e.stack || e);
   });
 };
+
+export const removePPTFromInboxOfGoal = async (id: string, relId: string) => {
+  db.transaction("rw", db.inboxCollection, async () => {
+    await db.inboxCollection
+      .where("id")
+      .equals(id)
+      .modify((obj: InboxItem) => {
+        delete obj.changes[relId];
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
