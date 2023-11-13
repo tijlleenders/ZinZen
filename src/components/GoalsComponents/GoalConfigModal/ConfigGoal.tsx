@@ -186,13 +186,26 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     window.history.back();
   };
 
+  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
+  const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
+
   useEffect(() => {
     if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
     document.getElementById("title-field")?.focus();
   }, []);
 
-  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
-  const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
+  useEffect(() => {
+    const timeRange = beforeTime - afterTime;
+    const weeklyRange = timeRange * numberOfDays;
+    const updatedPerDayHrs = perDayHrs.map((hour) =>
+      hour > timeRange ? timeRange : hour < timeRange ? timeRange : hour,
+    );
+    const updatedPerWeekHrs = perWeekHrs.map((hour) =>
+      hour > weeklyRange ? weeklyRange : hour < weeklyRange ? weeklyRange : hour,
+    );
+    setPerDayHrs(updatedPerDayHrs);
+    setPerWeekHrs(updatedPerWeekHrs);
+  }, [afterTime, beforeTime, numberOfDays]);
 
   return (
     <Modal
