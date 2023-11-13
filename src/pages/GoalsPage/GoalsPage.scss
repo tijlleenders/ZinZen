@@ -98,6 +98,22 @@
   border: 1px solid;
 }
 
+.goal-menu-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding-top: 5px;
+}
+
+.goal-menu-dots span {
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background-color: white;
+  display: inline-block;
+}
+
 #addGoal-btn {
   position: fixed;
   bottom: 20px;
