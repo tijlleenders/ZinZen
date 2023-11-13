@@ -191,6 +191,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     document.getElementById("title-field")?.focus();
   }, []);
 
+  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
+  const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
+
   return (
     <Modal
       className={`configModal popupModal${darkModeStatus ? "-dark" : ""} 
@@ -259,20 +262,17 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             </div>
             <ZAccordion
               showCount={false}
-              defaultActiveKey={["1"]}
               style={{
                 border: "none",
                 background: "var(--secondary-background)",
               }}
               panels={[
                 {
-                  header: "Set Your Budget",
+                  header: `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
                   body: (
                     <div>
                       <div>
-                        <span>
-                          {perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`} hrs / day
-                        </span>
+                        <span>{budgetPerHrSummary} hrs / day</span>
                         <Slider
                           min={1}
                           max={beforeTime - afterTime}
@@ -290,10 +290,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                         />
                       </div>
                       <div>
-                        <span>
-                          {perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`} hrs
-                          / week
-                        </span>
+                        <span>{budgetPerWeekSummary} hrs / week</span>
                         <Slider
                           min={1}
                           max={(beforeTime - afterTime) * numberOfDays}
