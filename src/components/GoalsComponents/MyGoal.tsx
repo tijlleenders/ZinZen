@@ -44,6 +44,20 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
   const hoursPerDayText = formatBudgetHrsToText(goal.timeBudget.perDay);
   const hoursPerWeekText = formatBudgetHrsToText(goal.timeBudget.perWeek);
 
+  const calculateDaysLeft = (dueDate: string) => {
+    if (!dueDate) return "";
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const due = new Date(dueDate);
+    due.setHours(0, 0, 0, 0);
+    if (due.getTime() === currentDate.getTime()) {
+      return "due today";
+    }
+    const timeDifference = due.getTime() - currentDate.getTime();
+    const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+    return daysLeft >= 0 ? `${daysLeft} days left` : "due date passed";
+  };
+
   return (
     <>
       <div>
@@ -84,7 +98,7 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
           {hasStarted ? t("started") : t("starts")} {new Date(goal.start).toDateString().slice(4)}
         </div>
       )}
-      <div>{goal.due && `${t("ends")} ${new Date(goal.due).toDateString().slice(4)}`}</div>
+      <div>{goal.due && <div>{calculateDaysLeft(goal.due)}</div>}</div>
       <div>{goal.habit === "weekly" && `${t("every")} week`}</div>
     </>
   );
