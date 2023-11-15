@@ -66,9 +66,9 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
             <span>
               {goal.duration} {t(`hour${Number(goal.duration) > 1 ? "s" : ""}`)}
             </span>
-          ) : (
+          ) : !goal.due ? (
             <span>no duration</span>
-          ))}
+          ) : null)}
         {goal.timeBudget.perDay && <span>{hoursPerDayText}</span>}
         {goal.timeBudget.perDay && (
           <span>
