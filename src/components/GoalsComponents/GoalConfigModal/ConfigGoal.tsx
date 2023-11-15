@@ -105,7 +105,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const getFinalTags = () => ({
     ...goal,
-    due: due && due !== "" ? new Date(due).toString() : null,
+    due: due && due !== "" ? new Date(due).toISOString() : null,
     // start: start && start !== "" ? new Date(start).toString() : null,
     duration: tags.duration !== "" ? `${tags.duration}` : null,
     afterTime: state.goalType === "Budget" ? afterTime : null,
@@ -374,7 +374,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             <CustomDatePicker
               label="Due"
               dateValue={due}
-              handleDateChange={(newValue) => setDue(newValue)}
+              handleDateChange={(newDate) => {
+                setDue(newDate);
+              }}
               showTime={false}
               timeValue={0}
               handleTimeChange={() => null}
