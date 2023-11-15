@@ -168,6 +168,10 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   const innerBorderColor = hasSubGoals ? goal.goalColor : "transparent";
 
+  const renderDots = (color: string) => {
+    return [...Array(3)].map(() => <span key={goal.id} style={{ backgroundColor: color }} />);
+  };
+
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
       <div
@@ -201,7 +205,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
               </div>
             </div>
           </div>
-          {isActionVisible && <span className="goal-menu-subtext">Actions</span>}
+          {isActionVisible && <div className="goal-menu-dots">{renderDots(goal.goalColor)}</div>}
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <div className="goal-title">
