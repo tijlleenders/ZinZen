@@ -11,6 +11,12 @@ npm install
 npm run dev
 ```
 
+To run the development server with hosting accessible on a mobile device, use:
+
+```
+npm run dev -- --host
+```
+
 ## Frameworks used
 
 UI : ~~react-bootstrap~~ antd  
