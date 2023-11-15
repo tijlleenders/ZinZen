@@ -24,11 +24,11 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
   return (
     <div
       style={{
-        paddingTop: 25,
         position: "relative",
         display: "flex",
         gap: 12,
         alignItems: "center",
+        fontSize: 14,
       }}
     >
       <span

@@ -371,8 +371,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 boxShadow: "var(--shadow)",
               }}
             />
+            <span>Due</span>
             <CustomDatePicker
-              label="Due"
+              label=""
               dateValue={due}
               handleDateChange={(newDate) => {
                 setDue(newDate);
