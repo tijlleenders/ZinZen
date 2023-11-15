@@ -356,22 +356,22 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           <div
             style={{
               display: "flex",
-              gap: 20,
+              gap: 12,
               alignItems: "center",
             }}
           >
-            <span>Duration</span>
+            <span>{t("duration")}</span>
             <CustomInput
               value={tags.duration}
               handleChange={(value: string) => {
                 setTags({ ...tags, duration: roundOffHours(value) });
               }}
               style={{
-                maxWidth: 50,
+                width: 20,
                 boxShadow: "var(--shadow)",
               }}
             />
-            <span>Due</span>
+            <span>{t("dueDate")}</span>
             <CustomDatePicker
               label=""
               dateValue={due}
