@@ -21,6 +21,7 @@ import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } f
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
+import CustomDatePicker from "./CustomDatePicker";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -61,7 +62,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const open = !!showAddGoal || !!showUpdateGoal;
 
   const [title, setTitle] = useState(goal.title);
-  // const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
+  const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
   // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
   // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
   // const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
@@ -104,7 +105,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const getFinalTags = () => ({
     ...goal,
-    // due: due && due !== "" ? new Date(due).toString() : null,
+    due: due && due !== "" ? new Date(due).toString() : null,
     // start: start && start !== "" ? new Date(start).toString() : null,
     duration: tags.duration !== "" ? `${tags.duration}` : null,
     afterTime: state.goalType === "Budget" ? afterTime : null,
@@ -369,6 +370,14 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 maxWidth: 50,
                 boxShadow: "var(--shadow)",
               }}
+            />
+            <CustomDatePicker
+              label="Due"
+              dateValue={due}
+              handleDateChange={(newValue) => setDue(newValue)}
+              showTime={false}
+              timeValue={0}
+              handleTimeChange={() => null}
             />
           </div>
         )}
