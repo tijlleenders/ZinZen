@@ -381,6 +381,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               showTime={false}
               timeValue={0}
               handleTimeChange={() => null}
+              disablePastDates
             />
           </div>
         )}
