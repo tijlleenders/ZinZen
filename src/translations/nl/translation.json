@@ -168,7 +168,7 @@
   "dueDate": "Deadline",
   "dueToday": "Vandaag verschuldigd",
   "dueDatePassed": "Vervaldatum verstreken",
-  "daysLeft": "nog {{days}} dagen",
+  "daysLeft": "Nog {{days}} dagen",
   "goal": {
     "archive": {
       "header": "Wil je deze doelstelling als voltooid markeren?",
