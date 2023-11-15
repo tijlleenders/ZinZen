@@ -9,6 +9,7 @@ interface ICustomDatePicker {
   handleDateChange: (value: string) => void;
   handleTimeChange: (value: number) => void;
   showTime: boolean;
+  disablePastDates: boolean;
 }
 
 const CustomDatePicker: React.FC<ICustomDatePicker> = ({
@@ -18,8 +19,18 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
   handleDateChange,
   handleTimeChange,
   showTime = true,
+  disablePastDates = false,
 }) => {
   const { t } = useTranslation();
+
+  const getTodayDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = today.getMonth() + 1;
+    const dd = today.getDate();
+
+    return `${yyyy}-${mm.toString().padStart(2, "0")}-${dd.toString().padStart(2, "0")}`;
+  };
 
   return (
     <div
@@ -28,7 +39,7 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
         display: "flex",
         gap: 12,
         alignItems: "center",
-        fontSize: 14,
+        fontSize: 12,
       }}
     >
       <span
@@ -40,7 +51,13 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
       >
         {label}
       </span>
-      <input type="date" value={dateValue} onChange={(e) => handleDateChange(e.target.value)} className="datepicker" />
+      <input
+        type="date"
+        value={dateValue}
+        onChange={(e) => handleDateChange(e.target.value)}
+        min={disablePastDates ? getTodayDate() : undefined}
+        className="datepicker"
+      />
       {showTime && (
         <>
           <span>{t("at")}</span>
