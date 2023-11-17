@@ -250,18 +250,13 @@ export const formatBudgetHrsToText = (hours: string | null) => {
 
 export const calculateDaysLeft = (dueDate: string) => {
   const { t } = useTranslation();
-  if (!dueDate) return "";
+  if (!dueDate) return null;
   const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
   const due = new Date(dueDate);
-  due.setHours(0, 0, 0, 0);
+  const daysLeft = getDiffInDates(currentDate, due);
 
-  if (due.getTime() === currentDate.getTime()) {
+  if (daysLeft === 0) {
     return t("dueToday");
   }
-
-  const timeDifference = due.getTime() - currentDate.getTime();
-  const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
-
   return daysLeft >= 0 ? t("daysLeft", { days: daysLeft }) : t("dueDatePassed");
 };
