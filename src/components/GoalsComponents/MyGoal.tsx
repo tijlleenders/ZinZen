@@ -43,6 +43,7 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
 
   const hoursPerDayText = formatBudgetHrsToText(goal.timeBudget.perDay);
   const hoursPerWeekText = formatBudgetHrsToText(goal.timeBudget.perWeek);
+  const dueDateText = goal.due ? calculateDaysLeft(goal.due) : null;
 
   return (
     <>
@@ -84,7 +85,7 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
           {hasStarted ? t("started") : t("starts")} {new Date(goal.start).toDateString().slice(4)}
         </div>
       )}
-      <div>{goal.due && <div>{calculateDaysLeft(goal.due)}</div>}</div>
+      <div>{goal.due && <div>{dueDateText}</div>}</div>
       <div>{goal.habit === "weekly" && `${t("every")} week`}</div>
     </>
   );
