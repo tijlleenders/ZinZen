@@ -53,6 +53,9 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
       </span>
       <input
         type="date"
+        style={{
+          boxShadow: "var(--shadow)",
+        }}
         value={dateValue}
         onChange={(e) => handleDateChange(e.target.value)}
         min={disablePastDates ? getTodayDate() : undefined}
