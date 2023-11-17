@@ -247,3 +247,21 @@ export const formatBudgetHrsToText = (hours: string | null) => {
   }
   return `${hours} hours`;
 };
+
+export const calculateDaysLeft = (dueDate: string) => {
+  const { t } = useTranslation();
+  if (!dueDate) return "";
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  const due = new Date(dueDate);
+  due.setHours(0, 0, 0, 0);
+
+  if (due.getTime() === currentDate.getTime()) {
+    return t("dueToday");
+  }
+
+  const timeDifference = due.getTime() - currentDate.getTime();
+  const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+  return daysLeft >= 0 ? t("daysLeft", { days: daysLeft }) : t("dueDatePassed");
+};
