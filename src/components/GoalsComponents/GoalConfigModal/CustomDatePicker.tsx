@@ -23,14 +23,7 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
 }) => {
   const { t } = useTranslation();
 
-  const getTodayDate = () => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = today.getMonth() + 1;
-    const dd = today.getDate();
-
-    return `${yyyy}-${mm.toString().padStart(2, "0")}-${dd.toString().padStart(2, "0")}`;
-  };
+  const todayDate = new Date().toISOString().slice(0, 10);
 
   return (
     <div
@@ -58,7 +51,7 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
         }}
         value={dateValue}
         onChange={(e) => handleDateChange(e.target.value)}
-        min={disablePastDates ? getTodayDate() : undefined}
+        min={disablePastDates ? todayDate : undefined}
         className="datepicker"
       />
       {showTime && (
