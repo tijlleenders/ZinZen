@@ -6,10 +6,20 @@
   }
   .goal-action {
     width: unset !important;
-    border: none !important;
+    border: none;
     border-radius: 0 !important;
     cursor: pointer;
     background: transparent !important;
+  }
+  .goal-action:first-child {
+    border-right: 2px solid var(--default-border-color);
+    border-bottom: 2px solid var(--default-border-color);
+  }
+  .goal-action:nth-child(2) {
+    border-bottom: 2px solid var(--default-border-color);
+  }
+  .goal-action:nth-child(3) {
+    border-right: 2px solid var(--default-border-color);
   }
   .goal-action:last-child {
     border-radius: 0 0 28px 28px !important;
@@ -25,8 +35,8 @@
   }
   img,
   svg {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     opacity: 0.6;
   }
 }
