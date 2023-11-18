@@ -8,7 +8,7 @@ import { unarchiveIcon } from "@src/assets";
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
-import { formatBudgetHrsToText } from "@src/utils";
+import { calculateDaysLeft, formatBudgetHrsToText } from "@src/utils";
 
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
@@ -43,6 +43,7 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
 
   const hoursPerDayText = formatBudgetHrsToText(goal.timeBudget.perDay);
   const hoursPerWeekText = formatBudgetHrsToText(goal.timeBudget.perWeek);
+  const dueDateText = goal.due ? calculateDaysLeft(goal.due) : null;
 
   return (
     <>
@@ -52,9 +53,9 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
             <span>
               {goal.duration} {t(`hour${Number(goal.duration) > 1 ? "s" : ""}`)}
             </span>
-          ) : (
-            <span>no duration</span>
-          ))}
+          ) : !goal.due ? (
+            <span>{t("noDuration")}</span>
+          ) : null)}
         {goal.timeBudget.perDay && <span>{hoursPerDayText}</span>}
         {goal.timeBudget.perDay && (
           <span>
@@ -84,7 +85,7 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
           {hasStarted ? t("started") : t("starts")} {new Date(goal.start).toDateString().slice(4)}
         </div>
       )}
-      <div>{goal.due && `${t("ends")} ${new Date(goal.due).toDateString().slice(4)}`}</div>
+      <div>{goal.due && <div>{dueDateText}</div>}</div>
       <div>{goal.habit === "weekly" && `${t("every")} week`}</div>
     </>
   );

@@ -86,12 +86,16 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
         darkModeStatus ? "dark" : "light"
       }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
-      <div style={{ textAlign: "left" }} className="header-title">
-        <Tooltip placement="top" title={goal.title}>
-          <p className="ordinary-element" id="title-field" style={{ paddingLeft: "32px" }}>
-            {goal.title}
-          </p>
-        </Tooltip>
+      <div
+        style={{ textAlign: "left" }}
+        className="header-title"
+        onClickCapture={() => {
+          handleUpdateGoal(goal.id, !!goal.timeBudget.perDay);
+        }}
+      >
+        <p className="ordinary-element" id="title-field">
+          {goal.title}
+        </p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
         {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}

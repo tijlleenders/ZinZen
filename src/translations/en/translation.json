@@ -121,6 +121,12 @@
   "collaborateOnGoal": "Collaborate on goal",
   "confirm": "Confirm",
   "cancel": "Cancel",
+  "duration": "Duration",
+  "noDuration": "No duration",
+  "dueDate": "Due",
+  "dueToday": "Due today",
+  "dueDatePassed": "Due date passed",
+  "daysLeft": "{{days}} days left",
   "goal": {
     "archive": {
       "header": "Do you want to mark this goal completed?",
