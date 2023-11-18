@@ -9,14 +9,18 @@ interface IActionDivProps {
 
 const ActionDiv: React.FC<IActionDivProps> = ({ icon, label }) => {
   return (
-    <Row>
-      <Col span={6}>
-        <Icon active title={icon} />
-      </Col>
-      <Col span={18}>
-        <p>{label}</p>
-      </Col>
-    </Row>
+    <>
+      <Row justify="center">
+        <Col>
+          <Icon active title={icon} />
+        </Col>
+      </Row>
+      <Row justify="center">
+        <Col>
+          <p>{label}</p>
+        </Col>
+      </Row>
+    </>
   );
 };
 
