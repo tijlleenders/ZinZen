@@ -1,3 +1,16 @@
+# Branching convention
+
+[developer shortcut]/[issue number]/[meaningful name]
+
+like: alice/411/fix-budgets-on-weekends
+
+The branches should only be developed by the distinct developer and not mixed up.
+This helps retrace the development train of each developer and does not get confusing.
+
+Finished branches should be merged into the main branch after reviewing the pull request and then deleted.
+
+If someone likes work on a branch of another developer, then branch from this one with the above naming convention.
+
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge

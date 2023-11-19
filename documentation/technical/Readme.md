@@ -30,3 +30,7 @@ Animations : just CSS
 
 If an important architectural decision is made, it is best practice to document it as an ADR (Architectural Decision Record).
 This way there is always a reference of what architectural decisions are already made. You can find them in [the ADR folder](../ADR).
+
+## Contributing
+
+We welcome contributions! Please respect our [contributing conventions](../../CONTRIBUTING.md).
