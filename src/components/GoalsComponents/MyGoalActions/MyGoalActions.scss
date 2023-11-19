@@ -9,7 +9,7 @@
     border: none;
     border-radius: 0 !important;
     cursor: pointer;
-    background: transparent !important;
+    background: var(--bottom-nav-color) !important;
   }
   .goal-action:first-child {
     border-right: 2px solid var(--default-border-color);
@@ -20,6 +20,7 @@
   }
   .goal-action:nth-child(3) {
     border-right: 2px solid var(--default-border-color);
+    border-radius: 0 0 0 28px !important;
   }
   .goal-action:last-child {
     border-radius: 0 0 28px 28px !important;
