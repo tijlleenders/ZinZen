@@ -223,6 +223,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           window.history.back();
         }
       }}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <input
