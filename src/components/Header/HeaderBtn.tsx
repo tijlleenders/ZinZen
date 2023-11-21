@@ -29,7 +29,13 @@ const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
       {alt === "zinzen settings" ? (
         <Settings />
       ) : (
-        <img onClickCapture={handleClick} className="theme-icon header-icon" src={path} alt={alt} />
+        <img
+          onClickCapture={handleClick}
+          className="theme-icon header-icon"
+          src={path}
+          alt={alt}
+          style={{ padding: "10px" }}
+        />
       )}
     </div>
   );

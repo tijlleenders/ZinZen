@@ -2,7 +2,7 @@
   position: fixed;
   display: flex;
   justify-content: space-between;
-  padding: 16px 0;
+  padding: 10px 0;
   width: 100%;
   background: var(--secondary-background);
   max-width: 600px;
@@ -19,7 +19,7 @@
 .header-items {
   display: flex;
   justify-content: space-between;
-  gap: 30px;
+  gap: 8px;
   max-width: 180px;
   margin-right: 16px;
 }
