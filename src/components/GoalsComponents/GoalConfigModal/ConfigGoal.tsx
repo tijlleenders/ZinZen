@@ -260,6 +260,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             <div>
               <span>Between</span>
               <Slider
+                tooltip={{ prefixCls: "between-tooltip" }}
                 min={0}
                 max={24}
                 marks={{
@@ -292,6 +293,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                       <div>
                         <span>{budgetPerHrSummary} hrs / day</span>
                         <Slider
+                          tooltip={{ prefixCls: "per-day-tooltip" }}
                           min={1}
                           max={beforeTime - afterTime}
                           marks={{
@@ -310,6 +312,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                       <div>
                         <span>{budgetPerWeekSummary} hrs / week</span>
                         <Slider
+                          tooltip={{ prefixCls: "per-week-tooltip" }}
                           min={1}
                           max={(beforeTime - afterTime) * numberOfDays}
                           marks={{
