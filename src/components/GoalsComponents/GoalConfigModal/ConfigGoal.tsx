@@ -90,6 +90,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [perDayHrs, setPerDayHrs] = useState(perDayBudget);
   const [perWeekHrs, setPerWeekHrs] = useState(perWeekBudget);
 
+  const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
   const isTitleEmpty = () => {
@@ -283,9 +284,12 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 border: "none",
                 background: "var(--secondary-background)",
               }}
+              onChange={() => setIsBudgetAccordianOpen(!isBudgetAccordianOpen)}
               panels={[
                 {
-                  header: `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
+                  header: isBudgetAccordianOpen
+                    ? "Budget"
+                    : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
                   body: (
                     <div>
                       <div>
