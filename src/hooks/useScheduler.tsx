@@ -31,6 +31,7 @@ function useScheduler() {
 
   const getInputForScheduler = async () => {
     const activeGoals: GoalItem[] = await getAllGoals();
+    console.log("activeGoals", activeGoals);
     const { dbTasks, schedulerInput } = await organizeDataForInptPrep(activeGoals);
     setTasksStatus({ ...dbTasks });
     return schedulerInput;

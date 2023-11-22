@@ -19,6 +19,7 @@ export const transformIntoSchInputGoals = (
   blockedSlots: { [goalid: string]: blockedSlotOfTask[] },
 ) => {
   const inputGoalsArr: ISchedulerInputGoal[] = [];
+  console.log("activeGoals in function", activeGoals);
   activeGoals.forEach(async (ele) => {
     const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, created_at: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
@@ -66,6 +67,7 @@ export const transformIntoSchInputGoals = (
     }
     inputGoalsArr.push(obj);
   });
+  console.log("inputGoalsArr", inputGoalsArr);
   return inputGoalsArr;
 };
 
@@ -159,8 +161,8 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
 
   activeGoals = [
     ...activeGoals.filter((ele) => {
-      if (!ele.duration) noDurationGoalIds.push(ele.id);
-      return !!ele.duration;
+      if (!ele.duration || ele.timeBudget.perDay === null) noDurationGoalIds.push(ele.id);
+      return ele.duration || ele.timeBudget;
     }),
   ];
 
@@ -171,6 +173,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
     blockedSlots,
   );
   schedulerInput.goals = inputGoalsArr.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+  console.log("schedulerInput", schedulerInput.goals);
   return { dbTasks, schedulerInput };
 };
 
