@@ -159,12 +159,18 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   );
   const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
 
-  activeGoals = [
-    ...activeGoals.filter((ele) => {
-      if (!ele.duration || ele.timeBudget.perDay === null) noDurationGoalIds.push(ele.id);
-      return ele.duration || ele.timeBudget;
-    }),
-  ];
+  function filterRootGoalsWithoutDuration(goal: GoalItem) {
+    const isRootGoalWithoutTimeBudget = goal.timeBudget.perDay === null && goal.parentGoalId === "root";
+    if (isRootGoalWithoutTimeBudget) {
+      const hasDuration = !!goal.duration;
+      if (!hasDuration) {
+        noDurationGoalIds.push(goal.id);
+      }
+      return hasDuration;
+    }
+    return true;
+  }
+  activeGoals = activeGoals.filter(filterRootGoalsWithoutDuration);
 
   const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(
     dbTasks,
@@ -174,6 +180,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   );
   schedulerInput.goals = inputGoalsArr.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
   console.log("schedulerInput", schedulerInput.goals);
+  console.log("noDurationGoalIds", noDurationGoalIds);
   return { dbTasks, schedulerInput };
 };
 
