@@ -30,27 +30,88 @@ const AddGoalOptions = () => {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleAddGoal("Budget");
+      <div
+        style={{
+          display: "flex",
+          borderRadius: "30px",
+          position: "fixed",
+          right: 34,
+          bottom: 144,
+          border: "1px solid var(--icon-grad-1)",
+          color: "white",
+          fontWeight: 600,
+          fontSize: "0.875em",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "var(--secondary-background)",
+          gap: 5,
+          padding: "5px",
+          width: 120,
         }}
-        style={{ ...style, bottom: 144, fontSize: "0.875em" }}
       >
-        Budget
-      </button>
-
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleAddGoal("Goal");
+        <span style={{ paddingLeft: 5 }}>Budget</span>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAddGoal("Budget");
+          }}
+          style={{
+            borderRadius: "50%",
+            border: "none",
+            background: "var(--selection-color)",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
+            width: 56,
+            height: 56,
+            color: "white",
+            fontWeight: 600,
+            fontSize: "0.875em",
+          }}
+        >
+          Budget
+        </button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          borderRadius: "30px",
+          position: "fixed",
+          right: 34,
+          bottom: 74,
+          color: "white",
+          fontWeight: 600,
+          fontSize: "0.875em",
+          justifyContent: "space-between",
+          border: "1px solid var(--icon-grad-1)",
+          backgroundColor: "var(--secondary-background)",
+          alignItems: "center",
+          gap: 5,
+          padding: "5px",
+          width: 120,
         }}
-        style={{ ...style, fontSize: "0.875em" }}
       >
-        Goal
-      </button>
+        <span style={{ paddingLeft: 5 }}>Goal</span>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAddGoal("Goal");
+          }}
+          style={{
+            borderRadius: "50%",
+            border: "none",
+            background: "var(--selection-color)",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
+            width: 56,
+            height: 56,
+            color: "white",
+            fontWeight: 600,
+            fontSize: "0.875em",
+          }}
+        >
+          Goal
+        </button>
+      </div>
     </>
   );
 };
