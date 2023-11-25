@@ -21,7 +21,7 @@ export const transformIntoSchInputGoals = (
   const inputGoalsArr: ISchedulerInputGoal[] = [];
   console.log("activeGoals in function", activeGoals);
   activeGoals.forEach(async (ele) => {
-    const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, created_at: ele.createdAt };
+    const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, createdAt: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
     // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
     // obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
@@ -159,18 +159,37 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   );
   const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
 
-  function filterRootGoalsWithoutDuration(goal: GoalItem) {
-    const isRootGoalWithoutTimeBudget = goal.timeBudget.perDay === null && goal.parentGoalId === "root";
-    if (isRootGoalWithoutTimeBudget) {
-      const hasDuration = !!goal.duration;
-      if (!hasDuration) {
-        noDurationGoalIds.push(goal.id);
+  const goals: GoalItem[] = activeGoals;
+  const goalsMap = new Map<string, GoalItem>();
+  goals.forEach((goal) => goalsMap.set(goal.id, goal));
+
+  function hasDurationOrTimeBudgetInTree(rootGoalId: string): boolean {
+    function checkSubtree(goalId: string): boolean {
+      const goal = goalsMap.get(goalId);
+      if (!goal) return false;
+      if (goal.duration !== null || (goal.timeBudget && goal.timeBudget.perDay !== null)) {
+        return true;
       }
-      return hasDuration;
+      return goal.sublist.some(checkSubtree);
     }
-    return true;
+    return checkSubtree(rootGoalId);
   }
-  activeGoals = activeGoals.filter(filterRootGoalsWithoutDuration);
+
+  const rootGoalsToKeep = new Set<string>();
+  goals.forEach((goal) => {
+    if (goal.parentGoalId === "root" && hasDurationOrTimeBudgetInTree(goal.id)) {
+      rootGoalsToKeep.add(goal.id);
+    }
+  });
+
+  activeGoals = goals.filter((goal) => {
+    let currentGoal: GoalItem | undefined = goal;
+    while (currentGoal.parentGoalId !== "root") {
+      currentGoal = goalsMap.get(currentGoal.parentGoalId);
+      if (!currentGoal) return false;
+    }
+    return rootGoalsToKeep.has(currentGoal.id);
+  });
 
   const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(
     dbTasks,

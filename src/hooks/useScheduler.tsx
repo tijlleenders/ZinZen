@@ -34,6 +34,7 @@ function useScheduler() {
     console.log("activeGoals", activeGoals);
     const { dbTasks, schedulerInput } = await organizeDataForInptPrep(activeGoals);
     setTasksStatus({ ...dbTasks });
+    console.log("schedulerInput", schedulerInput.goals);
     return schedulerInput;
   };
 
@@ -69,6 +70,7 @@ function useScheduler() {
       newGeneratedInputId = generatedInputId;
       await init();
       res = schedule(schedulerInputV2);
+      console.log("reseted");
     }
     putSchedulerRes(cachedRes.code, newGeneratedInputId, JSON.stringify(res))
       .then(() => console.log("schedule saved"))
