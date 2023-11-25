@@ -1,5 +1,5 @@
 export const shareGoal = async (goal: object) => {
-  const URL = "https://jb65zz5efi3jy5rw5f2y5ke2u40hobkq.lambda-url.eu-west-1.on.aws/";
+  const URL = "https://ryah5agkswabywebsdqk7ar4om0wjdrn.lambda-url.eu-west-1.on.aws/";
   try {
     const res = await fetch(URL, {
       mode: "cors",
@@ -19,7 +19,7 @@ export const shareGoal = async (goal: object) => {
 };
 
 export const getPublicGoals = async (goalTitle: string) => {
-  const URL = "https://jb65zz5efi3jy5rw5f2y5ke2u40hobkq.lambda-url.eu-west-1.on.aws/";
+  const URL = "https://ryah5agkswabywebsdqk7ar4om0wjdrn.lambda-url.eu-west-1.on.aws/";
   const errorMessage = [
     "Uh oh, do you have internet?",
     "No internet. Have aliens landed?",
