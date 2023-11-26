@@ -11,107 +11,42 @@ import useGoalStore from "@src/hooks/useGoalStore";
 import useFeelingStore from "@src/hooks/useFeelingStore";
 import Backdrop from "@src/common/Backdrop";
 
-const style: React.CSSProperties = {
-  position: "fixed",
-  borderRadius: "50%",
-  border: "none",
-  background: "var(--selection-color)",
-  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-  width: 56,
-  height: 56,
-  right: 34,
-  bottom: 74,
-  color: "white",
-  fontWeight: 600,
-};
+import "./index.scss";
 
 const AddGoalOptions = () => {
   const { handleAddGoal } = useGoalStore();
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          borderRadius: "30px",
-          position: "fixed",
-          right: 34,
-          bottom: 144,
-          border: "1px solid var(--icon-grad-1)",
-          color: "white",
-          fontWeight: 600,
-          fontSize: "0.875em",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: "var(--secondary-background)",
-          gap: 5,
-          padding: "5px",
-          width: 120,
+      <button
+        type="button"
+        className="add-goal-pill-btn"
+        style={{ right: 34, bottom: 144 }}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleAddGoal("Budget");
         }}
       >
         <span style={{ paddingLeft: 5 }}>Budget</span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleAddGoal("Budget");
-          }}
-          style={{
-            borderRadius: "50%",
-            border: "none",
-            background: "var(--selection-color)",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-            width: 56,
-            height: 56,
-            color: "white",
-            fontWeight: 600,
-            fontSize: "0.875em",
-          }}
-        >
-          Budget
-        </button>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          borderRadius: "30px",
-          position: "fixed",
-          right: 34,
-          bottom: 74,
-          color: "white",
-          fontWeight: 600,
-          fontSize: "0.875em",
-          justifyContent: "space-between",
-          border: "1px solid var(--icon-grad-1)",
-          backgroundColor: "var(--secondary-background)",
-          alignItems: "center",
-          gap: 5,
-          padding: "5px",
-          width: 120,
+        <span className="goal-btn-circle">
+          <img className="global-addBtn-img" src={GlobalAddIcon} alt="add goal" />
+        </span>
+      </button>
+
+      <button
+        type="button"
+        className="add-goal-pill-btn"
+        style={{ right: 34, bottom: 74 }}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleAddGoal("Goal");
         }}
       >
         <span style={{ paddingLeft: 5 }}>Goal</span>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleAddGoal("Goal");
-          }}
-          style={{
-            borderRadius: "50%",
-            border: "none",
-            background: "var(--selection-color)",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-            width: 56,
-            height: 56,
-            color: "white",
-            fontWeight: 600,
-            fontSize: "0.875em",
-          }}
-        >
-          Goal
-        </button>
-      </div>
+        <span className="goal-btn-circle">
+          <img className="global-addBtn-img" src={GlobalAddIcon} alt="add goal" />
+        </span>
+      </button>
     </>
   );
 };
@@ -152,7 +87,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       onClick={(e) => {
         handleClick(e);
       }}
-      style={style}
+      className="global-addBtn"
     >
       <img
         className="global-addBtn-img"
