@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
+import darkModeIcon from "@assets/images/darkModeIcon.svg";
 
 import { themeSelectionMode } from "@src/store/ThemeState";
 
@@ -29,7 +30,11 @@ const AddGoalOptions = () => {
       >
         <span style={{ paddingLeft: 5 }}>Budget</span>
         <span className="goal-btn-circle">
-          <img className="global-addBtn-img" src={GlobalAddIcon} alt="add goal" />
+          <img
+            style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
+            src={GlobalAddIcon}
+            alt="add goal"
+          />
         </span>
       </button>
 
@@ -44,7 +49,11 @@ const AddGoalOptions = () => {
       >
         <span style={{ paddingLeft: 5 }}>Goal</span>
         <span className="goal-btn-circle">
-          <img className="global-addBtn-img" src={GlobalAddIcon} alt="add goal" />
+          <img
+            style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
+            src={GlobalAddIcon}
+            alt="add goal"
+          />
         </span>
       </button>
     </>
@@ -90,7 +99,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       className="global-addBtn"
     >
       <img
-        className="global-addBtn-img"
+        style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
         src={themeSelection ? correct : GlobalAddIcon}
         alt="add goal | add feeling | add group"
       />

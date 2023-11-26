@@ -19,8 +19,8 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   width: 56px;
   height: 56px;
-  right: 34px;
-  bottom: 74px;
+  right: 39px;
+  bottom: 79px;
   color: white;
   font-weight: 600;
 }
@@ -32,13 +32,12 @@
   border: 1px solid var(--icon-grad-1);
   color: white;
   font-weight: 600;
-  font-size: 0.875em;
+  font-size: 18px;
   justify-content: space-between;
   align-items: center;
   background-color: var(--secondary-background);
-  gap: 5px;
   padding: 5px;
-  width: 130px;
+  width: 150px;
 }
 
 .goal-btn-circle {
