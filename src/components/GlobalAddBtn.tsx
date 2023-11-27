@@ -70,7 +70,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      navigate("/MyGoals", { state: { ...state, displayAddGoalOptions: true } });
+      navigate("/MyGoals", { state: { displayAddGoalOptions: true } });
     } else if (add === "myJournal") {
       handleAddFeeling();
     }

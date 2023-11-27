@@ -105,7 +105,8 @@ const BottomNavbar = ({ title }: { title: string }) => {
         </button>
         <button
           type="button"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             if (themeSelection) themeChange(1);
             else handleClick("MyJournal");
           }}
@@ -120,8 +121,8 @@ const BottomNavbar = ({ title }: { title: string }) => {
             title={themeSelection ? "ArrowIcon" : "JournalIcon"}
           />
           {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
-          {isAddBtnVisible && <GlobalAddBtn add={title} />}
         </button>
+        {isAddBtnVisible && <GlobalAddBtn add={title} />}
       </BottomNavLayout>
     </>
   );
