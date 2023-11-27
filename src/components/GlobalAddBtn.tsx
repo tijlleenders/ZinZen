@@ -4,8 +4,6 @@ import { useRecoilValue } from "recoil";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
-import darkModeIcon from "@assets/images/darkModeIcon.svg";
-
 import { themeSelectionMode } from "@src/store/ThemeState";
 
 import useGoalStore from "@src/hooks/useGoalStore";
