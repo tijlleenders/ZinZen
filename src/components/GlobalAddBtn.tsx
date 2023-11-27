@@ -12,49 +12,33 @@ import Backdrop from "@src/common/Backdrop";
 
 import "./index.scss";
 
-const AddGoalOptions = () => {
+interface AdGoalOptionsProps {
+  goalType: "Budget" | "Goal";
+  bottom: number;
+}
+
+const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom }) => {
   const { handleAddGoal } = useGoalStore();
 
   return (
-    <>
-      <button
-        type="button"
-        className="add-goal-pill-btn"
-        style={{ right: 34, bottom: 144 }}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleAddGoal("Budget");
-        }}
-      >
-        <span style={{ paddingLeft: 5 }}>Budget</span>
-        <span className="goal-btn-circle">
-          <img
-            style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
-            src={GlobalAddIcon}
-            alt="add goal"
-          />
-        </span>
-      </button>
-
-      <button
-        type="button"
-        className="add-goal-pill-btn"
-        style={{ right: 34, bottom: 74 }}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleAddGoal("Goal");
-        }}
-      >
-        <span style={{ paddingLeft: 5 }}>Goal</span>
-        <span className="goal-btn-circle">
-          <img
-            style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
-            src={GlobalAddIcon}
-            alt="add goal"
-          />
-        </span>
-      </button>
-    </>
+    <button
+      type="button"
+      className="add-goal-pill-btn"
+      style={{ right: 34, bottom }}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleAddGoal(goalType);
+      }}
+    >
+      <span style={{ paddingLeft: 5 }}>{goalType}</span>
+      <span className="goal-btn-circle">
+        <img
+          style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
+          src={GlobalAddIcon}
+          alt="add goal"
+        />
+      </span>
+    </button>
   );
 };
 
@@ -84,7 +68,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             window.history.back();
           }}
         />
-        <AddGoalOptions />
+        <AddGoalOptions goalType="Budget" bottom={144} />
+        <AddGoalOptions goalType="Goal" bottom={74} />
       </>
     );
   }
