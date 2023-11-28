@@ -8,6 +8,7 @@
     ]
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@jest/globals": "^28.1.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^11.2.7",

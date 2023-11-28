@@ -4,8 +4,8 @@ import { followContactOnGoal, getGoal } from "@src/api/GoalsAPI";
 import { IParticipant } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
-import { Modal } from "antd";
-import ToggleFollowSwitch from "./ToggleFollowSwitch";
+import { Modal, Switch } from "antd";
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 const Participants = ({ goalId }: { goalId: string }) => {
   const theme = useRecoilValue(themeState);
@@ -64,9 +64,11 @@ const Participants = ({ goalId }: { goalId: string }) => {
           >
             <p style={{ fontSize: 16 }}>{participant.name}</p>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <ToggleFollowSwitch
-                initialChecked={participant.following}
+              <Switch
+                defaultChecked={participant.following}
                 onChange={(value) => toggleFollowStatus(participant, value)}
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
               />
             </div>
           </div>
