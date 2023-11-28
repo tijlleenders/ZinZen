@@ -1,3 +1,5 @@
+# Setting Up Your Repository
+
 To contribute to open-source projects, you typically need to follow a workflow involving git Pull Requests (PRs) for peer review. You cannot create PRs directly from a repository cloned from the original project. Instead, you must fork the project and then clone your forked repository. You'll need to restart the process if you initially cloned the project without forking.
 
 ## Initial Project Setup
