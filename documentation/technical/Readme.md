@@ -33,4 +33,6 @@ This way there is always a reference of what architectural decisions are already
 
 ## Contributing
 
-We welcome contributions! Please respect our [contributing conventions](../../CONTRIBUTING.md).
+We welcome contributions! Here, you'll discover essential information to consider before submitting pull requests. We highly value contributors who take the time to familiarize themselves with our code conventions and styles, which helps minimize additional change requests from our team. Please respect our [contributing conventions](../../CONTRIBUTING.md).
+* [Setting Up Your Repository](./Setup.md).
+* [Submitting your first Pull Request](./PRGuide.md).
