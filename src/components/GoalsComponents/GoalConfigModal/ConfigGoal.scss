@@ -60,7 +60,7 @@
     text-align: left;
     color: #000;
     border: none;
-    padding: 12px;
+    padding: 10px;
     border-radius: 4px;
   }
   .timepicker {
@@ -112,3 +112,20 @@
     }
   }
 }
+
+
+.between-tooltip {
+  top: 177px !important;
+  font-size: 17px !important;
+}
+
+.per-day-tooltip {
+  top: 335px !important;
+  font-size: 17px !important;
+}
+
+.per-week-tooltip {
+  top: 411px !important;
+  font-size: 17px !important;
+}
+

@@ -21,6 +21,7 @@ import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } f
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
+import CustomDatePicker from "./CustomDatePicker";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -61,7 +62,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const open = !!showAddGoal || !!showUpdateGoal;
 
   const [title, setTitle] = useState(goal.title);
-  // const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
+  const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
   // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
   // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
   // const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
@@ -89,6 +90,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [perDayHrs, setPerDayHrs] = useState(perDayBudget);
   const [perWeekHrs, setPerWeekHrs] = useState(perWeekBudget);
 
+  const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
   const isTitleEmpty = () => {
@@ -104,7 +106,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const getFinalTags = () => ({
     ...goal,
-    // due: due && due !== "" ? new Date(due).toString() : null,
+    due: due && due !== "" ? new Date(due).toISOString() : null,
     // start: start && start !== "" ? new Date(start).toString() : null,
     duration: tags.duration !== "" ? `${tags.duration}` : null,
     afterTime: state.goalType === "Budget" ? afterTime : null,
@@ -258,6 +260,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             <div>
               <span>Between</span>
               <Slider
+                tooltip={{ prefixCls: "between-tooltip" }}
                 min={0}
                 max={24}
                 marks={{
@@ -279,14 +282,18 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 border: "none",
                 background: "var(--secondary-background)",
               }}
+              onChange={() => setIsBudgetAccordianOpen(!isBudgetAccordianOpen)}
               panels={[
                 {
-                  header: `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
+                  header: isBudgetAccordianOpen
+                    ? "Budget"
+                    : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
                   body: (
                     <div>
                       <div>
                         <span>{budgetPerHrSummary} hrs / day</span>
                         <Slider
+                          tooltip={{ prefixCls: "per-day-tooltip" }}
                           min={1}
                           max={beforeTime - afterTime}
                           marks={{
@@ -305,6 +312,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                       <div>
                         <span>{budgetPerWeekSummary} hrs / week</span>
                         <Slider
+                          tooltip={{ prefixCls: "per-week-tooltip" }}
                           min={1}
                           max={(beforeTime - afterTime) * numberOfDays}
                           marks={{
@@ -355,20 +363,32 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           <div
             style={{
               display: "flex",
-              gap: 20,
+              gap: 12,
               alignItems: "center",
             }}
           >
-            <span>Duration</span>
+            <span>{t("duration")}</span>
             <CustomInput
               value={tags.duration}
               handleChange={(value: string) => {
                 setTags({ ...tags, duration: roundOffHours(value) });
               }}
               style={{
-                maxWidth: 50,
+                width: 20,
                 boxShadow: "var(--shadow)",
               }}
+            />
+            <span>{t("dueDate")}</span>
+            <CustomDatePicker
+              label=""
+              dateValue={due}
+              handleDateChange={(newDate) => {
+                setDue(newDate);
+              }}
+              showTime={false}
+              timeValue={0}
+              handleTimeChange={() => null}
+              disablePastDates
             />
           </div>
         )}

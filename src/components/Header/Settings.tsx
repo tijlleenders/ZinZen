@@ -60,7 +60,12 @@ const Settings = () => {
     {
       label: (
         <div
-          style={{ display: "flex", justifyContent: "space-between", marginTop: 12, alignItems: "center" }}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: 12,
+            alignItems: "center",
+          }}
           onClickCapture={toggleDarkModeStatus}
         >
           <p>{t("darkMode")}</p>
@@ -86,13 +91,19 @@ const Settings = () => {
   }, []);
   return (
     <Dropdown
-      rootClassName={`header-dropdown${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]
-        }`}
+      rootClassName={`header-dropdown${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
+        theme[darkModeStatus ? "dark" : "light"]
+      }`}
       overlayStyle={{ width: 175 }}
       menu={{ items }}
       trigger={["click"]}
     >
-      <img className="theme-icon header-icon settings-icon" src={verticalDots} alt="Settings" />
+      <img
+        className="theme-icon header-icon settings-icon"
+        src={verticalDots}
+        alt="Settings"
+        style={{ padding: "10px" }}
+      />
     </Dropdown>
   );
 };

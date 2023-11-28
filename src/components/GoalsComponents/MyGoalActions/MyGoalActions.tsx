@@ -80,65 +80,71 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       closable={false}
       footer={null}
       centered
-      width={200}
+      width={400}
       onCancel={() => window.history.back()}
       className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${
         darkModeStatus ? "dark" : "light"
       }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
     >
-      <div style={{ textAlign: "left" }} className="header-title">
-        <Tooltip placement="top" title={goal.title}>
-          <p className="ordinary-element" id="title-field">
-            {goal.title}
-          </p>
-        </Tooltip>
-      </div>
-      {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
       <div
-        className="goal-action shareOptions-btn"
-        onClickCapture={async (e) => {
-          e.stopPropagation();
-          await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
-        }}
-      >
-        <ActionDiv label={t("Delete")} icon="Delete" />
-      </div>
-      {((isPartnerGoal && goal.parentGoalId === "root") || !isPartnerGoal) && (
-        <div
-          className="goal-action shareOptions-btn"
-          onClickCapture={async (e) => {
-            e.stopPropagation();
-            if (!isPartnerGoal) {
-              handleShareGoal(goal);
-            } else {
-              await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
-            }
-          }}
-        >
-          <ActionDiv
-            label={t(isPartnerGoal ? "Collaborate" : "Share")}
-            icon={isPartnerGoal ? "Collaborate" : "SingleAvatar"}
-          />
-        </div>
-      )}
-      {!isPartnerGoal && (
-        <div
-          className="goal-action shareOptions-btn"
-          onClickCapture={async (e) => {
-            e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
-          }}
-        >
-          <ActionDiv label={t("Done")} icon="Correct" />
-        </div>
-      )}
-      <div
-        className="goal-action shareOptions-btn"
+        style={{ textAlign: "left" }}
+        className="header-title"
         onClickCapture={() => {
           handleUpdateGoal(goal.id, !!goal.timeBudget.perDay);
         }}
       >
-        <ActionDiv label={t("Edit")} icon="Edit" />
+        <p className="ordinary-element" id="title-field">
+          {goal.title}
+        </p>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+        {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
+        <div
+          className="goal-action shareOptions-btn"
+          onClickCapture={async (e) => {
+            e.stopPropagation();
+            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
+          }}
+        >
+          <ActionDiv label={t("Delete")} icon="Delete" />
+        </div>
+        {!isPartnerGoal && (
+          <div
+            className="goal-action shareOptions-btn"
+            onClickCapture={async (e) => {
+              e.stopPropagation();
+              await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
+            }}
+          >
+            <ActionDiv label={t("Done")} icon="Correct" />
+          </div>
+        )}
+        {((isPartnerGoal && goal.parentGoalId === "root") || !isPartnerGoal) && (
+          <div
+            className="goal-action shareOptions-btn"
+            onClickCapture={async (e) => {
+              e.stopPropagation();
+              if (!isPartnerGoal) {
+                handleShareGoal(goal);
+              } else {
+                await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
+              }
+            }}
+          >
+            <ActionDiv
+              label={t(isPartnerGoal ? "Collaborate" : "Share")}
+              icon={isPartnerGoal ? "Collaborate" : "SingleAvatar"}
+            />
+          </div>
+        )}
+        <div
+          className="goal-action shareOptions-btn"
+          onClickCapture={() => {
+            handleUpdateGoal(goal.id, !!goal.timeBudget.perDay);
+          }}
+        >
+          <ActionDiv label={t("Edit")} icon="Edit" />
+        </div>
       </div>
     </Modal>
   );
