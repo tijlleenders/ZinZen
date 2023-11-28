@@ -4,10 +4,11 @@ import "./ToggleFollowSwitch.scss";
 
 interface ToggleSwitchProps {
   onChange: (value: boolean) => void;
+  initialChecked: boolean;
 }
 
-const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ onChange }) => {
-  const [checked, setChecked] = useState(false);
+const ToggleFollowSwitch: React.FC<ToggleSwitchProps> = ({ onChange, initialChecked }) => {
+  const [checked, setChecked] = useState(initialChecked);
 
   const toggle = () => {
     const updatedChecked = !checked;
@@ -23,14 +24,14 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ onChange }) => {
 
   return (
     <div
-      className="toggle-switch"
+      className={`toggle-switch ${checked ? "checked" : ""}`}
       onClick={toggle}
       onKeyDown={handleKeyPress}
       role="switch"
       aria-checked={checked}
       tabIndex={0}
     >
-      <input type="checkbox" className="checkbox" checked={checked} readOnly tabIndex={-1} />
+      <input type="checkbox" className="checkbox" checked={checked} readOnly />
       <label className="label">
         <span className="inner" />
         <span className="switch" />
@@ -39,4 +40,4 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ onChange }) => {
   );
 };
 
-export default ToggleSwitch;
+export default ToggleFollowSwitch;

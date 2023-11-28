@@ -22,7 +22,6 @@ const Participants = ({ goalId }: { goalId: string }) => {
 
   const handleFollow = async (following: boolean, participant: IParticipant) => {
     await followContactOnGoal(goalId, { ...participant, following });
-    getParticipants();
   };
 
   useEffect(() => {
@@ -65,7 +64,10 @@ const Participants = ({ goalId }: { goalId: string }) => {
           >
             <p style={{ fontSize: 16 }}>{participant.name}</p>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <ToggleFollowSwitch onChange={(value) => toggleFollowStatus(participant, value)} />
+              <ToggleFollowSwitch
+                initialChecked={participant.following}
+                onChange={(value) => toggleFollowStatus(participant, value)}
+              />
             </div>
           </div>
         ))}
