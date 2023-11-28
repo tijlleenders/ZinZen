@@ -1,8 +1,8 @@
 import { test, expect, Page } from "@playwright/test";
 import { shareGoalPrivately } from "./lib/testUtils";
 
-const apiServerUrl = "https://n65hkx5nehmmkzy5wp6ijyarka0qujrj.lambda-url.eu-west-1.on.aws/";
-const apiServerUrlGoal = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
+const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
+const apiServerUrlGoal = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
 
 test.describe.configure({ mode: "serial" });
 
