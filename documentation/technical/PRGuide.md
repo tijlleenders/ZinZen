@@ -29,7 +29,9 @@ Follow these simple steps to propose changes or fixes to ZinZen:
 ### Setup a feature branch
 
 1. Make a new branch in your local project for your fixes or features (called a "feature branch"). 
-2. Follow branch naming conventions. 
+2. Follow [branch naming conventions](./conventions/git.md):
+
+   `[developer shortcut]/[issue number]/[meaningful name]`
     - To create and switch to a new branch locally:
         
         `git checkout -b vin/01/my-fix-branch`
