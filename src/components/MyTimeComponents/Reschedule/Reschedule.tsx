@@ -100,6 +100,9 @@ const Reschedule = () => {
       className={`rescheduleModal popupModal${darkModeStatus ? "-dark" : ""} ${
         darkModeStatus ? "dark" : "light"
       }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       <div className="header-title">
         <h4>{task.title}</h4>

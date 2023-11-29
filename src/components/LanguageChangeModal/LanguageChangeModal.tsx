@@ -54,6 +54,9 @@ export const LanguageChangeModal = () => {
       className={`languageChangeModal popupModal${darkModeStatus ? "-dark" : ""} ${
         darkModeStatus ? "dark" : "light"
       }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       <LanguagesList languages={Languages} type="modal" />
     </Modal>
