@@ -1,0 +1,26 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://127.0.0.1:3000/",
+      "localStorage": [
+        {
+          "name": "checkedIn",
+          "value": "yes"
+        },
+        {
+          "name": "language",
+          "value": "\"en\""
+        },
+        {
+          "name": "theme",
+          "value": "{\"light\":1,\"dark\":1}"
+        },
+        {
+          "name": "darkMode",
+          "value": "off"
+        }
+      ]
+    }
+  ]
+}
