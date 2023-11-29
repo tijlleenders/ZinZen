@@ -256,7 +256,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           )}
         </div>
       </div>
-      {!showPartnerMode && goal.participants.length > 0 && <GoalAvatar goal={goal} />}
+      {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
       {archived && (
         <div className="contact-button">
           <button

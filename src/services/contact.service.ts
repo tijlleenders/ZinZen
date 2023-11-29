@@ -3,7 +3,7 @@ import { typeOfChange } from "@src/models/InboxItem";
 import { createContactRequest, getInstallId } from "@src/utils";
 
 export const initRelationship = async () => {
-  const url = "https://n65hkx5nehmmkzy5wp6ijyarka0qujrj.lambda-url.eu-west-1.on.aws/";
+  const url = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
 
   const res = await createContactRequest(url, { method: "initiateRelationship", installId: getInstallId() });
   if (res.success) {
@@ -15,13 +15,13 @@ export const initRelationship = async () => {
 
 export const acceptRelationship = async () => {
   const relId = window.location.pathname.split("/invite/")[1];
-  const url = "https://n65hkx5nehmmkzy5wp6ijyarka0qujrj.lambda-url.eu-west-1.on.aws/";
+  const url = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, { method: "acceptRelationship", installId: getInstallId(), relId });
   return res;
 };
 
 export const shareGoalWithContact = async (relId: string, goalWithChildrens: GoalItem[]) => {
-  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
+  const url = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, {
     method: "shareMessage",
     installId: getInstallId(),
@@ -32,7 +32,7 @@ export const shareGoalWithContact = async (relId: string, goalWithChildrens: Goa
 };
 
 export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
-  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
+  const url = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, {
     method: "shareMessage",
     installId: getInstallId(),
@@ -44,7 +44,7 @@ export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
 
 export const getContactSharedGoals = async () => {
   const lastProcessedTimestamp = new Date(Number(localStorage.getItem("lastProcessedTimestamp"))).toISOString();
-  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
+  const url = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, {
     method: "getMessages",
     installId: getInstallId(),
@@ -55,7 +55,7 @@ export const getContactSharedGoals = async () => {
 };
 
 export const getRelationshipStatus = async (relationshipId: string) => {
-  const url = "https://n65hkx5nehmmkzy5wp6ijyarka0qujrj.lambda-url.eu-west-1.on.aws/";
+  const url = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, {
     method: "getRelationshipStatus",
     installId: getInstallId(),
@@ -69,9 +69,9 @@ export const sendUpdatesToSubscriber = async (
   rootGoalId: string,
   changeType: typeOfChange,
   changes: { level: number; goal: GoalItem }[] | { level: number; id: string }[],
-  customEventType = "",
+  customEventType = ""
 ) => {
-  const url = "https://od66oidjc64tghsplm2s4seuau0dbkgy.lambda-url.eu-west-1.on.aws/";
+  const url = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
   const { relId, type } = sub;
   const requestBody = {
     method: "shareMessage",

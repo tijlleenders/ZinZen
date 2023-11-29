@@ -72,7 +72,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       handleAddFeeling();
     }
   };
-  if (state.displayAddGoalOptions) {
+  if (state?.displayAddGoalOptions) {
     return (
       <>
         <Backdrop
