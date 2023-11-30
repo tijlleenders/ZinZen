@@ -62,9 +62,7 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
             {onLength > 0 &&
               !onWeekdays &&
               !onWeekends &&
-              (onLength === 7
-                ? ` ${t("on any day of week")}`
-                : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
+              (onLength === 7 ? ` ${t("daily")}` : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
             {onWeekdays && ` ${t("on")} ${t("weekdays")}`}
             {onWeekends && " on weekends"}
           </span>
