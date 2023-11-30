@@ -121,8 +121,8 @@ const BottomNavbar = ({ title }: { title: string }) => {
             title={themeSelection ? "ArrowIcon" : "JournalIcon"}
           />
           {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
+          {isAddBtnVisible && <GlobalAddBtn add={title} />}
         </button>
-        {isAddBtnVisible && <GlobalAddBtn add={title} />}
       </BottomNavLayout>
     </>
   );
