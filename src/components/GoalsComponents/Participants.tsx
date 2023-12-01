@@ -39,6 +39,9 @@ const Participants = ({ goalId }: { goalId: string }) => {
       onCancel={() => {
         window.history.back();
       }}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       <div style={{ textAlign: "left", padding: 20, fontSize: 16, fontWeight: 600 }} className="header-title">
         Participants

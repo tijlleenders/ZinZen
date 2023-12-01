@@ -155,6 +155,9 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         className={`${darkModeStatus ? "notes-modal-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
           darkModeStatus ? "dark" : "light"
         }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+        maskStyle={{
+          backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+        }}
       >
         <p className="popupModal-title">Want to tell more about it? </p>
         <div>
@@ -197,6 +200,9 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
           darkModeStatus ? "dark" : "light"
         }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+        maskStyle={{
+          backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+        }}
       >
         <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />
         <div className="show-feeling-actions">

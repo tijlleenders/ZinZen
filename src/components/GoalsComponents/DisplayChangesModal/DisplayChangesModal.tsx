@@ -226,6 +226,9 @@ const DisplayChangesModal = () => {
       }}
       closable={false}
       footer={null}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       {showChangesModal && (
         <>

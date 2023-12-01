@@ -9,7 +9,7 @@
     border: none;
     border-radius: 0 !important;
     cursor: pointer;
-    background: transparent !important;
+    background: var(--bottom-nav-color) !important;
   }
   .goal-action:first-child {
     border-right: 2px solid var(--default-border-color);
@@ -20,9 +20,10 @@
   }
   .goal-action:nth-child(3) {
     border-right: 2px solid var(--default-border-color);
+    border-radius: 0 0 0 28px !important;
   }
   .goal-action:last-child {
-    border-radius: 0 0 28px 28px !important;
+    border-radius: 0 0 28px 0 !important;
   }
   div {
     text-align: center;
@@ -56,6 +57,7 @@
   font-weight: 500;
 }
 .header-title {
-  background: var(--bottom-nav-color) !important;
+  background: var(--secondary-background) !important;
   border-bottom: 1px solid var(--default-border-color);
+  z-index: 1;
 }
