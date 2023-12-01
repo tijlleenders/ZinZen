@@ -68,7 +68,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
-          completedTodayIds: [task.taskid],
+          completedTodayIds: actionName === "Focus" ? [] : [task.taskid],
           forgotToday:
             actionName === "Skip" ? [`${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`] : [],
           completedToday: actionName === "Done" ? Number(task.duration) : 0,
