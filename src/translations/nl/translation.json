@@ -22,7 +22,6 @@
   "Done": "Klaar",
   "Create Goal": "Doel maken",
   "Update Goal": "Doel bijwerken",
-  "Goal Title": "Typ je doel...",
   "Period": "Periode",
   "Duration": "Duur",
   "Timings": "Tijdsinstellingen",
@@ -194,5 +193,7 @@
       "header": "Wil je dit doel archiveren?",
       "note": "Dit beëindigt de samenwerking en je zult geen updates meer ontvangen."
     }
-  }
+  },
+  "goalTitle": "Doeltitel",
+  "budgetTitle": "Budgettitel"
 }

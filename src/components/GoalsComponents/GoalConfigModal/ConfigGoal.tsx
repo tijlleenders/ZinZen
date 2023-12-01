@@ -236,7 +236,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         <input
           className="ordinary-element"
           id="title-field"
-          placeholder={t(`${state.goalType !== "Budget" ? "Goal" : "Budget"} title`)}
+          placeholder={t(`${state.goalType !== "Budget" ? "goal" : "budget"}Title`)}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onKeyDownCapture={async (e) => {
