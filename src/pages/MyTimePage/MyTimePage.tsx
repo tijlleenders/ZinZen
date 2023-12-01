@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
 
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";

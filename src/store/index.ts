@@ -92,7 +92,7 @@ export const currentScheduledTask = atom({
 
 export const focusTaskTitle = atom({
   key: "focusTaskTitle",
-  default: "No Task Scheduled",
+  default: "",
 });
 
 export { darkModeState, languageSelectionState };

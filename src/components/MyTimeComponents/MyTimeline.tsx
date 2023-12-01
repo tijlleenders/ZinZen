@@ -138,21 +138,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       },
     });
   };
-  const currentHour = new Date().getHours();
-  const currentActiveTask = myTasks.scheduled.filter((task) => {
-    if (task.start) {
-      const startHour = parseInt(task.start.split("T")[1].slice(0, 2), 10);
-      if (startHour < currentHour) {
-        return false;
-      }
-    }
-    return true;
-  });
-  if (currentActiveTask[0] === undefined) {
-    setTaskTitle("No Scheduled Tasks");
-  } else {
-    setTaskTitle(currentActiveTask[0]?.title);
-  }
+
   return (
     <>
       {myTasks.impossible.length > 0 && (
