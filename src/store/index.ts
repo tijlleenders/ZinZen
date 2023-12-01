@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 import { confirmActionState } from "@src/Interfaces/IPopupModals";
+import ContactItem from "@src/models/ContactItem";
 import { darkModeState } from "./DarkModeState";
 import { languageSelectionState } from "./LanguageSelectionState";
-import ContactItem from "@src/models/ContactItem";
 
 export const displayConfirmation = atom({
   key: "displayConfirmation",

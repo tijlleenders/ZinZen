@@ -118,6 +118,7 @@
   "Schedule": "Zeitplan",
   "Goals": "Ziele",
   "Journal": "Tagebuch",
+  "save": "Speichern",
   "goal": {
     "archive": {
       "header": "Möchten Sie dieses Ziel als abgeschlossen markieren?",
@@ -149,5 +150,11 @@
       "header": "Möchten Sie dieses Ziel archivieren?",
       "note": "Dies beendet die Zusammenarbeit und Sie erhalten keine weiteren Aktualisierungen."
     }
-  }
+  },
+  "reset": "Zurücksetzen",
+  "editTime": "Bearbeitungszeit",
+  "pause": "Pause",
+  "start": "Start",
+  "min": "Min",
+  "sec": "Sek"
 }

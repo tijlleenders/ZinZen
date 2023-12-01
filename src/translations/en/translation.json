@@ -121,6 +121,7 @@
   "dueToday": "Due today",
   "dueDatePassed": "Due date passed",
   "daysLeft": "{{days}} days left",
+  "save": "Save",
   "goal": {
     "archive": {
       "header": "Do you want to mark this goal completed?",
@@ -152,5 +153,11 @@
       "header": "Do you want to archive this goal?",
       "note": "This will end the collaboration and you will not receive any updates."
     }
-  }
+  },
+  "reset": "reset",
+  "editTime": "Edit Time",
+  "pause": "Pause",
+  "start": "Start",
+  "min": "min",
+  "sec": "sec"
 }

@@ -118,6 +118,7 @@
   "Journal": "diario",
   "Goals": "Objetivos",
   "Schedule": "Cronograma",
+  "Save": "Guardar",
   "goal": {
     "archive": {
       "header": "¿Deseas marcar esta meta como completada?",
@@ -149,5 +150,11 @@
       "header": "¿Deseas archivar esta meta?",
       "note": "Esto finalizará la colaboración y no recibirás ninguna actualización."
     }
-  }
+  },
+  "reset": "Reiniciar",
+  "editTime": "Tiempo de edición",
+  "pause": "Pausa",
+  "start": "Inicio",
+  "min": "min",
+  "sec": "seg"
 }
