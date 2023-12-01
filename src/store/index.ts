@@ -85,11 +85,6 @@ export const displayPartnerMode = atom({
   default: false,
 });
 
-export const selectedMyTimeView = atom({
-  key: "selectedMyTimeView",
-  default: "today",
-});
-
 export const currentScheduledTask = atom({
   key: "currentScheduledTask",
   default: "",

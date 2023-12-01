@@ -15,7 +15,6 @@ export const Focus = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [userEnteredTime, setUserEnteredTime] = useState<string>("");
   const taskTitle = useRecoilValue(focusTaskTitle);
-  const isActiveTitle = useRecoilValue(currentScheduledTask);
 
   useEffect(() => {
     let interval;
@@ -56,7 +55,7 @@ export const Focus = () => {
 
   return (
     <div className="focus">
-      <h6>{isActiveTitle === "" ? taskTitle : isActiveTitle}</h6>
+      <h6>{taskTitle}</h6>
       <Progress
         className={`progress-${darkModeStatus ? "dark" : ""}`}
         size={200}

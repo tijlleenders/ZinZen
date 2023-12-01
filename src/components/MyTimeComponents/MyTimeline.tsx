@@ -16,7 +16,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
-import { darkModeState, displayToast, lastAction, openDevMode, selectedMyTimeView, focusTaskTitle } from "@src/store";
+import { darkModeState, displayToast, lastAction, openDevMode, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
@@ -39,6 +39,7 @@ interface MyTimelineProps {
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetails, setTaskDetails }) => {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const doneSound = new Audio(archiveTune);
   const forgetSound = new Audio(forgetTune);
 
@@ -48,7 +49,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
-  const setCurrentView = useSetRecoilState(selectedMyTimeView);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
 
   const [showScheduled, setShowScheduled] = useState(true);
@@ -101,7 +101,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         setLastAction("TaskSkipped");
       } else if (actionName === "Focus") {
         setTaskTitle(task.title);
-        setCurrentView("focus");
+        navigate("/", { state: { ...state, displayFocus: true } });
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
