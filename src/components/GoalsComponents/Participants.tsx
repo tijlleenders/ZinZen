@@ -4,7 +4,9 @@ import { followContactOnGoal, getGoal } from "@src/api/GoalsAPI";
 import { IParticipant } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
-import { Modal } from "antd";
+import { Modal, Switch } from "antd";
+import CrossIcon from "@assets/images/deleteIcon.svg";
+import TickIcon from "@assets/images/correct.svg";
 
 const Participants = ({ goalId }: { goalId: string }) => {
   const theme = useRecoilValue(themeState);
@@ -21,17 +23,21 @@ const Participants = ({ goalId }: { goalId: string }) => {
 
   const handleFollow = async (following: boolean, participant: IParticipant) => {
     await followContactOnGoal(goalId, { ...participant, following });
-    getParticipants();
   };
 
   useEffect(() => {
     getParticipants();
   }, []);
 
+  const toggleFollowStatus = async (participant: IParticipant, value: boolean) => {
+    await handleFollow(value, participant);
+  };
+
   return (
     <Modal
-      className={`configModal popupModal${darkModeStatus ? "-dark" : ""} 
-        ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      className={`configModal popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
+        theme[darkModeStatus ? "dark" : "light"]
+      }`}
       open
       width={360}
       closable={false}
@@ -44,7 +50,7 @@ const Participants = ({ goalId }: { goalId: string }) => {
       }}
     >
       <div style={{ textAlign: "left", padding: 20, fontSize: 16, fontWeight: 600 }} className="header-title">
-        Participants
+        Following
       </div>
       <div
         style={{
@@ -57,20 +63,30 @@ const Participants = ({ goalId }: { goalId: string }) => {
       >
         {list.map((participant) => (
           <div
-            style={{ display: "flex", justifyContent: "space-between" }}
+            style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
             key={`${participant.relId}-${participant.name}`}
           >
             <p style={{ fontSize: 16 }}>{participant.name}</p>
-            <button
-              type="button"
-              onClick={async () => {
-                await handleFollow(!participant.following, participant);
-              }}
-              className="default-btn"
-              style={{ padding: 8, margin: 0 }}
-            >
-              {participant.following ? "Following" : "Follow"}
-            </button>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Switch
+                defaultChecked={participant.following}
+                onChange={(value) => toggleFollowStatus(participant, value)}
+                checkedChildren={
+                  <img
+                    src={TickIcon}
+                    style={{ width: "15px", height: "15px", marginTop: "2px", filter: "brightness(0) invert(1)" }}
+                    alt="Tick icon"
+                  />
+                }
+                unCheckedChildren={
+                  <img
+                    src={CrossIcon}
+                    style={{ width: "14px", height: "15px", marginTop: "2px", filter: "brightness(0) invert(1)" }}
+                    alt="Cross icon"
+                  />
+                }
+              />
+            </div>
           </div>
         ))}
       </div>
