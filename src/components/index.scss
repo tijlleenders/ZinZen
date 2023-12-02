@@ -12,15 +12,15 @@
 }
 
 .global-addBtn {
-  position: fixed;
+  position: absolute;
   border-radius: 50%;
   border: none;
   background: var(--selection-color);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   width: 56px;
   height: 56px;
-  right: 34px;
-  bottom: 79px;
+  right: 40px;
+  bottom: 80px;
   color: white;
   font-weight: 600;
 }
@@ -28,7 +28,7 @@
 .add-goal-pill-btn {
   display: flex;
   border-radius: 30px;
-  position: fixed;
+  position: absolute;
   border: 1px solid var(--icon-grad-1);
   color: white;
   font-size: 18px;
