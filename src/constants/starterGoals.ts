@@ -18,7 +18,7 @@ export const addStarterGoal = async (
     createGoalObjectFromTags({
       title: goalTitle,
       ...goalTags,
-      goalColor: colorPalleteList[colorIndex],
+      goalColor: colorPalleteList[colorIndex % colorPalleteList.length],
     }),
   );
 };
