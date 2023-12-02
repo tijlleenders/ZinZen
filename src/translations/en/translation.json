@@ -152,5 +152,7 @@
       "header": "Do you want to archive this goal?",
       "note": "This will end the collaboration and you will not receive any updates."
     }
-  }
+  },
+  "goalTitle": "Goal title",
+  "budgetTitle": "Goal budget"
 }

@@ -228,12 +228,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           window.history.back();
         }
       }}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <input
           className="ordinary-element"
           id="title-field"
-          placeholder={t(`${state.goalType !== "Budget" ? "Goal" : "Budget"} title`)}
+          placeholder={t(`${state.goalType !== "Budget" ? "goal" : "budget"}Title`)}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onKeyDownCapture={async (e) => {

@@ -73,6 +73,9 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
       className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""} ${
         darkModeStatus ? "dark" : "light"
       }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       <p className="popupModal-title"> Add a contact name </p>
       <input

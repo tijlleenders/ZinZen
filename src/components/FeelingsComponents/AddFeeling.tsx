@@ -56,6 +56,9 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
       onCancel={() => {
         window.history.back();
       }}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       {selectedCategory === "" ? (
         <>
