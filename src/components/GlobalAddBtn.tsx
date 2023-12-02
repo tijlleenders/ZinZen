@@ -71,8 +71,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             window.history.back();
           }}
         />
-        <AddGoalOptions goalType="Budget" bottom={144} />
-        <AddGoalOptions goalType="Goal" bottom={74} />
+        <AddGoalOptions goalType={t("addBtnBudget")} bottom={144} />
+        <AddGoalOptions goalType={t("addBtnGoal")} bottom={74} />
       </>
     );
   }

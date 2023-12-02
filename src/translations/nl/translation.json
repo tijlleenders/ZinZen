@@ -195,5 +195,7 @@
     }
   },
   "goalTitle": "Jouw doel",
-  "budgetTitle": "Budget titel"
+  "budgetTitle": "Budget titel",
+  "addBtnBudget": "Budget",
+  "addBtnGoal": "Doel"
 }
