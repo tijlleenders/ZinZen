@@ -5,7 +5,8 @@ import { IParticipant } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import { Modal, Switch } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import CrossIcon from "@assets/images/deleteIcon.svg";
+import TickIcon from "@assets/images/correct.svg";
 
 const Participants = ({ goalId }: { goalId: string }) => {
   const theme = useRecoilValue(themeState);
@@ -67,8 +68,20 @@ const Participants = ({ goalId }: { goalId: string }) => {
               <Switch
                 defaultChecked={participant.following}
                 onChange={(value) => toggleFollowStatus(participant, value)}
-                checkedChildren={<CheckOutlined />}
-                unCheckedChildren={<CloseOutlined />}
+                checkedChildren={
+                  <img
+                    src={TickIcon}
+                    style={{ width: "15px", height: "15px", marginTop: "2px", filter: "brightness(0) invert(1)" }}
+                    alt="Tick icon"
+                  />
+                }
+                unCheckedChildren={
+                  <img
+                    src={CrossIcon}
+                    style={{ width: "14px", height: "15px", marginTop: "2px", filter: "brightness(0) invert(1)" }}
+                    alt="Cross icon"
+                  />
+                }
               />
             </div>
           </div>
