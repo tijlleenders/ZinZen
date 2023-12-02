@@ -8,7 +8,7 @@ export interface IHeader {
 
 export interface IBackdrop {
   opacity: number;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   customStyle?: React.CSSProperties;
 }
 export interface ZAccordionProps {

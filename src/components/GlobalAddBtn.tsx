@@ -11,6 +11,7 @@ import useFeelingStore from "@src/hooks/useFeelingStore";
 import Backdrop from "@src/common/Backdrop";
 
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 interface AdGoalOptionsProps {
   goalType: "Budget" | "Goal";
@@ -43,6 +44,7 @@ const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom }) => {
 };
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
+  const { t } = useTranslation();
   const { state } = useLocation();
   const navigate = useNavigate();
   const { handleAddFeeling } = useFeelingStore();
@@ -54,7 +56,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      navigate("/MyGoals", { state: { displayAddGoalOptions: true } });
+      navigate("/MyGoals", { state: { ...state, displayAddGoalOptions: true } });
     } else if (add === "myJournal") {
       handleAddFeeling();
     }
@@ -64,7 +66,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       <>
         <Backdrop
           opacity={0.5}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             window.history.back();
           }}
         />
