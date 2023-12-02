@@ -88,7 +88,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     rootGoalId: "root",
     link: null,
     sublist: [],
-    goalColor: colorPalleteList[Math.floor(Math.random() * 11)],
+    goalColor: colorPalleteList[Math.floor(Math.random() * colorPalleteList.length)],
     typeOfGoal: "myGoal",
     ...obj,
     participants: [],
