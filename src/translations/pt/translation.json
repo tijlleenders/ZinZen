@@ -156,5 +156,9 @@
   "pause": "Pausa",
   "start": "Início",
   "min": "min",
-  "sec": "seg"
+  "sec": "seg",
+  "goalTitle": "Título do objetivo",
+  "budgetTitle": "Título do orçamento",
+  "addBtnBudget": "Orçamento",
+  "addBtnGoal": "Objetivo"
 }

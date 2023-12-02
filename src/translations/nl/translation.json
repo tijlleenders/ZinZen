@@ -22,7 +22,6 @@
   "Done": "Klaar",
   "Create Goal": "Doel maken",
   "Update Goal": "Doel bijwerken",
-  "Goal Title": "Typ je doel...",
   "Period": "Periode",
   "Duration": "Duur",
   "Timings": "Tijdsinstellingen",
@@ -201,5 +200,9 @@
   "pause": "Pauze",
   "start": "Start",
   "min": "min",
-  "sec": "sec"
+  "sec": "sec",
+  "goalTitle": "Jouw doel",
+  "budgetTitle": "Budget titel",
+  "addBtnBudget": "Budget",
+  "addBtnGoal": "Doel"
 }

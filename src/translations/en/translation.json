@@ -159,5 +159,9 @@
   "pause": "Pause",
   "start": "Start",
   "min": "min",
-  "sec": "sec"
+  "sec": "sec",
+  "goalTitle": "Goal title",
+  "budgetTitle": "Goal budget",
+  "addBtnBudget": "Budget",
+  "addBtnGoal": "Goal"
 }

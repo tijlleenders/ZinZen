@@ -156,5 +156,9 @@
   "pause": "विराम",
   "start": "शुरू करें ",
   "min": "मिनट",
-  "sec": "सेक"
+  "sec": "सेक",
+  "goalTitle": "लक्ष्य शीर्षक",
+  "budgetTitle": "बजेट शीर्षक",
+  "addBtnBudget": "बजट",
+  "addBtnGoal": "लक्ष्य"
 }

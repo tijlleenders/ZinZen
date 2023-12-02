@@ -4,58 +4,47 @@ import { useRecoilValue } from "recoil";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
-
 import { themeSelectionMode } from "@src/store/ThemeState";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import useFeelingStore from "@src/hooks/useFeelingStore";
 import Backdrop from "@src/common/Backdrop";
 
-const style: React.CSSProperties = {
-  position: "fixed",
-  borderRadius: "50%",
-  border: "none",
-  background: "var(--selection-color)",
-  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-  width: 56,
-  height: 56,
-  right: 34,
-  bottom: 74,
-  color: "white",
-  fontWeight: 600,
-};
+import "./index.scss";
+import { useTranslation } from "react-i18next";
 
-const AddGoalOptions = () => {
+interface AdGoalOptionsProps {
+  goalType: "Budget" | "Goal";
+  bottom: number;
+}
+
+const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom }) => {
   const { handleAddGoal } = useGoalStore();
 
   return (
-    <>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleAddGoal("Budget");
-        }}
-        style={{ ...style, bottom: 144, fontSize: "0.875em" }}
-      >
-        Budget
-      </button>
-
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleAddGoal("Goal");
-        }}
-        style={{ ...style, fontSize: "0.875em" }}
-      >
-        Goal
-      </button>
-    </>
+    <button
+      type="button"
+      className="add-goal-pill-btn"
+      style={{ right: 29, bottom }}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleAddGoal(goalType);
+      }}
+    >
+      <span style={{ paddingLeft: 5 }}>{goalType}</span>
+      <span className="goal-btn-circle">
+        <img
+          style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
+          src={GlobalAddIcon}
+          alt="add goal"
+        />
+      </span>
+    </button>
   );
 };
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
+  const { t } = useTranslation();
   const { state } = useLocation();
   const navigate = useNavigate();
   const { handleAddFeeling } = useFeelingStore();
@@ -77,11 +66,13 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       <>
         <Backdrop
           opacity={0.5}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             window.history.back();
           }}
         />
-        <AddGoalOptions />
+        <AddGoalOptions goalType={t("addBtnBudget")} bottom={144} />
+        <AddGoalOptions goalType={t("addBtnGoal")} bottom={74} />
       </>
     );
   }
@@ -91,10 +82,10 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       onClick={(e) => {
         handleClick(e);
       }}
-      style={style}
+      className="global-addBtn"
     >
       <img
-        className="global-addBtn-img"
+        style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
         src={themeSelection ? correct : GlobalAddIcon}
         alt="add goal | add feeling | add group"
       />
