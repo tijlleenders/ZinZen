@@ -154,5 +154,7 @@
     }
   },
   "goalTitle": "Goal title",
-  "budgetTitle": "Goal budget"
+  "budgetTitle": "Goal budget",
+  "addBtnBudget": "Budget",
+  "addBtnGoal": "Goal"
 }

@@ -105,7 +105,8 @@ const BottomNavbar = ({ title }: { title: string }) => {
         </button>
         <button
           type="button"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             if (themeSelection) themeChange(1);
             else handleClick("MyJournal");
           }}

@@ -151,5 +151,7 @@
     }
   },
   "goalTitle": "Titre de l'objectif",
-  "budgetTitle": "Titre du budget"
+  "budgetTitle": "Titre du budget",
+  "addBtnBudget": "Budget",
+  "addBtnGoal": "Objectif"
 }
