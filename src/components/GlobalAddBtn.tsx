@@ -25,7 +25,7 @@ const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom }) => {
     <button
       type="button"
       className="add-goal-pill-btn"
-      style={{ right: 29, bottom }}
+      style={{ right: 35, bottom }}
       onClick={(e) => {
         e.stopPropagation();
         handleAddGoal(goalType);
