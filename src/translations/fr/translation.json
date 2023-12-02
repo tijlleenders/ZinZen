@@ -149,5 +149,7 @@
       "header": "Voulez-vous archiver cette cible ?",
       "note": "Cela mettra fin à la collaboration et vous ne recevrez plus aucune mise à jour."
     }
-  }
+  },
+  "goalTitle": "Titre de l'objectif",
+  "budgetTitle": "Titre du budget"
 }

@@ -149,5 +149,7 @@
       "header": "¿Deseas archivar esta meta?",
       "note": "Esto finalizará la colaboración y no recibirás ninguna actualización."
     }
-  }
+  },
+  "goalTitle": "Título del objetivo",
+  "budgetTitle": "Presupuesto del objetivo"
 }
