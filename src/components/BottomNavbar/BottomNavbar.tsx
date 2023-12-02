@@ -46,7 +46,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
     if (location.state?.from === to) {
       window.history.back();
     } else {
-      const newLocationState = { ...location.state, from: currentPage };
+      const newLocationState = { ...location.state, from: currentPage, displayFocus: false };
       if (to === "MyTime") {
         if (currentPage !== "") navigate("/", { state: newLocationState });
       } else if (to === "MyGoals") {

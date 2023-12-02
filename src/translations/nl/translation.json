@@ -163,6 +163,7 @@
   "dueToday": "Vandaag verschuldigd",
   "dueDatePassed": "Vervaldatum verstreken",
   "daysLeft": "Nog {{days}} dagen",
+  "save": "Opslaan",
   "goal": {
     "archive": {
       "header": "Wil je dit doel als voltooid markeren?",
@@ -195,6 +196,12 @@
       "note": "Dit beëindigt de samenwerking en je zult geen updates meer ontvangen."
     }
   },
+  "reset": "Resetten",
+  "editTime": "Bewerkingstijd",
+  "pause": "Pauze",
+  "start": "Start",
+  "min": "min",
+  "sec": "sec",
   "goalTitle": "Jouw doel",
   "budgetTitle": "Budget titel",
   "addBtnBudget": "Budget",

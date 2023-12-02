@@ -119,6 +119,7 @@
   "Schedule": "Calendrier",
   "Goals": "Objectifs",
   "Journal": "Journal",
+  "save": "Enregistrer",
   "goal": {
     "archive": {
       "header": "Voulez-vous marquer cette cible comme terminée ?",
@@ -151,6 +152,12 @@
       "note": "Cela mettra fin à la collaboration et vous ne recevrez plus aucune mise à jour."
     }
   },
+  "reset": "Réinitialiser",
+  "editTime": "Temps d'édition",
+  "pause": "Pause",
+  "start": "Début",
+  "min": "min",
+  "sec": "sec",
   "goalTitle": "Titre de l'objectif",
   "budgetTitle": "Titre du budget",
   "addBtnBudget": "Budget",

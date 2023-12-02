@@ -1,6 +1,4 @@
-/* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
-import { useRecoilState } from "recoil";
+import React, { useEffect, useState } from "react";
 
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
@@ -11,16 +9,17 @@ import AppLayout from "@src/layouts/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
 import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
 import useScheduler from "@src/hooks/useScheduler";
-import { selectedMyTimeView } from "@src/store";
 
 import "./MyTimePage.scss";
 import "@translations/i18n";
+import { useLocation } from "react-router-dom";
+import { Row } from "antd";
 
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
-  const [currentView, setCurrentView] = useRecoilState(selectedMyTimeView);
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
+  const { state } = useLocation();
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
@@ -79,32 +78,38 @@ export const MyTimePage = () => {
     );
   };
 
+  if (state?.displayFocus) {
+    return (
+      <AppLayout title="myTime">
+        <SubHeader
+          title="Focus"
+          leftNav={() => {
+            return null;
+          }}
+          rightNav={() => {
+            return null;
+          }}
+          showLeftNav={false}
+          showRightNav={false}
+        />
+        <Focus />
+      </AppLayout>
+    );
+  }
+
   return (
     <AppLayout title="myTime">
-      <SubHeader
-        showLeftNav={currentView === "thisWeek" || currentView === "today"}
-        showRightNav={currentView === "today" || currentView === "focus"}
-        title={currentView === "today" ? "Today" : currentView === "thisWeek" ? "This Week" : "Focus"}
-        leftNav={() => {
-          setCurrentView(currentView === "thisWeek" ? "today" : "focus");
-        }}
-        rightNav={() => {
-          setCurrentView(currentView === "today" ? "thisWeek" : "today");
-        }}
-      />
-      {currentView === "today" && getDayComponent("Today")}
-      {currentView === "thisWeek" && getDayComponent("Tomorrow")}
-      {currentView === "thisWeek" &&
-        [...Array(6).keys()].map((i) => {
+      <>
+        <Row />
+        {getDayComponent("Today")}
+        {getDayComponent("Tomorrow")}
+        {[...Array(6).keys()].map((i) => {
           const thisDay = new Date(today);
           thisDay.setDate(thisDay.getDate() + i + 1);
-          if (i >= 1) {
-            return getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`);
-          }
-          return null;
+          return i >= 1 ? getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`) : null;
         })}
-      {currentView === "focus" && <Focus />}
-      <Reschedule />
+        <Reschedule />
+      </>
     </AppLayout>
   );
 };

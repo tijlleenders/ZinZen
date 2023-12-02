@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 import { confirmActionState } from "@src/Interfaces/IPopupModals";
+import ContactItem from "@src/models/ContactItem";
 import { darkModeState } from "./DarkModeState";
 import { languageSelectionState } from "./LanguageSelectionState";
-import ContactItem from "@src/models/ContactItem";
 
 export const displayConfirmation = atom({
   key: "displayConfirmation",
@@ -85,11 +85,6 @@ export const displayPartnerMode = atom({
   default: false,
 });
 
-export const selectedMyTimeView = atom({
-  key: "selectedMyTimeView",
-  default: "today",
-});
-
 export const currentScheduledTask = atom({
   key: "currentScheduledTask",
   default: "",
@@ -97,7 +92,7 @@ export const currentScheduledTask = atom({
 
 export const focusTaskTitle = atom({
   key: "focusTaskTitle",
-  default: "No Task Scheduled",
+  default: "",
 });
 
 export { darkModeState, languageSelectionState };
