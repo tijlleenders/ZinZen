@@ -117,7 +117,7 @@ export const MyGoals = () => {
         )}
 
         <img
-          style={{ width: 350, height: zinZenLogoHeight, opacity: 0.3 }}
+          style={{ width: 200, height: zinZenLogoHeight, opacity: 0.3, marginRight: 50 }}
           src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
           alt="Zinzen"
         />
