@@ -76,9 +76,13 @@ export const updateGoal = async (id: string, changes: object) => {
   });
 };
 
-export const archiveGoal = async (goal: GoalItem) => {
+export const archiveGoal = async (goal: GoalItem, isSoftDelete = false) => {
   db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.update(goal.id, { archived: "true" });
+    if (isSoftDelete) {
+      await db.goalsCollection.update(goal.id, { archived: "true", softDeletedAt: new Date().toISOString() });
+    } else {
+      await db.goalsCollection.update(goal.id, { archived: "true" });
+    }
   });
   if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getGoal(goal.parentGoalId);
@@ -90,24 +94,39 @@ export const archiveGoal = async (goal: GoalItem) => {
   }
 };
 
-export const archiveChildrenGoals = async (id: string) => {
+export const archiveChildrenGoals = async (id: string, isSoftDelete = false) => {
   const childrenGoals = await getChildrenGoals(id);
   if (childrenGoals) {
     childrenGoals.forEach(async (goal: GoalItem) => {
-      await archiveChildrenGoals(goal.id);
-      await archiveGoal(goal);
+      await archiveChildrenGoals(goal.id, isSoftDelete);
+      await archiveGoal(goal, isSoftDelete);
     });
   }
 };
 
-export const archiveUserGoal = async (goal: GoalItem) => {
-  await archiveChildrenGoals(goal.id);
-  await archiveGoal(goal);
+export const archiveUserGoal = async (goal: GoalItem, isSoftDelete = false) => {
+  await archiveChildrenGoals(goal.id, isSoftDelete);
+  await archiveGoal(goal, isSoftDelete);
+};
+
+export const permanentlyDeleteOldSoftDeletedGoals = async (daysBeforePermanentDelete: number) => {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - daysBeforePermanentDelete);
+
+  db.transaction("rw", db.goalsCollection, async () => {
+    const oldSoftDeletedGoals = await db.goalsCollection
+      .where("softDeletedAt")
+      .below(cutoffDate.toISOString())
+      .toArray();
+    await Promise.all(oldSoftDeletedGoals.map((goal) => db.goalsCollection.delete(goal.id)));
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
 };
 
 export const unarchiveGoal = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.update(goal.id, { archived: "false" });
+    await db.goalsCollection.update(goal.id, { archived: "false", softDeletedAt: null });
   });
   if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getGoal(goal.parentGoalId);

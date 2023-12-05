@@ -4,7 +4,13 @@ import { useEffect } from "react";
 import { lastAction, displayConfirmation, openDevMode, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
 import { GoalItem } from "@src/models/GoalItem";
-import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import {
+  checkMagicGoal,
+  getAllLevelGoalsOfId,
+  getGoal,
+  updateSharedStatusOfGoal,
+  permanentlyDeleteOldSoftDeletedGoals,
+} from "@src/api/GoalsAPI";
 import { addSharedWMGoal } from "@src/api/SharedWMAPI";
 import { createDefaultGoals } from "@src/helpers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
@@ -152,6 +158,14 @@ function useApp() {
     checkUpdates();
     checkDevMode();
     createDefaultGoals();
+  }, []);
+
+  useEffect(() => {
+    const init = async () => {
+      await permanentlyDeleteOldSoftDeletedGoals(7);
+    };
+
+    init();
   }, []);
 
   useEffect(() => {

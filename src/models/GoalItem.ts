@@ -19,6 +19,7 @@ export interface GoalItem {
   beforeTime: number | null;
   afterTime: number | null;
   createdAt: string;
+  softDeletedAt: string | null;
   archived: "false" | "true";
   parentGoalId: string;
   goalColor: string;

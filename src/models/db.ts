@@ -36,7 +36,7 @@ export class ZinZenDB extends Dexie {
       .stores({
         feelingsCollection: "++id, content, category, date, note",
         goalsCollection:
-          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal, softDeletedAt",
         sharedWMCollection:
           "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt",

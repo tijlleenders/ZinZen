@@ -92,6 +92,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     typeOfGoal: "myGoal",
     ...obj,
     participants: [],
+    softDeletedAt: null,
   };
   if (newGoal.rootGoalId === "root") {
     newGoal.rootGoalId = newGoal.id;
