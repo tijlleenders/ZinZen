@@ -132,7 +132,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   };
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.stopPropagation();
-    if (archived || (showPartnerMode && goal.parentGoalId !== "root")) {
+    if (showPartnerMode && goal.parentGoalId !== "root") {
       return;
     }
     const navState = { ...location.state, from: "" };
@@ -256,21 +256,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         </div>
       </div>
       {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
-      {archived && (
-        <div className="contact-button">
-          <button
-            type="button"
-            className="contact-icon"
-            style={{ padding: 0, background: "transparent", filter: darkModeStatus ? "invert(1)" : "none" }}
-            onClickCapture={async () => {
-              await unarchiveUserGoal(goal);
-              setLastAction("goalUnarchived");
-            }}
-          >
-            <img alt="archived goal" src={unarchiveIcon} style={{ width: 18, height: 18 }} />
-          </button>
-        </div>
-      )}
     </div>
   );
 };

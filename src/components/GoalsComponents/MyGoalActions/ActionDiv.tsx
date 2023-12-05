@@ -4,16 +4,14 @@ import Icon from "@src/common/Icon";
 
 interface IActionDivProps {
   label: string;
-  icon: string;
+  icon: React.ReactNode;
 }
 
 const ActionDiv: React.FC<IActionDivProps> = ({ icon, label }) => {
   return (
     <>
       <Row justify="center">
-        <Col>
-          <Icon active title={icon} />
-        </Col>
+        <Col>{typeof icon === "string" ? <Icon active title={icon} /> : icon}</Col>
       </Row>
       <Row justify="center">
         <Col>

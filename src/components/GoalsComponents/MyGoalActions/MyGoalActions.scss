@@ -25,6 +25,18 @@
   .goal-action:last-child {
     border-radius: 0 0 28px 0 !important;
   }
+
+  .goal-action-archive {
+    width: unset !important;
+    border: none;
+    border-radius: 0 !important;
+    cursor: pointer;
+    background: transparent !important;
+  }
+  .goal-action-archive:first-child {
+    border-right: 2px solid var(--default-border-color);
+  }
+
   div {
     text-align: center;
     p {
