@@ -103,7 +103,7 @@ export const starterGoals = [
     },
   },
   {
-    title: "Walk🚶🏽",
+    title: "Walk 🚶🏽",
     goalTags: {
       id: "walk",
       afterTime: 6,
