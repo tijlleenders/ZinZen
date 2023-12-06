@@ -6,6 +6,7 @@
   "spanish": "Spanish",
   "german": "German",
   "dutch": "Dutch",
+  "marathi": "Marathi",
   "portuguese": "Portuguese",
   "themeChoice": "What do you like?",
   "home": "Home",
@@ -82,11 +83,11 @@
   "iHaveQuestions": "Quick intro",
   "iAlreadyKnowZinZen": "Skip intro",
   "qWhatIsZinZen": "What is ZinZen®?",
-  "ansWhatIsZinZen": "A smart planner to focus on what gives you meaning together with your partner - and to be Zen.",
+  "ansWhatIsZinZen": "A smart planner.",
   "qIsZinZenPrivate": "Is it private?",
-  "AnsIsZinZenPrivate": "We respect your privacy. We do not know your name, email, address or phone number. All your data will be kept on this device by default, so we can't see it.",
+  "AnsIsZinZenPrivate": "Yes. Your data stays on your device by default.",
   "qIsZinZenExpensive": "Is it expensive?",
-  "ansIsZinZenExpensive": "It's free, open source and financed by donations. No ads or 'dark patterns' - ever.",
+  "ansIsZinZenExpensive": "It's free - supported by donations. No ads. No deception.",
   "qTooGoodToBeTrue": "Too good to be true?",
   "ansTooGoodToBeTrue": "Don't believe us, just try!",
   "iHaveDifferentQuestions": "I have a different question.",
@@ -121,6 +122,7 @@
   "dueToday": "Due today",
   "dueDatePassed": "Due date passed",
   "daysLeft": "{{days}} days left",
+  "save": "Save",
   "goal": {
     "archive": {
       "header": "Do you want to mark this goal completed?",
@@ -152,5 +154,15 @@
       "header": "Do you want to archive this goal?",
       "note": "This will end the collaboration and you will not receive any updates."
     }
-  }
+  },
+  "reset": "reset",
+  "editTime": "Edit Time",
+  "pause": "Pause",
+  "start": "Start",
+  "min": "min",
+  "sec": "sec",
+  "goalTitle": "Goal title",
+  "budgetTitle": "Goal budget",
+  "addBtnBudget": "Budget",
+  "addBtnGoal": "Goal"
 }

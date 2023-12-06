@@ -6,6 +6,7 @@
   "spanish": "Spanisch",
   "german": "Deutsch",
   "dutch": "Niederländisch",
+  "marathi": "Marathi",
   "portuguese": "Portugiesisch",
   "themeChoice": "Was haben Sie gern?",
   "home": "Heim",
@@ -82,11 +83,11 @@
   "iHaveQuestions": "Schnelle Einführung",
   "iAlreadyKnowZinZen": "Intro überspringen",
   "qWhatIsZinZen": "Was ist ZinZen®?",
-  "ansWhatIsZinZen": "Ein intelligenter Planer, um sich gemeinsam mit Ihrem Partner auf das zu konzentrieren, was Ihnen Sinn gibt - und um Zen zu sein.",
+  "ansWhatIsZinZen": "Ein intelligenter Planer.",
   "qIsZinZenPrivate": "Ist ZinZen® privat?",
-  "AnsIsZinZenPrivate": "ZinZen® respektiert Ihre Privatsphäre. ZinZen® kennt weder Ihren Namen noch Ihre E-Mail-Adresse, Adresse oder Telefonnummer. Alle Ihre Daten werden standardmäßig auf diesem Gerät gespeichert, sodass ZinZen® sie nicht sehen kann.",
+  "AnsIsZinZenPrivate": "Ja. Ihre Daten bleiben standardmäßig auf Ihrem Gerät.",
   "qIsZinZenExpensive": "Ist ZinZen®. teuer?",
-  "ansIsZinZenExpensive": "ZinZen® ist kostenlos, Open Source und wird durch freiwillige Beiträge finanziert. Keine Werbung oder dunkle Muster - niemals.",
+  "ansIsZinZenExpensive": "Es ist kostenlos - unterstützt durch Spenden. Keine Werbung. Keine Täuschung.",
   "qTooGoodToBeTrue": "Zu schön um wahr zu sein?",
   "ansTooGoodToBeTrue": "Glauben Sie uns nicht, versuchen Sie es einfach!",
   "iHaveDifferentQuestions": "Ich habe eine andere Frage.",
@@ -118,6 +119,7 @@
   "Schedule": "Zeitplan",
   "Goals": "Ziele",
   "Journal": "Tagebuch",
+  "save": "Speichern",
   "goal": {
     "archive": {
       "header": "Möchten Sie dieses Ziel als abgeschlossen markieren?",
@@ -149,5 +151,15 @@
       "header": "Möchten Sie dieses Ziel archivieren?",
       "note": "Dies beendet die Zusammenarbeit und Sie erhalten keine weiteren Aktualisierungen."
     }
-  }
+  },
+  "reset": "Zurücksetzen",
+  "editTime": "Bearbeitungszeit",
+  "pause": "Pause",
+  "start": "Start",
+  "min": "Min",
+  "sec": "Sek",
+  "goalTitle": "Ziel-Titel",
+  "budgetTitle": "Budgettitel",
+  "addBtnGoal": "Ziel",
+  "addBtnBudget": "Budget"
 }

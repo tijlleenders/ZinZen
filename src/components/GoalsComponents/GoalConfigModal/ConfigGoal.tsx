@@ -58,6 +58,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [colorIndex, setColorIndex] = useRecoilState(selectedColorIndex);
   const showAddGoal = useRecoilValue(displayAddGoal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
 
   const open = !!showAddGoal || !!showUpdateGoal;
 
@@ -197,17 +198,20 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   }, []);
 
   useEffect(() => {
-    const timeRange = beforeTime - afterTime;
-    const weeklyRange = timeRange * numberOfDays;
-    const updatedPerDayHrs = perDayHrs.map((hour) =>
-      hour > timeRange ? timeRange : hour < timeRange ? timeRange : hour,
-    );
-    const updatedPerWeekHrs = perWeekHrs.map((hour) =>
-      hour > weeklyRange ? weeklyRange : hour < weeklyRange ? weeklyRange : hour,
-    );
-    setPerDayHrs(updatedPerDayHrs);
-    setPerWeekHrs(updatedPerWeekHrs);
-  }, [afterTime, beforeTime, numberOfDays]);
+    if (betweenSliderUpdated) {
+      const timeRange = beforeTime - afterTime;
+      const weeklyRange = timeRange * numberOfDays;
+      const updatedPerDayHrs = perDayHrs.map((hour) =>
+        hour > timeRange ? timeRange : hour < timeRange ? timeRange : hour,
+      );
+      const updatedPerWeekHrs = perWeekHrs.map((hour) =>
+        hour > weeklyRange ? weeklyRange : hour < weeklyRange ? weeklyRange : hour,
+      );
+      setPerDayHrs(updatedPerDayHrs);
+      setPerWeekHrs(updatedPerWeekHrs);
+      setBetweenSliderUpdated(false);
+    }
+  }, [afterTime, beforeTime, numberOfDays, betweenSliderUpdated]);
 
   return (
     <Modal
@@ -224,12 +228,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           window.history.back();
         }
       }}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <input
           className="ordinary-element"
           id="title-field"
-          placeholder={t(`${state.goalType !== "Budget" ? "Goal" : "Budget"} title`)}
+          placeholder={t(`${state.goalType !== "Budget" ? "goal" : "budget"}Title`)}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onKeyDownCapture={async (e) => {
@@ -273,6 +280,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 onAfterChange={(val) => {
                   setAfterTime(val[0]);
                   setBeforeTime(val[1]);
+                  setBetweenSliderUpdated(true);
                 }}
               />
             </div>

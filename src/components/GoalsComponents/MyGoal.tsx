@@ -62,9 +62,7 @@ const GoalSent = ({ goal }: { goal: GoalItem }) => {
             {onLength > 0 &&
               !onWeekdays &&
               !onWeekends &&
-              (onLength === 7
-                ? ` ${t("on any day of week")}`
-                : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
+              (onLength === 7 ? ` ${t("daily")}` : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
             {onWeekdays && ` ${t("on")} ${t("weekdays")}`}
             {onWeekends && " on weekends"}
           </span>
@@ -98,6 +96,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
   // const collabWithContact =
   //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
@@ -109,7 +108,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
   const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
 
-  const { urlsWithIndexes, replacedString } = replaceUrlsWithText(goal.title);
+  const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(goal.title));
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
@@ -256,7 +255,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           )}
         </div>
       </div>
-      {!showPartnerMode && goal.participants.length > 0 && <GoalAvatar goal={goal} />}
+      {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
       {archived && (
         <div className="contact-button">
           <button

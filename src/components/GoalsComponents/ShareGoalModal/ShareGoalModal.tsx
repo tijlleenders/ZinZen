@@ -130,6 +130,9 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       className={`share-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
         darkModeStatus ? "dark" : "light"
       }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+      maskStyle={{
+        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
+      }}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
       <p className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</p>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { darkModeState, currentScheduledTask, focusTaskTitle } from "@src/store";
+import { darkModeState, focusTaskTitle } from "@src/store";
 import { Progress } from "antd";
 
 import "./focus.scss";
 import { formatTimeDisplay } from "@src/utils";
+import { useTranslation } from "react-i18next";
 
 export const Focus = () => {
+  const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const [initialTime, setInitialTime] = useState(25 * 60);
@@ -15,26 +17,26 @@ export const Focus = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [userEnteredTime, setUserEnteredTime] = useState<string>("");
   const taskTitle = useRecoilValue(focusTaskTitle);
-  const isActiveTitle = useRecoilValue(currentScheduledTask);
 
   useEffect(() => {
-    let interval;
+    let intervalId: NodeJS.Timeout | null = null;
     if (isTimerActive && time > 0) {
-      interval = setInterval(() => {
+      intervalId = setInterval(() => {
         setTime((prevTime) => prevTime - 1);
       }, 1000);
-    } else if (!isTimerActive && time !== 0) {
-      clearInterval(interval!);
     }
-    return () => clearInterval(interval!);
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
   }, [isTimerActive, time]);
 
   const toggle = () => {
     setIsTimerActive(!isTimerActive);
   };
   const reset = () => {
-    const resetTime = initialTime;
-    setTime(resetTime);
+    setTime(initialTime);
     setIsTimerActive(false);
   };
 
@@ -47,16 +49,16 @@ export const Focus = () => {
 
   const handleSaveClick = () => {
     const newTimeInSeconds = parseInt(userEnteredTime, 10) * 60;
-    if (!Number.isNaN(newTimeInSeconds)) {
+    if (!Number.isNaN(newTimeInSeconds) && newTimeInSeconds > 0) {
       setInitialTime(newTimeInSeconds);
       setTime(newTimeInSeconds);
-      setEditMode(false);
-    } else setEditMode(false);
+    }
+    setEditMode(false);
   };
 
   return (
     <div className="focus">
-      <h6>{isActiveTitle === "" ? taskTitle : isActiveTitle}</h6>
+      <h6>{taskTitle}</h6>
       <Progress
         className={`progress-${darkModeStatus ? "dark" : ""}`}
         size={200}
@@ -67,9 +69,9 @@ export const Focus = () => {
         success={{ percent: 0, strokeColor: darkModeStatus ? "white" : "black" }}
         format={() => {
           if (minutes >= 1) {
-            return `${minutes} min`;
+            return `${minutes} ${t("min")}`;
           }
-          return `${seconds} sec`;
+          return `${seconds} ${t("sec")}`;
         }}
       />
       {editMode ? (
@@ -82,20 +84,20 @@ export const Focus = () => {
             onChange={(e) => setUserEnteredTime(e.target.value)}
           />
           <button className="action-btn" type="button" onClick={handleSaveClick}>
-            Save
+            {t("save")}
           </button>
         </div>
       ) : (
         <div style={{ display: "flex", gap: "10px" }}>
           <button className="action-btn" type="button" onClick={toggle}>
-            {isTimerActive ? "Pause" : "Start"}
+            {isTimerActive ? `${t("pause")}` : `${t("start")}`}
           </button>
           <button className="action-btn" type="button" onClick={reset}>
-            Reset
+            {t("reset")}
           </button>
           {time === initialTime && !isTimerActive && (
             <button className="action-btn" type="button" onClick={handleEditClick}>
-              Edit Time
+              {t("editTime")}
             </button>
           )}
         </div>

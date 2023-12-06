@@ -6,6 +6,7 @@
   "spanish": "español",
   "german": "alemán",
   "dutch": "holandés",
+  "marathi": "Marathi",
   "portuguese": "portugués",
   "themeChoice": "¿Qué te gusta?",
   "home": "Casa",
@@ -82,11 +83,11 @@
   "iHaveQuestions": "Introducción rápida",
   "iAlreadyKnowZinZen": "Presiona intro",
   "qWhatIsZinZen": "¿Qué es ZinZen®?",
-  "ansWhatIsZinZen": "Un planificador inteligente para centrarte en lo que te da significado junto con tu pareja y ser zen.",
+  "ansWhatIsZinZen": "Un planificador inteligente.",
   "qIsZinZenPrivate": "¿ZinZen® es privado?",
-  "AnsIsZinZenPrivate": "ZinZen® respeta su privacidad. ZinZen® no conoce su nombre, correo electrónico, dirección o número de teléfono. Todos sus datos se guardarán en este dispositivo de forma predeterminada, por lo que ZinZen® no puede verlos.",
+  "AnsIsZinZenPrivate": "Sí. Sus datos permanecen en su dispositivo de forma predeterminada.",
   "qIsZinZenExpensive": "¿ZinZen® es caro?",
-  "ansIsZinZenExpensive": "ZinZen® es gratuito, de código abierto y se financia con contribuciones voluntarias. Sin anuncios ni 'dark patterns', nunca.",
+  "ansIsZinZenExpensive": "Es gratis y está respaldado por donaciones. Sin anuncios. Sin engaños.",
   "qTooGoodToBeTrue": "¿Demasiado bueno para ser verdad?",
   "ansTooGoodToBeTrue": "¡No nos creas, solo inténtalo!",
   "iHaveDifferentQuestions": "Tengo una pregunta diferente.",
@@ -118,6 +119,7 @@
   "Journal": "diario",
   "Goals": "Objetivos",
   "Schedule": "Cronograma",
+  "Save": "Guardar",
   "goal": {
     "archive": {
       "header": "¿Deseas marcar esta meta como completada?",
@@ -149,5 +151,15 @@
       "header": "¿Deseas archivar esta meta?",
       "note": "Esto finalizará la colaboración y no recibirás ninguna actualización."
     }
-  }
+  },
+  "reset": "Reiniciar",
+  "editTime": "Tiempo de edición",
+  "pause": "Pausa",
+  "start": "Inicio",
+  "min": "min",
+  "sec": "seg",
+  "goalTitle": "Título del objetivo",
+  "budgetTitle": "Presupuesto del objetivo",
+  "addBtnBudget": "Presupuesto",
+  "addBtnGoal": "Objetivo"
 }

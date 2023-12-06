@@ -6,6 +6,7 @@
   "spanish": "Espanhol",
   "german": "Alemão",
   "dutch": "Holandês",
+  "marathi": "Marathi",
   "portuguese": "Português",
   "themeChoice": "Do que você gosta?",
   "home": "Home",
@@ -82,11 +83,11 @@
   "iHaveQuestions": "Introdução rápida",
   "iAlreadyKnowZinZen": "Pular introdução",
   "qWhatIsZinZen": "O que é ZinZen®?",
-  "ansWhatIsZinZen": "Um planejador inteligente para focar no que dá sentido a você junto com seu parceiro - e para ser Zen.",
+  "ansWhatIsZinZen": "Um planejador inteligente.",
   "qIsZinZenPrivate": "ZinZen® é privado?",
-  "AnsIsZinZenPrivate": "A ZinZen® respeita sua privacidade. ZinZen® não sabe seu nome, e-mail, endereço ou número de telefone. Todos os seus dados serão mantidos neste dispositivo por padrão, então o ZinZen® não poderá vê-los.",
+  "AnsIsZinZenPrivate": "Sim. Seus dados permanecem no seu dispositivo por padrão.",
   "qIsZinZenExpensive": "ZinZen® é caro?",
-  "ansIsZinZenExpensive": "ZinZen® é gratuito, de código aberto e financiado por contribuições voluntárias. Sem anúncios ou padrões escuros - nunca.",
+  "ansIsZinZenExpensive": "É gratuito - apoiado por doações. Sem anúncios. Sem engano.",
   "qTooGoodToBeTrue": "Muito bom para ser verdade?",
   "ansTooGoodToBeTrue": "Não acredite em nós, apenas tente!",
   "iHaveDifferentQuestions": "Eu tenho uma pergunta diferente.",
@@ -118,6 +119,7 @@
   "Goals": "Metas",
   "Schedule": "Agendar",
   "Journal": "Diária",
+  "save": "Salvar",
   "goal": {
     "archive": {
       "header": "Deseja marcar esta meta como concluída?",
@@ -149,5 +151,15 @@
       "header": "Deseja arquivar esta meta?",
       "note": "Isso encerrará a colaboração e você não receberá mais atualizações."
     }
-  }
+  },
+  "reset": "Redefinir",
+  "editTime": "Tempo de edição",
+  "pause": "Pausa",
+  "start": "Início",
+  "min": "min",
+  "sec": "seg",
+  "goalTitle": "Título do objetivo",
+  "budgetTitle": "Título do orçamento",
+  "addBtnBudget": "Orçamento",
+  "addBtnGoal": "Objetivo"
 }

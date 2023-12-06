@@ -6,6 +6,7 @@
   "spanish": "espagnol",
   "german": "allemand",
   "dutch": "néerlandais",
+  "marathi": "Marathi",
   "portuguese": "portugais",
   "themeChoice": "Qu'est-ce que tu aimes?",
   "home": "Domicile",
@@ -82,11 +83,11 @@
   "iHaveQuestions": "Intro rapide",
   "iAlreadyKnowZinZen": "Sauter l'intro",
   "qWhatIsZinZen": "Qu'est-ce que ZinZen® ?",
-  "ansWhatIsZinZen": "Un agenda intelligent pour vous concentrer sur ce qui vous donne du sens avec votre partenaire - et être zen.",
+  "ansWhatIsZinZen": "Un planificateur intelligent.",
   "qIsZinZenPrivate": "Vos données restent-elles privées?",
-  "AnsIsZinZenPrivate": "Le respect de votre vie privée est pour nous une valeur majeure. Nous n'avons accès ni à votre nom, email, adresse ou numéro de téléphone. Toutes vos données seront conservées sur votre appareil, et ne seront accessibles qu'à vous !",
+  "AnsIsZinZenPrivate": "Oui. Vos données restent sur votre appareil par défaut.",
   "qIsZinZenExpensive": "Est-ce cher ?",
-  "ansIsZinZenExpensive": "C'est gratuit, open source et financé par des contributions volontaires. Pas de publicités ou de 'dark patterns' - jamais.",
+  "ansIsZinZenExpensive": "C'est gratuit - soutenu par des dons. Pas de pubs. Aucune tromperie.",
   "qTooGoodToBeTrue": "Trop beau pour être vrai?",
   "ansTooGoodToBeTrue": "Ne nous croyez pas sur parole, essayez !",
   "iHaveDifferentQuestions": "J'ai une question différente.",
@@ -118,6 +119,7 @@
   "Schedule": "Calendrier",
   "Goals": "Objectifs",
   "Journal": "Journal",
+  "save": "Enregistrer",
   "goal": {
     "archive": {
       "header": "Voulez-vous marquer cette cible comme terminée ?",
@@ -149,5 +151,15 @@
       "header": "Voulez-vous archiver cette cible ?",
       "note": "Cela mettra fin à la collaboration et vous ne recevrez plus aucune mise à jour."
     }
-  }
+  },
+  "reset": "Réinitialiser",
+  "editTime": "Temps d'édition",
+  "pause": "Pause",
+  "start": "Début",
+  "min": "min",
+  "sec": "sec",
+  "goalTitle": "Titre de l'objectif",
+  "budgetTitle": "Titre du budget",
+  "addBtnBudget": "Budget",
+  "addBtnGoal": "Objectif"
 }

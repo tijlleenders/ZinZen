@@ -68,6 +68,8 @@ export const MyGoals = () => {
     }, 300);
   };
 
+  const zinZenLogoHeight = activeGoals.length > 0 ? "125px" : "350px";
+
   useEffect(() => {
     if (action !== "none") {
       setLastAction("none");
@@ -101,23 +103,24 @@ export const MyGoals = () => {
                   setGoals={setActiveGoals}
                 />
               </div>
-              <ArchivedAccordion
-                archivedGoals={archivedGoals}
-                showActions={showActions}
-                setShowActions={setShowActions}
-              />
+              {archivedGoals.length > 0 && (
+                <ArchivedAccordion
+                  archivedGoals={archivedGoals}
+                  showActions={showActions}
+                  setShowActions={setShowActions}
+                />
+              )}
             </div>
           </div>
         ) : (
           <GoalSublist />
         )}
-        {activeGoals?.length === 0 && (
-          <img
-            style={{ width: 350, height: 350, opacity: 0.3 }}
-            src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-            alt="Zinzen"
-          />
-        )}
+
+        <img
+          style={{ width: 200, height: zinZenLogoHeight, opacity: 0.3, marginRight: 50 }}
+          src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+          alt="Zinzen"
+        />
       </div>
     </AppLayout>
   );

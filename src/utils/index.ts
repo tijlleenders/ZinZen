@@ -101,7 +101,6 @@ export const colorPalleteList = [
   "#4793E1",
   "#4CA46B",
   "#87FF2A",
-  "#FFFF66",
   "#FFCC33",
   "#FF7A00",
   "#FC0909",

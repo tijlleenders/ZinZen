@@ -28,4 +28,5 @@ export interface ILocationState {
   displayChanges?: GoalItem; // to show the changes under goal
   goalType?: "Budget" | "Goal"; // characteristic of the goal
   displayAddGoalOptions: boolean; // whether to show the add goal options
+  displayFocus: boolean; // whether to show the focus component
 }
