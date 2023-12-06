@@ -18,6 +18,7 @@ import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import { darkModeState, displayToast, lastAction, openDevMode, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { TaskOptions, GoalTiming } from "./MyTimelineElements";
 
 import "./index.scss";
 
@@ -194,27 +195,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   >
                     {task.title}
                   </button>
-                  {displayOptionsIndex === task.taskid && (
-                    <div className="MTL-goalTiming">
-                      {startTime ? (
-                        <>
-                          <span>{parseInt(startTime, 10)}</span>
-                          <sup>00</sup>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                      <span>&nbsp;-&nbsp;</span>
-                      {endTime ? (
-                        <>
-                          <span>{parseInt(endTime, 10)}</span>
-                          <sup>00</sup>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  )}
+                  {displayOptionsIndex === task.taskid && <GoalTiming startTime={startTime} endTime={endTime} />}
                 </div>
 
                 {displayOptionsIndex === task.taskid && (
@@ -230,24 +211,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                 )}
               </div>
               {!markDone && displayOptionsIndex === task.taskid ? (
-                <div className="MTL-options">
-                  <button type="button" onClick={() => handleActionClick("Skip", task)}>
-                    Skip
-                  </button>
-                  <div />
-                  <button type="button" onClick={() => handleActionClick("Reschedule", task)}>
-                    Reschedule
-                  </button>
-                  <div />
-                  <button type="button" onClick={() => handleActionClick("Done", task)}>
-                    Done
-                  </button>
-                  <div />
-                  <button type="button" onClick={() => handleFocusClick(task)}>
-                    Focus
-                  </button>
-                  <div />
-                </div>
+                <TaskOptions task={task} handleActionClick={handleActionClick} />
               ) : null}
             </button>
           );
