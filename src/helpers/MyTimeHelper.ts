@@ -41,23 +41,21 @@ export const transformIntoSchInputGoals = (
     if (ele.habit) obj.repeat = "weekly";
     if (ele.timeBudget) {
       const { perDay, perWeek } = ele.timeBudget;
-      obj.budgets = [];
-      if (perDay && perDay !== "-") {
-        const [min, max] = perDay.split("-");
-        obj.budgets.push({
-          budget_type: "Daily",
-          ...(min !== "" ? { min: Number(min) } : {}),
-          ...(min !== "" ? { max: Number(max) } : {}),
-        });
-      }
-      if (perWeek && perWeek !== "-") {
-        const [min, max] = perWeek.split("-");
-        obj.budgets.push({
-          budget_type: "Weekly",
-          ...(min !== "" ? { min: Number(min) } : {}),
-          ...(min !== "" ? { max: Number(max) } : {}),
-        });
-      }
+      obj.budget = [];
+
+      const [minPerDay, maxPerDay] = perDay
+        ? perDay.split("-").map((val) => (val !== "" ? Number(val) : undefined))
+        : [undefined, undefined];
+      const [minPerWeek, maxPerWeek] = perWeek
+        ? perWeek.split("-").map((val) => (val !== "" ? Number(val) : undefined))
+        : [undefined, undefined];
+
+      obj.budget.push({
+        minPerDay,
+        maxPerDay,
+        minPerWeek,
+        maxPerWeek,
+      });
     }
     if (ele.sublist.length > 0) obj.children = ele.sublist;
     if (Object.keys(obj.filters || {}).length === 0) {
