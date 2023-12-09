@@ -70,7 +70,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   useEffect(() => {
     const timer = isFlipping ? setTimeout(() => setIsFlipping(false), 500) : undefined;
     return () => clearTimeout(timer);
-  }, [isFlipping, setIsFlipping]);
+  }, [isFlipping]);
 
   const currentHour = new Date().getHours();
   const isNighttime = currentHour >= 18 || currentHour < 6;
