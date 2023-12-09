@@ -18,9 +18,10 @@ import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import { darkModeState, displayToast, lastAction, openDevMode, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
-import { TaskOptions, GoalTiming } from "./MyTimelineElements";
 
 import "./index.scss";
+import { GoalTiming } from "./GoalTiming";
+import { TaskOptions } from "./TaskOptions";
 
 interface MyTimelineProps {
   day: string;

@@ -1,39 +1,10 @@
-import { ITask } from "@src/Interfaces/Task";
 import React from "react";
-
-interface GoalTimingProps {
-  startTime: string | null;
-  endTime: string | null;
-}
+import { ITask } from "@src/Interfaces/Task";
 
 interface TaskOptionsProps {
   task: ITask;
   handleActionClick: (action: string, task: ITask) => void;
 }
-
-export const GoalTiming: React.FC<GoalTimingProps> = ({ startTime, endTime }) => {
-  return (
-    <div className="MTL-goalTiming">
-      {startTime ? (
-        <>
-          <span>{parseInt(startTime, 10)}</span>
-          <sup>00</sup>
-        </>
-      ) : (
-        ""
-      )}
-      <span>&nbsp;-&nbsp;</span>
-      {endTime ? (
-        <>
-          <span>{parseInt(endTime, 10)}</span>
-          <sup>00</sup>
-        </>
-      ) : (
-        ""
-      )}
-    </div>
-  );
-};
 
 export const TaskOptions: React.FC<TaskOptionsProps> = ({ task, handleActionClick }) => {
   return (
