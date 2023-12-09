@@ -198,8 +198,6 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
     blockedSlots,
   );
   schedulerInput.goals = inputGoalsArr.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
-  console.log("schedulerInput", schedulerInput.goals);
-  console.log("noDurationGoalIds", noDurationGoalIds);
   return { dbTasks, schedulerInput };
 };
 
