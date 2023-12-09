@@ -44,7 +44,7 @@ export interface ISchedulerInputGoal {
     maxPerDay: number | undefined;
     minPerWeek: number | undefined;
     maxPerWeek: number | undefined;
-  }[];
+  };
   children?: string[];
   createdAt: string;
   hoursSpent?: number;
