@@ -95,4 +95,9 @@ export const focusTaskTitle = atom({
   default: "",
 });
 
+export const flipAnimationState = atom({
+  key: "flipAnimationState",
+  default: false,
+});
+
 export { darkModeState, languageSelectionState };
