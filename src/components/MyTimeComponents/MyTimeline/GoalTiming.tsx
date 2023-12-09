@@ -6,25 +6,19 @@ interface GoalTimingProps {
 }
 
 export const GoalTiming: React.FC<GoalTimingProps> = ({ startTime, endTime }) => {
+  const renderTime = (time: string | null) =>
+    time ? (
+      <>
+        <span>{parseInt(time, 10)}</span>
+        <sup>00</sup>
+      </>
+    ) : null;
+
   return (
     <div className="MTL-goalTiming">
-      {startTime ? (
-        <>
-          <span>{parseInt(startTime, 10)}</span>
-          <sup>00</sup>
-        </>
-      ) : (
-        ""
-      )}
-      <span>&nbsp;-&nbsp;</span>
-      {endTime ? (
-        <>
-          <span>{parseInt(endTime, 10)}</span>
-          <sup>00</sup>
-        </>
-      ) : (
-        ""
-      )}
+      {renderTime(startTime)}
+      {startTime && endTime && <span> - </span>}
+      {renderTime(endTime)}
     </div>
   );
 };
