@@ -59,16 +59,15 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     setShowScheduled(!showScheduled);
   };
   // console.log(devMode);
-  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
+  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done", task: ITask) => {
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
-        // @ts-ignore
         await addTask({
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
-          completedTodayIds: actionName === "Focus" ? [] : [task.taskid],
+          completedTodayIds: [task.taskid],
           forgotToday:
             actionName === "Skip" ? [`${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`] : [],
           completedToday: actionName === "Done" ? Number(task.duration) : 0,
@@ -99,14 +98,21 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Skip") {
         await forgetSound.play();
         setLastAction("TaskSkipped");
-      } else if (actionName === "Focus") {
-        setTaskTitle(task.title);
-        navigate("/", { state: { ...state, displayFocus: true } });
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
+
+  const handleFocusClick = (task: ITask) => {
+    if (day === "Today") {
+      setTaskTitle(task.title);
+      navigate("/", { state: { ...state, displayFocus: true } });
+    } else {
+      setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
+    }
+  };
+
   const handleOpenGoal = async (goalId: string) => {
     const goalsHistory = [];
     let tmpGoal: GoalItem | null = await getGoal(goalId);
@@ -235,7 +241,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     Done
                   </button>
                   <div />
-                  <button type="button" onClick={() => handleActionClick("Focus", task)}>
+                  <button type="button" onClick={() => handleFocusClick(task)}>
                     Focus
                   </button>
                   <div />
