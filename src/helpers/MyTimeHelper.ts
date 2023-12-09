@@ -19,7 +19,6 @@ export const transformIntoSchInputGoals = (
   blockedSlots: { [goalid: string]: blockedSlotOfTask[] },
 ) => {
   const inputGoalsArr: ISchedulerInputGoal[] = [];
-  console.log("activeGoals in function", activeGoals);
   activeGoals.forEach(async (ele) => {
     const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, createdAt: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
@@ -67,7 +66,6 @@ export const transformIntoSchInputGoals = (
     }
     inputGoalsArr.push(obj);
   });
-  console.log("inputGoalsArr", inputGoalsArr);
   return inputGoalsArr;
 };
 
