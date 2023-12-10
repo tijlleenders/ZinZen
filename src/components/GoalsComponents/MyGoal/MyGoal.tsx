@@ -8,15 +8,13 @@ import { unarchiveIcon } from "@src/assets";
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
-import { calculateDaysLeft, formatBudgetHrsToText } from "@src/utils";
 
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
-import NotificationSymbol from "@src/common/NotificationSymbol";
 
-import { jumpToLowestChanges, getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary";
+import GoalDropdown from "./GoalDropdown";
 
 interface MyGoalProps {
   goal: GoalItem;
@@ -48,9 +46,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const darkModeStatus = useRecoilValue(darkModeState);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
-  const [selectedGoalId, setSelectedGoalId] = useRecoilState(displayGoalId);
-  const [subGoalHistory, setSubGoalHistory] = useRecoilState(goalsHistory);
-  const [showChangesModal, setShowChangesModal] = useRecoilState(displayChangesModal);
+  const selectedGoalId = useRecoilValue(displayGoalId);
+  const subGoalHistory = useRecoilValue(goalsHistory);
+  const showChangesModal = useRecoilValue(displayChangesModal);
 
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(goal.title));
 
@@ -103,19 +101,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     }
   }, [location]);
 
-  const hasSubGoals = goal.sublist.length > 0;
-  const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goal.goalColor}33 89.585%, ${
-    goal.timeBudget.perDay != null ? "transparent" : goal.goalColor
-  } 100%)`;
-  const outerBorderStyle =
-    goal.timeBudget.perDay == null ? `1px solid ${goal.goalColor}` : `2px dashed ${goal.goalColor}`;
-
-  const innerBorderColor = hasSubGoals ? goal.goalColor : "transparent";
-
-  const renderDots = (color: string) => {
-    return [...Array(3)].map(() => <span key={goal.id} style={{ backgroundColor: color }} />);
-  };
-
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
       <div
@@ -124,32 +109,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div
-          style={{
-            padding: "20px 0",
-            marginLeft: 20,
-            display: "flex",
-            flexDirection: "column",
-            gap: 3,
-          }}
-          onClickCapture={(e) => {
-            handleDropDown(e);
-          }}
-        >
-          <div className="goal-dropdown">
-            <div
-              className="goal-dd-outer"
-              style={{
-                background: outerBackground,
-                border: outerBorderStyle,
-              }}
-            >
-              <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
-                {goal.newUpdates && <NotificationSymbol color={goal.goalColor} />}
-              </div>
-            </div>
-          </div>
-          {isActionVisible && <div className="goal-menu-dots">{renderDots(goal.goalColor)}</div>}
+        <div onClickCapture={handleDropDown}>
+          <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <div className="goal-title">
