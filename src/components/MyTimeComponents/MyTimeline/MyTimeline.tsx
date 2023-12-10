@@ -20,6 +20,8 @@ import { darkModeState, displayToast, lastAction, openDevMode, focusTaskTitle } 
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
+import { GoalTiming } from "./GoalTiming";
+import { TaskOptions } from "./TaskOptions";
 
 interface MyTimelineProps {
   day: string;
@@ -59,7 +61,11 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     setShowScheduled(!showScheduled);
   };
   // console.log(devMode);
-  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done", task: ITask) => {
+  const handleFocusClick = (task: ITask) => {
+    setTaskTitle(task.title);
+    navigate("/", { state: { ...state, displayFocus: true } });
+  };
+  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
@@ -99,20 +105,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         await forgetSound.play();
         setLastAction("TaskSkipped");
       }
+    } else if (actionName === "Focus") {
+      handleFocusClick(task);
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
-
-  const handleFocusClick = (task: ITask) => {
-    if (day === "Today") {
-      setTaskTitle(task.title);
-      navigate("/", { state: { ...state, displayFocus: true } });
-    } else {
-      setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
-    }
-  };
-
   const handleOpenGoal = async (goalId: string) => {
     const goalsHistory = [];
     let tmpGoal: GoalItem | null = await getGoal(goalId);
@@ -194,25 +192,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   >
                     {task.title}
                   </button>
-                  <div className="MTL-goalTiming">
-                    {startTime ? (
-                      <>
-                        <span>{parseInt(startTime, 10)}</span>
-                        <sup>00</sup>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                    <span>&nbsp;-&nbsp;</span>
-                    {endTime ? (
-                      <>
-                        <span>{parseInt(endTime, 10)}</span>
-                        <sup>00</sup>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </div>
+                  {displayOptionsIndex === task.taskid && <GoalTiming startTime={startTime} endTime={endTime} />}
                 </div>
 
                 {displayOptionsIndex === task.taskid && (
@@ -228,24 +208,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                 )}
               </div>
               {!markDone && displayOptionsIndex === task.taskid ? (
-                <div className="MTL-options">
-                  <button type="button" onClick={() => handleActionClick("Skip", task)}>
-                    Skip
-                  </button>
-                  <div />
-                  <button type="button" onClick={() => handleActionClick("Reschedule", task)}>
-                    Reschedule
-                  </button>
-                  <div />
-                  <button type="button" onClick={() => handleActionClick("Done", task)}>
-                    Done
-                  </button>
-                  <div />
-                  <button type="button" onClick={() => handleFocusClick(task)}>
-                    Focus
-                  </button>
-                  <div />
-                </div>
+                <TaskOptions task={task} handleActionClick={handleActionClick} />
               ) : null}
             </button>
           );
