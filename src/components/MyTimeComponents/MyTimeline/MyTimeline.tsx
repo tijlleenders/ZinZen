@@ -61,7 +61,11 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     setShowScheduled(!showScheduled);
   };
   // console.log(devMode);
-  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done", task: ITask) => {
+  const handleFocusClick = (task: ITask) => {
+    setTaskTitle(task.title);
+    navigate("/", { state: { ...state, displayFocus: true } });
+  };
+  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
@@ -101,20 +105,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         await forgetSound.play();
         setLastAction("TaskSkipped");
       }
+    } else if (actionName === "Focus") {
+      handleFocusClick(task);
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
-
-  const handleFocusClick = (task: ITask) => {
-    if (day === "Today") {
-      setTaskTitle(task.title);
-      navigate("/", { state: { ...state, displayFocus: true } });
-    } else {
-      setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
-    }
-  };
-
   const handleOpenGoal = async (goalId: string) => {
     const goalsHistory = [];
     let tmpGoal: GoalItem | null = await getGoal(goalId);
