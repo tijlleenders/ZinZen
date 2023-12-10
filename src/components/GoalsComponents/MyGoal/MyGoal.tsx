@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { unarchiveIcon } from "@src/assets";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
 
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
@@ -15,6 +13,7 @@ import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } f
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary";
 import GoalDropdown from "./GoalDropdown";
+import GoalTitle from "./GoalTitle";
 
 interface MyGoalProps {
   goal: GoalItem;
@@ -38,7 +37,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { t } = useTranslation();
   // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
   // const collabWithContact =
   //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
@@ -49,8 +47,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const showChangesModal = useRecoilValue(displayChangesModal);
-
-  const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(goal.title));
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
@@ -113,46 +109,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <div className="goal-title">
-            {replacedString.split(" ").map((ele, index) => {
-              const replacedUrls = Array.from(ele.matchAll(/zURL-(\d+)/g));
-              if (replacedUrls.length) {
-                return (
-                  <React.Fragment key={`${goal.id}-${ele}-replacedUrlsFragment`}>
-                    {replacedUrls.map(([url, digitStr]) => {
-                      const urlIndex = Number.parseInt(digitStr, 10);
-                      const originalUrl = urlsWithIndexes[urlIndex];
-                      const summarizedUrl = summarizeUrl(originalUrl);
-                      return (
-                        <span
-                          key={`${goal.id}-${ele}-${url}`}
-                          style={{ cursor: "pointer", textDecoration: "underline" }}
-                          onClickCapture={() => {
-                            window.open(originalUrl, "_blank");
-                          }}
-                        >
-                          {index === 0 ? summarizedUrl : ` ${summarizedUrl}`}
-                        </span>
-                      );
-                    })}
-                  </React.Fragment>
-                );
-              }
-              return <span key={`${goal.id}-${ele}`}>{index === 0 ? ele : ` ${ele}`}</span>;
-            })}
-            &nbsp;
-            {goal.link && (
-              <a
-                className="goal-link"
-                href={goal.link}
-                target="_blank"
-                onClick={(e) => e.stopPropagation()}
-                rel="noreferrer"
-              >
-                URL
-              </a>
-            )}
-          </div>
+          <GoalTitle goal={goal} />
           {showActions.open === goal.id && showActions.click > 0 && (
             <p className="goal-desc">
               <GoalSummary goal={goal} />
