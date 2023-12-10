@@ -132,7 +132,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   };
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.stopPropagation();
-    if (archived || (showPartnerMode && goal.parentGoalId !== "root")) {
+    if (archived) {
       return;
     }
     const navState = { ...location.state, from: "" };
