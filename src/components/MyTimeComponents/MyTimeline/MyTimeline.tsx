@@ -67,8 +67,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   };
   const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
     if (actionName === "Focus") {
-      handleFocusClick(task);
-      return;
+      return handleFocusClick(task);
     }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
