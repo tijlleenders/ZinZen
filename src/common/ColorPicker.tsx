@@ -30,7 +30,7 @@ const ColorPicker: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex })
   return (
     <div className="color-picker-container">
       <div
-        className="selected-color"
+        className="goal-color"
         style={{ backgroundColor: colorPalleteList[colorIndex] }}
         onClick={toggleColorPalette}
         onKeyDown={(e) => handleKeyDown(e, toggleColorPalette)}

@@ -11,7 +11,7 @@ import TickIcon from "@assets/images/correct.svg";
 import plingSound from "@assets/pling.mp3";
 
 import ZAccordion from "@src/common/Accordion";
-import ColorPalette from "@src/common/ColorPalette";
+import ColorPalette from "@src/common/ColorPicker";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
 import { ILocationState } from "@src/Interfaces";
@@ -235,6 +235,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       }}
     >
       <div style={{ textAlign: "left" }} className="header-title">
+        <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
         <input
           className="ordinary-element"
           id="title-field"
@@ -402,24 +403,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             />
           </div>
         )}
-        <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
-        <div className="action-btn-container">
-          <div className="hint-toggle">
-            <p style={{ marginTop: 6 }}>Hints</p>
-            <Switch
-              prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
-              checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-            />
-          </div>
-          <button
-            type="button"
-            className="action-btn"
-            onClick={handleSave}
-            style={{ display: "flex", gap: 15, justifyContent: "center" }}
-          >
-            {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
-          </button>
-        </div>
+        <button type="button" className="action-btn" onClick={handleSave}>
+          {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+        </button>
       </div>
     </Modal>
   );
