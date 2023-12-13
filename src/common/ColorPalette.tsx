@@ -1,39 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { colorPalleteList } from "@src/utils";
 import { ColorPaletteProps } from "@src/Interfaces/ICommon";
-import { useTranslation } from "react-i18next";
 
-const ColorPalette: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }) => {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const getBtn = (color: string, index: number, style = {}) => (
-    <button
-      type="button"
-      key={`color-${color}`}
-      style={{ backgroundColor: color, ...style }}
-      className="color-btn"
-      onClick={() => {
-        if (!open) {
-          setOpen(true);
-        } else {
-          setOpen(false);
-          setColorIndex(index);
-        }
-      }}
-    >
-      {colorIndex === index ? "✔" : ""}
-    </button>
-  );
+const ColorPicker: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleColorSelect = (index: number) => {
+    setColorIndex(index);
+    setIsOpen(false);
+  };
+
+  const toggleColorPalette = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent, action: () => void) => {
+    if (event.key === "Enter" || event.key === " ") {
+      action();
+    }
+  };
+
+  useEffect(() => {
+    const element = document.getElementById(`color-${colorIndex}`);
+    if (element !== null) {
+      element.focus();
+    }
+  }, [isOpen, colorIndex]);
+
   return (
-    <div>
-      <p>{t("Change Color")}:</p>
-      {open ? (
-        <div className="colorPallette">{colorPalleteList.map((color, index) => getBtn(color, index))}</div>
-      ) : (
-        getBtn(colorPalleteList[colorIndex], -1, { width: 110, borderRadius: 4, boxShadow: "var(--shadow)" })
+    <div className="color-picker-container">
+      <div
+        className="selected-color"
+        style={{ backgroundColor: colorPalleteList[colorIndex] }}
+        onClick={toggleColorPalette}
+        onKeyDown={(e) => handleKeyDown(e, toggleColorPalette)}
+        role="button"
+        tabIndex={0}
+        aria-label="Select color"
+        aria-expanded={isOpen}
+      />
+
+      {isOpen && (
+        <div className="color-palette-popup">
+          {colorPalleteList.map((color, index) => (
+            <button
+              id={`color-${index}`}
+              key={`color-${color}`}
+              className="color-btn"
+              style={{ backgroundColor: color }}
+              onClick={() => handleColorSelect(index)}
+              onKeyDown={(e) => handleKeyDown(e, () => handleColorSelect(index))}
+              type="button"
+              aria-label={`Color ${index + 1}`}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
 };
 
-export default ColorPalette;
+export default ColorPicker;
