@@ -113,7 +113,6 @@
   }
 }
 
-
 .between-tooltip {
   top: 177px !important;
   font-size: 17px !important;
@@ -129,7 +128,20 @@
   font-size: 17px !important;
 }
 
+.action-btn-container {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  gap: 15px;
+}
+
 .ant-switch {
   margin-top: 6px;
 }
 
+.hint-toggle {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}

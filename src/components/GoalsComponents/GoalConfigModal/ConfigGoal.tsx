@@ -403,10 +403,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           </div>
         )}
         <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
-        <div
-          style={{ textAlign: "center", display: "flex", justifyContent: "center", alignContent: "center", gap: 15 }}
-        >
-          <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+        <div className="action-btn-container">
+          <div className="hint-toggle">
             <p style={{ marginTop: 6 }}>Hints</p>
             <Switch
               checkedChildren={<img src={TickIcon} alt="Tick icon" />}
