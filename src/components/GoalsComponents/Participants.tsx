@@ -71,20 +71,8 @@ const Participants = ({ goalId }: { goalId: string }) => {
               <Switch
                 defaultChecked={participant.following}
                 onChange={(value) => toggleFollowStatus(participant, value)}
-                checkedChildren={
-                  <img
-                    src={TickIcon}
-                    style={{ width: "15px", height: "15px", marginTop: "2px", filter: "brightness(0) invert(1)" }}
-                    alt="Tick icon"
-                  />
-                }
-                unCheckedChildren={
-                  <img
-                    src={CrossIcon}
-                    style={{ width: "14px", height: "15px", marginTop: "2px", filter: "brightness(0) invert(1)" }}
-                    alt="Cross icon"
-                  />
-                }
+                checkedChildren={<img src={TickIcon} alt="Tick icon" />}
+                unCheckedChildren={<img src={CrossIcon} alt="Cross icon" />}
               />
             </div>
           </div>
