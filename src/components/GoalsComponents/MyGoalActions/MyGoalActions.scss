@@ -11,6 +11,20 @@
     cursor: pointer;
     background: var(--bottom-nav-color) !important;
   }
+
+  @media screen and (max-width: 400px) {
+    .goal-action {
+      padding: 25px 0 !important;
+    }
+  }
+
+  @media screen and (max-width: 250px) {
+    .goal-action {
+      p {
+        font-size: 12px !important;
+      }
+    }
+  }
   .goal-action:first-child {
     border-right: 2px solid var(--default-border-color);
     border-bottom: 2px solid var(--default-border-color);
