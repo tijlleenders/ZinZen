@@ -22,7 +22,7 @@ import "./ShareGoalModal.scss";
 import Icon from "../../../common/Icon";
 
 const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
-  const minContacts = 3;
+  const minContacts = 10;
   const navigate = useNavigate();
   const { state } = useLocation();
   const theme = useRecoilValue(themeState);
