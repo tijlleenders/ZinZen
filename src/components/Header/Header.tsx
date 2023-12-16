@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -12,7 +12,7 @@ import lightModeIcon from "@assets/images/lightModeIcon.svg";
 import { IHeader } from "@src/Interfaces/ICommon";
 import { goalsHistory } from "@src/store/GoalsState";
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { darkModeState, displayPartnerMode, displayToast, searchActive } from "@src/store";
+import { darkModeState, displayPartnerMode, displayToast, flipAnimationState, searchActive } from "@src/store";
 
 import HeaderBtn from "./HeaderBtn";
 import Search from "../../common/Search";
@@ -30,8 +30,10 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
 
   const [showPartnerMode, setShowPartnerMode] = useRecoilState(displayPartnerMode);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
+  const [isFlipping, setIsFlipping] = useRecoilState(flipAnimationState);
 
   const handlePartner = async () => {
+    setIsFlipping(true);
     const list = await getAllContacts();
     if (list.length === 0) {
       setShowToast({
@@ -65,6 +67,11 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
     handlePopState();
   }, [location]);
 
+  useEffect(() => {
+    const timer = isFlipping ? setTimeout(() => setIsFlipping(false), 500) : undefined;
+    return () => clearTimeout(timer);
+  }, [isFlipping]);
+
   const currentHour = new Date().getHours();
   const isNighttime = currentHour >= 18 || currentHour < 6;
 
@@ -76,6 +83,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
         <>
           <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
             <img
+              className={isFlipping ? "logo-flip" : ""}
               style={{ height: 30, width: 30, cursor: "pointer" }}
               onClickCapture={handlePartner}
               src={zinzenLightLogo}

@@ -15,12 +15,11 @@ import { convertDateToString } from "@src/utils";
 export const transformIntoSchInputGoals = (
   dbTasks: { [goalid: string]: TaskItem },
   activeGoals: GoalItem[],
-  noDurationGoalIds: string[],
   blockedSlots: { [goalid: string]: blockedSlotOfTask[] },
 ) => {
   const inputGoalsArr: ISchedulerInputGoal[] = [];
   activeGoals.forEach(async (ele) => {
-    const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, created_at: ele.createdAt };
+    const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, createdAt: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
     // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
     // obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
@@ -60,7 +59,7 @@ export const transformIntoSchInputGoals = (
         });
       }
     }
-    if (ele.sublist.length > 0) obj.children = ele.sublist.filter((id) => !noDurationGoalIds.includes(id));
+    if (ele.sublist.length > 0) obj.children = ele.sublist;
     if (Object.keys(obj.filters || {}).length === 0) {
       delete obj.filters;
     }
@@ -136,9 +135,8 @@ export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) 
 };
 
 export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
-  let activeGoals = [...inputGoals];
+  const activeGoals = [...inputGoals];
   const _today = new Date();
-  const noDurationGoalIds: string[] = [];
   const startDate = convertDateToString(new Date(_today));
   const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
 
@@ -157,19 +155,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   );
   const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
 
-  activeGoals = [
-    ...activeGoals.filter((ele) => {
-      if (!ele.duration) noDurationGoalIds.push(ele.id);
-      return !!ele.duration;
-    }),
-  ];
-
-  const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(
-    dbTasks,
-    activeGoals,
-    noDurationGoalIds,
-    blockedSlots,
-  );
+  const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(dbTasks, activeGoals, blockedSlots);
   schedulerInput.goals = inputGoalsArr.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
   return { dbTasks, schedulerInput };
 };

@@ -111,7 +111,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
             else handleClick("MyJournal");
           }}
           style={{
-            paddingTop: 3,
+            padding: 7.5,
             gap: 10,
           }}
           className={`bottom-nav-item ${currentPage === "MyJournal" && !themeSelection ? "active" : ""}`}

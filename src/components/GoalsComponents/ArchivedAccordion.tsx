@@ -5,7 +5,7 @@ import { darkModeState } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import ZAccordion from "@src/common/Accordion";
 
-import MyGoal from "./MyGoal";
+import MyGoal from "./MyGoal/MyGoal";
 
 interface IArchivedAccordionProps {
   archivedGoals: GoalItem[];
