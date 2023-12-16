@@ -143,11 +143,11 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const schedulerInput: {
     startDate: string;
     endDate: string;
-    goals: { [goalid: string]: ISchedulerInputGoal };
+    goals: ISchedulerInputGoal[];
   } = {
     startDate,
     endDate,
-    goals: {},
+    goals: [],
   };
   const dbTasks: { [goalid: string]: TaskItem } = (await getAllTasks()).reduce(
     (acc, curr) => ({ ...acc, [curr.goalId]: curr }),
@@ -156,7 +156,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
 
   const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(dbTasks, activeGoals, blockedSlots);
-  schedulerInput.goals = inputGoalsArr.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+  schedulerInput.goals = inputGoalsArr;
   return { dbTasks, schedulerInput };
 };
 
