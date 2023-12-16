@@ -152,12 +152,7 @@ const DisplayChangesModal = () => {
       setNewGoals([]);
     } else if (currentDisplay === "modifiedGoals") {
       await acceptSelectedTags(unselectedChanges, updateList, activeGoal);
-      await sendUpdatedGoal(
-        activeGoal.id,
-        [],
-        true,
-        updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-      );
+      await sendUpdatedGoal(activeGoal.id, [], true, [participants[activePPT].relId]);
       setUnselectedChanges([]);
       setUpdateList({ schemaVersion: {}, prettierVersion: {} });
     } else if (currentDisplay === "deleted") {
@@ -302,6 +297,7 @@ const DisplayChangesModal = () => {
       )}
     </Modal>
   );
+  return <div />;
 };
 
 export default DisplayChangesModal;

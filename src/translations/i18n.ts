@@ -13,7 +13,6 @@ import TRANSLATIONS_NL from "./nl/translation.json";
 import TRANSLATIONS_DE from "./de/translation.json";
 import TRANSLATIONS_PT from "./pt/translation.json";
 import TRANSLATIONS_MR from "./mr/translation.json";
-import TRANSLATIONS_GT from "./gt/translation.json";
 
 i18n
   .use(LanguageDetector)
@@ -47,9 +46,6 @@ i18n
       mr: {
         translation: TRANSLATIONS_MR,
       },
-      gt: {
-        translation: TRANSLATIONS_GT,
-      },
     },
   });
 
@@ -63,7 +59,7 @@ i18n.init({
   },
 });
 
-const languagesAvailable = ["de", "en", "es", "fr", "hi", "nl", "mr", "gt"];
+const languagesAvailable = ["de", "en", "es", "fr", "hi", "nl", "mr"];
 const languagesFullForms: { [key: string]: string } = {
   de: "Deutsch",
   en: "English",
@@ -72,6 +68,5 @@ const languagesFullForms: { [key: string]: string } = {
   hi: "हिन्दी",
   nl: "Nederlands",
   mr: "मराठी",
-  gt: "ગુજરાતી",
 };
 export { i18n, languagesAvailable, languagesFullForms };

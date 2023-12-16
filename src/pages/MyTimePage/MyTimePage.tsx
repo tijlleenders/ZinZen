@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { MyTimeline } from "@components/MyTimeComponents/MyTimeline/MyTimeline";
+import { MyTimeline } from "@components/MyTimeComponents/MyTimeline";
 import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
 
 import { getOrdinalSuffix } from "@src/utils";

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { useTranslation } from "react-i18next";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
@@ -23,7 +22,6 @@ import GoalHistory from "./GoalHistory";
 import ArchivedAccordion from "../ArchivedAccordion";
 
 export const GoalSublist = () => {
-  const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
   const goalID = useRecoilValue(displayGoalId);
   const showAddGoal = useRecoilValue(displayAddGoal);
@@ -56,7 +54,7 @@ export const GoalSublist = () => {
       <GoalHistory />
       <div className="sublist-content-container">
         <div className="sublist-content">
-          <p className="sublist-title">{t(parentGoal?.title)}</p>
+          <p className="sublist-title">{parentGoal?.title}</p>
           <div className="sublist-list-container">
             {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
             <GoalsList

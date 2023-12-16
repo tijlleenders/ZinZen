@@ -27,21 +27,17 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
         background: choice !== "cancel" ? "var(--selection-color)" : "transparent",
       }}
       onClick={async () => {
-        if (choice === "cancel") {
-          window.history.back();
-        } else {
-          if (neverShowAgain) {
-            const actionChange = { ...displayModal[actionCategory] };
-            // @ts-ignore
-            actionChange[actionName] = false;
-            const newDisplayModal = { ...displayModal };
-            // @ts-ignore
-            newDisplayModal[actionCategory] = actionChange;
-            console.log(newDisplayModal);
-            setDisplayModal({ ...newDisplayModal, open: false });
-          }
-          await handleClick(choice === "cancel" ? choice : actionName);
+        if (neverShowAgain) {
+          const actionChange = { ...displayModal[actionCategory] };
+          // @ts-ignore
+          actionChange[actionName] = false;
+          const newDisplayModal = { ...displayModal };
+          // @ts-ignore
+          newDisplayModal[actionCategory] = actionChange;
+          console.log(newDisplayModal);
+          setDisplayModal({ ...newDisplayModal, open: false });
         }
+        await handleClick(choice === "cancel" ? choice : actionName);
       }}
     >
       {t(choice)}

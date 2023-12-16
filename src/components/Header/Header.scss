@@ -69,16 +69,3 @@
     color: white !important;
   }
 }
-
-.logo-flip {
-  animation: flipAnimation 0.5s forwards;
-}
-
-@keyframes flipAnimation {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}

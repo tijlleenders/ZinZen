@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
-import MyGoal from "./MyGoal/MyGoal";
+import MyGoal from "./MyGoal";
 
 interface GoalsListProps {
   goals: GoalItem[];

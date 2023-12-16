@@ -20,8 +20,6 @@ import { darkModeState, displayToast, lastAction, openDevMode, focusTaskTitle } 
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
-import { GoalTiming } from "./GoalTiming";
-import { TaskOptions } from "./TaskOptions";
 
 interface MyTimelineProps {
   day: string;
@@ -61,22 +59,16 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     setShowScheduled(!showScheduled);
   };
   // console.log(devMode);
-  const handleFocusClick = (task: ITask) => {
-    setTaskTitle(task.title);
-    navigate("/", { state: { ...state, displayFocus: true } });
-  };
   const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
-    if (actionName === "Focus") {
-      return handleFocusClick(task);
-    }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
+        // @ts-ignore
         await addTask({
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
-          completedTodayIds: [task.taskid],
+          completedTodayIds: actionName === "Focus" ? [] : [task.taskid],
           forgotToday:
             actionName === "Skip" ? [`${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`] : [],
           completedToday: actionName === "Done" ? Number(task.duration) : 0,
@@ -107,6 +99,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Skip") {
         await forgetSound.play();
         setLastAction("TaskSkipped");
+      } else if (actionName === "Focus") {
+        setTaskTitle(task.title);
+        navigate("/", { state: { ...state, displayFocus: true } });
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
@@ -193,7 +188,25 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   >
                     {task.title}
                   </button>
-                  {displayOptionsIndex === task.taskid && <GoalTiming startTime={startTime} endTime={endTime} />}
+                  <div className="MTL-goalTiming">
+                    {startTime ? (
+                      <>
+                        <span>{parseInt(startTime, 10)}</span>
+                        <sup>00</sup>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    <span>&nbsp;-&nbsp;</span>
+                    {endTime ? (
+                      <>
+                        <span>{parseInt(endTime, 10)}</span>
+                        <sup>00</sup>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
 
                 {displayOptionsIndex === task.taskid && (
@@ -209,7 +222,24 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                 )}
               </div>
               {!markDone && displayOptionsIndex === task.taskid ? (
-                <TaskOptions task={task} handleActionClick={handleActionClick} />
+                <div className="MTL-options">
+                  <button type="button" onClick={() => handleActionClick("Skip", task)}>
+                    Skip
+                  </button>
+                  <div />
+                  <button type="button" onClick={() => handleActionClick("Reschedule", task)}>
+                    Reschedule
+                  </button>
+                  <div />
+                  <button type="button" onClick={() => handleActionClick("Done", task)}>
+                    Done
+                  </button>
+                  <div />
+                  <button type="button" onClick={() => handleActionClick("Focus", task)}>
+                    Focus
+                  </button>
+                  <div />
+                </div>
               ) : null}
             </button>
           );

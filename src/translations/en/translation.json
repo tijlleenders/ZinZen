@@ -7,7 +7,6 @@
   "german": "German",
   "dutch": "Dutch",
   "marathi": "Marathi",
-  "gujarati": "Gujarati",
   "portuguese": "Portuguese",
   "themeChoice": "What do you like?",
   "home": "Home",
@@ -156,7 +155,7 @@
       "note": "This will end the collaboration and you will not receive any updates."
     }
   },
-  "reset": "Reset",
+  "reset": "reset",
   "editTime": "Edit Time",
   "pause": "Pause",
   "start": "Start",
