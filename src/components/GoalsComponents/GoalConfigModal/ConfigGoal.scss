@@ -131,9 +131,13 @@
 .action-btn-container {
   text-align: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-content: center;
   gap: 15px;
+
+  .action-btn {
+    flex: 1;
+  }
 }
 
 .ant-switch {

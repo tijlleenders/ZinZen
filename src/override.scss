@@ -99,12 +99,21 @@
 }
 
 /* Switch */
-.ant-switch-inner {
-  background: var(--selection-color);
+.ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled) {
+  background: var(--selection-color) !important;
 }
 
-.ant-switch-inner-checked, .ant-switch-inner-unchecked {
-  img {  width: 15px; height: 15px; margin-top: 2px; 
+.ant-switch-checked{
+.ant-switch-inner {
+  background: var(--selection-color) !important;
+}}
+
+.ant-switch-inner-checked,
+.ant-switch-inner-unchecked {
+  img {
+    width: 15px;
+    height: 15px;
+    margin-top: 2px;
     filter: brightness(0) invert(1);
   }
 }
