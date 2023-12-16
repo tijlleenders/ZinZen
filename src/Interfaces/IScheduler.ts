@@ -40,10 +40,10 @@ export interface ISchedulerInputGoal {
   };
   repeat?: string;
   budget?: {
-    minPerDay: number | undefined;
-    maxPerDay: number | undefined;
-    minPerWeek: number | undefined;
-    maxPerWeek: number | undefined;
+    minPerDay?: number;
+    maxPerDay?: number;
+    minPerWeek?: number;
+    maxPerWeek?: number;
   };
   children?: string[];
   createdAt: string;
