@@ -6,6 +6,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
+import { unarchiveUserGoal } from "@src/api/GoalsAPI";
+import { unarchiveIcon } from "@src/assets";
 
 import {
   darkModeState,
@@ -52,6 +54,9 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
     } else if (action === "archive") {
       await archiveThisGoal(goal, ancestors);
       setLastAction("goalArchived");
+    } else if (action === "restore") {
+      await unarchiveUserGoal(goal);
+      setLastAction("goalUnarchived");
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
       window.history.back();
@@ -73,6 +78,8 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       await handleActionClick(actionName);
     }
   };
+
+  const isGoalArchived = goal.archived;
 
   return (
     <Modal
@@ -102,52 +109,88 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
         {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
-        <div
-          className="goal-action shareOptions-btn"
-          onClickCapture={async (e) => {
-            e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
-          }}
-        >
-          <ActionDiv label={t("Delete")} icon="Delete" />
-        </div>
-        {!isPartnerGoal && (
-          <div
-            className="goal-action shareOptions-btn"
-            onClickCapture={async (e) => {
-              e.stopPropagation();
-              await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
-            }}
-          >
-            <ActionDiv label={t("Done")} icon="Correct" />
-          </div>
+        {isGoalArchived === "true" ? (
+          <>
+            <div
+              className="goal-action-archive shareOptions-btn"
+              onClickCapture={async (e) => {
+                e.stopPropagation();
+                await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "restore" });
+              }}
+            >
+              <ActionDiv
+                label={t("Restore")}
+                icon={
+                  <img
+                    alt="archived goal"
+                    src={unarchiveIcon}
+                    style={{ width: 24, height: 25, filter: darkModeStatus ? "invert(1)" : "none" }}
+                  />
+                }
+              />
+            </div>
+            {!isPartnerGoal && (
+              <div
+                className="goal-action-archive shareOptions-btn"
+                onClickCapture={async (e) => {
+                  e.stopPropagation();
+                  await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
+                }}
+              >
+                <ActionDiv label={t("Delete")} icon="Delete" />
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <div
+              className="goal-action shareOptions-btn"
+              onClickCapture={async (e) => {
+                e.stopPropagation();
+                await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
+              }}
+            >
+              <ActionDiv label={t("Delete")} icon="Delete" />
+            </div>
+            {!isPartnerGoal && (
+              <div
+                className="goal-action shareOptions-btn"
+                onClickCapture={async (e) => {
+                  e.stopPropagation();
+                  await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "archive" });
+                }}
+              >
+                <ActionDiv label={t("Done")} icon="Correct" />
+              </div>
+            )}
+            {((isPartnerGoal && goal.parentGoalId === "root") || !isPartnerGoal) && (
+              <div
+                className="goal-action shareOptions-btn"
+                onClickCapture={async (e) => {
+                  e.stopPropagation();
+                  if (!isPartnerGoal) {
+                    handleShareGoal(goal);
+                  } else {
+                    await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
+                  }
+                }}
+              >
+                <ActionDiv
+                  label={t(isPartnerGoal ? "Collaborate" : "Share")}
+                  icon={isPartnerGoal ? "Collaborate" : "SingleAvatar"}
+                />
+              </div>
+            )}
+            <div
+              className="goal-action shareOptions-btn"
+              onClickCapture={() => {
+                handleUpdateGoal(goal.id, !!goal.timeBudget.perDay);
+              }}
+            >
+              <ActionDiv label={t("Edit")} icon="Edit" />
+            </div>
+          </>
         )}
-        {((isPartnerGoal && goal.parentGoalId === "root") || !isPartnerGoal) && (
-          <div
-            className="goal-action shareOptions-btn"
-            onClickCapture={async (e) => {
-              e.stopPropagation();
-              if (!isPartnerGoal) {
-                handleShareGoal(goal);
-              } else {
-                await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
-              }
-            }}
-          >
-            <ActionDiv
-              label={t(isPartnerGoal ? "Collaborate" : "Share")}
-              icon={isPartnerGoal ? "Collaborate" : "SingleAvatar"}
-            />
-          </div>
-        )}
-        <div
-          className="goal-action shareOptions-btn"
-          onClickCapture={() => {
-            handleUpdateGoal(goal.id, !!goal.timeBudget.perDay);
-          }}
-        >
-          <ActionDiv label={t("Edit")} icon="Edit" />
-        </div>
       </div>
     </Modal>
   );
