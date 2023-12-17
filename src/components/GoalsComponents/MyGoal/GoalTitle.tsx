@@ -12,9 +12,12 @@ const GoalTitle: React.FC<GoalTitleProps> = ({ goal }) => {
   const { id, title, link } = goal;
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
 
+  //splitting the string
+  const ele = replacedString.split(/(zURL-\d+)/g);
+
   return (
     <div className="goal-title">
-      {replacedString.split(" ").map((ele, index) => {
+      {ele.map((ele, index) => {
         const replacedUrls = Array.from(ele.matchAll(/zURL-(\d+)/g));
         if (replacedUrls.length) {
           return (
