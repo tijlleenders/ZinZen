@@ -39,7 +39,12 @@ export interface ISchedulerInputGoal {
     not_on?: blockedSlotOfTask[];
   };
   repeat?: string;
-  budgets?: { budget_type: "Daily" | "Weekly"; min?: number; max?: number }[];
+  budget?: {
+    minPerDay?: number;
+    maxPerDay?: number;
+    minPerWeek?: number;
+    maxPerWeek?: number;
+  };
   children?: string[];
   createdAt: string;
   hoursSpent?: number;
