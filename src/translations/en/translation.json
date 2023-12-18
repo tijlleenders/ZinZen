@@ -165,5 +165,18 @@
   "goalTitle": "Goal title",
   "budgetTitle": "Goal budget",
   "addBtnBudget": "Budget",
-  "addBtnGoal": "Goal"
+  "addBtnGoal": "Goal",
+  "daily": "daily",
+  "on": "on",
+  "onWeekdays": "on weekdays",
+  "onWeekends": "on weekends",
+  "between": "between",
+  "before": "before",
+  "after": "after",
+  "started": "started",
+  "starts": "starts",
+  "perWeek": "per week",
+  "everyWeek": "every week",
+  "hour": "hour",
+  "hours": "hours"
 }
