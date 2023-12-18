@@ -11,7 +11,7 @@ import TickIcon from "@assets/images/correct.svg";
 import plingSound from "@assets/pling.mp3";
 
 import ZAccordion from "@src/common/Accordion";
-import ColorPalette from "@src/common/ColorPicker";
+import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem } from "@src/models/GoalItem";
 import { themeState } from "@src/store/ThemeState";
 import { ILocationState } from "@src/Interfaces";
@@ -235,7 +235,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       }}
     >
       <div style={{ textAlign: "left" }} className="header-title">
-        <ColorPalette colorIndex={colorIndex} setColorIndex={setColorIndex} />
+        <ColorPicker colorIndex={colorIndex} setColorIndex={setColorIndex} />
         <input
           className="ordinary-element"
           id="title-field"

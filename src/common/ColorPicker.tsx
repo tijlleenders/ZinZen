@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { colorPalleteList } from "@src/utils";
 import { ColorPaletteProps } from "@src/Interfaces/ICommon";
 
+import "./index.scss";
+
 const ColorPicker: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }) => {
   const [isOpen, setIsOpen] = useState(false);
 
