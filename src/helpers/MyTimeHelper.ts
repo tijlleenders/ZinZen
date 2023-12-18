@@ -41,23 +41,20 @@ export const transformIntoSchInputGoals = (
     if (ele.habit) obj.repeat = "weekly";
     if (ele.timeBudget) {
       const { perDay, perWeek } = ele.timeBudget;
-      obj.budgets = [];
-      if (perDay && perDay !== "-") {
-        const [min, max] = perDay.split("-");
-        obj.budgets.push({
-          budget_type: "Daily",
-          ...(min !== "" ? { min: Number(min) } : {}),
-          ...(min !== "" ? { max: Number(max) } : {}),
-        });
-      }
-      if (perWeek && perWeek !== "-") {
-        const [min, max] = perWeek.split("-");
-        obj.budgets.push({
-          budget_type: "Weekly",
-          ...(min !== "" ? { min: Number(min) } : {}),
-          ...(min !== "" ? { max: Number(max) } : {}),
-        });
-      }
+
+      const [minPerDay, maxPerDay] = perDay
+        ? perDay.split("-").map((val) => (val !== "" ? Number(val) : undefined))
+        : [undefined, undefined];
+      const [minPerWeek, maxPerWeek] = perWeek
+        ? perWeek.split("-").map((val) => (val !== "" ? Number(val) : undefined))
+        : [undefined, undefined];
+
+      obj.budget = {
+        minPerDay,
+        maxPerDay,
+        minPerWeek,
+        maxPerWeek,
+      };
     }
     if (ele.sublist.length > 0) obj.children = ele.sublist;
     if (Object.keys(obj.filters || {}).length === 0) {
@@ -143,11 +140,11 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const schedulerInput: {
     startDate: string;
     endDate: string;
-    goals: { [goalid: string]: ISchedulerInputGoal };
+    goals: ISchedulerInputGoal[];
   } = {
     startDate,
     endDate,
-    goals: {},
+    goals: [],
   };
   const dbTasks: { [goalid: string]: TaskItem } = (await getAllTasks()).reduce(
     (acc, curr) => ({ ...acc, [curr.goalId]: curr }),
@@ -156,7 +153,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
 
   const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(dbTasks, activeGoals, blockedSlots);
-  schedulerInput.goals = inputGoalsArr.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+  schedulerInput.goals = inputGoalsArr;
   return { dbTasks, schedulerInput };
 };
 

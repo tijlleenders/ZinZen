@@ -22,7 +22,7 @@ import "./ShareGoalModal.scss";
 import Icon from "../../../common/Icon";
 
 const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
-  const minContacts = 3;
+  const minContacts = 10;
   const navigate = useNavigate();
   const { state } = useLocation();
   const theme = useRecoilValue(themeState);
@@ -179,16 +179,11 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
           </div>
           {displaySubmenu === "contacts" && (
             <div className="shareWithContacts">
-              {contacts.length === minContacts && (
+              {contacts.length === 0 && (
                 <p className="share-warning">
                   You don&apos;t have a contact yet.
                   <br />
                   Add one!
-                </p>
-              )}
-              {contacts.length >= minContacts && (
-                <p className="share-warning">
-                  Don&apos;t Worry. <br /> We will soon allow our users to add more than 1 contact
                 </p>
               )}
               <div
