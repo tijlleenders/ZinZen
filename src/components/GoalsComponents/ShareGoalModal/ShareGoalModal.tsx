@@ -1,4 +1,3 @@
-import { Modal } from "antd";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -8,8 +7,8 @@ import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import Loader from "@src/common/Loader";
 import ContactItem from "@src/models/ContactItem";
 import ConfirmationModal from "@src/common/ConfirmationModal";
+import ZModal from "@src/common/ZModal";
 import { GoalItem } from "@src/models/GoalItem";
-import { themeState } from "@src/store/ThemeState";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { displayAddContact, displayShareModal } from "@src/store/GoalsState";
@@ -25,7 +24,6 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
   const minContacts = 10;
   const navigate = useNavigate();
   const { state } = useLocation();
-  const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
 
@@ -123,19 +121,11 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
     })();
   }, [showAddContactModal]);
   return (
-    <Modal
+    <ZModal
       open={!!showShareModal}
-      closable={false}
-      footer={null}
-      centered
       style={showAddContactModal ? { zIndex: 1 } : {}}
       onCancel={() => window.history.back()}
-      className={`share-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
-      }}
+      type={`share-modal${darkModeStatus ? "-dark" : ""}`}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
       <p className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</p>
@@ -206,7 +196,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       {showAddContactModal && (
         <AddContactModal showAddContactModal={showAddContactModal} setShowAddContactModal={setShowAddContactModal} />
       )}
-    </Modal>
+    </ZModal>
   );
 };
 

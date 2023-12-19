@@ -25,6 +25,7 @@ export interface ZModalProps {
   open: boolean;
   onCancel: () => void;
   width?: number;
+  style?: React.CSSProperties;
 }
 
 export interface ColorPaletteProps {
