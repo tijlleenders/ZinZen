@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 // @ts-nocheck
 /* eslint-disable react/prop-types */
-import { Modal } from "antd";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from "react";
@@ -15,8 +14,8 @@ import { IFeelingItem } from "@models";
 import { feelingListType } from "@src/global";
 import { feelingsEmojis } from "@consts/FeelingsList";
 import { ShowFeelingTemplateProps } from "@src/Interfaces/IPages";
+import ZModal from "@src/common/ZModal";
 import { removeFeeling, addFeelingNote, removeFeelingNote } from "@api/FeelingsAPI";
-import { themeState } from "@src/store/ThemeState";
 
 import "@translations/i18n";
 
@@ -33,7 +32,6 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
   const [showNotesModal, setShowNotesModal] = useState(-1);
   const [selectedFeelingNote, setSelectedFeelingNote] = useState("");
   const [noteValue, setNoteValue] = useState("");
-  const theme = useRecoilValue(themeState);
 
   const handleInputClose = () => setShowInputModal(-1);
   const handleInputShow = (id) => setShowInputModal(id);
@@ -147,17 +145,10 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
             );
           })}
       </div>
-      <Modal
+      <ZModal
         open={showInputModal !== -1}
-        closable={false}
-        footer={null}
         onCancel={() => window.history.back()}
-        className={`${darkModeStatus ? "notes-modal-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
-          darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-        maskStyle={{
-          backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
-        }}
+        type={`${darkModeStatus ? "notes-modal-dark" : ""}`}
       >
         <p className="popupModal-title">Want to tell more about it? </p>
         <div>
@@ -191,18 +182,11 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
         >
           Save Note
         </button>
-      </Modal>
-      <Modal
+      </ZModal>
+      <ZModal
         open={showNotesModal !== -1}
-        closable={false}
-        footer={null}
         onCancel={() => window.history.back()}
-        className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
-          darkModeStatus ? "dark" : "light"
-        }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-        maskStyle={{
-          backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
-        }}
+        className={`notes-modal${darkModeStatus ? "-dark" : ""}`}
       >
         <textarea
           className="show-feeling__note-textarea"
@@ -256,7 +240,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
             Done
           </button>
         </div>
-      </Modal>
+      </ZModal>
     </>
   );
 };

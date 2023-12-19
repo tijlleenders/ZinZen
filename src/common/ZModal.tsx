@@ -5,7 +5,7 @@ import { darkModeState } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import { ZModalProps } from "@src/Interfaces/ICommon";
 
-const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width }) => {
+const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width, style }) => {
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -28,6 +28,7 @@ const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width }
       className={combinedClassName}
       maskStyle={maskStyle}
       width={width}
+      style={style}
     >
       {children}
     </Modal>

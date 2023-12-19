@@ -2,22 +2,18 @@
 import React, { useLayoutEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
-import { Modal } from "antd";
-
 import { ILanguage } from "@src/Interfaces";
 import { i18n } from "@src/translations/i18n";
 
-import { themeState } from "@src/store/ThemeState";
-import { languageChangeModal, languageSelectionState, darkModeState } from "@src/store";
+import { languageChangeModal, languageSelectionState } from "@src/store";
 import "./index.scss";
 import { LanguagesList } from "@components/LanguageChoice/LanguagesList";
 import { getLanguages } from "@src/constants/languages";
+import ZModal from "@src/common/ZModal";
 
 export const LanguageChangeModal = () => {
   const [, setPosition] = useState(1);
   const open = useRecoilValue(languageChangeModal);
-  const darkModeStatus = useRecoilValue(darkModeState);
-  const theme = useRecoilValue(themeState);
   const [IsLanguageChosen] = useRecoilState(languageSelectionState);
   const langSelected = (lang: string, newPos: number) => {
     if (i18n.language.includes(lang)) {
@@ -44,21 +40,8 @@ export const LanguageChangeModal = () => {
   }, [IsLanguageChosen]);
 
   return (
-    <Modal
-      open={!!open}
-      closable={false}
-      footer={null}
-      centered
-      onCancel={() => window.history.back()}
-      width={200}
-      className={`languageChangeModal popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
-      }}
-    >
+    <ZModal type="languageChangeModal" open={!!open} onCancel={() => window.history.back()} width={200}>
       <LanguagesList languages={Languages} type="modal" />
-    </Modal>
+    </ZModal>
   );
 };
