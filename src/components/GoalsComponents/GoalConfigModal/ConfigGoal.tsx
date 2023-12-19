@@ -23,6 +23,7 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
+import CustomModal from "@src/common/ZModal";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -215,22 +216,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   }, [afterTime, beforeTime, numberOfDays, betweenSliderUpdated]);
 
   return (
-    <Modal
-      className={`configModal popupModal${darkModeStatus ? "-dark" : ""} 
-        ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+    <CustomModal
+      type="configModal"
       open={open}
       width={360}
-      closable={false}
-      footer={null}
       onCancel={async () => {
         if (title !== "") {
           await handleSave();
         } else {
           window.history.back();
         }
-      }}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
       }}
     >
       <div style={{ textAlign: "left" }} className="header-title">
@@ -420,7 +415,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           </button>
         </div>
       </div>
-    </Modal>
+    </CustomModal>
   );
 };
 

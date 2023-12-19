@@ -1,16 +1,15 @@
-import { Checkbox, Modal } from "antd";
+import { Checkbox } from "antd";
 import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
-import { themeState } from "@src/store/ThemeState";
 import { darkModeState, displayConfirmation } from "@src/store";
 import { getConfirmButtonText } from "@src/constants/myGoals";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
+import ZModal from "./ZModal";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
   const { t } = useTranslation();
-  const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const { actionCategory, actionName } = action;
@@ -48,19 +47,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
     </button>
   );
   return (
-    <Modal
+    <ZModal
       open={displayModal.open}
-      closable={false}
-      footer={null}
-      centered
       onCancel={() => {
         window.history.back();
-      }}
-      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
-        theme[darkModeStatus ? "dark" : "light"]
-      }`}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
       }}
     >
       <p className="popupModal-title" style={{ margin: 0 }}>
@@ -84,7 +74,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
         {getChoiceButton("cancel")}
         {getChoiceButton(getConfirmButtonText(actionName))}
       </div>
-    </Modal>
+    </ZModal>
   );
 };
 
