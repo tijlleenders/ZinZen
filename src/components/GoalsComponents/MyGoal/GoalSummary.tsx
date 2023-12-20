@@ -1,20 +1,46 @@
+import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { calculateDaysLeft, formatBudgetHrsToText } from "@src/utils";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const SublistSummary = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
-  console.log(goal.sublist);
+  const [subGoalsCount, setSubGoalsCount] = useState(0);
+  const [subBudgetsCount, setSubBudgetsCount] = useState(0);
 
-  if (goal.sublist && goal.sublist.length > 0) {
-    return (
-      <span>
-        {goal.sublist.length} {t("items")}
-      </span>
-    );
+  useEffect(() => {
+    const classifyChildren = async () => {
+      const childrenGoalIds = await getChildrenGoals(goal.id);
+      const childrenGoals = await Promise.all(childrenGoalIds.map((goals) => getGoal(goals.id)));
+
+      let goalsCount = 0;
+      let budgetsCount = 0;
+      childrenGoals.forEach((childGoal) => {
+        if (childGoal && !childGoal.timeBudget.perDay) {
+          goalsCount += 1;
+        } else if (childGoal) {
+          budgetsCount += 1;
+        }
+      });
+
+      setSubGoalsCount(goalsCount);
+      setSubBudgetsCount(budgetsCount);
+    };
+
+    classifyChildren();
+  }, [goal]);
+
+  let summary = "";
+  if (subGoalsCount > 0 && subBudgetsCount === 0) {
+    summary = `${subGoalsCount} ${t(`goal${subGoalsCount > 1 ? "s" : ""}`)}`;
+  } else if (subBudgetsCount > 0 && subGoalsCount === 0) {
+    summary = `${subBudgetsCount} ${t("budgets")}`;
+  } else if (subGoalsCount > 0 && subBudgetsCount > 0) {
+    summary = `${subGoalsCount} ${t("goals")}, ${subBudgetsCount} ${t("budgets")}`;
   }
-  return <span>{t("noDuration")}</span>;
+
+  return summary ? <div>{summary}</div> : <span>{t("noDuration")}</span>;
 };
 
 const GoalDurationSummary = ({ goal }: { goal: GoalItem }) => {
@@ -118,7 +144,7 @@ const HabitComponent = ({ goal }: { goal: GoalItem }) => {
 
 const GoalSummary = ({ goal }: { goal: GoalItem }) => {
   const isBudget = goal.timeBudget.perDay !== null || goal.timeBudget.perWeek !== null;
-
+  console.log(goal);
   if (isBudget) {
     return (
       <>
