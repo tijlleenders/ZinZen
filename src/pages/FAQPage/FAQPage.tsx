@@ -8,7 +8,8 @@ import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 import ZAccordion from "@src/common/Accordion";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
-
+import { useRecoilValue } from "recoil";
+import { darkModeState } from "@src/store";
 import "@translations/i18n";
 
 const customStyle = {
@@ -25,6 +26,7 @@ const customStyle = {
 };
 
 export const FAQPage = () => {
+  const darkModeStatus = useRecoilValue(darkModeState);
   const navigate = useNavigate();
   const { t } = useTranslation();
   const QnA = [
@@ -48,6 +50,9 @@ export const FAQPage = () => {
 
   return (
     <OnboardingLayout>
+      <p className={`faqpage-about${darkModeStatus ? "-dark" : ""}`}>
+        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>Better together </span>
+      </p>
       <div style={{ marginTop: 8, width: "100%" }}>
         <ZAccordion
           defaultActiveKey={["1"]}

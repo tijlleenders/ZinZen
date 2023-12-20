@@ -9,6 +9,7 @@ import { languageChangeModal, languageSelectionState } from "@src/store";
 export const LanguagesList = (props: ILanguageListProps) => {
   const { languages, navigationCallback, type } = props;
   const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
+  const sortedLanguages = [languages[0], ...languages.slice(1).sort((a, b) => a.title.localeCompare(b.title))];
 
   const handleClick = (langId: string) => {
     vibrateWorks ? navigator.vibrate(100) : null;
@@ -20,7 +21,7 @@ export const LanguagesList = (props: ILanguageListProps) => {
   };
   return (
     <div className="containerLang">
-      {languages.map((lang: ILanguage) => (
+      {sortedLanguages.map((lang: ILanguage) => (
         <button
           key={String(lang.sno)}
           type="button"
