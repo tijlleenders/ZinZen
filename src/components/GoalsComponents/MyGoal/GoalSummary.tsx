@@ -3,42 +3,60 @@ import { calculateDaysLeft, formatBudgetHrsToText } from "@src/utils";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-const GoalSummary = ({ goal }: { goal: GoalItem }) => {
+const SublistSummary = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
-  const onLength = goal.on.length;
-  const onWeekdays = onLength === 5 && !goal.on.includes("Sat") && !goal.on.includes("Sun");
-  const onWeekends = onLength === 2 && goal.on.includes("Sat") && goal.on.includes("Sun");
+  console.log(goal.sublist);
 
-  const hasStarted = !!goal.start && new Date(goal.start).getTime() < new Date().getTime();
-  const showStart = !!goal.due || !hasStarted;
+  if (goal.sublist && goal.sublist.length > 0) {
+    return (
+      <span>
+        {goal.sublist.length} {t("items")}
+      </span>
+    );
+  }
+  return <span>{t("noDuration")}</span>;
+};
 
-  const hoursPerDayText = formatBudgetHrsToText(goal.timeBudget.perDay);
-  const hoursPerWeekText = formatBudgetHrsToText(goal.timeBudget.perWeek);
-  const dueDateText = goal.due ? calculateDaysLeft(goal.due) : null;
+const GoalDurationSummary = ({ goal }: { goal: GoalItem }) => {
+  const { t } = useTranslation();
+
+  if (goal.timeBudget.perDay) {
+    return null;
+  }
+  if (goal.duration) {
+    return (
+      <span>
+        {goal.duration} {t(`hour${Number(goal.duration) > 1 ? "s" : ""}`)}
+      </span>
+    );
+  }
+
+  return <SublistSummary goal={goal} />;
+};
+
+const TimeBudgetComponent = ({ goal }: { goal: GoalItem }) => {
+  const { t } = useTranslation();
+  const { perDay, perWeek } = goal.timeBudget;
+
+  if (!perDay && !perWeek) {
+    return null;
+  }
+
+  const onWeekdays = goal.on.length === 5 && !goal.on.includes("Sat") && !goal.on.includes("Sun");
+  const onWeekends = goal.on.length === 2 && goal.on.includes("Sat") && goal.on.includes("Sun");
 
   return (
-    <>
-      <div>
-        {goal.timeBudget.perDay === null &&
-          (goal.duration !== null ? (
-            <span>
-              {goal.duration} {t(`hour${Number(goal.duration) > 1 ? "s" : ""}`)}
-            </span>
-          ) : !goal.due ? (
-            <span>{t("noDuration")}</span>
-          ) : null)}
-        {goal.timeBudget.perDay && <span>{hoursPerDayText}</span>}
-        {goal.timeBudget.perDay && (
-          <span>
-            {onLength > 0 &&
-              !onWeekdays &&
-              !onWeekends &&
-              (onLength === 7 ? ` ${t("daily")}` : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
-            {onWeekdays && ` ${t("onWeekdays")}`}
-            {onWeekends && ` ${t("onWeekends")}`}
-          </span>
+    <div>
+      <span>{formatBudgetHrsToText(perDay)}</span>
+      <span>
+        {goal.on.length > 0 && (
+          <>
+            {onWeekdays && ` ${t("on")} ${t("weekdays")}`}
+            {onWeekends && ` ${t("on")} ${t("weekends")}`}
+            {!onWeekdays && !onWeekends ? ` ${t("daily")}` : ` ${t("on")} ${goal.on.map((day) => t(day)).join(", ")}`}
+          </>
         )}
-      </div>
+      </span>
       <div>
         {goal.beforeTime && goal.afterTime
           ? `${t("between")} ${goal.afterTime}-${goal.beforeTime}`
@@ -48,14 +66,72 @@ const GoalSummary = ({ goal }: { goal: GoalItem }) => {
           ? `${t("after")} ${goal.afterTime}`
           : ""}
       </div>
-      <div>{goal.timeBudget.perWeek && <span>{`${hoursPerWeekText} ${t("perWeek")}`}</span>}</div>
-      {showStart && !!goal.start && (
-        <div>
-          {hasStarted ? t("started") : t("starts")} {new Date(goal.start).toDateString().slice(4)}
-        </div>
-      )}
-      <div>{goal.due && <div>{dueDateText}</div>}</div>
-      <div>{goal.habit === "weekly" && `${t("everyWeek")}`}</div>
+
+      <div>
+        {formatBudgetHrsToText(perWeek)} {t("perWeek")}
+      </div>
+    </div>
+  );
+};
+
+const DueDateComponent = ({ goal }: { goal: GoalItem }) => {
+  const { t } = useTranslation();
+
+  if (!goal.due) {
+    return null;
+  }
+
+  const dueDateText = calculateDaysLeft(goal.due);
+
+  return (
+    <div>
+      <span>{dueDateText}</span>
+    </div>
+  );
+};
+
+const StartComponent = ({ goal }: { goal: GoalItem }) => {
+  const { t } = useTranslation();
+  const hasStarted = goal.start && new Date(goal.start).getTime() < new Date().getTime();
+  const showStart = goal.due || !hasStarted;
+
+  if (!showStart || !goal.start) {
+    return null;
+  }
+
+  return (
+    <div>
+      {hasStarted ? t("started") : t("starts")} {new Date(goal.start).toDateString().slice(4)}
+    </div>
+  );
+};
+
+const HabitComponent = ({ goal }: { goal: GoalItem }) => {
+  const { t } = useTranslation();
+
+  if (!goal.habit) {
+    return null;
+  }
+
+  return <div>{goal.habit === "weekly" && <span>{t("everyWeek")}</span>}</div>;
+};
+
+const GoalSummary = ({ goal }: { goal: GoalItem }) => {
+  const isBudget = goal.timeBudget.perDay !== null || goal.timeBudget.perWeek !== null;
+
+  if (isBudget) {
+    return (
+      <>
+        <TimeBudgetComponent goal={goal} />
+        <StartComponent goal={goal} />
+      </>
+    );
+  }
+  return (
+    <>
+      <GoalDurationSummary goal={goal} />
+      <DueDateComponent goal={goal} />
+      <HabitComponent goal={goal} />
     </>
   );
 };
