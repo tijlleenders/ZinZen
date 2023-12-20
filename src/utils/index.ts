@@ -260,3 +260,8 @@ export const calculateDaysLeft = (dueDate: string) => {
   }
   return daysLeft >= 0 ? t("daysLeft", { days: daysLeft }) : t("dueDatePassed", { days: Math.abs(daysLeft) });
 };
+
+// Utility function for singular/plural formatting
+export const formatSingularPlural = (count: number, singularWord: string) => {
+  return `${count} ${singularWord}${count !== 1 ? "s" : ""}`;
+};
