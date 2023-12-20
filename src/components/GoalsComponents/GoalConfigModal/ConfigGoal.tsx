@@ -407,8 +407,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           <div className="hint-toggle">
             <p style={{ marginTop: 6 }}>Hints</p>
             <Switch
+              prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
               checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-              unCheckedChildren={<img src={CrossIcon} alt="Cross icon" />}
             />
           </div>
           <button
