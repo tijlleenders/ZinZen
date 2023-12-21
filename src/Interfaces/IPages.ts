@@ -15,7 +15,7 @@ export interface ShowFeelingTemplateProps {
   feelingsListObject: IFeelingItem[];
   setFeelingsListObject: ISetFeelingsListObject;
   currentFeelingsList: feelingListType[];
-  handleFocus: ISetSelectedFeeling;
+  handleFocus?: ISetSelectedFeeling;
 }
 
 /* MyGoals Page */
