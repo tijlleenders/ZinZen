@@ -120,6 +120,9 @@
   "Schedule": "Calendrier",
   "Goals": "Objectifs",
   "Journal": "Journal",
+  "dueToday": "Dû pour aujourd'hui",
+  "dueDatePassed": "Il y a {{days}} jour(s)",
+  "daysLeft": "{{days}} jour(s) restant(s)",
   "save": "Enregistrer",
   "goal": {
     "archive": {
