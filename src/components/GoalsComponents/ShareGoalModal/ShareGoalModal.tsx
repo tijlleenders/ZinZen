@@ -72,7 +72,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
               setShowToast({
                 open: true,
                 message: "Link copied to clipboard",
-                extra: `Your invite hasn't been accepted yet. Send this link to ${name} so that they can add you in their contacts`,
+                extra: `Once your partner accepts the invitation link - your goals will be shared automatically`,
               });
             }
           }
