@@ -14,7 +14,7 @@ import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { displayAddContact, displayShareModal } from "@src/store/GoalsState";
 import { darkModeState, displayToast, displayConfirmation } from "@src/store";
-import { checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
+import { addToSharingQueue, checkAndUpdateRelationshipStatus, getAllContacts } from "@src/api/ContactsAPI";
 import { getGoal, getAllLevelGoalsOfId, shareMyGoalAnonymously, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 
 import AddContactModal from "./AddContactModal";
@@ -65,6 +65,9 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
               setShowToast({ open: true, message: `Cheers!!, Your goal is shared with ${name}`, extra: "" });
               updateSharedStatusOfGoal(goal.id, relId, name).then(() => console.log("status updated"));
             } else {
+              await addToSharingQueue(relId, goal.id).catch(() => {
+                console.log("Unable to add this goal in queue");
+              });
               navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);
               setShowToast({
                 open: true,
