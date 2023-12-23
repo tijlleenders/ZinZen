@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { lastAction, displayConfirmation, openDevMode, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
 import { GoalItem } from "@src/models/GoalItem";
-import { checkMagicGoal, getAllLevelGoalsOfId, getGoal } from "@src/api/GoalsAPI";
+import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { addSharedWMGoal } from "@src/api/SharedWMAPI";
 import { createDefaultGoals } from "@src/helpers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
@@ -39,8 +39,7 @@ function useApp() {
         });
         await Promise.allSettled(
           contacts.map(async (contact) => {
-            const { goalsToBeShared, relId } = contact;
-
+            const { goalsToBeShared, relId, name } = contact;
             return Promise.allSettled([
               ...goalsToBeShared.map(async (goalId) => {
                 const goal = getGoal(goalId);
@@ -55,7 +54,9 @@ function useApp() {
                     parentGoalId: ele.id === goalId ? "root" : ele.parentGoalId,
                     rootGoalId: goalId,
                   })),
-                ]);
+                ]).then(async () => {
+                  updateSharedStatusOfGoal(goalId, relId, name).then(() => console.log("status updated"));
+                });
               }),
               clearTheQueue(relId),
             ]);
