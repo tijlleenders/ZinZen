@@ -75,11 +75,37 @@ export const checkAndUpdateRelationshipStatus = async (relId: string) => {
   return false;
 };
 
-export const updateAllUnacceptedContacts = async () => {
+export const updateAllUnacceptedContacts = async (): Promise<ContactItem[]> => {
   const allContacts = await db.contactsCollection.toArray();
-  allContacts.forEach(async (ele) => {
-    if (!ele.accepted) {
-      checkAndUpdateRelationshipStatus(ele.relId);
-    }
+
+  const results = await Promise.allSettled(
+    allContacts
+      .filter((contact) => !contact.accepted)
+      .map(async (contact) => {
+        const res = await checkAndUpdateRelationshipStatus(contact.relId);
+        return res ? contact : null;
+      }),
+  );
+
+  return results
+    .filter(
+      (result): result is { status: "fulfilled"; value: ContactItem | null } =>
+        result.status === "fulfilled" && !!result.value,
+    )
+    .map(({ value }) => value as ContactItem);
+};
+
+export const addToSharingQueue = async (relId: string, goalId: string) => {
+  db.transaction("rw", db.contactsCollection, async () => {
+    await db.contactsCollection
+      .where("relId")
+      .equals(relId)
+      .modify((obj) => {
+        if (!obj.goalsToBeShared.includes(goalId)) {
+          obj.goalsToBeShared.push(goalId);
+        }
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
   });
 };
