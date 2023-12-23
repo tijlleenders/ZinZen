@@ -12,20 +12,23 @@ const GoalTitle: React.FC<GoalTitleProps> = ({ goal }) => {
   const { id, title, link } = goal;
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
 
+  //splitting the string
+  const textParts = replacedString.split(/(zURL-\d+)/g);
+
   return (
     <div className="goal-title">
-      {replacedString.split(" ").map((ele, index) => {
-        const replacedUrls = Array.from(ele.matchAll(/zURL-(\d+)/g));
+      {textParts.map((textParts, index) => {
+        const replacedUrls = Array.from(textParts.matchAll(/zURL-(\d+)/g));
         if (replacedUrls.length) {
           return (
-            <React.Fragment key={`${id}-${ele}-replacedUrlsFragment`}>
+            <React.Fragment key={`${id}-${textParts}-replacedUrlsFragment`}>
               {replacedUrls.map(([url, digitStr]) => {
                 const urlIndex = Number.parseInt(digitStr, 10);
                 const originalUrl = urlsWithIndexes[urlIndex];
                 const summarizedUrl = summarizeUrl(originalUrl);
                 return (
                   <span
-                    key={`${id}-${ele}-${url}`}
+                    key={`${id}-${textParts}-${url}`}
                     style={{ cursor: "pointer", textDecoration: "underline" }}
                     onClickCapture={() => {
                       window.open(originalUrl, "_blank");
@@ -38,7 +41,7 @@ const GoalTitle: React.FC<GoalTitleProps> = ({ goal }) => {
             </React.Fragment>
           );
         }
-        return <span key={`${id}-${ele}`}>{index === 0 ? ele : ` ${ele}`}</span>;
+        return <span key={`${id}-${textParts}`}>{index === 0 ? textParts : ` ${textParts}`}</span>;
       })}
       &nbsp;
       {link && (
