@@ -26,7 +26,6 @@ export const starterGoals = [
   {
     title: "Sleep 😴🌙",
     goalTags: {
-      id: "sleep",
       afterTime: 22,
       beforeTime: 7,
       timeBudget: {
@@ -39,7 +38,6 @@ export const starterGoals = [
   {
     title: "Hobby project 🚂🚋",
     goalTags: {
-      id: "hobbyProject",
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
@@ -52,7 +50,6 @@ export const starterGoals = [
   {
     title: "House chores 🏡🧹🛠️",
     goalTags: {
-      id: "houseChores",
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
@@ -65,7 +62,6 @@ export const starterGoals = [
   {
     title: "Family time 🥰",
     goalTags: {
-      id: "familyTime",
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
@@ -78,7 +74,6 @@ export const starterGoals = [
   {
     title: "Work 💪🏽",
     goalTags: {
-      id: "work",
       afterTime: 6,
       beforeTime: 18,
       timeBudget: {
@@ -91,7 +86,6 @@ export const starterGoals = [
   {
     title: "Daily habits 🔁",
     goalTags: {
-      id: "dailyHabits",
       afterTime: null,
       beforeTime: null,
       timeBudget: {
@@ -105,7 +99,6 @@ export const starterGoals = [
   {
     title: "Walk 🚶🏽",
     goalTags: {
-      id: "walk",
       afterTime: 6,
       beforeTime: 21,
       timeBudget: {
@@ -119,7 +112,6 @@ export const starterGoals = [
   {
     title: "Me time 🧘🏽😌",
     goalTags: {
-      id: "meTime",
       afterTime: 5,
       beforeTime: 23,
       timeBudget: {
@@ -133,7 +125,6 @@ export const starterGoals = [
   {
     title: "Dinner 🍽️",
     goalTags: {
-      id: "dinner",
       afterTime: 18,
       beforeTime: 20,
       timeBudget: {
@@ -147,7 +138,6 @@ export const starterGoals = [
   {
     title: "Lunch 🥪",
     goalTags: {
-      id: "lunch",
       afterTime: 12,
       beforeTime: 14,
       timeBudget: {
@@ -161,7 +151,6 @@ export const starterGoals = [
   {
     title: "Breakfast 🥐🥣",
     goalTags: {
-      id: "breakfast",
       afterTime: 6,
       beforeTime: 9,
       timeBudget: {
