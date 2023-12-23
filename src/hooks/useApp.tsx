@@ -1,16 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
 import { useEffect } from "react";
 
-import { lastAction, displayConfirmation, openDevMode, languageSelectionState } from "@src/store";
+import { lastAction, displayConfirmation, openDevMode, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
 import { GoalItem } from "@src/models/GoalItem";
-import { checkMagicGoal } from "@src/api/GoalsAPI";
+import { checkMagicGoal, getAllLevelGoalsOfId, getGoal } from "@src/api/GoalsAPI";
 import { addSharedWMGoal } from "@src/api/SharedWMAPI";
 import { createDefaultGoals } from "@src/helpers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
 import { handleIncomingChanges } from "@src/helpers/InboxProcessor";
-import { getContactSharedGoals } from "@src/services/contact.service";
-import { updateAllUnacceptedContacts, getContactByRelId } from "@src/api/ContactsAPI";
+import { getContactSharedGoals, shareGoalWithContact } from "@src/services/contact.service";
+import { updateAllUnacceptedContacts, getContactByRelId, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 
 const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
@@ -21,13 +21,47 @@ function useApp() {
   const isLanguageChosen = language !== "No language chosen.";
 
   const setLastAction = useSetRecoilState(lastAction);
+  const setShowToast = useSetRecoilState(displayToast);
   const [devMode, setDevMode] = useRecoilState(openDevMode);
 
   const confirmationState = useRecoilValue(displayConfirmation);
 
   useEffect(() => {
     const init = async () => {
-      updateAllUnacceptedContacts();
+      updateAllUnacceptedContacts().then(async (contacts) => {
+        if (contacts.length === 0) {
+          return;
+        }
+        setShowToast({
+          open: true,
+          message: `${contacts.map(({ name }) => name).join(", ")} accepted your invite`,
+          extra: "Enjoy sharing goals",
+        });
+        await Promise.allSettled(
+          contacts.map(async (contact) => {
+            const { goalsToBeShared, relId } = contact;
+
+            return Promise.allSettled([
+              ...goalsToBeShared.map(async (goalId) => {
+                const goal = getGoal(goalId);
+                if (!goal) {
+                  return null;
+                }
+                const goalWithChildrens = await getAllLevelGoalsOfId(goalId, true);
+                return shareGoalWithContact(relId, [
+                  ...goalWithChildrens.map((ele) => ({
+                    ...ele,
+                    participants: [],
+                    parentGoalId: ele.id === goalId ? "root" : ele.parentGoalId,
+                    rootGoalId: goalId,
+                  })),
+                ]);
+              }),
+              clearTheQueue(relId),
+            ]);
+          }),
+        );
+      });
       const res = await getContactSharedGoals();
       // @ts-ignore
       const resObject = res.response.reduce(
