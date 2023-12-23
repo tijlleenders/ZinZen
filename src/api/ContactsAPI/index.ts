@@ -109,3 +109,16 @@ export const addToSharingQueue = async (relId: string, goalId: string) => {
     console.log(e.stack || e);
   });
 };
+
+export const clearTheQueue = async (relId: string) => {
+  db.transaction("rw", db.contactsCollection, async () => {
+    await db.contactsCollection
+      .where("relId")
+      .equals(relId)
+      .modify((obj) => {
+        obj.goalsToBeShared = [];
+      });
+  }).catch((e) => {
+    console.log(e.stack || e);
+  });
+};
