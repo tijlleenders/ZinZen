@@ -50,11 +50,18 @@ const App = () => {
       }`,
     });
   };
+  const handleClick = () => {
+    api.destroy();
+  };
   useEffect(() => {
     if (showToast.open) {
       openNotification();
       setShowToast({ ...showToast, open: false });
     }
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
   }, [showToast]);
   return (
     <div className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`}>
