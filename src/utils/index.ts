@@ -89,7 +89,7 @@ export const getDiffInDates = (date1: Date, date2: Date, resetTime = true) => {
   const date1MS = a.getTime();
   const date2MS = b.getTime();
   // Calculate the difference in milliseconds
-  const differenceMS = Math.abs(date2MS - date1MS);
+  const differenceMS = date2MS - date1MS;
   // Convert the difference to days
   const daysDifference = Math.ceil(differenceMS / (1000 * 60 * 60 * 24));
   return daysDifference;
@@ -257,5 +257,5 @@ export const calculateDaysLeft = (dueDate: string) => {
   if (daysLeft === 0) {
     return t("dueToday");
   }
-  return daysLeft >= 0 ? t("daysLeft", { days: daysLeft }) : t("dueDatePassed");
+  return daysLeft >= 0 ? t("daysLeft", { days: daysLeft }) : t("dueDatePassed", { days: Math.abs(daysLeft) });
 };
