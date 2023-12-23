@@ -20,8 +20,8 @@ const BudgetTimeSummary = ({ goal }: { goal: GoalItem }) => {
       <span>
         {goal.on.length > 0 && (
           <>
-            {onWeekdays && ` ${t("on")} ${t("weekdays")}`}
-            {onWeekends && ` ${t("on")} ${t("weekends")}`}
+            {onWeekdays && ` ${t("onWeekdays")}`}
+            {onWeekends && ` ${t("onWeekends")}`}
             {!onWeekdays && !onWeekends ? ` ${t("daily")}` : ` ${t("on")} ${goal.on.map((day) => t(day)).join(", ")}`}
           </>
         )}
