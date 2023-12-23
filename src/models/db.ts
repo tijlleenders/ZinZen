@@ -8,7 +8,7 @@ import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
 
-export const dexieVersion = 16;
+export const dexieVersion = 17;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -39,7 +39,7 @@ export class ZinZenDB extends Dexie {
           "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         sharedWMCollection:
           "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-        contactsCollection: "id, name, relId, accepted, createdAt",
+        contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt",
         outboxCollection: null,
         inboxCollection: "id, goalChanges",
         pubSubCollection: "id, subscribers",
@@ -117,6 +117,12 @@ export class ZinZenDB extends Dexie {
           });
           goalsCollection.toCollection().modify((goal: GoalItem) => {
             goal.newUpdates = false;
+          });
+        }
+        if (currentVersion < 17) {
+          const contactsCollection = trans.table("contactsCollection");
+          contactsCollection.toCollection().modify((contact) => {
+            contact.goalsToBeShared = [];
           });
         }
       });
