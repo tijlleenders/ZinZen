@@ -11,6 +11,8 @@ const BudgetTimeSummary = ({ goal }: { goal: GoalItem }) => {
     return null;
   }
 
+  const onLength = goal.on.length;
+
   const onWeekdays = goal.on.length === 5 && !goal.on.includes("Sat") && !goal.on.includes("Sun");
   const onWeekends = goal.on.length === 2 && goal.on.includes("Sat") && goal.on.includes("Sun");
 
@@ -20,9 +22,12 @@ const BudgetTimeSummary = ({ goal }: { goal: GoalItem }) => {
       <span>
         {goal.on.length > 0 && (
           <>
+            {onLength > 0 &&
+              !onWeekdays &&
+              !onWeekends &&
+              (onLength === 7 ? ` ${t("daily")}` : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
             {onWeekdays && ` ${t("onWeekdays")}`}
             {onWeekends && ` ${t("onWeekends")}`}
-            {!onWeekdays && !onWeekends ? ` ${t("daily")}` : ` ${t("on")} ${goal.on.map((day) => t(day)).join(", ")}`}
           </>
         )}
       </span>
