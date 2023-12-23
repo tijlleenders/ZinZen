@@ -244,23 +244,6 @@ h6 {
     color: white;
   }
 }
-.colorPallette {
-  display: flex;
-  gap: 20px;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  padding: 0px 8px;
-  width: 200px;
-  border-radius: 10px;
-}
-.color-btn {
-  border: none;
-  min-width: 32px;
-  height: 32px;
-  border-radius: 4px;
-  text-align: center;
-  font-size: 1em;
-}
 
 /* Loader */
 .loader {
