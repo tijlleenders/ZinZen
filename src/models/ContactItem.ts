@@ -3,5 +3,6 @@ export default interface ContactItem {
   name: string;
   relId: string;
   accepted: boolean;
+  goalsToBeShared: string[];
   createdAt: Date;
 }
