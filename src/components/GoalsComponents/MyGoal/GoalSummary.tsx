@@ -34,8 +34,8 @@ const GoalSummary = ({ goal }: { goal: GoalItem }) => {
               !onWeekdays &&
               !onWeekends &&
               (onLength === 7 ? ` ${t("daily")}` : ` ${t("on")} ${goal.on.map((ele) => t(ele)).join(" ")}`)}
-            {onWeekdays && ` ${t("on")} ${t("weekdays")}`}
-            {onWeekends && " on weekends"}
+            {onWeekdays && ` ${t("onWeekdays")}`}
+            {onWeekends && ` ${t("onWeekends")}`}
           </span>
         )}
       </div>
@@ -48,14 +48,14 @@ const GoalSummary = ({ goal }: { goal: GoalItem }) => {
           ? `${t("after")} ${goal.afterTime}`
           : ""}
       </div>
-      <div>{goal.timeBudget.perWeek && <span>{`${hoursPerWeekText} per week`}</span>}</div>
+      <div>{goal.timeBudget.perWeek && <span>{`${hoursPerWeekText} ${t("perWeek")}`}</span>}</div>
       {showStart && !!goal.start && (
         <div>
           {hasStarted ? t("started") : t("starts")} {new Date(goal.start).toDateString().slice(4)}
         </div>
       )}
       <div>{goal.due && <div>{dueDateText}</div>}</div>
-      <div>{goal.habit === "weekly" && `${t("every")} week`}</div>
+      <div>{goal.habit === "weekly" && `${t("everyWeek")}`}</div>
     </>
   );
 };

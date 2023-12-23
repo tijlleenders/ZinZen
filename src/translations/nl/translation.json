@@ -210,5 +210,10 @@
   "goalTitle": "Jouw doel",
   "budgetTitle": "Budget titel",
   "addBtnBudget": "Budget",
-  "addBtnGoal": "Doel"
+  "addBtnGoal": "Doel",
+  "onWeekdays": "door de week",
+  "onWeekends": "in het weekend",
+  "perWeek": "per week",
+  "everyWeek": "elke week",
+  "daily": "dagelijks"
 }

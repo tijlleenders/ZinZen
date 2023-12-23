@@ -162,5 +162,22 @@
   "goalTitle": "Título del objetivo",
   "budgetTitle": "Presupuesto del objetivo",
   "addBtnBudget": "Presupuesto",
-  "addBtnGoal": "Objetivo"
+  "addBtnGoal": "Objetivo",
+  "noDuration": "Sin duración",
+  "daily": "Diario",
+  "on": "en",
+  "onWeekdays": "en días laborables",
+  "onWeekends": "en fines de semana",
+  "between": "entre",
+  "before": "antes",
+  "after": "después",
+  "started": "empezado",
+  "starts": "comienza",
+  "dueToday": "Vence hoy",
+  "daysLeft": "Quedan {{days}} días",
+  "dueDatePassed": "Fecha de vencimiento pasada",
+  "perWeek": "por semana",
+  "everyWeek": "cada semana",
+  "hour": "hora",
+  "hours": "horas"
 }
