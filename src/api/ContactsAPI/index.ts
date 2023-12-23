@@ -22,6 +22,7 @@ export const addContact = async (contactName: string, relId: string, accepted = 
     relId,
     createdAt: currentDate,
     accepted,
+    goalsToBeShared: [],
   };
   let newContactId;
   await db
