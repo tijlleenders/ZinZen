@@ -12,6 +12,12 @@ We've already decided on a reactive UI model in the vanilla JS implementation - 
 
 Use a popular framework like React.
 
+# Rationale
+
+- React is the most popular framework out there for reactive UI's - with the most readily available talent.
+- It's open source.
+- It has a lot of commercial users - so continuity is less of a risk
+
 # Consequences
 
 - Rewrite the vanilla JS to React.
