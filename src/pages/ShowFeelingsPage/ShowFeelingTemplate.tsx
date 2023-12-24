@@ -19,6 +19,7 @@ import { removeFeeling, addFeelingNote, removeFeelingNote } from "@api/FeelingsA
 import { themeState } from "@src/store/ThemeState";
 
 import "@translations/i18n";
+import { getJustDate } from "@src/utils";
 
 export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
   feelingsListObject,
@@ -79,12 +80,17 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
     } else {
       console.log("Attempting to remove feeling not in the database");
     }
-    const newFeelingsList = currentFeelingsList;
+    const newFeelingsList = { ...currentFeelingsList };
     const feelingDate = feelingsListObject[id].date;
-    newFeelingsList[feelingDate] = currentFeelingsList[feelingDate].filter(
+    newFeelingsList[feelingDate] = newFeelingsList[feelingDate].filter(
       (feelingOnDate: IFeelingItem) => feelingOnDate.id !== numFeelingId,
     );
-    setFeelingsListObject.setFeelingsList({ ...newFeelingsList });
+    const todayString = getJustDate(new Date()).toString();
+
+    if (newFeelingsList[feelingDate].length === 0 && feelingDate.toString() !== todayString) {
+      delete newFeelingsList[feelingDate];
+    }
+    setFeelingsListObject.setFeelingsList(newFeelingsList);
   };
 
   const handleLocationChange = () => {
