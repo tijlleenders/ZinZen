@@ -14,13 +14,17 @@ We needed a structured template to write down Architectural Decision Records (AD
 
 Template ADR 000-template was added
 
+# Rationale
+
+Explain the (dis)advantages
+
 # Consequences
 
 There now is an ADR folder where decisions are registered
 
 # Alternatives considered
 
-/
+Explain the (dis)advantages
 
 # Metadata
 
