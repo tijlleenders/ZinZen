@@ -6,6 +6,7 @@
 
 We need to get contributions from the community to stay in touch with needs - and lower costs.  
 To do this, we need to lower the barriers to entry for newcomers. They need to be able to jump in, solve an issue, and move on.
+We've already decided on a reactive UI model in the vanilla JS implementation - but without motivating it clearly.
 
 # Decision
 
