@@ -10,5 +10,5 @@ declare module "*FeelingsAPI";
 declare module "*GoalsAPI";
 
 export type feelingListType = {
-  [Date as string]: IFeelingItem[];
+  [key: string]: IFeelingItem[];
 };

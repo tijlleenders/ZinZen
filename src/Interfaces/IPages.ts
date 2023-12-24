@@ -4,8 +4,8 @@ import { IFeelingItem } from "@src/models";
 /* Show Feelings Page */
 
 export interface ISetFeelingsListObject {
-  feelingsList: feelingListType[];
-  setFeelingsList: React.Dispatch<React.SetStateAction<feelingListType[]>>;
+  feelingsList: feelingListType;
+  setFeelingsList: React.Dispatch<React.SetStateAction<feelingListType>>;
 }
 export interface ISetSelectedFeeling {
   selectedFeeling: number;
@@ -14,7 +14,7 @@ export interface ISetSelectedFeeling {
 export interface ShowFeelingTemplateProps {
   feelingsListObject: IFeelingItem[];
   setFeelingsListObject: ISetFeelingsListObject;
-  currentFeelingsList: feelingListType[];
+  currentFeelingsList: feelingListType;
   handleFocus?: ISetSelectedFeeling;
 }
 

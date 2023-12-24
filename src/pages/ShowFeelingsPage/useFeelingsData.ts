@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import { getAllFeelings } from "@api/FeelingsAPI";
-import { getDates, getJustDate } from "@utils";
+import { getJustDate } from "@utils";
 import { feelingListType } from "@src/global";
+import { IFeelingItem } from "@src/models";
 
 const useFeelingsData = (trigger: boolean) => {
-  const [feelingsList, setFeelingsList] = useState<feelingListType[]>([]);
+  const [feelingsList, setFeelingsList] = useState<feelingListType>({});
 
   useEffect(() => {
     const fetchAndOrganizeFeelings = async () => {
-      const allFeelings = await getAllFeelings();
-      const feelingsByDates = allFeelings.reduce((dates, feeling) => {
+      const allFeelings: IFeelingItem[] = await getAllFeelings();
+      const feelingsByDates = allFeelings.reduce<feelingListType>((dates, feeling) => {
         const newDates = { ...dates };
-        const formattedDate = getJustDate(feeling.date);
+        const formattedDate = getJustDate(feeling.date).toString();
         if (newDates[formattedDate]) {
           newDates[formattedDate].push(feeling);
         } else {
@@ -20,12 +21,7 @@ const useFeelingsData = (trigger: boolean) => {
         return newDates;
       }, {});
 
-      const dateArr = Object.keys(feelingsByDates).map((date) => date);
-      const dateRangeArr = getDates(new Date(dateArr[0]), new Date());
-      if (dateRangeArr.length === 0) {
-        dateRangeArr.push(new Date());
-      }
-      const todayString = getJustDate(new Date());
+      const todayString = getJustDate(new Date()).toString();
       if (!feelingsByDates[todayString]) {
         feelingsByDates[todayString] = [];
       }
