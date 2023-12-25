@@ -41,10 +41,12 @@ export const ShowFeelingsPage = () => {
     return formatSubheaderDate(date);
   };
 
+  const sortedDates = Object.keys(feelingsList).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+
   return (
     <AppLayout title="myJournal">
       <div>
-        {Object.entries(feelingsList).map(([date]) => (
+        {sortedDates.map((date) => (
           <div key={date}>
             {feelingsList[date] && (
               <SubHeader
