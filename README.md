@@ -31,23 +31,16 @@ We have simple [documentation](documentation/Readme.md).
 
 ## How to contribute?
 
-There are many ways to contribute... not only code!  
-https://opensource.guide/how-to-contribute/  
-Please mind the code of conduct.
-
-We plan our work on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4). Have a look!
-
-If Rust, WASM and scheduling algorithms are your domains of interest, please consider contributing to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
-
-## ...or [sponsor us with coffee or tea!](https://github.com/sponsors/tijlleenders)
+There are many ways to contribute... not only code!
 
 - [Donate via Stripe](https://donate.stripe.com/6oE4jK1iPcPT1m89AA) or [GitHub sponsors](https://github.com/sponsors/tijlleenders)
 - [Give anonymous feedback](https://zinzen.me/Feedback)
 - ✨Star✨ this repo
 - Tell a friend!
 - Pick an issue on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4) and do let us know before you start working on it. ;)
+- If Rust, WASM and scheduling algorithms are your domains of interest, please consider contributing to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
+- Get some more ideas on https://opensource.guide/how-to-contribute/
 
-https://opensource.guide/how-to-contribute/  
 Please mind the code of conduct.
 
 ## Legal stuff
