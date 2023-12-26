@@ -169,7 +169,7 @@
   "dueDatePassed": "{{days}} dagen geleden",
   "dueDatePassedSingular": "{{days}} dag geleden",
   "daysLeft": "Nog {{days}} dagen",
-  "daysLeftSingular": "{{days}} dag resterend",
+  "daysLeftSingular": "Nog {{days}} dag",
   "save": "Opslaan",
   "goal": {
     "archive": {
