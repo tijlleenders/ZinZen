@@ -168,7 +168,7 @@
   "dueToday": "Vandaag verschuldigd",
   "dueDatePassed": "{{days}} dagen geleden",
   "dueDatePassedSingular": "{{days}} dag geleden",
-  "daysLeft": "{{days}} dagen resterend",
+  "daysLeft": "Nog {{days}} dagen",
   "daysLeftSingular": "{{days}} dag resterend",
   "save": "Opslaan",
   "goal": {
