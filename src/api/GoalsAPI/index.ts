@@ -76,19 +76,26 @@ export const updateGoal = async (id: string, changes: object) => {
   });
 };
 
+export const softDeleteGoal = async (goalId: string) => {
+  const softDeleteData: SoftDeleteGoalItem = {
+    id: goalId,
+    softDeleteGoalAt: new Date().toISOString(),
+  };
+  try {
+    await db.transaction("rw", db.softDeletedGoalsCollection, async () => {
+      await db.softDeletedGoalsCollection.add(softDeleteData);
+    });
+  } catch (error) {
+    console.error("Error in soft deleting the goal:", error);
+  }
+};
+
 export const archiveGoal = async (goal: GoalItem, isSoftDelete = false) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, { archived: "true" });
   });
   if (isSoftDelete) {
-    const softDeleteData: SoftDeleteGoalItem = {
-      id: goal.id,
-      softDeleteGoalAt: new Date().toISOString(),
-    };
-    db.transaction("rw", db.softDeletedGoalsCollection, async () => {
-      await db.softDeletedGoalsCollection.add(softDeleteData);
-      console.log(await db.softDeletedGoalsCollection);
-    });
+    await softDeleteGoal(goal.id);
   }
   if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getGoal(goal.parentGoalId);
@@ -118,7 +125,6 @@ export const archiveUserGoal = async (goal: GoalItem, isSoftDelete = false) => {
 export const permanentlyDeleteOldSoftDeletedGoals = async (daysBeforePermanentDelete: number) => {
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - daysBeforePermanentDelete);
-  console.log(cutoffDate.toISOString());
 
   db.transaction("rw", db.softDeletedGoalsCollection, db.goalsCollection, async () => {
     const oldSoftDeletedGoals = await db.softDeletedGoalsCollection
