@@ -121,8 +121,10 @@
   "noDuration": "No duration",
   "dueDate": "Due",
   "dueToday": "Due today",
-  "dueDatePassed": "{{days}} day(s) ago",
-  "daysLeft": "{{days}} day(s) left",
+  "dueDatePassed": "{{days}} days ago",
+  "dueDatePassedSingular": "{{days}} day ago",
+  "daysLeft": "{{days}} days left",
+  "daysLeftSingular": "{{days}} day left",
   "save": "Save",
   "goal": {
     "archive": {

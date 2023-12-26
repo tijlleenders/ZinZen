@@ -258,5 +258,10 @@ export const calculateDaysLeft = (dueDate: string) => {
   if (daysLeft === 0) {
     return t("dueToday");
   }
-  return daysLeft >= 0 ? t("daysLeft", { days: daysLeft }) : t("dueDatePassed", { days: Math.abs(daysLeft) });
+  if (daysLeft >= 0) {
+    return daysLeft === 1 ? t("daysLeftSingular", { days: daysLeft }) : t("daysLeft", { days: daysLeft });
+  }
+  return daysLeft >= -1
+    ? t("dueDatePassedSingular", { days: Math.abs(daysLeft) })
+    : t("dueDatePassed", { days: Math.abs(daysLeft) });
 };

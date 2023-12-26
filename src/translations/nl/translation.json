@@ -166,8 +166,10 @@
   "noDuration": "Geen duur",
   "dueDate": "Deadline",
   "dueToday": "Vandaag verschuldigd",
-  "dueDatePassed": "Vervaldatum verstreken",
-  "daysLeft": "Nog {{days}} dagen",
+  "dueDatePassed": "{{days}} dagen geleden",
+  "dueDatePassedSingular": "{{days}} dag geleden",
+  "daysLeft": "{{days}} dagen resterend",
+  "daysLeftSingular": "{{days}} dag resterend",
   "save": "Opslaan",
   "goal": {
     "archive": {
