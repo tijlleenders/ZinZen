@@ -19,7 +19,6 @@ export interface GoalItem {
   beforeTime: number | null;
   afterTime: number | null;
   createdAt: string;
-  softDeletedAt: string | null;
   archived: "false" | "true";
   parentGoalId: string;
   goalColor: string;
@@ -33,4 +32,9 @@ export interface GoalItem {
   };
   typeOfGoal: "myGoal" | "shared";
   newUpdates: boolean;
+}
+
+export interface SoftDeleteGoalItem {
+  id: string;
+  softDeleteGoalAt: string | null;
 }

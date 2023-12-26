@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
-import { GoalItem, IParticipant } from "@src/models/GoalItem";
+import { GoalItem, IParticipant, SoftDeleteGoalItem } from "@src/models/GoalItem";
 import { shareGoal } from "@src/services/goal.service";
 import { sortGoalsByProps } from "../GCustomAPI";
 
@@ -78,12 +78,18 @@ export const updateGoal = async (id: string, changes: object) => {
 
 export const archiveGoal = async (goal: GoalItem, isSoftDelete = false) => {
   db.transaction("rw", db.goalsCollection, async () => {
-    if (isSoftDelete) {
-      await db.goalsCollection.update(goal.id, { archived: "true", softDeletedAt: new Date().toISOString() });
-    } else {
-      await db.goalsCollection.update(goal.id, { archived: "true" });
-    }
+    await db.goalsCollection.update(goal.id, { archived: "true" });
   });
+  if (isSoftDelete) {
+    const softDeleteData: SoftDeleteGoalItem = {
+      id: goal.id,
+      softDeleteGoalAt: new Date().toISOString(),
+    };
+    db.transaction("rw", db.softDeletedGoalsCollection, async () => {
+      await db.softDeletedGoalsCollection.add(softDeleteData);
+      console.log(await db.softDeletedGoalsCollection);
+    });
+  }
   if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
@@ -112,21 +118,31 @@ export const archiveUserGoal = async (goal: GoalItem, isSoftDelete = false) => {
 export const permanentlyDeleteOldSoftDeletedGoals = async (daysBeforePermanentDelete: number) => {
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - daysBeforePermanentDelete);
+  console.log(cutoffDate.toISOString());
 
-  db.transaction("rw", db.goalsCollection, async () => {
-    const oldSoftDeletedGoals = await db.goalsCollection
-      .where("softDeletedAt")
+  db.transaction("rw", db.softDeletedGoalsCollection, db.goalsCollection, async () => {
+    const oldSoftDeletedGoals = await db.softDeletedGoalsCollection
+      .where("softDeleteGoalAt")
       .below(cutoffDate.toISOString())
       .toArray();
-    await Promise.all(oldSoftDeletedGoals.map((goal) => db.goalsCollection.delete(goal.id)));
+
+    await Promise.all(
+      oldSoftDeletedGoals.map((goal) =>
+        Promise.all([db.softDeletedGoalsCollection.delete(goal.id), db.goalsCollection.delete(goal.id)]),
+      ),
+    );
   }).catch((e) => {
-    console.log(e.stack || e);
+    console.error(e.stack || e);
   });
 };
 
 export const unarchiveGoal = async (goal: GoalItem) => {
-  db.transaction("rw", db.goalsCollection, async () => {
+  db.transaction("rw", db.goalsCollection, db.softDeletedGoalsCollection, async () => {
+    const isSoftDeletedGoal = await db.softDeletedGoalsCollection.get(goal.id);
     await db.goalsCollection.update(goal.id, { archived: "false", softDeletedAt: null });
+    if (isSoftDeletedGoal) {
+      await db.softDeletedGoalsCollection.delete(goal.id);
+    }
   });
   if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getGoal(goal.parentGoalId);

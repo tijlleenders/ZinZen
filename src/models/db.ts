@@ -1,14 +1,14 @@
 /* eslint-disable no-param-reassign */
 import Dexie, { Table } from "dexie";
 import { IFeelingItem } from "./FeelingItem";
-import { GoalItem } from "./GoalItem";
+import { GoalItem, SoftDeleteGoalItem } from "./GoalItem";
 import ContactItem from "./ContactItem";
 import { InboxItem } from "./InboxItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
 
-export const dexieVersion = 17;
+export const dexieVersion = 18;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -30,13 +30,15 @@ export class ZinZenDB extends Dexie {
 
   dumpboxCollection!: Table<DumpboxItem, string>;
 
+  softDeletedGoalsCollection!: Table<SoftDeleteGoalItem, string>;
+
   constructor() {
     super("ZinZenDB");
     this.version(dexieVersion)
       .stores({
         feelingsCollection: "++id, content, category, date, note",
         goalsCollection:
-          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal, softDeletedAt",
+          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         sharedWMCollection:
           "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt",
@@ -49,6 +51,7 @@ export class ZinZenDB extends Dexie {
         customizationCollection: "++id, goalId, posIndex",
         dumpboxCollection: "id, key, value",
         partnersCollection: null,
+        softDeletedGoalsCollection: "id, softDeleteGoalAt",
       })
       .upgrade((trans) => {
         console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
