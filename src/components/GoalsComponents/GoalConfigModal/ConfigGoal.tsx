@@ -6,7 +6,6 @@ import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
-import CrossIcon from "@assets/images/deleteIcon.svg";
 import TickIcon from "@assets/images/correct.svg";
 import plingSound from "@assets/pling.mp3";
 
@@ -403,9 +402,23 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             />
           </div>
         )}
-        <button type="button" className="action-btn" onClick={handleSave}>
-          {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
-        </button>
+        <div className="action-btn-container">
+          <div className="hint-toggle">
+            <p style={{ marginTop: 6 }}>Hints</p>
+            <Switch
+              prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
+              checkedChildren={<img src={TickIcon} alt="Tick icon" />}
+            />
+          </div>
+          <button
+            type="button"
+            className="action-btn"
+            onClick={handleSave}
+            style={{ display: "flex", gap: 15, justifyContent: "center" }}
+          >
+            {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+          </button>
+        </div>
       </div>
     </Modal>
   );

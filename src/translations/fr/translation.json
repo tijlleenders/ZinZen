@@ -121,8 +121,10 @@
   "Goals": "Objectifs",
   "Journal": "Journal",
   "dueToday": "Dû pour aujourd'hui",
-  "dueDatePassed": "Il y a {{days}} jour(s)",
-  "daysLeft": "{{days}} jour(s) restant(s)",
+  "dueDatePassed": "il y a {{days}} jours",
+  "dueDatePassedSingular": "il y a {{days}} jours",
+  "daysLeft": "{{days}} jours restant",
+  "daysLeftSingular": "il reste {{days}} jours",
   "save": "Enregistrer",
   "goal": {
     "archive": {
@@ -176,9 +178,6 @@
   "after": "après",
   "started": "commencé",
   "starts": "commence",
-  "dueToday": "Dû aujourd'hui",
-  "daysLeft": "{{days}} jours restants",
-  "dueDatePassed": "Date d'échéance passée",
   "perWeek": "par semaine",
   "everyWeek": "chaque semaine",
   "hour": "heure",

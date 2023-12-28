@@ -40,9 +40,9 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
   const handleNotesClose = () => setShowNotesModal(-1);
   const handleNotesShow = (id) => setShowNotesModal(id);
 
-  const handleFeelingsNoteModify = async (id: number) => {
-    console.log(id, noteValue);
-    const res = await addFeelingNote(id, noteValue);
+  const handleFeelingsNoteModify = async (id: number, note: string) => {
+    console.log(id, note);
+    const res = await addFeelingNote(id, note);
     console.log(res);
     if (res) {
       const feelingsByDates: feelingListType[] = res.reduce((dates: Date[], feeling: IFeelingItem) => {
@@ -174,7 +174,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
             // Admittedly not the best way to do this but suffices for now
             onKeyDown={async (e) => {
               if (e.key === "Enter") {
-                await handleFeelingsNoteModify(showInputModal);
+                await handleFeelingsNoteModify(showInputModal, noteValue);
                 window.history.back();
               }
             }}
@@ -184,7 +184,7 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
           type="submit"
           style={{ marginLeft: "auto", width: "fit-content" }}
           onClick={async () => {
-            await handleFeelingsNoteModify(showInputModal);
+            await handleFeelingsNoteModify(showInputModal, noteValue);
             window.history.back();
           }}
           className={`action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
@@ -204,7 +204,15 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
           backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
         }}
       >
-        <textarea readOnly className="show-feeling__note-textarea" rows={5} cols={32} value={selectedFeelingNote} />
+        <textarea
+          className="show-feeling__note-textarea"
+          rows={5}
+          cols={32}
+          value={selectedFeelingNote}
+          onChange={(e) => {
+            setSelectedFeelingNote(e.target.value);
+          }}
+        />
         <div className="show-feeling-actions">
           <button
             type="button"
@@ -235,7 +243,8 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
           </button>
           <button
             type="button"
-            onClick={() => {
+            onClick={async () => {
+              await handleFeelingsNoteModify(showNotesModal, selectedFeelingNote);
               window.history.back();
             }}
             className={`feelingsModal-btn${darkModeStatus ? "-dark" : ""}`}
