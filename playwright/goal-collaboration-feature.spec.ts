@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { shareGoalPrivately } from "./lib/testUtils";
+import { createUserContextAndPage, shareGoalPrivately, waitForSpecificResponse } from "./lib/testUtils";
 
 const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
 const apiServerUrlGoal = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
@@ -18,19 +18,10 @@ test.describe("Goal Sharing Feature", () => {
   let userOnePageGoalTitle: string;
 
   test.beforeAll(async ({ browser }) => {
-    userOneContext = await browser.newContext({
-      storageState: "playwright/userOnboarding.json",
-    });
-    userTwoContext = await browser.newContext({
-      storageState: "playwright/userOnboarding.json",
-    });
-    userThreeContext = await browser.newContext({
-      storageState: "playwright/userOnboarding.json",
-    });
-
-    userTwoPage = await userTwoContext.newPage();
-    userOnePage = await userOneContext.newPage();
-    userThreePage = await userThreeContext.newPage();
+    const storageState = "playwright/userOnboarding.json";
+    ({ context: userOneContext, page: userOnePage } = await createUserContextAndPage(browser, storageState));
+    ({ context: userTwoContext, page: userTwoPage } = await createUserContextAndPage(browser, storageState));
+    ({ context: userThreeContext, page: userThreePage } = await createUserContextAndPage(browser, storageState));
   });
 
   test("add contact in user 1", async () => {
@@ -41,28 +32,10 @@ test.describe("Goal Sharing Feature", () => {
     await userOnePage.getByPlaceholder("Name").click();
     await userOnePage.getByPlaceholder("Name").fill("User 2");
     await userOnePage.getByRole("button", { name: "add contact Share invitation" }).click();
-    await Promise.all([
-      userOnePage.waitForResponse(
-        (res) =>
-          res.status() === 200 &&
-          res.url().includes(apiServerUrl) &&
-          res.body().then((responseBody) => {
-            return responseBody.includes("relId");
-          }),
-      ),
-    ]);
+    await waitForSpecificResponse(userOnePage, apiServerUrl, "relId");
     await userOnePage.goBack();
     await userOnePage.getByRole("button", { name: "U", exact: true }).click();
-    await Promise.all([
-      userOnePage.waitForResponse(
-        (res) =>
-          res.status() === 200 &&
-          res.url().includes(apiServerUrl) &&
-          res.body().then((responseBody) => {
-            return responseBody.includes("relationshipId");
-          }),
-      ),
-    ]);
+    await waitForSpecificResponse(userOnePage, apiServerUrl, "relationshipId");
     await userOnePage.waitForSelector(".ant-notification-notice");
     inviationLink = await userOnePage.evaluate("navigator.clipboard.readText()");
     await userOnePage.goto("http://127.0.0.1:3000/");
@@ -75,16 +48,7 @@ test.describe("Goal Sharing Feature", () => {
     await userTwoPage.getByPlaceholder("Contact name").click();
     await userTwoPage.getByPlaceholder("Contact name").fill("User 1");
     await userTwoPage.getByRole("button", { name: "Add to my contacts" }).click();
-    await Promise.all([
-      userTwoPage.waitForResponse(
-        (res) =>
-          res.status() === 200 &&
-          res.url().includes(apiServerUrl) &&
-          res.body().then((responseBody) => {
-            return responseBody.includes("accepted");
-          }),
-      ),
-    ]);
+    await waitForSpecificResponse(userTwoPage, apiServerUrl, "accepted");
   });
 
   test("share goal in user 1", async () => {
@@ -94,16 +58,7 @@ test.describe("Goal Sharing Feature", () => {
 
   test("check goal in user 2", async () => {
     await userTwoPage.reload();
-    await Promise.all([
-      userTwoPage.waitForResponse(
-        (res) =>
-          res.status() === 200 &&
-          res.url().includes(apiServerUrlGoal) &&
-          res.body().then((responseBody) => {
-            return responseBody.includes("shareMessage");
-          }),
-      ),
-    ]);
+    await waitForSpecificResponse(userTwoPage, apiServerUrlGoal, "shareMessage");
     await userTwoPage.getByRole("img", { name: "ZinZen" }).click();
     await userTwoPage.reload();
     await expect(userTwoPage.locator(".user-goal-main")).toBeVisible();
@@ -127,32 +82,14 @@ test.describe("Goal Sharing Feature", () => {
     await userTwoPage.getByPlaceholder("Name").click();
     await userTwoPage.getByPlaceholder("Name").fill("User 3");
     await userTwoPage.getByRole("button", { name: "add contact Share invitation" }).click();
-    await Promise.all([
-      userTwoPage.waitForResponse(
-        (res) =>
-          res.status() === 200 &&
-          res.url().includes(apiServerUrl) &&
-          res.body().then((responseBody) => {
-            return responseBody.includes("relId");
-          }),
-      ),
-    ]);
+    await waitForSpecificResponse(userTwoPage, apiServerUrl, "relId");
     await userTwoPage.goBack();
     await userTwoPage
       .locator("div")
       .filter({ hasText: /^UUser 3$/ })
       .getByRole("button")
       .click();
-    await Promise.all([
-      userTwoPage.waitForResponse(
-        (res) =>
-          res.status() === 200 &&
-          res.url().includes(apiServerUrl) &&
-          res.body().then((responseBody) => {
-            return responseBody.includes("relationshipId");
-          }),
-      ),
-    ]);
+    await waitForSpecificResponse(userTwoPage, apiServerUrl, "relationshipId");
     await userTwoPage.waitForSelector(".ant-notification-notice");
     inviationLink = await userTwoPage.evaluate("navigator.clipboard.readText()");
     await userTwoPage.goto("http://127.0.0.1:3000/");
@@ -165,16 +102,7 @@ test.describe("Goal Sharing Feature", () => {
     await userThreePage.getByPlaceholder("Contact name").click();
     await userThreePage.getByPlaceholder("Contact name").fill("User 3");
     await userThreePage.getByRole("button", { name: "Add to my contacts" }).click();
-    await Promise.all([
-      userThreePage.waitForResponse(
-        (res) =>
-          res.status() === 200 &&
-          res.url().includes(apiServerUrl) &&
-          res.body().then((responseBody) => {
-            return responseBody.includes("accepted");
-          }),
-      ),
-    ]);
+    await waitForSpecificResponse(userThreePage, apiServerUrl, "accepted");
   });
 
   test("share goal in user 2", async () => {
@@ -188,16 +116,7 @@ test.describe("Goal Sharing Feature", () => {
 
   test("check goal in user 3", async () => {
     await userThreePage.reload();
-    await Promise.all([
-      userThreePage.waitForResponse(
-        (res) =>
-          res.status() === 200 &&
-          res.url().includes(apiServerUrlGoal) &&
-          res.body().then((responseBody) => {
-            return responseBody.includes("shareMessage");
-          }),
-      ),
-    ]);
+    await waitForSpecificResponse(userThreePage, apiServerUrlGoal, "shareMessage");
     await userThreePage.getByRole("img", { name: "ZinZen" }).click();
     await userThreePage.reload();
     await expect(userThreePage.locator(".user-goal-main")).toBeVisible();
