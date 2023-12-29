@@ -29,3 +29,26 @@ export async function waitForSpecificResponse(
       (await response.text()).includes(responseBodyIncludes),
   );
 }
+
+export async function addContactAndShareGoal(
+  page: Page,
+  contactName: string,
+  expectedApiResponse1: string,
+  expectedApiResponse2: string,
+  isFirstContact: boolean,
+): Promise<string> {
+  const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
+  await shareGoalPrivately(page);
+  if (!isFirstContact) {
+    await page.getByRole("button", { name: "add contact", exact: true }).click();
+  }
+  await page.getByPlaceholder("Name").click();
+  await page.getByPlaceholder("Name").fill(contactName);
+  await page.getByRole("button", { name: "add contact Share invitation" }).click();
+  await waitForSpecificResponse(page, apiServerUrl, expectedApiResponse1);
+  await page.goBack();
+  await page.getByRole("button", { name: contactName.slice(0, 1), exact: true }).click();
+  await waitForSpecificResponse(page, apiServerUrl, expectedApiResponse2);
+  await page.waitForSelector(".ant-notification-notice");
+  return page.evaluate("navigator.clipboard.readText()");
+}
