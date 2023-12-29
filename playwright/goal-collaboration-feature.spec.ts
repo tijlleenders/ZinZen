@@ -230,12 +230,26 @@ test.describe("Goal Sharing Feature", () => {
     userOnePageGoalTitle = await userOnePage.locator(".goal-title").first().locator("span").innerText();
 
     await userTwoPage.goto("http://127.0.0.1:3000/");
-    await userTwoPage.getByRole("button", { name: "Goals" }).click();
-    await userTwoPage.getByRole("button", { name: "Schedule" }).click();
-    await userTwoPage.getByRole("button", { name: "Goals" }).click();
-    await userTwoPage.reload();
     await Promise.all([
       userTwoPage.waitForResponse((res) => res.status() === 200 && res.url().includes(apiServerUrlGoal)),
     ]);
+
+    await userTwoPage.getByRole("button", { name: "Goals" }).click();
+    await userTwoPage.locator(".goal-dd-outer").first().click();
+    await expect(userTwoPage.getByText(userOnePageGoalTitle).first()).toBeVisible();
+    await userTwoPage.getByRole("button", { name: "add changes Make all checked" }).click();
+    await expect(userTwoPage.getByText(userOnePageGoalTitle).first()).toBeVisible();
+  });
+
+  test("check if user 3 received updated goal from user 2", async () => {
+    await userThreePage.goto("http://127.0.0.1:3000/");
+    await Promise.all([
+      userThreePage.waitForResponse((res) => res.status() === 200 && res.url().includes(apiServerUrlGoal)),
+    ]);
+    await userThreePage.getByRole("button", { name: "Goals" }).click();
+    await userThreePage.locator(".goal-dd-outer").first().click();
+    await expect(userThreePage.getByText(userOnePageGoalTitle).first()).toBeVisible();
+    await userThreePage.getByRole("button", { name: "add changes Make all checked" }).click();
+    await expect(userThreePage.getByText(userOnePageGoalTitle).first()).toBeVisible();
   });
 });
