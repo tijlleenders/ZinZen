@@ -4,8 +4,11 @@ import {
   addContact,
   collaborateFlow,
   createUserContextAndPage,
-  shareGoalPrivately,
-  waitForSpecificResponse,
+  goToMyGoalsPageFlow,
+  goToShareGoalModalFlow,
+  goalActionFlow,
+  verifyUpdatedGoal,
+  waitForResponseConfirmation,
 } from "./lib/testUtils";
 
 const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
@@ -31,106 +34,87 @@ test.describe("Goal Sharing Feature", () => {
     ({ context: userCContext, page: userCPage } = await createUserContextAndPage(browser, storageState));
   });
 
-  test("add contact in user 1", async () => {
-    await userAPage.goto("http://127.0.0.1:3000/");
-    await userAPage.getByRole("button", { name: "Goals" }).click();
+  test("from User A share invitation to User B", async () => {
+    await goToMyGoalsPageFlow(userAPage);
     userAPageGoalTitle = await userAPage.locator(".goal-title").first().locator("span").innerText();
     invitationLink = await addContact(userAPage, "B", "relId", "relationshipId", true);
-    await userAPage.goto("http://127.0.0.1:3000/");
-    await userAPage.getByRole("button", { name: "Goals" }).click();
-    await shareGoalPrivately(userAPage);
+    await goToMyGoalsPageFlow(userAPage);
+    await goToShareGoalModalFlow(userAPage);
   });
 
-  test("add contact in user 2", async () => {
+  test("from User B accept invitation of User A", async () => {
     await acceptContactInvitation(userBPage, invitationLink, "B");
-    await waitForSpecificResponse(userBPage, apiServerUrl, "accepted");
+    await waitForResponseConfirmation(userBPage, apiServerUrl, "accepted");
   });
 
-  test("share goal in user 1", async () => {
-    await userAPage.getByRole("button", { name: "U", exact: true }).click();
+  test("share goal from User A to User B", async () => {
+    await userAPage.getByRole("button", { name: "B", exact: true }).click();
     await userAPage.waitForSelector(".ant-notification-notice");
   });
 
-  test("check goal in user 2", async () => {
+  test("check whether shared goal is visible in User B's patner goal", async () => {
     await userBPage.reload();
-    await waitForSpecificResponse(userBPage, apiServerUrlGoal, "shareMessage");
+    await waitForResponseConfirmation(userBPage, apiServerUrlGoal, "shareMessage");
     await userBPage.getByRole("img", { name: "ZinZen" }).click();
     await userBPage.reload();
     await expect(userBPage.locator(".user-goal-main")).toBeVisible();
   });
 
-  test("collaboration between user1 and user2", async () => {
+  test("initiate collaboration between User A and User B", async () => {
     await collaborateFlow(userBPage);
   });
 
-  test("check colloborated goal in user 2 myGoals", async () => {
+  test("check if collaborated goal is visible in User B's MyGoal", async () => {
     await userBPage.getByRole("button", { name: "Goals" }).click();
     await expect(userBPage.locator(".goal-title").first().locator("span")).toContainText(userAPageGoalTitle);
+  });
+
+  test("from User B share invitation to User C", async () => {
     invitationLink = await addContact(userBPage, "C", "relId", "relationshipId", false);
-    await userBPage.goto("http://127.0.0.1:3000/");
-    await userBPage.getByRole("button", { name: "Goals" }).click();
-    await shareGoalPrivately(userBPage);
+    await goToMyGoalsPageFlow(userBPage);
+    await goToShareGoalModalFlow(userBPage);
   });
 
-  test("add contact in user 3", async () => {
+  test("from User C accept invitation of User B", async () => {
     await acceptContactInvitation(userCPage, invitationLink, "C");
-    await waitForSpecificResponse(userCPage, apiServerUrl, "accepted");
+    await waitForResponseConfirmation(userCPage, apiServerUrl, "accepted");
   });
 
-  test("share goal in user 2", async () => {
+  test("share goal from User B to User C", async () => {
     await userBPage.locator("div").filter({ hasText: /^CC$/ }).getByRole("button").click();
     await userBPage.waitForSelector(".ant-notification-notice");
   });
 
-  test("check goal in user 3", async () => {
+  test("check whether shared goal is visible in User C's patner goal", async () => {
     await userCPage.reload();
-    await waitForSpecificResponse(userCPage, apiServerUrlGoal, "shareMessage");
+    await waitForResponseConfirmation(userCPage, apiServerUrlGoal, "shareMessage");
     await userCPage.getByRole("img", { name: "ZinZen" }).click();
     await userCPage.reload();
     await expect(userCPage.locator(".user-goal-main")).toBeVisible();
   });
 
-  test("collaboration between user2 and user3", async () => {
+  test("initiate collaboration between User B and User C", async () => {
     await collaborateFlow(userCPage);
+  });
 
+  test("check if collaborated goal is visible in User C's MyGoal", async () => {
     await userCPage.getByRole("button", { name: "Goals" }).click();
     await expect(userCPage.locator(".goal-title").first().locator("span")).toContainText(userAPageGoalTitle);
   });
 
-  test("edit goal in user 1 and check changes in user 2", async () => {
-    await userAPage.goto("http://127.0.0.1:3000/");
-    await userAPage.getByRole("button", { name: "Goals" }).click();
-    await userAPage.locator(".goal-dd-outer").first().click();
-    await userAPage
-      .locator("div")
-      .filter({ hasText: /^Edit$/ })
-      .first()
-      .click();
+  test("edit goal in user A", async () => {
+    await goToMyGoalsPageFlow(userAPage);
+    await goalActionFlow(userAPage, "Edit");
     await userAPage.locator(".header-title").locator("input").fill(`${userAPageGoalTitle} edited by user 1`);
     await userAPage.locator(".action-btn-container").locator(".action-btn").click();
     userAPageGoalTitle = await userAPage.locator(".goal-title").first().locator("span").innerText();
-
-    await userBPage.goto("http://127.0.0.1:3000/");
-    await Promise.all([
-      userBPage.waitForResponse((res) => res.status() === 200 && res.url().includes(apiServerUrlGoal)),
-    ]);
-
-    await userBPage.getByRole("button", { name: "Goals" }).click();
-    await userBPage.locator(".goal-dd-outer").first().click();
-    await expect(userBPage.getByText(userAPageGoalTitle).first()).toBeVisible();
-    await userBPage.getByRole("button", { name: "add changes Make all checked" }).click();
-    await expect(userBPage.getByText(userAPageGoalTitle).first()).toBeVisible();
   });
 
-  test("check if user 3 received updated goal from user 2", async () => {
-    await userCPage.goto("http://127.0.0.1:3000/");
-    await Promise.all([
-      userCPage.waitForResponse((res) => res.status() === 200 && res.url().includes(apiServerUrlGoal)),
-    ]);
-    await userCPage.getByRole("button", { name: "Goals" }).click();
-    await userCPage.locator(".goal-dd-outer").first().click();
-    await expect(userCPage.getByText(userAPageGoalTitle).first()).toBeVisible();
-    await userCPage.getByRole("button", { name: "add changes Make all checked" }).click();
-    await expect(userCPage.getByText(userAPageGoalTitle).first()).toBeVisible();
+  test("check if user B received updated goal from user A", async () => {
+    await verifyUpdatedGoal(userBPage, userAPageGoalTitle, apiServerUrlGoal);
+  });
+
+  test("check if user C received updated goal from user B", async () => {
+    await verifyUpdatedGoal(userCPage, userAPageGoalTitle, apiServerUrlGoal);
   });
 });
