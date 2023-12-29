@@ -1,5 +1,12 @@
 import { test, expect, Page } from "@playwright/test";
-import { addContact, createUserContextAndPage, shareGoalPrivately, waitForSpecificResponse } from "./lib/testUtils";
+import {
+  acceptContactInvitation,
+  addContact,
+  collaborateFlow,
+  createUserContextAndPage,
+  shareGoalPrivately,
+  waitForSpecificResponse,
+} from "./lib/testUtils";
 
 const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
 const apiServerUrlGoal = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
@@ -35,10 +42,7 @@ test.describe("Goal Sharing Feature", () => {
   });
 
   test("add contact in user 2", async () => {
-    await userBPage.goto(`${invitationLink}`);
-    await userBPage.getByPlaceholder("Contact name").click();
-    await userBPage.getByPlaceholder("Contact name").fill("A");
-    await userBPage.getByRole("button", { name: "Add to my contacts" }).click();
+    await acceptContactInvitation(userBPage, invitationLink, "B");
     await waitForSpecificResponse(userBPage, apiServerUrl, "accepted");
   });
 
@@ -56,13 +60,7 @@ test.describe("Goal Sharing Feature", () => {
   });
 
   test("collaboration between user1 and user2", async () => {
-    await userBPage.locator(".goal-dd-inner").first().click();
-    await userBPage
-      .locator("div")
-      .filter({ hasText: /^Collaborate$/ })
-      .first()
-      .click();
-    await userBPage.getByRole("button", { name: "Collaborate on goal" }).click();
+    await collaborateFlow(userBPage);
   });
 
   test("check colloborated goal in user 2 myGoals", async () => {
@@ -75,10 +73,7 @@ test.describe("Goal Sharing Feature", () => {
   });
 
   test("add contact in user 3", async () => {
-    await userCPage.goto(`${invitationLink}`);
-    await userCPage.getByPlaceholder("Contact name").click();
-    await userCPage.getByPlaceholder("Contact name").fill("C");
-    await userCPage.getByRole("button", { name: "Add to my contacts" }).click();
+    await acceptContactInvitation(userCPage, invitationLink, "C");
     await waitForSpecificResponse(userCPage, apiServerUrl, "accepted");
   });
 
@@ -96,13 +91,7 @@ test.describe("Goal Sharing Feature", () => {
   });
 
   test("collaboration between user2 and user3", async () => {
-    await userCPage.locator(".goal-dd-inner").first().click();
-    await userCPage
-      .locator("div")
-      .filter({ hasText: /^Collaborate$/ })
-      .first()
-      .click();
-    await userCPage.getByRole("button", { name: "Collaborate on goal" }).click();
+    await collaborateFlow(userCPage);
 
     await userCPage.getByRole("button", { name: "Goals" }).click();
     await expect(userCPage.locator(".goal-title").first().locator("span")).toContainText(userAPageGoalTitle);

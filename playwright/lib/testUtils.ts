@@ -30,7 +30,7 @@ export async function waitForSpecificResponse(
   );
 }
 
-export async function addContactAndShareGoal(
+export async function addContact(
   page: Page,
   contactName: string,
   expectedApiResponse1: string,
@@ -39,6 +39,8 @@ export async function addContactAndShareGoal(
 ): Promise<string> {
   const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
   await shareGoalPrivately(page);
+
+  // Add contact flow
   if (!isFirstContact) {
     await page.getByRole("button", { name: "add contact", exact: true }).click();
   }
@@ -51,4 +53,21 @@ export async function addContactAndShareGoal(
   await waitForSpecificResponse(page, apiServerUrl, expectedApiResponse2);
   await page.waitForSelector(".ant-notification-notice");
   return page.evaluate("navigator.clipboard.readText()");
+}
+
+export async function collaborateFlow(page: Page) {
+  await page.locator(".goal-dd-inner").first().click();
+  await page
+    .locator("div")
+    .filter({ hasText: /^Collaborate$/ })
+    .first()
+    .click();
+  await page.getByRole("button", { name: "Collaborate on goal" }).click();
+}
+
+export async function acceptContactInvitation(page: Page, invitationLink: string, patnerName: string) {
+  await page.goto(`${invitationLink}`);
+  await page.getByPlaceholder("Contact name").click();
+  await page.getByPlaceholder("Contact name").fill(patnerName);
+  await page.getByRole("button", { name: "Add to my contacts" }).click();
 }
