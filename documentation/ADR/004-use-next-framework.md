@@ -51,7 +51,7 @@ The decision is to transition to Next.js as our framework for building the app.
 
 Explain the (dis)advantages:
 
-- Adding NextJS might not be worth the benefits - as this is a framework that is focused on Server-Client apps - not offline-first apps. Of all the 'benefits' listed in the rationale I'mn not sure how many appy to a PWA - as everything is done on the client... unless the client side can be split in a client-client and a client-server; so a server 'inside' the client.
+- Adding NextJS might not be worth the benefits - as this is a framework that is focused on Server-Client apps - not offline-first apps. Of all the 'benefits' listed in the rationale I'mn not sure how many apply to a PWA - as everything is done on the client... unless the client side can be split in a client-client and a client-server; so a server 'inside' the client.
 - Dependence / coupling with Vercel
 
 # Metadata
