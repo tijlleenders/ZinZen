@@ -9,7 +9,7 @@ import { AddFeeling } from "@components/FeelingsComponents/AddFeeling";
 import { ShowFeelingTemplate } from "./ShowFeelingTemplate";
 
 import "./ShowFeelings.scss";
-import useFeelingsData from "./useFeelingsData";
+import useFeelingsData from "../../hooks/useFeelingsData";
 
 export const ShowFeelingsPage = () => {
   const showAddFeelingsModal = useRecoilValue(displayAddFeeling);
