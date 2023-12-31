@@ -2,6 +2,7 @@ import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Slider, Switch } from "antd";
+import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
@@ -10,8 +11,8 @@ import plingSound from "@assets/pling.mp3";
 
 import ZAccordion from "@src/common/Accordion";
 import ColorPicker from "@src/common/ColorPicker";
-import CustomModal from "@src/common/ZModal";
 import { GoalItem } from "@src/models/GoalItem";
+import ZModal from "@src/common/ZModal";
 import { ILocationState } from "@src/Interfaces";
 import { getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
@@ -47,6 +48,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
 
+  const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
@@ -212,7 +214,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   }, [afterTime, beforeTime, numberOfDays, betweenSliderUpdated]);
 
   return (
-    <CustomModal
+    <ZModal
       type="configModal"
       open={open}
       width={360}
@@ -411,7 +413,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           </button>
         </div>
       </div>
-    </CustomModal>
+    </ZModal>
   );
 };
 

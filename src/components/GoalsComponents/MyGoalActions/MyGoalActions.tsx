@@ -9,7 +9,14 @@ import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { unarchiveIcon } from "@src/assets";
 import ZModal from "@src/common/ZModal";
 
-import { displayToast, lastAction, openDevMode, displayConfirmation, displayPartnerMode } from "@src/store";
+import {
+  displayToast,
+  lastAction,
+  openDevMode,
+  displayConfirmation,
+  displayPartnerMode,
+  darkModeState,
+} from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { goalsHistory } from "@src/store/GoalsState";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
@@ -29,6 +36,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const isPartnerGoal = useRecoilValue(displayPartnerMode);
   const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
+  const darkModeStatus = useRecoilValue(darkModeState);
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
