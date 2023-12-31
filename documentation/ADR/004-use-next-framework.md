@@ -1,10 +1,14 @@
 # Title
 
-Use next js 
+Use next js
 
 # Status
 
-We have accepted the decision to switch our app to Next.js.
+We have made the decision to test switching our app to Next.js.
+
+Update 2023-12-31 :  
+Holding off on trying this out as the PWA plugins are not mature/popular for the latest version of NextJS (14).  
+[Comparison of plugins](https://npmtrends.com/@ducanh2912/next-pwa-vs-next-offline-vs-next-pwa) Maybe there will be some official comments from Vercel/NextJS on PWA?
 
 # Context
 
@@ -45,7 +49,10 @@ The decision is to transition to Next.js as our framework for building the app.
 
 # Alternatives considered
 
-Explain the (dis)advantages
+Explain the (dis)advantages:
+
+- Adding NextJS might not be worth the benefits - as this is a framework that is focused on Server-Client apps - not offline-first apps. Of all the 'benefits' listed in the rationale I'mn not sure how many appy to a PWA - as everything is done on the client... unless the client side can be split in a client-client and a client-server; so a server 'inside' the client.
+- Dependence / coupling with Vercel
 
 # Metadata
 
@@ -60,3 +67,7 @@ Explain the (dis)advantages
 #### Accepted on
 
 2023-12-25
+
+#### Updated on
+
+2023-12-31
