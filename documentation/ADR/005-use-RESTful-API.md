@@ -20,6 +20,7 @@ Use RESTful API interface between clients and the cloud queue.
 ## Consequences
 
 - None; we already use RESTful API
+- Resist any other API style - like WebSockets
 
 ## Alternatives considered
 
