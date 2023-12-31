@@ -36,6 +36,33 @@ test.describe("Goal Sharing Feature", () => {
     { sharer: "B", receiver: "C", sharerPage: () => userBPage, receiverPage: () => userCPage },
   ];
 
+  const editAndConfirmScenarios = [
+    {
+      sharer: "A",
+      receiver: "B",
+      receiverTwo: "C",
+      sharerPage: () => userAPage,
+      receiverPageFirst: () => userBPage,
+      receiverPageSecond: () => userCPage,
+    },
+    {
+      sharer: "B",
+      receiver: "C",
+      receiverTwo: "A",
+      sharerPage: () => userBPage,
+      receiverPageFirst: () => userCPage,
+      receiverPageSecond: () => userAPage,
+    },
+    {
+      sharer: "C",
+      receiver: "B",
+      receiverTwo: "A",
+      sharerPage: () => userCPage,
+      receiverPageFirst: () => userBPage,
+      receiverPageSecond: () => userAPage,
+    },
+  ];
+
   userScenarios.forEach(({ sharer, receiver, sharerPage, receiverPage }) => {
     test(`from User ${sharer} share invitation to User ${receiver}`, async () => {
       await goToMyGoalsPageFlow(sharerPage());
@@ -74,35 +101,55 @@ test.describe("Goal Sharing Feature", () => {
     });
   });
 
-  test("goal update by A: edit goal in user A", async () => {
-    await goToMyGoalsPageFlow(userAPage);
-    await goalActionFlow(userAPage, "Edit");
-    await userAPage.locator(".header-title").locator("input").fill(`${userAPageGoalTitle} edited by user 1`);
-    await userAPage.locator(".action-btn-container").locator(".action-btn").click();
-    userAPageGoalTitle = await userAPage.locator(".goal-title").first().locator("span").innerText();
-  });
+  editAndConfirmScenarios.forEach(
+    ({ sharer, receiver, receiverTwo, sharerPage, receiverPageFirst, receiverPageSecond }) => {
+      test(`goal update by ${sharer}: edit goal in User ${sharer}`, async () => {
+        await goToMyGoalsPageFlow(sharerPage());
+        await goalActionFlow(sharerPage(), "Edit");
+        await sharerPage().locator(".header-title").locator("input").fill(`${userAPageGoalTitle} edited by ${sharer}`);
+        await sharerPage().locator(".action-btn-container").locator(".action-btn").click();
+        userAPageGoalTitle = await sharerPage().locator(".goal-title").first().locator("span").innerText();
+      });
 
-  test("goal update by A: check if user B received updated goal from user A", async () => {
-    await verifyUpdatedGoal(userBPage, userAPageGoalTitle, API_SERVER_URL_GOAL);
-  });
+      test(`goal update by ${sharer}: check if User ${receiver} received updated goal from User ${sharer}`, async () => {
+        await verifyUpdatedGoal(receiverPageFirst(), userAPageGoalTitle, API_SERVER_URL_GOAL);
+      });
 
-  test("goal update by A: check if user C received updated goal from user B", async () => {
-    await verifyUpdatedGoal(userCPage, userAPageGoalTitle, API_SERVER_URL_GOAL);
-  });
+      test(`goal update by ${sharer}: check if User ${receiverTwo} received updated goal from User ${sharer}`, async () => {
+        await verifyUpdatedGoal(receiverPageSecond(), userAPageGoalTitle, API_SERVER_URL_GOAL);
+      });
+    },
+  );
 
-  test("goal update by B: edit goal in User B", async () => {
-    await goToMyGoalsPageFlow(userBPage);
-    await goalActionFlow(userBPage, "Edit");
-    await userBPage.locator(".header-title").locator("input").fill(`${userAPageGoalTitle} edited by user 2`);
-    await userBPage.locator(".action-btn-container").locator(".action-btn").click();
-    userAPageGoalTitle = await userBPage.locator(".goal-title").first().locator("span").innerText();
-  });
+  // test("goal update by A: edit goal in user A", async () => {
+  //   await goToMyGoalsPageFlow(userAPage);
+  //   await goalActionFlow(userAPage, "Edit");
+  //   await userAPage.locator(".header-title").locator("input").fill(`${userAPageGoalTitle} edited by user 1`);
+  //   await userAPage.locator(".action-btn-container").locator(".action-btn").click();
+  //   userAPageGoalTitle = await userAPage.locator(".goal-title").first().locator("span").innerText();
+  // });
 
-  test("goal update by B: check if user C received updated goal from user B", async () => {
-    await verifyUpdatedGoal(userCPage, userAPageGoalTitle, API_SERVER_URL_GOAL);
-  });
+  // test("goal update by A: check if user B received updated goal from user A", async () => {
+  //   await verifyUpdatedGoal(userBPage, userAPageGoalTitle, API_SERVER_URL_GOAL);
+  // });
 
-  test("goal update by B: check if user A received updated goal from user B", async () => {
-    await verifyUpdatedGoal(userAPage, userAPageGoalTitle, API_SERVER_URL_GOAL);
-  });
+  // test("goal update by A: check if user C received updated goal from user B", async () => {
+  //   await verifyUpdatedGoal(userCPage, userAPageGoalTitle, API_SERVER_URL_GOAL);
+  // });
+
+  // test("goal update by B: edit goal in User B", async () => {
+  //   await goToMyGoalsPageFlow(userBPage);
+  //   await goalActionFlow(userBPage, "Edit");
+  //   await userBPage.locator(".header-title").locator("input").fill(`${userAPageGoalTitle} edited by user 2`);
+  //   await userBPage.locator(".action-btn-container").locator(".action-btn").click();
+  //   userAPageGoalTitle = await userBPage.locator(".goal-title").first().locator("span").innerText();
+  // });
+
+  // test("goal update by B: check if user C received updated goal from user B", async () => {
+  //   await verifyUpdatedGoal(userCPage, userAPageGoalTitle, API_SERVER_URL_GOAL);
+  // });
+
+  // test("goal update by B: check if user A received updated goal from user B", async () => {
+  //   await verifyUpdatedGoal(userAPage, userAPageGoalTitle, API_SERVER_URL_GOAL);
+  // });
 });
