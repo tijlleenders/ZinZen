@@ -100,4 +100,9 @@ export const flipAnimationState = atom({
   default: false,
 });
 
+export const displayPartnerModeTour = atom({
+  key: "displayPartnerModeTour",
+  default: false,
+});
+
 export { darkModeState, languageSelectionState };

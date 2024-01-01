@@ -1,9 +1,8 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import zinzenDarkLogo from "@assets/images/zinzenDarkLogo.svg";
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
 import searchIcon from "@assets/images/searchIcon.svg";
 import darkModeIcon from "@assets/images/darkModeIcon.svg";
@@ -12,6 +11,9 @@ import lightModeIcon from "@assets/images/lightModeIcon.svg";
 import { IHeader } from "@src/Interfaces/ICommon";
 import { goalsHistory } from "@src/store/GoalsState";
 import { getAllContacts } from "@src/api/ContactsAPI";
+
+import PartnerModeTour from "@components/PartnerModeTour";
+
 import { darkModeState, displayPartnerMode, displayToast, flipAnimationState, searchActive } from "@src/store";
 
 import HeaderBtn from "./HeaderBtn";
@@ -31,6 +33,8 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const [showPartnerMode, setShowPartnerMode] = useRecoilState(displayPartnerMode);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const [isFlipping, setIsFlipping] = useRecoilState(flipAnimationState);
+
+  const zinZenLogoRef = useRef(null);
 
   const handlePartner = async () => {
     setIsFlipping(true);
@@ -88,7 +92,9 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
               onClickCapture={handlePartner}
               src={zinzenLightLogo}
               alt="ZinZen"
+              ref={zinZenLogoRef}
             />
+            <PartnerModeTour refTarget={zinZenLogoRef} />
             <h6
               style={{ cursor: "pointer" }}
               onClickCapture={() => {
