@@ -13,7 +13,7 @@ const GoalDurationSummary = ({ goal }: { goal: GoalItem }) => {
     return <span>{formatSingularPlural(Number(goal.duration), t("hour"))}</span>;
   }
 
-  return <span>{t("noDuration")}</span>;
+  return <span>{t("noDurationText")}</span>;
 };
 
 export default GoalDurationSummary;
