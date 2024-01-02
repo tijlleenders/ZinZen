@@ -1,7 +1,7 @@
 import React from "react";
 import { Tour, TourProps } from "antd";
 import { useRecoilState } from "recoil";
-import { displayPartnerModeTour } from "@src/store";
+import { displayPartnerModeTour } from "@src/store/TourState";
 
 interface PartnerModeTourProps {
   refTarget: React.MutableRefObject<null>;
@@ -18,7 +18,9 @@ const PartnerModeTour: React.FC<PartnerModeTourProps> = ({ refTarget }) => {
     },
   ];
 
-  return <Tour open={partnerModeTour} steps={steps} onClose={() => setPartnerModeTour(false)} />;
+  return (
+    <Tour placement="bottomRight" open={partnerModeTour} steps={steps} onClose={() => setPartnerModeTour(false)} />
+  );
 };
 
 export default PartnerModeTour;
