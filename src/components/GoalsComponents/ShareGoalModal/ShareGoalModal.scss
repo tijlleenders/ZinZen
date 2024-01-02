@@ -155,3 +155,35 @@
     height: 33.5px;
   }
 }
+
+.button__shareAnonymously {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s ease-in-out;
+
+  &:hover {
+    .button__shareAnonymously--tooltip {
+      opacity: 1;
+      visibility: visible;
+      height: auto;
+      top: -25px;
+      width: auto;
+    }
+  }
+}
+
+.button__shareAnonymously--tooltip {
+  opacity: 0;
+  visibility: hidden;
+  height: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: -25px;
+  min-width: max-content;
+  position: absolute;
+  transition: 0.3s ease-in-out;
+  font-size: 13px;
+}
