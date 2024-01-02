@@ -17,6 +17,13 @@ const InvitePage = () => {
 
   const [newContactName, setNewContactName] = useState("");
 
+  const checkForTour = async () => {
+    const numberOfContacts = await getAllContacts();
+    if (numberOfContacts.length <= 1) {
+      setDisplayTour(true);
+    }
+  };
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (newContactName.trim() === "") {
@@ -29,10 +36,7 @@ const InvitePage = () => {
       await addContact(newContactName, relId, true);
       setNewContactName("");
     }
-    const numberOfContacts = await getAllContacts();
-    if (numberOfContacts.length <= 1) {
-      setDisplayTour(true);
-    }
+    checkForTour();
     navigate("/");
   };
 
