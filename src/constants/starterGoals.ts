@@ -1,12 +1,12 @@
 import { addGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { colorPalleteList } from "@src/utils";
+import { v4 as uuidv4 } from "uuid";
 
 export const addStarterGoal = async (
   goalTitle: string,
   goalTags: {
-    id: string | null;
-    duration: string | null;
+    id?: string | null;
     afterTime: number | null;
     beforeTime: number | null;
     sublist?: string[];
@@ -22,6 +22,9 @@ export const addStarterGoal = async (
     }),
   );
 };
+
+const dailyHabitsId = uuidv4();
+
 export const starterGoals = [
   {
     title: "Sleep 😴🌙",
@@ -86,6 +89,7 @@ export const starterGoals = [
   {
     title: "Daily habits 🔁",
     goalTags: {
+      id: dailyHabitsId,
       afterTime: null,
       beforeTime: null,
       timeBudget: {
@@ -106,7 +110,7 @@ export const starterGoals = [
         perWeek: "7-7",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      parentGoalId: "dailyHabits",
+      parentGoalId: dailyHabitsId,
     },
   },
   {
@@ -119,7 +123,7 @@ export const starterGoals = [
         perWeek: "7-7",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      parentGoalId: "dailyHabits",
+      parentGoalId: dailyHabitsId,
     },
   },
   {
@@ -132,7 +136,7 @@ export const starterGoals = [
         perWeek: "7-7",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      parentGoalId: "dailyHabits",
+      parentGoalId: dailyHabitsId,
     },
   },
   {
@@ -145,7 +149,7 @@ export const starterGoals = [
         perWeek: "7-7",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      parentGoalId: "dailyHabits",
+      parentGoalId: dailyHabitsId,
     },
   },
   {
@@ -158,7 +162,7 @@ export const starterGoals = [
         perWeek: "7-7",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      parentGoalId: "dailyHabits",
+      parentGoalId: dailyHabitsId,
     },
   },
 ];
