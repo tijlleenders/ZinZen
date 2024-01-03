@@ -23,6 +23,7 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
+import HintToggle from "./ConfigGoal/HintToggle";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -399,13 +400,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           </div>
         )}
         <div className="action-btn-container">
-          <div className="hint-toggle">
-            <p style={{ marginTop: 6 }}>Hints</p>
-            <Switch
-              prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
-              checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-            />
-          </div>
+          <HintToggle />
           <button
             type="button"
             className="action-btn"
