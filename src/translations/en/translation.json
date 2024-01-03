@@ -118,7 +118,7 @@
   "confirm": "Confirm",
   "cancel": "Cancel",
   "duration": "Duration",
-  "noDurationText": "Click again to enter - or click the circle to edit",
+  "noDurationText": "Click again to enter\n or click the circle to edit",
   "dueDate": "Due",
   "dueToday": "Due today",
   "dueDatePassed": "{{days}} days ago",
