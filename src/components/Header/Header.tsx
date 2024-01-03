@@ -15,6 +15,7 @@ import { getAllContacts } from "@src/api/ContactsAPI";
 import PartnerModeTour from "@components/PartnerModeTour";
 
 import { darkModeState, displayPartnerMode, displayToast, flipAnimationState, searchActive } from "@src/store";
+import { displayPartnerModeTour } from "@src/store/TourState";
 
 import HeaderBtn from "./HeaderBtn";
 import Search from "../../common/Search";
@@ -31,6 +32,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const subGoalHistory = useRecoilValue(goalsHistory);
 
   const [showPartnerMode, setShowPartnerMode] = useRecoilState(displayPartnerMode);
+  const [partnerModeTour, setPartnerModeTour] = useRecoilState(displayPartnerModeTour);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const [isFlipping, setIsFlipping] = useRecoilState(flipAnimationState);
 
@@ -50,6 +52,9 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
     if (showPartnerMode) {
       window.history.back();
     } else {
+      if (partnerModeTour) {
+        setPartnerModeTour(false);
+      }
       navigate("/MyGoals", {
         state: {
           displayPartnerMode: true,
