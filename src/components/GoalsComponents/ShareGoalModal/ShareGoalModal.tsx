@@ -138,48 +138,8 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       }}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
-      <div className="popupModal-title">
-        {displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}
-        <button
-          onClick={async () => {
-            await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareAnonymously" });
-          }}
-          type="button"
-          className="button__shareAnonymously "
-        >
-          <p className="button__shareAnonymously--tooltip">Share pseudo anonymously</p>
-          {/* <Icon active title="SingleAvatar" /> */}
-          {loading.A ? (
-            <Loader />
-          ) : (
-            <div className="icon">
-              <Icon active title="SingleAvatar" />
-            </div>
-          )}
-        </button>
-      </div>
+      <div className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {/* Share Anonymously */}
-        {/* <button
-          onClick={async () => {
-            await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareAnonymously" });
-          }}
-          type="button"
-          className="shareOptions-btn"
-        >
-          <div className="share-Options">
-            {loading.A ? (
-              <Loader />
-            ) : (
-              <div className="icon">
-                <Icon active title="SingleAvatar" />
-                 <img className="secondary-icon" alt="share goal pseudo anonymously" src={shareAnonymous} />  
-              </div>
-            )}
-            <p className={`shareOption-name ${loading.A ? "loading" : ""}`}>Share pseudo anonymously</p>
-          </div>
-        </button> */}
-
         {/* Share 1:1 */}
         <button
           type="button"
