@@ -12,8 +12,7 @@ const PartnerModeTour: React.FC<PartnerModeTourProps> = ({ refTarget }) => {
 
   const steps: TourProps["steps"] = [
     {
-      title: "Switch to partner mode",
-      description: "See your partner's goals here.",
+      title: "See your partner's goals here.",
       target: () => refTarget.current,
       nextButtonProps: {
         children: "Close",

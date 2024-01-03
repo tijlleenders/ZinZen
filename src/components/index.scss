@@ -53,9 +53,13 @@
   align-items: center;
 }
 
+.ant-tour-close {
+  display: none !important;
+}
+
 @media (max-width: 400px) {
   .ant-tour {
     position: relative !important;
-    width: 50% !important;
+    width: 70% !important;
   }
 }
