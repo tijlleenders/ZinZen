@@ -7,7 +7,7 @@ import { vibrateWorks } from "@src/constants/vibrateCheck";
 import { languageChangeModal, languageSelectionState } from "@src/store";
 
 export const LanguagesList = (props: ILanguageListProps) => {
-  const { languages, navigationCallback, type } = props;
+  const { languages, navigationCallback, type, hideSelected } = props;
   const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
   const sortedLanguages = [languages[0], ...languages.slice(1).sort((a, b) => a.title.localeCompare(b.title))];
 
@@ -25,7 +25,7 @@ export const LanguagesList = (props: ILanguageListProps) => {
         <button
           key={String(lang.sno)}
           type="button"
-          className={lang.selected ? "selected" : ""}
+          className={lang.selected && !hideSelected ? "selected" : ""}
           onClick={() => {
             handleClick(lang.langId);
           }}
