@@ -5,9 +5,16 @@ import { darkModeState } from "@src/store";
 
 import TickIcon from "@assets/images/correct.svg";
 
-const HintToggle = () => {
+const HintToggle = ({
+  defaultValue,
+  setHints,
+}: {
+  defaultValue: boolean;
+  setHints: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [hints, setHints] = useState(false);
+
+  console.log("defaultChecked: ", defaultValue);
 
   return (
     <div className="hint-toggle">
@@ -15,8 +22,8 @@ const HintToggle = () => {
       <Switch
         prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
         checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-        defaultChecked={hints}
-        onChange={(value) => setHints(!value)}
+        defaultChecked={defaultValue}
+        onChange={(value) => (value === true ? setHints(true) : setHints(false))}
       />
     </div>
   );

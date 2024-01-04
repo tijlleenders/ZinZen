@@ -32,4 +32,5 @@ export interface GoalItem {
   } | null;
   typeOfGoal: "myGoal" | "shared";
   newUpdates: boolean;
+  hints: boolean;
 }

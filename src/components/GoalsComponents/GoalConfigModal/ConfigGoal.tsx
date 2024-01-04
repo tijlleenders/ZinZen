@@ -1,12 +1,11 @@
 import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Slider, Switch } from "antd";
+import { Slider } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
-import TickIcon from "@assets/images/correct.svg";
 import plingSound from "@assets/pling.mp3";
 
 import ZAccordion from "@src/common/Accordion";
@@ -65,6 +64,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const [title, setTitle] = useState(goal.title);
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
+  const [hints, setHints] = useState(false);
   // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
   // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
   // const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
@@ -122,6 +122,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             perWeek: state.goalType === "Budget" ? perWeekHrs.join("-") : null,
           }
         : null,
+    hints,
   });
 
   const updateThisGoal = async () => {
@@ -400,7 +401,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           </div>
         )}
         <div className="action-btn-container">
-          <HintToggle />
+          <HintToggle setHints={setHints} defaultValue={hints} />
           <button
             type="button"
             className="action-btn"

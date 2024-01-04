@@ -9,6 +9,7 @@ import {
   archiveUserGoal,
   removeGoalWithChildrens,
   getParticipantsOfGoals,
+  getGoalHints,
 } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
@@ -31,6 +32,11 @@ export const createGoal = async (
     parentGoalId,
     goalColor,
   });
+
+  if (goalTags.hints === true) {
+    const res = await getGoalHints(newGoal);
+    console.log(res);
+  }
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);

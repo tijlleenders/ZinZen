@@ -1,7 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
-import { shareGoal } from "@src/services/goal.service";
+import { createFetchRequest, shareGoal } from "@src/services/goal.service";
+import { getInstallId } from "@src/utils";
 import { sortGoalsByProps } from "../GCustomAPI";
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
@@ -168,6 +169,35 @@ export const shareMyGoalAnonymously = async (goal: GoalItem, parent: string) => 
     },
   };
   const res = await shareGoal(shareableGoal);
+  return res;
+};
+
+export const getGoalHints = async (goal: GoalItem) => {
+  let parentGoalTitle = "root";
+  if (goal.parentGoalId !== "root") {
+    parentGoalTitle = (await getGoal(goal.parentGoalId))?.title || "";
+  }
+  const requestBody = {
+    method: "getHints",
+    installId: getInstallId(),
+    parentTitle: parentGoalTitle,
+    goal: {
+      title: goal.title,
+      duration: goal.duration,
+      habit: goal.habit,
+      start: goal.start?.toString(),
+      on: goal.on,
+      timeBudget: goal.timeBudget,
+      due: goal.due?.toString(),
+      afterTime: goal.afterTime,
+      beforeTime: goal.beforeTime,
+      createdAt: goal.createdAt,
+      goalColor: goal.goalColor,
+      language: goal.language,
+      link: goal.link,
+    },
+  };
+  const res = await createFetchRequest(requestBody);
   return res;
 };
 
