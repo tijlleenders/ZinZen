@@ -69,6 +69,17 @@ export const modifyGoal = async (
   goalColor: string,
   ancestors: string[],
 ) => {
+  if (goalTags.hints === true) {
+    const res = await getGoalHints({
+      ...goalTags,
+      title: goalTitle
+        .split(" ")
+        .filter((ele: string) => ele !== "")
+        .join(" "),
+      goalColor,
+    });
+    console.log(res);
+  }
   await updateGoal(goalId, {
     ...goalTags,
     title: goalTitle
