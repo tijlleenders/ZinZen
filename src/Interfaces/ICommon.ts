@@ -18,6 +18,16 @@ export interface ZAccordionProps {
   defaultActiveKey?: string[];
   onChange?: (key: string | string[]) => void;
 }
+
+export interface ZModalProps {
+  children: React.ReactNode;
+  type?: string;
+  open: boolean;
+  onCancel: () => void;
+  width?: number;
+  style?: React.CSSProperties;
+}
+
 export interface ColorPaletteProps {
   colorIndex: number;
   setColorIndex: SetterOrUpdater<number>;

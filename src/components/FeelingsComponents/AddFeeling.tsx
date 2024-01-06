@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
 
@@ -14,6 +13,7 @@ import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/Feelin
 
 import "@translations/i18n";
 import "./AddFeeling.scss";
+import ZModal from "@src/common/ZModal";
 
 export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
   const { t } = useTranslation();
@@ -46,19 +46,10 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
     window.history.back();
   };
   return (
-    <Modal
-      footer={null}
-      closable={false}
+    <ZModal
+      type={`notes-modal${darkModeStatus ? "-dark" : ""}`}
       open={!!feelingDate}
-      className={`notes-modal${darkModeStatus ? "-dark" : ""} popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      onCancel={() => {
-        window.history.back();
-      }}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
-      }}
+      onCancel={() => window.history.back()}
     >
       {selectedCategory === "" ? (
         <>
@@ -141,6 +132,6 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
           </button>
         </div>
       )}
-    </Modal>
+    </ZModal>
   );
 };

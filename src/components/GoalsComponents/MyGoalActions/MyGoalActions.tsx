@@ -1,5 +1,4 @@
-import { Modal, Tooltip } from "antd";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,17 +7,17 @@ import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { unarchiveIcon } from "@src/assets";
+import ZModal from "@src/common/ZModal";
 
 import {
-  darkModeState,
   displayToast,
   lastAction,
   openDevMode,
   displayConfirmation,
   displayPartnerMode,
+  darkModeState,
 } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
-import { themeState } from "@src/store/ThemeState";
 import { goalsHistory } from "@src/store/GoalsState";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
@@ -32,13 +31,12 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { handleUpdateGoal, handleShareGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
-  const theme = useRecoilValue(themeState);
-  const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
   const isPartnerGoal = useRecoilValue(displayPartnerMode);
   const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
+  const darkModeStatus = useRecoilValue(darkModeState);
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
@@ -82,20 +80,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const isGoalArchived = goal.archived;
 
   return (
-    <Modal
-      open={open}
-      closable={false}
-      footer={null}
-      centered
-      width={400}
-      onCancel={() => window.history.back()}
-      className={`interactables-modal popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
-      }}
-    >
+    <ZModal open={open} width={400} onCancel={() => window.history.back()} type="interactables-modal">
       <div
         style={{ textAlign: "left" }}
         className="header-title"
@@ -192,7 +177,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
           </>
         )}
       </div>
-    </Modal>
+    </ZModal>
   );
 };
 
