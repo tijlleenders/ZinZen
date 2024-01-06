@@ -4,11 +4,9 @@ import { shareInvitation } from "@src/assets";
 import Loader from "@src/common/Loader";
 import { initRelationship } from "@src/services/contact.service";
 import { darkModeState, displayToast } from "@src/store";
-import { themeState } from "@src/store/ThemeState";
 import React, { useState } from "react";
-import { Modal } from "antd";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { createPartner } from "@src/api/PartnerAPI";
+import ZModal from "@src/common/ZModal";
 
 interface AddContactModalProps {
   showAddContactModal: boolean;
@@ -16,7 +14,6 @@ interface AddContactModalProps {
 }
 const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, setShowAddContactModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const theme = useRecoilValue(themeState);
   const [loading, setLoading] = useState(false);
   const [newContact, setNewContact] = useState<{ contactName: string; relId: string } | null>(null);
   const handleCloseAddContact = () => {
@@ -61,20 +58,12 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
     setLoading(false);
   };
   return (
-    <Modal
-      closable={false}
-      footer={null}
-      centered
+    <ZModal
+      type="addContact-modal"
       open={showAddContactModal}
       onCancel={() => {
         setNewContact(null);
         handleCloseAddContact();
-      }}
-      className={`addContact-modal popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
       }}
     >
       <p className="popupModal-title"> Add a contact name </p>
@@ -107,7 +96,7 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         {loading ? <Loader /> : <img alt="add contact" className="theme-icon" src={shareInvitation} />}
         <span style={loading ? { marginLeft: 28 } : {}}>Share invitation</span>
       </button>
-    </Modal>
+    </ZModal>
   );
 };
 

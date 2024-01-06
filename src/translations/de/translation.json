@@ -163,7 +163,7 @@
   "budgetTitle": "Budgettitel",
   "addBtnGoal": "Ziel",
   "addBtnBudget": "Budget",
-  "noDuration": "Keine Dauer",
+  "noDurationText": "Klicken Sie erneut, um einzutreten\n oder klicken Sie auf den Kreis, um zu bearbeiten",
   "daily": "Täglich",
   "on": "auf",
   "onWeekdays": "an Wochentagen",

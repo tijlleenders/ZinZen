@@ -168,7 +168,7 @@
   "budgetTitle": "Titre du budget",
   "addBtnBudget": "Budget",
   "addBtnGoal": "Objectif",
-  "noDuration": "Pas de durée",
+  "noDurationText": "Cliquez à nouveau pour entrer\n ou cliquez sur le cercle pour éditer",
   "daily": "Quotidien",
   "on": "sur",
   "onWeekdays": "en jours de semaine",
