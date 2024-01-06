@@ -24,7 +24,7 @@ const GoalSummary = ({ goal }: { goal: GoalItem }) => {
   }
   return shouldRenderGoalSummary ? (
     <>
-      {hasSubGoalItems ? <GoalSublistSummary goal={goal} /> : <GoalDurationSummary goal={goal} />}
+      {hasSubGoalItems && !goal.duration ? <GoalSublistSummary goal={goal} /> : <GoalDurationSummary goal={goal} />}
       <GoalDueDateSummary goal={goal} />
       <GoalHabitSummary goal={goal} />
     </>
