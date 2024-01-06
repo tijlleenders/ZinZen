@@ -29,7 +29,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
 
   const [loading, setLoading] = useState({ P: false, A: false, S: false });
   const [contacts, setContacts] = useState<ContactItem[]>([]);
-  const [displaySubmenu, setDisplaySubmenu] = useState("");
+  const [displaySubmenu, setDisplaySubmenu] = useState("contacts");
   const [showConfirmation, setDisplayConfirmation] = useRecoilState(displayConfirmation);
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
   const [showAddContactModal, setShowAddContactModal] = useRecoilState(displayAddContact);
@@ -128,29 +128,8 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       type={`share-modal${darkModeStatus ? "-dark" : ""}`}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
-      <p className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</p>
+      <div className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {/* Share Anonymously */}
-        <button
-          onClick={async () => {
-            await openConfirmationPopUp({ actionCategory: "goal", actionName: "shareAnonymously" });
-          }}
-          type="button"
-          className="shareOptions-btn"
-        >
-          <div className="share-Options">
-            {loading.A ? (
-              <Loader />
-            ) : (
-              <div className="icon">
-                <Icon active title="SingleAvatar" />
-                {/* <img className="secondary-icon" alt="share goal pseudo anonymously" src={shareAnonymous} /> */}
-              </div>
-            )}
-            <p className={`shareOption-name ${loading.A ? "loading" : ""}`}>Share pseudo anonymously</p>
-          </div>
-        </button>
-
         {/* Share 1:1 */}
         <button
           type="button"
