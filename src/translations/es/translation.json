@@ -163,7 +163,7 @@
   "budgetTitle": "Presupuesto del objetivo",
   "addBtnBudget": "Presupuesto",
   "addBtnGoal": "Objetivo",
-  "noDuration": "Sin duración",
+  "noDurationText": "Haz clic de nuevo para entrar\n o haz clic en el círculo para editar",
   "daily": "Diario",
   "on": "en",
   "onWeekdays": "en días laborables",
