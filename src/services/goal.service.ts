@@ -1,4 +1,4 @@
-export async function createFetchRequest(body: object, method = "POST") {
+export async function createGetHintsRequest(body: object, method = "POST") {
   const url = "https://ryah5agkswabywebsdqk7ar4om0wjdrn.lambda-url.eu-west-1.on.aws/";
   try {
     const res = await fetch(url, {

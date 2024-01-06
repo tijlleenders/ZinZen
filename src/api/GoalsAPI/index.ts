@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
-import { createFetchRequest, shareGoal } from "@src/services/goal.service";
+import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { sortGoalsByProps } from "../GCustomAPI";
 
@@ -197,7 +197,12 @@ export const getGoalHints = async (goal: GoalItem) => {
       link: goal.link,
     },
   };
-  const res = await createFetchRequest(requestBody);
+
+  if (parentGoalTitle === "root") {
+    delete requestBody.parentTitle;
+  }
+
+  const res = await createGetHintsRequest(requestBody);
   return res;
 };
 
