@@ -9,4 +9,5 @@ export interface ILanguageListProps {
   languages: ILanguage[];
   navigationCallback?: (path: string) => void;
   type: string;
+  hideSelected?: boolean;
 }

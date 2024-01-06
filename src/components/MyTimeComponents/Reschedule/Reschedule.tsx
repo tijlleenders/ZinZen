@@ -1,19 +1,19 @@
-import { Modal, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import { useRecoilState, useRecoilValue } from "recoil";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { darkModeState } from "@src/store";
-import { getDiffInDates, getMonthByIndex } from "@src/utils";
+import { getMonthByIndex } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
-import { themeState } from "@src/store/ThemeState";
 import { convertDateToDay } from "@src/utils/SchedulerUtils";
 
 import "./Reschedule.scss";
 import { displayReschedule } from "@src/store/TaskState";
-import { ITask, ITaskOfDay } from "@src/Interfaces/Task";
+import { ITask } from "@src/Interfaces/Task";
 import { getFromOutbox } from "@src/api/DumpboxAPI";
 import { IFinalOutputSlot } from "@src/Interfaces/IScheduler";
+import ZModal from "@src/common/ZModal";
 import { rescheduleTaskOnDay } from "@src/api/RescheduledAPI";
 import ScheduledSlots from "./ScheduledSlots";
 
@@ -39,7 +39,6 @@ const Reschedule = () => {
   const [overridenTasks, setOverridenTasks] = useState<IFinalOutputSlot[]>([]);
   const [schedulerOutput, setSchedulerOutput] = useState<{ [key: string]: IFinalOutputSlot[] }>({});
 
-  const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const getSlots = (start: number, end: number) =>
@@ -91,19 +90,7 @@ const Reschedule = () => {
 
   // console.log(schedulerOutput, selectedDate.toLocaleDateString(), schedulerOutput[selectedDate.toLocaleDateString()]);
   return task ? (
-    <Modal
-      open={!!task}
-      closable={false}
-      footer={null}
-      onCancel={() => setOpen(null)}
-      // eslint-disable-next-line prettier/prettier
-      className={`rescheduleModal popupModal${darkModeStatus ? "-dark" : ""} ${
-        darkModeStatus ? "dark" : "light"
-      }-theme${theme[darkModeStatus ? "dark" : "light"]}`}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
-      }}
-    >
+    <ZModal type="rescheduleModal" open={!!task} onCancel={() => setOpen(null)}>
       <div className="header-title">
         <h4>{task.title}</h4>
       </div>
@@ -175,7 +162,7 @@ const Reschedule = () => {
           Reschedule
         </button>
       </div>
-    </Modal>
+    </ZModal>
   ) : null;
 };
 

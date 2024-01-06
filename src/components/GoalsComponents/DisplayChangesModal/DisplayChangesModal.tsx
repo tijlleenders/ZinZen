@@ -1,10 +1,9 @@
 /* eslint-disable consistent-return */
-import { Checkbox, Modal } from "antd";
+import { Checkbox } from "antd";
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { themeState } from "@src/store/ThemeState";
 import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { sendNewGoals } from "@src/helpers/BatchPublisher";
 import { darkModeState } from "@src/store";
@@ -18,6 +17,7 @@ import { findGoalTagChanges, jumpToLowestChanges } from "@src/helpers/GoalProces
 import { acceptSelectedSubgoals, acceptSelectedTags } from "@src/helpers/InboxProcessor";
 import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
+import ZModal from "@src/common/ZModal";
 
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
@@ -25,7 +25,6 @@ import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
 
 const DisplayChangesModal = () => {
-  const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showChangesModal = useRecoilValue(displayChangesModal);
 
@@ -221,20 +220,7 @@ const DisplayChangesModal = () => {
     init();
   }, []);
   return (
-    <Modal
-      className={`popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
-        theme[darkModeStatus ? "dark" : "light"]
-      }`}
-      open={!!showChangesModal}
-      onCancel={() => {
-        window.history.back();
-      }}
-      closable={false}
-      footer={null}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
-      }}
-    >
+    <ZModal type="popupModal" open={!!showChangesModal} onCancel={() => window.history.back()}>
       {showChangesModal && (
         <>
           <SubHeader
@@ -300,7 +286,7 @@ const DisplayChangesModal = () => {
           </div>
         </>
       )}
-    </Modal>
+    </ZModal>
   );
 };
 

@@ -6,14 +6,10 @@ import { useTranslation } from "react-i18next";
 const GoalDurationSummary = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
 
-  if (goal.timeBudget.perDay) {
-    return null;
-  }
   if (goal.duration) {
     return <span>{formatSingularPlural(Number(goal.duration), t("hour"))}</span>;
   }
-
-  return <span>{t("noDuration")}</span>;
+  return null;
 };
 
 export default GoalDurationSummary;

@@ -163,7 +163,7 @@
   "confirm": "Bevestigen",
   "cancel": "Annuleren",
   "duration": "Duur",
-  "noDuration": "Geen duur",
+  "noDurationText": "Klik nogmaals om een niveau dieper te gaan\n of klik op de cirkel om te bewerken",
   "dueDate": "Deadline",
   "dueToday": "Vandaag verschuldigd",
   "dueDatePassed": "{{days}} dagen geleden",

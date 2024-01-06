@@ -1,7 +1,7 @@
 import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Modal, Slider, Switch } from "antd";
+import { Slider, Switch } from "antd";
 import { darkModeState, displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
@@ -12,7 +12,7 @@ import plingSound from "@assets/pling.mp3";
 import ZAccordion from "@src/common/Accordion";
 import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem } from "@src/models/GoalItem";
-import { themeState } from "@src/store/ThemeState";
+import ZModal from "@src/common/ZModal";
 import { ILocationState } from "@src/Interfaces";
 import { getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
@@ -48,7 +48,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
 
-  const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
@@ -215,22 +214,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   }, [afterTime, beforeTime, numberOfDays, betweenSliderUpdated]);
 
   return (
-    <Modal
-      className={`configModal popupModal${darkModeStatus ? "-dark" : ""} 
-        ${darkModeStatus ? "dark" : "light"}-theme${theme[darkModeStatus ? "dark" : "light"]}`}
+    <ZModal
+      type="configModal"
       open={open}
       width={360}
-      closable={false}
-      footer={null}
       onCancel={async () => {
         if (title !== "") {
           await handleSave();
         } else {
           window.history.back();
         }
-      }}
-      maskStyle={{
-        backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
       }}
     >
       <div style={{ textAlign: "left" }} className="header-title">
@@ -420,7 +413,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           </button>
         </div>
       </div>
-    </Modal>
+    </ZModal>
   );
 };
 
