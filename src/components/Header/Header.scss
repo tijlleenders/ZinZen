@@ -57,8 +57,16 @@
 
 .header-dropdown,
 .header-dropdown-dark {
+  width: 75% !important;
   ul {
     background-color: var(--secondary-background) !important;
+
+    li {
+      margin: 15px 0 !important;
+      span {
+        font-size: 18px;
+      }
+    }
   }
   .ant-switch-inner {
     background: var(--primary-background);
