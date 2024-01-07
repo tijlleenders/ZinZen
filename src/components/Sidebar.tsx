@@ -1,3 +1,5 @@
+// # TODO: This component is no longer in use. Can be removed.
+
 import React from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
