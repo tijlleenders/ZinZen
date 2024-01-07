@@ -65,6 +65,7 @@ const Settings = () => {
             justifyContent: "space-between",
             marginTop: 12,
             alignItems: "center",
+            fontSize: "18px",
           }}
           onClickCapture={toggleDarkModeStatus}
         >
