@@ -19,8 +19,6 @@ export async function goalActionFlow(page: Page, action: string) {
 
 export async function goToShareGoalModalFlow(page: Page) {
   await goalActionFlow(page, "Share");
-  await page.getByRole("button", { name: "Share privately" }).click();
-  await page.getByRole("button", { name: "Choose contact" }).click();
 }
 
 export async function waitForResponseConfirmation(
@@ -41,15 +39,12 @@ export async function addContact(
   contactName: string,
   expectedApiResponse1: string,
   expectedApiResponse2: string,
-  isFirstContact: boolean,
 ): Promise<string> {
   const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
   await goToShareGoalModalFlow(page);
 
   // Add contact flow
-  if (!isFirstContact) {
-    await page.getByRole("button", { name: "add contact", exact: true }).click();
-  }
+  await page.getByRole("button", { name: "add contact", exact: true }).click();
   await page.getByPlaceholder("Name").click();
   await page.getByPlaceholder("Name").fill(contactName);
   await page.getByRole("button", { name: "add contact Share invitation" }).click();
