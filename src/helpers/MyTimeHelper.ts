@@ -31,9 +31,11 @@ export const transformIntoSchInputGoals = (
       obj.deadline = convertDateToString(new Date(ele.due));
     }
     if (obj.filters) {
-      if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
-      if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;
-      if (ele.on) obj.filters.on_days = ele.on;
+      if (ele.afterTime || ele.afterTime === 0) obj.filters.afterTime = ele.afterTime;
+      if (ele.beforeTime || ele.beforeTime === 0) obj.filters.beforeTime = ele.beforeTime;
+      if (ele.on) {
+        obj.filters.onDays = ele.on.map((day) => day.toLowerCase());
+      }
       if (slotsNotallowed && slotsNotallowed.length > 0) {
         obj.filters.not_on = [...slotsNotallowed];
       }
