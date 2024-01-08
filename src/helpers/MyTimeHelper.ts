@@ -49,12 +49,16 @@ export const transformIntoSchInputGoals = (
         ? perWeek.split("-").map((val) => (val !== "" ? Number(val) : undefined))
         : [undefined, undefined];
 
-      obj.budget = {
+      const budget = {
         minPerDay,
         maxPerDay,
         minPerWeek,
         maxPerWeek,
       };
+
+      if (Object.values(budget).some((val) => val !== undefined)) {
+        obj.budget = budget;
+      }
     }
     if (ele.sublist.length > 0) obj.children = ele.sublist;
     if (Object.keys(obj.filters || {}).length === 0) {
