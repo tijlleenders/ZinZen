@@ -36,7 +36,7 @@ export interface ISchedulerInputGoal {
     afterTime?: number;
     beforeTime?: number;
     onDays?: string[];
-    not_on?: blockedSlotOfTask[];
+    notOn?: blockedSlotOfTask[];
   };
   repeat?: string;
   budget?: {
