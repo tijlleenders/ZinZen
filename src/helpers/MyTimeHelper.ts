@@ -23,7 +23,7 @@ export const transformIntoSchInputGoals = (
     const slotsNotallowed = blockedSlots[ele.id];
     // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
     // obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
-    if (ele.duration) obj.min_duration = Number(ele.duration);
+    if (ele.duration) obj.minDuration = Number(ele.duration);
     if (ele.start) {
       obj.start = convertDateToString(new Date(ele.start));
     }
