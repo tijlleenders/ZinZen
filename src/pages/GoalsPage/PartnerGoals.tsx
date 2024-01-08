@@ -18,11 +18,14 @@ import GoalsList from "@components/GoalsComponents/GoalsList";
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 import ContactItem from "@src/models/ContactItem";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
+import { checkAndUpdateRelationshipStatus } from "@src/api/ContactsAPI";
 
 const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
+  console.log(partner.name);
   const { name, relId } = partner;
   const partnerName = name.charAt(0).toUpperCase() + name.slice(1, 4);
+  const [relationshipStatus, setRelationshipStatus] = useState(false);
 
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
@@ -72,6 +75,12 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
     }
   }, [selectedGoalId, partner, displaySearch]);
 
+  useEffect(async () => {
+    const status = await checkAndUpdateRelationshipStatus(partner.relId);
+    setRelationshipStatus(true);
+    console.log(relationshipStatus);
+  }, []);
+
   return (
     <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
       <GoalLocStateHandler />
@@ -105,6 +114,8 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
             alt="Zinzen"
           />
         )}
+        {console.log(relationshipStatus)}
+        {relationshipStatus ? <p>Accepted</p> : <p>Pending</p>}
       </div>
     </AppLayout>
   );
