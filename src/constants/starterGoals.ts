@@ -97,7 +97,6 @@ export const starterGoals = [
         perDay: null,
         perWeek: null,
       },
-      on: [],
       sublist: ["breakfast", "lunch", "dinner", "meTime", "walk"],
     },
   },
