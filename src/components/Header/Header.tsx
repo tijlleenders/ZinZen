@@ -1,9 +1,8 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import zinzenDarkLogo from "@assets/images/zinzenDarkLogo.svg";
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
 import searchIcon from "@assets/images/searchIcon.svg";
 import darkModeIcon from "@assets/images/darkModeIcon.svg";
@@ -81,16 +80,14 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
         <Search debounceSearch={debounceSearch} />
       ) : (
         <>
-          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+          <div>
             <img
               className={isFlipping ? "logo-flip" : ""}
-              style={{ height: 30, width: 30, cursor: "pointer" }}
               onClickCapture={handlePartner}
               src={zinzenLightLogo}
               alt="ZinZen"
             />
             <h6
-              style={{ cursor: "pointer" }}
               onClickCapture={() => {
                 if (title === "myGoals") {
                   window.history.go(-subGoalHistory.length);
