@@ -1,8 +1,6 @@
 .header {
   position: fixed;
   display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
   width: 100%;
   background: var(--secondary-background);
   max-width: 600px;
@@ -10,20 +8,23 @@
   > :first-child {
     display: flex;
     align-items: center;
-    justify-content: space-around;
-
+    justify-content: flex-start;
+    flex: 1;
     img {
       height: 30px;
       width: 30px;
       cursor: pointer;
       flex: 1;
-      padding: 0 17px 0 20px;
+      flex-grow: 0;
+      padding: 14px 17px 14px 20px;
     }
   }
   h6 {
     line-height: 27px;
     font-weight: 500;
     cursor: pointer;
+    flex: 1;
+    padding: 14px 0 14px 0;
   }
 }
 
