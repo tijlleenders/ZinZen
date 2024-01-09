@@ -77,9 +77,9 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
 
   useEffect(async () => {
     const status = await checkAndUpdateRelationshipStatus(partner.relId);
-    setRelationshipStatus(true);
-    console.log(relationshipStatus);
-  }, []);
+    setRelationshipStatus(status);
+    console.log("Name: ", name, "Status: ", status);
+  }, [relId]);
 
   return (
     <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
@@ -107,15 +107,21 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
         ) : (
           <GoalSublist />
         )}
+
         {activeGoals?.length === 0 && (
-          <img
-            style={{ width: 350, height: 350, opacity: 0.3 }}
-            src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-            alt="Zinzen"
-          />
+          <>
+            {relationshipStatus ? (
+              <p>Your partner has accepted the sharing request but has not started sharing anything with you.</p>
+            ) : (
+              <p>Your partner has not accepted the sharing request yet. Click the button below to share again.</p>
+            )}
+            <img
+              style={{ width: 350, height: 350, opacity: 0.3 }}
+              src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+              alt="Zinzen"
+            />
+          </>
         )}
-        {console.log(relationshipStatus)}
-        {relationshipStatus ? <p>Accepted</p> : <p>Pending</p>}
       </div>
     </AppLayout>
   );
