@@ -50,7 +50,7 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
       setShowToast({ open: true, message: "Please give a name to this contact", extra: "" });
     }
     if (link !== "") {
-      await navigator.share({ text: link }).then(() => {
+      navigator.share({ text: link }).then(() => {
         setNewContact(null);
         handleCloseAddContact();
       });
