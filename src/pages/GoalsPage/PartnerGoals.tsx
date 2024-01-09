@@ -20,12 +20,15 @@ import ContactItem from "@src/models/ContactItem";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
 import { addToSharingQueue, checkAndUpdateRelationshipStatus } from "@src/api/ContactsAPI";
 
+import { shareInvitation } from "@src/assets";
+
 const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
   console.log(partner.name);
   const { name, relId } = partner;
   const partnerName = name.charAt(0).toUpperCase() + name.slice(1, 4);
   const [relationshipStatus, setRelationshipStatus] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
@@ -76,10 +79,15 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
     }
   }, [selectedGoalId, partner, displaySearch]);
 
-  useEffect(async () => {
-    const status = await checkAndUpdateRelationshipStatus(partner.relId);
-    setRelationshipStatus(status);
-    console.log("Name: ", name, "Status: ", status);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const status = await checkAndUpdateRelationshipStatus(partner.relId);
+      setRelationshipStatus(status);
+      setLoading(false);
+    };
+
+    fetchData();
   }, [relId]);
 
   const handleSendInvitation = async () => {
@@ -120,21 +128,26 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
 
         {activeGoals?.length === 0 && (
           <>
-            <p style={{ textAlign: "center", margin: "0 20px" }}>
-              {relationshipStatus
-                ? "Your partner has accepted the sharing request but has not started sharing anything with you."
-                : "Your partner has not accepted the sharing request yet. Click the button below to share again."}
-            </p>
-            {relationshipStatus === false && (
-              <button
-                type="button"
-                className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-                style={{ alignSelf: "center" }}
-                onClick={handleSendInvitation}
-              >
-                {" "}
-                Share link
-              </button>
+            {!loading && (
+              <div style={{ textAlign: "center", margin: "0 20px" }}>
+                <p>
+                  {relationshipStatus
+                    ? "Your partner has accepted the sharing request but has not started sharing anything with you."
+                    : "Your partner has not accepted the sharing request yet. Click the button below to share again."}
+                </p>
+                {!relationshipStatus && (
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <button
+                      type="button"
+                      className={`default-btn${darkModeStatus ? "-dark" : ""}`}
+                      onClick={handleSendInvitation}
+                    >
+                      <img alt="add contact" className="theme-icon" src={shareInvitation} />
+                      <span>Share invitation</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
             <img
               style={{ width: 350, height: 350, opacity: 0.3 }}
