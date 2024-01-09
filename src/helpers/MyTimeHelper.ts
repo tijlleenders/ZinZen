@@ -96,7 +96,7 @@ export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) 
       impossible: [],
       colorBands: [],
     };
-    impossible[index].tasks.forEach((ele: ISchedulerOutputGoal) => {
+    impossible[index]?.tasks?.forEach((ele: ISchedulerOutputGoal) => {
       const { goalColor, parentGoalId } = obj[ele.goalid];
       thisDay.impossible.push({ ...ele, goalColor, parentGoalId });
     });
