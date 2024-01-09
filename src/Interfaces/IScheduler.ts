@@ -29,7 +29,7 @@ export interface ISchedulerOutput {
 export interface ISchedulerInputGoal {
   id: string;
   title: string;
-  min_duration?: number;
+  minDuration?: number;
   start?: string;
   deadline?: string;
   filters?: {
