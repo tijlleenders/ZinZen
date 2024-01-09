@@ -65,6 +65,7 @@ const InvitePage = () => {
         className="default-input"
         placeholder="Contact name"
       />
+      {/* Make this button a component */}
       <button
         type="button"
         className={`default-btn${darkModeStatus ? "-dark" : ""}`}

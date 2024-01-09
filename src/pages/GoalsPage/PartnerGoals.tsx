@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
@@ -9,7 +9,7 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import { GoalItem } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { displayGoalActions, displayGoalId } from "@src/store/GoalsState";
-import { darkModeState, lastAction, searchActive } from "@src/store";
+import { darkModeState, displayToast, lastAction, searchActive } from "@src/store";
 
 import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
 import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
@@ -18,7 +18,7 @@ import GoalsList from "@components/GoalsComponents/GoalsList";
 import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 import ContactItem from "@src/models/ContactItem";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
-import { checkAndUpdateRelationshipStatus } from "@src/api/ContactsAPI";
+import { addToSharingQueue, checkAndUpdateRelationshipStatus } from "@src/api/ContactsAPI";
 
 const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -35,6 +35,7 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   const selectedGoalId = useRecoilValue(displayGoalId);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showGoalActions = useRecoilValue(displayGoalActions);
+  const setShowToast = useSetRecoilState(displayToast);
 
   const [action, setLastAction] = useRecoilState(lastAction);
 
@@ -81,6 +82,15 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
     console.log("Name: ", name, "Status: ", status);
   }, [relId]);
 
+  const handleSendInvitation = async () => {
+    navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);
+    setShowToast({
+      open: true,
+      message: "Link copied to clipboard",
+      extra: "Once your partner accepts the invitation link - your goals will be shared automatically",
+    });
+  };
+
   return (
     <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
       <GoalLocStateHandler />
@@ -110,10 +120,21 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
 
         {activeGoals?.length === 0 && (
           <>
-            {relationshipStatus ? (
-              <p>Your partner has accepted the sharing request but has not started sharing anything with you.</p>
-            ) : (
-              <p>Your partner has not accepted the sharing request yet. Click the button below to share again.</p>
+            <p style={{ textAlign: "center", margin: "0 20px" }}>
+              {relationshipStatus
+                ? "Your partner has accepted the sharing request but has not started sharing anything with you."
+                : "Your partner has not accepted the sharing request yet. Click the button below to share again."}
+            </p>
+            {relationshipStatus === false && (
+              <button
+                type="button"
+                className={`default-btn${darkModeStatus ? "-dark" : ""}`}
+                style={{ alignSelf: "center" }}
+                onClick={handleSendInvitation}
+              >
+                {" "}
+                Share link
+              </button>
             )}
             <img
               style={{ width: 350, height: 350, opacity: 0.3 }}
