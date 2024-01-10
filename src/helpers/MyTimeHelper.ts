@@ -23,7 +23,7 @@ export const transformIntoSchInputGoals = (
     const slotsNotallowed = blockedSlots[ele.id];
     // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
     // obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
-    if (ele.duration) obj.min_duration = Number(ele.duration);
+    if (ele.duration) obj.minDuration = Number(ele.duration);
     if (ele.start) {
       obj.start = convertDateToString(new Date(ele.start));
     }
@@ -31,11 +31,13 @@ export const transformIntoSchInputGoals = (
       obj.deadline = convertDateToString(new Date(ele.due));
     }
     if (obj.filters) {
-      if (ele.afterTime || ele.afterTime === 0) obj.filters.after_time = ele.afterTime;
-      if (ele.beforeTime || ele.beforeTime === 0) obj.filters.before_time = ele.beforeTime;
-      if (ele.on) obj.filters.on_days = ele.on;
+      if (ele.afterTime || ele.afterTime === 0) obj.filters.afterTime = ele.afterTime;
+      if (ele.beforeTime || ele.beforeTime === 0) obj.filters.beforeTime = ele.beforeTime;
+      if (ele.on) {
+        obj.filters.onDays = ele.on.map((day) => day.toLowerCase());
+      }
       if (slotsNotallowed && slotsNotallowed.length > 0) {
-        obj.filters.not_on = [...slotsNotallowed];
+        obj.filters.notOn = [...slotsNotallowed];
       }
     }
     if (ele.habit) obj.repeat = "weekly";
@@ -49,12 +51,16 @@ export const transformIntoSchInputGoals = (
         ? perWeek.split("-").map((val) => (val !== "" ? Number(val) : undefined))
         : [undefined, undefined];
 
-      obj.budget = {
+      const budget = {
         minPerDay,
         maxPerDay,
         minPerWeek,
         maxPerWeek,
       };
+
+      if (Object.values(budget).some((val) => val !== undefined)) {
+        obj.budget = budget;
+      }
     }
     if (ele.sublist.length > 0) obj.children = ele.sublist;
     if (Object.keys(obj.filters || {}).length === 0) {
@@ -90,7 +96,7 @@ export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) 
       impossible: [],
       colorBands: [],
     };
-    impossible[index].tasks.forEach((ele: ISchedulerOutputGoal) => {
+    impossible[index]?.tasks?.forEach((ele: ISchedulerOutputGoal) => {
       const { goalColor, parentGoalId } = obj[ele.goalid];
       thisDay.impossible.push({ ...ele, goalColor, parentGoalId });
     });

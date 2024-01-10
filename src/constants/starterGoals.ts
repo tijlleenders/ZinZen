@@ -36,6 +36,7 @@ export const starterGoals = [
         perWeek: "42-52",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      parentGoalId: dailyHabitsId,
     },
   },
   {
@@ -96,7 +97,6 @@ export const starterGoals = [
         perDay: null,
         perWeek: null,
       },
-      on: [],
       sublist: ["breakfast", "lunch", "dinner", "meTime", "walk"],
     },
   },

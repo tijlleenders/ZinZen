@@ -29,14 +29,14 @@ export interface ISchedulerOutput {
 export interface ISchedulerInputGoal {
   id: string;
   title: string;
-  min_duration?: number;
+  minDuration?: number;
   start?: string;
   deadline?: string;
   filters?: {
-    after_time?: number;
-    before_time?: number;
-    on_days?: string[];
-    not_on?: blockedSlotOfTask[];
+    afterTime?: number;
+    beforeTime?: number;
+    onDays?: string[];
+    notOn?: blockedSlotOfTask[];
   };
   repeat?: string;
   budget?: {
