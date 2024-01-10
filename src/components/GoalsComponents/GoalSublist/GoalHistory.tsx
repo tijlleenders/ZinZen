@@ -6,6 +6,7 @@ import { darkModeState } from "@src/store";
 import goalsIcon from "@assets/images/goalsIcon.svg";
 
 import { ISubGoalHistory, goalsHistory } from "@src/store/GoalsState";
+import { useTranslation } from "react-i18next";
 
 const breadcrumbStyle: React.CSSProperties = {
   fontWeight: 500,
@@ -21,17 +22,20 @@ const breadcrumbStyle: React.CSSProperties = {
   height: 18,
 };
 
-const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => (
-  <span
-    style={{
-      ...breadcrumbStyle,
-      border: `1px solid ${goal.goalColor}`,
-      background: `${goal.goalColor}33`,
-    }}
-  >
-    {goal.goalTitle}
-  </span>
-);
+const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => {
+  const { t } = useTranslation();
+  return (
+    <span
+      style={{
+        ...breadcrumbStyle,
+        border: `1px solid ${goal.goalColor}`,
+        background: `${goal.goalColor}33`,
+      }}
+    >
+      {t(goal.goalTitle)}
+    </span>
+  );
+};
 const GoalHistory = () => {
   const subGoalHistory = useRecoilValue(goalsHistory);
   const darkModeStatus = useRecoilValue(darkModeState);
