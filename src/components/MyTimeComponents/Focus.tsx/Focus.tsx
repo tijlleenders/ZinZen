@@ -58,7 +58,7 @@ export const Focus = () => {
 
   return (
     <div className="focus">
-      <h6>{taskTitle}</h6>
+      <h6>{t(`${taskTitle}`)}</h6>
       <Progress
         className={`progress-${darkModeStatus ? "dark" : ""}`}
         size={200}

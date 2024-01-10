@@ -16,6 +16,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
+import { useTranslation } from "react-i18next";
 import { darkModeState, displayToast, lastAction, openDevMode, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
@@ -40,6 +41,7 @@ interface MyTimelineProps {
 }
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetails, setTaskDetails }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { state } = useLocation();
   const doneSound = new Audio(archiveTune);
@@ -191,7 +193,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                       }
                     }}
                   >
-                    {task.title}
+                    {t(`${task.title}`)}
                   </button>
                   {displayOptionsIndex === task.taskid && <GoalTiming startTime={startTime} endTime={endTime} />}
                 </div>
