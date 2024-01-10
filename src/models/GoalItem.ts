@@ -13,7 +13,7 @@ export interface GoalItem {
   duration: string | null;
   sublist: string[];
   habit: string | null;
-  on: string[];
+  on: string[] | null;
   due: string | null;
   start: string | null;
   beforeTime: number | null;
@@ -29,7 +29,7 @@ export interface GoalItem {
   timeBudget: {
     perDay: string | null;
     perWeek: string | null;
-  };
+  } | null;
   typeOfGoal: "myGoal" | "shared";
   newUpdates: boolean;
 }

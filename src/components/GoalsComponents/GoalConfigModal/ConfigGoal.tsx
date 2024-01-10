@@ -77,11 +77,11 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [afterTime, setAfterTime] = useState(showUpdateGoal ? goal.afterTime || 9 : 9);
   const [beforeTime, setBeforeTime] = useState(showUpdateGoal ? goal.beforeTime || 18 : 18);
   const timeDiff = beforeTime - afterTime;
-  const perDayBudget = (goal.timeBudget.perDay?.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
+  const perDayBudget = (goal.timeBudget?.perDay?.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
     .split("-")
     .map((ele) => Number(ele));
   const perWeekBudget = (
-    goal.timeBudget.perWeek?.includes("-")
+    goal.timeBudget?.perWeek?.includes("-")
       ? goal.timeBudget.perWeek
       : `${timeDiff * numberOfDays}-${timeDiff * numberOfDays}`
   )
@@ -113,11 +113,14 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     afterTime: state.goalType === "Budget" ? afterTime : null,
     beforeTime: state.goalType === "Budget" ? beforeTime : null,
     habit: tags.repeatWeekly ? "weekly" : null,
-    on: calDays.filter((ele) => tags.on.includes(ele)),
-    timeBudget: {
-      perDay: state.goalType === "Budget" ? perDayHrs.join("-") : null,
-      perWeek: state.goalType === "Budget" ? perWeekHrs.join("-") : null,
-    },
+    on: state.goalType === "Budget" ? calDays.filter((ele) => tags.on.includes(ele)) : null,
+    timeBudget:
+      state.goalType === "Budget"
+        ? {
+            perDay: state.goalType === "Budget" ? perDayHrs.join("-") : null,
+            perWeek: state.goalType === "Budget" ? perWeekHrs.join("-") : null,
+          }
+        : null,
   });
 
   const updateThisGoal = async () => {
