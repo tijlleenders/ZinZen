@@ -89,7 +89,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
         }}
       >
         <p className="ordinary-element" id="title-field">
-          {goal.title}
+          {t(`${goal.title}`)}
         </p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
