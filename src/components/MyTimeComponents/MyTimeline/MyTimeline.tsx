@@ -60,12 +60,48 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const handleView = () => {
     setShowScheduled(!showScheduled);
   };
+
+  const handleOpenGoal = async (goalId: string) => {
+    const goalsHistory = [];
+    let tmpGoal: GoalItem | null = await getGoal(goalId);
+    let openGoalId = tmpGoal?.parentGoalId;
+    const parentGoalId = openGoalId;
+    if (!openGoalId) {
+      return;
+    }
+    while (openGoalId !== "root") {
+      tmpGoal = await getGoal(openGoalId);
+      if (!tmpGoal) {
+        break;
+      }
+      goalsHistory.push({
+        goalID: tmpGoal.id || "root",
+        goalColor: tmpGoal.goalColor || "#ffffff",
+        goalTitle: tmpGoal.title || "",
+      });
+      openGoalId = tmpGoal.parentGoalId;
+    }
+    goalsHistory.reverse();
+    navigate("/MyGoals", {
+      state: {
+        ...locationState,
+        from: "",
+        goalsHistory,
+        activeGoalId: parentGoalId,
+        expandedGoalId: goalId,
+      },
+    });
+  };
   // console.log(devMode);
   const handleFocusClick = (task: ITask) => {
     setTaskTitle(task.title);
     navigate("/", { state: { ...state, displayFocus: true } });
   };
-  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
+
+  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus" | "Goal", task: ITask) => {
+    if (actionName === "Goal") {
+      return handleOpenGoal(task.goalid);
+    }
     if (actionName === "Focus") {
       return handleFocusClick(task);
     }
@@ -112,37 +148,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
-  const handleOpenGoal = async (goalId: string) => {
-    const goalsHistory = [];
-    let tmpGoal: GoalItem | null = await getGoal(goalId);
-    let openGoalId = tmpGoal?.parentGoalId;
-    const parentGoalId = openGoalId;
-    if (!openGoalId) {
-      return;
-    }
-    while (openGoalId !== "root") {
-      tmpGoal = await getGoal(openGoalId);
-      if (!tmpGoal) {
-        break;
-      }
-      goalsHistory.push({
-        goalID: tmpGoal.id || "root",
-        goalColor: tmpGoal.goalColor || "#ffffff",
-        goalTitle: tmpGoal.title || "",
-      });
-      openGoalId = tmpGoal.parentGoalId;
-    }
-    goalsHistory.reverse();
-    navigate("/MyGoals", {
-      state: {
-        ...locationState,
-        from: "",
-        goalsHistory,
-        activeGoalId: parentGoalId,
-        expandedGoalId: goalId,
-      },
-    });
-  };
 
   return (
     <>
@@ -187,7 +192,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                       e.stopPropagation();
                       setDisplayOptionsIndex(task.taskid);
                       if (displayOptionsIndex === task.taskid || markDone) {
-                        handleOpenGoal(task.goalid);
+                        setDisplayOptionsIndex("");
                       }
                     }}
                   >
