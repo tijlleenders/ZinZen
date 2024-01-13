@@ -80,7 +80,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
         <Search debounceSearch={debounceSearch} />
       ) : (
         <>
-          <div>
+          <div className="header-logo-title">
             <img
               className={isFlipping ? "logo-flip" : ""}
               onClickCapture={handlePartner}

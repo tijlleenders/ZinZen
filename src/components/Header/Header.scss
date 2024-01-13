@@ -4,8 +4,10 @@
   width: 100%;
   background: var(--secondary-background);
   max-width: 600px;
+  height: 58px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-  > :first-child {
+
+  .header-logo-title {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -14,11 +16,11 @@
       height: 30px;
       width: 30px;
       cursor: pointer;
-      flex: 1;
       flex-grow: 0;
       padding: 14px 17px 14px 20px;
     }
   }
+  
   h6 {
     line-height: 27px;
     font-weight: 500;
@@ -51,10 +53,10 @@
   width: calc(100% - 26px);
   max-width: 560px;
   img {
-    width: 18px;
+    width: 18px ;
     height: 18px;
     align-self: center;
-    margin-right: 10px;
+    padding: 14px 14px 14px 26px;
   }
 }
 
