@@ -123,6 +123,13 @@
   }
 }
 
+@media only screen and (max-width: 400px) {
+  .MTL-options > button {
+    padding: 0.3rem;
+    margin-right: 3px;
+  }
+}
+
 .task-dropdown {
   position: absolute;
   top: 0;
