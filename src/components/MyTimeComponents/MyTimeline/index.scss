@@ -100,6 +100,7 @@
   display: flex;
   margin-top: 0.7em;
   margin-left: 18px;
+  overflow-x: auto;
 }
 
 .MTL-options > button {
@@ -109,6 +110,17 @@
   padding: 0.5vw 2vw;
   font-size: 0.875rem;
   font-weight: 600;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+@media only screen and (max-width: 767px) {
+  .MTL-options > button {
+    padding: 0.5rem;
+    margin-right: 4px;
+  }
 }
 
 .task-dropdown {
