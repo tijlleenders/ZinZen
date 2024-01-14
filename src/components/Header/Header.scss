@@ -71,7 +71,7 @@
 
 .header-dropdown,
 .header-dropdown-dark {
-  width: 75% !important;
+  width: 400px !important;
   ul {
     background-color: var(--secondary-background) !important;
 
@@ -104,3 +104,10 @@
     transform: rotateY(360deg);
   }
 }
+
+@media (max-width: 475px) {
+  .header-dropdown,
+  .header-dropdown-dark {
+    width: 75% !important;
+  }
+} 
