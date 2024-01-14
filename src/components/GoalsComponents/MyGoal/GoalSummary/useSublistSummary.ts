@@ -7,26 +7,43 @@ export const useSublistSummary = ({ goal }: { goal: GoalItem }) => {
   const [subBudgetsCount, setSubBudgetsCount] = useState(0);
 
   useEffect(() => {
+    let isMounted = true;
+
     const classifyChildren = async () => {
-      const childrenGoalIds = await getChildrenGoals(goal.id);
-      const childrenGoals = await Promise.all(childrenGoalIds.map((goalItem) => getGoal(goalItem.id)));
+      try {
+        const childrenGoalIds = await getChildrenGoals(goal.id);
+        const childrenGoals = await Promise.all(childrenGoalIds.map((goalItem) => getGoal(goalItem.id)));
 
-      let goalsCount = 0;
-      let budgetsCount = 0;
-      childrenGoals.forEach((childGoal) => {
-        if (childGoal && !childGoal.timeBudget.perDay) {
-          goalsCount += 1;
-        } else if (childGoal) {
-          budgetsCount += 1;
+        let goalsCount = 0;
+        let budgetsCount = 0;
+
+        childrenGoals.forEach((childGoal) => {
+          if (childGoal) {
+            if (childGoal.timeBudget && childGoal.timeBudget.perDay !== null) {
+              budgetsCount += 1;
+            } else {
+              goalsCount += 1;
+            }
+          }
+        });
+
+        if (isMounted) {
+          setSubGoalsCount(goalsCount);
+          setSubBudgetsCount(budgetsCount);
         }
-      });
-
-      setSubGoalsCount(goalsCount);
-      setSubBudgetsCount(budgetsCount);
+      } catch (error) {
+        if (isMounted) {
+          console.error("Error fetching children goals:", error);
+        }
+      }
     };
 
     classifyChildren();
-  }, [goal]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return { subGoalsCount, subBudgetsCount };
 };

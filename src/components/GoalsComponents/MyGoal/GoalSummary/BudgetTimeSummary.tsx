@@ -5,22 +5,25 @@ import { useTranslation } from "react-i18next";
 
 const BudgetTimeSummary = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
+
+  if (!goal.timeBudget) {
+    return null;
+  }
   const { perDay, perWeek } = goal.timeBudget;
 
   if (!perDay && !perWeek) {
     return null;
   }
 
-  const onLength = goal.on.length;
-
-  const onWeekdays = goal.on.length === 5 && !goal.on.includes("Sat") && !goal.on.includes("Sun");
-  const onWeekends = goal.on.length === 2 && goal.on.includes("Sat") && goal.on.includes("Sun");
+  const onLength = goal.on?.length || 0;
+  const onWeekdays = onLength === 5 && goal.on?.includes("Sat") && goal.on?.includes("Sun");
+  const onWeekends = onLength === 2 && goal.on?.includes("Sat") && goal.on?.includes("Sun");
 
   return (
     <div>
       <span>{formatBudgetHrsToText(perDay)}</span>
       <span>
-        {goal.on.length > 0 && (
+        {goal.on && goal.on.length > 0 && (
           <>
             {onLength > 0 &&
               !onWeekdays &&
