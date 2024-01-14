@@ -98,6 +98,7 @@ const Settings = () => {
       overlayStyle={{ width: 175 }}
       menu={{ items }}
       trigger={["click"]}
+      placement="bottomRight"
     >
       <img
         className="theme-icon header-icon settings-icon"
