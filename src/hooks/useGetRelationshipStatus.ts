@@ -1,4 +1,4 @@
-import { checkAndUpdateRelationshipStatus } from "@src/api/ContactsAPI";
+import { getContactByRelId } from "@src/api/ContactsAPI";
 import { useEffect, useState } from "react";
 
 const useGetRelationshipStatus = (relId: string) => {
@@ -8,8 +8,10 @@ const useGetRelationshipStatus = (relId: string) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const status = await checkAndUpdateRelationshipStatus(relId);
-      setRelationshipStatus(status);
+      const status = await getContactByRelId(relId);
+      if (status?.accepted !== undefined) {
+        setRelationshipStatus(status.accepted);
+      }
       setLoading(false);
     };
 
