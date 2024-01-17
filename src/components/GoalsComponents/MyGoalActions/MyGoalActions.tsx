@@ -85,7 +85,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
         style={{ textAlign: "left" }}
         className="header-title"
         onClickCapture={() => {
-          handleUpdateGoal(goal.id, !!goal.timeBudget.perDay);
+          handleUpdateGoal(goal.id, !!goal.timeBudget?.perDay);
         }}
       >
         <p className="ordinary-element" id="title-field">
@@ -169,7 +169,7 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
             <div
               className="goal-action shareOptions-btn"
               onClickCapture={() => {
-                handleUpdateGoal(goal.id, !!goal.timeBudget.perDay);
+                handleUpdateGoal(goal.id, !!goal.timeBudget?.perDay);
               }}
             >
               <ActionDiv label={t("Edit")} icon="Edit" />

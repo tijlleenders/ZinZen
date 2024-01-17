@@ -10,7 +10,7 @@ import GoalHabitSummary from "./GoalHabitSummary";
 
 const GoalSummary = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
-  const isBudget = goal.timeBudget.perDay !== null;
+  const isBudget = goal.timeBudget?.perDay !== null && goal.timeBudget?.perDay !== undefined;
   const hasSubGoalItems = goal.sublist.length > 0;
   const shouldRenderGoalSummary = hasSubGoalItems || goal.due || goal.habit || goal.duration;
 
