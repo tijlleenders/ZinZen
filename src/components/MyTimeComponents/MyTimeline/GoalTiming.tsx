@@ -3,21 +3,20 @@ import React from "react";
 interface GoalTimingProps {
   startTime: string | null;
   endTime: string | null;
+  showTaskOptions: boolean;
 }
 
-export const GoalTiming: React.FC<GoalTimingProps> = ({ startTime, endTime }) => {
+export const GoalTiming: React.FC<GoalTimingProps> = ({ startTime, endTime, showTaskOptions }) => {
   const renderTime = (time: string) => (
-    <>
-      <span>{parseInt(time, 10)}</span>
-      <sup>00</sup>
-    </>
+    <p>
+      {parseInt(time, 10)} <sup>00</sup>
+    </p>
   );
 
   return (
     <div className="MTL-goalTiming">
       {startTime && renderTime(startTime)}
-      {startTime && endTime && <span> - </span>}
-      {endTime && renderTime(endTime)}
+      {endTime && showTaskOptions && renderTime(endTime)}
     </div>
   );
 };
