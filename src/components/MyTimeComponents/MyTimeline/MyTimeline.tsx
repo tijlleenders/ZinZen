@@ -16,6 +16,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
+import { useTranslation } from "react-i18next";
 import { darkModeState, displayToast, lastAction, openDevMode, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
@@ -40,6 +41,7 @@ interface MyTimelineProps {
 }
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetails, setTaskDetails }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { state } = useLocation();
   const doneSound = new Audio(archiveTune);
@@ -60,12 +62,48 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const handleView = () => {
     setShowScheduled(!showScheduled);
   };
+
+  const handleOpenGoal = async (goalId: string) => {
+    const goalsHistory = [];
+    let tmpGoal: GoalItem | null = await getGoal(goalId);
+    let openGoalId = tmpGoal?.parentGoalId;
+    const parentGoalId = openGoalId;
+    if (!openGoalId) {
+      return;
+    }
+    while (openGoalId !== "root") {
+      tmpGoal = await getGoal(openGoalId);
+      if (!tmpGoal) {
+        break;
+      }
+      goalsHistory.push({
+        goalID: tmpGoal.id || "root",
+        goalColor: tmpGoal.goalColor || "#ffffff",
+        goalTitle: tmpGoal.title || "",
+      });
+      openGoalId = tmpGoal.parentGoalId;
+    }
+    goalsHistory.reverse();
+    navigate("/MyGoals", {
+      state: {
+        ...locationState,
+        from: "",
+        goalsHistory,
+        activeGoalId: parentGoalId,
+        expandedGoalId: goalId,
+      },
+    });
+  };
   // console.log(devMode);
   const handleFocusClick = (task: ITask) => {
     setTaskTitle(task.title);
     navigate("/", { state: { ...state, displayFocus: true } });
   };
-  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus", task: ITask) => {
+
+  const handleActionClick = async (actionName: "Skip" | "Reschedule" | "Done" | "Focus" | "Goal", task: ITask) => {
+    if (actionName === "Goal") {
+      return handleOpenGoal(task.goalid);
+    }
     if (actionName === "Focus") {
       return handleFocusClick(task);
     }
@@ -112,37 +150,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
-  const handleOpenGoal = async (goalId: string) => {
-    const goalsHistory = [];
-    let tmpGoal: GoalItem | null = await getGoal(goalId);
-    let openGoalId = tmpGoal?.parentGoalId;
-    const parentGoalId = openGoalId;
-    if (!openGoalId) {
-      return;
-    }
-    while (openGoalId !== "root") {
-      tmpGoal = await getGoal(openGoalId);
-      if (!tmpGoal) {
-        break;
-      }
-      goalsHistory.push({
-        goalID: tmpGoal.id || "root",
-        goalColor: tmpGoal.goalColor || "#ffffff",
-        goalTitle: tmpGoal.title || "",
-      });
-      openGoalId = tmpGoal.parentGoalId;
-    }
-    goalsHistory.reverse();
-    navigate("/MyGoals", {
-      state: {
-        ...locationState,
-        from: "",
-        goalsHistory,
-        activeGoalId: parentGoalId,
-        expandedGoalId: goalId,
-      },
-    });
-  };
 
   return (
     <>
@@ -187,11 +194,11 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                       e.stopPropagation();
                       setDisplayOptionsIndex(task.taskid);
                       if (displayOptionsIndex === task.taskid || markDone) {
-                        handleOpenGoal(task.goalid);
+                        setDisplayOptionsIndex("");
                       }
                     }}
                   >
-                    {task.title}
+                    {t(`${task.title}`)}
                   </button>
                   {displayOptionsIndex === task.taskid && <GoalTiming startTime={startTime} endTime={endTime} />}
                 </div>
