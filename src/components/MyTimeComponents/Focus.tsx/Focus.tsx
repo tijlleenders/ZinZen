@@ -47,6 +47,7 @@ export const Focus = () => {
     setEditMode(!editMode);
   };
 
+  // delete this comment later
   const handleSaveClick = () => {
     const newTimeInSeconds = parseInt(userEnteredTime, 10) * 60;
     if (!Number.isNaN(newTimeInSeconds) && newTimeInSeconds > 0) {
