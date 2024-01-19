@@ -11,12 +11,17 @@ interface TaskOptionsProps {
 const ActionButton: React.FC<{
   action: TaskAction;
   task: ITask;
+  last?: boolean;
   onActionClick: (action: TaskAction, task: ITask) => void;
-}> = ({ action, task, onActionClick }) => (
-  <button type="button" onClick={() => onActionClick(action, task)}>
+}> = ({ action, task, last, onActionClick }) => (
+  <button type="button" onClick={() => onActionClick(action, task)} className={last ? "last-btn" : ""}>
     {action}
   </button>
 );
+
+ActionButton.defaultProps = {
+  last: false,
+};
 
 export const TaskOptions: React.FC<TaskOptionsProps> = ({ task, handleActionClick }) => {
   return (
@@ -25,7 +30,7 @@ export const TaskOptions: React.FC<TaskOptionsProps> = ({ task, handleActionClic
       <ActionButton action="Reschedule" task={task} onActionClick={handleActionClick} />
       <ActionButton action="Done" task={task} onActionClick={handleActionClick} />
       <ActionButton action="Focus" task={task} onActionClick={handleActionClick} />
-      <ActionButton action="Goal" task={task} onActionClick={handleActionClick} />
+      <ActionButton action="Goal" task={task} onActionClick={handleActionClick} last />
     </div>
   );
 };

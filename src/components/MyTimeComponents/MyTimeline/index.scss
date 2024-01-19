@@ -111,9 +111,13 @@
   font-weight: 600;
 }
 
+.MTL-options > .last-btn {
+  border-right: none;
+}
+
 @media only screen and (max-width: 600px) {
   .MTL-options {
-    padding : 0.1em;
+    padding: 0.1em;
   }
   .MTL-options > button {
     padding: 0.3em 1.2em;
