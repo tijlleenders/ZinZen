@@ -66,8 +66,7 @@ test.describe("Goal Sharing Feature", () => {
     test(`from User ${sharer} share invitation to User ${receiver}`, async () => {
       await goToMyGoalsPageFlow(sharerPage());
       currentGoalTitle = await sharerPage().locator(".goal-title").first().locator("span").innerText();
-      const isFirstContact = sharer === "A";
-      invitationLink = await addContact(sharerPage(), receiver, "relId", "relationshipId", isFirstContact);
+      invitationLink = await addContact(sharerPage(), receiver, "relId", "relationshipId");
       await goToMyGoalsPageFlow(sharerPage());
       await goToShareGoalModalFlow(sharerPage());
     });
