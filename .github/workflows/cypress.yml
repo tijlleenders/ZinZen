@@ -1,4 +1,5 @@
 name: Cypress
+
 on:
   push:
   pull_request:
@@ -7,10 +8,19 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      # Explicitly check out the head of the pull request from the forked repository
+      - name: Checkout PR head
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
