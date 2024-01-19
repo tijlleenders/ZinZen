@@ -42,6 +42,7 @@
   "scripts": {
     "cy": "cypress",
     "dev": "vite",
+    "host": "vite --host",
     "build": "CI=false && vite build",
     "build-local": "vite build",
     "tsc": "tsc",
@@ -84,7 +85,7 @@
     "@types/crypto-js": "^4.1.1",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
-    "cypress": "^10.11.0",
+    "cypress": "^13.6.3",
     "eslint": "^8.13.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",

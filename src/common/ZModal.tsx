@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import { ZModalProps } from "@src/Interfaces/ICommon";
+import { read } from "fs";
 
 const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width, style }) => {
   const theme = useRecoilValue(themeState);
@@ -18,12 +19,16 @@ const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width, 
     backgroundColor: darkModeStatus ? "rgba(0, 0, 0, 0.50)" : "rgba(87, 87, 87, 0.4)",
   };
 
+  const isMobileDevice = () => {
+    return window.matchMedia("(max-width: 768px)").matches;
+  };
+
   return (
     <Modal
       open={open}
       closable={false}
       footer={null}
-      centered
+      centered={!isMobileDevice()}
       onCancel={onCancel || (() => window.history.back())}
       className={combinedClassName}
       maskStyle={maskStyle}
