@@ -8,9 +8,6 @@ import {
   waitForResponseConfirmation,
 } from "playwright/utils/collaboration-feature-utils";
 
-const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
-const apiServerUrlGoal = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
-
 test.describe.configure({ mode: "serial" });
 
 test.describe("Goal Sharing Feature", () => {
