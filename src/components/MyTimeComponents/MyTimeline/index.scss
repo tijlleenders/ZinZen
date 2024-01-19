@@ -111,6 +111,16 @@
   font-weight: 600;
 }
 
+@media only screen and (max-width: 600px) {
+  .MTL-options {
+    padding : 0.1em;
+  }
+  .MTL-options > button {
+    padding: 0.3em 1.2em;
+    font-size: 0.7rem;
+  }
+}
+
 .task-dropdown {
   position: absolute;
   top: 0;
