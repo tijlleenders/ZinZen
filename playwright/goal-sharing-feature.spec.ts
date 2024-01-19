@@ -29,6 +29,7 @@ test.describe("Goal Sharing Feature", () => {
     await userOnePage.goto("http://127.0.0.1:3000/");
     await userOnePage.getByRole("button", { name: "Goals" }).click();
     await shareGoalPrivately(userOnePage);
+    await userOnePage.getByRole("button", { name: "add contact", exact: true }).click();
     await userOnePage.getByPlaceholder("Name").click();
     await userOnePage.getByPlaceholder("Name").fill("User 2");
     await userOnePage.getByRole("button", { name: "add contact Share invitation" }).click();

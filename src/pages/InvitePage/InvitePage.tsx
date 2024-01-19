@@ -3,17 +3,26 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { darkModeState, displayToast } from "@src/store";
-import { addContact } from "@src/api/ContactsAPI";
+import { addContact, getAllContacts } from "@src/api/ContactsAPI";
 import { acceptRelationship } from "@src/services/contact.service";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
+import { displayPartnerModeTour } from "@src/store/TourState";
 
 const InvitePage = () => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
+  const setDisplayTour = useSetRecoilState(displayPartnerModeTour);
 
   const setShowToast = useSetRecoilState(displayToast);
 
   const [newContactName, setNewContactName] = useState("");
+
+  const checkForTour = async () => {
+    const numberOfContacts = await getAllContacts();
+    if (numberOfContacts.length <= 1) {
+      setDisplayTour(true);
+    }
+  };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -27,8 +36,10 @@ const InvitePage = () => {
       await addContact(newContactName, relId, true);
       setNewContactName("");
     }
+    checkForTour();
     navigate("/");
   };
+
   useEffect(() => {
     const checkin = localStorage.getItem("checkedIn");
     if (!checkin) {

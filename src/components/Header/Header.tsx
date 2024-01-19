@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -11,7 +11,11 @@ import lightModeIcon from "@assets/images/lightModeIcon.svg";
 import { IHeader } from "@src/Interfaces/ICommon";
 import { goalsHistory } from "@src/store/GoalsState";
 import { getAllContacts } from "@src/api/ContactsAPI";
+
+import PartnerModeTour from "@components/PartnerModeTour";
+
 import { darkModeState, displayPartnerMode, displayToast, flipAnimationState, searchActive } from "@src/store";
+import { displayPartnerModeTour } from "@src/store/TourState";
 
 import HeaderBtn from "./HeaderBtn";
 import Search from "../../common/Search";
@@ -28,8 +32,11 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const subGoalHistory = useRecoilValue(goalsHistory);
 
   const [showPartnerMode, setShowPartnerMode] = useRecoilState(displayPartnerMode);
+  const [partnerModeTour, setPartnerModeTour] = useRecoilState(displayPartnerModeTour);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const [isFlipping, setIsFlipping] = useRecoilState(flipAnimationState);
+
+  const zinZenLogoRef = useRef(null);
 
   const handlePartner = async () => {
     setIsFlipping(true);
@@ -45,6 +52,9 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
     if (showPartnerMode) {
       window.history.back();
     } else {
+      if (partnerModeTour) {
+        setPartnerModeTour(false);
+      }
       navigate("/MyGoals", {
         state: {
           displayPartnerMode: true,
@@ -86,7 +96,9 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
               onClickCapture={handlePartner}
               src={zinzenLightLogo}
               alt="ZinZen"
+              ref={zinZenLogoRef}
             />
+            <PartnerModeTour refTarget={zinZenLogoRef} />
             <h6
               onClickCapture={() => {
                 if (title === "myGoals") {

@@ -7,6 +7,4 @@ export async function shareGoalPrivately(userOnePage: Page) {
     .filter({ hasText: /^Share$/ })
     .first()
     .click();
-  await userOnePage.getByRole("button", { name: "Share privately" }).click();
-  await userOnePage.getByRole("button", { name: "Choose contact" }).click();
 }
