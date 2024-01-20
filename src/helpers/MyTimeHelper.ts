@@ -11,6 +11,7 @@ import { getAllTasks, getAllBlockedTasks } from "@src/api/TasksAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
+import { t } from "i18next";
 
 export const transformIntoSchInputGoals = (
   dbTasks: { [goalid: string]: TaskItem },
@@ -19,7 +20,7 @@ export const transformIntoSchInputGoals = (
 ) => {
   const inputGoalsArr: ISchedulerInputGoal[] = [];
   activeGoals.forEach(async (ele) => {
-    const obj: ISchedulerInputGoal = { id: ele.id, title: ele.title, filters: {}, createdAt: ele.createdAt };
+    const obj: ISchedulerInputGoal = { id: ele.id, title: t(ele.title), filters: {}, createdAt: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
     // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
     // obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];

@@ -106,9 +106,23 @@
   background: transparent;
   border: 0px;
   border-right: 1px solid;
-  padding: 0.5vw 2vw;
+  padding: 0.5em 2em;
   font-size: 0.875rem;
   font-weight: 600;
+}
+
+.MTL-options > .last-btn {
+  border-right: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .MTL-options {
+    padding: 0.1em;
+  }
+  .MTL-options > button {
+    padding: 0.3em 1.2em;
+    font-size: 0.7rem;
+  }
 }
 
 .task-dropdown {
