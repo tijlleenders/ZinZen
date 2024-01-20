@@ -45,7 +45,7 @@ export const starterGoals = [
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
-        perDay: "1-4",
+        perDay: "0-4",
         perWeek: "1-4",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -58,7 +58,7 @@ export const starterGoals = [
       beforeTime: 24,
       timeBudget: {
         perDay: "1-3",
-        perWeek: "1-3",
+        perWeek: "2-3",
       },
       on: ["Sat", "Sun"],
     },
