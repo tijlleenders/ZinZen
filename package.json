@@ -31,7 +31,7 @@
     "regenerator-runtime": "^0.13.9",
     "sass": "^1.50.0",
     "uuidv4": "^6.2.13",
-    "vite": "^2.9.1",
+    "vite": "^2.9.17",
     "workbox-core": "^5.1.4",
     "workbox-expiration": "^5.1.4",
     "workbox-precaching": "^5.1.4",
