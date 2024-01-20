@@ -188,7 +188,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                 } else setDisplayOptionsIndex("");
               }}
             >
-              <button type="button" className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
+              <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
               <GoalTiming startTime={startTime} endTime={endTime} showTaskOptions={showTaskOptions} />
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", position: "relative" }}>
