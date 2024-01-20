@@ -90,10 +90,9 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
         <Search debounceSearch={debounceSearch} />
       ) : (
         <>
-          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+          <div className="header-logo-title">
             <img
               className={isFlipping ? "logo-flip" : ""}
-              style={{ height: 30, width: 30, cursor: "pointer" }}
               onClickCapture={handlePartner}
               src={zinzenLightLogo}
               alt="ZinZen"
@@ -101,7 +100,6 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
             />
             <PartnerModeTour refTarget={zinZenLogoRef} />
             <h6
-              style={{ cursor: "pointer" }}
               onClickCapture={() => {
                 if (title === "myGoals") {
                   window.history.go(-subGoalHistory.length);

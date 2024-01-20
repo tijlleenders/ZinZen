@@ -16,7 +16,7 @@ const Search = ({ debounceSearch }: { debounceSearch: (event: ChangeEvent<HTMLIn
           window.history.back();
         }}
       >
-        <img src={backIcon} alt="zinzen search" style={{ padding: "8px" }} />
+        <img src={backIcon} alt="zinzen search" />
       </button>
       <input
         className="header-search ordinary-element"

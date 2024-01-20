@@ -12,6 +12,7 @@ It is also a way to collaborate efficiently with others to achieve shared goals.
 Explain ZinZen like I'm:
 
 - a developer: "ZinZen is git - but for personal goals instead of code - and with a UI that anyone understands."
+- a busy person: "ZinZen helps you plan like a pro - with the ease of a messaging app."
 - five: "ZinZen tells the world about your dreams - and then people come and help you."
 - a project manager: "ZinZen is a global multi-project management platform for individuals."
 - an investor: "ZinZen will never be for sale - but we offer decent ROI on loans."
@@ -38,7 +39,7 @@ There are many ways to contribute... not only code!
 - ✨Star✨ this repo
 - Tell a friend!
 - Pick an issue on the [ZinZen® project board](https://github.com/users/tijlleenders/projects/4) and do let us know before you start working on it. ;)
-- If Rust, WASM and scheduling algorithms are your domains of interest, please consider contributing to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
+- If you like Rust, WASM and scheduling algorithms, please contibute to [the ZinZen-scheduler](https://github.com/tijlleenders/ZinZen-scheduler).
 - Get some more ideas on https://opensource.guide/how-to-contribute/
 
 Please mind the code of conduct.
