@@ -46,7 +46,7 @@
 
 .MTL-display > button {
   line-height: 22px;
-  padding: 0.7em 4%;
+  padding: 0.7em 0;
   line-height: 22px;
   padding-bottom: 0.7em;
   background: transparent;
@@ -64,10 +64,11 @@
 
 .MTL-color-block {
   align-self: stretch;
-  border-radius: 10px;
+  border-radius: 0 10px 10px 0;
   flex-shrink: 0;
   border: none;
-  width: 8px;
+  width: 6px;
+  margin-right: 17px;
 }
 
 .MyTime-expand-btw {
