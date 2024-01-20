@@ -366,54 +366,55 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             </div>
           </>
         ) : (
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              alignItems: "center",
-            }}
-          >
-            <span>{t("duration")}</span>
-            <CustomInput
-              value={tags.duration}
-              handleChange={(value: string) => {
-                setTags({ ...tags, duration: roundOffHours(value) });
-              }}
-              style={{
-                width: 20,
-                boxShadow: "var(--shadow)",
-              }}
-            />
-            <span>{t("dueDate")}</span>
-            <CustomDatePicker
-              label=""
-              dateValue={due}
-              handleDateChange={(newDate) => {
-                setDue(newDate);
-              }}
-              showTime={false}
-              timeValue={0}
-              handleTimeChange={() => null}
-              disablePastDates
-            />
+          <div className="action-btn-container">
+            <div className="hint-toggle">
+              <p style={{ marginTop: 6 }}>Hints</p>
+              <Switch
+                prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
+                checkedChildren={<img src={TickIcon} alt="Tick icon" />}
+              />
+            </div>
+            <button
+              type="button"
+              className="action-btn"
+              onClick={handleSave}
+              style={{ display: "flex", gap: 15, justifyContent: "center" }}
+            >
+              {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+            </button>
           </div>
         )}
-        <div className="action-btn-container">
-          <div className="hint-toggle">
-            <p style={{ marginTop: 6 }}>Hints</p>
-            <Switch
-              prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
-              checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-            />
-          </div>
-          <button
-            type="button"
-            className="action-btn"
-            onClick={handleSave}
-            style={{ display: "flex", gap: 15, justifyContent: "center" }}
-          >
-            {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
-          </button>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            alignItems: "center",
+          }}
+        >
+          <span>{t("duration")}</span>
+          <CustomInput
+            value={tags.duration}
+            handleChange={(value: string) => {
+              setTags({ ...tags, duration: roundOffHours(value) });
+            }}
+            style={{
+              width: 20,
+              boxShadow: "var(--shadow)",
+            }}
+          />
+          <span>{t("dueDate")}</span>
+          <CustomDatePicker
+            label=""
+            dateValue={due}
+            handleDateChange={(newDate) => {
+              setDue(newDate);
+            }}
+            showTime={false}
+            timeValue={0}
+            handleTimeChange={() => null}
+            disablePastDates
+          />
         </div>
       </div>
     </ZModal>
