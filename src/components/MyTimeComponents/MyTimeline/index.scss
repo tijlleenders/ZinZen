@@ -28,6 +28,8 @@
   }
   .MTL-goalTiming {
     margin: 4px 5px 4px 5px;
+    border: none;
+    font-weight: 600;
     line-height: 16px;
     white-space: nowrap;
     display: flex;
@@ -99,10 +101,10 @@
 .MTL-options > button {
   background: transparent;
   border: 0px;
+  font-weight: 400;
   border-right: 1px solid;
   padding: 0.5em 2em;
   font-size: 0.875rem;
-  font-weight: 600;
 }
 
 .MTL-options > .last-btn {
