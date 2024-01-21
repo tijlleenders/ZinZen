@@ -70,7 +70,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
               setShowToast({
                 open: true,
                 message: "Link copied to clipboard",
-                extra: `Once your partner accepts the invitation link - your goals will be shared automatically`,
+                extra: `Paste this link in a chat message to your partner so they can accept the request and start receiving what you shared automatically`,
               });
             }
           }
