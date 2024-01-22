@@ -41,14 +41,23 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
+  const isGoalArchived = goal.archived;
 
+  const handleDeleteAction = async () => {
+    if (goal.title === "magic") {
+      setDevMode(false);
+    } else if (isGoalArchived === "false") {
+      await removeThisGoal(goal, ancestors, isPartnerGoal, false);
+      setLastAction("goalSoftDeleted");
+      await setShowToast({ open: true, message: "Will auto-delete in 7 days", extra: "" });
+    } else {
+      await removeThisGoal(goal, ancestors, isPartnerGoal, true);
+      setLastAction("goalDeleted");
+    }
+  };
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
-      if (goal.title === "magic") {
-        setDevMode(false);
-      }
-      await removeThisGoal(goal, ancestors, isPartnerGoal);
-      setLastAction("goalDeleted");
+      handleDeleteAction();
     } else if (action === "archive") {
       await archiveThisGoal(goal, ancestors);
       setLastAction("goalArchived");
@@ -76,8 +85,6 @@ const MyGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
       await handleActionClick(actionName);
     }
   };
-
-  const isGoalArchived = goal.archived;
 
   return (
     <ZModal open={open} width={400} onCancel={() => window.history.back()} type="interactables-modal">
