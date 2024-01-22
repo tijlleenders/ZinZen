@@ -19,7 +19,6 @@ import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActio
 import ContactItem from "@src/models/ContactItem";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
 
-import useGetRelationshipStatus from "@src/hooks/useGetRelationshipStatus";
 import InvitationStatus from "./InvitationStatus";
 
 const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
@@ -36,7 +35,6 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const showGoalActions = useRecoilValue(displayGoalActions);
   const [action, setLastAction] = useRecoilState(lastAction);
-  const { relationshipStatus, loading } = useGetRelationshipStatus(relId);
 
   const handleUserGoals = (goals: GoalItem[]) => {
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
@@ -104,7 +102,7 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
 
         {activeGoals?.length === 0 && (
           <>
-            {!loading && <InvitationStatus relationshipStatus={relationshipStatus} relId={relId} />}
+            <InvitationStatus relId={relId} />
             <img
               style={{ width: 350, height: 350, opacity: 0.3 }}
               src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}

@@ -2,10 +2,12 @@ import React from "react";
 import { shareInvitation } from "@src/assets";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { displayToast, darkModeState } from "@src/store";
+import useGetRelationshipStatus from "@src/hooks/useGetRelationshipStatus";
 
-const InvitationStatus = ({ relationshipStatus, relId }: { relationshipStatus: boolean; relId: string }) => {
+const InvitationStatus = ({ relId }: { relId: string }) => {
   const setShowToast = useSetRecoilState(displayToast);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const { relationshipStatus, loading } = useGetRelationshipStatus(relId);
 
   const handleSendInvitation = async () => {
     navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);
@@ -15,6 +17,8 @@ const InvitationStatus = ({ relationshipStatus, relId }: { relationshipStatus: b
       extra: "Once your partner accepts the invitation link - your goals will be shared automatically",
     });
   };
+
+  if (loading) return null;
 
   return (
     <div style={{ textAlign: "center", margin: "0 20px" }}>
