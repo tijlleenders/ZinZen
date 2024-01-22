@@ -268,5 +268,7 @@ export const calculateDaysLeft = (dueDate: string) => {
 
 // Utility function for singular/plural formatting
 export const formatSingularPlural = (count: number, singularWord: string) => {
-  return `${count} ${singularWord}${count !== 1 ? "s" : ""}`;
+  const { t } = useTranslation();
+  const word = `${singularWord}${count !== 1 ? "s" : ""}`;
+  return `${count} ${t(word)}`;
 };
