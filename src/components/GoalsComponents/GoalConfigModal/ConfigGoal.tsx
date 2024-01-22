@@ -300,10 +300,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                         <span>{budgetPerHrSummary} hrs / day</span>
                         <Slider
                           tooltip={{ prefixCls: "per-day-tooltip" }}
-                          min={1}
+                          min={0}
                           max={beforeTime - afterTime}
                           marks={{
-                            1: "1",
+                            0: "0",
                             [perDayHrs[0]]: `${perDayHrs[0]}`,
                             [perDayHrs[1]]: `${perDayHrs[1]}`,
                             [beforeTime - afterTime]: `${beforeTime - afterTime}`,
@@ -319,10 +319,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                         <span>{budgetPerWeekSummary} hrs / week</span>
                         <Slider
                           tooltip={{ prefixCls: "per-week-tooltip" }}
-                          min={1}
+                          min={0}
                           max={(beforeTime - afterTime) * numberOfDays}
                           marks={{
-                            1: "1",
+                            0: "0",
                             [perWeekHrs[0]]: `${perWeekHrs[0]}`,
                             [perWeekHrs[1]]: `${perWeekHrs[1]}`,
                             [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
