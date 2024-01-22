@@ -21,7 +21,7 @@ const InvitationStatus = ({ relId }: { relId: string }) => {
   if (loading) return null;
 
   return (
-    <div style={{ textAlign: "center", margin: "0 20px" }}>
+    <div style={{ textAlign: "center", margin: "0 20px", fontWeight: 400, fontSize: 18 }}>
       <p>
         {relationshipStatus
           ? "Your partner has accepted the sharing request but has not started sharing anything with you."
