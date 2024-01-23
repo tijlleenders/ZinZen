@@ -32,6 +32,18 @@ export const addGoal = async (goalDetails: GoalItem) => {
   return newGoalId;
 };
 
+export const saveHintInDb = async (id, hint) => {
+  console.log(id, hint);
+  const hintObject = { id, hint };
+  await db
+    .transaction("rw", db.hintsCollection, async () => {
+      await db.hintsCollection.add(hintObject);
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+};
+
 export const getGoal = async (goalId: string) => {
   const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
   return goal.length > 0 ? goal[0] : null;

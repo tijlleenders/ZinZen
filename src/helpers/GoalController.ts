@@ -10,6 +10,7 @@ import {
   removeGoalWithChildrens,
   getParticipantsOfGoals,
   getGoalHints,
+  saveHintInDb,
 } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
@@ -35,8 +36,9 @@ export const createGoal = async (
 
   if (goalTags.hints === true) {
     const res = await getGoalHints(newGoal);
-    console.log(res);
   }
+
+  await saveHintInDb(newGoal.id, newGoal.hints);
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);

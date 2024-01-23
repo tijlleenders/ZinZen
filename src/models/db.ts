@@ -6,7 +6,7 @@ import ContactItem from "./ContactItem";
 import { InboxItem } from "./InboxItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
-import { DumpboxItem } from "./DumpboxItem";
+import { DumpboxItem, HintItem } from "./DumpboxItem";
 
 export const dexieVersion = 17;
 
@@ -30,6 +30,8 @@ export class ZinZenDB extends Dexie {
 
   dumpboxCollection!: Table<DumpboxItem, string>;
 
+  hintsCollection!: Table<HintItem, string>;
+
   constructor() {
     super("ZinZenDB");
     this.version(dexieVersion)
@@ -49,6 +51,7 @@ export class ZinZenDB extends Dexie {
         customizationCollection: "++id, goalId, posIndex",
         dumpboxCollection: "id, key, value",
         partnersCollection: null,
+        hintsCollection: "id, hint",
       })
       .upgrade((trans) => {
         console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
