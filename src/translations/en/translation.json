@@ -179,6 +179,6 @@
   "starts": "starts",
   "perWeek": "per week",
   "everyWeek": "every week",
-  "hour": "hour",
-  "hours": "hours"
+  "hourWithCount_one": "{{count}} hour",
+  "hourWithCount_other": "{{count}} hours"
 }

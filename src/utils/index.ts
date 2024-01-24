@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
-import { ILanguage } from "@src/Interfaces";
 import { languagesFullForms } from "@src/translations/i18n";
 
 export async function createContactRequest(url: string, body: object | null = null, method = "POST") {

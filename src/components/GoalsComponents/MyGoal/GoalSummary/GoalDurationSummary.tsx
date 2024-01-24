@@ -1,14 +1,16 @@
-import { GoalItem } from "@src/models/GoalItem";
-import { formatSingularPlural } from "@src/utils";
-import React from "react";
 import { useTranslation } from "react-i18next";
+import React from "react";
+import { GoalItem } from "@src/models/GoalItem";
 
 const GoalDurationSummary = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
+  const count = Number(goal.duration);
+  const localizedHourText = t("hourWithCount", { count });
 
   if (goal.duration) {
-    return <span>{formatSingularPlural(Number(goal.duration), t("hour"))}</span>;
+    return <span>{`${localizedHourText}`}</span>;
   }
+
   return null;
 };
 
