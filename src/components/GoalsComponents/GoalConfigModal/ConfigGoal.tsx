@@ -309,9 +309,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                             [beforeTime - afterTime]: `${beforeTime - afterTime}`,
                           }}
                           range
-                          defaultValue={perDayHrs}
+                          value={perDayHrs}
                           onAfterChange={(val) => {
-                            setPerDayHrs(val);
+                            if (val[0] === 0 && val[1] === 0) {
+                              setPerDayHrs([0, 1]);
+                            } else if (val[0] === 0 && val[1] < 1) {
+                              setPerDayHrs([0, 1]);
+                            } else {
+                              setPerDayHrs(val);
+                            }
                           }}
                         />
                       </div>
@@ -328,9 +334,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                             [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
                           }}
                           range
-                          defaultValue={perWeekHrs}
-                          onAfterChange={(val) => {
-                            setPerWeekHrs(val);
+                          value={perWeekHrs}
+                          onChange={(val) => {
+                            if (val[0] === 0 && val[1] === 0) {
+                              setPerWeekHrs([0, 1]);
+                            } else if (val[0] === 0 && val[1] < 1) {
+                              setPerWeekHrs([0, 1]);
+                            } else {
+                              setPerWeekHrs(val);
+                            }
                           }}
                         />
                       </div>
