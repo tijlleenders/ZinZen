@@ -20,13 +20,12 @@ export const saveHintInDb = async (goalId: string, hint: boolean) => {
 export const updateHintInDb = async (goalId: string, hint: boolean) => {
   await db
     .transaction("rw", db.hintsCollection, async () => {
-      await db.hintsCollection
-        .where("id")
-        .equals(goalId)
-        .modify((obj: HintItem) => {
-          const newObj = { ...obj, hint };
-          return newObj;
-        });
+      const existingItem = await db.hintsCollection.where("id").equals(goalId).first();
+      if (existingItem) {
+        await db.hintsCollection.update(goalId, { hint });
+      } else {
+        await saveHintInDb(goalId, hint);
+      }
     })
     .catch((e) => {
       console.log(e.stack || e);
