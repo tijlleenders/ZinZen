@@ -23,7 +23,7 @@ const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width, 
       open={open}
       closable={false}
       footer={null}
-      centered
+      centered={true}
       onCancel={onCancel || (() => window.history.back())}
       className={combinedClassName}
       maskStyle={maskStyle}
