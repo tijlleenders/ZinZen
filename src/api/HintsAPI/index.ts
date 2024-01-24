@@ -1,4 +1,5 @@
 import { db } from "@src/models";
+import { HintItem } from "@src/models/HintItem";
 
 export const getGoalHintFromDB = async (goalId: string) => {
   const hint = await db.hintsCollection.where("id").equals(goalId).toArray();
@@ -10,6 +11,22 @@ export const saveHintInDb = async (goalId: string, hint: boolean) => {
   await db
     .transaction("rw", db.hintsCollection, async () => {
       await db.hintsCollection.add(hintObject);
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+};
+
+export const updateHintInDb = async (goalId: string, hint: boolean) => {
+  await db
+    .transaction("rw", db.hintsCollection, async () => {
+      await db.hintsCollection
+        .where("id")
+        .equals(goalId)
+        .modify((obj: HintItem) => {
+          const newObj = { ...obj, hint };
+          return newObj;
+        });
     })
     .catch((e) => {
       console.log(e.stack || e);
