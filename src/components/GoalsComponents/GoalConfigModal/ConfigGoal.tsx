@@ -192,6 +192,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     window.history.back();
   };
 
+  const handleSliderChange = (value: number[], setHours: React.Dispatch<React.SetStateAction<number[]>>) => {
+    if (value[0] === 0 && value[1] === 0) {
+      setHours([0, 1]);
+    } else if (value[0] === 0 && value[1] < 1) {
+      setHours([0, 1]);
+    } else {
+      setHours(value);
+    }
+  };
+
   const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
   const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
 
@@ -310,15 +320,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                           }}
                           range
                           value={perDayHrs}
-                          onAfterChange={(val) => {
-                            if (val[0] === 0 && val[1] === 0) {
-                              setPerDayHrs([0, 1]);
-                            } else if (val[0] === 0 && val[1] < 1) {
-                              setPerDayHrs([0, 1]);
-                            } else {
-                              setPerDayHrs(val);
-                            }
-                          }}
+                          onChange={(val) => handleSliderChange(val, setPerDayHrs)}
                         />
                       </div>
                       <div>
@@ -335,15 +337,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                           }}
                           range
                           value={perWeekHrs}
-                          onChange={(val) => {
-                            if (val[0] === 0 && val[1] === 0) {
-                              setPerWeekHrs([0, 1]);
-                            } else if (val[0] === 0 && val[1] < 1) {
-                              setPerWeekHrs([0, 1]);
-                            } else {
-                              setPerWeekHrs(val);
-                            }
-                          }}
+                          onChange={(val) => handleSliderChange(val, setPerWeekHrs)}
                         />
                       </div>
                     </div>
