@@ -15,3 +15,13 @@ export const saveHintInDb = async (goalId: string, hint: boolean) => {
       console.log(e.stack || e);
     });
 };
+
+export const deleteHintInDb = async (goalId: string) => {
+  await db
+    .transaction("rw", db.hintsCollection, async () => {
+      await db.hintsCollection.delete(goalId);
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+};

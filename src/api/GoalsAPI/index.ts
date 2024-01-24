@@ -4,6 +4,7 @@ import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { sortGoalsByProps } from "../GCustomAPI";
+import { deleteHintInDb } from "../HintsAPI";
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.goalsCollection, async () => {
@@ -134,6 +135,7 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
 };
 
 export const removeGoal = async (goalId: string) => {
+  await deleteHintInDb(goalId);
   await db.goalsCollection.delete(goalId).catch((err) => console.log("failed to delete", err));
 };
 
