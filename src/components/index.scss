@@ -13,6 +13,9 @@
 
 .global-addBtn {
   position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   bottom: 130px;
   border-radius: 50%;
   border: none;
