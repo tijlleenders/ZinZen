@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import { languagesFullForms } from "@src/translations/i18n";
+import i18next from "i18next";
 
 export async function createContactRequest(url: string, body: object | null = null, method = "POST") {
   try {
@@ -236,15 +237,14 @@ export const getSvgForGoalPps = (count: number) => {
 };
 
 export const formatBudgetHrsToText = (hours: string | null) => {
-  const { t } = useTranslation();
   if (hours === null) {
     return "";
   }
   const parts = hours.split("-").map(Number);
   if (parts.length === 2 && parts[0] === parts[1]) {
-    return `${parts[0]} ${t("hour", { count: parts[0] })}`;
+    return `${parts[0]} ${i18next.t("hour", { count: parts[0] })}`;
   }
-  return `${hours} ${t("hours")}`;
+  return `${hours} ${i18next.t("hours")}`;
 };
 
 export const calculateDaysLeft = (dueDate: string) => {
