@@ -3,8 +3,3 @@ export interface DumpboxItem {
   key: string;
   value: string;
 }
-
-export interface HintItem {
-  id: string;
-  hint: boolean;
-}

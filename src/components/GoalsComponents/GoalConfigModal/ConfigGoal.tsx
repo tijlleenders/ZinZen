@@ -18,6 +18,7 @@ import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
+import { getGoalHintFromDB } from "@src/api/HintsAPI";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -48,7 +49,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
 
-  const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
@@ -61,10 +61,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
 
   const open = !!showAddGoal || !!showUpdateGoal;
+  const [hints, setHints] = useState(false);
+
+  useEffect(() => {
+    getGoalHintFromDB(goal.id).then((hintItem) => {
+      setHints(!!hintItem);
+    });
+  }, [goal.id]);
 
   const [title, setTitle] = useState(goal.title);
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
-  const [hints, setHints] = useState(false);
   // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
   // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
   // const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);

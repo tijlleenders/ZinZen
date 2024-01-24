@@ -14,15 +14,13 @@ const HintToggle = ({
 }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
-  console.log("defaultChecked: ", defaultValue);
-
   return (
     <div className="hint-toggle">
       <p style={{ marginTop: 6 }}>Hints</p>
       <Switch
         prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
         checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-        defaultChecked={defaultValue}
+        checked={defaultValue}
         onChange={(value) => (value === true ? setHints(true) : setHints(false))}
       />
     </div>

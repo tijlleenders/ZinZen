@@ -10,8 +10,8 @@ import {
   removeGoalWithChildrens,
   getParticipantsOfGoals,
   getGoalHints,
-  saveHintInDb,
 } from "@src/api/GoalsAPI";
+import { saveHintInDb } from "@src/api/HintsAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
@@ -35,10 +35,10 @@ export const createGoal = async (
   });
 
   if (goalTags.hints === true) {
-    const res = await getGoalHints(newGoal);
+    await getGoalHints(newGoal);
   }
 
-  await saveHintInDb(newGoal.id, newGoal.hints);
+  await saveHintInDb(goalTags.id, goalTags.hints);
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
@@ -91,6 +91,7 @@ export const modifyGoal = async (
     goalColor,
   });
   sendUpdatedGoal(goalId, ancestors);
+  await saveHintInDb(goalTags.id, goalTags.hints);
 };
 
 export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {

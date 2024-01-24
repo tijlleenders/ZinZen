@@ -6,7 +6,8 @@ import ContactItem from "./ContactItem";
 import { InboxItem } from "./InboxItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
-import { DumpboxItem, HintItem } from "./DumpboxItem";
+import { DumpboxItem } from "./DumpboxItem";
+import { HintItem } from "./HintItem";
 
 export const dexieVersion = 17;
 
