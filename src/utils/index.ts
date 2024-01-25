@@ -43,7 +43,7 @@ export async function createGroupRequest(url: string, body: object | null = null
 
 export const myNameSpace = "c95256dc-aa03-11ed-afa1-0242ac120002";
 
-export const getJustDate = (fullDate: Date) => new Date(fullDate.toDateString());
+export const getJustDate = (fullDate: Date) => new Date(fullDate);
 
 export const truncateContent = (content: string, maxLength = 20) => {
   const { length } = content;
