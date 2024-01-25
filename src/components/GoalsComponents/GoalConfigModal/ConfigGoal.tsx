@@ -372,51 +372,65 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 </span>
               ))}
             </div>
+            <div className="action-btn-container">
+              <HintToggle setHints={setHints} defaultValue={hints} />
+              <button
+                type="button"
+                className="action-btn"
+                onClick={handleSave}
+                style={{ display: "flex", gap: 15, justifyContent: "center" }}
+              >
+                {t(`${action} Budget`)}
+              </button>
+            </div>
           </>
         ) : (
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              alignItems: "center",
-            }}
-          >
-            <span>{t("duration")}</span>
-            <CustomInput
-              value={tags.duration}
-              handleChange={(value: string) => {
-                setTags({ ...tags, duration: roundOffHours(value) });
-              }}
+          <div>
+            <div className="action-btn-container">
+              <HintToggle setHints={setHints} defaultValue={hints} />
+              <button
+                type="button"
+                className="action-btn"
+                onClick={handleSave}
+                style={{ display: "flex", gap: 15, justifyContent: "center" }}
+              >
+                {t(`${action} Goal`)}
+              </button>
+            </div>
+            <div
               style={{
-                width: 20,
-                boxShadow: "var(--shadow)",
+                display: "flex",
+                gap: 12,
+                alignItems: "center",
+                marginTop: 12,
               }}
-            />
-            <span>{t("dueDate")}</span>
-            <CustomDatePicker
-              label=""
-              dateValue={due}
-              handleDateChange={(newDate) => {
-                setDue(newDate);
-              }}
-              showTime={false}
-              timeValue={0}
-              handleTimeChange={() => null}
-              disablePastDates
-            />
+            >
+              <span>{t("duration")}</span>
+              <CustomInput
+                value={tags.duration}
+                handleChange={(value: string) => {
+                  setTags({ ...tags, duration: roundOffHours(value) });
+                }}
+                style={{
+                  width: 20,
+                  boxShadow: "var(--shadow)",
+                }}
+              />
+              <span>{t("dueDate")}</span>
+              <CustomDatePicker
+                label=""
+                dateValue={due}
+                handleDateChange={(newDate) => {
+                  setDue(newDate);
+                }}
+                showTime={false}
+                timeValue={0}
+                handleTimeChange={() => null}
+                disablePastDates
+              />
+            </div>
           </div>
         )}
-        <div className="action-btn-container">
-          <HintToggle setHints={setHints} defaultValue={hints} />
-          <button
-            type="button"
-            className="action-btn"
-            onClick={handleSave}
-            style={{ display: "flex", gap: 15, justifyContent: "center" }}
-          >
-            {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
-          </button>
-        </div>
       </div>
     </ZModal>
   );
