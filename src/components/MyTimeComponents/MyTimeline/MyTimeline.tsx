@@ -23,6 +23,7 @@ import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/Tas
 import "./index.scss";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
+import { addImpossibleGoal, deleteAllImpossibleGoals } from "@src/api/ImpossibleGoalsApi";
 
 interface MyTimelineProps {
   day: string;
@@ -150,6 +151,28 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
   };
+
+  async function fetchData() {
+    const impossibleGoals = await Promise.all<{ goalid: string; title?: string }>(
+      myTasks.impossible.map(async (task) => {
+        const goal = await getGoal(task);
+        return {
+          goalid: goal?.id,
+          title: goal?.title,
+        };
+      }),
+    );
+    await deleteAllImpossibleGoals();
+    // Call addImpossibleGoal for each goal
+    impossibleGoals.forEach(async (goal) => {
+      if (goal.title !== undefined) {
+        await addImpossibleGoal(goal.goalid);
+      }
+    });
+  }
+
+  // Call the async function
+  fetchData();
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -14,6 +14,7 @@ import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
+import { getImpossibleGoalById } from "@src/api/ImpossibleGoalsApi";
 
 interface MyGoalProps {
   goal: GoalItem;
@@ -34,6 +35,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const archived = goal.archived === "true";
   const defaultTap = { open: "root", click: 1 };
   const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
+
+  const [isImpossible, setIsImpossible] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -94,6 +97,21 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     }
   }, [location]);
 
+  useEffect(() => {
+    const getIfImpossibleGoal = async (goalItem) => {
+      const id = goalItem.id;
+      const res = await getImpossibleGoalById(id);
+      if (res) {
+        setIsImpossible(true);
+      } else {
+        setIsImpossible(false);
+      }
+    };
+
+    getIfImpossibleGoal(goal);
+  }, [goal]);
+
+  console.log(goal.title, isImpossible);
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
       <div
@@ -107,6 +125,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <GoalTitle goal={goal} />
+          {isImpossible && "!"}
           {showActions.open === goal.id && showActions.click > 0 && (
             <p className="goal-desc">
               <GoalSummary goal={goal} />
