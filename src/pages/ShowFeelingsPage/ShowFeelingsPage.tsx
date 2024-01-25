@@ -20,7 +20,9 @@ export const ShowFeelingsPage = () => {
   };
 
   const isYesterday = (date: string) => {
-    return new Date(date).toDateString() === new Date(new Date().setDate(new Date().getDate() - 1)).toDateString();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return new Date(date).toDateString() === yesterday.toDateString();
   };
 
   const formatSubheaderDate = (date: string) => {
