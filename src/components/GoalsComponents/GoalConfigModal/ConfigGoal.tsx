@@ -242,6 +242,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               if (state.goalType === "Goal") {
                 e.preventDefault();
                 await handleSave();
+              }
+              if (state.goalType === "Budget") {
+                e.preventDefault();
+                await handleSave();
               } else {
                 e.preventDefault();
                 document.getElementById("title-field")?.blur();
