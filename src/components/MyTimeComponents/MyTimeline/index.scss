@@ -27,16 +27,22 @@
     font-weight: 500;
   }
   .MTL-goalTiming {
+    margin: 4px 5px 4px 5px;
     border: none;
     font-weight: 600;
-    margin-top: 8px;
-    margin-bottom: 0;
     line-height: 16px;
     white-space: nowrap;
-    width: 80px;
     display: flex;
-    span {
-      font-size: 14px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-self: normal;
+
+    .MTL-startTime {
+      font-size: 1.143rem;
+    }
+    .MTL-endTime {
+      font-size: 0.875rem;
+      font-weight: 400;
     }
     sup {
       font-size: 8.5px;
@@ -47,7 +53,7 @@
 
 .MTL-display > button {
   line-height: 22px;
-  padding: 0.7em 4%;
+  padding: 0.7em 0;
   line-height: 22px;
   padding-bottom: 0.7em;
   background: transparent;
@@ -63,12 +69,13 @@
   margin-bottom: 0 !important;
 }
 
-.MTL-circle {
-  height: 15px;
-  width: 15px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-top: 4px;
+.MTL-color-block {
+  align-self: stretch;
+  border-radius: 0 10px 10px 0;
+  flex-shrink: 0;
+  border: none;
+  width: 6px;
+  margin-right: 1%;
 }
 
 .MyTime-expand-btw {
@@ -91,15 +98,9 @@
   padding: 0;
 }
 
-.MTL-circle {
-  border: none;
-  color: transparent;
-}
-
 .MTL-options {
   display: flex;
   margin-top: 0.7em;
-  margin-left: 18px;
 }
 
 .MTL-options > button {
@@ -120,7 +121,7 @@
     padding: 0.1em;
   }
   .MTL-options > button {
-    padding: 0.3em 1.2em;
+    padding: 0.3em 1em;
     font-size: 0.7rem;
   }
 }
