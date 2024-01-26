@@ -4,7 +4,7 @@ import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { deleteHintInDb } from "../HintsAPI";
+import { deleteHintInDb, getGoalHintFromDB } from "../HintsAPI";
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.goalsCollection, async () => {
@@ -176,8 +176,10 @@ export const shareMyGoalAnonymously = async (goal: GoalItem, parent: string) => 
 
 export const getGoalHints = async (goal: GoalItem) => {
   let parentGoalTitle = "root";
+  let parentGoalHint = false;
   if (goal.parentGoalId !== "root") {
     parentGoalTitle = (await getGoal(goal.parentGoalId))?.title || "";
+    parentGoalHint = (await getGoalHintFromDB(goal.parentGoalId)) || false;
   }
   const requestBody = {
     method: "getHints",
@@ -200,7 +202,7 @@ export const getGoalHints = async (goal: GoalItem) => {
     },
   };
 
-  if (parentGoalTitle === "root") {
+  if (parentGoalTitle === "root" || !parentGoalHint) {
     delete requestBody.parentTitle;
   }
 

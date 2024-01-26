@@ -1,5 +1,4 @@
 import { db } from "@src/models";
-import { HintItem } from "@src/models/HintItem";
 
 export const getGoalHintFromDB = async (goalId: string) => {
   const hint = await db.hintsCollection.where("id").equals(goalId).toArray();
