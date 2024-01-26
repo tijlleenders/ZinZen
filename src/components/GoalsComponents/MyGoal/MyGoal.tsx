@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
+import exclaimationIcon from "@assets/images/exclaimationIcon.svg";
+
 import { unarchiveIcon } from "@src/assets";
 
 import { GoalItem } from "@src/models/GoalItem";
@@ -9,12 +11,12 @@ import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
+import { getImpossibleGoalById } from "@src/api/ImpossibleGoalsApi";
 
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
-import { getImpossibleGoalById } from "@src/api/ImpossibleGoalsApi";
 
 interface MyGoalProps {
   goal: GoalItem;
@@ -98,8 +100,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   }, [location]);
 
   useEffect(() => {
-    const getIfImpossibleGoal = async (goalItem) => {
-      const id = goalItem.id;
+    const getIfImpossibleGoal = async (goalItem: GoalItem) => {
+      const { id } = goalItem;
       const res = await getImpossibleGoalById(id);
       if (res) {
         setIsImpossible(true);
@@ -111,21 +113,15 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     getIfImpossibleGoal(goal);
   }, [goal]);
 
-  console.log(goal.title, isImpossible);
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
-      <div
-        className="user-goal-main"
-        style={{
-          ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
-        }}
-      >
+      <div className="user-goal-main" style={isImpossible ? { gap: "10px" } : {}}>
         <div onClickCapture={handleDropDown}>
           <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
         </div>
+        {isImpossible && <img src={exclaimationIcon} alt="exclamation icon" className="exclamation-icon theme-icon" />}
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <GoalTitle goal={goal} />
-          {isImpossible && "!"}
           {showActions.open === goal.id && showActions.click > 0 && (
             <p className="goal-desc">
               <GoalSummary goal={goal} />

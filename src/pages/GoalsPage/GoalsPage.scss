@@ -52,6 +52,14 @@
     height: 100%;
     width: 100%;
     gap: 16px;
+
+    .exclamation-icon {
+      width: 10px;
+      height: 10px;
+      flex: 0;
+      margin-left: 4px;
+      margin-top: 30px;
+    }
   }
   .contact-button {
     position: absolute;
