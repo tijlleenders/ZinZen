@@ -1,11 +1,11 @@
 import { db } from "@src/models";
 
-export const getGoalHintFromDB = async (goalId: string) => {
+export const getGoalHint = async (goalId: string) => {
   const hint = await db.hintsCollection.where("id").equals(goalId).toArray();
   return hint.length > 0 ? hint[0].hint : null;
 };
 
-export const saveHintInDb = async (goalId: string, hint: boolean) => {
+export const saveHint = async (goalId: string, hint: boolean) => {
   const hintObject = { id: goalId, hint };
   await db
     .transaction("rw", db.hintsCollection, async () => {
@@ -16,14 +16,14 @@ export const saveHintInDb = async (goalId: string, hint: boolean) => {
     });
 };
 
-export const updateHintInDb = async (goalId: string, hint: boolean) => {
+export const updateHint = async (goalId: string, hint: boolean) => {
   await db
     .transaction("rw", db.hintsCollection, async () => {
       const existingItem = await db.hintsCollection.where("id").equals(goalId).first();
       if (existingItem) {
         await db.hintsCollection.update(goalId, { hint });
       } else {
-        await saveHintInDb(goalId, hint);
+        await saveHint(goalId, hint);
       }
     })
     .catch((e) => {
@@ -31,7 +31,7 @@ export const updateHintInDb = async (goalId: string, hint: boolean) => {
     });
 };
 
-export const deleteHintInDb = async (goalId: string) => {
+export const deleteHint = async (goalId: string) => {
   await db
     .transaction("rw", db.hintsCollection, async () => {
       await db.hintsCollection.delete(goalId);

@@ -11,7 +11,7 @@ import {
   getParticipantsOfGoals,
   getGoalHints,
 } from "@src/api/GoalsAPI";
-import { saveHintInDb, updateHintInDb } from "@src/api/HintsAPI";
+import { saveHint, updateHint } from "@src/api/HintsAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
@@ -39,7 +39,7 @@ export const createGoal = async (
     await getGoalHints(newGoal);
   }
 
-  await saveHintInDb(goalTags.id, goalHint);
+  await saveHint(goalTags.id, goalHint);
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
@@ -93,7 +93,7 @@ export const modifyGoal = async (
     goalColor,
   });
   sendUpdatedGoal(goalId, ancestors);
-  await updateHintInDb(goalTags.id, goalHint);
+  await updateHint(goalTags.id, goalHint);
 };
 
 export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {

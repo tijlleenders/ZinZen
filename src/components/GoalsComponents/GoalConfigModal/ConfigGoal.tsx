@@ -18,7 +18,7 @@ import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
-import { getGoalHintFromDB } from "@src/api/HintsAPI";
+import { getGoalHint } from "@src/api/HintsAPI";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -64,7 +64,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [hints, setHints] = useState(false);
 
   useEffect(() => {
-    getGoalHintFromDB(goal.id).then((hintItem) => {
+    getGoalHint(goal.id).then((hintItem) => {
       setHints(!!hintItem);
     });
   }, [goal.id]);
