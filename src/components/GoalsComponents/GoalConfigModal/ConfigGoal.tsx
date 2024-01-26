@@ -200,6 +200,16 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     window.history.back();
   };
 
+  const handleSliderChange = (value: number[], setHours: React.Dispatch<React.SetStateAction<number[]>>) => {
+    if (value[0] === 0 && value[1] === 0) {
+      setHours([0, 1]);
+    } else if (value[0] === 0 && value[1] < 1) {
+      setHours([0, 1]);
+    } else {
+      setHours(value);
+    }
+  };
+
   const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
   const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
 
@@ -308,38 +318,34 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                         <span>{budgetPerHrSummary} hrs / day</span>
                         <Slider
                           tooltip={{ prefixCls: "per-day-tooltip" }}
-                          min={1}
+                          min={0}
                           max={beforeTime - afterTime}
                           marks={{
-                            1: "1",
+                            0: "0",
                             [perDayHrs[0]]: `${perDayHrs[0]}`,
                             [perDayHrs[1]]: `${perDayHrs[1]}`,
                             [beforeTime - afterTime]: `${beforeTime - afterTime}`,
                           }}
                           range
-                          defaultValue={perDayHrs}
-                          onAfterChange={(val) => {
-                            setPerDayHrs(val);
-                          }}
+                          value={perDayHrs}
+                          onChange={(val) => handleSliderChange(val, setPerDayHrs)}
                         />
                       </div>
                       <div>
                         <span>{budgetPerWeekSummary} hrs / week</span>
                         <Slider
                           tooltip={{ prefixCls: "per-week-tooltip" }}
-                          min={1}
+                          min={0}
                           max={(beforeTime - afterTime) * numberOfDays}
                           marks={{
-                            1: "1",
+                            0: "0",
                             [perWeekHrs[0]]: `${perWeekHrs[0]}`,
                             [perWeekHrs[1]]: `${perWeekHrs[1]}`,
                             [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
                           }}
                           range
-                          defaultValue={perWeekHrs}
-                          onAfterChange={(val) => {
-                            setPerWeekHrs(val);
-                          }}
+                          value={perWeekHrs}
+                          onChange={(val) => handleSliderChange(val, setPerWeekHrs)}
                         />
                       </div>
                     </div>

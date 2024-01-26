@@ -170,5 +170,7 @@
   "perWeek": "प्रति आठवडा",
   "everyWeek": "प्रत्येक आठवडा",
   "hour": "तास",
-  "hours": "तास"
+  "hours": "तास",
+  "hourWithCount_one": "{{count}} तास",
+  "hourWithCount_other": "{{count}} तास"
 }

@@ -174,5 +174,7 @@
   "perWeek": "દર અઠવાડિયે",
   "everyWeek": "દર અઠવાડિયે",
   "hour": "કલાક",
-  "hours": "કલાકો"
+  "hours": "કલાકો",
+  "hourWithCount_one": "{{count}} કલાક",
+  "hourWithCount_other": "{{count}} કલાકો"
 }

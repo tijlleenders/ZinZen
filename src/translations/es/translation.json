@@ -181,5 +181,7 @@
   "perWeek": "por semana",
   "everyWeek": "cada semana",
   "hour": "hora",
-  "hours": "horas"
+  "hours": "horas",
+  "hourWithCount_one": "{{count}} hora",
+  "hourWithCount_other": "{{count}} horas"
 }
