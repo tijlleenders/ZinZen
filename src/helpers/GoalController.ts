@@ -21,6 +21,7 @@ export const createGoal = async (
   goalTitle: string,
   goalColor: string,
   ancestors: string[],
+  goalHint: boolean,
 ) => {
   const level = ancestors.length;
   let newGoal = createGoalObjectFromTags({
@@ -34,11 +35,11 @@ export const createGoal = async (
     goalColor,
   });
 
-  if (goalTags.hints === true) {
+  if (goalHint === true) {
     await getGoalHints(newGoal);
   }
 
-  await saveHintInDb(goalTags.id, goalTags.hints);
+  await saveHintInDb(goalTags.id, goalHint);
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
@@ -70,8 +71,9 @@ export const modifyGoal = async (
   goalTitle: string,
   goalColor: string,
   ancestors: string[],
+  goalHint: boolean,
 ) => {
-  if (goalTags.hints === true) {
+  if (goalHint === true) {
     const res = await getGoalHints({
       ...goalTags,
       title: goalTitle
@@ -91,7 +93,7 @@ export const modifyGoal = async (
     goalColor,
   });
   sendUpdatedGoal(goalId, ancestors);
-  await updateHintInDb(goalTags.id, goalTags.hints);
+  await updateHintInDb(goalTags.id, goalHint);
 };
 
 export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {

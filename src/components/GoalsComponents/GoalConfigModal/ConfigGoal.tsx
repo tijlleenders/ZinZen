@@ -128,7 +128,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             perWeek: state.goalType === "Budget" ? perWeekHrs.join("-") : null,
           }
         : null,
-    hints,
   });
 
   const updateThisGoal = async () => {
@@ -144,7 +143,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       }
       suggestChanges(rootGoal, getFinalTags(), title, goalColor, subGoalsHistory.length);
     } else {
-      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id]);
+      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id], hints);
     }
   };
 
@@ -168,6 +167,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         title,
         colorPalleteList[colorIndex],
         ancestors,
+        hints,
       );
       if (!parentGoal && title === "magic") {
         setDevMode(true);
