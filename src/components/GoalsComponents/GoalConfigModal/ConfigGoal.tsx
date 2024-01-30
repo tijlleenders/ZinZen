@@ -231,8 +231,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     >
       <form
         onSubmit={async (e) => {
-          e.preventDefault(); // Prevent the default form submission behavior
-          await handleSave(); // Execute your save logic
+          e.preventDefault();
+          await handleSave();
         }}
       >
         <div style={{ textAlign: "left" }} className="header-title">
