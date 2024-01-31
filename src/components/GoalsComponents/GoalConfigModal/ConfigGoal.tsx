@@ -301,44 +301,45 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                       : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
                     body: (
                       <div>
-                        <span>{budgetPerHrSummary} hrs / day</span>
-                        <Slider
-                          tooltip={{ prefixCls: "per-day-tooltip" }}
-                          min={0}
-                          max={beforeTime - afterTime}
-                          marks={{
-                            0: "0",
-                            [perDayHrs[0]]: `${perDayHrs[0]}`,
-                            [perDayHrs[1]]: `${perDayHrs[1]}`,
-                            [beforeTime - afterTime]: `${beforeTime - afterTime}`,
-                          }}
-                          range
-                          value={perDayHrs}
-                          onChange={(val) => handleSliderChange(val, setPerDayHrs)}
-                        />
+                        <div>
+                          <span>{budgetPerHrSummary} hrs / day</span>
+                          <Slider
+                            tooltip={{ prefixCls: "per-day-tooltip" }}
+                            min={0}
+                            max={beforeTime - afterTime}
+                            marks={{
+                              0: "0",
+                              [perDayHrs[0]]: `${perDayHrs[0]}`,
+                              [perDayHrs[1]]: `${perDayHrs[1]}`,
+                              [beforeTime - afterTime]: `${beforeTime - afterTime}`,
+                            }}
+                            range
+                            value={perDayHrs}
+                            onChange={(val) => handleSliderChange(val, setPerDayHrs)}
+                          />
+                        </div>
+                        <div>
+                          <span>{budgetPerWeekSummary} hrs / week</span>
+                          <Slider
+                            tooltip={{ prefixCls: "per-week-tooltip" }}
+                            min={0}
+                            max={(beforeTime - afterTime) * numberOfDays}
+                            marks={{
+                              0: "0",
+                              [perWeekHrs[0]]: `${perWeekHrs[0]}`,
+                              [perWeekHrs[1]]: `${perWeekHrs[1]}`,
+                              [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
+                            }}
+                            range
+                            value={perWeekHrs}
+                            onChange={(val) => handleSliderChange(val, setPerWeekHrs)}
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <span>{budgetPerWeekSummary} hrs / week</span>
-                        <Slider
-                          tooltip={{ prefixCls: "per-week-tooltip" }}
-                          min={0}
-                          max={(beforeTime - afterTime) * numberOfDays}
-                          marks={{
-                            0: "0",
-                            [perWeekHrs[0]]: `${perWeekHrs[0]}`,
-                            [perWeekHrs[1]]: `${perWeekHrs[1]}`,
-                            [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
-                          }}
-                          range
-                          value={perWeekHrs}
-                          onChange={(val) => handleSliderChange(val, setPerWeekHrs)}
-                        />
-                      </div>
-                    </div>
-                  ),
-                },
-              ]}
-            />
+                    ),
+                  },
+                ]}
+              />
               <div
                 style={{
                   display: "flex",
