@@ -217,5 +217,7 @@
   "onWeekends": "in het weekend",
   "perWeek": "per week",
   "everyWeek": "elke week",
-  "daily": "dagelijks"
+  "daily": "dagelijks",
+  "hourWithCount_one": "{{count}} uur",
+  "hourWithCount_other": "{{count}} uur"
 }

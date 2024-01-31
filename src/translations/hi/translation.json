@@ -181,5 +181,7 @@
   "perWeek": "प्रति सप्ताह",
   "everyWeek": "हर सप्ताह",
   "hour": "घंटा",
-  "hours": "घंटे"
+  "hours": "घंटे",
+  "hourWithCount_one": "{{count}} घंटा",
+  "hourWithCount_other": "{{count}} घंटे"
 }

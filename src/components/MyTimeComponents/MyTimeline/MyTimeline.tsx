@@ -168,11 +168,16 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
           const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
+          const showTaskOptions = displayOptionsIndex === task.taskid;
           return (
             <button
               className={`${day === "Today" && markDone ? "completedTask" : ""}`}
               type="button"
-              style={displayOptionsIndex !== task.taskid ? { cursor: "pointer" } : {}}
+              style={
+                displayOptionsIndex !== task.taskid
+                  ? { cursor: "pointer", display: "flex", flexDirection: "row" }
+                  : { display: "flex", flexDirection: "row" }
+              }
               onClick={() => {
                 if (displayOptionsIndex !== task.taskid) {
                   if (markDone) {
@@ -183,41 +188,43 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                 } else setDisplayOptionsIndex("");
               }}
             >
-              <div style={{ display: "flex", position: "relative" }}>
-                <button type="button" className="MTL-circle" style={{ backgroundColor: `${task.goalColor}` }} />
-                <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
-                  <button
-                    style={{ textDecorationColor: task.goalColor }}
-                    type="button"
-                    className="MTL-taskTitle"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDisplayOptionsIndex(task.taskid);
-                      if (displayOptionsIndex === task.taskid || markDone) {
-                        setDisplayOptionsIndex("");
-                      }
-                    }}
-                  >
-                    {t(`${task.title}`)}
-                  </button>
-                  {displayOptionsIndex === task.taskid && <GoalTiming startTime={startTime} endTime={endTime} />}
-                </div>
+              <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
+              <GoalTiming startTime={startTime} endTime={endTime} showTaskOptions={showTaskOptions} />
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", position: "relative" }}>
+                  <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
+                    <button
+                      style={{ textDecorationColor: task.goalColor }}
+                      type="button"
+                      className="MTL-taskTitle"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDisplayOptionsIndex(task.taskid);
+                        if (displayOptionsIndex === task.taskid || markDone) {
+                          setDisplayOptionsIndex("");
+                        }
+                      }}
+                    >
+                      {t(`${task.title}`)}
+                    </button>
+                  </div>
 
-                {displayOptionsIndex === task.taskid && (
-                  <button
-                    type="button"
-                    onClick={() => setDisplayOptionsIndex("")}
-                    className="MyTime-expand-btw task-dropdown"
-                  >
-                    <div>
-                      <img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" />
-                    </div>
-                  </button>
-                )}
+                  {showTaskOptions && (
+                    <button
+                      type="button"
+                      onClick={() => setDisplayOptionsIndex("")}
+                      className="MyTime-expand-btw task-dropdown"
+                    >
+                      <div>
+                        <img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" />
+                      </div>
+                    </button>
+                  )}
+                </div>
+                {!markDone && showTaskOptions ? (
+                  <TaskOptions task={task} handleActionClick={handleActionClick} />
+                ) : null}
               </div>
-              {!markDone && displayOptionsIndex === task.taskid ? (
-                <TaskOptions task={task} handleActionClick={handleActionClick} />
-              ) : null}
             </button>
           );
         })}
