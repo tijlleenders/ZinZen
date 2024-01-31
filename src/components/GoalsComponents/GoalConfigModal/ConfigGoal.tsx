@@ -229,213 +229,207 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         }
       }}
     >
-      <div style={{ textAlign: "left" }} className="header-title">
-        <ColorPicker colorIndex={colorIndex} setColorIndex={setColorIndex} />
-        <input
-          className="ordinary-element"
-          id="title-field"
-          placeholder={t(`${state.goalType !== "Budget" ? "goal" : "budget"}Title`)}
-          value={t(`${title}`)}
-          onChange={(e) => setTitle(e.target.value)}
-          onKeyDownCapture={async (e) => {
-            if (e.key === "Enter") {
-              if (state.goalType === "Goal") {
-                e.preventDefault();
-                await handleSave();
-              } else {
-                e.preventDefault();
-                document.getElementById("title-field")?.blur();
-              }
-            }
-          }}
-          inputMode="text"
-        />
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 20,
-          marginTop: 24,
-          padding: "0 18px",
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await handleSave();
         }}
       >
-        {state.goalType === "Budget" ? (
-          <>
-            <div>
-              <span>Between</span>
-              <Slider
-                tooltip={{ prefixCls: "between-tooltip" }}
-                min={0}
-                max={24}
-                marks={{
-                  ...marks,
-                  [afterTime]: `${afterTime}`,
-                  [beforeTime]: `${beforeTime}`,
-                }}
-                range
-                defaultValue={[afterTime, beforeTime]}
-                onAfterChange={(val) => {
-                  setAfterTime(val[0]);
-                  setBeforeTime(val[1]);
-                  setBetweenSliderUpdated(true);
-                }}
-              />
-            </div>
-            <ZAccordion
-              showCount={false}
-              style={{
-                border: "none",
-                background: "var(--secondary-background)",
-              }}
-              onChange={() => setIsBudgetAccordianOpen(!isBudgetAccordianOpen)}
-              panels={[
-                {
-                  header: isBudgetAccordianOpen
-                    ? "Budget"
-                    : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
-                  body: (
-                    <div>
-                      <div>
-                        <span>{budgetPerHrSummary} hrs / day</span>
-                        <Slider
-                          tooltip={{ prefixCls: "per-day-tooltip" }}
-                          min={1}
-                          max={beforeTime - afterTime}
-                          marks={{
-                            1: "1",
-                            [perDayHrs[0]]: `${perDayHrs[0]}`,
-                            [perDayHrs[1]]: `${perDayHrs[1]}`,
-                            [beforeTime - afterTime]: `${beforeTime - afterTime}`,
-                          }}
-                          range
-                          defaultValue={perDayHrs}
-                          onAfterChange={(val) => {
-                            setPerDayHrs(val);
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <span>{budgetPerWeekSummary} hrs / week</span>
-                        <Slider
-                          tooltip={{ prefixCls: "per-week-tooltip" }}
-                          min={1}
-                          max={(beforeTime - afterTime) * numberOfDays}
-                          marks={{
-                            1: "1",
-                            [perWeekHrs[0]]: `${perWeekHrs[0]}`,
-                            [perWeekHrs[1]]: `${perWeekHrs[1]}`,
-                            [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
-                          }}
-                          range
-                          defaultValue={perWeekHrs}
-                          onAfterChange={(val) => {
-                            setPerWeekHrs(val);
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ),
-                },
-              ]}
-            />
-
-            <div
-              style={{
-                display: "flex",
-                gap: 6,
-                height: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {onDays.map((d) => (
-                <span
-                  onClickCapture={() => {
-                    setTags({
-                      ...tags,
-                      on: tags.on.includes(d) ? [...tags.on.filter((ele) => ele !== d)] : [...tags.on, d],
-                    });
+        <div style={{ textAlign: "left" }} className="header-title">
+          <ColorPicker colorIndex={colorIndex} setColorIndex={setColorIndex} />
+          <input
+            className="ordinary-element"
+            id="title-field"
+            placeholder={t(`${state.goalType !== "Budget" ? "goal" : "budget"}Title`)}
+            value={t(`${title}`)}
+            onChange={(e) => setTitle(e.target.value)}
+            inputMode="text"
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
+            marginTop: 24,
+            padding: "0 18px",
+          }}
+        >
+          {state.goalType === "Budget" ? (
+            <>
+              <div>
+                <span>Between</span>
+                <Slider
+                  tooltip={{ prefixCls: "between-tooltip" }}
+                  min={0}
+                  max={24}
+                  marks={{
+                    ...marks,
+                    [afterTime]: `${afterTime}`,
+                    [beforeTime]: `${beforeTime}`,
                   }}
-                  className={`on_day ${tags.on.includes(d) ? "selected" : ""}`}
-                  key={d}
-                >
-                  {t(d)[0]}
-                </span>
-              ))}
-            </div>
-            <div className="action-btn-container">
-              <div className="hint-toggle">
-                <p style={{ marginTop: 6 }}>Hints</p>
-                <Switch
-                  prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
-                  checkedChildren={<img src={TickIcon} alt="Tick icon" />}
+                  range
+                  defaultValue={[afterTime, beforeTime]}
+                  onAfterChange={(val) => {
+                    setAfterTime(val[0]);
+                    setBeforeTime(val[1]);
+                    setBetweenSliderUpdated(true);
+                  }}
                 />
               </div>
-              <button
-                type="button"
-                className="action-btn"
-                onClick={handleSave}
-                style={{ display: "flex", gap: 15, justifyContent: "center" }}
-              >
-                {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
-              </button>
-            </div>
-          </>
-        ) : (
-          <div>
-            <div className="action-btn-container">
-              <div className="hint-toggle">
-                <p style={{ marginTop: 6 }}>Hints</p>
-                <Switch
-                  prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
-                  checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-                />
-              </div>
-              <button
-                type="button"
-                className="action-btn"
-                onClick={handleSave}
-                style={{ display: "flex", gap: 15, justifyContent: "center" }}
-              >
-                {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
-              </button>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                gap: 12,
-                alignItems: "center",
-                marginTop: 12,
-              }}
-            >
-              <span>{t("duration")}</span>
-              <CustomInput
-                value={tags.duration}
-                handleChange={(value: string) => {
-                  setTags({ ...tags, duration: roundOffHours(value) });
-                }}
+              <ZAccordion
+                showCount={false}
                 style={{
-                  width: 20,
-                  boxShadow: "var(--shadow)",
+                  border: "none",
+                  background: "var(--secondary-background)",
                 }}
+                onChange={() => setIsBudgetAccordianOpen(!isBudgetAccordianOpen)}
+                panels={[
+                  {
+                    header: isBudgetAccordianOpen
+                      ? "Budget"
+                      : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
+                    body: (
+                      <div>
+                        <div>
+                          <span>{budgetPerHrSummary} hrs / day</span>
+                          <Slider
+                            tooltip={{ prefixCls: "per-day-tooltip" }}
+                            min={1}
+                            max={beforeTime - afterTime}
+                            marks={{
+                              1: "1",
+                              [perDayHrs[0]]: `${perDayHrs[0]}`,
+                              [perDayHrs[1]]: `${perDayHrs[1]}`,
+                              [beforeTime - afterTime]: `${beforeTime - afterTime}`,
+                            }}
+                            range
+                            defaultValue={perDayHrs}
+                            onAfterChange={(val) => {
+                              setPerDayHrs(val);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <span>{budgetPerWeekSummary} hrs / week</span>
+                          <Slider
+                            tooltip={{ prefixCls: "per-week-tooltip" }}
+                            min={1}
+                            max={(beforeTime - afterTime) * numberOfDays}
+                            marks={{
+                              1: "1",
+                              [perWeekHrs[0]]: `${perWeekHrs[0]}`,
+                              [perWeekHrs[1]]: `${perWeekHrs[1]}`,
+                              [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
+                            }}
+                            range
+                            defaultValue={perWeekHrs}
+                            onAfterChange={(val) => {
+                              setPerWeekHrs(val);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ),
+                  },
+                ]}
               />
-              <span>{t("dueDate")}</span>
-              <CustomDatePicker
-                label=""
-                dateValue={due}
-                handleDateChange={(newDate) => {
-                  setDue(newDate);
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
-                showTime={false}
-                timeValue={0}
-                handleTimeChange={() => null}
-                disablePastDates
-              />
+              >
+                {onDays.map((d) => (
+                  <span
+                    onClickCapture={() => {
+                      setTags({
+                        ...tags,
+                        on: tags.on.includes(d) ? [...tags.on.filter((ele) => ele !== d)] : [...tags.on, d],
+                      });
+                    }}
+                    className={`on_day ${tags.on.includes(d) ? "selected" : ""}`}
+                    key={d}
+                  >
+                    {t(d)[0]}
+                  </span>
+                ))}
+              </div>
+              <div className="action-btn-container">
+                <div className="hint-toggle">
+                  <p style={{ marginTop: 6 }}>Hints</p>
+                  <Switch
+                    prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
+                    checkedChildren={<img src={TickIcon} alt="Tick icon" />}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="action-btn"
+                  style={{ display: "flex", gap: 15, justifyContent: "center" }}
+                >
+                  {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+                </button>
+              </div>
+            </>
+          ) : (
+            <div>
+              <div className="action-btn-container">
+                <div className="hint-toggle">
+                  <p style={{ marginTop: 6 }}>Hints</p>
+                  <Switch
+                    prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
+                    checkedChildren={<img src={TickIcon} alt="Tick icon" />}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="action-btn"
+                  style={{ display: "flex", gap: 15, justifyContent: "center" }}
+                >
+                  {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+                </button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 12,
+                  alignItems: "center",
+                  marginTop: 12,
+                }}
+              >
+                <span>{t("duration")}</span>
+                <CustomInput
+                  value={tags.duration}
+                  handleChange={(value: string) => {
+                    setTags({ ...tags, duration: roundOffHours(value) });
+                  }}
+                  style={{
+                    width: 20,
+                    boxShadow: "var(--shadow)",
+                  }}
+                />
+                <span>{t("dueDate")}</span>
+                <CustomDatePicker
+                  label=""
+                  dateValue={due}
+                  handleDateChange={(newDate) => {
+                    setDue(newDate);
+                  }}
+                  showTime={false}
+                  timeValue={0}
+                  handleTimeChange={() => null}
+                  disablePastDates
+                />
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </form>
     </ZModal>
   );
 };
