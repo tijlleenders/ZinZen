@@ -134,7 +134,9 @@ export const permanentlyDeleteOldSoftDeletedGoals = async (daysBeforePermanentDe
 
     await Promise.all(
       oldSoftDeletedGoals.map((goal) =>
-        Promise.all([db.softDeletedGoalsCollection.delete(goal.id), db.goalsCollection.delete(goal.id)]),
+        Promise.all([db.softDeletedGoalsCollection.delete(goal.id), db.goalsCollection.delete(goal.id)]).then(() => {
+          console.log(`Deleted goal ID: ${goal.id}`);
+        }),
       ),
     );
   }).catch((e) => {
