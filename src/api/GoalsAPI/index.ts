@@ -3,6 +3,7 @@ import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
+import { HintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
 import { deleteHint, getGoalHint } from "../HintsAPI";
 
@@ -177,33 +178,23 @@ export const shareMyGoalAnonymously = async (goal: GoalItem, parent: string) => 
 export const getGoalHints = async (goal: GoalItem) => {
   let parentGoalTitle = "root";
   let parentGoalHint = false;
+
   if (goal.parentGoalId !== "root") {
-    parentGoalTitle = (await getGoal(goal.parentGoalId))?.title || "";
+    const parentGoal = await getGoal(goal.parentGoalId);
+    parentGoalTitle = parentGoal?.title || "";
     parentGoalHint = (await getGoalHint(goal.parentGoalId)) || false;
   }
-  const requestBody = {
+
+  const { title, duration } = goal;
+
+  const requestBody: HintRequestBody = {
     method: "getHints",
     installId: getInstallId(),
-    parentTitle: parentGoalTitle,
-    goal: {
-      title: goal.title,
-      duration: goal.duration,
-      habit: goal.habit,
-      start: goal.start?.toString(),
-      on: goal.on,
-      timeBudget: goal.timeBudget,
-      due: goal.due?.toString(),
-      afterTime: goal.afterTime,
-      beforeTime: goal.beforeTime,
-      createdAt: goal.createdAt,
-      goalColor: goal.goalColor,
-      language: goal.language,
-      link: goal.link,
-    },
+    goal: { title, duration: duration !== null ? duration : undefined },
   };
 
-  if (parentGoalTitle === "root" || !parentGoalHint) {
-    delete requestBody.parentTitle;
+  if (goal.parentGoalId !== "root" && parentGoalHint) {
+    requestBody.parentTitle = parentGoalTitle;
   }
 
   const res = await createGetHintsRequest(requestBody);
