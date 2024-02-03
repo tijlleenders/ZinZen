@@ -110,11 +110,14 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
             </h6>
           </div>
           <div className="header-items">
-            {isNighttime && !darkModeStatus ? (
-              <HeaderBtn path={darkModeIcon} alt="dark mode" />
-            ) : !isNighttime && darkModeStatus ? (
-              <HeaderBtn path={lightModeIcon} alt="light mode" />
-            ) : null}
+            {isNighttime || darkModeStatus ? (
+              <HeaderBtn
+                path={darkModeStatus ? lightModeIcon : darkModeIcon}
+                alt={`${darkModeStatus ? "light" : "dark"} mode`}
+              />
+            ) : (
+              <HeaderBtn path={darkModeIcon} alt="light mode" />
+            )}
             {title === "myGoals" && <HeaderBtn path={searchIcon} alt="zinzen search" />}
             <HeaderBtn path="" alt="zinzen settings" />
           </div>
