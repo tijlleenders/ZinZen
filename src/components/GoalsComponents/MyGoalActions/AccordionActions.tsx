@@ -1,32 +1,24 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useLocation, useNavigate } from "react-router-dom";
 
+import ZModal from "@src/common/ZModal";
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
-import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import { unarchiveIcon } from "@src/assets";
-import ZModal from "@src/common/ZModal";
 
-import {
-  displayToast,
-  lastAction,
-  openDevMode,
-  displayConfirmation,
-  displayPartnerMode,
-  darkModeState,
-} from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
-import { goalsHistory } from "@src/store/GoalsState";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
-import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
+import { unarchiveIcon } from "@src/assets";
+import { restoreUserGoal } from "@src/api/TrashAPI";
+import { unarchiveUserGoal } from "@src/api/GoalsAPI";
+import { TAction, goalsHistory } from "@src/store/GoalsState";
 import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
+import { lastAction, openDevMode, displayConfirmation, displayPartnerMode, darkModeState } from "@src/store";
 
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
 
-const AccordionActions = ({ actionType, goal, open }: { actionType: string; open: boolean; goal: GoalItem }) => {
+const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
   const { handleUpdateGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
@@ -52,7 +44,11 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: string; open
       await archiveThisGoal(goal, ancestors);
       setLastAction("goalArchived");
     } else if (action === "restore") {
-      await unarchiveUserGoal(goal);
+      if (actionType === "archived") {
+        await unarchiveUserGoal(goal);
+      } else if (actionType === "deleted") {
+        await restoreUserGoal(goal);
+      }
       setLastAction("goalUnarchived");
     } else {
       return;
