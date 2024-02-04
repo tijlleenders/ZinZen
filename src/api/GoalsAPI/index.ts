@@ -3,6 +3,7 @@ import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { shareGoal } from "@src/services/goal.service";
 import { sortGoalsByProps } from "../GCustomAPI";
+import { addDeletedGoal } from "../TrashAPI";
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.goalsCollection, async () => {
@@ -132,8 +133,11 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
   await unarchiveGoal(goal);
 };
 
-export const removeGoal = async (goalId: string) => {
-  await db.goalsCollection.delete(goalId).catch((err) => console.log("failed to delete", err));
+export const removeGoal = async (goal: GoalItem) => {
+  await Promise.allSettled([
+    db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
+    addDeletedGoal(goal),
+  ]);
 };
 
 export const removeChildrenGoals = async (parentGoalId: string) => {
@@ -143,7 +147,7 @@ export const removeChildrenGoals = async (parentGoalId: string) => {
   }
   childrenGoals.forEach((goal) => {
     removeChildrenGoals(goal.id);
-    removeGoal(goal.id);
+    removeGoal(goal);
   });
 };
 
@@ -259,7 +263,7 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
 
 export const removeGoalWithChildrens = async (goal: GoalItem) => {
   await removeChildrenGoals(goal.id);
-  await removeGoal(goal.id);
+  await removeGoal(goal);
   if (goal.parentGoalId !== "root") {
     getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;
