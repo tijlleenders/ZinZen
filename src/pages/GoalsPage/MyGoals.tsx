@@ -9,7 +9,6 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import {
   displayAddGoal,
   displayChangesModal,
-  displayGoalActions,
   displayGoalId,
   displayShareModal,
   displaySuggestionsModal,
@@ -24,7 +23,6 @@ import { darkModeState, lastAction, searchActive } from "@src/store";
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
-import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
@@ -44,7 +42,6 @@ export const MyGoals = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
-  const showGoalActions = useRecoilValue(displayGoalActions);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
@@ -100,7 +97,6 @@ export const MyGoals = () => {
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
       {showShareModal && <ShareGoalModal goal={showShareModal} />}
-      {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
       {showChangesModal && <DisplayChangesModal />}
       <div className="myGoals-container">
         {selectedGoalId === "root" ? (
