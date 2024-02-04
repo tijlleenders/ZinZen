@@ -44,7 +44,12 @@ export const GoalSublist = () => {
   };
 
   useEffect(() => {
-    (showPartnerMode ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) => setParentGoal(parent));
+    (showPartnerMode ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) => {
+      setParentGoal(parent);
+      getDeletedGoals(goalID).then((res) => {
+        setDeletedGoals([...res.map(({ deletedAt, ...goal }) => goal)]);
+      });
+    });
   }, [goalID]);
 
   useEffect(() => {
