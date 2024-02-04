@@ -11,12 +11,12 @@ import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist
 import { displayGoalActions, displayGoalId } from "@src/store/GoalsState";
 import { darkModeState, lastAction, searchActive } from "@src/store";
 
-import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
-import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
-import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
-import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
+import AppLayout from "@src/layouts/AppLayout";
 import ContactItem from "@src/models/ContactItem";
+import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
+import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
+import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
 
 const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
@@ -88,8 +88,9 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
                   setGoals={setActiveGoals}
                 />
               </div>
-              <ArchivedAccordion
-                archivedGoals={archivedGoals}
+              <GoalsAccordion
+                header="Done"
+                goals={archivedGoals}
                 showActions={showActions}
                 setShowActions={setShowActions}
               />
