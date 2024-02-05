@@ -95,7 +95,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
-      <div className="user-goal-main" style={isImpossible ? { gap: "10px" } : {}}>
+      <div className="user-goal-main">
         <div onClickCapture={handleDropDown}>
           <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
         </div>

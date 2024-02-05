@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
 import { v4 as uuidv4 } from "uuid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -23,7 +23,9 @@ import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/Tas
 import "./index.scss";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
-import { addImpossibleGoal, deleteAllImpossibleGoals } from "@src/api/ImpossibleGoalsApi";
+import { updateImpossibleGoals } from "./updateImpossibleGoals";
+
+type ImpossibleTaskId = string;
 
 interface MyTimelineProps {
   day: string;
@@ -35,7 +37,7 @@ interface MyTimelineProps {
   >;
   myTasks: {
     scheduled: ITask[];
-    impossible: ITask[];
+    impossible: ImpossibleTaskId[];
     freeHrsOfDay: number;
     scheduledHrs: number;
   };
@@ -152,27 +154,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     }
   };
 
-  async function fetchData() {
-    const impossibleGoals = await Promise.all<{ goalid: string; title?: string }>(
-      myTasks.impossible.map(async (task) => {
-        const goal = await getGoal(task);
-        return {
-          goalid: goal?.id,
-          title: goal?.title,
-        };
-      }),
-    );
-    await deleteAllImpossibleGoals();
-    // Call addImpossibleGoal for each goal
-    impossibleGoals.forEach(async (goal) => {
-      if (goal.title !== undefined) {
-        await addImpossibleGoal(goal.goalid);
-      }
-    });
-  }
-
-  // Call the async function
-  fetchData();
+  useEffect(() => {
+    updateImpossibleGoals(myTasks.impossible);
+  }, []);
 
   return (
     <>
@@ -187,7 +171,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         </div>
       )}
       <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
-        {myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
+        {myTasks.scheduled.map((task) => {
           const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
           const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
           const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
