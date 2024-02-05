@@ -14,6 +14,7 @@ import {
   displaySuggestionsModal,
   displayUpdateGoal,
 } from "@src/store/GoalsState";
+import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
 import GoalsList from "../GoalsList";
 import ConfigGoal from "../GoalConfigModal/ConfigGoal";
@@ -21,7 +22,6 @@ import ConfigGoal from "../GoalConfigModal/ConfigGoal";
 import "./GoalSublist.scss";
 import GoalHistory from "./GoalHistory";
 import ArchivedAccordion from "../ArchivedAccordion";
-import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
 export const GoalSublist = () => {
   const { t } = useTranslation();
