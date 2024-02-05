@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
-import { getImpossibleGoalById } from "@src/api/ImpossibleGoalsApi";
 
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
+import useIsGoalImpossible from "../../../hooks/useIsGoalImpossible";
 
 interface MyGoalProps {
   goal: GoalItem;
@@ -32,8 +32,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const defaultTap = { open: "root", click: 1 };
   const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
 
-  const [isImpossible, setIsImpossible] = useState(false);
-
   const navigate = useNavigate();
   const location = useLocation();
   // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
@@ -46,6 +44,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const showChangesModal = useRecoilValue(displayChangesModal);
+
+  const isImpossible = useIsGoalImpossible({ id: goal.id });
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
@@ -92,20 +92,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
       }
     }
   }, [location]);
-
-  useEffect(() => {
-    const getIfImpossibleGoal = async (goalItem: GoalItem) => {
-      const { id } = goalItem;
-      const res = await getImpossibleGoalById(id);
-      if (res) {
-        setIsImpossible(true);
-      } else {
-        setIsImpossible(false);
-      }
-    };
-
-    getIfImpossibleGoal(goal);
-  }, [goal]);
 
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
