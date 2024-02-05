@@ -348,7 +348,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   },
                 ]}
               />
-
               <div
                 style={{
                   display: "flex",
@@ -395,7 +394,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
-                  {t(`${action} Goal`)}
+                  {t(`${action} Goal`)}            
                 </button>
               </div>
               <div
