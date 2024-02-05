@@ -3,7 +3,7 @@ import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
-import { HintRequestBody } from "@src/models/HintItem";
+import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
 import { deleteHint, getGoalHint } from "../HintsAPI";
 
@@ -87,7 +87,7 @@ export const archiveGoal = async (goal: GoalItem) => {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
       await db.goalsCollection.update(goal.parentGoalId, {
-        sublist: parentGoal.sublist.filter((ele) => ele !== goal.id),
+        sublist: parentGoal?.sublist.filter((ele) => ele !== goal.id),
       });
     });
   }
@@ -175,7 +175,7 @@ export const shareMyGoalAnonymously = async (goal: GoalItem, parent: string) => 
   return res;
 };
 
-export const getGoalHints = async (goal: GoalItem) => {
+export const getHintsFromAPI = async (goal: GoalItem) => {
   let parentGoalTitle = "root";
   let parentGoalHint = false;
 
@@ -187,7 +187,7 @@ export const getGoalHints = async (goal: GoalItem) => {
 
   const { title, duration } = goal;
 
-  const requestBody: HintRequestBody = {
+  const requestBody: IHintRequestBody = {
     method: "getHints",
     installId: getInstallId(),
     goal: { title, duration: duration !== null ? duration : undefined },

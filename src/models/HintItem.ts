@@ -3,7 +3,7 @@ export interface HintItem {
   hint: boolean;
 }
 
-export interface HintRequestBody {
+export interface IHintRequestBody {
   method: string;
   installId: string | null;
   goal: {

@@ -9,7 +9,7 @@ import {
   archiveUserGoal,
   removeGoalWithChildrens,
   getParticipantsOfGoals,
-  getGoalHints,
+  getHintsFromAPI,
 } from "@src/api/GoalsAPI";
 import { saveHint, updateHint } from "@src/api/HintsAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
@@ -35,8 +35,8 @@ export const createGoal = async (
     goalColor,
   });
 
-  if (goalHint === true) {
-    await getGoalHints(newGoal);
+  if (goalHint) {
+    await getHintsFromAPI(newGoal);
   }
 
   await saveHint(goalTags.id, goalHint);
@@ -74,7 +74,7 @@ export const modifyGoal = async (
   goalHint: boolean,
 ) => {
   if (goalHint === true) {
-    const res = await getGoalHints({
+    const res = await getHintsFromAPI({
       ...goalTags,
       title: goalTitle
         .split(" ")
@@ -92,7 +92,7 @@ export const modifyGoal = async (
       .join(" "),
     goalColor,
   });
-  sendUpdatedGoal(goalId, ancestors);
+  await sendUpdatedGoal(goalId, ancestors);
   await updateHint(goalTags.id, goalHint);
 };
 
