@@ -83,6 +83,7 @@ export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) 
   } = {};
   const res: { [dayName: string]: ITaskOfDay } = {};
   const { scheduled, impossible } = _schedulerOutput;
+
   activeGoals.forEach((goal) => {
     obj[goal.id] = {
       parentGoalId: goal.parentGoalId,
@@ -99,10 +100,9 @@ export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) 
       colorBands: [],
     };
     if (impossible) {
-      impossible.forEach((ele: IImpossibleTaskOfTheDay) => {
-        // Assuming ele.id is the property that represents the goal id
-        if (ele.id && !thisDay.impossible.includes(ele.id)) {
-          thisDay.impossible.push(ele.id);
+      impossible.forEach((task: IImpossibleTaskOfTheDay) => {
+        if (task.id && !thisDay.impossible.includes(task.id)) {
+          thisDay.impossible.push(task.id);
         }
       });
     }
