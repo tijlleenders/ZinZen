@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-
-import exclaimationIcon from "@assets/images/exclaimationIcon.svg";
-
-import { unarchiveIcon } from "@src/assets";
-
 import { GoalItem } from "@src/models/GoalItem";
-import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
@@ -119,9 +113,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         <div onClickCapture={handleDropDown}>
           <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
         </div>
-        {isImpossible && <img src={exclaimationIcon} alt="exclamation icon" className="exclamation-icon theme-icon" />}
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <GoalTitle goal={goal} />
+          <GoalTitle goal={goal} isImpossible={isImpossible} />
           {showActions.open === goal.id && showActions.click > 0 && (
             <p className="goal-desc">
               <GoalSummary goal={goal} />
