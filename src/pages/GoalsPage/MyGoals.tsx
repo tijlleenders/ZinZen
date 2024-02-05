@@ -28,7 +28,7 @@ import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActio
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
-import { getAllImpossibleGoals } from "@src/api/ImpossibleGoalsApi";
+import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -47,27 +47,6 @@ export const MyGoals = () => {
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const [action, setLastAction] = useRecoilState(lastAction);
-
-  const priotizeImpossibleGoals = async (goals: GoalItem[]) => {
-    try {
-      const allImpossibleGoals = await getAllImpossibleGoals();
-      const impossibleGoalIds = allImpossibleGoals.map((impossibleGoal) => impossibleGoal.goalId);
-      const prioritizedGoals: GoalItem[] = [];
-      const remainingGoals: GoalItem[] = [];
-      goals.forEach((goal) => {
-        if (impossibleGoalIds.includes(goal.id)) {
-          prioritizedGoals.push(goal);
-        } else {
-          remainingGoals.push(goal);
-        }
-      });
-      const sortedGoals = prioritizedGoals.concat(remainingGoals);
-      return sortedGoals;
-    } catch (error) {
-      console.error("Error in priotizeImpossibleGoals:", error);
-      throw error;
-    }
-  };
 
   const handleUserGoals = (goals: GoalItem[]) => {
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
