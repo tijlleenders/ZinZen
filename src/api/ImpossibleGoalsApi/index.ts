@@ -24,6 +24,15 @@ export const addImpossibleGoal = async (impossibleGoalId: string) => {
   }
 };
 
+export const getAllImpossibleGoals = async () => {
+  try {
+    return await db.impossibleGoalsCollection.toArray();
+  } catch (error) {
+    console.error("Error getting impossible goals:", error.message);
+    throw new Error("Failed to get impossible goals.");
+  }
+};
+
 export const getImpossibleGoalById = async (impossibleGoalId: string) => {
   try {
     return await db.impossibleGoalsCollection.where({ goalId: impossibleGoalId }).first();
