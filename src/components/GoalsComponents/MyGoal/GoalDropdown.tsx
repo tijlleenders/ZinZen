@@ -20,24 +20,20 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, isActionVisible }) =>
   return (
     <div
       style={{
-        padding: "20px 0",
-        marginLeft: 20,
         display: "flex",
         flexDirection: "column",
         gap: 3,
       }}
     >
-      <div className="goal-dropdown">
-        <div
-          className="goal-dd-outer"
-          style={{
-            background: outerBackground,
-            border: outerBorderStyle,
-          }}
-        >
-          <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
-            {newUpdates && <NotificationSymbol color={goalColor} />}
-          </div>
+      <div
+        className="goal-dropdown goal-dd-outer"
+        style={{
+          background: outerBackground,
+          border: outerBorderStyle,
+        }}
+      >
+        <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
+          {newUpdates && <NotificationSymbol color={goalColor} />}
         </div>
       </div>
       {isActionVisible && (

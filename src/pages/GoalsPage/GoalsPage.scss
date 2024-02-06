@@ -45,13 +45,15 @@
   word-break: break-all;
   text-align: left;
   cursor: pointer;
-  width: 100%;
+  width: 600px;
   background: transparent;
   .user-goal-main {
     display: flex;
     height: 100%;
-    width: 100%;
+    width: 600px;
     gap: 16px;
+    align-items: center;
+    margin-left: 20px;
   }
   .contact-button {
     position: absolute;
