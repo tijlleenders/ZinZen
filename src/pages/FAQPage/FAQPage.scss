@@ -1,0 +1,20 @@
+.intro-features-drawer {
+  margin-top: 8px;
+  width: 100%;
+  .ant-collapse-content {
+    background: var(--secondary-background);
+  }
+
+  .faq-question-content {
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .action-btn {
+    img {
+      margin-left: 6px;
+      padding-bottom: 2px;
+      vertical-align: middle;
+    }
+  }
+}
