@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-
-import { unarchiveIcon } from "@src/assets";
-
 import { GoalItem } from "@src/models/GoalItem";
-import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
@@ -14,6 +10,7 @@ import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
+import useIsGoalImpossible from "../../../hooks/useIsGoalImpossible";
 
 interface MyGoalProps {
   goal: GoalItem;
@@ -47,6 +44,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const showChangesModal = useRecoilValue(displayChangesModal);
+
+  const isImpossible = useIsGoalImpossible({ id: goal.id });
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
@@ -96,17 +95,12 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   return (
     <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
-      <div
-        className="user-goal-main"
-        style={{
-          ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
-        }}
-      >
+      <div className="user-goal-main">
         <div onClickCapture={handleDropDown}>
           <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <GoalTitle goal={goal} />
+          <GoalTitle goal={goal} isImpossible={isImpossible} />
           {showActions.open === goal.id && showActions.click > 0 && (
             <p className="goal-desc">
               <GoalSummary goal={goal} />

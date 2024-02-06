@@ -13,7 +13,7 @@ export interface ITask {
 
 export interface ITaskOfDay {
   scheduled: ITask[];
-  impossible: ITask[];
+  impossible: string[];
   freeHrsOfDay: number;
   scheduledHrs: number;
   colorBands: {

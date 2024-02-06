@@ -28,6 +28,7 @@ import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActio
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
 import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
+import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -53,7 +54,8 @@ export const MyGoals = () => {
   };
   const refreshActiveGoals = async () => {
     const goals: GoalItem[] = await getActiveGoals("true");
-    handleUserGoals(goals);
+    const sortedGoals = await priotizeImpossibleGoals(goals);
+    handleUserGoals(sortedGoals);
   };
   const search = async (text: string) => {
     const goals: GoalItem[] = await getActiveGoals("true");

@@ -1,4 +1,5 @@
 import {
+  IImpossibleTaskOfTheDay,
   IScheduleOfTheDay,
   ISchedulerInputGoal,
   ISchedulerOutput,
@@ -82,6 +83,7 @@ export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) 
   } = {};
   const res: { [dayName: string]: ITaskOfDay } = {};
   const { scheduled, impossible } = _schedulerOutput;
+
   activeGoals.forEach((goal) => {
     obj[goal.id] = {
       parentGoalId: goal.parentGoalId,
@@ -97,10 +99,14 @@ export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) 
       impossible: [],
       colorBands: [],
     };
-    impossible[index]?.tasks?.forEach((ele: ISchedulerOutputGoal) => {
-      const { goalColor, parentGoalId } = obj[ele.goalid];
-      thisDay.impossible.push({ ...ele, goalColor, parentGoalId });
-    });
+    if (impossible) {
+      impossible.forEach((task: IImpossibleTaskOfTheDay) => {
+        if (task.id && !thisDay.impossible.includes(task.id)) {
+          thisDay.impossible.push(task.id);
+        }
+      });
+    }
+
     dayOutput.tasks.forEach((ele: ISchedulerOutputGoal) => {
       if (ele.title !== "free" && obj[ele.goalid]) {
         const { goalColor, parentGoalId } = obj[ele.goalid];
