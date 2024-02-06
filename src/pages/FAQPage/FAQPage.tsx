@@ -10,20 +10,8 @@ import { vibrateWorks } from "@src/constants/vibrateCheck";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
+import "./FAQPage.scss";
 import "@translations/i18n";
-
-const customStyle = {
-  display: "flex",
-  alignItems: "flex-end",
-  border: "none",
-  background: "var(--selection-color)",
-  borderRadius: 8,
-  padding: 8,
-  fontSize: "0.875rem",
-  fontWeight: 500,
-  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.25)",
-  margin: "14px auto 0",
-};
 
 export const FAQPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -53,7 +41,7 @@ export const FAQPage = () => {
       <p className={`faqpage-about${darkModeStatus ? "-dark" : ""}`}>
         <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>Better together </span>
       </p>
-      <div style={{ marginTop: 8, width: "100%" }}>
+      <div className="intro-features-drawer">
         <ZAccordion
           defaultActiveKey={["1"]}
           showCount={false}
@@ -61,7 +49,7 @@ export const FAQPage = () => {
           panels={QnA.map((ele) => ({
             header: ele.header,
             body: (
-              <p style={{ textAlign: "left", fontWeight: 500, color: "#000" }}>
+              <p className="faq-question-content">
                 {ele.body.split(" ")[0].includes("ZinZen") ? (
                   <>
                     {" "}
@@ -74,15 +62,9 @@ export const FAQPage = () => {
             ),
           }))}
         />
-        <button style={customStyle} type="button" onClick={handleClick}>
+        <button className="action-btn" type="button" onClick={handleClick}>
           {" "}
-          {t("continue")}{" "}
-          <img
-            className="chevronRight theme-icon"
-            src={chevronLeftIcon}
-            alt="zinzen faq"
-            style={{ marginLeft: 6, paddingBottom: 2 }}
-          />
+          {t("continue")} <img className="chevronRight theme-icon" src={chevronLeftIcon} alt="zinzen faq" />
         </button>
       </div>
     </OnboardingLayout>

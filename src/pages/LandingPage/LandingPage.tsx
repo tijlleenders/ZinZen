@@ -57,7 +57,7 @@ export const LandingPage = () => {
         languages={Languages}
         navigationCallback={(path) => handleNavigateToFaq(path)}
         type="fragment"
-        hideSelected={true}
+        hideSelected
       />
     </OnboardingLayout>
   );
