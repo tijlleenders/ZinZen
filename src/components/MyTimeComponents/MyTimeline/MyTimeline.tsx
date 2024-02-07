@@ -128,9 +128,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         // }
       } else if (actionName === "Done") {
         const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
-
         if (markDone) return;
-
         await completeTask(taskItem.id, Number(task.duration), task.taskid);
       } else if (actionName === "Skip") {
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
@@ -183,11 +181,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   : { display: "flex", flexDirection: "row" }
               }
               onClick={() => {
-                if (displayOptionsIndex !== task.taskid) {
-                  setDisplayOptionsIndex(task.taskid);
-                } else {
-                  setDisplayOptionsIndex("");
-                }
+                setDisplayOptionsIndex(displayOptionsIndex !== task.taskid ? task.taskid : "");
               }}
             >
               <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
