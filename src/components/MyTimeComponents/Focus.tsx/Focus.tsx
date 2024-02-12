@@ -60,7 +60,9 @@ export const Focus = () => {
     <div className="focus">
       <h6>{t(`${taskTitle}`)}</h6>
       <Progress
-        className={`progress-${darkModeStatus ? "dark" : ""}`}
+        className={`progress-${darkModeStatus ? "dark" : ""} ${
+          isTimerActive && percentage < 100 ? "windy-effect" : ""
+        }`}
         size={200}
         strokeColor="var(--icon-grad-2)"
         trailColor={darkModeStatus ? "#7e7e7e" : "var(--secondary-background)"}
@@ -71,6 +73,7 @@ export const Focus = () => {
           if (minutes >= 1) {
             return `${minutes} ${t("min")}`;
           }
+          if (seconds === 0) return "Done🎉";
           return `${seconds} ${t("sec")}`;
         }}
       />
