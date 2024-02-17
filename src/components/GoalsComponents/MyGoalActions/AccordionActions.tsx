@@ -7,9 +7,9 @@ import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 
 import { GoalItem } from "@src/models/GoalItem";
+import { restoreGoal } from "@src/helpers/GoalController";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { unarchiveIcon } from "@src/assets";
-import { restoreUserGoal } from "@src/api/TrashAPI";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { TAction, goalsHistory } from "@src/store/GoalsState";
 import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
@@ -47,7 +47,7 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
       if (actionType === "archived") {
         await unarchiveUserGoal(goal);
       } else if (actionType === "deleted") {
-        await restoreUserGoal(goal);
+        await restoreGoal(goal, ancestors);
       }
       setLastAction("goalUnarchived");
     } else {
