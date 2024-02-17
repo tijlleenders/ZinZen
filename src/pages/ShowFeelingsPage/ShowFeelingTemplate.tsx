@@ -135,12 +135,14 @@ export const ShowFeelingTemplate: React.FC<ShowFeelingTemplateProps> = ({
                 </div>
                 <div className="feelingOfDaty-options">
                   <img
+                    style={{ cursor: "pointer" }}
                     alt="add note to feeling"
                     className={`${darkModeStatus ? "dark-svg" : ""}`}
                     src={noteIcon}
                     onClick={() => handleJournalClick(feelingId)}
                   />
                   <img
+                    style={{ cursor: "pointer" }}
                     alt="delete feeling"
                     className={`${darkModeStatus ? "dark-svg" : ""}`}
                     src={deleteIcon}
