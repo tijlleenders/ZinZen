@@ -14,10 +14,10 @@ import { darkModeState, lastAction, searchActive } from "@src/store";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import AppLayout from "@src/layouts/AppLayout";
 import ContactItem from "@src/models/ContactItem";
-import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
 import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
+import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
 
 const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -75,7 +75,7 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   return (
     <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
       <GoalLocStateHandler />
-      {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
+      {showGoalActions && <RegularGoalActions open goal={showGoalActions.goal} />}
       <div className="myGoals-container">
         {selectedGoalId === "root" ? (
           <div className="my-goals-content">
