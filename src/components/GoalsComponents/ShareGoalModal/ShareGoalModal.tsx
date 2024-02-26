@@ -128,7 +128,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       type={`share-modal${darkModeStatus ? "-dark" : ""}`}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
-      <div className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</div>
+      <div className="popupModal-title">{displaySubmenu === "groups" && "Share in Public Group"}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {/* Share 1:1 */}
         <button
