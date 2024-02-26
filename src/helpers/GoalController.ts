@@ -73,7 +73,7 @@ export const modifyGoal = async (
   ancestors: string[],
   goalHint: boolean,
 ) => {
-  if (goalHint === true) {
+  if (goalHint) {
     const res = await getHintsFromAPI({
       ...goalTags,
       title: goalTitle
@@ -92,8 +92,9 @@ export const modifyGoal = async (
       .join(" "),
     goalColor,
   });
-  await sendUpdatedGoal(goalId, ancestors);
-  await updateHint(goalTags.id, goalHint);
+  const sendUpdatedGoalPromise = sendUpdatedGoal(goalId, ancestors);
+  const updateHintPromise = updateHint(goalTags.id, goalHint);
+  await Promise.all([sendUpdatedGoalPromise, updateHintPromise]);
 };
 
 export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {
