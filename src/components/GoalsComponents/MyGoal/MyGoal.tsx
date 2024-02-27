@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
@@ -31,6 +31,16 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const archived = goal.archived === "true";
   const defaultTap = { open: "root", click: 1 };
   const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
+
+  const [expandGoalId, setExpandGoalId] = useState("root");
+  const [isAnimating, setIsAnimating] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -81,6 +91,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   useEffect(() => {
     if (location && location.pathname === "/MyGoals") {
       const { expandedGoalId } = location.state || {};
+      setExpandGoalId(expandedGoalId);
       if (expandedGoalId && showActions.open !== expandedGoalId) {
         setShowActions({ open: expandedGoalId, click: 1 });
       }
@@ -111,7 +122,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         }}
       >
         {showActions.open === goal.id && showActions.click > 0 && (
-          <p className="goal-desc">
+          <p className={`goal-desc ${expandGoalId === goal.id && isAnimating ? "goal-glow" : ""}`}>
             <GoalSummary goal={goal} />
           </p>
         )}

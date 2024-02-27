@@ -154,6 +154,22 @@
   font-weight: 300;
 }
 
+.goal-glow {
+  animation: glowAnimation 2s infinite;
+}
+
+@keyframes glowAnimation {
+  0% {
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+  }
+}
+
 .goal-link {
   // width: 100%;
   border: none;
