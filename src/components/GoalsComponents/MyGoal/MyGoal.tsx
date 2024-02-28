@@ -37,7 +37,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsAnimating(false);
-    }, 2000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
