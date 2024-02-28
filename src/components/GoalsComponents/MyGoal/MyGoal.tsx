@@ -110,7 +110,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           <div onClickCapture={handleDropDown}>
             <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
           </div>
-          <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
+          <div
+            aria-hidden
+            className={`goal-tile ${expandGoalId === goal.id && isAnimating ? "goal-glow" : ""}`}
+            onClick={handleGoalClick}
+          >
             <GoalTitle goal={goal} />
           </div>
         </div>
@@ -122,7 +126,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
         }}
       >
         {showActions.open === goal.id && showActions.click > 0 && (
-          <p className={`goal-desc ${expandGoalId === goal.id && isAnimating ? "goal-glow" : ""}`}>
+          <p className="goal-desc">
             <GoalSummary goal={goal} />
           </p>
         )}
