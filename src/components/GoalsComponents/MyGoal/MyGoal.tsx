@@ -100,9 +100,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   return (
     <>
-      <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
+      <div
+        key={String(`goal-${goal.id}`)}
+        className={`user-goal${darkModeStatus ? "-dark" : ""} ${
+          expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
+        }`}
+      >
         <div
-          className={`user-goal-main ${expandGoalId === goal.id && isAnimating ? "goal-glow" : ""}`}
+          className="user-goal-main"
           style={{
             ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
           }}
