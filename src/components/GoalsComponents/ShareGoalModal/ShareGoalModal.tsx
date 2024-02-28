@@ -128,7 +128,9 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       type={`share-modal${darkModeStatus ? "-dark" : ""}`}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
-      <div className="popupModal-title">{displaySubmenu === "groups" && "Share in Public Group"}</div>
+      <div className="popupModal-title">
+        {displaySubmenu === "groups" ? "Share in Public Group" : "Share privately"}
+      </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {/* Share 1:1 */}
         <button
@@ -147,7 +149,6 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
                 <Icon active title="TwoAvatars" />
               </div>
             )}
-            <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>Share privately</p>
           </div>
           {displaySubmenu === "contacts" && (
             <div className="shareWithContacts">
