@@ -102,7 +102,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
     <>
       <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
         <div
-          className="user-goal-main"
+          className={`user-goal-main ${expandGoalId === goal.id && isAnimating ? "goal-glow" : ""}`}
           style={{
             ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
           }}
@@ -110,11 +110,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
           <div onClickCapture={handleDropDown}>
             <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
           </div>
-          <div
-            aria-hidden
-            className={`goal-tile ${expandGoalId === goal.id && isAnimating ? "goal-glow" : ""}`}
-            onClick={handleGoalClick}
-          >
+          <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
             <GoalTitle goal={goal} />
           </div>
         </div>
