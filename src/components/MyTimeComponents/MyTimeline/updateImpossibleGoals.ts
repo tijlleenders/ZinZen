@@ -7,18 +7,13 @@ interface FormattedGoal {
 }
 
 const fetchAndFormatGoal = async (taskId: string): Promise<FormattedGoal | null> => {
-  try {
-    const goal = await getGoal(taskId);
-    return goal
-      ? {
-          goalId: goal.id,
-          goalTitle: goal.title,
-        }
-      : null;
-  } catch (error) {
-    console.error(`Error fetching goal for task ${taskId}:`, error);
-    return null;
-  }
+  const goal = await getGoal(taskId);
+  return goal
+    ? {
+        goalId: goal.id,
+        goalTitle: goal.title,
+      }
+    : null;
 };
 
 export const updateImpossibleGoals = async (impossibleTasks: string[]) => {
