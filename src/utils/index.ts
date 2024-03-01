@@ -125,9 +125,6 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   if (!goal.habit) {
     goal.habit = parentGoal.habit;
   }
-  if (!goal.on) {
-    goal.on = parentGoal.on;
-  }
 
   goal.rootGoalId = parentGoal.rootGoalId;
   goal.typeOfGoal = parentGoal.typeOfGoal;
