@@ -1,5 +1,5 @@
 .subheading {
-  font-size: 0.875rem;
+  font-size: 18px;
   font-weight: 500;
   margin-block: 16px !important;
 }
@@ -18,9 +18,10 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 8px 16px;
+    padding: 10px 16px;
     align-items: center;
     border: none;
+    font-size: 18px;
     font-weight: 500;
     background: var(--bottom-nav-color);
     border-bottom: 1px solid var(--default-border-color);

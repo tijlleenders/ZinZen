@@ -39,7 +39,7 @@ export const FAQPage = () => {
   return (
     <OnboardingLayout>
       <p className={`faqpage-about${darkModeStatus ? "-dark" : ""}`}>
-        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>Better together </span>
+        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D", fontSize: "18px" }}>Better together </span>
       </p>
       <div className="intro-features-drawer">
         <ZAccordion
