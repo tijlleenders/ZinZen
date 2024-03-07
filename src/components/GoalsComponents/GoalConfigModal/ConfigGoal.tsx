@@ -19,6 +19,7 @@ import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
+import { is24HourFormat } from "@src/store/HourFormatState";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -47,9 +48,9 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
-  const [is24HourFormat, setIs24HourFormat] = useState(false);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
+  const hourFormat = useRecoilValue(is24HourFormat);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
   const setDevMode = useSetRecoilState(openDevMode);
@@ -92,7 +93,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [perWeekHrs, setPerWeekHrs] = useState(perWeekBudget);
 
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
-  const generateMarks = (is24HourFormat: boolean, startHour: number, endHour: number) => {
+  const generateMarks = (isHourFormat24: boolean, startHour: number, endHour: number) => {
     const convertTo12HourFormat = (hour: number) => {
       const suffix = hour >= 12 ? "PM" : "AM";
       const hourIn12 = hour % 12 === 0 ? 12 : hour % 12;
@@ -100,7 +101,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     };
     let marks = {};
 
-    if (is24HourFormat) {
+    if (isHourFormat24) {
       marks = {
         0: "0",
         24: "24",
@@ -118,10 +119,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
     return marks;
   };
-  const marks = generateMarks(is24HourFormat, afterTime, beforeTime);
+  const marks = generateMarks(hourFormat, afterTime, beforeTime);
 
   const formatTooltip = (value: number) => {
-    if (is24HourFormat) {
+    if (hourFormat) {
       return `${value < 10 ? `0${value}` : value}`;
     }
     const suffix = value >= 12 ? "PM" : "AM";
