@@ -43,6 +43,7 @@
 
     .MTL-startTime {
       font-size: 1.143rem;
+      width: 50px;
     }
 
     .MTL-endTime {
@@ -57,7 +58,7 @@
   }
 }
 
-.MTL-display>button {
+.MTL-display > button {
   line-height: 22px;
   padding: 0.7em 0;
   line-height: 22px;
@@ -66,11 +67,11 @@
   border: none;
 }
 
-.MTL-display>button:first-child {
+.MTL-display > button:first-child {
   padding-top: 1.4em;
 }
 
-.MTL-display>button:last-child {
+.MTL-display > button:last-child {
   border: none;
   margin-bottom: 0 !important;
 }
@@ -109,7 +110,7 @@
   margin-top: 0.7em;
 }
 
-.MTL-options>button {
+.MTL-options > button {
   background: transparent;
   border: 0px;
   font-weight: 400;
@@ -119,7 +120,7 @@
   cursor: pointer;
 }
 
-.MTL-options>.last-btn {
+.MTL-options > .last-btn {
   border-right: none;
 }
 
@@ -128,7 +129,7 @@
     padding: 0.1em;
   }
 
-  .MTL-options>button {
+  .MTL-options > button {
     padding: 0.3em 1em;
     font-size: 0.7rem;
   }

@@ -185,7 +185,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
               }}
             >
               <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
-              <GoalTiming startTime={startTime} endTime={endTime} showTaskOptions={showTaskOptions} />
+              <GoalTiming
+                startTime={startTime}
+                endTime={endTime}
+                showTaskOptions={showTaskOptions}
+                is24HourFormat={false}
+              />
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", position: "relative" }}>
                   <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>

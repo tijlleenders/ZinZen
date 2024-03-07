@@ -15,8 +15,7 @@ const Settings = () => {
   const { handleChangeTheme, handleBackResModal, handleBackLangModal } = useGlobalStore();
 
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-  const [hourFormat, setHourFormat] = useState(true); // true for 24-hour, false for 12-hour
-
+  const [hourFormat, setHourFormat] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstall, setShowInstall] = useState(false);
   const dropdownOptions = [t("donate"), t("feedback"), t("blog"), t("backup"), t("changeLanguage"), t("changeTheme")];
