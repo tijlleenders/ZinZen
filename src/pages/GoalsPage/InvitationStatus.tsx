@@ -7,7 +7,7 @@ import useGetRelationshipStatus from "@src/hooks/useGetRelationshipStatus";
 const InvitationStatus = ({ relId }: { relId: string }) => {
   const setShowToast = useSetRecoilState(displayToast);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const { relationshipStatus, loading } = useGetRelationshipStatus(relId);
+  const { relationshipStatus, type, partnerName, loading } = useGetRelationshipStatus(relId);
 
   const handleSendInvitation = async () => {
     navigator.clipboard.writeText(`${window.location.origin}/invite/${relId}`);
@@ -20,13 +20,18 @@ const InvitationStatus = ({ relId }: { relId: string }) => {
 
   if (loading) return null;
 
+  let message;
+  if (relationshipStatus && type === "reciever") {
+    message = `This is where you can see all the goals shared by ${partnerName}. At the moment there are no goals shared with you yet by ${partnerName}.`;
+  } else if (!relationshipStatus && type === "reciever") {
+    message = "Your partner has not accepted the sharing request yet. Click the button below to share again.";
+  } else {
+    message = "Your partner has accepted the sharing request but has not shared anything with you.";
+  }
+
   return (
     <div style={{ textAlign: "center", margin: "0 20px", fontWeight: 400, fontSize: 18 }}>
-      <p>
-        {relationshipStatus
-          ? "Your partner has accepted the sharing request but has not shared anything with you."
-          : "Your partner has not accepted the sharing request yet. Click the button below to share again."}
-      </p>
+      <p>{message}</p>
       {!relationshipStatus && (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <button

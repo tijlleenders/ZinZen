@@ -6,14 +6,24 @@ import { useRecoilValue } from "recoil";
 const useGetRelationshipStatus = (relId: string) => {
   const [loading, setLoading] = useState(false);
   const [relationshipStatus, setRelationshipStatus] = useState(false);
+  const [type, setType] = useState("");
+  const [partnerName, setPartnerName] = useState("");
   const displayToastValue = useRecoilValue(displayToast);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const status = await getContactByRelId(relId);
-      if (status?.accepted !== undefined) {
-        setRelationshipStatus(status.accepted);
+      const contact = await getContactByRelId(relId);
+      const accepted = contact?.accepted;
+      if (contact?.name) {
+        setPartnerName(contact.name);
+      }
+      if (contact?.type) {
+        setType(contact.type);
+      }
+
+      if (accepted !== undefined) {
+        setRelationshipStatus(accepted);
       }
       setLoading(false);
     };
@@ -21,7 +31,7 @@ const useGetRelationshipStatus = (relId: string) => {
     fetchData();
   }, [displayToastValue, relId]);
 
-  return { relationshipStatus, loading };
+  return { relationshipStatus, partnerName, type, loading };
 };
 
 export default useGetRelationshipStatus;
