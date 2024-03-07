@@ -47,8 +47,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
-  const [is24HourFormat, setIs24HourFormat] = useState(false); // True for 24-hour, false for 12-hour
-
+  const [is24HourFormat, setIs24HourFormat] = useState(false);
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
@@ -97,9 +96,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     const convertTo12HourFormat = (hour: number) => {
       const suffix = hour >= 12 ? "PM" : "AM";
       const hourIn12 = hour % 12 === 0 ? 12 : hour % 12;
-      return `${hourIn12} ${suffix}`;
+      return `${hourIn12}\n${suffix}`;
     };
-
     let marks = {};
 
     if (is24HourFormat) {
@@ -121,6 +119,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     return marks;
   };
   const marks = generateMarks(is24HourFormat, afterTime, beforeTime);
+
+  const formatTooltip = (value: number) => {
+    if (is24HourFormat) {
+      return `${value < 10 ? `0${value}` : value}`;
+    }
+    const suffix = value >= 12 ? "PM" : "AM";
+    const hour = value % 12 || 12;
+    return `${hour} ${suffix}`;
+  };
 
   const isTitleEmpty = () => {
     if (title.length === 0 || title.trim() === "") {
@@ -298,7 +305,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <div>
                 <span>Between</span>
                 <Slider
-                  tooltip={{ prefixCls: "between-tooltip" }}
+                  tooltip={{
+                    prefixCls: "between-tooltip",
+                    formatter: formatTooltip,
+                  }}
                   min={0}
                   max={24}
                   marks={marks}

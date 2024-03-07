@@ -30,6 +30,9 @@
     color: inherit !important;
   }
 }
+.ant-slider-mark-text {
+  width: 1.7rem;
+}
 // .App-dark,
 // .popupModal-dark {
 //   .checkbox {
@@ -102,12 +105,15 @@
 .ant-switch-dark {
   background: #8c8c8c !important;
 }
-.ant-switch:hover:not(.ant-switch-disabled), .ant-switch-dark:hover:not(.ant-switch-dark-disabled) {
+.ant-switch:hover:not(.ant-switch-disabled),
+.ant-switch-dark:hover:not(.ant-switch-dark-disabled) {
   background: #8c8c8c !important;
 }
 
-.ant-switch-checked, .ant-switch-dark-checked {
-  .ant-switch-inner, .ant-switch-dark-inner {
+.ant-switch-checked,
+.ant-switch-dark-checked {
+  .ant-switch-inner,
+  .ant-switch-dark-inner {
     background: var(--selection-color) !important;
   }
 }
@@ -115,8 +121,7 @@
 .ant-switch-inner-checked,
 .ant-switch-inner-unchecked,
 .ant-switch-dark-inner-checked,
-.ant-switch-dark-inner-unchecked
- {
+.ant-switch-dark-inner-unchecked {
   img {
     width: 15px;
     height: 15px;
