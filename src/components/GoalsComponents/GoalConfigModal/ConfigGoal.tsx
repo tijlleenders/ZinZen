@@ -47,6 +47,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
+  const [is24HourFormat, setIs24HourFormat] = useState(false); // True for 24-hour, false for 12-hour
 
   const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
@@ -92,7 +93,34 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [perWeekHrs, setPerWeekHrs] = useState(perWeekBudget);
 
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
-  const marks: SliderMarks = { 0: "0", 24: "24" };
+  const generateMarks = (is24HourFormat: boolean, startHour: number, endHour: number) => {
+    const convertTo12HourFormat = (hour: number) => {
+      const suffix = hour >= 12 ? "PM" : "AM";
+      const hourIn12 = hour % 12 === 0 ? 12 : hour % 12;
+      return `${hourIn12} ${suffix}`;
+    };
+
+    let marks = {};
+
+    if (is24HourFormat) {
+      marks = {
+        0: "0",
+        24: "24",
+        [startHour]: startHour.toString(),
+        [endHour]: endHour.toString(),
+      };
+    } else {
+      marks = {
+        0: "12 AM",
+        24: "12 AM",
+        [startHour]: convertTo12HourFormat(startHour),
+        [endHour]: convertTo12HourFormat(endHour),
+      };
+    }
+
+    return marks;
+  };
+  const marks = generateMarks(is24HourFormat, afterTime, beforeTime);
 
   const isTitleEmpty = () => {
     if (title.length === 0 || title.trim() === "") {
@@ -273,11 +301,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   tooltip={{ prefixCls: "between-tooltip" }}
                   min={0}
                   max={24}
-                  marks={{
-                    ...marks,
-                    [afterTime]: `${afterTime}`,
-                    [beforeTime]: `${beforeTime}`,
-                  }}
+                  marks={marks}
                   range
                   defaultValue={[afterTime, beforeTime]}
                   onAfterChange={(val) => {
