@@ -2,20 +2,22 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Dropdown, MenuProps, Switch } from "antd";
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import verticalDots from "@assets/images/verticalDots.svg";
 import { darkModeState } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import useGlobalStore from "@src/hooks/useGlobalStore";
+import { is24HourFormat } from "@src/store/HourFormatState";
 
 const Settings = () => {
   const { t } = useTranslation();
+  const [hourFormat, setHourFormat] = useRecoilState(is24HourFormat);
+
   const navigate = useNavigate();
   const { handleChangeTheme, handleBackResModal, handleBackLangModal } = useGlobalStore();
 
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
-  const [hourFormat, setHourFormat] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstall, setShowInstall] = useState(false);
   const dropdownOptions = [t("donate"), t("feedback"), t("blog"), t("backup"), t("changeLanguage"), t("changeTheme")];

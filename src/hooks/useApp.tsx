@@ -117,6 +117,7 @@ function useApp() {
     if (!installId) {
       localStorage.setItem("installId", uuidv4());
       localStorage.setItem("darkMode", "on");
+      localStorage.setItem("hourFormat", "24");
       localStorage.setItem("theme", JSON.stringify(getTheme()));
     } else {
       init();

@@ -1,23 +1,21 @@
 import React from "react";
 
+import { useRecoilValue } from "recoil";
+import { is24HourFormat } from "@src/store/HourFormatState";
+
 interface GoalTimingProps {
   startTime: string | null;
   endTime: string | null;
   showTaskOptions: boolean;
-  is24HourFormat: boolean;
 }
 
-export const GoalTiming: React.FC<GoalTimingProps> = ({
-  startTime,
-  endTime,
-  showTaskOptions,
-  is24HourFormat = true,
-}) => {
+export const GoalTiming: React.FC<GoalTimingProps> = ({ startTime, endTime, showTaskOptions }) => {
+  const hourFormat = useRecoilValue(is24HourFormat);
   const formatTime = (time: string) => {
     let hours = parseInt(time, 10);
     let ampm = "AM";
 
-    if (!is24HourFormat) {
+    if (!hourFormat) {
       if (hours >= 12) {
         ampm = "PM";
         hours = hours > 12 ? hours - 12 : hours;
@@ -25,11 +23,11 @@ export const GoalTiming: React.FC<GoalTimingProps> = ({
       hours = hours === 0 ? 12 : hours;
     }
 
-    const formattedHours = is24HourFormat ? `${hours < 10 ? `0${hours}` : hours}` : `${hours}`;
+    const formattedHours = hourFormat ? `${hours < 10 ? `0${hours}` : hours}` : `${hours}`;
 
     return {
       formattedHours,
-      ampm: !is24HourFormat ? `00 ${ampm}` : "00",
+      ampm: !hourFormat ? `00 ${ampm}` : "00",
     };
   };
 
