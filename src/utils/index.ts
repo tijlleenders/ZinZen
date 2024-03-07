@@ -255,3 +255,10 @@ export const calculateDaysLeft = (dueDate: string) => {
 export const formatSingularPlural = (count: number, singularWord: string) => {
   return `${count} ${singularWord}${count !== 1 ? "s" : ""}`;
 };
+
+export const formatTimeTo12Hour = (time: string) => {
+  const hour = parseInt(time, 10);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const convertedHour = hour % 12 || 12;
+  return `${convertedHour} ${ampm}`;
+};
