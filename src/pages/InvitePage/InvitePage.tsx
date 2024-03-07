@@ -33,7 +33,7 @@ const InvitePage = () => {
     const res = await acceptRelationship();
     if (res.success && res.response?.relId) {
       const { relId } = res.response;
-      await addContact(newContactName, relId, "reciever", true);
+      await addContact(newContactName, relId, "receiver", true);
       setNewContactName("");
     }
     checkForTour();

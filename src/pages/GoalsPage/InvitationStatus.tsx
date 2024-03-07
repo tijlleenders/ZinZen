@@ -21,9 +21,9 @@ const InvitationStatus = ({ relId }: { relId: string }) => {
   if (loading) return null;
 
   let message;
-  if (relationshipStatus && type === "reciever") {
+  if (relationshipStatus && type === "receiver") {
     message = `This is where you can see all the goals shared by ${partnerName}. At the moment there are no goals shared with you yet by ${partnerName}.`;
-  } else if (!relationshipStatus && type === "reciever") {
+  } else if (!relationshipStatus && type === "receiver") {
     message = "Your partner has not accepted the sharing request yet. Click the button below to share again.";
   } else {
     message = "Your partner has accepted the sharing request but has not shared anything with you.";
