@@ -15,6 +15,7 @@ const Settings = () => {
   const { handleChangeTheme, handleBackResModal, handleBackLangModal } = useGlobalStore();
 
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+  const [hourFormat, setHourFormat] = useState(true); // true for 24-hour, false for 12-hour
 
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstall, setShowInstall] = useState(false);
@@ -23,6 +24,11 @@ const Settings = () => {
   const toggleDarkModeStatus = () => {
     localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
     setDarkModeStatus(!darkModeStatus);
+  };
+
+  const toggleHourFormat = () => {
+    localStorage.setItem("hourFormat", hourFormat ? "12" : "24");
+    setHourFormat(!hourFormat);
   };
 
   const theme = useRecoilValue(themeState);
@@ -63,7 +69,22 @@ const Settings = () => {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            marginTop: 12,
+            alignItems: "center",
+            fontSize: "18px",
+          }}
+        >
+          <p>{t("hourFormat")}</p>
+          <Switch checked={hourFormat} onClick={toggleHourFormat} />
+        </div>
+      ),
+      key: "7",
+    },
+    {
+      label: (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
             fontSize: "18px",
           }}
@@ -73,7 +94,7 @@ const Settings = () => {
           <Switch checked={darkModeStatus} />
         </div>
       ),
-      key: "7",
+      key: "8",
     },
   ];
 
