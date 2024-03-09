@@ -5,4 +5,5 @@ export default interface ContactItem {
   accepted: boolean;
   goalsToBeShared: string[];
   createdAt: Date;
+  type: string;
 }

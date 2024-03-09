@@ -39,7 +39,7 @@ export class ZinZenDB extends Dexie {
           "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         sharedWMCollection:
           "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-        contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt",
+        contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt, type",
         outboxCollection: null,
         inboxCollection: "id, goalChanges",
         pubSubCollection: "id, subscribers",
