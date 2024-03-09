@@ -13,7 +13,7 @@ export const getPartnersCount = async () => {
   return db.contactsCollection.count();
 };
 
-export const addContact = async (contactName: string, relId: string, accepted = false) => {
+export const addContact = async (contactName: string, relId: string, type: string, accepted = false) => {
   const name = `${contactName.charAt(0).toUpperCase() + contactName.slice(1)}`;
   const currentDate = new Date();
   const newContact: ContactItem = {
@@ -23,6 +23,7 @@ export const addContact = async (contactName: string, relId: string, accepted = 
     createdAt: currentDate,
     accepted,
     goalsToBeShared: [],
+    type,
   };
   let newContactId;
   await db

@@ -50,7 +50,7 @@ export const LandingPage = () => {
   return (
     <OnboardingLayout>
       <p className={`landing-about${darkModeStatus ? "-dark" : ""}`}>
-        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D" }}>Better together </span>
+        <span style={{ color: darkModeStatus ? "#AB9ED8" : "#C6441D", fontSize: "18px" }}>Better together </span>
       </p>
       <p className="subheading">{t("langChoice")}</p>
       <LanguagesList

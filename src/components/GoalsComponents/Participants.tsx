@@ -8,7 +8,6 @@ import ZModal from "@src/common/ZModal";
 
 const Participants = ({ goalId }: { goalId: string }) => {
   const [list, setList] = useState<IParticipant[]>([]);
-
   const getParticipants = async () => {
     const goal = await getGoal(goalId);
     if (goal) {

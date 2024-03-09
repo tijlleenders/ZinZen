@@ -29,7 +29,7 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         const res = await initRelationship();
         if (res.success && res.response.relId && res.response.relId.length > 0) {
           const { relId } = res.response;
-          await addContact(newContact?.contactName, relId);
+          await addContact(newContact?.contactName, relId, "sender");
           setNewContact({ ...newContact, relId });
           const defaultPartner = localStorage.getItem("defaultPartner");
           if (!defaultPartner) {

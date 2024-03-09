@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { useRecoilValue } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -32,6 +34,16 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   const archived = goal.archived === "true";
   const defaultTap = { open: "root", click: 1 };
   const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
+
+  const [expandGoalId, setExpandGoalId] = useState("root");
+  const [isAnimating, setIsAnimating] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -81,6 +93,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   useEffect(() => {
     if (location && location.pathname === "/MyGoals") {
       const { expandedGoalId } = location.state || {};
+      setExpandGoalId(expandedGoalId);
       if (expandedGoalId && showActions.open !== expandedGoalId) {
         setShowActions({ open: expandedGoalId, click: 1 });
       }
@@ -89,7 +102,12 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
 
   return (
     <>
-      <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
+      <div
+        key={String(`goal-${goal.id}`)}
+        className={`user-goal${darkModeStatus ? "-dark" : ""} ${
+          expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
+        }`}
+      >
         <div
           className="user-goal-main"
           style={{
