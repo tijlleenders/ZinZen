@@ -94,7 +94,7 @@ export const modifyGoal = async (
   });
   const sendUpdatedGoalPromise = sendUpdatedGoal(goalId, ancestors);
   const updateHintPromise = updateHint(goalTags.id, goalHint);
-  await Promise.all([sendUpdatedGoalPromise, updateHintPromise]);
+  Promise.allSettled([sendUpdatedGoalPromise, updateHintPromise]).catch((err) => console.log(err));
 };
 
 export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {
