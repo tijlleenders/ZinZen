@@ -122,23 +122,8 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   if (!goal.due) {
     goal.due = parentGoal.due;
   }
-  if (!(goal.beforeTime || goal.beforeTime === 0)) {
-    goal.beforeTime = parentGoal.beforeTime;
-  }
-  if (!(goal.afterTime || goal.afterTime === 0)) {
-    goal.afterTime = parentGoal.afterTime;
-  }
-  if (!goal.on) {
-    goal.on = parentGoal.on;
-  }
   if (!goal.habit) {
     goal.habit = parentGoal.habit;
-  }
-  if (!goal.timeBudget) {
-    goal.timeBudget = parentGoal.timeBudget;
-  }
-  if (!goal.on) {
-    goal.on = parentGoal.on;
   }
 
   goal.rootGoalId = parentGoal.rootGoalId;
@@ -242,9 +227,10 @@ export const formatBudgetHrsToText = (hours: string | null) => {
   }
   const parts = hours.split("-").map(Number);
   if (parts.length === 2 && parts[0] === parts[1]) {
-    return `${parts[0]} ${i18next.t("hour", { count: parts[0] })}`;
+    return `${i18next.t(`hourWithCount_${parts[0] <= 1 ? "one" : "other"}`, { count: parts[0] })}`;
   }
-  return `${hours} ${i18next.t("hours")}`;
+
+  return `${parts[0]}-${i18next.t(`hourWithCount_${parts[1] <= 1 ? "one" : "other"}`, { count: parts[1] })}`;
 };
 
 export const calculateDaysLeft = (dueDate: string) => {

@@ -116,7 +116,7 @@ function useApp() {
     const installId = localStorage.getItem("installId");
     if (!installId) {
       localStorage.setItem("installId", uuidv4());
-      localStorage.setItem("darkMode", "off");
+      localStorage.setItem("darkMode", "on");
       localStorage.setItem("theme", JSON.stringify(getTheme()));
     } else {
       init();

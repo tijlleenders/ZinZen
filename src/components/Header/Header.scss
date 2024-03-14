@@ -12,12 +12,13 @@
     align-items: center;
     justify-content: flex-start;
     flex: 1;
+    gap: 16px;
     img {
       height: 30px;
       width: 30px;
       cursor: pointer;
       flex-grow: 0;
-      padding: 14px 17px 14px 5%;
+      margin-left: 20px;
     }
   }
   

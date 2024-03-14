@@ -33,7 +33,7 @@ const InvitePage = () => {
     const res = await acceptRelationship();
     if (res.success && res.response?.relId) {
       const { relId } = res.response;
-      await addContact(newContactName, relId, true);
+      await addContact(newContactName, relId, "receiver", true);
       setNewContactName("");
     }
     checkForTour();
@@ -65,6 +65,7 @@ const InvitePage = () => {
         className="default-input"
         placeholder="Contact name"
       />
+      {/* Make this button a component */}
       <button
         type="button"
         className={`default-btn${darkModeStatus ? "-dark" : ""}`}

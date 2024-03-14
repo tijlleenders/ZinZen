@@ -19,6 +19,8 @@ import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActio
 import ContactItem from "@src/models/ContactItem";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
 
+import InvitationStatus from "./InvitationStatus";
+
 const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const { name, relId } = partner;
@@ -32,7 +34,6 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   const selectedGoalId = useRecoilValue(displayGoalId);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showGoalActions = useRecoilValue(displayGoalActions);
-
   const [action, setLastAction] = useRecoilState(lastAction);
 
   const handleUserGoals = (goals: GoalItem[]) => {
@@ -98,12 +99,16 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
         ) : (
           <GoalSublist />
         )}
+
         {activeGoals?.length === 0 && (
-          <img
-            style={{ width: 350, height: 350, opacity: 0.3 }}
-            src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-            alt="Zinzen"
-          />
+          <>
+            <InvitationStatus relId={relId} />
+            <img
+              style={{ width: 350, height: 350, opacity: 0.3 }}
+              src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+              alt="Zinzen"
+            />
+          </>
         )}
       </div>
     </AppLayout>

@@ -127,6 +127,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         //   setOpenReschedule({ ...task });
         // }
       } else if (actionName === "Done") {
+        const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
+        if (markDone) return;
         await completeTask(taskItem.id, Number(task.duration), task.taskid);
       } else if (actionName === "Skip") {
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
@@ -179,13 +181,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   : { display: "flex", flexDirection: "row" }
               }
               onClick={() => {
-                if (displayOptionsIndex !== task.taskid) {
-                  if (markDone) {
-                    handleOpenGoal(task.goalid);
-                  } else {
-                    setDisplayOptionsIndex(task.taskid);
-                  }
-                } else setDisplayOptionsIndex("");
+                setDisplayOptionsIndex(displayOptionsIndex !== task.taskid ? task.taskid : "");
               }}
             >
               <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
@@ -193,20 +189,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", position: "relative" }}>
                   <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
-                    <button
-                      style={{ textDecorationColor: task.goalColor }}
-                      type="button"
-                      className="MTL-taskTitle"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setDisplayOptionsIndex(task.taskid);
-                        if (displayOptionsIndex === task.taskid || markDone) {
-                          setDisplayOptionsIndex("");
-                        }
-                      }}
-                    >
+                    <div style={{ textDecorationColor: task.goalColor }} className="MTL-taskTitle">
                       {t(`${task.title}`)}
-                    </button>
+                    </div>
                   </div>
 
                   {showTaskOptions && (
@@ -221,9 +206,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     </button>
                   )}
                 </div>
-                {!markDone && showTaskOptions ? (
-                  <TaskOptions task={task} handleActionClick={handleActionClick} />
-                ) : null}
+                {showTaskOptions ? <TaskOptions task={task} handleActionClick={handleActionClick} /> : null}
               </div>
             </button>
           );

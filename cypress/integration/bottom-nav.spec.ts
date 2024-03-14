@@ -30,14 +30,14 @@ describe("BottomNavbar", () => {
 
   it("should change to next theme when Next button is clicked", () => {
     cy.get(".bottom-nav-item").contains("Next").click();
-    cy.get(".light-theme1").should("not.exist");
-    cy.get(".light-theme2").should("be.visible");
+    cy.get(".dark-theme1").should("not.exist");
+    cy.get(".dark-theme2").should("be.visible");
     // Assert that the previous page is navigated based on your implementation
   });
 
   it("should change back to previous theme when Prev button is clicked", () => {
     cy.get(".bottom-nav-item").contains("Prev").click();
-    cy.get(".light-theme2").should("not.exist");
-    cy.get(".light-theme1").should("be.visible");
+    cy.get(".dark-theme2").should("not.exist");
+    cy.get(".dark-theme1").should("be.visible");
   });
 });

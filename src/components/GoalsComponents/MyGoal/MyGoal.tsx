@@ -1,11 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-
-import { unarchiveIcon } from "@src/assets";
+import { useRecoilValue } from "recoil";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 
 import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
@@ -35,12 +32,18 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   const defaultTap = { open: "root", click: 1 };
   const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
 
+  const [expandGoalId, setExpandGoalId] = useState("root");
+  const [isAnimating, setIsAnimating] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const navigate = useNavigate();
   const location = useLocation();
-  // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
-  // const collabWithContact =
-  //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
-  const setLastAction = useSetRecoilState(lastAction);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
@@ -88,6 +91,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   useEffect(() => {
     if (location && location.pathname === "/MyGoals") {
       const { expandedGoalId } = location.state || {};
+      setExpandGoalId(expandedGoalId);
       if (expandedGoalId && showActions.open !== expandedGoalId) {
         setShowActions({ open: expandedGoalId, click: 1 });
       }
@@ -95,27 +99,40 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   }, [location]);
 
   return (
-    <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
+    <>
       <div
-        className="user-goal-main"
+        key={String(`goal-${goal.id}`)}
+        className={`user-goal${darkModeStatus ? "-dark" : ""} ${
+          expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
+        }`}
+      >
+        <div
+          className="user-goal-main"
+          style={{
+            ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
+          }}
+        >
+          <div onClickCapture={handleDropDown}>
+            <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
+          </div>
+          <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
+            <GoalTitle goal={goal} />
+          </div>
+        </div>
+        {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
+      </div>
+      <div
         style={{
-          ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
+          marginLeft: "69px",
         }}
       >
-        <div onClickCapture={handleDropDown}>
-          <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
-        </div>
-        <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <GoalTitle goal={goal} />
-          {showActions.open === goal.id && showActions.click > 0 && (
-            <p className="goal-desc">
-              <GoalSummary goal={goal} />
-            </p>
-          )}
-        </div>
+        {showActions.open === goal.id && showActions.click > 0 && (
+          <p className="goal-desc">
+            <GoalSummary goal={goal} />
+          </p>
+        )}
       </div>
-      {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
-    </div>
+    </>
   );
 };
 
