@@ -1,4 +1,4 @@
-import { ISubGoalHistory, TDisplayGoalActions } from "@src/store/GoalsState";
+import { ISubGoalHistory } from "@src/store/GoalsState";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import ContactItem from "@src/models/ContactItem";
 import { ILanguage, ILanguageListProps } from "./ILanguage";
@@ -20,7 +20,7 @@ export interface ILocationState {
   displayInputNoteModal?: number; // show input modal for adding note for id
   changeTheme?: boolean; // theme changer mode
   expandedGoalId?: string; // id of goal to be expanded
-  displayGoalActions?: TDisplayGoalActions; // id of goal whose actions have to be opened
+  displayGoalActions?: GoalItem; // id of goal whose actions have to be opened
   displayPartnerMode?: boolean; // whether or not to display the partner goals
   displayAddContact?: boolean; // whether or not to display the add contact form
   displayParticipants?: string; // id of goal whose participants have to be displayed

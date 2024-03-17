@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
+import { GoalItem } from "@src/models/GoalItem";
+import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { displayPartnerMode, lastAction } from "@src/store";
 import {
   displayAddGoal,
   displayChangesModal,
@@ -9,19 +14,13 @@ import {
   displaySuggestionsModal,
   displayUpdateGoal,
 } from "@src/store/GoalsState";
-import { GoalItem } from "@src/models/GoalItem";
-import { getDeletedGoals } from "@src/api/TrashAPI";
-import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
-import { displayPartnerMode, lastAction } from "@src/store";
-import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
 
 import GoalsList from "../GoalsList";
 import ConfigGoal from "../GoalConfigModal/ConfigGoal";
-import GoalHistory from "./GoalHistory";
-import GoalsAccordion from "../GoalsAccordion";
 
 import "./GoalSublist.scss";
+import GoalHistory from "./GoalHistory";
+import ArchivedAccordion from "../ArchivedAccordion";
 
 export const GoalSublist = () => {
   const { t } = useTranslation();
@@ -34,7 +33,6 @@ export const GoalSublist = () => {
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const [parentGoal, setParentGoal] = useState<GoalItem | null>(null);
   const [childrenGoals, setChildrenGoals] = useState<GoalItem[]>([]);
-  const [deletedGoals, setDeletedGoals] = useState<GoalItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
 
@@ -44,20 +42,12 @@ export const GoalSublist = () => {
   };
 
   useEffect(() => {
-    (showPartnerMode ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) => {
-      setParentGoal(parent);
-      getDeletedGoals(goalID).then((res) => {
-        setDeletedGoals([...res.map(({ deletedAt, ...goal }) => goal)]);
-      });
-    });
+    (showPartnerMode ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) => setParentGoal(parent));
   }, [goalID]);
 
   useEffect(() => {
     (showPartnerMode ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID)).then((fetchedGoals) => {
       handleChildrenGoals(fetchedGoals);
-      getDeletedGoals(goalID).then((res) => {
-        setDeletedGoals([...res.map(({ deletedAt, ...goal }) => goal)]);
-      });
     });
   }, [action, parentGoal, showAddGoal, showSuggestionModal, showChangesModal, showUpdateGoal]);
 
@@ -75,15 +65,8 @@ export const GoalSublist = () => {
               setGoals={setChildrenGoals}
               setShowActions={setShowActions}
             />
-            <GoalsAccordion
-              header="Done"
-              goals={archivedChildren}
-              showActions={showActions}
-              setShowActions={setShowActions}
-            />
-            <GoalsAccordion
-              header="Trash"
-              goals={deletedGoals}
+            <ArchivedAccordion
+              archivedGoals={archivedChildren}
               showActions={showActions}
               setShowActions={setShowActions}
             />
