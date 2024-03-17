@@ -11,13 +11,13 @@ import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist
 import { displayGoalActions, displayGoalId } from "@src/store/GoalsState";
 import { darkModeState, lastAction, searchActive } from "@src/store";
 
-import GoalsList from "@components/GoalsComponents/GoalsList";
-import AppLayout from "@src/layouts/AppLayout";
-import ContactItem from "@src/models/ContactItem";
-import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
+import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
 import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
+import AppLayout from "@src/layouts/AppLayout";
+import GoalsList from "@components/GoalsComponents/GoalsList";
+import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
+import ContactItem from "@src/models/ContactItem";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
-import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
 
 import InvitationStatus from "./InvitationStatus";
 
@@ -76,7 +76,7 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   return (
     <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
       <GoalLocStateHandler />
-      {showGoalActions && <RegularGoalActions open goal={showGoalActions.goal} />}
+      {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
       <div className="myGoals-container">
         {selectedGoalId === "root" ? (
           <div className="my-goals-content">
@@ -89,9 +89,8 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
                   setGoals={setActiveGoals}
                 />
               </div>
-              <GoalsAccordion
-                header="Done"
-                goals={archivedGoals}
+              <ArchivedAccordion
+                archivedGoals={archivedGoals}
                 showActions={showActions}
                 setShowActions={setShowActions}
               />

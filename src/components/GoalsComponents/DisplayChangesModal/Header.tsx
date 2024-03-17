@@ -36,12 +36,6 @@ const Header = ({
           {contactName} completed {title}.
         </>
       );
-    case "restored":
-      return (
-        <>
-          {contactName} restored {title}.
-        </>
-      );
     default:
       return <>&nbsp;</>;
   }

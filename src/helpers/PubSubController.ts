@@ -2,7 +2,6 @@
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getGoal, getParticipantsOfGoals } from "@src/api/GoalsAPI";
 import { getHistoryUptoGoal } from "./GoalProcessor";
-import { getParticipantsOfDeletedGoal } from "@src/api/TrashAPI";
 
 export const sendUpdatedGoal = async (
   goalId: string,
@@ -30,18 +29,13 @@ export const sendUpdatedGoal = async (
 
 export const sendFinalUpdateOnGoal = async (
   goalId: string,
-  action: "archived" | "deleted" | "restored",
+  action: "archived" | "deleted",
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
 ) => {
   const ancestorGoalIds = redefineAncestors ? (await getHistoryUptoGoal(goalId)).map((ele) => ele.goalID) : ancestors;
   const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
-  if (action === "restored") {
-    (await getParticipantsOfDeletedGoal(goalId)).forEach((doc) => {
-      subscribers.push(doc);
-    });
-  }
   subscribers
     .filter((ele) => !excludeSubs.includes(ele.sub.relId))
     .forEach(async ({ sub, rootGoalId }) => {

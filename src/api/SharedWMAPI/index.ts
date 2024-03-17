@@ -3,7 +3,6 @@ import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { addGoal } from "../GoalsAPI";
-import { addDeletedGoal } from "../TrashAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -75,7 +74,7 @@ export const getRootGoalsOfPartner = async (relId: string) => {
     await db.sharedWMCollection
       .where("parentGoalId")
       .equals("root")
-      .and((x) => x.participants.length > 0 && x.participants[0].relId === relId)
+      .and((x) => x.participants[0].relId === relId)
       .sortBy("createdAt")
   ).reverse();
 };
@@ -117,11 +116,8 @@ export const archiveSharedWMGoal = async (goal: GoalItem) => {
   await archiveGoal(goal);
 };
 
-export const removeSharedWMGoal = async (goal: GoalItem) => {
-  await Promise.allSettled([
-    addDeletedGoal(goal),
-    db.sharedWMCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
-  ]);
+export const removeSharedWMGoal = async (goalId: string) => {
+  await db.sharedWMCollection.delete(goalId).catch((err) => console.log("failed to delete", err));
 };
 
 export const removeSharedWMChildrenGoals = async (parentGoalId: string) => {
@@ -131,7 +127,7 @@ export const removeSharedWMChildrenGoals = async (parentGoalId: string) => {
   }
   childrenGoals.forEach((goal) => {
     removeSharedWMChildrenGoals(goal.id);
-    removeSharedWMGoal(goal);
+    removeSharedWMGoal(goal.id);
   });
 };
 
@@ -142,7 +138,7 @@ export const transferToMyGoals = async (id: string) => {
   }
   childrenGoals.forEach((goal) => {
     transferToMyGoals(goal.id);
-    addGoal(goal).then(async () => removeSharedWMGoal(goal));
+    addGoal(goal).then(async () => removeSharedWMGoal(goal.id));
   });
 };
 
@@ -151,7 +147,7 @@ export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
     .then(async () => {
       addGoal({ ...goal, typeOfGoal: "shared" })
         .then(async () => {
-          removeSharedWMGoal(goal);
+          removeSharedWMGoal(goal.id);
         })
         .catch((err) => console.log(err));
     })

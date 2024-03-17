@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import { useRecoilValue } from "recoil";
-import { useLocation, useNavigate } from "react-router-dom";
 
 import { GoalItem } from "@src/models/GoalItem";
 
-import { darkModeState, displayPartnerMode } from "@src/store";
-import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
+import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
+import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
 
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
-import { ILocationState } from "@src/Interfaces";
 
 interface MyGoalProps {
-  actionType: TAction;
   goal: GoalItem;
   showActions: {
     open: string;
@@ -26,11 +22,12 @@ interface MyGoalProps {
     React.SetStateAction<{
       open: string;
       click: number;
+      // eslint-disable-next-line prettier/prettier
     }>
   >;
 }
 
-const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowActions }) => {
+const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
   const archived = goal.archived === "true";
   const defaultTap = { open: "root", click: 1 };
   const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
@@ -76,11 +73,12 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   };
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.stopPropagation();
-    const navState: ILocationState = { ...location.state, from: "" };
+    const navState = { ...location.state, from: "" };
     if (goal.newUpdates) {
       navState.displayChanges = goal;
     } else {
-      navState.displayGoalActions = { actionType, goal };
+      navState.displayGoalActions = goal;
+      console.log("in navstate, displayGoalActions: ", navState);
     }
     navigate("/MyGoals", { state: navState });
   }
