@@ -34,3 +34,13 @@ export function summarizeUrl(url: string) {
   }
   return "";
 }
+
+export function isJSONParsable(str: string | null | undefined): boolean {
+  if (!str) return false;
+  try {
+    JSON.parse(str);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
