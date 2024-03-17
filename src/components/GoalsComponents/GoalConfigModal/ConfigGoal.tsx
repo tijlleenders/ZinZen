@@ -315,7 +315,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                               [beforeTime - afterTime]: `${beforeTime - afterTime}`,
                             }}
                             range
-                            value={perDayHrs}
+                            value={[perDayHrs[0], perDayHrs[1]]}
                             onChange={(val) => handleSliderChange(val, setPerDayHrs)}
                           />
                         </div>
