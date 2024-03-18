@@ -5,24 +5,22 @@ export interface confirmActionState {
     delete: boolean;
     shareAnonymously: boolean;
     shareWithOne: boolean;
-    restore: boolean;
   };
   collaboration: {
     colabRequest: boolean;
     delete: boolean;
     archive: boolean;
-    restore: boolean;
   };
 }
 
 export interface confirmGoalAction {
   actionCategory: "goal";
-  actionName: "archive" | "delete" | "shareAnonymously" | "shareWithOne" | "restore";
+  actionName: "archive" | "delete" | "shareAnonymously" | "shareWithOne";
 }
 
 export interface confirmColabGoalAction {
   actionCategory: "collaboration";
-  actionName: "colabRequest" | "delete" | "archive" | "restore";
+  actionName: "colabRequest" | "delete" | "archive";
 }
 
 export interface ConfirmationModalProps {

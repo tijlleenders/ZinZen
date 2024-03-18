@@ -12,7 +12,6 @@ import {
 } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
-import { restoreUserGoal } from "@src/api/TrashAPI";
 
 export const createGoal = async (
   parentGoalId: string,
@@ -83,17 +82,10 @@ export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {
 };
 
 export const deleteGoal = async (goal: GoalItem, ancestors: string[]) => {
-  sendFinalUpdateOnGoal(goal.id, "deleted", [...ancestors, goal.id], false).then(() => {
+  sendFinalUpdateOnGoal(goal.id, "deleted", ancestors, false).then(() => {
     console.log("Update Sent");
   });
   await removeGoalWithChildrens(goal);
-};
-
-export const restoreGoal = async (goal: GoalItem, ancestors: string[]) => {
-  sendFinalUpdateOnGoal(goal.id, "restored", [...ancestors, goal.id], false).then(() => {
-    console.log("Update Sent");
-  });
-  await restoreUserGoal(goal);
 };
 
 export const deleteSharedGoal = async (goal: GoalItem) => {

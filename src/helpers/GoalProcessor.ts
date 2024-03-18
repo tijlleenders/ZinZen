@@ -126,8 +126,6 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
     typeAtPriority = "archived";
   } else if (goalChanges.deleted.length > 0) {
     typeAtPriority = "deleted";
-  } else if (goalChanges.restored.length > 0) {
-    typeAtPriority = "restored";
   }
   return { typeAtPriority };
 };
