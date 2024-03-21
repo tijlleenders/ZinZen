@@ -30,7 +30,7 @@ export const addGoalChangesInID = async (id: string, relId: string, newChanges: 
       .where("id")
       .equals(id)
       .modify((obj: InboxItem) => {
-        const currentState = obj.changes[relId] || getDefaultValueOfGoalChanges();
+        const currentState = { ...getDefaultValueOfGoalChanges(), ...obj.changes[relId] };
         Object.keys(currentState).forEach((changeType: typeOfChange) => {
           currentState[changeType] = [...currentState[changeType], ...newChanges[changeType]];
         });

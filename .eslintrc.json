@@ -21,6 +21,7 @@
   "extends": [
     "airbnb",
     "eslint:recommended",
+    "@typescript-eslint/parser",
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:react/recommended",
