@@ -2,10 +2,12 @@ import { updatePositionIndex } from "@src/api/GCustomAPI";
 import DragAndDrop from "@src/layouts/DragAndDrop";
 import { GoalItem } from "@src/models/GoalItem";
 import React, { useState } from "react";
-import { displayUpdateGoal } from "@src/store/GoalsState";
+import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal/MyGoal";
+import MyGoalActions from "./MyGoalActions/MyGoalActions";
+import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
 
 interface GoalsListProps {
   goals: GoalItem[];
@@ -22,12 +24,13 @@ interface GoalsListProps {
   >;
 }
 
-const GoalsList: React.FC<GoalsListProps> = ({ goals, showActions, setGoals, setShowActions }) => {
+const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListProps) => {
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const showGoalActions = useRecoilValue(displayGoalActions);
   const [dragging, setDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState<GoalItem | null>(null);
 
-  const handleDragStart = (e, index: number) => {
+  const handleDragStart = (e: any, index: number) => {
     setDragging(true);
     setDraggedItem(goals[index]);
     e.dataTransfer.effectAllowed = "move";
@@ -48,22 +51,29 @@ const GoalsList: React.FC<GoalsListProps> = ({ goals, showActions, setGoals, set
     const posIndexPromises = goals.map(async (ele, index) => updatePositionIndex(ele.id, index));
     Promise.all(posIndexPromises).catch((err) => console.log("error in sorting", err));
   };
-  return goals.map((goal: GoalItem, index: number) => (
-    // eslint-disable-next-line react/no-array-index-key
-    <React.Fragment key={index}>
-      {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
-      <DragAndDrop
-        thisItem={goal.id === draggedItem?.id}
-        index={index}
-        dragging={dragging}
-        handleDragStart={handleDragStart}
-        handleDragEnter={handleDragEnter}
-        handleDragEnd={handleDragEnd}
-      >
-        <MyGoal goal={goal} showActions={showActions} setShowActions={setShowActions} />
-      </DragAndDrop>
-    </React.Fragment>
-  ));
+  return (
+    <>
+      {showGoalActions && showGoalActions.actionType === "regular" && (
+        <RegularGoalActions open goal={showGoalActions.goal} />
+      )}
+      {goals.map((goal: GoalItem, index: number) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <React.Fragment key={index}>
+          {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
+          <DragAndDrop
+            thisItem={goal.id === draggedItem?.id}
+            index={index}
+            dragging={dragging}
+            handleDragStart={handleDragStart}
+            handleDragEnter={handleDragEnter}
+            handleDragEnd={handleDragEnd}
+          >
+            <MyGoal actionType="regular" goal={goal} showActions={showActions} setShowActions={setShowActions} />
+          </DragAndDrop>
+        </React.Fragment>
+      ))}
+    </>
+  );
 };
 
 export default GoalsList;

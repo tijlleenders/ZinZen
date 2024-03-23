@@ -5,6 +5,7 @@ import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
+import { addDeletedGoal } from "../TrashAPI";
 import { deleteHint, getGoalHint } from "../HintsAPI";
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
@@ -135,9 +136,12 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
   await unarchiveGoal(goal);
 };
 
-export const removeGoal = async (goalId: string) => {
-  await deleteHint(goalId);
-  await db.goalsCollection.delete(goalId).catch((err) => console.log("failed to delete", err));
+export const removeGoal = async (goal: GoalItem) => {
+  await deleteHint(goal.id);
+  await Promise.allSettled([
+    db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
+    addDeletedGoal(goal),
+  ]);
 };
 
 export const removeChildrenGoals = async (parentGoalId: string) => {
@@ -147,7 +151,7 @@ export const removeChildrenGoals = async (parentGoalId: string) => {
   }
   childrenGoals.forEach((goal) => {
     removeChildrenGoals(goal.id);
-    removeGoal(goal.id);
+    removeGoal(goal);
   });
 };
 
@@ -289,7 +293,7 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
 
 export const removeGoalWithChildrens = async (goal: GoalItem) => {
   await removeChildrenGoals(goal.id);
-  await removeGoal(goal.id);
+  await removeGoal(goal);
   if (goal.parentGoalId !== "root") {
     getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;

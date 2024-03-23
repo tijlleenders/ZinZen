@@ -50,7 +50,7 @@ function getObject(idx) {
 
 function _assertBoolean(n) {
   if (typeof n !== "boolean") {
-    throw new Error("expected a boolean argument");
+    throw new Error(`expected a boolean argument, found ${typeof n}`);
   }
 }
 
@@ -80,7 +80,7 @@ const encodeString =
       };
 
 function passStringToWasm0(arg, malloc, realloc) {
-  if (typeof arg !== "string") throw new Error("expected a string argument");
+  if (typeof arg !== "string") throw new Error(`expected a string argument, found ${typeof arg}`);
 
   if (realloc === undefined) {
     const buf = cachedTextEncoder.encode(arg);
@@ -114,6 +114,7 @@ function passStringToWasm0(arg, malloc, realloc) {
     const ret = encodeString(arg, view);
     if (ret.read !== arg.length) throw new Error("failed to pass whole string");
     offset += ret.written;
+    ptr = realloc(ptr, len, offset, 1) >>> 0;
   }
 
   WASM_VECTOR_LEN = offset;
@@ -134,7 +135,7 @@ function getInt32Memory0() {
 }
 
 function _assertNum(n) {
-  if (typeof n !== "number") throw new Error("expected a number argument");
+  if (typeof n !== "number") throw new Error(`expected a number argument, found ${typeof n}`);
 }
 
 let cachedFloat64Memory0 = null;
@@ -212,7 +213,7 @@ function debugString(val) {
 }
 
 function _assertBigInt(n) {
-  if (typeof n !== "bigint") throw new Error("expected a bigint argument");
+  if (typeof n !== "bigint") throw new Error(`expected a bigint argument, found ${typeof n}`);
 }
 
 let cachedBigInt64Memory0 = null;

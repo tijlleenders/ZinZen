@@ -20,6 +20,7 @@ import {
 } from "@src/api/SharedWMAPI";
 import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { fixDateVlauesInGoalObject } from "@src/utils";
+import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 
 export const handleIncomingChanges = async (payload, relId) => {
   if (payload.type === "sharer" && (await getSharedWMGoal(payload.rootGoalId))) {
@@ -39,24 +40,28 @@ export const handleIncomingChanges = async (payload, relId) => {
       ];
       await updateSharedWMGoal(changes[0].goal.id, changes[0].goal);
     } else if (payload.changeType === "deleted") {
-      await removeSharedWMChildrenGoals(payload.changes[0].id);
-      await removeSharedWMGoal(payload.changes[0].id);
-      getSharedWMGoal(payload.changes[0].id).then((goal: GoalItem) => {
-        if (goal.parentGoalId !== "root") {
-          getSharedWMGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
-            const parentGoalSublist = parentGoal.sublist;
-            const childGoalIndex = parentGoalSublist.indexOf(goal.id);
-            if (childGoalIndex !== -1) {
-              parentGoalSublist.splice(childGoalIndex, 1);
-            }
-            await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
-          });
-        }
-      });
+      const goalToBeDeleted = await getSharedWMGoal(payload.changes[0].id);
+      await removeSharedWMChildrenGoals(goalToBeDeleted.id);
+      await removeSharedWMGoal(goalToBeDeleted);
+      if (goalToBeDeleted.parentGoalId !== "root") {
+        getSharedWMGoal(goalToBeDeleted.parentGoalId).then(async (parentGoal: GoalItem) => {
+          const parentGoalSublist = parentGoal.sublist;
+          const childGoalIndex = parentGoalSublist.indexOf(goalToBeDeleted.id);
+          if (childGoalIndex !== -1) {
+            parentGoalSublist.splice(childGoalIndex, 1);
+          }
+          await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
+        });
+      }
     } else if (payload.changeType === "archived") {
       getSharedWMGoal(payload.changes[0].id).then(async (goal: GoalItem) =>
         archiveSharedWMGoal(goal).catch((err) => console.log(err, "failed to archive")),
       );
+    } else if (payload.changeType === "restored") {
+      const goalToBeRestored = await getDeletedGoal(payload.changes[0].id);
+      if (goalToBeRestored) {
+        await restoreUserGoal(goalToBeRestored, true);
+      }
     }
   } else if (["sharer", "suggestion"].includes(payload.type)) {
     const { rootGoalId, changes, changeType } = payload;

@@ -14,7 +14,7 @@ export async function goalActionFlow(page: Page, action: string) {
     .locator("div")
     .filter({ hasText: new RegExp(`^${action}$`) })
     .first()
-    .click();
+    .click({ force: true });
 }
 
 export async function goToShareGoalModalFlow(page: Page) {

@@ -9,9 +9,12 @@ export interface ISubGoalHistory {
   goalTitle: string;
 }
 
+export type TAction = "deleted" | "archived" | "regular";
+export type TDisplayGoalActions = { actionType: TAction; goal: GoalItem };
+
 export const displayGoalActions = atom({
   key: "displayGoalActions",
-  default: null as GoalItem | null,
+  default: null as TDisplayGoalActions | null,
 });
 
 export const displayGoalConfigModal = atom({
