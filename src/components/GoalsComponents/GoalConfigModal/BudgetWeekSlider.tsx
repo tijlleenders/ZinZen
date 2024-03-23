@@ -1,5 +1,5 @@
 import { Slider } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 interface IBudgetWeekSlider {
   perWeekHrs: number[];
@@ -9,27 +9,45 @@ interface IBudgetWeekSlider {
 }
 
 const BudgetWeekSlider: React.FC<IBudgetWeekSlider> = ({ perWeekHrs, perDayHrs, setPerWeekHrs, setPerDayHrs }) => {
-  const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
+  const [budgetPerWeekSummary, setBudgetPerWeekSummary] = useState<string>("");
+
   const minWeekValue = perDayHrs[0] * 7;
   const maxWeekValue = perDayHrs[1] * 7;
 
   const handleWeekSliderChange = (value: number[]) => {
-    if (value[0] < minWeekValue) {
-      setPerWeekHrs([minWeekValue, value[1]]);
-    } else if (value[1] > maxWeekValue) {
-      setPerWeekHrs([value[0], maxWeekValue]);
-    } else {
-      setPerWeekHrs(value);
+    let adjustedValue: number[] = value.slice();
+
+    adjustedValue[0] = Math.max(adjustedValue[0], minWeekValue);
+    adjustedValue[1] = Math.min(adjustedValue[1], maxWeekValue);
+
+    if (adjustedValue[0] > adjustedValue[1]) {
+      [adjustedValue[0], adjustedValue[1]] = [adjustedValue[1], adjustedValue[0]];
     }
+
+    if (perDayHrs[0] === perDayHrs[1]) {
+      adjustedValue = [minWeekValue, maxWeekValue];
+    }
+
+    adjustedValue = adjustedValue.map((val) => Math.max(minWeekValue, Math.min(val, maxWeekValue)));
+    setPerWeekHrs(adjustedValue);
   };
 
   useEffect(() => {
     handleWeekSliderChange(perWeekHrs);
   }, [perDayHrs, setPerDayHrs]);
 
+  useEffect(() => {
+    const summary =
+      perWeekHrs[0] === perWeekHrs[1]
+        ? `${perWeekHrs[0]} hrs / week`
+        : `${perWeekHrs[0]} - ${perWeekHrs[1]} hrs / week`;
+
+    setBudgetPerWeekSummary(summary);
+  }, [perWeekHrs]);
+
   return (
     <div>
-      <span>{budgetPerWeekSummary} hrs / week</span>
+      <span>{budgetPerWeekSummary}</span>
       <Slider
         tooltip={{ prefixCls: "per-week-tooltip" }}
         min={minWeekValue}
