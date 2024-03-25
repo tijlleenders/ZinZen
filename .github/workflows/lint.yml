@@ -1,4 +1,5 @@
 name: ESLint
+
 on:
   push:
   pull_request:
@@ -15,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: reviewdog/action-eslint@v14
-      with:
+        with:
           node-version: "20"
       - run: npm install
       - uses: reviewdog/action-eslint@v1
