@@ -9,7 +9,7 @@ import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
 import { TrashItem } from "./TrashItem";
 
-export const dexieVersion = 17;
+export const dexieVersion = 18;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
