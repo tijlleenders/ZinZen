@@ -9,6 +9,7 @@ import "./index.scss";
 import { GoalItem } from "@src/models/GoalItem";
 import { TaskItem } from "@src/models/TaskItem";
 import ZModal from "@src/common/ZModal";
+import ContactItem from "@src/models/ContactItem";
 
 const backupImg =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADB0lEQVR4nO2Z3YtMYRzHP3a9jpc21sxQ5C1FFFHakJeibd24EQnXe4H2brkTpVUU+QMWiVLWhfdEsSHvNizLtkoJid3FLlvs6Nm+R481M7szc87OeTSfOs0855zn9/y+53n7nd+BAgUKhIHBwAJgE7Ad2AqsBRYCxTjAIuAI8BVIpDg+ArVAGSFkAnAK6LYcfg6cAA4Bh4E64FkvUXXAdELCcuC9HPsM7AYmpbl/BrALaFedVqCcPLMa+C6HTgLRDOqOV4+Zuj+BLeSJ2cA3ObIzSxuDVNcMyS5gCQER0UqzUkPCYwjwVCL2+NDOXtkyQ7QEH5kGHAc6e03ORmAdUKXydaDIh/aKgKuyWYNPlFsT0YzdR8A14LUlyAyFX8AsvxoF5smmeXgxP4x1yNlaLas2ZRLmLZ1+c0a2K3M1dFOG9vUxbyr9eGpJ2Kz2L5ID82XklSZzPojKh0+5GKnycRXKhU75MSKbykuB+zKQt41JtMiPqWRAzJpgXkBn7xf54K18OQCsAYb2VWGmtaS2aKJl1Z0+86TX3vUBqE41b8cBzbrxNDCK8DAGWAxs1KbcJT/vJovljuni5TyuUP3FRBm3rcjCCP0T7HVr956IGwxXOJRQL/WwXycO4hZx4Is6wUQgPJCQZbhHjd0JrSqMDagxMwTuBZgTSGhl44cKwwJqzFs2g6BEtttM4Y0K6d6rwypkpGybN1OuqLDeQSFzZPulKWxT4ayDQqqtdyVKrTdAk8pxRUjEisMqvJM7dOIdMMURIUdl95ayLz2Y/OsFS8yKEAuJWCLaFZn8xWjgvNXwOWADMLk/oXPAQiLAXM0JbziZXX1VqgrFurktTdI51VGfhZD6LNpJaDj90xPJKFXq/5L2GS90TnfcCFBIB9Ck1anCnhMDSZDL74BSEBI2nOyRh8BjvfSkEmKuNQB3CDEN1me2eBIhcV1LKGccWqLWd5Im5QA8ITHr2gsX8gNx66l7v/Z/u7dCT9R6+vbhRE/0JcZJER5xJdEaXRpO6Xomk8/UBfgf+A3SSyxFIXLo1QAAAABJRU5ErkJggg==";
@@ -66,27 +67,23 @@ const BackupRestoreModal = () => {
           if (currentVersion < 9) {
             console.log("processing updates for 9th version");
             const goalsCollection = db.table("goalsCollection");
-            goalsCollection.toCollection().modify((goal) => {
-              if (goal.on === "weekends") {
-                goal.on = ["Sat", "Sun"];
-              } else {
-                goal.on = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-              }
-              if (goal.habit !== "weekly") {
-                goal.habit = null;
-              }
-              goal.timeBudget = {
+            goalsCollection.toCollection().modify((goal) => ({
+              ...goal,
+              on: goal.on === "weekends" ? ["Sat", "Sun"] : ["Mon", "Tue", "Wed", "Thu", "Fri"],
+              habit: goal.habit !== "weekly" ? null : goal.habit,
+              timeBudget: {
                 perDay: goal.timeBudget?.period === "day" ? `${goal.timeBudget?.duration}` : null,
                 perWeek: goal.timeBudget?.period === "week" ? `${goal.timeBudget?.duration}` : null,
-              };
-            });
+              },
+            }));
             const taskCollection = db.table("taskCollection");
-            taskCollection.toCollection().modify((task: TaskItem) => {
-              task.blockedSlots = [];
-              task.forgotToday = [];
-              task.completedToday = 0;
-              task.completedTodayIds = [];
-            });
+            taskCollection.toCollection().modify((task: TaskItem) => ({
+              ...task,
+              blockedSlots: [],
+              forgotToday: [],
+              completedToday: 0,
+              completedTodayIds: [],
+            }));
           }
           if (currentVersion < 12) {
             console.log("processing updates for 12th version");
@@ -94,40 +91,46 @@ const BackupRestoreModal = () => {
             sharedWMCollection.clear();
 
             const goalsCollection = db.table("goalsCollection");
-            goalsCollection.toCollection().modify((goal) => {
-              delete goal.shared;
-              delete goal.collaboration;
-              goal.participants = [];
-            });
+            goalsCollection.toCollection().modify((goal) => ({
+              ...goal,
+              shared: undefined,
+              collaboration: undefined,
+              participants: [],
+            }));
           }
           if (currentVersion < 13) {
             console.log("processing updates for 13th version");
             const sharedWMCollection = db.table("sharedWMCollection");
             const goalsCollection = db.table("goalsCollection");
-            sharedWMCollection.toCollection().modify((goal: GoalItem) => {
-              goal.participants = goal.participants.map((ele) => ({ ...ele, following: true }));
-            });
-            goalsCollection.toCollection().modify((goal: GoalItem) => {
-              goal.participants = goal.participants.map((ele) => ({ ...ele, following: true }));
-            });
+            sharedWMCollection.toCollection().modify((goal: GoalItem) => ({
+              ...goal,
+              participants: goal.participants.map((ele) => ({ ...ele, following: true })),
+            }));
+            goalsCollection.toCollection().modify((goal: GoalItem) => ({
+              ...goal,
+              participants: goal.participants.map((ele) => ({ ...ele, following: true })),
+            }));
           }
           if (currentVersion < 14) {
             const contactsCollection = db.table("contactsCollection");
-            contactsCollection.toCollection().modify((contact) => {
-              delete contact.collaborativeGoals;
-              delete contact.sharedGoals;
-            });
+            contactsCollection.toCollection().modify((contact: ContactItem) => ({
+              ...contact,
+              collaborativeGoals: undefined,
+              sharedGoals: undefined,
+            }));
           }
           if (currentVersion < 16) {
             console.log("processing updates for 16th version");
             const sharedWMCollection = db.table("sharedWMCollection");
             const goalsCollection = db.table("goalsCollection");
-            sharedWMCollection.toCollection().modify((goal: GoalItem) => {
-              goal.newUpdates = false;
-            });
-            goalsCollection.toCollection().modify((goal: GoalItem) => {
-              goal.newUpdates = false;
-            });
+            sharedWMCollection.toCollection().modify((goal: GoalItem) => ({
+              ...goal,
+              newUpdates: false,
+            }));
+            goalsCollection.toCollection().modify((goal: GoalItem) => ({
+              ...goal,
+              newUpdates: false,
+            }));
           }
           importSuccessfull();
         } else {
@@ -143,6 +146,7 @@ const BackupRestoreModal = () => {
       setShowToast({ open: true, message: "Failed to restore the data", extra: error.message });
     }
   };
+
   const getOption = (text: "Backup" | "Restore") => (
     <button
       type="button"
