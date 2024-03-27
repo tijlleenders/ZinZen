@@ -12,7 +12,9 @@ export const LanguagesList = (props: ILanguageListProps) => {
   const sortedLanguages = [languages[0], ...languages.slice(1).sort((a, b) => a.title.localeCompare(b.title))];
 
   const handleClick = (langId: string) => {
-    vibrateWorks ? navigator.vibrate(100) : null;
+    if (vibrateWorks) {
+      navigator.vibrate(100);
+    }
     setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
     localStorage.setItem("language", JSON.stringify(langId));

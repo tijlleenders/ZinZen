@@ -53,6 +53,7 @@ export const MyGoals = () => {
     return { goals, delGoals };
   };
   const handleUserGoals = (goals: GoalItem[], delGoals: TrashItem[]) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setDeletedGoals([...delGoals.map(({ deletedAt, ...goal }) => goal)]);
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
     setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
@@ -65,6 +66,7 @@ export const MyGoals = () => {
     const { goals, delGoals } = await getAllGoals();
     handleUserGoals(
       goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())),
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       delGoals.filter(({ deletedAt, ...goal }) => goal.title.toUpperCase().includes(text.toUpperCase())),
     );
   };
