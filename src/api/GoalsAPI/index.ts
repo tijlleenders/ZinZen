@@ -278,17 +278,18 @@ export const removeGoalWithChildrens = async (goal: GoalItem) => {
 
 export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false) => {
   const goalsAcc: GoalItem[] = [];
-  const root = await getGoal(id);
-  if (root) {
-    let queue: GoalItem[] = [root];
-    while (queue.length > 0) {
-      const front = queue[0];
-      goalsAcc.push(resetSharedStatus ? { ...front, participants: [] } : front);
-      queue.shift();
-      queue = [...queue, ...(await getChildrenGoals(front.id))];
-    }
-    console.log(goalsAcc);
-    return goalsAcc;
-  }
-  return [];
+
+  const processGoalAndChildren = async (goalId: string) => {
+    const goal = await getGoal(goalId);
+    if (!goal) return;
+
+    goalsAcc.push(resetSharedStatus ? { ...goal, participants: [] } : goal);
+    const childrenGoals = await getChildrenGoals(goalId);
+    await Promise.all(childrenGoals.map((childGoal) => processGoalAndChildren(childGoal.id)));
+  };
+
+  await processGoalAndChildren(id);
+
+  console.log(goalsAcc);
+  return goalsAcc;
 };
