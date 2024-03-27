@@ -6,7 +6,6 @@ import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal/MyGoal";
-import MyGoalActions from "./MyGoalActions/MyGoalActions";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
 
 interface GoalsListProps {

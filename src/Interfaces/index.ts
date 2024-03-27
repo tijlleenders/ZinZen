@@ -1,5 +1,5 @@
 import { ISubGoalHistory, TDisplayGoalActions } from "@src/store/GoalsState";
-import { GoalItem, IParticipant } from "@src/models/GoalItem";
+import { GoalItem } from "@src/models/GoalItem";
 import ContactItem from "@src/models/ContactItem";
 import { ILanguage, ILanguageListProps } from "./ILanguage";
 import { confirmActionState } from "./IPopupModals";

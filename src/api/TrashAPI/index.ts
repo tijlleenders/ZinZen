@@ -41,6 +41,7 @@ export const restoreGoal = async (goal: GoalItem, isShareWMType = false) => {
 export const restoreChildrenGoals = async (id: string, isShareWMType = false) => {
   const childrenGoals: TrashItem[] = await getDeletedGoals(id);
   if (childrenGoals) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     childrenGoals.forEach(async ({ deletedAt, ...goal }) => {
       await restoreChildrenGoals(goal.id, isShareWMType);
       await restoreGoal(goal, isShareWMType);
