@@ -53,6 +53,7 @@ const BackupRestoreModal = () => {
           const { data } = JSON.parse(reader.result);
           const currentVersion = data.databaseVersion;
           await Promise.all(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             data.data.map(async (table: { tableName: string; rows: readonly any[] }) => {
               try {
                 const dbTable = db.table(table.tableName);

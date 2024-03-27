@@ -4,7 +4,7 @@ import i18n from "i18next";
 import { useRecoilState } from "recoil";
 import { ILanguageListProps, ILanguage } from "@src/Interfaces/ILanguage";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
-import { languageChangeModal, languageSelectionState } from "@src/store";
+import { languageSelectionState } from "@src/store";
 
 export const LanguagesList = (props: ILanguageListProps) => {
   const { languages, navigationCallback, type, hideSelected } = props;
