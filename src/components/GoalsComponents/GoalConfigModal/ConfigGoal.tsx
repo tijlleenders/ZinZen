@@ -271,7 +271,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <div>
                 <span>Between</span>
                 <Slider
-                  tooltip={{ prefixCls: "between-tooltip" }}
+                  tooltip={{ prefixCls: isBudgetAccordianOpen ? "between-tooltip-open" : "between-tooltip-close" }}
                   min={0}
                   max={24}
                   marks={{

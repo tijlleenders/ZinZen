@@ -114,8 +114,13 @@
   }
 }
 
-.between-tooltip {
+.between-tooltip-open {
   top: 177px !important;
+  font-size: 17px !important;
+}
+
+.between-tooltip-close {
+  top: 260px !important;
   font-size: 17px !important;
 }
 
@@ -141,7 +146,8 @@
   }
 }
 
-.ant-switch, .ant-switch-dark {
+.ant-switch,
+.ant-switch-dark {
   margin-top: 6px;
 }
 
