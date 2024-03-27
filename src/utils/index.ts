@@ -116,14 +116,9 @@ export const fixDateVlauesInGoalObject = (goal: GoalItem) => ({
 
 export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   const goal = { ...newGoal, participants: [] };
-  if (!goal.start) {
-    goal.start = parentGoal.start;
-  }
+
   if (!goal.due) {
     goal.due = parentGoal.due;
-  }
-  if (!goal.habit) {
-    goal.habit = parentGoal.habit;
   }
 
   goal.rootGoalId = parentGoal.rootGoalId;

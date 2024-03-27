@@ -23,6 +23,7 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
+import { getGoal } from "@src/api/GoalsAPI";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -206,8 +207,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
 
   useEffect(() => {
-    if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
-    document.getElementById("title-field")?.focus();
+    const addGoalColor = async () => {
+      const parentGoalId = state.goalsHistory ? state.goalsHistory.slice(-1)[0].goalID : null;
+      if (parentGoalId && state.displayAddGoal) {
+        const parentGoal = await getGoal(parentGoalId);
+        if (parentGoal) setColorIndex(colorPalleteList.indexOf(parentGoal?.goalColor));
+      } else if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
+      document.getElementById("title-field")?.focus();
+    };
+    addGoalColor();
   }, []);
 
   useEffect(() => {
