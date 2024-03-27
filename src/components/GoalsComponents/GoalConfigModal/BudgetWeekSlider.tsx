@@ -6,13 +6,21 @@ interface IBudgetWeekSlider {
   perDayHrs: number[];
   setPerWeekHrs: (value: number[]) => void;
   setPerDayHrs: (value: number[]) => void;
+  onDays: string[];
 }
 
-const BudgetWeekSlider: React.FC<IBudgetWeekSlider> = ({ perWeekHrs, perDayHrs, setPerWeekHrs, setPerDayHrs }) => {
+const BudgetWeekSlider: React.FC<IBudgetWeekSlider> = ({
+  perWeekHrs,
+  perDayHrs,
+  setPerWeekHrs,
+  setPerDayHrs,
+  onDays,
+}) => {
   const [budgetPerWeekSummary, setBudgetPerWeekSummary] = useState<string>("");
+  const numberOfDays = onDays.length;
 
-  const minWeekValue = perDayHrs[0] * 7;
-  const maxWeekValue = perDayHrs[1] * 7;
+  const minWeekValue = perDayHrs[0] * numberOfDays;
+  const maxWeekValue = perDayHrs[1] * numberOfDays;
 
   const handleWeekSliderChange = (value: number[]) => {
     let adjustedValue: number[] = value.slice();
@@ -34,7 +42,7 @@ const BudgetWeekSlider: React.FC<IBudgetWeekSlider> = ({ perWeekHrs, perDayHrs, 
 
   useEffect(() => {
     handleWeekSliderChange(perWeekHrs);
-  }, [perDayHrs, setPerDayHrs]);
+  }, [perDayHrs, setPerDayHrs, onDays]);
 
   useEffect(() => {
     const summary =

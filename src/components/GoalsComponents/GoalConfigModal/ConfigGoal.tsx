@@ -324,6 +324,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                           perDayHrs={perDayHrs}
                           setPerWeekHrs={setPerWeekHrs}
                           setPerDayHrs={setPerDayHrs}
+                          onDays={tags.on}
                         />
                       </div>
                     ),
