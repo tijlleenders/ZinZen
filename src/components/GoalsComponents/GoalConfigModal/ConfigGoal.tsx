@@ -24,6 +24,7 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
+import BudgetWeekSlider from "./BudgetWeekSlider";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -278,7 +279,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <div>
                 <span>Between</span>
                 <Slider
-                  tooltip={{ prefixCls: "between-tooltip" }}
+                  tooltip={{ prefixCls: isBudgetAccordianOpen ? "between-tooltip-open" : "between-tooltip-close" }}
                   min={0}
                   max={24}
                   marks={{
@@ -322,27 +323,17 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                               [beforeTime - afterTime]: `${beforeTime - afterTime}`,
                             }}
                             range
-                            value={perDayHrs}
+                            value={[perDayHrs[0], perDayHrs[1]]}
                             onChange={(val) => handleSliderChange(val, setPerDayHrs)}
                           />
                         </div>
-                        <div>
-                          <span>{budgetPerWeekSummary} hrs / week</span>
-                          <Slider
-                            tooltip={{ prefixCls: "per-week-tooltip" }}
-                            min={0}
-                            max={(beforeTime - afterTime) * numberOfDays}
-                            marks={{
-                              0: "0",
-                              [perWeekHrs[0]]: `${perWeekHrs[0]}`,
-                              [perWeekHrs[1]]: `${perWeekHrs[1]}`,
-                              [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
-                            }}
-                            range
-                            value={perWeekHrs}
-                            onChange={(val) => handleSliderChange(val, setPerWeekHrs)}
-                          />
-                        </div>
+                        <BudgetWeekSlider
+                          perWeekHrs={perWeekHrs}
+                          perDayHrs={perDayHrs}
+                          setPerWeekHrs={setPerWeekHrs}
+                          setPerDayHrs={setPerDayHrs}
+                          onDays={tags.on}
+                        />
                       </div>
                     ),
                   },
@@ -394,7 +385,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
-                  {t(`${action} Goal`)}            
+                  {t(`${action} Goal`)}
                 </button>
               </div>
               <div
