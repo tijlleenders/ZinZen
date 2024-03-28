@@ -4,7 +4,7 @@ import { getGoal } from "@src/api/GoalsAPI";
 import { colorPalleteList } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
-import { changesInGoal, IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
+import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
 // export const createSentFromTags = (goal: GoalItem) =>
