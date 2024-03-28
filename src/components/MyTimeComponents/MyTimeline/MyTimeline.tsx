@@ -125,7 +125,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         // }
       } else if (actionName === "Done") {
         const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
-        if (markDone) return;
+        if (markDone) return null;
         await completeTask(taskItem.id, Number(task.duration), task.taskid);
       } else if (actionName === "Skip") {
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
@@ -148,6 +148,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
+    return null;
   };
 
   return (
