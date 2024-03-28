@@ -6,7 +6,6 @@ import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal/MyGoal";
-import MyGoalActions from "./MyGoalActions/MyGoalActions";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
 
 interface GoalsListProps {
@@ -30,11 +29,11 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
   const [dragging, setDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState<GoalItem | null>(null);
 
-  const handleDragStart = (e: any, index: number) => {
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     setDragging(true);
     setDraggedItem(goals[index]);
     e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", index);
+    e.dataTransfer.setData("text/plain", index.toString());
   };
 
   const handleDragEnter = (index: number) => {

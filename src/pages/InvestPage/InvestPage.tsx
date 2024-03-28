@@ -3,7 +3,6 @@ import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
 
 import download from "@assets/images/download.svg";
-import { LandingHeader } from "@components/HeaderDashboard/LandingHeader";
 
 import "./InvestPage.scss";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";

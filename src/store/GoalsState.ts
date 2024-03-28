@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { atom } from "recoil";
-import { GoalItem, IParticipant } from "@src/models/GoalItem";
-import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
+import { GoalItem } from "@src/models/GoalItem";
 
 export interface ISubGoalHistory {
   goalID: string;

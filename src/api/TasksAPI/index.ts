@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { TaskItem } from "@src/models/TaskItem";
-import { getGoal } from "../GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { calDays, getLastDayDate } from "@src/utils";
 import { convertDateToDay } from "@src/utils/SchedulerUtils";
+import { getGoal } from "../GoalsAPI";
 
 export const addTask = async (taskDetails: TaskItem) => {
   let newTaskId;

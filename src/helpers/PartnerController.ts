@@ -58,6 +58,7 @@ export const suggestChanges = async (
     goalColor,
     newUpdates: false,
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { participants, ...changes } = goal;
   sendUpdate(rootGoal.participants, rootGoal.id, "modifiedGoals", [{ level, goal: changes }]);
 };

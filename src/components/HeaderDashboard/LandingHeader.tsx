@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import ArrowIcon from "@assets/images/ArrowIcon.svg";
 import mainAvatarLight from "@assets/images/mainAvatarLight.svg";
@@ -17,7 +17,7 @@ import "./HeaderDashboard.scss";
 export const LandingHeader = ({ avatar }: { avatar: string | null }) => {
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [showSidebar, setShowSidebar] = useRecoilState(displaySidebar);
+  const setShowSidebar = useSetRecoilState(displaySidebar);
 
   return (
     <>

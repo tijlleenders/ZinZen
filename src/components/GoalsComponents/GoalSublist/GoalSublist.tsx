@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
@@ -47,6 +48,7 @@ export const GoalSublist = () => {
     (showPartnerMode ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) => {
       setParentGoal(parent);
       getDeletedGoals(goalID).then((res) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         setDeletedGoals([...res.map(({ deletedAt, ...goal }) => goal)]);
       });
     });
@@ -56,6 +58,7 @@ export const GoalSublist = () => {
     (showPartnerMode ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID)).then((fetchedGoals) => {
       handleChildrenGoals(fetchedGoals);
       getDeletedGoals(goalID).then((res) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         setDeletedGoals([...res.map(({ deletedAt, ...goal }) => goal)]);
       });
     });

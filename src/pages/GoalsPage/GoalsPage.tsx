@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import React, { useEffect, useState } from "react";
 
 import { getAllContacts } from "@src/api/ContactsAPI";

@@ -4,9 +4,9 @@ import { darkModeState } from "@src/store";
 
 import { GoalItem } from "@src/models/GoalItem";
 import ZAccordion from "@src/common/Accordion";
+import { TAction, displayGoalActions } from "@src/store/GoalsState";
 
 import MyGoal from "./MyGoal/MyGoal";
-import { TAction, displayGoalActions } from "@src/store/GoalsState";
 import AccordionActions from "./MyGoalActions/AccordionActions";
 
 interface IGoalsAccordionProps {

@@ -21,6 +21,7 @@ export const sendNewGoals = async (
         rootGoalId,
         "subgoals",
         newGoals.map((goal) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { participants, ...changes } = goal;
           return { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId } };
         }),
