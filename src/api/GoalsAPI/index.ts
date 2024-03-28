@@ -1,9 +1,12 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
-import { shareGoal } from "@src/services/goal.service";
+import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
+import { getInstallId } from "@src/utils";
+import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
 import { addDeletedGoal } from "../TrashAPI";
+import { deleteHint, getGoalHint } from "../HintsAPI";
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.goalsCollection, async () => {
@@ -85,7 +88,7 @@ export const archiveGoal = async (goal: GoalItem) => {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
       await db.goalsCollection.update(goal.parentGoalId, {
-        sublist: parentGoal.sublist.filter((ele) => ele !== goal.id),
+        sublist: parentGoal?.sublist.filter((ele) => ele !== goal.id),
       });
     });
   }
@@ -134,6 +137,7 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
 };
 
 export const removeGoal = async (goal: GoalItem) => {
+  await deleteHint(goal.id);
   await Promise.allSettled([
     db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
     addDeletedGoal(goal),
@@ -172,6 +176,32 @@ export const shareMyGoalAnonymously = async (goal: GoalItem, parent: string) => 
     },
   };
   const res = await shareGoal(shareableGoal);
+  return res;
+};
+
+export const getHintsFromAPI = async (goal: GoalItem) => {
+  let parentGoalTitle = "root";
+  let parentGoalHint = false;
+
+  if (goal.parentGoalId !== "root") {
+    const parentGoal = await getGoal(goal.parentGoalId);
+    parentGoalTitle = parentGoal?.title || "";
+    parentGoalHint = (await getGoalHint(goal.parentGoalId)) || false;
+  }
+
+  const { title, duration } = goal;
+
+  const requestBody: IHintRequestBody = {
+    method: "getHints",
+    installId: getInstallId(),
+    goal: { title, duration: duration !== null ? duration : undefined },
+  };
+
+  if (goal.parentGoalId !== "root" && parentGoalHint) {
+    requestBody.parentTitle = parentGoalTitle;
+  }
+
+  const res = await createGetHintsRequest(requestBody);
   return res;
 };
 
