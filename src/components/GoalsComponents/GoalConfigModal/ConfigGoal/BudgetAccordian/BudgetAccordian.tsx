@@ -1,7 +1,5 @@
 import ZAccordion from "@src/common/Accordion";
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { budgetAccordianOpenState } from "@src/store";
 import BudgetWeekSlider from "./BudgetWeekSlider";
 import BudgetDaySlider from "./BudgetDaySlider";
 
@@ -14,6 +12,8 @@ interface IBudgetAccordianProps {
   setPerDayHrs: React.Dispatch<React.SetStateAction<number[]>>;
   setPerWeekHrs: React.Dispatch<React.SetStateAction<number[]>>;
   handleSliderChange: (val: number[], setPerHrs: React.Dispatch<React.SetStateAction<number[]>>) => void;
+  setIsBudgetAccordianOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isBudgetAccordianOpen: boolean;
 }
 
 const BudgetAccordian = ({
@@ -25,9 +25,9 @@ const BudgetAccordian = ({
   onDays,
   afterTime,
   beforeTime,
+  isBudgetAccordianOpen,
+  setIsBudgetAccordianOpen,
 }: IBudgetAccordianProps) => {
-  const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useRecoilState(budgetAccordianOpenState);
-
   const budgetPerHrSummary =
     perDayHrs[0] === perDayHrs[1] ? perDayHrs[0].toString() : `${perDayHrs[0]} - ${perDayHrs[1]}`;
   const [budgetPerWeekSummary, setBudgetPerWeekSummary] = useState<string>("");

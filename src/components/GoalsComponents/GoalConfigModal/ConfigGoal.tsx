@@ -2,7 +2,7 @@ import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Slider } from "antd";
-import { budgetAccordianOpenState, displayToast, openDevMode } from "@src/store";
+import { displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
@@ -99,7 +99,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [perDayHrs, setPerDayHrs] = useState(perDayBudget);
   const [perWeekHrs, setPerWeekHrs] = useState(perWeekBudget);
 
-  const isBudgetAccordianOpen = useRecoilValue(budgetAccordianOpenState);
+  const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
   const isTitleEmpty = () => {
@@ -309,6 +309,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 perWeekHrs={perWeekHrs}
                 onDays={tags.on}
                 handleSliderChange={handleSliderChange}
+                isBudgetAccordianOpen={isBudgetAccordianOpen}
+                setIsBudgetAccordianOpen={setIsBudgetAccordianOpen}
               />
               <div
                 style={{

@@ -112,9 +112,4 @@ export const flipAnimationState = atom({
   default: false,
 });
 
-export const budgetAccordianOpenState = atom({
-  key: "budgetAccordianOpenState",
-  default: false,
-});
-
 export { darkModeState, languageSelectionState };
