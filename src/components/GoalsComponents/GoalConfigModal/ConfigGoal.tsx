@@ -8,7 +8,6 @@ import { useLocation } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
-import ZAccordion from "@src/common/Accordion";
 import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
@@ -24,10 +23,7 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
-import BudgetWeekSlider from "./ConfigGoal/BudgetAccordian/BudgetWeekSlider";
-import BudgetAccordianBody from "./ConfigGoal/BudgetAccordian/BudgetAccordianBody";
 import BudgetAccordian from "./ConfigGoal/BudgetAccordian/BudgetAccordian";
-import { log } from "console";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -303,7 +299,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 setPerWeekHrs={setPerWeekHrs}
                 perDayHrs={perDayHrs}
                 perWeekHrs={perWeekHrs}
-                tags={tags}
+                onDays={tags.on}
                 handleSliderChange={handleSliderChange}
               />
               <div

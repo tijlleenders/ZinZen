@@ -1,13 +1,12 @@
 import ZAccordion from "@src/common/Accordion";
 import React, { useEffect, useState } from "react";
-import BudgetAccordianBody from "./BudgetAccordianBody";
 import { useRecoilState } from "recoil";
 import { budgetAccordianOpenState } from "@src/store";
 import BudgetWeekSlider from "./BudgetWeekSlider";
-import { Slider } from "antd";
+import BudgetDaySlider from "./BudgetDaySlider";
 
 interface IBudgetAccordianProps {
-  tags: string[];
+  onDays: string[];
   afterTime: number;
   beforeTime: number;
   perDayHrs: number[];
@@ -23,16 +22,16 @@ const BudgetAccordian = ({
   setPerDayHrs,
   setPerWeekHrs,
   handleSliderChange,
-  tags,
+  onDays,
   afterTime,
   beforeTime,
 }: IBudgetAccordianProps) => {
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useRecoilState(budgetAccordianOpenState);
 
-  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
-
+  const budgetPerHrSummary =
+    perDayHrs[0] === perDayHrs[1] ? perDayHrs[0].toString() : `${perDayHrs[0]} - ${perDayHrs[1]}`;
   const [budgetPerWeekSummary, setBudgetPerWeekSummary] = useState<string>("");
-  const onDays = tags.on;
+
   const numberOfDays = onDays.length;
 
   const minWeekValue = perDayHrs[0] * numberOfDays;
@@ -79,28 +78,18 @@ const BudgetAccordian = ({
       onChange={() => setIsBudgetAccordianOpen(!isBudgetAccordianOpen)}
       panels={[
         {
-          header: isBudgetAccordianOpen
-            ? "Budget"
-            : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
+          header: isBudgetAccordianOpen ? "Budget" : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary}`,
           body: (
             <div>
-              <div>
-                <span>{budgetPerHrSummary} hrs / day</span>
-                <Slider
-                  tooltip={{ prefixCls: "per-day-tooltip" }}
-                  min={0}
-                  max={beforeTime - afterTime}
-                  marks={{
-                    0: "0",
-                    [perDayHrs[0]]: `${perDayHrs[0]}`,
-                    [perDayHrs[1]]: `${perDayHrs[1]}`,
-                    [beforeTime - afterTime]: `${beforeTime - afterTime}`,
-                  }}
-                  range
-                  value={[perDayHrs[0], perDayHrs[1]]}
-                  onChange={(val) => handleSliderChange(val, setPerDayHrs)}
-                />
-              </div>
+              <BudgetDaySlider
+                perDayHrs={perDayHrs}
+                beforeTime={beforeTime}
+                afterTime={afterTime}
+                handleSliderChange={handleSliderChange}
+                setPerDayHrs={setPerDayHrs}
+                budgetPerHrSummary={budgetPerHrSummary}
+              />
+
               <BudgetWeekSlider
                 perWeekHrs={perWeekHrs}
                 budgetPerWeekSummary={budgetPerWeekSummary}
