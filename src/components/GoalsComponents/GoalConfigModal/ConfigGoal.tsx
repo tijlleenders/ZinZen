@@ -1,12 +1,11 @@
 import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Slider, Switch } from "antd";
-import { darkModeState, displayToast, openDevMode } from "@src/store";
+import { Slider } from "antd";
+import { displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
-import TickIcon from "@assets/images/correct.svg";
 import plingSound from "@assets/pling.mp3";
 
 import ZAccordion from "@src/common/Accordion";
@@ -19,11 +18,13 @@ import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
+import { getGoalHint } from "@src/api/HintsAPI";
+import { getGoal } from "@src/api/GoalsAPI";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
-import { getGoal } from "@src/api/GoalsAPI";
+import HintToggle from "./ConfigGoal/HintToggle";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -49,7 +50,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
 
-  const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
@@ -62,6 +62,13 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
 
   const open = !!showAddGoal || !!showUpdateGoal;
+  const [hints, setHints] = useState(false);
+
+  useEffect(() => {
+    getGoalHint(goal.id).then((hintItem) => {
+      setHints(!!hintItem);
+    });
+  }, [goal.id]);
 
   const [title, setTitle] = useState(goal.title);
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
@@ -137,7 +144,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       }
       suggestChanges(rootGoal, getFinalTags(), title, goalColor, subGoalsHistory.length);
     } else {
-      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id]);
+      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id], hints);
     }
   };
 
@@ -161,6 +168,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         title,
         colorPalleteList[colorIndex],
         ancestors,
+        hints,
       );
       if (!parentGoal && title === "magic") {
         setDevMode(true);
@@ -373,35 +381,25 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 ))}
               </div>
               <div className="action-btn-container">
-                <div className="hint-toggle">
-                  <p style={{ marginTop: 6 }}>Hints</p>
-                  <Switch
-                    prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
-                    checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-                  />
-                </div>
+                <HintToggle setHints={setHints} defaultValue={hints} />
                 <button
-                  type="submit"
+                  type="button"
                   className="action-btn"
+                  onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
-                  {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+                  {t(`${action} Budget`)}
                 </button>
               </div>
             </>
           ) : (
             <div>
               <div className="action-btn-container">
-                <div className="hint-toggle">
-                  <p style={{ marginTop: 6 }}>Hints</p>
-                  <Switch
-                    prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
-                    checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-                  />
-                </div>
+                <HintToggle setHints={setHints} defaultValue={hints} />
                 <button
-                  type="submit"
+                  type="button"
                   className="action-btn"
+                  onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
                   {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
