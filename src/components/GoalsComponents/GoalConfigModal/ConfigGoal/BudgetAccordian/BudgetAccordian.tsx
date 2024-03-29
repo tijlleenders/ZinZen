@@ -1,6 +1,8 @@
 import ZAccordion from "@src/common/Accordion";
 import React, { useState } from "react";
 import BudgetAccordianBody from "./BudgetAccordianBody";
+import { useRecoilState } from "recoil";
+import { budgetAccordianOpenState } from "@src/store";
 
 interface IBudgetAccordianProps {
   tags: string[];
@@ -23,7 +25,7 @@ const BudgetAccordian = ({
   afterTime,
   beforeTime,
 }: IBudgetAccordianProps) => {
-  const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
+  const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useRecoilState(budgetAccordianOpenState);
 
   const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
   const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
