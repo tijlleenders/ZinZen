@@ -24,7 +24,10 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
-import BudgetWeekSlider from "./BudgetWeekSlider";
+import BudgetWeekSlider from "./ConfigGoal/BudgetAccordian/BudgetWeekSlider";
+import BudgetAccordianBody from "./ConfigGoal/BudgetAccordian/BudgetAccordianBody";
+import BudgetAccordian from "./ConfigGoal/BudgetAccordian/BudgetAccordian";
+import { log } from "console";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -100,6 +103,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [perWeekHrs, setPerWeekHrs] = useState(perWeekBudget);
 
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
+  console.log(isBudgetAccordianOpen);
+
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
   const isTitleEmpty = () => {
@@ -211,9 +216,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     }
   };
 
-  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
-  const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
-
   useEffect(() => {
     if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
     document.getElementById("title-field")?.focus();
@@ -296,48 +298,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   }}
                 />
               </div>
-              <ZAccordion
-                showCount={false}
-                style={{
-                  border: "none",
-                  background: "var(--secondary-background)",
-                }}
-                onChange={() => setIsBudgetAccordianOpen(!isBudgetAccordianOpen)}
-                panels={[
-                  {
-                    header: isBudgetAccordianOpen
-                      ? "Budget"
-                      : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
-                    body: (
-                      <div>
-                        <div>
-                          <span>{budgetPerHrSummary} hrs / day</span>
-                          <Slider
-                            tooltip={{ prefixCls: "per-day-tooltip" }}
-                            min={0}
-                            max={beforeTime - afterTime}
-                            marks={{
-                              0: "0",
-                              [perDayHrs[0]]: `${perDayHrs[0]}`,
-                              [perDayHrs[1]]: `${perDayHrs[1]}`,
-                              [beforeTime - afterTime]: `${beforeTime - afterTime}`,
-                            }}
-                            range
-                            value={[perDayHrs[0], perDayHrs[1]]}
-                            onChange={(val) => handleSliderChange(val, setPerDayHrs)}
-                          />
-                        </div>
-                        <BudgetWeekSlider
-                          perWeekHrs={perWeekHrs}
-                          perDayHrs={perDayHrs}
-                          setPerWeekHrs={setPerWeekHrs}
-                          setPerDayHrs={setPerDayHrs}
-                          onDays={tags.on}
-                        />
-                      </div>
-                    ),
-                  },
-                ]}
+              <BudgetAccordian
+                afterTime={afterTime}
+                beforeTime={beforeTime}
+                setPerDayHrs={setPerDayHrs}
+                setPerWeekHrs={setPerWeekHrs}
+                perDayHrs={perDayHrs}
+                perWeekHrs={perWeekHrs}
+                tags={tags}
+                handleSliderChange={handleSliderChange}
               />
               <div
                 style={{
