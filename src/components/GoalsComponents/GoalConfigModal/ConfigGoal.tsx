@@ -19,6 +19,7 @@ import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
 import { getGoalHint } from "@src/api/HintsAPI";
+import { getGoal } from "@src/api/GoalsAPI";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -214,8 +215,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
 
   useEffect(() => {
-    if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
-    document.getElementById("title-field")?.focus();
+    const addGoalColor = async () => {
+      const parentGoalId = state.goalsHistory ? state.goalsHistory.slice(-1)[0].goalID : null;
+      if (parentGoalId && state.displayAddGoal) {
+        const parentGoal = await getGoal(parentGoalId);
+        if (parentGoal) setColorIndex(colorPalleteList.indexOf(parentGoal?.goalColor));
+      } else if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
+      document.getElementById("title-field")?.focus();
+    };
+    addGoalColor();
   }, []);
 
   useEffect(() => {
@@ -394,7 +402,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
-                  {t(`${action} Goal`)}            
+                  {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
                 </button>
               </div>
               <div
