@@ -19,14 +19,13 @@ import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
 import { getGoalHint } from "@src/api/HintsAPI";
 import { getGoal } from "@src/api/GoalsAPI";
+import ZAccordion from "@src/common/Accordion";
+
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
-import ZAccordion from "@src/common/Accordion";
-import BudgetDaySlider from "./ConfigGoal/BudgetAccordian/BudgetDaySlider";
-import BudgetWeekSlider from "./ConfigGoal/BudgetAccordian/BudgetWeekSlider";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
