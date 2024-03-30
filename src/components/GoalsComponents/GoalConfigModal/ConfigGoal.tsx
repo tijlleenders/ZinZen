@@ -24,7 +24,9 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
-import BudgetAccordian from "./ConfigGoal/BudgetAccordian/BudgetAccordian";
+import ZAccordion from "@src/common/Accordion";
+import BudgetDaySlider from "./ConfigGoal/BudgetAccordian/BudgetDaySlider";
+import BudgetWeekSlider from "./ConfigGoal/BudgetAccordian/BudgetWeekSlider";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -239,6 +241,35 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     }
   }, [afterTime, beforeTime, numberOfDays, betweenSliderUpdated]);
 
+  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
+  const budgetPerWeekSummary =
+    perWeekHrs[0] === perWeekHrs[1] ? `${perWeekHrs[0]} hrs / week` : `${perWeekHrs[0]} - ${perWeekHrs[1]} hrs / week`;
+
+  const minWeekValue = perDayHrs[0] * numberOfDays;
+  const maxWeekValue = perDayHrs[1] * numberOfDays;
+
+  const handleWeekSliderChange = (value: number[]) => {
+    let adjustedValue: number[] = value.slice();
+
+    adjustedValue[0] = Math.max(adjustedValue[0], minWeekValue);
+    adjustedValue[1] = Math.min(adjustedValue[1], maxWeekValue);
+
+    if (adjustedValue[0] > adjustedValue[1]) {
+      [adjustedValue[0], adjustedValue[1]] = [adjustedValue[1], adjustedValue[0]];
+    }
+
+    if (perDayHrs[0] === perDayHrs[1]) {
+      adjustedValue = [minWeekValue, maxWeekValue];
+    }
+
+    adjustedValue = adjustedValue.map((val) => Math.max(minWeekValue, Math.min(val, maxWeekValue)));
+    setPerWeekHrs(adjustedValue);
+  };
+
+  useEffect(() => {
+    handleWeekSliderChange(perWeekHrs);
+  }, [perDayHrs, setPerDayHrs, tags.on]);
+
   return (
     <ZModal
       type="configModal"
@@ -300,17 +331,58 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   }}
                 />
               </div>
-              <BudgetAccordian
-                afterTime={afterTime}
-                beforeTime={beforeTime}
-                setPerDayHrs={setPerDayHrs}
-                setPerWeekHrs={setPerWeekHrs}
-                perDayHrs={perDayHrs}
-                perWeekHrs={perWeekHrs}
-                onDays={tags.on}
-                handleSliderChange={handleSliderChange}
-                isBudgetAccordianOpen={isBudgetAccordianOpen}
-                setIsBudgetAccordianOpen={setIsBudgetAccordianOpen}
+              <ZAccordion
+                showCount={false}
+                style={{
+                  border: "none",
+                  background: "var(--secondary-background)",
+                }}
+                onChange={() => setIsBudgetAccordianOpen(!isBudgetAccordianOpen)}
+                panels={[
+                  {
+                    header: isBudgetAccordianOpen
+                      ? "Budget"
+                      : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary}`,
+                    body: (
+                      <div>
+                        <div>
+                          <span>{budgetPerHrSummary} hrs / day</span>
+                          <Slider
+                            tooltip={{ prefixCls: "per-day-tooltip" }}
+                            min={0}
+                            max={beforeTime - afterTime}
+                            marks={{
+                              0: "0",
+                              [perDayHrs[0]]: `${perDayHrs[0]}`,
+                              [perDayHrs[1]]: `${perDayHrs[1]}`,
+                              [beforeTime - afterTime]: `${beforeTime - afterTime}`,
+                            }}
+                            range
+                            value={[perDayHrs[0], perDayHrs[1]]}
+                            onChange={(val) => handleSliderChange(val, setPerDayHrs)}
+                          />
+                        </div>
+                        <div>
+                          <span>{budgetPerWeekSummary}</span>
+                          <Slider
+                            tooltip={{ prefixCls: "per-week-tooltip" }}
+                            min={minWeekValue}
+                            max={maxWeekValue}
+                            marks={{
+                              [minWeekValue]: `${minWeekValue}`,
+                              [perWeekHrs[0]]: `${perWeekHrs[0]}`,
+                              [perWeekHrs[1]]: `${perWeekHrs[1]}`,
+                              [maxWeekValue]: `${maxWeekValue}`,
+                            }}
+                            range
+                            value={[perWeekHrs[0], perWeekHrs[1]]}
+                            onChange={(val) => handleWeekSliderChange(val)}
+                          />
+                        </div>
+                      </div>
+                    ),
+                  },
+                ]}
               />
               <div
                 style={{
