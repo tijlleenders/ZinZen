@@ -142,13 +142,12 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
       goalChanges[typeAtPriority].sort((a: { level: number }, b: { level: number }) => a.level - b.level);
       let goals: { intent: typeOfIntent; goal: GoalItem }[] = [];
       const goalAtPriority = goalChanges[typeAtPriority][0];
-      console.log("🚀 ~ file: GoalProcessor.ts:145 ~ jumpToLowestChanges ~ goalAtPriority:", goalAtPriority);
       const parentId =
         "id" in goalAtPriority
           ? goalAtPriority.id
           : typeAtPriority === "subgoals"
-            ? goalAtPriority.goal.parentGoalId
-            : goalAtPriority.goal.id;
+          ? goalAtPriority.goal.parentGoalId
+          : goalAtPriority.goal.id;
 
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
         return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
@@ -199,7 +198,6 @@ export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
   ];
   const res: ITagsChanges = { schemaVersion: {}, prettierVersion: {} };
   const goal1Tags = formatTagsToText(goal1);
-  console.log("🚀 ~ file: GoalProcessor.ts:201 ~ findGoalTagChanges ~ goal1:", goal1);
   const goal2Tags = formatTagsToText(goal2);
   console.log(goal1Tags, goal2Tags);
   tags.forEach((tag) => {
