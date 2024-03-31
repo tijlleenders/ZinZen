@@ -149,6 +149,7 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
           : typeAtPriority === "subgoals"
             ? goalAtPriority.goal.parentGoalId
             : goalAtPriority.goal.id;
+
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
         return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
       }
