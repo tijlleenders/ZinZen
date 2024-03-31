@@ -59,15 +59,10 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      let allowAddingBudgetGoal = true;
-      if (state.activeGoalId) {
-        const fetchedGoal = await getGoal(state.activeGoalId);
-        if (fetchedGoal) allowAddingBudgetGoal = fetchedGoal.category !== "Standard";
-      }
-      if (!allowAddingBudgetGoal) {
+      if (state.allowAddingBudgetGoal === false) {
         return handleAddGoal(t("addBtnGoal"));
       }
-      navigate("/MyGoals", { state: { ...state, displayAddGoalOptions: true, allowAddingBudgetGoal } });
+      navigate("/MyGoals", { state: { ...state, displayAddGoalOptions: true } });
     } else if (add === "myJournal") {
       handleAddFeeling();
     }
