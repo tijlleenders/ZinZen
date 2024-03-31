@@ -12,6 +12,8 @@ import Backdrop from "@src/common/Backdrop";
 
 import "./index.scss";
 import { useTranslation } from "react-i18next";
+import { ILocationState } from "@src/Interfaces";
+import { getGoal } from "@src/api/GoalsAPI";
 
 interface AdGoalOptionsProps {
   goalType: "Budget" | "Goal";
@@ -45,9 +47,10 @@ const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom }) => {
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
   const { t } = useTranslation();
-  const { state } = useLocation();
+  const { state }: { state: ILocationState } = useLocation();
   const navigate = useNavigate();
   const { handleAddFeeling } = useFeelingStore();
+  const { handleAddGoal } = useGoalStore();
 
   const themeSelection = useRecoilValue(themeSelectionMode);
 
@@ -56,7 +59,15 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      navigate("/MyGoals", { state: { ...state, displayAddGoalOptions: true } });
+      let allowAddingBudgetGoal = true;
+      if (state.activeGoalId) {
+        const fetchedGoal = await getGoal(state.activeGoalId);
+        if (fetchedGoal) allowAddingBudgetGoal = fetchedGoal.category !== "Standard";
+      }
+      if (!allowAddingBudgetGoal) {
+        return handleAddGoal(t("addBtnGoal"));
+      }
+      navigate("/MyGoals", { state: { ...state, displayAddGoalOptions: true, allowAddingBudgetGoal } });
     } else if (add === "myJournal") {
       handleAddFeeling();
     }
