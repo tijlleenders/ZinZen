@@ -113,7 +113,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     return title.length === 0 || title.trim() === "";
   };
 
-  const getFinalTags = () => ({
+  const getFinalTags = (): GoalItem => ({
     ...goal,
     due: due && due !== "" ? new Date(due).toISOString() : null,
     // start: start && start !== "" ? new Date(start).toString() : null,
@@ -129,6 +129,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             perWeek: state.goalType === "Budget" ? perWeekHrs.join("-") : null,
           }
         : null,
+    category: state.goalType === "Budget" ? "Budget" : tags.duration !== "" ? "Standard" : "Cluster",
   });
 
   const updateThisGoal = async () => {
@@ -219,7 +220,14 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       const parentGoalId = state.goalsHistory ? state.goalsHistory.slice(-1)[0].goalID : null;
       if (parentGoalId && state.displayAddGoal) {
         const parentGoal = await getGoal(parentGoalId);
-        if (parentGoal) setColorIndex(colorPalleteList.indexOf(parentGoal?.goalColor));
+        if (parentGoal) {
+          if (state.goalType === "Budget") {
+            setBeforeTime(parentGoal.beforeTime || 18);
+            setAfterTime(parentGoal.afterTime || 9);
+            setBetweenSliderUpdated(true);
+          }
+          setColorIndex(colorPalleteList.indexOf(parentGoal?.goalColor));
+        }
       } else if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
       document.getElementById("title-field")?.focus();
     };
@@ -295,7 +303,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                     [beforeTime]: `${beforeTime}`,
                   }}
                   range
-                  defaultValue={[afterTime, beforeTime]}
+                  value={[afterTime, beforeTime]}
                   onAfterChange={(val) => {
                     setAfterTime(val[0]);
                     setBeforeTime(val[1]);
