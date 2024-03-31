@@ -13,21 +13,20 @@ import Backdrop from "@src/common/Backdrop";
 import "./index.scss";
 import { useTranslation } from "react-i18next";
 import { ILocationState } from "@src/Interfaces";
-import { getGoal } from "@src/api/GoalsAPI";
 
 interface AdGoalOptionsProps {
   goalType: "Budget" | "Goal";
   bottom: number;
+  disabled?: boolean;
 }
 
-const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom }) => {
+const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom, disabled }) => {
   const { handleAddGoal } = useGoalStore();
-
   return (
     <button
       type="button"
       className="add-goal-pill-btn"
-      style={{ right: 35, bottom }}
+      style={{ right: 35, bottom, ...(disabled ? { opacity: 0.25, pointerEvents: "none" } : {}) }}
       onClick={(e) => {
         e.stopPropagation();
         handleAddGoal(goalType);
@@ -50,7 +49,6 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const { state }: { state: ILocationState } = useLocation();
   const navigate = useNavigate();
   const { handleAddFeeling } = useFeelingStore();
-  const { handleAddGoal } = useGoalStore();
 
   const themeSelection = useRecoilValue(themeSelectionMode);
 
@@ -59,9 +57,6 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      if (state.allowAddingBudgetGoal === false) {
-        return handleAddGoal(t("addBtnGoal"));
-      }
       navigate("/MyGoals", { state: { ...state, displayAddGoalOptions: true } });
     } else if (add === "myJournal") {
       handleAddFeeling();
@@ -77,7 +72,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             window.history.back();
           }}
         />
-        <AddGoalOptions goalType={t("addBtnBudget")} bottom={144} />
+        <AddGoalOptions disabled={!state.allowAddingBudgetGoal} goalType={t("addBtnBudget")} bottom={144} />
         <AddGoalOptions goalType={t("addBtnGoal")} bottom={74} />
       </>
     );
