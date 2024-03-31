@@ -1,5 +1,5 @@
 import { ISubGoalHistory, TDisplayGoalActions } from "@src/store/GoalsState";
-import { GoalItem, IParticipant } from "@src/models/GoalItem";
+import { GoalItem } from "@src/models/GoalItem";
 import ContactItem from "@src/models/ContactItem";
 import { ILanguage, ILanguageListProps } from "./ILanguage";
 import { confirmActionState } from "./IPopupModals";
@@ -29,5 +29,5 @@ export interface ILocationState {
   goalType?: "Budget" | "Goal"; // characteristic of the goal
   displayAddGoalOptions: boolean; // whether to show the add goal options
   displayFocus: boolean; // whether to show the focus component
-  allowAddingBudgetGoal: boolean; // whether to allow adding a budget goal
+  allowAddingBudgetGoal?: boolean; // whether to allow adding a budget goal
 }
