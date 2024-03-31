@@ -2,8 +2,7 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { addGoal } from "../GoalsAPI";
-import { addDeletedGoal } from "../TrashAPI";
+import { addDeletedGoal, addGoal } from "../GoalsAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {

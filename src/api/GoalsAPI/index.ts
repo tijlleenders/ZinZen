@@ -5,8 +5,17 @@ import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { addDeletedGoal } from "../TrashAPI";
 import { deleteHint, getGoalHint } from "../HintsAPI";
+
+export const addDeletedGoal = async (goal: GoalItem) => {
+  await db
+    .transaction("rw", db.goalTrashCollection, async () => {
+      await db.goalTrashCollection.add({ ...goal, deletedAt: new Date().toISOString() });
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+};
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.goalsCollection, async () => {
