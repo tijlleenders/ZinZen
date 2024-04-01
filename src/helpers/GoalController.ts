@@ -12,9 +12,9 @@ import {
   getHintsFromAPI,
 } from "@src/api/GoalsAPI";
 import { saveHint, updateHint } from "@src/api/HintsAPI";
+import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
-import { restoreUserGoal } from "@src/api/TrashAPI";
 
 export const createGoal = async (
   parentGoalId: string,

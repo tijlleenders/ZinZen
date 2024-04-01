@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Switch } from "antd";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
