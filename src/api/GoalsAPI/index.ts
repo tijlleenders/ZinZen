@@ -211,7 +211,7 @@ export const getHintsFromAPI = async (goal: GoalItem) => {
   }
 
   const res = await createGetHintsRequest(requestBody);
-  return res;
+  return res.response;
 };
 
 export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string) => {

@@ -1,6 +1,13 @@
+export interface IGoalHint {
+  parentTitle: string;
+  title: string;
+  duration?: string | null;
+}
+
 export interface HintItem {
   id: string;
   hint: boolean;
+  goalHints: IGoalHint[];
 }
 
 export interface IHintRequestBody {

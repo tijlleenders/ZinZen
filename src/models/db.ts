@@ -10,7 +10,7 @@ import { DumpboxItem } from "./DumpboxItem";
 import { TrashItem } from "./TrashItem";
 import { HintItem } from "./HintItem";
 
-export const dexieVersion = 18;
+export const dexieVersion = 19;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -57,7 +57,7 @@ export class ZinZenDB extends Dexie {
         partnersCollection: null,
         goalTrashCollection:
           "id, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-        hintsCollection: "id, hint",
+        hintsCollection: "id, hint, goalHints",
       })
       .upgrade((trans) => {
         console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
@@ -132,6 +132,12 @@ export class ZinZenDB extends Dexie {
           const contactsCollection = trans.table("contactsCollection");
           contactsCollection.toCollection().modify((contact) => {
             contact.goalsToBeShared = [];
+          });
+        }
+        if (currentVersion < 18) {
+          const hintsCollection = trans.table("hintsCollection");
+          hintsCollection.toCollection().modify((hint) => {
+            hint.goalHints = [];
           });
         }
       });
