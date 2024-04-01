@@ -7,7 +7,6 @@ import backIcon from "@assets/images/backIcon.svg";
 
 import { darkModeState } from "@store";
 import { getJustDate } from "@utils";
-import { themeState } from "@src/store/ThemeState";
 import { addFeelingWithNote, addFeeling } from "@src/api/FeelingsAPI";
 import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
 
@@ -24,7 +23,6 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [choice, setChoice] = useState(0);
   const [customFeeling, setCustomFeeling] = useState<string>("");
-  const theme = useRecoilValue(themeState);
 
   const addThisFeeling = async (directAdd = "") => {
     if (directAdd !== "") {
