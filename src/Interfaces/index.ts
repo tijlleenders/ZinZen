@@ -29,4 +29,5 @@ export interface ILocationState {
   goalType?: "Budget" | "Goal"; // characteristic of the goal
   displayAddGoalOptions: boolean; // whether to show the add goal options
   displayFocus: boolean; // whether to show the focus component
+  allowAddingBudgetGoal?: boolean; // whether to allow adding a budget goal
 }

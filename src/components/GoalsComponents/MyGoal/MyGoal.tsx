@@ -53,19 +53,23 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
+      const newState: ILocationState = {
+        ...location.state,
+        activeGoalId: goal.id,
+        goalsHistory: [
+          ...subGoalHistory,
+          {
+            goalID: goal.id || "root",
+            goalColor: goal.goalColor || "#ffffff",
+            goalTitle: goal.title || "",
+          },
+        ],
+      };
+      if (newState.allowAddingBudgetGoal !== false) {
+        newState.allowAddingBudgetGoal = goal.category !== "Standard";
+      }
       navigate("/MyGoals", {
-        state: {
-          ...location.state,
-          activeGoalId: goal.id,
-          goalsHistory: [
-            ...subGoalHistory,
-            {
-              goalID: goal.id || "root",
-              goalColor: goal.goalColor || "#ffffff",
-              goalTitle: goal.title || "",
-            },
-          ],
-        },
+        state: newState,
       });
     } else {
       setShowActions({ open: goal.id, click: 1 });
