@@ -10,9 +10,8 @@ import ZModal from "@src/common/ZModal";
 
 interface AddContactModalProps {
   showAddContactModal: boolean;
-  setShowAddContactModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, setShowAddContactModal }) => {
+const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [loading, setLoading] = useState(false);
   const [newContact, setNewContact] = useState<{ contactName: string; relId: string } | null>(null);

@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-
-import { unarchiveIcon } from "@src/assets";
-
+import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
-import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
+import { ILocationState } from "@src/Interfaces";
 
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
-import { ILocationState } from "@src/Interfaces";
 
 interface MyGoalProps {
   actionType: TAction;

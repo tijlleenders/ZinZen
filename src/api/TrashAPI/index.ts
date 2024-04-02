@@ -2,7 +2,7 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { TrashItem } from "@src/models/TrashItem";
-import { addGoal } from "../GoalsAPI";
+import { addDeletedGoal, addGoal } from "../GoalsAPI";
 import { addSharedWMGoal } from "../SharedWMAPI";
 
 export const getDeletedGoals = async (parentGoalId: string) => {
@@ -12,16 +12,6 @@ export const getDeletedGoals = async (parentGoalId: string) => {
     .sortBy("deletedAt");
   childrenGoals.reverse();
   return childrenGoals;
-};
-
-export const addDeletedGoal = async (goal: GoalItem) => {
-  await db
-    .transaction("rw", db.goalTrashCollection, async () => {
-      await db.goalTrashCollection.add({ ...goal, deletedAt: new Date().toISOString() });
-    })
-    .catch((e) => {
-      console.log(e.stack || e);
-    });
 };
 
 export const getDeletedGoal = async (goalId: string) => {
@@ -41,6 +31,7 @@ export const restoreGoal = async (goal: GoalItem, isShareWMType = false) => {
 export const restoreChildrenGoals = async (id: string, isShareWMType = false) => {
   const childrenGoals: TrashItem[] = await getDeletedGoals(id);
   if (childrenGoals) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     childrenGoals.forEach(async ({ deletedAt, ...goal }) => {
       await restoreChildrenGoals(goal.id, isShareWMType);
       await restoreGoal(goal, isShareWMType);

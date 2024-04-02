@@ -1,7 +1,7 @@
 import { IconProps } from "@src/Interfaces/ICommon";
 import React from "react";
 
-const Icon: React.FC<IconProps> = ({ title, active, c1, c2 }) => {
+const Icon: React.FC<IconProps> = ({ title, active }) => {
   const color1 = active ? "var(--icon-grad-1)" : "#B1B1B1";
   // console.log("🚀 ~ file: Icon.tsx:6 ~ color1:", color1)
   const color2 = active ? "var(--icon-grad-2)" : "#B1B1B1";

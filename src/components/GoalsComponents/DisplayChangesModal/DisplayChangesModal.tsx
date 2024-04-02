@@ -83,7 +83,7 @@ const DisplayChangesModal = () => {
           borderRadius: 8,
         }}
       >
-        {newGoals.map(({ goal, intent }) => (
+        {newGoals.map(({ goal }) => (
           <div
             key={`${goal.id}-subgoal`}
             style={{

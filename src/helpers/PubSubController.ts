@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getGoal, getParticipantsOfGoals } from "@src/api/GoalsAPI";
-import { getHistoryUptoGoal } from "./GoalProcessor";
 import { getParticipantsOfDeletedGoal } from "@src/api/TrashAPI";
+import { getHistoryUptoGoal } from "./GoalProcessor";
 
 export const sendUpdatedGoal = async (
   goalId: string,

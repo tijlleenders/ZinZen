@@ -5,8 +5,17 @@ import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { addDeletedGoal } from "../TrashAPI";
 import { deleteHint, getGoalHint } from "../HintsAPI";
+
+export const addDeletedGoal = async (goal: GoalItem) => {
+  await db
+    .transaction("rw", db.goalTrashCollection, async () => {
+      await db.goalTrashCollection.add({ ...goal, deletedAt: new Date().toISOString() });
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+};
 
 export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.goalsCollection, async () => {
@@ -308,17 +317,18 @@ export const removeGoalWithChildrens = async (goal: GoalItem) => {
 
 export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false) => {
   const goalsAcc: GoalItem[] = [];
-  const root = await getGoal(id);
-  if (root) {
-    let queue: GoalItem[] = [root];
-    while (queue.length > 0) {
-      const front = queue[0];
-      goalsAcc.push(resetSharedStatus ? { ...front, participants: [] } : front);
-      queue.shift();
-      queue = [...queue, ...(await getChildrenGoals(front.id))];
-    }
-    console.log(goalsAcc);
-    return goalsAcc;
-  }
-  return [];
+
+  const processGoalAndChildren = async (goalId: string) => {
+    const goal = await getGoal(goalId);
+    if (!goal) return;
+
+    goalsAcc.push(resetSharedStatus ? { ...goal, participants: [] } : goal);
+    const childrenGoals = await getChildrenGoals(goalId);
+    await Promise.all(childrenGoals.map((childGoal) => processGoalAndChildren(childGoal.id)));
+  };
+
+  await processGoalAndChildren(id);
+
+  console.log(goalsAcc);
+  return goalsAcc;
 };

@@ -4,7 +4,7 @@ import i18n from "i18next";
 import { useRecoilState } from "recoil";
 import { ILanguageListProps, ILanguage } from "@src/Interfaces/ILanguage";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
-import { languageChangeModal, languageSelectionState } from "@src/store";
+import { languageSelectionState } from "@src/store";
 
 export const LanguagesList = (props: ILanguageListProps) => {
   const { languages, navigationCallback, type, hideSelected } = props;
@@ -12,7 +12,9 @@ export const LanguagesList = (props: ILanguageListProps) => {
   const sortedLanguages = [languages[0], ...languages.slice(1).sort((a, b) => a.title.localeCompare(b.title))];
 
   const handleClick = (langId: string) => {
-    vibrateWorks ? navigator.vibrate(100) : null;
+    if (vibrateWorks) {
+      navigator.vibrate(100);
+    }
     setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
     localStorage.setItem("language", JSON.stringify(langId));
