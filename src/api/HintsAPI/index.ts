@@ -2,8 +2,8 @@ import { db } from "@src/models";
 import { IGoalHint } from "@src/models/HintItem";
 
 export const getGoalHint = async (goalId: string) => {
-  const hint = await db.hintsCollection.where("id").equals(goalId).toArray();
-  return hint.length > 0 ? hint[0].hint : null;
+  const hintItem = await db.hintsCollection.where("id").equals(goalId).toArray();
+  return hintItem.length > 0 ? hintItem[0] : null;
 };
 
 export const saveHint = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {

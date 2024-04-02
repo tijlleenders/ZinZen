@@ -23,6 +23,8 @@ import GoalHistory from "./GoalHistory";
 import GoalsAccordion from "../GoalsAccordion";
 
 import "./GoalSublist.scss";
+import { getGoalHint } from "@src/api/HintsAPI";
+import { IGoalHint } from "@src/models/HintItem";
 
 export const GoalSublist = () => {
   const { t } = useTranslation();
@@ -38,6 +40,20 @@ export const GoalSublist = () => {
   const [deletedGoals, setDeletedGoals] = useState<GoalItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
+  const [goalhints, setGoalHints] = useState<IGoalHint[]>([]);
+  console.log(archivedChildren);
+
+  useEffect(() => {
+    getGoalHint(goalID).then((hintItem) => {
+      const array: IGoalHint[] = [];
+      hintItem?.goalHints?.forEach((hint) => {
+        if (hint) {
+          array.push(hint);
+        }
+      });
+      setGoalHints(array || []);
+    });
+  }, [goalID]);
 
   const handleChildrenGoals = (goals: GoalItem[]) => {
     setChildrenGoals([...goals.filter((goal) => goal.archived === "false")]);
@@ -76,6 +92,12 @@ export const GoalSublist = () => {
               goals={childrenGoals}
               showActions={showActions}
               setGoals={setChildrenGoals}
+              setShowActions={setShowActions}
+            />
+            <GoalsAccordion
+              header="Hints"
+              goals={goalhints}
+              showActions={showActions}
               setShowActions={setShowActions}
             />
             <GoalsAccordion
