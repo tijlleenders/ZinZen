@@ -1,4 +1,5 @@
 export interface IGoalHint {
+  id: string;
   parentTitle: string;
   title: string;
   duration?: string | null;

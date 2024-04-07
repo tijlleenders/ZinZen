@@ -1,5 +1,6 @@
 import { db } from "@src/models";
 import { IGoalHint } from "@src/models/HintItem";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Retrieves a hint item related to a specific goal ID from the hintsCollection.
@@ -21,7 +22,13 @@ export const getGoalHintItem = async (goalId: string) => {
  * @return {Promise<void>} A promise that resolves when the hint item is added to the database
  */
 export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
-  const hintObject = { id: goalId, hint, goalHints };
+  const updatedHintsWithId = goalHints.map((hintItem: IGoalHint) => {
+    if (!hintItem.id) {
+      return { ...hintItem, id: uuidv4() };
+    }
+    return hintItem;
+  });
+  const hintObject = { id: goalId, hint, goalHints: updatedHintsWithId };
   await db
     .transaction("rw", db.hintsCollection, async () => {
       await db.hintsCollection.add(hintObject);
@@ -39,13 +46,20 @@ export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoa
  * @param {IGoalHint[]} goalHints - The array of goal hints to update.
  */
 export const updateHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
+  const updatedHintsWithId = goalHints.map((hintItem: IGoalHint) => {
+    if (!hintItem.id) {
+      const newHintItem = { ...hintItem, id: uuidv4() };
+      return newHintItem;
+    }
+    return hintItem;
+  });
   await db
     .transaction("rw", db.hintsCollection, async () => {
       const existingItem = await db.hintsCollection.where("id").equals(goalId).first();
       if (existingItem) {
-        await db.hintsCollection.update(goalId, { hint, goalHints });
+        await db.hintsCollection.update(goalId, { hint, updateHintItem: updatedHintsWithId });
       } else {
-        await addHintItem(goalId, hint, []);
+        await addHintItem(goalId, hint, updatedHintsWithId);
       }
     })
     .catch((e) => {

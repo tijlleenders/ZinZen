@@ -5,7 +5,7 @@ import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { deleteHint, getGoalHintItem } from "../HintsAPI";
+import { deleteHintItem, getGoalHintItem } from "../HintsAPI";
 
 export const addDeletedGoal = async (goal: GoalItem) => {
   await db
@@ -146,7 +146,7 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
 };
 
 export const removeGoal = async (goal: GoalItem) => {
-  await deleteHint(goal.id);
+  await deleteHintItem(goal.id);
   await Promise.allSettled([
     db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
     addDeletedGoal(goal),
