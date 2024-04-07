@@ -79,16 +79,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
             await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "addHint" });
           }}
         >
-          <ActionDiv
-            label={t("Add Hint")}
-            icon={
-              <img
-                alt="archived goal"
-                src={unarchiveIcon}
-                style={{ width: 24, height: 25, filter: darkModeStatus ? "invert(1)" : "none" }}
-              />
-            }
-          />
+          <ActionDiv label={t("Add Hint")} icon="Add" />
         </div>
 
         <div
