@@ -9,10 +9,10 @@ import ConfirmationModal from "@src/common/ConfirmationModal";
 import { GoalItem } from "@src/models/GoalItem";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { unarchiveIcon } from "@src/assets";
-import { goalsHistory } from "@src/store/GoalsState";
 import { lastAction, displayConfirmation, darkModeState } from "@src/store";
+import { addHintGoaltoMyGoals } from "@src/api/GoalsAPI";
+import { deleteGoalHint } from "@src/api/HintsAPI";
 
-import { addHintGoaltoMyGoals, deleteGoalHint } from "@src/api/HintsAPI";
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
 
@@ -21,11 +21,9 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
   const { handleUpdateGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory = "goal";
 
-  const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
   const darkModeStatus = useRecoilValue(darkModeState);
   const setLastAction = useSetRecoilState(lastAction);
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 

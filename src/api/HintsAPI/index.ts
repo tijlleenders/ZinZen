@@ -1,8 +1,6 @@
 import { db } from "@src/models";
-import { GoalItem } from "@src/models/GoalItem";
 import { IGoalHint } from "@src/models/HintItem";
 import { v4 as uuidv4 } from "uuid";
-import { addGoal, updateGoal } from "../GoalsAPI";
 
 /**
  * Retrieves a hint item related to a specific goal ID from the hintsCollection.
@@ -104,16 +102,4 @@ export const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
     .catch((e) => {
       console.log(e.stack || e);
     });
-};
-
-/**
- * Add a hint goal to the list of goals.
- *
- * @param {GoalItem} goal - The goal item to add as a hint goal.
- * @return {Promise<void>} A promise that resolves when the hint goal is added successfully.
- */
-export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
-  await updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] });
-  await addGoal(goal);
-  await deleteGoalHint(goal.parentGoalId, goal.id);
 };

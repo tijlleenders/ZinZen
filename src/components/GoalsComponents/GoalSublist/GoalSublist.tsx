@@ -16,7 +16,7 @@ import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { displayPartnerMode, lastAction } from "@src/store";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
-import { IGoalHint } from "@src/models/HintItem";
+import { getGoalHintItem } from "@src/api/HintsAPI";
 
 import GoalsList from "../GoalsList";
 import ConfigGoal from "../GoalConfigModal/ConfigGoal";
@@ -24,7 +24,6 @@ import GoalHistory from "./GoalHistory";
 import GoalsAccordion from "../GoalsAccordion";
 
 import "./GoalSublist.scss";
-import { getGoalHintItem } from "@src/api/HintsAPI";
 
 export const GoalSublist = () => {
   const { t } = useTranslation();

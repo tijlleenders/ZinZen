@@ -5,7 +5,7 @@ import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { deleteHintItem, getGoalHintItem } from "../HintsAPI";
+import { deleteGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
 
 export const addDeletedGoal = async (goal: GoalItem) => {
   await db
@@ -331,4 +331,16 @@ export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false
 
   console.log(goalsAcc);
   return goalsAcc;
+};
+
+/**
+ * Add a hint goal to the list of goals.
+ *
+ * @param {GoalItem} goal - The goal item to add as a hint goal.
+ * @return {Promise<void>} A promise that resolves when the hint goal is added successfully.
+ */
+export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
+  await updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] });
+  await addGoal(goal);
+  await deleteGoalHint(goal.parentGoalId, goal.id);
 };

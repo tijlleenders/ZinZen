@@ -19,12 +19,12 @@ import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
 import { getGoal } from "@src/api/GoalsAPI";
+import { getGoalHintItem } from "@src/api/HintsAPI";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
-import { getGoalHintItem } from "@src/api/HintsAPI";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
