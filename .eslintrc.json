@@ -58,6 +58,7 @@
         "avoidEscape": true
       }
     ],
+    "react/require-default-props": ["error", { "ignoreFunctionalComponents": true }],
     "implicit-arrow-linebreak": "off",
     "function-paren-newline": "off",
     "comma-dangle": "off",

@@ -7,6 +7,8 @@ export interface IParticipant {
   following: boolean;
 }
 
+export type TGoalCategory = "Standard" | "Budget" | "Cluster";
+
 export interface GoalItem {
   id: string;
   title: string;
@@ -31,5 +33,6 @@ export interface GoalItem {
     perWeek: string | null;
   } | null;
   typeOfGoal: "myGoal" | "shared";
+  category: TGoalCategory;
   newUpdates: boolean;
 }

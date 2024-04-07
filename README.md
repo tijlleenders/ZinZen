@@ -15,6 +15,7 @@ Explain ZinZen like I'm:
 - a busy person: "ZinZen helps you plan like a pro - with the ease of a messaging app."
 - five: "ZinZen tells the world about your dreams - and then people come and help you."
 - a project manager: "ZinZen is a global multi-project management platform for individuals."
+- a philantropist: "ZinZen is a catalyst for individual and collective agency."
 - an investor: "ZinZen will never be for sale - but we offer decent ROI on loans."
 
 Phases:

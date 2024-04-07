@@ -12,20 +12,21 @@ import Backdrop from "@src/common/Backdrop";
 
 import "./index.scss";
 import { useTranslation } from "react-i18next";
+import { ILocationState } from "@src/Interfaces";
 
 interface AdGoalOptionsProps {
   goalType: "Budget" | "Goal";
   bottom: number;
+  disabled?: boolean;
 }
 
-const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom }) => {
+const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom, disabled }) => {
   const { handleAddGoal } = useGoalStore();
-
   return (
     <button
       type="button"
       className="add-goal-pill-btn"
-      style={{ right: 35, bottom }}
+      style={{ right: 35, bottom, ...(disabled ? { opacity: 0.25, pointerEvents: "none" } : {}) }}
       onClick={(e) => {
         e.stopPropagation();
         handleAddGoal(goalType);
@@ -45,7 +46,7 @@ const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom }) => {
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
   const { t } = useTranslation();
-  const { state } = useLocation();
+  const { state }: { state: ILocationState } = useLocation();
   const navigate = useNavigate();
   const { handleAddFeeling } = useFeelingStore();
 
@@ -71,7 +72,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             window.history.back();
           }}
         />
-        <AddGoalOptions goalType={t("addBtnBudget")} bottom={144} />
+        <AddGoalOptions disabled={state.allowAddingBudgetGoal === false} goalType={t("addBtnBudget")} bottom={144} />
         <AddGoalOptions goalType={t("addBtnGoal")} bottom={74} />
       </>
     );

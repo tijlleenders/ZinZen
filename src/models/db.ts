@@ -42,9 +42,9 @@ export class ZinZenDB extends Dexie {
       .stores({
         feelingsCollection: "++id, content, category, date, note",
         goalsCollection:
-          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+          "id, category, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         sharedWMCollection:
-          "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+          "id, category, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt, type",
         outboxCollection: null,
         inboxCollection: "id, goalChanges",
@@ -56,7 +56,7 @@ export class ZinZenDB extends Dexie {
         dumpboxCollection: "id, key, value",
         partnersCollection: null,
         goalTrashCollection:
-          "id, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+          "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         hintsCollection: "id, hint, goalHints",
       })
       .upgrade((trans) => {
@@ -134,11 +134,53 @@ export class ZinZenDB extends Dexie {
             contact.goalsToBeShared = [];
           });
         }
+        if (currentVersion < 19) {
+          console.log("processing updates for 19th version");
+          trans
+            .table("sharedWMCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+          trans
+            .table("goalsCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+          trans
+            .table("goalTrashCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+        }
         if (currentVersion < 18) {
           const hintsCollection = trans.table("hintsCollection");
           hintsCollection.toCollection().modify((hint) => {
             hint.goalHints = [];
           });
+        }
+        if (currentVersion < 19) {
+          console.log("processing updates for 19th version");
+          trans
+            .table("sharedWMCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+          trans
+            .table("goalsCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+          trans
+            .table("goalTrashCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
         }
       });
   }
