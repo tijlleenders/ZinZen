@@ -11,7 +11,7 @@ import {
   getParticipantsOfGoals,
   getHintsFromAPI,
 } from "@src/api/GoalsAPI";
-import { addHintItem, updateHint } from "@src/api/HintsAPI";
+import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { IGoalHint } from "@src/models/HintItem";
 import { createGoalObjectFromTags } from "./GoalProcessor";
@@ -76,9 +76,9 @@ export const modifyGoal = async (
   ancestors: string[],
   goalHint: boolean,
 ) => {
-  let res: IGoalHint[] = [];
+  let goalHints: IGoalHint[] = [];
   if (goalHint) {
-    res = await getHintsFromAPI({
+    goalHints = await getHintsFromAPI({
       ...goalTags,
       title: goalTitle
         .split(" ")
@@ -96,7 +96,7 @@ export const modifyGoal = async (
     goalColor,
   });
   const sendUpdatedGoalPromise = sendUpdatedGoal(goalId, ancestors);
-  const updateHintPromise = updateHint(goalTags.id, goalHint, res);
+  const updateHintPromise = updateHintItem(goalTags.id, goalHint, goalHints);
   Promise.allSettled([sendUpdatedGoalPromise, updateHintPromise]).catch((err) => console.log(err));
 };
 

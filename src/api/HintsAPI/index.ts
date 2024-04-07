@@ -31,7 +31,14 @@ export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoa
     });
 };
 
-export const updateHint = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
+/**
+ * Updates a hint for a specific goal in the database.
+ *
+ * @param {string} goalId - The ID of the goal to update the hint for.
+ * @param {boolean} hint - The new hint value to update.
+ * @param {IGoalHint[]} goalHints - The array of goal hints to update.
+ */
+export const updateHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
   await db
     .transaction("rw", db.hintsCollection, async () => {
       const existingItem = await db.hintsCollection.where("id").equals(goalId).first();
