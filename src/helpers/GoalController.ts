@@ -13,7 +13,7 @@ import {
 } from "@src/api/GoalsAPI";
 import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
-import { HintItem, IGoalHint } from "@src/models/HintItem";
+import { IGoalHint } from "@src/models/HintItem";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
@@ -37,11 +37,7 @@ export const createGoal = async (
     goalColor,
   });
 
-  if (goalHint === true) {
-    const goalHintItem: HintItem = await getHintsFromAPI(newGoal);
-    const hintsToAdd = goalHintItem.goalHints === undefined ? [] : goalHintItem.goalHints;
-    await addHintItem(goalTags.id, goalHint, hintsToAdd);
-  }
+  if (goalHint) await addHintItem(goalTags.id, goalHint, (await getHintsFromAPI(newGoal)) || []);
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
