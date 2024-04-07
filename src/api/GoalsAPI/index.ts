@@ -81,7 +81,7 @@ export const getActiveGoals = async (includeArchived = "false") => {
   return sortedGoals;
 };
 
-export const updateGoal = async (id: string, changes: object) => {
+export const updateGoal = async (id: string, changes: Partial<GoalItem>) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(id, changes).then((updated) => updated);
   }).catch((e) => {

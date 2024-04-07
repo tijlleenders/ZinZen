@@ -27,7 +27,6 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
-  const [refreshComponent, setRefreshComponent] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
   const handleActionClick = async (action: string) => {
@@ -43,7 +42,6 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
       return;
     }
     window.history.go(confirmationAction ? -2 : -1);
-    setRefreshComponent((prev) => !prev);
   };
 
   const openConfirmationPopUp = async (action: confirmAction) => {
