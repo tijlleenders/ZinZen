@@ -1,7 +1,13 @@
 import { db } from "@src/models";
 import { IGoalHint } from "@src/models/HintItem";
 
-export const getGoalHint = async (goalId: string) => {
+/**
+ * Retrieves a hint item related to a specific goal ID from the hintsCollection.
+ *
+ * @param {string} goalId - The ID of the goal to retrieve the hint item for.
+ * @return {object | null} The hint item associated with the provided goal ID, or null if not found.
+ */
+export const getGoalHintItem = async (goalId: string) => {
   const hintItem = await db.hintsCollection.where("id").equals(goalId).toArray();
   return hintItem.length > 0 ? hintItem[0] : null;
 };

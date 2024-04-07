@@ -18,13 +18,13 @@ import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
-import { getGoalHint } from "@src/api/HintsAPI";
 import { getGoal } from "@src/api/GoalsAPI";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
+import { getGoalHintItem } from "@src/api/HintsAPI";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -65,8 +65,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [hints, setHints] = useState(false);
 
   useEffect(() => {
-    getGoalHint(goal.id).then((hintItem) => {
-      setHints(!!hintItem);
+    getGoalHintItem(goal.id).then((hintItem) => {
+      setHints(!!hintItem?.hint);
     });
   }, [goal.id]);
 

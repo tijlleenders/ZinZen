@@ -16,6 +16,7 @@ import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { displayPartnerMode, lastAction } from "@src/store";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { IGoalHint } from "@src/models/HintItem";
 
 import GoalsList from "../GoalsList";
 import ConfigGoal from "../GoalConfigModal/ConfigGoal";
@@ -23,8 +24,7 @@ import GoalHistory from "./GoalHistory";
 import GoalsAccordion from "../GoalsAccordion";
 
 import "./GoalSublist.scss";
-import { getGoalHint } from "@src/api/HintsAPI";
-import { IGoalHint } from "@src/models/HintItem";
+import { getGoalHintItem } from "@src/api/HintsAPI";
 
 export const GoalSublist = () => {
   const { t } = useTranslation();
@@ -44,7 +44,7 @@ export const GoalSublist = () => {
   console.log(archivedChildren);
 
   useEffect(() => {
-    getGoalHint(goalID).then((hintItem) => {
+    getGoalHintItem(goalID).then((hintItem) => {
       const array: IGoalHint[] = [];
       hintItem?.goalHints?.forEach((hint) => {
         if (hint) {
