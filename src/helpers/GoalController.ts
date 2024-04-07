@@ -11,7 +11,7 @@ import {
   getParticipantsOfGoals,
   getHintsFromAPI,
 } from "@src/api/GoalsAPI";
-import { saveHint, updateHint } from "@src/api/HintsAPI";
+import { addHintItem, updateHint } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { IGoalHint } from "@src/models/HintItem";
 import { createGoalObjectFromTags } from "./GoalProcessor";
@@ -39,10 +39,10 @@ export const createGoal = async (
 
   if (goalHint) {
     const goalHints = await getHintsFromAPI(newGoal);
-    await saveHint(goalTags.id, goalHint, goalHints);
+    await addHintItem(goalTags.id, goalHint, goalHints);
   }
 
-  await saveHint(goalTags.id, goalHint, []);
+  await addHintItem(goalTags.id, goalHint, []);
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);

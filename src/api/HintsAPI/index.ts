@@ -12,7 +12,15 @@ export const getGoalHintItem = async (goalId: string) => {
   return hintItem.length > 0 ? hintItem[0] : null;
 };
 
-export const saveHint = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
+/**
+ * Adds a hint item to the database for a specific goal.
+ *
+ * @param {string} goalId - The ID of the goal
+ * @param {boolean} hint - The hint value
+ * @param {IGoalHint[]} goalHints - The array of goal hints from api call
+ * @return {Promise<void>} A promise that resolves when the hint item is added to the database
+ */
+export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
   const hintObject = { id: goalId, hint, goalHints };
   await db
     .transaction("rw", db.hintsCollection, async () => {
@@ -30,7 +38,7 @@ export const updateHint = async (goalId: string, hint: boolean, goalHints: IGoal
       if (existingItem) {
         await db.hintsCollection.update(goalId, { hint, goalHints });
       } else {
-        await saveHint(goalId, hint, []);
+        await addHintItem(goalId, hint, []);
       }
     })
     .catch((e) => {
