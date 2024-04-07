@@ -90,7 +90,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
           <ActionDiv label={t("Delete Hint")} icon="Delete" />
         </div>
 
-        {/* <div
+        <div
           className="goal-action-archive shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
@@ -107,7 +107,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
               />
             }
           />
-        </div> */}
+        </div>
       </div>
     </ZModal>
   );

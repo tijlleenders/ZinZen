@@ -59,7 +59,7 @@ export const updateHintItem = async (goalId: string, hint: boolean, goalHints: I
     .transaction("rw", db.hintsCollection, async () => {
       const existingItem = await db.hintsCollection.where("id").equals(goalId).first();
       if (existingItem) {
-        await db.hintsCollection.update(goalId, { hint, updateHintItem: updatedHintsWithId });
+        await db.hintsCollection.update(goalId, { hint, goalHints: updatedHintsWithId });
       } else {
         await addHintItem(goalId, hint, updatedHintsWithId);
       }

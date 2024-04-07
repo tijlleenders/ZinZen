@@ -39,7 +39,8 @@ export const createGoal = async (
 
   if (goalHint === true) {
     const goalHintItem: HintItem = await getHintsFromAPI(newGoal);
-    await addHintItem(goalTags.id, goalHint, goalHintItem.goalHints);
+    const hintsToAdd = goalHintItem.goalHints === undefined ? [] : goalHintItem.goalHints;
+    await addHintItem(goalTags.id, goalHint, hintsToAdd);
   }
 
   if (parentGoalId && parentGoalId !== "root") {
