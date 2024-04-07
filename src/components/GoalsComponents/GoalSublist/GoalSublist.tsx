@@ -40,20 +40,19 @@ export const GoalSublist = () => {
   const [deletedGoals, setDeletedGoals] = useState<GoalItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
-  const [goalhints, setGoalHints] = useState<IGoalHint[]>([]);
-  console.log(archivedChildren);
+  const [goalhints, setGoalHints] = useState<GoalItem[]>([]);
 
   useEffect(() => {
     getGoalHintItem(goalID).then((hintItem) => {
-      const array: IGoalHint[] = [];
+      const array: GoalItem[] = [];
       hintItem?.goalHints?.forEach((hint) => {
         if (hint) {
-          array.push(hint);
+          array.push(createGoalObjectFromTags({ ...hint, parentGoalId: goalID }));
         }
       });
       setGoalHints(array || []);
     });
-  }, [goalID]);
+  }, [goalID, action]);
 
   const handleChildrenGoals = (goals: GoalItem[]) => {
     setChildrenGoals([...goals.filter((goal) => goal.archived === "false")]);

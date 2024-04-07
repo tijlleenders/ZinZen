@@ -8,7 +8,7 @@ export interface ISubGoalHistory {
   goalTitle: string;
 }
 
-export type TAction = "deleted" | "archived" | "regular";
+export type TAction = "deleted" | "archived" | "regular" | "hints";
 export type TDisplayGoalActions = { actionType: TAction; goal: GoalItem };
 
 export const displayGoalActions = atom({

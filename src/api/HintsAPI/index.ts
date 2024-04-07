@@ -91,7 +91,7 @@ export const deleteHintItem = async (goalId: string) => {
  * @param {string} goalId - The ID of the goal hint to be deleted
  * @return {Promise<void>} A promise that resolves when the hint is deleted
  */
-const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
+export const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
   await db
     .transaction("rw", db.hintsCollection, async () => {
       const goalHints = await db.hintsCollection.get(parentGoalId);
