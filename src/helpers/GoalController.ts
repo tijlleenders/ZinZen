@@ -11,7 +11,7 @@ import {
   getParticipantsOfGoals,
   getHintsFromAPI,
 } from "@src/api/GoalsAPI";
-import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
+import { addHintItem, deleteHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { IGoalHint } from "@src/models/HintItem";
 import { createGoalObjectFromTags } from "./GoalProcessor";
@@ -86,6 +86,8 @@ export const modifyGoal = async (
         .join(" "),
       goalColor,
     });
+  } else {
+    await deleteHintItem(goalTags.id);
   }
   await updateGoal(goalId, {
     ...goalTags,

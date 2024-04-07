@@ -53,7 +53,12 @@ export const updateHintItem = async (goalId: string, hint: boolean, goalHints: I
     });
 };
 
-export const deleteHint = async (goalId: string) => {
+/**
+ * Deletes a hint item associated with a specific goal ID.
+ *
+ * @param {string} goalId - The ID of the goal for which the hint item should be deleted.
+ */
+export const deleteHintItem = async (goalId: string) => {
   await db
     .transaction("rw", db.hintsCollection, async () => {
       await db.hintsCollection.delete(goalId);
