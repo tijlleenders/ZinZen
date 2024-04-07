@@ -1,6 +1,8 @@
 import { db } from "@src/models";
+import { GoalItem } from "@src/models/GoalItem";
 import { IGoalHint } from "@src/models/HintItem";
 import { v4 as uuidv4 } from "uuid";
+import { addGoal } from "../GoalsAPI";
 
 /**
  * Retrieves a hint item related to a specific goal ID from the hintsCollection.
@@ -80,4 +82,37 @@ export const deleteHintItem = async (goalId: string) => {
     .catch((e) => {
       console.log(e.stack || e);
     });
+};
+
+/**
+ * Delete a specific goal hint associated with a parent goal.
+ *
+ * @param {string} parentGoalId - The ID of the parent goal
+ * @param {string} goalId - The ID of the goal hint to be deleted
+ * @return {Promise<void>} A promise that resolves when the hint is deleted
+ */
+const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
+  await db
+    .transaction("rw", db.hintsCollection, async () => {
+      const goalHints = await db.hintsCollection.get(parentGoalId);
+
+      const goalHint = goalHints?.goalHints.filter((hint) => hint.id !== goalId);
+      console.log(goalHint, "goalHint");
+
+      await db.hintsCollection.update(parentGoalId, { goalHints: goalHint });
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+};
+
+/**
+ * Add a hint goal to the list of goals.
+ *
+ * @param {GoalItem} goal - The goal item to add as a hint goal.
+ * @return {Promise<void>} A promise that resolves when the hint goal is added successfully.
+ */
+export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
+  await addGoal(goal);
+  await deleteGoalHint(goal.parentGoalId, goal.id);
 };
