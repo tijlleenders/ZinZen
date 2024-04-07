@@ -15,7 +15,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
   const { actionCategory, actionName } = action;
   const [neverShowAgain, setNeverShowAgain] = useState(false);
   const [displayModal, setDisplayModal] = useRecoilState(displayConfirmation);
-  // @ts-ignore
   const [headerKey, noteKey] = [`${actionCategory}.${actionName}.header`, `${actionCategory}.${actionName}.note`];
   const getChoiceButton = (choice: string) => (
     <button
