@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { GoalItem } from "@src/models/GoalItem";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
@@ -11,11 +10,11 @@ import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
-import useIsGoalImpossible from "../../../hooks/useIsGoalImpossible";
+import { GoalWithImpossible } from "../GoalsList";
 
 interface MyGoalProps {
   actionType: TAction;
-  goal: GoalItem;
+  goal: GoalWithImpossible;
   showActions: {
     open: string;
     click: number;
@@ -51,8 +50,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const showChangesModal = useRecoilValue(displayChangesModal);
-
-  const isImpossible = useIsGoalImpossible({ id: goal.id });
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
@@ -122,7 +119,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
             <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
           </div>
           <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-            <GoalTitle goal={goal} isImpossible={isImpossible} />
+            <GoalTitle goal={goal} isImpossible={goal.impossible} />
           </div>
         </div>
         {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}

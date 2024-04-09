@@ -4,6 +4,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import React, { useState } from "react";
 import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
+import { displayImpossibleGoal } from "@src/store/ImpossibleGoalState";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal/MyGoal";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
@@ -23,11 +24,28 @@ interface GoalsListProps {
   >;
 }
 
+export interface GoalWithImpossible extends GoalItem {
+  impossible: boolean;
+}
+
 const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListProps) => {
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showGoalActions = useRecoilValue(displayGoalActions);
   const [dragging, setDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState<GoalItem | null>(null);
+  const impossibleGoals = useRecoilValue(displayImpossibleGoal);
+  const updatedGoals = goals.map((goal) => {
+    if (impossibleGoals.some((impossibleGoal) => impossibleGoal.goalId === goal.id)) {
+      return {
+        ...goal,
+        impossible: true,
+      };
+    }
+    return {
+      ...goal,
+      impossible: false,
+    };
+  });
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     setDragging(true);
@@ -55,8 +73,7 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
       {showGoalActions && showGoalActions.actionType === "regular" && (
         <RegularGoalActions open goal={showGoalActions.goal} />
       )}
-      {goals.map((goal: GoalItem, index: number) => (
-        // eslint-disable-next-line react/no-array-index-key
+      {updatedGoals.map((goal: GoalWithImpossible, index: number) => (
         <React.Fragment key={goal.id}>
           {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
           <DragAndDrop

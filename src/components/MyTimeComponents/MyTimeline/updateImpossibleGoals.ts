@@ -4,6 +4,7 @@ import { deleteAllImpossibleGoals, addImpossibleGoal } from "@src/api/Impossible
 interface FormattedGoal {
   goalId: string;
   goalTitle: string;
+  parentGoalId: string;
 }
 
 const fetchAndFormatGoal = async (taskId: string): Promise<FormattedGoal | null> => {
@@ -12,6 +13,7 @@ const fetchAndFormatGoal = async (taskId: string): Promise<FormattedGoal | null>
     ? {
         goalId: goal.id,
         goalTitle: goal.title,
+        parentGoalId: goal.parentGoalId,
       }
     : null;
 };
