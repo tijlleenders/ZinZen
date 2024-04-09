@@ -8,7 +8,6 @@ import { useLocation } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
-import ZAccordion from "@src/common/Accordion";
 import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
@@ -19,6 +18,7 @@ import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
 import { getGoal } from "@src/api/GoalsAPI";
+import ZAccordion from "@src/common/Accordion";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
@@ -212,9 +212,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     }
   };
 
-  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
-  const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
-
   useEffect(() => {
     const addGoalColor = async () => {
       const parentGoalId = state.goalsHistory ? state.goalsHistory.slice(-1)[0].goalID : null;
@@ -249,6 +246,35 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       setBetweenSliderUpdated(false);
     }
   }, [afterTime, beforeTime, numberOfDays, betweenSliderUpdated]);
+
+  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
+  const budgetPerWeekSummary =
+    perWeekHrs[0] === perWeekHrs[1] ? `${perWeekHrs[0]} hrs / week` : `${perWeekHrs[0]} - ${perWeekHrs[1]} hrs / week`;
+
+  const minWeekValue = perDayHrs[0] * numberOfDays;
+  const maxWeekValue = perDayHrs[1] * numberOfDays;
+
+  const handleWeekSliderChange = (value: number[]) => {
+    let adjustedValue: number[] = value.slice();
+
+    adjustedValue[0] = Math.max(adjustedValue[0], minWeekValue);
+    adjustedValue[1] = Math.min(adjustedValue[1], maxWeekValue);
+
+    if (adjustedValue[0] > adjustedValue[1]) {
+      [adjustedValue[0], adjustedValue[1]] = [adjustedValue[1], adjustedValue[0]];
+    }
+
+    if (perDayHrs[0] === perDayHrs[1]) {
+      adjustedValue = [minWeekValue, maxWeekValue];
+    }
+
+    adjustedValue = adjustedValue.map((val) => Math.max(minWeekValue, Math.min(val, maxWeekValue)));
+    setPerWeekHrs(adjustedValue);
+  };
+
+  useEffect(() => {
+    handleWeekSliderChange(perWeekHrs);
+  }, [perDayHrs, setPerDayHrs, tags.on]);
 
   return (
     <ZModal
@@ -294,7 +320,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <div>
                 <span>Between</span>
                 <Slider
-                  tooltip={{ prefixCls: "between-tooltip" }}
+                  tooltip={{ prefixCls: isBudgetAccordianOpen ? "between-tooltip-open" : "between-tooltip-close" }}
                   min={0}
                   max={24}
                   marks={{
@@ -322,7 +348,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   {
                     header: isBudgetAccordianOpen
                       ? "Budget"
-                      : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
+                      : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary}`,
                     body: (
                       <div>
                         <div>
@@ -338,25 +364,25 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                               [beforeTime - afterTime]: `${beforeTime - afterTime}`,
                             }}
                             range
-                            value={perDayHrs}
+                            value={[perDayHrs[0], perDayHrs[1]]}
                             onChange={(val) => handleSliderChange(val, setPerDayHrs)}
                           />
                         </div>
                         <div>
-                          <span>{budgetPerWeekSummary} hrs / week</span>
+                          <span>{budgetPerWeekSummary}</span>
                           <Slider
                             tooltip={{ prefixCls: "per-week-tooltip" }}
-                            min={0}
-                            max={(beforeTime - afterTime) * numberOfDays}
+                            min={minWeekValue}
+                            max={maxWeekValue}
                             marks={{
-                              0: "0",
+                              [minWeekValue]: `${minWeekValue}`,
                               [perWeekHrs[0]]: `${perWeekHrs[0]}`,
                               [perWeekHrs[1]]: `${perWeekHrs[1]}`,
-                              [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
+                              [maxWeekValue]: `${maxWeekValue}`,
                             }}
                             range
-                            value={perWeekHrs}
-                            onChange={(val) => handleSliderChange(val, setPerWeekHrs)}
+                            value={[perWeekHrs[0], perWeekHrs[1]]}
+                            onChange={(val) => handleWeekSliderChange(val)}
                           />
                         </div>
                       </div>
