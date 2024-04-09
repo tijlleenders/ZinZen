@@ -9,7 +9,6 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 import {
   displayAddGoal,
   displayChangesModal,
-  displayGoalActions,
   displayGoalId,
   displayShareModal,
   displaySuggestionsModal,
@@ -24,16 +23,18 @@ import { darkModeState, lastAction, searchActive } from "@src/store";
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
-import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
 import ShareGoalModal from "@components/GoalsComponents/ShareGoalModal/ShareGoalModal";
-import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
+import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
+import { TrashItem } from "@src/models/TrashItem";
+import { getDeletedGoals } from "@src/api/TrashAPI";
 import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
+  const [deletedGoals, setDeletedGoals] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
 
   const showAddGoal = useRecoilValue(displayAddGoal);
@@ -42,24 +43,34 @@ export const MyGoals = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
-  const showGoalActions = useRecoilValue(displayGoalActions);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const [action, setLastAction] = useRecoilState(lastAction);
 
-  const handleUserGoals = (goals: GoalItem[]) => {
+  const getAllGoals = async () => {
+    const [goals, delGoals] = await Promise.all([getActiveGoals("true"), getDeletedGoals("root")]);
+    console.log("🚀 ~ getAllGoals ~ goals, delGoals:", goals, delGoals);
+    return { goals, delGoals };
+  };
+  const handleUserGoals = (goals: GoalItem[], delGoals: TrashItem[]) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setDeletedGoals([...delGoals.map(({ deletedAt, ...goal }) => goal)]);
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
     setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
   };
   const refreshActiveGoals = async () => {
-    const goals: GoalItem[] = await getActiveGoals("true");
+    const { goals, delGoals } = await getAllGoals();
     const sortedGoals = await priotizeImpossibleGoals(goals);
-    handleUserGoals(sortedGoals);
+    handleUserGoals(sortedGoals, delGoals);
   };
   const search = async (text: string) => {
-    const goals: GoalItem[] = await getActiveGoals("true");
-    handleUserGoals(goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
+    const { goals, delGoals } = await getAllGoals();
+    handleUserGoals(
+      goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())),
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      delGoals.filter(({ deletedAt, ...goal }) => goal.title.toUpperCase().includes(text.toUpperCase())),
+    );
   };
   const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
     if (debounceTimeout) {
@@ -90,7 +101,6 @@ export const MyGoals = () => {
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
       {showShareModal && <ShareGoalModal goal={showShareModal} />}
-      {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
       {showChangesModal && <DisplayChangesModal />}
       <div className="myGoals-container">
         {selectedGoalId === "root" ? (
@@ -106,8 +116,17 @@ export const MyGoals = () => {
                 />
               </div>
               {archivedGoals.length > 0 && (
-                <ArchivedAccordion
-                  archivedGoals={archivedGoals}
+                <GoalsAccordion
+                  header="Done"
+                  goals={archivedGoals}
+                  showActions={showActions}
+                  setShowActions={setShowActions}
+                />
+              )}
+              {deletedGoals.length > 0 && (
+                <GoalsAccordion
+                  header="Trash"
+                  goals={deletedGoals}
                   showActions={showActions}
                   setShowActions={setShowActions}
                 />

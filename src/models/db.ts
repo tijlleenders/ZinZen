@@ -7,9 +7,11 @@ import { InboxItem } from "./InboxItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { DumpboxItem } from "./DumpboxItem";
+import { TrashItem } from "./TrashItem";
+import { HintItem } from "./HintItem";
 import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
 
-export const dexieVersion = 17;
+export const dexieVersion = 19;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -31,6 +33,10 @@ export class ZinZenDB extends Dexie {
 
   dumpboxCollection!: Table<DumpboxItem, string>;
 
+  goalTrashCollection!: Table<TrashItem, string>;
+
+  hintsCollection!: Table<HintItem, string>;
+
   impossibleGoalsCollection!: Table<ImpossibleGoalItem, string>;
 
   constructor() {
@@ -39,10 +45,10 @@ export class ZinZenDB extends Dexie {
       .stores({
         feelingsCollection: "++id, content, category, date, note",
         goalsCollection:
-          "id, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+          "id, category, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
         sharedWMCollection:
-          "id, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-        contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt",
+          "id, category, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+        contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt, type",
         outboxCollection: null,
         inboxCollection: "id, goalChanges",
         pubSubCollection: "id, subscribers",
@@ -52,6 +58,9 @@ export class ZinZenDB extends Dexie {
         customizationCollection: "++id, goalId, posIndex",
         dumpboxCollection: "id, key, value",
         partnersCollection: null,
+        goalTrashCollection:
+          "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+        hintsCollection: "id, hint",
         impossibleGoalsCollection: "goalId, goalTitle",
       })
       .upgrade((trans) => {
@@ -128,6 +137,27 @@ export class ZinZenDB extends Dexie {
           contactsCollection.toCollection().modify((contact) => {
             contact.goalsToBeShared = [];
           });
+        }
+        if (currentVersion < 19) {
+          console.log("processing updates for 19th version");
+          trans
+            .table("sharedWMCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+          trans
+            .table("goalsCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+          trans
+            .table("goalTrashCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
         }
       });
   }

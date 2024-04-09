@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getGoal, getParticipantsOfGoals } from "@src/api/GoalsAPI";
+import { getParticipantsOfDeletedGoal } from "@src/api/TrashAPI";
 import { getHistoryUptoGoal } from "./GoalProcessor";
 
 export const sendUpdatedGoal = async (
@@ -29,13 +30,18 @@ export const sendUpdatedGoal = async (
 
 export const sendFinalUpdateOnGoal = async (
   goalId: string,
-  action: "archived" | "deleted",
+  action: "archived" | "deleted" | "restored",
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
 ) => {
   const ancestorGoalIds = redefineAncestors ? (await getHistoryUptoGoal(goalId)).map((ele) => ele.goalID) : ancestors;
   const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
+  if (action === "restored") {
+    (await getParticipantsOfDeletedGoal(goalId)).forEach((doc) => {
+      subscribers.push(doc);
+    });
+  }
   subscribers
     .filter((ele) => !excludeSubs.includes(ele.sub.relId))
     .forEach(async ({ sub, rootGoalId }) => {

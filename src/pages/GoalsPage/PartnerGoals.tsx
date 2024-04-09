@@ -11,13 +11,15 @@ import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist
 import { displayGoalActions, displayGoalId } from "@src/store/GoalsState";
 import { darkModeState, lastAction, searchActive } from "@src/store";
 
-import ArchivedAccordion from "@components/GoalsComponents/ArchivedAccordion";
-import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
-import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
-import MyGoalActions from "@components/GoalsComponents/MyGoalActions/MyGoalActions";
+import AppLayout from "@src/layouts/AppLayout";
 import ContactItem from "@src/models/ContactItem";
+import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
+import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
+import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
+
+import InvitationStatus from "./InvitationStatus";
 
 const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -32,7 +34,6 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   const selectedGoalId = useRecoilValue(displayGoalId);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showGoalActions = useRecoilValue(displayGoalActions);
-
   const [action, setLastAction] = useRecoilState(lastAction);
 
   const handleUserGoals = (goals: GoalItem[]) => {
@@ -75,7 +76,7 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   return (
     <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
       <GoalLocStateHandler />
-      {showGoalActions && <MyGoalActions open={!!showGoalActions} goal={showGoalActions} />}
+      {showGoalActions && <RegularGoalActions open goal={showGoalActions.goal} />}
       <div className="myGoals-container">
         {selectedGoalId === "root" ? (
           <div className="my-goals-content">
@@ -88,8 +89,9 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
                   setGoals={setActiveGoals}
                 />
               </div>
-              <ArchivedAccordion
-                archivedGoals={archivedGoals}
+              <GoalsAccordion
+                header="Done"
+                goals={archivedGoals}
                 showActions={showActions}
                 setShowActions={setShowActions}
               />
@@ -98,12 +100,16 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
         ) : (
           <GoalSublist />
         )}
+
         {activeGoals?.length === 0 && (
-          <img
-            style={{ width: 350, height: 350, opacity: 0.3 }}
-            src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-            alt="Zinzen"
-          />
+          <>
+            <InvitationStatus relId={relId} />
+            <img
+              style={{ width: 350, height: 350, opacity: 0.3 }}
+              src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+              alt="Zinzen"
+            />
+          </>
         )}
       </div>
     </AppLayout>

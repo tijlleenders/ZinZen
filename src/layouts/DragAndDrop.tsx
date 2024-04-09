@@ -5,7 +5,7 @@ interface DadProps {
   dragging: boolean;
   children: ReactNode;
   thisItem: boolean;
-  handleDragStart: (e: any, index: number) => void;
+  handleDragStart: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
   handleDragEnter: (index: number) => void;
   handleDragEnd: () => void;
 }

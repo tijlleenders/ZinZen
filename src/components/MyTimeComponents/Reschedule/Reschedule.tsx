@@ -14,7 +14,6 @@ import { ITask } from "@src/Interfaces/Task";
 import { getFromOutbox } from "@src/api/DumpboxAPI";
 import { IFinalOutputSlot } from "@src/Interfaces/IScheduler";
 import ZModal from "@src/common/ZModal";
-import { rescheduleTaskOnDay } from "@src/api/RescheduledAPI";
 import ScheduledSlots from "./ScheduledSlots";
 
 const Reschedule = () => {

@@ -8,7 +8,7 @@ interface GoalDropdownProps {
 }
 
 const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, isActionVisible }) => {
-  const { sublist, goalColor, timeBudget, newUpdates, id } = goal;
+  const { sublist, goalColor, timeBudget, newUpdates } = goal;
   const hasSubGoals = sublist.length > 0;
   const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 89.585%, ${
     timeBudget?.perDay != null ? "transparent" : goalColor
@@ -20,24 +20,21 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, isActionVisible }) =>
   return (
     <div
       style={{
-        padding: "20px 0",
-        marginLeft: 20,
         display: "flex",
         flexDirection: "column",
         gap: 3,
+        paddingTop: isActionVisible ? "11px" : "",
       }}
     >
-      <div className="goal-dropdown">
-        <div
-          className="goal-dd-outer"
-          style={{
-            background: outerBackground,
-            border: outerBorderStyle,
-          }}
-        >
-          <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
-            {newUpdates && <NotificationSymbol color={goalColor} />}
-          </div>
+      <div
+        className="goal-dropdown goal-dd-outer"
+        style={{
+          background: outerBackground,
+          border: outerBorderStyle,
+        }}
+      >
+        <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
+          {newUpdates && <NotificationSymbol color={goalColor} />}
         </div>
       </div>
       {isActionVisible && (

@@ -1,28 +1,40 @@
 import { atom } from "recoil";
 import { confirmActionState } from "@src/Interfaces/IPopupModals";
 import ContactItem from "@src/models/ContactItem";
+import { isJSONParsable } from "@src/utils/patterns";
 import { darkModeState } from "./DarkModeState";
 import { languageSelectionState } from "./LanguageSelectionState";
 
+const defaultConfirmationObj: confirmActionState = {
+  open: false,
+  goal: {
+    archive: true,
+    delete: true,
+    shareAnonymously: true,
+    shareWithOne: true,
+    restore: true,
+  },
+  collaboration: {
+    colabRequest: true,
+    delete: true,
+    archive: true,
+    restore: true,
+  },
+};
+
+if (isJSONParsable(localStorage.getItem("confirmationState"))) {
+  // @ts-ignore
+  const savedConfirmationState = JSON.parse(localStorage.getItem("confirmationService"));
+  defaultConfirmationObj.goal = { ...defaultConfirmationObj.goal, ...(savedConfirmationState?.goal || {}) };
+  defaultConfirmationObj.collaboration = {
+    ...defaultConfirmationObj.collaboration,
+    ...(savedConfirmationState?.collaboration || {}),
+  };
+}
+
 export const displayConfirmation = atom({
   key: "displayConfirmation",
-  default: JSON.parse(
-    localStorage.getItem("confirmationState") ||
-      JSON.stringify({
-        open: false,
-        goal: {
-          archive: true,
-          delete: true,
-          shareAnonymously: true,
-          shareWithOne: true,
-        },
-        collaboration: {
-          colabRequest: true,
-          delete: true,
-          archive: true,
-        },
-      }),
-  ) as confirmActionState,
+  default: defaultConfirmationObj,
 });
 
 export const lastAction = atom({

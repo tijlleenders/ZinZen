@@ -65,6 +65,9 @@ export const transformIntoSchInputGoals = (
       }
     }
     if (ele.sublist.length > 0) obj.children = ele.sublist;
+    if (ele.afterTime == null && ele.beforeTime == null) {
+      delete obj.filters;
+    }
     if (Object.keys(obj.filters || {}).length === 0) {
       delete obj.filters;
     }

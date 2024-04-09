@@ -1,5 +1,5 @@
-import { ISubGoalHistory } from "@src/store/GoalsState";
-import { GoalItem, IParticipant } from "@src/models/GoalItem";
+import { ISubGoalHistory, TDisplayGoalActions } from "@src/store/GoalsState";
+import { GoalItem } from "@src/models/GoalItem";
 import ContactItem from "@src/models/ContactItem";
 import { ILanguage, ILanguageListProps } from "./ILanguage";
 import { confirmActionState } from "./IPopupModals";
@@ -20,7 +20,7 @@ export interface ILocationState {
   displayInputNoteModal?: number; // show input modal for adding note for id
   changeTheme?: boolean; // theme changer mode
   expandedGoalId?: string; // id of goal to be expanded
-  displayGoalActions?: GoalItem; // id of goal whose actions have to be opened
+  displayGoalActions?: TDisplayGoalActions; // id of goal whose actions have to be opened
   displayPartnerMode?: boolean; // whether or not to display the partner goals
   displayAddContact?: boolean; // whether or not to display the add contact form
   displayParticipants?: string; // id of goal whose participants have to be displayed
@@ -29,4 +29,5 @@ export interface ILocationState {
   goalType?: "Budget" | "Goal"; // characteristic of the goal
   displayAddGoalOptions: boolean; // whether to show the add goal options
   displayFocus: boolean; // whether to show the focus component
+  allowAddingBudgetGoal?: boolean; // whether to allow adding a budget goal
 }

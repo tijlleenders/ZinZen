@@ -10,9 +10,8 @@ import ZModal from "@src/common/ZModal";
 
 interface AddContactModalProps {
   showAddContactModal: boolean;
-  setShowAddContactModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, setShowAddContactModal }) => {
+const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [loading, setLoading] = useState(false);
   const [newContact, setNewContact] = useState<{ contactName: string; relId: string } | null>(null);
@@ -29,7 +28,7 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal, 
         const res = await initRelationship();
         if (res.success && res.response.relId && res.response.relId.length > 0) {
           const { relId } = res.response;
-          await addContact(newContact?.contactName, relId);
+          await addContact(newContact?.contactName, relId, "sender");
           setNewContact({ ...newContact, relId });
           const defaultPartner = localStorage.getItem("defaultPartner");
           if (!defaultPartner) {

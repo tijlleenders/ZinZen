@@ -50,7 +50,7 @@ const ColorBands: React.FC<IColorBands> = ({ list, tasksStatus, day, active }) =
       {active && day === "Today" && (
         <>
           <div className="task-progress">
-            <p>{`${dayTotal > 0 ? Math.floor((dayCompleted / dayTotal) * 100) + "% done" : "No tasks today"}`}</p>
+            <p>{`${dayTotal > 0 ? `${Math.floor((dayCompleted / dayTotal) * 100)}% done` : "No tasks today"}`}</p>
           </div>
           <div className={`MyTime_colorPalette ${active ? "active" : ""}`}>
             {[

@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 
-import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
-import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal } from "@src/store/GoalsState";
+import { darkModeState, displayPartnerMode } from "@src/store";
+import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
+import { ILocationState } from "@src/Interfaces";
 
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
@@ -13,6 +14,7 @@ import GoalTitle from "./GoalTitle";
 import useIsGoalImpossible from "../../../hooks/useIsGoalImpossible";
 
 interface MyGoalProps {
+  actionType: TAction;
   goal: GoalItem;
   showActions: {
     open: string;
@@ -22,22 +24,27 @@ interface MyGoalProps {
     React.SetStateAction<{
       open: string;
       click: number;
-      // eslint-disable-next-line prettier/prettier
     }>
   >;
 }
 
-const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) => {
+const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowActions }) => {
   const archived = goal.archived === "true";
   const defaultTap = { open: "root", click: 1 };
   const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
 
+  const [expandGoalId, setExpandGoalId] = useState("root");
+  const [isAnimating, setIsAnimating] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const navigate = useNavigate();
   const location = useLocation();
-  // const sharedWithContact = goal.shared.contacts.length > 0 ? goal.shared.contacts[0].name : null;
-  // const collabWithContact =
-  //   goal.collaboration.collaborators.length > 0 ? goal.collaboration.collaborators[0].name : null;
-  const setLastAction = useSetRecoilState(lastAction);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
@@ -49,19 +56,23 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
+      const newState: ILocationState = {
+        ...location.state,
+        activeGoalId: goal.id,
+        goalsHistory: [
+          ...subGoalHistory,
+          {
+            goalID: goal.id || "root",
+            goalColor: goal.goalColor || "#ffffff",
+            goalTitle: goal.title || "",
+          },
+        ],
+      };
+      if (newState.allowAddingBudgetGoal !== false) {
+        newState.allowAddingBudgetGoal = goal.category !== "Standard";
+      }
       navigate("/MyGoals", {
-        state: {
-          ...location.state,
-          activeGoalId: goal.id,
-          goalsHistory: [
-            ...subGoalHistory,
-            {
-              goalID: goal.id || "root",
-              goalColor: goal.goalColor || "#ffffff",
-              goalTitle: goal.title || "",
-            },
-          ],
-        },
+        state: newState,
       });
     } else {
       setShowActions({ open: goal.id, click: 1 });
@@ -69,12 +80,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   };
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.stopPropagation();
-    const navState = { ...location.state, from: "" };
+    const navState: ILocationState = { ...location.state, from: "" };
     if (goal.newUpdates) {
       navState.displayChanges = goal;
     } else {
-      navState.displayGoalActions = goal;
-      console.log("in navstate, displayGoalActions: ", navState);
+      navState.displayGoalActions = { actionType, goal };
     }
     navigate("/MyGoals", { state: navState });
   }
@@ -87,6 +97,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   useEffect(() => {
     if (location && location.pathname === "/MyGoals") {
       const { expandedGoalId } = location.state || {};
+      setExpandGoalId(expandedGoalId);
       if (expandedGoalId && showActions.open !== expandedGoalId) {
         setShowActions({ open: expandedGoalId, click: 1 });
       }
@@ -94,22 +105,40 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, setShowActions }) =>
   }, [location]);
 
   return (
-    <div key={String(`goal-${goal.id}`)} className={`user-goal${darkModeStatus ? "-dark" : ""}`}>
-      <div className="user-goal-main">
-        <div onClickCapture={handleDropDown}>
-          <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
+    <>
+      <div
+        key={String(`goal-${goal.id}`)}
+        className={`user-goal${darkModeStatus ? "-dark" : ""} ${
+          expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
+        }`}
+      >
+        <div
+          className="user-goal-main"
+          style={{
+            ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
+          }}
+        >
+          <div onClickCapture={handleDropDown}>
+            <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
+          </div>
+          <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
+            <GoalTitle goal={goal} isImpossible={isImpossible} />
+          </div>
         </div>
-        <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <GoalTitle goal={goal} isImpossible={isImpossible} />
-          {showActions.open === goal.id && showActions.click > 0 && (
-            <p className="goal-desc">
-              <GoalSummary goal={goal} />
-            </p>
-          )}
-        </div>
+        {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
       </div>
-      {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
-    </div>
+      <div
+        style={{
+          marginLeft: "69px",
+        }}
+      >
+        {showActions.open === goal.id && showActions.click > 0 && (
+          <p className="goal-desc">
+            <GoalSummary goal={goal} />
+          </p>
+        )}
+      </div>
+    </>
   );
 };
 

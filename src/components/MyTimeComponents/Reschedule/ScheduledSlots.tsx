@@ -1,7 +1,7 @@
 import { IFinalOutputSlot } from "@src/Interfaces/IScheduler";
 import { darkModeState } from "@src/store";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
-import React, { useState } from "react";
+import React from "react";
 import { useRecoilValue } from "recoil";
 import { v4 as uuidv4 } from "uuid";
 

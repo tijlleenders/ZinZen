@@ -32,7 +32,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
   const [displaySubmenu, setDisplaySubmenu] = useState("contacts");
   const [showConfirmation, setDisplayConfirmation] = useRecoilState(displayConfirmation);
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
-  const [showAddContactModal, setShowAddContactModal] = useRecoilState(displayAddContact);
+  const showAddContactModal = useRecoilValue(displayAddContact);
 
   const setShowToast = useSetRecoilState(displayToast);
   const handleShowAddContact = () => {
@@ -70,7 +70,8 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
               setShowToast({
                 open: true,
                 message: "Link copied to clipboard",
-                extra: `Paste this link in a chat message to your partner so they can accept the request and start receiving what you shared automatically`,
+                extra:
+                  "Paste this link in a chat message to your partner so they can accept the request and start receiving what you shared automatically",
               });
             }
           }
@@ -128,7 +129,9 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
       type={`share-modal${darkModeStatus ? "-dark" : ""}`}
     >
       {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
-      <div className="popupModal-title">{displaySubmenu === "groups" ? "Share in Public Group" : "Share Goals"}</div>
+      <div className="popupModal-title">
+        {displaySubmenu === "groups" ? "Share in Public Group" : "Share privately"}
+      </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {/* Share 1:1 */}
         <button
@@ -147,7 +150,6 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
                 <Icon active title="TwoAvatars" />
               </div>
             )}
-            <p className={`shareOption-name ${loading.S ? "loading" : ""}`}>Share privately</p>
           </div>
           {displaySubmenu === "contacts" && (
             <div className="shareWithContacts">
@@ -172,9 +174,7 @@ const ShareGoalModal = ({ goal }: { goal: GoalItem }) => {
           )}
         </button>
       </div>
-      {showAddContactModal && (
-        <AddContactModal showAddContactModal={showAddContactModal} setShowAddContactModal={setShowAddContactModal} />
-      )}
+      {showAddContactModal && <AddContactModal showAddContactModal={showAddContactModal} />}
     </ZModal>
   );
 };

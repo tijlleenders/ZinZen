@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { atom } from "recoil";
-import { GoalItem, IParticipant } from "@src/models/GoalItem";
-import { IDisplayChangesModal } from "@src/Interfaces/IDisplayChangesModal";
+import { GoalItem } from "@src/models/GoalItem";
 
 export interface ISubGoalHistory {
   goalID: string;
@@ -9,9 +8,12 @@ export interface ISubGoalHistory {
   goalTitle: string;
 }
 
+export type TAction = "deleted" | "archived" | "regular";
+export type TDisplayGoalActions = { actionType: TAction; goal: GoalItem };
+
 export const displayGoalActions = atom({
   key: "displayGoalActions",
-  default: null as GoalItem | null,
+  default: null as TDisplayGoalActions | null,
 });
 
 export const displayGoalConfigModal = atom({

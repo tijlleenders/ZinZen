@@ -1,15 +1,13 @@
 import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Slider, Switch } from "antd";
-import { darkModeState, displayToast, openDevMode } from "@src/store";
+import { Slider } from "antd";
+import { displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
-import TickIcon from "@assets/images/correct.svg";
 import plingSound from "@assets/pling.mp3";
 
-import ZAccordion from "@src/common/Accordion";
 import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
@@ -19,10 +17,15 @@ import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
 import { modifyGoal, createGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
+import { getGoalHint } from "@src/api/HintsAPI";
+import { getGoal } from "@src/api/GoalsAPI";
+import ZAccordion from "@src/common/Accordion";
+
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
+import HintToggle from "./ConfigGoal/HintToggle";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -48,7 +51,6 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
 
-  const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
@@ -61,6 +63,13 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
 
   const open = !!showAddGoal || !!showUpdateGoal;
+  const [hints, setHints] = useState(false);
+
+  useEffect(() => {
+    getGoalHint(goal.id).then((hintItem) => {
+      setHints(!!hintItem);
+    });
+  }, [goal.id]);
 
   const [title, setTitle] = useState(goal.title);
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
@@ -105,7 +114,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     return title.length === 0 || title.trim() === "";
   };
 
-  const getFinalTags = () => ({
+  const getFinalTags = (): GoalItem => ({
     ...goal,
     due: due && due !== "" ? new Date(due).toISOString() : null,
     // start: start && start !== "" ? new Date(start).toString() : null,
@@ -121,6 +130,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             perWeek: state.goalType === "Budget" ? perWeekHrs.join("-") : null,
           }
         : null,
+    category: state.goalType === "Budget" ? "Budget" : tags.duration !== "" ? "Standard" : "Cluster",
   });
 
   const updateThisGoal = async () => {
@@ -136,7 +146,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       }
       suggestChanges(rootGoal, getFinalTags(), title, goalColor, subGoalsHistory.length);
     } else {
-      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id]);
+      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id], hints);
     }
   };
 
@@ -160,6 +170,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
         title,
         colorPalleteList[colorIndex],
         ancestors,
+        hints,
       );
       if (!parentGoal && title === "magic") {
         setDevMode(true);
@@ -202,12 +213,23 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     }
   };
 
-  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
-  const budgetPerWeekSummary = perWeekHrs[0] === perWeekHrs[1] ? perWeekHrs[0] : `${perWeekHrs[0]} - ${perWeekHrs[1]}`;
-
   useEffect(() => {
-    if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
-    document.getElementById("title-field")?.focus();
+    const addGoalColor = async () => {
+      const parentGoalId = state.goalsHistory ? state.goalsHistory.slice(-1)[0].goalID : null;
+      if (parentGoalId && state.displayAddGoal) {
+        const parentGoal = await getGoal(parentGoalId);
+        if (parentGoal) {
+          if (state.goalType === "Budget") {
+            setBeforeTime(parentGoal.beforeTime || 18);
+            setAfterTime(parentGoal.afterTime || 9);
+            setBetweenSliderUpdated(true);
+          }
+          setColorIndex(colorPalleteList.indexOf(parentGoal?.goalColor));
+        }
+      } else if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
+      document.getElementById("title-field")?.focus();
+    };
+    addGoalColor();
   }, []);
 
   useEffect(() => {
@@ -225,6 +247,35 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       setBetweenSliderUpdated(false);
     }
   }, [afterTime, beforeTime, numberOfDays, betweenSliderUpdated]);
+
+  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
+  const budgetPerWeekSummary =
+    perWeekHrs[0] === perWeekHrs[1] ? `${perWeekHrs[0]} hrs / week` : `${perWeekHrs[0]} - ${perWeekHrs[1]} hrs / week`;
+
+  const minWeekValue = perDayHrs[0] * numberOfDays;
+  const maxWeekValue = perDayHrs[1] * numberOfDays;
+
+  const handleWeekSliderChange = (value: number[]) => {
+    let adjustedValue: number[] = value.slice();
+
+    adjustedValue[0] = Math.max(adjustedValue[0], minWeekValue);
+    adjustedValue[1] = Math.min(adjustedValue[1], maxWeekValue);
+
+    if (adjustedValue[0] > adjustedValue[1]) {
+      [adjustedValue[0], adjustedValue[1]] = [adjustedValue[1], adjustedValue[0]];
+    }
+
+    if (perDayHrs[0] === perDayHrs[1]) {
+      adjustedValue = [minWeekValue, maxWeekValue];
+    }
+
+    adjustedValue = adjustedValue.map((val) => Math.max(minWeekValue, Math.min(val, maxWeekValue)));
+    setPerWeekHrs(adjustedValue);
+  };
+
+  useEffect(() => {
+    handleWeekSliderChange(perWeekHrs);
+  }, [perDayHrs, setPerDayHrs, tags.on]);
 
   return (
     <ZModal
@@ -270,7 +321,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <div>
                 <span>Between</span>
                 <Slider
-                  tooltip={{ prefixCls: "between-tooltip" }}
+                  tooltip={{ prefixCls: isBudgetAccordianOpen ? "between-tooltip-open" : "between-tooltip-close" }}
                   min={0}
                   max={24}
                   marks={{
@@ -279,7 +330,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                     [beforeTime]: `${beforeTime}`,
                   }}
                   range
-                  defaultValue={[afterTime, beforeTime]}
+                  value={[afterTime, beforeTime]}
                   onAfterChange={(val) => {
                     setAfterTime(val[0]);
                     setBeforeTime(val[1]);
@@ -298,7 +349,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   {
                     header: isBudgetAccordianOpen
                       ? "Budget"
-                      : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary} hrs / week`,
+                      : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary}`,
                     body: (
                       <div>
                         <div>
@@ -314,25 +365,25 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                               [beforeTime - afterTime]: `${beforeTime - afterTime}`,
                             }}
                             range
-                            value={perDayHrs}
+                            value={[perDayHrs[0], perDayHrs[1]]}
                             onChange={(val) => handleSliderChange(val, setPerDayHrs)}
                           />
                         </div>
                         <div>
-                          <span>{budgetPerWeekSummary} hrs / week</span>
+                          <span>{budgetPerWeekSummary}</span>
                           <Slider
                             tooltip={{ prefixCls: "per-week-tooltip" }}
-                            min={0}
-                            max={(beforeTime - afterTime) * numberOfDays}
+                            min={minWeekValue}
+                            max={maxWeekValue}
                             marks={{
-                              0: "0",
+                              [minWeekValue]: `${minWeekValue}`,
                               [perWeekHrs[0]]: `${perWeekHrs[0]}`,
                               [perWeekHrs[1]]: `${perWeekHrs[1]}`,
-                              [(beforeTime - afterTime) * numberOfDays]: `${(beforeTime - afterTime) * numberOfDays}`,
+                              [maxWeekValue]: `${maxWeekValue}`,
                             }}
                             range
-                            value={perWeekHrs}
-                            onChange={(val) => handleSliderChange(val, setPerWeekHrs)}
+                            value={[perWeekHrs[0], perWeekHrs[1]]}
+                            onChange={(val) => handleWeekSliderChange(val)}
                           />
                         </div>
                       </div>
@@ -365,35 +416,25 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                 ))}
               </div>
               <div className="action-btn-container">
-                <div className="hint-toggle">
-                  <p style={{ marginTop: 6 }}>Hints</p>
-                  <Switch
-                    prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
-                    checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-                  />
-                </div>
+                <HintToggle setHints={setHints} defaultValue={hints} />
                 <button
-                  type="submit"
+                  type="button"
                   className="action-btn"
+                  onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
-                  {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+                  {t(`${action} Budget`)}
                 </button>
               </div>
             </>
           ) : (
             <div>
               <div className="action-btn-container">
-                <div className="hint-toggle">
-                  <p style={{ marginTop: 6 }}>Hints</p>
-                  <Switch
-                    prefixCls={`ant-switch${darkModeStatus ? "-dark" : ""}`}
-                    checkedChildren={<img src={TickIcon} alt="Tick icon" />}
-                  />
-                </div>
+                <HintToggle setHints={setHints} defaultValue={hints} />
                 <button
-                  type="submit"
+                  type="button"
                   className="action-btn"
+                  onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
                   {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}

@@ -116,29 +116,9 @@ export const fixDateVlauesInGoalObject = (goal: GoalItem) => ({
 
 export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
   const goal = { ...newGoal, participants: [] };
-  if (!goal.start) {
-    goal.start = parentGoal.start;
-  }
+
   if (!goal.due) {
     goal.due = parentGoal.due;
-  }
-  if (!(goal.beforeTime || goal.beforeTime === 0)) {
-    goal.beforeTime = parentGoal.beforeTime;
-  }
-  if (!(goal.afterTime || goal.afterTime === 0)) {
-    goal.afterTime = parentGoal.afterTime;
-  }
-  if (!goal.on) {
-    goal.on = parentGoal.on;
-  }
-  if (!goal.habit) {
-    goal.habit = parentGoal.habit;
-  }
-  if (!goal.timeBudget) {
-    goal.timeBudget = parentGoal.timeBudget;
-  }
-  if (!goal.on) {
-    goal.on = parentGoal.on;
   }
 
   goal.rootGoalId = parentGoal.rootGoalId;

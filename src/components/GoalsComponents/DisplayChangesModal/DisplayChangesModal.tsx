@@ -15,6 +15,7 @@ import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@
 import { deleteGoalChangesInID, getInboxItem, removeGoalInbox, removePPTFromInboxOfGoal } from "@src/api/InboxAPI";
 import { findGoalTagChanges, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import { acceptSelectedSubgoals, acceptSelectedTags } from "@src/helpers/InboxProcessor";
+import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
@@ -82,7 +83,7 @@ const DisplayChangesModal = () => {
           borderRadius: 8,
         }}
       >
-        {newGoals.map(({ goal, intent }) => (
+        {newGoals.map(({ goal }) => (
           <div
             key={`${goal.id}-subgoal`}
             style={{
@@ -163,6 +164,8 @@ const DisplayChangesModal = () => {
       await removeGoalWithChildrens(activeGoal);
     } else if (currentDisplay === "archived") {
       await archiveUserGoal(activeGoal);
+    } else if (currentDisplay === "restored") {
+      await restoreUserGoal(activeGoal);
     }
     setCurrentDisplay("none");
   };
@@ -185,20 +188,28 @@ const DisplayChangesModal = () => {
         const currPPT = participants[activePPT].relId;
         setActivePPT(0);
         setParticipants([...participants.filter((ele) => ele.relId !== currPPT)]);
+      } else if (typeAtPriority === "restored") {
+        const goalToBeRestored = await getDeletedGoal(parentId);
+        console.log("🚀 ~ getChanges ~ goalToBeRestored:", goalToBeRestored);
+        if (goalToBeRestored) {
+          delete goalToBeRestored.deletedAt;
+          setActiveGoal(goalToBeRestored);
+        }
+      } else {
+        const changedGoal = await getGoal(parentId);
+        if (changedGoal) {
+          setActiveGoal({ ...changedGoal });
+          if (typeAtPriority === "subgoals") {
+            setNewGoals(goals || []);
+          } else if (typeAtPriority === "modifiedGoals") {
+            setUpdatesIntent(goals[0].intent);
+            const incGoal: GoalItem = { ...goals[0].goal };
+            setUpdateList({ ...findGoalTagChanges(changedGoal, incGoal) });
+          }
+        }
       }
-      const changedGoal = await getGoal(parentId);
-      if (changedGoal) {
-        setActiveGoal({ ...changedGoal });
-        if (typeAtPriority === "subgoals") {
-          setNewGoals(goals || []);
-        } else if (typeAtPriority === "modifiedGoals") {
-          setUpdatesIntent(goals[0].intent);
-          const incGoal: GoalItem = { ...goals[0].goal };
-          setUpdateList({ ...findGoalTagChanges(changedGoal, incGoal) });
-        }
-        if (currentDisplay !== typeAtPriority) {
-          setCurrentDisplay(typeAtPriority);
-        }
+      if (currentDisplay !== typeAtPriority) {
+        setCurrentDisplay(typeAtPriority);
       }
     }
   };
@@ -273,9 +284,10 @@ const DisplayChangesModal = () => {
               />
             </p>
           )}
-          {(currentDisplay === "archived" || currentDisplay === "deleted") && <div />}
+          {["deleted", "archived", "restored"].includes(currentDisplay) && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
           {currentDisplay === "subgoals" && getSubgoalsList()}
+
           <div style={{ display: "flex", gap: 18, justifyContent: "flex-end" }}>
             {activeGoal && (
               <>

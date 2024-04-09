@@ -5,7 +5,7 @@ export const getDarkModeValue = () => {
   if (mode && (mode === "on" || mode === "off")) {
     return mode;
   }
-  return "off";
+  return "on";
 };
 export const darkModeState = atom({
   key: "darkModeState",

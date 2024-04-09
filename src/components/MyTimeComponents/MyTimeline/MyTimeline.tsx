@@ -14,10 +14,9 @@ import { ITask } from "@src/Interfaces/Task";
 import { getGoal } from "@src/api/GoalsAPI";
 import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayReschedule } from "@src/store/TaskState";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import { useTranslation } from "react-i18next";
-import { darkModeState, displayToast, lastAction, openDevMode, focusTaskTitle } from "@src/store";
+import { darkModeState, displayToast, lastAction, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
@@ -51,10 +50,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const forgetSound = new Audio(forgetTune);
 
   const { state: locationState } = useLocation();
-  const devMode = useRecoilValue(openDevMode);
+  const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
-  const setOpenReschedule = useSetRecoilState(displayReschedule);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
 
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
@@ -123,6 +121,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         //   setOpenReschedule({ ...task });
         // }
       } else if (actionName === "Done") {
+        const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
+        if (markDone) return null;
         await completeTask(taskItem.id, Number(task.duration), task.taskid);
       } else if (actionName === "Skip") {
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
@@ -145,6 +145,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
     }
+    return null;
   };
 
   useEffect(() => {
@@ -188,7 +189,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     className="MTL-taskTitle"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setDisplayOptionsIndex(task.taskid);
+                      setDisplayOptionsIndex(displayOptionsIndex !== task.taskid ? task.taskid : "");
                       if (displayOptionsIndex === task.taskid || markDone) {
                         setDisplayOptionsIndex("");
                       }
@@ -210,7 +211,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   </button>
                 )}
               </div>
-              {!markDone && showTaskOptions ? <TaskOptions task={task} handleActionClick={handleActionClick} /> : null}
+              {showTaskOptions ? <TaskOptions task={task} handleActionClick={handleActionClick} /> : null}
             </div>
           </button>
         );

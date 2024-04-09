@@ -1,3 +1,20 @@
+export async function createGetHintsRequest(body: object, method = "POST") {
+  const url = "https://ryah5agkswabywebsdqk7ar4om0wjdrn.lambda-url.eu-west-1.on.aws/";
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const jsonRes = await res.json();
+    return { success: res.ok, response: jsonRes };
+  } catch (err) {
+    return { success: false, response: "Let's focus on happy path" };
+  }
+}
+
 export const shareGoal = async (goal: object) => {
   const URL = "https://ryah5agkswabywebsdqk7ar4om0wjdrn.lambda-url.eu-west-1.on.aws/";
   try {
