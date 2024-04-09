@@ -12,7 +12,6 @@ import { handleIncomingChanges } from "@src/helpers/InboxProcessor";
 import { getContactSharedGoals, shareGoalWithContact } from "@src/services/contact.service";
 import { updateAllUnacceptedContacts, getContactByRelId, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
-import { getAllImpossibleGoals } from "@src/api/ImpossibleGoalsApi";
 import { displayImpossibleGoal } from "@src/store/ImpossibleGoalState";
 
 const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
@@ -155,12 +154,6 @@ function useApp() {
     checkUpdates();
     checkDevMode();
     createDefaultGoals();
-  }, []);
-
-  useEffect(() => {
-    getAllImpossibleGoals().then((goals) => {
-      setImpossibleGoals(goals);
-    });
   }, []);
 
   useEffect(() => {

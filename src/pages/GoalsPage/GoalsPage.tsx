@@ -1,4 +1,4 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import React, { useEffect, useState } from "react";
 
 import { getAllContacts } from "@src/api/ContactsAPI";
@@ -10,6 +10,8 @@ import ContactItem from "@src/models/ContactItem";
 import Participants from "@components/GoalsComponents/Participants";
 import ParticipantsNavbar from "@components/ParticipantsNavbar";
 import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
+import { getAllImpossibleGoals } from "@src/api/ImpossibleGoalsApi";
+import { displayImpossibleGoal } from "@src/store/ImpossibleGoalState";
 
 import { MyGoals } from "./MyGoals";
 import PartnerGoals from "./PartnerGoals";
@@ -20,6 +22,7 @@ const GoalsPage = () => {
   const { state } = useLocation();
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const showParticipants = useRecoilValue(displayParticipants);
+  const setImpossibleGoals = useSetRecoilState(displayImpossibleGoal);
 
   const activePartner = useRecoilValue(displayPartner);
   const [partnersList, setPartnersList] = useState<ContactItem[]>([]);
@@ -35,6 +38,12 @@ const GoalsPage = () => {
     };
     switchMode();
   }, [showPartnerMode]);
+
+  useEffect(() => {
+    getAllImpossibleGoals().then((goals) => {
+      setImpossibleGoals(goals);
+    });
+  }, []);
 
   return (
     <>
