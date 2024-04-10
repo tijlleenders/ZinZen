@@ -34,18 +34,24 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
   const [dragging, setDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState<GoalItem | null>(null);
   const impossibleGoals = useRecoilValue(displayImpossibleGoal);
-  const updatedGoals = goals.map((goal) => {
-    if (impossibleGoals.some((impossibleGoal) => impossibleGoal.goalId === goal.id)) {
-      return {
-        ...goal,
-        impossible: true,
-      };
-    }
+
+  const addImpossibleProp = (goal: GoalItem): GoalWithImpossible => {
+    const isImpossibleGoal = impossibleGoals.some((impossibleGoal) => {
+      return goal.id === impossibleGoal.goalId;
+    });
+
+    const isImpossibleSublistGoal =
+      !isImpossibleGoal &&
+      goal.sublist.some((sublistGoal) =>
+        impossibleGoals.some((impossibleSublistGoal) => impossibleSublistGoal.goalId === sublistGoal),
+      );
     return {
       ...goal,
-      impossible: false,
+      impossible: isImpossibleGoal || isImpossibleSublistGoal,
     };
-  });
+  };
+
+  const updatedGoals = goals.map(addImpossibleProp);
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     setDragging(true);
