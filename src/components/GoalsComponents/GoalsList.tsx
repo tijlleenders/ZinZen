@@ -4,7 +4,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import React, { useState } from "react";
 import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
-import { displayImpossibleGoal } from "@src/store/ImpossibleGoalState";
+import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal/MyGoal";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
@@ -33,7 +33,7 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
   const showGoalActions = useRecoilValue(displayGoalActions);
   const [dragging, setDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState<GoalItem | null>(null);
-  const impossibleGoals = useRecoilValue(displayImpossibleGoal);
+  const impossibleGoals = useRecoilValue(impossibleGoalsList);
 
   const addImpossibleProp = (goal: GoalItem): GoalWithImpossible => {
     const isImpossibleGoal = impossibleGoals.some((impossibleGoal) => {

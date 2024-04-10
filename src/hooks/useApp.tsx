@@ -12,7 +12,7 @@ import { handleIncomingChanges } from "@src/helpers/InboxProcessor";
 import { getContactSharedGoals, shareGoalWithContact } from "@src/services/contact.service";
 import { updateAllUnacceptedContacts, getContactByRelId, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
-import { displayImpossibleGoal } from "@src/store/ImpossibleGoalState";
+import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 
 const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -24,7 +24,7 @@ function useApp() {
   const setLastAction = useSetRecoilState(lastAction);
   const setShowToast = useSetRecoilState(displayToast);
   const [devMode, setDevMode] = useRecoilState(openDevMode);
-  const setImpossibleGoals = useSetRecoilState(displayImpossibleGoal);
+  const setImpossibleGoals = useSetRecoilState(impossibleGoalsList);
 
   const confirmationState = useRecoilValue(displayConfirmation);
 
