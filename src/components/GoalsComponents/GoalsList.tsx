@@ -24,10 +24,6 @@ interface GoalsListProps {
   >;
 }
 
-export interface GoalWithImpossible extends GoalItem {
-  impossible: boolean;
-}
-
 const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListProps) => {
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showGoalActions = useRecoilValue(displayGoalActions);
