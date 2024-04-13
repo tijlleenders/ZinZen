@@ -22,6 +22,7 @@ import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/Tas
 import "./index.scss";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
+import { displayReschedule } from "@src/store/TaskState";
 
 interface MyTimelineProps {
   day: string;
@@ -51,6 +52,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
+  const setOpenReschedule = useSetRecoilState(displayReschedule);
 
   const [showScheduled, setShowScheduled] = useState(true);
 
@@ -118,11 +120,11 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           lastForget: actionName === "Skip" ? new Date().toLocaleDateString() : "",
           lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
           hoursSpent: 0,
-          blockedSlots: [], // actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : [],
+          blockedSlots: actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : [],
         });
-        // if (actionName === "Reschedule") {
-        //   setOpenReschedule({ ...task });
-        // }
+        if (actionName === "Reschedule") {
+          setOpenReschedule({ ...task });
+        }
       } else if (actionName === "Done") {
         const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
         if (markDone) return null;
@@ -130,7 +132,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Skip") {
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
       } else if (actionName === "Reschedule") {
-        // setOpenReschedule({ ...task });
+        setOpenReschedule({ ...task });
       }
       if (actionName === "Done") {
         await doneSound.play();

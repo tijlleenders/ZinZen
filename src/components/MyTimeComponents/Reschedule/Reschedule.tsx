@@ -89,7 +89,7 @@ const Reschedule = () => {
 
   // console.log(schedulerOutput, selectedDate.toLocaleDateString(), schedulerOutput[selectedDate.toLocaleDateString()]);
   return task ? (
-    <ZModal type="rescheduleModal" open={!!task} onCancel={() => setOpen(null)}>
+    <ZModal type="rescheduleModal" open={task.taskid} onCancel={() => setOpen({})}>
       <div className="header-title">
         <h4>{task.title}</h4>
       </div>

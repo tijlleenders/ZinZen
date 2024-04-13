@@ -3,5 +3,5 @@ import { atom } from "recoil";
 
 export const displayReschedule = atom({
   key: "displayReschedule",
-  default: null as ITask | null,
+  default: {} as ITask,
 });
