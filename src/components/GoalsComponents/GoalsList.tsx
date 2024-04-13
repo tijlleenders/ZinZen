@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
+import { ImpossibleGoal } from "@src/Interfaces";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal/MyGoal";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
@@ -31,7 +32,7 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
   const [draggedItem, setDraggedItem] = useState<GoalItem | null>(null);
   const impossibleGoals = useRecoilValue(impossibleGoalsList);
 
-  const addImpossibleProp = (goal: GoalItem): GoalWithImpossible => {
+  const addImpossibleProp = (goal: GoalItem): ImpossibleGoal => {
     const isImpossibleGoal = impossibleGoals.some((impossibleGoal) => {
       return goal.id === impossibleGoal.goalId;
     });
@@ -75,7 +76,7 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
       {showGoalActions && showGoalActions.actionType === "regular" && (
         <RegularGoalActions open goal={showGoalActions.goal} />
       )}
-      {updatedGoals.map((goal: GoalWithImpossible, index: number) => (
+      {updatedGoals.map((goal: ImpossibleGoal, index: number) => (
         <React.Fragment key={goal.id}>
           {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
           <DragAndDrop

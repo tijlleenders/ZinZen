@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
-import { GoalWithImpossible, ILocationState } from "@src/Interfaces";
+import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
@@ -13,7 +13,7 @@ import GoalTitle from "./GoalTitle";
 
 interface MyGoalProps {
   actionType: TAction;
-  goal: GoalWithImpossible;
+  goal: ImpossibleGoal;
   showActions: {
     open: string;
     click: number;

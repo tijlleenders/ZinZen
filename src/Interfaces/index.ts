@@ -32,6 +32,6 @@ export interface ILocationState {
   allowAddingBudgetGoal?: boolean; // whether to allow adding a budget goal
 }
 
-export interface GoalWithImpossible extends GoalItem {
+export interface ImpossibleGoal extends GoalItem {
   impossible: boolean;
 }
