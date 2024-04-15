@@ -11,8 +11,9 @@ import {
   getParticipantsOfGoals,
   getHintsFromAPI,
 } from "@src/api/GoalsAPI";
-import { saveHint, updateHint } from "@src/api/HintsAPI";
+import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
+import { IGoalHint } from "@src/models/HintItem";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
@@ -36,11 +37,7 @@ export const createGoal = async (
     goalColor,
   });
 
-  if (goalHint) {
-    await getHintsFromAPI(newGoal);
-  }
-
-  await saveHint(goalTags.id, goalHint);
+  if (goalHint) await addHintItem(goalTags.id, goalHint, (await getHintsFromAPI(newGoal)) || []);
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
@@ -74,8 +71,9 @@ export const modifyGoal = async (
   ancestors: string[],
   goalHint: boolean,
 ) => {
+  let goalHints: IGoalHint[] = [];
   if (goalHint) {
-    const res = await getHintsFromAPI({
+    goalHints = await getHintsFromAPI({
       ...goalTags,
       title: goalTitle
         .split(" ")
@@ -83,7 +81,6 @@ export const modifyGoal = async (
         .join(" "),
       goalColor,
     });
-    console.log(res);
   }
   await updateGoal(goalId, {
     ...goalTags,
@@ -93,8 +90,9 @@ export const modifyGoal = async (
       .join(" "),
     goalColor,
   });
+
   const sendUpdatedGoalPromise = sendUpdatedGoal(goalId, ancestors);
-  const updateHintPromise = updateHint(goalTags.id, goalHint);
+  const updateHintPromise = updateHintItem(goalTags.id, goalHint, goalHints);
   Promise.allSettled([sendUpdatedGoalPromise, updateHintPromise]).catch((err) => console.log(err));
 };
 

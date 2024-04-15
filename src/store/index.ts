@@ -13,6 +13,9 @@ const defaultConfirmationObj: confirmActionState = {
     shareAnonymously: true,
     shareWithOne: true,
     restore: true,
+    addHint: true,
+    deleteHint: true,
+    reportHint: true,
   },
   collaboration: {
     colabRequest: true,

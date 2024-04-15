@@ -16,6 +16,7 @@ import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { displayPartnerMode, lastAction } from "@src/store";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { getGoalHintItem } from "@src/api/HintsAPI";
 
 import GoalsList from "../GoalsList";
 import ConfigGoal from "../GoalConfigModal/ConfigGoal";
@@ -38,6 +39,19 @@ export const GoalSublist = () => {
   const [deletedGoals, setDeletedGoals] = useState<GoalItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
   const [showActions, setShowActions] = useState({ open: "root", click: 1 });
+  const [goalhints, setGoalHints] = useState<GoalItem[]>([]);
+
+  useEffect(() => {
+    getGoalHintItem(goalID).then((hintItem) => {
+      const array: GoalItem[] = [];
+      hintItem?.goalHints?.forEach((hint) => {
+        if (hint) {
+          array.push(createGoalObjectFromTags({ ...hint, parentGoalId: goalID }));
+        }
+      });
+      setGoalHints(array || []);
+    });
+  }, [goalID, action]);
 
   const handleChildrenGoals = (goals: GoalItem[]) => {
     setChildrenGoals([...goals.filter((goal) => goal.archived === "false")]);
@@ -76,6 +90,12 @@ export const GoalSublist = () => {
               goals={childrenGoals}
               showActions={showActions}
               setGoals={setChildrenGoals}
+              setShowActions={setShowActions}
+            />
+            <GoalsAccordion
+              header="Hints"
+              goals={goalhints}
+              showActions={showActions}
               setShowActions={setShowActions}
             />
             <GoalsAccordion

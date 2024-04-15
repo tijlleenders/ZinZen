@@ -57,7 +57,7 @@ export class ZinZenDB extends Dexie {
         partnersCollection: null,
         goalTrashCollection:
           "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-        hintsCollection: "id, hint",
+        hintsCollection: "id, hint, goalHints",
       })
       .upgrade((trans) => {
         console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
@@ -132,6 +132,33 @@ export class ZinZenDB extends Dexie {
           const contactsCollection = trans.table("contactsCollection");
           contactsCollection.toCollection().modify((contact) => {
             contact.goalsToBeShared = [];
+          });
+        }
+        if (currentVersion < 19) {
+          console.log("processing updates for 19th version");
+          trans
+            .table("sharedWMCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+          trans
+            .table("goalsCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+          trans
+            .table("goalTrashCollection")
+            .toCollection()
+            .modify((goal: GoalItem) => {
+              goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
+            });
+        }
+        if (currentVersion < 18) {
+          const hintsCollection = trans.table("hintsCollection");
+          hintsCollection.toCollection().modify((hint) => {
+            hint.goalHints = [];
           });
         }
         if (currentVersion < 19) {
