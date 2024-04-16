@@ -29,7 +29,7 @@ export default defineConfig({
       filename: "service-worker.ts",
       manifest: {
         short_name: "ZinZen",
-        name: "ZinZen: Deliver purpose",
+        name: "ZinZen-me.ZinZen",
         icons: [
           {
             src: "pwa-192x192.png",
@@ -59,7 +59,7 @@ export default defineConfig({
           },
         ],
         theme_color: "#3367D6",
-        description: "ZinZen for purpose",
+        description: "A smart planner",
       },
       injectManifest: {
         globDirectory: "./dist",
