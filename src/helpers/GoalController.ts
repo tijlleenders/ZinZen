@@ -13,7 +13,6 @@ import {
 } from "@src/api/GoalsAPI";
 import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
-import { IGoalHint } from "@src/models/HintItem";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
