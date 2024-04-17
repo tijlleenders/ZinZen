@@ -37,7 +37,11 @@ export const createGoal = async (
     goalColor,
   });
 
-  if (goalHint) await addHintItem(goalTags.id, goalHint, (await getHintsFromAPI(newGoal)) || []);
+  if (goalHint) {
+    getHintsFromAPI(newGoal)
+      .then((hints) => addHintItem(goalTags.id, goalHint, hints || []))
+      .catch((error) => console.error("Error fetching hints:", error));
+  }
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
@@ -71,17 +75,22 @@ export const modifyGoal = async (
   ancestors: string[],
   goalHint: boolean,
 ) => {
-  let goalHints: IGoalHint[] = [];
+  const hintsPromise = getHintsFromAPI({
+    ...goalTags,
+    title: goalTitle
+      .split(" ")
+      .filter((ele: string) => ele !== "")
+      .join(" "),
+    goalColor,
+  });
   if (goalHint) {
-    goalHints = await getHintsFromAPI({
-      ...goalTags,
-      title: goalTitle
-        .split(" ")
-        .filter((ele: string) => ele !== "")
-        .join(" "),
-      goalColor,
-    });
+    hintsPromise
+      .then((hints) => updateHintItem(goalTags.id, goalHint, hints))
+      .catch((err) => console.error("Error updating hints:", err));
+  } else {
+    updateHintItem(goalTags.id, goalHint, []);
   }
+
   await updateGoal(goalId, {
     ...goalTags,
     title: goalTitle
@@ -90,10 +99,7 @@ export const modifyGoal = async (
       .join(" "),
     goalColor,
   });
-
-  const sendUpdatedGoalPromise = sendUpdatedGoal(goalId, ancestors);
-  const updateHintPromise = updateHintItem(goalTags.id, goalHint, goalHints);
-  Promise.allSettled([sendUpdatedGoalPromise, updateHintPromise]).catch((err) => console.log(err));
+  sendUpdatedGoal(goalId, ancestors);
 };
 
 export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {
