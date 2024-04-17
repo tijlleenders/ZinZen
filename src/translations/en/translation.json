@@ -115,6 +115,9 @@
   "shareGoal": "Share goal",
   "chooseContact": "Choose contact",
   "collaborateOnGoal": "Collaborate on goal",
+  "addHint": "Add hint",
+  "deleteHint": "Delete hint",
+  "reportHint": "Report hint",
   "confirm": "Confirm",
   "cancel": "Cancel",
   "duration": "Duration",
@@ -142,6 +145,18 @@
     "shareWithOne": {
       "header": "Do you want to share this goal with one of your contacts?",
       "note": "Every change you make on/under this goal will be shared with that person."
+    },
+    "addHint": {
+      "header": "Do you want to add a hint to this goal?",
+      "note": "A hint will be added to the goal. You can edit or delete it anytime."
+    },
+    "deleteHint": {
+      "header": "Do you want to delete this hint?",
+      "note": "You won't be able to recover it again."
+    },
+    "reportHint": {
+      "header": "Do you want to report this hint?",
+      "note": "You will be notified when it's reported."
     }
   },
   "collaboration": {

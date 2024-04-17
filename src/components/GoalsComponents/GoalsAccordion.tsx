@@ -8,9 +8,10 @@ import { TAction, displayGoalActions } from "@src/store/GoalsState";
 
 import MyGoal from "./MyGoal/MyGoal";
 import AccordionActions from "./MyGoalActions/AccordionActions";
+import HintsAccordionActions from "./MyGoalActions/HintsAccordianAction";
 
 interface IGoalsAccordionProps {
-  header: "Done" | "Trash";
+  header: "Done" | "Trash" | "Hints";
   goals: GoalItem[];
   showActions: {
     open: string;
@@ -29,6 +30,7 @@ const actionsMap: {
 } = {
   Done: "archived",
   Trash: "deleted",
+  Hints: "hints",
 };
 
 const GoalsAccordion: React.FC<IGoalsAccordionProps> = ({ header, goals, showActions, setShowActions }) => {
@@ -40,6 +42,9 @@ const GoalsAccordion: React.FC<IGoalsAccordionProps> = ({ header, goals, showAct
     <div className="archived-drawer">
       {showGoalActions && ["archived", "deleted"].includes(showGoalActions.actionType) && (
         <AccordionActions open goal={showGoalActions.goal} actionType={actionType} />
+      )}
+      {showGoalActions && ["hints"].includes(showGoalActions.actionType) && (
+        <HintsAccordionActions open goal={showGoalActions.goal} />
       )}
       {goals.length > 0 && (
         <ZAccordion

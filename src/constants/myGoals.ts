@@ -49,6 +49,15 @@ export const getConfirmButtonText = (actionName: string) => {
     case "colabRequest":
       confirmButtonText = "collaborateOnGoal";
       break;
+    case "addHint":
+      confirmButtonText = "addHint";
+      break;
+    case "deleteHint":
+      confirmButtonText = "deleteHint";
+      break;
+    case "reportHint":
+      confirmButtonText = "reportHint";
+      break;
     default:
   }
   return confirmButtonText;

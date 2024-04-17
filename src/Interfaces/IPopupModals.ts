@@ -6,6 +6,9 @@ export interface confirmActionState {
     shareAnonymously: boolean;
     shareWithOne: boolean;
     restore: boolean;
+    addHint: boolean;
+    deleteHint: boolean;
+    reportHint: boolean;
   };
   collaboration: {
     colabRequest: boolean;
@@ -25,8 +28,13 @@ export interface confirmColabGoalAction {
   actionName: "colabRequest" | "delete" | "archive" | "restore";
 }
 
+export interface confirmHintAction {
+  actionCategory: "goal";
+  actionName: "addHint" | "deleteHint" | "reportHint";
+}
+
 export interface ConfirmationModalProps {
-  action: confirmGoalAction | confirmColabGoalAction;
+  action: confirmGoalAction | confirmColabGoalAction | confirmHintAction;
   handleClick: (action: string) => Promise<void>;
 }
 
@@ -38,4 +46,4 @@ export interface ICustomInputProps {
 }
 
 export type confirmCategory = "goal" | "collaboration";
-export type confirmAction = confirmGoalAction | confirmColabGoalAction;
+export type confirmAction = confirmGoalAction | confirmColabGoalAction | confirmHintAction;

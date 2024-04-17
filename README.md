@@ -14,6 +14,7 @@ Explain ZinZen like I'm:
 - a developer: "ZinZen is git - but for personal goals instead of code - and with a UI that anyone understands."
 - a busy person: "ZinZen helps you plan like a pro - with the ease of a messaging app."
 - five: "ZinZen tells the world about your dreams - and then people come and help you."
+- an Operating System (OS) / kernel developer: "ZinZen is an OS for humanity."
 - a project manager: "ZinZen is a global multi-project management platform for individuals."
 - a philantropist: "ZinZen is a catalyst for individual and collective agency."
 - an investor: "ZinZen will never be for sale - but we offer decent ROI on loans."
