@@ -1,26 +1,3 @@
-.timeline-view,
-.timeline-view-dark {
-  display: flex;
-  background: var(--bottom-nav-color);
-  padding: 10px 20px;
-
-  button {
-    border: none;
-    width: 50%;
-    padding: 12px 18px;
-    color: var(--icon-grad-2) !important;
-    background: transparent;
-  }
-
-  .activeView {
-    box-shadow: none;
-    font-weight: 600;
-    background: var(--selection-color);
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 6px;
-  }
-}
-
 .MTL-display {
   display: flex;
   flex-direction: column;
@@ -57,7 +34,7 @@
   }
 }
 
-.MTL-display>button {
+.MTL-display > button {
   line-height: 22px;
   padding: 0.7em 0;
   line-height: 22px;
@@ -66,11 +43,11 @@
   border: none;
 }
 
-.MTL-display>button:first-child {
+.MTL-display > button:first-child {
   padding-top: 1.4em;
 }
 
-.MTL-display>button:last-child {
+.MTL-display > button:last-child {
   border: none;
   margin-bottom: 0 !important;
 }
@@ -109,7 +86,7 @@
   margin-top: 0.7em;
 }
 
-.MTL-options>button {
+.MTL-options > button {
   background: transparent;
   border: 0px;
   font-weight: 400;
@@ -119,7 +96,7 @@
   cursor: pointer;
 }
 
-.MTL-options>.last-btn {
+.MTL-options > .last-btn {
   border-right: none;
 }
 
@@ -128,7 +105,7 @@
     padding: 0.1em;
   }
 
-  .MTL-options>button {
+  .MTL-options > button {
     padding: 0.3em 1em;
     font-size: 0.7rem;
   }

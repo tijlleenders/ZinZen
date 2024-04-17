@@ -5,9 +5,10 @@ import { GoalItem } from "@src/models/GoalItem";
 
 interface GoalTitleProps {
   goal: GoalItem;
+  isImpossible: boolean;
 }
 
-const GoalTitle: React.FC<GoalTitleProps> = ({ goal }) => {
+const GoalTitle: React.FC<GoalTitleProps> = ({ goal, isImpossible }) => {
   const { t } = useTranslation();
   const { id, title, link } = goal;
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
@@ -17,6 +18,7 @@ const GoalTitle: React.FC<GoalTitleProps> = ({ goal }) => {
 
   return (
     <div className="goal-title">
+      {isImpossible && "! "}
       {textParts.map((textPart, index) => {
         const replacedUrls = Array.from(textPart.matchAll(/zURL-(\d+)/g));
         if (replacedUrls.length) {

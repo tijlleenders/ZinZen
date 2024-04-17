@@ -21,9 +21,16 @@ export interface IScheduleOfTheDay {
   tasks: IFinalOutputSlot[];
 }
 
+export interface IImpossibleTaskOfTheDay {
+  id: string;
+  hoursMissing: number;
+  periodStartDateTime: string;
+  periodEndDateTime: string;
+}
+
 export interface ISchedulerOutput {
   scheduled: IScheduleOfTheDay[];
-  impossible: IScheduleOfTheDay[];
+  impossible: IImpossibleTaskOfTheDay[];
 }
 
 export interface ISchedulerInputGoal {

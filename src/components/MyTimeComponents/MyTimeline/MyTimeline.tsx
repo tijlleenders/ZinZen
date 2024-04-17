@@ -2,9 +2,9 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
 import { v4 as uuidv4 } from "uuid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 import archiveTune from "@assets/archive.mp3";
 import forgetTune from "@assets/forget.mp3";
@@ -16,12 +16,15 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import { useTranslation } from "react-i18next";
-import { darkModeState, displayToast, lastAction, focusTaskTitle } from "@src/store";
+import { displayToast, lastAction, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
+import { updateImpossibleGoals } from "./updateImpossibleGoals";
+
+type ImpossibleTaskId = string;
 
 interface MyTimelineProps {
   day: string;
@@ -33,7 +36,7 @@ interface MyTimelineProps {
   >;
   myTasks: {
     scheduled: ITask[];
-    impossible: ITask[];
+    impossible: ImpossibleTaskId[];
     freeHrsOfDay: number;
     scheduledHrs: number;
   };
@@ -47,18 +50,11 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const forgetSound = new Audio(forgetTune);
 
   const { state: locationState } = useLocation();
-  const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
 
-  const [showScheduled, setShowScheduled] = useState(true);
-
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
-
-  const handleView = () => {
-    setShowScheduled(!showScheduled);
-  };
 
   const handleOpenGoal = async (goalId: string) => {
     const goalsHistory = [];
@@ -151,65 +147,74 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     return null;
   };
 
-  return (
-    <>
-      {myTasks.impossible.length > 0 && (
-        <div className={`timeline-view${darkModeStatus ? "-dark" : ""}`}>
-          <button type="button" className={`${showScheduled && "activeView"}`} onClick={handleView}>
-            Scheduled
-          </button>
-          <button type="button" className={`${!showScheduled && "activeView"}`} onClick={handleView}>
-            Impossible
-          </button>
-        </div>
-      )}
-      <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
-        {myTasks[showScheduled ? "scheduled" : "impossible"].map((task) => {
-          const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
-          const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
-          const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
-          const showTaskOptions = displayOptionsIndex === task.taskid;
-          return (
-            <button
-              className={`${day === "Today" && markDone ? "completedTask" : ""}`}
-              type="button"
-              style={
-                displayOptionsIndex !== task.taskid
-                  ? { cursor: "pointer", display: "flex", flexDirection: "row" }
-                  : { display: "flex", flexDirection: "row" }
-              }
-              onClick={() => {
-                setDisplayOptionsIndex(displayOptionsIndex !== task.taskid ? task.taskid : "");
-              }}
-            >
-              <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
-              <GoalTiming startTime={startTime} endTime={endTime} showTaskOptions={showTaskOptions} />
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", position: "relative" }}>
-                  <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
-                    <div style={{ textDecorationColor: task.goalColor }} className="MTL-taskTitle">
-                      {t(`${task.title}`)}
-                    </div>
-                  </div>
+  useEffect(() => {
+    updateImpossibleGoals(myTasks.impossible);
+  }, []);
 
-                  {showTaskOptions && (
-                    <button
-                      type="button"
-                      onClick={() => setDisplayOptionsIndex("")}
-                      className="MyTime-expand-btw task-dropdown"
-                    >
-                      <div>
-                        <img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" />
-                      </div>
-                    </button>
-                  )}
+  return (
+    <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
+      {myTasks.scheduled.map((task) => {
+        const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
+        const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
+        const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
+        const showTaskOptions = displayOptionsIndex === task.taskid;
+        return (
+          <button
+            className={`${day === "Today" && markDone ? "completedTask" : ""}`}
+            type="button"
+            style={
+              displayOptionsIndex !== task.taskid
+                ? { cursor: "pointer", display: "flex", flexDirection: "row" }
+                : { display: "flex", flexDirection: "row" }
+            }
+            onClick={() => {
+              if (displayOptionsIndex !== task.taskid) {
+                if (markDone) {
+                  handleOpenGoal(task.goalid);
+                } else {
+                  setDisplayOptionsIndex(task.taskid);
+                }
+              } else setDisplayOptionsIndex("");
+            }}
+          >
+            <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
+            <GoalTiming startTime={startTime} endTime={endTime} showTaskOptions={showTaskOptions} />
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", position: "relative" }}>
+                <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
+                  <button
+                    style={{ textDecorationColor: task.goalColor }}
+                    type="button"
+                    className="MTL-taskTitle"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDisplayOptionsIndex(displayOptionsIndex !== task.taskid ? task.taskid : "");
+                      if (displayOptionsIndex === task.taskid || markDone) {
+                        setDisplayOptionsIndex("");
+                      }
+                    }}
+                  >
+                    {t(`${task.title}`)}
+                  </button>
                 </div>
-                {showTaskOptions ? <TaskOptions task={task} handleActionClick={handleActionClick} /> : null}
+
+                {showTaskOptions && (
+                  <button
+                    type="button"
+                    onClick={() => setDisplayOptionsIndex("")}
+                    className="MyTime-expand-btw task-dropdown"
+                  >
+                    <div>
+                      <img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" />
+                    </div>
+                  </button>
+                )}
               </div>
-            </button>
-          );
-        })}
-      </div>
-    </>
+              {showTaskOptions ? <TaskOptions task={task} handleActionClick={handleActionClick} /> : null}
+            </div>
+          </button>
+        );
+      })}
+    </div>
   );
 };

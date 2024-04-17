@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { GoalItem } from "@src/models/GoalItem";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
-import { ILocationState } from "@src/Interfaces";
+import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
@@ -14,7 +13,7 @@ import GoalTitle from "./GoalTitle";
 
 interface MyGoalProps {
   actionType: TAction;
-  goal: GoalItem;
+  goal: ImpossibleGoal;
   showActions: {
     open: string;
     click: number;
@@ -119,7 +118,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
             <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
           </div>
           <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-            <GoalTitle goal={goal} />
+            <GoalTitle goal={goal} isImpossible={goal.impossible} />
           </div>
         </div>
         {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}

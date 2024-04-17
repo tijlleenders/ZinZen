@@ -17,6 +17,7 @@ import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
 import { displayPartnerMode, lastAction } from "@src/store";
 import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { getGoalHintItem } from "@src/api/HintsAPI";
+import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
 import GoalsList from "../GoalsList";
 import ConfigGoal from "../GoalConfigModal/ConfigGoal";
@@ -53,9 +54,10 @@ export const GoalSublist = () => {
     });
   }, [goalID, action]);
 
-  const handleChildrenGoals = (goals: GoalItem[]) => {
-    setChildrenGoals([...goals.filter((goal) => goal.archived === "false")]);
-    setArchivedChildren([...goals.filter((goal) => goal.archived === "true")]);
+  const handleChildrenGoals = async (goals: GoalItem[]) => {
+    const sortedGoals = await priotizeImpossibleGoals(goals);
+    setChildrenGoals([...sortedGoals.filter((goal) => goal.archived === "false")]);
+    setArchivedChildren([...sortedGoals.filter((goal) => goal.archived === "true")]);
   };
 
   useEffect(() => {
@@ -83,7 +85,7 @@ export const GoalSublist = () => {
       <GoalHistory />
       <div className="sublist-content-container">
         <div className="sublist-content">
-          <p className="sublist-title">{t(parentGoal?.title)}</p>
+          <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
           <div className="sublist-list-container">
             {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
             <GoalsList
