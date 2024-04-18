@@ -1,168 +1,80 @@
-import { Tooltip } from "antd";
+import { Radio, Tooltip } from "antd";
 import { useRecoilState, useRecoilValue } from "recoil";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { darkModeState } from "@src/store";
-import { getMonthByIndex } from "@src/utils";
-import SubHeader from "@src/common/SubHeader";
-import { convertDateToDay } from "@src/utils/SchedulerUtils";
-
 import "./Reschedule.scss";
-import { displayReschedule } from "@src/store/TaskState";
-import { ITask } from "@src/Interfaces/Task";
-import { getFromOutbox } from "@src/api/DumpboxAPI";
-import { IFinalOutputSlot } from "@src/Interfaces/IScheduler";
 import ZModal from "@src/common/ZModal";
-import ScheduledSlots from "./ScheduledSlots";
+import { updateGoal } from "@src/api/GoalsAPI";
+import { TaskItem } from "@src/models/TaskItem";
+import { addBlockedSlot } from "@src/api/TasksAPI";
+import { displayReschedule } from "@src/store/TaskState";
 
 const Reschedule = () => {
   const [task, setOpen] = useRecoilState(displayReschedule);
+  const [selectedOption, setSelectedOption] = useState(null);
+  console.log(task);
   if (!task) {
     return null;
   }
-  let today = new Date();
-  if (today.getHours() + task.duration > 23) {
-    today = new Date(today.setDate(today.getDate() + 1));
-  }
-  const currHr = today.getHours();
-  const currDate = today.getDate();
-  const currMonth = today.getMonth();
-  const lastDate = new Date(2023, today.getMonth() + 1, 0).getDate();
 
-  const [selectedHr, setSelectedHr] = useState(currHr === new Date().getHours() ? 8 : currHr);
-  const [monthIndex, setMonthIndex] = useState(currMonth);
-  const [selectedDay, setSelectedDay] = useState(currDate);
-  const [selectedDate, setSelctedDate] = useState(today);
-  const [endDate, setEndDate] = useState<Date>(today);
-  const [overridenTasks, setOverridenTasks] = useState<IFinalOutputSlot[]>([]);
-  const [schedulerOutput, setSchedulerOutput] = useState<{ [key: string]: IFinalOutputSlot[] }>({});
+  const rescheduleOptions = [
+    { label: "1 hour", value: 1 },
+    { label: "3 hours", value: 3 },
+    { label: "1 day", value: 24 },
+    { label: "3 days", value: 72 },
+    { label: "7 days", value: 168 },
+    { label: "30 days", value: 720 },
+  ];
 
-  const darkModeStatus = useRecoilValue(darkModeState);
+  // Function to update `notOn` field based on selected reschedule option
+  const handleReschedule = (value) => {
+    setSelectedOption(value);
+    const now = new Date(); // Get the current date and time
+    // Convert current time to UTC by subtracting the timezone offset
+    const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
 
-  const getSlots = (start: number, end: number) =>
-    [...Array(end).keys()].slice(start).map((hr) => (
-      <button
-        type="button"
-        key={uuidv4()}
-        onClick={() => setSelectedHr(hr)}
-        className={`slot-card ${hr > selectedHr && hr < task.duration + selectedHr ? "booked" : ""} ${
-          hr === selectedHr ? "selected" : ""
-        }`}
-      >
-        <p style={hr === selectedHr ? { color: !darkModeStatus ? "#CD6E51" : "#9E9E9E" } : {}}>
-          {hr}
-          <sup>00</sup>
-        </p>
-      </button>
-    ));
+    // Zero out UTC minutes, seconds, and milliseconds to align with the start of the hour
+    utcNow.setUTCHours(utcNow.getUTCHours(), 0, 0, 0);
 
-  useEffect(() => {
-    getFromOutbox("scheduler").then((res) => {
-      if (res) {
-        const { scheduled } = JSON.parse(JSON.parse(res.value).output);
-        setEndDate(new Date(scheduled.slice(-1)[0].day));
-        const temp: { [key: string]: IFinalOutputSlot[] } = {};
-        scheduled.forEach((sod: { day: string; tasks: IFinalOutputSlot[] }) => {
-          temp[new Date(sod.day).toLocaleDateString()] = sod.tasks;
-        });
-        setSchedulerOutput({ ...temp });
-      }
+    const futureDate = new Date(utcNow.getTime() + value * 3600000); // Compute the future date in UTC
+
+    // Calculate `notOnStart` and `notOnEnd` to match exact hours in UTC
+    const notOnStart = new Date(utcNow.getTime());
+    const notOnEnd = new Date(futureDate.getTime());
+
+    // Call to add blocked slot in the scheduling system with UTC dates
+    addBlockedSlot(task.goalid, {
+      start: notOnStart.toISOString(), // This will naturally be in UTC
+      end: notOnEnd.toISOString(), // This will naturally be in UTC
     });
-  }, []);
 
-  // useEffect(() => {
-  //   if (task) document.getElementsByClassName("slot-card")[currHr].scrollIntoView({ inline: "center" });
-  // }, [task]);
+    console.log(`Task to avoid scheduling from ${notOnStart.toISOString()} to ${notOnEnd.toISOString()}`);
+    setOpen(null); // Close the modal after setting the notOn field
+  };
 
-  useEffect(() => {
-    const tmp = new Date(today.getFullYear(), monthIndex, selectedDay);
-    if (tmp > endDate) {
-      setOverridenTasks([]);
-    }
-    if (tmp > today) {
-      console.log("sdd");
-      setSelectedHr(8);
-    }
-    setSelctedDate(tmp);
-  }, [selectedDay, monthIndex]);
-
-  // console.log(schedulerOutput, selectedDate.toLocaleDateString(), schedulerOutput[selectedDate.toLocaleDateString()]);
-  return task ? (
-    <ZModal type="rescheduleModal" open={task.taskid} onCancel={() => setOpen({})}>
+  return (
+    <ZModal type="rescheduleModal" open={!!task.taskid} onCancel={() => setOpen(null)}>
       <div className="header-title">
         <h4>{task.title}</h4>
       </div>
-      <SubHeader
-        showLeftNav={monthIndex > today.getMonth()}
-        showRightNav={monthIndex < 11}
-        title={getMonthByIndex(monthIndex)}
-        leftNav={() => setMonthIndex(monthIndex - 1)}
-        rightNav={() => setMonthIndex(monthIndex + 1)}
-      />
-      <hr style={{ marginBottom: "0.5rem" }} />
-      <div className="list">
-        {[...Array(lastDate + 1).keys()].slice(currDate).map((onDate) => (
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedDay(onDate);
-            }}
-            key={uuidv4()}
-            className={`res-card ${onDate === selectedDay ? "selected" : ""}`}
-          >
-            <p style={{ color: "black" }}>{convertDateToDay(new Date(new Date().setDate(onDate))).slice(0, 3)}</p>
-            <p style={onDate === selectedDay ? { color: !darkModeStatus ? "#CD6E51" : "#9E9E9E" } : {}}>{onDate}</p>
-          </button>
-        ))}
-      </div>
-      <hr style={{ margin: "0.5rem 0" }} />
-      <p className="subheader-title" style={{ margin: "1rem 0 0 0" }}>
-        Pick {task.duration} hour{task.duration > 1 ? "s" : ""}
-      </p>
-      <div className="list">
-        {schedulerOutput[selectedDate.toLocaleDateString()] ? (
-          <ScheduledSlots
-            selectedDate={selectedDate}
-            selectedHr={selectedHr}
-            setSelectedHr={setSelectedHr}
-            targetDuration={task.duration}
-            tasks={schedulerOutput[selectedDate.toLocaleDateString()]}
-            setOverridenTasks={setOverridenTasks}
-          />
-        ) : (
-          getSlots(0, 25)
-        )}
-      </div>
-      <div className="list">
-        {overridenTasks.map((psTask: ITask) => (
-          <button
-            type="button"
-            key={uuidv4()}
-            style={{ textDecoration: "line-through" }}
-            className="slot-card task-card" // ${hr === selectedHr ? "selected" : ""}`}
-          >
-            <Tooltip placement="top" title={psTask.title}>
-              {psTask.title.slice(0, 10)}
-            </Tooltip>
-          </button>
-        ))}
+      <div className="list" style={{ display: "flex", flexWrap: "wrap" }}>
+        <Radio.Group defaultValue={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
+          {rescheduleOptions.map((option) => (
+            <Radio.Button key={uuidv4()} value={option.value}>
+              {option.label}
+            </Radio.Button>
+          ))}
+        </Radio.Group>
       </div>
       <div>
-        <button
-          type="button"
-          className="action-btn"
-          onClick={async () => {
-            // const on = new Date(today.getFullYear(), monthIndex, selectedDay, selectedHr, 0, 0);
-            // const end = selectedHr + task.duration;
-            // await rescheduleTaskOnDay(on, task.goalid, selectedHr, end >= 24 ? 0 : end);
-          }}
-        >
+        <button type="button" className="action-btn" onClick={() => handleReschedule(selectedOption)}>
           Reschedule
         </button>
       </div>
     </ZModal>
-  ) : null;
+  );
 };
 
 export default Reschedule;

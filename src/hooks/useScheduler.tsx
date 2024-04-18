@@ -63,7 +63,7 @@ function useScheduler() {
       res = cachedRes.output;
       logIO(JSON.stringify(schedulerInputV1), res);
     } else {
-      await resetProgressOfToday();
+      //await resetProgressOfToday();
       const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
       newGeneratedInputId = generatedInputId;
       await init();

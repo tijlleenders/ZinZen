@@ -120,9 +120,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           hoursSpent: 0,
           blockedSlots: actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : [],
         });
-        if (actionName === "Reschedule") {
-          setOpenReschedule({ ...task });
-        }
+        // if (actionName === "Reschedule") {
+        //   setOpenReschedule({ ...task });
+        // }
       } else if (actionName === "Done") {
         const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
         if (markDone) return null;
@@ -130,7 +130,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Skip") {
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
       } else if (actionName === "Reschedule") {
-        setOpenReschedule({ ...task });
+        setOpenReschedule(task);
       }
       if (actionName === "Done") {
         await doneSound.play();
@@ -144,6 +144,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Skip") {
         await forgetSound.play();
         setLastAction("TaskSkipped");
+      } else if (actionName === "Reschedule") {
+        setOpenReschedule({ ...task });
+        setLastAction("TaskRescheduled");
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });

@@ -167,6 +167,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
     {},
   );
   const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
+  console.log("blockedSlots", blockedSlots);
 
   const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(dbTasks, activeGoals, blockedSlots);
   schedulerInput.goals = inputGoalsArr;
