@@ -116,11 +116,11 @@ export const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
         const updatedDeletedGoalHints = goalHintsItem.deletedGoalHints ? [...goalHintsItem.deletedGoalHints] : [];
 
         if (deletedGoalHint) {
-          const { id, ...deletedHintDetails } = deletedGoalHint;
+          const deletedHintDetails: IGoalHint = { ...deletedGoalHint };
+          delete deletedHintDetails.id;
           updatedDeletedGoalHints.push(deletedHintDetails);
         }
 
-        // Update the item in the database
         await db.hintsCollection.update(parentGoalId, {
           goalHints: updatedGoalHints,
           deletedGoalHints: updatedDeletedGoalHints,
