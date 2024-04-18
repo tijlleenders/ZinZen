@@ -31,3 +31,7 @@ export interface ILocationState {
   displayFocus: boolean; // whether to show the focus component
   allowAddingBudgetGoal?: boolean; // whether to allow adding a budget goal
 }
+
+export interface ImpossibleGoal extends GoalItem {
+  impossible: boolean;
+}

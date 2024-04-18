@@ -28,6 +28,7 @@ import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import { TrashItem } from "@src/models/TrashItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
+import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -60,7 +61,8 @@ export const MyGoals = () => {
   };
   const refreshActiveGoals = async () => {
     const { goals, delGoals } = await getAllGoals();
-    handleUserGoals(goals, delGoals);
+    const sortedGoals = await priotizeImpossibleGoals(goals);
+    handleUserGoals(sortedGoals, delGoals);
   };
   const search = async (text: string) => {
     const { goals, delGoals } = await getAllGoals();

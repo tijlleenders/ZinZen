@@ -5,7 +5,7 @@ import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { deleteHint, getGoalHint } from "../HintsAPI";
+import { deleteGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
 
 export const addDeletedGoal = async (goal: GoalItem) => {
   await db
@@ -45,8 +45,13 @@ export const addGoal = async (goalDetails: GoalItem) => {
 };
 
 export const getGoal = async (goalId: string) => {
-  const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
-  return goal.length > 0 ? goal[0] : null;
+  try {
+    const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
+    return goal.length > 0 ? goal[0] : null;
+  } catch (error) {
+    console.error(`Error fetching goal with ID ${goalId}:`, error);
+    throw new Error(`Failed to fetch goal with ID ${goalId}`);
+  }
 };
 
 export const getChildrenGoals = async (parentGoalId: string) => {
@@ -81,7 +86,7 @@ export const getActiveGoals = async (includeArchived = "false") => {
   return sortedGoals;
 };
 
-export const updateGoal = async (id: string, changes: object) => {
+export const updateGoal = async (id: string, changes: Partial<GoalItem>) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(id, changes).then((updated) => updated);
   }).catch((e) => {
@@ -146,7 +151,7 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
 };
 
 export const removeGoal = async (goal: GoalItem) => {
-  await deleteHint(goal.id);
+  await deleteHintItem(goal.id);
   await Promise.allSettled([
     db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
     addDeletedGoal(goal),
@@ -195,7 +200,7 @@ export const getHintsFromAPI = async (goal: GoalItem) => {
   if (goal.parentGoalId !== "root") {
     const parentGoal = await getGoal(goal.parentGoalId);
     parentGoalTitle = parentGoal?.title || "";
-    parentGoalHint = (await getGoalHint(goal.parentGoalId)) || false;
+    parentGoalHint = (await getGoalHintItem(goal.parentGoalId))?.hint || false;
   }
 
   const { title, duration } = goal;
@@ -211,7 +216,7 @@ export const getHintsFromAPI = async (goal: GoalItem) => {
   }
 
   const res = await createGetHintsRequest(requestBody);
-  return res;
+  return res.response;
 };
 
 export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string) => {
@@ -331,4 +336,16 @@ export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false
 
   console.log(goalsAcc);
   return goalsAcc;
+};
+
+/**
+ * Add a hint goal to the list of goals.
+ *
+ * @param {GoalItem} goal - The goal item to add as a hint goal.
+ * @return {Promise<void>} A promise that resolves when the hint goal is added successfully.
+ */
+export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
+  await updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] });
+  await addGoal(goal);
+  await deleteGoalHint(goal.parentGoalId, goal.id);
 };

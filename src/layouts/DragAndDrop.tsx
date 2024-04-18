@@ -20,7 +20,6 @@ const DragAndDrop: React.FC<DadProps> = ({
   handleDragEnd,
 }) => (
   <div
-    key={index}
     draggable={!dragging}
     onDragStart={(e) => handleDragStart(e, index)}
     onDragEnter={() => handleDragEnter(index)}

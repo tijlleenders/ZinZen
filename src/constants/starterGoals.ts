@@ -3,6 +3,8 @@ import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { colorPalleteList } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
+const starterGoals = [];
+
 export const addStarterGoal = async (
   goalTitle: string,
   goalTags: {
@@ -24,12 +26,14 @@ export const addStarterGoal = async (
 };
 
 const dailyHabitsId = uuidv4();
+const otherGoalIds = Array.from({ length: 10 }, () => uuidv4());
 
-export const starterGoals = [
+starterGoals.push(
   {
     title: "Sleep 😴🌙",
     goalTags: {
       afterTime: 22,
+      id: otherGoalIds[0],
       beforeTime: 7,
       timeBudget: {
         perDay: "6-8",
@@ -42,6 +46,7 @@ export const starterGoals = [
   {
     title: "Hobby project 🚂🚋",
     goalTags: {
+      id: otherGoalIds[1],
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
@@ -54,6 +59,7 @@ export const starterGoals = [
   {
     title: "House chores 🏡🧹🛠️",
     goalTags: {
+      id: otherGoalIds[2],
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
@@ -66,6 +72,7 @@ export const starterGoals = [
   {
     title: "Family time 🥰",
     goalTags: {
+      id: otherGoalIds[3],
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
@@ -76,6 +83,7 @@ export const starterGoals = [
     },
   },
   {
+    id: otherGoalIds[4],
     title: "Work 💪🏽",
     goalTags: {
       afterTime: 6,
@@ -97,12 +105,13 @@ export const starterGoals = [
         perDay: null,
         perWeek: null,
       },
-      sublist: ["breakfast", "lunch", "dinner", "meTime", "walk"],
+      sublist: [otherGoalIds[5], otherGoalIds[6], otherGoalIds[7], otherGoalIds[8], otherGoalIds[9]],
     },
   },
   {
     title: "Walk 🚶🏽",
     goalTags: {
+      id: otherGoalIds[5],
       afterTime: 6,
       beforeTime: 21,
       timeBudget: {
@@ -116,6 +125,7 @@ export const starterGoals = [
   {
     title: "Me time 🧘🏽😌",
     goalTags: {
+      id: otherGoalIds[6],
       afterTime: 5,
       beforeTime: 23,
       timeBudget: {
@@ -129,6 +139,7 @@ export const starterGoals = [
   {
     title: "Dinner 🍽️",
     goalTags: {
+      id: otherGoalIds[7],
       afterTime: 18,
       beforeTime: 20,
       timeBudget: {
@@ -142,6 +153,7 @@ export const starterGoals = [
   {
     title: "Lunch 🥪",
     goalTags: {
+      id: otherGoalIds[8],
       afterTime: 12,
       beforeTime: 14,
       timeBudget: {
@@ -155,6 +167,7 @@ export const starterGoals = [
   {
     title: "Breakfast 🥐🥣",
     goalTags: {
+      id: otherGoalIds[9],
       afterTime: 6,
       beforeTime: 9,
       timeBudget: {
@@ -165,4 +178,6 @@ export const starterGoals = [
       parentGoalId: dailyHabitsId,
     },
   },
-];
+);
+
+export { starterGoals };

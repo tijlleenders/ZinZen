@@ -4,6 +4,8 @@ import { GoalItem } from "@src/models/GoalItem";
 import React, { useState } from "react";
 import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
+import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
+import { ImpossibleGoal } from "@src/Interfaces";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal/MyGoal";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
@@ -28,6 +30,25 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
   const showGoalActions = useRecoilValue(displayGoalActions);
   const [dragging, setDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState<GoalItem | null>(null);
+  const impossibleGoals = useRecoilValue(impossibleGoalsList);
+
+  const addImpossibleProp = (goal: GoalItem): ImpossibleGoal => {
+    const isImpossibleGoal = impossibleGoals.some((impossibleGoal) => {
+      return goal.id === impossibleGoal.goalId;
+    });
+
+    const isImpossibleSublistGoal =
+      !isImpossibleGoal &&
+      goal.sublist.some((sublistGoal) =>
+        impossibleGoals.some((impossibleSublistGoal) => impossibleSublistGoal.goalId === sublistGoal),
+      );
+    return {
+      ...goal,
+      impossible: isImpossibleGoal || isImpossibleSublistGoal,
+    };
+  };
+
+  const updatedGoals = goals.map(addImpossibleProp);
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     setDragging(true);
@@ -55,9 +76,8 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
       {showGoalActions && showGoalActions.actionType === "regular" && (
         <RegularGoalActions open goal={showGoalActions.goal} />
       )}
-      {goals.map((goal: GoalItem, index: number) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <React.Fragment key={index}>
+      {updatedGoals.map((goal: ImpossibleGoal, index: number) => (
+        <React.Fragment key={goal.id}>
           {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
           <DragAndDrop
             thisItem={goal.id === draggedItem?.id}
