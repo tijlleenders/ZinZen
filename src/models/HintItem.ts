@@ -9,6 +9,7 @@ export interface HintItem {
   id: string;
   hint: boolean;
   goalHints: IGoalHint[];
+  deletedGoalHints?: Omit<IGoalHint, "id">[];
 }
 
 export interface IHintRequestBody {

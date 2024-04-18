@@ -44,22 +44,37 @@ export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoa
  * @param {string} goalId - The ID of the goal to update the hint for.
  * @param {boolean} hint - The new hint value to update.
  * @param {IGoalHint[]} goalHints - The array of goal hints to update.
+ * @return {Promise<void>} A promise that resolves when the hint item is updated in the database.
  */
 export const updateHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
-  const updatedHintsWithId = goalHints.map((hintItem: IGoalHint) => {
-    if (!hintItem.id) {
-      const newHintItem = { ...hintItem, id: uuidv4() };
-      return newHintItem;
-    }
-    return hintItem;
-  });
   await db
     .transaction("rw", db.hintsCollection, async () => {
       const existingItem = await db.hintsCollection.where("id").equals(goalId).first();
+
       if (existingItem) {
-        await db.hintsCollection.update(goalId, { hint, goalHints: updatedHintsWithId });
+        const updatedHintsWithId = goalHints.map((hintItem: IGoalHint) => {
+          if (!hintItem.id) {
+            return { ...hintItem, id: uuidv4() };
+          }
+          return hintItem;
+        });
+
+        const filteredHintsWithId = updatedHintsWithId.filter(
+          (hintItem) =>
+            !existingItem.deletedGoalHints ||
+            !existingItem.deletedGoalHints.some((deletedHint) => deletedHint.title === hintItem.title),
+        );
+
+        await db.hintsCollection.update(goalId, {
+          hint,
+          goalHints: filteredHintsWithId,
+        });
       } else {
-        await addHintItem(goalId, hint, updatedHintsWithId);
+        const newHints = goalHints.map((hintItem) => ({
+          ...hintItem,
+          id: hintItem.id || uuidv4(),
+        }));
+        await addHintItem(goalId, hint, newHints);
       }
     })
     .catch((e) => {
@@ -68,7 +83,7 @@ export const updateHintItem = async (goalId: string, hint: boolean, goalHints: I
 };
 
 /**
- * Deletes a hint item associated with a specific goal ID.
+ * Deletes a hint item from the database collection associated with a specific goal ID.
  *
  * @param {string} goalId - The ID of the goal for which the hint item should be deleted.
  */
@@ -92,12 +107,25 @@ export const deleteHintItem = async (goalId: string) => {
 export const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
   await db
     .transaction("rw", db.hintsCollection, async () => {
-      const goalHints = await db.hintsCollection.get(parentGoalId);
+      const goalHintsItem = await db.hintsCollection.get(parentGoalId);
 
-      const goalHint = goalHints?.goalHints.filter((hint) => hint.id !== goalId);
-      console.log(goalHint, "goalHint");
+      if (goalHintsItem) {
+        const updatedGoalHints = goalHintsItem.goalHints.filter((hint) => hint.id !== goalId);
+        const deletedGoalHint = goalHintsItem.goalHints.find((hint) => hint.id === goalId);
 
-      await db.hintsCollection.update(parentGoalId, { goalHints: goalHint });
+        const updatedDeletedGoalHints = goalHintsItem.deletedGoalHints ? [...goalHintsItem.deletedGoalHints] : [];
+
+        if (deletedGoalHint) {
+          const { id, ...deletedHintDetails } = deletedGoalHint;
+          updatedDeletedGoalHints.push(deletedHintDetails);
+        }
+
+        // Update the item in the database
+        await db.hintsCollection.update(parentGoalId, {
+          goalHints: updatedGoalHints,
+          deletedGoalHints: updatedDeletedGoalHints,
+        });
+      }
     })
     .catch((e) => {
       console.log(e.stack || e);
