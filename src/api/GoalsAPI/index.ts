@@ -338,12 +338,6 @@ export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false
   return goalsAcc;
 };
 
-/**
- * Add a hint goal to the list of goals.
- *
- * @param {GoalItem} goal - The goal item to add as a hint goal.
- * @return {Promise<void>} A promise that resolves when the hint goal is added successfully.
- */
 export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
   await updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] });
   await addGoal(goal);
