@@ -186,6 +186,14 @@ export class ZinZenDB extends Dexie {
               goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
             });
         }
+        if (currentVersion < 20) {
+          console.log("processing updates for 20th version");
+          const hintsCollection = trans.table("hintsCollection");
+          hintsCollection.toCollection().modify((hint: HintItem) => {
+            hint.hintFrequency = "daily";
+            hint.lastCheckedDate = new Date().toISOString();
+          });
+        }
       });
   }
 }
