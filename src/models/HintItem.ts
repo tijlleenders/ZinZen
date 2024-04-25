@@ -9,6 +9,9 @@ export interface HintItem {
   id: string;
   hint: boolean;
   goalHints: IGoalHint[];
+  lastCheckedDate: string;
+  newHintsPresent: boolean;
+  hintFrequency: string;
 }
 
 export interface IHintRequestBody {
