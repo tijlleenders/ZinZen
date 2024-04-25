@@ -10,7 +10,6 @@ export interface HintItem {
   hint: boolean;
   goalHints: IGoalHint[];
   lastCheckedDate: string;
-  newHintsPresent: boolean;
   hintFrequency: string;
 }
 

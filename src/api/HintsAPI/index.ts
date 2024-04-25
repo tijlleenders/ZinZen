@@ -28,7 +28,13 @@ export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoa
     }
     return hintItem;
   });
-  const hintObject = { id: goalId, hint, goalHints: updatedHintsWithId };
+  const hintObject = {
+    id: goalId,
+    hint,
+    goalHints: updatedHintsWithId,
+    lastCheckedDate: new Date().toISOString(),
+    hintFrequency: "daily",
+  };
   await db
     .transaction("rw", db.hintsCollection, async () => {
       await db.hintsCollection.add(hintObject);
