@@ -153,9 +153,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
 
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
-      {myTasks.scheduled.map((task) => {
+      {myTasks.scheduled.map((task, index) => {
         const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
         const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
+        const nextTask = myTasks.scheduled[index + 1];
+        const nextStartTime = nextTask ? nextTask.start.split("T")[1].slice(0, 2) : null;
+        const displayEndTime = endTime !== nextStartTime;
         const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
         const showTaskOptions = displayOptionsIndex === task.taskid;
         return (
@@ -178,7 +181,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
             }}
           >
             <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
-            <GoalTiming startTime={startTime} endTime={endTime} showTaskOptions={showTaskOptions} />
+            <GoalTiming
+              startTime={startTime}
+              endTime={endTime}
+              showTaskOptions={showTaskOptions}
+              displayEndTime={displayEndTime}
+            />
             <div style={{ flex: 1 }}>
               <div style={{ display: "flex", position: "relative" }}>
                 <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
