@@ -46,7 +46,7 @@ function useScheduler() {
   const logIO = (schedulerInput: string, schedulerOutput: ISchedulerOutput) => {
     console.log("parsedInput", JSON.parse(schedulerInput));
     console.log("input", schedulerInput);
-    console.log("output", schedulerOutput);
+    console.log("output", schedulerOutput, JSON.stringify(schedulerOutput));
   };
 
   const initialCall = async () => {
@@ -63,7 +63,7 @@ function useScheduler() {
       res = cachedRes.output;
       logIO(JSON.stringify(schedulerInputV1), res);
     } else {
-      await resetProgressOfToday();
+      // await resetProgressOfToday();
       const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
       newGeneratedInputId = generatedInputId;
       await init();
