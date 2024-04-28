@@ -330,7 +330,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   }}
                   range
                   value={[afterTime, beforeTime]}
-                  onAfterChange={(val) => {
+                  onChange={(val) => {
                     setAfterTime(val[0]);
                     setBeforeTime(val[1]);
                     setBetweenSliderUpdated(true);
