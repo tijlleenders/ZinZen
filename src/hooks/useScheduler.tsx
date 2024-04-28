@@ -9,7 +9,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
-import { resetProgressOfToday } from "@src/api/TasksAPI";
+// import { resetProgressOfToday } from "@src/api/TasksAPI";
 import { lastAction, openDevMode } from "@src/store";
 import { generateUniqueIdForSchInput } from "@src/utils/SchedulerUtils";
 import {
