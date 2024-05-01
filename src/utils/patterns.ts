@@ -1,5 +1,5 @@
 export function replaceUrlsWithText(inputString: string) {
-  const urlRegex = /(?:tel:\s*\+?\d{10,15}|https?:\/\/[\w.-]+\.[\w]{2,}(?:\/[\S]*)?|\b[\w.-]+\.[\w]{2,}(?:\/[\S]*)?)/gi;
+  const urlRegex = /(?:tel:\s*\+?\d{10,}|https?:\/\/[\w.-]+\.[\w]{2,}(?:\/[\S]*)?|\b[\w.-]+\.[\w]{2,}(?:\/[\S]*)?)/gi;
 
   const urlsWithIndexes: { [key: string]: string } = {};
   const replacedString = inputString.replace(urlRegex, (url, index) => {
@@ -18,7 +18,6 @@ export function replaceUrlsWithText(inputString: string) {
 
 export function summarizeUrl(url: string) {
   const domainMatch = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/im);
-  console.log("domainMatch", domainMatch);
 
   if (domainMatch) {
     const domain = domainMatch[1];
