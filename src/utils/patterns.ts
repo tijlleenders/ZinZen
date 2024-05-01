@@ -1,16 +1,15 @@
 export function replaceUrlsWithText(inputString: string) {
-  const urlRegex =
-    /(?:tel:\s*\+?[0-9]{10,15}|(?:https?:\/\/)?[\w.-]+\.[a-zA-Z]{2,}(?:\/[\S]*)?|\b[\w.-]+\.[a-zA-Z]{2,}(?:\/[\S]*)?)/gi;
+  const urlRegex = /(?:tel:\s*\+?\d{10,15}|https?:\/\/[\w.-]+\.[\w]{2,}(?:\/[\S]*)?|\b[\w.-]+\.[\w]{2,}(?:\/[\S]*)?)/gi;
 
   const urlsWithIndexes: { [key: string]: string } = {};
   const replacedString = inputString.replace(urlRegex, (url, index) => {
-    let modifiedUrl = url;
-    if (url.startsWith("tel:")) {
-      modifiedUrl = url.replace(/\s/g, "");
-    } else if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      modifiedUrl = `https://${url}`;
+    let normalizedUrl = url.trim();
+    if (normalizedUrl.startsWith("tel:")) {
+      normalizedUrl = normalizedUrl.replace(/\s+/g, "");
+    } else if (!normalizedUrl.match(/^https?:\/\//)) {
+      normalizedUrl = `https://${normalizedUrl}`;
     }
-    urlsWithIndexes[index] = modifiedUrl;
+    urlsWithIndexes[index.toString()] = normalizedUrl;
     return `zURL-${index}`;
   });
 
@@ -18,20 +17,14 @@ export function replaceUrlsWithText(inputString: string) {
 }
 
 export function summarizeUrl(url: string) {
-  const match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/im);
-  if (match) {
-    const domain = match[1];
+  const domainMatch = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/im);
+  console.log("domainMatch", domainMatch);
+
+  if (domainMatch) {
+    const domain = domainMatch[1];
     const domainParts = domain.split(".");
-    if (domainParts.length > 1) {
-      const extractedDomain = domainParts[domainParts.length - 2];
-      if (extractedDomain.length > 7) {
-        const firstPart = extractedDomain.substring(0, 4);
-        const lastPart = extractedDomain.slice(-3);
-        return `${firstPart}..${lastPart}`;
-      }
-      return extractedDomain;
-    }
-    return "";
+    const relevantParts = domainParts.filter((part) => !["com", "net", "org", "www"].includes(part));
+    return relevantParts.slice(-2).join(".");
   }
   return "";
 }
