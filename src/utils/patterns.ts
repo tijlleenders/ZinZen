@@ -1,12 +1,13 @@
 export function replaceUrlsWithText(inputString: string) {
-  // Regular expression to match URLs
-  const urlRegex = /(?:(?:https?:\/\/)?[\w.-]+\.[a-zA-Z]{2,}(?:\/[\S]*)?|\b[\w.-]+\.[a-zA-Z]{2,}(?:\/[\S]*)?)/gi;
+  const urlRegex =
+    /(?:tel:\s*\+?[0-9]{10,15}|(?:https?:\/\/)?[\w.-]+\.[a-zA-Z]{2,}(?:\/[\S]*)?|\b[\w.-]+\.[a-zA-Z]{2,}(?:\/[\S]*)?)/gi;
 
-  // Find all URLs in the input string and store their indexes
-  const urlsWithIndexes: { [index: number]: string } = {};
+  const urlsWithIndexes: { [key: string]: string } = {};
   const replacedString = inputString.replace(urlRegex, (url, index) => {
     let modifiedUrl = url;
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    if (url.startsWith("tel:")) {
+      modifiedUrl = url.replace(/\s/g, "");
+    } else if (!url.startsWith("http://") && !url.startsWith("https://")) {
       modifiedUrl = `https://${url}`;
     }
     urlsWithIndexes[index] = modifiedUrl;

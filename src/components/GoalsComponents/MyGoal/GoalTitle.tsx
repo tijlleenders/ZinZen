@@ -1,56 +1,36 @@
 import React from "react";
-import { replaceUrlsWithText, summarizeUrl } from "@src/utils/patterns";
+import { replaceUrlsWithText } from "@src/utils/patterns";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
+import { TelHandler, UrlHandler } from "./GoalTitleProcessors";
 
 interface GoalTitleProps {
   goal: GoalItem;
   isImpossible: boolean;
 }
 
-const GoalTitle: React.FC<GoalTitleProps> = ({ goal, isImpossible }) => {
+const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
   const { t } = useTranslation();
-  const { id, title, link } = goal;
+  const { id, title } = goal;
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
 
-  // splitting the string
   const textParts = replacedString.split(/(zURL-\d+)/g);
 
   return (
     <div className="goal-title">
       {isImpossible && "! "}
-      {textParts.map((textPart, index) => {
-        const replacedUrls = Array.from(textPart.matchAll(/zURL-(\d+)/g));
-        if (replacedUrls.length) {
-          return (
-            <React.Fragment key={`${id}-${textPart}-replacedUrlsFragment`}>
-              {replacedUrls.map(([url, digitStr]) => {
-                const urlIndex = Number.parseInt(digitStr, 10);
-                const originalUrl = urlsWithIndexes[urlIndex];
-                const summarizedUrl = summarizeUrl(originalUrl);
-                return (
-                  <span
-                    key={`${id}-${textPart}-${url}`}
-                    style={{ cursor: "pointer", textDecoration: "underline" }}
-                    onClickCapture={() => {
-                      window.open(originalUrl, "_blank");
-                    }}
-                  >
-                    {index === 0 ? summarizedUrl : ` ${summarizedUrl}`}
-                  </span>
-                );
-              })}
-            </React.Fragment>
-          );
+      {textParts.map((part) => {
+        const match = part.match(/zURL-(\d+)/);
+        if (match) {
+          const urlIndex = parseInt(match[1], 10);
+          const url = urlsWithIndexes[urlIndex];
+          if (url.startsWith("tel:")) {
+            return <TelHandler key={`${id}-tel-${urlIndex}`} telUrl={url} />;
+          }
+          return <UrlHandler key={`${id}-url-${urlIndex}`} url={url} />;
         }
-        return <span key={`${id}-${textPart}`}>{index === 0 ? textPart : ` ${textPart}`}</span>;
+        return <span key={`${id}-text-${part}`}>{part}</span>;
       })}
-      &nbsp;
-      {link && (
-        <a className="goal-link" href={link} target="_blank" onClick={(e) => e.stopPropagation()} rel="noreferrer">
-          URL
-        </a>
-      )}
     </div>
   );
 };
