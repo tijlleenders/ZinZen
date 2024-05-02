@@ -1,4 +1,4 @@
-import { Radio, Tooltip } from "antd";
+import { Radio } from "antd";
 import { useRecoilState, useRecoilValue } from "recoil";
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -6,15 +6,13 @@ import { v4 as uuidv4 } from "uuid";
 import { darkModeState } from "@src/store";
 import "./Reschedule.scss";
 import ZModal from "@src/common/ZModal";
-import { updateGoal } from "@src/api/GoalsAPI";
-import { TaskItem } from "@src/models/TaskItem";
 import { addBlockedSlot } from "@src/api/TasksAPI";
 import { displayReschedule } from "@src/store/TaskState";
 
 const Reschedule = () => {
   const [task, setOpen] = useRecoilState(displayReschedule);
-  const [selectedOption, setSelectedOption] = useState(null);
-  console.log(task);
+  const [selectedOption, setSelectedOption] = useState(0);
+  const darkModeStatus = useRecoilValue(darkModeState);
   if (!task) {
     return null;
   }
@@ -28,30 +26,27 @@ const Reschedule = () => {
     { label: "30 days", value: 720 },
   ];
 
-  // Function to update `notOn` field based on selected reschedule option
   const handleReschedule = (value) => {
+    console.log("called");
+
     setSelectedOption(value);
-    const now = new Date(); // Get the current date and time
-    // Convert current time to UTC by subtracting the timezone offset
+    const now = new Date();
     const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
 
-    // Zero out UTC minutes, seconds, and milliseconds to align with the start of the hour
     utcNow.setUTCHours(utcNow.getUTCHours(), 0, 0, 0);
 
-    const futureDate = new Date(utcNow.getTime() + value * 3600000); // Compute the future date in UTC
+    const futureDate = new Date(utcNow.getTime() + value * 3600000);
 
-    // Calculate `notOnStart` and `notOnEnd` to match exact hours in UTC
     const notOnStart = new Date(utcNow.getTime());
     const notOnEnd = new Date(futureDate.getTime());
 
-    // Call to add blocked slot in the scheduling system with UTC dates
     addBlockedSlot(task.goalid, {
-      start: notOnStart.toISOString(), // This will naturally be in UTC
-      end: notOnEnd.toISOString(), // This will naturally be in UTC
+      start: notOnStart.toISOString(),
+      end: notOnEnd.toISOString(),
     });
 
     console.log(`Task to avoid scheduling from ${notOnStart.toISOString()} to ${notOnEnd.toISOString()}`);
-    setOpen(null); // Close the modal after setting the notOn field
+    setOpen(null);
   };
 
   return (
@@ -62,7 +57,13 @@ const Reschedule = () => {
       <div className="list" style={{ display: "flex", flexWrap: "wrap" }}>
         <Radio.Group defaultValue={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
           {rescheduleOptions.map((option) => (
-            <Radio.Button key={uuidv4()} value={option.value}>
+            <Radio.Button
+              style={{
+                backgroundColor: darkModeStatus ? "rgba(255, 255, 255, 0.08)" : "rgba(87, 87, 87, 0.2)",
+              }}
+              key={uuidv4()}
+              value={option.value}
+            >
               {option.label}
             </Radio.Button>
           ))}

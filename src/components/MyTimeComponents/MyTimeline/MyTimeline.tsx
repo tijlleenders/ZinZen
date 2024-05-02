@@ -107,25 +107,30 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
+        console.log("task not found");
+
         await addTask({
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
-          completedTodayIds: [task.taskid],
+          completedTodayIds: [],
           forgotToday:
             actionName === "Skip" ? [`${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`] : [],
           completedToday: actionName === "Done" ? Number(task.duration) : 0,
           lastForget: actionName === "Skip" ? new Date().toLocaleDateString() : "",
           lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
           hoursSpent: 0,
-          completedTodayTimings: [
-            {
-              goalid: task.goalid,
-              start: task.start,
-              deadline: task.deadline,
-            },
-          ],
-          blockedSlots: actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : [],
+          completedTodayTimings:
+            actionName === "Done"
+              ? [
+                  {
+                    goalid: task.goalid,
+                    start: task.start,
+                    deadline: task.deadline,
+                  },
+                ]
+              : [],
+          blockedSlots: [],
         });
         // if (actionName === "Reschedule") {
         //   setOpenReschedule({ ...task });

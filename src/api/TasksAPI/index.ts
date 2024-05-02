@@ -156,18 +156,13 @@ export const getAllBlockedTasks = async () => {
   return tasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr.blockedSlots }), {});
 };
 
-/**
- * Adds a blocked slot to the task associated with the provided goal ID.
- *
- * @param {string} goalId - The ID of the goal from the goals collection.
- * @param {object} slot - The start and end timestamps of the blocked slot.
- */
 export const addBlockedSlot = async (goalId: string, slot: { start: string; end: string }) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection
       .where("goalId")
       .equals(goalId)
       .modify((obj: TaskItem) => {
+        obj.blockedSlots = [];
         obj.blockedSlots.push(slot);
       });
   }).catch((e) => {
