@@ -48,12 +48,14 @@ export const getGoalHintItem = async (goalId: string) => {
  */
 export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
   const updatedHintsWithId = ensureGoalHintsHaveIds(goalHints);
+  const now = new Date();
+  const oneDayLater = new Date(now.getTime() + 24 * 60 * 60 * 1000);
   const hintObject = {
     id: goalId,
     hint,
     goalHints: updatedHintsWithId,
-    lastCheckedDate: new Date().toISOString(),
-    hintFrequency: "daily",
+    lastCheckedDate: now.toISOString(),
+    nextCheckDate: oneDayLater.toISOString(),
   };
   await db
     .transaction("rw", db.hintsCollection, async () => {
@@ -74,7 +76,12 @@ export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoa
 export const updateHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
   const updatedHintsWithId = ensureGoalHintsHaveIds(goalHints);
   const isNewHintPresent = await checkForNewGoalHints(goalId, updatedHintsWithId);
-  const hintFrequency = isNewHintPresent ? "daily" : "weekly";
+
+  const oneDay = 24 * 60 * 60 * 1000;
+  const oneWeek = 7 * oneDay;
+
+  const now = new Date();
+  const nextCheckDate = new Date(now.getTime() + (isNewHintPresent ? oneDay : oneWeek));
 
   await db
     .transaction("rw", db.hintsCollection, async () => {
@@ -83,8 +90,8 @@ export const updateHintItem = async (goalId: string, hint: boolean, goalHints: I
         await db.hintsCollection.update(goalId, {
           hint,
           goalHints: updatedHintsWithId,
-          lastCheckedDate: new Date().toISOString(),
-          hintFrequency,
+          lastCheckedDate: now.toISOString(),
+          nextCheckDate: nextCheckDate.toISOString(),
         });
       } else {
         await addHintItem(goalId, hint, updatedHintsWithId);

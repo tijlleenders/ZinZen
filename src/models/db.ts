@@ -60,7 +60,7 @@ export class ZinZenDB extends Dexie {
         partnersCollection: null,
         goalTrashCollection:
           "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-        hintsCollection: "id, hint, goalHints, lastCheckedDate, hintFrequency",
+        hintsCollection: "id, hint, goalHints, lastCheckedDate, nextCheckDate",
         impossibleGoalsCollection: "goalId, goalTitle",
       })
       .upgrade((trans) => {
@@ -190,7 +190,7 @@ export class ZinZenDB extends Dexie {
           console.log("processing updates for 20th version");
           const hintsCollection = trans.table("hintsCollection");
           hintsCollection.toCollection().modify((hint: HintItem) => {
-            hint.hintFrequency = "daily";
+            hint.nextCheckDate = new Date().toISOString();
             hint.lastCheckedDate = new Date().toISOString();
           });
         }
