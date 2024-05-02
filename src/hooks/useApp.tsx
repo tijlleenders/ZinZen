@@ -134,14 +134,13 @@ function useApp() {
 
   // Check for missed hint calls
   useEffect(() => {
-    (async () => {
-      try {
-        await scheduledHintCalls();
+    scheduledHintCalls()
+      .then(() => {
         console.log("Checked for missed hint calls.");
-      } catch (error) {
+      })
+      .catch((error) => {
         console.error("Failed to check for missed hint calls:", error);
-      }
-    })();
+      });
   }, []);
 
   useEffect(() => {
