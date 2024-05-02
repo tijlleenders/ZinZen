@@ -13,6 +13,7 @@ const Reschedule = () => {
   const [task, setOpen] = useRecoilState(displayReschedule);
   const [selectedOption, setSelectedOption] = useState(0);
   const darkModeStatus = useRecoilValue(darkModeState);
+
   if (!task) {
     return null;
   }
@@ -41,11 +42,16 @@ const Reschedule = () => {
     const notOnEnd = new Date(futureDate.getTime());
 
     addBlockedSlot(task.goalid, {
-      start: notOnStart.toISOString(),
-      end: notOnEnd.toISOString(),
+      start: notOnStart.toISOString().slice(0, 19),
+      end: notOnEnd.toISOString().slice(0, 19),
     });
 
-    console.log(`Task to avoid scheduling from ${notOnStart.toISOString()} to ${notOnEnd.toISOString()}`);
+    console.log(
+      `Task to avoid scheduling from ${notOnStart.toISOString().slice(0, 19)} to ${notOnEnd
+        .toISOString()
+        .slice(0, 19)}`,
+    );
+
     setOpen(null);
   };
 
