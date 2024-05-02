@@ -4,6 +4,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { calDays, getLastDayDate } from "@src/utils";
 import { convertDateToDay } from "@src/utils/SchedulerUtils";
+import { ITask } from "@src/Interfaces/Task";
 import { getGoal } from "../GoalsAPI";
 
 export const addTask = async (taskDetails: TaskItem) => {
@@ -104,27 +105,37 @@ export const refreshTaskCollection = async () => {
     console.error("Error updating field:", error);
   }
 };
-export const completeTask = async (id: string, duration: number, taskId: string) => {
+export const completeTask = async (id: string, duration: number, task: ITask) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection
       .where("id")
       .equals(id)
       .modify((obj: TaskItem) => {
         obj.completedToday += duration;
-        obj.completedTodayIds.push(taskId);
+        obj.completedTodayTimings.push({
+          goalid: task.goalid,
+          start: task.start,
+          deadline: task.deadline,
+        });
+        obj.completedTodayIds.push(task.taskid);
       });
   }).catch((e) => {
     console.log(e.stack || e);
   });
 };
 
-export const forgetTask = async (id: string, period: string) => {
+export const forgetTask = async (id: string, period: string, task: ITask) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection
       .where("id")
       .equals(id)
       .modify((obj: TaskItem) => {
         obj.forgotToday.push(period);
+        obj.completedTodayTimings.push({
+          goalid: task.goalid,
+          start: task.start,
+          deadline: task.deadline,
+        });
         if (obj.forgotToday.length > 1) {
           obj.forgotToday.sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
         }

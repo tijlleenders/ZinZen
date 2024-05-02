@@ -11,7 +11,7 @@ import { TrashItem } from "./TrashItem";
 import { HintItem } from "./HintItem";
 import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
 
-export const dexieVersion = 19;
+export const dexieVersion = 20;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -54,7 +54,7 @@ export class ZinZenDB extends Dexie {
         pubSubCollection: "id, subscribers",
         publicGroupsCollection: null,
         taskCollection:
-          "id, goalId, title, hoursSpent, completedTodayIds, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
+          "id, goalId, title, hoursSpent, completedTodayIds, completedTodayTimings, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
         customizationCollection: "++id, goalId, posIndex",
         dumpboxCollection: "id, key, value",
         partnersCollection: null,

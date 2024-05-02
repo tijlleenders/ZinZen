@@ -118,6 +118,13 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           lastForget: actionName === "Skip" ? new Date().toLocaleDateString() : "",
           lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
           hoursSpent: 0,
+          completedTodayTimings: [
+            {
+              goalid: task.goalid,
+              start: task.start,
+              deadline: task.deadline,
+            },
+          ],
           blockedSlots: actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : [],
         });
         // if (actionName === "Reschedule") {
@@ -126,9 +133,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Done") {
         const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
         if (markDone) return null;
-        await completeTask(taskItem.id, Number(task.duration), task.taskid);
+        await completeTask(taskItem.id, Number(task.duration), task);
       } else if (actionName === "Skip") {
-        await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`);
+        await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`, task);
       } else if (actionName === "Reschedule") {
         setOpenReschedule(task);
       }
@@ -160,10 +167,15 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
 
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
-      {myTasks.scheduled.map((task) => {
+      {myTasks.scheduled.map((task, index) => {
         const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
         const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
-        const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
+        const nextTask = myTasks.scheduled[index + 1];
+        const nextStartTime = nextTask ? nextTask.start.split("T")[1].slice(0, 2) : null;
+        const displayEndTime = endTime !== nextStartTime;
+        const markDone = !!taskDetails[task.goalid]?.completedTodayTimings.find(
+          (ele) => ele.start === task.start && ele.deadline === task.deadline,
+        );
         const showTaskOptions = displayOptionsIndex === task.taskid;
         return (
           <button
@@ -185,7 +197,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
             }}
           >
             <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
-            <GoalTiming startTime={startTime} endTime={endTime} showTaskOptions={showTaskOptions} />
+            <GoalTiming
+              startTime={startTime}
+              endTime={endTime}
+              showTaskOptions={showTaskOptions}
+              displayEndTime={displayEndTime}
+            />
             <div style={{ flex: 1 }}>
               <div style={{ display: "flex", position: "relative" }}>
                 <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
