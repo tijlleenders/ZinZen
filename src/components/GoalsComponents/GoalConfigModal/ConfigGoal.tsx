@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
+import useDetectKeyboardOpen from "use-detect-keyboard-open";
 import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
@@ -46,6 +47,8 @@ const roundOffHours = (hrsValue: string) => {
 };
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
+  const isKeyboardOpen = useDetectKeyboardOpen();
+
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
@@ -279,6 +282,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   return (
     <ZModal
       type="configModal"
+      style={isKeyboardOpen ? { position: "relative", top: 0 } : {}}
       open={open}
       width={360}
       onCancel={async () => {
