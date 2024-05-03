@@ -8,7 +8,6 @@ import { useLocation } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
-import useDetectKeyboardOpen from "use-detect-keyboard-open";
 import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
@@ -26,6 +25,7 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
+import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -47,7 +47,7 @@ const roundOffHours = (hrsValue: string) => {
 };
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
-  const isKeyboardOpen = useDetectKeyboardOpen(50, false);
+  const isKeyboardOpen = useVirtualKeyboardOpen();
 
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
@@ -280,7 +280,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   }, [perDayHrs, setPerDayHrs, tags.on]);
 
   const modalStyle = {
-    transform: `translate(0, ${isKeyboardOpen ? "-45%" : ""})`,
+    transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
     transition: "transform 0.3s ease-in-out",
   };
 
