@@ -12,6 +12,7 @@ import { handleIncomingChanges } from "@src/helpers/InboxProcessor";
 import { getContactSharedGoals, shareGoalWithContact } from "@src/services/contact.service";
 import { updateAllUnacceptedContacts, getContactByRelId, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
+import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 
 const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -130,6 +131,17 @@ function useApp() {
   useEffect(() => {
     localStorage.setItem("confirmationState", JSON.stringify(confirmationState));
   }, [confirmationState]);
+
+  // Check for missed hint calls
+  useEffect(() => {
+    scheduledHintCalls()
+      .then(() => {
+        console.log("Checked for missed hint calls.");
+      })
+      .catch((error) => {
+        console.error("Failed to check for missed hint calls:", error);
+      });
+  }, []);
 
   useEffect(() => {
     const checkDevMode = async () => {
