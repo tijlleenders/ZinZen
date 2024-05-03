@@ -47,7 +47,7 @@ const roundOffHours = (hrsValue: string) => {
 };
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
-  const isKeyboardOpen = useDetectKeyboardOpen();
+  const isKeyboardOpen = useDetectKeyboardOpen(50, false);
 
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
@@ -279,10 +279,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     handleWeekSliderChange(perWeekHrs);
   }, [perDayHrs, setPerDayHrs, tags.on]);
 
+  const modalStyle = {
+    transform: `translate(0, ${isKeyboardOpen ? "-45%" : ""})`,
+    transition: "transform 0.3s ease-in-out",
+  };
+
   return (
     <ZModal
       type="configModal"
-      style={isKeyboardOpen ? { position: "relative", top: 0 } : {}}
+      style={modalStyle}
       open={open}
       width={360}
       onCancel={async () => {
