@@ -30,7 +30,6 @@
     "recoil": "^0.7.1",
     "regenerator-runtime": "^0.13.9",
     "sass": "^1.50.0",
-    "use-detect-keyboard-open": "^0.4.0",
     "uuidv4": "^6.2.13",
     "vite": "^2.9.18",
     "workbox-core": "^5.1.4",
