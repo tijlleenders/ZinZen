@@ -8,6 +8,7 @@ import "./Reschedule.scss";
 import ZModal from "@src/common/ZModal";
 import { addBlockedSlot } from "@src/api/TasksAPI";
 import { displayReschedule } from "@src/store/TaskState";
+import moment from "moment";
 
 const Reschedule = () => {
   const [task, setOpen] = useRecoilState(displayReschedule);
@@ -27,36 +28,22 @@ const Reschedule = () => {
     { label: "30 days", value: 720 },
   ];
 
-  const handleReschedule = (value) => {
-    console.log("called");
-
+  const handleReschedule = (value: number) => {
     setSelectedOption(value);
-    const now = new Date();
-    const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-
-    utcNow.setUTCHours(utcNow.getUTCHours(), 0, 0, 0);
-
-    const futureDate = new Date(utcNow.getTime() + value * 3600000);
-
-    const notOnStart = new Date(utcNow.getTime());
-    const notOnEnd = new Date(futureDate.getTime());
+    const now = moment();
+    const futureMoment = now.clone().add(value, "hours");
 
     addBlockedSlot(task.goalid, {
-      start: notOnStart.toISOString().slice(0, 19),
-      end: notOnEnd.toISOString().slice(0, 19),
+      start: now.format().slice(0, 19),
+      end: futureMoment.format().slice(0, 19),
     });
 
-    console.log(
-      `Task to avoid scheduling from ${notOnStart.toISOString().slice(0, 19)} to ${notOnEnd
-        .toISOString()
-        .slice(0, 19)}`,
-    );
-
+    console.log(`Task to avoid scheduling from ${now.format().slice(0, 19)} to ${futureMoment.format().slice(0, 19)}`);
     setOpen(null);
   };
 
   return (
-    <ZModal type="rescheduleModal" open={!!task.taskid} onCancel={() => setOpen(null)}>
+    <ZModal type="rescheduleModal" open={!!task.title} onCancel={() => setOpen(null)}>
       <div className="header-title">
         <h4>{task.title}</h4>
       </div>

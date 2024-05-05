@@ -20,12 +20,12 @@ import { displayToast, lastAction, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
+import { displayReschedule } from "@src/store/TaskState";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
 
 type ImpossibleTaskId = string;
-import { displayReschedule } from "@src/store/TaskState";
 
 interface MyTimelineProps {
   day: string;
@@ -55,8 +55,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const setLastAction = useSetRecoilState(lastAction);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
-
-  const [showScheduled, setShowScheduled] = useState(true);
 
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
 
