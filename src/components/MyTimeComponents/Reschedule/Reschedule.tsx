@@ -25,7 +25,6 @@ const Reschedule = () => {
     { label: "1 day", value: 24 },
     { label: "3 days", value: 72 },
     { label: "7 days", value: 168 },
-    { label: "30 days", value: 720 },
   ];
 
   const handleReschedule = (value: number) => {
@@ -33,26 +32,34 @@ const Reschedule = () => {
     const now = moment();
     const futureMoment = now.clone().add(value, "hours");
 
+    const start = now.format().slice(0, 19);
+    const end = futureMoment.format().slice(0, 19);
+
     addBlockedSlot(task.goalid, {
-      start: now.format().slice(0, 19),
-      end: futureMoment.format().slice(0, 19),
+      start,
+      end,
     });
 
-    console.log(`Task to avoid scheduling from ${now.format().slice(0, 19)} to ${futureMoment.format().slice(0, 19)}`);
+    console.log(`Task to avoid scheduling from ${start} to ${end}`);
     setOpen(null);
   };
 
   return (
-    <ZModal type="rescheduleModal" open={!!task.title} onCancel={() => setOpen(null)}>
+    <ZModal type="rescheduleModal" open={!!task} onCancel={() => setOpen(null)}>
       <div className="header-title">
         <h4>{task.title}</h4>
       </div>
-      <div className="list" style={{ display: "flex", flexWrap: "wrap" }}>
-        <Radio.Group defaultValue={selectedOption} onChange={(e) => setSelectedOption(e.target.value)}>
+      <div className="reschedule-options" style={{ display: "flex", flexWrap: "wrap" }}>
+        <Radio.Group
+          size="large"
+          buttonStyle="solid"
+          defaultValue={selectedOption}
+          onChange={(e) => setSelectedOption(e.target.value)}
+        >
           {rescheduleOptions.map((option) => (
             <Radio.Button
               style={{
-                backgroundColor: darkModeStatus ? "rgba(255, 255, 255, 0.08)" : "rgba(87, 87, 87, 0.2)",
+                backgroundColor: darkModeStatus ? "rgba(255, 255, 255, 0.08)" : "var(--secondary-background)",
               }}
               key={uuidv4()}
               value={option.value}

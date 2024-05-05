@@ -20,27 +20,23 @@
     }
   }
 
-  .list {
+  .reschedule-options {
+    align-self: center;
     margin: 0 16px;
-    padding: 8px 8px 16px 8px;
-    border-left: 0;
-    border-right: 0;
+    padding: 12px 8px 16px 8px;
+    margin-top: 20px;
     flex-wrap: nowrap;
     overflow-x: scroll;
     display: flex;
-    gap: 20px;
 
-    .res-card {
-      border-radius: 8px;
-      background: transparent;
-      border: 1px solid #d9d9d9;
-      padding: 10px 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      text-align: center;
-      min-width: 75px;
-      align-items: center;
+    .ant-radio-button-wrapper {
+      margin: 2px;
+      border-inline-start-width: 1px;
+      border-radius: 10px;
+    }
+
+    .ant-radio-button-wrapper:not(:first-child)::before {
+      display: none;
     }
 
     p {
@@ -91,11 +87,6 @@
 
   .slot-card.selected {
     font-weight: 600;
-  }
-
-  .action-btn {
-    margin-top: 16px;
-    background: var(--primary-background);
   }
 
   div:has(.action-btn) {
