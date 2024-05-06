@@ -27,31 +27,6 @@ export const ensureGoalHintsHaveIds = (goalHints: IGoalHint[]): IGoalHint[] => {
   });
 };
 
-export const checkForNewGoalHints = async (hintId: string, newGoalHints: IGoalHint[]) => {
-  try {
-    const hintItem = await db.hintsCollection.get(hintId);
-    if (!hintItem) return false;
-    const currentGoalHints = hintItem.goalHints || [];
-    const combinedHints = [...currentGoalHints];
-
-    const existingTitles = new Set(combinedHints.map((hint) => hint.title));
-
-    return newGoalHints.some((newHint) => !existingTitles.has(newHint.title));
-  } catch (error) {
-    console.error("Error checking for new goal hints:", error);
-    return false;
-  }
-};
-
-export const ensureGoalHintsHaveIds = (goalHints: IGoalHint[]): IGoalHint[] => {
-  return goalHints.map((hintItem) => {
-    if (!hintItem.id) {
-      return { ...hintItem, id: uuidv4() };
-    }
-    return hintItem;
-  });
-};
-
 export const getGoalHintItem = async (goalId: string) => {
   const hintItem = await db.hintsCollection.where("id").equals(goalId).toArray();
   return hintItem.length > 0 ? hintItem[0] : null;
@@ -92,13 +67,6 @@ export const updateHintItem = async (goalId: string, hint: boolean, goalHints: I
       const existingItem = await db.hintsCollection.where("id").equals(goalId).first();
 
       if (existingItem) {
-        const updatedHintsWithId = goalHints.map((hintItem: IGoalHint) => {
-          if (!hintItem.id) {
-            return { ...hintItem, id: uuidv4() };
-          }
-          return hintItem;
-        });
-
         const filteredHintsWithId = updatedHintsWithId.filter(
           (hintItem) =>
             !existingItem.deletedGoalHints ||
