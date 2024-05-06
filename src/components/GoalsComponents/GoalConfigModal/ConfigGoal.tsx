@@ -25,6 +25,7 @@ import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../util
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
+import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -46,6 +47,8 @@ const roundOffHours = (hrsValue: string) => {
 };
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
+  const isKeyboardOpen = useVirtualKeyboardOpen();
+
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
   const mySound = new Audio(plingSound);
@@ -276,9 +279,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     handleWeekSliderChange(perWeekHrs);
   }, [perDayHrs, setPerDayHrs, tags.on]);
 
+  const modalStyle = {
+    transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
+    transition: "transform 0.3s ease-in-out",
+  };
+
   return (
     <ZModal
       type="configModal"
+      style={modalStyle}
       open={open}
       width={360}
       onCancel={async () => {
@@ -330,7 +339,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   }}
                   range
                   value={[afterTime, beforeTime]}
-                  onAfterChange={(val) => {
+                  onChange={(val) => {
                     setAfterTime(val[0]);
                     setBeforeTime(val[1]);
                     setBetweenSliderUpdated(true);

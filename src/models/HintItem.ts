@@ -9,6 +9,8 @@ export interface HintItem {
   id: string;
   hint: boolean;
   goalHints: IGoalHint[];
+  lastCheckedDate: string;
+  nextCheckDate: string;
   deletedGoalHints?: Omit<IGoalHint, "id">[];
 }
 

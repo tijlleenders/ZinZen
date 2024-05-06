@@ -11,7 +11,7 @@ import { TrashItem } from "./TrashItem";
 import { HintItem } from "./HintItem";
 import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
 
-export const dexieVersion = 19;
+export const dexieVersion = 20;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -54,13 +54,13 @@ export class ZinZenDB extends Dexie {
         pubSubCollection: "id, subscribers",
         publicGroupsCollection: null,
         taskCollection:
-          "id, goalId, title, hoursSpent, completedTodayIds, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
+          "id, goalId, title, hoursSpent, completedTodayIds, completedTodayTimings, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
         customizationCollection: "++id, goalId, posIndex",
         dumpboxCollection: "id, key, value",
         partnersCollection: null,
         goalTrashCollection:
           "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-        hintsCollection: "id, hint, goalHints",
+        hintsCollection: "id, hint, goalHints, lastCheckedDate, nextCheckDate",
         impossibleGoalsCollection: "goalId, goalTitle",
       })
       .upgrade((trans) => {
@@ -185,6 +185,14 @@ export class ZinZenDB extends Dexie {
             .modify((goal: GoalItem) => {
               goal.category = goal.afterTime || goal.beforeTime ? "Budget" : goal.duration ? "Standard" : "Cluster";
             });
+        }
+        if (currentVersion < 20) {
+          console.log("processing updates for 20th version");
+          const hintsCollection = trans.table("hintsCollection");
+          hintsCollection.toCollection().modify((hint: HintItem) => {
+            hint.nextCheckDate = new Date().toISOString();
+            hint.lastCheckedDate = new Date().toISOString();
+          });
         }
       });
   }

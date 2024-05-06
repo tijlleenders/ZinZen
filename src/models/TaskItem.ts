@@ -3,6 +3,7 @@ export interface blockedSlotOfTask {
   end: string;
 }
 
+export type TCompletedTaskTiming = { goalid: string; start: string; deadline: string };
 export interface TaskItem {
   id: string;
   goalId: string;
@@ -14,4 +15,5 @@ export interface TaskItem {
   lastCompleted: string; // date
   lastForget: string; // date
   blockedSlots: blockedSlotOfTask[];
+  completedTodayTimings: TCompletedTaskTiming[]; //  to store timings of the tasks that are completed today
 }
