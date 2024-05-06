@@ -49,7 +49,10 @@ const Reschedule = () => {
       <div className="header-title">
         <h4>{task.title}</h4>
       </div>
-      <div className="reschedule-options" style={{ display: "flex", flexWrap: "wrap" }}>
+      <div
+        className={`reschedule-options ${darkModeStatus ? "dark" : "light"}`}
+        style={{ display: "flex", flexWrap: "wrap" }}
+      >
         <Radio.Group
           size="large"
           buttonStyle="solid"
