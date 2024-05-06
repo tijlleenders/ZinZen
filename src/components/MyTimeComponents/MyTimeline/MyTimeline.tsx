@@ -156,7 +156,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         setLastAction("TaskSkipped");
       } else if (actionName === "Reschedule") {
         setOpenReschedule({ ...task });
-        setLastAction("TaskRescheduled");
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });

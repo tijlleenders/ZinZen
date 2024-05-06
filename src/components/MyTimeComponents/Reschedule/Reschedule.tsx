@@ -1,8 +1,8 @@
 import { Radio } from "antd";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import React, { useState } from "react";
 
-import { darkModeState } from "@src/store";
+import { darkModeState, lastAction } from "@src/store";
 import "./Reschedule.scss";
 import ZModal from "@src/common/ZModal";
 import { addBlockedSlot } from "@src/api/TasksAPI";
@@ -14,6 +14,7 @@ const Reschedule = () => {
   const [task, setOpen] = useRecoilState(displayReschedule);
   const [selectedOption, setSelectedOption] = useState(0);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const setLastAction = useSetRecoilState(lastAction);
 
   if (!task) {
     return null;
@@ -34,6 +35,7 @@ const Reschedule = () => {
 
     console.log(`Task to avoid scheduling from ${start} to ${end}`);
     setOpen(null);
+    setLastAction("TaskRescheduled");
   };
 
   return (
