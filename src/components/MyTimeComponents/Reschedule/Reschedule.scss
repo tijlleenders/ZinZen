@@ -3,15 +3,6 @@
     padding: 0 0 24px 0 !important;
     border: none !important;
     border-radius: 28px !important;
-
-    .selected {
-      border: none;
-      background: var(--bottom-nav-color);
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    }
-    .booked {
-      background: var(--bottom-nav-color);
-    }
   }
 
   .reschedule-options {
@@ -39,63 +30,10 @@
       ) {
       border-color: var(--icon-grad-2);
     }
-
-    p {
-      margin: 0;
-      font-size: 1.286em;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
-    .res-card > p:last-child {
-      font-weight: 500;
-    }
-
-    .res-card.selected > p:last-child {
-      font-weight: 700;
-      color: var(--bottom-nav-text-color);
-    }
-  }
-
-  .slot-batch {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    div {
-      display: flex;
-      gap: 10px;
-    }
-  }
-
-  .slot-card {
-    border-radius: 8px;
-    background: transparent;
-    border: 1px solid #d9d9d9;
-    padding: 10px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-    min-width: 50px;
-    align-items: center;
-
-    sup {
-      top: -1em;
-      font-size: 0.5em;
-    }
-  }
-
-  .slot-card.selected {
-    font-weight: 600;
   }
 
   div:has(.action-btn) {
     text-align: center;
-  }
-
-  .task-card {
-    width: 150px;
   }
 
   .action-btn {
