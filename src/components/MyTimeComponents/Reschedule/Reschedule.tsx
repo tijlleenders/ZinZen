@@ -7,8 +7,8 @@ import "./Reschedule.scss";
 import ZModal from "@src/common/ZModal";
 import { addBlockedSlot } from "@src/api/TasksAPI";
 import { displayReschedule } from "@src/store/TaskState";
-import moment from "moment";
 import { RESCHEDULE_OPTIONS } from "@src/constants/rescheduleOptions";
+import { convertDateToString } from "@src/utils";
 
 const Reschedule = () => {
   const [task, setOpen] = useRecoilState(displayReschedule);
@@ -22,18 +22,18 @@ const Reschedule = () => {
 
   const handleReschedule = (value: number) => {
     setSelectedOption(value);
-    const now = moment();
-    const futureMoment = now.clone().add(value, "hours");
 
-    const start = now.format().slice(0, 19);
-    const end = futureMoment.format().slice(0, 19);
+    const startTime = new Date(task.start);
+    const endTime = new Date(startTime.getTime() + value * 3600000);
+    const start = convertDateToString(startTime, false);
+    const end = convertDateToString(endTime, false);
 
     addBlockedSlot(task.goalid, {
       start,
       end,
     });
 
-    console.log(`Task to avoid scheduling from ${start} to ${end}`);
+    console.log(`Task rescheduled from ${start} to ${end}`);
     setOpen(null);
     setLastAction("TaskRescheduled");
   };
