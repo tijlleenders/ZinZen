@@ -1,4 +1,7 @@
-.interactables-modal {
+.interactables-modal.reschedule-modal {
+  .header-title {
+    text-align: left;
+  }
   .reschedule-options {
     display: grid;
     grid-template-columns: 2fr 2fr;

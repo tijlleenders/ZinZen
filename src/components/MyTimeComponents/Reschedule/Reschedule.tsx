@@ -33,9 +33,9 @@ const Reschedule = () => {
   };
 
   return (
-    <ZModal type="interactables-modal" open={!!task.title} onCancel={() => setDisplayReschedule(null)}>
+    <ZModal type="reschedule-modal interactables-modal" open={!!task.title} onCancel={() => setDisplayReschedule(null)}>
       <div className="header-title">
-        <h4>{`Postpone: ${task.title}`}</h4>
+        <p className="ordinary-element">{`Postpone: ${task.title}`}</p>
       </div>
       <div className="reschedule-options">
         {RESCHEDULE_OPTIONS.map((option) => (
