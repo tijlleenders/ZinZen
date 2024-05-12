@@ -1,60 +1,12 @@
-.reschedule-modal {
-  .ant-modal-content {
-    padding: 0 0 24px 0 !important;
-    border: none !important;
-    border-radius: 28px !important;
-  }
-
+.interactables-modal {
   .reschedule-options {
-    align-self: center;
-    margin: 0 16px;
-    padding: 12px 8px 16px 8px;
-    margin-top: 20px;
-    flex-wrap: nowrap;
-    overflow-x: scroll;
-    display: flex;
+    display: grid;
+    grid-template-columns: 2fr 2fr;
 
-    .ant-radio-button-wrapper {
-      margin: 2px;
-      border-inline-start-width: 1px;
-      border-radius: 10px;
+    .goal-action:last-child {
+      border-top: 2px solid var(--default-border-color);
+      grid-column: 1 / -1;
+      border-radius: 0 0 28px 28px;
     }
-
-    .ant-radio-button-wrapper:not(:first-child)::before {
-      display: none;
-    }
-
-    .ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-      border-color: var(--icon-grad-2);
-    }
-  }
-
-  div:has(.action-btn) {
-    text-align: center;
-  }
-
-  .action-btn {
-    color: white;
-  }
-
-  .radio-button {
-    background-color: rgba(255, 255, 255, 0.08);
-  }
-}
-
-.reschedule-modal.light {
-  .action-btn {
-    color: black;
-  }
-
-  .ant-radio-group-solid
-    :where(.css-dev-only-do-not-override-w8mnev).ant-radio-button-wrapper-checked:not(
-      .ant-radio-button-wrapper-disabled
-    ) {
-    color: black;
-  }
-
-  .radio-button {
-    background-color: var(--secondary-background);
   }
 }

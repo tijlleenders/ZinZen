@@ -5,3 +5,5 @@ export const RESCHEDULE_OPTIONS: { label: string; value: number }[] = [
   { label: "3 days", value: 72 },
   { label: "7 days", value: 168 },
 ];
+
+export const MILLISECONDS_IN_HOUR = 3600000;

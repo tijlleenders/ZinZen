@@ -1,30 +1,24 @@
-import { Radio } from "antd";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import React, { useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import React from "react";
 
-import { darkModeState, lastAction } from "@src/store";
+import { lastAction } from "@src/store";
 import "./Reschedule.scss";
 import ZModal from "@src/common/ZModal";
 import { addBlockedSlot } from "@src/api/TasksAPI";
 import { displayReschedule } from "@src/store/TaskState";
-import { RESCHEDULE_OPTIONS } from "@src/constants/rescheduleOptions";
+import { MILLISECONDS_IN_HOUR, RESCHEDULE_OPTIONS } from "@src/constants/rescheduleOptions";
 import { convertDateToString } from "@src/utils";
+import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 
 const Reschedule = () => {
-  const [task, setOpen] = useRecoilState(displayReschedule);
-  const [selectedOption, setSelectedOption] = useState(0);
-  const darkModeStatus = useRecoilValue(darkModeState);
+  const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
   const setLastAction = useSetRecoilState(lastAction);
 
-  if (!task) {
-    return null;
-  }
+  if (!task) return null;
 
-  const handleReschedule = (value: number) => {
-    setSelectedOption(value);
-
+  const handleReschedule = (hours: number) => {
     const startTime = new Date(task.start);
-    const endTime = new Date(startTime.getTime() + value * 3600000);
+    const endTime = new Date(startTime.getTime() + hours * MILLISECONDS_IN_HOUR);
     const start = convertDateToString(startTime, false);
     const end = convertDateToString(endTime, false);
 
@@ -34,44 +28,25 @@ const Reschedule = () => {
     });
 
     console.log(`Task rescheduled from ${start} to ${end}`);
-    setOpen(null);
+    setDisplayReschedule(null);
     setLastAction("TaskRescheduled");
   };
 
   return (
-    <ZModal
-      type={`reschedule-modal ${darkModeStatus ? "dark" : "light"}`}
-      open={!!task.title}
-      onCancel={() => setOpen(null)}
-    >
+    <ZModal type="interactables-modal" open={!!task.title} onCancel={() => setDisplayReschedule(null)}>
       <div className="header-title">
         <h4>{`Postpone: ${task.title}`}</h4>
       </div>
       <div className="reschedule-options">
-        <Radio.Group
-          size="large"
-          buttonStyle="solid"
-          defaultValue={selectedOption}
-          onChange={(e) => setSelectedOption(e.target.value)}
-        >
-          {RESCHEDULE_OPTIONS.map((option) => (
-            <Radio.Button
-              className={`radio-button ${darkModeStatus ? "dark" : "light"}`}
-              style={{
-                backgroundColor: darkModeStatus ? "rgba(255, 255, 255, 0.08)" : "var(--secondary-background)",
-              }}
-              key={option.label}
-              value={option.value}
-            >
-              {option.label}
-            </Radio.Button>
-          ))}
-        </Radio.Group>
-      </div>
-      <div>
-        <button type="button" className="action-btn" onClick={() => handleReschedule(selectedOption)}>
-          Reschedule
-        </button>
+        {RESCHEDULE_OPTIONS.map((option) => (
+          <div
+            key={option.value}
+            className="goal-action shareOptions-btn"
+            onClickCapture={() => handleReschedule(option.value)}
+          >
+            <ActionDiv label={option.label} icon="Clock" />
+          </div>
+        ))}
       </div>
     </ZModal>
   );
