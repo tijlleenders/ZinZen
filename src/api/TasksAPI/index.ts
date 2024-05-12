@@ -162,7 +162,6 @@ export const addBlockedSlot = async (goalId: string, slot: { start: string; end:
       .where("goalId")
       .equals(goalId)
       .modify((obj: TaskItem) => {
-        obj.blockedSlots = [];
         obj.blockedSlots.push(slot);
       });
   }).catch((e) => {
