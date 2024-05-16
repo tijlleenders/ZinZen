@@ -11,7 +11,7 @@ import { TrashItem } from "./TrashItem";
 import { HintItem } from "./HintItem";
 import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
 
-export const dexieVersion = 20;
+export const dexieVersion = 21;
 
 const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
 localStorage.setItem("dexieVersion", `${dexieVersion}`);
@@ -192,6 +192,13 @@ export class ZinZenDB extends Dexie {
           hintsCollection.toCollection().modify((hint: HintItem) => {
             hint.nextCheckDate = new Date().toISOString();
             hint.lastCheckedDate = new Date().toISOString();
+          });
+        }
+        if (currentVersion < 21) {
+          console.log("processing updates for 20th version");
+          const taskCollection = trans.table("taskCollection");
+          taskCollection.toCollection().modify((task: TaskItem) => {
+            task.completedTodayTimings = [];
           });
         }
       });
