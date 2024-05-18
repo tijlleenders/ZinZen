@@ -128,10 +128,10 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     timeBudget:
       state.goalType === "Budget"
         ? {
-            perDay: state.goalType === "Budget" ? perDayHrs.join("-") : null,
-            perWeek: state.goalType === "Budget" ? perWeekHrs.join("-") : null,
+            perDay: perDayHrs.join("-"),
+            perWeek: perWeekHrs.join("-"),
           }
-        : null,
+        : undefined,
     category: state.goalType === "Budget" ? "Budget" : tags.duration !== "" ? "Standard" : "Cluster",
   });
 
