@@ -74,10 +74,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     language: "English",
     habit: null,
     on: null,
-    timeBudget: {
-      perDay: null,
-      perWeek: null,
-    },
+    timeBudget: undefined,
     duration: null,
     start: null,
     due: null,
@@ -90,8 +87,11 @@ export const createGoalObjectFromTags = (obj: object) => {
     sublist: [],
     goalColor: colorPalleteList[Math.floor(Math.random() * colorPalleteList.length)],
     typeOfGoal: "myGoal",
-    ...obj,
+    createdAt: "",
     participants: [],
+    newUpdates: false,
+    category: "Standard",
+    ...obj,
   };
   if (newGoal.rootGoalId === "root") {
     newGoal.rootGoalId = newGoal.id;
@@ -103,7 +103,8 @@ export const getHistoryUptoGoal = async (id: string) => {
   const history = [];
   let openGoalOfId = id;
   while (openGoalOfId !== "root") {
-    const tmpGoal: GoalItem = await getGoal(openGoalOfId);
+    const tmpGoal: GoalItem | null = await getGoal(openGoalOfId);
+    if (!tmpGoal) break;
     history.push({
       goalID: tmpGoal.id || "root",
       goalColor: tmpGoal.goalColor || "#ffffff",
