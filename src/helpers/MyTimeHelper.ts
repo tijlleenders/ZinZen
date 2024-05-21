@@ -184,15 +184,18 @@ export const getCachedSchedule = async (generatedInputId: string) => {
     return { code: "not-exist" };
   }
   const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
+  console.log("uniqueId", uniqueId, "output", output);
+
   return uniqueId === generatedInputId
     ? {
         code: "found",
         output: JSON.parse(output),
       }
-    : { code: "expired" };
+    : { code: "expired", output: JSON.parse(output) };
 };
 
 export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {
+  if (output === undefined || generatedInputId === undefined) return null;
   return code === "expired"
     ? updateSchedulerCachedRes(generatedInputId, output)
     : addSchedulerRes(generatedInputId, output);

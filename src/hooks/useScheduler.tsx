@@ -66,8 +66,14 @@ function useScheduler() {
       // await resetProgressOfToday();
       const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
       newGeneratedInputId = generatedInputId;
-      await init();
-      res = schedule(schedulerInputV2);
+
+      try {
+        await init();
+        res = schedule(schedulerInputV2);
+      } catch (error) {
+        res = cachedRes.output;
+        console.log("res", res);
+      }
     }
     putSchedulerRes(cachedRes.code, newGeneratedInputId, JSON.stringify(res))
       .then(() => console.log("schedule saved"))
