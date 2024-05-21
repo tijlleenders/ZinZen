@@ -38,7 +38,7 @@ function useScheduler() {
 
   const generateSchedule = async () => {
     const schedulerInput = await getInputForScheduler();
-    const generatedInputId = generateUniqueIdForSchInput(JSON.stringify(schedulerInput));
+    const generatedInputId: string | undefined = generateUniqueIdForSchInput(JSON.stringify(schedulerInput));
     const cachedRes = await getCachedSchedule(generatedInputId);
     return { generatedInputId, schedulerInput, cachedRes };
   };
@@ -72,7 +72,7 @@ function useScheduler() {
         res = schedule(schedulerInputV2);
       } catch (error) {
         res = cachedRes.output;
-        console.log("res", res);
+        console.warn("Due to latest changes in task or goals data, reschedule failed. Using cached output", error);
       }
     }
     putSchedulerRes(cachedRes.code, newGeneratedInputId, JSON.stringify(res))

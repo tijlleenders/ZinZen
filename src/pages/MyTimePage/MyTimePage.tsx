@@ -14,6 +14,7 @@ import "./MyTimePage.scss";
 import "@translations/i18n";
 import { useLocation } from "react-router-dom";
 import { Row } from "antd";
+import SchedulerErrorModal from "@components/MyTimeComponents/SchedulerErrorModal";
 
 export const MyTimePage = () => {
   const today = new Date();
@@ -100,6 +101,8 @@ export const MyTimePage = () => {
   return (
     <AppLayout title="myTime">
       <>
+        <SchedulerErrorModal />
+
         <Row />
         {getDayComponent("Today")}
         {getDayComponent("Tomorrow")}
