@@ -74,7 +74,6 @@ export const createGoalObjectFromTags = (obj: object) => {
     language: "English",
     habit: null,
     on: null,
-    timeBudget: undefined,
     duration: null,
     start: null,
     due: null,

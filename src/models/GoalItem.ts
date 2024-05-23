@@ -28,12 +28,10 @@ export interface GoalItem {
   link: string | null;
   participants: IParticipant[];
   rootGoalId: string;
-  timeBudget:
-    | {
-        perDay: string;
-        perWeek: string;
-      }
-    | undefined;
+  timeBudget?: {
+    perDay: string;
+    perWeek: string;
+  };
   typeOfGoal: "myGoal" | "shared";
   category: TGoalCategory;
   newUpdates: boolean;
