@@ -39,9 +39,13 @@ export const transformIntoSchInputGoals = (
       if (ele.on) {
         obj.filters.onDays = ele.on.map((day) => day.toLowerCase());
       }
-      if (slotsNotallowed && slotsNotallowed.length > 0) {
-        obj.filters.notOn = [...slotsNotallowed];
-      }
+
+      obj.notOn = [
+        {
+          start: new Date(),
+          end: new Date(),
+        },
+      ];
     }
     if (ele.habit) obj.repeat = "weekly";
     if (ele.timeBudget) {
