@@ -174,18 +174,12 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   return { dbTasks, schedulerInput };
 };
 
-export const getCachedSchedule = async (
-  generatedInputId: string,
-): Promise<{ code: string; output: ISchedulerOutput }> => {
+export const getCachedSchedule = async (generatedInputId: string) => {
   const schedulerCachedRes = await getFromOutbox("scheduler");
 
   if (!schedulerCachedRes) {
     return {
       code: "not-exist",
-      output: {
-        scheduled: [],
-        impossible: [],
-      },
     };
   }
   const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
@@ -195,15 +189,10 @@ export const getCachedSchedule = async (
         code: "found",
         output: JSON.parse(output),
       }
-    : { code: "expired", output: JSON.parse(output) };
+    : { code: "expired" };
 };
 
-export const putSchedulerRes = async (
-  code: string,
-  generatedInputId: string | undefined,
-  output: string | undefined,
-) => {
-  if (output === undefined || generatedInputId === undefined) return null;
+export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {
   return code === "expired"
     ? updateSchedulerCachedRes(generatedInputId, output)
     : addSchedulerRes(generatedInputId, output);

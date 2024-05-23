@@ -1,5 +1,5 @@
 /* eslint-disable import/no-relative-packages */
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useEffect, useState } from "react";
 
 import rescheduleTune from "@assets/reschedule.mp3";
@@ -19,6 +19,7 @@ import {
   putSchedulerRes,
 } from "@src/helpers/MyTimeHelper";
 
+import { schedulerErrorState } from "@src/store/SchedulerErrorState";
 import init, { schedule } from "../../pkg/scheduler";
 
 function useScheduler() {
@@ -28,6 +29,7 @@ function useScheduler() {
   const devMode = useRecoilValue(openDevMode);
   const [tasks, setTasks] = useState<{ [day: string]: ITaskOfDay }>({});
   const [action, setLastAction] = useRecoilState(lastAction);
+  const setSchedulerError = useSetRecoilState(schedulerErrorState);
 
   const getInputForScheduler = async () => {
     const activeGoals: GoalItem[] = await getAllGoals();
@@ -72,7 +74,7 @@ function useScheduler() {
         res = schedule(schedulerInputV2);
       } catch (error) {
         res = cachedRes.output;
-        console.warn("Due to latest changes in task or goals data, reschedule failed. Using cached output", error);
+        setSchedulerError(error.toString());
       }
     }
     putSchedulerRes(cachedRes.code, newGeneratedInputId, JSON.stringify(res))
