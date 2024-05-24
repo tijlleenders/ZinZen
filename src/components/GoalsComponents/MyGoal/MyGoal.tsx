@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
@@ -10,6 +10,8 @@ import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
+import { moveGoalState } from "@src/store/moveGoalState";
+import { moveGoalHierarchy } from "@src/helpers/GoalController";
 
 interface MyGoalProps {
   actionType: TAction;
@@ -49,6 +51,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const showChangesModal = useRecoilValue(displayChangesModal);
+  const [moveGoal, setMoveGoal] = useRecoilState(moveGoalState);
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
@@ -100,6 +103,17 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
     }
   }, [location]);
 
+  const handleMove = () => {
+    console.log("goal moved");
+
+    if (moveGoal.goal == null) return;
+    setMoveGoal({
+      ...moveGoal,
+      parentGoalId: goal.id,
+    });
+    moveGoalHierarchy(moveGoal.goal, goal.id);
+  };
+
   return (
     <>
       <div
@@ -119,6 +133,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
           </div>
           <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
             <GoalTitle goal={goal} isImpossible={goal.impossible} />
+            <button type="button" onClick={handleMove}>
+              Move here
+            </button>
           </div>
         </div>
         {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}

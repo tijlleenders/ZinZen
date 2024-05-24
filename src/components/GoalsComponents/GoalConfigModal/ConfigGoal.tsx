@@ -26,6 +26,7 @@ import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
+import { moveGoalState } from "@src/store/moveGoalState";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -63,9 +64,17 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const showAddGoal = useRecoilValue(displayAddGoal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
+  const [moveGoal, setMoveGoal] = useRecoilState(moveGoalState);
 
   const open = !!showAddGoal || !!showUpdateGoal;
   const [hints, setHints] = useState(false);
+
+  const handleMove = () => {
+    setMoveGoal({
+      ...moveGoal,
+      goal,
+    });
+  };
 
   useEffect(() => {
     getGoalHintItem(goal.id).then((hintItem) => {
@@ -314,6 +323,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             onChange={(e) => setTitle(e.target.value)}
             inputMode="text"
           />
+          <button onClick={handleMove}>Move</button>
         </div>
         <div
           style={{

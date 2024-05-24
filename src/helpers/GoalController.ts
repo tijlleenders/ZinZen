@@ -135,3 +135,17 @@ export const deleteSharedGoal = async (goal: GoalItem) => {
     });
   }
 };
+
+export const moveGoalHierarchy = async (goal: GoalItem, parentGoalId: string) => {
+  await updateGoal(goal.id, { parentGoalId });
+  if (goal.parentGoalId !== "root") {
+    getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
+      const parentGoalSublist = parentGoal.sublist;
+      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
+      if (childGoalIndex !== -1) {
+        parentGoalSublist.splice(childGoalIndex, 1);
+      }
+      await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
+    });
+  }
+};
