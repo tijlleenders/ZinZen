@@ -132,12 +132,12 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
           </div>
           <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
             <GoalTitle goal={goal} isImpossible={goal.impossible} />
-            {moveGoal && goal.id !== moveGoal.id && (
-              <ZButton className="move-goal-button" onClick={handleMove}>
-                +
-              </ZButton>
-            )}
           </div>
+          {moveGoal && goal.id !== moveGoal.id && (
+            <ZButton className="move-goal-button" onClick={handleMove}>
+              +
+            </ZButton>
+          )}
         </div>
         {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
       </div>
