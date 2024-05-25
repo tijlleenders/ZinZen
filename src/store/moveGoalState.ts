@@ -3,8 +3,5 @@ import { atom } from "recoil";
 
 export const moveGoalState = atom({
   key: "moveGoalState",
-  default: {
-    parentGoalId: "",
-    goal: null as GoalItem | null,
-  },
+  default: null as GoalItem | null,
 });

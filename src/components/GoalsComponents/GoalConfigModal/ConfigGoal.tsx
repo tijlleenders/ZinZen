@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Slider } from "antd";
 import { displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
@@ -20,13 +20,14 @@ import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } f
 import { getGoal } from "@src/api/GoalsAPI";
 import ZAccordion from "@src/common/Accordion";
 import { getGoalHintItem } from "@src/api/HintsAPI";
+import { moveGoalState } from "@src/store/moveGoalState";
+import ZButton from "@src/common/ZButton";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
-import { moveGoalState } from "@src/store/moveGoalState";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -49,6 +50,7 @@ const roundOffHours = (hrsValue: string) => {
 
 const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
   const isKeyboardOpen = useVirtualKeyboardOpen();
+  const navigate = useNavigate();
 
   const { t } = useTranslation();
   const { state }: { state: ILocationState } = useLocation();
@@ -70,10 +72,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [hints, setHints] = useState(false);
 
   const handleMove = () => {
-    setMoveGoal({
-      ...moveGoal,
-      goal,
-    });
+    setMoveGoal(goal);
+    navigate("/MyGoals", { state: { ...state, displayUpdateGoal: undefined } });
   };
 
   useEffect(() => {
@@ -323,7 +323,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             onChange={(e) => setTitle(e.target.value)}
             inputMode="text"
           />
-          <button onClick={handleMove}>Move</button>
+          <ZButton onClick={handleMove}>Move</ZButton>
         </div>
         <div
           style={{

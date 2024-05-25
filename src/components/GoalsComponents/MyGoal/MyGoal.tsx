@@ -5,13 +5,16 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
+import { moveGoalState } from "@src/store/moveGoalState";
+import { moveGoalHierarchy } from "@src/helpers/GoalController";
 
+import ZButton from "@src/common/ZButton";
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
-import { moveGoalState } from "@src/store/moveGoalState";
-import { moveGoalHierarchy } from "@src/helpers/GoalController";
+
+import "./index.scss";
 
 interface MyGoalProps {
   actionType: TAction;
@@ -105,13 +108,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
 
   const handleMove = () => {
     console.log("goal moved");
-
-    if (moveGoal.goal == null) return;
-    setMoveGoal({
-      ...moveGoal,
-      parentGoalId: goal.id,
-    });
-    moveGoalHierarchy(moveGoal.goal, goal.id);
+    if (moveGoal == null) return;
+    moveGoalHierarchy(moveGoal, goal.id);
+    setMoveGoal(null);
   };
 
   return (
@@ -133,9 +132,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
           </div>
           <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
             <GoalTitle goal={goal} isImpossible={goal.impossible} />
-            <button type="button" onClick={handleMove}>
-              Move here
-            </button>
+            {moveGoal && goal.id !== moveGoal.id && (
+              <ZButton className="move-goal-button" onClick={handleMove}>
+                +
+              </ZButton>
+            )}
           </div>
         </div>
         {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}

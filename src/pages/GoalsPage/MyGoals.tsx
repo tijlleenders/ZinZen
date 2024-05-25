@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
@@ -29,6 +29,7 @@ import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal
 import { TrashItem } from "@src/models/TrashItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
 import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
+import MoveGoalGuide from "@components/GoalsComponents/MyGoal/MoveGoalGuide";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -98,11 +99,15 @@ export const MyGoals = () => {
     }
   }, [selectedGoalId, displaySearch]);
 
+  const goalWrapperRef = useRef(null);
+
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
       {showShareModal && <ShareGoalModal goal={showShareModal} />}
       {showChangesModal && <DisplayChangesModal />}
-      <div className="myGoals-container">
+      <div className="myGoals-container" ref={goalWrapperRef}>
+        <MoveGoalGuide goalComponentRef={goalWrapperRef} />
+
         {selectedGoalId === "root" ? (
           <div className="my-goals-content">
             {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}

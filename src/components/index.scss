@@ -68,3 +68,30 @@
     width: 70% !important;
   }
 }
+
+/* Default Button */
+.primary-btn,
+.primary-btn-dark {
+  font-weight: 600 !important;
+  background: transparent;
+  border-radius: 5px;
+  padding: 8px 15px;
+  border: none;
+  margin-top: 20px;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  place-self: flex-end;
+  background: var(--selection-color);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  font-size: 0.875em;
+  img {
+    margin-right: 10px;
+  }
+}
+.primary-btn-dark {
+  img {
+    filter: brightness(0) invert(1);
+  }
+}
