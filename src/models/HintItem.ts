@@ -1,5 +1,5 @@
 export interface IGoalHint {
-  id: string;
+  id?: string;
   parentTitle: string;
   title: string;
   duration?: string | null;
@@ -11,6 +11,7 @@ export interface HintItem {
   goalHints: IGoalHint[];
   lastCheckedDate: string;
   nextCheckDate: string;
+  deletedGoalHints?: Omit<IGoalHint, "id">[];
 }
 
 export interface IHintRequestBody {
