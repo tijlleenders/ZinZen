@@ -1,6 +1,7 @@
 import {
   IImpossibleTaskOfTheDay,
   IScheduleOfTheDay,
+  ISchedulerInput,
   ISchedulerInputGoal,
   ISchedulerOutput,
   ISchedulerOutputGoal,
@@ -156,12 +157,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
     docs.filter((doc) => doc.completedToday > 0).map((doc) => tasksCompletedToday.push(...doc.completedTodayTimings)),
   );
 
-  const schedulerInput: {
-    startDate: string;
-    endDate: string;
-    goals: ISchedulerInputGoal[];
-    tasksCompletedToday: TCompletedTaskTiming[];
-  } = {
+  const schedulerInput: ISchedulerInput = {
     startDate,
     endDate,
     goals: [],
@@ -180,10 +176,14 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
 
 export const getCachedSchedule = async (generatedInputId: string) => {
   const schedulerCachedRes = await getFromOutbox("scheduler");
+
   if (!schedulerCachedRes) {
-    return { code: "not-exist" };
+    return {
+      code: "not-exist",
+    };
   }
   const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
+
   return uniqueId === generatedInputId
     ? {
         code: "found",
