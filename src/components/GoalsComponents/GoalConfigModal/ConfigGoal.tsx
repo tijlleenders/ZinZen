@@ -432,9 +432,11 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   </span>
                 ))}
               </div>
-              <ZButton className="move-goal-button" onClick={handleMove}>
-                Move
-              </ZButton>
+              {state.displayUpdateGoal && (
+                <ZButton className="move-goal-button" onClick={handleMove}>
+                  Move
+                </ZButton>
+              )}
               <div className="action-btn-container">
                 <div>
                   <HintToggle setHints={setHints} defaultValue={hints} />
@@ -497,9 +499,11 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   />
                 </div>
               </div>
-              <ZButton className="move-goal-button" onClick={handleMove}>
-                Move
-              </ZButton>
+              {state.displayUpdateGoal && (
+                <ZButton className="move-goal-button" onClick={handleMove}>
+                  Move
+                </ZButton>
+              )}
             </>
           )}
         </div>

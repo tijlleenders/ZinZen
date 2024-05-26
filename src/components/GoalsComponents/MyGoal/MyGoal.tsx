@@ -107,7 +107,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   }, [location]);
 
   const handleMove = () => {
-    console.log("goal moved");
     if (moveGoal == null) return;
     moveGoalHierarchy(moveGoal, goal.id);
     setMoveGoal(null);
