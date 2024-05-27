@@ -136,16 +136,31 @@ export const deleteSharedGoal = async (goal: GoalItem) => {
   }
 };
 
-export const moveGoalHierarchy = async (goal: GoalItem, parentGoalId: string) => {
-  await updateGoal(goal.id, { parentGoalId });
-  if (goal.parentGoalId !== "root") {
-    getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
-      const parentGoalSublist = parentGoal.sublist;
-      const childGoalIndex = parentGoalSublist.indexOf(goal.id);
-      if (childGoalIndex !== -1) {
-        parentGoalSublist.splice(childGoalIndex, 1);
-      }
-      await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
-    });
+const removeGoalFromParentSublist = async (goalId: string, parentGoalId: string) => {
+  const parentGoal = await getGoal(parentGoalId);
+  if (!parentGoal) return;
+  const parentGoalSublist = parentGoal.sublist;
+  const childGoalIndex = parentGoalSublist.indexOf(goalId);
+  if (childGoalIndex !== -1) {
+    parentGoalSublist.splice(childGoalIndex, 1);
+  }
+  await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
+};
+
+const addGoalIdToTargetGoalSublist = async (goalId: string, targetGoalId: string) => {
+  const targetGoal = await getGoal(targetGoalId);
+  if (!targetGoal) return;
+  const targetGoalSublist = targetGoal.sublist;
+  targetGoalSublist.push(goalId);
+  await updateGoal(targetGoal.id, { sublist: targetGoalSublist });
+};
+
+export const moveGoalHierarchy = async (goalToMove: GoalItem, targetGoalId: string) => {
+  await updateGoal(goalToMove.id, { parentGoalId: targetGoalId });
+  if (goalToMove.parentGoalId !== "root") {
+    await Promise.all([
+      removeGoalFromParentSublist(goalToMove.id, goalToMove.parentGoalId),
+      addGoalIdToTargetGoalSublist(goalToMove.id, targetGoalId),
+    ]);
   }
 };
