@@ -101,10 +101,6 @@ starterGoals.push(
       id: dailyHabitsId,
       afterTime: null,
       beforeTime: null,
-      timeBudget: {
-        perDay: null,
-        perWeek: null,
-      },
       sublist: [otherGoalIds[5], otherGoalIds[6], otherGoalIds[7], otherGoalIds[8], otherGoalIds[9]],
     },
   },
