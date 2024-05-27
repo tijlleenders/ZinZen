@@ -56,6 +56,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   const goalToMove = useRecoilValue(moveGoalState);
   const navigateToSubgoal = useNavigateToSubgoal();
 
+  const shouldRenderMoveButton = goalToMove && goal.id !== goalToMove.id && goal.id !== goalToMove.parentGoalId;
+
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
       navigateToSubgoal(goal);
@@ -110,7 +112,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
           <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
             <GoalTitle goal={goal} isImpossible={goal.impossible} />
           </div>
-          {goalToMove && goal.id !== goalToMove.id && <GoalMoveButton type="move" targetGoal={goal} />}
+          {shouldRenderMoveButton && <GoalMoveButton type="move" targetGoal={goal} />}
         </div>
         {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
       </div>
