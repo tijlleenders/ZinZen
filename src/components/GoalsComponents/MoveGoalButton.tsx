@@ -39,7 +39,7 @@ const GoalMoveButton: React.FC<GoalMoveButtonProps> = ({ goal, targetGoal, type 
 
   return (
     <ZButton className="move-goal-button" onClick={handleClick}>
-      {type === "move" ? "Move Goal Here" : "Move Goal"}
+      {type === "move" ? "Move Here" : "Move Goal"}
     </ZButton>
   );
 };
