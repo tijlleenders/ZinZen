@@ -89,7 +89,7 @@ export const createGoalObjectFromTags = (obj: object) => {
     createdAt: "",
     participants: [],
     newUpdates: false,
-    category: "Standard",
+    category: "Cluster",
     ...obj,
   };
   if (newGoal.rootGoalId === "root") {
