@@ -3,9 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
-import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
+import { displayGoalId, displayUpdateGoal, displayChangesModal, TAction } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { moveGoalState } from "@src/store/moveGoalState";
+import useNavigateToSubgoal from "@src/store/useNavigateToSubgoal";
 
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
@@ -51,34 +52,18 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const selectedGoalId = useRecoilValue(displayGoalId);
-  const subGoalHistory = useRecoilValue(goalsHistory);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const goalToMove = useRecoilValue(moveGoalState);
+  const navigateToSubgoal = useNavigateToSubgoal();
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
-      const newState: ILocationState = {
-        ...location.state,
-        activeGoalId: goal.id,
-        goalsHistory: [
-          ...subGoalHistory,
-          {
-            goalID: goal.id || "root",
-            goalColor: goal.goalColor || "#ffffff",
-            goalTitle: goal.title || "",
-          },
-        ],
-      };
-      if (newState.allowAddingBudgetGoal !== false) {
-        newState.allowAddingBudgetGoal = goal.category !== "Standard";
-      }
-      navigate("/MyGoals", {
-        state: newState,
-      });
+      navigateToSubgoal(goal);
     } else {
       setShowActions({ open: goal.id, click: 1 });
     }
   };
+
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.stopPropagation();
     const navState: ILocationState = { ...location.state, from: "" };
@@ -125,7 +110,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
           <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
             <GoalTitle goal={goal} isImpossible={goal.impossible} />
           </div>
-          {goalToMove && goal.id !== goalToMove.id && <GoalMoveButton type="move" targetGoalId={goal.id} />}
+          {goalToMove && goal.id !== goalToMove.id && <GoalMoveButton type="move" targetGoal={goal} />}
         </div>
         {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
       </div>
