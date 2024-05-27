@@ -11,7 +11,8 @@ interface ZButtonProps {
 const ZButton: React.FC<ZButtonProps> = ({ children, onClick, className }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
-  const combinedClassName = `${className} default-btn${darkModeStatus ? "-dark" : ""}`;
+  const defaultClassName = `default-btn${darkModeStatus ? "-dark" : ""}`;
+  const combinedClassName = className ? `${defaultClassName} ${className}` : defaultClassName;
 
   return (
     <button type="button" className={combinedClassName} onClick={onClick}>

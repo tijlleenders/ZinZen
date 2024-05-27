@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { moveGoalState } from "@src/store/moveGoalState";
-import { moveGoalHierarchy } from "@src/helpers/GoalController";
 
-import ZButton from "@src/common/ZButton";
 import GoalAvatar from "../GoalAvatar";
 import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
 
 import "./index.scss";
+import GoalMoveButton from "../MoveGoalButton";
 
 interface MyGoalProps {
   actionType: TAction;
@@ -54,7 +53,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const showChangesModal = useRecoilValue(displayChangesModal);
-  const [moveGoal, setMoveGoal] = useRecoilState(moveGoalState);
+  const goalToMove = useRecoilValue(moveGoalState);
 
   const handleGoalClick = () => {
     if (showActions.open === goal.id && showActions.click > 0) {
@@ -106,12 +105,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
     }
   }, [location]);
 
-  const handleMove = () => {
-    if (moveGoal == null) return;
-    moveGoalHierarchy(moveGoal, goal.id);
-    setMoveGoal(null);
-  };
-
   return (
     <>
       <div
@@ -132,11 +125,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
           <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
             <GoalTitle goal={goal} isImpossible={goal.impossible} />
           </div>
-          {moveGoal && goal.id !== moveGoal.id && (
-            <ZButton className="move-goal-button" onClick={handleMove}>
-              +
-            </ZButton>
-          )}
+          {goalToMove && goal.id !== goalToMove.id && <GoalMoveButton type="move" targetGoalId={goal.id} />}
         </div>
         {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
       </div>

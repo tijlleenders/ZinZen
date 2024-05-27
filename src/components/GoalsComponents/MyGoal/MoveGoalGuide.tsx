@@ -1,11 +1,11 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Tour } from "antd";
 import type { TourProps } from "antd";
 import { useRecoilState } from "recoil";
 import { moveGoalState } from "@src/store/moveGoalState";
 
 const MoveGoalGuide: React.FC = ({ goalComponentRef }: { goalComponentRef: React.MutableRefObject<null> }) => {
-  const [moveGoal, setMoveGoal] = useRecoilState(moveGoalState);
+  const [goalToMove, setGoalToMove] = useRecoilState(moveGoalState);
 
   const steps: TourProps["steps"] = [
     {
@@ -13,6 +13,7 @@ const MoveGoalGuide: React.FC = ({ goalComponentRef }: { goalComponentRef: React
       target: () => goalComponentRef.current,
       nextButtonProps: {
         children: "Close",
+        onClick: () => setGoalToMove(null),
       },
       placement: "bottom",
       className: "move-goal-guide",
@@ -20,7 +21,7 @@ const MoveGoalGuide: React.FC = ({ goalComponentRef }: { goalComponentRef: React
   ];
   return (
     <div>
-      <Tour closable open={!!moveGoal} onClose={() => setMoveGoal(null)} steps={steps} />
+      <Tour closable open={!!goalToMove} onClose={() => setGoalToMove(null)} steps={steps} />
     </div>
   );
 };
