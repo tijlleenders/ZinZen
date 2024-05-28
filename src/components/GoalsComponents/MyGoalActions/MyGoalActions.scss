@@ -7,7 +7,7 @@
   .goal-action {
     width: unset !important;
     border: none;
-    border-radius: 0 !important;
+    border-radius: 0;
     cursor: pointer;
     background: var(--bottom-nav-color) !important;
   }
@@ -37,7 +37,7 @@
     border-radius: 0 0 0 28px !important;
   }
   .goal-action:last-child {
-    border-radius: 0 0 28px 0 !important;
+    border-radius: 0 0 28px 0;
   }
 
   .goal-action-archive {
