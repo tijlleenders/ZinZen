@@ -2,7 +2,7 @@ import React from "react";
 import { replaceUrlsWithText } from "@src/utils/patterns";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
-import { TelHandler, UrlHandler } from "./GoalTitleHandlers";
+import { useTelHandler, useUrlHandler } from "./GoalTitleHandlers";
 
 interface GoalTitleProps {
   goal: GoalItem;
@@ -25,9 +25,11 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
           const urlIndex = parseInt(match[1], 10);
           const url = urlsWithIndexes[urlIndex];
           if (url.startsWith("tel:")) {
-            return <TelHandler key={`${id}-tel-${urlIndex}`} telUrl={url} />;
+            const TelHandlerComponent = useTelHandler(url);
+            return <TelHandlerComponent key={`${id}-tel-${urlIndex}`} />;
           }
-          return <UrlHandler key={`${id}-url-${urlIndex}`} url={url} />;
+          const UrlHandlerComponent = useUrlHandler(url);
+          return <UrlHandlerComponent key={`${id}-url-${urlIndex}`} />;
         }
         return <span key={`${id}-text-${part}`}>{part}</span>;
       })}

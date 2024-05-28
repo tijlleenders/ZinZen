@@ -1,52 +1,57 @@
+import React, { useCallback } from "react";
 import { summarizeUrl } from "@src/utils/patterns";
-import React from "react";
 
-export const UrlHandler = ({ url }: { url: string }) => {
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter" || event.key === " ") {
-      window.open(url, "_blank");
-    }
-  };
+type Action = () => void;
 
-  const handleClick = () => {
-    window.open(url, "_blank");
-  };
+const useClickHandler = (action: Action, ariaLabelPrefix: string) => {
+  const handleClick = useCallback(() => {
+    action();
+  }, [action]);
 
-  return (
-    <span
-      role="link"
-      tabIndex={0}
-      style={{ cursor: "pointer", textDecoration: "underline" }}
-      onClick={handleClick}
-      onKeyDown={handleKeyPress}
-      aria-label={`Open ${summarizeUrl(url)}`}
-    >
-      {summarizeUrl(url)}
-    </span>
+  const handleKeyPress = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " ") {
+        action();
+      }
+    },
+    [action],
   );
+  const ariaLabel = `${ariaLabelPrefix}`;
+  return { handleClick, handleKeyPress, ariaLabel };
 };
 
-export const TelHandler = ({ telUrl }: { telUrl: string }) => {
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter" || event.key === " ") {
-      window.location.href = telUrl;
-    }
-  };
+const useHandler = (action: Action, ariaLabelPrefix: string, displayText: string) => {
+  const { handleClick, handleKeyPress, ariaLabel } = useClickHandler(action, `${ariaLabelPrefix} ${displayText}`);
 
-  const handleClick = () => {
-    window.location.href = telUrl;
-  };
-
-  return (
-    <span
-      role="button"
+  const HandlerComponent = () => (
+    <button
+      type="button"
+      role={ariaLabelPrefix === "Call" ? "button" : "link"}
       tabIndex={0}
-      style={{ cursor: "pointer", textDecoration: "underline" }}
+      style={{ background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
       onClick={handleClick}
       onKeyDown={handleKeyPress}
-      aria-label={`Call ${telUrl.split(":")[1]}`}
+      aria-label={ariaLabel}
     >
-      {telUrl}
-    </span>
+      {displayText}
+    </button>
   );
+
+  return HandlerComponent;
+};
+
+// Hook for URL handling
+export const useUrlHandler = (url: string) => {
+  const action = () => window.open(url, "_blank");
+  const displayText = summarizeUrl(url);
+  return useHandler(action, "Open", displayText);
+};
+
+// Hook for Tel handling
+export const useTelHandler = (telUrl: string) => {
+  const action = () => {
+    window.location.href = telUrl;
+  };
+  const displayText = telUrl.split(":")[1];
+  return useHandler(action, "Call", displayText);
 };
