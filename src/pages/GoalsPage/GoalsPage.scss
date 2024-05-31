@@ -150,8 +150,8 @@
 
 .goal-desc {
   white-space: pre-line;
-  font-size: 0.875em;
-  font-weight: 300;
+  font-size: 0.875em !important;
+  font-weight: 300 !important;
 }
 
 .goal-glow {
@@ -159,21 +159,35 @@
 }
 
 @keyframes glowAnimation {
-  0%, 100% {
+  0%,
+  100% {
     background-color: rgba(255, 215, 0, 0.2);
-    box-shadow: 0 0 2px rgba(255, 215, 0, 0.7), 0 0 5px rgba(255, 215, 0, 0.7), 0 0 2px rgba(255, 215, 0, 0.7);
+    box-shadow:
+      0 0 2px rgba(255, 215, 0, 0.7),
+      0 0 5px rgba(255, 215, 0, 0.7),
+      0 0 2px rgba(255, 215, 0, 0.7);
   }
-  15%, 85% {
+  15%,
+  85% {
     background-color: rgba(255, 215, 0, 0.4);
-    box-shadow: 0 0 2px rgba(255, 215, 0, 0.9), 0 0 5px rgba(255, 215, 0, 0.9), 0 0 2px rgba(255, 215, 0, 0.9);
+    box-shadow:
+      0 0 2px rgba(255, 215, 0, 0.9),
+      0 0 5px rgba(255, 215, 0, 0.9),
+      0 0 2px rgba(255, 215, 0, 0.9);
   }
-  30%, 70% {
+  30%,
+  70% {
     background-color: rgba(255, 215, 0, 0.6);
-    box-shadow: 0 0 2px rgba(255, 215, 0, 0.7), 0 0 5px rgba(255, 215, 0, 0.7), 0 0 2px rgba(255, 215, 0, 0.7);
+    box-shadow:
+      0 0 2px rgba(255, 215, 0, 0.7),
+      0 0 5px rgba(255, 215, 0, 0.7),
+      0 0 2px rgba(255, 215, 0, 0.7);
   }
   50% {
     background-color: rgba(255, 215, 0, 0.8);
-    box-shadow: 0 0 2px rgba(255, 215, 0, 0.7), 0 0 5px rgba(255, 215, 0);
+    box-shadow:
+      0 0 2px rgba(255, 215, 0, 0.7),
+      0 0 5px rgba(255, 215, 0);
   }
 }
 

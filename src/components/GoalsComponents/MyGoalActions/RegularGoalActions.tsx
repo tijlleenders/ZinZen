@@ -15,6 +15,7 @@ import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
 
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
+import GoalSummary from "../MyGoal/GoalSummary/GoalSummary";
 
 const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
@@ -73,6 +74,9 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
       >
         <p className="ordinary-element" id="title-field">
           {t(`${goal.title}`)}
+        </p>
+        <p className="goal-desc">
+          <GoalSummary goal={goal} />
         </p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
