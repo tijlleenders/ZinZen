@@ -1,16 +1,20 @@
-import React from "react";
+import React, { MutableRefObject } from "react";
 import { Tour } from "antd";
 import type { TourProps } from "antd";
 import { useRecoilState } from "recoil";
 import { moveGoalState } from "@src/store/moveGoalState";
 
-const MoveGoalGuide: React.FC = ({ goalComponentRef }: { goalComponentRef: React.MutableRefObject<null> }) => {
+interface MoveGoalGuideProps {
+  goalComponentRef: MutableRefObject<HTMLDivElement | null>;
+}
+
+const MoveGoalGuide: React.FC<MoveGoalGuideProps> = ({ goalComponentRef }) => {
   const [goalToMove, setGoalToMove] = useRecoilState(moveGoalState);
 
   const steps: TourProps["steps"] = [
     {
       title: "Navigate to the goal you want to move into.",
-      target: () => goalComponentRef.current,
+      target: () => goalComponentRef.current as HTMLElement,
       nextButtonProps: {
         children: "Close",
         onClick: () => setGoalToMove(null),

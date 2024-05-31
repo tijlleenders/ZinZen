@@ -49,6 +49,8 @@ export const MyGoals = () => {
 
   const [action, setLastAction] = useRecoilState(lastAction);
 
+  const goalWrapperRef = useRef<HTMLDivElement | null>(null);
+
   const getAllGoals = async () => {
     const [goals, delGoals] = await Promise.all([getActiveGoals("true"), getDeletedGoals("root")]);
     console.log("🚀 ~ getAllGoals ~ goals, delGoals:", goals, delGoals);
@@ -98,8 +100,6 @@ export const MyGoals = () => {
       refreshActiveGoals();
     }
   }, [selectedGoalId, displaySearch]);
-
-  const goalWrapperRef = useRef(null);
 
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>

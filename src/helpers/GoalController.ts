@@ -157,10 +157,8 @@ const addGoalIdToTargetGoalSublist = async (goalId: string, targetGoalId: string
 
 export const moveGoalHierarchy = async (goalToMove: GoalItem, targetGoalId: string) => {
   await updateGoal(goalToMove.id, { parentGoalId: targetGoalId });
-  if (goalToMove.parentGoalId !== "root") {
-    await Promise.all([
-      removeGoalFromParentSublist(goalToMove.id, goalToMove.parentGoalId),
-      addGoalIdToTargetGoalSublist(goalToMove.id, targetGoalId),
-    ]);
-  }
+  await Promise.all([
+    removeGoalFromParentSublist(goalToMove.id, goalToMove.parentGoalId),
+    addGoalIdToTargetGoalSublist(goalToMove.id, targetGoalId),
+  ]);
 };
