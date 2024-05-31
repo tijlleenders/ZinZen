@@ -10,9 +10,10 @@ const GoalDueDateSummary = ({ goal }: { goal: GoalItem }) => {
   const dueDateText = calculateDaysLeft(goal.due);
 
   return (
-    <div>
-      <span>{dueDateText}</span>
-    </div>
+    <span>
+      {", "}
+      {dueDateText}
+    </span>
   );
 };
 

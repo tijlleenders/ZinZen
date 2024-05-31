@@ -12,9 +12,9 @@ const BudgetStartSummary = ({ goal }: { goal: GoalItem }) => {
   }
 
   return (
-    <div>
+    <span>
       {hasStarted ? t("started") : t("starts")} {new Date(goal.start).toDateString().slice(4)}
-    </div>
+    </span>
   );
 };
 

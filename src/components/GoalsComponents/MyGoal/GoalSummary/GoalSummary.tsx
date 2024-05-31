@@ -9,10 +9,8 @@ import BudgetStartSummary from "./BudgetStartSummary";
 import GoalHabitSummary from "./GoalHabitSummary";
 
 const GoalSummary = ({ goal }: { goal: GoalItem }) => {
-  const { t } = useTranslation();
-  const isBudget = goal.timeBudget?.perDay !== null && goal.timeBudget?.perDay !== undefined;
+  const isBudget = goal.timeBudget !== undefined;
   const hasSubGoalItems = goal.sublist.length > 0;
-  const shouldRenderGoalSummary = hasSubGoalItems || goal.due || goal.habit || goal.duration;
   if (isBudget) {
     return (
       <>
@@ -21,14 +19,12 @@ const GoalSummary = ({ goal }: { goal: GoalItem }) => {
       </>
     );
   }
-  return shouldRenderGoalSummary ? (
+  return (
     <>
       {hasSubGoalItems && !goal.duration ? <GoalSublistSummary goal={goal} /> : <GoalDurationSummary goal={goal} />}
       <GoalDueDateSummary goal={goal} />
       <GoalHabitSummary goal={goal} />
     </>
-  ) : (
-    <span>{t("noDurationText")}</span>
   );
 };
 
