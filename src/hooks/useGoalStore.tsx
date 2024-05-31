@@ -1,11 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { ILocationState } from "@src/Interfaces";
 import { getGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayConfirmation } from "@src/store";
-import { displayGoalId, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
+import { displayGoalActions, displayGoalId, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 import { colorPalleteList } from "@src/utils";
+import { moveGoalState } from "@src/store/moveGoalState";
 
 const useGoalStore = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const useGoalStore = () => {
   const subGoalHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
 
+  const setGoalToMove = useSetRecoilState(moveGoalState);
   const setColorIndex = useSetRecoilState(selectedColorIndex);
 
   const handleAddGoal = async (type: "Budget" | "Goal", goal: GoalItem | null = null) => {
@@ -75,6 +77,11 @@ const useGoalStore = () => {
     navigate("/MyGoals", { state: { ...location.state, showGoalActions: id } });
   };
 
+  const handleMove = (goal: GoalItem) => {
+    setGoalToMove(goal);
+    navigate("/MyGoals", { state: { ...location.state, displayGoalActions: null } });
+  };
+
   return {
     handleAddGoal,
     handleShareGoal,
@@ -82,6 +89,7 @@ const useGoalStore = () => {
     handleGoalActions,
     handleConfirmation,
     handleDisplayChanges,
+    handleMove,
   };
 };
 

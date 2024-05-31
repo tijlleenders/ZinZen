@@ -34,10 +34,12 @@
   }
   .goal-action:nth-child(3) {
     border-right: 2px solid var(--default-border-color);
-    border-radius: 0 0 0 28px !important;
   }
+
   .goal-action:last-child {
-    border-radius: 0 0 28px 0 !important;
+    border-top: 2px solid var(--default-border-color);
+    grid-column: 1 / -1;
+    border-radius: 0 0 28px 28px !important;
   }
 
   .goal-action-archive {

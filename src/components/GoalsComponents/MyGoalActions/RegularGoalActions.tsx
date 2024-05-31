@@ -15,10 +15,11 @@ import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
 
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
+import { moveGoalState } from "@src/store/moveGoalState";
 
 const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
-  const { handleUpdateGoal, handleShareGoal, handleConfirmation } = useGoalStore();
+  const { handleUpdateGoal, handleShareGoal, handleConfirmation, handleMove } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
   const subGoalsHistory = useRecoilValue(goalsHistory);
@@ -27,6 +28,7 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
   const setDevMode = useSetRecoilState(openDevMode);
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
+  const goalToMove = useRecoilValue(moveGoalState);
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
@@ -123,6 +125,16 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
         >
           <ActionDiv label={t("Edit")} icon="Edit" />
         </div>
+        {goalToMove && (
+          <div
+            className="goal-action shareOptions-btn"
+            onClickCapture={() => {
+              handleMove(goal);
+            }}
+          >
+            <ActionDiv label={t("Move")} icon="Edit" />
+          </div>
+        )}
       </div>
     </ZModal>
   );
