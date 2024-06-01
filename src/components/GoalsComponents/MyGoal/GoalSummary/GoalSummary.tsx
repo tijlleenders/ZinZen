@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import GoalSublistSummary from "./GoalSublistSummary";
 import GoalDurationSummary from "./GoalDurationSummary";

@@ -29,6 +29,10 @@
   flex-direction: column;
   justify-content: center;
 
+  .goal-desc {
+    margin: 10px auto;
+  }
+
   .mygoalsbutton-dark,
   .mygoalsbutton-light {
     display: none;
