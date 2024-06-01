@@ -7,7 +7,7 @@ const BudgetSummary = ({ goal }: { goal: GoalItem }) => {
 
   const summaryParts = [perDaySummary, onDaysSummary, timeConstraintsSummary, perWeekSummary].filter(Boolean);
 
-  return <span>{summaryParts.join(" | ")}</span>;
+  return <span>{summaryParts.join(", ")}</span>;
 };
 
 export default BudgetSummary;

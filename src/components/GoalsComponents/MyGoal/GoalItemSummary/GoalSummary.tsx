@@ -7,7 +7,7 @@ const GoalSummary = ({ goal }: { goal: GoalItem }) => {
 
   const summaryParts = [sublistSummary, durationSummary, dueDateSummary, habitSummary].filter(Boolean);
 
-  return <span>{summaryParts.join(" | ")}</span>;
+  return <span>{summaryParts.join(", ")}</span>;
 };
 
 export default GoalSummary;
