@@ -25,7 +25,7 @@ import GoalHistory from "./GoalHistory";
 import GoalsAccordion from "../GoalsAccordion";
 
 import "./GoalSublist.scss";
-import GoalSummary from "../MyGoal/GoalSummary/GoalSummary";
+import GoalItemSummary from "../MyGoal/GoalItemSummary/GoalItemSummary";
 
 export const GoalSublist = () => {
   const { t } = useTranslation();
@@ -89,7 +89,7 @@ export const GoalSublist = () => {
           <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
           {parentGoal && (
             <p className="goal-desc">
-              <GoalSummary goal={parentGoal} />
+              <GoalItemSummary goal={parentGoal} />
             </p>
           )}
           <div className="sublist-list-container">
