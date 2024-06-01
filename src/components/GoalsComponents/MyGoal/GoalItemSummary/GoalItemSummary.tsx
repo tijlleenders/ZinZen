@@ -7,10 +7,9 @@ const GoalItemSummary = ({ goal }: { goal: GoalItem }) => {
   const isBudget = goal.timeBudget !== undefined;
 
   return (
-    <>
-      {isBudget && <BudgetSummary goal={goal} />}
-      <GoalSummary goal={goal} />
-    </>
+    <span className="goal-item-summary-wrapper">
+      {isBudget ? <BudgetSummary goal={goal} /> : <GoalSummary goal={goal} />}
+    </span>
   );
 };
 

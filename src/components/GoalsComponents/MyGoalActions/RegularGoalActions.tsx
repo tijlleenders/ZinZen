@@ -75,9 +75,7 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
         <p className="ordinary-element" id="title-field">
           {t(`${goal.title}`)}
         </p>
-        <p className="goal-desc">
-          <GoalItemSummary goal={goal} />
-        </p>
+        <GoalItemSummary goal={goal} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
         {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
