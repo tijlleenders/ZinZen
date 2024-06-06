@@ -43,8 +43,8 @@ export interface ISchedulerInputGoal {
     afterTime?: number;
     beforeTime?: number;
     onDays?: string[];
-    notOn?: blockedSlotOfTask[];
   };
+  notOn?: blockedSlotOfTask[];
   repeat?: string;
   budget?: {
     minPerDay?: number;

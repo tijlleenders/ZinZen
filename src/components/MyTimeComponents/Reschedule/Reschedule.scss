@@ -1,108 +1,15 @@
-.rescheduleModal {
-  hr {
-    margin: 0;
-    color: #d9d9d9;
-    opacity: 1;
+.interactables-modal.reschedule-modal {
+  .header-title {
+    text-align: left;
   }
+  .reschedule-options {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
 
-  .ant-modal-content {
-    padding: 0 0 24px 0 !important;
-    border: none !important;
-    border-radius: 28px !important;
-
-    .selected {
-      border: none;
-      background: var(--bottom-nav-color);
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    .goal-action:last-child {
+      border-top: 2px solid var(--default-border-color);
+      grid-column: 1 / -1;
+      border-radius: 0 0 28px 28px;
     }
-    .booked {
-      background: var(--bottom-nav-color);
-    }
-  }
-
-  .list {
-    margin: 0 16px;
-    padding: 8px 8px 16px 8px;
-    border-left: 0;
-    border-right: 0;
-    flex-wrap: nowrap;
-    overflow-x: scroll;
-    display: flex;
-    gap: 20px;
-
-    .res-card {
-      border-radius: 8px;
-      background: transparent;
-      border: 1px solid #d9d9d9;
-      padding: 10px 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      text-align: center;
-      min-width: 75px;
-      align-items: center;
-    }
-
-    p {
-      margin: 0;
-      font-size: 1.286em;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
-    .res-card > p:last-child {
-      font-weight: 500;
-    }
-
-    .res-card.selected > p:last-child {
-      font-weight: 700;
-      color: var(--bottom-nav-text-color);
-    }
-  }
-
-  .slot-batch {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    div {
-      display: flex;
-      gap: 10px;
-    }
-  }
-
-  .slot-card {
-    border-radius: 8px;
-    background: transparent;
-    border: 1px solid #d9d9d9;
-    padding: 10px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-    min-width: 50px;
-    align-items: center;
-
-    sup {
-      top: -1em;
-      font-size: 0.5em;
-    }
-  }
-
-  .slot-card.selected {
-    font-weight: 600;
-  }
-
-  .action-btn {
-    margin-top: 16px;
-    background: var(--primary-background);
-  }
-
-  div:has(.action-btn) {
-    text-align: center;
-  }
-
-  .task-card {
-    width: 150px;
   }
 }

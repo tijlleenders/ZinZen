@@ -20,6 +20,7 @@ import { displayToast, lastAction, focusTaskTitle } from "@src/store";
 import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
+import { displayReschedule } from "@src/store/TaskState";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
@@ -53,6 +54,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
+  const setOpenReschedule = useSetRecoilState(displayReschedule);
 
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
 
@@ -103,25 +105,30 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
+        console.log("task not found");
+
         await addTask({
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
-          completedTodayIds: [task.taskid],
+          completedTodayIds: [],
           forgotToday:
             actionName === "Skip" ? [`${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`] : [],
           completedToday: actionName === "Done" ? Number(task.duration) : 0,
           lastForget: actionName === "Skip" ? new Date().toLocaleDateString() : "",
           lastCompleted: actionName === "Done" ? new Date().toLocaleDateString() : "",
           hoursSpent: 0,
-          completedTodayTimings: [
-            {
-              goalid: task.goalid,
-              start: task.start,
-              deadline: task.deadline,
-            },
-          ],
-          blockedSlots: [], // actionName === "Reschedule" ? [{ start: task.start, end: task.deadline }] : [],
+          completedTodayTimings:
+            actionName === "Done"
+              ? [
+                  {
+                    goalid: task.goalid,
+                    start: task.start,
+                    deadline: task.deadline,
+                  },
+                ]
+              : [],
+          blockedSlots: [],
         });
         // if (actionName === "Reschedule") {
         //   setOpenReschedule({ ...task });
@@ -133,7 +140,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Skip") {
         await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`, task);
       } else if (actionName === "Reschedule") {
-        // setOpenReschedule({ ...task });
+        setOpenReschedule(task);
       }
       if (actionName === "Done") {
         await doneSound.play();
@@ -147,6 +154,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       } else if (actionName === "Skip") {
         await forgetSound.play();
         setLastAction("TaskSkipped");
+      } else if (actionName === "Reschedule") {
+        setOpenReschedule({ ...task });
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
