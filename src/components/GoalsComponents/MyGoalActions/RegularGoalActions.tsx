@@ -15,7 +15,6 @@ import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
 
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
-import { moveGoalState } from "@src/store/moveGoalState";
 
 const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
@@ -28,7 +27,6 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
   const setDevMode = useSetRecoilState(openDevMode);
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
-  const goalToMove = useRecoilValue(moveGoalState);
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
