@@ -18,7 +18,7 @@ const GoalMoveButton: React.FC<GoalMoveButtonProps> = ({ targetGoal }) => {
 
   const handleClick = () => {
     if (selectedGoal && targetGoalId) {
-      moveGoalHierarchy(selectedGoal, targetGoalId);
+      moveGoalHierarchy(selectedGoal.id, targetGoal.id);
       navigateToSubgoal(targetGoal);
       setSelectedGoal(null);
     }

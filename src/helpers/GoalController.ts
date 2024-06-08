@@ -10,6 +10,7 @@ import {
   removeGoalWithChildrens,
   getParticipantsOfGoals,
   getHintsFromAPI,
+  getChildrenGoals,
 } from "@src/api/GoalsAPI";
 import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
@@ -136,9 +137,21 @@ export const deleteSharedGoal = async (goal: GoalItem) => {
   }
 };
 
+const updateRootGoal = async (goalId: string, newRootGoalId: string) => {
+  await updateGoal(goalId, { rootGoalId: newRootGoalId });
+
+  const childrenGoals = await getChildrenGoals(goalId);
+  if (childrenGoals) {
+    childrenGoals.forEach(async (goal: GoalItem) => {
+      await updateRootGoal(goal.id, newRootGoalId);
+    });
+  }
+};
+
 const removeGoalFromParentSublist = async (goalId: string, parentGoalId: string) => {
   const parentGoal = await getGoal(parentGoalId);
   if (!parentGoal) return;
+
   const parentGoalSublist = parentGoal.sublist;
   const childGoalIndex = parentGoalSublist.indexOf(goalId);
   if (childGoalIndex !== -1) {
@@ -147,18 +160,24 @@ const removeGoalFromParentSublist = async (goalId: string, parentGoalId: string)
   await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
 };
 
-const addGoalIdToTargetGoalSublist = async (goalId: string, targetGoalId: string) => {
-  const targetGoal = await getGoal(targetGoalId);
-  if (!targetGoal) return;
-  const targetGoalSublist = targetGoal.sublist;
-  targetGoalSublist.push(goalId);
-  await updateGoal(targetGoal.id, { sublist: targetGoalSublist });
+const addGoalToNewParentSublist = async (goalId: string, newParentGoalId: string) => {
+  const newParentGoal = await getGoal(newParentGoalId);
+  if (!newParentGoal) return;
+
+  const newParentGoalSublist = newParentGoal.sublist;
+  newParentGoalSublist.push(goalId);
+  await updateGoal(newParentGoal.id, { sublist: newParentGoalSublist });
 };
 
-export const moveGoalHierarchy = async (goalToMove: GoalItem, targetGoalId: string) => {
-  await updateGoal(goalToMove.id, { parentGoalId: targetGoalId });
+export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string) => {
+  const goalToMove = await getGoal(goalId);
+  const newParentGoal = await getGoal(newParentGoalId);
+  if (!goalToMove) return;
+
   await Promise.all([
+    updateGoal(goalToMove.id, { parentGoalId: newParentGoalId }),
     removeGoalFromParentSublist(goalToMove.id, goalToMove.parentGoalId),
-    addGoalIdToTargetGoalSublist(goalToMove.id, targetGoalId),
+    addGoalToNewParentSublist(goalToMove.id, newParentGoalId),
+    updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId || "root"),
   ]);
 };
