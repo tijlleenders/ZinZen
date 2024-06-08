@@ -52,39 +52,32 @@ function useScheduler() {
   };
 
   const initialCall = async () => {
-    const { schedulerInput: schedulerInputV1, cachedRes } = await generateSchedule();
-    let newGeneratedInputId = "";
-    let res: ISchedulerOutput;
-    console.log(
-      "🚀 ~ file: useScheduler.tsx:58 ~ initialCall ~ JSON.stringify(schedulerInputV1), res:",
-      JSON.stringify(schedulerInputV1),
-      schedulerInputV1,
-    );
-    console.log("🚀 ~ file: useScheduler.tsx:75 ~ initialCall ~ cachedRes.code:", cachedRes.code);
-    if (cachedRes.code === "found") {
-      res = cachedRes.output;
-      logIO(JSON.stringify(schedulerInputV1), res);
-    } else {
-      // await resetProgressOfToday();
-      const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
-      newGeneratedInputId = generatedInputId;
+    try {
+      const { schedulerInput: schedulerInputV1, cachedRes } = await generateSchedule();
+      let newGeneratedInputId = "";
+      let res: ISchedulerOutput | undefined = { scheduled: [], impossible: [] };
 
-      try {
+      console.log(
+        "🚀 ~ file: useScheduler.tsx:58 ~ initialCall ~ JSON.stringify(schedulerInputV1), res:",
+        JSON.stringify(schedulerInputV1),
+        schedulerInputV1,
+      );
+      console.log("🚀 ~ file: useScheduler.tsx:75 ~ initialCall ~ cachedRes.code:", cachedRes.code);
+
+      if (cachedRes.code === "found") {
+        res = cachedRes.output;
+        logIO(JSON.stringify(schedulerInputV1), res as ISchedulerOutput);
+      } else {
+        const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
+        newGeneratedInputId = generatedInputId;
+
         await init();
         res = schedule(schedulerInputV2);
-      } catch (error) {
-        setSchedulerError((prevErrors) => [...prevErrors, error.toString()]);
       }
-    }
 
-    try {
       await putSchedulerRes(cachedRes.code, newGeneratedInputId, JSON.stringify(res));
       console.log("schedule saved");
-    } catch (error) {
-      setSchedulerError((prevErrors) => [...prevErrors, error.toString()]);
-    }
 
-    try {
       const processedOutput = await handleSchedulerOutput(res);
       setTasks({ ...processedOutput });
     } catch (error) {
