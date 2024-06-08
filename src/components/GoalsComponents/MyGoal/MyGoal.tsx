@@ -115,7 +115,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
           </div>
           {shouldRenderMoveButton && <GoalMoveButton targetGoal={goal} />}
         </div>
-        {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
+        {!shouldRenderMoveButton && !showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
       </div>
       <div
         style={{
