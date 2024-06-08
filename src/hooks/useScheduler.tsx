@@ -73,20 +73,29 @@ function useScheduler() {
         await init();
         res = schedule(schedulerInputV2);
       } catch (error) {
-        res = cachedRes.output;
-        setSchedulerError(error.toString());
+        setSchedulerError((prevErrors) => [...prevErrors, error.toString()]);
       }
     }
-    putSchedulerRes(cachedRes.code, newGeneratedInputId, JSON.stringify(res))
-      .then(() => console.log("schedule saved"))
-      .catch(() => console.log("failed to save scheduler output"));
-    const processedOutput = await handleSchedulerOutput(res);
-    setTasks({ ...processedOutput });
+
+    try {
+      await putSchedulerRes(cachedRes.code, newGeneratedInputId, JSON.stringify(res));
+      console.log("schedule saved");
+    } catch (error) {
+      setSchedulerError((prevErrors) => [...prevErrors, error.toString()]);
+    }
+
+    try {
+      const processedOutput = await handleSchedulerOutput(res);
+      setTasks({ ...processedOutput });
+    } catch (error) {
+      setSchedulerError((prevErrors) => [...prevErrors, error.toString()]);
+    }
   };
 
   useEffect(() => {
     initialCall();
   }, [devMode]);
+
   useEffect(() => {
     if (action.includes("Task")) {
       if (action === "TaskRescheduled") rescheduleSound.play();

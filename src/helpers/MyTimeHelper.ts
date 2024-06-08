@@ -184,13 +184,12 @@ export const getCachedSchedule = async (generatedInputId: string) => {
     };
   }
   const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
-
   return uniqueId === generatedInputId
     ? {
         code: "found",
-        output: JSON.parse(output),
+        output: output && JSON.parse(output),
       }
-    : { code: "expired" };
+    : { code: "expired", output: {} };
 };
 
 export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {

@@ -8,7 +8,7 @@ import { ISchedulerInput, ISchedulerOutput } from "@src/Interfaces/IScheduler";
  * @param {ISchedulerInput} input
  * @returns {ISchedulerOutput}
  */
-export function schedule(input: ISchedulerInput): ISchedulerOutput;
+export function schedule(input: ISchedulerInput): ISchedulerOutput | undefined;
 
 interface Input {
   startDate: string;
