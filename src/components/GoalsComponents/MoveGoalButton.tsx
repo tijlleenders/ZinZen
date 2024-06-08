@@ -14,10 +14,8 @@ const GoalMoveButton: React.FC<GoalMoveButtonProps> = ({ targetGoal }) => {
   const [selectedGoal, setSelectedGoal] = useRecoilState(moveGoalState);
   const navigateToSubgoal = useNavigateToSubgoal();
 
-  const targetGoalId = targetGoal?.id;
-
   const handleClick = () => {
-    if (selectedGoal && targetGoalId) {
+    if (selectedGoal && targetGoal?.id) {
       moveGoalHierarchy(selectedGoal.id, targetGoal.id);
       navigateToSubgoal(targetGoal);
       setSelectedGoal(null);
