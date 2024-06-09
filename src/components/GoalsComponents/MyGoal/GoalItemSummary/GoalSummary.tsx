@@ -1,4 +1,4 @@
-import useGoalSummaryStore from "@src/hooks/useGoalSummary";
+import useGoalSummaryStore from "@src/hooks/useGoalSummaryStore";
 import { GoalItem } from "@src/models/GoalItem";
 import React from "react";
 
