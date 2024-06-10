@@ -99,7 +99,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
         key={String(`goal-${goal.id}`)}
         className={`user-goal${darkModeStatus ? "-dark" : ""} ${
           expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
-        }`}
+        } ${goalToMove && goalToMove.id === goal.id ? "goal-to-move-selected" : ""}`}
       >
         <div
           className="user-goal-main"

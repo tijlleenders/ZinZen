@@ -13,3 +13,8 @@
     min-width: fit-content;
   }
 }
+
+.goal-to-move-selected {
+  opacity: 0.5;
+  pointer-events: none;
+}
