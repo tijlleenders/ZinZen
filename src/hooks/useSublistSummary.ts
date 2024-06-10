@@ -33,7 +33,9 @@ export const useSublistSummary = ({ goal }: { goal: GoalItem }) => {
     const updateSublistSummary = async () => {
       try {
         const childrenGoals = await getChildrenGoals(goal.id);
-        const { goalsCount, budgetsCount } = classifyChildrenGoalItems(childrenGoals);
+        const unArchivedChildrenGoals = childrenGoals.filter((childGoal) => childGoal.archived === "false");
+
+        const { goalsCount, budgetsCount } = classifyChildrenGoalItems(unArchivedChildrenGoals);
 
         if (isMounted) {
           setSubGoalsCount(goalsCount);
