@@ -1,7 +1,7 @@
 import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Slider } from "antd";
+import { AutoComplete, Slider } from "antd";
 import { displayToast, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
@@ -26,6 +26,7 @@ import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
+import AutocompleteComponent from "./AutoComplete";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -306,14 +307,15 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       >
         <div style={{ textAlign: "left" }} className="header-title">
           <ColorPicker colorIndex={colorIndex} setColorIndex={setColorIndex} />
-          <input
+          {/* <input
             className="ordinary-element"
             id="title-field"
             placeholder={t(`${state.goalType !== "Budget" ? "goal" : "budget"}Title`)}
             value={t(`${title}`)}
             onChange={(e) => setTitle(e.target.value)}
             inputMode="text"
-          />
+          /> */}
+          <AutocompleteComponent />
         </div>
         <div
           style={{

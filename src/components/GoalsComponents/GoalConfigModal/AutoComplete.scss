@@ -1,0 +1,41 @@
+.autocomplete-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 400px;
+}
+
+.autocomplete-input-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+.autocomplete-input-wrapper input {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 1.2em;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  width: auto; /* Auto width */
+}
+
+.autocomplete-suggestion {
+  color: rgba(0, 0, 0, 0.5); /* Lighter color for suggestion text */
+  font-size: 1.2em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.hidden-span {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre;
+  font-size: 1.2em;
+  font-family: inherit; /* Match the input's font properties */
+  padding: 0;
+  margin: 0;
+}
