@@ -26,7 +26,7 @@ import "./ConfigGoal.scss";
 import CustomDatePicker from "./CustomDatePicker";
 import HintToggle from "./ConfigGoal/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
-import AutocompleteComponent from "./AutoComplete";
+import ArchivedAutoComplete from "./ArchivedAutoComplete";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -285,6 +285,23 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
     transition: "transform 0.3s ease-in-out",
   };
 
+  const onSuggestionClick = (selectedGoal: GoalItem) => {
+    console.log(selectedGoal);
+    setTitle(selectedGoal.title);
+    // setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
+    // setAfterTime(selectedGoal.afterTime || 9);
+    // setBeforeTime(selectedGoal.beforeTime || 18);
+    // setBetweenSliderUpdated(true);
+    // setTags({ on: selectedGoal.on || [], off: selectedGoal.due || [] });
+
+    // if (state.goalType === "Budget") {
+    //   const timeRange = selectedGoal.beforeTime - selectedGoal.afterTime;
+    //   const weeklyRange = timeRange * numberOfDays;
+    //   setPerDayHrs([timeRange, timeRange]);
+    //   setPerWeekHrs([weeklyRange, weeklyRange]);
+    // }
+  };
+
   return (
     <ZModal
       type="configModal"
@@ -315,7 +332,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             onChange={(e) => setTitle(e.target.value)}
             inputMode="text"
           /> */}
-          <AutocompleteComponent />
+          <ArchivedAutoComplete onGoalSelect={onSuggestionClick} />
         </div>
         <div
           style={{
