@@ -20,14 +20,15 @@
   outline: none;
   padding: 0;
   margin: 0;
-  width: auto; /* Auto width */
+  width: auto;
 }
 
 .autocomplete-suggestion {
-  color: rgba(0, 0, 0, 0.5); /* Lighter color for suggestion text */
+  color: rgba(0, 0, 0, 0.5);
   font-size: 1.2em;
-  pointer-events: none;
+  cursor: pointer;
   white-space: nowrap;
+  pointer-events: auto;
 }
 
 .hidden-span {
@@ -35,7 +36,7 @@
   visibility: hidden;
   white-space: pre;
   font-size: 1.2em;
-  font-family: inherit; /* Match the input's font properties */
+  font-family: inherit;
   padding: 0;
   margin: 0;
 }
