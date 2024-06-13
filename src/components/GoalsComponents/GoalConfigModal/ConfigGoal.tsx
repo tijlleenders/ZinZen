@@ -288,18 +288,14 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const onSuggestionClick = (selectedGoal: GoalItem) => {
     console.log(selectedGoal);
     setTitle(selectedGoal.title);
-    // setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
-    // setAfterTime(selectedGoal.afterTime || 9);
-    // setBeforeTime(selectedGoal.beforeTime || 18);
-    // setBetweenSliderUpdated(true);
-    // setTags({ on: selectedGoal.on || [], off: selectedGoal.due || [] });
-
-    // if (state.goalType === "Budget") {
-    //   const timeRange = selectedGoal.beforeTime - selectedGoal.afterTime;
-    //   const weeklyRange = timeRange * numberOfDays;
-    //   setPerDayHrs([timeRange, timeRange]);
-    //   setPerWeekHrs([weeklyRange, weeklyRange]);
-    // }
+    setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
+    setAfterTime(selectedGoal.afterTime || 9);
+    setBeforeTime(selectedGoal.beforeTime || 18);
+    setTags({
+      on: selectedGoal.on || convertOnFilterToArray("weekdays"),
+      repeatWeekly: selectedGoal.habit === "weekly",
+      duration: selectedGoal.duration || "",
+    });
   };
 
   return (
@@ -332,7 +328,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
             onChange={(e) => setTitle(e.target.value)}
             inputMode="text"
           /> */}
-          <ArchivedAutoComplete onGoalSelect={onSuggestionClick} />
+          <ArchivedAutoComplete onGoalSelect={onSuggestionClick} onInputChange={(value) => setTitle(value)} />
         </div>
         <div
           style={{

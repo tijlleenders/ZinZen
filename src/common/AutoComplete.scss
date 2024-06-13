@@ -3,40 +3,39 @@
   display: inline-block;
   width: 100%;
   max-width: 400px;
-}
 
-.autocomplete-input-wrapper {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  width: 100%;
-}
+  .autocomplete-input-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
 
-.autocomplete-input-wrapper input {
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid #ccc;
-  font-size: 1.2em;
-  outline: none;
-  padding: 0;
-  margin: 0;
-  width: auto;
-}
+    input {
+      background: transparent;
+      border: none;
+      font-size: 1.2em;
+      outline: none;
+      padding-right: 0;
+      margin: 0;
+      width: auto;
+    }
+  }
 
-.autocomplete-suggestion {
-  color: rgba(0, 0, 0, 0.5);
-  font-size: 1.2em;
-  cursor: pointer;
-  white-space: nowrap;
-  pointer-events: auto;
-}
+  .autocomplete-suggestion {
+    opacity: 0.5;
+    font-size: 1em;
+    cursor: pointer;
+    white-space: nowrap;
+    pointer-events: auto;
+  }
 
-.hidden-span {
-  position: absolute;
-  visibility: hidden;
-  white-space: pre;
-  font-size: 1.2em;
-  font-family: inherit;
-  padding: 0;
-  margin: 0;
+  .hidden-span {
+    position: absolute;
+    visibility: hidden;
+    white-space: pre;
+    font-size: 1.2em;
+    font-family: inherit;
+    padding: 0;
+    margin: 0;
+  }
 }

@@ -5,13 +5,20 @@ import { GoalItem } from "@src/models/GoalItem";
 interface AutocompleteComponentProps {
   data: GoalItem[];
   onSuggestionClick: (suggestion: GoalItem) => void;
+  onInputChange?: (value: string) => void;
 }
 
-const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({ data, onSuggestionClick }) => {
+const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({ data, onSuggestionClick, onInputChange }) => {
   const [inputValue, setInputValue] = useState("");
   const [autocompleteValue, setAutocompleteValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
+
+  const onInputChangeHandler = (value: string) => {
+    if (onInputChange) {
+      onInputChange(value);
+    }
+  };
 
   useEffect(() => {
     if (inputRef.current && spanRef.current) {
@@ -37,6 +44,8 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({ data, onS
     const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(value.toLowerCase()));
     const suggestion = filteredData.length > 0 ? filteredData[0] : null;
     setAutocompleteValue(suggestion ? suggestion.title.slice(value.length) : "");
+
+    onInputChangeHandler(value);
   };
 
   const handleSuggestionClick = () => {
@@ -63,9 +72,9 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({ data, onS
           {inputValue}
         </span>
         {autocompleteValue && (
-          <button className="autocomplete-suggestion" type="button" onClick={handleSuggestionClick}>
+          <span className="autocomplete-suggestion" type="button" onClick={handleSuggestionClick}>
             {autocompleteValue}
-          </button>
+          </span>
         )}
       </div>
     </div>

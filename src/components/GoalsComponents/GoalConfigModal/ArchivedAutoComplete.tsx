@@ -5,7 +5,13 @@ import AutocompleteComponent from "@src/common/AutoComplete";
 import { useLocation } from "react-router-dom";
 import { ILocationState } from "@src/Interfaces";
 
-const ArchivedAutoComplete = ({ onGoalSelect }: { onGoalSelect: (goal: GoalItem) => void }) => {
+const ArchivedAutoComplete = ({
+  onGoalSelect,
+  onInputChange,
+}: {
+  onGoalSelect: (goal: GoalItem) => void;
+  onInputChange: (value: string) => void;
+}) => {
   const archivedGoals = useArchivedGoals();
   const { state }: { state: ILocationState } = useLocation();
 
@@ -19,7 +25,13 @@ const ArchivedAutoComplete = ({ onGoalSelect }: { onGoalSelect: (goal: GoalItem)
 
   const filteredGoals = filterData("", archivedGoals);
 
-  return <AutocompleteComponent data={filteredGoals} onSuggestionClick={onGoalSelect} />;
+  return (
+    <AutocompleteComponent
+      data={filteredGoals}
+      onSuggestionClick={onGoalSelect}
+      onInputChange={(value) => onInputChange(value)}
+    />
+  );
 };
 
 export default ArchivedAutoComplete;
