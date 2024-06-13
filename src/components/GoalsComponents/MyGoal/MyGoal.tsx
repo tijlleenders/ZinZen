@@ -89,41 +89,28 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   }, [location]);
 
   return (
-    <>
+    <div
+      key={String(`goal-${goal.id}`)}
+      className={`user-goal${darkModeStatus ? "-dark" : ""} ${
+        expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
+      } ${goalToMove && goalToMove.id === goal.id ? "goal-to-move-selected" : ""}`}
+    >
       <div
-        key={String(`goal-${goal.id}`)}
-        className={`user-goal${darkModeStatus ? "-dark" : ""} ${
-          expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
-        } ${goalToMove && goalToMove.id === goal.id ? "goal-to-move-selected" : ""}`}
-      >
-        <div
-          className="user-goal-main"
-          style={{
-            ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
-          }}
-        >
-          <div onClickCapture={handleDropDown}>
-            <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
-          </div>
-          <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-            <GoalTitle goal={goal} isImpossible={goal.impossible} />
-          </div>
-          {shouldRenderMoveButton && <GoalMoveButton targetGoal={goal} />}
-        </div>
-        {!shouldRenderMoveButton && !showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
-      </div>
-      <div
+        className="user-goal-main"
         style={{
-          marginLeft: "69px",
+          ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        {showActions.open === goal.id && showActions.click > 0 && (
-          <p className="goal-desc">
-            <GoalSummary goal={goal} />
-          </p>
-        )}
+        <div onClickCapture={handleDropDown}>
+          <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
+        </div>
+        <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
+          <GoalTitle goal={goal} isImpossible={goal.impossible} />
+        </div>
+        {shouldRenderMoveButton && <GoalMoveButton targetGoal={goal} />}
       </div>
-    </>
+      {!shouldRenderMoveButton && !showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
+    </div>
   );
 };
 
