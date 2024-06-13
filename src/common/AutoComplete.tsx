@@ -1,20 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./AutoComplete.scss";
+import { GoalItem } from "@src/models/GoalItem";
 
-interface AutocompleteComponentProps<T> {
-  data: T[];
-  titleKey: keyof T;
-  onSuggestionClick: (suggestion: T) => void;
-  filterData: (inputValue: string, data: T[]) => T[];
+interface AutocompleteComponentProps {
+  data: GoalItem[];
+  onSuggestionClick: (suggestion: GoalItem) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const AutocompleteComponent = <T extends Record<string, any>>({
-  data,
-  titleKey,
-  onSuggestionClick,
-  filterData,
-}: AutocompleteComponentProps<T>) => {
+const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({ data, onSuggestionClick }) => {
   const [inputValue, setInputValue] = useState("");
   const [autocompleteValue, setAutocompleteValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,17 +34,17 @@ const AutocompleteComponent = <T extends Record<string, any>>({
       return;
     }
 
-    const filteredData = filterData(value, data);
+    const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(value.toLowerCase()));
     const suggestion = filteredData.length > 0 ? filteredData[0] : null;
-    setAutocompleteValue(suggestion ? String(suggestion[titleKey]).slice(value.length) : "");
+    setAutocompleteValue(suggestion ? suggestion.title.slice(value.length) : "");
   };
 
   const handleSuggestionClick = () => {
-    const filteredData = filterData(inputValue, data);
+    const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(inputValue.toLowerCase()));
     const suggestion = filteredData.length > 0 ? filteredData[0] : null;
     if (suggestion) {
       onSuggestionClick(suggestion);
-      setInputValue(String(suggestion[titleKey]));
+      setInputValue(suggestion.title);
     }
     setAutocompleteValue("");
   };

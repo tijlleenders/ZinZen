@@ -17,14 +17,9 @@ const ArchivedAutoComplete = ({ onGoalSelect }: { onGoalSelect: (goal: GoalItem)
     });
   };
 
-  return (
-    <AutocompleteComponent
-      data={archivedGoals}
-      titleKey="title"
-      onSuggestionClick={onGoalSelect}
-      filterData={filterData}
-    />
-  );
+  const filteredGoals = filterData("", archivedGoals);
+
+  return <AutocompleteComponent data={filteredGoals} onSuggestionClick={onGoalSelect} />;
 };
 
 export default ArchivedAutoComplete;
