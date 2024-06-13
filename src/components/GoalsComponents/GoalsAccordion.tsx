@@ -41,7 +41,7 @@ const GoalsAccordion: React.FC<IGoalsAccordionProps> = ({ header, goals, showAct
   return (
     <div className="archived-drawer">
       {showGoalActions && ["archived", "deleted"].includes(showGoalActions.actionType) && (
-        <AccordionActions open goal={showGoalActions.goal} actionType={actionType} />
+        <AccordionActions open goal={showGoalActions.goal} actionType={showGoalActions.actionType} />
       )}
       {showGoalActions && ["hints"].includes(showGoalActions.actionType) && (
         <HintsAccordionActions open goal={showGoalActions.goal} />

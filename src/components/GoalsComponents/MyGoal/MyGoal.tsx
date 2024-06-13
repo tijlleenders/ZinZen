@@ -9,7 +9,6 @@ import { moveGoalState } from "@src/store/moveGoalState";
 import useNavigateToSubgoal from "@src/store/useNavigateToSubgoal";
 
 import GoalAvatar from "../GoalAvatar";
-import GoalSummary from "./GoalSummary/GoalSummary";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
 
@@ -60,11 +59,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
     goalToMove && goal.id !== goalToMove.id && goal.id !== goalToMove.parentGoalId && !archived;
 
   const handleGoalClick = () => {
-    if (showActions.open === goal.id && showActions.click > 0) {
-      navigateToSubgoal(goal);
-    } else {
-      setShowActions({ open: goal.id, click: 1 });
-    }
+    navigateToSubgoal(goal);
   };
 
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {

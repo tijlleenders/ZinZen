@@ -29,6 +29,12 @@
   flex-direction: column;
   justify-content: center;
 
+  .goal-item-summary-wrapper {
+    margin: 10px auto;
+    text-align: center;
+    padding: 0 24px;
+  }
+
   .mygoalsbutton-dark,
   .mygoalsbutton-light {
     display: none;

@@ -15,6 +15,7 @@ import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
 
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
+import GoalItemSummary from "../MyGoal/GoalItemSummary/GoalItemSummary";
 
 const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
@@ -74,6 +75,7 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
         <p className="ordinary-element" id="title-field">
           {t(`${goal.title}`)}
         </p>
+        <GoalItemSummary goal={goal} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
         {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
