@@ -123,15 +123,16 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
         >
           <ActionDiv label={t("Edit")} icon="Edit" />
         </div>
-
-        <div
-          className="goal-action shareOptions-btn"
-          onClickCapture={() => {
-            handleMove(goal);
-          }}
-        >
-          <ActionDiv label={t("Move")} icon="Edit" />
-        </div>
+        {!isPartnerGoal && (
+          <div
+            className="goal-action shareOptions-btn"
+            onClickCapture={() => {
+              handleMove(goal);
+            }}
+          >
+            <ActionDiv label={t("Move")} icon="Move" />
+          </div>
+        )}
       </div>
     </ZModal>
   );
