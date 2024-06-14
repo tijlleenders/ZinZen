@@ -153,8 +153,18 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const startDate = convertDateToString(new Date(_today));
   const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
   const tasksCompletedToday: TCompletedTaskTiming[] = [];
+  const tasksForgotToday: TCompletedTaskTiming[] = [];
   getAllTasks().then((docs) =>
     docs.filter((doc) => doc.completedToday > 0).map((doc) => tasksCompletedToday.push(...doc.completedTodayTimings)),
+  );
+
+  getAllTasks().then((docs) =>
+    docs
+      .filter((doc) => {
+        console.log("doc.forgotToday", doc.forgotToday);
+        return doc.forgotToday.length > 0;
+      })
+      .map((doc) => tasksForgotToday.push(...doc.forgotTodayTimings)),
   );
 
   const schedulerInput: ISchedulerInput = {
@@ -162,6 +172,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
     endDate,
     goals: [],
     tasksCompletedToday,
+    tasksForgotToday,
   };
   const dbTasks: { [goalid: string]: TaskItem } = (await getAllTasks()).reduce(
     (acc, curr) => ({ ...acc, [curr.goalId]: curr }),

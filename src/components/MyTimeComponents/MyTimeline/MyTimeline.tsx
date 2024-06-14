@@ -129,6 +129,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                 ]
               : [],
           blockedSlots: [],
+          forgotTodayTimings:
+            actionName === "Skip" ? [{ goalid: task.goalid, start: task.start, deadline: task.deadline }] : [],
         });
         // if (actionName === "Reschedule") {
         //   setOpenReschedule({ ...task });
@@ -178,10 +180,15 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         const markDone = !!taskDetails[task.goalid]?.completedTodayTimings.find(
           (ele) => ele.start === task.start && ele.deadline === task.deadline,
         );
+
+        const markSkip = !!taskDetails[task.goalid]?.forgotTodayTimings.find((ele) => {
+          console.log(ele);
+          return ele.start === task.start && ele.deadline === task.deadline;
+        });
         const showTaskOptions = displayOptionsIndex === task.taskid;
         return (
           <button
-            className={`${day === "Today" && markDone ? "completedTask" : ""}`}
+            className={`${(day === "Today" && markDone) || markSkip ? "completedTask" : ""}`}
             type="button"
             style={
               displayOptionsIndex !== task.taskid

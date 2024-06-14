@@ -72,6 +72,7 @@ export interface ISchedulerInput {
   endDate: string;
   goals: ISchedulerInputGoal[];
   tasksCompletedToday: TCompletedTaskTiming[];
+  tasksForgotToday: TCompletedTaskTiming[];
 }
 
 export type TBufferValue = { nextBuffer: number; availableBuffer: number };
