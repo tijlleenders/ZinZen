@@ -77,7 +77,8 @@ export const transformIntoSchInputGoals = (
   return inputGoalsArr;
 };
 
-export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput) => {
+export const handleSchedulerOutput = async (_schedulerOutput: ISchedulerOutput | undefined) => {
+  if (!_schedulerOutput) return {};
   const activeGoals = await getAllGoals();
   const obj: {
     [goalid: string]: {
@@ -179,18 +180,16 @@ export const getCachedSchedule = async (generatedInputId: string) => {
   const schedulerCachedRes = await getFromOutbox("scheduler");
 
   if (!schedulerCachedRes) {
-    return {
-      code: "not-exist",
-    };
+    return { code: "not-exist" };
   }
+
   const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
 
-  return uniqueId === generatedInputId
-    ? {
-        code: "found",
-        output: JSON.parse(output),
-      }
-    : { code: "expired" };
+  if (!output) {
+    return { code: "expired" };
+  }
+
+  return uniqueId === generatedInputId ? { code: "found", output: JSON.parse(output) } : { code: "expired" };
 };
 
 export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {
