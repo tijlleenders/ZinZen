@@ -58,6 +58,12 @@ export const getLanguages = () => {
       langId: "gt",
       selected: false,
     },
+    {
+      sno: 10,
+      title: t("hebrew"),
+      langId: "he",
+      selected: false,
+    },
   ];
 
   return languages;
