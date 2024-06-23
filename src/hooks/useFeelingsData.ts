@@ -12,7 +12,7 @@ const useFeelingsData = (trigger: boolean) => {
       const allFeelings: IFeelingItem[] = await getAllFeelings();
       const feelingsByDates = allFeelings.reduce<feelingListType>((dates, feeling) => {
         const newDates = { ...dates };
-        const formattedDate = getJustDate(feeling.date).toString();
+        const formattedDate = getJustDate(new Date(feeling.date)).toString();
         if (newDates[formattedDate]) {
           newDates[formattedDate].push(feeling);
         } else {
