@@ -15,12 +15,12 @@ import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/Feelin
 
 import "@translations/i18n";
 
-export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
+export const AddFeeling = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const date = feelingDate ? getJustDate(feelingDate) : getJustDate(new Date());
+  const date = new Date();
 
   const [feelingNote, setFeelingNote] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -35,14 +35,14 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
     await addFeeling({
       content: text || t(feelingsList[optedCategory][emojiIndx]),
       category: optedCategory,
-      date,
+      date: Date.now(),
       note: feelingNote,
     });
     queryClient.invalidateQueries("feelings");
     navigate(-1);
   };
   return (
-    <ZModal type={`notes-modal${darkModeStatus ? "-dark" : ""}`} open={!!feelingDate}>
+    <ZModal type={`notes-modal${darkModeStatus ? "-dark" : ""}`} open>
       {selectedCategory === "" ? (
         <>
           <p className="popupModal-title">
