@@ -31,16 +31,7 @@ h6 {
   height: 100vh;
   overflow: scroll;
   background: var(--app-background);
-  p,
-  button,
-  span,
-  div,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  * {
     color: black;
   }
   p,
@@ -58,17 +49,7 @@ h6 {
 }
 .App-dark,
 .popupModal-dark {
-  p,
-  button,
-  input,
-  span,
-  div,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  * {
     color: white;
   }
   .theme-icon {
@@ -150,12 +131,6 @@ h6 {
   border: none;
   color: black;
   background: var(--secondary-background);
-}
-
-.ordinary-element {
-  border: none;
-  background: transparent;
-  outline: none;
 }
 
 /* button */
