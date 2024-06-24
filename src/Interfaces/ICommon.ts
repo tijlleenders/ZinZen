@@ -23,7 +23,7 @@ export interface ZModalProps {
   children: React.ReactNode;
   type?: string;
   open: boolean;
-  onCancel: () => void;
+  onCancel?: () => void;
   width?: number;
   style?: React.CSSProperties;
 }
