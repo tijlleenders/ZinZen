@@ -1,0 +1,17 @@
+.ordinary-element,
+.simple {
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+.bg-primary {
+  background: var(--selection-color);
+}
+
+.bg-sec {
+  background: var(--secondary-background);
+}
+.d-flex {
+  display: flex;
+}
