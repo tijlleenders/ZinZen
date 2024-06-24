@@ -2,6 +2,8 @@ export interface IFeelingItem {
   id?: number;
   content: string;
   category: string;
-  date: Date;
+  date: number;
   note?: string;
 }
+
+export type TFeelingsObject = { [id: string]: IFeelingItem[] };

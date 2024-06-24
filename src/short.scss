@@ -1,0 +1,85 @@
+.ordinary-element,
+.simple {
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+.bg-primary {
+  background: var(--selection-color);
+}
+
+.bg-sec {
+  background: var(--secondary-background);
+}
+
+.place-middle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.f-col {
+  flex-direction: column;
+}
+
+.justify-sb {
+  justify-content: space-between;
+}
+
+.justify-fe {
+  justify-content: flex-end;
+}
+
+.gap-4 {
+  gap: 4px;
+}
+
+.gap-8 {
+  gap: 8px;
+}
+
+.gap-16 {
+  gap: 16px;
+}
+
+.br-4 {
+  border-radius: 4px;
+}
+
+.br-8 {
+  border-radius: 8px;
+}
+
+.br-12 {
+  border-radius: 12px;
+}
+
+.br-16 {
+  border-radius: 16px;
+}
+
+.bordered {
+  border: 1px solid var(--default-border-color);
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.m-0 {
+  margin: 0;
+}

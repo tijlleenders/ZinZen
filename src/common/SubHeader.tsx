@@ -6,7 +6,7 @@ import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { ISubHeaderProps } from "@src/Interfaces/ICommon";
 
-const NavBtn = ({ show, className, handleClick }: { show: boolean; className: string; handleClick: () => void }) => (
+const NavBtn = ({ show, className, handleClick }: { show?: boolean; className: string; handleClick?: () => void }) => (
   <Col span={6} style={{ textAlign: "center", alignSelf: "center" }}>
     {show && (
       <button type="button" className="ordinary-element" onClick={handleClick}>
