@@ -1,32 +1,33 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
+import { useQueryClient } from "react-query";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { IFeelingItem } from "@src/models";
 import { darkModeState } from "@src/store";
-
-import deleteIcon from "@assets/images/deleteIcon.svg";
-import noteIcon from "@assets/images/noteIcon.svg";
-import { feelingsEmojis } from "@src/constants/FeelingsList";
-import { useQueryClient } from "react-query";
 import { deleteFeeling } from "@src/api/FeelingsAPI";
+import { feelingsEmojis } from "@src/constants/FeelingsList";
+
+import noteIcon from "@assets/images/noteIcon.svg";
+import deleteIcon from "@assets/images/deleteIcon.svg";
 
 const ActionBtn = ({ icon, handleClick }: { icon: string; handleClick: () => void }) => {
-  const darkModeStatus = useRecoilValue(darkModeState);
+  const darkMode = useRecoilValue(darkModeState);
   return (
-    <button type="button" className="ordinary-element" onClick={handleClick}>
-      <img alt="" className={`${darkModeStatus ? "dark-svg" : ""}`} src={icon} />
+    <button type="button" className="simple" onClick={handleClick}>
+      <img alt="" className={`${darkMode ? "dark-svg" : ""}`} src={icon} />
     </button>
   );
 };
+
 const Feeling = ({ data }: { data: IFeelingItem }) => {
-  const queryClient = useQueryClient();
-  const { t } = useTranslation();
   const { id, content, date, category, note } = data;
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  const darkModeStatus = useRecoilValue(darkModeState);
+  const queryClient = useQueryClient();
+  const darkMode = useRecoilValue(darkModeState);
 
   const handleJournalClick = () => {
     navigate("/MyJournal", {
@@ -40,8 +41,13 @@ const Feeling = ({ data }: { data: IFeelingItem }) => {
   };
 
   return (
-    <button type="button" key={content + date} className={`feelingOfDay${darkModeStatus ? "-dark" : ""}`}>
-      <div className="feelingOfDay-name">
+    <button
+      type="button"
+      key={content + date}
+      className={`w-100 d-flex justify-sb feelingOfDay${darkMode ? "-dark" : ""} simple 
+    `}
+    >
+      <div className="place-middle feelingOfDay-name fw-600">
         {feelingsEmojis[category]}&nbsp;
         <div className="feelingOfDay-content">
           <span>{t(content)}</span>
@@ -49,7 +55,7 @@ const Feeling = ({ data }: { data: IFeelingItem }) => {
           <span style={{ fontSize: "0.875rem", opacity: "0.8", wordBreak: "break-word" }}>{t(note || "")}</span>
         </div>
       </div>
-      <div className="feelingOfDaty-options">
+      <div className="d-flex justify-fe gap-16" style={{ marginTop: 15 }}>
         <ActionBtn icon={noteIcon} handleClick={handleJournalClick} />
         <ActionBtn
           icon={deleteIcon}

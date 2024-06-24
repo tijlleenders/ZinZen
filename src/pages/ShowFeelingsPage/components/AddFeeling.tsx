@@ -1,20 +1,19 @@
-// @ts-nocheck
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useRecoilValue } from "recoil";
+import { useQueryClient } from "react-query";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import backIcon from "@assets/images/backIcon.svg";
+import ZModal from "@src/common/ZModal";
 
-import { darkModeState } from "@store";
-import { getJustDate } from "@utils";
 import { addFeeling } from "@src/api/FeelingsAPI";
+import { getJustDate } from "@utils";
+import { darkModeState } from "@store";
 import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
 
 import "@translations/i18n";
-import "./AddFeeling.scss";
-import ZModal from "@src/common/ZModal";
-import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "react-query";
+import { Row, Col } from "antd";
 
 export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
   const { t } = useTranslation();
@@ -51,41 +50,48 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
               ? t("feelingsMessage")
               : `${t("feelingsMessagePast")} ${date.toDateString()}`}
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <div className="d-flex f-col gap-8">
             {feelingsCategories.map((category: string) => (
-              <div key={`feeling-${category}`} className="feelings-category">
-                <button
-                  type="button"
-                  onClick={async () => {
-                    await addThisFeeling(category);
-                  }}
-                >
-                  {feelingsEmojis[category]}&nbsp;&nbsp;
-                  {t(category)}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedCategory(category);
-                  }}
-                >
-                  <img alt="add feeling" src={backIcon} className="chevronRight theme-icon" />
-                </button>
-              </div>
+              <Row key={`feeling-${category}`} className="feelings-category br-8">
+                <Col span={20}>
+                  <button
+                    className="simple w-100 fw-400"
+                    type="button"
+                    style={{ textAlign: "left" }}
+                    onClick={async () => {
+                      await addThisFeeling(category);
+                    }}
+                  >
+                    {feelingsEmojis[category]}&nbsp;&nbsp;
+                    {t(category)}
+                  </button>
+                </Col>
+                <Col span={4}>
+                  <button
+                    className="simple w-100 fw-400"
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategory(category);
+                    }}
+                  >
+                    <img alt="add feeling" src={backIcon} className="chevronRight theme-icon" />
+                  </button>
+                </Col>
+              </Row>
             ))}
           </div>
         </>
       ) : (
-        <div id="addFeelings-container">
+        <div className="d-flex f-col gap-16">
           <p className="popupModal-title">{`You feel ${
-            customFeeling === "" ? t(feelingsList[selectedCategory][customFeeling.emojiIndx]) : customFeeling.text
+            customFeeling.text === "" ? t(feelingsList[selectedCategory][customFeeling.emojiIndx]) : customFeeling.text
           }`}</p>
-          <div id="feelingOptions">
+          <div className="f-wrap gap-8">
             {selectedCategory !== "" &&
               feelingsList[selectedCategory].map((feeling, index) => (
                 <button
                   type="button"
-                  className={`feelingOption${customFeeling.emojiIndx === index ? "-selected" : ""}`}
+                  className={`br-8 feelingOption${customFeeling.emojiIndx === index ? "-selected" : ""}`}
                   key={`feelingOption-${feeling}`}
                   onClick={() => {
                     setCustomFeeling({

@@ -80,7 +80,6 @@ export const ShowFeelingsPage = () => {
           }}
         />
       )}
-
       {showAddFeelingsModal && <AddFeeling feelingDate={new Date()} />}
     </>
   );

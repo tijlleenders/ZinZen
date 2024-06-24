@@ -14,15 +14,15 @@ const NoteModal = ({
   const [value, setValue] = useState(defaultValue || "");
   return (
     <ZModal open={open}>
-      <p style={{ fontWeight: 600, margin: 0 }}>Feeling Note</p>
+      <p className="m-0 fw-600">Feeling Note</p>
       <form
         onSubmit={async () => {
           await saveNote(value);
         }}
-        style={{ display: "flex", flexDirection: "column", gap: 12 }}
+        className="d-flex f-col gap-16"
       >
         <textarea
-          className="feeling-note-input simple"
+          className="feeling-note-input simple br-8"
           rows={5}
           cols={32}
           value={value}
@@ -30,11 +30,11 @@ const NoteModal = ({
             setValue(e.target.value);
           }}
         />
-        <div className="note-modal-actions">
+        <div className="d-flex gap-16 note-modal-actions">
           {defaultValue && (
             <button
               type="button"
-              className="simple bg-sec"
+              className="simple bg-sec fw-500 br-4"
               onClick={async () => {
                 await saveNote();
               }}
@@ -42,7 +42,7 @@ const NoteModal = ({
               Delete
             </button>
           )}
-          <button type="submit" className="simple bg-primary">
+          <button type="submit" className="simple bg-primary fw-500 br-4">
             Save
           </button>
         </div>
