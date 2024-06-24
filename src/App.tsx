@@ -1,5 +1,5 @@
-import { notification } from "antd";
-import React, { useEffect } from "react";
+import { Spin, notification } from "antd";
+import React, { Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } from "@store";
@@ -19,10 +19,13 @@ import BackupRestoreModal from "@components/BackupRestoreModal";
 import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
 import { themeState } from "./store/ThemeState";
 
+import useApp from "./hooks/useApp";
+import AppLayout from "./layouts/AppLayout";
+
 import "./global.scss";
 import "./customize.scss";
 import "./override.scss";
-import useApp from "./hooks/useApp";
+import "./short.scss";
 
 const Context = React.createContext({ name: "Default" });
 
@@ -77,7 +80,14 @@ const App = () => {
             )}
             <Route path="/Feedback" element={<FeedbackPage />} />
             <Route path="/MyGoals" element={<GoalsPage />} />
-            <Route path="/MyJournal" element={<ShowFeelingsPage />} />
+            <Route
+              path="/MyJournal"
+              element={
+                <AppLayout title="myJournal">
+                  <ShowFeelingsPage />
+                </AppLayout>
+              }
+            />
             <Route path="*" element={<GoalsPage />} />
             <Route path="/ZinZenFAQ" element={<FAQPage />} />
             <Route path="/invite/:id" element={<InvitePage />} />

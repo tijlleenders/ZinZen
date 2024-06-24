@@ -1,17 +1,19 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { RecoilRoot } from "recoil";
+import { createRoot } from "react-dom/client";
 import * as serviceWorkerRegistration from "./service-worker/serviceWorkerRegistration";
 
 import App from "./App";
+import Providers from "./Providers";
 
-ReactDOM.render(
+// @ts-ignore
+const root = createRoot(document.getElementById("root"));
+
+root.render(
   <React.StrictMode>
-    <RecoilRoot>
+    <Providers>
       <App />
-    </RecoilRoot>
+    </Providers>
   </React.StrictMode>,
-  document.getElementById("root"),
 );
 
 serviceWorkerRegistration.register();
