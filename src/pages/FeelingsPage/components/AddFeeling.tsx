@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { Row, Col } from "antd";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { useQueryClient } from "react-query";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
-import backIcon from "@assets/images/backIcon.svg";
 import ZModal from "@src/common/ZModal";
+import backIcon from "@assets/images/backIcon.svg";
 
 import { addFeeling } from "@src/api/FeelingsAPI";
 import { getJustDate } from "@utils";
@@ -13,7 +14,6 @@ import { darkModeState } from "@store";
 import { feelingsList, feelingsCategories, feelingsEmojis } from "@consts/FeelingsList";
 
 import "@translations/i18n";
-import { Row, Col } from "antd";
 
 export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
   const { t } = useTranslation();

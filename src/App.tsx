@@ -1,5 +1,5 @@
-import { Spin, notification } from "antd";
-import React, { Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
+import { notification } from "antd";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } from "@store";
@@ -7,20 +7,21 @@ import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
 
-import { FAQPage } from "@pages/FAQPage/FAQPage";
-import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
-import { LandingPage } from "@pages/LandingPage/LandingPage";
-import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
-import { ShowFeelingsPage } from "@pages/ShowFeelingsPage/ShowFeelingsPage";
 import GoalsPage from "@pages/GoalsPage/GoalsPage";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
 import BackupRestoreModal from "@components/BackupRestoreModal";
+
+import { FAQPage } from "@pages/FAQPage/FAQPage";
+import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
+import { LandingPage } from "@pages/LandingPage/LandingPage";
+import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
+import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
-import { themeState } from "./store/ThemeState";
 
 import useApp from "./hooks/useApp";
 import AppLayout from "./layouts/AppLayout";
+import { themeState } from "./store/ThemeState";
 
 import "./global.scss";
 import "./customize.scss";
@@ -84,7 +85,7 @@ const App = () => {
               path="/MyJournal"
               element={
                 <AppLayout title="myJournal">
-                  <ShowFeelingsPage />
+                  <FeelingsPage />
                 </AppLayout>
               }
             />
