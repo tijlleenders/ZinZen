@@ -44,7 +44,7 @@ const Feeling = ({ data }: { data: IFeelingItem }) => {
     <button
       type="button"
       key={content + date}
-      className={`w-100 d-flex justify-sb feelingOfDay${darkMode ? "-dark" : ""} simple 
+      className={`place-middle w-100 justify-sb feelingOfDay${darkMode ? "-dark" : ""} simple 
     `}
     >
       <div className="place-middle feelingOfDay-name fw-600">
@@ -55,7 +55,7 @@ const Feeling = ({ data }: { data: IFeelingItem }) => {
           <span style={{ fontSize: "0.875rem", opacity: "0.8", wordBreak: "break-word" }}>{t(note || "")}</span>
         </div>
       </div>
-      <div className="d-flex justify-fe gap-16" style={{ marginTop: 15 }}>
+      <div className="d-flex justify-fe gap-16">
         <ActionBtn icon={noteIcon} handleClick={handleJournalClick} />
         <ActionBtn
           icon={deleteIcon}
