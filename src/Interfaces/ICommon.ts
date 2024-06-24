@@ -35,10 +35,10 @@ export interface ColorPaletteProps {
 
 export interface ISubHeaderProps {
   title: string;
-  leftNav: () => void;
-  rightNav: () => void;
-  showLeftNav: boolean;
-  showRightNav: boolean;
+  leftNav?: () => void;
+  rightNav?: () => void;
+  showLeftNav?: boolean;
+  showRightNav?: boolean;
 }
 
 export interface IconProps {

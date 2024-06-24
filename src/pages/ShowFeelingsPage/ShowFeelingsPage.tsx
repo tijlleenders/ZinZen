@@ -24,13 +24,9 @@ export const ShowFeelingsPage = () => {
   const { displayNoteModal, note } = location.state || {};
   const showAddFeelingsModal = useRecoilValue(displayAddFeeling);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useInfiniteQuery(
-    "feelings",
-    fetchFeelings,
-    {
-      getNextPageParam: (lastPage) => (lastPage.feelings.length ? lastPage.nextPage : undefined),
-    },
-  );
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery("feelings", fetchFeelings, {
+    getNextPageParam: (lastPage) => (lastPage.feelings.length ? lastPage.nextPage : undefined),
+  });
   const loadMoreRef = useRef(null);
 
   useEffect(() => {
@@ -56,17 +52,7 @@ export const ShowFeelingsPage = () => {
     const groupedFeelings = groupFeelingsByDate(feelingList);
     return Object.keys(groupedFeelings).map((date) => (
       <div key={date}>
-        <SubHeader
-          title={getTitleForDate(new Date(date).toDateString())}
-          leftNav={() => {
-            return null;
-          }}
-          rightNav={() => {
-            return null;
-          }}
-          showLeftNav={false}
-          showRightNav={false}
-        />
+        <SubHeader title={getTitleForDate(new Date(date).toDateString())} />
         {groupedFeelings[date].map((feeling) => (
           <Feeling key={feeling.id} data={feeling} />
         ))}
