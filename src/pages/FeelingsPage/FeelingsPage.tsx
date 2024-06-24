@@ -25,7 +25,7 @@ export const FeelingsPage = () => {
   const { displayNoteModal, note } = location.state || {};
   const showAddFeelingsModal = useRecoilValue(displayAddFeeling);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery("feelings", fetchFeelings, {
+  const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery("feelings", fetchFeelings, {
     getNextPageParam: (lastPage) => (lastPage.feelings.length ? lastPage.nextPage : undefined),
   });
   const loadMoreRef = useRef(null);
