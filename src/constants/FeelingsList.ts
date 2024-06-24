@@ -1,6 +1,6 @@
 export const feelingsCategories = ["happy", "excited", "gratitude", "sad", "afraid", "angry", "tired"];
 
-export const feelingsEmojis = {
+export const feelingsEmojis: { [name: string]: string } = {
   happy: "😊",
   excited: "😃",
   gratitude: "😇",
