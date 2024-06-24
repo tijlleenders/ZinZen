@@ -1,78 +1,101 @@
-import React from "react";
+/* eslint-disable react/no-array-index-key */
+import React, { useEffect, useRef } from "react";
 import { useRecoilValue } from "recoil";
+import { useInfiniteQuery, useQueryClient } from "react-query";
+import { useLocation } from "react-router-dom";
 
-import AppLayout from "@src/layouts/AppLayout";
 import SubHeader from "@src/common/SubHeader";
+import { getTitleForDate, groupFeelingsByDate } from "@src/utils/journal";
 import { displayAddFeeling } from "@src/store/FeelingsState";
-import { AddFeeling } from "@components/FeelingsComponents/AddFeeling";
+import { fetchFeelings, updateFeeling } from "@src/api/FeelingsAPI";
 
-import { ShowFeelingTemplate } from "./ShowFeelingTemplate";
+import { IFeelingItem } from "@src/models";
 
 import "./ShowFeelings.scss";
-import useFeelingsData from "../../hooks/useFeelingsData";
+import LoadingContainer from "@src/common/LoadingContainer";
+import { AddFeeling } from "@pages/ShowFeelingsPage/components/AddFeeling";
+import { message } from "antd";
+import Feeling from "./components/Feeling";
+import NoteModal from "./components/NoteModal";
 
 export const ShowFeelingsPage = () => {
+  const location = useLocation();
+  const queryClient = useQueryClient();
+  const { displayNoteModal, note } = location.state || {};
   const showAddFeelingsModal = useRecoilValue(displayAddFeeling);
-  const { feelingsList, setFeelingsList } = useFeelingsData(showAddFeelingsModal);
 
-  const isToday = (date: string) => {
-    return new Date(date).toDateString() === new Date().toDateString();
-  };
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, error } = useInfiniteQuery(
+    "feelings",
+    fetchFeelings,
+    {
+      getNextPageParam: (lastPage) => (lastPage.feelings.length ? lastPage.nextPage : undefined),
+    },
+  );
+  const loadMoreRef = useRef(null);
 
-  const isYesterday = (date: string) => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    return new Date(date).toDateString() === yesterday.toDateString();
-  };
-
-  const formatSubheaderDate = (date: string) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const getTitleForDate = (date: string) => {
-    if (isToday(date)) {
-      return "Today";
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1 },
+    );
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
     }
-    if (isYesterday(date)) {
-      return "Yesterday";
-    }
-    return formatSubheaderDate(date);
-  };
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [hasNextPage, fetchNextPage]);
 
-  const sortedDates = Object.keys(feelingsList).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-
-  return (
-    <AppLayout title="myJournal">
-      <div>
-        {sortedDates.map((date) => (
-          <div key={date}>
-            {feelingsList[date] && (
-              <SubHeader
-                title={getTitleForDate(date)}
-                leftNav={() => {
-                  return null;
-                }}
-                rightNav={() => {
-                  return null;
-                }}
-                showLeftNav={false}
-                showRightNav={false}
-              />
-            )}
-            <ShowFeelingTemplate
-              key={date}
-              feelingsListObject={feelingsList[date]}
-              setFeelingsListObject={{ feelingsList, setFeelingsList }}
-              currentFeelingsList={feelingsList}
-            />
-          </div>
+  const renderFeelings = (feelingList: IFeelingItem[]) => {
+    const groupedFeelings = groupFeelingsByDate(feelingList);
+    return Object.keys(groupedFeelings).map((date) => (
+      <div key={date}>
+        <SubHeader
+          title={getTitleForDate(new Date(date).toDateString())}
+          leftNav={() => {
+            return null;
+          }}
+          rightNav={() => {
+            return null;
+          }}
+          showLeftNav={false}
+          showRightNav={false}
+        />
+        {groupedFeelings[date].map((feeling) => (
+          <Feeling key={feeling.id} data={feeling} />
         ))}
       </div>
+    ));
+  };
+  if (status === "error") {
+    message.error("Something went wrong");
+    window.history.back();
+  }
+  return (
+    <>
+      {status === "loading" && <LoadingContainer />}
+      <div>{data && renderFeelings(data.pages.flatMap((page) => page.feelings))}</div>
+      <div ref={loadMoreRef} />
+      {isFetchingNextPage && <p>Loading more...</p>}
+      {displayNoteModal >= 0 && (
+        <NoteModal
+          open={displayNoteModal}
+          defaultValue={note}
+          saveNote={async (newNote = "") => {
+            await updateFeeling(displayNoteModal, { note: newNote });
+            queryClient.invalidateQueries("feelings");
+            window.history.back();
+          }}
+        />
+      )}
+
       {showAddFeelingsModal && <AddFeeling feelingDate={new Date()} />}
-    </AppLayout>
+    </>
   );
 };
