@@ -4,14 +4,10 @@ import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
 const LoadingContainer = () => {
   return (
     <div
+      className="place-middle f-col gap-8"
       style={{
-        opacity: 0.8,
         gap: 8,
         height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        placeContent: "center",
       }}
     >
       <img className="logo-flip" src={zinzenLightLogo} alt="ZinZen" />

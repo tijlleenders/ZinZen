@@ -68,7 +68,6 @@ export const ShowFeelingsPage = () => {
       {status === "loading" && <LoadingContainer />}
       <div>{data && renderFeelings(data.pages.flatMap((page) => page.feelings))}</div>
       <div ref={loadMoreRef} />
-      {isFetchingNextPage && <p>Loading more...</p>}
       {displayNoteModal >= 0 && (
         <NoteModal
           open={displayNoteModal}

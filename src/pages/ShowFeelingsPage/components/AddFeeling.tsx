@@ -42,7 +42,7 @@ export const AddFeeling = ({ feelingDate }: { feelingDate: Date | null }) => {
     navigate(-1);
   };
   return (
-    <ZModal type={`notes-modal${darkModeStatus ? "-dark" : ""}`} open={!!feelingDate} onCancel={window.history.back}>
+    <ZModal type={`notes-modal${darkModeStatus ? "-dark" : ""}`} open={!!feelingDate}>
       {selectedCategory === "" ? (
         <>
           <p className="popupModal-title">
