@@ -5,3 +5,5 @@ export interface IFeelingItem {
   date: Date;
   note?: string;
 }
+
+export type TFeelingsObject = { [id: string]: IFeelingItem[] };
