@@ -428,9 +428,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <div className="action-btn-container">
                 <HintToggle setHints={setHints} defaultValue={hints} />
                 <button
-                  type="button"
+                  type="submit"
                   className="action-btn"
-                  onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
                   {t(`${action} Budget`)}
@@ -442,12 +441,11 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <div className="action-btn-container">
                 <HintToggle setHints={setHints} defaultValue={hints} />
                 <button
-                  type="button"
+                  type="submit"
                   className="action-btn"
-                  onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
-                  {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+                  {t(`${action} Goal`)}
                 </button>
               </div>
               <div
