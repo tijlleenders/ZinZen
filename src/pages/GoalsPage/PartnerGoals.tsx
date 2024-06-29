@@ -28,7 +28,7 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
 
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
-  const [showActions, setShowActions] = useState({ open: "root", click: 1 });
+  // const [showActions, setShowActions] = useState({ open: "root", click: 1 });
 
   const displaySearch = useRecoilValue(searchActive);
   const selectedGoalId = useRecoilValue(displayGoalId);
@@ -76,25 +76,15 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   return (
     <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
       <GoalLocStateHandler />
-      {showGoalActions && <RegularGoalActions open goal={showGoalActions.goal} />}
+      {/* {showGoalActions && <RegularGoalActions open goal={showGoalActions.goal} />} */}
       <div className="myGoals-container">
         {selectedGoalId === "root" ? (
           <div className="my-goals-content">
             <div>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <GoalsList
-                  goals={activeGoals}
-                  showActions={showActions}
-                  setShowActions={setShowActions}
-                  setGoals={setActiveGoals}
-                />
+                <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
               </div>
-              <GoalsAccordion
-                header="Done"
-                goals={archivedGoals}
-                showActions={showActions}
-                setShowActions={setShowActions}
-              />
+              <GoalsAccordion header="Done" goals={archivedGoals} />
             </div>
           </div>
         ) : (

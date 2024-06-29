@@ -4,10 +4,9 @@ import { GoalItem } from "@src/models/GoalItem";
 
 interface GoalDropdownProps {
   goal: GoalItem;
-  isActionVisible: boolean;
 }
 
-const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, isActionVisible }) => {
+const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
   const { sublist, goalColor, timeBudget, newUpdates } = goal;
   const hasSubGoals = sublist.length > 0;
   const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 89.585%, ${
@@ -23,7 +22,6 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, isActionVisible }) =>
         display: "flex",
         flexDirection: "column",
         gap: 3,
-        paddingTop: isActionVisible ? "11px" : "",
       }}
     >
       <div
@@ -37,13 +35,6 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, isActionVisible }) =>
           {newUpdates && <NotificationSymbol color={goalColor} />}
         </div>
       </div>
-      {isActionVisible && (
-        <div className="goal-menu-dots">
-          <span style={{ backgroundColor: goalColor }} />
-          <span style={{ backgroundColor: goalColor }} />
-          <span style={{ backgroundColor: goalColor }} />
-        </div>
-      )}
     </div>
   );
 };

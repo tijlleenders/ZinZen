@@ -93,29 +93,14 @@ export const GoalSublist = () => {
           <div className="sublist-list-container">
             {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
             <GoalsList
-              goals={childrenGoals}
-              showActions={showActions}
-              setGoals={setChildrenGoals}
-              setShowActions={setShowActions}
+              goals={subgoals}
+              setGoals={(orderedGoals: GoalItem[]) => {
+                dispatch({ type: "SET_SUBGOALS", payload: orderedGoals });
+              }}
             />
-            <GoalsAccordion
-              header="Hints"
-              goals={goalhints}
-              showActions={showActions}
-              setShowActions={setShowActions}
-            />
-            <GoalsAccordion
-              header="Done"
-              goals={archivedChildren}
-              showActions={showActions}
-              setShowActions={setShowActions}
-            />
-            <GoalsAccordion
-              header="Trash"
-              goals={deletedGoals}
-              showActions={showActions}
-              setShowActions={setShowActions}
-            />
+            <GoalsAccordion header="Hints" goals={goalhints} />
+            <GoalsAccordion header="Done" goals={archivedChildren} />
+            <GoalsAccordion header="Trash" goals={deletedGoals} />
           </div>
         </div>
       </div>
