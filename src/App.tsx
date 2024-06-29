@@ -27,6 +27,7 @@ import "./global.scss";
 import "./customize.scss";
 import "./override.scss";
 import "./short.scss";
+import { MyGoals } from "@pages/GoalsPage/MyGoals";
 
 const Context = React.createContext({ name: "Default" });
 
@@ -80,7 +81,12 @@ const App = () => {
               <Route path="/" element={<MyTimePage />} />
             )}
             <Route path="/Feedback" element={<FeedbackPage />} />
-            <Route path="/MyGoals" element={<GoalsPage />} />
+            <Route path="/MyGoals" element={<MyGoals />} />
+            <Route path="/MyGoals/:parent" element={<MyGoals />} />
+            <Route path="/MyGoals/:parent/:activeGoalId" element={<MyGoals />} />
+
+            {/* <Route path="/MyGoals" element={<GoalsPage />} /> */}
+
             <Route
               path="/MyJournal"
               element={
