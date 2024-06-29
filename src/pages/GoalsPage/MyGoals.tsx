@@ -30,16 +30,21 @@ import { TrashItem } from "@src/models/TrashItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
 import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
+import { useParams } from "react-router-dom";
+import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
+import { ActiveGoalProvider } from "@src/contexts/activeGoal-context";
+
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [deletedGoals, setDeletedGoals] = useState<GoalItem[]>([]);
-  const [showActions, setShowActions] = useState({ open: "root", click: 1 });
+  // const [showActions, setShowActions] = useState({ open: "root", click: 1 });
+
+  const { parent = "root" } = useParams();
 
   const showAddGoal = useRecoilValue(displayAddGoal);
   const displaySearch = useRecoilValue(searchActive);
-  const selectedGoalId = useRecoilValue(displayGoalId);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
@@ -50,11 +55,9 @@ export const MyGoals = () => {
 
   const getAllGoals = async () => {
     const [goals, delGoals] = await Promise.all([getActiveGoals("true"), getDeletedGoals("root")]);
-    console.log("🚀 ~ getAllGoals ~ goals, delGoals:", goals, delGoals);
     return { goals, delGoals };
   };
   const handleUserGoals = (goals: GoalItem[], delGoals: TrashItem[]) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setDeletedGoals([...delGoals.map(({ deletedAt, ...goal }) => goal)]);
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
     setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
@@ -81,7 +84,7 @@ export const MyGoals = () => {
     }, 300);
   };
 
-  const zinZenLogoHeight = activeGoals.length > 0 ? "125px" : "350px";
+  const zinZenLogoHeight = activeGoals.length > 0 ? 125 : 350;
 
   useEffect(() => {
     if (action !== "none") {
@@ -93,56 +96,41 @@ export const MyGoals = () => {
     refreshActiveGoals();
   }, [showShareModal, showAddGoal, showChangesModal, showUpdateGoal, showSuggestionModal, showChangesModal]);
   useEffect(() => {
-    if (selectedGoalId === "root") {
+    if (parent === "root") {
       refreshActiveGoals();
     }
-  }, [selectedGoalId, displaySearch]);
+  }, [parent, displaySearch]);
 
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
-      {showShareModal && <ShareGoalModal goal={showShareModal} />}
-      {showChangesModal && <DisplayChangesModal />}
-      <div className="myGoals-container">
-        {selectedGoalId === "root" ? (
-          <div className="my-goals-content">
-            {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
-            <div>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <GoalsList
-                  goals={activeGoals}
-                  showActions={showActions}
-                  setShowActions={setShowActions}
-                  setGoals={setActiveGoals}
-                />
+      <ActiveGoalProvider>
+        {showShareModal && <ShareGoalModal goal={showShareModal} />}
+        {showChangesModal && <DisplayChangesModal />}
+        <div className="myGoals-container">
+          {parent === "root" ? (
+            <div className="my-goals-content">
+              {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
+              <div>
+                <div className="d-flex f-col">
+                  <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
+                </div>
+                {archivedGoals.length > 0 && <GoalsAccordion header="Done" goals={archivedGoals} />}
+                {deletedGoals.length > 0 && <GoalsAccordion header="Trash" goals={deletedGoals} />}
               </div>
-              {archivedGoals.length > 0 && (
-                <GoalsAccordion
-                  header="Done"
-                  goals={archivedGoals}
-                  showActions={showActions}
-                  setShowActions={setShowActions}
-                />
-              )}
-              {deletedGoals.length > 0 && (
-                <GoalsAccordion
-                  header="Trash"
-                  goals={deletedGoals}
-                  showActions={showActions}
-                  setShowActions={setShowActions}
-                />
-              )}
             </div>
-          </div>
-        ) : (
-          <GoalSublist />
-        )}
+          ) : (
+            <ParentGoalProvider>
+              <GoalSublist />
+            </ParentGoalProvider>
+          )}
 
-        <img
-          style={{ width: 180, height: zinZenLogoHeight, opacity: 0.3 }}
-          src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-          alt="Zinzen"
-        />
-      </div>
+          <img
+            style={{ width: 180, height: zinZenLogoHeight, opacity: 0.3 }}
+            src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+            alt="Zinzen"
+          />
+        </div>
+      </ActiveGoalProvider>
     </AppLayout>
   );
 };
