@@ -54,7 +54,8 @@
     "lint-fix": "eslint ./ --fix",
     "format": "prettier --write .",
     "format-all": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "playwright": "playwright test"
   },
   "eslintConfig": {
     "extends": [
