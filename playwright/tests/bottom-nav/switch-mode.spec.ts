@@ -1,6 +1,8 @@
 import { test, expect, Page } from "@playwright/test";
 import { STORAGE_STATE } from "playwright/config/constants";
 
+test.describe.configure({ mode: "serial" });
+
 test.describe("Switch Mode", () => {
   test.use({ storageState: STORAGE_STATE });
 
