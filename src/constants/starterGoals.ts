@@ -1,5 +1,6 @@
 import { addGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import { TGoalCategory } from "@src/models/GoalItem";
 import { colorPalleteList } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
@@ -13,6 +14,7 @@ export const addStarterGoal = async (
     beforeTime: number | null;
     sublist?: string[];
     parentGoalId?: string;
+    category?: TGoalCategory;
   },
   colorIndex: number,
 ) => {
@@ -40,7 +42,9 @@ starterGoals.push(
         perWeek: "42-52",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      category: "Budget",
       parentGoalId: dailyHabitsId,
+      rootGoalId: dailyHabitsId,
     },
   },
   {
@@ -54,6 +58,7 @@ starterGoals.push(
         perWeek: "1-4",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      category: "Budget",
     },
   },
   {
@@ -67,6 +72,7 @@ starterGoals.push(
         perWeek: "2-3",
       },
       on: ["Sat", "Sun"],
+      category: "Budget",
     },
   },
   {
@@ -80,6 +86,7 @@ starterGoals.push(
         perWeek: "10-10",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      category: "Budget",
     },
   },
   {
@@ -93,6 +100,7 @@ starterGoals.push(
         perWeek: "40-40",
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      category: "Budget",
     },
   },
   {
@@ -102,6 +110,7 @@ starterGoals.push(
       afterTime: null,
       beforeTime: null,
       sublist: [otherGoalIds[5], otherGoalIds[6], otherGoalIds[7], otherGoalIds[8], otherGoalIds[9]],
+      category: "Cluster",
     },
   },
   {
@@ -116,6 +125,8 @@ starterGoals.push(
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
+      rootGoalId: dailyHabitsId,
+      category: "Budget",
     },
   },
   {
@@ -130,6 +141,8 @@ starterGoals.push(
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
+      rootGoalId: dailyHabitsId,
+      category: "Budget",
     },
   },
   {
@@ -144,6 +157,8 @@ starterGoals.push(
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
+      rootGoalId: dailyHabitsId,
+      category: "Budget",
     },
   },
   {
@@ -158,6 +173,8 @@ starterGoals.push(
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
+      rootGoalId: dailyHabitsId,
+      category: "Budget",
     },
   },
   {
@@ -172,6 +189,8 @@ starterGoals.push(
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
+      rootGoalId: dailyHabitsId,
+      category: "Budget",
     },
   },
 );

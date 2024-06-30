@@ -3,12 +3,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
-import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
+import { displayGoalId, displayUpdateGoal, displayChangesModal, TAction } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
+import { moveGoalState } from "@src/store/moveGoalState";
+import useNavigateToSubgoal from "@src/store/useNavigateToSubgoal";
 
 import GoalAvatar from "../GoalAvatar";
 import GoalDropdown from "./GoalDropdown";
 import GoalTitle from "./GoalTitle";
+
+import "./index.scss";
+import GoalMoveButton from "../MoveGoalButton";
 
 interface MyGoalProps {
   actionType: TAction;
@@ -46,29 +51,17 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const selectedGoalId = useRecoilValue(displayGoalId);
-  const subGoalHistory = useRecoilValue(goalsHistory);
   const showChangesModal = useRecoilValue(displayChangesModal);
+  const goalToMove = useRecoilValue(moveGoalState);
+  const navigateToSubgoal = useNavigateToSubgoal();
+
+  const shouldRenderMoveButton =
+    goalToMove && goal.id !== goalToMove.id && goal.id !== goalToMove.parentGoalId && !archived;
 
   const handleGoalClick = () => {
-    const newState: ILocationState = {
-      ...location.state,
-      activeGoalId: goal.id,
-      goalsHistory: [
-        ...subGoalHistory,
-        {
-          goalID: goal.id || "root",
-          goalColor: goal.goalColor || "#ffffff",
-          goalTitle: goal.title || "",
-        },
-      ],
-    };
-    if (newState.allowAddingBudgetGoal !== false) {
-      newState.allowAddingBudgetGoal = goal.category !== "Standard";
-    }
-    navigate("/MyGoals", {
-      state: newState,
-    });
+    navigateToSubgoal(goal);
   };
+
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.stopPropagation();
     const navState: ILocationState = { ...location.state, from: "" };
@@ -100,7 +93,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
       key={String(`goal-${goal.id}`)}
       className={`user-goal${darkModeStatus ? "-dark" : ""} ${
         expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
-      }`}
+      } ${goalToMove && goalToMove.id === goal.id ? "goal-to-move-selected" : ""}`}
     >
       <div
         className="user-goal-main"
@@ -114,8 +107,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <GoalTitle goal={goal} isImpossible={goal.impossible} />
         </div>
+        {shouldRenderMoveButton && <GoalMoveButton targetGoal={goal} />}
       </div>
-      {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
+      {!shouldRenderMoveButton && !showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
     </div>
   );
 };
