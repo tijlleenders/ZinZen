@@ -18,6 +18,8 @@ import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
+import { MyGoals } from "@pages/GoalsPage/MyGoals";
+import { ActiveGoalProvider } from "./contexts/activeGoal-context";
 
 import useApp from "./hooks/useApp";
 import AppLayout from "./layouts/AppLayout";
@@ -27,7 +29,6 @@ import "./global.scss";
 import "./customize.scss";
 import "./override.scss";
 import "./short.scss";
-import { MyGoals } from "@pages/GoalsPage/MyGoals";
 
 const Context = React.createContext({ name: "Default" });
 
@@ -81,9 +82,30 @@ const App = () => {
               <Route path="/" element={<MyTimePage />} />
             )}
             <Route path="/Feedback" element={<FeedbackPage />} />
-            <Route path="/MyGoals" element={<MyGoals />} />
-            <Route path="/MyGoals/:parent" element={<MyGoals />} />
-            <Route path="/MyGoals/:parent/:activeGoalId" element={<MyGoals />} />
+            <Route
+              path="/MyGoals"
+              element={
+                <ActiveGoalProvider>
+                  <MyGoals />
+                </ActiveGoalProvider>
+              }
+            />
+            <Route
+              path="/MyGoals/:parentId"
+              element={
+                <ActiveGoalProvider>
+                  <MyGoals />
+                </ActiveGoalProvider>
+              }
+            />
+            <Route
+              path="/MyGoals/:parentId/:activeGoalId"
+              element={
+                <ActiveGoalProvider>
+                  <MyGoals />
+                </ActiveGoalProvider>
+              }
+            />
 
             {/* <Route path="/MyGoals" element={<GoalsPage />} /> */}
 
