@@ -17,7 +17,7 @@ import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
 import GoalItemSummary from "../MyGoal/GoalItemSummary/GoalItemSummary";
 
-const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
+const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
   const { handleUpdateGoal, handleShareGoal, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
@@ -64,7 +64,7 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
   };
 
   return (
-    <ZModal open={open} width={400} onCancel={() => window.history.back()} type="interactables-modal">
+    <ZModal open width={400} onCancel={() => window.history.back()} type="interactables-modal">
       <div
         style={{ textAlign: "left" }}
         className="header-title"

@@ -59,11 +59,6 @@ export const GoalSublist = () => {
     });
   }, [goalID, action]);
 
-  const handleChildrenGoals = async (goals: GoalItem[]) => {
-    const sortedGoals = await priotizeImpossibleGoals(goals);
-    setArchivedChildren([...sortedGoals.filter((goal) => goal.archived === "true")]);
-  };
-
   useEffect(() => {
     (showPartnerMode ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) => {
       getDeletedGoals(goalID).then((res) => {
@@ -74,13 +69,16 @@ export const GoalSublist = () => {
   }, [goalID]);
 
   useEffect(() => {
-    (showPartnerMode ? getSharedWMChildrenGoals(goalID) : getChildrenGoals(goalID)).then((fetchedGoals) => {
-      handleChildrenGoals(fetchedGoals);
+    async function init() {
+      const fetchedGoals = showPartnerMode ? await getSharedWMChildrenGoals(goalID) : subgoals;
+      const sortedGoals = await priotizeImpossibleGoals(fetchedGoals);
+      setArchivedChildren([...sortedGoals.filter((goal) => goal.archived === "true")]);
       getDeletedGoals(goalID).then((res) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         setDeletedGoals([...res.map(({ deletedAt, ...goal }) => goal)]);
       });
-    });
+    }
+    init();
   }, [action, parentGoal, showAddGoal, showSuggestionModal, showChangesModal, showUpdateGoal]);
 
   return (

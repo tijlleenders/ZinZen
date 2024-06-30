@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
+import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./GoalTitle";
 import GoalDropdown from "./GoalDropdown";
@@ -15,22 +16,26 @@ interface MyGoalProps {
 }
 
 const MyGoal: React.FC<MyGoalProps> = ({ goal }) => {
-  const [expandGoalId, setExpandGoalId] = useState("root");
-  const [isAnimating, setIsAnimating] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAnimating(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   const navigate = useNavigate();
   const location = useLocation();
+  const {
+    parentData: { parentGoal },
+  } = useParentGoalContext();
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const subGoalHistory = useRecoilValue(goalsHistory);
 
+  const [isAnimating, setIsAnimating] = useState(true);
+  const [expandGoalId, setExpandGoalId] = useState("root");
+
+  const redirect = (state: object, isDropdown = false) => {
+    const pid = parentGoal?.id;
+    if (isDropdown) {
+      navigate(`/MyGoals/${pid || "root"}/${goal.id}?showOptions=true`, { state });
+    } else {
+      navigate(`/MyGoals/${goal.id}`, { state });
+    }
+  };
   const handleGoalClick = () => {
     const newState: ILocationState = {
       ...location.state,
@@ -47,9 +52,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal }) => {
     if (newState.allowAddingBudgetGoal !== false) {
       newState.allowAddingBudgetGoal = goal.category !== "Standard";
     }
-    navigate("/MyGoals", {
-      state: newState,
-    });
+    redirect(newState);
   };
 
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -60,7 +63,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal }) => {
     } else {
       // navState.displayGoalActions = { actionType, goal };
     }
-    navigate("/MyGoals", { state: navState });
+    redirect(navState, true);
   }
 
   useEffect(() => {

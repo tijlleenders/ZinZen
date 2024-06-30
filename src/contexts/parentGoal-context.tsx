@@ -37,17 +37,17 @@ export const ParentGoalContext = createContext<{
 }>({ parentData: initialState, dispatch: () => null });
 
 export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
-  const { parent = "root" } = useParams();
+  const { parentId = "root" } = useParams();
   const [parentData, dispatch] = useReducer(parentGoalReducer, initialState);
 
   useEffect(() => {
-    if (parent !== "root") {
-      getGoalById(parent).then((doc) => dispatch({ type: "SET_PARENT_GOAL", payload: doc }));
-      getChildrenGoals(parent).then((childGoals) => dispatch({ type: "SET_SUBGOALS", payload: childGoals || [] }));
+    if (parentId !== "root") {
+      getGoalById(parentId).then((doc) => dispatch({ type: "SET_PARENT_GOAL", payload: doc }));
+      getChildrenGoals(parentId).then((childGoals) => dispatch({ type: "SET_SUBGOALS", payload: childGoals || [] }));
       return;
     }
     dispatch({ type: "RESET_STATE" });
-  }, [parent]);
+  }, [parentId]);
 
   const value = useMemo(() => ({ parentData, dispatch }), [parentData]);
 
