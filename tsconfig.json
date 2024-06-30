@@ -50,7 +50,6 @@
     "types": [
       "react/next",
       "react-dom/next",
-      "cypress",
       "jest",
       "@testing-library/jest-dom"
     ] /* Specify type package names to be included without being referenced in a source file. */,

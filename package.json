@@ -41,7 +41,6 @@
     "yui-lint": "^0.2.0"
   },
   "scripts": {
-    "cy": "cypress",
     "dev": "vite",
     "build": "CI=false && vite build",
     "build-local": "vite build",
@@ -51,13 +50,12 @@
     "https-preview": "CI=false && vite build && serve dist",
     "preview": "vite preview",
     "test": "jest --verbose ./src/__tests__",
-    "cypresstest": "cypress run",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint-fix": "eslint ./ --fix",
     "format": "prettier --write .",
     "format-all": "prettier --write .",
-    "cy:open": "cypress open",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "playwright": "playwright test"
   },
   "eslintConfig": {
     "extends": [
@@ -85,7 +83,6 @@
     "@types/crypto-js": "^4.1.1",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
-    "cypress": "^13.7.2",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",

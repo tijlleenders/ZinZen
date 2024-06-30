@@ -37,7 +37,7 @@ test.describe("Header component", () => {
     await expect(settingsDropdown).toHaveCSS("display", "none");
   });
 
-  test("should toggle dark mode when Switch Mode button is clicked", async ({ page }) => {
+  test("should toggle dark mode when Dark Mode switch is clicked", async ({ page }) => {
     const settingsIcon = page.getByRole("img", { name: "Settings" });
     await settingsIcon.click();
 
