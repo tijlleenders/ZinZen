@@ -8,6 +8,7 @@ import verticalDots from "@assets/images/verticalDots.svg";
 import { darkModeState } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import useGlobalStore from "@src/hooks/useGlobalStore";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
 const Settings = () => {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ const Settings = () => {
   const dropdownOptions = [t("donate"), t("feedback"), t("blog"), t("backup"), t("changeLanguage"), t("changeTheme")];
 
   const toggleDarkModeStatus = () => {
-    localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
+    localStorage.setItem(LocalStorageKeys.DARK_MODE, darkModeStatus ? "off" : "on");
     setDarkModeStatus(!darkModeStatus);
   };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { displayToast, darkModeState } from "@src/store";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState, useRecoilState } from "recoil";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import Settings from "./Settings";
 
 const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
@@ -16,10 +17,10 @@ const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
     } else if (alt === "zinzen search") {
       navigate("/MyGoals", { state: { ...state, displaySearch: true } });
     } else if (alt === "light mode") {
-      localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
+      localStorage.setItem(LocalStorageKeys.DARK_MODE, darkModeStatus ? "off" : "on");
       setDarkModeStatus(!darkModeStatus);
     } else if (alt === "dark mode") {
-      localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
+      localStorage.setItem(LocalStorageKeys.DARK_MODE, darkModeStatus ? "off" : "on");
       setDarkModeStatus(!darkModeStatus);
     }
   };
