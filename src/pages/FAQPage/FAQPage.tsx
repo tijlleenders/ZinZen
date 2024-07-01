@@ -28,7 +28,7 @@ export const FAQPage = () => {
   const handleClick = () => {
     localStorage.setItem(LocalStorageKeys.CHECKED_IN, "yes");
     const invite = localStorage.getItem(LocalStorageKeys.PENDING_INVITE);
-    localStorage.removeItem("pendingInvite");
+    localStorage.removeItem(LocalStorageKeys.PENDING_INVITE);
     vibrateWorks ? navigator.vibrate(100) : null;
     if (invite && invite !== "none") {
       navigate(`/invite/${invite}`);
