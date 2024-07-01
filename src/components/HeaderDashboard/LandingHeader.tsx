@@ -13,6 +13,7 @@ import { displaySidebar } from "@src/store/SidebarState";
 
 import "@translations/i18n";
 import "./HeaderDashboard.scss";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
 export const LandingHeader = ({ avatar }: { avatar: string | null }) => {
   const navigate = useNavigate();
@@ -28,10 +29,10 @@ export const LandingHeader = ({ avatar }: { avatar: string | null }) => {
           alt="Back arrow"
           id="main-header-homeLogo"
           onClick={() => {
-            if (localStorage.getItem("checkedIn") !== "yes") {
-              localStorage.setItem("checkedIn", "yes");
-              const invite = localStorage.getItem("pendingInvite");
-              localStorage.removeItem("pendingInvite");
+            if (localStorage.getItem(LocalStorageKeys.CHECKED_IN) !== "yes") {
+              localStorage.setItem(LocalStorageKeys.CHECKED_IN, "yes");
+              const invite = localStorage.getItem(LocalStorageKeys.PENDING_INVITE);
+              localStorage.removeItem(LocalStorageKeys.PENDING_INVITE);
               if (invite && invite !== "none") {
                 navigate(`/invite/${invite}`);
               } else {

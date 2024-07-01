@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 import "./FAQPage.scss";
 import "@translations/i18n";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
 export const FAQPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -25,9 +26,9 @@ export const FAQPage = () => {
   ];
 
   const handleClick = () => {
-    localStorage.setItem("checkedIn", "yes");
-    const invite = localStorage.getItem("pendingInvite");
-    localStorage.removeItem("pendingInvite");
+    localStorage.setItem(LocalStorageKeys.CHECKED_IN, "yes");
+    const invite = localStorage.getItem(LocalStorageKeys.PENDING_INVITE);
+    localStorage.removeItem(LocalStorageKeys.PENDING_INVITE);
     vibrateWorks ? navigator.vibrate(100) : null;
     if (invite && invite !== "none") {
       navigate(`/invite/${invite}`);
@@ -62,8 +63,7 @@ export const FAQPage = () => {
             ),
           }))}
         />
-        <button className="action-btn" type="button" onClick={handleClick}>
-          {" "}
+        <button className="action-btn" type="button" tabIndex={0} onKeyDown={handleClick} onClick={handleClick}>
           {t("continue")} <img className="chevronRight theme-icon" src={chevronLeftIcon} alt="zinzen faq" />
         </button>
       </div>
