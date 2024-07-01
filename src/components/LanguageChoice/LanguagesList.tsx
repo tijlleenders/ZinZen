@@ -1,13 +1,11 @@
 import React from "react";
 import i18n from "i18next";
-
 import { useRecoilState } from "recoil";
 import { ILanguageListProps, ILanguage } from "@src/Interfaces/ILanguage";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
 import { languageSelectionState } from "@src/store";
 
-export const LanguagesList = (props: ILanguageListProps) => {
-  const { languages, navigationCallback, type, hideSelected } = props;
+export const LanguagesList = ({ languages, navigationCallback, type, hideSelected }: ILanguageListProps) => {
   const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
   const sortedLanguages = [languages[0], ...languages.slice(1).sort((a, b) => a.title.localeCompare(b.title))];
 
@@ -21,20 +19,24 @@ export const LanguagesList = (props: ILanguageListProps) => {
     if (type === "fragment" && navigationCallback) navigationCallback("/ZinZenFAQ");
     else window.history.back();
   };
+
   return (
     <div className="containerLang">
       {sortedLanguages.map((lang: ILanguage) => (
-        <button
-          key={String(lang.sno)}
-          type="button"
+        <label
+          key={lang.sno}
+          htmlFor={lang.sno.toString()}
           className={lang.selected && !hideSelected ? "selected" : ""}
-          onClick={() => {
-            handleClick(lang.langId);
-          }}
         >
           {lang.title}
-          <input type="radio" checked={lang.selected} readOnly />
-        </button>
+          <input
+            type="radio"
+            onClick={() => handleClick(lang.langId)}
+            checked={lang.selected}
+            readOnly
+            id={lang.sno.toString()}
+          />
+        </label>
       ))}
     </div>
   );
