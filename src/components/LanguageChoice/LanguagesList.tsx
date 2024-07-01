@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import i18n from "i18next";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { ILanguageListProps, ILanguage } from "@src/Interfaces/ILanguage";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
 import { languageSelectionState } from "@src/store";
+import { useLanguageSelection } from "../../hooks/useLanguageSelection";
 
 export const LanguagesList = ({ languages, navigationCallback, type, hideSelected }: ILanguageListProps) => {
-  const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
-  const sortedLanguages = [languages[0], ...languages.slice(1).sort((a, b) => a.title.localeCompare(b.title))];
+  const setIsLanguageChosen = useSetRecoilState(languageSelectionState);
+  const labelRefs = useRef<HTMLLabelElement[]>([]);
 
   const handleClick = (langId: string) => {
     if (vibrateWorks) {
@@ -20,11 +21,21 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
     else window.history.back();
   };
 
+  const focusedIndex = useLanguageSelection(languages, handleClick);
+
+  useEffect(() => {
+    labelRefs.current[focusedIndex]?.focus();
+  }, [focusedIndex]);
+
   return (
     <div className="containerLang">
-      {sortedLanguages.map((lang: ILanguage) => (
+      {languages.map((lang: ILanguage, index: number) => (
         <label
           key={lang.sno}
+          ref={(ref) => {
+            labelRefs.current[index] = ref!;
+            return null;
+          }}
           htmlFor={lang.sno.toString()}
           className={lang.selected && !hideSelected ? "selected" : ""}
         >
