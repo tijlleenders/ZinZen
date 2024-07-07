@@ -27,8 +27,14 @@
     border-bottom: 1px solid var(--default-border-color);
   }
 
+  .focused {
+    border: var(--icon-grad-2) 2px solid;
+    border-radius: 4px;
+  }
+
   input[type="radio"] {
     accent-color: #cd6e51 !important;
+    outline: none;
   }
 
   .selected {

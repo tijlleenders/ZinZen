@@ -37,7 +37,7 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
             return null;
           }}
           htmlFor={lang.sno.toString()}
-          className={lang.selected && !hideSelected ? "selected" : ""}
+          className={`${lang.selected && !hideSelected ? "selected" : ""} ${focusedIndex === index ? "focused" : ""}`}
         >
           {lang.title}
           <input
