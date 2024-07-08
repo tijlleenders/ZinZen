@@ -10,7 +10,7 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
   const setIsLanguageChosen = useSetRecoilState(languageSelectionState);
   const labelRefs = useRef<HTMLLabelElement[]>([]);
 
-  const handleClick = (langId: string) => {
+  const handleLanguageSelect = (langId: string) => {
     if (vibrateWorks) {
       navigator.vibrate(100);
     }
@@ -21,7 +21,12 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
     else window.history.back();
   };
 
-  const focusedIndex = useLanguageSelection(languages, handleClick);
+  const handleClick = (event: React.MouseEvent, langId: string) => {
+    event.preventDefault();
+    handleLanguageSelect(langId);
+  };
+
+  const focusedIndex = useLanguageSelection(languages, handleLanguageSelect);
 
   useEffect(() => {
     labelRefs.current[focusedIndex]?.focus();
@@ -34,7 +39,6 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
           key={lang.sno}
           ref={(ref) => {
             labelRefs.current[index] = ref!;
-            return null;
           }}
           htmlFor={lang.sno.toString()}
           className={`${lang.selected && !hideSelected ? "selected" : ""} ${focusedIndex === index ? "focused" : ""}`}
@@ -42,7 +46,7 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
           {lang.title}
           <input
             type="radio"
-            onClick={() => handleClick(lang.langId)}
+            onMouseDown={(e) => handleClick(e, lang.langId)}
             checked={lang.selected}
             readOnly
             id={lang.sno.toString()}
