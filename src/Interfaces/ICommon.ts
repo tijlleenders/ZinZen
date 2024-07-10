@@ -23,7 +23,7 @@ export interface ZModalProps {
   children: React.ReactNode;
   type?: string;
   open: boolean;
-  onCancel: () => void;
+  onCancel?: () => void;
   width?: number;
   style?: React.CSSProperties;
 }
@@ -35,10 +35,10 @@ export interface ColorPaletteProps {
 
 export interface ISubHeaderProps {
   title: string;
-  leftNav: () => void;
-  rightNav: () => void;
-  showLeftNav: boolean;
-  showRightNav: boolean;
+  leftNav?: () => void;
+  rightNav?: () => void;
+  showLeftNav?: boolean;
+  showRightNav?: boolean;
 }
 
 export interface IconProps {

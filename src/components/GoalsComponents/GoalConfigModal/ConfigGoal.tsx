@@ -2,7 +2,7 @@ import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { AutoComplete, Slider } from "antd";
-import { displayToast, openDevMode } from "@src/store";
+import { displayToast, lastAction, openDevMode } from "@src/store";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
 
@@ -59,6 +59,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
+  const setLastAction = useSetRecoilState(lastAction);
 
   const [colorIndex, setColorIndex] = useRecoilState(selectedColorIndex);
   const showAddGoal = useRecoilValue(displayAddGoal);
@@ -183,6 +184,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           extra: "Explore what's hidden",
         });
       }
+      setLastAction("goalItemCreated");
     }
     await mySound.play();
   };
@@ -441,9 +443,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <div className="action-btn-container">
                 <HintToggle setHints={setHints} defaultValue={hints} />
                 <button
-                  type="button"
+                  type="submit"
                   className="action-btn"
-                  onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
                   {t(`${action} Budget`)}
@@ -455,12 +456,11 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               <div className="action-btn-container">
                 <HintToggle setHints={setHints} defaultValue={hints} />
                 <button
-                  type="button"
+                  type="submit"
                   className="action-btn"
-                  onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
-                  {t(`${action} ${state.goalType === "Budget" ? "Budget" : "Goal"}`)}
+                  {t(`${action} Goal`)}
                 </button>
               </div>
               <div

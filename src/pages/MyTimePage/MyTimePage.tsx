@@ -82,17 +82,7 @@ export const MyTimePage = () => {
   if (state?.displayFocus) {
     return (
       <AppLayout title="myTime">
-        <SubHeader
-          title="Focus"
-          leftNav={() => {
-            return null;
-          }}
-          rightNav={() => {
-            return null;
-          }}
-          showLeftNav={false}
-          showRightNav={false}
-        />
+        <SubHeader title="Focus" />
         <Focus />
       </AppLayout>
     );
