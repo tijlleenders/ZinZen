@@ -120,7 +120,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
         <div
           className="goal-action shareOptions-btn"
           onClickCapture={() => {
-            handleUpdateGoal(goal.id, !!goal.timeBudget?.perDay);
+            handleUpdateGoal(goal);
           }}
         >
           <ActionDiv label={t("Edit")} icon="Edit" />

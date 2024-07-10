@@ -6,15 +6,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import {
-  displayAddGoal,
-  displayChangesModal,
-  displayGoalId,
-  displayShareModal,
-  displaySuggestionsModal,
-  displayUpdateGoal,
-} from "@src/store/GoalsState";
-import { GoalItem } from "@src/models/GoalItem";
+import { displayChangesModal, displayShareModal } from "@src/store/GoalsState";
+import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveGoals } from "@api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
@@ -34,6 +27,8 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
 import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
+import { goalCategories } from "@src/constants/myGoals";
+import { TGoalConfigMode } from "@src/types";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -46,16 +41,17 @@ export const MyGoals = () => {
 
   const [searchParams] = useSearchParams();
   const showOptions = !!searchParams.get("showOptions");
+  const goalType = (searchParams.get("type") as TGoalCategory) || "";
+
+  const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
 
   const { goal: activeGoal } = useActiveGoalContext();
+  console.log("🚀 ~ MyGoals ~ activeGoal:", activeGoal);
 
-  const showAddGoal = useRecoilValue(displayAddGoal);
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
   const showShareModal = useRecoilValue(displayShareModal);
-  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showChangesModal = useRecoilValue(displayChangesModal);
-  const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   const [action, setLastAction] = useRecoilState(lastAction);
 
@@ -99,9 +95,9 @@ export const MyGoals = () => {
     }
   }, [action]);
 
-  useEffect(() => {
-    refreshActiveGoals();
-  }, [showShareModal, showAddGoal, showChangesModal, showUpdateGoal, showSuggestionModal, showChangesModal]);
+  // useEffect(() => {
+  //   refreshActiveGoals();
+  // }, [showShareModal, showAddGoal, showChangesModal, showUpdateGoal, showSuggestionModal, showChangesModal]);
 
   useEffect(() => {
     if (parentId === "root") {
@@ -111,33 +107,34 @@ export const MyGoals = () => {
 
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
-      {showShareModal && <ShareGoalModal goal={showShareModal} />}
-      {showChangesModal && <DisplayChangesModal />}
-      {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
-      <div className="myGoals-container">
-        {parentId === "root" ? (
-          <div className="my-goals-content">
-            {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
-            <div>
+      <ParentGoalProvider>
+        {showShareModal && <ShareGoalModal goal={showShareModal} />}
+        {showChangesModal && <DisplayChangesModal />}
+        {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
+        {goalCategories.includes(goalType) && (
+          <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
+        )}
+
+        <div className="myGoals-container">
+          {parentId === "root" ? (
+            <div className="my-goals-content">
               <div className="d-flex f-col">
                 <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
               </div>
               {archivedGoals.length > 0 && <GoalsAccordion header="Done" goals={archivedGoals} />}
               {deletedGoals.length > 0 && <GoalsAccordion header="Trash" goals={deletedGoals} />}
             </div>
-          </div>
-        ) : (
-          <ParentGoalProvider>
+          ) : (
             <GoalSublist />
-          </ParentGoalProvider>
-        )}
+          )}
 
-        <img
-          style={{ width: 180, height: zinZenLogoHeight, opacity: 0.3 }}
-          src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-          alt="Zinzen"
-        />
-      </div>
+          <img
+            style={{ width: 180, height: zinZenLogoHeight, opacity: 0.3 }}
+            src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+            alt="Zinzen"
+          />
+        </div>
+      </ParentGoalProvider>
     </AppLayout>
   );
 };
