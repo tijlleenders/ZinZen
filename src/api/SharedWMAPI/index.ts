@@ -48,6 +48,10 @@ export const getSharedWMGoal = async (goalId: string) => {
   return goal[0];
 };
 
+export const getSharedWMGoalById = (id: string) => {
+  return db.goalsCollection.get(id);
+};
+
 export const getSharedWMChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals: GoalItem[] = await db.sharedWMCollection
     .where("parentGoalId")
