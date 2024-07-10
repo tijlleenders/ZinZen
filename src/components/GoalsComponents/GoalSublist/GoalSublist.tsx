@@ -89,7 +89,6 @@ export const GoalSublist = () => {
           <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
           {parentGoal && <GoalItemSummary goal={parentGoal} />}
           <div className="sublist-list-container">
-            {showAddGoal && <ConfigGoal action="Create" goal={createGoalObjectFromTags({})} />}
             <GoalsList
               goals={subgoals}
               setGoals={(orderedGoals: GoalItem[]) => {
