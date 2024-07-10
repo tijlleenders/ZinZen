@@ -1,8 +1,8 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { ILocationState } from "@src/Interfaces";
 import { getGoal } from "@src/api/GoalsAPI";
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { displayConfirmation } from "@src/store";
 import { displayGoalId, goalsHistory, selectedColorIndex } from "@src/store/GoalsState";
 import { colorPalleteList } from "@src/utils";
@@ -10,13 +10,14 @@ import { colorPalleteList } from "@src/utils";
 const useGoalStore = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { parentId } = useParams();
   const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
 
   const setColorIndex = useSetRecoilState(selectedColorIndex);
 
-  const handleAddGoal = async (type: "Budget" | "Goal", goal: GoalItem | null = null) => {
+  const handleAddGoal = async (type: TGoalCategory, goal: GoalItem | null = null) => {
     let newLocationState: ILocationState = { ...location.state, displayAddGoal: selectedGoalId };
     delete newLocationState.displayAddGoalOptions;
     if (selectedGoalId === "root") {
@@ -42,7 +43,7 @@ const useGoalStore = () => {
       };
     }
     newLocationState.displayAddGoal = goal ? goal.id : selectedGoalId;
-    navigate("/MyGoals", {
+    navigate(`/MyGoals/${parentId || "root"}?type=${type}&mode=add`, {
       state: {
         ...newLocationState,
         goalType: type,
@@ -51,11 +52,15 @@ const useGoalStore = () => {
     });
   };
 
-  const handleUpdateGoal = (id: string, isBudget: boolean) => {
+  const handleUpdateGoal = (goal: GoalItem) => {
     const newLocationState: ILocationState = { ...location.state };
     delete newLocationState.displayGoalActions;
-    navigate("/MyGoals", {
-      state: { ...newLocationState, displayUpdateGoal: id, goalType: isBudget ? "Budget" : "Goal" },
+    navigate(`/MyGoals/${goal.parentGoalId}/${goal.id}?type=${goal.category}&mode=edit`, {
+      state: {
+        ...newLocationState,
+        displayUpdateGoal: goal.id,
+        goalType: goal.category === "Budget" ? "Budget" : "Goal",
+      },
       replace: true,
     });
   };
