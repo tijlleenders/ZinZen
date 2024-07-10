@@ -1,7 +1,10 @@
 import { getChildrenGoals, getGoalById } from "@src/api/GoalsAPI";
+import { getSharedWMChildrenGoals, getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { displayPartnerMode } from "@src/store";
 import React, { ReactNode, createContext, useContext, useEffect, useMemo, useReducer } from "react";
 import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
 type TParentData = {
   parentGoal: GoalItem | undefined;
@@ -39,15 +42,20 @@ export const ParentGoalContext = createContext<{
 export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
   const { parentId = "root" } = useParams();
   const [parentData, dispatch] = useReducer(parentGoalReducer, initialState);
+  const isPartnerModeActive = useRecoilValue(displayPartnerMode);
 
   useEffect(() => {
     if (parentId !== "root") {
-      getGoalById(parentId).then((doc) => dispatch({ type: "SET_PARENT_GOAL", payload: doc }));
-      getChildrenGoals(parentId).then((childGoals) => dispatch({ type: "SET_SUBGOALS", payload: childGoals || [] }));
+      (isPartnerModeActive ? getSharedWMGoalById(parentId) : getGoalById(parentId)).then((doc) =>
+        dispatch({ type: "SET_PARENT_GOAL", payload: doc }),
+      );
+      (isPartnerModeActive ? getSharedWMChildrenGoals(parentId) : getChildrenGoals(parentId)).then((childGoals) =>
+        dispatch({ type: "SET_SUBGOALS", payload: childGoals || [] }),
+      );
       return;
     }
     dispatch({ type: "RESET_STATE" });
-  }, [parentId]);
+  }, [parentId, isPartnerModeActive]);
 
   const value = useMemo(() => ({ parentData, dispatch }), [parentData]);
 
