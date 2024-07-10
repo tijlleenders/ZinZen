@@ -1,5 +1,5 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { ReactNode } from "react";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
@@ -14,14 +14,14 @@ import "./index.scss";
 import { useTranslation } from "react-i18next";
 import { ILocationState } from "@src/Interfaces";
 
-interface AdGoalOptionsProps {
-  goalType: "Budget" | "Goal";
+interface AddGoalOptionProps {
+  children: ReactNode;
   bottom: number;
   disabled?: boolean;
+  handleClick: () => void;
 }
 
-const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom, disabled }) => {
-  const { handleAddGoal } = useGoalStore();
+const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disabled, handleClick }) => {
   return (
     <button
       type="button"
@@ -29,10 +29,10 @@ const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom, disabl
       style={{ right: 35, bottom, ...(disabled ? { opacity: 0.25, pointerEvents: "none" } : {}) }}
       onClick={(e) => {
         e.stopPropagation();
-        handleAddGoal(goalType);
+        handleClick();
       }}
     >
-      <span style={{ paddingLeft: 5 }}>{goalType}</span>
+      <span style={{ paddingLeft: 5 }}>{children}</span>
       <span className="goal-btn-circle">
         <img
           style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
@@ -46,10 +46,15 @@ const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom, disabl
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
   const { t } = useTranslation();
-  const { state }: { state: ILocationState } = useLocation();
-  const navigate = useNavigate();
   const { handleAddFeeling } = useFeelingStore();
+  const { handleAddGoal } = useGoalStore();
 
+  const { state }: { state: ILocationState } = useLocation();
+
+  const { parentId = "root" } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const navigate = useNavigate();
   const themeSelection = useRecoilValue(themeSelectionMode);
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -57,12 +62,12 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      navigate("/MyGoals", { state: { ...state, displayAddGoalOptions: true } });
+      navigate(`/MyGoals/${parentId}?addOptions=true`, { state: { ...state, displayAddGoalOptions: true } });
     } else if (add === "myJournal") {
       handleAddFeeling();
     }
   };
-  if (state?.displayAddGoalOptions) {
+  if (searchParams?.get("addOptions")) {
     return (
       <>
         <Backdrop
@@ -72,8 +77,23 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             window.history.back();
           }}
         />
-        <AddGoalOptions disabled={state.allowAddingBudgetGoal === false} goalType={t("addBtnBudget")} bottom={144} />
-        <AddGoalOptions goalType={t("addBtnGoal")} bottom={74} />
+        <AddGoalOption
+          handleClick={() => {
+            handleAddGoal("Budget");
+          }}
+          disabled={state.allowAddingBudgetGoal === false}
+          bottom={144}
+        >
+          {t("addBtnBudget")}
+        </AddGoalOption>
+        <AddGoalOption
+          handleClick={() => {
+            handleAddGoal("Standard");
+          }}
+          bottom={74}
+        >
+          {t("addBtnGoal")}
+        </AddGoalOption>
       </>
     );
   }
