@@ -43,7 +43,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "CI=false && vite build && npm run generate-build-info ",
+    "build": "CI=false && vite build && npm run generate-build-info",
     "build-local": "vite build && npm run generate-build-info",
     "generate-build-info": "node generate-build-info.mjs",
     "tsc": "tsc",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -6,9 +6,10 @@ import { submitFeedback } from "@src/api/FeedbackAPI";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
 import { darkModeState, displayLoader, displayToast } from "@store";
 
+import releaseInfo from "../../version.json";
+
 import "@translations/i18n";
 import "./feedbackpage.scss";
-import { IBuildInfo } from "@src/Interfaces/IBuildInfo";
 
 export const FeedbackPage = () => {
   const [userRating, setUserRating] = useState(3);
@@ -16,17 +17,9 @@ export const FeedbackPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const setLoading = useSetRecoilState(displayLoader);
   const setDisplayToast = useSetRecoilState(displayToast);
-  const [buildInfo, setBuildInfo] = useState<IBuildInfo | null>(null);
-
-  useEffect(() => {
-    fetch("/dist/build-info.json")
-      .then((response) => response.json())
-      .then((data) => setBuildInfo(data))
-      .catch((error) => console.error("Error fetching build info:", error));
-  }, []);
 
   async function submitToAPI(feedback: string) {
-    const updatedFeedback = `Rating : ${userRating}\n${feedback}\n\nBuild Info:\nVersion numbers: ${buildInfo?.buildHash}\nRelease Date: ${buildInfo?.releaseDate}`;
+    const updatedFeedback = `Rating : ${userRating}\n${feedback}\n\nBuild Info:\nVersion numbers: ${releaseInfo.buildHash}\nRelease Date: ${releaseInfo.releaseDate}`;
     setLoading(true);
     const res = await submitFeedback(updatedFeedback);
     setLoading(false);
@@ -86,10 +79,10 @@ export const FeedbackPage = () => {
           {t("submit")}
         </button>
       </div>
-      {buildInfo && (
+      {releaseInfo && (
         <div id="build-info-line">
-          <p>Version numbers: {buildInfo.buildHash}</p>
-          <p>Release date: {new Date(buildInfo.releaseDate).toDateString()}</p>
+          <p>Version numbers: {releaseInfo.buildHash}</p>
+          <p>Release date: {new Date(releaseInfo.releaseDate).toDateString()}</p>
         </div>
       )}
     </OnboardingLayout>

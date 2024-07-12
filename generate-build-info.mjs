@@ -23,7 +23,7 @@ const buildInfo = {
   buildHash: getHash(path.resolve(__dirname, "pkg/scheduler_bg.wasm")),
 };
 
-const outputPath = path.resolve(__dirname, "dist", "build-info.json");
+const outputPath = path.resolve(__dirname, "src", "version.json");
 
 fs.writeFileSync(outputPath, JSON.stringify(buildInfo, null, 2));
 
