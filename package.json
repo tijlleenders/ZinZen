@@ -41,8 +41,8 @@
     "yui-lint": "^0.2.0"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "CI=false && vite build",
+    "dev": "vite && node generate-build-info.js",
+    "build": "CI=false && vite build && node generate-build-info.js",
     "build-local": "vite build",
     "tsc": "tsc",
     "tsc-build": "tsc && vite build",
