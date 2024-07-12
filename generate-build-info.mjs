@@ -1,9 +1,13 @@
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
-const packageJson = require("./package.json");
+import { fileURLToPath } from "url";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
 
 /** Getting hashes of release package files, including the scheduler wasm */
+
+// Get current file path
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function getHash(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
@@ -15,11 +19,13 @@ function getHash(filePath) {
 }
 
 const buildInfo = {
-  version: packageJson.version,
   releaseDate: new Date().toISOString(),
   buildHash: getHash(path.resolve(__dirname, "pkg/scheduler_bg.wasm")),
 };
 
-fs.writeFileSync(path.resolve(__dirname, "dist", "build-info.json"), JSON.stringify(buildInfo, null, 2));
+const outputPath = path.resolve(__dirname, "dist", "build-info.json");
+
+fs.writeFileSync(outputPath, JSON.stringify(buildInfo, null, 2));
 
 console.log("Build info generated:", buildInfo);
+console.log("Output written to:", outputPath);
