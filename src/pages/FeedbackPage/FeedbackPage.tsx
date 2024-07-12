@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -8,6 +8,7 @@ import { darkModeState, displayLoader, displayToast } from "@store";
 
 import "@translations/i18n";
 import "./feedbackpage.scss";
+import { IBuildInfo } from "@src/Interfaces/IBuildInfo";
 
 export const FeedbackPage = () => {
   const [userRating, setUserRating] = useState(3);
@@ -15,9 +16,17 @@ export const FeedbackPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const setLoading = useSetRecoilState(displayLoader);
   const setDisplayToast = useSetRecoilState(displayToast);
+  const [buildInfo, setBuildInfo] = useState<IBuildInfo | null>(null);
+
+  useEffect(() => {
+    fetch("/dist/build-info.json")
+      .then((response) => response.json())
+      .then((data) => setBuildInfo(data))
+      .catch((error) => console.error("Error fetching build info:", error));
+  }, []);
 
   async function submitToAPI(feedback: string) {
-    const updatedFeedback = `Rating : ${userRating}\n${feedback}`;
+    const updatedFeedback = `Rating : ${userRating}\n${feedback}\n\nBuild Info:\nVersion numbers: ${buildInfo?.buildHash}\nRelease Date: ${buildInfo?.releaseDate}`;
     setLoading(true);
     const res = await submitFeedback(updatedFeedback);
     setLoading(false);
@@ -77,6 +86,12 @@ export const FeedbackPage = () => {
           {t("submit")}
         </button>
       </div>
+      {buildInfo && (
+        <div id="build-info-line">
+          <p>Version numbers: {buildInfo.buildHash}</p>
+          <p>Release date: {new Date(buildInfo.releaseDate).toDateString()}</p>
+        </div>
+      )}
     </OnboardingLayout>
   );
 };
