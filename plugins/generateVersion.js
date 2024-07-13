@@ -15,7 +15,7 @@ function generateVersion() {
         const buildHash = mainFile.split(".")[1];
         const versionData = { buildHash, buildDate: new Date().toISOString() };
 
-        fs.writeFileSync(path.resolve(__dirname, "../version.json"), JSON.stringify(versionData, null, 2));
+        fs.writeFileSync(path.resolve(__dirname, "../src/version.json"), JSON.stringify(versionData, null, 2));
         console.log("version.json created:", versionData);
       }
     },

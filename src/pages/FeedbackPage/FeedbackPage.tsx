@@ -19,7 +19,7 @@ export const FeedbackPage = () => {
   const setDisplayToast = useSetRecoilState(displayToast);
 
   async function submitToAPI(feedback: string) {
-    const updatedFeedback = `Rating : ${userRating}\n${feedback}\n\nBuild Info:\nVersion numbers: ${releaseInfo.buildHash}\nRelease Date: ${releaseInfo.releaseDate}`;
+    const updatedFeedback = `Rating : ${userRating}\n${feedback}\n\nBuild Info:\nVersion numbers: ${releaseInfo.buildHash}\nRelease Date: ${releaseInfo.buildDate}`;
     setLoading(true);
     const res = await submitFeedback(updatedFeedback);
     setLoading(false);
@@ -82,7 +82,7 @@ export const FeedbackPage = () => {
       {releaseInfo && (
         <div id="build-info-line">
           <p>Version numbers: {releaseInfo.buildHash}</p>
-          <p>Release date: {new Date(releaseInfo.releaseDate).toDateString()}</p>
+          <p>Release date: {new Date(releaseInfo.buildDate).toDateString()}</p>
         </div>
       )}
     </OnboardingLayout>
