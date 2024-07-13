@@ -10,7 +10,7 @@ function generateBuildInfo() {
       const files = fs.readdirSync(buildDir);
       console.log("files...", files);
       const schedulerFile = files.find((file) => file.startsWith("scheduler_bg"));
-      const indexFile = files.find((file) => file.startsWith("index"));
+      const indexFile = files.find((file) => file.startsWith("index") && file.endsWith("js"));
 
       console.log("main file", schedulerFile);
       if (schedulerFile && indexFile) {
