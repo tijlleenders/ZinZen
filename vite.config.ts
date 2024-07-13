@@ -4,6 +4,7 @@ import { Alias, defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 import * as tsconfig from "./tsconfig.paths.json";
+import generateVersion from "./plugins/generateVersion";
 
 function readAliasFromTsConfig(): Alias[] {
   // eslint-disable-next-line prefer-regex-literals
@@ -66,5 +67,6 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,mp3,jpg,png,svg,wasm}"],
       },
     }),
+    generateVersion(),
   ],
 });
