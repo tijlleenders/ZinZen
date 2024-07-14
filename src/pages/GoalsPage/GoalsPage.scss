@@ -45,6 +45,7 @@
   word-break: break-all;
   text-align: left;
   cursor: pointer;
+touch-action: none;
   width: 100%;
   background: transparent;
   .user-goal-main {
@@ -53,6 +54,8 @@
     gap: 16px;
     align-items: center;
     margin-left: 20px;
+touch-action: none;
+  
   }
   .contact-button {
     position: absolute;
