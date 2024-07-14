@@ -20,12 +20,41 @@ import React from "react";
 import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
-import { updatePositionIndex } from "@src/api/GCustomAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ImpossibleGoal } from "@src/Interfaces";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal/MyGoal";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
+
+interface SortableItemProps {
+  goal: ImpossibleGoal;
+  index: number;
+  showActions: {
+    open: string;
+    click: number;
+  };
+  setShowActions: React.Dispatch<
+    React.SetStateAction<{
+      open: string;
+      click: number;
+    }>
+  >;
+}
+
+const SortableItem = ({ goal, index, showActions, setShowActions }: SortableItemProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: goal.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    touchAction: "none", // Prevents scrolling during drag
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <MyGoal actionType="regular" goal={goal} showActions={showActions} setShowActions={setShowActions} />
+    </div>
+  );
+};
 
 interface GoalsListProps {
   goals: GoalItem[];
@@ -78,23 +107,12 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
     const { active, over } = event;
     if (active.id === over?.id) return;
 
-    setGoals((goals) => {
+    setGoals((items) => {
       const originalPos = getGoalsPos(active.id);
       const newPos = getGoalsPos(over?.id);
 
-      return arrayMove(goals, originalPos, newPos);
+      return arrayMove(items, originalPos, newPos);
     });
-
-    // if (active.id !== over?.id) {
-    //   setGoals((items) => {
-    //     const oldIndex = items.findIndex((item) => item.id === active.id);
-    //     const newIndex = items.findIndex((item) => item.id === over?.id);
-    //     const newItems = arrayMove(items, oldIndex, newIndex);
-    //     const posIndexPromises = newItems.map(async (ele, index) => updatePositionIndex(ele.id, index));
-    //     Promise.all(posIndexPromises).catch((err) => console.log("error in sorting", err));
-    //     return newItems;
-    //   });
-    // }
   };
 
   return (
@@ -123,33 +141,3 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
 };
 
 export default GoalsList;
-
-interface SortableItemProps {
-  goal: ImpossibleGoal;
-  index: number;
-  showActions: {
-    open: string;
-    click: number;
-  };
-  setShowActions: React.Dispatch<
-    React.SetStateAction<{
-      open: string;
-      click: number;
-    }>
-  >;
-}
-
-const SortableItem = ({ goal, index, showActions, setShowActions }: SortableItemProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: goal.id });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    touchAction: "none", // Prevents scrolling during drag
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <MyGoal actionType="regular" goal={goal} showActions={showActions} setShowActions={setShowActions} />
-    </div>
-  );
-};
