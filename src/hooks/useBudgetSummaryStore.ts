@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 const useBudgetSummaryStore = (goal: GoalItem) => {
   const { t } = useTranslation();
 
-  const { perDay, perWeek } = goal.timeBudget!;
+  const { perDay = null, perWeek = null } = goal.timeBudget || {};
 
   const getPerDaySummary = () => formatBudgetHrsToText(perDay);
 

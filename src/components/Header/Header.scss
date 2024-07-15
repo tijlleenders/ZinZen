@@ -12,16 +12,24 @@
     align-items: center;
     justify-content: flex-start;
     flex: 1;
-    gap: 16px;
+
+    .header-logo-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-grow: 0;
+      height: 58px;
+      padding-left: 20px;
+      padding-right: 16px;
+    }
+
     img {
       height: 30px;
       width: 30px;
-      cursor: pointer;
-      flex-grow: 0;
-      margin-left: 20px;
     }
   }
-  
+
   h6 {
     line-height: 27px;
     font-weight: 500;
@@ -54,7 +62,7 @@
   width: calc(100% - 26px);
   max-width: 560px;
   img {
-    width: 18px ;
+    width: 18px;
     height: 18px;
     align-self: center;
     padding: 14px 14px 14px 26px;
@@ -94,7 +102,7 @@
 }
 
 .logo-flip {
-  animation: flipAnimation 0.5s forwards;
+  animation: flipAnimation 0.8s forwards infinite;
 }
 
 @keyframes flipAnimation {

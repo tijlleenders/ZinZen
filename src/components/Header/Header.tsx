@@ -91,13 +91,10 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       ) : (
         <>
           <div className="header-logo-title">
-            <img
-              className={isFlipping ? "logo-flip" : ""}
-              onClickCapture={handlePartner}
-              src={zinzenLightLogo}
-              alt="ZinZen"
-              ref={zinZenLogoRef}
-            />
+            <div className="header-logo-wrapper" onClickCapture={handlePartner}>
+              <img className={isFlipping ? "logo-flip" : ""} src={zinzenLightLogo} alt="ZinZen" ref={zinZenLogoRef} />
+            </div>
+
             <PartnerModeTour refTarget={zinZenLogoRef} />
             <h6
               onClickCapture={() => {

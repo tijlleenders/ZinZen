@@ -1,31 +1,41 @@
 import { useEffect, useState } from "react";
-import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
+import { getChildrenGoals } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
+import { lastAction } from "@src/store";
+import { useRecoilValue } from "recoil";
+
+const classifyChildrenGoalItems = (childrenGoals: GoalItem[]) => {
+  let goalsCount = 0;
+  let budgetsCount = 0;
+
+  childrenGoals.forEach((childGoal) => {
+    if (childGoal) {
+      if (childGoal.timeBudget && childGoal.timeBudget.perDay !== null) {
+        budgetsCount += 1;
+      } else {
+        goalsCount += 1;
+      }
+    }
+  });
+
+  return { goalsCount, budgetsCount };
+};
 
 export const useSublistSummary = ({ goal }: { goal: GoalItem }) => {
   const [subGoalsCount, setSubGoalsCount] = useState(0);
   const [subBudgetsCount, setSubBudgetsCount] = useState(0);
 
+  const action = useRecoilValue(lastAction);
+
   useEffect(() => {
     let isMounted = true;
 
-    const classifyChildren = async () => {
+    const updateSublistSummary = async () => {
       try {
-        const childrenGoalIds = await getChildrenGoals(goal.id);
-        const childrenGoals = await Promise.all(childrenGoalIds.map((goalItem) => getGoal(goalItem.id)));
+        const childrenGoals = await getChildrenGoals(goal.id);
+        const unArchivedChildrenGoals = childrenGoals.filter((childGoal) => childGoal.archived === "false");
 
-        let goalsCount = 0;
-        let budgetsCount = 0;
-
-        childrenGoals.forEach((childGoal) => {
-          if (childGoal) {
-            if (childGoal.timeBudget && childGoal.timeBudget.perDay !== null) {
-              budgetsCount += 1;
-            } else {
-              goalsCount += 1;
-            }
-          }
-        });
+        const { goalsCount, budgetsCount } = classifyChildrenGoalItems(unArchivedChildrenGoals);
 
         if (isMounted) {
           setSubGoalsCount(goalsCount);
@@ -38,12 +48,12 @@ export const useSublistSummary = ({ goal }: { goal: GoalItem }) => {
       }
     };
 
-    classifyChildren();
+    updateSublistSummary();
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [goal, action]);
 
   return { subGoalsCount, subBudgetsCount };
 };

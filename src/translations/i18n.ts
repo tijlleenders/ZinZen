@@ -21,6 +21,9 @@ i18n
   .init({
     fallbackLng: "en",
 
+    nsSeparator: false,
+    keySeparator: false,
+
     returnEmptyString: false,
     resources: {
       en: {
