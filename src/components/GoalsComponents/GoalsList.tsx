@@ -1,13 +1,5 @@
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from "@dnd-kit/core";
-import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
+import { DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import React from "react";
 import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
@@ -15,8 +7,8 @@ import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { GoalItem } from "@src/models/GoalItem";
 import { ImpossibleGoal } from "@src/Interfaces";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
-import MyGoal from "./MyGoal/MyGoal";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
+import SortableItem from "./MyGoal/SortableItem";
 
 interface GoalsListProps {
   goals: GoalItem[];
@@ -69,11 +61,9 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
 
   const updatedGoals = goals.map(addImpossibleProp);
 
-  //helper function for getting item position
-
   const getGoalsPos = (id: string | number | undefined) => goals.findIndex((goal) => goal.id === id);
 
-  const handleDragEnd = async (event: DragEndEvent) => {
+  const handleDragEnd = async (event: any) => {
     const { active, over } = event;
     if (active.id !== over?.id) {
       setGoals((items) => {
@@ -110,35 +100,3 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
 };
 
 export default GoalsList;
-
-interface SortableItemProps {
-  goal: ImpossibleGoal;
-  index: number;
-  showActions: {
-    open: string;
-    click: number;
-  };
-  setShowActions: React.Dispatch<
-    React.SetStateAction<{
-      open: string;
-      click: number;
-    }>
-  >;
-}
-
-const SortableItem = ({ goal, index, showActions, setShowActions }: SortableItemProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: goal.id });
-
-  // Constrain transform to only affect the vertical axis
-  const style = {
-    transform: transform ? `translate3d(0, ${transform.y}px, 0)` : undefined,
-    transition,
-    touchAction: "none", // Prevents scrolling during drag
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <MyGoal actionType="regular" goal={goal} showActions={showActions} setShowActions={setShowActions} />
-    </div>
-  );
-};
