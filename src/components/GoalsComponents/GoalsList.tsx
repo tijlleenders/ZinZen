@@ -1,4 +1,12 @@
-import { DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
 import React from "react";
 import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
@@ -62,16 +70,17 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
 
   const updatedGoals = goals.map(addImpossibleProp);
 
-  const handleDragEnd = async (event: any) => {
+  //helper function for getting item position
+
+  const getGoalsPos = (id: string | number | undefined) => goals.findIndex((goal) => goal.id === id);
+
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     if (active.id !== over?.id) {
       setGoals((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
-        const newItems = arrayMove(items, oldIndex, newIndex);
-        const posIndexPromises = newItems.map(async (ele, index) => updatePositionIndex(ele.id, index));
-        Promise.all(posIndexPromises).catch((err) => console.log("error in sorting", err));
-        return newItems;
+        const originalPos = getGoalsPos(active.id);
+        const newPos = getGoalsPos(over?.id);
+        return arrayMove(items, originalPos, newPos);
       });
     }
   };
