@@ -17,6 +17,7 @@ import { ImpossibleGoal } from "@src/Interfaces";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
 import SortableItem from "./MyGoal/SortableItem";
+import { updatePositionIndex } from "@src/api/GCustomAPI";
 
 interface GoalsListProps {
   goals: GoalItem[];
@@ -77,7 +78,10 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
       setGoals((items) => {
         const originalPos = getGoalsPos(active.id);
         const newPos = getGoalsPos(over?.id);
-        return arrayMove(items, originalPos, newPos);
+        const newItems = arrayMove(items, originalPos, newPos);
+        const posIndexPromises = newItems.map(async (ele, index) => updatePositionIndex(ele.id, index));
+        Promise.all(posIndexPromises).catch((err) => console.log("error in sorting", err));
+        return newItems;
       });
     }
   };
