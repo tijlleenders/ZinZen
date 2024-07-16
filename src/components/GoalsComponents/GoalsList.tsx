@@ -1,4 +1,12 @@
-import { DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import React from "react";
 import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
@@ -63,7 +71,7 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
 
   const getGoalsPos = (id: string | number | undefined) => goals.findIndex((goal) => goal.id === id);
 
-  const handleDragEnd = async (event: any) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     if (active.id !== over?.id) {
       setGoals((items) => {
