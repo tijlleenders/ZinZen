@@ -12,7 +12,6 @@ import React from "react";
 import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
-import { updatePositionIndex } from "@src/api/GCustomAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ImpossibleGoal } from "@src/Interfaces";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
