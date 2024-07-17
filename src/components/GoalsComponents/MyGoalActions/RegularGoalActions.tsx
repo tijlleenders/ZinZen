@@ -59,7 +59,7 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
         await archiveThisGoal(goal, ancestors);
         setLastAction("goalArchived");
         handleMarkNotCompleted();
-      }, 2000);
+      }, 10000);
       handleCompleteGoal();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
