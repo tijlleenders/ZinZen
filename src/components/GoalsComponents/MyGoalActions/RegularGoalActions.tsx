@@ -54,12 +54,12 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
       await removeThisGoal(goal, ancestors, isPartnerGoal);
       setLastAction("goalDeleted");
     } else if (action === "archive") {
-      await doneSound.play(); //play the done sound when a line strikes through
       setTimeout(async () => {
         await archiveThisGoal(goal, ancestors);
         setLastAction("goalArchived");
         handleMarkNotCompleted();
       }, 10000);
+      await doneSound.play(); //play the done sound when a line strikes through
       handleCompleteGoal();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
