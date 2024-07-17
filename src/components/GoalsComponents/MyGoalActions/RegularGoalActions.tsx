@@ -5,6 +5,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
+import archiveSound from "@assets/archive.mp3";
 
 import { lastAction, openDevMode, displayConfirmation, displayPartnerMode } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
@@ -12,6 +13,7 @@ import { completedGoalsState, goalsHistory } from "@src/store/GoalsState";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
+const doneSound = new Audio(archiveSound);
 
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
@@ -52,6 +54,7 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
       await removeThisGoal(goal, ancestors, isPartnerGoal);
       setLastAction("goalDeleted");
     } else if (action === "archive") {
+      await doneSound.play(); //play the done sound when a line strikes through
       setTimeout(async () => {
         await archiveThisGoal(goal, ancestors);
         setLastAction("goalArchived");

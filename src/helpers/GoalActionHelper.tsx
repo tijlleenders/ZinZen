@@ -16,6 +16,5 @@ export const removeThisGoal = async (goal: GoalItem, ancestors: string[], showPa
 };
 
 export const archiveThisGoal = async (goal: GoalItem, ancestors: string[]) => {
-  await doneSound.play();
   await archiveGoal(goal, ancestors);
 };
