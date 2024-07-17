@@ -42,6 +42,7 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
       [goal.id]: false, // Set explicitly to false
     }));
   };
+  console.log("completed", completed);
 
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
