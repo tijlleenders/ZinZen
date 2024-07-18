@@ -23,9 +23,18 @@ interface MyGoalProps {
       click: number;
     }>
   >;
+  dragAttributes?: any;
+  dragListeners?: any;
 }
 
-const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowActions }) => {
+const MyGoal: React.FC<MyGoalProps> = ({
+  goal,
+  actionType,
+  showActions,
+  setShowActions,
+  dragAttributes,
+  dragListeners,
+}) => {
   const archived = goal.archived === "true";
   const defaultTap = { open: "root", click: 1 };
   const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
@@ -69,6 +78,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
       state: newState,
     });
   };
+
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.stopPropagation();
     const navState: ILocationState = { ...location.state, from: "" };
@@ -79,6 +89,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
     }
     navigate("/MyGoals", { state: navState });
   }
+
   useEffect(() => {
     if (showActions !== defaultTap) {
       setShowActions(defaultTap);
@@ -108,7 +119,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div onClickCapture={handleDropDown}>
+        <div onClickCapture={handleDropDown} {...dragAttributes} {...dragListeners}>
           <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
