@@ -14,6 +14,7 @@ import { updateAllUnacceptedContacts, getContactByRelId, clearTheQueue } from "@
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -142,6 +143,10 @@ function useApp() {
       .catch((error) => {
         console.error("Failed to check for missed hint calls:", error);
       });
+  }, []);
+
+  useEffect(() => {
+    checkAndCleanupTrash();
   }, []);
 
   useEffect(() => {

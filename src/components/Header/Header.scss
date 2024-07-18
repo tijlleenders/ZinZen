@@ -12,13 +12,21 @@
     align-items: center;
     justify-content: flex-start;
     flex: 1;
-    gap: 16px;
+
+    .header-logo-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-grow: 0;
+      height: 58px;
+      padding-left: 20px;
+      padding-right: 16px;
+    }
+
     img {
       height: 30px;
       width: 30px;
-      cursor: pointer;
-      flex-grow: 0;
-      margin-left: 20px;
     }
   }
 
