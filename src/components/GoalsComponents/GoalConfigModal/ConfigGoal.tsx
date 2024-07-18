@@ -153,21 +153,18 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       updateStatus = await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id], hints);
     }
 
-    if (updateStatus) {
-      setShowToast({
-        open: true,
-        message: `Goal updated!`,
-        extra: "",
-      });
-
-      await mySound.play();
-    } else {
-      setShowToast({
-        open: true,
-        message: `Oops something went wrong while updating this goal!`,
-        extra: "",
-      });
-    }
+    updateStatus
+      ? (setShowToast({
+          open: true,
+          message: `Goal updated!`,
+          extra: "",
+        }),
+        await mySound.play())
+      : setShowToast({
+          open: true,
+          message: `Oops something went wrong while updating this goal!`,
+          extra: "",
+        });
   };
 
   const addThisGoal = async () => {
