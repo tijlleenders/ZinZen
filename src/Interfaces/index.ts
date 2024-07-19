@@ -2,7 +2,7 @@ import { ISubGoalHistory, TDisplayGoalActions } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
 import ContactItem from "@src/models/ContactItem";
 import { ILanguage, ILanguageListProps } from "./ILanguage";
-import { confirmActionState } from "./IPopupModals";
+import { TConfirmActionState } from "./IPopupModals";
 
 export { ILanguage, ILanguageListProps };
 
@@ -12,7 +12,7 @@ export interface ILocationState {
   activeGoalId?: string; // selected goal id
   displayAddGoal?: string; // parent id of the goal to be added
   displayShareModal?: GoalItem; // show share modal
-  displayConfirmation?: confirmActionState; // show confirmation modal
+  displayConfirmation?: TConfirmActionState; // show confirmation modal
   displayBackResModal?: boolean; // show backup restore modal
   displayLangChangeModal?: boolean; // show language change modal
   displayAddFeeling?: boolean; // show add feeling modal
@@ -27,8 +27,7 @@ export interface ILocationState {
   displayPartner?: ContactItem; // to show this partner
   displayChanges?: GoalItem; // to show the changes under goal
   goalType?: "Budget" | "Goal"; // characteristic of the goal
-  displayAddGoalOptions: boolean; // whether to show the add goal options
-  displayFocus: boolean; // whether to show the focus component
+  displayFocus?: boolean; // whether to show the focus component
   allowAddingBudgetGoal?: boolean; // whether to allow adding a budget goal
 }
 
