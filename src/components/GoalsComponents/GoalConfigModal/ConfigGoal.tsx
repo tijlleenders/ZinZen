@@ -2,24 +2,20 @@ import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Slider } from "antd";
-import { displayToast, lastAction, openDevMode } from "@src/store";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useLocation } from "react-router-dom";
+import { displayToast } from "@src/store";
+import { useSetRecoilState } from "recoil";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
 import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
-import { ILocationState } from "@src/Interfaces";
-import { getSharedWMGoal, getSharedWMGoalById } from "@src/api/SharedWMAPI";
-import { modifyGoal } from "@src/helpers/GoalController";
-import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
-import { goalsHistory } from "@src/store/GoalsState";
 import ZAccordion from "@src/common/Accordion";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import useGoalActions from "@src/hooks/useGoalActions";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -34,13 +30,16 @@ const roundOffHours = (hrsValue: string) => {
 };
 
 const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConfigMode; goal: GoalItem }) => {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
   const isEditMode = mode === "edit";
   const action = isEditMode ? "Update" : "Create";
+  const { updateGoal, addGoal } = useGoalActions();
   const {
     parentData: { parentGoal },
   } = useParentGoalContext();
 
-  let defaultColorIndex = Math.random() * colorPalleteList.length;
+  let defaultColorIndex = Math.floor(Math.random() * colorPalleteList.length - 1) + 1;
   let defaultAfterTime = isEditMode ? goal.afterTime || 9 : 9;
   let defaultBeforeTime = isEditMode ? goal.beforeTime || 18 : 18;
 
@@ -53,16 +52,11 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   }
 
   const { t } = useTranslation();
-  const { state }: { state: ILocationState } = useLocation();
-  const mySound = new Audio(plingSound);
+  const addGoalSound = new Audio(plingSound);
 
   const isKeyboardOpen = useVirtualKeyboardOpen();
-  const subGoalsHistory = useRecoilValue(goalsHistory);
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
-  const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
-  const setLastAction = useSetRecoilState(lastAction);
 
   const [colorIndex, setColorIndex] = useState(defaultColorIndex);
 
@@ -108,17 +102,6 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
-  const isTitleEmpty = () => {
-    if (title.length === 0 || title.trim() === "") {
-      setShowToast({
-        open: true,
-        message: `Goal cannot be ${isEditMode ? "updated" : "added"} without title`,
-        extra: "",
-      });
-    }
-    return title.length === 0 || title.trim() === "";
-  };
-
   const getFinalTags = (): GoalItem => ({
     ...goal,
     due: due && due !== "" ? new Date(due).toISOString() : null,
@@ -136,56 +119,27 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
           }
         : undefined,
     category: type === "Budget" ? "Budget" : tags.duration !== "" ? "Standard" : "Cluster",
+    title: title
+      .split(" ")
+      .filter((ele: string) => ele !== "")
+      .join(" "),
+    goalColor: colorPalleteList[colorIndex],
+    parentGoalId: parentGoal?.id || "root",
   });
 
-  const handleUpdateGoal = async () => {
-    const goalColor = colorPalleteList[colorIndex];
-    if (state.displayPartnerMode) {
-      let rootGoal = goal;
-      if (state.goalsHistory && state.goalsHistory.length > 0) {
-        const rootGoalId = state.goalsHistory[0].goalID;
-        rootGoal = await getSharedWMGoal(rootGoalId);
-      }
-      suggestChanges(rootGoal, getFinalTags(), title, goalColor, subGoalsHistory.length);
-    } else {
-      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id], hints);
-    }
-  };
-
-  const handleNewGoal = async () => {
-    if (state.displayPartnerMode && state.goalsHistory) {
-      const rootGoalId = state.goalsHistory[0].goalID;
-      const rootGoal = await getSharedWMGoalById(rootGoalId);
-      if (!parentGoal || !rootGoal) {
-        return;
-      }
-      suggestNewGoal(rootGoal, parentGoal, getFinalTags(), title, colorPalleteList[colorIndex], subGoalsHistory.length);
-    } else if (!parentGoal && title === "magic") {
-      setDevMode(true);
-      setShowToast({
-        open: true,
-        message: "Congratulations, you activated DEV mode",
-        extra: "Explore what's hidden",
-      });
-      setLastAction("goalItemCreated");
-    }
-    await mySound.play();
-  };
-
   const handleSave = async () => {
-    if (isTitleEmpty()) {
+    if (title.trim().length) {
+      await (isEditMode
+        ? updateGoal(getFinalTags(), hints)
+        : addGoalSound.play().then(() => addGoal(getFinalTags(), hints, parentGoal)));
+    } else {
       setShowToast({
         open: true,
         message: `Goal cannot be ${isEditMode ? "updated" : "added"} without title`,
         extra: "",
       });
-      setTitle("");
-      return;
     }
-
-    if (isEditMode) {
-      await handleUpdateGoal();
-    } else await handleNewGoal();
+    navigate(pathname, { replace: true });
   };
 
   const handleSliderChange = (value: number[], setHours: React.Dispatch<React.SetStateAction<number[]>>) => {
@@ -257,10 +211,12 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       }}
       width={360}
       onCancel={async () => {
-        if (title !== "") {
+        if (!title.trim().length) {
+          console.log("in");
+          window.history.back();
+        } else {
           await handleSave();
         }
-        window.history.back();
       }}
     >
       <form
