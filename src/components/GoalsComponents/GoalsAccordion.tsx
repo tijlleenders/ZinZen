@@ -4,8 +4,10 @@ import { darkModeState } from "@src/store";
 
 import { GoalItem } from "@src/models/GoalItem";
 import ZAccordion from "@src/common/Accordion";
-import { TAction, displayGoalActions } from "@src/store/GoalsState";
 
+import { useSearchParams } from "react-router-dom";
+import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
+import { useDeletedGoalContext } from "@src/contexts/deletedGoal-context";
 import MyGoal from "./MyGoal/MyGoal";
 import AccordionActions from "./MyGoalActions/AccordionActions";
 import HintsAccordionActions from "./MyGoalActions/HintsAccordianAction";
@@ -15,26 +17,18 @@ interface IGoalsAccordionProps {
   goals: GoalItem[];
 }
 
-// const actionsMap: {
-//   [key: string]: TAction;
-// } = {
-//   Done: "archived",
-//   Trash: "deleted",
-//   Hints: "hints",
-// };
-
 const GoalsAccordion: React.FC<IGoalsAccordionProps> = ({ header, goals }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showGoalActions = useRecoilValue(displayGoalActions);
+
+  const [searchParams] = useSearchParams();
+  const showOptions = !!searchParams.get("showOptions") && activeGoal;
+  const { goal: activeGoal } = useActiveGoalContext();
+  const { goal: deleteGoal } = useDeletedGoalContext();
 
   return (
     <div className="archived-drawer">
-      {showGoalActions && ["archived", "deleted"].includes(showGoalActions.actionType) && (
-        <AccordionActions open goal={showGoalActions.goal} actionType={showGoalActions.actionType} />
-      )}
-      {showGoalActions && ["hints"].includes(showGoalActions.actionType) && (
-        <HintsAccordionActions open goal={showGoalActions.goal} />
-      )}
+      {showOptions && header === "Hints" && <HintsAccordionActions open goal={activeGoal} />}
+
       {goals.length > 0 && (
         <ZAccordion
           showCount

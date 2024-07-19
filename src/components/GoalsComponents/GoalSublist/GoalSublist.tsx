@@ -1,50 +1,40 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
-import {
-  displayAddGoal,
-  displayChangesModal,
-  displayGoalId,
-  displaySuggestionsModal,
-  displayUpdateGoal,
-} from "@src/store/GoalsState";
+import { displayChangesModal, displayGoalId, displaySuggestionsModal } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { getChildrenGoals, getGoal } from "@src/api/GoalsAPI";
-import { displayPartnerMode, lastAction } from "@src/store";
-import { getSharedWMChildrenGoals, getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { lastAction } from "@src/store";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
+import DeletedGoals from "@pages/GoalsPage/components/DeletedGoals";
+import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
+import { TrashItem } from "@src/models/TrashItem";
 
 import GoalsList from "../GoalsList";
-import ConfigGoal from "../GoalConfigModal/ConfigGoal";
-import GoalHistory from "./GoalHistory";
-import GoalsAccordion from "../GoalsAccordion";
+import GoalHistory from "./components/GoalHistory";
 
 import "./GoalSublist.scss";
-import GoalItemSummary from "../MyGoal/GoalItemSummary/GoalItemSummary";
+import BudgetSummary from "../../../common/GoalItemSummary/BudgetSummary";
+import GoalSummary from "../../../common/GoalItemSummary/GoalSummary";
 
 export const GoalSublist = () => {
   const {
     parentData: { parentGoal, subgoals },
     dispatch,
   } = useParentGoalContext();
+
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
   const goalID = useRecoilValue(displayGoalId);
-  const showAddGoal = useRecoilValue(displayAddGoal);
-  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
-  const showPartnerMode = useRecoilValue(displayPartnerMode);
-  // const [parentGoal, setParentGoal] = useState<GoalItem | null>(null);
-  const [deletedGoals, setDeletedGoals] = useState<GoalItem[]>([]);
+  const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
-  // const [showActions, setShowActions] = useState({ open: "root", click: 1 });
   const [goalhints, setGoalHints] = useState<GoalItem[]>([]);
 
   useEffect(() => {
@@ -60,26 +50,22 @@ export const GoalSublist = () => {
   }, [goalID, action]);
 
   useEffect(() => {
-    (showPartnerMode ? getSharedWMGoal(goalID) : getGoal(goalID)).then((parent) => {
-      getDeletedGoals(goalID).then((res) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        setDeletedGoals([...res.map(({ deletedAt, ...goal }) => goal)]);
-      });
+    getDeletedGoals(goalID).then((res) => {
+      setDeletedGoals([...res]);
     });
   }, [goalID]);
 
   useEffect(() => {
     async function init() {
-      const fetchedGoals = showPartnerMode ? await getSharedWMChildrenGoals(goalID) : subgoals;
-      const sortedGoals = await priotizeImpossibleGoals(fetchedGoals);
+      const sortedGoals = await priotizeImpossibleGoals(subgoals);
       setArchivedChildren([...sortedGoals.filter((goal) => goal.archived === "true")]);
       getDeletedGoals(goalID).then((res) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        setDeletedGoals([...res.map(({ deletedAt, ...goal }) => goal)]);
+        setDeletedGoals([...res]);
       });
     }
+    console.log("refreshed goals");
     init();
-  }, [action, parentGoal, showAddGoal, showSuggestionModal, showChangesModal, showUpdateGoal]);
+  }, [action, parentGoal, showSuggestionModal, showChangesModal]);
 
   return (
     <div className="sublist-container">
@@ -87,7 +73,11 @@ export const GoalSublist = () => {
       <div className="sublist-content-container">
         <div className="sublist-content">
           <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
-          {parentGoal && <GoalItemSummary goal={parentGoal} />}
+          {parentGoal && (
+            <span className="goal-item-summary-wrapper">
+              {!parentGoal.timeBudget ? <BudgetSummary goal={parentGoal} /> : <GoalSummary goal={parentGoal} />}
+            </span>
+          )}
           <div className="sublist-list-container">
             <GoalsList
               goals={subgoals}
@@ -95,9 +85,10 @@ export const GoalSublist = () => {
                 dispatch({ type: "SET_SUBGOALS", payload: orderedGoals });
               }}
             />
-            <GoalsAccordion header="Hints" goals={goalhints} />
-            <GoalsAccordion header="Done" goals={archivedChildren} />
-            <GoalsAccordion header="Trash" goals={deletedGoals} />
+            <DeletedGoalProvider>
+              {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
+            </DeletedGoalProvider>
+            {archivedChildren.length > 0 && <ArchivedGoals goals={archivedChildren} />}
           </div>
         </div>
       </div>
