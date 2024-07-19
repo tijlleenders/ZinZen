@@ -2,7 +2,7 @@ import React from "react";
 import { replaceUrlsWithText } from "@src/utils/patterns";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
-import { useTelHandler, useUrlHandler } from "./GoalTitleHandlers";
+import { useTelHandler, useUrlHandler } from "../GoalTitleHandlers";
 
 interface GoalTitleProps {
   goal: GoalItem;

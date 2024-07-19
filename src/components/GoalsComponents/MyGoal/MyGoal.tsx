@@ -1,54 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
-import { displayGoalId, displayUpdateGoal, goalsHistory, displayChangesModal, TAction } from "@src/store/GoalsState";
+import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
+import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import GoalAvatar from "../GoalAvatar";
-import GoalDropdown from "./GoalDropdown";
-import GoalTitle from "./GoalTitle";
+import GoalTitle from "./components/GoalTitle";
+import GoalDropdown from "./components/GoalDropdown";
 
 interface MyGoalProps {
-  actionType: TAction;
   goal: ImpossibleGoal;
-  showActions: {
-    open: string;
-    click: number;
-  };
-  setShowActions: React.Dispatch<
-    React.SetStateAction<{
-      open: string;
-      click: number;
-    }>
-  >;
 }
 
-const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowActions }) => {
-  const archived = goal.archived === "true";
-  const defaultTap = { open: "root", click: 1 };
-  const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
-
-  const [expandGoalId, setExpandGoalId] = useState("root");
-  const [isAnimating, setIsAnimating] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAnimating(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
+const MyGoal: React.FC<MyGoalProps> = ({ goal }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const {
+    parentData: { parentGoal },
+  } = useParentGoalContext();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
-  const selectedGoalId = useRecoilValue(displayGoalId);
   const subGoalHistory = useRecoilValue(goalsHistory);
-  const showChangesModal = useRecoilValue(displayChangesModal);
 
+  const [isAnimating, setIsAnimating] = useState(true);
+  const [expandGoalId, setExpandGoalId] = useState("root");
+
+  const redirect = (state: object, isDropdown = false) => {
+    if (isDropdown) {
+      navigate(`/MyGoals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
+    } else {
+      navigate(`/MyGoals/${goal.id}`, { state });
+    }
+  };
   const handleGoalClick = () => {
     const newState: ILocationState = {
       ...location.state,
@@ -62,36 +48,25 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
         },
       ],
     };
-    if (newState.allowAddingBudgetGoal !== false) {
-      newState.allowAddingBudgetGoal = goal.category !== "Standard";
-    }
-    navigate("/MyGoals", {
-      state: newState,
-    });
+
+    redirect(newState);
   };
+
   async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.stopPropagation();
     const navState: ILocationState = { ...location.state, from: "" };
     if (goal.newUpdates) {
       navState.displayChanges = goal;
     } else {
-      navState.displayGoalActions = { actionType, goal };
+      // navState.displayGoalActions = { actionType, goal };
     }
-    navigate("/MyGoals", { state: navState });
+    redirect(navState, true);
   }
-  useEffect(() => {
-    if (showActions !== defaultTap) {
-      setShowActions(defaultTap);
-    }
-  }, [showChangesModal, showUpdateGoal, selectedGoalId]);
 
   useEffect(() => {
     if (location && location.pathname === "/MyGoals") {
       const { expandedGoalId } = location.state || {};
       setExpandGoalId(expandedGoalId);
-      if (expandedGoalId && showActions.open !== expandedGoalId) {
-        setShowActions({ open: expandedGoalId, click: 1 });
-      }
     }
   }, [location]);
 
@@ -109,7 +84,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, actionType, showActions, setShowA
         }}
       >
         <div onClickCapture={handleDropDown}>
-          <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
+          <GoalDropdown goal={goal} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <GoalTitle goal={goal} isImpossible={goal.impossible} />

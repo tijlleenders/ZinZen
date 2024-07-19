@@ -2,71 +2,67 @@ import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { AutoComplete, Slider } from "antd";
-import { displayToast, lastAction, openDevMode } from "@src/store";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useLocation } from "react-router-dom";
+import { displayToast } from "@src/store";
+import { useSetRecoilState } from "recoil";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
 import ColorPicker from "@src/common/ColorPicker";
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
-import { ILocationState } from "@src/Interfaces";
-import { getSharedWMGoal } from "@src/api/SharedWMAPI";
-import { ICustomInputProps } from "@src/Interfaces/IPopupModals";
-import { modifyGoal, createGoal } from "@src/helpers/GoalController";
-import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
-import { displayAddGoal, selectedColorIndex, displayUpdateGoal, goalsHistory } from "@src/store/GoalsState";
-import { getGoal } from "@src/api/GoalsAPI";
 import ZAccordion from "@src/common/Accordion";
 import { getGoalHintItem } from "@src/api/HintsAPI";
+import { TGoalConfigMode } from "@src/types";
+import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import useGoalActions from "@src/hooks/useGoalActions";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
-import CustomDatePicker from "./CustomDatePicker";
-import HintToggle from "./ConfigGoal/HintToggle";
+import CustomDatePicker from "./components/CustomDatePicker";
+import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./ArchivedAutoComplete";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
-const CustomInput: React.FC<ICustomInputProps> = ({ placeholder, value, handleChange, style }) => (
-  <input
-    type="number"
-    placeholder={placeholder || ""}
-    style={{ textAlign: "center", maxWidth: 30, ...(style || {}) }}
-    className="default-input"
-    value={value}
-    onChange={(e) => {
-      handleChange(e.target.value);
-    }}
-  />
-);
-
 const roundOffHours = (hrsValue: string) => {
   return hrsValue === "" ? "" : String(Math.min(Math.max(Math.round(Number(hrsValue)), 0), 99));
 };
 
-const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalItem }) => {
-  const isKeyboardOpen = useVirtualKeyboardOpen();
+const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConfigMode; goal: GoalItem }) => {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const isEditMode = mode === "edit";
+  const action = isEditMode ? "Update" : "Create";
+  const { updateGoal, addGoal } = useGoalActions();
+  const {
+    parentData: { parentGoal },
+  } = useParentGoalContext();
+
+  let defaultColorIndex = Math.floor(Math.random() * colorPalleteList.length - 1) + 1;
+  let defaultAfterTime = isEditMode ? goal.afterTime || 9 : 9;
+  let defaultBeforeTime = isEditMode ? goal.beforeTime || 18 : 18;
+
+  if (isEditMode) {
+    defaultColorIndex = colorPalleteList.indexOf(goal.goalColor);
+  } else if (parentGoal) {
+    defaultColorIndex = colorPalleteList.indexOf(parentGoal.goalColor);
+    defaultAfterTime = parentGoal.afterTime || 18;
+    defaultBeforeTime = parentGoal.beforeTime || 9;
+  }
 
   const { t } = useTranslation();
-  const { state }: { state: ILocationState } = useLocation();
-  const mySound = new Audio(plingSound);
+  const addGoalSound = new Audio(plingSound);
 
-  const subGoalsHistory = useRecoilValue(goalsHistory);
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
+  const isKeyboardOpen = useVirtualKeyboardOpen();
 
-  const setDevMode = useSetRecoilState(openDevMode);
   const setShowToast = useSetRecoilState(displayToast);
-  const setLastAction = useSetRecoilState(lastAction);
 
-  const [colorIndex, setColorIndex] = useRecoilState(selectedColorIndex);
-  const showAddGoal = useRecoilValue(displayAddGoal);
-  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
+  const [colorIndex, setColorIndex] = useState(defaultColorIndex);
+
   const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
 
-  const open = !!showAddGoal || !!showUpdateGoal;
   const [hints, setHints] = useState(false);
 
   useEffect(() => {
@@ -87,8 +83,8 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   });
   const numberOfDays = tags.on.length;
 
-  const [afterTime, setAfterTime] = useState(showUpdateGoal ? goal.afterTime || 9 : 9);
-  const [beforeTime, setBeforeTime] = useState(showUpdateGoal ? goal.beforeTime || 18 : 18);
+  const [afterTime, setAfterTime] = useState(defaultAfterTime);
+  const [beforeTime, setBeforeTime] = useState(defaultBeforeTime);
   const timeDiff = beforeTime - afterTime;
   const perDayBudget = (goal.timeBudget?.perDay?.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
     .split("-")
@@ -107,105 +103,44 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
-  const isTitleEmpty = () => {
-    if (title.length === 0 || title.trim() === "") {
-      setShowToast({
-        open: true,
-        message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`,
-        extra: "",
-      });
-    }
-    return title.length === 0 || title.trim() === "";
-  };
-
   const getFinalTags = (): GoalItem => ({
     ...goal,
     due: due && due !== "" ? new Date(due).toISOString() : null,
     // start: start && start !== "" ? new Date(start).toString() : null,
     duration: tags.duration !== "" ? `${tags.duration}` : null,
-    afterTime: state.goalType === "Budget" ? afterTime : null,
-    beforeTime: state.goalType === "Budget" ? beforeTime : null,
+    afterTime: type === "Budget" ? afterTime : null,
+    beforeTime: type === "Budget" ? beforeTime : null,
     habit: tags.repeatWeekly ? "weekly" : null,
-    on: state.goalType === "Budget" ? calDays.filter((ele) => tags.on.includes(ele)) : null,
+    on: type === "Budget" ? calDays.filter((ele) => tags.on.includes(ele)) : null,
     timeBudget:
-      state.goalType === "Budget"
+      type === "Budget"
         ? {
             perDay: perDayHrs.join("-"),
             perWeek: perWeekHrs.join("-"),
           }
         : undefined,
-    category: state.goalType === "Budget" ? "Budget" : tags.duration !== "" ? "Standard" : "Cluster",
+    category: type === "Budget" ? "Budget" : tags.duration !== "" ? "Standard" : "Cluster",
+    title: title
+      .split(" ")
+      .filter((ele: string) => ele !== "")
+      .join(" "),
+    goalColor: colorPalleteList[colorIndex],
+    parentGoalId: parentGoal?.id || "root",
   });
 
-  const updateThisGoal = async () => {
-    if (!showUpdateGoal) {
-      return;
-    }
-    const goalColor = colorPalleteList[colorIndex];
-    if (state.displayPartnerMode) {
-      let rootGoal = goal;
-      if (state.goalsHistory && state.goalsHistory.length > 0) {
-        const rootGoalId = state.goalsHistory[0].goalID;
-        rootGoal = await getSharedWMGoal(rootGoalId);
-      }
-      suggestChanges(rootGoal, getFinalTags(), title, goalColor, subGoalsHistory.length);
-    } else {
-      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id], hints);
-    }
-  };
-
-  const addThisGoal = async () => {
-    if (!showAddGoal) {
-      return;
-    }
-    if (state.displayPartnerMode && state.goalsHistory) {
-      const parentId = state.goalsHistory.slice(-1)[0].goalID;
-      const rootGoalId = state.goalsHistory[0].goalID;
-      const rootGoal = await getSharedWMGoal(rootGoalId);
-      const parentGoal = parentId === rootGoalId ? rootGoal : await getSharedWMGoal(parentId);
-      if (!parentGoal || !rootGoal) {
-        return;
-      }
-      suggestNewGoal(rootGoal, parentGoal, getFinalTags(), title, colorPalleteList[colorIndex], subGoalsHistory.length);
-    } else {
-      const { parentGoal } = await createGoal(
-        showAddGoal.goalId,
-        getFinalTags(),
-        title,
-        colorPalleteList[colorIndex],
-        ancestors,
-        hints,
-      );
-      if (!parentGoal && title === "magic") {
-        setDevMode(true);
-        setShowToast({
-          open: true,
-          message: "Congratulations, you activated DEV mode",
-          extra: "Explore what's hidden",
-        });
-      }
-      setLastAction("goalItemCreated");
-    }
-    await mySound.play();
-  };
-
   const handleSave = async () => {
-    if (isTitleEmpty()) {
+    if (title.trim().length) {
+      await (isEditMode
+        ? updateGoal(getFinalTags(), hints)
+        : addGoalSound.play().then(() => addGoal(getFinalTags(), hints, parentGoal)));
+    } else {
       setShowToast({
         open: true,
-        message: `Goal cannot be ${showAddGoal ? "added" : "updated"} without title`,
+        message: `Goal cannot be ${isEditMode ? "updated" : "added"} without title`,
         extra: "",
       });
-      setTitle("");
-      return;
     }
-
-    if (showAddGoal?.open) {
-      await addThisGoal();
-    } else if (showUpdateGoal?.open) {
-      await updateThisGoal();
-    }
-    window.history.back();
+    navigate(pathname, { replace: true });
   };
 
   const handleSliderChange = (value: number[], setHours: React.Dispatch<React.SetStateAction<number[]>>) => {
@@ -219,22 +154,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
   };
 
   useEffect(() => {
-    const addGoalColor = async () => {
-      const parentGoalId = state.goalsHistory ? state.goalsHistory.slice(-1)[0].goalID : null;
-      if (parentGoalId && state.displayAddGoal) {
-        const parentGoal = await getGoal(parentGoalId);
-        if (parentGoal) {
-          if (state.goalType === "Budget") {
-            setBeforeTime(parentGoal.beforeTime || 18);
-            setAfterTime(parentGoal.afterTime || 9);
-            setBetweenSliderUpdated(true);
-          }
-          setColorIndex(colorPalleteList.indexOf(parentGoal?.goalColor));
-        }
-      } else if (goal) setColorIndex(colorPalleteList.indexOf(goal.goalColor));
-      document.getElementById("title-field")?.focus();
-    };
-    addGoalColor();
+    document.getElementById("title-field")?.focus();
   }, []);
 
   useEffect(() => {
@@ -302,15 +222,19 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
 
   return (
     <ZModal
+      open
       type="configModal"
-      style={modalStyle}
-      open={open}
+      style={{
+        transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
+        transition: "transform 0.3s ease-in-out",
+      }}
       width={360}
       onCancel={async () => {
-        if (title !== "") {
-          await handleSave();
-        } else {
+        if (!title.trim().length) {
+          console.log("in");
           window.history.back();
+        } else {
+          await handleSave();
         }
       }}
     >
@@ -325,7 +249,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           {/* <input
             className="ordinary-element"
             id="title-field"
-            placeholder={t(`${state.goalType !== "Budget" ? "goal" : "budget"}Title`)}
+            placeholder={t(`${type !== "Budget" ? "goal" : "budget"}Title`)}
             value={t(`${title}`)}
             onChange={(e) => setTitle(e.target.value)}
             inputMode="text"
@@ -333,15 +257,13 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
           <ArchivedAutoComplete onGoalSelect={onSuggestionClick} onInputChange={(value) => setTitle(value)} />
         </div>
         <div
+          className="d-flex f-col gap-20"
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 20,
             marginTop: 24,
             padding: "0 18px",
           }}
         >
-          {state.goalType === "Budget" ? (
+          {type === "Budget" ? (
             <>
               <div>
                 <span>Between</span>
@@ -416,15 +338,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
                   },
                 ]}
               />
-              <div
-                style={{
-                  display: "flex",
-                  gap: 6,
-                  height: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+              <div className="place-middle gap-8 h-100">
                 {onDays.map((d) => (
                   <span
                     onClickCapture={() => {
@@ -442,56 +356,42 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
               </div>
               <div className="action-btn-container">
                 <HintToggle setHints={setHints} defaultValue={hints} />
-                <button
-                  type="submit"
-                  className="action-btn"
-                  style={{ display: "flex", gap: 15, justifyContent: "center" }}
-                >
+                <button type="submit" className="action-btn place-middle gap-16" onClick={handleSave}>
                   {t(`${action} Budget`)}
                 </button>
               </div>
             </>
           ) : (
-            <div>
+            <div className="d-flex f-col gap-16">
               <div className="action-btn-container">
                 <HintToggle setHints={setHints} defaultValue={hints} />
                 <button
-                  type="submit"
+                  type="button"
                   className="action-btn"
+                  onClick={handleSave}
                   style={{ display: "flex", gap: 15, justifyContent: "center" }}
                 >
                   {t(`${action} Goal`)}
                 </button>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 12,
-                  alignItems: "center",
-                  marginTop: 12,
-                }}
-              >
+              <div className="place-middle justify-fs gap-16">
                 <span>{t("duration")}</span>
-                <CustomInput
+                <input
+                  type="number"
+                  style={{ textAlign: "center", maxWidth: 30, width: 20, boxShadow: "var(--shadow)" }}
+                  className="default-input"
                   value={tags.duration}
-                  handleChange={(value: string) => {
-                    setTags({ ...tags, duration: roundOffHours(value) });
-                  }}
-                  style={{
-                    width: 20,
-                    boxShadow: "var(--shadow)",
+                  onChange={(e) => {
+                    setTags({ ...tags, duration: roundOffHours(e.target.value) });
                   }}
                 />
                 <span>{t("dueDate")}</span>
                 <CustomDatePicker
-                  label=""
                   dateValue={due}
                   handleDateChange={(newDate) => {
                     setDue(newDate);
                   }}
-                  showTime={false}
                   timeValue={0}
-                  handleTimeChange={() => null}
                   disablePastDates
                 />
               </div>

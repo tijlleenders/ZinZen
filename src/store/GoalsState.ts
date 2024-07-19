@@ -75,3 +75,8 @@ export const goalsHistory = atom({
   key: "goalsHistory",
   default: [] as ISubGoalHistory[],
 });
+
+export const allowAddingBudgetGoal = atom({
+  key: "allowAddingBudgetGoal",
+  default: true,
+});

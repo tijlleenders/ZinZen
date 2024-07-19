@@ -54,6 +54,10 @@ export const getGoal = async (goalId: string) => {
   }
 };
 
+export const getGoalById = (id: string) => {
+  return db.goalsCollection.get(id);
+};
+
 export const getChildrenGoals = async (parentGoalId: string) => {
   const childrenGoals: GoalItem[] = await db.goalsCollection
     .where("parentGoalId")

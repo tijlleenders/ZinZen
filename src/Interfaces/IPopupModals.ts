@@ -1,4 +1,4 @@
-export interface confirmActionState {
+export interface TConfirmActionState {
   open: boolean;
   goal: {
     archive: boolean;
@@ -18,24 +18,25 @@ export interface confirmActionState {
   };
 }
 
-export interface confirmGoalAction {
+export interface TConfirmGoalAction {
   actionCategory: "goal";
   actionName: "archive" | "delete" | "shareAnonymously" | "shareWithOne" | "restore";
 }
 
-export interface confirmColabGoalAction {
+export interface TConfirmColabGoalAction {
   actionCategory: "collaboration";
   actionName: "colabRequest" | "delete" | "archive" | "restore";
 }
 
-export interface confirmHintAction {
+export interface TConfirmHintAction {
   actionCategory: "goal";
   actionName: "addHint" | "deleteHint" | "reportHint";
 }
 
 export interface ConfirmationModalProps {
-  action: confirmGoalAction | confirmColabGoalAction | confirmHintAction;
+  action: TConfirmGoalAction | TConfirmColabGoalAction | TConfirmHintAction;
   handleClick: (action: string) => Promise<void>;
+  handleClose: () => void;
 }
 
 export interface ICustomInputProps {
@@ -46,4 +47,4 @@ export interface ICustomInputProps {
 }
 
 export type confirmCategory = "goal" | "collaboration";
-export type confirmAction = confirmGoalAction | confirmColabGoalAction | confirmHintAction;
+export type TConfirmAction = TConfirmGoalAction | TConfirmColabGoalAction | TConfirmHintAction;

@@ -19,43 +19,29 @@ const sendUpdate = (
   );
 };
 
-export const suggestNewGoal = async (
-  rootGoal: GoalItem,
-  parentGoal: GoalItem,
-  goalTags: GoalItem,
-  goalTitle: string,
-  goalColor: string,
-  level: number,
-) => {
-  let newGoal = createGoalObjectFromTags({
-    ...goalTags,
-    title: goalTitle
-      .split(" ")
-      .filter((ele: string) => ele !== "")
-      .join(" "),
-    language: getSelectedLanguage(),
-    parentGoalId: parentGoal.id,
-    goalColor,
-  });
-  newGoal.createdAt = `${new Date()}`;
-  newGoal = inheritParentProps(newGoal, parentGoal);
-  await Promise.all(sendUpdate(rootGoal.participants, rootGoal.id, "subgoals", [{ level, goal: newGoal }]));
+export const suggestNewGoal = async (newGoal: GoalItem, parentGoal: GoalItem, rootGoal: GoalItem, level: number) => {
+  return sendUpdate(rootGoal.participants, rootGoal.id, "subgoals", [
+    {
+      level,
+      goal: {
+        ...inheritParentProps(
+          {
+            ...createGoalObjectFromTags({
+              newGoal,
+              language: getSelectedLanguage(),
+            }),
+            createdAt: `${new Date()}`,
+          },
+          parentGoal,
+        ),
+      },
+    },
+  ]);
 };
 
-export const suggestChanges = async (
-  rootGoal: GoalItem,
-  goalTags: GoalItem,
-  goalTitle: string,
-  goalColor: string,
-  level: number,
-) => {
+export const suggestChanges = async (rootGoal: GoalItem, goalTags: GoalItem, level: number) => {
   const goal: GoalItem = {
     ...goalTags,
-    title: goalTitle
-      .split(" ")
-      .filter((ele: string) => ele !== "")
-      .join(" "),
-    goalColor,
     newUpdates: false,
   };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

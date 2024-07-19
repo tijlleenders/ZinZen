@@ -2,35 +2,23 @@ import { updatePositionIndex } from "@src/api/GCustomAPI";
 import DragAndDrop from "@src/layouts/DragAndDrop";
 import { GoalItem } from "@src/models/GoalItem";
 import React, { useState } from "react";
-import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
+import { displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { ImpossibleGoal } from "@src/Interfaces";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import MyGoal from "./MyGoal/MyGoal";
-import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
 
 interface GoalsListProps {
   goals: GoalItem[];
-  showActions: {
-    open: string;
-    click: number;
-  };
   setGoals: React.Dispatch<React.SetStateAction<GoalItem[]>>;
-  setShowActions: React.Dispatch<
-    React.SetStateAction<{
-      open: string;
-      click: number;
-    }>
-  >;
 }
 
-const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListProps) => {
+const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
   const showUpdateGoal = useRecoilValue(displayUpdateGoal);
-  const showGoalActions = useRecoilValue(displayGoalActions);
+  const impossibleGoals = useRecoilValue(impossibleGoalsList);
   const [dragging, setDragging] = useState(false);
   const [draggedItem, setDraggedItem] = useState<GoalItem | null>(null);
-  const impossibleGoals = useRecoilValue(impossibleGoalsList);
 
   const addImpossibleProp = (goal: GoalItem): ImpossibleGoal => {
     const isImpossibleGoal = impossibleGoals.some((impossibleGoal) => {
@@ -73,9 +61,6 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
   };
   return (
     <>
-      {showGoalActions && showGoalActions.actionType === "regular" && (
-        <RegularGoalActions open goal={showGoalActions.goal} />
-      )}
       {updatedGoals.map((goal: ImpossibleGoal, index: number) => (
         <React.Fragment key={goal.id}>
           {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
@@ -87,7 +72,7 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
             handleDragEnter={handleDragEnter}
             handleDragEnd={handleDragEnd}
           >
-            <MyGoal actionType="regular" goal={goal} showActions={showActions} setShowActions={setShowActions} />
+            <MyGoal goal={goal} />
           </DragAndDrop>
         </React.Fragment>
       ))}
