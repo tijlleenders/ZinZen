@@ -19,6 +19,10 @@ export const getDeletedGoal = async (goalId: string) => {
   return delGoal.length > 0 ? delGoal[0] : null;
 };
 
+export const getDeletedGoalById = (id: string) => {
+  return db.goalTrashCollection.get(id);
+};
+
 export const restoreGoal = async (goal: GoalItem, isShareWMType = false) => {
   db.goalTrashCollection.delete(goal.id).catch((err) => console.log("failed to delete", err));
   if (isShareWMType) {
