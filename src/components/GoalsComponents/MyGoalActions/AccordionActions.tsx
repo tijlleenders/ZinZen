@@ -20,16 +20,16 @@ import "./MyGoalActions.scss";
 
 const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
-  const { handleUpdateGoal, handleConfirmation } = useGoalStore();
+  const { openEditMode, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
   const subGoalsHistory = useRecoilValue(goalsHistory);
+  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
   const showConfirmation = useRecoilValue(displayConfirmation);
   const isPartnerGoal = useRecoilValue(displayPartnerMode);
   const setDevMode = useSetRecoilState(openDevMode);
   const darkModeStatus = useRecoilValue(darkModeState);
   const setLastAction = useSetRecoilState(lastAction);
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
 
@@ -56,7 +56,7 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
     window.history.go(confirmationAction ? -2 : -1);
   };
 
-  const openConfirmationPopUp = async (action: confirmAction) => {
+  const openConfirmationPopUp = async (action: TConfirmAction) => {
     const { actionCategory, actionName } = action;
     if (actionCategory === "collaboration" && showConfirmation.collaboration[actionName]) {
       handleConfirmation();
@@ -75,7 +75,7 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
         style={{ textAlign: "left" }}
         className="header-title"
         onClickCapture={() => {
-          handleUpdateGoal(goal.id, !!goal.timeBudget?.perDay);
+          openEditMode(goal);
         }}
       >
         <p className="ordinary-element" id="title-field">
@@ -89,7 +89,7 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
           className="goal-action-archive shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "restore" });
+            await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "restore" });
           }}
         >
           <ActionDiv
@@ -108,7 +108,7 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
             className="goal-action-archive shareOptions-btn"
             onClickCapture={async (e) => {
               e.stopPropagation();
-              await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
+              await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "delete" });
             }}
           >
             <ActionDiv label={t("Delete")} icon="Delete" />
