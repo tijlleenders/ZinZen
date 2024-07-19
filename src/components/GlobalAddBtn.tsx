@@ -1,18 +1,21 @@
 import React, { ReactNode } from "react";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
-import { themeSelectionMode } from "@src/store/ThemeState";
 
+import Backdrop from "@src/common/Backdrop";
 import useGoalStore from "@src/hooks/useGoalStore";
 import useFeelingStore from "@src/hooks/useFeelingStore";
-import Backdrop from "@src/common/Backdrop";
+
+import { ILocationState } from "@src/Interfaces";
+import { themeSelectionMode } from "@src/store/ThemeState";
 
 import "./index.scss";
-import { useTranslation } from "react-i18next";
-import { ILocationState } from "@src/Interfaces";
+import { TGoalCategory } from "@src/models/GoalItem";
+import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -46,23 +49,30 @@ const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disable
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
   const { t } = useTranslation();
-  const { handleAddFeeling } = useFeelingStore();
-  const { handleAddGoal } = useGoalStore();
-
-  const { state }: { state: ILocationState } = useLocation();
-
   const { parentId = "root" } = useParams();
-  const [searchParams] = useSearchParams();
+  const { state }: { state: ILocationState } = useLocation();
+  const { handleAddFeeling } = useFeelingStore();
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const themeSelection = useRecoilValue(themeSelectionMode);
+  const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
 
+  const handleAddGoal = async (type: TGoalCategory) => {
+    navigate(`/MyGoals/${parentId || "root"}?type=${type}&mode=add`, {
+      state: {
+        ...state,
+        goalType: type,
+      },
+      replace: true,
+    });
+  };
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      navigate(`/MyGoals/${parentId}?addOptions=true`, { state: { ...state, displayAddGoalOptions: true } });
+      navigate(`/MyGoals/${parentId}?addOptions=true`, { state });
     } else if (add === "myJournal") {
       handleAddFeeling();
     }
@@ -81,7 +91,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
           handleClick={() => {
             handleAddGoal("Budget");
           }}
-          disabled={state.allowAddingBudgetGoal === false}
+          disabled={!isAddingBudgetGoalAllowed}
           bottom={144}
         >
           {t("addBtnBudget")}
@@ -98,13 +108,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     );
   }
   return (
-    <button
-      type="button"
-      onClick={(e) => {
-        handleClick(e);
-      }}
-      className="global-addBtn"
-    >
+    <button type="button" onClick={handleClick} className="global-addBtn">
       <img
         style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
         src={themeSelection ? correct : GlobalAddIcon}
