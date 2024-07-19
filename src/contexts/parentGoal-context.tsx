@@ -1,10 +1,11 @@
 import { getChildrenGoals, getGoalById } from "@src/api/GoalsAPI";
 import { getSharedWMChildrenGoals, getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayPartnerMode } from "@src/store";
+import { displayPartnerMode, lastAction } from "@src/store";
+import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import React, { ReactNode, createContext, useContext, useEffect, useMemo, useReducer } from "react";
 import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 type TParentData = {
   parentGoal: GoalItem | undefined;
@@ -41,21 +42,34 @@ export const ParentGoalContext = createContext<{
 
 export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
   const { parentId = "root" } = useParams();
+  const action = useRecoilValue(lastAction);
+  const setAllowBudgetGoal = useSetRecoilState(allowAddingBudgetGoal);
   const [parentData, dispatch] = useReducer(parentGoalReducer, initialState);
   const isPartnerModeActive = useRecoilValue(displayPartnerMode);
 
-  useEffect(() => {
+  async function init() {
     if (parentId !== "root") {
-      (isPartnerModeActive ? getSharedWMGoalById(parentId) : getGoalById(parentId)).then((doc) =>
-        dispatch({ type: "SET_PARENT_GOAL", payload: doc }),
-      );
+      (isPartnerModeActive ? getSharedWMGoalById(parentId) : getGoalById(parentId)).then((doc) => {
+        setAllowBudgetGoal(doc ? doc.category !== "Standard" : true);
+        dispatch({ type: "SET_PARENT_GOAL", payload: doc });
+      });
       (isPartnerModeActive ? getSharedWMChildrenGoals(parentId) : getChildrenGoals(parentId)).then((childGoals) =>
         dispatch({ type: "SET_SUBGOALS", payload: childGoals || [] }),
       );
       return;
     }
+    setAllowBudgetGoal(true);
     dispatch({ type: "RESET_STATE" });
+  }
+
+  useEffect(() => {
+    init();
   }, [parentId, isPartnerModeActive]);
+  useEffect(() => {
+    if (action !== "none") {
+      init();
+    }
+  }, [action]);
 
   const value = useMemo(() => ({ parentData, dispatch }), [parentData]);
 
