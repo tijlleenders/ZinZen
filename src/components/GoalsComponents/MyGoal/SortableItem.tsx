@@ -24,7 +24,6 @@ const SortableItem = ({ goal, index, showActions, setShowActions }: SortableItem
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    touchAction: "none", // Prevents scrolling during drag
   };
 
   return (

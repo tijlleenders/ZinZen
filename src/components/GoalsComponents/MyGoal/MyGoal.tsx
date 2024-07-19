@@ -119,7 +119,7 @@ const MyGoal: React.FC<MyGoalProps> = ({
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div onClickCapture={handleDropDown} {...dragAttributes} {...dragListeners}>
+        <div style={{ touchAction: "none" }} onClickCapture={handleDropDown} {...dragAttributes} {...dragListeners}>
           <GoalDropdown goal={goal} isActionVisible={isActionVisible} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
