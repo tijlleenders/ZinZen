@@ -7,9 +7,7 @@
   .ant-modal-content {
     border-radius: 0.5rem 0.5rem 0 0;
   }
-  .icon {
-    margin-right: 3%;
-  }
+
   h4 {
     margin-bottom: 16px;
   }
@@ -67,25 +65,13 @@
   }
 }
 
-.shareWithContacts {
-  position: relative;
-  text-align: left;
-  margin-top: 4%;
-}
-
 #modal-contact-list {
-  display: flex;
-  gap: 25px;
-  flex-direction: row;
   overflow-x: hidden;
-  justify-content: space-around;
-  padding: 1% 0;
-
+  padding: 0 2px;
   .contact-icon {
     width: fit-content;
     text-align: center;
     position: relative;
-
     button {
       border-radius: 50%;
       width: 1.785em;
@@ -106,21 +92,9 @@
 }
 
 .share-warning {
-  font-weight: 500;
   font-style: italic;
   margin: 0% 2%;
   margin-bottom: 3%;
-}
-
-.shareOption-name {
-  margin: 0;
-  align-self: center;
-  font-weight: 500;
-  text-align: left;
-}
-
-.shareOption-name.loading {
-  margin-left: 45px;
 }
 
 /* Add Contact Modal */
