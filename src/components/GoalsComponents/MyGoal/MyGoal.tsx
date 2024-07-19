@@ -8,8 +8,8 @@ import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import GoalAvatar from "../GoalAvatar";
-import GoalTitle from "./GoalTitle";
-import GoalDropdown from "./GoalDropdown";
+import GoalTitle from "./components/GoalTitle";
+import GoalDropdown from "./components/GoalDropdown";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -29,9 +29,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal }) => {
   const [expandGoalId, setExpandGoalId] = useState("root");
 
   const redirect = (state: object, isDropdown = false) => {
-    const pid = parentGoal?.id;
     if (isDropdown) {
-      navigate(`/MyGoals/${pid || "root"}/${goal.id}?showOptions=true`, { state });
+      navigate(`/MyGoals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
     } else {
       navigate(`/MyGoals/${goal.id}`, { state });
     }
@@ -49,9 +48,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal }) => {
         },
       ],
     };
-    if (newState.allowAddingBudgetGoal !== false) {
-      newState.allowAddingBudgetGoal = goal.category !== "Standard";
-    }
+
     redirect(newState);
   };
 
