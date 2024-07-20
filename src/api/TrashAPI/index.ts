@@ -1,9 +1,10 @@
-/* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { TrashItem } from "@src/models/TrashItem";
 import { addDeletedGoal, addGoal } from "../GoalsAPI";
 import { addSharedWMGoal } from "../SharedWMAPI";
+
+const TRASH_RETENTION_DAYS = 7;
 
 export const getDeletedGoals = async (parentGoalId: string) => {
   const childrenGoals: TrashItem[] = await db.goalTrashCollection
@@ -86,4 +87,27 @@ export const getParticipantsOfDeletedGoal = async (id: string) => {
     .anyOf(...[id])
     .toArray();
   return goals.flatMap((goal) => goal.participants.map((participant) => ({ sub: participant, rootGoalId: goal.id })));
+};
+
+export const cleanupTrash = async () => {
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - TRASH_RETENTION_DAYS);
+  const oldTrashItems = await db.goalTrashCollection.where("deletedAt").below(sevenDaysAgo.toISOString()).toArray();
+  await Promise.all(oldTrashItems.map((item) => db.goalTrashCollection.delete(item.id)));
+};
+
+function isMoreThan24HoursAgo(isoTimestamp: string): boolean {
+  const timestamp = new Date(isoTimestamp).getTime();
+  const now = new Date().getTime();
+  const twentyFourHours = 24 * 60 * 60 * 1000;
+  return now - timestamp > twentyFourHours;
+}
+
+export const checkAndCleanupTrash = async () => {
+  const lastCleanupTimestamp = localStorage.getItem("lastTrashCleanup");
+  const currentTime = new Date().toISOString();
+  if (!lastCleanupTimestamp || isMoreThan24HoursAgo(lastCleanupTimestamp)) {
+    await cleanupTrash();
+    localStorage.setItem("lastTrashCleanup", currentTime);
+  }
 };
