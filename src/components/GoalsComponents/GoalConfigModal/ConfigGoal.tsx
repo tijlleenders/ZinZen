@@ -65,8 +65,11 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const [hints, setHints] = useState(false);
 
   useEffect(() => {
-    getHintRecord(goal.id).then((hintItem) => {
-      setHints(!!hintItem?.hint);
+    console.log(goal.id);
+
+    getHintRecord(goal.id).then((hintRecord) => {
+      console.log(hintRecord);
+      setHints(hintRecord?.hintEnabled || false);
     });
   }, [goal.id]);
 

@@ -1,6 +1,7 @@
 import { db } from "@src/models";
 import { HintRecord, IGoalHint } from "@src/models/HintRecord";
 import { v4 as uuidv4 } from "uuid";
+import { getGoalById, getHintsFromAPI } from "../GoalsAPI";
 
 export const checkForNewGoalHints = async (hintId: string, newGoalHints: IGoalHint[]) => {
   try {
@@ -28,8 +29,8 @@ export const ensureGoalHintsHaveIds = (goalHints: IGoalHint[]): IGoalHint[] => {
 };
 
 export const getHintRecord = async (goalId: string) => {
-  const hintRecord = await db.hintRecordCollection.where("id").equals(goalId).toArray();
-  return hintRecord.length > 0 ? hintRecord[0] : null;
+  const hintRecord = await db.hintRecordCollection.where("goalItemId").equals(goalId).first();
+  return hintRecord;
 };
 
 export const addHintRecord = async (goalId: string): Promise<string | undefined> => {
@@ -53,6 +54,58 @@ export const addHintRecord = async (goalId: string): Promise<string | undefined>
     console.log(e.stack || e);
     return undefined;
   }
+};
+
+export const disableHintsForGoal = async (goalId) => {
+  await db.transaction("rw", db.hintRecordCollection, db.subGoalHintCollection, async () => {
+    const hintRecord = await db.hintRecordCollection.where("goalItemId").equals(goalId).first();
+    if (hintRecord) {
+      // Update the hint record to disable hints
+      await db.hintRecordCollection.update(hintRecord.id, { hintEnabled: false });
+      // Delete all subgoal hints associated with this hint record
+      await db.subGoalHintCollection.where("hintRecordId").equals(hintRecord.id).delete();
+    }
+  });
+};
+
+export const deleteHintRecord = async (id: string) => {
+  await db
+    .transaction("rw", db.hintRecordCollection, async () => {
+      await db.hintRecordCollection.delete(id);
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+};
+
+export const enableHintsForGoal = async (goalId: string) => {
+  const goal = await getGoalById(goalId);
+  if (!goal) return;
+  const hints = await getHintsFromAPI(goal);
+  const hintRecord = await db.hintRecordCollection.where("goalItemId").equals(goal.id).first();
+
+  console.log(hintRecord);
+
+  if (!hintRecord) return;
+
+  const hintRecordId = hintRecord.id;
+
+  await db.transaction("rw", db.subGoalHintCollection, db.hintRecordCollection, async () => {
+    const subGoalHints = hints.map((hint) => ({
+      id: hintRecordId,
+      hintRecordId,
+      duration: hint.duration?.toString() || null,
+      isDeleted: false,
+      parentGoalTitle: hint.parentTitle,
+    }));
+
+    try {
+      //await db.subGoalHintCollection.bulkAdd(subGoalHints);
+      await db.hintRecordCollection.update(hintRecord.id, { hintEnabled: true });
+    } catch (error) {
+      console.error("Error adding subgoal hints:", error);
+    }
+  });
 };
 
 // export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {

@@ -21,6 +21,8 @@ import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
 import BudgetSummary from "../../../common/GoalItemSummary/BudgetSummary";
 import GoalSummary from "../../../common/GoalItemSummary/GoalSummary";
+import { getSubGoalHints } from "@src/api/SubGoalHintAPI";
+import HintGoals from "@pages/GoalsPage/components/HintGoals";
 
 export const GoalSublist = () => {
   const {
@@ -38,16 +40,24 @@ export const GoalSublist = () => {
   const [goalhints, setGoalHints] = useState<GoalItem[]>([]);
 
   useEffect(() => {
-    getHintRecord(goalID).then((hintItem) => {
+    if (!parentGoal) return;
+    getSubGoalHints(parentGoal.id).then((hintItems) => {
       const array: GoalItem[] = [];
-      hintItem?.goalHints?.forEach((hint) => {
+      hintItems?.forEach((hint) => {
         if (hint) {
-          array.push(createGoalObjectFromTags({ ...hint, parentGoalId: goalID }));
+          array.push(createGoalObjectFromTags({ ...hint, parentGoalId: parentGoal.id }));
         }
       });
       setGoalHints(array || []);
     });
-  }, [goalID, action]);
+  }, [parentGoal, action]);
+
+  useEffect(() => {
+    if (!parentGoal) return;
+    getSubGoalHints(parentGoal.id).then((hintItem) => {
+      console.log(hintItem);
+    });
+  }, [parentGoal]);
 
   useEffect(() => {
     getDeletedGoals(goalID).then((res) => {
@@ -89,6 +99,7 @@ export const GoalSublist = () => {
               {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
             </DeletedGoalProvider>
             {archivedChildren.length > 0 && <ArchivedGoals goals={archivedChildren} />}
+            {goalhints.length > 0 && <HintGoals goals={goalhints} />}
           </div>
         </div>
       </div>
