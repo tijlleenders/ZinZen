@@ -11,7 +11,7 @@ import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { unarchiveIcon } from "@src/assets";
 import { lastAction, displayConfirmation, darkModeState } from "@src/store";
 import { addHintGoaltoMyGoals } from "@src/api/GoalsAPI";
-import { deleteGoalHint } from "@src/api/HintsAPI";
+import { deleteGoalHint } from "@src/api/HintRecordAPI";
 
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";

@@ -12,7 +12,7 @@ import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
 import ZAccordion from "@src/common/Accordion";
-import { getGoalHintItem } from "@src/api/HintsAPI";
+import { getHintRecord } from "@src/api/HintRecordAPI";
 import { TGoalConfigMode } from "@src/types";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
@@ -65,7 +65,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const [hints, setHints] = useState(false);
 
   useEffect(() => {
-    getGoalHintItem(goal.id).then((hintItem) => {
+    getHintRecord(goal.id).then((hintItem) => {
       setHints(!!hintItem?.hint);
     });
   }, [goal.id]);

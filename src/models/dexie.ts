@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { Transaction } from "dexie";
 import { GoalItem } from "./GoalItem";
-import { HintItem } from "./HintItem";
+import { HintRecord } from "./HintRecord";
 import { TaskItem } from "./TaskItem";
 
 export const dbStoreSchema = {
@@ -22,7 +22,7 @@ export const dbStoreSchema = {
   partnersCollection: null,
   goalTrashCollection:
     "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-  hintsCollection: "id, hint, goalHints, lastCheckedDate, nextCheckDate",
+  hintRecordCollection: "id, hint, goalHints, lastCheckedDate, nextCheckDate",
   impossibleGoalsCollection: "goalId, goalTitle",
 };
 export const syncVersion = (transaction: Transaction, currentVersion: number) => {
@@ -121,8 +121,8 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
       });
   }
   if (currentVersion < 18) {
-    const hintsCollection = transaction.table("hintsCollection");
-    hintsCollection.toCollection().modify((hint) => {
+    const hintRecordCollection = transaction.table("hintRecordCollection");
+    hintRecordCollection.toCollection().modify((hint) => {
       hint.goalHints = [];
     });
   }
@@ -149,8 +149,8 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
   }
   if (currentVersion < 20) {
     console.log("processing updates for 20th version");
-    const hintsCollection = transaction.table("hintsCollection");
-    hintsCollection.toCollection().modify((hint: HintItem) => {
+    const hintRecordCollection = transaction.table("hintRecordCollection");
+    hintRecordCollection.toCollection().modify((hint: HintRecord) => {
       hint.nextCheckDate = new Date().toISOString();
       hint.lastCheckedDate = new Date().toISOString();
     });

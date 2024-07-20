@@ -3,9 +3,9 @@ import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
-import { IHintRequestBody } from "@src/models/HintItem";
+import { IHintRequestBody } from "@src/models/HintRecord";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { deleteGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
+import { deleteGoalHint, deleteHintItem, getHintRecord } from "../HintRecordAPI";
 
 export const addDeletedGoal = async (goal: GoalItem) => {
   await db
@@ -197,14 +197,20 @@ export const shareMyGoalAnonymously = async (goal: GoalItem, parent: string) => 
   return res;
 };
 
-export const getHintsFromAPI = async (goal: GoalItem) => {
+interface IHintResponse {
+  title: string;
+  parentTitle: string;
+  duration?: number | null;
+}
+
+export const getHintsFromAPI: (goal: GoalItem) => Promise<IHintResponse[]> = async (goal: GoalItem) => {
   let parentGoalTitle = "root";
   let parentGoalHint = false;
 
   if (goal.parentGoalId !== "root") {
     const parentGoal = await getGoal(goal.parentGoalId);
     parentGoalTitle = parentGoal?.title || "";
-    parentGoalHint = (await getGoalHintItem(goal.parentGoalId))?.hint || false;
+    parentGoalHint = (await getHintRecord(goal.parentGoalId))?.hintEnabled || false;
   }
 
   const { title, duration } = goal;

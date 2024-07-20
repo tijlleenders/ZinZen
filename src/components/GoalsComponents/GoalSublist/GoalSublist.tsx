@@ -7,7 +7,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { lastAction } from "@src/store";
-import { getGoalHintItem } from "@src/api/HintsAPI";
+import { getHintRecord } from "@src/api/HintRecordAPI";
 import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
@@ -38,7 +38,7 @@ export const GoalSublist = () => {
   const [goalhints, setGoalHints] = useState<GoalItem[]>([]);
 
   useEffect(() => {
-    getGoalHintItem(goalID).then((hintItem) => {
+    getHintRecord(goalID).then((hintItem) => {
       const array: GoalItem[] = [];
       hintItem?.goalHints?.forEach((hint) => {
         if (hint) {

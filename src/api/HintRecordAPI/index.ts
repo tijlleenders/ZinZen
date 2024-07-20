@@ -1,10 +1,10 @@
 import { db } from "@src/models";
-import { IGoalHint } from "@src/models/HintItem";
+import { HintRecord, IGoalHint } from "@src/models/HintRecord";
 import { v4 as uuidv4 } from "uuid";
 
 export const checkForNewGoalHints = async (hintId: string, newGoalHints: IGoalHint[]) => {
   try {
-    const hintItem = await db.hintsCollection.get(hintId);
+    const hintItem = await db.hintRecordCollection.get(hintId);
     if (!hintItem) return false;
     const currentGoalHints = hintItem.goalHints || [];
     const combinedHints = [...currentGoalHints];
@@ -27,30 +27,53 @@ export const ensureGoalHintsHaveIds = (goalHints: IGoalHint[]): IGoalHint[] => {
   });
 };
 
-export const getGoalHintItem = async (goalId: string) => {
-  const hintItem = await db.hintsCollection.where("id").equals(goalId).toArray();
-  return hintItem.length > 0 ? hintItem[0] : null;
+export const getHintRecord = async (goalId: string) => {
+  const hintRecord = await db.hintRecordCollection.where("id").equals(goalId).toArray();
+  return hintRecord.length > 0 ? hintRecord[0] : null;
 };
 
-export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
-  const updatedHintsWithId = ensureGoalHintsHaveIds(goalHints);
+export const addHintRecord = async (goalId: string): Promise<string | undefined> => {
   const now = new Date();
   const oneDayLater = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  const hintObject = {
-    id: goalId,
-    hint,
-    goalHints: updatedHintsWithId,
-    lastCheckedDate: now.toISOString(),
-    nextCheckDate: oneDayLater.toISOString(),
-  };
-  await db
-    .transaction("rw", db.hintsCollection, async () => {
-      await db.hintsCollection.add(hintObject);
-    })
-    .catch((e) => {
-      console.log(e.stack || e);
+  try {
+    const newHintRecord: HintRecord = {
+      id: uuidv4(),
+      goalItemId: goalId,
+      hintEnabled: true,
+      lastCheckedDate: now.toISOString(),
+      nextCheckDate: oneDayLater.toISOString(),
+    };
+
+    await db.transaction("rw", db.hintRecordCollection, async () => {
+      await db.hintRecordCollection.add(newHintRecord);
     });
+
+    return newHintRecord.id;
+  } catch (e) {
+    console.log(e.stack || e);
+    return undefined;
+  }
 };
+
+// export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
+//   const updatedHintsWithId = ensureGoalHintsHaveIds(goalHints);
+//   const now = new Date();
+//   const oneDayLater = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+//   const hintObject = {
+//     id: goalId,
+//     hint,
+//     goalHints: updatedHintsWithId,
+//     lastCheckedDate: now.toISOString(),
+//     nextCheckDate: oneDayLater.toISOString(),
+//   };
+//   await db
+//     .transaction("rw", db.hintRecordCollection, async () => {
+//       await db.hintRecordCollection.add(hintObject);
+//     })
+//     .catch((e) => {
+//       console.log(e.stack || e);
+//     });
+// };
 
 export const updateHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
   const updatedHintsWithId = ensureGoalHintsHaveIds(goalHints);
@@ -63,8 +86,8 @@ export const updateHintItem = async (goalId: string, hint: boolean, goalHints: I
   const nextCheckDate = new Date(now.getTime() + (isNewHintPresent ? oneDay : oneWeek));
 
   await db
-    .transaction("rw", db.hintsCollection, async () => {
-      const existingItem = await db.hintsCollection.where("id").equals(goalId).first();
+    .transaction("rw", db.hintRecordCollection, async () => {
+      const existingItem = await db.hintRecordCollection.where("id").equals(goalId).first();
 
       if (existingItem) {
         const filteredHintsWithId = updatedHintsWithId.filter(
@@ -73,7 +96,7 @@ export const updateHintItem = async (goalId: string, hint: boolean, goalHints: I
             !existingItem.deletedGoalHints.some((deletedHint) => deletedHint.title === hintItem.title),
         );
 
-        await db.hintsCollection.update(goalId, {
+        await db.hintRecordCollection.update(goalId, {
           hint,
           goalHints: filteredHintsWithId,
           lastCheckedDate: now.toISOString(),
@@ -94,8 +117,8 @@ export const updateHintItem = async (goalId: string, hint: boolean, goalHints: I
 
 export const deleteHintItem = async (goalId: string) => {
   await db
-    .transaction("rw", db.hintsCollection, async () => {
-      await db.hintsCollection.delete(goalId);
+    .transaction("rw", db.hintRecordCollection, async () => {
+      await db.hintRecordCollection.delete(goalId);
     })
     .catch((e) => {
       console.log(e.stack || e);
@@ -104,8 +127,8 @@ export const deleteHintItem = async (goalId: string) => {
 
 export const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
   await db
-    .transaction("rw", db.hintsCollection, async () => {
-      const goalHintsItem = await db.hintsCollection.get(parentGoalId);
+    .transaction("rw", db.hintRecordCollection, async () => {
+      const goalHintsItem = await db.hintRecordCollection.get(parentGoalId);
 
       if (goalHintsItem) {
         const updatedGoalHints = goalHintsItem.goalHints.filter((hint) => hint.id !== goalId);
@@ -119,7 +142,7 @@ export const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
           updatedDeletedGoalHints.push(deletedHintDetails);
         }
 
-        await db.hintsCollection.update(parentGoalId, {
+        await db.hintRecordCollection.update(parentGoalId, {
           goalHints: updatedGoalHints,
           deletedGoalHints: updatedDeletedGoalHints,
         });

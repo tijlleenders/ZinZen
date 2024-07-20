@@ -1,17 +1,9 @@
-export interface IGoalHint {
-  id?: string;
-  parentTitle: string;
-  title: string;
-  duration?: string | null;
-}
-
-export interface HintItem {
+export interface HintRecord {
   id: string;
-  hint: boolean;
-  goalHints: IGoalHint[];
+  goalItemId: string;
+  hintEnabled: boolean;
   lastCheckedDate: string;
   nextCheckDate: string;
-  deletedGoalHints?: Omit<IGoalHint, "id">[];
 }
 
 export interface IHintRequestBody {

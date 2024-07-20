@@ -1,10 +1,10 @@
 import { db } from "@src/models";
-import { IGoalHint } from "@src/models/HintItem";
-import { checkForNewGoalHints, getGoalHintItem } from ".";
+import { IGoalHint } from "@src/models/HintRecord";
+import { checkForNewGoalHints, getHintRecord } from ".";
 import { getGoal, getHintsFromAPI } from "../GoalsAPI";
 
 const manageHintCalls = async (goalId: string) => {
-  const hintItem = await getGoalHintItem(goalId);
+  const hintItem = await getHintRecord(goalId);
   if (!hintItem) {
     console.error("No hint item found for the provided ID.");
     return;
@@ -27,7 +27,7 @@ const manageHintCalls = async (goalId: string) => {
     const oneWeek = 7 * oneDay;
     const nextCheckDate = new Date(now.getTime() + (hasNewHints ? oneDay : oneWeek));
 
-    await db.hintsCollection.update(goalId, {
+    await db.hintRecordCollection.update(goalId, {
       lastCheckedDate: now.toISOString(),
       nextCheckDate: nextCheckDate.toISOString(),
       goalHints: newHints,
@@ -39,7 +39,7 @@ const manageHintCalls = async (goalId: string) => {
 
 export const scheduledHintCalls = async () => {
   const now = new Date().toISOString();
-  const goalsDueForCheck = await db.hintsCollection.where("nextCheckDate").belowOrEqual(now).toArray();
+  const goalsDueForCheck = await db.hintRecordCollection.where("nextCheckDate").belowOrEqual(now).toArray();
 
   await Promise.all(goalsDueForCheck.map((goal) => manageHintCalls(goal.id)));
 };

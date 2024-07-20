@@ -11,10 +11,13 @@ import {
   getParticipantsOfGoals,
   getHintsFromAPI,
 } from "@src/api/GoalsAPI";
-import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
+import { addHintRecord, updateHintItem } from "@src/api/HintRecordAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
+import { addSubGoalHint } from "@src/api/SubGoalHintAPI";
+import { v4 as uuidv4 } from "uuid";
+import { duration } from "moment";
 
 export const createGoal = async (goalTags: GoalItem, parentGoalId: string, ancestors: string[], goalHint: boolean) => {
   const level = ancestors.length;
@@ -23,10 +26,25 @@ export const createGoal = async (goalTags: GoalItem, parentGoalId: string, ances
     language: getSelectedLanguage(),
   });
 
+  // if (goalHint) {
+  //   getHintsFromAPI(newGoal).then((hint) => {
+
+  //     addHintRecord(goalTags.id).then(() => addSubGoalHint(goalTags.id)).catch((error) => console.error("Error fetching hints:", error));
+  //   });
+  // }
+
   if (goalHint) {
-    getHintsFromAPI(newGoal)
-      .then((hints) => addHintItem(goalTags.id, goalHint, hints || []))
-      .catch((error) => console.error("Error fetching hints:", error));
+    const hints = await getHintsFromAPI(newGoal);
+    const hintRecordId = await addHintRecord(goalTags.id);
+    if (!hintRecordId) return { hintRecordId: null };
+    const subGoalHints = hints.map((hint) => ({
+      id: uuidv4(),
+      hintRecordId,
+      duration: hint.duration?.toString() || null,
+      isDeleted: false,
+      parentGoalTitle: hint.parentTitle,
+    }));
+    await Promise.all(subGoalHints.map(addSubGoalHint));
   }
 
   if (parentGoalId && parentGoalId !== "root") {
