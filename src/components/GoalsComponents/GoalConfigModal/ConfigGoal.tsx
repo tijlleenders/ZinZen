@@ -336,7 +336,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
               </div>
               <div className="action-btn-container">
                 <HintToggle setHints={setHints} defaultValue={hints} />
-                <button type="button" className="action-btn place-middle gap-16" onClick={handleSave}>
+                <button type="submit" className="action-btn place-middle gap-16">
                   {t(`${action} Budget`)}
                 </button>
               </div>
@@ -345,7 +345,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
             <div className="d-flex f-col gap-16">
               <div className="action-btn-container">
                 <HintToggle setHints={setHints} defaultValue={hints} />
-                <button type="button" className="action-btn place-middle gap-16" onClick={handleSave}>
+                <button type="submit" className="action-btn place-middle gap-16">
                   {t(`${action} Goal`)}
                 </button>
               </div>
