@@ -75,3 +75,8 @@ export const goalsHistory = atom({
   key: "goalsHistory",
   default: [] as ISubGoalHistory[],
 });
+
+export const completedGoalsState = atom({
+  key: "completedGoalsState",
+  default: {} as Record<string, boolean>,
+});

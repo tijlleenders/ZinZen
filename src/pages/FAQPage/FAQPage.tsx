@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-expressions */
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
-import chevronLeftIcon from "@assets/images/chevronLeft.svg";
-
-import ZAccordion from "@src/common/Accordion";
-import { vibrateWorks } from "@src/constants/vibrateCheck";
-import OnboardingLayout from "@src/layouts/OnboardingLayout";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
+import chevronLeftIcon from "@assets/images/chevronLeft.svg";
+import ZAccordion from "@src/common/Accordion";
+import OnboardingLayout from "@src/layouts/OnboardingLayout";
+import { vibrateWorks } from "@src/constants/vibrateCheck";
+import { useKeyPress } from "@src/hooks/useKeyPress";
+
 import "./FAQPage.scss";
 import "@translations/i18n";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
@@ -25,6 +25,8 @@ export const FAQPage = () => {
     { header: t("qTooGoodToBeTrue"), body: t("ansTooGoodToBeTrue") },
   ];
 
+  const enterPressed = useKeyPress("Enter");
+
   const handleClick = () => {
     localStorage.setItem(LocalStorageKeys.CHECKED_IN, "yes");
     const invite = localStorage.getItem(LocalStorageKeys.PENDING_INVITE);
@@ -37,6 +39,12 @@ export const FAQPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (enterPressed) {
+      handleClick();
+    }
+  }, [enterPressed]);
+
   return (
     <OnboardingLayout>
       <p className={`faqpage-about${darkModeStatus ? "-dark" : ""}`}>
@@ -47,7 +55,8 @@ export const FAQPage = () => {
           defaultActiveKey={["1"]}
           showCount={false}
           style={{ background: "var(--bottom-nav-color)" }}
-          panels={QnA.map((ele) => ({
+          panels={QnA.map((ele, index) => ({
+            key: index.toString(),
             header: ele.header,
             body: (
               <p className="faq-question-content">

@@ -1,18 +1,17 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import i18n from "i18next";
-
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { ILanguageListProps, ILanguage } from "@src/Interfaces/ILanguage";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
 import { languageSelectionState } from "@src/store";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+import { useLanguageSelection } from "../../hooks/useLanguageSelection";
 
-export const LanguagesList = (props: ILanguageListProps) => {
-  const { languages, navigationCallback, type, hideSelected } = props;
-  const [, setIsLanguageChosen] = useRecoilState(languageSelectionState);
-  const sortedLanguages = [languages[0], ...languages.slice(1).sort((a, b) => a.title.localeCompare(b.title))];
+export const LanguagesList = ({ languages, navigationCallback, type, hideSelected }: ILanguageListProps) => {
+  const setIsLanguageChosen = useSetRecoilState(languageSelectionState);
+  const labelRefs = useRef<HTMLLabelElement[]>([]);
 
-  const handleClick = (langId: string) => {
+  const handleLanguageSelect = (langId: string) => {
     if (vibrateWorks) {
       navigator.vibrate(100);
     }
@@ -22,20 +21,38 @@ export const LanguagesList = (props: ILanguageListProps) => {
     if (type === "fragment" && navigationCallback) navigationCallback("/ZinZenFAQ");
     else window.history.back();
   };
+
+  const handleClick = (event: React.MouseEvent, langId: string) => {
+    event.preventDefault();
+    handleLanguageSelect(langId);
+  };
+
+  const focusedIndex = useLanguageSelection(languages, handleLanguageSelect);
+
+  useEffect(() => {
+    labelRefs.current[focusedIndex]?.focus();
+  }, [focusedIndex]);
+
   return (
     <div className="containerLang">
-      {sortedLanguages.map((lang: ILanguage) => (
-        <button
-          key={String(lang.sno)}
-          type="button"
-          className={lang.selected && !hideSelected ? "selected" : ""}
-          onClick={() => {
-            handleClick(lang.langId);
+      {languages.map((lang: ILanguage, index: number) => (
+        <label
+          key={lang.sno}
+          ref={(ref) => {
+            labelRefs.current[index] = ref!;
           }}
+          htmlFor={lang.sno.toString()}
+          className={`${lang.selected && !hideSelected ? "selected" : ""} ${focusedIndex === index ? "focused" : ""}`}
         >
           {lang.title}
-          <input type="radio" checked={lang.selected} readOnly />
-        </button>
+          <input
+            type="radio"
+            onMouseDown={(e) => handleClick(e, lang.langId)}
+            checked={lang.selected}
+            readOnly
+            id={lang.sno.toString()}
+          />
+        </label>
       ))}
     </div>
   );

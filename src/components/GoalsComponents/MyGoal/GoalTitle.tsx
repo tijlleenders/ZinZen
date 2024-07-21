@@ -3,6 +3,8 @@ import { replaceUrlsWithText } from "@src/utils/patterns";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import { useTelHandler, useUrlHandler } from "./GoalTitleHandlers";
+import { useRecoilState } from "recoil";
+import { completedGoalsState } from "@src/store/GoalsState";
 
 interface GoalTitleProps {
   goal: GoalItem;
@@ -14,10 +16,13 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
   const { id, title } = goal;
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
 
+  const [completed] = useRecoilState(completedGoalsState);
+  const isCompleted = completed[goal.id] || false;
+
   const textParts = replacedString.split(/(zURL-\d+)/g);
 
   return (
-    <div className="goal-title">
+    <div className={`goal-title ${isCompleted ? " completed" : ""}`}>
       {isImpossible && "! "}
       {textParts.map((part) => {
         const match = part.match(/zURL-(\d+)/);

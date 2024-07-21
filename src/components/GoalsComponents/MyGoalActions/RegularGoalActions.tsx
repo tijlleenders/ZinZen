@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
+import archiveSound from "@assets/archive.mp3";
 
 import { lastAction, openDevMode, displayConfirmation, displayPartnerMode } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
-import { goalsHistory } from "@src/store/GoalsState";
+import { completedGoalsState, goalsHistory } from "@src/store/GoalsState";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
+const doneSound = new Audio(archiveSound);
 
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
@@ -26,10 +28,23 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
   const showConfirmation = useRecoilValue(displayConfirmation);
   const isPartnerGoal = useRecoilValue(displayPartnerMode);
   const setDevMode = useSetRecoilState(openDevMode);
+  const [completed, setCompleted] = useRecoilState(completedGoalsState);
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
   const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
+
+  const handleCompleteGoal = () => {
+    setCompleted((prev) => ({ ...prev, [goal.id]: !prev[goal.id] }));
+  };
+
+  const handleMarkNotCompleted = () => {
+    setCompleted((prev) => ({
+      ...prev,
+      [goal.id]: false, // Set explicitly to false
+    }));
+  };
+  console.log("completed", completed);
 
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
@@ -39,8 +54,13 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
       await removeThisGoal(goal, ancestors, isPartnerGoal);
       setLastAction("goalDeleted");
     } else if (action === "archive") {
-      await archiveThisGoal(goal, ancestors);
-      setLastAction("goalArchived");
+      setTimeout(async () => {
+        await archiveThisGoal(goal, ancestors);
+        setLastAction("goalArchived");
+        handleMarkNotCompleted();
+      }, 10000);
+      await doneSound.play(); //play the done sound when a line strikes through
+      handleCompleteGoal();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
       window.history.back();
