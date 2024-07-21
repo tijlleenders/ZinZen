@@ -16,6 +16,7 @@ import { themeSelectionMode } from "@src/store/ThemeState";
 import "./index.scss";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
+import useLongPress from "@src/hooks/useLongPress";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -72,11 +73,24 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      navigate(`/goals/${parentId}?addOptions=true`, { state });
+      handleAddGoal("Standard");
     } else if (add === "myJournal") {
       handleAddFeeling();
     }
   };
+
+  const [showMenu, setShowMenu] = React.useState(false);
+  const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    if (add === "myGoals" || state.displayPartnerMode) {
+      navigate(`/MyGoals/${parentId}?addOptions=true`, { state });
+    }
+  };
+  const { handlers } = useLongPress({
+    onLongPress: handleLongPress,
+    onClick: handleClick,
+    longPressTime: 500,
+  });
   if (searchParams?.get("addOptions")) {
     return (
       <>
@@ -108,7 +122,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     );
   }
   return (
-    <button type="button" onClick={handleClick} className="global-addBtn">
+    <button type="button" className="global-addBtn" {...handlers}>
       <img
         style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
         src={themeSelection ? correct : GlobalAddIcon}
