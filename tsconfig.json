@@ -11,7 +11,7 @@
     // "disableReferencedProjectLoad": true,             /* Reduce the number of projects loaded automatically by TypeScript. */
 
     /* Language and Environment */
-    "target": "esnext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "lib": [
       "webworker",
       "dom"
@@ -50,7 +50,6 @@
     "types": [
       "react/next",
       "react-dom/next",
-      "cypress",
       "jest",
       "@testing-library/jest-dom"
     ] /* Specify type package names to be included without being referenced in a source file. */,
@@ -120,5 +119,6 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
-  }
+  },
+  "include": ["src/**/*", "generate-build-info.mjs"]
 }

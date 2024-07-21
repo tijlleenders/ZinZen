@@ -20,7 +20,7 @@ npm run dev -- --host
 ## Frameworks used
 
 UI : ~~react-bootstrap~~ antd  
-Testing : Cypress  
+Testing : Playwright  
 CI/CD : GithubActions and Vercel  
 Internationalization : i18next  
 Progressive Web App : workbox  
@@ -34,5 +34,6 @@ This way there is always a reference of what architectural decisions are already
 ## Contributing
 
 We welcome contributions! Here, you'll discover essential information to consider before submitting pull requests. We highly value contributors who take the time to familiarize themselves with our code conventions and styles, which helps minimize additional change requests from our team. Please respect our [contributing conventions](./conventions/Readme.md) and [Code of Conduct](../../CONTRIBUTING.md).
-* [Setting Up Your Repository](./Setup.md).
-* [Submitting your first Pull Request](./PRGuide.md).
+
+- [Setting Up Your Repository](./Setup.md).
+- [Submitting your first Pull Request](./PRGuide.md).

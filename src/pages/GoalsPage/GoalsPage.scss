@@ -53,6 +53,8 @@
     gap: 16px;
     align-items: center;
     margin-left: 20px;
+
+  
   }
   .contact-button {
     position: absolute;
@@ -138,11 +140,13 @@
   gap: 6px;
 }
 
-.goal-title {
+.goal-title.completed {
   white-space: nowrap;
   overflow-x: scroll;
   scrollbar-width: none;
   line-height: 31px;
+  text-decoration: line-through;
+  
 }
 .goal-title::-webkit-scrollbar {
   display: none;
