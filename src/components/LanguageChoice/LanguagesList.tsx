@@ -38,6 +38,7 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
       {languages.map((lang: ILanguage, index: number) => (
         <label
           key={lang.sno}
+          onMouseDown={(e) => handleClick(e, lang.langId)}
           ref={(ref) => {
             labelRefs.current[index] = ref!;
           }}
@@ -45,13 +46,7 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
           className={`${lang.selected && !hideSelected ? "selected" : ""} ${focusedIndex === index ? "focused" : ""}`}
         >
           {lang.title}
-          <input
-            type="radio"
-            onMouseDown={(e) => handleClick(e, lang.langId)}
-            checked={lang.selected}
-            readOnly
-            id={lang.sno.toString()}
-          />
+          <input type="radio" checked={lang.selected} readOnly id={lang.sno.toString()} />
         </label>
       ))}
     </div>
