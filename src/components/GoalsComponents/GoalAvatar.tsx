@@ -15,6 +15,7 @@ const GoalAvatar = ({ goal }: { goal: GoalItem }) => {
       <button
         type="button"
         className="contact-icon pps-icon"
+        aria-label="Navigate to participants"
         style={{
           cursor: "pointer",
           background: `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 20% 79.17%, ${goalColor} 100%)`,
