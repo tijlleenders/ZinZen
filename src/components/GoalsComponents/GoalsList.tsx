@@ -14,10 +14,10 @@ import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { GoalItem } from "@src/models/GoalItem";
 import { ImpossibleGoal } from "@src/Interfaces";
+import { updatePositionIndex } from "@src/api/GCustomAPI";
 import ConfigGoal from "./GoalConfigModal/ConfigGoal";
 import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
 import SortableItem from "./MyGoal/SortableItem";
-import { updatePositionIndex } from "@src/api/GCustomAPI";
 
 interface GoalsListProps {
   goals: GoalItem[];
