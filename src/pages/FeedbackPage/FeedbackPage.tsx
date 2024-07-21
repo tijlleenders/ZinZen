@@ -6,6 +6,8 @@ import { submitFeedback } from "@src/api/FeedbackAPI";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
 import { darkModeState, displayLoader, displayToast } from "@store";
 
+import releaseInfo from "../../version.json";
+
 import "@translations/i18n";
 import "./feedbackpage.scss";
 
@@ -17,7 +19,8 @@ export const FeedbackPage = () => {
   const setDisplayToast = useSetRecoilState(displayToast);
 
   async function submitToAPI(feedback: string) {
-    const updatedFeedback = `Rating : ${userRating}\n${feedback}`;
+    const updatedFeedback = `Rating : ${userRating}\n${feedback}\n\nBuild Info:\nVersion numbers: ${releaseInfo.buildHash.indexFileHash}, ${releaseInfo.buildHash.schedulerFileHash}
+    \nRelease Date: ${releaseInfo.buildDate}`;
     setLoading(true);
     const res = await submitFeedback(updatedFeedback);
     setLoading(false);
@@ -28,6 +31,8 @@ export const FeedbackPage = () => {
     setDisplayToast({ open: true, message: res.message, extra: "" });
   }
   const { t } = useTranslation();
+
+  console.log(releaseInfo);
 
   return (
     <OnboardingLayout>
@@ -77,6 +82,12 @@ export const FeedbackPage = () => {
           {t("submit")}
         </button>
       </div>
+      {releaseInfo && (
+        <div id="build-info-line">
+          <p>Version numbers: {`${releaseInfo.buildHash.indexFileHash}, ${releaseInfo.buildHash.schedulerFileHash}`}</p>
+          <p>Release date: {new Date(releaseInfo.buildDate).toDateString()}</p>
+        </div>
+      )}
     </OnboardingLayout>
   );
 };
