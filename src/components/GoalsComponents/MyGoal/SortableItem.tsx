@@ -6,20 +6,9 @@ import MyGoal from "./MyGoal";
 
 interface SortableItemProps {
   goal: ImpossibleGoal;
-  index: number;
-  showActions: {
-    open: string;
-    click: number;
-  };
-  setShowActions: React.Dispatch<
-    React.SetStateAction<{
-      open: string;
-      click: number;
-    }>
-  >;
 }
 
-const SortableItem = ({ goal, index, showActions, setShowActions }: SortableItemProps) => {
+const SortableItem = ({ goal }: SortableItemProps) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: goal.id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -29,14 +18,7 @@ const SortableItem = ({ goal, index, showActions, setShowActions }: SortableItem
 
   return (
     <div ref={setNodeRef} style={style}>
-      <MyGoal
-        goal={goal}
-        actionType="regular"
-        showActions={showActions}
-        setShowActions={setShowActions}
-        dragAttributes={attributes}
-        dragListeners={listeners}
-      />
+      <MyGoal goal={goal} dragAttributes={attributes} dragListeners={listeners} />
     </div>
   );
 };

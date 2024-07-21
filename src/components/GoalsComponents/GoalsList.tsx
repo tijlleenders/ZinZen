@@ -1,7 +1,6 @@
 import { updatePositionIndex } from "@src/api/GCustomAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import React, { useState } from "react";
-import { displayUpdateGoal, displayGoalActions } from "@src/store/GoalsState";
+import React from "react";
 import {
   DndContext,
   closestCenter,
@@ -16,7 +15,6 @@ import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { ImpossibleGoal } from "@src/Interfaces";
 
-import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
 import SortableItem from "./MyGoal/SortableItem";
 
 interface GoalsListProps {
@@ -25,11 +23,7 @@ interface GoalsListProps {
 }
 
 const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
-  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
   const impossibleGoals = useRecoilValue(impossibleGoalsList);
-  const [dragging, setDragging] = useState(false);
-  const [draggedItem, setDraggedItem] = useState<GoalItem | null>(null);
-  const showGoalActions = useRecoilValue(displayGoalActions);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -79,20 +73,15 @@ const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
   };
 
   return (
-    <>
-      {showGoalActions && showGoalActions.actionType === "regular" && (
-        <RegularGoalActions open goal={showGoalActions.goal} />
-      )}
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={updatedGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
-          {updatedGoals.map((goal: ImpossibleGoal, index: number) => (
-            <React.Fragment key={goal.id}>
-              <SortableItem key={goal.id} goal={goal} index={index} />
-            </React.Fragment>
-          ))}
-        </SortableContext>
-      </DndContext>
-    </>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={updatedGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
+        {updatedGoals.map((goal: ImpossibleGoal) => (
+          <React.Fragment key={`sortable-${goal.id}`}>
+            <SortableItem key={`sortable-${goal.id}`} goal={goal} />
+          </React.Fragment>
+        ))}
+      </SortableContext>
+    </DndContext>
   );
 };
 
