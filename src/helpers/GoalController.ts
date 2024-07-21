@@ -90,7 +90,7 @@ export const modifyGoal = async (
     updateHintItem(goalTags.id, goalHint, []);
   }
 
-  await updateGoal(goalId, {
+  const updateStatus = await updateGoal(goalId, {
     ...goalTags,
     title: goalTitle
       .split(" ")
@@ -99,6 +99,8 @@ export const modifyGoal = async (
     goalColor,
   });
   sendUpdatedGoal(goalId, ancestors);
+
+  return updateStatus;
 };
 
 export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {

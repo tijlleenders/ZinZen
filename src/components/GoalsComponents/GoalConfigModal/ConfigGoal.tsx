@@ -141,6 +141,7 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       return;
     }
     const goalColor = colorPalleteList[colorIndex];
+    let updateStatus;
     if (state.displayPartnerMode) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
@@ -149,8 +150,21 @@ const ConfigGoal = ({ goal, action }: { action: "Update" | "Create"; goal: GoalI
       }
       suggestChanges(rootGoal, getFinalTags(), title, goalColor, subGoalsHistory.length);
     } else {
-      await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id], hints);
+      updateStatus = await modifyGoal(goal.id, getFinalTags(), title, goalColor, [...ancestors, goal.id], hints);
     }
+
+    updateStatus
+      ? (setShowToast({
+          open: true,
+          message: `Goal updated!`,
+          extra: "",
+        }),
+        await mySound.play())
+      : setShowToast({
+          open: true,
+          message: `Oops something went wrong while updating this goal!`,
+          extra: "",
+        });
   };
 
   const addThisGoal = async () => {
