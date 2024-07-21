@@ -1,6 +1,7 @@
 import React from "react";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
+import youtubeLogo from "@assets/images/youtube.svg";
 
 interface GoalDropdownProps {
   goal: GoalItem;
@@ -28,6 +29,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
       >
         <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
           {newUpdates && <NotificationSymbol color={goalColor} />}
+          {goal.title.includes("youtube") && <img src={youtubeLogo} />}
         </div>
       </div>
     </div>
