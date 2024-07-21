@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import { useRecoilState } from "recoil";
 import { completedGoalsState } from "@src/store/GoalsState";
-import { useTelHandler, useUrlHandler } from "./GoalTitleHandlers";
+import { useTelHandler, useUrlHandler } from "../GoalTitleHandlers";
 
 interface GoalTitleProps {
   goal: GoalItem;

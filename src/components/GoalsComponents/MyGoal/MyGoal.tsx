@@ -13,25 +13,11 @@ import GoalDropdown from "./components/GoalDropdown";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
-  showActions: {
-    open: string;
-    click: number;
-  };
-  setShowActions: React.Dispatch<
-    React.SetStateAction<{
-      open: string;
-      click: number;
-    }>
-  >;
   dragAttributes?: any;
   dragListeners?: any;
 }
 
-const MyGoal: React.FC<MyGoalProps> = ({ goal, showActions, dragAttributes, dragListeners }) => {
-  const archived = goal.archived === "true";
-  const defaultTap = { open: "root", click: 1 };
-  const isActionVisible = !archived && showActions.open === goal.id && showActions.click > 0;
-
+const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
   useEffect(() => {
