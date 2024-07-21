@@ -13,9 +13,10 @@ import { getContactSharedGoals, shareGoalWithContact } from "@src/services/conta
 import { updateAllUnacceptedContacts, getContactByRelId, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 
-const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
+const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
 
 function useApp() {
@@ -115,11 +116,11 @@ function useApp() {
         });
       }
     };
-    const installId = localStorage.getItem("installId");
+    const installId = localStorage.getItem(LocalStorageKeys.INSTALL_ID);
     if (!installId) {
-      localStorage.setItem("installId", uuidv4());
-      localStorage.setItem("darkMode", "on");
-      localStorage.setItem("theme", JSON.stringify(getTheme()));
+      localStorage.setItem(LocalStorageKeys.INSTALL_ID, uuidv4());
+      localStorage.setItem(LocalStorageKeys.CHECKED_IN, "on");
+      localStorage.setItem(LocalStorageKeys.THEME, JSON.stringify(getTheme()));
     } else {
       init();
     }
@@ -130,7 +131,7 @@ function useApp() {
   }, [langFromStorage]);
 
   useEffect(() => {
-    localStorage.setItem("confirmationState", JSON.stringify(confirmationState));
+    localStorage.setItem(LocalStorageKeys.CONFIRMATION_STATE, JSON.stringify(confirmationState));
   }, [confirmationState]);
 
   // Check for missed hint calls
@@ -172,11 +173,11 @@ function useApp() {
   }, []);
 
   useEffect(() => {
-    const lastRefresh = localStorage.getItem("lastRefresh");
+    const lastRefresh = localStorage.getItem(LocalStorageKeys.LAST_REFRESH);
     const today = new Date().toLocaleDateString();
     if (lastRefresh !== today) {
       refreshTaskCollection().then(() => {
-        localStorage.setItem("lastRefresh", today);
+        localStorage.setItem(LocalStorageKeys.LAST_REFRESH, today);
         setLastAction("TaskCollectionRefreshed");
       });
     }

@@ -4,6 +4,7 @@ import { useSetRecoilState } from "recoil";
 import { ILanguageListProps, ILanguage } from "@src/Interfaces/ILanguage";
 import { vibrateWorks } from "@src/constants/vibrateCheck";
 import { languageSelectionState } from "@src/store";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { useLanguageSelection } from "../../hooks/useLanguageSelection";
 
 export const LanguagesList = ({ languages, navigationCallback, type, hideSelected }: ILanguageListProps) => {
@@ -16,7 +17,7 @@ export const LanguagesList = ({ languages, navigationCallback, type, hideSelecte
     }
     setIsLanguageChosen(langId);
     i18n.changeLanguage(langId);
-    localStorage.setItem("language", JSON.stringify(langId));
+    localStorage.setItem(LocalStorageKeys.LANGUAGE, langId);
     if (type === "fragment" && navigationCallback) navigationCallback("/ZinZenFAQ");
     else window.history.back();
   };

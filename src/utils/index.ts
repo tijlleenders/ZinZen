@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import { languagesFullForms } from "@src/translations/i18n";
 import i18next from "i18next";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
 export async function createContactRequest(url: string, body: object | null = null, method = "POST") {
   try {
@@ -129,11 +130,11 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
 export const convertNumberToHr = (hr: number) => `${hr > 9 ? "" : "0"}${hr} : 00`;
 
 export function getInstallId() {
-  return localStorage.getItem("installId");
+  return localStorage.getItem(LocalStorageKeys.INSTALL_ID);
 }
 
 export function getSelectedLanguage() {
-  const langFromStorage = localStorage.getItem("language")?.slice(1, -1);
+  const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
   const lang = langFromStorage ? languagesFullForms[langFromStorage] : languagesFullForms.en;
   return lang;
 }
