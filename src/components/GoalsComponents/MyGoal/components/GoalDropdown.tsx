@@ -1,11 +1,22 @@
 import React from "react";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
-import youtubeLogo from "@assets/images/youtube.svg";
+import recorderIcon from "@assets/images/recorderIcon.svg";
 
 interface GoalDropdownProps {
   goal: GoalItem;
 }
+
+interface TitleIconProps {
+  title: string;
+}
+
+const GoalTitleIcon: React.FC<TitleIconProps> = ({ title }) => {
+  if (title.includes("youtube") || title.includes("peertube")) {
+    return <img src={recorderIcon} alt="Recorder Icon" />;
+  }
+  return null;
+};
 
 const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
   const { sublist, goalColor, timeBudget, newUpdates } = goal;
@@ -29,7 +40,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
       >
         <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
           {newUpdates && <NotificationSymbol color={goalColor} />}
-          {goal.title.includes("youtube") && <img src={youtubeLogo} />}
+          <GoalTitleIcon title={goal.title} />
         </div>
       </div>
     </div>
