@@ -1,7 +1,7 @@
 import React from "react";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
-import recorderIcon from "@assets/images/recorderIcon.svg";
+import playIcon from "@assets/images/playIcon.svg";
 
 interface GoalDropdownProps {
   goal: GoalItem;
@@ -13,7 +13,7 @@ interface TitleIconProps {
 
 const GoalTitleIcon: React.FC<TitleIconProps> = ({ title }) => {
   if (title.includes("youtube") || title.includes("peertube")) {
-    return <img src={recorderIcon} alt="Recorder Icon" />;
+    return <img src={playIcon} alt="Recorder Icon" />;
   }
   return null;
 };
