@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
@@ -10,7 +10,7 @@ import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import { containsLink, extractLinks, summarizeUrl } from "@src/utils/patterns";
+import { containsLink, extractLinks } from "@src/utils/patterns";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
