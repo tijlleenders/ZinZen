@@ -79,7 +79,6 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     }
   };
 
-  const [showMenu, setShowMenu] = React.useState(false);
   const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (add === "myGoals" || state.displayPartnerMode) {
@@ -91,6 +90,9 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     onClick: handleClick,
     longPressTime: 500,
   });
+
+  const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
+
   if (searchParams?.get("addOptions")) {
     return (
       <>
@@ -122,7 +124,15 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     );
   }
   return (
-    <button type="button" className="global-addBtn" {...handlers}>
+    <button
+      type="button"
+      className="global-addBtn"
+      onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       <img
         style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
         src={themeSelection ? correct : GlobalAddIcon}
