@@ -10,6 +10,7 @@ import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
+import { containsLink, extractLinks, summarizeUrl } from "@src/utils/patterns";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -40,6 +41,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
       navigate(`/MyGoals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
+    } else if (containsLink(goal.title)) {
+      window.open(extractLinks(goal.title)[0], "_blank");
     } else {
       navigate(`/MyGoals/${goal.id}`, { state });
     }
