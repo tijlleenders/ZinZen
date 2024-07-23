@@ -15,6 +15,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
   const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 89.585%, ${
     timeBudget?.perDay != null ? "transparent" : goalColor
   } 100%)`;
+  console.log(outerBackground);
 
   const innerBorderColor = hasSubGoals ? goalColor : "transparent";
   const outerBorderStyle = timeBudget?.perDay == null ? `1px solid ${goalColor}` : `2px dashed ${goalColor}`;
