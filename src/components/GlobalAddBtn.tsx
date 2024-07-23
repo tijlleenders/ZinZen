@@ -59,21 +59,21 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
 
-  const handleAddGoal = async (type: TGoalCategory) => {
+  const handleAddGoal = async (type: TGoalCategory, replaceCurrentRoute = true) => {
     navigate(`/goals/${parentId || "root"}?type=${type}&mode=add`, {
       state: {
         ...state,
         goalType: type,
       },
-      replace: true,
+      replace: replaceCurrentRoute,
     });
   };
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleGlobalAddClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      handleAddGoal("Standard");
+      handleAddGoal("Standard", false);
     } else if (add === "myJournal") {
       handleAddFeeling();
     }
@@ -87,7 +87,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   };
   const { handlers } = useLongPress({
     onLongPress: handleLongPress,
-    onClick: handleClick,
+    onClick: handleGlobalAddClick,
     longPressTime: 500,
   });
 
