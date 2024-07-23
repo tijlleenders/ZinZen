@@ -1,14 +1,20 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-	 width="800px" height="800px" viewBox="0 0 408.221 408.221"
-	 xml:space="preserve">
-<g>
-	<g>
-		<path d="M204.11,0C91.388,0,0,91.388,0,204.111c0,112.725,91.388,204.11,204.11,204.11c112.729,0,204.11-91.385,204.11-204.11
-			C408.221,91.388,316.839,0,204.11,0z M286.547,229.971l-126.368,72.471c-17.003,9.75-30.781,1.763-30.781-17.834V140.012
-			c0-19.602,13.777-27.575,30.781-17.827l126.368,72.466C303.551,204.403,303.551,220.217,286.547,229.971z"/>
-	</g>
-</g>
-</svg>
+<svg
+  width="256px"
+  height="256px"
+  viewBox="0 0 20.00 20.00"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  stroke="#3c9dbe"
+  stroke-width="0.0002"
+><g id="SVGRepo_bgCarrier" stroke-width="0" /><g
+    id="SVGRepo_tracerCarrier"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke="#CCCCCC"
+    stroke-width="0.04"
+  /><g id="SVGRepo_iconCarrier"> <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M7.53 15.848L15.53 10.848C16.1567 10.4563 16.1567 9.54368 15.53 9.15201L7.53 4.15201C6.86395 3.73573 6 4.21458 6 5.00001L6 15C6 15.7854 6.86395 16.2643 7.53 15.848ZM8 13.1958L8 6.80426L13.1132 10L8 13.1958Z"
+      fill="#32c850"
+    /> </g></svg>

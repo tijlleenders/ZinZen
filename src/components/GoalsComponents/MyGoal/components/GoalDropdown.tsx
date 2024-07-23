@@ -1,26 +1,16 @@
 import React from "react";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
-import playIcon from "@assets/images/playIcon.svg";
-
+import TriangleIcon from "./TriangleIcon";
 interface GoalDropdownProps {
   goal: GoalItem;
 }
 
-interface TitleIconProps {
-  title: string;
-}
-
-const GoalTitleIcon: React.FC<TitleIconProps> = ({ title }) => {
-  if (title.includes("youtube") || title.includes("peertube")) {
-    return <img src={playIcon} alt="Recorder Icon" />;
-  }
-  return null;
-};
-
 const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
-  const { sublist, goalColor, timeBudget, newUpdates } = goal;
+  const { sublist, goalColor, timeBudget, newUpdates, title } = goal;
   const hasSubGoals = sublist.length > 0;
+
+  const isVideoLink = title.includes("youtube") || title.includes("peertube");
 
   const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 89.585%, ${
     timeBudget?.perDay != null ? "transparent" : goalColor
@@ -31,18 +21,21 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
 
   return (
     <div className="d-flex f-col gap-4">
-      <div
-        className="goal-dropdown goal-dd-outer"
-        style={{
-          background: outerBackground,
-          border: outerBorderStyle,
-        }}
-      >
-        <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
-          {newUpdates && <NotificationSymbol color={goalColor} />}
-          <GoalTitleIcon title={goal.title} />
+      {isVideoLink ? (
+        <TriangleIcon fill={goal.goalColor} backgroundColor={outerBackground} />
+      ) : (
+        <div
+          className="goal-dropdown goal-dd-outer"
+          style={{
+            background: outerBackground,
+            border: outerBorderStyle,
+          }}
+        >
+          <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
+            {newUpdates && <NotificationSymbol color={goalColor} />}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
