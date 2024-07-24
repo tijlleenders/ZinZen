@@ -2,6 +2,7 @@ import React from "react";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
 import TriangleIcon from "./TriangleIcon";
+
 interface GoalDropdownProps {
   goal: GoalItem;
 }
@@ -23,7 +24,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
   return (
     <div className="d-flex f-col gap-4">
       {isVideoLink ? (
-        <TriangleIcon fill={goal.goalColor} backgroundColor={outerBackground} />
+        <TriangleIcon fill={goalColor} size={33} strokeWidth={4} strokeColor={goalColor} />
       ) : (
         <div
           className="goal-dropdown goal-dd-outer"
