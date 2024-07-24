@@ -250,3 +250,12 @@ export const calculateDaysLeft = (dueDate: string) => {
 export const formatSingularPlural = (count: number, singularWord: string) => {
   return `${count} ${singularWord}${count !== 1 ? "s" : ""}`;
 };
+
+/**Check if the goal title is goal */
+export const isGoalCode = (str: string | undefined | null): boolean => {
+  return (str?.startsWith("```") && str?.endsWith("```")) ?? false;
+};
+
+export const removeBackTicks = (str: string | undefined | null) => {
+  return str?.replace(/`/g, "");
+};
