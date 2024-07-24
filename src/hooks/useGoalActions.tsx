@@ -114,7 +114,7 @@ const useGoalActions = () => {
   };
 
   const copyCode = (goalTitle: string) => {
-    showMessage("Code copied to clipboard", goalTitle);
+    showMessage("Code copied to clipboard", removeBackTicks(goalTitle.slice(0, 15)));
     navigator.clipboard.writeText(removeBackTicks(goalTitle));
   };
 
