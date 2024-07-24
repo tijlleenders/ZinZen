@@ -13,7 +13,6 @@ import useGoalActions from "@src/hooks/useGoalActions";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import { isGoalCode } from "@src/utils";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
