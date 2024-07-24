@@ -12,6 +12,7 @@ import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
+import { removeBackTicks } from "@src/utils";
 
 const useGoalActions = () => {
   const { state } = useLocation();
@@ -111,6 +112,12 @@ const useGoalActions = () => {
       "Paste this link in a chat message to your partner so they can accept the request and start receiving what you shared automatically",
     );
   };
+
+  const copyCode = (goalTitle: string) => {
+    showMessage("Code copied to clipboard", goalTitle);
+    navigator.clipboard.writeText(removeBackTicks(goalTitle));
+  };
+
   return {
     addGoal,
     deleteGoalAction,
@@ -119,6 +126,7 @@ const useGoalActions = () => {
     updateGoal,
     shareGoalWithRelId,
     addContact,
+    copyCode,
   };
 };
 

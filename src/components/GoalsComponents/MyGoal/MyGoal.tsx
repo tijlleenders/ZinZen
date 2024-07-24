@@ -10,6 +10,7 @@ import { isGoalCode } from "@src/utils";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
+import useGoalActions from "@src/hooks/useGoalActions";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -36,12 +37,13 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const subGoalHistory = useRecoilValue(goalsHistory);
+  const { copyCode } = useGoalActions();
 
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
       navigate(`/MyGoals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
     } else if (isGoalCode(goal.title)) {
-      // do something
+      copyCode(goal.title);
     } else {
       navigate(`/MyGoals/${goal.id}`, { state });
     }

@@ -256,6 +256,6 @@ export const isGoalCode = (str: string | undefined | null): boolean => {
   return (str?.startsWith("```") && str?.endsWith("```")) ?? false;
 };
 
-export const removeBackTicks = (str: string | undefined | null) => {
+export const removeBackTicks = (str: string) => {
   return str?.replace(/`/g, "");
 };
