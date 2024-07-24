@@ -23,7 +23,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, titleContainsVideoLin
   return (
     <div className="d-flex f-col gap-4">
       {titleContainsVideoLink ? (
-        <TriangleIcon fill={goalColor} size={37} strokeWidth={4} strokeColor={goalColor} />
+        <TriangleIcon color={goalColor} size={37} borderWidth={4} borderColor={goalColor} />
       ) : (
         <div
           className="goal-dropdown goal-dd-outer"
