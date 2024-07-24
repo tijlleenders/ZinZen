@@ -5,6 +5,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { useRecoilState } from "recoil";
 import { completedGoalsState } from "@src/store/GoalsState";
 import { useTelHandler, useUrlHandler } from "../GoalTitleHandlers";
+import { removeBackTicks } from "@src/utils";
 
 interface GoalTitleProps {
   goal: GoalItem;
@@ -36,7 +37,7 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
           const UrlHandlerComponent = useUrlHandler(url);
           return <UrlHandlerComponent key={`${id}-url-${urlIndex}`} />;
         }
-        return <span key={`${id}-text-${part}`}>{part}</span>;
+        return <span key={`${id}-text-${part}`}>{removeBackTicks(part)}</span>;
       })}
     </div>
   );
