@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
-
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { isGoalCode } from "@src/utils";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import { isGoalCode } from "@src/utils";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -42,7 +41,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     if (isDropdown) {
       navigate(`/MyGoals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
     } else if (isGoalCode(goal.title)) {
-      alert(goal.title);
+      // do something
     } else {
       navigate(`/MyGoals/${goal.id}`, { state });
     }
