@@ -116,7 +116,7 @@ const useGoalActions = () => {
     const MAX_LENGTH = 15;
 
     if (goalTitle.length > MAX_LENGTH) {
-      goalTitle = `${goalTitle.split(" ").slice(0, MAX_LENGTH)}...`;
+      goalTitle = `${goalTitle.split(" ").slice(0, MAX_LENGTH).join(" ")}...`;
     }
 
     navigator.clipboard
