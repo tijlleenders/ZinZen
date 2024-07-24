@@ -6,11 +6,11 @@ import { darkModeState, displayPartnerMode } from "@src/store";
 import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
-import { isGoalCode } from "@src/utils";
+
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import useGoalActions from "@src/hooks/useGoalActions";
+import { containsLink, extractLinks } from "@src/utils/patterns";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -21,6 +21,9 @@ interface MyGoalProps {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
+  const { title } = goal;
+  const titleContainsVideoLink = title.includes("youtube") || title.includes("peertube");
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsAnimating(false);
@@ -37,13 +40,12 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const subGoalHistory = useRecoilValue(goalsHistory);
-  const { copyCode } = useGoalActions();
 
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
       navigate(`/MyGoals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
-    } else if (isGoalCode(goal.title)) {
-      copyCode(goal.title);
+    } else if (containsLink(goal.title)) {
+      window.open(extractLinks(goal.title)[0], "_blank");
     } else {
       navigate(`/MyGoals/${goal.id}`, { state });
     }
@@ -97,9 +99,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         }}
       >
         <div onClickCapture={handleDropDown} {...dragAttributes} {...dragListeners}>
-          <GoalDropdown goal={goal} />
+          <GoalDropdown goal={goal} titleContainsVideoLink={titleContainsVideoLink} />
         </div>
-        <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
+        <div
+          aria-hidden
+          style={titleContainsVideoLink ? { marginLeft: "-5px" } : {}}
+          className="goal-tile"
+          onClick={handleGoalClick}
+        >
           <GoalTitle goal={goal} isImpossible={goal.impossible} />
         </div>
       </div>

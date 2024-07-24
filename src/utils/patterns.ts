@@ -37,3 +37,14 @@ export function isJSONParsable(str: string | null | undefined): boolean {
     return false;
   }
 }
+
+export const extractLinks = (text: string) => {
+  const urlPattern = /https?:\/\/[^\s/$.?#].[^\s]*/g;
+  const matches = text.match(urlPattern);
+  return matches || [];
+};
+
+export const containsLink = (text: string) => {
+  const urlPattern = /https?:\/\/[^\s/$.?#].[^\s]*/g;
+  return urlPattern.test(text);
+};
