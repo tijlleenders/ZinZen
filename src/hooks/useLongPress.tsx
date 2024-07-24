@@ -1,8 +1,8 @@
 import { useRef, useState, useCallback } from "react";
 
 interface UseLongPressOptions {
-  onLongPress?: (e: React.MouseEvent | React.TouchEvent) => void;
-  onClick?: (e: React.MouseEvent | React.TouchEvent) => void;
+  onLongPress?: (e: React.TouchEvent | React.MouseEvent) => void;
+  onClick?: (e: React.MouseEvent) => void;
   longPressTime?: number;
 }
 
@@ -10,10 +10,10 @@ export default function useLongPress({ onLongPress, onClick, longPressTime = 500
   const [action, setAction] = useState("");
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const isLongPress = useRef<boolean>(false);
-  const eventRef = useRef<React.MouseEvent | React.TouchEvent | null>(null);
+  const eventRef = useRef<React.TouchEvent | React.MouseEvent | null>(null);
 
   const startPressTimer = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
+    (e: React.TouchEvent | React.MouseEvent) => {
       isLongPress.current = false;
       eventRef.current = e;
       timerRef.current = setTimeout(() => {
@@ -26,11 +26,9 @@ export default function useLongPress({ onLongPress, onClick, longPressTime = 500
   );
 
   const handleOnClick = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
+    (e: React.MouseEvent) => {
       e.stopPropagation();
-      if (isLongPress.current) {
-        return;
-      }
+      if (isLongPress.current) return;
       setAction("click");
       onClick?.(e);
     },
@@ -58,14 +56,11 @@ export default function useLongPress({ onLongPress, onClick, longPressTime = 500
     [startPressTimer],
   );
 
-  const handleOnTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      e.stopPropagation();
-      if (action === "longpress") return;
-      clearTimeout(timerRef.current!);
-    },
-    [action],
-  );
+  const handleOnTouchEnd = useCallback((e: React.TouchEvent) => {
+    e.stopPropagation();
+    clearTimeout(timerRef.current!);
+    // We don't trigger onClick for touch events
+  }, []);
 
   return {
     action,
