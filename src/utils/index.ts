@@ -251,7 +251,7 @@ export const formatSingularPlural = (count: number, singularWord: string) => {
   return `${count} ${singularWord}${count !== 1 ? "s" : ""}`;
 };
 
-/**Check if the goal title is goal */
+/** Check if the goal title is goal */
 export const isGoalCode = (str: string | undefined | null): boolean => {
   return (str?.startsWith("```") && str?.endsWith("```")) ?? false;
 };
