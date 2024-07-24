@@ -89,7 +89,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const { handlers } = useLongPress({
     onLongPress: handleLongPress,
     onClick: handleGlobalAddClick,
-    longPressTime: 500,
+    longPressTime: 200,
   });
 
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
