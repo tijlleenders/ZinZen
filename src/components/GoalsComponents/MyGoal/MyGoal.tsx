@@ -13,6 +13,7 @@ import useGoalActions from "@src/hooks/useGoalActions";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
+import { isGoalCode } from "@src/utils";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -50,6 +51,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
       navigate(`/MyGoals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
     } else if (containsLink(goal.title)) {
       window.open(extractLinks(goal.title)[0], "_blank");
+    } else if (isGoalCode(goal.title)) {
+      navigator.clipboard.writeText("hello");
     } else {
       navigate(`/MyGoals/${goal.id}`, { state });
     }
