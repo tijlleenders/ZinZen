@@ -7,11 +7,11 @@ import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { isGoalCode } from "@src/utils";
+import useGoalActions from "@src/hooks/useGoalActions";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import { isGoalCode } from "@src/utils";
-import useGoalActions from "@src/hooks/useGoalActions";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
