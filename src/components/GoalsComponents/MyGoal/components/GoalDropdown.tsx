@@ -5,13 +5,12 @@ import TriangleIcon from "./TriangleIcon";
 
 interface GoalDropdownProps {
   goal: GoalItem;
+  titleContainsVideoLink: boolean;
 }
 
-const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
-  const { sublist, goalColor, timeBudget, newUpdates, title } = goal;
+const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, titleContainsVideoLink }) => {
+  const { sublist, goalColor, timeBudget, newUpdates } = goal;
   const hasSubGoals = sublist.length > 0;
-
-  const isVideoLink = title.includes("youtube") || title.includes("peertube");
 
   const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 89.585%, ${
     timeBudget?.perDay != null ? "transparent" : goalColor
@@ -23,8 +22,8 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
 
   return (
     <div className="d-flex f-col gap-4">
-      {isVideoLink ? (
-        <TriangleIcon fill={goalColor} size={33} strokeWidth={4} strokeColor={goalColor} />
+      {titleContainsVideoLink ? (
+        <TriangleIcon fill={goalColor} size={37} strokeWidth={4} strokeColor={goalColor} />
       ) : (
         <div
           className="goal-dropdown goal-dd-outer"
