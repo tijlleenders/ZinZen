@@ -37,7 +37,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   } = useParentGoalContext();
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
-  const subGoalHistory = useRecoilValue(goalsHistory);
 
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
@@ -51,7 +50,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
       ...location.state,
       activeGoalId: goal.id,
       goalsHistory: [
-        ...subGoalHistory,
+        ...(location.state.goalsHistory || []),
         {
           goalID: goal.id || "root",
           goalColor: goal.goalColor || "#ffffff",
@@ -59,7 +58,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         },
       ],
     };
-
     redirect(newState);
   };
 
