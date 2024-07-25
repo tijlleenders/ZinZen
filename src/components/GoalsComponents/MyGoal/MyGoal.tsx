@@ -10,7 +10,7 @@ import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import { containsLink, extractLinks } from "@src/utils/patterns";
+import { extractLinks } from "@src/utils/patterns";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -40,17 +40,24 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const subGoalHistory = useRecoilValue(goalsHistory);
-
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
       navigate(`/MyGoals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
-    } else if (containsLink(goal.title)) {
-      window.open(extractLinks(goal.title)[0], "_blank");
     } else {
       navigate(`/MyGoals/${goal.id}`, { state });
     }
   };
+
   const handleGoalClick = () => {
+    const link = extractLinks(goal.title);
+    if (link) {
+      let url = link;
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = "https://" + url;
+      }
+      window.open(url, "_blank");
+      return;
+    }
     const newState: ILocationState = {
       ...location.state,
       activeGoalId: goal.id,
