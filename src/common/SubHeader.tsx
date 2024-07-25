@@ -10,7 +10,7 @@ const NavBtn = ({ show, className, handleClick }: { show?: boolean; className: s
   <Col span={6} style={{ textAlign: "center", alignSelf: "center" }}>
     {show && (
       <button type="button" className="ordinary-element" onClick={handleClick}>
-        <img src={chevronLeftIcon} className={className} />
+        <img src={chevronLeftIcon} alt="Navigate Left" className={className} />
       </button>
     )}
   </Col>

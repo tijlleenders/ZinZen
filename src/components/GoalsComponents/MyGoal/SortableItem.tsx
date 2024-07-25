@@ -13,7 +13,6 @@ const SortableItem = ({ goal }: SortableItemProps) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    touchAction: "none", // Prevents scrolling during drag
   };
 
   return (
