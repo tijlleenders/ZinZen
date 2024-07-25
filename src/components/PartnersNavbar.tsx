@@ -5,7 +5,7 @@ import { usePartnerContext } from "@src/contexts/partner-context";
 
 import BottomNavLayout from "@src/layouts/BottomNavLayout";
 
-const ParticipantsNavbar = () => {
+const PartnersNavbar = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { partnerId } = useParams();
@@ -31,4 +31,4 @@ const ParticipantsNavbar = () => {
   );
 };
 
-export default ParticipantsNavbar;
+export default PartnersNavbar;

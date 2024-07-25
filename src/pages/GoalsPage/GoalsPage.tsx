@@ -8,14 +8,15 @@ import { displayParticipants } from "@src/store/GoalsState";
 import { useLocation, useNavigate } from "react-router-dom";
 import ContactItem from "@src/models/ContactItem";
 import Participants from "@components/GoalsComponents/Participants";
-import ParticipantsNavbar from "@components/ParticipantsNavbar";
+
 import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import { getAllImpossibleGoals } from "@src/api/ImpossibleGoalsApi";
+import PartnersNavbar from "@components/PartnersNavbar";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 
-import { MyGoals } from "./MyGoals";
 import PartnerGoals from "./PartnerGoals";
 import "./GoalsPage.scss";
+import { MyGoals } from "./MyGoals";
 
 const GoalsPage = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const GoalsPage = () => {
   const [partnersList, setPartnersList] = useState<ContactItem[]>([]);
 
   const handleActivePartner = (partner: ContactItem) => {
-    navigate("/MyGoals", { state: { ...state, displayPartner: partner }, replace: true });
+    navigate("/goals", { state: { ...state, displayPartner: partner }, replace: true });
   };
 
   useEffect(() => {
@@ -51,12 +52,8 @@ const GoalsPage = () => {
       {showParticipants && <Participants goalId={showParticipants} />}
       {showPartnerMode && activePartner ? (
         <>
-          <PartnerGoals partner={activePartner} />
-          <ParticipantsNavbar
-            list={partnersList}
-            activePartner={activePartner}
-            handleActivePartner={handleActivePartner}
-          />
+          <PartnerGoals />
+          <PartnersNavbar list={partnersList} activePartner={activePartner} handleActivePartner={handleActivePartner} />
         </>
       ) : (
         <MyGoals />
