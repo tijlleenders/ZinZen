@@ -72,6 +72,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   }, [goal.id]);
 
   const [title, setTitle] = useState(goal.title);
+  const handleTitleChange = (value: string) => {
+    setTitle(value);
+  };
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
   // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
   // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
@@ -254,7 +257,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
             onChange={(e) => setTitle(e.target.value)}
             inputMode="text"
           /> */}
-          <ArchivedAutoComplete onGoalSelect={onSuggestionClick} onInputChange={(value) => setTitle(value)} />
+          <ArchivedAutoComplete inputvalue={title} onGoalSelect={onSuggestionClick} onInputChange={handleTitleChange} />
         </div>
         <div
           className="d-flex f-col gap-20"

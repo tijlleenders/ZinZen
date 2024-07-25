@@ -5,36 +5,38 @@ import { GoalItem } from "@src/models/GoalItem";
 interface AutocompleteComponentProps {
   data: GoalItem[];
   onSuggestionClick: (suggestion: GoalItem) => void;
-  onInputChange?: (value: string) => void;
+  onInputChange: (value: string) => void;
+  inputvalue: string;
 }
 
-const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({ data, onSuggestionClick, onInputChange }) => {
-  const [inputValue, setInputValue] = useState("");
+const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
+  data,
+  onSuggestionClick,
+  onInputChange,
+  inputvalue,
+}) => {
   const [autocompleteValue, setAutocompleteValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
 
-  const onInputChangeHandler = (value: string) => {
-    if (onInputChange) {
-      onInputChange(value);
-    }
-  };
-
   useEffect(() => {
-    if (inputRef.current && spanRef.current) {
-      inputRef.current.style.width = `${spanRef.current.offsetWidth + 2}px`;
-    }
-  }, [inputValue]);
+    const adjustInputWidth = () => {
+      if (inputRef.current && spanRef.current) {
+        inputRef.current.style.width = `${spanRef.current.offsetWidth + 2}px`;
+      }
+    };
 
-  useEffect(() => {
-    if (inputRef.current && spanRef.current) {
-      inputRef.current.style.width = "inherit";
-    }
-  }, []);
+    adjustInputWidth();
+    window.addEventListener("resize", adjustInputWidth);
+
+    return () => {
+      window.removeEventListener("resize", adjustInputWidth);
+    };
+  }, [inputvalue]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setInputValue(value);
+    onInputChange(value);
 
     if (value.trim() === "") {
       setAutocompleteValue("");
@@ -44,16 +46,14 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({ data, onS
     const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(value.toLowerCase()));
     const suggestion = filteredData.length > 0 ? filteredData[0] : null;
     setAutocompleteValue(suggestion ? suggestion.title.slice(value.length) : "");
-
-    onInputChangeHandler(value);
   };
 
   const handleSuggestionClick = () => {
-    const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(inputValue.toLowerCase()));
+    const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(inputvalue.toLowerCase()));
     const suggestion = filteredData.length > 0 ? filteredData[0] : null;
     if (suggestion) {
       onSuggestionClick(suggestion);
-      setInputValue(suggestion.title);
+      onInputChange(suggestion.title);
     }
     setAutocompleteValue("");
   };
@@ -64,15 +64,15 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({ data, onS
         <input
           ref={inputRef}
           type="text"
-          value={inputValue}
+          value={inputvalue}
           onChange={handleInputChange}
           placeholder="Type a title..."
         />
         <span ref={spanRef} className="hidden-span">
-          {inputValue}
+          {inputvalue}
         </span>
         {autocompleteValue && (
-          <span className="autocomplete-suggestion" type="button" onClick={handleSuggestionClick}>
+          <span className="autocomplete-suggestion" onClick={handleSuggestionClick}>
             {autocompleteValue}
           </span>
         )}
