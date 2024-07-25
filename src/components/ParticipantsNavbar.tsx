@@ -1,28 +1,30 @@
-import BottomNavLayout from "@src/layouts/BottomNavLayout";
-import ContactItem from "@src/models/ContactItem";
 import React from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-const ParticipantsNavbar = ({
-  list,
-  activePartner,
-  handleActivePartner,
-}: {
-  list: ContactItem[];
-  activePartner: ContactItem;
-  handleActivePartner: (partner: ContactItem) => void;
-}) => {
+import { usePartnerContext } from "@src/contexts/partner-context";
+
+import BottomNavLayout from "@src/layouts/BottomNavLayout";
+
+const ParticipantsNavbar = () => {
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const { partnerId } = useParams();
+  const { partner, partnersList } = usePartnerContext();
   return (
     <BottomNavLayout>
-      {list.map((contact) => (
+      {partnersList.map(({ id, relId, name }) => (
         <button
-          key={contact.relId}
+          key={relId}
           type="button"
           onClick={() => {
-            handleActivePartner(contact);
+            navigate(`/partners/${id}/goals`, {
+              state: { ...state, displayPartner: partner },
+              replace: true,
+            });
           }}
-          className={`bottom-nav-item ${activePartner.relId === contact.relId ? "active" : ""}`}
+          className={`bottom-nav-item ${partnerId === id ? "active" : ""}`}
         >
-          <p>{contact.name}</p>
+          <p>{name}</p>
         </button>
       ))}
     </BottomNavLayout>
