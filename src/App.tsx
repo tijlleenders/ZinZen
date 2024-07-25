@@ -106,8 +106,30 @@ const App = () => {
                 </ActiveGoalProvider>
               }
             />
-
-            {/* <Route path="/MyGoals" element={<GoalsPage />} /> */}
+            <Route
+              path="partners/:partnerId/goals"
+              element={
+                <PartnerProvider>
+                  <PartnerGoals />
+                </PartnerProvider>
+              }
+            />
+            <Route
+              path="partners/:partnerId/goals/:parentId"
+              element={
+                <PartnerProvider>
+                  <PartnerGoals />
+                </PartnerProvider>
+              }
+            />
+            <Route
+              path="partners/:partnerId/goals/:parentId/:activeGoalId"
+              element={
+                <PartnerProvider>
+                  <PartnerGoals />
+                </PartnerProvider>
+              }
+            />
 
             <Route
               path="/MyJournal"
