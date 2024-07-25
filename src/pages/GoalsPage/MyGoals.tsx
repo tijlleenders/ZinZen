@@ -32,6 +32,8 @@ import { goalCategories } from "@src/constants/goals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
+import "./GoalsPage.scss";
+
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);

@@ -7,7 +7,6 @@ import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
 
-import GoalsPage from "@pages/GoalsPage/GoalsPage";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
 import PartnerGoals from "@pages/GoalsPage/PartnerGoals";
@@ -86,7 +85,7 @@ const App = () => {
             )}
             <Route path="/Feedback" element={<FeedbackPage />} />
             <Route
-              path="/goals"
+              path="*"
               element={
                 <ActiveGoalProvider>
                   <MyGoals />
@@ -143,7 +142,6 @@ const App = () => {
                 </AppLayout>
               }
             />
-            <Route path="*" element={<GoalsPage />} />
             <Route path="/ZinZenFAQ" element={<FAQPage />} />
             <Route path="/invite/:id" element={<InvitePage />} />
             <Route path="/Invest" element={<InvestPage />} />
