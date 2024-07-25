@@ -11,12 +11,12 @@ const useGoalSummaryStore = (goal: GoalItem) => {
     goal.due
       ? ""
       : subGoalsCount > 0 && subBudgetsCount === 0
-      ? formatSingularPlural(subGoalsCount, "goal")
-      : subBudgetsCount > 0 && subGoalsCount === 0
-      ? formatSingularPlural(subBudgetsCount, "budget")
-      : subGoalsCount > 0 && subBudgetsCount > 0
-      ? `${formatSingularPlural(subGoalsCount, "goal")}, ${formatSingularPlural(subBudgetsCount, "budget")}`
-      : "";
+        ? formatSingularPlural(subGoalsCount, "goal")
+        : subBudgetsCount > 0 && subGoalsCount === 0
+          ? formatSingularPlural(subBudgetsCount, "budget")
+          : subGoalsCount > 0 && subBudgetsCount > 0
+            ? `${formatSingularPlural(subGoalsCount, "goal")}, ${formatSingularPlural(subBudgetsCount, "budget")}`
+            : "";
 
   const getDurationSummaryText = () => (goal.duration ? t("hourWithCount", { count: Number(goal.duration) }) : "");
 

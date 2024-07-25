@@ -1,24 +1,27 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
+import archiveSound from "@assets/archive.mp3";
 
 import { lastAction, openDevMode, displayConfirmation, displayPartnerMode } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
-import { goalsHistory } from "@src/store/GoalsState";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
+import useGoalActions from "@src/hooks/useGoalActions";
+import { completedGoalsState, goalsHistory } from "@src/store/GoalsState";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
-import useGoalActions from "@src/hooks/useGoalActions";
 
 import ActionDiv from "./ActionDiv";
 
 import "./MyGoalActions.scss";
 import GoalItemSummary from "../../../common/GoalItemSummary/GoalItemSummary";
+
+const doneSound = new Audio(archiveSound);
 
 const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
@@ -32,19 +35,37 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
   const setDevMode = useSetRecoilState(openDevMode);
+  const [completed, setCompleted] = useRecoilState(completedGoalsState);
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
   console.log("🚀 ~ RegularGoalActions ~ confirmationAction:", confirmationAction);
 
+  const handleCompleteGoal = () => {
+    setCompleted((prev) => ({ ...prev, [goal.id]: !prev[goal.id] }));
+  };
+
+  const handleMarkNotCompleted = () => {
+    setCompleted((prev) => ({
+      ...prev,
+      [goal.id]: false, // Set explicitly to false
+    }));
+  };
+  console.log("completed", completed);
+
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
       await deleteGoalAction(goal);
       setLastAction("goalDeleted");
     } else if (action === "archive") {
-      await archiveThisGoal(goal, ancestors);
-      setLastAction("goalArchived");
+      setTimeout(async () => {
+        await archiveThisGoal(goal, ancestors);
+        setLastAction("goalArchived");
+        handleMarkNotCompleted();
+      }, 10000);
+      await doneSound.play(); // play the done sound when a line strikes through
+      handleCompleteGoal();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
     }

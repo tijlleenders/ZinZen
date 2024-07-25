@@ -17,3 +17,17 @@ export const submitFeedback = async (updatedFeedback: string) => {
     };
   }
 };
+
+export const fetchBuildInfo = async () => {
+  const URL = "/dist/build-info.json";
+  try {
+    const response = await fetch(URL);
+    const data = await response.json();
+    return { status: "success", buildInfo: data };
+  } catch (error) {
+    return {
+      status: "error",
+      message: "Something went wrong. Error fetching build information",
+    };
+  }
+};

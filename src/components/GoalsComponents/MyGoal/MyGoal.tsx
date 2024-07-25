@@ -13,9 +13,21 @@ import GoalDropdown from "./components/GoalDropdown";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
+  dragAttributes?: any;
+  dragListeners?: any;
 }
 
-const MyGoal: React.FC<MyGoalProps> = ({ goal }) => {
+const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
+  const [expandGoalId, setExpandGoalId] = useState("root");
+  const [isAnimating, setIsAnimating] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const navigate = useNavigate();
   const location = useLocation();
   const {
@@ -24,9 +36,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
   const subGoalHistory = useRecoilValue(goalsHistory);
-
-  const [isAnimating, setIsAnimating] = useState(true);
-  const [expandGoalId, setExpandGoalId] = useState("root");
 
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
@@ -83,7 +92,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal }) => {
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div onClickCapture={handleDropDown}>
+        <div onClickCapture={handleDropDown} {...dragAttributes} {...dragListeners}>
           <GoalDropdown goal={goal} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
