@@ -7,6 +7,7 @@ interface AutocompleteComponentProps {
   onSuggestionClick: (suggestion: GoalItem) => void;
   onInputChange: (value: string) => void;
   inputvalue: string;
+  placeholder: string;
 }
 
 const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
@@ -14,6 +15,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   onSuggestionClick,
   onInputChange,
   inputvalue,
+  placeholder,
 }) => {
   const [autocompleteValue, setAutocompleteValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,7 +35,6 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
       window.removeEventListener("resize", adjustInputWidth);
     };
   }, [inputvalue]);
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     onInputChange(value);
@@ -66,7 +67,10 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
           type="text"
           value={inputvalue}
           onChange={handleInputChange}
-          placeholder="Type a title..."
+          placeholder={placeholder}
+          className="ordinary-element"
+          id="title-field"
+          inputMode="text"
         />
         <span ref={spanRef} className="hidden-span">
           {inputvalue}

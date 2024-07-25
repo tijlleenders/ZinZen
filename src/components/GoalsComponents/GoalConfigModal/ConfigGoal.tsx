@@ -223,6 +223,8 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     });
   };
 
+  const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
+
   return (
     <ZModal
       open
@@ -257,7 +259,12 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
             onChange={(e) => setTitle(e.target.value)}
             inputMode="text"
           /> */}
-          <ArchivedAutoComplete inputvalue={title} onGoalSelect={onSuggestionClick} onInputChange={handleTitleChange} />
+          <ArchivedAutoComplete
+            placeholder={titlePlaceholder}
+            inputvalue={title}
+            onGoalSelect={onSuggestionClick}
+            onInputChange={handleTitleChange}
+          />
         </div>
         <div
           className="d-flex f-col gap-20"

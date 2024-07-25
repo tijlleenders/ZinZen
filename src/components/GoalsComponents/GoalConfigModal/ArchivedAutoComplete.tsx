@@ -5,29 +5,31 @@ import AutocompleteComponent from "@src/common/AutoComplete";
 import { useLocation } from "react-router-dom";
 import { ILocationState } from "@src/Interfaces";
 
-const ArchivedAutoComplete = ({
-  onGoalSelect,
-  onInputChange,
-  inputvalue,
-}: {
+interface ArchivedAutoCompleteProps {
   onGoalSelect: (goal: GoalItem) => void;
   onInputChange: (value: string) => void;
   inputvalue: string;
+  placeholder: string;
+}
+
+const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
+  onGoalSelect,
+  onInputChange,
+  inputvalue,
+  placeholder,
 }) => {
   const archivedGoals = useArchivedGoals();
   const { state }: { state: ILocationState } = useLocation();
 
   const filterData = (archivedInputValue: string, data: GoalItem[]): GoalItem[] => {
-    const type = state?.goalType;
+    const goalType = state?.goalType;
     return data.filter((item) => {
       const isGoal = !item.timeBudget;
-      return isGoal === (type === "Goal") && item.title.toLowerCase().startsWith(archivedInputValue.toLowerCase());
+      return isGoal === (goalType === "Goal") && item.title.toLowerCase().startsWith(archivedInputValue.toLowerCase());
     });
   };
 
   const filteredGoals = filterData("", archivedGoals);
-
-  console.log(inputvalue);
 
   return (
     <AutocompleteComponent
@@ -35,6 +37,7 @@ const ArchivedAutoComplete = ({
       data={filteredGoals}
       onSuggestionClick={onGoalSelect}
       onInputChange={(value) => onInputChange(value)}
+      placeholder={placeholder}
     />
   );
 };
