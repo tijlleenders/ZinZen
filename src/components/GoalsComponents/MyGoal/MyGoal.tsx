@@ -41,9 +41,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
 
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
-      navigate(`/MyGoals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
+      navigate(`/goals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
     } else {
-      navigate(`/MyGoals/${goal.id}`, { state });
+      navigate(`/goals/${goal.id}`, { state });
     }
   };
   const handleGoalClick = () => {
@@ -75,7 +75,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   }
 
   useEffect(() => {
-    if (location && location.pathname === "/MyGoals") {
+    if (location && location.pathname === "/goals") {
       const { expandedGoalId } = location.state || {};
       setExpandGoalId(expandedGoalId);
     }

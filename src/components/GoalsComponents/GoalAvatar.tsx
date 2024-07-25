@@ -21,7 +21,7 @@ const GoalAvatar = ({ goal }: { goal: GoalItem }) => {
           background: `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 20% 79.17%, ${goalColor} 100%)`,
         }}
         onClick={() => {
-          navigate("/MyGoals", {
+          navigate("/goals", {
             state: {
               ...location.state,
               displayParticipants: id,

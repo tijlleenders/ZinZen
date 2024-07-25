@@ -9,7 +9,7 @@ const useGoalStore = () => {
   const showConfirmation = useRecoilValue(displayConfirmation);
 
   const openEditMode = (goal: GoalItem) => {
-    navigate(`/MyGoals/${goal.parentGoalId}/${goal.id}?type=${goal.category}&mode=edit`, {
+    navigate(`/goals/${goal.parentGoalId}/${goal.id}?type=${goal.category}&mode=edit`, {
       state: {
         ...location.state,
         goalType: goal.category === "Budget" ? "Budget" : "Goal",
@@ -19,11 +19,11 @@ const useGoalStore = () => {
   };
 
   const handleConfirmation = () => {
-    navigate("/MyGoals", { state: { ...location.state, displayConfirmation: { ...showConfirmation, open: true } } });
+    navigate("/goals", { state: { ...location.state, displayConfirmation: { ...showConfirmation, open: true } } });
   };
 
   const handleDisplayChanges = () => {
-    navigate("/MyGoals", { state: location.state });
+    navigate("/goals", { state: location.state });
   };
 
   return {

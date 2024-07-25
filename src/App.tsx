@@ -10,6 +10,7 @@ import darkAvatar from "@assets/images/mainAvatarDark.svg";
 import GoalsPage from "@pages/GoalsPage/GoalsPage";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
+import PartnerGoals from "@pages/GoalsPage/PartnerGoals";
 import BackupRestoreModal from "@components/BackupRestoreModal";
 
 import { FAQPage } from "@pages/FAQPage/FAQPage";
@@ -18,7 +19,9 @@ import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
+
 import { MyGoals } from "@pages/GoalsPage/MyGoals";
+import { PartnerProvider } from "./contexts/partner-context";
 import { ActiveGoalProvider } from "./contexts/activeGoal-context";
 
 import useApp from "./hooks/useApp";
@@ -83,7 +86,7 @@ const App = () => {
             )}
             <Route path="/Feedback" element={<FeedbackPage />} />
             <Route
-              path="/MyGoals"
+              path="/goals"
               element={
                 <ActiveGoalProvider>
                   <MyGoals />
@@ -91,7 +94,7 @@ const App = () => {
               }
             />
             <Route
-              path="/MyGoals/:parentId"
+              path="/goals/:parentId"
               element={
                 <ActiveGoalProvider>
                   <MyGoals />
@@ -99,7 +102,7 @@ const App = () => {
               }
             />
             <Route
-              path="/MyGoals/:parentId/:activeGoalId"
+              path="/goals/:parentId/:activeGoalId"
               element={
                 <ActiveGoalProvider>
                   <MyGoals />
@@ -130,6 +133,7 @@ const App = () => {
                 </PartnerProvider>
               }
             />
+            {/* <Route path="/goals" element={<GoalsPage />} /> */}
 
             <Route
               path="/MyJournal"
