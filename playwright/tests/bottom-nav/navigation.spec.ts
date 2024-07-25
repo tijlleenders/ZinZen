@@ -15,7 +15,7 @@ test.describe("BottomNavbar", () => {
 
   test("should navigate to MyGoals when Goals button is clicked", async ({ page }) => {
     await page.getByRole("button", { name: "Goals" }).click();
-    await expect(page).toHaveURL("http://127.0.0.1:3000/MyGoals");
+    await expect(page).toHaveURL("http://127.0.0.1:3000/goals");
   });
 
   test("should navigate to MyJournal when Journal button is clicked", async ({ page }) => {
