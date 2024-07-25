@@ -9,7 +9,15 @@ interface TriangleIconProps {
 
 const TriangleIcon: React.FC<TriangleIconProps> = ({ color, borderWidth, size, borderColor }) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill={color} opacity={50} viewBox="0 0 96 99">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      fill={color}
+      opacity={50}
+      viewBox="0 0 96 99"
+      style={{ marginRight: -10 }}
+    >
       <g clipPath="url(#clip0_3_3406)">
         <path
           fillOpacity={0.2}
