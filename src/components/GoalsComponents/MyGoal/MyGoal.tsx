@@ -22,7 +22,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
   const { title } = goal;
-  const titleContainsVideoLink = title.includes("youtube") || title.includes("peertube");
+  const titleContainsVideoLink = title.includes("youtu") || title.includes("peertube");
 
   useEffect(() => {
     const timer = setTimeout(() => {
