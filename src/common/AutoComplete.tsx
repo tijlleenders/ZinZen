@@ -18,32 +18,40 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   placeholder,
 }) => {
   const [autocompleteValue, setAutocompleteValue] = useState("");
+  const [isSuggestionVisible, setIsSuggestionVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
+  const suggestionRef = useRef<HTMLButtonElement>(null);
+
+  // Adjust input width based on the span width
+  useEffect(() => {
+    if (inputRef.current && spanRef.current) {
+      inputRef.current.style.width = `${spanRef.current.offsetWidth + 2}px`;
+    }
+  }, [inputvalue]);
 
   useEffect(() => {
-    const adjustInputWidth = () => {
-      if (inputRef.current && spanRef.current) {
+    setIsSuggestionVisible(!!autocompleteValue);
+  }, [autocompleteValue]);
+
+  // Adjust input width based on visibility of suggestion
+  useEffect(() => {
+    if (inputRef.current && spanRef.current) {
+      if (isSuggestionVisible) {
         inputRef.current.style.width = `${spanRef.current.offsetWidth + 2}px`;
+      } else {
+        inputRef.current.style.width = "100%";
       }
-    };
+    }
+  }, [isSuggestionVisible]);
 
-    adjustInputWidth();
-    window.addEventListener("resize", adjustInputWidth);
-
-    return () => {
-      window.removeEventListener("resize", adjustInputWidth);
-    };
-  }, [inputvalue]);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     onInputChange(value);
-
     if (value.trim() === "") {
       setAutocompleteValue("");
       return;
     }
-
     const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(value.toLowerCase()));
     const suggestion = filteredData.length > 0 ? filteredData[0] : null;
     setAutocompleteValue(suggestion ? suggestion.title.slice(value.length) : "");
@@ -76,9 +84,9 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
           {inputvalue}
         </span>
         {autocompleteValue && (
-          <span className="autocomplete-suggestion" onClick={handleSuggestionClick}>
+          <button type="button" ref={suggestionRef} className="autocomplete-suggestion" onClick={handleSuggestionClick}>
             {autocompleteValue}
-          </span>
+          </button>
         )}
       </div>
     </div>
