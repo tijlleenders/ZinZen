@@ -21,8 +21,6 @@ interface MyGoalProps {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
-  const { title } = goal;
-  const titleContainsVideoLink = title.includes("youtube") || title.includes("peertube") || title.includes("youtu");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -49,14 +47,10 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   };
 
   const handleGoalClick = () => {
-    const link = extractLinks(goal.title);
-    if (link) {
-      let url = link;
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        url = "https://" + url;
-      }
-      window.open(url, "_blank");
-      return;
+    const url = extractLinks(goal.title);
+    if (url) {
+      const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : "https://" + url;
+      window.open(finalUrl, "_blank");
     }
     const newState: ILocationState = {
       ...location.state,
@@ -106,14 +100,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         }}
       >
         <div onClickCapture={handleDropDown} {...dragAttributes} {...dragListeners}>
-          <GoalDropdown goal={goal} titleContainsVideoLink={titleContainsVideoLink} />
+          <GoalDropdown goal={goal} />
         </div>
-        <div
-          aria-hidden
-          style={titleContainsVideoLink ? { marginLeft: "-5px" } : {}}
-          className="goal-tile"
-          onClick={handleGoalClick}
-        >
+        <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
           <GoalTitle goal={goal} isImpossible={goal.impossible} />
         </div>
       </div>
