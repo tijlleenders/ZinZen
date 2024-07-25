@@ -1,16 +1,16 @@
 import React from "react";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
-import TriangleIcon from "./TriangleIcon";
+import TriangleIcon from "../../../../assets/TriangleIcon";
 
 interface GoalDropdownProps {
   goal: GoalItem;
-  titleContainsVideoLink: boolean;
 }
 
-const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, titleContainsVideoLink }) => {
-  const { sublist, goalColor, timeBudget, newUpdates } = goal;
+const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
+  const { sublist, goalColor, timeBudget, newUpdates, title } = goal;
   const hasSubGoals = sublist.length > 0;
+  const titleContainsVideoLink = title.includes("youtube") || title.includes("peertube") || title.includes("youtu");
 
   const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 89.585%, ${
     timeBudget?.perDay != null ? "transparent" : goalColor
