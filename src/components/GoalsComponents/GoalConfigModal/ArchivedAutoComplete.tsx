@@ -23,13 +23,11 @@ const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
 
   const filterData = (archivedInputValue: string, data: GoalItem[]): GoalItem[] => {
     const goalType = state?.goalType;
-    console.log("goalType: ", goalType);
-
     return data.filter((item) => {
       const isGoal = !item.timeBudget;
-
       return (
-        isGoal === (goalType === "Standard") && item.title.toLowerCase().startsWith(archivedInputValue.toLowerCase())
+        isGoal === (goalType === "Standard" || goalType === "Goal" || goalType === "Cluster") &&
+        item.title.toLowerCase().startsWith(archivedInputValue?.toLowerCase())
       );
     });
   };

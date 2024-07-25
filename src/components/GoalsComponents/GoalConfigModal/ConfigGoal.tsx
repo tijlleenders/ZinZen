@@ -1,7 +1,7 @@
 import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { AutoComplete, Slider } from "antd";
+import { Slider } from "antd";
 import { displayToast } from "@src/store";
 import { useSetRecoilState } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import ZAccordion from "@src/common/Accordion";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import useGoalActions from "@src/hooks/useGoalActions";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
@@ -30,7 +31,15 @@ const roundOffHours = (hrsValue: string) => {
   return hrsValue === "" ? "" : String(Math.min(Math.max(Math.round(Number(hrsValue)), 0), 99));
 };
 
-const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConfigMode; goal: GoalItem }) => {
+const ConfigGoal = ({
+  type,
+  initialGoal,
+  mode,
+}: {
+  type: TGoalCategory;
+  mode: TGoalConfigMode;
+  initialGoal: GoalItem;
+}) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const isEditMode = mode === "edit";
@@ -40,12 +49,14 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     parentData: { parentGoal },
   } = useParentGoalContext();
 
+  const [goal, setGoal] = useState<GoalItem>(initialGoal);
+
   let defaultColorIndex = Math.floor(Math.random() * colorPalleteList.length - 1) + 1;
-  let defaultAfterTime = isEditMode ? goal.afterTime || 9 : 9;
-  let defaultBeforeTime = isEditMode ? goal.beforeTime || 18 : 18;
+  let defaultAfterTime = isEditMode ? goal?.afterTime || 9 : 9;
+  let defaultBeforeTime = isEditMode ? goal?.beforeTime || 18 : 18;
 
   if (isEditMode) {
-    defaultColorIndex = colorPalleteList.indexOf(goal.goalColor);
+    defaultColorIndex = colorPalleteList.indexOf(goal?.goalColor);
   } else if (parentGoal) {
     defaultColorIndex = colorPalleteList.indexOf(parentGoal.goalColor);
     defaultAfterTime = parentGoal.afterTime || 18;
@@ -66,34 +77,31 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const [hints, setHints] = useState(false);
 
   useEffect(() => {
-    getGoalHintItem(goal.id).then((hintItem) => {
+    getGoalHintItem(goal?.id).then((hintItem) => {
       setHints(!!hintItem?.hint);
     });
-  }, [goal.id]);
+  }, [goal?.id]);
 
-  const [title, setTitle] = useState(goal.title);
+  const [title, setTitle] = useState(goal?.title);
   const handleTitleChange = (value: string) => {
     setTitle(value);
   };
-  const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
-  // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
-  // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
-  // const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
+  const [due, setDue] = useState(goal?.due ? new Date(goal?.due).toISOString().slice(0, 10) : "");
   const [tags, setTags] = useState({
-    on: goal.on || convertOnFilterToArray("weekdays"),
-    repeatWeekly: goal.habit === "weekly",
-    duration: goal.duration || "",
+    on: goal?.on || convertOnFilterToArray("weekdays"),
+    repeatWeekly: goal?.habit === "weekly",
+    duration: goal?.duration || "",
   });
   const numberOfDays = tags.on.length;
 
   const [afterTime, setAfterTime] = useState(defaultAfterTime);
   const [beforeTime, setBeforeTime] = useState(defaultBeforeTime);
   const timeDiff = beforeTime - afterTime;
-  const perDayBudget = (goal.timeBudget?.perDay?.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
+  const perDayBudget = (goal?.timeBudget?.perDay?.includes("-") ? goal?.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
     .split("-")
     .map((ele) => Number(ele));
   const perWeekBudget = (
-    goal.timeBudget?.perWeek?.includes("-")
+    goal?.timeBudget?.perWeek?.includes("-")
       ? goal.timeBudget.perWeek
       : `${timeDiff * numberOfDays}-${timeDiff * numberOfDays}`
   )
@@ -109,7 +117,6 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const getFinalTags = (): GoalItem => ({
     ...goal,
     due: due && due !== "" ? new Date(due).toISOString() : null,
-    // start: start && start !== "" ? new Date(start).toString() : null,
     duration: tags.duration !== "" ? `${tags.duration}` : null,
     afterTime: type === "Budget" ? afterTime : null,
     beforeTime: type === "Budget" ? beforeTime : null,
@@ -210,17 +217,46 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     transition: "transform 0.3s ease-in-out",
   };
 
-  const onSuggestionClick = (selectedGoal: GoalItem) => {
-    console.log(selectedGoal);
-    setTitle(selectedGoal.title);
-    setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
-    setAfterTime(selectedGoal.afterTime || 9);
-    setBeforeTime(selectedGoal.beforeTime || 18);
+  const onSuggestionClick = async (selectedGoal: GoalItem) => {
+    const unarchivedGoal = await unarchiveUserGoal(selectedGoal);
+    setGoal(unarchivedGoal);
+    setTitle(unarchivedGoal.title);
+    setColorIndex(colorPalleteList.indexOf(unarchivedGoal.goalColor));
+    setAfterTime(unarchivedGoal.afterTime || 9);
+    setBeforeTime(unarchivedGoal.beforeTime || 18);
     setTags({
-      on: selectedGoal.on || convertOnFilterToArray("weekdays"),
-      repeatWeekly: selectedGoal.habit === "weekly",
-      duration: selectedGoal.duration || "",
+      on: unarchivedGoal.on || convertOnFilterToArray("weekdays"),
+      repeatWeekly: unarchivedGoal.habit === "weekly",
+      duration: unarchivedGoal.duration || "",
     });
+    setDue(unarchivedGoal.due ? new Date(unarchivedGoal.due).toISOString().slice(0, 10) : "");
+
+    if (type === "Budget") {
+      if (unarchivedGoal.beforeTime == null || unarchivedGoal.afterTime == null) {
+        return;
+      }
+      const selectedPerDayBudget = (
+        unarchivedGoal.timeBudget?.perDay?.includes("-")
+          ? unarchivedGoal.timeBudget.perDay
+          : `${unarchivedGoal.beforeTime - unarchivedGoal.afterTime}-${unarchivedGoal.beforeTime - unarchivedGoal.afterTime}`
+      )
+        .split("-")
+        .map((ele) => Number(ele));
+      setPerDayHrs(selectedPerDayBudget);
+
+      const selectedNumberOfDays = unarchivedGoal.on?.length || 7;
+      const selectedPerWeekBudget = (
+        unarchivedGoal.timeBudget?.perWeek?.includes("-")
+          ? unarchivedGoal.timeBudget.perWeek
+          : `${selectedPerDayBudget[0] * selectedNumberOfDays}-${selectedPerDayBudget[1] * selectedNumberOfDays}`
+      )
+        .split("-")
+        .map((ele) => Number(ele));
+      setPerWeekHrs(selectedPerWeekBudget);
+    }
+
+    const hint = await getGoalHintItem(unarchivedGoal.id);
+    setHints(!!hint);
   };
 
   const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
@@ -235,7 +271,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       }}
       width={360}
       onCancel={async () => {
-        if (!title.trim().length) {
+        if (!title?.trim().length) {
           console.log("in");
           window.history.back();
         } else {

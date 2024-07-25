@@ -159,6 +159,7 @@ export const unarchiveChildrenGoals = async (id: string) => {
 export const unarchiveUserGoal = async (goal: GoalItem) => {
   await unarchiveChildrenGoals(goal.id);
   await unarchiveGoal(goal);
+  return goal;
 };
 
 export const removeGoal = async (goal: GoalItem) => {
