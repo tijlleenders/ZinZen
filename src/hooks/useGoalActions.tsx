@@ -115,6 +115,7 @@ const useGoalActions = () => {
 
   const copyCode = (goalTitle: string) => {
     goalTitle = removeBackTicks(goalTitle);
+    navigator.clipboard.writeText(goalTitle);
     const MAX_LENGTH = 15;
     if (goalTitle.length > MAX_LENGTH) {
       goalTitle =
@@ -124,7 +125,6 @@ const useGoalActions = () => {
           .join(" ") + "...";
     }
     goalTitle = goalTitle + " copied!";
-    navigator.clipboard.writeText(goalTitle);
     showMessage("Code copied to clipboard", goalTitle);
   };
 
