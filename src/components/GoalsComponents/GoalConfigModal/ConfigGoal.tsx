@@ -25,6 +25,7 @@ import CustomDatePicker from "./components/CustomDatePicker";
 import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./ArchivedAutoComplete";
+import useGoalStore from "@src/hooks/useGoalStore";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -147,6 +148,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       });
     }
     if (suggestedGoal) {
+      await unarchiveUserGoal(suggestedGoal);
       setSuggestedGoal(null);
     }
     navigate(pathname, { replace: true });
@@ -216,8 +218,11 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   //   transition: "transform 0.3s ease-in-out",
   // };
 
+  const { openEditMode } = useGoalStore();
+
   const onSuggestionClick = async (selectedGoal: GoalItem) => {
-    await unarchiveUserGoal(selectedGoal);
+    await openEditMode(selectedGoal);
+    // await unarchiveUserGoal(selectedGoal);
     setSuggestedGoal(selectedGoal);
     setTitle(selectedGoal.title);
     setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
