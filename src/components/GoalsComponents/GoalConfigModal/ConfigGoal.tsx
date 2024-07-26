@@ -17,6 +17,7 @@ import { TGoalConfigMode } from "@src/types";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
+import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -24,7 +25,6 @@ import CustomDatePicker from "./components/CustomDatePicker";
 import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./ArchivedAutoComplete";
-import { SuggestedGoalState } from "../../../store/SuggestedGoalState";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -35,7 +35,7 @@ const roundOffHours = (hrsValue: string) => {
 const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConfigMode; goal: GoalItem }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [suggestedGoal, setSuggestedGoal] = useRecoilState(SuggestedGoalState);
+  const [suggestedGoal, setSuggestedGoal] = useRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
   const action = isEditMode ? "Update" : "Create";
   const { updateGoal, addGoal } = useGoalActions();
