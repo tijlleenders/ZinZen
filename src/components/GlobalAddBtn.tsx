@@ -59,7 +59,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
 
   const handleAddGoal = async (type: TGoalCategory) => {
-    navigate(`/MyGoals/${parentId || "root"}?type=${type}&mode=add`, {
+    navigate(`/goals/${parentId || "root"}?type=${type}&mode=add`, {
       state: {
         ...state,
         goalType: type,
@@ -72,7 +72,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      navigate(`/MyGoals/${parentId}?addOptions=true`, { state });
+      navigate(`/goals/${parentId}?addOptions=true`, { state });
     } else if (add === "myJournal") {
       handleAddFeeling();
     }

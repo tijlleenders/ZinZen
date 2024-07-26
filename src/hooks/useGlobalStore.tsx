@@ -51,7 +51,7 @@ function useGlobalStore() {
   };
 
   const handleChangeTheme = () => {
-    navigate("/MyGoals", { state: { ...location.state, changeTheme: true } });
+    navigate("/goals", { state: { ...location.state, changeTheme: true } });
   };
 
   useEffect(() => {

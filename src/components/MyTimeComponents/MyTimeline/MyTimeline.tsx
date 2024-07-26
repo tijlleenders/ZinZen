@@ -79,7 +79,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       openGoalId = tmpGoal.parentGoalId;
     }
     goalsHistory.reverse();
-    navigate("/MyGoals", {
+    navigate("/goals", {
       state: {
         ...locationState,
         from: "",
