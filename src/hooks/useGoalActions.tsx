@@ -118,11 +118,11 @@ const useGoalActions = () => {
     navigator.clipboard.writeText(goalTitle);
     const MAX_LENGTH = 15;
     if (goalTitle.length > MAX_LENGTH) {
-      goalTitle = `${goalTitle
-        .split(" ")
-        .slice(0, MAX_LENGTH - 1)
-        .join(" ")} + "..."
-      `;
+      goalTitle =
+        `${goalTitle
+          .split(" ")
+          .slice(0, MAX_LENGTH - 1)
+          .join(" ")}` + "...";
     }
     goalTitle = `${goalTitle} copied!`;
     showMessage("Code copied to clipboard", goalTitle);
