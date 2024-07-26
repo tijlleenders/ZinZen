@@ -10,10 +10,10 @@ import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { extractLinks, isGoalCode } from "@src/utils/patterns";
+import useGoalActions from "@src/hooks/useGoalActions";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import useGoalActions from "@src/hooks/useGoalActions";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
