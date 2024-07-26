@@ -16,6 +16,7 @@ import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
+import useGoalStore from "@src/hooks/useGoalStore";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
@@ -25,7 +26,6 @@ import CustomDatePicker from "./components/CustomDatePicker";
 import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./ArchivedAutoComplete";
-import useGoalStore from "@src/hooks/useGoalStore";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -222,7 +222,6 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
 
   const onSuggestionClick = async (selectedGoal: GoalItem) => {
     await openEditMode(selectedGoal);
-    // await unarchiveUserGoal(selectedGoal);
     setSuggestedGoal(selectedGoal);
     setTitle(selectedGoal.title);
     setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
@@ -258,7 +257,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       setPerWeekHrs(selectedPerWeekBudget);
     }
     const hint = await getGoalHintItem(selectedGoal.id);
-    setHints(!!hint);
+    setHints(hint?.hint || false);
   };
 
   const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
