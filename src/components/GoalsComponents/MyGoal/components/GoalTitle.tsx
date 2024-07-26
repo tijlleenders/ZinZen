@@ -1,5 +1,5 @@
 import React from "react";
-import { replaceUrlsWithText } from "@src/utils/patterns";
+import { removeBackTicks, replaceUrlsWithText } from "@src/utils/patterns";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import { useRecoilState } from "recoil";
@@ -26,6 +26,7 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
       {isImpossible && "! "}
       {textParts.map((part) => {
         const match = part.match(/zURL-(\d+)/);
+        part = removeBackTicks(part); //if it contains backticks, strip it
         if (match) {
           const urlIndex = parseInt(match[1], 10);
           const url = urlsWithIndexes[urlIndex];
