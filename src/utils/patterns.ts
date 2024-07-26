@@ -47,3 +47,7 @@ export const containsLink = (text: string) => {
   const urlPattern = /(?:https?:\/\/|www\.)?[^\s/$.?#].[^\s]*/g;
   return urlPattern.test(text);
 };
+
+export const isGoalCode = (text: string) => {
+  return text.startsWith("```") && text.endsWith("```");
+};
