@@ -1,9 +1,9 @@
 import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { AutoComplete, Slider } from "antd";
+import { Slider } from "antd";
 import { displayToast } from "@src/store";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
@@ -16,6 +16,7 @@ import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
+import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -23,6 +24,7 @@ import CustomDatePicker from "./components/CustomDatePicker";
 import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./ArchivedAutoComplete";
+import { SuggestedGoalState } from "../../../store/SuggestedGoalState";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -33,6 +35,7 @@ const roundOffHours = (hrsValue: string) => {
 const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConfigMode; goal: GoalItem }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [suggestedGoal, setSuggestedGoal] = useRecoilState(SuggestedGoalState);
   const isEditMode = mode === "edit";
   const action = isEditMode ? "Update" : "Create";
   const { updateGoal, addGoal } = useGoalActions();
@@ -143,6 +146,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
         extra: "",
       });
     }
+    if (suggestedGoal) {
+      setSuggestedGoal(null);
+    }
     navigate(pathname, { replace: true });
   };
 
@@ -205,13 +211,14 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     handleWeekSliderChange(perWeekHrs);
   }, [perDayHrs, setPerDayHrs, tags.on]);
 
-  const modalStyle = {
-    transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
-    transition: "transform 0.3s ease-in-out",
-  };
+  // const modalStyle = {
+  //   transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
+  //   transition: "transform 0.3s ease-in-out",
+  // };
 
-  const onSuggestionClick = (selectedGoal: GoalItem) => {
-    console.log(selectedGoal);
+  const onSuggestionClick = async (selectedGoal: GoalItem) => {
+    await unarchiveUserGoal(selectedGoal);
+    setSuggestedGoal(selectedGoal);
     setTitle(selectedGoal.title);
     setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
     setAfterTime(selectedGoal.afterTime || 9);
@@ -221,6 +228,32 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       repeatWeekly: selectedGoal.habit === "weekly",
       duration: selectedGoal.duration || "",
     });
+    setDue(selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "");
+    if (type === "Budget") {
+      if (selectedGoal.beforeTime == null || selectedGoal.afterTime == null) {
+        return;
+      }
+      const selectedPerDayBudget = (
+        selectedGoal.timeBudget?.perDay?.includes("-")
+          ? selectedGoal.timeBudget.perDay
+          : `${selectedGoal.beforeTime - selectedGoal.afterTime}-${selectedGoal.beforeTime - selectedGoal.afterTime}`
+      )
+        .split("-")
+        .map((ele) => Number(ele));
+      setPerDayHrs(selectedPerDayBudget);
+
+      const selectedNumberOfDays = selectedGoal.on?.length || 7;
+      const selectedPerWeekBudget = (
+        selectedGoal.timeBudget?.perWeek?.includes("-")
+          ? selectedGoal.timeBudget.perWeek
+          : `${selectedPerDayBudget[0] * selectedNumberOfDays}-${selectedPerDayBudget[1] * selectedNumberOfDays}`
+      )
+        .split("-")
+        .map((ele) => Number(ele));
+      setPerWeekHrs(selectedPerWeekBudget);
+    }
+    const hint = await getGoalHintItem(selectedGoal.id);
+    setHints(!!hint);
   };
 
   const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
@@ -236,8 +269,8 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       width={360}
       onCancel={async () => {
         if (!title.trim().length) {
-          console.log("in");
           window.history.back();
+          setSuggestedGoal(null);
         } else {
           await handleSave();
         }

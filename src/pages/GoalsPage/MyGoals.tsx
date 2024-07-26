@@ -15,7 +15,6 @@ import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
-import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import { TrashItem } from "@src/models/TrashItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
@@ -28,6 +27,7 @@ import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/Regula
 import { goalCategories } from "@src/constants/myGoals";
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
+import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -49,6 +49,7 @@ export const MyGoals = () => {
 
   const { goal: activeGoal } = useActiveGoalContext();
 
+  const suggestedGoal = useRecoilValue(suggestedGoalState);
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -113,7 +114,7 @@ export const MyGoals = () => {
         {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {goalCategories.includes(goalType) && (
-          <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
+          <ConfigGoal type={goalType} goal={suggestedGoal || activeGoal || createGoalObjectFromTags()} mode={mode} />
         )}
 
         <div className="myGoals-container">
