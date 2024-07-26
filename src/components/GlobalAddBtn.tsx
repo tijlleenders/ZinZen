@@ -83,7 +83,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (add === "myGoals" || state.displayPartnerMode) {
-      navigate(`/MyGoals/${parentId}?addOptions=true`, { state });
+      navigate(`/goals/${parentId}?addOptions=true`, { state });
     }
   };
   const { handlers } = useLongPress({
