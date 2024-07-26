@@ -49,7 +49,7 @@ export const containsLink = (text: string) => {
 };
 
 export const isGoalCode = (text: string) => {
-  return text.startsWith("```") && text.endsWith("```");
+  return text.startsWith("```") || text.endsWith("```");
 };
 export const removeBackTicks = (text: string) => {
   return text.replace(/```/g, "");
