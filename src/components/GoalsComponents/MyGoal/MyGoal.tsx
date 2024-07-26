@@ -70,7 +70,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
       ...location.state,
       activeGoalId: goal.id,
       goalsHistory: [
-        ...(location.state.goalsHistory || []),
+        ...subGoalHistory,
         {
           goalID: goal.id || "root",
           goalColor: goal.goalColor || "#ffffff",
