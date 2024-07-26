@@ -26,7 +26,7 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
       {isImpossible && "! "}
       {textParts.map((part) => {
         const match = part.match(/zURL-(\d+)/);
-        part = removeBackTicks(part); //if it contains backticks, strip it
+        part = removeBackTicks(part); // if it contains backticks, strip it
         if (match) {
           const urlIndex = parseInt(match[1], 10);
           const url = urlsWithIndexes[urlIndex];

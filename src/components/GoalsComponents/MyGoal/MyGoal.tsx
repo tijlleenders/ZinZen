@@ -9,10 +9,10 @@ import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { extractLinks, isGoalCode } from "@src/utils/patterns";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import { extractLinks, isGoalCode } from "@src/utils/patterns";
 import useGoalActions from "@src/hooks/useGoalActions";
 
 interface MyGoalProps {
