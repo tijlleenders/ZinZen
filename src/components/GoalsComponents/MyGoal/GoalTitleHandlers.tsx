@@ -28,7 +28,7 @@ const useHandler = (action: Action, ariaLabelPrefix: string, displayText: string
       type="button"
       role={ariaLabelPrefix === "Call" ? "button" : "link"}
       tabIndex={0}
-      style={{ background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
+      style={{ background: "none", border: "none", cursor: "pointer", textDecoration: "underline", padding: 0 }}
       onClick={handleClick}
       onKeyDown={handleKeyPress}
       aria-label={ariaLabel}
