@@ -12,11 +12,11 @@ import { feelingsEmojis } from "@src/constants/FeelingsList";
 import noteIcon from "@assets/images/noteIcon.svg";
 import deleteIcon from "@assets/images/deleteIcon.svg";
 
-const ActionBtn = ({ icon, handleClick }: { icon: string; handleClick: () => void }) => {
+const ActionBtn = ({ icon, handleClick, label }: { icon: string; handleClick: () => void; label: string }) => {
   const darkMode = useRecoilValue(darkModeState);
   return (
-    <button type="button" className="simple" onClick={handleClick}>
-      <img alt="" className={`${darkMode ? "dark-svg" : ""}`} src={icon} />
+    <button aria-label={label} type="button" className="simple" onClick={handleClick}>
+      <img alt="Delete" className={`${darkMode ? "dark-svg" : ""}`} src={icon} />
     </button>
   );
 };
@@ -56,13 +56,14 @@ const Feeling = ({ data }: { data: IFeelingItem }) => {
         </div>
       </div>
       <div className="d-flex justify-fe gap-16">
-        <ActionBtn icon={noteIcon} handleClick={handleJournalClick} />
+        <ActionBtn icon={noteIcon} handleClick={handleJournalClick} label="Add Note" />
         <ActionBtn
           icon={deleteIcon}
           handleClick={async () => {
             await deleteFeeling(id!);
             queryClient.invalidateQueries("feelings");
           }}
+          label="Delete Feeling"
         />
       </div>
     </button>

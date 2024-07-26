@@ -25,6 +25,7 @@ import "./Header.scss";
 const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const { t } = useTranslation();
   const location = useLocation();
+
   const navigate = useNavigate();
   const setShowToast = useSetRecoilState(displayToast);
 
@@ -40,8 +41,8 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
 
   const handlePartner = async () => {
     setIsFlipping(true);
-    const list = await getAllContacts();
-    if (list.length === 0) {
+    const partners = await getAllContacts();
+    if (partners.length === 0) {
       setShowToast({
         open: true,
         message: "Do you have a partner?",
@@ -49,19 +50,14 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       });
       return;
     }
-    if (showPartnerMode) {
-      window.history.back();
-    } else {
-      if (partnerModeTour) {
-        setPartnerModeTour(false);
-      }
-      navigate("/MyGoals", {
-        state: {
-          displayPartnerMode: true,
-          displayPartner: list[0],
-        },
-      });
+    if (partnerModeTour) {
+      setPartnerModeTour(false);
     }
+    if (location.pathname.split("/")[1] === "partners") {
+      navigate("/goals", { replace: true });
+      return;
+    }
+    navigate(`/partners/${partners[0].id}/goals`);
   };
   const handlePopState = () => {
     const locationState = location.state || {};

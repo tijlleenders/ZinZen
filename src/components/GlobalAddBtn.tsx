@@ -16,6 +16,7 @@ import { themeSelectionMode } from "@src/store/ThemeState";
 import "./index.scss";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
+import useLongPress from "@src/hooks/useLongPress";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -30,6 +31,7 @@ const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disable
       type="button"
       className="add-goal-pill-btn"
       style={{ right: 35, bottom, ...(disabled ? { opacity: 0.25, pointerEvents: "none" } : {}) }}
+      onContextMenu={(e) => e.preventDefault()}
       onClick={(e) => {
         e.stopPropagation();
         handleClick();
@@ -58,25 +60,40 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
 
-  const handleAddGoal = async (type: TGoalCategory) => {
-    navigate(`/MyGoals/${parentId || "root"}?type=${type}&mode=add`, {
+  const handleAddGoal = async (type: TGoalCategory, replaceCurrentRoute = true) => {
+    navigate(`/goals/${parentId || "root"}?type=${type}&mode=add`, {
       state: {
         ...state,
         goalType: type,
       },
-      replace: true,
+      replace: replaceCurrentRoute,
     });
   };
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleGlobalAddClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (themeSelection) {
       window.history.back();
     } else if (add === "myGoals" || state.displayPartnerMode) {
-      navigate(`/MyGoals/${parentId}?addOptions=true`, { state });
+      handleAddGoal("Standard", false);
     } else if (add === "myJournal") {
       handleAddFeeling();
     }
   };
+
+  const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    if (add === "myGoals" || state.displayPartnerMode) {
+      navigate(`/goals/${parentId}?addOptions=true`, { state });
+    }
+  };
+  const { handlers } = useLongPress({
+    onLongPress: handleLongPress,
+    onClick: handleGlobalAddClick,
+    longPressTime: 200,
+  });
+
+  const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
+
   if (searchParams?.get("addOptions")) {
     return (
       <>
@@ -108,7 +125,16 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     );
   }
   return (
-    <button type="button" onClick={handleClick} className="global-addBtn">
+    <button
+      type="button"
+      className="global-addBtn"
+      onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onContextMenu={(e) => e.preventDefault()}
+    >
       <img
         style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
         src={themeSelection ? correct : GlobalAddIcon}

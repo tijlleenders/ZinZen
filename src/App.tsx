@@ -7,9 +7,9 @@ import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
 
-import GoalsPage from "@pages/GoalsPage/GoalsPage";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
+import PartnerGoals from "@pages/GoalsPage/PartnerGoals";
 import BackupRestoreModal from "@components/BackupRestoreModal";
 
 import { FAQPage } from "@pages/FAQPage/FAQPage";
@@ -18,7 +18,9 @@ import { LandingPage } from "@pages/LandingPage/LandingPage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
 import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
+
 import { MyGoals } from "@pages/GoalsPage/MyGoals";
+import { PartnerProvider } from "./contexts/partner-context";
 import { ActiveGoalProvider } from "./contexts/activeGoal-context";
 
 import useApp from "./hooks/useApp";
@@ -83,7 +85,7 @@ const App = () => {
             )}
             <Route path="/Feedback" element={<FeedbackPage />} />
             <Route
-              path="/MyGoals"
+              path="*"
               element={
                 <ActiveGoalProvider>
                   <MyGoals />
@@ -91,7 +93,7 @@ const App = () => {
               }
             />
             <Route
-              path="/MyGoals/:parentId"
+              path="/goals/:parentId"
               element={
                 <ActiveGoalProvider>
                   <MyGoals />
@@ -99,15 +101,38 @@ const App = () => {
               }
             />
             <Route
-              path="/MyGoals/:parentId/:activeGoalId"
+              path="/goals/:parentId/:activeGoalId"
               element={
                 <ActiveGoalProvider>
                   <MyGoals />
                 </ActiveGoalProvider>
               }
             />
-
-            {/* <Route path="/MyGoals" element={<GoalsPage />} /> */}
+            <Route
+              path="partners/:partnerId/goals"
+              element={
+                <PartnerProvider>
+                  <PartnerGoals />
+                </PartnerProvider>
+              }
+            />
+            <Route
+              path="partners/:partnerId/goals/:parentId"
+              element={
+                <PartnerProvider>
+                  <PartnerGoals />
+                </PartnerProvider>
+              }
+            />
+            <Route
+              path="partners/:partnerId/goals/:parentId/:activeGoalId"
+              element={
+                <PartnerProvider>
+                  <PartnerGoals />
+                </PartnerProvider>
+              }
+            />
+            {/* <Route path="/goals" element={<GoalsPage />} /> */}
 
             <Route
               path="/MyJournal"
@@ -117,7 +142,6 @@ const App = () => {
                 </AppLayout>
               }
             />
-            <Route path="*" element={<GoalsPage />} />
             <Route path="/ZinZenFAQ" element={<FAQPage />} />
             <Route path="/invite/:id" element={<InvitePage />} />
             <Route path="/Invest" element={<InvestPage />} />

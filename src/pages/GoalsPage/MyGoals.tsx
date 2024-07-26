@@ -24,12 +24,15 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
 import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
-import { goalCategories } from "@src/constants/myGoals";
+
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
+import { goalCategories } from "@src/constants/goals";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
+
+import "./GoalsPage.scss";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -96,10 +99,6 @@ export const MyGoals = () => {
       refreshActiveGoals();
     }
   }, [action]);
-
-  // useEffect(() => {
-  //   refreshActiveGoals();
-  // }, [showShareModal, showAddGoal, showChangesModal, showUpdateGoal, showSuggestionModal, showChangesModal]);
 
   useEffect(() => {
     if (parentId === "root") {

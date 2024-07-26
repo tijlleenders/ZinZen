@@ -4,8 +4,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
 import { darkModeState, displayConfirmation } from "@src/store";
-import { getConfirmButtonText } from "@src/constants/myGoals";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
+import { getConfirmButtonText } from "@src/constants/goals";
 import ZModal from "./ZModal";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick, handleClose }) => {
