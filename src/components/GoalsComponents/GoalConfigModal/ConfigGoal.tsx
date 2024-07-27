@@ -288,17 +288,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       >
         <div style={{ textAlign: "left" }} className="header-title">
           <ColorPicker colorIndex={colorIndex} setColorIndex={setColorIndex} />
-          {/* <input
-            className="ordinary-element"
-            id="title-field"
-            placeholder={t(`${type !== "Budget" ? "goal" : "budget"}Title`)}
-            value={t(`${title}`)}
-            onChange={(e) => setTitle(e.target.value)}
-            inputMode="text"
-          /> */}
           <ArchivedAutoComplete
             placeholder={titlePlaceholder}
-            inputvalue={title}
+            inputValue={title}
             onGoalSelect={onSuggestionClick}
             onInputChange={handleTitleChange}
           />

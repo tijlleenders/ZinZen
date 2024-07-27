@@ -26,7 +26,7 @@ export interface ILocationState {
   displayParticipants?: string; // id of goal whose participants have to be displayed
   displayPartner?: ContactItem; // to show this partner
   displayChanges?: GoalItem; // to show the changes under goal
-  goalType?: "Budget" | "Goal" | "Cluster" | "Standard"; // characteristic of the goal
+  goalType?: "Budget" | "Goal"; // characteristic of the goal
   displayFocus?: boolean; // whether to show the focus component
   allowAddingBudgetGoal?: boolean; // whether to allow adding a budget goal
 }

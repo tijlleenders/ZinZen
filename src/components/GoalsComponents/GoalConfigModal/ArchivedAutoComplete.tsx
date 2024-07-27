@@ -6,32 +6,26 @@ import AutocompleteComponent from "@src/common/AutoComplete";
 interface ArchivedAutoCompleteProps {
   onGoalSelect: (goal: GoalItem) => void;
   onInputChange: (value: string) => void;
-  inputvalue: string;
+  inputValue: string;
   placeholder: string;
 }
 
 const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
   onGoalSelect,
   onInputChange,
-  inputvalue,
+  inputValue,
   placeholder,
 }) => {
   const archivedGoals = useArchivedGoals();
 
-  const filterData = (archivedInputValue: string, data: GoalItem[]): GoalItem[] => {
-    return data.filter((item) => {
-      return item.title.toLowerCase().startsWith(archivedInputValue.toLowerCase());
-    });
-  };
-
-  const filteredGoals = filterData(inputvalue, archivedGoals);
+  const filteredGoals = archivedGoals.filter((item) => item.title.toLowerCase().startsWith(inputValue.toLowerCase()));
 
   return (
     <AutocompleteComponent
-      inputvalue={inputvalue}
+      inputvalue={inputValue}
       data={filteredGoals}
       onSuggestionClick={onGoalSelect}
-      onInputChange={(value) => onInputChange(value)}
+      onInputChange={onInputChange}
       placeholder={placeholder}
     />
   );
