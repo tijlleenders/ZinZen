@@ -18,7 +18,7 @@ import "./MyGoalActions.scss";
 
 const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
-  const { handleUpdateGoal, handleConfirmation } = useGoalStore();
+  const { openEditMode, handleConfirmation } = useGoalStore();
   const confirmActionCategory = "goal";
 
   const showConfirmation = useRecoilValue(displayConfirmation);
@@ -42,7 +42,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
     window.history.go(confirmationAction ? -2 : -1);
   };
 
-  const openConfirmationPopUp = async (action: confirmAction) => {
+  const openConfirmationPopUp = async (action: TConfirmAction) => {
     const { actionCategory, actionName } = action;
     if (actionCategory === "goal" && showConfirmation.goal[action.actionName]) {
       handleConfirmation();
@@ -58,7 +58,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
         style={{ textAlign: "left" }}
         className="header-title"
         onClickCapture={() => {
-          handleUpdateGoal(goal.id, !!goal.timeBudget?.perDay);
+          openEditMode(goal);
         }}
       >
         <p className="ordinary-element" id="title-field">
@@ -72,7 +72,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
           className="goal-action-archive shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "addHint" });
+            await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "addHint" });
           }}
         >
           <ActionDiv label={t("Add Hint")} icon="Add" />
@@ -82,7 +82,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
           className="goal-action-archive shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "deleteHint" });
+            await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "deleteHint" });
           }}
         >
           <ActionDiv label={t("Delete Hint")} icon="Delete" />
@@ -92,7 +92,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
           className="goal-action-archive shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "restore" });
+            await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "restore" });
           }}
         >
           <ActionDiv

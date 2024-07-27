@@ -15,6 +15,7 @@ const Backdrop: React.FC<IBackdrop> = ({ customStyle, opacity, onClick }) => (
       ...(customStyle || {}),
     }}
     onClick={onClick}
+    onContextMenu={(e) => e.preventDefault()}
   />
 );
 

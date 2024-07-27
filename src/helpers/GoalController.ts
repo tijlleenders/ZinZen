@@ -16,24 +16,11 @@ import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
-export const createGoal = async (
-  parentGoalId: string,
-  goalTags: GoalItem,
-  goalTitle: string,
-  goalColor: string,
-  ancestors: string[],
-  goalHint: boolean,
-) => {
+export const createGoal = async (goalTags: GoalItem, parentGoalId: string, ancestors: string[], goalHint: boolean) => {
   const level = ancestors.length;
   let newGoal = createGoalObjectFromTags({
     ...goalTags,
-    title: goalTitle
-      .split(" ")
-      .filter((ele: string) => ele !== "")
-      .join(" "),
     language: getSelectedLanguage(),
-    parentGoalId,
-    goalColor,
   });
 
   if (goalHint) {
@@ -66,22 +53,8 @@ export const createGoal = async (
   return { parentGoal: null };
 };
 
-export const modifyGoal = async (
-  goalId: string,
-  goalTags: GoalItem,
-  goalTitle: string,
-  goalColor: string,
-  ancestors: string[],
-  goalHint: boolean,
-) => {
-  const hintsPromise = getHintsFromAPI({
-    ...goalTags,
-    title: goalTitle
-      .split(" ")
-      .filter((ele: string) => ele !== "")
-      .join(" "),
-    goalColor,
-  });
+export const modifyGoal = async (goalId: string, goalTags: GoalItem, ancestors: string[], goalHint: boolean) => {
+  const hintsPromise = getHintsFromAPI(goalTags);
   if (goalHint) {
     hintsPromise
       .then((hints) => updateHintItem(goalTags.id, goalHint, hints))
@@ -89,15 +62,8 @@ export const modifyGoal = async (
   } else {
     updateHintItem(goalTags.id, goalHint, []);
   }
-
-  await updateGoal(goalId, {
-    ...goalTags,
-    title: goalTitle
-      .split(" ")
-      .filter((ele: string) => ele !== "")
-      .join(" "),
-    goalColor,
-  });
+  console.log(goalTags);
+  await updateGoal(goalId, goalTags);
   sendUpdatedGoal(goalId, ancestors);
 };
 

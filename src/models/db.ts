@@ -22,7 +22,7 @@ export class ZinZenDB extends Dexie {
 
   goalsCollection!: Table<GoalItem, string>;
 
-  contactsCollection!: Table<ContactItem, number>;
+  contactsCollection!: Table<ContactItem, string>;
 
   sharedWMCollection!: Table<GoalItem, string>;
 

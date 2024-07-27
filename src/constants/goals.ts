@@ -1,4 +1,8 @@
+import { TGoalCategory } from "@src/models/GoalItem";
+
 export const goalConfigTags = ["Duration", "Due date", "Filter", "Habit", "Time budget", "Start date"];
+
+export const goalCategories: TGoalCategory[] = ["Standard", "Budget", "Cluster"];
 
 export const getHeadingOfTag = (tagName: string, warningMessage = false) => {
   let heading = "";

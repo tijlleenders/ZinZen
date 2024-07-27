@@ -1,11 +1,11 @@
 import { atom } from "recoil";
-import { confirmActionState } from "@src/Interfaces/IPopupModals";
+import { TConfirmActionState } from "@src/Interfaces/IPopupModals";
 import ContactItem from "@src/models/ContactItem";
 import { isJSONParsable } from "@src/utils/patterns";
 import { darkModeState } from "./DarkModeState";
 import { languageSelectionState } from "./LanguageSelectionState";
 
-const defaultConfirmationObj: confirmActionState = {
+const defaultConfirmationObj: TConfirmActionState = {
   open: false,
   goal: {
     archive: true,

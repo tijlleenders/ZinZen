@@ -7,21 +7,6 @@ import { getInboxItem } from "@src/api/InboxAPI";
 import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
-// export const createSentFromTags = (goal: GoalItem) =>
-//   `${goal.duration ? `${goal.duration} hours ` : ""} ${goal.on.length > 0 ? `on ${goal.on.join(" ")}\n` : ""}${
-//     goal.beforeTime && goal.afterTime
-//       ? `between ${goal.afterTime}-${goal.beforeTime} `
-//       : goal.beforeTime
-//       ? `before ${goal.beforeTime} `
-//       : goal.afterTime
-//       ? `after ${goal.afterTime} `
-//       : ""
-//   }${goal.timeBudget.perDay ? `${goal.timeBudget.perDay} h / day ` : ""} ${
-//     goal.timeBudget.perWeek ? `${goal.timeBudget.perDay ? "," : ""}${goal.timeBudget.perWeek} h / week` : ""
-//   }${goal.start ? `starts ${new Date(goal.start).toDateString().slice(4)}\n` : ""} ${
-//     goal.due ? `end ${new Date(goal.due).toDateString().slice(4)}\n` : ""
-//   }${goal.habit && goal.habit === "weekly" ? "every week\n" : ""}`;
-
 export const formatTagsToText = (_goal: GoalItem) => {
   const goal = { ..._goal };
   let startDate = new Date();
@@ -63,11 +48,10 @@ export const formatTagsToText = (_goal: GoalItem) => {
   response.timeBudget = JSON.stringify(goal.timeBudget);
   response.link = goal.link ? ` ${goal.link}` : "";
   const { title, duration, start, due, habit, on, timeBudget, link, timing } = response;
-  console.log("🚀 ~ file: GoalProcessor.ts:68 ~ formatTagsToText ~ timeBudget:", timeBudget);
   return { inputText: title + duration + start + due + timing + on + timeBudget + habit + link, ...response };
 };
 
-export const createGoalObjectFromTags = (obj: object) => {
+export const createGoalObjectFromTags = (obj: object = {}) => {
   const newGoal: GoalItem = {
     id: uuidv4(),
     title: "",
@@ -146,8 +130,8 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
         "id" in goalAtPriority
           ? goalAtPriority.id
           : typeAtPriority === "subgoals"
-          ? goalAtPriority.goal.parentGoalId
-          : goalAtPriority.goal.id;
+            ? goalAtPriority.goal.parentGoalId
+            : goalAtPriority.goal.id;
 
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
         return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };

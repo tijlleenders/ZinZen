@@ -14,7 +14,7 @@
   border-radius: 0.5rem;
   box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.25);
 
-  button {
+  label {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -27,8 +27,14 @@
     border-bottom: 1px solid var(--default-border-color);
   }
 
+  .focused {
+    border: var(--icon-grad-2) 2px solid;
+    border-radius: 4px;
+  }
+
   input[type="radio"] {
     accent-color: #cd6e51 !important;
+    outline: none;
   }
 
   .selected {

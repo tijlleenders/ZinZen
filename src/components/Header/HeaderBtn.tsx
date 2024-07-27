@@ -14,7 +14,7 @@ const HeaderBtn = ({ path, alt }: { path: string; alt: string }) => {
     if (alt === "zinzen hints") {
       setShowToast({ open: true, message: "Coming soon...", extra: "" });
     } else if (alt === "zinzen search") {
-      navigate("/MyGoals", { state: { ...state, displaySearch: true } });
+      navigate("/goals", { state: { ...state, displaySearch: true } });
     } else if (alt === "light mode") {
       localStorage.setItem("darkMode", darkModeStatus ? "off" : "on");
       setDarkModeStatus(!darkModeStatus);

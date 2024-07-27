@@ -51,7 +51,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
         if (currentPage !== "") navigate("/", { state: newLocationState });
       } else if (to === "MyGoals") {
         if (currentPage !== "MyGoals") {
-          navigate("/MyGoals", { state: newLocationState });
+          navigate("/goals", { state: newLocationState });
         } else if (subGoalHistory.length > 0) {
           window.history.go(-subGoalHistory.length);
         }

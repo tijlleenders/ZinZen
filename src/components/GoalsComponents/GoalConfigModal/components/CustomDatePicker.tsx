@@ -3,13 +3,13 @@ import { Select } from "antd";
 import { useTranslation } from "react-i18next";
 
 interface ICustomDatePicker {
-  label: string;
+  label?: string;
   dateValue: string;
   timeValue: number;
   handleDateChange: (value: string) => void;
-  handleTimeChange: (value: number) => void;
-  showTime: boolean;
-  disablePastDates: boolean;
+  handleTimeChange?: (value: number) => void;
+  showTime?: boolean;
+  disablePastDates?: boolean;
 }
 
 const CustomDatePicker: React.FC<ICustomDatePicker> = ({
@@ -18,8 +18,8 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
   timeValue,
   handleDateChange,
   handleTimeChange,
-  showTime = true,
-  disablePastDates = false,
+  showTime,
+  disablePastDates,
 }) => {
   const { t } = useTranslation();
 
@@ -35,15 +35,17 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
         fontSize: 12,
       }}
     >
-      <span
-        style={{
-          position: "absolute",
-          top: 0,
-          fontWeight: 500,
-        }}
-      >
-        {label}
-      </span>
+      {label && (
+        <span
+          style={{
+            position: "absolute",
+            top: 0,
+            fontWeight: 500,
+          }}
+        >
+          {label}
+        </span>
+      )}
       <input
         type="date"
         style={{

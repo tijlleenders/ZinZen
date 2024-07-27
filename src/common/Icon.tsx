@@ -657,7 +657,7 @@ const Icon: React.FC<IconProps> = ({ title, active }) => {
       );
 
     default:
-      return null;
+      return <div />;
   }
 };
 
