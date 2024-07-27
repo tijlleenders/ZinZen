@@ -57,6 +57,11 @@ const useGoalActions = () => {
   };
 
   const updateGoal = async (goal: GoalItem, hints: boolean) => {
+    const titleContainsCode = /```/.test(goal.title);
+    if (goal.sublist.length > 0 && titleContainsCode) {
+      showMessage("Action Failed!!", "Cannot update the title to include code if the goal has a subgoal.");
+      return;
+    }
     if (state.displayPartnerMode) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
