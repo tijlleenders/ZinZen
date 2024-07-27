@@ -104,7 +104,7 @@ export const MyGoals = () => {
     if (parentId === "root") {
       refreshActiveGoals();
     }
-  }, [parentId, displaySearch, activeGoals]);
+  }, [parentId, displaySearch, suggestedGoal]);
 
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
