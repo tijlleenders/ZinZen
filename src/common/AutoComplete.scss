@@ -23,13 +23,15 @@
 
   .autocomplete-suggestion {
     opacity: 0.5;
-    font-size: 1em;
+    font-size: 1.05em;
     cursor: pointer;
     white-space: nowrap;
     pointer-events: auto;
     background: none;
     border: none;
-    padding-top: 5px;
+    padding-top: 3px;
+    padding-left: 0px;
+    margin-left: -3px;
   }
 
   .hidden-span {
