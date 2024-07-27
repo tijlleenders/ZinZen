@@ -21,7 +21,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   const [isSuggestionVisible, setIsSuggestionVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
-  const suggestionRef = useRef<HTMLButtonElement>(null);
+  const suggestionRef = useRef<HTMLSpanElement>(null);
 
   // Adjust input width based on the span width
   useEffect(() => {
@@ -60,7 +60,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   const handleSuggestionClick = () => {
     const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(inputvalue.toLowerCase()));
     const suggestion = filteredData.length > 0 ? filteredData[0] : null;
-    if (suggestion) {
+    if (suggestion && suggestionRef.current) {
       onSuggestionClick(suggestion);
       onInputChange(suggestion.title);
     }
@@ -69,7 +69,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
 
   return (
     <div className="autocomplete-container">
-      <div className="autocomplete-input-wrapper">
+      <button type="button" className="autocomplete-input-wrapper" onClick={handleSuggestionClick}>
         <input
           ref={inputRef}
           type="text"
@@ -84,11 +84,11 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
           {inputvalue}
         </span>
         {autocompleteValue && (
-          <button type="button" ref={suggestionRef} className="autocomplete-suggestion" onClick={handleSuggestionClick}>
+          <span ref={suggestionRef} className="autocomplete-suggestion">
             {autocompleteValue}
-          </button>
+          </span>
         )}
-      </div>
+      </button>
     </div>
   );
 };
