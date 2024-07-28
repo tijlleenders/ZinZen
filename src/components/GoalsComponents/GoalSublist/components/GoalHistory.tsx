@@ -3,7 +3,6 @@ import { Breadcrumb } from "antd";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState } from "@src/store";
-
 import goalsIcon from "@assets/images/goalsIcon.svg";
 
 import { ISubGoalHistory, goalsHistory } from "@src/store/GoalsState";
@@ -63,7 +62,7 @@ const GoalHistory = () => {
             },
           },
           ...(subGoalHistory.length <= 3
-            ? subGoalHistory.map((goal: ISubGoalHistory, index: number) => ({
+            ? subGoalHistory.map((goal: ISubGoalHistory, index) => ({
                 title: <BreadcrumbItem goal={goal} />,
                 onClick: () => {
                   if (index === subGoalHistory.length - 1) {
@@ -73,7 +72,7 @@ const GoalHistory = () => {
                 },
               }))
             : [
-                ...subGoalHistory.slice(0, 2).map((goal: ISubGoalHistory, index: number) => ({
+                ...subGoalHistory.slice(0, 2).map((goal: ISubGoalHistory, index) => ({
                   title: <BreadcrumbItem goal={goal} />,
                   onClick: () => {
                     window.history.go(index + 1 - subGoalHistory.length);
@@ -89,7 +88,7 @@ const GoalHistory = () => {
                     window.history.back();
                   },
                 },
-                ...subGoalHistory.slice(subGoalHistory.length - 1).map((goal: ISubGoalHistory, index: number) => ({
+                ...subGoalHistory.slice(subGoalHistory.length - 1).map((goal: ISubGoalHistory, index) => ({
                   title: <BreadcrumbItem goal={goal} />,
                   onClick: () => {
                     const count = index + 1 - subGoalHistory.length;
