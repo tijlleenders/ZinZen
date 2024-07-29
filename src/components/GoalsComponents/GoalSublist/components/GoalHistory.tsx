@@ -41,6 +41,7 @@ const GoalHistory = () => {
   const location = useLocation();
   const goalsHistory = location.state?.goalsHistory ?? []; // default as an empty array if undefined.
 
+  console.log(goalsHistory);
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
