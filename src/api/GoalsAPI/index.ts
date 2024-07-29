@@ -10,7 +10,12 @@ import { deleteGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
 export const addDeletedGoal = async (goal: GoalItem) => {
   await db
     .transaction("rw", db.goalTrashCollection, async () => {
-      await db.goalTrashCollection.add({ ...goal, deletedAt: new Date().toISOString() });
+      const existingGoal = await db.goalTrashCollection.get(goal.id);
+      if (existingGoal) {
+        await db.goalTrashCollection.delete(goal.id);
+      } else {
+        await db.goalTrashCollection.add({ ...goal, deletedAt: new Date().toISOString() });
+      }
     })
     .catch((e) => {
       console.log(e.stack || e);
