@@ -26,7 +26,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const [isAnimating, setIsAnimating] = useState(true);
   const { copyCode } = useGoalActions();
   const { title } = goal;
-  const isCode = isGoalCode(title);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -62,7 +61,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : "https://" + url;
       window.open(finalUrl, "_blank");
     }
-    if (isCode) {
+    if (isGoalCode(title)) {
       copyCode(title);
       return;
     }
