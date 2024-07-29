@@ -171,12 +171,10 @@ export const addBlockedSlot = async (goalId: string, slot: { start: string; end:
 };
 export const updateBlockedSlotsInDB = async (goalId: string, newBlockedSlots: blockedSlotOfTask[]) => {
   try {
-    await db.transaction("rw", db.taskCollection, async () => {
-      const task = await db.taskCollection.where("goalId").equals(goalId).first();
-      if (task) {
-        await db.taskCollection.update(task.id, { blockedSlots: newBlockedSlots });
-      }
-    });
+    const task = await db.taskCollection.where("goalId").equals(goalId).first();
+    if (task) {
+      await db.taskCollection.update(task.id, { blockedSlots: newBlockedSlots });
+    }
   } catch (error) {
     console.error(`Error updating blocked slots for goalId ${goalId}:`, error);
   }
@@ -195,10 +193,7 @@ export const adjustNotOnBlocks = async (goals: ISchedulerInputGoal[]) => {
     let isUpdated = false;
 
     const adjustedNotOn = goal.notOn
-      .filter((block) => {
-        const blockEnd = new Date(block.end);
-        return blockEnd > today;
-      })
+      .filter((block) => new Date(block.end) > today)
       .map((block) => {
         const blockStart = new Date(block.start);
         if (blockStart < today) {
