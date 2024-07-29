@@ -21,9 +21,11 @@ export const transformIntoSchInputGoals = (
   blockedSlots: { [goalid: string]: blockedSlotOfTask[] },
 ) => {
   const inputGoalsArr: ISchedulerInputGoal[] = [];
+
   activeGoals.forEach(async (ele) => {
     const obj: ISchedulerInputGoal = { id: ele.id, title: t(ele.title), filters: {}, createdAt: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
+    const task = dbTasks[ele.id];
     // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
     // obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
     if (ele.duration) obj.minDuration = Number(ele.duration);
@@ -54,15 +56,23 @@ export const transformIntoSchInputGoals = (
         ? perWeek.split("-").map((val) => (val !== "" ? Number(val) : undefined))
         : [undefined, undefined];
 
-      const budget = {
-        minPerDay,
-        maxPerDay,
-        minPerWeek,
-        maxPerWeek,
-      };
+      if (minPerWeek !== undefined && maxPerWeek !== undefined) {
+        const skippedHours = task?.skippedHours || 0;
+        const adjustedMinPerWeek = Math.max(0, minPerWeek - skippedHours);
+        const adjustedMaxPerWeek = Math.max(0, maxPerWeek - skippedHours);
+        obj.budget = {
+          ...obj.budget,
+          minPerWeek: adjustedMinPerWeek,
+          maxPerWeek: adjustedMaxPerWeek,
+        };
+      }
 
-      if (Object.values(budget).some((val) => val !== undefined)) {
-        obj.budget = budget;
+      if (minPerDay !== undefined && maxPerDay !== undefined) {
+        obj.budget = {
+          ...obj.budget,
+          minPerDay,
+          maxPerDay,
+        };
       }
     }
     if (ele.sublist.length > 0) obj.children = ele.sublist;

@@ -139,12 +139,16 @@ export const forgetTask = async (id: string, period: string, task: ITask) => {
         if (obj.forgotToday.length > 1) {
           obj.forgotToday.sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
         }
+
+        // Calculate and update skipped hours
+        const [start, end] = period.split("-").map(Number);
+        const skippedHours = end - start;
+        obj.skippedHours = (obj.skippedHours || 0) + skippedHours;
       });
   }).catch((e) => {
     console.log(e.stack || e);
   });
 };
-
 export const getAllTasks = async () => {
   const allGoals = await db.taskCollection.toArray();
   allGoals.reverse();
