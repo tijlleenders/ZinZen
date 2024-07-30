@@ -25,7 +25,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
   const { copyCode } = useGoalActions();
-  const { title } = goal;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -56,13 +55,13 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const handleGoalClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
 
-    const url = extractLinks(title);
+    const url = extractLinks(goal.title);
     if (url) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : "https://" + url;
       window.open(finalUrl, "_blank");
     }
-    if (isGoalCode(title)) {
-      copyCode(title);
+    if (isGoalCode(goal.title)) {
+      copyCode(goal.title);
       return;
     }
     const newState: ILocationState = {
