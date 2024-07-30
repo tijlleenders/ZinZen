@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { GoalItem } from "@src/models/GoalItem";
-import useArchivedGoals from "@src/hooks/useArchivedGoals";
 import AutocompleteComponent from "@components/GoalsComponents/GoalConfigModal/components/AutoComplete";
+import { fetchArchivedGoalByTitle } from "@src/api/GoalsAPI";
 
 interface ArchivedAutoCompleteProps {
   onGoalSelect: (goal: GoalItem) => void;
@@ -16,16 +16,27 @@ const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
   inputValue,
   placeholder,
 }) => {
-  const archivedGoals = useArchivedGoals();
+  const [filteredGoals, setFilteredGoals] = useState<GoalItem[]>([]);
 
-  const filteredGoals = archivedGoals.filter((item) => item.title.toLowerCase().startsWith(inputValue.toLowerCase()));
+  const searchArchivedGoals = useCallback(async (value: string) => {
+    const goals = await fetchArchivedGoalByTitle(value);
+    setFilteredGoals(goals);
+  }, []);
+
+  const handleInputChange = useCallback(
+    (value: string) => {
+      onInputChange(value);
+      searchArchivedGoals(value);
+    },
+    [onInputChange, searchArchivedGoals],
+  );
 
   return (
     <AutocompleteComponent
       inputvalue={inputValue}
       data={filteredGoals}
       onSuggestionClick={onGoalSelect}
-      onInputChange={onInputChange}
+      onInputChange={handleInputChange}
       placeholder={placeholder}
     />
   );
