@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
-import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
