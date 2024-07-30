@@ -12,6 +12,7 @@ import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
+import { removeBackTicks } from "@src/utils/patterns";
 
 const useGoalActions = () => {
   const { state } = useLocation();
@@ -56,6 +57,11 @@ const useGoalActions = () => {
   };
 
   const updateGoal = async (goal: GoalItem, hints: boolean) => {
+    const titleContainsCode = /```/.test(goal.title);
+    if (goal.sublist.length > 0 && titleContainsCode) {
+      showMessage("Action Failed!!", "Cannot update the title to include code if the goal has a subgoal.");
+      return;
+    }
     if (state.displayPartnerMode) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
@@ -111,6 +117,22 @@ const useGoalActions = () => {
       "Paste this link in a chat message to your partner so they can accept the request and start receiving what you shared automatically",
     );
   };
+
+  const copyCode = (goalTitle: string) => {
+    goalTitle = removeBackTicks(goalTitle);
+    navigator.clipboard.writeText(goalTitle);
+    const MAX_LENGTH = 15;
+    if (goalTitle.length > MAX_LENGTH) {
+      goalTitle =
+        `${goalTitle
+          .split(" ")
+          .slice(0, MAX_LENGTH - 1)
+          .join(" ")}` + "...";
+    }
+    goalTitle = `${goalTitle} copied!`;
+    showMessage("Code copied to clipboard", goalTitle);
+  };
+
   return {
     addGoal,
     deleteGoalAction,
@@ -119,6 +141,7 @@ const useGoalActions = () => {
     updateGoal,
     shareGoalWithRelId,
     addContact,
+    copyCode,
   };
 };
 

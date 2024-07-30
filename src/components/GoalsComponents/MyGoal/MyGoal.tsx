@@ -9,10 +9,11 @@ import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { extractLinks, isGoalCode } from "@src/utils/patterns";
+import useGoalActions from "@src/hooks/useGoalActions";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import { extractLinks } from "@src/utils/patterns";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -23,6 +24,7 @@ interface MyGoalProps {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
+  const { copyCode } = useGoalActions();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -48,11 +50,17 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     }
   };
 
-  const handleGoalClick = () => {
+  const handleGoalClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+
     const url = extractLinks(goal.title);
     if (url) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : "https://" + url;
       window.open(finalUrl, "_blank");
+    }
+    if (isGoalCode(goal.title)) {
+      copyCode(goal.title);
+      return;
     }
     const newState: ILocationState = {
       ...location.state,
@@ -103,7 +111,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         <div style={{ touchAction: "none" }} onClickCapture={handleDropDown} {...dragAttributes} {...dragListeners}>
           <GoalDropdown goal={goal} />
         </div>
-        <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
+        <div aria-hidden className="goal-tile" onClick={(e) => handleGoalClick(e)}>
           <GoalTitle goal={goal} isImpossible={goal.impossible} />
         </div>
       </div>
