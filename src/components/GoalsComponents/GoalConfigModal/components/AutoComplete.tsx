@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./AutoComplete.scss";
 import { GoalItem } from "@src/models/GoalItem";
 
@@ -23,49 +23,41 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   const spanRef = useRef<HTMLSpanElement>(null);
   const suggestionRef = useRef<HTMLSpanElement>(null);
 
-  // Adjust input width based on the span width
+  // Adjust input width
   useEffect(() => {
     if (inputRef.current && spanRef.current) {
-      inputRef.current.style.width = `${spanRef.current.offsetWidth + 2}px`;
+      inputRef.current.style.width = isSuggestionVisible ? `${spanRef.current.offsetWidth + 2}px` : "100%";
     }
-  }, [inputvalue]);
+  }, [inputvalue, isSuggestionVisible]);
 
-  useEffect(() => {
-    setIsSuggestionVisible(!!autocompleteValue);
-  }, [autocompleteValue]);
-
-  // Adjust input width based on visibility of suggestion
-  useEffect(() => {
-    if (inputRef.current && spanRef.current) {
-      if (isSuggestionVisible) {
-        inputRef.current.style.width = `${spanRef.current.offsetWidth + 2}px`;
-      } else {
-        inputRef.current.style.width = "100%";
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.target;
+      onInputChange(value);
+      if (value.trim() === "") {
+        setAutocompleteValue("");
+        setIsSuggestionVisible(false);
+        return;
       }
-    }
-  }, [isSuggestionVisible]);
+      const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(value.toLowerCase()));
+      const suggestion = filteredData.length > 0 ? filteredData[0] : null;
+      setAutocompleteValue(suggestion ? suggestion.title.slice(value.length) : "");
+      setIsSuggestionVisible(!!suggestion);
+    },
+    [onInputChange, data],
+  );
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    onInputChange(value);
-    if (value.trim() === "") {
-      setAutocompleteValue("");
-      return;
-    }
-    const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(value.toLowerCase()));
-    const suggestion = filteredData.length > 0 ? filteredData[0] : null;
-    setAutocompleteValue(suggestion ? suggestion.title.slice(value.length) : "");
-  };
-
-  const handleSuggestionClick = () => {
+  const handleSuggestionClick = useCallback(() => {
     const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(inputvalue.toLowerCase()));
+    console.log(filteredData);
+
     const suggestion = filteredData.length > 0 ? filteredData[0] : null;
     if (suggestion && suggestionRef.current) {
       onSuggestionClick(suggestion);
       onInputChange(suggestion.title);
     }
     setAutocompleteValue("");
-  };
+  }, [inputvalue, data]);
 
   return (
     <div className="autocomplete-container w-100">
