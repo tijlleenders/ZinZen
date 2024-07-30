@@ -25,7 +25,7 @@ import "./ConfigGoal.scss";
 import CustomDatePicker from "./components/CustomDatePicker";
 import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
-import ArchivedAutoComplete from "./ArchivedAutoComplete";
+import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
 
 const onDays = [...calDays.slice(1), "Sun"];
 

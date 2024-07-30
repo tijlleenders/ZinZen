@@ -1,7 +1,7 @@
 import React from "react";
 import { GoalItem } from "@src/models/GoalItem";
 import useArchivedGoals from "@src/hooks/useArchivedGoals";
-import AutocompleteComponent from "@src/common/AutoComplete";
+import AutocompleteComponent from "@components/GoalsComponents/GoalConfigModal/components/AutoComplete";
 
 interface ArchivedAutoCompleteProps {
   onGoalSelect: (goal: GoalItem) => void;
