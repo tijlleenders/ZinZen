@@ -6,12 +6,12 @@ import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
+import { extractLinks } from "@src/utils/patterns";
 
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import { extractLinks } from "@src/utils/patterns";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -50,14 +50,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const handleGoalClick = () => {
     const url = extractLinks(goal.title);
     if (url) {
-      const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : "https://" + url;
+      const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
       window.open(finalUrl, "_blank");
     }
     const newState: ILocationState = {
       ...location.state,
       activeGoalId: goal.id,
       goalsHistory: [
-        ...(location.state?.goalsHistory || []), // if goal history is undefined returns empty array
+        ...(location.state?.goalsHistory || []),
         {
           goalID: goal.id || "root",
           goalColor: goal.goalColor || "#ffffff",
