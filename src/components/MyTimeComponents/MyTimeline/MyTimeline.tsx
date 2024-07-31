@@ -128,6 +128,17 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   },
                 ]
               : [],
+          skippedHours: actionName === "Skip" ? Number(task.duration) : 0,
+          skippedTodayTimings:
+            actionName === "Skip"
+              ? [
+                  {
+                    goalid: task.goalid,
+                    start: task.start,
+                    deadline: task.deadline,
+                  },
+                ]
+              : [],
           blockedSlots: [],
         });
         // if (actionName === "Reschedule") {

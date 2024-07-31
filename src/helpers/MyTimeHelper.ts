@@ -171,9 +171,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   );
 
   getAllTasks().then((tasks) =>
-    tasks
-      .filter((task) => task.forgotToday.length > 0)
-      .map((task) => tasksForgotToday.push(...task.completedTodayTimings)),
+    tasks.filter((task) => task.skippedHours > 0).map((task) => tasksForgotToday.push(...task.skippedTodayTimings)),
   );
 
   const schedulerInput: ISchedulerInput = {

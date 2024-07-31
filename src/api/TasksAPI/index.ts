@@ -131,7 +131,7 @@ export const forgetTask = async (id: string, period: string, task: ITask) => {
       .equals(id)
       .modify((obj: TaskItem) => {
         obj.forgotToday.push(period);
-        obj.completedTodayTimings.push({
+        obj.skippedTodayTimings.push({
           goalid: task.goalid,
           start: task.start,
           deadline: task.deadline,
