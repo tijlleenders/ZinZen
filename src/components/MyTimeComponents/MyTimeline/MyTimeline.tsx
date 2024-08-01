@@ -17,13 +17,14 @@ import { GoalItem } from "@src/models/GoalItem";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import { useTranslation } from "react-i18next";
 import { displayToast, lastAction, focusTaskTitle } from "@src/store";
-import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { addBlockedSlot, addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
 import { displayReschedule } from "@src/store/TaskState";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
+import { convertDateToString } from "@src/utils";
 
 type ImpossibleTaskId = string;
 
@@ -104,6 +105,10 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+      tomorrow.setHours(0, 0, 0, 0);
       if (!taskItem) {
         console.log("task not found");
 
@@ -139,7 +144,15 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   },
                 ]
               : [],
-          blockedSlots: [],
+          blockedSlots:
+            actionName === "Skip"
+              ? [
+                  {
+                    start: convertDateToString(today),
+                    end: convertDateToString(tomorrow),
+                  },
+                ]
+              : [],
         });
         // if (actionName === "Reschedule") {
         //   setOpenReschedule({ ...task });

@@ -6,6 +6,7 @@ import { calDays, getLastDayDate } from "@src/utils";
 import { convertDateToDay } from "@src/utils/SchedulerUtils";
 import { ITask } from "@src/Interfaces/Task";
 import { getGoal } from "../GoalsAPI";
+import { convertDateToString } from "@src/utils";
 
 export const addTask = async (taskDetails: TaskItem) => {
   let newTaskId;
@@ -145,6 +146,16 @@ export const forgetTask = async (id: string, period: string, task: ITask) => {
         const skippedHours = end - start;
         obj.skippedHours = (obj.skippedHours || 0) + skippedHours;
       });
+
+    const today = new Date();
+    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+    tomorrow.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    await addBlockedSlot(task.goalid, {
+      start: convertDateToString(today),
+      end: convertDateToString(tomorrow),
+    });
   }).catch((e) => {
     console.log(e.stack || e);
   });
