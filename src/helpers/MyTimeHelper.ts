@@ -9,7 +9,7 @@ import {
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { addSchedulerRes, getFromOutbox, updateSchedulerCachedRes } from "@src/api/DumpboxAPI";
 import { getAllGoals } from "@src/api/GoalsAPI";
-import { getAllTasks, getAllBlockedTasks } from "@src/api/TasksAPI";
+import { getAllTasks, getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TCompletedTaskTiming, TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
@@ -172,7 +172,8 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   console.log("blockedSlots", blockedSlots);
 
   const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(dbTasks, activeGoals, blockedSlots);
-  schedulerInput.goals = inputGoalsArr;
+  const adjustedInputGoalsArr = await adjustNotOnBlocks(inputGoalsArr);
+  schedulerInput.goals = adjustedInputGoalsArr;
   return { dbTasks, schedulerInput };
 };
 

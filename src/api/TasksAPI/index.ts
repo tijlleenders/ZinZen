@@ -1,10 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
-import { TaskItem } from "@src/models/TaskItem";
+import { blockedSlotOfTask, TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
-import { calDays, getLastDayDate } from "@src/utils";
+import { calDays, convertDateToString, getLastDayDate } from "@src/utils";
 import { convertDateToDay } from "@src/utils/SchedulerUtils";
 import { ITask } from "@src/Interfaces/Task";
+import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
 import { getGoal } from "../GoalsAPI";
 
 export const addTask = async (taskDetails: TaskItem) => {
@@ -167,4 +168,58 @@ export const addBlockedSlot = async (goalId: string, slot: { start: string; end:
   }).catch((e) => {
     console.log(e.stack || e);
   });
+};
+export const updateBlockedSlotsInDB = async (goalId: string, newBlockedSlots: blockedSlotOfTask[]) => {
+  try {
+    await db.transaction("rw", db.taskCollection, async () => {
+      const task = await db.taskCollection.where("goalId").equals(goalId).first();
+      if (task) {
+        await db.taskCollection.update(task.id, { blockedSlots: newBlockedSlots });
+      }
+    });
+  } catch (error) {
+    console.error(`Error updating blocked slots for goalId ${goalId}:`, error);
+  }
+};
+
+export const adjustNotOnBlocks = async (goals: ISchedulerInputGoal[]) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const updatePromises: Promise<void>[] = [];
+
+  const adjustedGoals = goals.map((goal) => {
+    if (!goal.notOn || goal.notOn.length === 0) {
+      return goal;
+    }
+
+    let isUpdated = false;
+
+    const adjustedNotOn = goal.notOn
+      .filter((block) => {
+        const blockEnd = new Date(block.end);
+        return blockEnd > today;
+      })
+      .map((block) => {
+        const blockStart = new Date(block.start);
+        if (blockStart < today) {
+          isUpdated = true;
+          return {
+            ...block,
+            start: convertDateToString(today),
+          };
+        }
+        return block;
+      });
+
+    if (isUpdated || adjustedNotOn.length !== goal.notOn.length) {
+      updatePromises.push(updateBlockedSlotsInDB(goal.id, adjustedNotOn));
+    }
+    return {
+      ...goal,
+      notOn: adjustedNotOn,
+    };
+  });
+
+  await Promise.all(updatePromises);
+  return adjustedGoals;
 };
