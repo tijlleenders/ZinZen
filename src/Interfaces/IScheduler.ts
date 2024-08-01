@@ -73,6 +73,7 @@ export interface ISchedulerInput {
   goals: ISchedulerInputGoal[];
   tasksCompletedToday: TCompletedTaskTiming[];
   tasksForgotToday: TCompletedTaskTiming[];
+  globalNotOn: { [goalid: string]: blockedSlotOfTask[] }[];
 }
 
 export type TBufferValue = { nextBuffer: number; availableBuffer: number };

@@ -147,14 +147,9 @@ export const forgetTask = async (id: string, period: string, task: ITask) => {
         obj.skippedHours = (obj.skippedHours || 0) + skippedHours;
       });
 
-    const today = new Date();
-    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-    tomorrow.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-
     await addBlockedSlot(task.goalid, {
-      start: convertDateToString(today),
-      end: convertDateToString(tomorrow),
+      start: task.start,
+      end: task.deadline,
     });
   }).catch((e) => {
     console.log(e.stack || e);

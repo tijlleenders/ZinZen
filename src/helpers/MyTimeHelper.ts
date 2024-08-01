@@ -165,9 +165,27 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
   const tasksCompletedToday: TCompletedTaskTiming[] = [];
   const tasksForgotToday: TCompletedTaskTiming[] = [];
+  const globalNotOn: { [goalid: string]: blockedSlotOfTask[] }[] = [];
 
   getAllTasks().then((docs) =>
     docs.filter((doc) => doc.completedToday > 0).map((doc) => tasksCompletedToday.push(...doc.completedTodayTimings)),
+  );
+
+  getAllTasks().then((docs) =>
+    docs
+      .filter((doc) => doc.skippedHours > 0)
+      .map((doc) =>
+        doc.skippedTodayTimings.forEach((entry) =>
+          globalNotOn.push({
+            [entry.goalid]: [
+              {
+                start: entry.start,
+                end: entry.deadline,
+              },
+            ],
+          }),
+        ),
+      ),
   );
 
   getAllTasks().then((tasks) =>
@@ -180,6 +198,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
     goals: [],
     tasksCompletedToday,
     tasksForgotToday,
+    globalNotOn,
   };
   const dbTasks: { [goalid: string]: TaskItem } = (await getAllTasks()).reduce(
     (acc, curr) => ({ ...acc, [curr.goalId]: curr }),

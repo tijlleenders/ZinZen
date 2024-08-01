@@ -148,8 +148,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
             actionName === "Skip"
               ? [
                   {
-                    start: convertDateToString(today),
-                    end: convertDateToString(tomorrow),
+                    start: task.start,
+                    end: task.deadline,
                   },
                 ]
               : [],
