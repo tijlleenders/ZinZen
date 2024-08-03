@@ -54,6 +54,7 @@ export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
         dispatch({ type: "SET_PARENT_GOAL", payload: doc });
       });
       (isPartnerModeActive ? getSharedWMChildrenGoals(parentId) : getChildrenGoals(parentId)).then((childGoals) => {
+        console.log("🚀 ~ childGoals:", childGoals);
         dispatch({ type: "SET_SUBGOALS", payload: childGoals || [] });
       });
       return;
@@ -64,7 +65,8 @@ export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     init();
-  }, [parentId, isPartnerModeActive]);
+  }, [parentId]);
+
   useEffect(() => {
     if (action !== "none") {
       init();

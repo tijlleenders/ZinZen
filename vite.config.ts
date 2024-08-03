@@ -22,6 +22,10 @@ export default defineConfig({
   resolve: {
     alias: readAliasFromTsConfig(),
   },
+  server: {
+    host: "127.0.0.1",
+    port: 5173,
+  },
   plugins: [
     VitePWA({
       registerType: "autoUpdate",

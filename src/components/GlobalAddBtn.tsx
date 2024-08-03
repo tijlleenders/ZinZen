@@ -62,7 +62,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
 
   const handleAddGoal = async (type: TGoalCategory, replaceCurrentRoute = true) => {
-    navigate(`/goals/${parentId || "root"}?type=${type}&mode=add`, {
+    const prefix = `/${isPartnerModeActive ? `partners/${partnerId}` : ""}/goals`;
+    navigate(`${prefix}/${parentId || "root"}?type=${type}&mode=add`, {
       state: {
         ...state,
         goalType: type,

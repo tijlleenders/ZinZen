@@ -63,7 +63,6 @@ export const GoalSublist = () => {
         setDeletedGoals([...res]);
       });
     }
-    console.log("refreshed goals");
     init();
   }, [action, parentGoal, showSuggestionModal, showChangesModal]);
 

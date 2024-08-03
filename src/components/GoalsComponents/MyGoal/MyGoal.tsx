@@ -36,16 +36,18 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
 
   const navigate = useNavigate();
   const location = useLocation();
+
   const {
     parentData: { parentGoal },
   } = useParentGoalContext();
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const redirect = (state: object, isDropdown = false) => {
+    const prefix = `/${isPartnerModeActive ? `partners/${partnerId}` : ""}/goals`;
     if (isDropdown) {
-      navigate(`/goals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
+      navigate(`${prefix}/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
     } else {
-      navigate(`/goals/${goal.id}`, { state });
+      navigate(`${prefix}/${goal.id}`, { state });
     }
   };
 
