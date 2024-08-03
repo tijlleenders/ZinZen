@@ -53,8 +53,6 @@
     gap: 16px;
     align-items: center;
     margin-left: 20px;
-
-  
   }
   .contact-button {
     position: absolute;
@@ -146,7 +144,7 @@
   scrollbar-width: none;
   line-height: 31px;
   text-decoration: line-through;
-  
+  text-decoration-thickness: 2px;
 }
 .goal-title::-webkit-scrollbar {
   display: none;
@@ -346,8 +344,6 @@
     gap: 16px;
     align-items: center;
     margin-left: 20px;
-
-
   }
 
   .contact-button {
@@ -369,7 +365,7 @@
   }
 }
 
-.pps-icon>svg {
+.pps-icon > svg {
   width: 16px;
   height: 16px;
 }
@@ -441,7 +437,6 @@
   scrollbar-width: none;
   line-height: 31px;
   text-decoration: line-through;
-
 }
 
 .goal-title::-webkit-scrollbar {
@@ -459,7 +454,6 @@
 }
 
 @keyframes glowAnimation {
-
   0%,
   100% {
     background-color: rgba(255, 215, 0, 0.2);
@@ -511,7 +505,6 @@
 }
 
 #addGoalForm {
-
   .mygoalsbutton-dark,
   .mygoalsbutton-light {
     display: none;
@@ -531,7 +524,6 @@
 }
 
 #updateGoalForm {
-
   .mygoalsbutton-dark,
   .mygoalsbutton-light {
     display: none;
@@ -605,7 +597,7 @@
 }
 
 .triangle::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 3px;
   top: -12px;
@@ -615,4 +607,3 @@
   border-bottom: 15px solid transparent;
   border-left: 20px solid white;
 }
-

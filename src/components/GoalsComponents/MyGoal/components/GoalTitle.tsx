@@ -22,7 +22,10 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
   const textParts = replacedString.split(/(zURL-\d+)/g);
 
   return (
-    <div className={`goal-title ${isCompleted ? " completed" : ""}`}>
+    <div
+      className={`goal-title ${isCompleted ? " completed" : ""}`}
+      style={isCompleted ? { textDecorationColor: goal.goalColor } : {}}
+    >
       {isImpossible && "! "}
       {textParts.map((part) => {
         const match = part.match(/zURL-(\d+)/);
