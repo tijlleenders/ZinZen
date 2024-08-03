@@ -105,10 +105,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
-      tomorrow.setHours(0, 0, 0, 0);
+
       if (!taskItem) {
         console.log("task not found");
 
