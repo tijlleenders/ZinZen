@@ -17,11 +17,16 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   inputvalue,
   placeholder,
 }) => {
-  const [autocompleteValue, setAutocompleteValue] = useState("");
   const [isSuggestionVisible, setIsSuggestionVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
   const suggestionRef = useRef<HTMLSpanElement>(null);
+
+  const getSuggestion = (value: string): string => {
+    const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(value.toLowerCase()));
+    const suggestion = filteredData.length > 0 ? filteredData[0] : null;
+    return suggestion ? suggestion.title.slice(value.length) : "";
+  };
 
   // Adjust input width
   useEffect(() => {
@@ -35,13 +40,10 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
       const { value } = event.target;
       onInputChange(value);
       if (value.trim() === "") {
-        setAutocompleteValue("");
         setIsSuggestionVisible(false);
         return;
       }
-      const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(value.toLowerCase()));
-      const suggestion = filteredData.length > 0 ? filteredData[0] : null;
-      setAutocompleteValue(suggestion ? suggestion.title.slice(value.length) : "");
+      const suggestion = getSuggestion(value);
       setIsSuggestionVisible(!!suggestion);
     },
     [onInputChange, data],
@@ -49,15 +51,15 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
 
   const handleSuggestionClick = useCallback(() => {
     const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(inputvalue.toLowerCase()));
-    console.log(filteredData);
-
     const suggestion = filteredData.length > 0 ? filteredData[0] : null;
     if (suggestion && suggestionRef.current) {
       onSuggestionClick(suggestion);
       onInputChange(suggestion.title);
     }
-    setAutocompleteValue("");
-  }, [inputvalue, data]);
+    setIsSuggestionVisible(false);
+  }, [inputvalue, data, onSuggestionClick, onInputChange]);
+
+  const suggestion = getSuggestion(inputvalue);
 
   return (
     <div className="autocomplete-container w-100">
@@ -75,9 +77,9 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
         <span ref={spanRef} className="hidden-span">
           {inputvalue}
         </span>
-        {autocompleteValue && (
+        {isSuggestionVisible && suggestion && (
           <span ref={suggestionRef} className="autocomplete-suggestion">
-            {autocompleteValue}
+            {suggestion}
           </span>
         )}
       </button>
