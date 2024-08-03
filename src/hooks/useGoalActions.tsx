@@ -73,8 +73,8 @@ const useGoalActions = () => {
   };
 
   const addGoal = async (newGoal: GoalItem, hints: boolean, parentGoal?: GoalItem) => {
-    if (isPartnerModeActive && state.goalsHistory) {
-      const rootGoalId = state.goalsHistory[0].goalID;
+    if (isPartnerModeActive && subGoalsHistory.length) {
+      const rootGoalId = subGoalsHistory[0].goalID;
       const rootGoal = await getSharedWMGoalById(rootGoalId);
       if (!parentGoal || !rootGoal) {
         return;
