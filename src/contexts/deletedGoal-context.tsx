@@ -1,9 +1,7 @@
 import { getDeletedGoalById } from "@src/api/TrashAPI";
 import { TrashItem } from "@src/models/TrashItem";
-import { displayPartnerMode } from "@src/store";
 import React, { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 
 type DeletedGoalContext = {
   goal: TrashItem | undefined;
@@ -13,9 +11,9 @@ type DeletedGoalContext = {
 export const DeletedGoalContext = createContext<DeletedGoalContext | undefined>(undefined);
 
 export const DeletedGoalProvider = ({ children }: { children: ReactNode }) => {
-  const { activeGoalId } = useParams();
+  const { activeGoalId, partnerId } = useParams();
   const [goal, setGoal] = useState<TrashItem>();
-  const isPartnerModeActive = useRecoilValue(displayPartnerMode);
+  const isPartnerModeActive = !!partnerId;
 
   useEffect(() => {
     if (activeGoalId) {

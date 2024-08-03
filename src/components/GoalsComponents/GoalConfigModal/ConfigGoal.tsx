@@ -16,7 +16,7 @@ import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
-import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
+import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./components/CustomDatePicker";
@@ -125,6 +125,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       .join(" "),
     goalColor: colorPalleteList[colorIndex],
     parentGoalId: parentGoal?.id || "root",
+    language: getSelectedLanguage(),
   });
 
   const handleSave = async () => {

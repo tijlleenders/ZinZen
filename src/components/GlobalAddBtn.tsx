@@ -51,9 +51,10 @@ const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disable
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
   const { t } = useTranslation();
-  const { parentId = "root" } = useParams();
+  const { parentId = "root", partnerId } = useParams();
   const { state }: { state: ILocationState } = useLocation();
   const { handleAddFeeling } = useFeelingStore();
+  const isPartnerModeActive = !!partnerId;
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -73,7 +74,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     e.stopPropagation();
     if (themeSelection) {
       window.history.back();
-    } else if (add === "myGoals" || state.displayPartnerMode) {
+    } else if (add === "myGoals" || isPartnerModeActive) {
       handleAddGoal("Standard", false);
     } else if (add === "myJournal") {
       handleAddFeeling();
@@ -82,8 +83,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
-    if (add === "myGoals" || state.displayPartnerMode) {
-      navigate(`/goals/${parentId}?addOptions=true`, { state });
+    if (add === "myGoals" || isPartnerModeActive) {
+      navigate(`/${parentId}?addOptions=true`, { state });
     }
   };
   const { handlers } = useLongPress({

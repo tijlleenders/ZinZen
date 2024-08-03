@@ -1,7 +1,7 @@
 import { getChildrenGoals, getGoalById } from "@src/api/GoalsAPI";
 import { getSharedWMChildrenGoals, getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayPartnerMode, lastAction } from "@src/store";
+import { lastAction } from "@src/store";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import React, { ReactNode, createContext, useContext, useEffect, useMemo, useReducer } from "react";
 import { useParams } from "react-router-dom";
@@ -41,11 +41,11 @@ export const ParentGoalContext = createContext<{
 }>({ parentData: initialState, dispatch: () => null });
 
 export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
-  const { parentId = "root" } = useParams();
+  const { parentId = "root", partnerId } = useParams();
   const action = useRecoilValue(lastAction);
   const setAllowBudgetGoal = useSetRecoilState(allowAddingBudgetGoal);
   const [parentData, dispatch] = useReducer(parentGoalReducer, initialState);
-  const isPartnerModeActive = useRecoilValue(displayPartnerMode);
+  const isPartnerModeActive = !!partnerId;
 
   async function init() {
     if (parentId !== "root") {
@@ -53,9 +53,9 @@ export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
         setAllowBudgetGoal(doc ? doc.category !== "Standard" : true);
         dispatch({ type: "SET_PARENT_GOAL", payload: doc });
       });
-      (isPartnerModeActive ? getSharedWMChildrenGoals(parentId) : getChildrenGoals(parentId)).then((childGoals) =>
-        dispatch({ type: "SET_SUBGOALS", payload: childGoals || [] }),
-      );
+      (isPartnerModeActive ? getSharedWMChildrenGoals(parentId) : getChildrenGoals(parentId)).then((childGoals) => {
+        dispatch({ type: "SET_SUBGOALS", payload: childGoals || [] });
+      });
       return;
     }
     setAllowBudgetGoal(true);
