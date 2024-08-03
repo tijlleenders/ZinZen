@@ -9,6 +9,7 @@ import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { extractLinks } from "@src/utils/patterns";
 
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { justCompletedGoalsState } from "@src/store/GoalsState";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
@@ -38,6 +39,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   } = useParentGoalContext();
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
+  const justCompletedGoals = useRecoilValue(justCompletedGoalsState);
 
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
@@ -48,6 +50,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   };
 
   const handleGoalClick = () => {
+    if (justCompletedGoals.includes(goal.id)) {
+      return;
+    }
     const url = extractLinks(goal.title);
     if (url) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
