@@ -5,14 +5,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import { darkModeState, displayPartnerMode } from "@src/store";
-import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
+import { extractLinks } from "@src/utils/patterns";
 
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import { extractLinks } from "@src/utils/patterns";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -40,8 +39,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
 
-  const subGoalHistory = useRecoilValue(goalsHistory);
-
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
       navigate(`/goals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
@@ -53,14 +50,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const handleGoalClick = () => {
     const url = extractLinks(goal.title);
     if (url) {
-      const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : "https://" + url;
+      const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
       window.open(finalUrl, "_blank");
     }
     const newState: ILocationState = {
       ...location.state,
       activeGoalId: goal.id,
       goalsHistory: [
-        ...subGoalHistory,
+        ...(location.state?.goalsHistory || []),
         {
           goalID: goal.id || "root",
           goalColor: goal.goalColor || "#ffffff",
