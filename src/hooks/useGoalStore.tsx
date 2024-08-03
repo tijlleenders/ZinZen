@@ -10,7 +10,7 @@ const useGoalStore = () => {
   const showConfirmation = useRecoilValue(displayConfirmation);
 
   const openEditMode = (goal: GoalItem) => {
-    const prefix = `/${partnerId ? `partners/${partnerId}` : ""}/goals`;
+    const prefix = `${partnerId ? `/partners/${partnerId}/` : "/"}goals`;
     navigate(`${prefix}/${goal.parentGoalId}/${goal.id}?type=${goal.category}&mode=edit`, {
       state: {
         ...location.state,
