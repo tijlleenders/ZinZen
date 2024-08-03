@@ -129,9 +129,10 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
 
   const handleSave = async () => {
     if (title.trim().length) {
-      await (isEditMode
-        ? updateGoal(getFinalTags(), hints)
-        : addGoalSound.play().then(() => addGoal(getFinalTags(), hints, parentGoal)));
+      if (!isEditMode) {
+        addGoalSound.play();
+      }
+      await (isEditMode ? updateGoal(getFinalTags(), hints) : addGoal(getFinalTags(), hints, parentGoal));
     } else {
       setShowToast({
         open: true,
@@ -139,7 +140,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
         extra: "",
       });
     }
-    navigate(pathname, { replace: true });
+    window.history.back();
   };
 
   const handleSliderChange = (value: number[], setHours: React.Dispatch<React.SetStateAction<number[]>>) => {
