@@ -1,27 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { followContactOnGoal, getGoal } from "@src/api/GoalsAPI";
+import React from "react";
+import { followContactOnGoal } from "@src/api/GoalsAPI";
 import { IParticipant } from "@src/models/GoalItem";
 import { Switch } from "antd";
 import CrossIcon from "@assets/images/deleteIcon.svg";
 import TickIcon from "@assets/images/correct.svg";
 import ZModal from "@src/common/ZModal";
+import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 
 const Participants = ({ goalId }: { goalId: string }) => {
-  const [list, setList] = useState<IParticipant[]>([]);
-  const getParticipants = async () => {
-    const goal = await getGoal(goalId);
-    if (goal) {
-      setList([...goal.participants]);
-    }
-  };
+  const { goal } = useActiveGoalContext();
 
   const handleFollow = async (following: boolean, participant: IParticipant) => {
     await followContactOnGoal(goalId, { ...participant, following });
   };
-
-  useEffect(() => {
-    getParticipants();
-  }, []);
 
   const toggleFollowStatus = async (participant: IParticipant, value: boolean) => {
     await handleFollow(value, participant);
@@ -41,7 +32,7 @@ const Participants = ({ goalId }: { goalId: string }) => {
           padding: "0 20px",
         }}
       >
-        {list.map((participant) => (
+        {goal?.participants.map((participant) => (
           <div
             style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
             key={`${participant.relId}-${participant.name}`}

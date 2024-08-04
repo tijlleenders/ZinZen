@@ -25,6 +25,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
 import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
+import Participants from "@components/GoalsComponents/Participants";
 
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
@@ -46,6 +47,8 @@ export const MyGoals = () => {
   const [searchParams] = useSearchParams();
   const showShareModal = searchParams.get("share") === "true";
   const showOptions = searchParams.get("showOptions") === "true";
+  const showParticipants = searchParams.get("showParticipants") === "true";
+
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
   const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
@@ -111,6 +114,8 @@ export const MyGoals = () => {
         {showChangesModal && <DisplayChangesModal />}
         {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
+        {showParticipants && <Participants />}
+
         {goalCategories.includes(goalType) && (
           <ConfigGoal
             type={goalType}
