@@ -24,8 +24,7 @@ ActionButton.defaultProps = {
 export const TaskOptions: React.FC<TaskOptionsProps> = ({ task, handleActionClick }) => {
   return (
     <div className="MTL-options">
-      <ActionButton action={TaskAction.Skip} task={task} onActionClick={handleActionClick} />
-      <ActionButton action={TaskAction.Reschedule} task={task} onActionClick={handleActionClick} />
+      <ActionButton action={TaskAction.NotNow} task={task} onActionClick={handleActionClick} />
       <ActionButton action={TaskAction.Done} task={task} onActionClick={handleActionClick} />
       <ActionButton action={TaskAction.Focus} task={task} onActionClick={handleActionClick} />
       <ActionButton action={TaskAction.Goal} task={task} onActionClick={handleActionClick} last />

@@ -25,8 +25,7 @@ export interface ITaskOfDay {
 
 // eslint-disable-next-line no-shadow
 export enum TaskAction {
-  Skip = "Skip",
-  Reschedule = "Reschedule",
+  NotNow = "Not now",
   Done = "Done",
   Focus = "Focus",
   Goal = "Goal",
