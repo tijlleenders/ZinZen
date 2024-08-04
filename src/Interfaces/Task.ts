@@ -22,3 +22,12 @@ export interface ITaskOfDay {
     style: CSSProperties;
   }[];
 }
+
+// eslint-disable-next-line no-shadow
+export enum TaskAction {
+  Skip = "Skip",
+  Reschedule = "Reschedule",
+  Done = "Done",
+  Focus = "Focus",
+  Goal = "Goal",
+}
