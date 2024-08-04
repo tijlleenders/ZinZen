@@ -1,18 +1,34 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { lastAction } from "@src/store";
 import "./NotNowModal.scss";
 import ZModal from "@src/common/ZModal";
-import { addBlockedSlot } from "@src/api/TasksAPI";
+import { addBlockedSlot } from "@src/api/TasksAPI"; // Assume getGoalById exists
 import { displayReschedule } from "@src/store/TaskState";
 import { MILLISECONDS_IN_HOUR, RESCHEDULE_OPTIONS } from "@src/constants/rescheduleOptions";
 import { convertDateToString } from "@src/utils";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
+import { getGoalById } from "@src/api/GoalsAPI";
 
 const NowNowModal = () => {
   const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
   const setLastAction = useSetRecoilState(lastAction);
+  const [showSkip, setShowSkip] = useState(false);
+
+  useEffect(() => {
+    const checkGoalCategory = async () => {
+      if (task?.goalid) {
+        const goal = await getGoalById(task.goalid);
+        if (goal?.category === "Budget") {
+          setShowSkip(true);
+        } else {
+          setShowSkip(false);
+        }
+      }
+    };
+    checkGoalCategory();
+  }, [task]);
 
   if (!task) return null;
 
@@ -54,9 +70,11 @@ const NowNowModal = () => {
           </div>
         ))}
 
-        <div className="goal-action shareOptions-btn" onClickCapture={handleSkip}>
-          <ActionDiv label="Skip" icon="Skip" />
-        </div>
+        {showSkip && (
+          <div className="goal-action shareOptions-btn" onClickCapture={handleSkip}>
+            <ActionDiv label="Skip" icon="Clock" />
+          </div>
+        )}
       </div>
     </ZModal>
   );

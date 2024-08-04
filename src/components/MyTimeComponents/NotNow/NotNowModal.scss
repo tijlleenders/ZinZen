@@ -2,14 +2,17 @@
   .header-title {
     text-align: left;
   }
+
   .reschedule-options {
     display: grid;
-    grid-template-columns: 2fr 2fr;
+    grid-template-columns: 1fr 1fr;
 
-    .goal-action:last-child {
-      border-top: 2px solid var(--default-border-color);
-      grid-column: 1 / -1;
-      border-radius: 0 0 28px 28px;
+    .goal-action {
+      &:last-child:nth-child(odd) {
+        border-top: 2px solid var(--default-border-color);
+        grid-column: 1 / -1;
+        border-radius: 0 0 28px 28px;
+      }
     }
   }
 }
