@@ -1,15 +1,17 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { displayConfirmation } from "@src/store";
 
 const useGoalStore = () => {
+  const { partnerId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const showConfirmation = useRecoilValue(displayConfirmation);
 
   const openEditMode = (goal: GoalItem) => {
-    navigate(`/goals/${goal.parentGoalId}/${goal.id}?type=${goal.category}&mode=edit`, {
+    const prefix = `${partnerId ? `/partners/${partnerId}/` : "/"}goals`;
+    navigate(`${prefix}/${goal.parentGoalId}/${goal.id}?type=${goal.category}&mode=edit`, {
       state: {
         ...location.state,
         goalType: goal.category === "Budget" ? "Budget" : "Goal",

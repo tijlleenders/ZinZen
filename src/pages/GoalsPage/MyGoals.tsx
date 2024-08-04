@@ -112,7 +112,11 @@ export const MyGoals = () => {
         {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {goalCategories.includes(goalType) && (
-          <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
+          <ConfigGoal
+            type={goalType}
+            goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
+            mode={mode}
+          />
         )}
 
         <div className="myGoals-container">

@@ -1,10 +1,8 @@
 import { getGoalById } from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayPartnerMode } from "@src/store";
 import React, { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 
 type ActiveGoalContext = {
   goal: GoalItem | undefined;
@@ -14,9 +12,9 @@ type ActiveGoalContext = {
 export const ActiveGoalContext = createContext<ActiveGoalContext | undefined>(undefined);
 
 export const ActiveGoalProvider = ({ children }: { children: ReactNode }) => {
-  const { activeGoalId } = useParams();
+  const { activeGoalId, partnerId } = useParams();
   const [goal, setGoal] = useState<GoalItem>();
-  const isPartnerModeActive = useRecoilValue(displayPartnerMode);
+  const isPartnerModeActive = !!partnerId;
 
   useEffect(() => {
     if (activeGoalId) {

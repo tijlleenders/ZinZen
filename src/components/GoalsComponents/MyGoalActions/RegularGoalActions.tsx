@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import useGoalStore from "@src/hooks/useGoalStore";
@@ -8,11 +8,12 @@ import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
 import archiveSound from "@assets/archive.mp3";
 
-import { lastAction, openDevMode, displayConfirmation, displayPartnerMode } from "@src/store";
+import { lastAction, openDevMode, displayConfirmation } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
 import useGoalActions from "@src/hooks/useGoalActions";
-import { completedGoalsState, goalsHistory } from "@src/store/GoalsState";
+import { completedGoalsState } from "@src/store/GoalsState";
+import { ILocationState } from "@src/Interfaces";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
 
@@ -25,19 +26,20 @@ const doneSound = new Audio(archiveSound);
 
 const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { state, pathname } = useLocation();
+  const { partnerId } = useParams();
+  const isPartnerModeActive = !!partnerId;
   const { openEditMode } = useGoalStore();
+  const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
   const { deleteGoalAction } = useGoalActions();
+  const navigate = useNavigate();
+
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
-  const isPartnerGoal = useRecoilValue(displayPartnerMode);
-  const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
   const setDevMode = useSetRecoilState(openDevMode);
   const [completed, setCompleted] = useRecoilState(completedGoalsState);
   const setLastAction = useSetRecoilState(lastAction);
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
+  const ancestors = (state?.goalsHistory || []).map((ele) => ele.goalID);
 
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
   console.log("🚀 ~ RegularGoalActions ~ confirmationAction:", confirmationAction);
@@ -116,7 +118,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
         >
           <ActionDiv label={t("Delete")} icon="Delete" />
         </div>
-        {!isPartnerGoal && (
+        {!isPartnerModeActive && (
           <div
             className="goal-action shareOptions-btn"
             onClickCapture={async (e) => {
@@ -127,12 +129,12 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
             <ActionDiv label={t("Done")} icon="Correct" />
           </div>
         )}
-        {((isPartnerGoal && goal.parentGoalId === "root") || !isPartnerGoal) && (
+        {((isPartnerModeActive && goal.parentGoalId === "root") || !isPartnerModeActive) && (
           <div
             className="goal-action shareOptions-btn"
             onClickCapture={async (e) => {
               e.stopPropagation();
-              if (!isPartnerGoal) {
+              if (!isPartnerModeActive) {
                 navigate(`${pathname}?share=true`, { state, replace: true });
               } else {
                 await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
@@ -140,8 +142,8 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
             }}
           >
             <ActionDiv
-              label={t(isPartnerGoal ? "Collaborate" : "Share")}
-              icon={isPartnerGoal ? "Collaborate" : "SingleAvatar"}
+              label={t(isPartnerModeActive ? "Collaborate" : "Share")}
+              icon={isPartnerModeActive ? "Collaborate" : "SingleAvatar"}
             />
           </div>
         )}
