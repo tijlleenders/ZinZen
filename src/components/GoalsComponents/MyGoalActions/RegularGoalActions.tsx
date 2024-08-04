@@ -12,7 +12,7 @@ import { lastAction, openDevMode, displayConfirmation, displayPartnerMode } from
 import { GoalItem } from "@src/models/GoalItem";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
 import useGoalActions from "@src/hooks/useGoalActions";
-import { goalsHistory, justCompletedGoalsState } from "@src/store/GoalsState";
+import { goalsHistory } from "@src/store/GoalsState";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
 
@@ -35,7 +35,6 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
   const setDevMode = useSetRecoilState(openDevMode);
-  const setJustCompletedGoals = useSetRecoilState(justCompletedGoalsState);
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
@@ -49,7 +48,6 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
     } else if (action === "archive") {
       await archiveThisGoal(goal, ancestors);
       setLastAction("goalArchived");
-      setJustCompletedGoals((prev) => [...prev, goal.id]);
       await doneSound.play();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);

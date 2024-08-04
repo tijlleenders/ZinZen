@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import { displayChangesModal, justCompletedGoalsState } from "@src/store/GoalsState";
+import { displayChangesModal } from "@src/store/GoalsState";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveGoals } from "@api/GoalsAPI";
@@ -39,7 +39,6 @@ export const MyGoals = () => {
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
   // const [showActions, setShowActions] = useState({ open: "root", click: 1 });
-  const [justCompletedGoals, setJustCompletedGoals] = useRecoilState(justCompletedGoalsState);
 
   const { parentId = "root" } = useParams();
 
@@ -66,12 +65,8 @@ export const MyGoals = () => {
 
   const handleUserGoals = (goals: GoalItem[], delGoals: TrashItem[]) => {
     setDeletedGoals([...delGoals]);
-    setActiveGoals([...goals.filter((goal) => goal.archived === "false" || justCompletedGoals.includes(goal.id))]);
-    setArchivedGoals([
-      ...goals.filter(
-        (goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal" && !justCompletedGoals.includes(goal.id),
-      ),
-    ]);
+    setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
+    setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
   };
   const refreshActiveGoals = async () => {
     const { goals, delGoals } = await getAllGoals();
@@ -109,12 +104,6 @@ export const MyGoals = () => {
       refreshActiveGoals();
     }
   }, [parentId, displaySearch]);
-
-  useEffect(() => {
-    return () => {
-      setJustCompletedGoals([]);
-    };
-  }, []);
 
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>

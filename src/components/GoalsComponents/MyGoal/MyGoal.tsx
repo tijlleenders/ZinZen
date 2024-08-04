@@ -1,15 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-
 import { darkModeState, displayPartnerMode } from "@src/store";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { extractLinks } from "@src/utils/patterns";
-
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
-import { justCompletedGoalsState } from "@src/store/GoalsState";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
@@ -23,12 +18,12 @@ interface MyGoalProps {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
+  const goalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsAnimating(false);
     }, 500);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -39,7 +34,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   } = useParentGoalContext();
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
-  const justCompletedGoals = useRecoilValue(justCompletedGoalsState);
+  const isCompleted = goal.archived === "true";
 
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {
@@ -50,14 +45,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   };
 
   const handleGoalClick = () => {
-    if (justCompletedGoals.includes(goal.id)) {
-      return;
-    }
+    if (isCompleted) return;
+
     const url = extractLinks(goal.title);
     if (url) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
       window.open(finalUrl, "_blank");
     }
+
     const newState: ILocationState = {
       ...location.state,
       activeGoalId: goal.id,
@@ -73,16 +68,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     redirect(newState);
   };
 
-  async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  const handleDropDown = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     const navState: ILocationState = { ...location.state, from: "" };
     if (goal.newUpdates) {
       navState.displayChanges = goal;
-    } else {
-      // navState.displayGoalActions = { actionType, goal };
     }
     redirect(navState, true);
-  }
+  };
 
   useEffect(() => {
     if (location && location.pathname === "/goals") {
@@ -93,6 +86,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
 
   return (
     <div
+      ref={goalRef}
       key={String(`goal-${goal.id}`)}
       className={`user-goal${darkModeStatus ? "-dark" : ""} ${
         expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
@@ -108,7 +102,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
           <GoalDropdown goal={goal} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <GoalTitle goal={goal} isImpossible={goal.impossible} />
+          <GoalTitle goal={goal} isImpossible={goal.impossible} isCompleted={isCompleted} />
         </div>
       </div>
       {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
