@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { displayChangesModal, displayGoalId, displaySuggestionsModal } from "@src/store/GoalsState";
@@ -21,11 +21,10 @@ import GoalSummary from "../../../common/GoalItemSummary/GoalSummary";
 
 export const GoalSublist = () => {
   const {
-    parentData: { parentGoal, subgoals: initialSubgoals },
+    parentData: { parentGoal, subgoals },
     dispatch,
   } = useParentGoalContext();
 
-  const [subgoals, setSubgoals] = useState<GoalItem[]>(initialSubgoals);
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
   const [goalhints, setGoalHints] = useState<GoalItem[]>([]);
@@ -35,10 +34,6 @@ export const GoalSublist = () => {
   const goalID = useRecoilValue(displayGoalId);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
-
-  useEffect(() => {
-    setSubgoals(initialSubgoals);
-  }, [initialSubgoals]);
 
   useEffect(() => {
     getGoalHintItem(goalID).then((hintItem) => {
@@ -72,13 +67,10 @@ export const GoalSublist = () => {
 
   const setGoals = useCallback(
     (setGoalsStateUpdateWrapper: (prevGoals: GoalItem[]) => GoalItem[]) => {
-      setSubgoals((prevSubgoals) => {
-        const newSubgoals = setGoalsStateUpdateWrapper(prevSubgoals);
-        dispatch({ type: "SET_SUBGOALS", payload: newSubgoals });
-        return newSubgoals;
-      });
+      const newSubgoals = setGoalsStateUpdateWrapper(subgoals);
+      dispatch({ type: "SET_SUBGOALS", payload: newSubgoals });
     },
-    [dispatch],
+    [subgoals],
   );
 
   return (
