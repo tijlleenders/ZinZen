@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { darkModeState, displayPartnerMode } from "@src/store";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { darkModeState, displayPartnerMode, lastAction } from "@src/store";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { extractLinks } from "@src/utils/patterns";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { getGoalById } from "@src/api/GoalsAPI";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
@@ -34,7 +35,15 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   } = useParentGoalContext();
   const darkModeStatus = useRecoilValue(darkModeState);
   const showPartnerMode = useRecoilValue(displayPartnerMode);
-  const isCompleted = goal.archived === "true";
+  const [action, setLastAction] = useRecoilState(lastAction);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  useEffect(() => {
+    setLastAction("none");
+    getGoalById(goal.id).then((doc) => {
+      setIsCompleted(doc?.archived === "true");
+    });
+  }, [action]);
 
   const redirect = (state: object, isDropdown = false) => {
     if (isDropdown) {

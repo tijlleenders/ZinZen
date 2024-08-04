@@ -93,6 +93,7 @@ export const MyGoals = () => {
   const zinZenLogoHeight = activeGoals.length > 0 ? 125 : 350;
 
   useEffect(() => {
+    if (action === "goalArchived") return;
     if (action !== "none") {
       setLastAction("none");
       refreshActiveGoals();
