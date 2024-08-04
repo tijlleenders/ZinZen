@@ -94,32 +94,32 @@ const PartnerGoals = () => {
           {goalCategories.includes(goalType) && (
             <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
           )}
-        </ParentGoalProvider>
 
-        <div className="myGoals-container">
-          {parentId === "root" ? (
-            <div className="my-goals-content">
-              <div className="d-flex f-col">
-                <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
+          <div className="myGoals-container">
+            {parentId === "root" ? (
+              <div className="my-goals-content">
+                <div className="d-flex f-col">
+                  <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
+                </div>
+
+                {archivedGoals.length > 0 && <ArchivedGoals goals={archivedGoals} />}
               </div>
+            ) : (
+              <GoalSublist />
+            )}
 
-              {archivedGoals.length > 0 && <ArchivedGoals goals={archivedGoals} />}
-            </div>
-          ) : (
-            <GoalSublist />
-          )}
-
-          {activeGoals?.length === 0 && (
-            <>
-              <InvitationStatus relId={relId} />
-              <img
-                style={{ width: 350, height: 350, opacity: 0.3 }}
-                src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-                alt="Zinzen"
-              />
-            </>
-          )}
-        </div>
+            {!activeGoals?.length && parentId === "root" && (
+              <>
+                <InvitationStatus relId={relId} />
+                <img
+                  style={{ width: 350, height: 350, opacity: 0.3 }}
+                  src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+                  alt="Zinzen"
+                />
+              </>
+            )}
+          </div>
+        </ParentGoalProvider>
       </AppLayout>
       <PartnersNavbar />
     </>

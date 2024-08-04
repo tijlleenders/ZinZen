@@ -14,7 +14,7 @@ import { getAllContacts } from "@src/api/ContactsAPI";
 
 import PartnerModeTour from "@components/PartnerModeTour";
 
-import { darkModeState, displayPartnerMode, displayToast, flipAnimationState, searchActive } from "@src/store";
+import { darkModeState, displayToast, flipAnimationState, searchActive } from "@src/store";
 import { displayPartnerModeTour } from "@src/store/TourState";
 
 import HeaderBtn from "./HeaderBtn";
@@ -30,9 +30,8 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const setShowToast = useSetRecoilState(displayToast);
 
   const darkModeStatus = useRecoilValue(darkModeState);
-  const subGoalHistory = useRecoilValue(goalsHistory);
+  const subGoalHistory = location.state?.goalsHistory || [];
 
-  const [showPartnerMode, setShowPartnerMode] = useRecoilState(displayPartnerMode);
   const [partnerModeTour, setPartnerModeTour] = useRecoilState(displayPartnerModeTour);
   const [displaySearch, setDisplaySearch] = useRecoilState(searchActive);
   const [isFlipping, setIsFlipping] = useRecoilState(flipAnimationState);
@@ -63,8 +62,6 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
     const locationState = location.state || {};
     if (displaySearch || locationState?.displaySearch) {
       setDisplaySearch(locationState?.displaySearch || false);
-    } else if (showPartnerMode || locationState?.displayPartnerMode) {
-      setShowPartnerMode(locationState?.displayPartnerMode || false);
     }
   };
 

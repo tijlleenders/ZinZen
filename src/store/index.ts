@@ -95,11 +95,6 @@ export const displayPartner = atom({
   default: null as ContactItem | null,
 });
 
-export const displayPartnerMode = atom({
-  key: "displayPartnerMode",
-  default: false,
-});
-
 export const currentScheduledTask = atom({
   key: "currentScheduledTask",
   default: "",

@@ -4,22 +4,25 @@ import { restoreGoal } from "@src/api/TrashAPI";
 import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayPartnerMode, displayToast, lastAction, openDevMode } from "@src/store";
-import { goalsHistory } from "@src/store/GoalsState";
-import { useLocation } from "react-router-dom";
+import { displayToast, lastAction, openDevMode } from "@src/store";
+
+import { useLocation, useParams } from "react-router-dom";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
 
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
+import { ILocationState } from "@src/Interfaces";
 
 const useGoalActions = () => {
-  const { state } = useLocation();
+  const { state }: { state: ILocationState } = useLocation();
+  const { partnerId } = useParams();
+  const isPartnerModeActive = !!partnerId;
   const setLastAction = useSetRecoilState(lastAction);
   const setDevMode = useSetRecoilState(openDevMode);
-  const subGoalsHistory = useRecoilValue(goalsHistory);
+  const subGoalsHistory = state?.goalsHistory || [];
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
-  const showPartnerMode = useRecoilValue(displayPartnerMode);
+
   const setShowToast = useSetRecoilState(displayToast);
   const pageCrumple = new Audio(pageCrumplingSound);
 
@@ -32,7 +35,7 @@ const useGoalActions = () => {
   };
   const deleteGoalAction = async (goal: GoalItem) => {
     await pageCrumple.play();
-    if (showPartnerMode) {
+    if (isPartnerModeActive) {
       await deleteSharedGoal(goal);
     } else {
       await deleteGoal(goal, ancestors);
@@ -56,7 +59,7 @@ const useGoalActions = () => {
   };
 
   const updateGoal = async (goal: GoalItem, hints: boolean) => {
-    if (state.displayPartnerMode) {
+    if (isPartnerModeActive) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
         const rootGoalId = state.goalsHistory[0].goalID;
@@ -70,8 +73,8 @@ const useGoalActions = () => {
   };
 
   const addGoal = async (newGoal: GoalItem, hints: boolean, parentGoal?: GoalItem) => {
-    if (state.displayPartnerMode && state.goalsHistory) {
-      const rootGoalId = state.goalsHistory[0].goalID;
+    if (isPartnerModeActive && subGoalsHistory.length) {
+      const rootGoalId = subGoalsHistory[0].goalID;
       const rootGoal = await getSharedWMGoalById(rootGoalId);
       if (!parentGoal || !rootGoal) {
         return;

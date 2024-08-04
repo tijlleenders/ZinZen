@@ -31,17 +31,7 @@ export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) =>
 };
 
 export const addGoal = async (goalDetails: GoalItem) => {
-  // @ts-ignore
-  const goals: GoalItem = { ...goalDetails, createdAt: new Date() };
-  let newGoalId;
-  await db
-    .transaction("rw", db.goalsCollection, async () => {
-      newGoalId = await db.goalsCollection.add(goals);
-    })
-    .catch((e) => {
-      console.log(e.stack || e);
-    });
-  return newGoalId;
+  return db.goalsCollection.add({ ...goalDetails, createdAt: new Date().toString() });
 };
 
 export const getGoal = async (goalId: string) => {
