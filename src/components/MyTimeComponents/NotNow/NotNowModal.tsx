@@ -2,7 +2,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import React from "react";
 
 import { lastAction } from "@src/store";
-import "./Reschedule.scss";
+import "./NotNowModal.scss";
 import ZModal from "@src/common/ZModal";
 import { addBlockedSlot } from "@src/api/TasksAPI";
 import { displayReschedule } from "@src/store/TaskState";
@@ -10,7 +10,7 @@ import { MILLISECONDS_IN_HOUR, RESCHEDULE_OPTIONS } from "@src/constants/resched
 import { convertDateToString } from "@src/utils";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 
-const Reschedule = () => {
+const NowNowModal = () => {
   const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
   const setLastAction = useSetRecoilState(lastAction);
 
@@ -62,4 +62,4 @@ const Reschedule = () => {
   );
 };
 
-export default Reschedule;
+export default NowNowModal;

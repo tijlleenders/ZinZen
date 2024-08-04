@@ -7,7 +7,7 @@ import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
-import Reschedule from "@components/MyTimeComponents/Reschedule/Reschedule";
+import NowNowModal from "@components/MyTimeComponents/NotNow/NotNowModal";
 import useScheduler from "@src/hooks/useScheduler";
 
 import "./MyTimePage.scss";
@@ -101,7 +101,7 @@ export const MyTimePage = () => {
           thisDay.setDate(thisDay.getDate() + i + 1);
           return i >= 1 ? getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`) : null;
         })}
-        <Reschedule />
+        <NowNowModal />
       </>
     </AppLayout>
   );
