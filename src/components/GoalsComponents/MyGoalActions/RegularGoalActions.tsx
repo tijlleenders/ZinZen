@@ -44,14 +44,24 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
   console.log("🚀 ~ RegularGoalActions ~ confirmationAction:", confirmationAction);
 
+  const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
+    await archiveThisGoal(goalToArchive, goalAncestors);
+    setLastAction("goalArchived");
+    const goalTitleElement = document.querySelector(`#goal-${goalToArchive.id} .goal-title`) as HTMLElement;
+    if (goalTitleElement) {
+      goalTitleElement.style.textDecoration = "line-through";
+      goalTitleElement.style.textDecorationColor = goalToArchive.goalColor;
+      goalTitleElement.style.textDecorationThickness = "2px";
+    }
+    await doneSound.play();
+  };
+
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
       await deleteGoalAction(goal);
       setLastAction("goalDeleted");
     } else if (action === "archive") {
-      await archiveThisGoal(goal, ancestors);
-      setLastAction("goalArchived");
-      await doneSound.play();
+      await handleArchiveGoal(goal, ancestors);
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
     }

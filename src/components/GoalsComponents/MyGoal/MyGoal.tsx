@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { darkModeState, lastAction } from "@src/store";
+import { useRecoilValue } from "recoil";
+import { darkModeState } from "@src/store";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { extractLinks } from "@src/utils/patterns";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
-import { getGoalById } from "@src/api/GoalsAPI";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
@@ -22,7 +21,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
 
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
-  const goalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -38,15 +36,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     parentData: { parentGoal },
   } = useParentGoalContext();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const [action, setLastAction] = useRecoilState(lastAction);
-  const [isCompleted, setIsCompleted] = useState(false);
-
-  useEffect(() => {
-    setLastAction("none");
-    getGoalById(goal.id).then((doc) => {
-      setIsCompleted(doc?.archived === "true");
-    });
-  }, [action]);
 
   const redirect = (state: object, isDropdown = false) => {
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
@@ -58,8 +47,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   };
 
   const handleGoalClick = () => {
-    if (isCompleted) return;
-
+    if (goal.archived === "true") {
+      return;
+    }
     const url = extractLinks(goal.title);
     if (url) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
@@ -99,7 +89,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
 
   return (
     <div
-      ref={goalRef}
+      id={`goal-${goal.id}`}
       key={String(`goal-${goal.id}`)}
       className={`user-goal${darkModeStatus ? "-dark" : ""} ${
         expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
@@ -115,7 +105,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
           <GoalDropdown goal={goal} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <GoalTitle goal={goal} isImpossible={goal.impossible} isCompleted={isCompleted} />
+          <GoalTitle goal={goal} isImpossible={goal.impossible} />
         </div>
       </div>
       {!isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
