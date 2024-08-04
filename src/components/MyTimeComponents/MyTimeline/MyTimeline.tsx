@@ -112,12 +112,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           goalId: task.goalid,
           title: task.title,
           completedTodayIds: [],
-          forgotToday:
-            actionName === TaskAction.Skip
-              ? [`${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`]
-              : [],
+          forgotToday: [],
           completedToday: actionName === TaskAction.Done ? Number(task.duration) : 0,
-          lastForget: actionName === TaskAction.Skip ? new Date().toLocaleDateString() : "",
+          lastForget: "",
           lastCompleted: actionName === TaskAction.Done ? new Date().toLocaleDateString() : "",
           hoursSpent: 0,
           completedTodayTimings:
@@ -136,9 +133,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
         if (markDone) return null;
         await completeTask(taskItem.id, Number(task.duration), task);
-      } else if (actionName === TaskAction.Skip) {
-        await forgetTask(taskItem.id, `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`, task);
-      } else if (actionName === TaskAction.Reschedule) {
+      } else if (actionName === TaskAction.NotNow) {
         setOpenReschedule(task);
       }
       if (actionName === TaskAction.Done) {
@@ -150,10 +145,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
             [task.goalid]: updatedTask,
           });
         }
-      } else if (actionName === TaskAction.Skip) {
-        await forgetSound.play();
-        setLastAction("TaskSkipped");
-      } else if (actionName === TaskAction.Reschedule) {
+      } else if (actionName === TaskAction.NotNow) {
         setOpenReschedule({ ...task });
       }
     } else {

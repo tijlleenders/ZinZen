@@ -32,10 +32,16 @@ const Reschedule = () => {
     setLastAction("TaskRescheduled");
   };
 
+  const handleSkip = () => {
+    console.log("Task skipped");
+    setDisplayReschedule(null);
+    setLastAction("TaskSkipped");
+  };
+
   return (
     <ZModal type="reschedule-modal interactables-modal" open={!!task.title} onCancel={() => setDisplayReschedule(null)}>
       <div className="header-title">
-        <p className="ordinary-element">{`Postpone: ${task.title}`}</p>
+        <p className="ordinary-element">{`Not now: ${task.title}`}</p>
       </div>
       <div className="reschedule-options">
         {RESCHEDULE_OPTIONS.map((option) => (
@@ -47,6 +53,10 @@ const Reschedule = () => {
             <ActionDiv label={option.label} icon="Clock" />
           </div>
         ))}
+
+        <div className="goal-action shareOptions-btn" onClickCapture={handleSkip}>
+          <ActionDiv label="Skip" icon="Skip" />
+        </div>
       </div>
     </ZModal>
   );
