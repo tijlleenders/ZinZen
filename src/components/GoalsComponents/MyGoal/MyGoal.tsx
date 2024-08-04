@@ -47,15 +47,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   };
 
   const handleGoalClick = () => {
-    if (goal.archived === "true") {
-      return;
-    }
     const url = extractLinks(goal.title);
     if (url) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
       window.open(finalUrl, "_blank");
     }
-
     const newState: ILocationState = {
       ...location.state,
       activeGoalId: goal.id,
