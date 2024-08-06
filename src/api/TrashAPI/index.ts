@@ -12,6 +12,7 @@ export const getDeletedGoals = async (parentGoalId: string) => {
     .equals(parentGoalId)
     .sortBy("deletedAt");
   childrenGoals.reverse();
+
   return childrenGoals;
 };
 

@@ -9,7 +9,7 @@ import ConfirmationModal from "@src/common/ConfirmationModal";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { restoreGoal } from "@src/helpers/GoalController";
-import { confirmAction } from "@src/Interfaces/IPopupModals";
+import { TConfirmAction } from "@src/Interfaces/IPopupModals";
 import { unarchiveIcon } from "@src/assets";
 import { ILocationState } from "@src/Interfaces";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
@@ -34,7 +34,7 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
   const darkModeStatus = useRecoilValue(darkModeState);
   const setLastAction = useSetRecoilState(lastAction);
 
-  const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
+  const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
 
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
@@ -86,13 +86,21 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
         </p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-        {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
+        {confirmationAction && (
+          <ConfirmationModal
+            action={confirmationAction}
+            handleClick={handleActionClick}
+            handleClose={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
+        )}
 
         <div
           className="goal-action-archive shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "restore" });
+            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "restore" });
           }}
         >
           <ActionDiv
@@ -111,7 +119,7 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
             className="goal-action-archive shareOptions-btn"
             onClickCapture={async (e) => {
               e.stopPropagation();
-              await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "delete" });
+              await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
             }}
           >
             <ActionDiv label={t("Delete")} icon="Delete" />

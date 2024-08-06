@@ -72,7 +72,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
           className="goal-action-archive shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "addHint" });
+            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "addHint" });
           }}
         >
           <ActionDiv label={t("Add Hint")} icon="Add" />
@@ -82,7 +82,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
           className="goal-action-archive shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "deleteHint" });
+            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "deleteHint" });
           }}
         >
           <ActionDiv label={t("Delete Hint")} icon="Delete" />
@@ -92,7 +92,7 @@ const HintsAccordionActions = ({ goal, open }: { open: boolean; goal: GoalItem }
           className="goal-action-archive shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: TConfirmActionCategory, actionName: "restore" });
+            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "restore" });
           }}
         >
           <ActionDiv
