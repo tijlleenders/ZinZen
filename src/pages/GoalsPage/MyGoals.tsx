@@ -120,7 +120,7 @@ export const MyGoals = () => {
         {goalCategories.includes(goalType) && (
           <ConfigGoal
             type={goalType}
-            goal={suggestedGoal || (mode === "edit" && activeGoal) ? activeGoal : createGoalObjectFromTags()}
+            goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
             mode={mode}
           />
         )}
