@@ -1,8 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { goalsHistory } from "@src/store/GoalsState";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { darkModeState } from "@src/store";
 import { themeSelectionMode, themeState } from "@src/store/ThemeState";
@@ -18,13 +17,17 @@ const BottomNavbar = ({ title }: { title: string }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { partnerId } = useParams();
+  const isPartnerModeActive = !!partnerId;
+
   const themeSelection = useRecoilValue(themeSelectionMode);
 
   const [theme, setTheme] = useRecoilState(themeState);
   const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
 
   const currentPage = window.location.pathname.split("/")[1];
-  const subGoalHistory = useRecoilValue(goalsHistory);
+  const subGoalHistory = location.state?.goalsHistory ?? [];
 
   const themeChange = (nav: -1 | 1) => {
     let choice = theme[darkModeStatus ? "dark" : "light"] + nav;
@@ -60,8 +63,8 @@ const BottomNavbar = ({ title }: { title: string }) => {
       }
     }
   };
-  const { displayPartnerMode, activeGoalId } = location.state || {};
-  const isAddBtnVisible = title !== "myTime" && title !== "Focus" && (displayPartnerMode ? !!activeGoalId : true);
+  const { activeGoalId } = location.state || {};
+  const isAddBtnVisible = title !== "myTime" && title !== "Focus" && (isPartnerModeActive ? !!activeGoalId : true);
   return (
     <>
       {themeSelection && (

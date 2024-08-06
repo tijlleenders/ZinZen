@@ -19,7 +19,7 @@ import useGoalActions from "@src/hooks/useGoalActions";
 import useGoalStore from "@src/hooks/useGoalStore";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
-import { colorPalleteList, calDays, convertOnFilterToArray } from "../../../utils";
+import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./components/CustomDatePicker";
@@ -133,6 +133,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       .join(" "),
     goalColor: colorPalleteList[colorIndex],
     parentGoalId: parentGoal?.id || "root",
+    language: getSelectedLanguage(),
   });
 
   const handleSave = async () => {

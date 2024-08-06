@@ -13,27 +13,21 @@ import {
 } from "@src/api/GoalsAPI";
 import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
-import { createGoalObjectFromTags } from "./GoalProcessor";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
-export const createGoal = async (goalTags: GoalItem, parentGoalId: string, ancestors: string[], goalHint: boolean) => {
+export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], goalHint: boolean) => {
   const level = ancestors.length;
-  let newGoal = createGoalObjectFromTags({
-    ...goalTags,
-    language: getSelectedLanguage(),
-  });
-
   if (goalHint) {
     getHintsFromAPI(newGoal)
-      .then((hints) => addHintItem(goalTags.id, goalHint, hints || []))
+      .then((hints) => addHintItem(newGoal.id, goalHint, hints || []))
       .catch((error) => console.error("Error fetching hints:", error));
   }
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
     if (!parentGoal) return { parentGoal: null };
-    newGoal = inheritParentProps(newGoal, parentGoal);
-    const newGoalId = await addGoal(newGoal);
+    const newGoalId = await addGoal(inheritParentProps(newGoal, parentGoal));
+
     const subscribers = await getParticipantsOfGoals(ancestors);
     if (newGoalId) {
       subscribers.map(async ({ sub, rootGoalId }) => {

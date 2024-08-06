@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-import { darkModeState, displayPartnerMode } from "@src/store";
+import { darkModeState } from "@src/store";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { extractLinks } from "@src/utils/patterns";
 
@@ -20,6 +20,9 @@ interface MyGoalProps {
 }
 
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
+  const { partnerId } = useParams();
+  const isPartnerModeActive = !!partnerId;
+
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
 
@@ -33,17 +36,18 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
 
   const navigate = useNavigate();
   const location = useLocation();
+
   const {
     parentData: { parentGoal },
   } = useParentGoalContext();
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showPartnerMode = useRecoilValue(displayPartnerMode);
 
   const redirect = (state: object, isDropdown = false) => {
+    const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
     if (isDropdown) {
-      navigate(`/goals/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
+      navigate(`${prefix}/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
     } else {
-      navigate(`/goals/${goal.id}`, { state });
+      navigate(`${prefix}/${goal.id}`, { state });
     }
   };
 
@@ -106,7 +110,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
           <GoalTitle goal={goal} isImpossible={goal.impossible} />
         </div>
       </div>
-      {!showPartnerMode && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
+      {!isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useLocation, useParams } from "react-router-dom";
 
 import ZModal from "@src/common/ZModal";
 import useGoalStore from "@src/hooks/useGoalStore";
@@ -10,23 +11,25 @@ import { GoalItem } from "@src/models/GoalItem";
 import { restoreGoal } from "@src/helpers/GoalController";
 import { confirmAction } from "@src/Interfaces/IPopupModals";
 import { unarchiveIcon } from "@src/assets";
+import { ILocationState } from "@src/Interfaces";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import { TAction, goalsHistory } from "@src/store/GoalsState";
+import { TAction } from "@src/store/GoalsState";
 import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
-import { lastAction, openDevMode, displayConfirmation, displayPartnerMode, darkModeState } from "@src/store";
+import { lastAction, openDevMode, displayConfirmation, darkModeState } from "@src/store";
 
 import ActionDiv from "./ActionDiv";
 import "./MyGoalActions.scss";
 
 const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; open: boolean; goal: GoalItem }) => {
   const { t } = useTranslation();
+  const { state }: { state: ILocationState } = useLocation();
+  const { partnerId } = useParams();
+  const isPartnerModeActive = !!partnerId;
   const { openEditMode, handleConfirmation } = useGoalStore();
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
-  const subGoalsHistory = useRecoilValue(goalsHistory);
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
+  const ancestors = (state?.goalsHistory || []).map((ele) => ele.goalID);
   const showConfirmation = useRecoilValue(displayConfirmation);
-  const isPartnerGoal = useRecoilValue(displayPartnerMode);
   const setDevMode = useSetRecoilState(openDevMode);
   const darkModeStatus = useRecoilValue(darkModeState);
   const setLastAction = useSetRecoilState(lastAction);
@@ -38,7 +41,7 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
       if (goal.title === "magic") {
         setDevMode(false);
       }
-      await removeThisGoal(goal, ancestors, isPartnerGoal);
+      await removeThisGoal(goal, ancestors, isPartnerModeActive);
       setLastAction("goalDeleted");
     } else if (action === "archive") {
       await archiveThisGoal(goal, ancestors);
@@ -103,7 +106,7 @@ const AccordionActions = ({ actionType, goal, open }: { actionType: TAction; ope
             }
           />
         </div>
-        {!isPartnerGoal && (
+        {!isPartnerModeActive && (
           <div
             className="goal-action-archive shareOptions-btn"
             onClickCapture={async (e) => {

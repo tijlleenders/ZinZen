@@ -21,7 +21,6 @@ export interface ILocationState {
   changeTheme?: boolean; // theme changer mode
   expandedGoalId?: string; // id of goal to be expanded
   displayGoalActions?: TDisplayGoalActions; // id of goal whose actions have to be opened
-  displayPartnerMode?: boolean; // whether or not to display the partner goals
   displayAddContact?: boolean; // whether or not to display the add contact form
   displayParticipants?: string; // id of goal whose participants have to be displayed
   displayPartner?: ContactItem; // to show this partner
