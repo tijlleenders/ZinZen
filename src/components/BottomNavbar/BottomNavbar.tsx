@@ -52,8 +52,8 @@ const BottomNavbar = ({ title }: { title: string }) => {
       const newLocationState = { ...location.state, from: currentPage, displayFocus: false };
       if (to === "MyTime") {
         if (currentPage !== "") navigate("/", { state: newLocationState });
-      } else if (to === "MyGoals") {
-        if (currentPage !== "MyGoals") {
+      } else if (to === "goals") {
+        if (currentPage !== "goals") {
           navigate("/goals", { state: newLocationState });
         } else if (subGoalHistory.length > 0) {
           window.history.go(-subGoalHistory.length);
@@ -99,11 +99,11 @@ const BottomNavbar = ({ title }: { title: string }) => {
         <button
           type="button"
           onClick={() => {
-            handleClick("MyGoals");
+            handleClick("goals");
           }}
-          className={`bottom-nav-item ${currentPage === "MyGoals" || themeSelection ? "active" : ""}`}
+          className={`bottom-nav-item ${currentPage === "goals" || themeSelection ? "active" : ""}`}
         >
-          <Icon active={currentPage === "MyGoals" || themeSelection} title="GoalsIcon" />
+          <Icon active={currentPage === "goals" || themeSelection} title="GoalsIcon" />
           {themeSelection ? <p>Switch Mode</p> : <p>{t("Goals")}</p>}
         </button>
         <button
