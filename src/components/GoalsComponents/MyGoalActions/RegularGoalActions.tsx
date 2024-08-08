@@ -42,7 +42,6 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const ancestors = (state?.goalsHistory || []).map((ele) => ele.goalID);
 
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
-  console.log("🚀 ~ RegularGoalActions ~ confirmationAction:", confirmationAction);
 
   const handleCompleteGoal = () => {
     setCompleted((prev) => ({ ...prev, [goal.id]: !prev[goal.id] }));
@@ -54,7 +53,6 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
       [goal.id]: false, // Set explicitly to false
     }));
   };
-  console.log("completed", completed);
 
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
@@ -66,7 +64,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
         setLastAction("goalArchived");
         handleMarkNotCompleted();
       }, 10000);
-      await doneSound.play(); // play the done sound when a line strikes through
+      await doneSound.play();
       handleCompleteGoal();
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);

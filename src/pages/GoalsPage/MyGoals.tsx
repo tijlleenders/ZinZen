@@ -64,6 +64,7 @@ export const MyGoals = () => {
 
   const getAllGoals = async () => {
     const [goals, delGoals] = await Promise.all([getActiveGoals("true"), getDeletedGoals("root")]);
+
     return { goals, delGoals };
   };
   const handleUserGoals = (goals: GoalItem[], delGoals: TrashItem[]) => {
@@ -73,6 +74,8 @@ export const MyGoals = () => {
   };
   const refreshActiveGoals = async () => {
     const { goals, delGoals } = await getAllGoals();
+    console.log(delGoals);
+
     const sortedGoals = await priotizeImpossibleGoals(goals);
     handleUserGoals(sortedGoals, delGoals);
   };
