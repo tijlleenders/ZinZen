@@ -15,7 +15,6 @@ import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
-import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import { TrashItem } from "@src/models/TrashItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
@@ -30,6 +29,7 @@ import Participants from "@components/GoalsComponents/Participants";
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
+import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -55,6 +55,7 @@ export const MyGoals = () => {
 
   const { goal: activeGoal } = useActiveGoalContext();
 
+  const suggestedGoal = useRecoilValue(suggestedGoalState);
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -106,7 +107,7 @@ export const MyGoals = () => {
     if (parentId === "root") {
       refreshActiveGoals();
     }
-  }, [parentId, displaySearch]);
+  }, [parentId, displaySearch, suggestedGoal]);
 
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
