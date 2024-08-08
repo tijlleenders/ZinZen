@@ -1,7 +1,5 @@
 import React from "react";
-import { ITask } from "@src/Interfaces/Task";
-
-type TaskAction = "Skip" | "Reschedule" | "Done" | "Focus" | "Goal";
+import { ITask, TaskAction } from "@src/Interfaces/Task";
 
 interface TaskOptionsProps {
   task: ITask;
@@ -26,11 +24,10 @@ ActionButton.defaultProps = {
 export const TaskOptions: React.FC<TaskOptionsProps> = ({ task, handleActionClick }) => {
   return (
     <div className="MTL-options">
-      <ActionButton action="Skip" task={task} onActionClick={handleActionClick} />
-      <ActionButton action="Reschedule" task={task} onActionClick={handleActionClick} />
-      <ActionButton action="Done" task={task} onActionClick={handleActionClick} />
-      <ActionButton action="Focus" task={task} onActionClick={handleActionClick} />
-      <ActionButton action="Goal" task={task} onActionClick={handleActionClick} last />
+      <ActionButton action={TaskAction.NotNow} task={task} onActionClick={handleActionClick} />
+      <ActionButton action={TaskAction.Done} task={task} onActionClick={handleActionClick} />
+      <ActionButton action={TaskAction.Focus} task={task} onActionClick={handleActionClick} />
+      <ActionButton action={TaskAction.Goal} task={task} onActionClick={handleActionClick} last />
     </div>
   );
 };
