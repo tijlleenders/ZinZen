@@ -13,11 +13,10 @@ import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import DeletedGoals from "@pages/GoalsPage/components/DeletedGoals";
 import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
 import { TrashItem } from "@src/models/TrashItem";
+import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
-import BudgetSummary from "../../../common/GoalItemSummary/BudgetSummary";
-import GoalSummary from "../../../common/GoalItemSummary/GoalSummary";
 
 export const GoalSublist = () => {
   const {
@@ -80,7 +79,7 @@ export const GoalSublist = () => {
           <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
           {parentGoal && (
             <span className="goal-item-summary-wrapper">
-              {!parentGoal.timeBudget ? <BudgetSummary goal={parentGoal} /> : <GoalSummary goal={parentGoal} />}
+              <GoalItemSummary goal={parentGoal} />
             </span>
           )}
           <div className="sublist-list-container">
