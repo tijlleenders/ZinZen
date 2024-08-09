@@ -7,7 +7,6 @@ import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
 
 import Backdrop from "@src/common/Backdrop";
-import useGoalStore from "@src/hooks/useGoalStore";
 import useFeelingStore from "@src/hooks/useFeelingStore";
 
 import { ILocationState } from "@src/Interfaces";
