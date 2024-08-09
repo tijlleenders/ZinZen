@@ -28,21 +28,17 @@ const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disable
   return (
     <button
       type="button"
-      className="add-goal-pill-btn"
-      style={{ right: 35, bottom, ...(disabled ? { opacity: 0.25, pointerEvents: "none" } : {}) }}
+      className={`add-goal-pill-btn ${disabled ? "disabled" : ""}`}
+      style={{ bottom }}
       onContextMenu={(e) => e.preventDefault()}
       onClick={(e) => {
         e.stopPropagation();
         handleClick();
       }}
     >
-      <span style={{ paddingLeft: 5 }}>{children}</span>
+      <span className="button-text">{children}</span>
       <span className="goal-btn-circle">
-        <img
-          style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
-          src={GlobalAddIcon}
-          alt="add goal"
-        />
+        <img className="add-icon" src={GlobalAddIcon} alt="add goal" />
       </span>
     </button>
   );
@@ -84,7 +80,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (add === "myGoals" || isPartnerModeActive) {
-      navigate(`/${parentId}?addOptions=true`, { state });
+      navigate(`/goals/${parentId}?addOptions=true`, { state });
     }
   };
   const { handlers } = useLongPress({
