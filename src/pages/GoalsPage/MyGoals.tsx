@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import { displayChangesModal, displayShareModal } from "@src/store/GoalsState";
+import { displayChangesModal } from "@src/store/GoalsState";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveGoals } from "@api/GoalsAPI";
@@ -15,7 +15,6 @@ import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
-import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import { TrashItem } from "@src/models/TrashItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
@@ -66,6 +65,7 @@ export const MyGoals = () => {
     const [goals, delGoals] = await Promise.all([getActiveGoals("true"), getDeletedGoals("root")]);
     return { goals, delGoals };
   };
+
   const handleUserGoals = (goals: GoalItem[], delGoals: TrashItem[]) => {
     setDeletedGoals([...delGoals]);
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
@@ -96,6 +96,7 @@ export const MyGoals = () => {
   const zinZenLogoHeight = activeGoals.length > 0 ? 125 : 350;
 
   useEffect(() => {
+    if (action === "goalArchived") return;
     if (action !== "none") {
       setLastAction("none");
       refreshActiveGoals();
