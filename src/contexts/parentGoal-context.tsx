@@ -68,6 +68,9 @@ export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
   }, [parentId]);
 
   useEffect(() => {
+    if (action === "goalArchived") {
+      return;
+    }
     if (action !== "none") {
       init();
     }

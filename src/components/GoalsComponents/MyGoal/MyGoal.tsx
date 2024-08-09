@@ -1,13 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-
 import { darkModeState } from "@src/store";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { extractLinks } from "@src/utils/patterns";
-
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
@@ -30,7 +26,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     const timer = setTimeout(() => {
       setIsAnimating(false);
     }, 500);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -72,16 +67,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     redirect(newState);
   };
 
-  async function handleDropDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  const handleDropDown = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     const navState: ILocationState = { ...location.state, from: "" };
     if (goal.newUpdates) {
       navState.displayChanges = goal;
-    } else {
-      // navState.displayGoalActions = { actionType, goal };
     }
     redirect(navState, true);
-  }
+  };
 
   useEffect(() => {
     if (location && location.pathname === "/goals") {
@@ -92,6 +85,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
 
   return (
     <div
+      id={`goal-${goal.id}`}
       key={String(`goal-${goal.id}`)}
       className={`user-goal${darkModeStatus ? "-dark" : ""} ${
         expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
