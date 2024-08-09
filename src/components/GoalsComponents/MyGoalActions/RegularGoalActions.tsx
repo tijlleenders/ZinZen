@@ -51,7 +51,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
     if (goalTitleElement) {
       goalTitleElement.style.textDecoration = "line-through";
       goalTitleElement.style.textDecorationColor = goalToArchive.goalColor;
-      goalTitleElement.style.textDecorationThickness = "2px";
+      goalTitleElement.style.textDecorationThickness = "4px";
     }
     await doneSound.play();
   };
