@@ -23,11 +23,10 @@ export const GoalSublist = () => {
     parentData: { parentGoal, subgoals },
     dispatch,
   } = useParentGoalContext();
-
+  const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
   const [goalhints, setGoalHints] = useState<GoalItem[]>([]);
-
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
   const goalID = useRecoilValue(displayGoalId);
@@ -59,16 +58,18 @@ export const GoalSublist = () => {
       getDeletedGoals(goalID).then((res) => {
         setDeletedGoals([...res]);
       });
+      setActiveGoals([...sortedGoals.filter((goal) => goal.archived === "false")]);
     }
     init();
-  }, [action, parentGoal, showSuggestionModal, showChangesModal, subgoals]);
+  }, [action, parentGoal, showSuggestionModal, showChangesModal, subgoals, goalID]);
 
   const setGoals = useCallback(
     (setGoalsStateUpdateWrapper: (prevGoals: GoalItem[]) => GoalItem[]) => {
-      const newSubgoals = setGoalsStateUpdateWrapper(subgoals);
-      dispatch({ type: "SET_SUBGOALS", payload: newSubgoals });
+      const newSubgoals = setGoalsStateUpdateWrapper(activeGoals);
+      setActiveGoals(newSubgoals);
+      dispatch({ type: "SET_SUBGOALS", payload: [...archivedChildren, ...newSubgoals] });
     },
-    [subgoals],
+    [subgoals, activeGoals],
   );
 
   return (
@@ -83,7 +84,7 @@ export const GoalSublist = () => {
             </span>
           )}
           <div className="sublist-list-container">
-            <GoalsList goals={subgoals} setGoals={setGoals} />
+            <GoalsList goals={activeGoals} setGoals={setGoals} />
             <DeletedGoalProvider>
               {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
             </DeletedGoalProvider>
