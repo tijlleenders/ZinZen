@@ -93,6 +93,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     e.stopPropagation();
     if (add === "myGoals" || isPartnerModeActive) {
       navigate(`/goals/${parentId}?addOptions=true`, { state });
+    } else if (add === "myTime") {
+      navigate("?addOptions=true", { state });
     }
   };
   const { handlers } = useLongPress({
