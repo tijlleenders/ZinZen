@@ -57,6 +57,16 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
 
   const handleAddGoal = async (type: TGoalCategory, replaceCurrentRoute = true) => {
+    if (add === "myTime") {
+      navigate(`?type=${type}&mode=add`, {
+        state: {
+          ...state,
+          goalType: type,
+        },
+        replace: replaceCurrentRoute,
+      });
+      return;
+    }
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
     navigate(`${prefix}/${parentId || "root"}?type=${type}&mode=add`, {
       state: {
@@ -74,6 +84,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       handleAddGoal("Standard", false);
     } else if (add === "myJournal") {
       handleAddFeeling();
+    } else if (add === "myTime") {
+      handleAddGoal("Standard", false);
     }
   };
 
