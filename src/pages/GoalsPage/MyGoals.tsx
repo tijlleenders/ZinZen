@@ -39,7 +39,6 @@ export const MyGoals = () => {
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
-  // const [showActions, setShowActions] = useState({ open: "root", click: 1 });
 
   const { parentId = "root" } = useParams();
 
@@ -47,6 +46,7 @@ export const MyGoals = () => {
   const showShareModal = searchParams.get("share") === "true";
   const showOptions = searchParams.get("showOptions") === "true";
   const showParticipants = searchParams.get("showParticipants") === "true";
+  const showNewChanges = searchParams.get("showNewChanges") === "true";
 
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
@@ -112,10 +112,10 @@ export const MyGoals = () => {
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
       <ParentGoalProvider>
-        {showChangesModal && <DisplayChangesModal />}
         {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {showParticipants && <Participants />}
+        {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}
 
         {goalCategories.includes(goalType) && (
           <ConfigGoal

@@ -40,7 +40,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const redirect = (state: object, isDropdown = false) => {
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
     if (isDropdown) {
-      navigate(`${prefix}/${parentGoal?.id || "root"}/${goal.id}?showOptions=true`, { state });
+      const searchparam = goal.newUpdates ? "showNewChanges" : "showOptions";
+      navigate(`${prefix}/${parentGoal?.id || "root"}/${goal.id}?${searchparam}=true`, { state });
     } else {
       navigate(`${prefix}/${goal.id}`, { state });
     }
@@ -67,15 +68,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     redirect(newState);
   };
 
-  const handleDropDown = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
-    const navState: ILocationState = { ...location.state, from: "" };
-    if (goal.newUpdates) {
-      navState.displayChanges = goal;
-    }
-    redirect(navState, true);
-  };
-
   useEffect(() => {
     if (location && location.pathname === "/goals") {
       const { expandedGoalId } = location.state || {};
@@ -97,7 +89,15 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div style={{ touchAction: "none" }} onClickCapture={handleDropDown} {...dragAttributes} {...dragListeners}>
+        <div
+          style={{ touchAction: "none" }}
+          onClickCapture={(e) => {
+            e.stopPropagation();
+            redirect(location.state, true);
+          }}
+          {...dragAttributes}
+          {...dragListeners}
+        >
           <GoalDropdown goal={goal} />
         </div>
         <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
