@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -7,7 +7,6 @@ import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
 
 import Backdrop from "@src/common/Backdrop";
-import useGoalStore from "@src/hooks/useGoalStore";
 import useFeelingStore from "@src/hooks/useFeelingStore";
 
 import { ILocationState } from "@src/Interfaces";
@@ -17,6 +16,7 @@ import "./index.scss";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import useLongPress from "@src/hooks/useLongPress";
+import { useKeyPress } from "@src/hooks/useKeyPress";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -61,6 +61,9 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
 
+  const enterPressed = useKeyPress("Enter");
+  const plusPressed = useKeyPress("+");
+
   const handleAddGoal = async (type: TGoalCategory, replaceCurrentRoute = true) => {
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
     navigate(`${prefix}/${parentId || "root"}?type=${type}&mode=add`, {
@@ -95,6 +98,13 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   });
 
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
+
+  useEffect(() => {
+    if (plusPressed || enterPressed) {
+      // @ts-ignore
+      handleGlobalAddClick(new MouseEvent("click"));
+    }
+  }, [plusPressed, enterPressed]);
 
   if (searchParams?.get("addOptions")) {
     return (
