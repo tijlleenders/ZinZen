@@ -100,7 +100,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
 
   useEffect(() => {
-    if (plusPressed || enterPressed) {
+    if ((plusPressed || enterPressed) && !state.goalType) {
       // @ts-ignore
       handleGlobalAddClick(new MouseEvent("click"));
     }
