@@ -8,6 +8,7 @@ import { displayToast, lastAction, openDevMode } from "@src/store";
 
 import { useLocation, useParams } from "react-router-dom";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
+import plingSound from "@assets/pling.mp3";
 
 import { useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
@@ -25,6 +26,7 @@ const useGoalActions = () => {
 
   const setShowToast = useSetRecoilState(displayToast);
   const pageCrumple = new Audio(pageCrumplingSound);
+  const plingsound = new Audio(plingSound);
 
   const showMessage = (message: string, extra = "") => {
     setShowToast({
@@ -67,6 +69,8 @@ const useGoalActions = () => {
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
     } else {
+      await plingsound.play();
+      showMessage("Goal updated!");
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
     }
     setLastAction("goalUpdated");
