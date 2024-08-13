@@ -132,6 +132,11 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     if (title.trim().length) {
       if (!isEditMode) {
         addGoalSound.play();
+        setShowToast({
+          open: true,
+          message: `${title.slice(0, 15)}${title.length > 15 ? "..." : ""} created!`,
+          extra: "",
+        });
       }
       await (isEditMode ? updateGoal(getFinalTags(), hints) : addGoal(getFinalTags(), hints, parentGoal));
     } else {
