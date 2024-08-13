@@ -57,6 +57,15 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const isKeyboardOpen = useVirtualKeyboardOpen();
 
   const setShowToast = useSetRecoilState(displayToast);
+  const plingsound = new Audio(plingSound);
+
+  const showMessage = (message: string, extra = "") => {
+    setShowToast({
+      open: true,
+      message,
+      extra,
+    });
+  };
 
   const [colorIndex, setColorIndex] = useState(defaultColorIndex);
 
@@ -71,6 +80,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   }, [goal.id]);
 
   const [title, setTitle] = useState(goal.title);
+  const [prevTitle, setPrevTitle] = useState(goal.title);
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
   // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
   // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
@@ -127,11 +137,20 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     parentGoalId: parentGoal?.id || "root",
     language: getSelectedLanguage(),
   });
+  useEffect(() => {
+    setPrevTitle(title);
+  }, [isEditMode]);
 
   const handleSave = async () => {
+    const trimmedTitle = title.trim();
+    const isTitleChanged = trimmedTitle !== prevTitle;
+
     if (title.trim().length) {
       if (!isEditMode) {
         addGoalSound.play();
+      } else if (isTitleChanged) {
+        await plingsound.play();
+        showMessage("Goal updated!");
       }
       await (isEditMode ? updateGoal(getFinalTags(), hints) : addGoal(getFinalTags(), hints, parentGoal));
     } else {
