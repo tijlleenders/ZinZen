@@ -13,22 +13,20 @@ import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import DeletedGoals from "@pages/GoalsPage/components/DeletedGoals";
 import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
 import { TrashItem } from "@src/models/TrashItem";
+import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
-import BudgetSummary from "../../../common/GoalItemSummary/BudgetSummary";
-import GoalSummary from "../../../common/GoalItemSummary/GoalSummary";
 
 export const GoalSublist = () => {
   const {
     parentData: { parentGoal, subgoals },
     dispatch,
   } = useParentGoalContext();
-
+  const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
   const [goalhints, setGoalHints] = useState<GoalItem[]>([]);
-
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
   const goalID = useRecoilValue(displayGoalId);
@@ -60,16 +58,18 @@ export const GoalSublist = () => {
       getDeletedGoals(goalID).then((res) => {
         setDeletedGoals([...res]);
       });
+      setActiveGoals([...sortedGoals.filter((goal) => goal.archived === "false")]);
     }
     init();
-  }, [action, parentGoal, showSuggestionModal, showChangesModal, subgoals]);
+  }, [action, parentGoal, showSuggestionModal, showChangesModal, subgoals, goalID]);
 
   const setGoals = useCallback(
     (setGoalsStateUpdateWrapper: (prevGoals: GoalItem[]) => GoalItem[]) => {
-      const newSubgoals = setGoalsStateUpdateWrapper(subgoals);
-      dispatch({ type: "SET_SUBGOALS", payload: newSubgoals });
+      const newSubgoals = setGoalsStateUpdateWrapper(activeGoals);
+      setActiveGoals(newSubgoals);
+      dispatch({ type: "SET_SUBGOALS", payload: [...archivedChildren, ...newSubgoals] });
     },
-    [subgoals],
+    [subgoals, activeGoals],
   );
 
   return (
@@ -80,11 +80,11 @@ export const GoalSublist = () => {
           <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
           {parentGoal && (
             <span className="goal-item-summary-wrapper">
-              {!parentGoal.timeBudget ? <BudgetSummary goal={parentGoal} /> : <GoalSummary goal={parentGoal} />}
+              <GoalItemSummary goal={parentGoal} />
             </span>
           )}
           <div className="sublist-list-container">
-            <GoalsList goals={subgoals} setGoals={setGoals} />
+            <GoalsList goals={activeGoals} setGoals={setGoals} />
             <DeletedGoalProvider>
               {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
             </DeletedGoalProvider>

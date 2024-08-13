@@ -78,13 +78,6 @@ export const handleIncomingChanges = async (payload, relId) => {
         updateGoal(rootGoalId, { newUpdates: true }),
         await addGoalChangesInID(rootGoalId, relId, defaultChanges),
       ]);
-      // const goalItemExist = changeType === "subgoals" || changeType === "modifiedGoals";
-      // changes.forEach(async (ele) => {
-      //   console.log(ele)
-      //   changeNewUpdatesStatus(true, goalItemExist ? ele.goal.parentGoalId : ele.id).catch(() => console.log("failed parent notification", ele));
-      // });
-      // changeNewUpdatesStatus(true, rootGoalId).catch((err) => console.log(err));
-      // @ts-ignore
     }
   }
 };

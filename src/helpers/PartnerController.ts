@@ -27,7 +27,7 @@ export const suggestNewGoal = async (newGoal: GoalItem, parentGoal: GoalItem, ro
         ...inheritParentProps(
           {
             ...createGoalObjectFromTags({
-              newGoal,
+              ...newGoal,
               language: getSelectedLanguage(),
             }),
             createdAt: `${new Date()}`,
