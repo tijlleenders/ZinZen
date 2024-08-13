@@ -13,6 +13,7 @@ import { useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
+import plingSound from "@assets/pling.mp3";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -25,6 +26,7 @@ const useGoalActions = () => {
 
   const setShowToast = useSetRecoilState(displayToast);
   const pageCrumple = new Audio(pageCrumplingSound);
+  const plingsound = new Audio(plingSound);
 
   const showMessage = (message: string, extra = "") => {
     setShowToast({

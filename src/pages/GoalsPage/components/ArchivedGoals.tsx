@@ -4,7 +4,6 @@ import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
 import ZModal from "@src/common/ZModal";
 import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
-import { useDeletedGoalContext } from "@src/contexts/deletedGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
@@ -13,6 +12,7 @@ import { t } from "i18next";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import { useDeletedGoalContext } from "../../../contexts/deletedGoal-context";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const darkMode = useRecoilValue(darkModeState);
@@ -64,7 +64,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
 const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
-  const { goal: deletedGoal } = useActiveGoalContext();
+  const { goal: deletedGoal } = useDeletedGoalContext();
   const showOptions = !!searchParams.get("showOptions") && deletedGoal;
 
   return (

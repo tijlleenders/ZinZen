@@ -136,8 +136,8 @@ export const MyGoals = () => {
               </div>
               <DeletedGoalProvider>
                 {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
+                {archivedGoals.length > 0 && <ArchivedGoals goals={archivedGoals} />}
               </DeletedGoalProvider>
-              {archivedGoals.length > 0 && <ArchivedGoals goals={archivedGoals} />}
             </div>
           ) : (
             <GoalSublist />
