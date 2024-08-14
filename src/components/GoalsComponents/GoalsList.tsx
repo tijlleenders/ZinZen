@@ -15,7 +15,9 @@ import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { ImpossibleGoal } from "@src/Interfaces";
 
+import { useGoalSelection } from "@src/hooks/useGoalSelection";
 import SortableItem from "./MyGoal/SortableItem";
+import "./GoalsList.scss";
 
 interface GoalsListProps {
   goals: GoalItem[];
@@ -72,13 +74,20 @@ const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
     }
   };
 
+  const handleGoalSelect = () => {};
+
+  const [focusedIndex, focusedGoal] = useGoalSelection(goals, handleGoalSelect);
+
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={updatedGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
-        {updatedGoals.map((goal: ImpossibleGoal) => (
-          <React.Fragment key={`sortable-${goal.id}`}>
+        {updatedGoals.map((goal: ImpossibleGoal, index: number) => (
+          <div
+            key={`sortable-${goal.id}`}
+            className={`sortable-${goal.id} ${focusedGoal.id === goal.id ? "focused" : ""}`}
+          >
             <SortableItem key={`sortable-${goal.id}`} goal={goal} />
-          </React.Fragment>
+          </div>
         ))}
       </SortableContext>
     </DndContext>
