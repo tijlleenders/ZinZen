@@ -71,10 +71,13 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
 
   const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
 
+  const [initialHints, setInitialHints] = useState(false);
   const [hints, setHints] = useState(false);
+  const initialDuration = goal.duration || "";
 
   useEffect(() => {
     getGoalHintItem(goal.id).then((hintItem) => {
+      setInitialHints(!!hintItem?.hint);
       setHints(!!hintItem?.hint);
     });
   }, [goal.id]);
@@ -140,34 +143,37 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   useEffect(() => {
     setPrevTitle(title);
   }, [isEditMode]);
+  const originalPerDayBudget = (
+    goal.timeBudget?.perDay.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`
+  )
+    .split("-")
+    .map((ele) => Number(ele));
+
+  const originalPerWeekBudget = (
+    goal.timeBudget?.perWeek?.includes("-")
+      ? goal.timeBudget.perWeek
+      : `${timeDiff * numberOfDays}-${timeDiff * numberOfDays}`
+  )
+    .split("-")
+    .map((ele) => Number(ele));
+  const isBudgetChanged =
+    perDayHrs[0] !== originalPerDayBudget[0] ||
+    perDayHrs[1] !== originalPerDayBudget[1] ||
+    perWeekHrs[0] !== originalPerWeekBudget[0] ||
+    perWeekHrs[1] !== originalPerWeekBudget[1];
 
   const handleSave = async () => {
     const trimmedTitle = title.trim();
     const isTitleChanged = trimmedTitle !== prevTitle;
+    const isHintChanged = hints !== initialHints;
+    const isDurationChanged = tags.duration !== initialDuration;
 
-    const originalPerDayBudget = (
-      goal.timeBudget?.perDay.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`
-    )
-      .split("-")
-      .map((ele) => Number(ele));
-
-    const originalPerWeekBudget = (
-      goal.timeBudget?.perWeek?.includes("-")
-        ? goal.timeBudget.perWeek
-        : `${timeDiff * numberOfDays}-${timeDiff * numberOfDays}`
-    )
-      .split("-")
-      .map((ele) => Number(ele));
-    const isBudgetChanged =
-      perDayHrs[0] !== originalPerDayBudget[0] ||
-      perDayHrs[1] !== originalPerDayBudget[1] ||
-      perWeekHrs[0] !== originalPerWeekBudget[0] ||
-      perWeekHrs[1] !== originalPerWeekBudget[1];
+    const isGoalUpdated = isTitleChanged || isBudgetChanged || isHintChanged || isDurationChanged;
 
     if (title.trim().length) {
       if (!isEditMode) {
         addGoalSound.play();
-      } else if (isTitleChanged || isBudgetChanged) {
+      } else if (isGoalUpdated) {
         await plingsound.play();
         showMessage("Goal updated!");
       }
