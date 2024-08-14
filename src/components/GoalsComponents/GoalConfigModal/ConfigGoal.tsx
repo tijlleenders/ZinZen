@@ -145,10 +145,29 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     const trimmedTitle = title.trim();
     const isTitleChanged = trimmedTitle !== prevTitle;
 
+    const originalPerDayBudget = (
+      goal.timeBudget?.perDay.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`
+    )
+      .split("-")
+      .map((ele) => Number(ele));
+
+    const originalPerWeekBudget = (
+      goal.timeBudget?.perWeek?.includes("-")
+        ? goal.timeBudget.perWeek
+        : `${timeDiff * numberOfDays}-${timeDiff * numberOfDays}`
+    )
+      .split("-")
+      .map((ele) => Number(ele));
+    const isBudgetChanged =
+      perDayHrs[0] !== originalPerDayBudget[0] ||
+      perDayHrs[1] !== originalPerDayBudget[1] ||
+      perWeekHrs[0] !== originalPerWeekBudget[0] ||
+      perWeekHrs[1] !== originalPerWeekBudget[1];
+
     if (title.trim().length) {
       if (!isEditMode) {
         addGoalSound.play();
-      } else if (isTitleChanged) {
+      } else if (isTitleChanged || isBudgetChanged) {
         await plingsound.play();
         showMessage("Goal updated!");
       }
