@@ -5,10 +5,7 @@ import { extractLinks } from "@src/utils/patterns";
 import { ILocationState } from "@src/Interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export const useGoalSelection = (
-  goals: GoalItem[],
-  handleRightNavigation: (langId: string) => void,
-): [number, GoalItem] => {
+export const useGoalSelection = (goals: GoalItem[]): GoalItem => {
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
   const location = useLocation();
   const navigate = useNavigate();
@@ -75,5 +72,5 @@ export const useGoalSelection = (
     }
   }, [leftPress]);
 
-  return [focusedIndex, goals[focusedIndex]];
+  return goals[focusedIndex];
 };
