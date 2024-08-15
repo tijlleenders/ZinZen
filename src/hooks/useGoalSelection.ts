@@ -44,7 +44,22 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
   const leftPress = useKeyPress("ArrowLeft");
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
     if (disableKeyboardNavigation) return;
+
     if (downPress) {
       setFocusedIndex((prevIndex) => (prevIndex + 1) % goals.length);
     }
@@ -52,6 +67,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
 
   useEffect(() => {
     if (disableKeyboardNavigation) return;
+
     if (upPress) {
       setFocusedIndex((prevIndex) => (prevIndex - 1 + goals.length) % goals.length);
     }
@@ -59,13 +75,15 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
 
   useEffect(() => {
     if (disableKeyboardNavigation) return;
-    if (rightPress && goals.length > 0) {
+
+    if (rightPress && goals.length > 0 && focusedIndex !== -1) {
       handleRightKeyPress(goals[focusedIndex]);
     }
   }, [rightPress]);
 
   useEffect(() => {
     if (disableKeyboardNavigation) return;
+
     if (leftPress) {
       if (location.pathname === "/goals") {
         return;
