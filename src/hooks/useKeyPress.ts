@@ -5,7 +5,7 @@ export const useKeyPress = (targetKey: string) => {
 
   const keyHandler = useCallback(
     (event: KeyboardEvent) => {
-      event.preventDefault();
+      event.stopPropagation();
       if (event.key === targetKey) {
         setKeyPressed(event.type === "keydown");
       }
