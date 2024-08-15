@@ -167,8 +167,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     const isTitleChanged = trimmedTitle !== prevTitle;
     const isHintChanged = hints !== initialHints;
     const isDurationChanged = tags.duration !== initialDuration;
+    const isDueDateChanged = due !== new Date(goal.due).toISOString().slice(0, 10);
 
-    const isGoalUpdated = isTitleChanged || isBudgetChanged || isHintChanged || isDurationChanged;
+    const isGoalUpdated = isTitleChanged || isBudgetChanged || isHintChanged || isDurationChanged || isDueDateChanged;
 
     if (title.trim().length) {
       if (!isEditMode) {
