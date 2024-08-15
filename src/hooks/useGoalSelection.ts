@@ -1,28 +1,21 @@
 import { GoalItem } from "@src/models/GoalItem";
 import { useEffect, useState } from "react";
-import { useKeyPress } from "./useKeyPress";
 import { extractLinks } from "@src/utils/patterns";
 import { ILocationState } from "@src/Interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useKeyPress } from "./useKeyPress";
 
 export const useGoalSelection = (goals: GoalItem[]): GoalItem => {
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const redirect = (goal: GoalItem, state: object) => {
-    const prefix = `${"/"}goals`;
-    navigate(`${prefix}/${goal.id}`, { state });
-  };
-
-  console.log("focusedIndex", focusedIndex);
-
-  const handleGoalClick = (goal: GoalItem) => {
-    if (goal === undefined) return;
-    const url = extractLinks(goal?.title);
+  const handleRightKeyPress = (goal: GoalItem) => {
+    const url = extractLinks(goal.title);
     if (url) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
       window.open(finalUrl, "_blank");
+      return;
     }
     const newState: ILocationState = {
       ...location.state,
@@ -36,11 +29,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem => {
         },
       ],
     };
-    redirect(goal, newState);
-  };
-
-  const handleRight = (goal: GoalItem) => {
-    handleGoalClick(goal);
+    navigate(`/goals/${goal.id}`, { state: newState });
   };
 
   const upPress = useKeyPress("ArrowUp");
@@ -61,16 +50,23 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem => {
   }, [upPress, goals.length]);
 
   useEffect(() => {
-    if (rightPress) {
-      handleRight(goals[focusedIndex]);
+    if (rightPress && goals.length > 0) {
+      handleRightKeyPress(goals[focusedIndex]);
     }
   }, [rightPress]);
 
   useEffect(() => {
     if (leftPress) {
+      if (window.location.pathname === "/goals") {
+        return;
+      }
       window.history.back();
     }
   }, [leftPress]);
+
+  if (goals.length === 0) {
+    return undefined;
+  }
 
   return goals[focusedIndex];
 };
