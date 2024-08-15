@@ -17,7 +17,6 @@ import { ImpossibleGoal } from "@src/Interfaces";
 
 import { useGoalSelection } from "@src/hooks/useGoalSelection";
 import SortableItem from "./MyGoal/SortableItem";
-import "./GoalsList.scss";
 
 interface GoalsListProps {
   goals: GoalItem[];
@@ -74,8 +73,6 @@ const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
     }
   };
 
-  const handleGoalSelect = () => {};
-
   const focusedGoal = useGoalSelection(goals);
 
   return (
@@ -85,7 +82,7 @@ const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
           <div
             key={`sortable-${goal.id}`}
             className={`sortable-${goal.id} ${focusedGoal.id === goal.id ? "focused" : ""}`}
-            style={{ borderLeftColor: goal.goalColor }}
+            style={focusedGoal.id === goal.id ? { borderLeft: `${goal.goalColor} 3px solid` } : {}}
           >
             <SortableItem key={`sortable-${goal.id}`} goal={goal} />
           </div>
