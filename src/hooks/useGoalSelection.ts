@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useKeyPress } from "./useKeyPress";
 
 export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
-  const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const location = useLocation();
   const navigate = useNavigate();
 
