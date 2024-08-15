@@ -1,5 +1,5 @@
 import { GoalItem } from "@src/models/GoalItem";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { extractLinks } from "@src/utils/patterns";
 import { ILocationState } from "@src/Interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -57,21 +57,39 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     };
   }, []);
 
+  const scrollIntoView = useCallback(
+    (index: number) => {
+      const goalElement = document.getElementById(`goal-${goals[index]?.id}`);
+      if (goalElement) {
+        goalElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    },
+    [goals],
+  );
+
   useEffect(() => {
     if (disableKeyboardNavigation) return;
 
     if (downPress) {
-      setFocusedIndex((prevIndex) => (prevIndex + 1) % goals.length);
+      setFocusedIndex((prevIndex) => {
+        const newIndex = (prevIndex + 1) % goals.length;
+        scrollIntoView(newIndex);
+        return newIndex;
+      });
     }
-  }, [downPress, goals.length]);
+  }, [downPress, goals.length, scrollIntoView]);
 
   useEffect(() => {
     if (disableKeyboardNavigation) return;
 
     if (upPress) {
-      setFocusedIndex((prevIndex) => (prevIndex - 1 + goals.length) % goals.length);
+      setFocusedIndex((prevIndex) => {
+        const newIndex = (prevIndex - 1 + goals.length) % goals.length;
+        scrollIntoView(newIndex);
+        return newIndex;
+      });
     }
-  }, [upPress, goals.length]);
+  }, [upPress, goals.length, scrollIntoView]);
 
   useEffect(() => {
     if (disableKeyboardNavigation) return;
