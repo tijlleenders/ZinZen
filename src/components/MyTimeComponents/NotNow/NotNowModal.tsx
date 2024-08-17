@@ -11,7 +11,7 @@ import { convertDateToString } from "@src/utils";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { getGoalById } from "@src/api/GoalsAPI";
 
-const NowNowModal = () => {
+const NotNowModal = () => {
   const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
   const setLastAction = useSetRecoilState(lastAction);
   const [showSkip, setShowSkip] = useState(false);
@@ -80,4 +80,4 @@ const NowNowModal = () => {
   );
 };
 
-export default NowNowModal;
+export default NotNowModal;

@@ -7,7 +7,6 @@ import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
-import NowNowModal from "@components/MyTimeComponents/NotNow/NotNowModal";
 import useScheduler from "@src/hooks/useScheduler";
 
 import "./MyTimePage.scss";
@@ -15,6 +14,7 @@ import "@translations/i18n";
 import { useLocation } from "react-router-dom";
 import { Row } from "antd";
 import SchedulerErrorModal from "@components/MyTimeComponents/SchedulerErrorModal";
+import NotNowModal from "@components/MyTimeComponents/NotNow/NotNowModal";
 
 export const MyTimePage = () => {
   const today = new Date();
@@ -101,7 +101,7 @@ export const MyTimePage = () => {
           thisDay.setDate(thisDay.getDate() + i + 1);
           return i >= 1 ? getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`) : null;
         })}
-        <NowNowModal />
+        <NotNowModal />
       </>
     </AppLayout>
   );
