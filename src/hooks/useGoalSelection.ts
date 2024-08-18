@@ -28,6 +28,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     const newState: ILocationState = {
       ...location.state,
       activeGoalId: goal.id,
+      foucusedGoalIndex: focusedIndex,
       goalsHistory: [
         ...(location.state?.goalsHistory || []),
         {
@@ -109,7 +110,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
       if (location.pathname === "/goals") {
         return;
       }
-      setFocusedIndex(location.state.index === undefined ? -1 : location.state.index);
+      setFocusedIndex(location.state.foucusedGoalIndex === undefined ? -1 : location.state.foucusedGoalIndex);
       window.history.back();
     }
   }, [leftPress]);
