@@ -37,7 +37,7 @@ const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disable
       }}
     >
       <span className="button-text">{children}</span>
-      <span className="goal-btn-circle">
+      <span className="goal-btn-circle place-middle fw-600">
         <img className="add-icon" src={GlobalAddIcon} alt="add goal" />
       </span>
     </button>
