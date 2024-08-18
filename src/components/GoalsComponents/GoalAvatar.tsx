@@ -2,13 +2,15 @@ import React from "react";
 import Icon from "@src/common/Icon";
 import { GoalItem } from "@src/models/GoalItem";
 import { getSvgForGoalPps } from "@src/utils";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const GoalAvatar = ({ goal }: { goal: GoalItem }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { id, participants, goalColor } = goal;
-  const participantsSvg = getSvgForGoalPps(participants.length);
+  const { partnerId } = useParams();
+
+  const { goalColor } = goal;
+  const participantsSvg = getSvgForGoalPps(goal.participants.length);
 
   return (
     <div className="contact-button" style={goal.archived ? { right: 60 } : {}}>
@@ -21,12 +23,8 @@ const GoalAvatar = ({ goal }: { goal: GoalItem }) => {
           background: `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 20% 79.17%, ${goalColor} 100%)`,
         }}
         onClick={() => {
-          navigate("/goals", {
-            state: {
-              ...location.state,
-              displayParticipants: id,
-            },
-          });
+          const prefix = `${partnerId ? `/partners/${partnerId}/` : "/"}goals`;
+          navigate(`${prefix}/${goal.parentGoalId}/${goal.id}?showParticipants=true`, { state: location.state });
         }}
       >
         <Icon active title={participantsSvg} c1={goalColor} c2={goalColor} />

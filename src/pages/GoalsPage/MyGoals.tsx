@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import { displayChangesModal, displayShareModal } from "@src/store/GoalsState";
+import { displayChangesModal } from "@src/store/GoalsState";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveGoals } from "@api/GoalsAPI";
@@ -15,7 +15,6 @@ import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
-import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 import { TrashItem } from "@src/models/TrashItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
@@ -25,6 +24,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
 import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
+import Participants from "@components/GoalsComponents/Participants";
 
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
@@ -39,13 +39,15 @@ export const MyGoals = () => {
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
-  // const [showActions, setShowActions] = useState({ open: "root", click: 1 });
 
   const { parentId = "root" } = useParams();
 
   const [searchParams] = useSearchParams();
   const showShareModal = searchParams.get("share") === "true";
   const showOptions = searchParams.get("showOptions") === "true";
+  const showParticipants = searchParams.get("showParticipants") === "true";
+  const showNewChanges = searchParams.get("showNewChanges") === "true";
+
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
   const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
@@ -63,6 +65,7 @@ export const MyGoals = () => {
     const [goals, delGoals] = await Promise.all([getActiveGoals("true"), getDeletedGoals("root")]);
     return { goals, delGoals };
   };
+
   const handleUserGoals = (goals: GoalItem[], delGoals: TrashItem[]) => {
     setDeletedGoals([...delGoals]);
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
@@ -93,6 +96,7 @@ export const MyGoals = () => {
   const zinZenLogoHeight = activeGoals.length > 0 ? 125 : 350;
 
   useEffect(() => {
+    if (action === "goalArchived") return;
     if (action !== "none") {
       setLastAction("none");
       refreshActiveGoals();
@@ -108,9 +112,11 @@ export const MyGoals = () => {
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
       <ParentGoalProvider>
-        {showChangesModal && <DisplayChangesModal />}
         {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
+        {showParticipants && <Participants />}
+        {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}
+
         {goalCategories.includes(goalType) && (
           <ConfigGoal
             type={goalType}
