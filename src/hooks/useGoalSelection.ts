@@ -1,12 +1,14 @@
 import { GoalItem } from "@src/models/GoalItem";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { extractLinks } from "@src/utils/patterns";
 import { ILocationState } from "@src/Interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { focusedGoalState } from "@src/store/GoalsState";
 import { useKeyPress } from "./useKeyPress";
 
 export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
-  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [focusedIndex, setFocusedIndex] = useRecoilState(focusedGoalState);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -35,6 +37,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
         },
       ],
     };
+    setFocusedIndex(-1);
     navigate(`/goals/${goal.id}`, { state: newState });
   };
 
@@ -106,6 +109,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
       if (location.pathname === "/goals") {
         return;
       }
+      setFocusedIndex(location.state.index === undefined ? -1 : location.state.index);
       window.history.back();
     }
   }, [leftPress]);
