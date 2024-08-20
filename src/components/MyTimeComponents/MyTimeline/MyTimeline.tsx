@@ -7,17 +7,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 
 import archiveTune from "@assets/archive.mp3";
-import forgetTune from "@assets/forget.mp3";
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { ITask, TaskAction } from "@src/Interfaces/Task";
 import { getGoal } from "@src/api/GoalsAPI";
 import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
-import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import { useTranslation } from "react-i18next";
-import { displayToast, lastAction, focusTaskTitle } from "@src/store";
-import { addTask, completeTask, forgetTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { displayToast, focusTaskTitle } from "@src/store";
+import { addTask, completeTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
 import { displayReschedule } from "@src/store/TaskState";
@@ -48,11 +46,8 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const navigate = useNavigate();
   const { state } = useLocation();
   const doneSound = new Audio(archiveTune);
-  const forgetSound = new Audio(forgetTune);
-
   const { state: locationState } = useLocation();
   const setShowToast = useSetRecoilState(displayToast);
-  const setLastAction = useSetRecoilState(lastAction);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
 
@@ -89,7 +84,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       },
     });
   };
-  // console.log(devMode);
   const handleFocusClick = (task: ITask) => {
     setTaskTitle(task.title);
     navigate("/", { state: { ...state, displayFocus: true } });

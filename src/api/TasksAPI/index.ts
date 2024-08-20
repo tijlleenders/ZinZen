@@ -125,7 +125,7 @@ export const completeTask = async (id: string, duration: number, task: ITask) =>
   });
 };
 
-export const forgetTask = async (id: string, period: string, task: ITask) => {
+export const skipTask = async (id: string, period: string, task: ITask) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection
       .where("id")
