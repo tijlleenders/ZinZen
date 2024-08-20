@@ -112,9 +112,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           goalId: task.goalid,
           title: task.title,
           completedTodayIds: [],
-          forgotToday: [],
+          skippedToday: [],
           completedToday: actionName === TaskAction.Done ? Number(task.duration) : 0,
-          lastForget: "",
+          lastSkipped: "",
           lastCompleted: actionName === TaskAction.Done ? new Date().toLocaleDateString() : "",
           hoursSpent: 0,
           completedTodayTimings:

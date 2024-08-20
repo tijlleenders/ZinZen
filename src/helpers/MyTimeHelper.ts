@@ -25,7 +25,7 @@ export const transformIntoSchInputGoals = (
     const obj: ISchedulerInputGoal = { id: ele.id, title: t(ele.title), filters: {}, createdAt: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
     // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
-    // obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
+    // obj.skippedToday = dbTasks[ele.id]?.skippedToday || [];
     if (ele.duration) obj.minDuration = Number(ele.duration);
     if (ele.start) {
       obj.start = convertDateToString(new Date(ele.start));
