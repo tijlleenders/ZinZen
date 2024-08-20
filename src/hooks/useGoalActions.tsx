@@ -1,4 +1,4 @@
-import { getAllLevelGoalsOfId, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getAllLevelGoalsOfId, getGoal, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { restoreGoal } from "@src/api/TrashAPI";
 import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/helpers/GoalController";
@@ -13,6 +13,7 @@ import { useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
+import { hashObject } from "@src/utils";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -59,6 +60,8 @@ const useGoalActions = () => {
   };
 
   const updateGoal = async (goal: GoalItem, hints: boolean) => {
+    let changes = false;
+
     if (isPartnerModeActive) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
@@ -67,9 +70,23 @@ const useGoalActions = () => {
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
     } else {
-      await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
+      const originalGoal = await getGoal(goal.id);
+      if (originalGoal) {
+        changes = hashObject(originalGoal) !== hashObject(goal);
+        if (changes) {
+          await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
+        }
+      }
     }
-    setLastAction("goalUpdated");
+    if (changes) {
+      setLastAction("goalUpdated");
+
+      setShowToast({
+        open: true,
+        message: "Goal updated!",
+        extra: "",
+      });
+    }
   };
 
   const addGoal = async (newGoal: GoalItem, hints: boolean, parentGoal?: GoalItem) => {
