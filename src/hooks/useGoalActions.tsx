@@ -8,6 +8,7 @@ import { displayToast, lastAction, openDevMode } from "@src/store";
 
 import { useLocation, useParams } from "react-router-dom";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
+import plingSound from "@assets/pling.mp3";
 
 import { useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
@@ -60,7 +61,8 @@ const useGoalActions = () => {
   };
 
   const updateGoal = async (goal: GoalItem, hints: boolean) => {
-    let changes = false;
+    let isGoalChanged = false;
+    const addGoalSound = new Audio(plingSound);
 
     if (isPartnerModeActive) {
       let rootGoal = goal;
@@ -72,20 +74,20 @@ const useGoalActions = () => {
     } else {
       const originalGoal = await getGoal(goal.id);
       if (originalGoal) {
-        changes = hashObject(originalGoal) !== hashObject(goal);
-        if (changes) {
+        isGoalChanged = hashObject(originalGoal) !== hashObject(goal);
+        if (isGoalChanged) {
           await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
         }
       }
     }
-    if (changes) {
+    if (isGoalChanged) {
       setLastAction("goalUpdated");
-
       setShowToast({
         open: true,
         message: "Goal updated!",
         extra: "",
       });
+      addGoalSound.play();
     }
   };
 
