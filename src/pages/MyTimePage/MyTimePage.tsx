@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline/MyTimeline";
 import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
@@ -19,12 +19,33 @@ import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import { displayToast } from "@src/store";
+import { isDumpBoxEmpty } from "@src/api/DumpboxAPI";
+import { useSetRecoilState } from "recoil";
 
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const { state } = useLocation();
+  const setShowToast = useSetRecoilState(displayToast);
+
+  const checkAndShowSchedulerToast = async () => {
+    const isEmpty = await isDumpBoxEmpty();
+    console.log("isEmpty", isEmpty);
+
+    if (isEmpty && !window.location.pathname.includes("ZinZenFAQ")) {
+      setShowToast({
+        open: true,
+        message: "Automagical scheduling of your goals in progress...",
+        extra: "",
+      });
+    }
+  };
+
+  useEffect(() => {
+    checkAndShowSchedulerToast();
+  }, []);
 
   const [searchParams] = useSearchParams();
 
