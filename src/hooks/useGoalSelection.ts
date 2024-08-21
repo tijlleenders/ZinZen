@@ -12,6 +12,11 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const upPress = useKeyPress("ArrowUp");
+  const downPress = useKeyPress("ArrowDown");
+  const rightPress = useKeyPress("ArrowRight");
+  const leftPress = useKeyPress("ArrowLeft");
+
   const disableKeyboardNavigation = useMemo(() => {
     return location.search !== "";
   }, [location.search]);
@@ -42,10 +47,15 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     navigate(`/goals/${goal.id}`, { state: newState });
   };
 
-  const upPress = useKeyPress("ArrowUp");
-  const downPress = useKeyPress("ArrowDown");
-  const rightPress = useKeyPress("ArrowRight");
-  const leftPress = useKeyPress("ArrowLeft");
+  const scrollIntoView = useCallback(
+    (index: number) => {
+      const goalElement = document.getElementById(`goal-${goals[index]?.id}`);
+      if (goalElement) {
+        goalElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    },
+    [goals],
+  );
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -61,20 +71,12 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     };
   }, []);
 
-  const scrollIntoView = useCallback(
-    (index: number) => {
-      const goalElement = document.getElementById(`goal-${goals[index]?.id}`);
-      if (goalElement) {
-        goalElement.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    },
-    [goals],
-  );
-
+  // handle down key press
   useEffect(() => {
     if (disableKeyboardNavigation) return;
 
     if (downPress) {
+      if (goals.length === 0) return;
       setFocusedIndex((prevIndex) => {
         const newIndex = (prevIndex + 1) % goals.length;
         scrollIntoView(newIndex);
@@ -83,10 +85,12 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     }
   }, [downPress, goals.length, scrollIntoView]);
 
+  // handle up key press
   useEffect(() => {
     if (disableKeyboardNavigation) return;
 
     if (upPress) {
+      if (goals.length === 0) return;
       setFocusedIndex((prevIndex) => {
         const newIndex = (prevIndex - 1 + goals.length) % goals.length;
         scrollIntoView(newIndex);
@@ -95,6 +99,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     }
   }, [upPress, goals.length, scrollIntoView]);
 
+  // handle right key press
   useEffect(() => {
     if (disableKeyboardNavigation) return;
 
@@ -103,6 +108,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     }
   }, [rightPress]);
 
+  // handle left key press
   useEffect(() => {
     if (disableKeyboardNavigation) return;
 
