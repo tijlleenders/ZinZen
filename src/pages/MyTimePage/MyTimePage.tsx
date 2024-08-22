@@ -32,9 +32,8 @@ export const MyTimePage = () => {
 
   const checkAndShowSchedulerToast = async () => {
     const isEmpty = await isDumpBoxEmpty();
-    console.log("isEmpty", isEmpty);
 
-    if (isEmpty && !window.location.pathname.includes("ZinZenFAQ")) {
+    if (isEmpty) {
       setShowToast({
         open: true,
         message: "Automagical scheduling of your goals in progress...",
