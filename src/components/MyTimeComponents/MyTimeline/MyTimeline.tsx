@@ -73,29 +73,15 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
             />
             <div style={{ flex: 1 }}>
               <div style={{ display: "flex", position: "relative" }}>
-                <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
-                  <button
-                    style={{ textDecorationColor: task.goalColor }}
-                    type="button"
-                    className="MTL-taskTitle"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggleDisplayOptions(task.taskid, markDone);
-                    }}
-                  >
-                    {t(`${task.title}`)}
-                  </button>
-                </div>
+                <button style={{ textDecorationColor: task.goalColor }} type="button" className="MTL-taskTitle">
+                  {t(`${task.title}`)}
+                </button>
                 {showTaskOptions && (
-                  <button
-                    type="button"
-                    onClick={() => setDisplayOptionsIndex(null)}
-                    className="MyTime-expand-btw task-dropdown"
-                  >
-                    <div>
-                      <img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" />
-                    </div>
-                  </button>
+                  <img
+                    src={chevronLeftIcon}
+                    className="MyTime-expand-btw task-dropdown chevronDown theme-icon"
+                    alt="zinzen schedule"
+                  />
                 )}
               </div>
               {showTaskOptions && <TaskOptions task={task} handleActionClick={handleActionClick} />}
