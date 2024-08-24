@@ -1,14 +1,8 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from "react";
-
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
-
 import { ITask } from "@src/Interfaces/Task";
 import { TaskItem } from "@src/models/TaskItem";
 import { useTranslation } from "react-i18next";
-
 import "./index.scss";
 import { getTimePart } from "@src/utils";
 import { GoalTiming } from "./GoalTiming";
@@ -36,14 +30,18 @@ interface MyTimelineProps {
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetails, setTaskDetails }) => {
   const { t } = useTranslation();
-
-  const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
-
+  const [displayOptionsIndex, setDisplayOptionsIndex] = useState<string | null>(null);
   const { handleActionClick } = useMyTimelineStore(day, taskDetails, setTaskDetails);
 
   useEffect(() => {
     updateImpossibleGoals(myTasks.impossible);
-  }, []);
+  }, [myTasks.impossible]);
+
+  const handleToggleDisplayOptions = (taskId: string, isTaskCompleted: boolean) => {
+    if (!isTaskCompleted) {
+      setDisplayOptionsIndex(displayOptionsIndex === taskId ? null : taskId);
+    }
+  };
 
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
@@ -57,25 +55,14 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           (ele) => ele.start === task.start && ele.deadline === task.deadline,
         );
         const showTaskOptions = displayOptionsIndex === task.taskid;
+
         return (
           <button
             key={task.taskid}
             className={`${day === "Today" && markDone ? "completedTask" : ""}`}
             type="button"
-            style={
-              displayOptionsIndex !== task.taskid
-                ? { cursor: "pointer", display: "flex", flexDirection: "row" }
-                : { display: "flex", flexDirection: "row" }
-            }
-            onClick={() => {
-              if (displayOptionsIndex !== task.taskid) {
-                if (markDone) {
-                  //handleOpenGoal(task.goalid);
-                } else {
-                  setDisplayOptionsIndex(task.taskid);
-                }
-              } else setDisplayOptionsIndex("");
-            }}
+            style={{ cursor: "pointer", display: "flex", flexDirection: "row" }}
+            onClick={() => handleToggleDisplayOptions(task.taskid, markDone)}
           >
             <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
             <GoalTiming
@@ -93,20 +80,16 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                     className="MTL-taskTitle"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setDisplayOptionsIndex(displayOptionsIndex !== task.taskid ? task.taskid : "");
-                      if (displayOptionsIndex === task.taskid || markDone) {
-                        setDisplayOptionsIndex("");
-                      }
+                      handleToggleDisplayOptions(task.taskid, markDone);
                     }}
                   >
                     {t(`${task.title}`)}
                   </button>
                 </div>
-
                 {showTaskOptions && (
                   <button
                     type="button"
-                    onClick={() => setDisplayOptionsIndex("")}
+                    onClick={() => setDisplayOptionsIndex(null)}
                     className="MyTime-expand-btw task-dropdown"
                   >
                     <div>
@@ -115,7 +98,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
                   </button>
                 )}
               </div>
-              {showTaskOptions ? <TaskOptions task={task} handleActionClick={handleActionClick} /> : null}
+              {showTaskOptions && <TaskOptions task={task} handleActionClick={handleActionClick} />}
             </div>
           </button>
         );
