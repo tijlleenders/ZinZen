@@ -45,6 +45,10 @@ export const myNameSpace = "c95256dc-aa03-11ed-afa1-0242ac120002";
 
 export const getJustDate = (fullDate: Date) => new Date(fullDate.toDateString());
 
+export const getTimePart = (datetime: string | null, part: "hour" | "minute" = "hour"): string | null => {
+  return datetime ? datetime.split("T")[1]?.slice(part === "hour" ? 0 : 3, part === "hour" ? 2 : 5) : null;
+};
+
 export const truncateContent = (content: string, maxLength = 20) => {
   const { length } = content;
   if (length >= maxLength) {

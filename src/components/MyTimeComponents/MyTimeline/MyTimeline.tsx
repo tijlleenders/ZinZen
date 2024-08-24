@@ -10,6 +10,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { useTranslation } from "react-i18next";
 
 import "./index.scss";
+import { getTimePart } from "@src/utils";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
@@ -47,10 +48,10 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
       {myTasks.scheduled.map((task, index) => {
-        const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
-        const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
+        const startTime = getTimePart(task.start);
+        const endTime = getTimePart(task.deadline);
         const nextTask = myTasks.scheduled[index + 1];
-        const nextStartTime = nextTask ? nextTask.start.split("T")[1].slice(0, 2) : null;
+        const nextStartTime = getTimePart(nextTask?.start);
         const displayEndTime = endTime !== nextStartTime;
         const markDone = !!taskDetails[task.goalid]?.completedTodayTimings.find(
           (ele) => ele.start === task.start && ele.deadline === task.deadline,
@@ -58,6 +59,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         const showTaskOptions = displayOptionsIndex === task.taskid;
         return (
           <button
+            key={task.taskid}
             className={`${day === "Today" && markDone ? "completedTask" : ""}`}
             type="button"
             style={
