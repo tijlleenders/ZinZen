@@ -25,6 +25,32 @@ export const useMyTimelineStore = (
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
 
+  const addNewTask = async (task: ITask, action: TaskAction) => {
+    const newTask = {
+      id: uuidv4(),
+      goalId: task.goalid,
+      title: task.title,
+      completedTodayIds: [],
+      forgotToday: [],
+      completedToday: action === TaskAction.Done ? Number(task.duration) : 0,
+      lastForget: "",
+      lastCompleted: action === TaskAction.Done ? new Date().toLocaleDateString() : "",
+      hoursSpent: 0,
+      completedTodayTimings:
+        action === TaskAction.Done
+          ? [
+              {
+                goalid: task.goalid,
+                start: task.start,
+                deadline: task.deadline,
+              },
+            ]
+          : [],
+      blockedSlots: [],
+    };
+    await addTask(newTask);
+  };
+
   const handleOpenGoal = async (goalId: string) => {
     const goalsHistory = [];
     let tmpGoal = await getGoal(goalId);
@@ -67,28 +93,7 @@ export const useMyTimelineStore = (
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
-        await addTask({
-          id: uuidv4(),
-          goalId: task.goalid,
-          title: task.title,
-          completedTodayIds: [],
-          forgotToday: [],
-          completedToday: actionName === TaskAction.Done ? Number(task.duration) : 0,
-          lastForget: "",
-          lastCompleted: actionName === TaskAction.Done ? new Date().toLocaleDateString() : "",
-          hoursSpent: 0,
-          completedTodayTimings:
-            actionName === TaskAction.Done
-              ? [
-                  {
-                    goalid: task.goalid,
-                    start: task.start,
-                    deadline: task.deadline,
-                  },
-                ]
-              : [],
-          blockedSlots: [],
-        });
+        await addNewTask(task, actionName);
       } else if (actionName === TaskAction.Done) {
         const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
         if (markDone) return null;
