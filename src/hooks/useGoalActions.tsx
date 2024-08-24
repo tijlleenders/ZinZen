@@ -15,6 +15,7 @@ import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
 import { hashObject } from "@src/utils";
+import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -24,6 +25,7 @@ const useGoalActions = () => {
   const setDevMode = useSetRecoilState(openDevMode);
   const subGoalsHistory = state?.goalsHistory || [];
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
+  const { goal: activeGoal } = useActiveGoalContext();
 
   const setShowToast = useSetRecoilState(displayToast);
   const pageCrumple = new Audio(pageCrumplingSound);
@@ -72,12 +74,10 @@ const useGoalActions = () => {
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
     } else {
-      const originalGoal = await getGoal(goal.id);
-      if (originalGoal) {
-        isGoalChanged = hashObject(originalGoal) !== hashObject(goal);
-        if (isGoalChanged) {
-          await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
-        }
+      const originalGoal = activeGoal;
+      if (originalGoal && hashObject(originalGoal) !== hashObject(goal)) {
+        isGoalChanged = true;
+        await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
       }
     }
     if (isGoalChanged) {
