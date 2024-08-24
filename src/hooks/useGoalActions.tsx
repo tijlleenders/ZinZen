@@ -73,13 +73,12 @@ const useGoalActions = () => {
         rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
-    } else {
-      const originalGoal = activeGoal;
-      if (originalGoal && hashObject(originalGoal) !== hashObject(goal)) {
-        isGoalChanged = true;
-        await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
-      }
+    } else if (activeGoal && hashObject(activeGoal) !== hashObject(goal)) {
+      // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
+      isGoalChanged = true;
+      await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
     }
+
     if (isGoalChanged) {
       setLastAction("goalUpdated");
       setShowToast({
