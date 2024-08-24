@@ -4,17 +4,21 @@ import React, { useEffect, useState } from "react";
 import { lastAction } from "@src/store";
 import "./NotNowModal.scss";
 import ZModal from "@src/common/ZModal";
-import { addBlockedSlot } from "@src/api/TasksAPI"; // Assume getGoalById exists
+import { addBlockedSlot, getTaskByGoalId, skipTask } from "@src/api/TasksAPI"; // Assume getGoalById exists
 import { displayReschedule } from "@src/store/TaskState";
 import { MILLISECONDS_IN_HOUR, RESCHEDULE_OPTIONS } from "@src/constants/rescheduleOptions";
 import { convertDateToString } from "@src/utils";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { getGoalById } from "@src/api/GoalsAPI";
+import { getHrFromDateString } from "@src/utils/SchedulerUtils";
+import forgetTune from "@assets/forget.mp3";
 
 const NotNowModal = () => {
   const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
   const setLastAction = useSetRecoilState(lastAction);
   const [showSkip, setShowSkip] = useState(false);
+
+  const forgetSound = new Audio(forgetTune);
 
   useEffect(() => {
     const checkGoalCategory = async () => {
@@ -48,10 +52,16 @@ const NotNowModal = () => {
     setLastAction("TaskRescheduled");
   };
 
-  const handleSkip = () => {
-    console.log("Task skipped");
+  const handleSkip = async () => {
+    const taskItem = await getTaskByGoalId(task.goalid);
+    if (!taskItem) {
+      return;
+    }
+    const period = `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`;
+    await skipTask(taskItem?.id, period, task);
     setDisplayReschedule(null);
     setLastAction("TaskSkipped");
+    forgetSound.play();
   };
 
   return (
