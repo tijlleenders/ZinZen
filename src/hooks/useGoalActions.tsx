@@ -1,4 +1,4 @@
-import { getAllLevelGoalsOfId, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getAllLevelGoalsOfId, getGoal, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { restoreGoal } from "@src/api/TrashAPI";
 import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/helpers/GoalController";
@@ -8,11 +8,14 @@ import { displayToast, lastAction, openDevMode } from "@src/store";
 
 import { useLocation, useParams } from "react-router-dom";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
+import plingSound from "@assets/pling.mp3";
 
 import { useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
+import { hashObject } from "@src/utils";
+import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -22,6 +25,7 @@ const useGoalActions = () => {
   const setDevMode = useSetRecoilState(openDevMode);
   const subGoalsHistory = state?.goalsHistory || [];
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
+  const { goal: activeGoal } = useActiveGoalContext();
 
   const setShowToast = useSetRecoilState(displayToast);
   const pageCrumple = new Audio(pageCrumplingSound);
@@ -59,6 +63,8 @@ const useGoalActions = () => {
   };
 
   const updateGoal = async (goal: GoalItem, hints: boolean) => {
+    const addGoalSound = new Audio(plingSound);
+
     if (isPartnerModeActive) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
@@ -66,10 +72,17 @@ const useGoalActions = () => {
         rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
-    } else {
+    } else if (activeGoal && hashObject(activeGoal) !== hashObject(goal)) {
+      // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
+      setLastAction("goalUpdated");
+      setShowToast({
+        open: true,
+        message: "Goal updated!",
+        extra: "",
+      });
+      addGoalSound.play();
     }
-    setLastAction("goalUpdated");
   };
 
   const addGoal = async (newGoal: GoalItem, hints: boolean, parentGoal?: GoalItem) => {
