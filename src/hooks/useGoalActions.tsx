@@ -63,7 +63,6 @@ const useGoalActions = () => {
   };
 
   const updateGoal = async (goal: GoalItem, hints: boolean) => {
-    let isGoalChanged = false;
     const addGoalSound = new Audio(plingSound);
 
     if (isPartnerModeActive) {
@@ -75,11 +74,7 @@ const useGoalActions = () => {
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
     } else if (activeGoal && hashObject(activeGoal) !== hashObject(goal)) {
       // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
-      isGoalChanged = true;
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
-    }
-
-    if (isGoalChanged) {
       setLastAction("goalUpdated");
       setShowToast({
         open: true,
