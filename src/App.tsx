@@ -59,7 +59,6 @@ const App = () => {
     });
   };
   const handleClick = () => {
-    ev;
     api.destroy();
   };
   useEffect(() => {
@@ -156,7 +155,7 @@ const App = () => {
           </Routes>
         </BrowserRouter>
         {displayBackupRestoreModal && <BackupRestoreModal />}
-        {/* {displayLanguageChangeModal && <LanguageChangeModal />} */}
+        {displayLanguageChangeModal && <LanguageChangeModal />}
       </div>
     </div>
   );
