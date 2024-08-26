@@ -3,14 +3,17 @@ import { useCallback, useEffect, useMemo } from "react";
 import { extractLinks } from "@src/utils/patterns";
 import { ILocationState } from "@src/Interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { focusedGoalState } from "@src/store/GoalsState";
 import { useKeyPress } from "./useKeyPress";
+import { lastAction } from "@src/store";
 
 export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
   const [focusedIndex, setFocusedIndex] = useRecoilState(focusedGoalState);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const action = useRecoilValue(lastAction);
 
   const upPress = useKeyPress("ArrowUp");
   const downPress = useKeyPress("ArrowDown");
@@ -56,6 +59,12 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     },
     [goals],
   );
+
+  useEffect(() => {
+    if (action === "goalItemCreated") {
+      setFocusedIndex(0);
+    }
+  }, [action]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
