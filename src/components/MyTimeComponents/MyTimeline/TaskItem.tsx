@@ -4,9 +4,9 @@ import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 import { useTranslation } from "react-i18next";
 import { TaskItem } from "@src/models/TaskItem";
 import { ITask } from "@src/Interfaces/Task";
+import { getTimePart } from "@src/utils";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
-import { getTimePart } from "@src/utils";
 
 interface TaskItemProps {
   task: ITask;
@@ -37,33 +37,28 @@ const TaskItemComponent = ({
   return (
     <button
       key={task.taskid}
-      className={`${markDone ? "completedTask" : ""}`}
+      className={`MTL-taskItem simple ${markDone ? "completedTask" : ""}`}
+      style={{ borderLeft: `6px solid ${task.goalColor}` }}
       type="button"
-      style={{ cursor: "pointer", display: "flex", flexDirection: "row" }}
       onClick={() => handleToggleDisplayOptions(task.taskid, markDone)}
     >
-      <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
       <GoalTiming
         startTime={startTime}
         endTime={endTime}
         showTaskOptions={showTaskOptions}
         displayEndTime={displayEndTime}
       />
-      <div style={{ flex: 1 }}>
-        <div style={{ display: "flex", position: "relative" }}>
-          <button style={{ textDecorationColor: task.goalColor }} type="button" className="MTL-taskTitle">
-            {t(`${task.title}`)}
-          </button>
-          {showTaskOptions && (
-            <img
-              src={chevronLeftIcon}
-              className="MyTime-expand-btw task-dropdown chevronDown theme-icon"
-              alt="zinzen schedule"
-            />
-          )}
-        </div>
+
+      <div className="MTL-taskTitleActionWrapper">
+        <span style={{ textDecorationColor: task.goalColor }} className="MTL-taskTitle">
+          {t(`${task.title}`)}
+        </span>
         {showTaskOptions && <TaskOptions task={task} handleActionClick={handleActionClick} />}
       </div>
+
+      {showTaskOptions && (
+        <img src={chevronLeftIcon} className="MyTime-expand-btw chevronDown theme-icon" alt="zinzen schedule" />
+      )}
     </button>
   );
 };
