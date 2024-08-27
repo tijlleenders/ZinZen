@@ -392,43 +392,11 @@
   border: 1px solid;
 }
 
-.goal-menu-dots {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding-top: 5px;
-}
-
-.goal-menu-dots span {
-  width: 3.5px;
-  height: 3.5px;
-  border-radius: 50%;
-  background-color: white;
-  display: inline-block;
-}
-
 #addGoal-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
   cursor: pointer;
-}
-
-.goal-tile {
-  border: none;
-  display: flex;
-  font-family: "Montserrat";
-  font-weight: 400;
-  font-size: 18px;
-  width: 100%;
-  text-align: left !important;
-  max-width: unset;
-  overflow: hidden;
-  padding: 20px 0;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 6px;
 }
 
 .goal-title::-webkit-scrollbar {
@@ -439,46 +407,6 @@
   white-space: pre-line;
   font-size: 0.875em !important;
   font-weight: 300 !important;
-}
-
-.goal-glow {
-  animation: glowAnimation 0.5s infinite ease-in-out;
-}
-
-@keyframes glowAnimation {
-  0%,
-  100% {
-    background-color: rgba(255, 215, 0, 0.2);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.7),
-      0 0 5px rgba(255, 215, 0, 0.7),
-      0 0 2px rgba(255, 215, 0, 0.7);
-  }
-
-  15%,
-  85% {
-    background-color: rgba(255, 215, 0, 0.4);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.9),
-      0 0 5px rgba(255, 215, 0, 0.9),
-      0 0 2px rgba(255, 215, 0, 0.9);
-  }
-
-  30%,
-  70% {
-    background-color: rgba(255, 215, 0, 0.6);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.7),
-      0 0 5px rgba(255, 215, 0, 0.7),
-      0 0 2px rgba(255, 215, 0, 0.7);
-  }
-
-  50% {
-    background-color: rgba(255, 215, 0, 0.8);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.7),
-      0 0 5px rgba(255, 215, 0);
-  }
 }
 
 .goal-link {
