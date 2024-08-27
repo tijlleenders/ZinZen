@@ -9,14 +9,14 @@ interface GoalTitleProps {
   isImpossible: boolean;
 }
 
-const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
+const GoalTitle = ({ goal, isImpossible, onClick }: GoalTitleProps) => {
   const { t } = useTranslation();
   const { id, title } = goal;
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
   const textParts = replacedString.split(/(zURL-\d+)/g);
 
   return (
-    <div className="goal-title">
+    <div className="goal-title" onClick={onClick}>
       {isImpossible && "! "}
       {textParts.map((part) => {
         const match = part.match(/zURL-(\d+)/);

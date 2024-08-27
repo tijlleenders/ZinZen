@@ -7,7 +7,7 @@ interface GoalDropdownProps {
   goal: GoalItem;
 }
 
-const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
+const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal, onClick, dragAttributes, dragListeners }) => {
   const { sublist, goalColor, timeBudget, newUpdates, title } = goal;
   const hasSubGoals = sublist.length > 0;
   const titleContainsVideoLink = title.includes("youtube") || title.includes("peertube") || title.includes("youtu");
@@ -24,17 +24,21 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
       {titleContainsVideoLink ? (
         <TriangleIcon color={goalColor} size={37} borderWidth={4} borderColor={goalColor} />
       ) : (
-        <div
-          className="goal-dropdown goal-dd-outer"
+        <button
+          className="goal-dropdown goal-dd-outer simple"
           style={{
             background: outerBackground,
             border: outerBorderStyle,
           }}
+          type="button"
+          onClick={onClick}
+          {...dragAttributes}
+          {...dragListeners}
         >
           <div className="goal-dd-inner" style={{ borderColor: innerBorderColor }}>
             {newUpdates && <NotificationSymbol color={goalColor} />}
           </div>
-        </div>
+        </button>
       )}
     </div>
   );

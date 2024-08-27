@@ -89,19 +89,14 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
           ...(goal.typeOfGoal !== "myGoal" && goal.parentGoalId === "root" ? { width: "80%" } : {}),
         }}
       >
-        <div
-          style={{ touchAction: "none" }}
-          onClickCapture={(e) => {
-            e.stopPropagation();
-            redirect(location.state, true);
-          }}
-          {...dragAttributes}
-          {...dragListeners}
-        >
-          <GoalDropdown goal={goal} />
-        </div>
-        <div aria-hidden className="goal-tile" onClick={handleGoalClick}>
-          <GoalTitle goal={goal} isImpossible={goal.impossible} />
+        <GoalDropdown
+          goal={goal}
+          onClick={() => redirect(location.state, true)}
+          dragAttributes={dragAttributes}
+          dragListeners={dragListeners}
+        />
+        <div aria-hidden className="goal-tile">
+          <GoalTitle goal={goal} isImpossible={goal.impossible} onClick={handleGoalClick} />
         </div>
       </div>
       {!isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
