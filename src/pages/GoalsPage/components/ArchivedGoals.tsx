@@ -31,6 +31,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           onClick={async (e) => {
             e.stopPropagation();
             await restoreArchivedGoal(goal);
+            window.history.back();
           }}
         >
           <ActionDiv
@@ -52,6 +53,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           className="goal-action-archive shareOptions-btn"
           onClick={async () => {
             await deleteGoalAction(goal);
+            window.history.back();
           }}
         >
           <ActionDiv label={t("Delete")} icon="Delete" />
