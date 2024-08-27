@@ -18,7 +18,7 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
   const { t } = useTranslation();
 
   return (
-    <ZModal open width={400} onCancel={() => window.history.back()} type="interactables-modal">
+    <ZModal open width={400} type="interactables-modal">
       <div style={{ textAlign: "left" }} className="header-title">
         <p className="ordinary-element" id="title-field">
           {t(`${goal.title}`)}
@@ -31,6 +31,7 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           onClick={async (e) => {
             e.stopPropagation();
             await restoreDeletedGoal(goal);
+            window.history.back();
           }}
         >
           <ActionDiv
@@ -52,6 +53,7 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           className="goal-action-archive shareOptions-btn"
           onClick={async () => {
             await deleteGoalAction(goal);
+            window.history.back();
           }}
         >
           <ActionDiv label={t("Delete")} icon="Delete" />
