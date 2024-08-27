@@ -27,16 +27,18 @@ interface MyTimelineProps {
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetails, setTaskDetails }) => {
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState<string | null>(null);
-  const { handleActionClick } = useMyTimelineStore(day, taskDetails, setTaskDetails);
+  const { handleActionClick, handleOpenGoal } = useMyTimelineStore(day, taskDetails, setTaskDetails);
 
   useEffect(() => {
     updateImpossibleGoals(myTasks.impossible);
   }, [myTasks.impossible]);
 
-  const handleToggleDisplayOptions = (taskId: string, isTaskCompleted: boolean) => {
+  const handleTaskItemClick = (task: ITask, isTaskCompleted: boolean) => {
     if (!isTaskCompleted) {
-      setDisplayOptionsIndex(displayOptionsIndex === taskId ? null : taskId);
+      setDisplayOptionsIndex(displayOptionsIndex === task.taskid ? null : task.taskid);
+      return;
     }
+    handleOpenGoal(task.goalid);
   };
 
   return (
@@ -53,7 +55,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
             task={task}
             key={task.taskid}
             handleActionClick={handleActionClick}
-            handleToggleDisplayOptions={handleToggleDisplayOptions}
+            handleClick={handleTaskItemClick}
             showTaskOptions={showTaskOptions}
             displayEndTime={displayEndTime}
             taskDetails={taskDetails}

@@ -119,5 +119,5 @@ export const useMyTimelineStore = (
     return null;
   };
 
-  return { handleActionClick };
+  return { handleActionClick, handleOpenGoal };
 };

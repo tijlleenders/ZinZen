@@ -3,17 +3,17 @@ import React from "react";
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 import { useTranslation } from "react-i18next";
 import { TaskItem } from "@src/models/TaskItem";
-import { ITask } from "@src/Interfaces/Task";
+import { ITask, TaskAction } from "@src/Interfaces/Task";
 import { getTimePart } from "@src/utils";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 
 interface TaskItemProps {
   task: ITask;
-  handleActionClick: (action: string) => void;
+  handleActionClick: (actionName: TaskAction, task: ITask) => Promise<void | null>;
   showTaskOptions: boolean;
   displayEndTime: boolean;
-  handleToggleDisplayOptions: (taskId: string, isTaskCompleted: boolean) => void;
+  handleClick: (task: ITask, isTaskCompleted: boolean) => void;
   taskDetails: { [goalid: string]: TaskItem };
 }
 
@@ -22,11 +22,10 @@ const TaskItemComponent = ({
   handleActionClick,
   showTaskOptions,
   displayEndTime,
-  handleToggleDisplayOptions,
+  handleClick,
   taskDetails,
 }: TaskItemProps) => {
   const { t } = useTranslation();
-
   const startTime = getTimePart(task.start);
   const endTime = getTimePart(task.deadline);
 
@@ -40,7 +39,7 @@ const TaskItemComponent = ({
       className={`MTL-taskItem simple ${markDone ? "completedTask" : ""}`}
       style={{ borderLeft: `6px solid ${task.goalColor}` }}
       type="button"
-      onClick={() => handleToggleDisplayOptions(task.taskid, markDone)}
+      onClick={() => handleClick(task, markDone)}
     >
       <GoalTiming
         startTime={startTime}
