@@ -1,6 +1,6 @@
-import { getAllLevelGoalsOfId, getGoal, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getAllLevelGoalsOfId, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
-import { restoreGoal } from "@src/api/TrashAPI";
+import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { GoalItem } from "@src/models/GoalItem";
@@ -51,7 +51,7 @@ const useGoalActions = () => {
   };
 
   const restoreDeletedGoal = async (goal: GoalItem) => {
-    return restoreGoal(goal, goal.typeOfGoal === "shared").then(() => {
+    return restoreUserGoal(goal, goal.typeOfGoal === "shared").then(() => {
       setLastAction("goalRestored");
     });
   };
