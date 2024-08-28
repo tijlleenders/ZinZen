@@ -82,6 +82,7 @@ const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
           <div
             key={`sortable-${goal.id}`}
             style={focusedGoal?.id === goal.id ? { borderLeft: `${goal.goalColor} 3px solid` } : {}}
+            className={focusedGoal?.id === goal.id ? "focused-goal" : ""}
           >
             <SortableItem key={`sortable-${goal.id}`} goal={goal} />
           </div>
