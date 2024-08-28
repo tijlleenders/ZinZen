@@ -49,7 +49,7 @@ export const getSharedWMGoal = async (goalId: string) => {
 };
 
 export const getSharedWMGoalById = (id: string) => {
-  return db.goalsCollection.get(id);
+  return db.sharedWMCollection.get(id);
 };
 
 export const getSharedWMChildrenGoals = async (parentGoalId: string) => {

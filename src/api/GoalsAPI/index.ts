@@ -31,17 +31,7 @@ export const addIntoSublist = async (parentGoalId: string, goalIds: string[]) =>
 };
 
 export const addGoal = async (goalDetails: GoalItem) => {
-  // @ts-ignore
-  const goals: GoalItem = { ...goalDetails, createdAt: new Date() };
-  let newGoalId;
-  await db
-    .transaction("rw", db.goalsCollection, async () => {
-      newGoalId = await db.goalsCollection.add(goals);
-    })
-    .catch((e) => {
-      console.log(e.stack || e);
-    });
-  return newGoalId;
+  return db.goalsCollection.add({ ...goalDetails, createdAt: new Date().toString() });
 };
 
 export const getGoal = async (goalId: string) => {
@@ -72,6 +62,12 @@ export const getAllGoals = async (includeArchived = "false") => {
   const allGoals = await db.goalsCollection.where("archived").equals(includeArchived).toArray();
   allGoals.reverse();
   return allGoals;
+};
+
+export const getArchivedGoals = async () => {
+  const archivedGoals: GoalItem[] = await db.goalsCollection.where("archived").equals("true").sortBy("createdAt");
+  archivedGoals.reverse();
+  return sortGoalsByProps(archivedGoals);
 };
 
 export const checkMagicGoal = async () => {
@@ -346,4 +342,16 @@ export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
   await updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] });
   await addGoal(goal);
   await deleteGoalHint(goal.parentGoalId, goal.id);
+};
+
+export const fetchArchivedGoalByTitle = async (value: string) => {
+  if (value.trim() === "") {
+    return [];
+  }
+  const lowerCaseValue = value.toLowerCase();
+  return db.goalsCollection
+    .where("archived")
+    .equals("true")
+    .and((goal) => goal.title.toLowerCase().startsWith(lowerCaseValue))
+    .toArray();
 };

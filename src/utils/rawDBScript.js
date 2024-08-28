@@ -14,7 +14,7 @@
 
 //     // Modify the desired field(s)
 //     data.lastCompleted = "5/5/2023";
-//     data.lastForget = "5/5/2023";
+//     data.lastSkipped = "5/5/2023";
 //     data.hoursSpent = 5;
 
 //     // Put the modified data back into the object store

@@ -7,24 +7,19 @@ import { useDeletedGoalContext } from "@src/contexts/deletedGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
 import { TrashItem } from "@src/models/TrashItem";
 import { darkModeState } from "@src/store";
-import { t } from "i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
-  const { deleteGoalAction } = useGoalActions();
+  const { restoreDeletedGoal, deleteGoalAction } = useGoalActions();
+  const { t } = useTranslation();
 
   return (
     <ZModal open width={400} onCancel={() => window.history.back()} type="interactables-modal">
-      <div
-        style={{ textAlign: "left" }}
-        className="header-title"
-        onClickCapture={() => {
-          handleUpdateGoal(goal);
-        }}
-      >
+      <div style={{ textAlign: "left" }} className="header-title">
         <p className="ordinary-element" id="title-field">
           {t(`${goal.title}`)}
         </p>
@@ -35,6 +30,7 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           className="goal-action-archive shareOptions-btn"
           onClick={async (e) => {
             e.stopPropagation();
+            await restoreDeletedGoal(goal);
           }}
         >
           <ActionDiv
@@ -75,7 +71,7 @@ const DeletedGoals = ({ goals }: { goals: TrashItem[] }) => {
 
   return (
     <div className="archived-drawer">
-      {showOptions && deletedGoal && <Actions goal={deletedGoal} />}
+      {showOptions && <Actions goal={deletedGoal} />}
       {goals.length > 0 && (
         <ZAccordion
           showCount

@@ -9,7 +9,7 @@ import {
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { addSchedulerRes, getFromOutbox, updateSchedulerCachedRes } from "@src/api/DumpboxAPI";
 import { getAllGoals } from "@src/api/GoalsAPI";
-import { getAllTasks, getAllBlockedTasks } from "@src/api/TasksAPI";
+import { getAllTasks, getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TCompletedTaskTiming, TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
@@ -25,7 +25,7 @@ export const transformIntoSchInputGoals = (
     const obj: ISchedulerInputGoal = { id: ele.id, title: t(ele.title), filters: {}, createdAt: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
     // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
-    // obj.skippedToday = dbTasks[ele.id]?.forgotToday || [];
+    // obj.skippedToday = dbTasks[ele.id]?.skippedToday || [];
     if (ele.duration) obj.minDuration = Number(ele.duration);
     if (ele.start) {
       obj.start = convertDateToString(new Date(ele.start));
@@ -172,7 +172,8 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   console.log("blockedSlots", blockedSlots);
 
   const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(dbTasks, activeGoals, blockedSlots);
-  schedulerInput.goals = inputGoalsArr;
+  const adjustedInputGoalsArr = await adjustNotOnBlocks(inputGoalsArr);
+  schedulerInput.goals = adjustedInputGoalsArr;
   return { dbTasks, schedulerInput };
 };
 

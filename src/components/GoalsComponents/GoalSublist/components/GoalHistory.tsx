@@ -38,9 +38,9 @@ const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => {
   );
 };
 const GoalHistory = () => {
-  const {
-    state: { goalsHistory },
-  } = useLocation();
+  const location = useLocation();
+  const goalsHistory = location.state?.goalsHistory ?? []; // default as an empty array if undefined.
+
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
@@ -91,7 +91,7 @@ const GoalHistory = () => {
                     window.history.back();
                   },
                 },
-                ...goalsHistory.slice(goalsHistory.length - 1).map((goal: IgoalsHistory, index: number) => ({
+                ...goalsHistory.slice(goalsHistory.length - 1).map((goal: ISubGoalHistory, index: number) => ({
                   title: <BreadcrumbItem goal={goal} />,
                   onClick: () => {
                     const count = index + 1 - goalsHistory.length;
