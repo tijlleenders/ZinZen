@@ -11,11 +11,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
+import plingSound from "@assets/pling.mp3";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
   const { restoreDeletedGoal, deleteGoalAction } = useGoalActions();
   const { t } = useTranslation();
+  const restoreGoalSound = new Audio(plingSound);
 
   return (
     <ZModal open width={400} type="interactables-modal">
@@ -31,6 +33,7 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           onClick={async (e) => {
             e.stopPropagation();
             await restoreDeletedGoal(goal);
+            restoreGoalSound.play();
             window.history.back();
           }}
         >
