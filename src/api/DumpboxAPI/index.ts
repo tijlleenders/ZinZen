@@ -46,13 +46,3 @@ export const updateSchedulerCachedRes = async (uniqueId: string, output: string)
     console.log(e.stack || e);
   });
 };
-
-export const isDumpBoxEmpty = async () => {
-  try {
-    const dumpbox = await db.dumpboxCollection.toArray();
-    return dumpbox.length === 0;
-  } catch (err) {
-    console.error("Error checking dumpbox:", err);
-    return true;
-  }
-};
