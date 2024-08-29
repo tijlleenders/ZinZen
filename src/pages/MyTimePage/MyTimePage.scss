@@ -1,4 +1,4 @@
-.MyTime_day {
+.MyTime_day-container {
   border-bottom: 2px solid var(--default-border-color);
 }
 
@@ -12,18 +12,17 @@
   cursor: pointer;
 }
 
-.MyTime_navRow {
+.MyTime_header {
   display: flex;
   justify-content: space-between;
-  padding: 3% 2% 0 4%;
-  padding-bottom: 0.5em;
+  padding: 3% 2% 0.5em 4%;
   border: none;
   width: auto;
   align-items: flex-start;
-  background: transparent;
+  background: var(--bottom-nav-color);
 }
 
-.MyTime_navRow.selected {
+.MyTime_header.selected {
   background: var(--bottom-nav-color);
 }
 

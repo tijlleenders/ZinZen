@@ -19,6 +19,7 @@ import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import classNames from "classnames";
 
 export const MyTimePage = () => {
   const today = new Date();
@@ -42,20 +43,11 @@ export const MyTimePage = () => {
     const freeHours = tasks[day]?.freeHrsOfDay;
     const dayOfMonth = today.getDate();
     const suffix = getOrdinalSuffix(dayOfMonth);
+    const isActive = showTasks.includes(day);
     return (
-      <div key={day} className="MyTime_day">
-        <button
-          type="button"
-          className="MyTime_button"
-          style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}
-          onClick={() => handleShowTasks(day)}
-        >
-          <div
-            style={{
-              background: "var(--bottom-nav-color)",
-            }}
-            className={`MyTime_navRow ${showTasks.includes(day) ? "selected" : ""}`}
-          >
+      <div key={day} className="MyTime_day-container">
+        <button type="button" className="MyTime_button" onClick={() => handleShowTasks(day)}>
+          <div className={classNames("MyTime_header", { selected: isActive })}>
             <h3 className="MyTime_dayTitle">
               {day === "Today" ? (
                 <>
@@ -66,23 +58,17 @@ export const MyTimePage = () => {
                 day
               )}
             </h3>
-            <div className="MyTime-expand-btw">
-              <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-                {freeHours > 0 && <p>{`${freeHours} hours free`}</p>}
-              </div>
-            </div>
+            {freeHours > 0 && <p className="MyTime-free-hours-text">{`${freeHours} hours free`}</p>}
           </div>
           {tasks[day] && (
             <ColorBands list={tasks[day]} day={day} tasksStatus={tasksStatus} active={showTasks.includes(day)} />
           )}
         </button>
-        <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
-          {showTasks.includes(day) && tasks[day] ? (
-            <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} />
-          ) : (
-            <div />
-          )}
-        </div>
+        {isActive && tasks[day] ? (
+          <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} />
+        ) : (
+          <div />
+        )}
       </div>
     );
   };

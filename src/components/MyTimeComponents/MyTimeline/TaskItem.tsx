@@ -57,7 +57,7 @@ const TaskItemComponent = ({
       </div>
 
       {showTaskOptions && (
-        <img src={chevronLeftIcon} className="MyTime-expand-btw chevronDown theme-icon" alt="zinzen schedule" />
+        <img src={chevronLeftIcon} className="MyTime-free-hours-text chevronDown theme-icon" alt="zinzen schedule" />
       )}
     </button>
   );
