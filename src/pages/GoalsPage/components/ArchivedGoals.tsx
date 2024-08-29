@@ -70,7 +70,7 @@ const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
   const { goal: activeGoal } = useActiveGoalContext();
-  const showOptions = !!searchParams.get("showOptions") && activeGoal;
+  const showOptions = !!searchParams.get("showOptions") && activeGoal?.archived === "true";
   console.log("🚀 ~ ArchivedGoals ~ showOptions:", showOptions);
 
   return (
