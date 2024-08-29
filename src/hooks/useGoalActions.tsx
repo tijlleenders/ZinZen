@@ -56,9 +56,10 @@ const useGoalActions = () => {
     });
   };
 
-  const restoreArchivedGoal = async (goal: GoalItem) => {
+  const restoreArchivedGoal = async (goal: GoalItem, action: "goalRestored" | "none") => {
     return unarchiveUserGoal(goal).then(() => {
-      setLastAction("goalRestored");
+      if (action === "none") return;
+      setLastAction(action);
     });
   };
 
