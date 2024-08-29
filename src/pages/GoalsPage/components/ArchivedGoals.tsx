@@ -33,6 +33,10 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           onClick={async (e) => {
             e.stopPropagation();
             await restoreArchivedGoal(goal);
+            const goalTitleElement = document.querySelector(`#goal-${goal.id} .goal-title`) as HTMLElement;
+            if (goalTitleElement) {
+              goalTitleElement.style.textDecoration = "none";
+            }
             restoreGoalSound.play();
             window.history.back();
           }}
