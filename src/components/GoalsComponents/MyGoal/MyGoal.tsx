@@ -109,4 +109,4 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   );
 };
 
-export default MyGoal;
+export default React.memo(MyGoal);
