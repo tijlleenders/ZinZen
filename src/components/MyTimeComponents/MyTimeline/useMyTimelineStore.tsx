@@ -90,31 +90,32 @@ export const useMyTimelineStore = (
     if (actionName === TaskAction.Focus) {
       return handleFocusClick(task);
     }
-    if (day === "Today") {
-      const taskItem = await getTaskByGoalId(task.goalid);
-      if (!taskItem) {
-        await addNewTask(task, actionName);
-      } else if (actionName === TaskAction.Done) {
-        const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
-        if (markDone) return null;
-        await completeTask(taskItem.id, Number(task.duration), task);
-      } else if (actionName === TaskAction.NotNow) {
-        setOpenReschedule(task);
-      }
-      if (actionName === TaskAction.Done) {
-        await doneSound.play();
-        const updatedTask = await getTaskByGoalId(task.goalid);
-        if (updatedTask) {
-          setTaskDetails((prev) => ({
-            ...prev,
-            [task.goalid]: updatedTask,
-          }));
-        }
-      } else if (actionName === TaskAction.NotNow) {
-        setOpenReschedule(task);
-      }
-    } else {
+    if (day !== "Today") {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
+      return null;
+    }
+    const taskItem = await getTaskByGoalId(task.goalid);
+    if (!taskItem) {
+      await addNewTask(task, actionName);
+    } else if (actionName === TaskAction.Done) {
+      const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
+      if (markDone) return null;
+      await completeTask(taskItem.id, Number(task.duration), task);
+    } else if (actionName === TaskAction.NotNow) {
+      setOpenReschedule(task);
+    }
+
+    if (actionName === TaskAction.Done) {
+      await doneSound.play();
+      const updatedTask = await getTaskByGoalId(task.goalid);
+      if (updatedTask) {
+        setTaskDetails((prev) => ({
+          ...prev,
+          [task.goalid]: updatedTask,
+        }));
+      }
+    } else if (actionName === TaskAction.NotNow) {
+      setOpenReschedule(task);
     }
     return null;
   };

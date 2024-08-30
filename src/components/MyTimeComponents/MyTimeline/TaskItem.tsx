@@ -38,7 +38,7 @@ const TaskItemComponent: React.FC<TaskItemProps> = ({
       type="button"
       onClick={() => onToggleExpand(task.taskid, markDone)}
     >
-      <div className={`MTL-taskTiming-wrapper ${isExpanded && displayEndTime ? "show-end-time" : ""}`}>
+      <div className={classNames("MTL-taskTiming-wrapper", { "show-end-time": isExpanded && displayEndTime })}>
         <TaskTiming start={task.start} deadline={task.deadline} />
       </div>
       <div className="MTL-taskTitleActionWrapper">
