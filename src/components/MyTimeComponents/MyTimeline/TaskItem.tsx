@@ -5,9 +5,8 @@ import { useTranslation } from "react-i18next";
 import { TaskItem } from "@src/models/TaskItem";
 import { ITask } from "@src/Interfaces/Task";
 import classNames from "classnames";
-import { getTimePart } from "@src/utils";
-import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
+import TaskTiming from "./TaskTiming";
 
 interface TaskItemProps {
   task: ITask;
@@ -28,9 +27,6 @@ const TaskItemComponent: React.FC<TaskItemProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const startTime = getTimePart(task.start);
-  const endTime = getTimePart(task.deadline);
-
   const markDone = !!taskDetails[task.goalid]?.completedTodayTimings.find(
     (ele) => ele.start === task.start && ele.deadline === task.deadline,
   );
@@ -42,13 +38,9 @@ const TaskItemComponent: React.FC<TaskItemProps> = ({
       type="button"
       onClick={() => onToggleExpand(task.taskid, markDone)}
     >
-      <GoalTiming
-        startTime={startTime}
-        endTime={endTime}
-        showTaskOptions={isExpanded}
-        displayEndTime={displayEndTime}
-      />
-
+      <div className={`MTL-taskTiming-wrapper ${isExpanded && displayEndTime ? "show-end-time" : ""}`}>
+        <TaskTiming start={task.start} deadline={task.deadline} />
+      </div>
       <div className="MTL-taskTitleActionWrapper">
         <span style={{ textDecorationColor: task.goalColor }} className="MTL-taskTitle">
           {t(`${task.title}`)}

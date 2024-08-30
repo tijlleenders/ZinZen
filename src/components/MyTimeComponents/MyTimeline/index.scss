@@ -22,30 +22,49 @@
     }
   }
 
-  .MTL-goalTiming {
-    margin: 4px 5px 4px 14px;
-    border: none;
-    font-weight: 500;
-    line-height: 16px;
-    white-space: nowrap;
-    display: flex;
+  .MTL-taskTiming-wrapper {
     flex-direction: column;
-    justify-content: space-between;
-    align-self: normal;
-
-    .MTL-startTime {
-      font-size: 1.143rem;
-    }
-
+    justify-content: center;
+    padding: 4px 5px 4px 14px;
+    min-height: 100%;
+    align-items: center;
     .MTL-endTime {
-      font-size: 0.875rem;
-      font-weight: 400;
+      display: none;
     }
 
-    sup {
-      font-size: 8.5px;
-      line-height: 12px;
+    &.show-end-time {
+      display: flex;
+      justify-content: space-between;
+      align-self: stretch;
+
+      .MTL-endTime {
+        display: block;
+      }
     }
+  }
+
+  .MTL-startTime,
+  .MTL-endTime {
+    margin: 0;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .MTL-startTime {
+    font-size: 1.143rem;
+    font-weight: 500;
+  }
+
+  .MTL-endTime {
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+
+  sup {
+    font-size: 8.5px;
+    line-height: 0;
+    position: relative;
+    top: -0.5em;
   }
 }
 
