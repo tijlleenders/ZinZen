@@ -4,6 +4,7 @@ import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 import { useTranslation } from "react-i18next";
 import { TaskItem } from "@src/models/TaskItem";
 import { ITask } from "@src/Interfaces/Task";
+import classNames from "classnames";
 import { getTimePart } from "@src/utils";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
@@ -11,20 +12,20 @@ import { TaskOptions } from "./TaskOptions";
 interface TaskItemProps {
   task: ITask;
   handleActionClick: (action: string) => void;
-  showTaskOptions: boolean;
+  isExpanded: boolean;
+  onToggleExpand: (taskId: string, isTaskCompleted: boolean) => void;
   displayEndTime: boolean;
-  handleToggleDisplayOptions: (taskId: string, isTaskCompleted: boolean) => void;
   taskDetails: { [goalid: string]: TaskItem };
 }
 
-const TaskItemComponent = ({
+const TaskItemComponent: React.FC<TaskItemProps> = ({
   task,
   handleActionClick,
-  showTaskOptions,
+  isExpanded,
+  onToggleExpand,
   displayEndTime,
-  handleToggleDisplayOptions,
   taskDetails,
-}: TaskItemProps) => {
+}) => {
   const { t } = useTranslation();
 
   const startTime = getTimePart(task.start);
@@ -36,16 +37,15 @@ const TaskItemComponent = ({
 
   return (
     <button
-      key={task.taskid}
-      className={`MTL-taskItem simple ${markDone ? "completedTask" : ""}`}
+      className={classNames("MTL-taskItem simple", { completedTask: markDone })}
       style={{ borderLeft: `6px solid ${task.goalColor}` }}
       type="button"
-      onClick={() => handleToggleDisplayOptions(task.taskid, markDone)}
+      onClick={() => onToggleExpand(task.taskid, markDone)}
     >
       <GoalTiming
         startTime={startTime}
         endTime={endTime}
-        showTaskOptions={showTaskOptions}
+        showTaskOptions={isExpanded}
         displayEndTime={displayEndTime}
       />
 
@@ -53,10 +53,10 @@ const TaskItemComponent = ({
         <span style={{ textDecorationColor: task.goalColor }} className="MTL-taskTitle">
           {t(`${task.title}`)}
         </span>
-        {showTaskOptions && <TaskOptions task={task} handleActionClick={handleActionClick} />}
+        {isExpanded && <TaskOptions task={task} handleActionClick={handleActionClick} />}
       </div>
 
-      {showTaskOptions && (
+      {isExpanded && (
         <img src={chevronLeftIcon} className="MyTime-free-hours-text chevronDown theme-icon" alt="zinzen schedule" />
       )}
     </button>

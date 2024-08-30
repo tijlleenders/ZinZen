@@ -49,15 +49,16 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         const showTaskOptions = displayOptionsIndex === task.taskid;
 
         return (
-          <TaskItemComponent
-            task={task}
-            key={task.taskid}
-            handleActionClick={handleActionClick}
-            handleToggleDisplayOptions={handleToggleDisplayOptions}
-            showTaskOptions={showTaskOptions}
-            displayEndTime={displayEndTime}
-            taskDetails={taskDetails}
-          />
+          <React.Fragment key={task.taskid}>
+            <TaskItemComponent
+              task={task}
+              handleActionClick={handleActionClick}
+              isExpanded={showTaskOptions}
+              onToggleExpand={handleToggleDisplayOptions}
+              displayEndTime={displayEndTime}
+              taskDetails={taskDetails}
+            />
+          </React.Fragment>
         );
       })}
     </div>
