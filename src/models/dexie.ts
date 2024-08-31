@@ -16,7 +16,7 @@ export const dbStoreSchema = {
   pubSubCollection: "id, subscribers",
   publicGroupsCollection: null,
   taskCollection:
-    "id, goalId, title, hoursSpent, completedTodayIds, completedTodayTimings, lastCompleted, lastForget, blockedSlots, forgotToday, completedToday",
+    "id, goalId, title, hoursSpent, completedTodayIds, completedTodayTimings, lastCompleted, lastSkipped, blockedSlots, skippedToday, completedToday",
   customizationCollection: "++id, goalId, posIndex",
   dumpboxCollection: "id, key, value",
   partnersCollection: null,
@@ -46,7 +46,7 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
     const taskCollection = transaction.table("taskCollection");
     taskCollection.toCollection().modify((task: TaskItem) => {
       task.blockedSlots = [];
-      task.forgotToday = [];
+      task.skippedToday = [];
       task.completedToday = 0;
       task.completedTodayIds = [];
     });

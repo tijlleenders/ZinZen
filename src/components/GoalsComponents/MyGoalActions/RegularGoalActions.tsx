@@ -13,7 +13,6 @@ import { GoalItem } from "@src/models/GoalItem";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
 import useGoalActions from "@src/hooks/useGoalActions";
 
-import { goalsHistory } from "@src/store/GoalsState";
 import { ILocationState } from "@src/Interfaces";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
@@ -26,13 +25,13 @@ import GoalItemSummary from "../../../common/GoalItemSummary/GoalItemSummary";
 const doneSound = new Audio(archiveSound);
 
 const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { partnerId } = useParams();
-  const isPartnerModeActive = !!partnerId;
   const { openEditMode } = useGoalStore();
   const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
   const { deleteGoalAction } = useGoalActions();
-  const navigate = useNavigate();
+  const isPartnerModeActive = !!partnerId;
 
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
@@ -42,7 +41,6 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const ancestors = (state?.goalsHistory || []).map((ele) => ele.goalID);
 
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
-  console.log("🚀 ~ RegularGoalActions ~ confirmationAction:", confirmationAction);
 
   const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
     await archiveThisGoal(goalToArchive, goalAncestors);
