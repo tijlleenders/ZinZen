@@ -35,7 +35,6 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     }
     const newState: ILocationState = {
       ...location.state,
-      activeGoalId: goal.id,
       foucusedGoalIndex: focusedIndex,
       goalsHistory: [
         ...(location.state?.goalsHistory || []),
@@ -50,14 +49,17 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     navigate(`/goals/${goal.id}`, { state: newState });
   };
 
-  const scrollIntoView = useCallback(
-    (index: number) => {
-      const goalElement = document.getElementById(`goal-${goals[index]?.id}`);
+  const handleFocusChange = useCallback(
+    (newIndex: number) => {
+      if (goals.length === 0) return;
+      const adjustedIndex = (newIndex + goals.length) % goals.length;
+      setFocusedIndex(adjustedIndex);
+      const goalElement = document.getElementById(`goal-${goals[adjustedIndex]?.id}`);
       if (goalElement) {
         goalElement.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     },
-    [goals],
+    [goals, setFocusedIndex],
   );
 
   if (focusedIndex !== -1 && action === "goalItemCreated") {
@@ -83,28 +85,18 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     if (disableKeyboardNavigation) return;
 
     if (downPress) {
-      if (goals.length === 0) return;
-      setFocusedIndex((prevIndex) => {
-        const newIndex = (prevIndex + 1) % goals.length;
-        scrollIntoView(newIndex);
-        return newIndex;
-      });
+      handleFocusChange(focusedIndex + 1);
     }
-  }, [downPress, goals.length, scrollIntoView]);
+  }, [downPress, goals.length, handleFocusChange]);
 
   // handle up key press
   useEffect(() => {
     if (disableKeyboardNavigation) return;
 
     if (upPress) {
-      if (goals.length === 0) return;
-      setFocusedIndex((prevIndex) => {
-        const newIndex = (prevIndex - 1 + goals.length) % goals.length;
-        scrollIntoView(newIndex);
-        return newIndex;
-      });
+      handleFocusChange(focusedIndex - 1);
     }
-  }, [upPress, goals.length, scrollIntoView]);
+  }, [upPress, goals.length, handleFocusChange]);
 
   // handle right key press
   useEffect(() => {
