@@ -2,6 +2,8 @@ import React from "react";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
 import TriangleIcon from "../../../../assets/TriangleIcon";
+import CopyIcon from "@src/assets/CopyIcon";
+import { isGoalCode } from "@src/utils/patterns";
 
 interface GoalDropdownProps {
   goal: GoalItem;
@@ -11,7 +13,7 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
   const { sublist, goalColor, timeBudget, newUpdates, title } = goal;
   const hasSubGoals = sublist.length > 0;
   const titleContainsVideoLink = title.includes("youtube") || title.includes("peertube") || title.includes("youtu");
-
+  const titleIsCode = isGoalCode(title);
   const outerBackground = `radial-gradient(50% 50% at 50% 50%, ${goalColor}33 89.585%, ${
     timeBudget?.perDay != null ? "transparent" : goalColor
   } 100%)`;
@@ -21,7 +23,9 @@ const GoalDropdown: React.FC<GoalDropdownProps> = ({ goal }) => {
 
   return (
     <div className="d-flex f-col gap-4">
-      {titleContainsVideoLink ? (
+      {titleIsCode ? (
+        <CopyIcon color={goalColor} size={37} borderWidth={4} borderColor={innerBorderColor} />
+      ) : titleContainsVideoLink ? (
         <TriangleIcon color={goalColor} size={37} borderWidth={4} borderColor={goalColor} />
       ) : (
         <div
