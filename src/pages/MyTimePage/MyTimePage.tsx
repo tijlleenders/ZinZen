@@ -99,7 +99,7 @@ export const MyTimePage = () => {
         )}
         <Row />
         {Object.keys(tasks).length === 0 ? (
-          <div className="scheduling-message place-middle">Auto-scheduling...</div>
+          <div className="scheduling-message fw-600 text-lg place-middle">Auto-scheduling...</div>
         ) : (
           <>
             {getDayComponent("Today")}
