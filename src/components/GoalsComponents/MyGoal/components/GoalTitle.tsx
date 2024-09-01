@@ -37,4 +37,4 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
   );
 };
 
-export default GoalTitle;
+export default React.memo(GoalTitle);
