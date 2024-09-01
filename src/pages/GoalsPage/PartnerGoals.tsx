@@ -101,8 +101,7 @@ const PartnerGoals = () => {
                 <div className="d-flex f-col">
                   <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
                 </div>
-
-                {archivedGoals.length > 0 && <ArchivedGoals goals={archivedGoals} />}
+                <ArchivedGoals goals={archivedGoals} display={archivedGoals.length > 0 ? "true" : "false"} />
               </div>
             ) : (
               <GoalSublist />

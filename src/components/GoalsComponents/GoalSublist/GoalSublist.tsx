@@ -83,7 +83,7 @@ export const GoalSublist = () => {
             <DeletedGoalProvider>
               {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
             </DeletedGoalProvider>
-            {archivedChildren.length > 0 && <ArchivedGoals goals={archivedChildren} />}
+            <ArchivedGoals goals={archivedChildren} display={archivedChildren.length > 0 ? "true" : "false"} />
           </div>
         </div>
       </div>
