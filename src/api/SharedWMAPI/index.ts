@@ -121,10 +121,7 @@ export const archiveSharedWMGoal = async (goal: GoalItem) => {
 };
 
 export const removeSharedWMGoal = async (goal: GoalItem) => {
-  await Promise.allSettled([
-    addDeletedGoal(goal),
-    db.sharedWMCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
-  ]);
+  return db.sharedWMCollection.delete(goal.id).catch((err) => console.log("failed to delete", err));
 };
 
 export const removeSharedWMChildrenGoals = async (parentGoalId: string) => {
