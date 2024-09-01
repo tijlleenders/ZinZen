@@ -73,7 +73,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
   );
 };
 
-const ArchivedGoals = ({ goals, display }: { goals: GoalItem[]; display: "true" | "false" }) => {
+const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
   const { goal: activeGoal } = useActiveGoalContext();
@@ -81,24 +81,26 @@ const ArchivedGoals = ({ goals, display }: { goals: GoalItem[]; display: "true" 
   console.log("🚀 ~ ArchivedGoals ~ showOptions:", showOptions);
 
   return (
-    <div className="archived-drawer" style={{ display }}>
+    <>
       {showOptions && <Actions goal={activeGoal} />}
       {goals.length > 0 && (
-        <ZAccordion
-          showCount
-          style={{
-            border: "none",
-            background: darkMode ? "var(--secondary-background)" : "transparent",
-          }}
-          panels={[
-            {
-              header: "Done",
-              body: goals.map((goal) => <MyGoal key={`goal-${goal.id}`} goal={goal} />),
-            },
-          ]}
-        />
+        <div className="archived-drawer">
+          <ZAccordion
+            showCount
+            style={{
+              border: "none",
+              background: darkMode ? "var(--secondary-background)" : "transparent",
+            }}
+            panels={[
+              {
+                header: "Done",
+                body: goals.map((goal) => <MyGoal key={`goal-${goal.id}`} goal={goal} />),
+              },
+            ]}
+          />
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
