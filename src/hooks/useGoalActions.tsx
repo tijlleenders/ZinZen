@@ -39,7 +39,7 @@ const useGoalActions = () => {
     });
   };
   const deleteGoalAction = async (goal: GoalItem) => {
-    await pageCrumple.play();
+    pageCrumple.play();
     if (isPartnerModeActive) {
       await deleteSharedGoal(goal);
     } else {
@@ -48,7 +48,7 @@ const useGoalActions = () => {
     if (goal.title === "magic" && goal.parentGoalId === "root") {
       setDevMode(false);
     }
-    setLastAction("goalRestored");
+    setLastAction("goalDeleted");
   };
 
   const restoreDeletedGoal = async (goal: GoalItem) => {
