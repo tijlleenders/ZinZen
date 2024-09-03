@@ -1,32 +1,21 @@
 import { GoalItem } from "@src/models/GoalItem";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { extractLinks } from "@src/utils/patterns";
 import { ILocationState } from "@src/Interfaces";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { focusedGoalState } from "@src/store/GoalsState";
-import { lastAction } from "@src/store";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useKeyPress } from "./useKeyPress";
 
 export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
-  const [focusedIndex, setFocusedIndex] = useRecoilState(focusedGoalState);
+  const [searchParams, setSeachParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
-
-  const action = useRecoilValue(lastAction);
 
   const upPress = useKeyPress("ArrowUp");
   const downPress = useKeyPress("ArrowDown");
   const rightPress = useKeyPress("ArrowRight");
   const leftPress = useKeyPress("ArrowLeft");
 
-  const disableKeyboardNavigation = useMemo(() => {
-    return location.search !== "";
-  }, [location.search]);
-
   const handleRightKeyPress = (goal: GoalItem) => {
-    if (disableKeyboardNavigation) return;
-
     const url = extractLinks(goal.title);
     if (url) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
@@ -35,7 +24,6 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     }
     const newState: ILocationState = {
       ...location.state,
-      foucusedGoalIndex: focusedIndex,
       goalsHistory: [
         ...(location.state?.goalsHistory || []),
         {
@@ -45,7 +33,6 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
         },
       ],
     };
-    setFocusedIndex(-1);
     navigate(`/goals/${goal.id}`, { state: newState });
   };
 
@@ -53,18 +40,24 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     (newIndex: number) => {
       if (goals.length === 0) return;
       const adjustedIndex = (newIndex + goals.length) % goals.length;
-      setFocusedIndex(adjustedIndex);
+      setSeachParams(
+        {
+          focus: adjustedIndex.toString(),
+        },
+        {
+          replace: true,
+          state: {
+            ...location.state,
+          },
+        },
+      );
       const goalElement = document.getElementById(`goal-${goals[adjustedIndex]?.id}`);
       if (goalElement) {
         goalElement.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     },
-    [goals, setFocusedIndex],
+    [goals],
   );
-
-  if (focusedIndex !== -1 && action === "goalItemCreated") {
-    setFocusedIndex(0);
-  }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -82,40 +75,31 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
 
   // handle down key press
   useEffect(() => {
-    if (disableKeyboardNavigation) return;
-
     if (downPress) {
-      handleFocusChange(focusedIndex + 1);
+      handleFocusChange(Number(searchParams.get("focus")) + 1);
     }
   }, [downPress, goals.length, handleFocusChange]);
 
   // handle up key press
   useEffect(() => {
-    if (disableKeyboardNavigation) return;
-
     if (upPress) {
-      handleFocusChange(focusedIndex - 1);
+      handleFocusChange(Number(searchParams.get("focus")) - 1);
     }
   }, [upPress, goals.length, handleFocusChange]);
 
   // handle right key press
   useEffect(() => {
-    if (disableKeyboardNavigation) return;
-
-    if (rightPress && goals.length > 0 && focusedIndex !== -1) {
-      handleRightKeyPress(goals[focusedIndex]);
+    if (rightPress && goals.length > 0) {
+      handleRightKeyPress(goals[Number(searchParams.get("focus"))]);
     }
   }, [rightPress]);
 
   // handle left key press
   useEffect(() => {
-    if (disableKeyboardNavigation) return;
-
     if (leftPress) {
       if (location.pathname === "/goals") {
         return;
       }
-      setFocusedIndex(location.state.foucusedGoalIndex === undefined ? -1 : location.state.foucusedGoalIndex);
       window.history.back();
     }
   }, [leftPress]);
@@ -124,5 +108,5 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     return undefined;
   }
 
-  return goals[focusedIndex];
+  return goals[Number(searchParams.get("focus"))];
 };
