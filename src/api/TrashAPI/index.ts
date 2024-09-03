@@ -1,7 +1,7 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { TrashItem } from "@src/models/TrashItem";
-import { addDeletedGoal, addGoal } from "../GoalsAPI";
+import { addDeletedGoal, addGoal, addIntoSublist } from "../GoalsAPI";
 import { addSharedWMGoal } from "../SharedWMAPI";
 
 const TRASH_RETENTION_DAYS = 7;
@@ -30,6 +30,7 @@ export const restoreGoal = async (goal: GoalItem, isShareWMType = false) => {
     await addSharedWMGoal(goal);
   } else {
     await addGoal(goal);
+    await addIntoSublist(goal.parentGoalId, [goal.id]);
   }
 };
 

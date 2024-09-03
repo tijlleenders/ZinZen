@@ -1,12 +1,12 @@
 /* eslint-disable consistent-return */
 import { Checkbox } from "antd";
 import React, { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { sendNewGoals } from "@src/helpers/BatchPublisher";
-import { darkModeState } from "@src/store";
+import { darkModeState, lastAction } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
 import { sendUpdatedGoal } from "@src/helpers/PubSubController";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
@@ -26,7 +26,7 @@ import "./DisplayChangesModal.scss";
 
 const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-
+  const setLastAction = useSetRecoilState(lastAction);
   const [updatesIntent, setUpdatesIntent] = useState<typeOfIntent>("shared");
   const [newGoals, setNewGoals] = useState<{ intent: typeOfIntent; goal: GoalItem }[]>([]);
   const [activePPT, setActivePPT] = useState(-1);
@@ -181,8 +181,11 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       if (typeAtPriority === "none") {
         // remove participant from inbox
         if (participants.length === 1) {
-          await removeGoalInbox(currentMainGoal.id);
-          await updateGoal(currentMainGoal.id, { newUpdates: false });
+          await Promise.allSettled([
+            removeGoalInbox(currentMainGoal.id),
+            updateGoal(currentMainGoal.id, { newUpdates: false }),
+          ]);
+          setLastAction("GoalChangesSynced");
           window.history.back();
           return;
         }
