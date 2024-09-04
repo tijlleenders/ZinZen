@@ -1,18 +1,38 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { lastAction } from "@src/store";
-import "./Reschedule.scss";
+import "./NotNowModal.scss";
 import ZModal from "@src/common/ZModal";
-import { addBlockedSlot } from "@src/api/TasksAPI";
+import { addBlockedSlot, getTaskByGoalId, skipTask } from "@src/api/TasksAPI"; // Assume getGoalById exists
 import { displayReschedule } from "@src/store/TaskState";
 import { MILLISECONDS_IN_HOUR, RESCHEDULE_OPTIONS } from "@src/constants/rescheduleOptions";
 import { convertDateToString } from "@src/utils";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
+import { getGoalById } from "@src/api/GoalsAPI";
+import { getHrFromDateString } from "@src/utils/SchedulerUtils";
+import forgetTune from "@assets/forget.mp3";
 
-const Reschedule = () => {
+const NotNowModal = () => {
   const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
   const setLastAction = useSetRecoilState(lastAction);
+  const [showSkip, setShowSkip] = useState(false);
+
+  const forgetSound = new Audio(forgetTune);
+
+  useEffect(() => {
+    const checkGoalCategory = async () => {
+      if (task?.goalid) {
+        const goal = await getGoalById(task.goalid);
+        if (goal?.category === "Budget") {
+          setShowSkip(true);
+        } else {
+          setShowSkip(false);
+        }
+      }
+    };
+    checkGoalCategory();
+  }, [task]);
 
   if (!task) return null;
 
@@ -32,10 +52,22 @@ const Reschedule = () => {
     setLastAction("TaskRescheduled");
   };
 
+  const handleSkip = async () => {
+    const taskItem = await getTaskByGoalId(task.goalid);
+    if (!taskItem) {
+      return;
+    }
+    const period = `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`;
+    await skipTask(taskItem?.id, period, task);
+    setDisplayReschedule(null);
+    setLastAction("TaskSkipped");
+    forgetSound.play();
+  };
+
   return (
     <ZModal type="reschedule-modal interactables-modal" open={!!task.title} onCancel={() => setDisplayReschedule(null)}>
       <div className="header-title">
-        <p className="ordinary-element">{`Postpone: ${task.title}`}</p>
+        <p className="ordinary-element">{`Not now: ${task.title}`}</p>
       </div>
       <div className="reschedule-options">
         {RESCHEDULE_OPTIONS.map((option) => (
@@ -47,9 +79,15 @@ const Reschedule = () => {
             <ActionDiv label={option.label} icon="Clock" />
           </div>
         ))}
+
+        {showSkip && (
+          <div className="goal-action shareOptions-btn" onClickCapture={handleSkip}>
+            <ActionDiv label="Skip" icon="Clock" />
+          </div>
+        )}
       </div>
     </ZModal>
   );
 };
 
-export default Reschedule;
+export default NotNowModal;

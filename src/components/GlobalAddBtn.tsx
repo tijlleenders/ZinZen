@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -7,7 +7,6 @@ import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
 
 import Backdrop from "@src/common/Backdrop";
-import useGoalStore from "@src/hooks/useGoalStore";
 import useFeelingStore from "@src/hooks/useFeelingStore";
 
 import { ILocationState } from "@src/Interfaces";
@@ -17,6 +16,7 @@ import "./index.scss";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import useLongPress from "@src/hooks/useLongPress";
+import { useKeyPress } from "@src/hooks/useKeyPress";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -29,21 +29,17 @@ const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disable
   return (
     <button
       type="button"
-      className="add-goal-pill-btn"
-      style={{ right: 35, bottom, ...(disabled ? { opacity: 0.25, pointerEvents: "none" } : {}) }}
+      className={`add-goal-pill-btn ${disabled ? "disabled" : ""}`}
+      style={{ bottom }}
       onContextMenu={(e) => e.preventDefault()}
       onClick={(e) => {
         e.stopPropagation();
         handleClick();
       }}
     >
-      <span style={{ paddingLeft: 5 }}>{children}</span>
-      <span className="goal-btn-circle">
-        <img
-          style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
-          src={GlobalAddIcon}
-          alt="add goal"
-        />
+      <span className="button-text">{children}</span>
+      <span className="goal-btn-circle place-middle fw-600">
+        <img className="add-icon" src={GlobalAddIcon} alt="add goal" />
       </span>
     </button>
   );
@@ -61,21 +57,29 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
 
+  const enterPressed = useKeyPress("Enter");
+  const plusPressed = useKeyPress("+");
+
   const handleAddGoal = async (type: TGoalCategory, replaceCurrentRoute = true) => {
-    const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
-    navigate(`${prefix}/${parentId || "root"}?type=${type}&mode=add`, {
+    const navigateOptions = {
       state: {
         ...state,
         goalType: type,
       },
       replace: replaceCurrentRoute,
-    });
+    };
+    if (add === "myTime") {
+      navigate(`?type=${type}&mode=add`, navigateOptions);
+      return;
+    }
+    const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
+    navigate(`${prefix}/${parentId || "root"}?type=${type}&mode=add`, navigateOptions);
   };
   const handleGlobalAddClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (themeSelection) {
       window.history.back();
-    } else if (add === "myGoals" || isPartnerModeActive) {
+    } else if (add === "myTime" || add === "myGoals" || isPartnerModeActive) {
       handleAddGoal("Standard", false);
     } else if (add === "myJournal") {
       handleAddFeeling();
@@ -85,7 +89,9 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (add === "myGoals" || isPartnerModeActive) {
-      navigate(`/${parentId}?addOptions=true`, { state });
+      navigate(`/goals/${parentId}?addOptions=true`, { state });
+    } else if (add === "myTime") {
+      navigate("?addOptions=true", { state });
     }
   };
   const { handlers } = useLongPress({
@@ -95,6 +101,13 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   });
 
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
+
+  useEffect(() => {
+    if ((plusPressed || enterPressed) && !state.goalType) {
+      // @ts-ignore
+      handleGlobalAddClick(new MouseEvent("click"));
+    }
+  }, [plusPressed, enterPressed]);
 
   if (searchParams?.get("addOptions")) {
     return (

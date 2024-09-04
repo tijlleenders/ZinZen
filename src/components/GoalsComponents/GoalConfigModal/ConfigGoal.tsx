@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Slider } from "antd";
 import { displayToast } from "@src/store";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
@@ -16,12 +16,16 @@ import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
+import useGoalStore from "@src/hooks/useGoalStore";
+import { unarchiveUserGoal } from "@src/api/GoalsAPI";
+import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./components/CustomDatePicker";
 import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
+import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -32,6 +36,7 @@ const roundOffHours = (hrsValue: string) => {
 const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConfigMode; goal: GoalItem }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [suggestedGoal, setSuggestedGoal] = useRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
   const action = isEditMode ? "Update" : "Create";
   const { updateGoal, addGoal } = useGoalActions();
@@ -71,6 +76,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   }, [goal.id]);
 
   const [title, setTitle] = useState(goal.title);
+  const handleTitleChange = (value: string) => {
+    setTitle(value);
+  };
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
   // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
   // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
@@ -132,6 +140,11 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     if (title.trim().length) {
       if (!isEditMode) {
         addGoalSound.play();
+        setShowToast({
+          open: true,
+          message: `${title.slice(0, 15)}${title.length > 15 ? "..." : ""} created!`,
+          extra: "",
+        });
       }
       await (isEditMode ? updateGoal(getFinalTags(), hints) : addGoal(getFinalTags(), hints, parentGoal));
     } else {
@@ -140,6 +153,10 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
         message: `Goal cannot be ${isEditMode ? "updated" : "added"} without title`,
         extra: "",
       });
+    }
+    if (suggestedGoal) {
+      await unarchiveUserGoal(suggestedGoal);
+      setSuggestedGoal(null);
     }
     window.history.back();
   };
@@ -203,6 +220,55 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     handleWeekSliderChange(perWeekHrs);
   }, [perDayHrs, setPerDayHrs, tags.on]);
 
+  // const modalStyle = {
+  //   transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
+  //   transition: "transform 0.3s ease-in-out",
+  // };
+
+  const { openEditMode } = useGoalStore();
+
+  const onSuggestionClick = async (selectedGoal: GoalItem) => {
+    await openEditMode(selectedGoal);
+    setSuggestedGoal(selectedGoal);
+    setTitle(selectedGoal.title);
+    setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
+    setAfterTime(selectedGoal.afterTime || 9);
+    setBeforeTime(selectedGoal.beforeTime || 18);
+    setTags({
+      on: selectedGoal.on || convertOnFilterToArray("weekdays"),
+      repeatWeekly: selectedGoal.habit === "weekly",
+      duration: selectedGoal.duration || "",
+    });
+    setDue(selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "");
+    if (type === "Budget") {
+      if (selectedGoal.beforeTime == null || selectedGoal.afterTime == null) {
+        return;
+      }
+      const selectedPerDayBudget = (
+        selectedGoal.timeBudget?.perDay?.includes("-")
+          ? selectedGoal.timeBudget.perDay
+          : `${selectedGoal.beforeTime - selectedGoal.afterTime}-${selectedGoal.beforeTime - selectedGoal.afterTime}`
+      )
+        .split("-")
+        .map((ele) => Number(ele));
+      setPerDayHrs(selectedPerDayBudget);
+
+      const selectedNumberOfDays = selectedGoal.on?.length || 7;
+      const selectedPerWeekBudget = (
+        selectedGoal.timeBudget?.perWeek?.includes("-")
+          ? selectedGoal.timeBudget.perWeek
+          : `${selectedPerDayBudget[0] * selectedNumberOfDays}-${selectedPerDayBudget[1] * selectedNumberOfDays}`
+      )
+        .split("-")
+        .map((ele) => Number(ele));
+      setPerWeekHrs(selectedPerWeekBudget);
+    }
+    const hint = await getGoalHintItem(selectedGoal.id);
+    setHints(hint?.hint || false);
+  };
+
+  const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
+
   return (
     <ZModal
       open
@@ -214,8 +280,8 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       width={360}
       onCancel={async () => {
         if (!title.trim().length) {
-          console.log("in");
           window.history.back();
+          setSuggestedGoal(null);
         } else {
           await handleSave();
         }
@@ -229,13 +295,11 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       >
         <div style={{ textAlign: "left" }} className="header-title">
           <ColorPicker colorIndex={colorIndex} setColorIndex={setColorIndex} />
-          <input
-            className="ordinary-element"
-            id="title-field"
-            placeholder={t(`${type !== "Budget" ? "goal" : "budget"}Title`)}
-            value={t(`${title}`)}
-            onChange={(e) => setTitle(e.target.value)}
-            inputMode="text"
+          <ArchivedAutoComplete
+            placeholder={titlePlaceholder}
+            inputValue={title}
+            onGoalSelect={onSuggestionClick}
+            onInputChange={handleTitleChange}
           />
         </div>
         <div

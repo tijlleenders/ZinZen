@@ -64,6 +64,12 @@ export const getAllGoals = async (includeArchived = "false") => {
   return allGoals;
 };
 
+export const getArchivedGoals = async () => {
+  const archivedGoals: GoalItem[] = await db.goalsCollection.where("archived").equals("true").sortBy("createdAt");
+  archivedGoals.reverse();
+  return sortGoalsByProps(archivedGoals);
+};
+
 export const checkMagicGoal = async () => {
   const goal = await db.goalsCollection.where("title").equals("magic").toArray();
   return !!(goal && goal.length > 0);
@@ -336,4 +342,16 @@ export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
   await updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] });
   await addGoal(goal);
   await deleteGoalHint(goal.parentGoalId, goal.id);
+};
+
+export const fetchArchivedGoalByTitle = async (value: string) => {
+  if (value.trim() === "") {
+    return [];
+  }
+  const lowerCaseValue = value.toLowerCase();
+  return db.goalsCollection
+    .where("archived")
+    .equals("true")
+    .and((goal) => goal.title.toLowerCase().startsWith(lowerCaseValue))
+    .toArray();
 };

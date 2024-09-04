@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, act } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
@@ -29,6 +29,7 @@ import Participants from "@components/GoalsComponents/Participants";
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
+import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -41,10 +42,12 @@ export const MyGoals = () => {
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
 
   const { parentId = "root" } = useParams();
+  const { goal: activeGoal } = useActiveGoalContext();
 
   const [searchParams] = useSearchParams();
   const showShareModal = searchParams.get("share") === "true";
-  const showOptions = searchParams.get("showOptions") === "true";
+  const showOptions = searchParams.get("showOptions") === "true" && activeGoal && activeGoal.archived === "false";
+
   const showParticipants = searchParams.get("showParticipants") === "true";
   const showNewChanges = searchParams.get("showNewChanges") === "true";
 
@@ -52,8 +55,7 @@ export const MyGoals = () => {
 
   const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
 
-  const { goal: activeGoal } = useActiveGoalContext();
-
+  const suggestedGoal = useRecoilValue(suggestedGoalState);
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -107,12 +109,12 @@ export const MyGoals = () => {
     if (parentId === "root") {
       refreshActiveGoals();
     }
-  }, [parentId, displaySearch]);
+  }, [parentId, displaySearch, suggestedGoal]);
 
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
       <ParentGoalProvider>
-        {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
+        {showOptions && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {showParticipants && <Participants />}
         {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}
