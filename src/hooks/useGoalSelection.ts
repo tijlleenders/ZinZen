@@ -71,45 +71,29 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
 
     window.addEventListener("keydown", handleKeyDown);
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
-  // handle down key press
-  useEffect(() => {
     if (downPress) {
       handleFocusChange(focusIndex + 1);
     }
-  }, [downPress, goals.length, handleFocusChange]);
 
-  // handle up key press
-  useEffect(() => {
     if (upPress) {
       handleFocusChange(focusIndex - 1);
     }
-  }, [upPress, goals.length, handleFocusChange]);
 
-  // handle right key press
-  useEffect(() => {
     if (rightPress && goals.length > 0) {
       handleRightKeyPress(goals[focusIndex]);
     }
-  }, [rightPress]);
 
-  // handle left key press
-  useEffect(() => {
     if (leftPress) {
       if (location.pathname === "/goals") {
         return;
       }
       window.history.back();
     }
-  }, [leftPress]);
 
-  if (goals.length === 0) {
-    return undefined;
-  }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [downPress, upPress, rightPress, leftPress]);
 
   return goals[focusIndex];
 };
