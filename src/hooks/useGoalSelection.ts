@@ -15,7 +15,10 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
   const rightPress = useKeyPress("ArrowRight");
   const leftPress = useKeyPress("ArrowLeft");
 
+  const focusIndex = Number(searchParams.get("focus") || -1);
+
   const handleRightKeyPress = (goal: GoalItem) => {
+    if (!goal) return;
     const url = extractLinks(goal.title);
     if (url) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
@@ -76,21 +79,21 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
   // handle down key press
   useEffect(() => {
     if (downPress) {
-      handleFocusChange(Number(searchParams.get("focus")) + 1);
+      handleFocusChange(focusIndex + 1);
     }
   }, [downPress, goals.length, handleFocusChange]);
 
   // handle up key press
   useEffect(() => {
     if (upPress) {
-      handleFocusChange(Number(searchParams.get("focus")) - 1);
+      handleFocusChange(focusIndex - 1);
     }
   }, [upPress, goals.length, handleFocusChange]);
 
   // handle right key press
   useEffect(() => {
     if (rightPress && goals.length > 0) {
-      handleRightKeyPress(goals[Number(searchParams.get("focus"))]);
+      handleRightKeyPress(goals[focusIndex]);
     }
   }, [rightPress]);
 
@@ -108,5 +111,5 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     return undefined;
   }
 
-  return goals[Number(searchParams.get("focus"))];
+  return goals[focusIndex];
 };
