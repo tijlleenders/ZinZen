@@ -85,8 +85,3 @@ export const completedGoalsState = atom({
   key: "completedGoalsState",
   default: {} as Record<string, boolean>,
 });
-
-export const focusedGoalState = atom({
-  key: "focusState",
-  default: -1,
-});
