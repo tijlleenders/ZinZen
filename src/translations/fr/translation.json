@@ -132,7 +132,7 @@
       "note": "Cette cible sera déplacée vers les archives avec les sous-cibles. Vous pouvez la restaurer à tout moment depuis les archives."
     },
     "delete": {
-      "header": "Voulez-vous supprimer cette cible ?",
+      "header": "Voulez-vous supprimer cet objectif?",
       "note": "Vous pouvez toujours le récupérer dans la corbeille."
     },
     "shareAnonymously": {
