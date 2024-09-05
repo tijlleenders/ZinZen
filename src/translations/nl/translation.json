@@ -178,7 +178,7 @@
     },
     "delete": {
       "header": "Wil je dit doel verwijderen?",
-      "note": "Je kunt deze niet meer herstellen."
+      "note": "Je kunt dit altijd terughalen uit de prullenbak."
     },
     "shareAnonymously": {
       "header": "Wil je dit doel pseudo-anoniem delen?",

@@ -128,7 +128,7 @@
     },
     "delete": {
       "header": "Möchten Sie dieses Ziel löschen?",
-      "note": "Sie können es nicht wiederherstellen."
+      "note": "Sie können diese jederzeit aus dem Papierkorb wiederherstellen."
     },
     "shareAnonymously": {
       "header": "Möchten Sie dieses Ziel pseudonym teilen?",

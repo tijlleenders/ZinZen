@@ -133,7 +133,7 @@
     },
     "delete": {
       "header": "Voulez-vous supprimer cette cible ?",
-      "note": "Vous ne pourrez pas la récupérer par la suite."
+      "note": "Vous pouvez toujours le récupérer dans la corbeille."
     },
     "shareAnonymously": {
       "header": "Voulez-vous partager cette cible de manière pseudo-anonyme ?",
