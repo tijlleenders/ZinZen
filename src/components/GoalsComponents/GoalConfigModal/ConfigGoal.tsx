@@ -75,7 +75,8 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     });
   }, [goal.id]);
 
-  const [title, setTitle] = useState(goal.title);
+  const goalTitle = t(goal.title);
+  const [title, setTitle] = useState(goalTitle);
   const handleTitleChange = (value: string) => {
     setTitle(value);
   };
