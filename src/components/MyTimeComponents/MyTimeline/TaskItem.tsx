@@ -3,14 +3,13 @@ import React from "react";
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 import { useTranslation } from "react-i18next";
 import { TaskItem } from "@src/models/TaskItem";
-import { ITask } from "@src/Interfaces/Task";
-import classNames from "classnames";
+import { ITask, TaskAction } from "@src/Interfaces/Task";
 import { TaskOptions } from "./TaskOptions";
 import TaskTiming from "./TaskTiming";
 
 interface TaskItemProps {
   task: ITask;
-  handleActionClick: (action: string) => void;
+  handleActionClick: (actionName: TaskAction, task: ITask) => Promise<void | null>;
   isExpanded: boolean;
   onToggleExpand: (taskId: string, isTaskCompleted: boolean) => void;
   displayEndTime: boolean;
@@ -33,12 +32,12 @@ const TaskItemComponent: React.FC<TaskItemProps> = ({
 
   return (
     <button
-      className={classNames("MTL-taskItem simple", { completedTask: markDone })}
+      className={`MTL-taskItem simple ${markDone ? "completedTask" : ""}`}
       style={{ borderLeft: `6px solid ${task.goalColor}` }}
       type="button"
       onClick={() => onToggleExpand(task.taskid, markDone)}
     >
-      <div className={classNames("MTL-taskTiming-wrapper", { "show-end-time": isExpanded && displayEndTime })}>
+      <div className={`MTL-taskTiming-wrapper ${isExpanded && displayEndTime ? "show-end-time" : ""}`}>
         <TaskTiming start={task.start} deadline={task.deadline} />
       </div>
       <div className="MTL-taskTitleActionWrapper">

@@ -47,7 +47,7 @@ export const MyTimePage = () => {
     return (
       <div key={day} className="MyTime_day-container">
         <button type="button" className="MyTime_button" onClick={() => handleShowTasks(day)}>
-          <div className={classNames("MyTime_header", { selected: isActive })}>
+          <div className={`MyTime_header ${showTasks.includes(day) ? "selected" : ""}`}>
             <h3 className="MyTime_dayTitle">
               {day === "Today" ? (
                 <>
