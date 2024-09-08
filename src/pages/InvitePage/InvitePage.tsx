@@ -7,6 +7,7 @@ import { addContact, getAllContacts } from "@src/api/ContactsAPI";
 import { acceptRelationship } from "@src/services/contact.service";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
 import { displayPartnerModeTour } from "@src/store/TourState";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
 const InvitePage = () => {
   const navigate = useNavigate();
@@ -41,12 +42,12 @@ const InvitePage = () => {
   };
 
   useEffect(() => {
-    const checkin = localStorage.getItem("checkedIn");
+    const checkin = localStorage.getItem(LocalStorageKeys.CHECKED_IN);
     if (!checkin) {
-      localStorage.setItem("checkedIn", "no");
+      localStorage.setItem(LocalStorageKeys.CHECKED_IN, "no");
     }
     if (checkin !== "yes") {
-      localStorage.setItem("pendingInvite", window.location.href.split("invite/")[1]);
+      localStorage.setItem(LocalStorageKeys.PENDING_INVITE, window.location.href.split("invite/")[1]);
       navigate("/");
     }
   }, []);

@@ -2,6 +2,7 @@ import { atom } from "recoil";
 import { TConfirmActionState } from "@src/Interfaces/IPopupModals";
 import ContactItem from "@src/models/ContactItem";
 import { isJSONParsable } from "@src/utils/patterns";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { darkModeState } from "./DarkModeState";
 import { languageSelectionState } from "./LanguageSelectionState";
 
@@ -25,9 +26,9 @@ const defaultConfirmationObj: TConfirmActionState = {
   },
 };
 
-if (isJSONParsable(localStorage.getItem("confirmationState"))) {
+if (isJSONParsable(localStorage.getItem(LocalStorageKeys.CONFIRMATION_STATE))) {
   // @ts-ignore
-  const savedConfirmationState = JSON.parse(localStorage.getItem("confirmationService"));
+  const savedConfirmationState = JSON.parse(localStorage.getItem(LocalStorageKeys.CONFIRMATION_STATE));
   defaultConfirmationObj.goal = { ...defaultConfirmationObj.goal, ...(savedConfirmationState?.goal || {}) };
   defaultConfirmationObj.collaboration = {
     ...defaultConfirmationObj.collaboration,

@@ -14,7 +14,6 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-ki
 import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { ImpossibleGoal } from "@src/Interfaces";
-
 import SortableItem from "./MyGoal/SortableItem";
 
 interface GoalsListProps {

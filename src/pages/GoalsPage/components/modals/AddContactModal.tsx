@@ -7,6 +7,7 @@ import { darkModeState, displayToast } from "@src/store";
 import React, { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import ZModal from "@src/common/ZModal";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
 const AddContactModal = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -25,9 +26,9 @@ const AddContactModal = () => {
           const { relId } = res.response;
           await addContact(newContact?.contactName, relId, "sender");
           setNewContact({ ...newContact, relId });
-          const defaultPartner = localStorage.getItem("defaultPartner");
+          const defaultPartner = localStorage.getItem(LocalStorageKeys.DEFAULT_PARTNER);
           if (!defaultPartner) {
-            localStorage.setItem("defaultPartner", relId);
+            localStorage.setItem(LocalStorageKeys.DEFAULT_PARTNER, relId);
           }
           link = `${window.location.origin}/invite/${res.response.relId}`;
         } else {

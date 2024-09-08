@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
-import { extractLinks } from "@src/utils/patterns";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { extractLinks, isGoalCode } from "@src/utils/patterns";
 import useGoalActions from "@src/hooks/useGoalActions";
