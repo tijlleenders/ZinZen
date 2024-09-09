@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline/MyTimeline";
 import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
-
 import { getOrdinalSuffix } from "@src/utils";
 import SubHeader from "@src/common/SubHeader";
 import AppLayout from "@src/layouts/AppLayout";
 import ColorBands from "@components/MyTimeComponents/ColorBands";
 import useScheduler from "@src/hooks/useScheduler";
-
 import "./MyTimePage.scss";
 import "@translations/i18n";
 import { useLocation, useSearchParams } from "react-router-dom";
@@ -25,7 +22,6 @@ export const MyTimePage = () => {
   const { tasks, tasksStatus, setTasksStatus } = useScheduler();
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
   const { state } = useLocation();
-
   const [searchParams] = useSearchParams();
 
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
@@ -77,10 +73,8 @@ export const MyTimePage = () => {
           )}
         </button>
         <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
-          {showTasks.includes(day) && tasks[day] ? (
+          {showTasks.includes(day) && tasks[day] && tasks[day].scheduled.length > 0 && (
             <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} />
-          ) : (
-            <div />
           )}
         </div>
       </div>
@@ -104,13 +98,19 @@ export const MyTimePage = () => {
           <ConfigGoal type={goalType} goal={createGoalObjectFromTags()} mode="add" />
         )}
         <Row />
-        {getDayComponent("Today")}
-        {getDayComponent("Tomorrow")}
-        {[...Array(6).keys()].map((i) => {
-          const thisDay = new Date(today);
-          thisDay.setDate(thisDay.getDate() + i + 1);
-          return i >= 1 ? getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`) : null;
-        })}
+        {Object.keys(tasks).length === 0 ? (
+          <div className="scheduling-message fw-600 text-lg place-middle">Auto-scheduling...</div>
+        ) : (
+          <>
+            {getDayComponent("Today")}
+            {getDayComponent("Tomorrow")}
+            {[...Array(6).keys()].map((i) => {
+              const thisDay = new Date(today);
+              thisDay.setDate(thisDay.getDate() + i + 1);
+              return i >= 1 ? getDayComponent(`${thisDay.toLocaleDateString("en-us", { weekday: "long" })}`) : null;
+            })}
+          </>
+        )}
         <NotNowModal />
       </>
     </AppLayout>
