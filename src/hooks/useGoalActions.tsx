@@ -1,6 +1,6 @@
-import { getAllLevelGoalsOfId, getGoal, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getAllLevelGoalsOfId, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
-import { restoreGoal } from "@src/api/TrashAPI";
+import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { GoalItem } from "@src/models/GoalItem";
@@ -39,7 +39,7 @@ const useGoalActions = () => {
     });
   };
   const deleteGoalAction = async (goal: GoalItem) => {
-    await pageCrumple.play();
+    pageCrumple.play();
     if (isPartnerModeActive) {
       await deleteSharedGoal(goal);
     } else {
@@ -48,18 +48,19 @@ const useGoalActions = () => {
     if (goal.title === "magic" && goal.parentGoalId === "root") {
       setDevMode(false);
     }
-    setLastAction("goalRestored");
+    setLastAction("goalDeleted");
   };
 
   const restoreDeletedGoal = async (goal: GoalItem) => {
-    return restoreGoal(goal, goal.typeOfGoal === "shared").then(() => {
+    return restoreUserGoal(goal, goal.typeOfGoal === "shared").then(() => {
       setLastAction("goalRestored");
     });
   };
 
-  const restoreArchivedGoal = async (goal: GoalItem) => {
+  const restoreArchivedGoal = async (goal: GoalItem, action: "goalRestored" | "none") => {
     return unarchiveUserGoal(goal).then(() => {
-      setLastAction("goalRestored");
+      if (action === "none") return;
+      setLastAction(action);
     });
   };
 
@@ -133,16 +134,15 @@ const useGoalActions = () => {
     );
   };
 
-  const copyCode = (goalTitle: string) => {
-    goalTitle = removeBackTicks(goalTitle);
+  const copyCode = (title: string) => {
+    let goalTitle = removeBackTicks(title);
     navigator.clipboard.writeText(goalTitle);
     const MAX_LENGTH = 15;
     if (goalTitle.length > MAX_LENGTH) {
-      goalTitle =
-        `${goalTitle
-          .split(" ")
-          .slice(0, MAX_LENGTH - 1)
-          .join(" ")}` + "...";
+      goalTitle = `${goalTitle
+        .split(" ")
+        .slice(0, MAX_LENGTH - 1)
+        .join(" ")}...`;
     }
     goalTitle = `${goalTitle} copied!`;
     showMessage("Code copied to clipboard", goalTitle);
