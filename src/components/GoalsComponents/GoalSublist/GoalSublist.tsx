@@ -46,16 +46,11 @@ export const GoalSublist = () => {
   }, [goalID, action]);
 
   useEffect(() => {
-    getDeletedGoals(goalID).then((res) => {
-      setDeletedGoals([...res]);
-    });
-  }, [goalID]);
-
-  useEffect(() => {
     async function init() {
+      if (!parentGoal) return;
       const sortedGoals = await priotizeImpossibleGoals(subgoals);
       setArchivedChildren([...sortedGoals.filter((goal) => goal.archived === "true")]);
-      getDeletedGoals(goalID).then((res) => {
+      getDeletedGoals(parentGoal.id).then((res) => {
         setDeletedGoals([...res]);
       });
       setActiveGoals([...sortedGoals.filter((goal) => goal.archived === "false")]);
@@ -88,7 +83,7 @@ export const GoalSublist = () => {
             <DeletedGoalProvider>
               {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
             </DeletedGoalProvider>
-            {archivedChildren.length > 0 && <ArchivedGoals goals={archivedChildren} />}
+            <ArchivedGoals goals={archivedChildren} />
           </div>
         </div>
       </div>
