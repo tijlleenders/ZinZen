@@ -11,9 +11,9 @@ export interface TaskItem {
   hoursSpent: number;
   completedToday: number;
   completedTodayIds: string[];
-  skippedToday: string[];
+  forgotToday: string[];
   lastCompleted: string; // date
-  lastSkipped: string; // date
+  lastForget: string; // date
   blockedSlots: blockedSlotOfTask[];
   completedTodayTimings: TCompletedTaskTiming[]; //  to store timings of the tasks that are completed today
 }
