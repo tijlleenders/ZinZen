@@ -10,6 +10,7 @@ import { displayReschedule } from "@src/store/TaskState";
 import { getGoal } from "@src/api/GoalsAPI";
 import { addTask, completeTask, getTaskByGoalId } from "@src/api/TasksAPI";
 import { ILocationState } from "@src/Interfaces";
+import { ISubGoalHistory } from "@src/store/GoalsState";
 
 type TaskDetails = { [goalid: string]: TaskItem };
 
@@ -54,7 +55,7 @@ export const useMyTimelineStore = (
   };
 
   const handleOpenGoal = async (goalId: string) => {
-    const goalsHistory = [];
+    const goalsHistory: ISubGoalHistory[] = [];
     let tmpGoal = await getGoal(goalId);
     let openGoalId = tmpGoal?.parentGoalId;
     const parentGoalId = openGoalId;
