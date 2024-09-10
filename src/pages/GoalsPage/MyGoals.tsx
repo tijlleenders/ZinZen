@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, act } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
@@ -42,18 +42,18 @@ export const MyGoals = () => {
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
 
   const { parentId = "root" } = useParams();
+  const { goal: activeGoal } = useActiveGoalContext();
 
   const [searchParams] = useSearchParams();
   const showShareModal = searchParams.get("share") === "true";
-  const showOptions = searchParams.get("showOptions") === "true";
+  const showOptions = searchParams.get("showOptions") === "true" && activeGoal && activeGoal.archived === "false";
+
   const showParticipants = searchParams.get("showParticipants") === "true";
   const showNewChanges = searchParams.get("showNewChanges") === "true";
 
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
   const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
-
-  const { goal: activeGoal } = useActiveGoalContext();
 
   const suggestedGoal = useRecoilValue(suggestedGoalState);
   const displaySearch = useRecoilValue(searchActive);
@@ -114,7 +114,7 @@ export const MyGoals = () => {
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
       <ParentGoalProvider>
-        {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
+        {showOptions && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {showParticipants && <Participants />}
         {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}
@@ -136,7 +136,7 @@ export const MyGoals = () => {
               <DeletedGoalProvider>
                 {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
               </DeletedGoalProvider>
-              {archivedGoals.length > 0 && <ArchivedGoals goals={archivedGoals} />}
+              <ArchivedGoals goals={archivedGoals} />
             </div>
           ) : (
             <GoalSublist />

@@ -1,5 +1,5 @@
 import React from "react";
-import { replaceUrlsWithText } from "@src/utils/patterns";
+import { removeBackTicks, replaceUrlsWithText } from "@src/utils/patterns";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import { useTelHandler, useUrlHandler } from "../GoalTitleHandlers";
@@ -19,6 +19,7 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
     <div className="goal-title">
       {isImpossible && "! "}
       {textParts.map((part) => {
+        part = removeBackTicks(part); // if it contains backticks, strip it
         const match = part.match(/zURL-(\d+)/);
         if (match) {
           const urlIndex = parseInt(match[1], 10);
@@ -36,4 +37,4 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
   );
 };
 
-export default GoalTitle;
+export default React.memo(GoalTitle);

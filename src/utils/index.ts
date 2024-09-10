@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import { languagesFullForms } from "@src/translations/i18n";
 import i18next from "i18next";
+import sha256 from "crypto-js/sha256";
 
 export async function createContactRequest(url: string, body: object | null = null, method = "POST") {
   try {
@@ -253,4 +254,8 @@ export const calculateDaysLeft = (dueDate: string) => {
 // Utility function for singular/plural formatting
 export const formatSingularPlural = (count: number, singularWord: string) => {
   return `${count} ${singularWord}${count !== 1 ? "s" : ""}`;
+};
+
+export const hashObject = (obj: object) => {
+  return sha256(JSON.stringify(obj)).toString();
 };
