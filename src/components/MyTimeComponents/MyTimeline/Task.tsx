@@ -7,7 +7,7 @@ import { ITask, TaskAction } from "@src/Interfaces/Task";
 import { TaskOptions } from "./TaskOptions";
 import TaskTiming from "./TaskTiming";
 
-interface TaskItemProps {
+interface TaskProps {
   task: ITask;
   handleActionClick: (actionName: TaskAction, task: ITask) => Promise<void | null>;
   isExpanded: boolean;
@@ -16,7 +16,7 @@ interface TaskItemProps {
   taskDetails: { [goalid: string]: TaskItem };
 }
 
-const TaskItemComponent: React.FC<TaskItemProps> = ({
+const Task: React.FC<TaskProps> = ({
   task,
   handleActionClick,
   isExpanded,
@@ -54,4 +54,4 @@ const TaskItemComponent: React.FC<TaskItemProps> = ({
   );
 };
 
-export default TaskItemComponent;
+export default Task;

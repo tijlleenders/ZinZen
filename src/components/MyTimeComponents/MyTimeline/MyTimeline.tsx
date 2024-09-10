@@ -5,7 +5,7 @@ import "./index.scss";
 import { getTimePart } from "@src/utils";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
 import { useMyTimelineStore } from "./useMyTimelineStore";
-import TaskItemComponent from "./TaskItem";
+import Task from "./Task";
 
 type ImpossibleTaskId = string;
 
@@ -51,7 +51,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
 
         return (
           <React.Fragment key={task.taskid}>
-            <TaskItemComponent
+            <Task
               task={task}
               handleActionClick={handleActionClick}
               isExpanded={showTaskOptions}
