@@ -11,7 +11,7 @@ interface TaskItemProps {
   task: ITask;
   handleActionClick: (actionName: TaskAction, task: ITask) => Promise<void | null>;
   isExpanded: boolean;
-  onToggleExpand: (taskId: string, isTaskCompleted: boolean) => void;
+  onToggleExpand: (task: ITask, isTaskCompleted: boolean) => void;
   displayEndTime: boolean;
   taskDetails: { [goalid: string]: TaskItem };
 }
@@ -35,7 +35,7 @@ const TaskItemComponent: React.FC<TaskItemProps> = ({
       className={`MTL-taskItem simple ${markDone ? "completedTask" : ""}`}
       style={{ borderLeft: `6px solid ${task.goalColor}` }}
       type="button"
-      onClick={() => onToggleExpand(task.taskid, markDone)}
+      onClick={() => onToggleExpand(task, markDone)}
     >
       <div className={`MTL-taskTiming-wrapper ${isExpanded && displayEndTime ? "show-end-time" : ""}`}>
         <TaskTiming start={task.start} deadline={task.deadline} />

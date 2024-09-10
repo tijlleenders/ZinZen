@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,6 +9,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { displayReschedule } from "@src/store/TaskState";
 import { getGoal } from "@src/api/GoalsAPI";
 import { addTask, completeTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { ILocationState } from "@src/Interfaces";
 
 type TaskDetails = { [goalid: string]: TaskItem };
 
@@ -18,6 +19,7 @@ export const useMyTimelineStore = (
   setTaskDetails: React.Dispatch<React.SetStateAction<TaskDetails>>,
 ) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const doneSound = new Audio(archiveTune);
 
@@ -61,21 +63,22 @@ export const useMyTimelineStore = (
     while (openGoalId !== "root") {
       tmpGoal = await getGoal(openGoalId);
       if (!tmpGoal) break;
+
       goalsHistory.push({
-        goalID: tmpGoal.id || "root",
-        goalColor: tmpGoal.goalColor || "#ffffff",
-        goalTitle: tmpGoal.title || "",
+        goalID: tmpGoal.id ?? "root",
+        goalColor: tmpGoal.goalColor ?? "#ffffff",
+        goalTitle: tmpGoal.title ?? "",
       });
       openGoalId = tmpGoal.parentGoalId;
     }
     goalsHistory.reverse();
-    navigate("/goals", {
-      state: {
-        goalsHistory,
-        activeGoalId: parentGoalId,
-        expandedGoalId: goalId,
-      },
-    });
+
+    const newState: ILocationState = {
+      ...location.state,
+      expandedGoalId: goalId,
+      goalsHistory,
+    };
+    navigate(`/goals${parentGoalId === "root" ? "" : `/${parentGoalId}`}`, { state: newState });
   };
 
   const handleFocusClick = (task: ITask) => {
@@ -120,5 +123,5 @@ export const useMyTimelineStore = (
     return null;
   };
 
-  return { handleActionClick };
+  return { handleActionClick, handleOpenGoal };
 };

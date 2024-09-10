@@ -19,7 +19,6 @@ import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import classNames from "classnames";
 
 export const MyTimePage = () => {
   const today = new Date();
