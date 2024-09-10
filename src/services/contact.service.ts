@@ -1,3 +1,4 @@
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
 import { createContactRequest, getInstallId } from "@src/utils";
@@ -43,14 +44,16 @@ export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
 };
 
 export const getContactSharedGoals = async () => {
-  const lastProcessedTimestamp = new Date(Number(localStorage.getItem("lastProcessedTimestamp"))).toISOString();
+  const lastProcessedTimestamp = new Date(
+    Number(localStorage.getItem(LocalStorageKeys.LAST_PROCESSED_TIMESTAMP)),
+  ).toISOString();
   const url = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, {
     method: "getMessages",
     installId: getInstallId(),
     ...(lastProcessedTimestamp ? { lastProcessedTimestamp } : {}),
   });
-  localStorage.setItem("lastProcessedTimestamp", `${Date.now()}`);
+  localStorage.setItem(LocalStorageKeys.LAST_PROCESSED_TIMESTAMP, `${Date.now()}`);
   return res;
 };
 

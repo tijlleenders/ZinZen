@@ -128,7 +128,7 @@
     },
     "delete": {
       "header": "¿Deseas eliminar esta meta?",
-      "note": "No podrás recuperarla nuevamente."
+      "note": "Siempre puedes recuperar esto de la Papelera."
     },
     "shareAnonymously": {
       "header": "¿Deseas compartir esta meta de forma pseudo anónima?",

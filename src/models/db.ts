@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import Dexie, { Table } from "dexie";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { IFeelingItem } from "./FeelingItem";
 import { GoalItem } from "./GoalItem";
 import ContactItem from "./ContactItem";
@@ -14,8 +15,8 @@ import { dbStoreSchema, syncVersion } from "./dexie";
 
 export const dexieVersion = 21;
 
-const currentVersion = Number(localStorage.getItem("dexieVersion") || dexieVersion);
-localStorage.setItem("dexieVersion", `${dexieVersion}`);
+const currentVersion = Number(localStorage.getItem(LocalStorageKeys.DEXIE_VERSION) || dexieVersion);
+localStorage.setItem(LocalStorageKeys.DEXIE_VERSION, `${dexieVersion}`);
 
 export class ZinZenDB extends Dexie {
   feelingsCollection!: Table<IFeelingItem, number>;
