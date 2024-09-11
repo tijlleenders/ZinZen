@@ -17,6 +17,7 @@ import { ILocationState } from "@src/Interfaces";
 import { hashObject } from "@src/utils";
 import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import { removeBackTicks } from "@src/utils/patterns";
+import { getGoalHintItem } from "@src/api/HintsAPI";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -66,11 +67,14 @@ const useGoalActions = () => {
 
   const updateGoal = async (goal: GoalItem, hints: boolean) => {
     const addGoalSound = new Audio(plingSound);
+    const currentHint = await getGoalHintItem(goal.id);
+
     const titleContainsCode = /```/.test(goal.title);
     if (goal.sublist.length > 0 && titleContainsCode) {
       showMessage("Action Failed!!", "Cannot update the title to include code if the goal has a subgoal.");
       return;
     }
+
     if (isPartnerModeActive) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
@@ -78,7 +82,7 @@ const useGoalActions = () => {
         rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
-    } else if (activeGoal && hashObject(activeGoal) !== hashObject(goal)) {
+    } else if (activeGoal && (hashObject({ ...activeGoal }) !== hashObject(goal) || currentHint?.hint !== hints)) {
       // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
       setLastAction("goalUpdated");
