@@ -33,29 +33,38 @@
   border-radius: 30px;
   position: absolute;
   border: 1px solid var(--icon-grad-1);
-  color: white;
   font-size: 18px;
   justify-content: space-between;
   align-items: center;
   background-color: var(--secondary-background);
   padding: 5px;
   width: 150px;
-}
+  right: 35px;
 
-.goal-btn-circle {
-  border-radius: 50%;
-  border: none;
-  background: var(--selection-color);
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-  width: 56px;
-  height: 56px;
-  color: white;
-  font-weight: 600;
-  font-size: 0.875em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+  &.disabled {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  .button-text {
+    padding-left: 5px;
+  }
+
+  .goal-btn-circle {
+    border-radius: 50%;
+    border: none;
+    background: var(--selection-color);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    width: 56px;
+    height: 56px;
+    color: white;
+    cursor: pointer;
+
+    .add-icon {
+      padding: 2px 0 0 0 !important;
+      filter: brightness(0) invert(1);
+    }
+  }
 }
 
 .ant-tour-close {

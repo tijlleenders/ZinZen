@@ -5,8 +5,9 @@ import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 import goalsIcon from "@assets/images/goalsIcon.svg";
 
-import { ISubGoalHistory, goalsHistory } from "@src/store/GoalsState";
+import { ISubGoalHistory } from "@src/store/GoalsState";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 const breadcrumbStyle: React.CSSProperties = {
   fontWeight: 500,
@@ -37,7 +38,9 @@ const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => {
   );
 };
 const GoalHistory = () => {
-  const subGoalHistory = useRecoilValue(goalsHistory);
+  const location = useLocation();
+  const goalsHistory = location.state?.goalsHistory ?? []; // default as an empty array if undefined.
+
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
@@ -58,24 +61,24 @@ const GoalHistory = () => {
               />
             ),
             onClick: () => {
-              window.history.go(-subGoalHistory.length);
+              window.history.go(-goalsHistory.length);
             },
           },
-          ...(subGoalHistory.length <= 3
-            ? subGoalHistory.map((goal: ISubGoalHistory, index) => ({
+          ...(goalsHistory.length <= 3
+            ? goalsHistory.map((goal: ISubGoalHistory, index: number) => ({
                 title: <BreadcrumbItem goal={goal} />,
                 onClick: () => {
-                  if (index === subGoalHistory.length - 1) {
+                  if (index === goalsHistory.length - 1) {
                     return;
                   }
-                  window.history.go(index + 1 - subGoalHistory.length);
+                  window.history.go(index + 1 - goalsHistory.length);
                 },
               }))
             : [
-                ...subGoalHistory.slice(0, 2).map((goal: ISubGoalHistory, index) => ({
+                ...goalsHistory.slice(0, 2).map((goal: ISubGoalHistory, index: number) => ({
                   title: <BreadcrumbItem goal={goal} />,
                   onClick: () => {
-                    window.history.go(index + 1 - subGoalHistory.length);
+                    window.history.go(index + 1 - goalsHistory.length);
                   },
                 })),
                 {
@@ -88,11 +91,11 @@ const GoalHistory = () => {
                     window.history.back();
                   },
                 },
-                ...subGoalHistory.slice(subGoalHistory.length - 1).map((goal: ISubGoalHistory, index) => ({
+                ...goalsHistory.slice(goalsHistory.length - 1).map((goal: ISubGoalHistory, index: number) => ({
                   title: <BreadcrumbItem goal={goal} />,
                   onClick: () => {
-                    const count = index + 1 - subGoalHistory.length;
-                    if (-count === subGoalHistory.length - 1) {
+                    const count = index + 1 - goalsHistory.length;
+                    if (-count === goalsHistory.length - 1) {
                       return;
                     }
                     window.history.go(count);

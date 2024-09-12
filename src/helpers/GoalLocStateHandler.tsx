@@ -83,7 +83,7 @@ const GoalLocStateHandler = () => {
   };
 
   useEffect(() => {
-    if (location && location.pathname === "/MyGoals") {
+    if (location && location.pathname === "/goals") {
       handleLocationChange();
     }
   }, [location]);

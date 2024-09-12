@@ -9,16 +9,11 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import ZModal from "@src/common/ZModal";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
-interface AddContactModalProps {
-  showAddContactModal: boolean;
-}
-const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal }) => {
+const AddContactModal = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
   const [loading, setLoading] = useState(false);
   const [newContact, setNewContact] = useState<{ contactName: string; relId: string } | null>(null);
-  const handleCloseAddContact = () => {
-    window.history.back();
-  };
+
   const setShowToast = useSetRecoilState(displayToast);
 
   const addNewContact = async () => {
@@ -52,20 +47,13 @@ const AddContactModal: React.FC<AddContactModalProps> = ({ showAddContactModal }
     if (link !== "") {
       navigator.share({ text: link }).then(() => {
         setNewContact(null);
-        handleCloseAddContact();
+        window.history.back();
       });
     }
     setLoading(false);
   };
   return (
-    <ZModal
-      type="addContact-modal"
-      open={showAddContactModal}
-      onCancel={() => {
-        setNewContact(null);
-        handleCloseAddContact();
-      }}
-    >
+    <ZModal type="addContact-modal" open>
       <p className="popupModal-title"> Add a contact name </p>
       <input
         autoFocus

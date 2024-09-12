@@ -37,3 +37,20 @@ export function isJSONParsable(str: string | null | undefined): boolean {
     return false;
   }
 }
+
+export const extractLinks = (text: string) => {
+  let regex = /([\w+]+\:\/\/)?([\w\d-]+\.)*[\w-]+[\.\:]\w+([\/\?\=\&\#\.]?[\w-]+)*\/?/gm;
+  const matches = text.match(regex);
+  return matches ? matches[0] : null;
+};
+export const containsLink = (text: string) => {
+  const urlPattern = /(?:https?:\/\/|www\.)?[^\s/$.?#].[^\s]*/g;
+  return urlPattern.test(text);
+};
+
+export const isGoalCode = (text: string) => {
+  return text.startsWith("```") || text.endsWith("```");
+};
+export const removeBackTicks = (text: string) => {
+  return text.replace(/```/g, "");
+};

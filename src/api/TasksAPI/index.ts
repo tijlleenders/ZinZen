@@ -1,10 +1,11 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
-import { TaskItem } from "@src/models/TaskItem";
+import { blockedSlotOfTask, TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
-import { calDays, getLastDayDate } from "@src/utils";
+import { calDays, convertDateToString, getLastDayDate } from "@src/utils";
 import { convertDateToDay } from "@src/utils/SchedulerUtils";
 import { ITask } from "@src/Interfaces/Task";
+import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
 import { getGoal } from "../GoalsAPI";
 
 export const addTask = async (taskDetails: TaskItem) => {
@@ -30,7 +31,7 @@ export const getTaskByGoalId = async (goalId: string) => {
 
 export const getForgetHrsCount = (task: TaskItem) => {
   let yesterdaysCount = 0;
-  task.forgotToday.forEach((slot) => {
+  task.skippedToday.forEach((slot) => {
     const [start, end] = slot.split("-");
     yesterdaysCount += Number(end) - Number(start);
   });
@@ -45,9 +46,9 @@ export const resetProgressOfToday = async () => {
         const task = { ..._task };
         task.completedToday = 0;
         task.completedTodayIds = [];
-        task.forgotToday = [];
+        task.skippedToday = [];
         task.lastCompleted = new Date().toLocaleDateString();
-        task.lastForget = new Date().toLocaleDateString();
+        task.lastSkipped = new Date().toLocaleDateString();
         task.blockedSlots = [];
         return task;
       });
@@ -80,7 +81,7 @@ export const refreshTaskCollection = async () => {
           const dayIndex = calDays.indexOf(convertDateToDay(startDate));
           const lastReset = getLastDayDate(dayIndex);
           const lastAction = new Date(
-            new Date(task.lastForget) < new Date(task.lastCompleted) ? task.lastCompleted : task.lastForget,
+            new Date(task.lastSkipped) < new Date(task.lastCompleted) ? task.lastCompleted : task.lastSkipped,
           );
           if (lastAction < lastReset) {
             task.hoursSpent = 0;
@@ -92,9 +93,9 @@ export const refreshTaskCollection = async () => {
         }
         task.completedToday = 0;
         task.completedTodayIds = [];
-        task.forgotToday = [];
+        task.skippedToday = [];
         task.lastCompleted = new Date().toLocaleDateString();
-        task.lastForget = new Date().toLocaleDateString();
+        task.lastSkipped = new Date().toLocaleDateString();
         return task;
       });
 
@@ -124,20 +125,20 @@ export const completeTask = async (id: string, duration: number, task: ITask) =>
   });
 };
 
-export const forgetTask = async (id: string, period: string, task: ITask) => {
+export const skipTask = async (id: string, period: string, task: ITask) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection
       .where("id")
       .equals(id)
       .modify((obj: TaskItem) => {
-        obj.forgotToday.push(period);
+        obj.skippedToday.push(period);
         obj.completedTodayTimings.push({
           goalid: task.goalid,
           start: task.start,
           deadline: task.deadline,
         });
-        if (obj.forgotToday.length > 1) {
-          obj.forgotToday.sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
+        if (obj.skippedToday.length > 1) {
+          obj.skippedToday.sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
         }
       });
   }).catch((e) => {
@@ -167,4 +168,53 @@ export const addBlockedSlot = async (goalId: string, slot: { start: string; end:
   }).catch((e) => {
     console.log(e.stack || e);
   });
+};
+export const updateBlockedSlotsInDB = async (goalId: string, newBlockedSlots: blockedSlotOfTask[]) => {
+  try {
+    const task = await db.taskCollection.where("goalId").equals(goalId).first();
+    if (task) {
+      await db.taskCollection.update(task.id, { blockedSlots: newBlockedSlots });
+    }
+  } catch (error) {
+    console.error(`Error updating blocked slots for goalId ${goalId}:`, error);
+  }
+};
+
+export const adjustNotOnBlocks = async (goals: ISchedulerInputGoal[]) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const updatePromises: Promise<void>[] = [];
+
+  const adjustedGoals = goals.map((goal) => {
+    if (!goal.notOn || goal.notOn.length === 0) {
+      return goal;
+    }
+
+    let isUpdated = false;
+
+    const adjustedNotOn = goal.notOn
+      .filter((block) => new Date(block.end) > today)
+      .map((block) => {
+        const blockStart = new Date(block.start);
+        if (blockStart < today) {
+          isUpdated = true;
+          return {
+            ...block,
+            start: convertDateToString(today),
+          };
+        }
+        return block;
+      });
+
+    if (isUpdated || adjustedNotOn.length !== goal.notOn.length) {
+      updatePromises.push(updateBlockedSlotsInDB(goal.id, adjustedNotOn));
+    }
+    return {
+      ...goal,
+      notOn: adjustedNotOn,
+    };
+  });
+
+  await Promise.all(updatePromises);
+  return adjustedGoals;
 };

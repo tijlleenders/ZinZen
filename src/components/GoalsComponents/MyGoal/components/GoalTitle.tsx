@@ -1,10 +1,8 @@
 import React from "react";
-import { replaceUrlsWithText } from "@src/utils/patterns";
+import { removeBackTicks, replaceUrlsWithText } from "@src/utils/patterns";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
-import { useTelHandler, useUrlHandler } from "./GoalTitleHandlers";
-import { useRecoilState } from "recoil";
-import { completedGoalsState } from "@src/store/GoalsState";
+import { useTelHandler, useUrlHandler } from "../GoalTitleHandlers";
 
 interface GoalTitleProps {
   goal: GoalItem;
@@ -15,16 +13,13 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
   const { t } = useTranslation();
   const { id, title } = goal;
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
-
-  const [completed] = useRecoilState(completedGoalsState);
-  const isCompleted = completed[goal.id] || false;
-
   const textParts = replacedString.split(/(zURL-\d+)/g);
 
   return (
-    <div className={`goal-title ${isCompleted ? " completed" : ""}`}>
+    <div className="goal-title">
       {isImpossible && "! "}
       {textParts.map((part) => {
+        part = removeBackTicks(part); // if it contains backticks, strip it
         const match = part.match(/zURL-(\d+)/);
         if (match) {
           const urlIndex = parseInt(match[1], 10);
@@ -42,4 +37,4 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
   );
 };
 
-export default GoalTitle;
+export default React.memo(GoalTitle);

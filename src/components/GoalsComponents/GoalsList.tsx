@@ -1,3 +1,6 @@
+import { updatePositionIndex } from "@src/api/GCustomAPI";
+import { GoalItem } from "@src/models/GoalItem";
+import React from "react";
 import {
   DndContext,
   closestCenter,
@@ -8,35 +11,19 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import React from "react";
-import { displayGoalActions, displayUpdateGoal } from "@src/store/GoalsState";
 import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
-import { GoalItem } from "@src/models/GoalItem";
 import { ImpossibleGoal } from "@src/Interfaces";
-import { updatePositionIndex } from "@src/api/GCustomAPI";
-import ConfigGoal from "./GoalConfigModal/ConfigGoal";
-import RegularGoalActions from "./MyGoalActions/RegularGoalActions";
+import { useGoalSelection } from "@src/hooks/useGoalSelection";
+ 
 import SortableItem from "./MyGoal/SortableItem";
 
 interface GoalsListProps {
   goals: GoalItem[];
-  showActions: {
-    open: string;
-    click: number;
-  };
   setGoals: React.Dispatch<React.SetStateAction<GoalItem[]>>;
-  setShowActions: React.Dispatch<
-    React.SetStateAction<{
-      open: string;
-      click: number;
-    }>
-  >;
 }
 
-const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListProps) => {
-  const showUpdateGoal = useRecoilValue(displayUpdateGoal);
-  const showGoalActions = useRecoilValue(displayGoalActions);
+const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
   const impossibleGoals = useRecoilValue(impossibleGoalsList);
 
   const sensors = useSensors(
@@ -86,28 +73,22 @@ const GoalsList = ({ goals, showActions, setGoals, setShowActions }: GoalsListPr
     }
   };
 
+  const focusedGoal = useGoalSelection(goals);
+
   return (
-    <>
-      {showGoalActions && showGoalActions.actionType === "regular" && (
-        <RegularGoalActions open goal={showGoalActions.goal} />
-      )}
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={updatedGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
-          {updatedGoals.map((goal: ImpossibleGoal, index: number) => (
-            <React.Fragment key={goal.id}>
-              {showUpdateGoal?.goalId === goal.id && <ConfigGoal action="Update" goal={goal} />}
-              <SortableItem
-                key={goal.id}
-                goal={goal}
-                index={index}
-                showActions={showActions}
-                setShowActions={setShowActions}
-              />
-            </React.Fragment>
-          ))}
-        </SortableContext>
-      </DndContext>
-    </>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={updatedGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
+        {updatedGoals.map((goal: ImpossibleGoal) => (
+          <div
+            key={`sortable-${goal.id}`}
+            style={focusedGoal?.id === goal.id ? { borderLeft: `${goal.goalColor} 3px solid` } : {}}
+            className={focusedGoal?.id === goal.id ? "focused-goal" : ""}
+          >
+            <SortableItem key={`sortable-${goal.id}`} goal={goal} />
+          </div>
+        ))}
+      </SortableContext>
+    </DndContext>
   );
 };
 

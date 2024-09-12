@@ -1,39 +1,52 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { useParams, useSearchParams } from "react-router-dom";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
-import { displayGoalActions, displayGoalId } from "@src/store/GoalsState";
 import { darkModeState, lastAction, searchActive } from "@src/store";
 
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import AppLayout from "@src/layouts/AppLayout";
-import ContactItem from "@src/models/ContactItem";
-import GoalsAccordion from "@components/GoalsComponents/GoalsAccordion";
-import GoalLocStateHandler from "@src/helpers/GoalLocStateHandler";
 import { getRootGoalsOfPartner } from "@src/api/SharedWMAPI";
-import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
 
+import { usePartnerContext } from "@src/contexts/partner-context";
+import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
+import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
+import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
+import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
+import { goalCategories } from "@src/constants/goals";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import PartnersNavbar from "@components/PartnersNavbar";
+import { TGoalConfigMode } from "@src/types";
+import ArchivedGoals from "./components/ArchivedGoals";
 import InvitationStatus from "./InvitationStatus";
 
-const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
+const PartnerGoals = () => {
+  const [searchParams] = useSearchParams();
+  const { parentId = "root" } = useParams();
+
   let debounceTimeout: ReturnType<typeof setTimeout>;
-  const { name, relId } = partner;
+  const showShareModal = searchParams.get("share") === "true";
+  const showOptions = searchParams.get("showOptions") === "true";
+  const goalType = (searchParams.get("type") as TGoalCategory) || "";
+  const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
+
+  const { partner } = usePartnerContext();
+  const { goal: activeGoal } = useActiveGoalContext();
+
+  const { name = "", relId = "" } = partner || {};
   const partnerName = name.charAt(0).toUpperCase() + name.slice(1, 4);
 
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
-  const [showActions, setShowActions] = useState({ open: "root", click: 1 });
+  // const [showActions, setShowActions] = useState({ open: "root", click: 1 });
 
   const displaySearch = useRecoilValue(searchActive);
-  const selectedGoalId = useRecoilValue(displayGoalId);
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showGoalActions = useRecoilValue(displayGoalActions);
   const [action, setLastAction] = useRecoilState(lastAction);
 
   const handleUserGoals = (goals: GoalItem[]) => {
@@ -68,51 +81,47 @@ const PartnerGoals = ({ partner }: { partner: ContactItem }) => {
   }, [action]);
 
   useEffect(() => {
-    if (selectedGoalId === "root") {
+    if (parentId === "root") {
       refreshActiveGoals();
     }
-  }, [selectedGoalId, partner, displaySearch]);
+  }, [parentId, partner, displaySearch]);
 
   return (
-    <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
-      <GoalLocStateHandler />
-      {showGoalActions && <RegularGoalActions open goal={showGoalActions.goal} />}
-      <div className="myGoals-container">
-        {selectedGoalId === "root" ? (
-          <div className="my-goals-content">
-            <div>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <GoalsList
-                  goals={activeGoals}
-                  showActions={showActions}
-                  setShowActions={setShowActions}
-                  setGoals={setActiveGoals}
-                />
-              </div>
-              <GoalsAccordion
-                header="Done"
-                goals={archivedGoals}
-                showActions={showActions}
-                setShowActions={setShowActions}
-              />
-            </div>
-          </div>
-        ) : (
-          <GoalSublist />
-        )}
+    <>
+      <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
+        <ParentGoalProvider>
+          {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
+          {goalCategories.includes(goalType) && (
+            <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
+          )}
 
-        {activeGoals?.length === 0 && (
-          <>
-            <InvitationStatus relId={relId} />
-            <img
-              style={{ width: 350, height: 350, opacity: 0.3 }}
-              src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-              alt="Zinzen"
-            />
-          </>
-        )}
-      </div>
-    </AppLayout>
+          <div className="myGoals-container">
+            {parentId === "root" ? (
+              <div className="my-goals-content">
+                <div className="d-flex f-col">
+                  <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
+                </div>
+                <ArchivedGoals goals={archivedGoals} />
+              </div>
+            ) : (
+              <GoalSublist />
+            )}
+
+            {!activeGoals?.length && parentId === "root" && (
+              <>
+                <InvitationStatus relId={relId} />
+                <img
+                  style={{ width: 350, height: 350, opacity: 0.3 }}
+                  src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+                  alt="Zinzen"
+                />
+              </>
+            )}
+          </div>
+        </ParentGoalProvider>
+      </AppLayout>
+      <PartnersNavbar />
+    </>
   );
 };
 

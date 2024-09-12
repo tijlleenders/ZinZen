@@ -5,12 +5,15 @@ import { getRelationshipStatus } from "@src/services/contact.service";
 import { v4 as uuidv4 } from "uuid";
 
 export const getAllContacts = async () => {
-  const allContacts = await db.contactsCollection.toArray();
-  return allContacts;
+  return db.contactsCollection.toArray();
 };
 
 export const getPartnersCount = async () => {
   return db.contactsCollection.count();
+};
+
+export const getPartnerById = (id: string) => {
+  return db.contactsCollection.get(id);
 };
 
 export const addContact = async (contactName: string, relId: string, type: string, accepted = false) => {

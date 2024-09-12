@@ -1,12 +1,12 @@
 import { atom } from "recoil";
-import { confirmActionState } from "@src/Interfaces/IPopupModals";
+import { TConfirmActionState } from "@src/Interfaces/IPopupModals";
 import ContactItem from "@src/models/ContactItem";
 import { isJSONParsable } from "@src/utils/patterns";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { darkModeState } from "./DarkModeState";
 import { languageSelectionState } from "./LanguageSelectionState";
 
-const defaultConfirmationObj: confirmActionState = {
+const defaultConfirmationObj: TConfirmActionState = {
   open: false,
   goal: {
     archive: true,
@@ -94,11 +94,6 @@ export const openDevMode = atom({
 export const displayPartner = atom({
   key: "showPartner",
   default: null as ContactItem | null,
-});
-
-export const displayPartnerMode = atom({
-  key: "displayPartnerMode",
-  default: false,
 });
 
 export const currentScheduledTask = atom({

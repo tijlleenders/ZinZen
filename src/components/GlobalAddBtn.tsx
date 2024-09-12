@@ -1,44 +1,45 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { ReactNode, useEffect } from "react";
 import { useRecoilValue } from "recoil";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import GlobalAddIcon from "@assets/images/globalAdd.svg";
 import correct from "@assets/images/correct.svg";
+
+import Backdrop from "@src/common/Backdrop";
+import useFeelingStore from "@src/hooks/useFeelingStore";
+
+import { ILocationState } from "@src/Interfaces";
 import { themeSelectionMode } from "@src/store/ThemeState";
 
-import useGoalStore from "@src/hooks/useGoalStore";
-import useFeelingStore from "@src/hooks/useFeelingStore";
-import Backdrop from "@src/common/Backdrop";
-
 import "./index.scss";
-import { useTranslation } from "react-i18next";
-import { ILocationState } from "@src/Interfaces";
+import { TGoalCategory } from "@src/models/GoalItem";
+import { allowAddingBudgetGoal } from "@src/store/GoalsState";
+import useLongPress from "@src/hooks/useLongPress";
+import { useKeyPress } from "@src/hooks/useKeyPress";
 
-interface AdGoalOptionsProps {
-  goalType: "Budget" | "Goal";
+interface AddGoalOptionProps {
+  children: ReactNode;
   bottom: number;
   disabled?: boolean;
+  handleClick: () => void;
 }
 
-const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom, disabled }) => {
-  const { handleAddGoal } = useGoalStore();
+const AddGoalOption: React.FC<AddGoalOptionProps> = ({ children, bottom, disabled, handleClick }) => {
   return (
     <button
       type="button"
-      className="add-goal-pill-btn"
-      style={{ right: 35, bottom, ...(disabled ? { opacity: 0.25, pointerEvents: "none" } : {}) }}
+      className={`add-goal-pill-btn ${disabled ? "disabled" : ""}`}
+      style={{ bottom }}
+      onContextMenu={(e) => e.preventDefault()}
       onClick={(e) => {
         e.stopPropagation();
-        handleAddGoal(goalType);
+        handleClick();
       }}
     >
-      <span style={{ paddingLeft: 5 }}>{goalType}</span>
-      <span className="goal-btn-circle">
-        <img
-          style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}
-          src={GlobalAddIcon}
-          alt="add goal"
-        />
+      <span className="button-text">{children}</span>
+      <span className="goal-btn-circle place-middle fw-600">
+        <img className="add-icon" src={GlobalAddIcon} alt="add goal" />
       </span>
     </button>
   );
@@ -46,23 +47,69 @@ const AddGoalOptions: React.FC<AdGoalOptionsProps> = ({ goalType, bottom, disabl
 
 const GlobalAddBtn = ({ add }: { add: string }) => {
   const { t } = useTranslation();
+  const { parentId = "root", partnerId } = useParams();
   const { state }: { state: ILocationState } = useLocation();
-  const navigate = useNavigate();
   const { handleAddFeeling } = useFeelingStore();
+  const isPartnerModeActive = !!partnerId;
 
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const themeSelection = useRecoilValue(themeSelectionMode);
+  const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const enterPressed = useKeyPress("Enter");
+  const plusPressed = useKeyPress("+");
+
+  const handleAddGoal = async (type: TGoalCategory, replaceCurrentRoute = true) => {
+    const navigateOptions = {
+      state: {
+        ...state,
+        goalType: type,
+      },
+      replace: replaceCurrentRoute,
+    };
+    if (add === "myTime") {
+      navigate(`?type=${type}&mode=add`, navigateOptions);
+      return;
+    }
+    const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
+    navigate(`${prefix}/${parentId || "root"}?type=${type}&mode=add`, navigateOptions);
+  };
+  const handleGlobalAddClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     if (themeSelection) {
       window.history.back();
-    } else if (add === "myGoals" || state.displayPartnerMode) {
-      navigate("/MyGoals", { state: { ...state, displayAddGoalOptions: true } });
+    } else if (add === "myTime" || add === "myGoals" || isPartnerModeActive) {
+      handleAddGoal("Standard", false);
     } else if (add === "myJournal") {
       handleAddFeeling();
     }
   };
-  if (state?.displayAddGoalOptions) {
+
+  const handleLongPress = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    if (add === "myGoals" || isPartnerModeActive) {
+      navigate(`/goals/${parentId}?addOptions=true`, { state });
+    } else if (add === "myTime") {
+      navigate("?addOptions=true", { state });
+    }
+  };
+  const { handlers } = useLongPress({
+    onLongPress: handleLongPress,
+    onClick: handleGlobalAddClick,
+    longPressTime: 200,
+  });
+
+  const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
+
+  useEffect(() => {
+    if ((plusPressed || enterPressed) && !state.goalType) {
+      // @ts-ignore
+      handleGlobalAddClick(new MouseEvent("click"));
+    }
+  }, [plusPressed, enterPressed]);
+
+  if (searchParams?.get("addOptions")) {
     return (
       <>
         <Backdrop
@@ -72,18 +119,36 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             window.history.back();
           }}
         />
-        <AddGoalOptions disabled={state.allowAddingBudgetGoal === false} goalType={t("addBtnBudget")} bottom={144} />
-        <AddGoalOptions goalType={t("addBtnGoal")} bottom={74} />
+        <AddGoalOption
+          handleClick={() => {
+            handleAddGoal("Budget");
+          }}
+          disabled={!isAddingBudgetGoalAllowed}
+          bottom={144}
+        >
+          {t("addBtnBudget")}
+        </AddGoalOption>
+        <AddGoalOption
+          handleClick={() => {
+            handleAddGoal("Standard");
+          }}
+          bottom={74}
+        >
+          {t("addBtnGoal")}
+        </AddGoalOption>
       </>
     );
   }
   return (
     <button
       type="button"
-      onClick={(e) => {
-        handleClick(e);
-      }}
       className="global-addBtn"
+      onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <img
         style={{ padding: "2px 0 0 0 !important", filter: "brightness(0) invert(1)" }}

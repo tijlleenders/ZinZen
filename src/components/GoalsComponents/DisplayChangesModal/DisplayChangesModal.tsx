@@ -1,15 +1,14 @@
 /* eslint-disable consistent-return */
 import { Checkbox } from "antd";
 import React, { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { sendNewGoals } from "@src/helpers/BatchPublisher";
-import { darkModeState } from "@src/store";
+import { darkModeState, lastAction } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
 import { sendUpdatedGoal } from "@src/helpers/PubSubController";
-import { displayChangesModal } from "@src/store/GoalsState";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { deleteGoalChangesInID, getInboxItem, removeGoalInbox, removePPTFromInboxOfGoal } from "@src/api/InboxAPI";
@@ -25,17 +24,17 @@ import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
 
-const DisplayChangesModal = () => {
+const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
-  const showChangesModal = useRecoilValue(displayChangesModal);
-
+  const setLastAction = useSetRecoilState(lastAction);
   const [updatesIntent, setUpdatesIntent] = useState<typeOfIntent>("shared");
   const [newGoals, setNewGoals] = useState<{ intent: typeOfIntent; goal: GoalItem }[]>([]);
   const [activePPT, setActivePPT] = useState(-1);
   const [updateList, setUpdateList] = useState<ITagsChanges>({ schemaVersion: {}, prettierVersion: {} });
-  const [activeGoal, setActiveGoal] = useState<GoalItem>();
+  const [goalUnderReview, setGoalUnderReview] = useState<GoalItem>();
   const [participants, setParticipants] = useState<ContactItem[]>([]);
   const [currentDisplay, setCurrentDisplay] = useState<typeOfChange | "none">("none");
+
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [unselectedChanges, setUnselectedChanges] = useState<string[]>([]);
 
@@ -123,17 +122,18 @@ const DisplayChangesModal = () => {
   };
 
   const deleteChanges = async () => {
-    if (!activeGoal || !showChangesModal) {
+    if (!goalUnderReview || !currentMainGoal) {
       return;
     }
-    const removeChanges = currentDisplay === "subgoals" ? newGoals.map(({ goal }) => goal.id) : [activeGoal.id];
+    const removeChanges = currentDisplay === "subgoals" ? newGoals.map(({ goal }) => goal.id) : [goalUnderReview.id];
     if (currentDisplay !== "none") {
-      await deleteGoalChangesInID(showChangesModal.id, participants[activePPT].relId, currentDisplay, removeChanges);
+      await deleteGoalChangesInID(currentMainGoal.id, participants[activePPT].relId, currentDisplay, removeChanges);
     }
     setCurrentDisplay("none");
   };
+
   const acceptChanges = async () => {
-    if (!activeGoal) {
+    if (!goalUnderReview) {
       return;
     }
     if (currentDisplay !== "none") {
@@ -143,7 +143,7 @@ const DisplayChangesModal = () => {
       const goalsToBeSelected = newGoals
         .filter(({ goal }) => !unselectedChanges.includes(goal.id))
         .map(({ goal }) => goal);
-      await acceptSelectedSubgoals(goalsToBeSelected, activeGoal);
+      await acceptSelectedSubgoals(goalsToBeSelected, goalUnderReview);
       if (goalsToBeSelected.length > 0) {
         const { intent } = newGoals[0];
         await sendNewGoals(goalsToBeSelected, [], true, intent === "suggestion" ? [] : [participants[activePPT].relId]);
@@ -151,9 +151,9 @@ const DisplayChangesModal = () => {
       setUnselectedChanges([]);
       setNewGoals([]);
     } else if (currentDisplay === "modifiedGoals") {
-      await acceptSelectedTags(unselectedChanges, updateList, activeGoal);
+      await acceptSelectedTags(unselectedChanges, updateList, goalUnderReview);
       await sendUpdatedGoal(
-        activeGoal.id,
+        goalUnderReview.id,
         [],
         true,
         updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
@@ -161,30 +161,35 @@ const DisplayChangesModal = () => {
       setUnselectedChanges([]);
       setUpdateList({ schemaVersion: {}, prettierVersion: {} });
     } else if (currentDisplay === "deleted") {
-      await removeGoalWithChildrens(activeGoal);
+      await removeGoalWithChildrens(goalUnderReview);
     } else if (currentDisplay === "archived") {
-      await archiveUserGoal(activeGoal);
+      await archiveUserGoal(goalUnderReview);
     } else if (currentDisplay === "restored") {
-      await restoreUserGoal(activeGoal);
+      await restoreUserGoal(goalUnderReview);
     }
     setCurrentDisplay("none");
   };
 
   const getChanges = async () => {
-    if (showChangesModal && participants.length > 0 && activePPT >= 0) {
+    if (currentMainGoal && participants.length > 0 && activePPT >= 0) {
       const { typeAtPriority, goals, parentId } = await jumpToLowestChanges(
-        showChangesModal.id,
+        currentMainGoal.id,
         participants[activePPT].relId,
       );
+      console.log("🚀 ~ getChanges ~ goals:", goals, typeAtPriority, parentId);
+
       if (typeAtPriority === "none") {
         // remove participant from inbox
         if (participants.length === 1) {
-          await removeGoalInbox(showChangesModal.id);
-          await updateGoal(showChangesModal.id, { newUpdates: false });
+          await Promise.allSettled([
+            removeGoalInbox(currentMainGoal.id),
+            updateGoal(currentMainGoal.id, { newUpdates: false }),
+          ]);
+          setLastAction("GoalChangesSynced");
           window.history.back();
           return;
         }
-        await removePPTFromInboxOfGoal(showChangesModal.id, participants[activePPT].relId);
+        await removePPTFromInboxOfGoal(currentMainGoal.id, participants[activePPT].relId);
         const currPPT = participants[activePPT].relId;
         setActivePPT(0);
         setParticipants([...participants.filter((ele) => ele.relId !== currPPT)]);
@@ -193,12 +198,13 @@ const DisplayChangesModal = () => {
         console.log("🚀 ~ getChanges ~ goalToBeRestored:", goalToBeRestored);
         if (goalToBeRestored) {
           delete goalToBeRestored.deletedAt;
-          setActiveGoal(goalToBeRestored);
+          setGoalUnderReview(goalToBeRestored);
         }
       } else {
         const changedGoal = await getGoal(parentId);
+        console.log("🚀 ~ getChanges ~ changedGoal:", changedGoal);
         if (changedGoal) {
-          setActiveGoal({ ...changedGoal });
+          setGoalUnderReview({ ...changedGoal });
           if (typeAtPriority === "subgoals") {
             setNewGoals(goals || []);
           } else if (typeAtPriority === "modifiedGoals") {
@@ -220,19 +226,20 @@ const DisplayChangesModal = () => {
 
   useEffect(() => {
     async function init() {
-      if (!showChangesModal) {
+      if (!currentMainGoal) {
         return;
       }
-      const inbox = await getInboxItem(showChangesModal.id);
+      const inbox = await getInboxItem(currentMainGoal.id);
       const ppsList = (await getAllContacts()).filter((ele) => Object.keys(inbox.changes).includes(ele.relId));
       setParticipants([...ppsList]);
       setActivePPT(0);
     }
     init();
-  }, []);
+  }, [currentMainGoal]);
+
   return (
-    <ZModal type="popupModal" open={!!showChangesModal} onCancel={() => window.history.back()}>
-      {showChangesModal && (
+    <ZModal type="popupModal" open>
+      {currentMainGoal && (
         <>
           <SubHeader
             showLeftNav={showSuggestions}
@@ -246,40 +253,36 @@ const DisplayChangesModal = () => {
             }}
           />
           <div
+            className="d-flex gap-4"
             style={{
-              display: "flex",
               height: 36,
-              gap: 5,
               background: "var(--bottom-nav-color)",
             }}
           >
             {participants.map((ele, index) => (
               <button
                 type="button"
+                key={ele.id}
                 style={{
                   width: 100,
-                  borderRadius: 4,
-                  // background: "var(--secondary-background)",
                   color: "var(--icon-grad-1)",
-                  fontWeight: 500,
                   fontSize: "1.143em",
                   background: `var(--${activePPT === index ? "selection-color" : "bottom-nav-color"})`,
                 }}
+                className="simple fw-500 br-4"
                 onClick={() => {
                   setActivePPT(index);
                 }}
-                key={ele.id}
-                className="ordinary-element"
               >
                 {ele.name}
               </button>
             ))}
           </div>
-          {activeGoal && participants.length > 0 && (
+          {goalUnderReview && participants.length > 0 && (
             <p className="popupModal-title" style={{ marginTop: 22 }}>
               <Header
                 contactName={participants[activePPT].name}
-                title={activeGoal.title}
+                title={goalUnderReview.title}
                 currentDisplay={currentDisplay}
               />
             </p>
@@ -288,8 +291,8 @@ const DisplayChangesModal = () => {
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
           {currentDisplay === "subgoals" && getSubgoalsList()}
 
-          <div style={{ display: "flex", gap: 18, justifyContent: "flex-end" }}>
-            {activeGoal && (
+          <div className="d-flex justify-fe gap-20">
+            {goalUnderReview && (
               <>
                 <IgnoreBtn deleteChanges={deleteChanges} />
                 <AcceptBtn acceptChanges={acceptChanges} typeAtPriority={currentDisplay} />

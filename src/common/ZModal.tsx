@@ -26,7 +26,7 @@ const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width, 
       centered
       onCancel={onCancel || (() => window.history.back())}
       className={combinedClassName}
-      maskStyle={maskStyle}
+      styles={{ mask: maskStyle }}
       width={width}
       style={style}
     >

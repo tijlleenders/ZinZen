@@ -1,82 +1,76 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
 import archiveSound from "@assets/archive.mp3";
 
-import { lastAction, openDevMode, displayConfirmation, displayPartnerMode } from "@src/store";
+import { lastAction, openDevMode, displayConfirmation } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
-import { completedGoalsState, goalsHistory } from "@src/store/GoalsState";
-import { confirmAction } from "@src/Interfaces/IPopupModals";
+import { TConfirmAction } from "@src/Interfaces/IPopupModals";
+import useGoalActions from "@src/hooks/useGoalActions";
+
+import { ILocationState } from "@src/Interfaces";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
-import { archiveThisGoal, removeThisGoal } from "@src/helpers/GoalActionHelper";
-const doneSound = new Audio(archiveSound);
+import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
 
 import ActionDiv from "./ActionDiv";
-import "./MyGoalActions.scss";
-import GoalItemSummary from "../MyGoal/GoalItemSummary/GoalItemSummary";
 
-const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) => {
+import "./MyGoalActions.scss";
+import GoalItemSummary from "../../../common/GoalItemSummary/GoalItemSummary";
+
+const doneSound = new Audio(archiveSound);
+
+const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
-  const { handleUpdateGoal, handleShareGoal, handleConfirmation } = useGoalStore();
+  const { partnerId } = useParams();
+  const { openEditMode } = useGoalStore();
+  const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
+  const { deleteGoalAction } = useGoalActions();
+  const isPartnerModeActive = !!partnerId;
+
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
-  const subGoalsHistory = useRecoilValue(goalsHistory);
   const showConfirmation = useRecoilValue(displayConfirmation);
-  const isPartnerGoal = useRecoilValue(displayPartnerMode);
   const setDevMode = useSetRecoilState(openDevMode);
-  const [completed, setCompleted] = useRecoilState(completedGoalsState);
   const setLastAction = useSetRecoilState(lastAction);
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
+  const ancestors = (state?.goalsHistory || []).map((ele) => ele.goalID);
 
-  const [confirmationAction, setConfirmationAction] = useState<confirmAction | null>(null);
+  const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
 
-  const handleCompleteGoal = () => {
-    setCompleted((prev) => ({ ...prev, [goal.id]: !prev[goal.id] }));
+  const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
+    await archiveThisGoal(goalToArchive, goalAncestors);
+    setLastAction("goalArchived");
+    const goalTitleElement = document.querySelector(`#goal-${goalToArchive.id} .goal-title`) as HTMLElement;
+    if (goalTitleElement) {
+      goalTitleElement.style.textDecoration = "line-through";
+      goalTitleElement.style.textDecorationColor = goalToArchive.goalColor;
+      goalTitleElement.style.textDecorationThickness = "4px";
+    }
+    await doneSound.play();
   };
-
-  const handleMarkNotCompleted = () => {
-    setCompleted((prev) => ({
-      ...prev,
-      [goal.id]: false, // Set explicitly to false
-    }));
-  };
-  console.log("completed", completed);
 
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
-      if (goal.title === "magic") {
-        setDevMode(false);
-      }
-      await removeThisGoal(goal, ancestors, isPartnerGoal);
+      await deleteGoalAction(goal);
       setLastAction("goalDeleted");
     } else if (action === "archive") {
-      setTimeout(async () => {
-        await archiveThisGoal(goal, ancestors);
-        setLastAction("goalArchived");
-        handleMarkNotCompleted();
-      }, 10000);
-      await doneSound.play(); //play the done sound when a line strikes through
-      handleCompleteGoal();
+      await handleArchiveGoal(goal, ancestors);
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
-      window.history.back();
-    } else {
-      return;
     }
-    window.history.go(confirmationAction ? -2 : -1);
+    window.history.back();
   };
 
-  const openConfirmationPopUp = async (action: confirmAction) => {
+  const openConfirmationPopUp = async (action: TConfirmAction) => {
     const { actionCategory, actionName } = action;
     if (actionCategory === "collaboration" && showConfirmation.collaboration[actionName]) {
-      handleConfirmation();
       setConfirmationAction({ ...action });
     } else if (actionCategory === "goal" && showConfirmation.goal[action.actionName]) {
-      handleConfirmation();
       setConfirmationAction({ ...action });
     } else {
       await handleActionClick(actionName);
@@ -84,12 +78,12 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
   };
 
   return (
-    <ZModal open={open} width={400} onCancel={() => window.history.back()} type="interactables-modal">
+    <ZModal open width={400} type="interactables-modal">
       <div
         style={{ textAlign: "left" }}
         className="header-title"
         onClickCapture={() => {
-          handleUpdateGoal(goal.id, !!goal.timeBudget?.perDay);
+          openEditMode(goal);
         }}
       >
         <p className="ordinary-element" id="title-field">
@@ -98,7 +92,15 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
         <GoalItemSummary goal={goal} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-        {confirmationAction && <ConfirmationModal action={confirmationAction} handleClick={handleActionClick} />}
+        {confirmationAction && (
+          <ConfirmationModal
+            action={confirmationAction}
+            handleClick={handleActionClick}
+            handleClose={() => {
+              setConfirmationAction(null);
+            }}
+          />
+        )}
         <div
           className="goal-action shareOptions-btn"
           onClickCapture={async (e) => {
@@ -108,7 +110,7 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
         >
           <ActionDiv label={t("Delete")} icon="Delete" />
         </div>
-        {!isPartnerGoal && (
+        {!isPartnerModeActive && (
           <div
             className="goal-action shareOptions-btn"
             onClickCapture={async (e) => {
@@ -119,28 +121,28 @@ const RegularGoalActions = ({ goal, open }: { open: boolean; goal: GoalItem }) =
             <ActionDiv label={t("Done")} icon="Correct" />
           </div>
         )}
-        {((isPartnerGoal && goal.parentGoalId === "root") || !isPartnerGoal) && (
+        {((isPartnerModeActive && goal.parentGoalId === "root") || !isPartnerModeActive) && (
           <div
             className="goal-action shareOptions-btn"
             onClickCapture={async (e) => {
               e.stopPropagation();
-              if (!isPartnerGoal) {
-                handleShareGoal(goal);
+              if (!isPartnerModeActive) {
+                navigate(`${pathname}?share=true`, { state, replace: true });
               } else {
                 await openConfirmationPopUp({ actionCategory: "collaboration", actionName: "colabRequest" });
               }
             }}
           >
             <ActionDiv
-              label={t(isPartnerGoal ? "Collaborate" : "Share")}
-              icon={isPartnerGoal ? "Collaborate" : "SingleAvatar"}
+              label={t(isPartnerModeActive ? "Collaborate" : "Share")}
+              icon={isPartnerModeActive ? "Collaborate" : "SingleAvatar"}
             />
           </div>
         )}
         <div
           className="goal-action shareOptions-btn"
           onClickCapture={() => {
-            handleUpdateGoal(goal.id, !!goal.timeBudget?.perDay);
+            openEditMode(goal);
           }}
         >
           <ActionDiv label={t("Edit")} icon="Edit" />

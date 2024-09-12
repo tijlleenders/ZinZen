@@ -4,11 +4,11 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 
 import { darkModeState, displayConfirmation } from "@src/store";
-import { getConfirmButtonText } from "@src/constants/myGoals";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
+import { getConfirmButtonText } from "@src/constants/goals";
 import ZModal from "./ZModal";
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick }) => {
+const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick, handleClose }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
 
@@ -26,7 +26,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       }}
       onClick={async () => {
         if (choice === "cancel") {
-          window.history.back();
+          handleClose();
         } else {
           if (neverShowAgain) {
             const actionChange = { ...displayModal[actionCategory] };
@@ -46,12 +46,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
     </button>
   );
   return (
-    <ZModal
-      open={displayModal.open}
-      onCancel={() => {
-        window.history.back();
-      }}
-    >
+    <ZModal open onCancel={handleClose}>
       <p className="popupModal-title" style={{ margin: 0 }}>
         {t(headerKey)}
       </p>
