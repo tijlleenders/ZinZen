@@ -12,6 +12,7 @@ import GlobalAddBtn from "@components/GlobalAddBtn";
 
 import "./BottomNavbar.scss";
 import Icon from "@src/common/Icon";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
 const BottomNavbar = ({ title }: { title: string }) => {
   const { t } = useTranslation();
@@ -37,7 +38,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
       choice = 8;
     }
     const newTheme = { ...theme, [darkModeStatus ? "dark" : "light"]: choice };
-    localStorage.setItem("theme", JSON.stringify(newTheme));
+    localStorage.setItem(LocalStorageKeys.THEME, JSON.stringify(newTheme));
     setTheme({ ...newTheme });
   };
 

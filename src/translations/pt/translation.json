@@ -128,7 +128,7 @@
     },
     "delete": {
       "header": "Deseja excluir esta meta?",
-      "note": "Você não poderá recuperá-la novamente."
+      "note": "Você sempre pode recuperar isso da lixeira."
     },
     "shareAnonymously": {
       "header": "Deseja compartilhar esta meta de forma pseudo anônima?",

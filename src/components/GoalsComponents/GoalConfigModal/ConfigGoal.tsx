@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { Slider } from "antd";
 import { displayToast } from "@src/store";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { useLocation, useNavigate } from "react-router-dom";
 
 import plingSound from "@assets/pling.mp3";
 
@@ -34,8 +33,6 @@ const roundOffHours = (hrsValue: string) => {
 };
 
 const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConfigMode; goal: GoalItem }) => {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
   const [suggestedGoal, setSuggestedGoal] = useRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
   const action = isEditMode ? "Update" : "Create";
@@ -75,7 +72,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     });
   }, [goal.id]);
 
-  const [title, setTitle] = useState(goal.title);
+  const [title, setTitle] = useState(t(goal.title) as string);
   const handleTitleChange = (value: string) => {
     setTitle(value);
   };

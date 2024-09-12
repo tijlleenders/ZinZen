@@ -87,11 +87,18 @@ export const getActiveGoals = async (includeArchived = "false") => {
 };
 
 export const updateGoal = async (id: string, changes: Partial<GoalItem>) => {
-  db.transaction("rw", db.goalsCollection, async () => {
-    await db.goalsCollection.update(id, changes).then((updated) => updated);
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
+  let updateStatus;
+  await db
+    .transaction("rw", db.goalsCollection, async () => {
+      await db.goalsCollection.update(id, changes).then((updated) => {
+        updateStatus = updated === 1 ? true : false;
+      });
+    })
+    .catch((e) => {
+      console.log(e.stack || e);
+    });
+
+  return updateStatus;
 };
 
 export const archiveGoal = async (goal: GoalItem) => {
