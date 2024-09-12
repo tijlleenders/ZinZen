@@ -14,6 +14,8 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-ki
 import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { ImpossibleGoal } from "@src/Interfaces";
+import { useGoalSelection } from "@src/hooks/useGoalSelection";
+ 
 import SortableItem from "./MyGoal/SortableItem";
 
 interface GoalsListProps {
@@ -71,13 +73,19 @@ const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
     }
   };
 
+  const focusedGoal = useGoalSelection(goals);
+
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={updatedGoals.map((goal) => goal.id)} strategy={verticalListSortingStrategy}>
         {updatedGoals.map((goal: ImpossibleGoal) => (
-          <React.Fragment key={`sortable-${goal.id}`}>
+          <div
+            key={`sortable-${goal.id}`}
+            style={focusedGoal?.id === goal.id ? { borderLeft: `${goal.goalColor} 3px solid` } : {}}
+            className={focusedGoal?.id === goal.id ? "focused-goal" : ""}
+          >
             <SortableItem key={`sortable-${goal.id}`} goal={goal} />
-          </React.Fragment>
+          </div>
         ))}
       </SortableContext>
     </DndContext>
