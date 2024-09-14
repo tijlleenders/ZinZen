@@ -80,6 +80,7 @@ export const allowAddingBudgetGoal = atom({
   key: "allowAddingBudgetGoal",
   default: true,
 });
+
 export const completedGoalsState = atom({
   key: "completedGoalsState",
   default: {} as Record<string, boolean>,
