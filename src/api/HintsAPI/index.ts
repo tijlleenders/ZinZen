@@ -1,12 +1,12 @@
 import { db } from "@src/models";
-import { IGoalHint } from "@src/models/HintItem";
+import { HintItem, IGoalHint } from "@src/models/HintItem";
 import { v4 as uuidv4 } from "uuid";
 
 export const checkForNewGoalHints = async (hintId: string, newGoalHints: IGoalHint[]) => {
   try {
     const hintItem = await db.hintsCollection.get(hintId);
     if (!hintItem) return false;
-    const currentGoalHints = hintItem.goalHints || [];
+    const currentGoalHints = hintItem.availableGoalHints || [];
     const combinedHints = [...currentGoalHints];
 
     const existingTitles = new Set(combinedHints.map((hint) => hint.title));
@@ -32,14 +32,14 @@ export const getGoalHintItem = async (goalId: string) => {
   return hintItem.length > 0 ? hintItem[0] : null;
 };
 
-export const addHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
+export const addHintItem = async (goalId: string, hintOption: boolean, goalHints: IGoalHint[]) => {
   const updatedHintsWithId = ensureGoalHintsHaveIds(goalHints);
   const now = new Date();
   const oneDayLater = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  const hintObject = {
+  const hintObject: HintItem = {
     id: goalId,
-    hint,
-    goalHints: updatedHintsWithId,
+    hintOptionEnabled: hintOption,
+    availableGoalHints: updatedHintsWithId,
     lastCheckedDate: now.toISOString(),
     nextCheckDate: oneDayLater.toISOString(),
   };
@@ -108,8 +108,8 @@ export const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
       const goalHintsItem = await db.hintsCollection.get(parentGoalId);
 
       if (goalHintsItem) {
-        const updatedGoalHints = goalHintsItem.goalHints.filter((hint) => hint.id !== goalId);
-        const deletedGoalHint = goalHintsItem.goalHints.find((hint) => hint.id === goalId);
+        const updatedGoalHints = goalHintsItem.availableGoalHints.filter((hint) => hint.id !== goalId);
+        const deletedGoalHint = goalHintsItem.availableGoalHints.find((hint) => hint.id === goalId);
 
         const updatedDeletedGoalHints = goalHintsItem.deletedGoalHints ? [...goalHintsItem.deletedGoalHints] : [];
 

@@ -65,9 +65,9 @@ const useGoalActions = () => {
     });
   };
 
-  const updateGoal = async (goal: GoalItem, hints: boolean) => {
+  const updateGoal = async (goal: GoalItem, updatedHintOption: boolean) => {
     const addGoalSound = new Audio(plingSound);
-    const currentHint = await getGoalHintItem(goal.id);
+    const currentHintItem = await getGoalHintItem(goal.id);
 
     const titleContainsCode = /```/.test(goal.title);
     if (goal.sublist.length > 0 && titleContainsCode) {
@@ -82,9 +82,12 @@ const useGoalActions = () => {
         rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
-    } else if (activeGoal && (hashObject({ ...activeGoal }) !== hashObject(goal) || currentHint?.hint !== hints)) {
+    } else if (
+      activeGoal &&
+      (hashObject({ ...activeGoal }) !== hashObject(goal) || currentHintItem?.hintOptionEnabled !== updatedHintOption)
+    ) {
       // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
-      await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
+      await modifyGoal(goal.id, goal, [...ancestors, goal.id], updatedHintOption);
       setLastAction("goalUpdated");
       setShowToast({
         open: true,
@@ -95,7 +98,7 @@ const useGoalActions = () => {
     }
   };
 
-  const addGoal = async (newGoal: GoalItem, hints: boolean, parentGoal?: GoalItem) => {
+  const addGoal = async (newGoal: GoalItem, hintOption: boolean, parentGoal?: GoalItem) => {
     if (isPartnerModeActive && subGoalsHistory.length) {
       const rootGoalId = subGoalsHistory[0].goalID;
       const rootGoal = await getSharedWMGoalById(rootGoalId);
@@ -104,7 +107,7 @@ const useGoalActions = () => {
       }
       suggestNewGoal(newGoal, parentGoal, rootGoal, subGoalsHistory.length);
     } else {
-      await createGoal(newGoal, newGoal.parentGoalId, ancestors, hints);
+      await createGoal(newGoal, newGoal.parentGoalId, ancestors, hintOption);
       if (!parentGoal && newGoal.title === "magic") {
         setDevMode(true);
         showMessage("Congratulations, you activated DEV mode", "Explore what's hidden");

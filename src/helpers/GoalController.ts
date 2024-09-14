@@ -15,11 +15,11 @@ import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
-export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], goalHint: boolean) => {
+export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], hintOption: boolean) => {
   const level = ancestors.length;
-  if (goalHint) {
+  if (hintOption) {
     getHintsFromAPI(newGoal)
-      .then((hints) => addHintItem(newGoal.id, goalHint, hints || []))
+      .then((hints) => addHintItem(newGoal.id, hintOption, hints || []))
       .catch((error) => console.error("Error fetching hints:", error));
   }
 
