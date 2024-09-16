@@ -17,6 +17,8 @@ import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
+import AvailableGoalHints from "@pages/GoalsPage/components/AvailableGoalHints";
+import { AvailableGoalHintProvider } from "@src/contexts/availableGoalHint-context";
 
 export const GoalSublist = () => {
   const {
@@ -34,16 +36,17 @@ export const GoalSublist = () => {
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
 
   useEffect(() => {
-    getGoalHintItem(goalID).then((hintItem) => {
+    if (parentGoal === undefined) return;
+    getGoalHintItem(parentGoal?.id).then((hintItem) => {
       const array: GoalItem[] = [];
-      hintItem?.goalHints?.forEach((hint) => {
-        if (hint) {
-          array.push(createGoalObjectFromTags({ ...hint, parentGoalId: goalID }));
+      hintItem?.availableGoalHints?.forEach((availableGoalHint) => {
+        if (availableGoalHint) {
+          array.push(createGoalObjectFromTags({ ...availableGoalHint, parentGoalId: parentGoal.id }));
         }
       });
       setGoalHints(array || []);
     });
-  }, [goalID, action]);
+  }, [action, parentGoal, showSuggestionModal, showChangesModal, subgoals, goalID]);
 
   useEffect(() => {
     async function init() {
@@ -80,6 +83,9 @@ export const GoalSublist = () => {
           )}
           <div className="sublist-list-container">
             <GoalsList goals={activeGoals} setGoals={setGoals} />
+            <AvailableGoalHintProvider goalHints={goalhints}>
+              <AvailableGoalHints goals={goalhints} />
+            </AvailableGoalHintProvider>
             <DeletedGoalProvider>
               {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
             </DeletedGoalProvider>
