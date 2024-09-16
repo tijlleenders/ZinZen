@@ -52,8 +52,8 @@ export const addHintItem = async (goalId: string, hintOption: boolean, goalHints
     });
 };
 
-export const updateHintItem = async (goalId: string, hint: boolean, goalHints: IGoalHint[]) => {
-  const updatedHintsWithId = ensureGoalHintsHaveIds(goalHints);
+export const updateHintItem = async (goalId: string, hint: boolean, availableGoalHints: IGoalHint[]) => {
+  const updatedHintsWithId = ensureGoalHintsHaveIds(availableGoalHints);
   const isNewHintPresent = await checkForNewGoalHints(goalId, updatedHintsWithId);
 
   const oneDay = 24 * 60 * 60 * 1000;
@@ -80,11 +80,11 @@ export const updateHintItem = async (goalId: string, hint: boolean, goalHints: I
           nextCheckDate: nextCheckDate.toISOString(),
         });
       } else {
-        const newHints = goalHints.map((hintItem) => ({
-          ...hintItem,
-          id: hintItem.id || uuidv4(),
+        const newGoalHints = availableGoalHints.map((hint) => ({
+          ...hint,
+          id: hint.id || uuidv4(),
         }));
-        await addHintItem(goalId, hint, newHints);
+        await addHintItem(goalId, hint, newGoalHints);
       }
     })
     .catch((e) => {

@@ -48,10 +48,10 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
 };
 
 export const modifyGoal = async (goalId: string, goalTags: GoalItem, ancestors: string[], goalHint: boolean) => {
-  const hintsPromise = getHintsFromAPI(goalTags);
+  const availableHintsPromise = getHintsFromAPI(goalTags);
   if (goalHint) {
-    hintsPromise
-      .then((hints) => updateHintItem(goalTags.id, goalHint, hints))
+    availableHintsPromise
+      .then((availableGoalHints) => updateHintItem(goalTags.id, goalHint, availableGoalHints))
       .catch((err) => console.error("Error updating hints:", err));
   } else {
     updateHintItem(goalTags.id, goalHint, []);
