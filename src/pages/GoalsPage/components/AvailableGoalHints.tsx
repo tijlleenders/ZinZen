@@ -15,11 +15,10 @@ import { addHintGoaltoMyGoals } from "@src/api/GoalsAPI";
 import { deleteAvailableGoalHint } from "@src/api/HintsAPI";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
-  const darkMode = useRecoilValue(darkModeState);
-  //const { restoreDeletedGoal, deleteGoalAction } = useGoalActions();
   const { t } = useTranslation();
   const restoreGoalSound = new Audio(plingSound);
   const setLastAction = useSetRecoilState(lastAction);
+  const darkMode = useRecoilValue(darkModeState);
 
   return (
     <ZModal open width={400} type="interactables-modal">
@@ -40,18 +39,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
             window.history.back();
           }}
         >
-          <ActionDiv
-            label={t("Delete")}
-            icon={
-              <img
-                alt="archived goal"
-                src={unarchiveIcon}
-                width={24}
-                height={25}
-                style={{ filter: darkMode ? "invert(1)" : "none" }}
-              />
-            }
-          />
+          <ActionDiv label={t("Delete")} icon="Delete" />
         </button>
 
         <button
@@ -63,7 +51,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
             window.history.back();
           }}
         >
-          <ActionDiv label={t("Add")} icon="Delete" />
+          <ActionDiv label={t("Add")} icon="Add" />
         </button>
         <button
           type="button"
@@ -72,7 +60,18 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           //     window.history.back();
           //   }}
         >
-          <ActionDiv label={t("Report")} icon="Delete" />
+          <ActionDiv
+            label={t("Report")}
+            icon={
+              <img
+                alt="archived goal"
+                src={unarchiveIcon}
+                width={24}
+                height={25}
+                style={{ filter: darkMode ? "invert(1)" : "none" }}
+              />
+            }
+          />
         </button>
       </div>
     </ZModal>

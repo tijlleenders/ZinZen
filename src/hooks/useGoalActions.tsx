@@ -19,6 +19,9 @@ import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import { removeBackTicks } from "@src/utils/patterns";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 
+const pageCrumple = new Audio(pageCrumplingSound);
+const addGoalSound = new Audio(plingSound);
+
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
   const { partnerId } = useParams();
@@ -30,7 +33,6 @@ const useGoalActions = () => {
   const { goal: activeGoal } = useActiveGoalContext();
 
   const setShowToast = useSetRecoilState(displayToast);
-  const pageCrumple = new Audio(pageCrumplingSound);
 
   const showMessage = (message: string, extra = "") => {
     setShowToast({
@@ -66,7 +68,6 @@ const useGoalActions = () => {
   };
 
   const updateGoal = async (goal: GoalItem, updatedHintOption: boolean) => {
-    const addGoalSound = new Audio(plingSound);
     const currentHintItem = await getGoalHintItem(goal.id);
 
     const titleContainsCode = /```/.test(goal.title);
