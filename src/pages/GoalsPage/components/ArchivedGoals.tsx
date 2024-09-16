@@ -94,7 +94,7 @@ const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
             panels={[
               {
                 header: "Done",
-                body: goals.map((goal) => <MyGoal key={`goal-${goal.id}`} goal={goal} />),
+                body: goals.map((goal) => <MyGoal key={`goal-${goal.id}`} goal={{ ...goal, impossible: false }} />),
               },
             ]}
           />

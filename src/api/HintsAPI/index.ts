@@ -7,10 +7,7 @@ export const checkForNewGoalHints = async (hintId: string, newGoalHints: IGoalHi
     const hintItem = await db.hintsCollection.get(hintId);
     if (!hintItem) return false;
     const currentGoalHints = hintItem.availableGoalHints || [];
-    const combinedHints = [...currentGoalHints];
-
-    const existingTitles = new Set(combinedHints.map((hint) => hint.title));
-
+    const existingTitles = new Set(currentGoalHints.map((hint) => hint.title));
     return newGoalHints.some((newHint) => !existingTitles.has(newHint.title));
   } catch (error) {
     console.error("Error checking for new goal hints:", error);
@@ -32,14 +29,14 @@ export const getGoalHintItem = async (goalId: string) => {
   return hintItem.length > 0 ? hintItem[0] : null;
 };
 
-export const addHintItem = async (goalId: string, hintOption: boolean, goalHints: IGoalHint[]) => {
-  const updatedHintsWithId = ensureGoalHintsHaveIds(goalHints);
+export const addHintItem = async (goalId: string, hintOption: boolean, availableGoalHints: IGoalHint[]) => {
+  const updatedAvailableGoalHintsWithId = ensureGoalHintsHaveIds(availableGoalHints);
   const now = new Date();
   const oneDayLater = new Date(now.getTime() + 24 * 60 * 60 * 1000);
   const hintObject: HintItem = {
     id: goalId,
     hintOptionEnabled: hintOption,
-    availableGoalHints: updatedHintsWithId,
+    availableGoalHints: updatedAvailableGoalHintsWithId,
     lastCheckedDate: now.toISOString(),
     nextCheckDate: oneDayLater.toISOString(),
   };
@@ -53,8 +50,8 @@ export const addHintItem = async (goalId: string, hintOption: boolean, goalHints
 };
 
 export const updateHintItem = async (goalId: string, hint: boolean, availableGoalHints: IGoalHint[]) => {
-  const updatedHintsWithId = ensureGoalHintsHaveIds(availableGoalHints);
-  const isNewHintPresent = await checkForNewGoalHints(goalId, updatedHintsWithId);
+  const updatedAvailableGoalHintsWithId = ensureGoalHintsHaveIds(availableGoalHints);
+  const isNewHintPresent = await checkForNewGoalHints(goalId, updatedAvailableGoalHintsWithId);
 
   const oneDay = 24 * 60 * 60 * 1000;
   const oneWeek = 7 * oneDay;
@@ -67,15 +64,15 @@ export const updateHintItem = async (goalId: string, hint: boolean, availableGoa
       const existingItem = await db.hintsCollection.where("id").equals(goalId).first();
 
       if (existingItem) {
-        const filteredHintsWithId = updatedHintsWithId.filter(
-          (hintItem) =>
+        const filteredAvailableGoalHintsWithId = updatedAvailableGoalHintsWithId.filter(
+          (availableGoalHint) =>
             !existingItem.deletedGoalHints ||
-            !existingItem.deletedGoalHints.some((deletedHint) => deletedHint.title === hintItem.title),
+            !existingItem.deletedGoalHints.some((deletedHint) => deletedHint.title === availableGoalHint.title),
         );
 
         await db.hintsCollection.update(goalId, {
           hint,
-          goalHints: filteredHintsWithId,
+          goalHints: filteredAvailableGoalHintsWithId,
           lastCheckedDate: now.toISOString(),
           nextCheckDate: nextCheckDate.toISOString(),
         });
@@ -102,30 +99,41 @@ export const deleteHintItem = async (goalId: string) => {
     });
 };
 
-export const deleteGoalHint = async (parentGoalId: string, goalId: string) => {
-  await db
-    .transaction("rw", db.hintsCollection, async () => {
+export const deleteAvailableGoalHint = async (parentGoalId: string, goalId: string) => {
+  try {
+    await db.transaction("rw", db.hintsCollection, async () => {
       const goalHintsItem = await db.hintsCollection.get(parentGoalId);
 
       if (goalHintsItem) {
-        const updatedGoalHints = goalHintsItem.availableGoalHints.filter((hint) => hint.id !== goalId);
-        const deletedGoalHint = goalHintsItem.availableGoalHints.find((hint) => hint.id === goalId);
+        const { availableGoalHints } = goalHintsItem;
+
+        // Find and remove the goal hint in a single step
+        const updatedGoalHints = [];
+        let deletedGoalHint = null;
+
+        for (const hint of availableGoalHints) {
+          if (hint.id === goalId) {
+            deletedGoalHint = hint;
+          } else {
+            updatedGoalHints.push(hint);
+          }
+        }
 
         const updatedDeletedGoalHints = goalHintsItem.deletedGoalHints ? [...goalHintsItem.deletedGoalHints] : [];
 
+        // If we found the goal hint, remove the id and add it to deletedGoalHints
         if (deletedGoalHint) {
-          const deletedHintDetails: IGoalHint = { ...deletedGoalHint };
-          delete deletedHintDetails.id;
+          const { id, ...deletedHintDetails } = deletedGoalHint; // Omitting 'id'
           updatedDeletedGoalHints.push(deletedHintDetails);
         }
 
         await db.hintsCollection.update(parentGoalId, {
-          goalHints: updatedGoalHints,
+          availableGoalHints: updatedGoalHints,
           deletedGoalHints: updatedDeletedGoalHints,
         });
       }
-    })
-    .catch((e) => {
-      console.log(e.stack || e);
     });
+  } catch (e) {
+    console.error("Failed to delete available goal hint:", e);
+  }
 };
