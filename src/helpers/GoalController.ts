@@ -47,14 +47,19 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
   return { parentGoal: null };
 };
 
-export const modifyGoal = async (goalId: string, goalTags: GoalItem, ancestors: string[], goalHint: boolean) => {
-  const availableHintsPromise = getHintsFromAPI(goalTags);
-  if (goalHint) {
+export const modifyGoal = async (
+  goalId: string,
+  goalTags: GoalItem,
+  ancestors: string[],
+  hintOptionEnabled: boolean,
+) => {
+  if (hintOptionEnabled) {
+    const availableHintsPromise = getHintsFromAPI(goalTags);
     availableHintsPromise
-      .then((availableGoalHints) => updateHintItem(goalTags.id, goalHint, availableGoalHints))
+      .then((availableGoalHints) => updateHintItem(goalTags.id, hintOptionEnabled, availableGoalHints))
       .catch((err) => console.error("Error updating hints:", err));
   } else {
-    updateHintItem(goalTags.id, goalHint, []);
+    updateHintItem(goalTags.id, hintOptionEnabled, []);
   }
   console.log(goalTags);
   await updateGoal(goalId, goalTags);

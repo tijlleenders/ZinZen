@@ -207,7 +207,7 @@ export const getHintsFromAPI = async (goal: GoalItem) => {
   if (goal.parentGoalId !== "root") {
     const parentGoal = await getGoal(goal.parentGoalId);
     parentGoalTitle = parentGoal?.title || "";
-    parentGoalHint = (await getGoalHintItem(goal.parentGoalId))?.hint || false;
+    parentGoalHint = (await getGoalHintItem(goal.parentGoalId))?.hintOptionEnabled || false;
   }
 
   const { title, duration } = goal;
