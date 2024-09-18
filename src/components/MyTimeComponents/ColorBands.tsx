@@ -14,20 +14,16 @@ interface IColorBands {
 }
 
 const ColorBands: React.FC<IColorBands> = ({ list, tasksStatus, day, active }) => {
-  let dayCompleted = 0;
-  let dayTotal = 0;
   const taskProgress: ITaskProgress = {};
   const completion: { [goalId: string]: number } = {};
   list.scheduled.forEach((ele) => {
     const { goalid } = ele;
     if (!taskProgress[goalid]) {
       const completedToday = tasksStatus[goalid]?.completedToday || 0;
-      dayCompleted += completedToday;
       completion[goalid] = completedToday + (completion[goalid] || 0);
       taskProgress[goalid] = { total: 0, completed: completedToday, goalColor: ele.goalColor };
     }
     taskProgress[goalid].total += ele.duration;
-    dayTotal += ele.duration;
   });
 
   const completed: React.CSSProperties[] = [];
@@ -48,22 +44,17 @@ const ColorBands: React.FC<IColorBands> = ({ list, tasksStatus, day, active }) =
         ))}
       </div>
       {active && day === "Today" && (
-        <>
-          <div className="task-progress">
-            <p>{`${dayTotal > 0 ? `${Math.floor((dayCompleted / dayTotal) * 100)}% done` : "No tasks today"}`}</p>
-          </div>
-          <div className={`MyTime_colorPalette ${active ? "active" : ""}`}>
-            {[
-              ...completed,
-              {
-                width: "100%",
-                background: "#d9cccc",
-              },
-            ].map((ele, index) => (
-              <div className="colorBand" key={uuidv4()} style={{ zIndex: 30 - index, height: 10, ...ele }} />
-            ))}
-          </div>
-        </>
+        <div className={`MyTime_colorPalette ${active ? "active" : ""}`}>
+          {[
+            ...completed,
+            {
+              width: "100%",
+              background: "#d9cccc",
+            },
+          ].map((ele, index) => (
+            <div className="colorBand" key={uuidv4()} style={{ zIndex: 30 - index, height: 10, ...ele }} />
+          ))}
+        </div>
       )}
     </>
   );
