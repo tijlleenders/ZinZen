@@ -37,26 +37,11 @@ const ColorBands: React.FC<IColorBands> = ({ list, tasksStatus, day, active }) =
     }
   });
   return (
-    <>
-      <div className={`MyTime_colorPalette ${active ? "active" : ""}`}>
-        {(list.colorBands || []).map((ele, index) => (
-          <div className="colorBand" key={uuidv4()} style={{ zIndex: 30 - index, height: 10, ...ele.style }} />
-        ))}
-      </div>
-      {active && day === "Today" && (
-        <div className={`MyTime_colorPalette ${active ? "active" : ""}`}>
-          {[
-            ...completed,
-            {
-              width: "100%",
-              background: "#d9cccc",
-            },
-          ].map((ele, index) => (
-            <div className="colorBand" key={uuidv4()} style={{ zIndex: 30 - index, height: 10, ...ele }} />
-          ))}
-        </div>
-      )}
-    </>
+    <div className={`MyTime_colorPalette ${active ? "active" : ""}`}>
+      {(list.colorBands || []).map((ele, index) => (
+        <div className="colorBand" key={uuidv4()} style={{ zIndex: 30 - index, height: 10, ...ele.style }} />
+      ))}
+    </div>
   );
 };
 
