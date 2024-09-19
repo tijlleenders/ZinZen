@@ -10,10 +10,9 @@ interface IColorBands {
   };
   active: boolean;
   list: ITaskOfDay;
-  day: string;
 }
 
-const ColorBands: React.FC<IColorBands> = ({ list, tasksStatus, day, active }) => {
+const ColorBands: React.FC<IColorBands> = ({ list, tasksStatus, active }) => {
   const taskProgress: ITaskProgress = {};
   const completion: { [goalId: string]: number } = {};
   list.scheduled.forEach((ele) => {
