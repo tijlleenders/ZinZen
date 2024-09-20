@@ -33,8 +33,8 @@ export default defineConfig({
       srcDir: "src/service-worker",
       filename: "service-worker.ts",
       manifest: {
-        short_name: "zinzen",
-        name: "zinzen-me.zinzen",
+        short_name: "ZinZen",
+        name: "ZinZen.me",
         icons: [
           {
             src: "pwa-192x192.png",
