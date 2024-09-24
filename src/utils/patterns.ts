@@ -39,7 +39,7 @@ export function isJSONParsable(str: string | null | undefined): boolean {
 }
 
 export const extractLinks = (text: string) => {
-  let regex = /([\w+]+\:\/\/)?([\w\d-]+\.)*[\w-]+[\.\:]\w+([\/\?\=\&\#\.]?[\w-]+)*\/?/gm;
+  const regex = /([\w+]+\:\/\/)?([\w\d-]+\.)*[\w-]+[\.\:]\w+([\/\?\=\&\#\.]?[\w-]+)*\/?/gm;
   const matches = text.match(regex);
   return matches ? matches[0] : null;
 };

@@ -3,6 +3,7 @@
 This document provides a set of coding standards and best practices for contributing to the ZinZen project. It aims to ensure consistency, readability, and maintainability of the codebase.
 
 ### Naming Conventions
+
 Proper naming enhances code readability:
 
 - **General:** Use clear, descriptive names.
@@ -15,6 +16,7 @@ Proper naming enhances code readability:
 - **Type Names:** Use PascalCase (e.g., `User`).
 
 ### TypeScript Practices
+
 Follow these TypeScript-specific practices:
 
 - **Type Annotations:** Always use type annotations.
@@ -22,6 +24,7 @@ Follow these TypeScript-specific practices:
 - **Avoid `any`:** Minimize the use of `any` for better type checking.
 
 ### Code Quality and Robustness
+
 To ensure the reliability and maintainability of the code:
 
 - **Simplicity:** Write simple and clear code.
