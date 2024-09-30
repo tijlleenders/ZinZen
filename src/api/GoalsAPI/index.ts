@@ -346,9 +346,11 @@ export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false
 };
 
 export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
-  await updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] });
-  await addGoal(goal);
-  await deleteAvailableGoalHint(goal.parentGoalId, goal.id);
+  await Promise.all([
+    updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] }),
+    addGoal(goal),
+    deleteAvailableGoalHint(goal.parentGoalId, goal.id),
+  ]);
 };
 
 export const fetchArchivedGoalByTitle = async (value: string) => {
