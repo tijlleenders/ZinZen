@@ -102,30 +102,21 @@ export const deleteAvailableGoalHint = async (parentGoalId: string, goalId: stri
       const goalHintsItem = await db.hintsCollection.get(parentGoalId);
 
       if (goalHintsItem) {
-        const { availableGoalHints } = goalHintsItem;
+        const { availableGoalHints, deletedGoalHints = [] } = goalHintsItem;
 
-        const updatedGoalHints = [];
-        let deletedGoalHint = null;
-
-        for (const hint of availableGoalHints) {
-          if (hint.id === goalId) {
-            deletedGoalHint = hint;
-          } else {
-            updatedGoalHints.push(hint);
-          }
-        }
-
-        const updatedDeletedGoalHints = goalHintsItem.deletedGoalHints ? [...goalHintsItem.deletedGoalHints] : [];
+        const deletedGoalHint = availableGoalHints.find((hint) => hint.id === goalId);
+        const updatedGoalHints = availableGoalHints.filter((hint) => hint.id !== goalId);
 
         if (deletedGoalHint) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { id, ...deletedHintDetails } = deletedGoalHint;
-          updatedDeletedGoalHints.push(deletedHintDetails);
-        }
+          const updatedDeletedGoalHints = [...deletedGoalHints, deletedHintDetails];
 
-        await db.hintsCollection.update(parentGoalId, {
-          availableGoalHints: updatedGoalHints,
-          deletedGoalHints: updatedDeletedGoalHints,
-        });
+          await db.hintsCollection.update(parentGoalId, {
+            availableGoalHints: updatedGoalHints,
+            deletedGoalHints: updatedDeletedGoalHints,
+          });
+        }
       }
     });
   } catch (e) {

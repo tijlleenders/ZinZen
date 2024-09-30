@@ -9,16 +9,16 @@ import { lastAction } from "@src/store";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { AvailableGoalHintProvider } from "@src/contexts/availableGoalHint-context";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import DeletedGoals from "@pages/GoalsPage/components/DeletedGoals";
 import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
 import { TrashItem } from "@src/models/TrashItem";
 import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
+import AvailableGoalHints from "@pages/GoalsPage/components/AvailableGoalHints";
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
-import AvailableGoalHints from "@pages/GoalsPage/components/AvailableGoalHints";
-import { AvailableGoalHintProvider } from "@src/contexts/availableGoalHint-context";
 
 export const GoalSublist = () => {
   const {
@@ -28,7 +28,7 @@ export const GoalSublist = () => {
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
   const [archivedChildren, setArchivedChildren] = useState<GoalItem[]>([]);
-  const [goalhints, setGoalHints] = useState<GoalItem[]>([]);
+  const [goalHints, setGoalHints] = useState<GoalItem[]>([]);
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
   const goalID = useRecoilValue(displayGoalId);
@@ -83,8 +83,8 @@ export const GoalSublist = () => {
           )}
           <div className="sublist-list-container">
             <GoalsList goals={activeGoals} setGoals={setGoals} />
-            <AvailableGoalHintProvider goalHints={goalhints}>
-              <AvailableGoalHints goals={goalhints} />
+            <AvailableGoalHintProvider goalHints={goalHints}>
+              <AvailableGoalHints goals={goalHints} />
             </AvailableGoalHintProvider>
             <DeletedGoalProvider>
               {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}

@@ -16,11 +16,10 @@ export const AvailableGoalHintProvider = ({ children, goalHints }: { children: R
 
   useEffect(() => {
     if (activeGoalId) {
-      const hint = goalHints.find((goal) => {
-        return goal.id === activeGoalId;
+      const hint = goalHints.find((goalItem) => {
+        return goalItem.id === activeGoalId;
       });
-      console.log(hint);
-      setGoal(hint ? hint : undefined);
+      setGoal(hint);
     }
   }, [isPartnerModeActive, activeGoalId]);
 
