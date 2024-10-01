@@ -36,7 +36,7 @@
     "sass": "^1.50.0",
     "ts-node": "^10.9.2",
     "uuidv4": "^6.2.13",
-    "vite": "^2.9.18",
+    "vite": "^5.4.8",
     "workbox-core": "^5.1.4",
     "workbox-expiration": "^5.1.4",
     "workbox-precaching": "^5.1.4",
