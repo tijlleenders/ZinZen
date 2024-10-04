@@ -34,6 +34,7 @@ export async function waitForResponseConfirmation(
           const url = response.url();
           const text = await response.text();
           const isMatch = status === 200 && url.includes(urlContains) && text.includes(responseBodyIncludes);
+          console.log(text);
 
           console.log(`Attempt ${attempt} - Response details:
             Status: ${status}
