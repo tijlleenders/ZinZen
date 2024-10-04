@@ -62,6 +62,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
       await handleArchiveGoal(goal, ancestors);
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
+      setLastAction("goalColabRequest");
     }
     window.history.back();
   };

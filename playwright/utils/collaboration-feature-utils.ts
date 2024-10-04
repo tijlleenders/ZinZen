@@ -1,9 +1,7 @@
 import { Browser, Page, expect } from "@playwright/test";
 
-export async function createUserContextAndPage(browser: Browser, storageState: string) {
-  const context = await browser.newContext({
-    storageState,
-  });
+export async function createUserContextAndPage(browser: Browser) {
+  const context = await browser.newContext();
   const page = await context.newPage();
   return { context, page };
 }

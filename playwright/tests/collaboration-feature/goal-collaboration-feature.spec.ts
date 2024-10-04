@@ -15,9 +15,6 @@ import {
 test.describe.configure({ mode: "serial" });
 
 test.describe("Goal Sharing Feature", () => {
-  let userAContext;
-  let userBContext;
-  let userCContext;
   let userAPage: Page;
   let userBPage: Page;
   let userCPage: Page;
@@ -25,9 +22,18 @@ test.describe("Goal Sharing Feature", () => {
   let currentGoalTitle: string;
 
   test.beforeAll(async ({ browser }) => {
-    ({ context: userAContext, page: userAPage } = await createUserContextAndPage(browser, STORAGE_STATE));
-    ({ context: userBContext, page: userBPage } = await createUserContextAndPage(browser, STORAGE_STATE));
-    ({ context: userCContext, page: userCPage } = await createUserContextAndPage(browser, STORAGE_STATE));
+    ({ page: userAPage } = await createUserContextAndPage(browser));
+    ({ page: userBPage } = await createUserContextAndPage(browser));
+    ({ page: userCPage } = await createUserContextAndPage(browser));
+    await userAPage.goto("http://127.0.0.1:3000/");
+    await userAPage.getByText("English").click();
+    await userAPage.getByRole("button", { name: "Continue zinzen faq" }).click();
+    await userBPage.goto("http://127.0.0.1:3000/");
+    await userBPage.getByText("English").click();
+    await userBPage.getByRole("button", { name: "Continue zinzen faq" }).click();
+    await userCPage.goto("http://127.0.0.1:3000/");
+    await userCPage.getByText("English").click();
+    await userCPage.getByRole("button", { name: "Continue zinzen faq" }).click();
   });
 
   const userCollaborationScenarios = [
@@ -94,6 +100,7 @@ test.describe("Goal Sharing Feature", () => {
     });
 
     test(`check if collaborated goal is visible in User ${receiver}'s MyGoal`, async () => {
+      await receiverPage().goto("http://127.0.0.1:3000/");
       await receiverPage().getByRole("button", { name: "Goals" }).click();
       await expect(receiverPage().locator(".goal-title").first().locator("span")).toContainText(currentGoalTitle);
     });
