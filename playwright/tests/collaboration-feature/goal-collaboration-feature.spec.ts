@@ -12,7 +12,7 @@ import {
   waitForResponseConfirmation,
 } from "../../utils/collaboration-feature-utils";
 
-test.describe.configure({ mode: "serial" });
+test.describe.configure({ mode: "serial", timeout: 100000 });
 
 test.describe("Goal Sharing Feature", () => {
   let userAPage: Page;

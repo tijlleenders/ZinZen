@@ -24,7 +24,7 @@ export async function waitForResponseConfirmation(
   urlContains: string,
   responseBodyIncludes: string,
   maxRetries: number = 3,
-  retryDelay: number = 15000,
+  retryDelay: number = 2000,
 ): Promise<void> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
