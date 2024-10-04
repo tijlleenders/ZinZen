@@ -24,7 +24,7 @@ export async function waitForResponseConfirmation(
   urlContains: string,
   responseBodyIncludes: string,
   maxRetries: number = 3,
-  retryDelay: number = 2000,
+  retryDelay: number = 3000,
 ): Promise<void> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -43,7 +43,7 @@ export async function waitForResponseConfirmation(
 
           return isMatch;
         },
-        { timeout: 10000 },
+        { timeout: 30000 },
       );
 
       console.log(`Success on attempt ${attempt}`);

@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { API_SERVER_URL, API_SERVER_URL_GOAL, STORAGE_STATE } from "playwright/config/constants";
+import { API_SERVER_URL, API_SERVER_URL_GOAL } from "playwright/config/constants";
 import {
   acceptContactInvitation,
   addContact,
