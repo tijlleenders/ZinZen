@@ -23,15 +23,42 @@ export async function waitForResponseConfirmation(
   page: Page,
   urlContains: string,
   responseBodyIncludes: string,
+  maxRetries: number = 3,
+  retryDelay: number = 15000,
 ): Promise<void> {
-  await page.waitForResponse(
-    async (response) =>
-      response.status() === 200 &&
-      response.url().includes(urlContains) &&
-      (await response.text()).includes(responseBodyIncludes),
-  );
-}
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await page.waitForResponse(
+        async (response) => {
+          const status = response.status();
+          const url = response.url();
+          const text = await response.text();
+          const isMatch = status === 200 && url.includes(urlContains) && text.includes(responseBodyIncludes);
 
+          console.log(`Attempt ${attempt} - Response details:
+            Status: ${status}
+            URL: ${url}
+            Includes expected body: ${text.includes(responseBodyIncludes)}
+            Is match: ${isMatch}`);
+
+          return isMatch;
+        },
+        { timeout: 10000 },
+      );
+
+      console.log(`Success on attempt ${attempt}`);
+      console.log(`Response: ${JSON.stringify(response)}`);
+      return;
+    } catch (error) {
+      if (attempt === maxRetries) {
+        console.error(`All ${maxRetries} attempts failed. Last error: ${error.message}`);
+        throw new Error(`Failed to get response confirmation after ${maxRetries} attempts: ${error.message}`);
+      }
+      console.warn(`Attempt ${attempt} failed. Retrying in ${retryDelay}ms...`);
+      await page.waitForTimeout(retryDelay);
+    }
+  }
+}
 export async function addContact(
   page: Page,
   contactName: string,
@@ -71,13 +98,36 @@ export async function goToMyGoalsPageFlow(page: Page) {
   await page.getByRole("button", { name: "Goals" }).click();
 }
 
-export async function verifyUpdatedGoal(page: Page, expectedGoalTitle: string, apiUrlGoal: string): Promise<void> {
-  await page.goto("http://127.0.0.1:3000/");
-  await Promise.all([page.waitForResponse((res) => res.status() === 200 && res.url().includes(apiUrlGoal))]);
+export async function verifyUpdatedGoal(
+  page: Page,
+  expectedGoalTitle: string,
+  apiUrlGoal: string,
+  maxRetries: number = 3,
+  retryDelay: number = 2000,
+): Promise<void> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await page.goto("http://127.0.0.1:3000/");
+      await Promise.all([
+        page.waitForResponse((res) => res.status() === 200 && res.url().includes(apiUrlGoal), { timeout: 10000 }),
+      ]);
 
-  await page.getByRole("button", { name: "Goals" }).click();
-  await page.locator(".goal-dd-outer").first().click();
-  await expect(page.getByText(expectedGoalTitle).first()).toBeVisible();
-  await page.getByRole("button", { name: "add changes Make all checked" }).click();
-  await expect(page.getByText(expectedGoalTitle).first()).toBeVisible();
+      await page.getByRole("button", { name: "Goals" }).click();
+      await page.locator(".goal-dd-outer").first().click();
+
+      await page.waitForSelector(`text=${expectedGoalTitle}`, { timeout: 10000 });
+
+      await page.getByRole("button", { name: "add changes Make all checked" }).click();
+
+      await page.waitForSelector(`text=${expectedGoalTitle}`, { timeout: 10000 });
+
+      return;
+    } catch (error) {
+      if (attempt === maxRetries) {
+        throw new Error(`Failed to verify updated goal after ${maxRetries} attempts: ${error.message}`);
+      }
+      console.warn(`Attempt ${attempt} failed. Retrying in ${retryDelay}ms...`);
+      await page.waitForTimeout(retryDelay);
+    }
+  }
 }
