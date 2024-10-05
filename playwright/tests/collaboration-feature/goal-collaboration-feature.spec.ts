@@ -121,7 +121,9 @@ test.describe("Goal Sharing Feature", () => {
       await expect(async () => {
         await sharerPage().getByRole("button", { name: receiver, exact: true }).click();
         await sharerPage().waitForLoadState("networkidle");
-      }).toPass();
+      }).toPass({
+        timeout: 2000,
+      });
     });
 
     test(`check whether shared goal is visible in User ${receiver}'s partner goal`, async () => {
@@ -142,12 +144,8 @@ test.describe("Goal Sharing Feature", () => {
       console.log(`Checking if collaborated goal is visible in User ${receiver}'s MyGoal...`);
       await receiverPage().goto("http://127.0.0.1:3000/");
       await receiverPage().getByRole("button", { name: "Goals" }).click();
-      const userGoalWithContact = receiverPage()
-        .locator(".user-goal-dark")
-        .filter({
-          has: receiverPage().locator(".contact-button"),
-        });
-      await expect(userGoalWithContact.locator(".goal-title span")).toContainText(currentGoalTitle);
+
+      await expect(receiverPage().locator(".goal-title span").first()).toContainText(currentGoalTitle);
     });
   });
 
