@@ -114,8 +114,14 @@ test.describe("Goal Sharing Feature", () => {
 
     test(`share goal from User ${receiver} to User ${sharer}`, async () => {
       console.log(`User ${sharer} is sharing the goal with User ${receiver}...`);
-      await sharerPage().getByRole("button", { name: receiver, exact: true }).click();
-      await sharerPage().waitForSelector(".ant-notification-notice");
+      await goToMyGoalsPageFlow(sharerPage());
+
+      console.log(`User ${sharer} is opening the share goal modal for "${currentGoalTitle}"...`);
+      await goToShareGoalModalFlow(sharerPage(), currentGoalTitle);
+      await expect(async () => {
+        await sharerPage().getByRole("button", { name: receiver, exact: true }).click();
+        await sharerPage().waitForLoadState("networkidle");
+      }).toPass();
     });
 
     test(`check whether shared goal is visible in User ${receiver}'s partner goal`, async () => {
