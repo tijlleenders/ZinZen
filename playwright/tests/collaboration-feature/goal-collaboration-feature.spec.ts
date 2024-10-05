@@ -145,7 +145,7 @@ test.describe("Goal Sharing Feature", () => {
       const userGoalWithContact = receiverPage()
         .locator(".user-goal-dark")
         .filter({
-          has: receiverPage().locator(".contact-icon"),
+          has: receiverPage().locator(".contact-button"),
         });
       await expect(userGoalWithContact.locator(".goal-title span")).toContainText(currentGoalTitle);
     });
@@ -166,7 +166,7 @@ test.describe("Goal Sharing Feature", () => {
         currentGoalTitle = await sharerPage()
           .locator(".user-goal-dark")
           .filter({
-            has: sharerPage().locator(".contact-icon"),
+            has: sharerPage().locator(".contact-button"),
           })
           .locator(".goal-title span")
           .innerText();
