@@ -6,8 +6,21 @@ export async function createUserContextAndPage(browser: Browser) {
   return { context, page };
 }
 
-export async function goalActionFlow(page: Page, action: string) {
-  await page.locator(".goal-dd-outer").first().click();
+export async function goalActionFlow(page: Page, action: string, goalTitle: string) {
+  const goalDiv = await page.locator(".user-goal-main").filter({ hasText: new RegExp(`^${goalTitle}$`) });
+  console.log(goalDiv);
+
+  // Find the .goal-dd-outer associated with the goal title 'Test Goal'
+  const goalDropdown = await page
+    .locator(".user-goal-main")
+    .filter({
+      has: page.locator('.goal-title:has-text("Test Goal")'),
+    })
+    .locator(".goal-dd-outer");
+
+  // Click the specific .goal-dd-outer
+  await goalDropdown.click();
+
   await page
     .locator("div")
     .filter({ hasText: new RegExp(`^${action}$`) })
@@ -15,44 +28,53 @@ export async function goalActionFlow(page: Page, action: string) {
     .click({ force: true });
 }
 
-export async function goToShareGoalModalFlow(page: Page) {
-  await goalActionFlow(page, "Share");
+export async function goToShareGoalModalFlow(page: Page, goalTitle: string) {
+  await goalActionFlow(page, "Share", goalTitle);
 }
 
 export async function waitForResponseConfirmation(
   page: Page,
   urlContains: string,
   maxRetries: number = 3,
-  retryDelay: number = 3000,
+  retryDelay: number = 2000,
 ): Promise<void> {
+  let response;
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       if (attempt > 1) {
-        await page.reload();
+        page.reload();
       }
-      const response = await page.waitForResponse((res) => res.url().includes(urlContains) && res.status() === 200);
+      response = await page.waitForResponse((res) => res.url().includes(urlContains) && res.status() === 200, {
+        timeout: 5000,
+      });
 
       console.log(`Success on attempt ${attempt}`);
-      console.log(`Response: ${JSON.stringify(response)}`);
-      return;
+      const responseBody = await response.text();
+      console.log(`Response status: ${response.status()}`);
+      console.log(`Response body: ${responseBody}`);
+
+      return; // Exit after success
     } catch (error) {
-      if (attempt === maxRetries) {
-        console.error(`All ${maxRetries} attempts failed. Last error: ${error.message}`);
-        throw new Error(`Failed to get response confirmation after ${maxRetries} attempts: ${error.message}`);
-      }
       console.warn(`Attempt ${attempt} failed. Retrying in ${retryDelay}ms...`);
+      if (attempt === maxRetries) {
+        console.error(`Failed after ${maxRetries} attempts. Last error: ${error.message}`);
+        throw new Error(`Failed to get response confirmation: ${error.message}`);
+      }
+
       await page.waitForTimeout(retryDelay);
     }
   }
 }
+
 export async function addContact(
   page: Page,
   contactName: string,
+  goalTitle: string,
   expectedApiResponse1: string,
   expectedApiResponse2: string,
 ): Promise<string> {
   const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
-  await goToShareGoalModalFlow(page);
+  await goToShareGoalModalFlow(page, goalTitle);
 
   // Add contact flow
   await page.getByRole("button", { name: "add contact", exact: true }).click();
@@ -67,8 +89,8 @@ export async function addContact(
   return page.evaluate("navigator.clipboard.readText()");
 }
 
-export async function collaborateFlow(page: Page) {
-  await goalActionFlow(page, "Collaborate");
+export async function collaborateFlow(page: Page, goalTitle: string) {
+  await goalActionFlow(page, "Collaborate", goalTitle);
   await page.getByRole("button", { name: "Collaborate on goal" }).click();
 }
 
@@ -97,7 +119,6 @@ export async function verifyUpdatedGoal(
       await Promise.all([
         page.waitForResponse((res) => res.status() === 200 && res.url().includes(apiUrlGoal), { timeout: 10000 }),
       ]);
-
       await page.getByRole("button", { name: "Goals" }).click();
       await page.locator(".goal-dd-outer").first().click();
 

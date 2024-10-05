@@ -19,7 +19,7 @@ test.describe("Goal Sharing Feature", () => {
   let userBPage: Page;
   let userCPage: Page;
   let invitationLink: string;
-  let currentGoalTitle: string;
+  let currentGoalTitle = "Test Goal";
 
   test.beforeAll(async ({ browser }) => {
     ({ page: userAPage } = await createUserContextAndPage(browser));
@@ -34,6 +34,12 @@ test.describe("Goal Sharing Feature", () => {
     await userCPage.goto("http://127.0.0.1:3000/");
     await userCPage.getByText("English").click();
     await userCPage.getByRole("button", { name: "Continue zinzen faq" }).click();
+  });
+
+  test.afterAll(async () => {
+    await userAPage.close();
+    await userBPage.close();
+    await userCPage.close();
   });
 
   const userCollaborationScenarios = [
@@ -71,10 +77,16 @@ test.describe("Goal Sharing Feature", () => {
   userCollaborationScenarios.forEach(({ sharer, receiver, sharerPage, receiverPage }) => {
     test(`from User ${sharer} share invitation to User ${receiver}`, async () => {
       await goToMyGoalsPageFlow(sharerPage());
-      currentGoalTitle = await sharerPage().locator(".goal-title").first().locator("span").innerText();
-      invitationLink = await addContact(sharerPage(), receiver, "relId", "relationshipId");
+      if (sharer === "A") {
+        await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click({});
+
+        const titleInputContainer = sharerPage().getByPlaceholder("Goal title");
+        await titleInputContainer.fill(currentGoalTitle);
+        await titleInputContainer.press("Enter");
+      }
+      invitationLink = await addContact(sharerPage(), receiver, currentGoalTitle, "relId", "relationshipId");
       await goToMyGoalsPageFlow(sharerPage());
-      await goToShareGoalModalFlow(sharerPage());
+      await goToShareGoalModalFlow(sharerPage(), currentGoalTitle);
     });
 
     test(`from User ${receiver} accept invitation of User ${sharer}`, async () => {
@@ -96,7 +108,7 @@ test.describe("Goal Sharing Feature", () => {
     });
 
     test(`initiate collaboration between User ${sharer} and User ${receiver}`, async () => {
-      await collaborateFlow(receiverPage());
+      await collaborateFlow(receiverPage(), currentGoalTitle);
     });
 
     test(`check if collaborated goal is visible in User ${receiver}'s MyGoal`, async () => {
@@ -110,7 +122,7 @@ test.describe("Goal Sharing Feature", () => {
     ({ sharer, receiverFirst, receiverSecond, sharerPage, receiverPageFirst, receiverPageSecond }) => {
       test(`goal update by ${sharer}: edit goal in User ${sharer}`, async () => {
         await goToMyGoalsPageFlow(sharerPage());
-        await goalActionFlow(sharerPage(), "Edit");
+        await goalActionFlow(sharerPage(), "Edit", currentGoalTitle);
         await sharerPage().locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by ${sharer}`);
         await sharerPage().locator(".action-btn-container").locator(".action-btn").click();
         currentGoalTitle = await sharerPage().locator(".goal-title").first().locator("span").innerText();
