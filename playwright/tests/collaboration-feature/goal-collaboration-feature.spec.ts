@@ -108,13 +108,20 @@ test.describe("Goal Sharing Feature", () => {
     });
 
     test(`initiate collaboration between User ${sharer} and User ${receiver}`, async () => {
+      await receiverPage().waitForLoadState("networkidle");
       await collaborateFlow(receiverPage(), currentGoalTitle);
     });
 
     test(`check if collaborated goal is visible in User ${receiver}'s MyGoal`, async () => {
       await receiverPage().goto("http://127.0.0.1:3000/");
       await receiverPage().getByRole("button", { name: "Goals" }).click();
-      await expect(receiverPage().locator(".goal-title").first().locator("span")).toContainText(currentGoalTitle);
+      const userGoalWithContact = receiverPage()
+        .locator(".user-goal-dark")
+        .filter({
+          has: receiverPage().locator(".contact-icon"),
+        });
+
+      await expect(userGoalWithContact.locator(".goal-title span")).toContainText(currentGoalTitle);
     });
   });
 
@@ -125,7 +132,14 @@ test.describe("Goal Sharing Feature", () => {
         await goalActionFlow(sharerPage(), "Edit", currentGoalTitle);
         await sharerPage().locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by ${sharer}`);
         await sharerPage().locator(".action-btn-container").locator(".action-btn").click();
-        currentGoalTitle = await sharerPage().locator(".goal-title").first().locator("span").innerText();
+        // Locate the .goal-title span within the user-goal-dark div that also contains the .contact-icon
+        currentGoalTitle = await sharerPage()
+          .locator(".user-goal-dark")
+          .filter({
+            has: sharerPage().locator(".contact-icon"),
+          })
+          .locator(".goal-title span")
+          .innerText();
       });
 
       test(`goal update by ${sharer}: check if User ${receiverFirst} received updated goal from User ${sharer}`, async () => {

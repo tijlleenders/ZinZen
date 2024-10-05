@@ -10,7 +10,6 @@ export async function goalActionFlow(page: Page, action: string, goalTitle: stri
   const goalDiv = await page.locator(".user-goal-main").filter({ hasText: new RegExp(`^${goalTitle}$`) });
   console.log(goalDiv);
 
-  // Find the .goal-dd-outer associated with the goal title 'Test Goal'
   const goalDropdown = await page
     .locator(".user-goal-main")
     .filter({
@@ -18,7 +17,6 @@ export async function goalActionFlow(page: Page, action: string, goalTitle: stri
     })
     .locator(".goal-dd-outer");
 
-  // Click the specific .goal-dd-outer
   await goalDropdown.click();
 
   await page
@@ -53,7 +51,7 @@ export async function waitForResponseConfirmation(
       console.log(`Response status: ${response.status()}`);
       console.log(`Response body: ${responseBody}`);
 
-      return; // Exit after success
+      return;
     } catch (error) {
       console.warn(`Attempt ${attempt} failed. Retrying in ${retryDelay}ms...`);
       if (attempt === maxRetries) {
@@ -66,13 +64,7 @@ export async function waitForResponseConfirmation(
   }
 }
 
-export async function addContact(
-  page: Page,
-  contactName: string,
-  goalTitle: string,
-  expectedApiResponse1: string,
-  expectedApiResponse2: string,
-): Promise<string> {
+export async function addContact(page: Page, contactName: string, goalTitle: string): Promise<string> {
   const apiServerUrl = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
   await goToShareGoalModalFlow(page, goalTitle);
 
@@ -120,7 +112,15 @@ export async function verifyUpdatedGoal(
         page.waitForResponse((res) => res.status() === 200 && res.url().includes(apiUrlGoal), { timeout: 10000 }),
       ]);
       await page.getByRole("button", { name: "Goals" }).click();
-      await page.locator(".goal-dd-outer").first().click();
+      await page.waitForLoadState("networkidle");
+      const goalDropdownWithContact = page
+        .locator(".user-goal-dark")
+        .filter({
+          has: page.locator(".contact-icon"),
+        })
+        .locator(".goal-dd-outer");
+
+      await goalDropdownWithContact.click();
 
       await page.waitForSelector(`text=${expectedGoalTitle}`, { timeout: 10000 });
 
