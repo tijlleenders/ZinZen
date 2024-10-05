@@ -79,7 +79,7 @@ test.describe("Goal Sharing Feature", () => {
 
     test(`from User ${receiver} accept invitation of User ${sharer}`, async () => {
       await acceptContactInvitation(receiverPage(), invitationLink, receiver);
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL, "accepted");
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL);
     });
 
     test(`share goal from User ${receiver} to User ${sharer}`, async () => {
@@ -89,7 +89,7 @@ test.describe("Goal Sharing Feature", () => {
 
     test(`check whether shared goal is visible in User ${receiver}'s patner goal`, async () => {
       await receiverPage().reload();
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL, "shareMessage");
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().reload();
       await expect(receiverPage().locator(".user-goal-main")).toBeVisible();

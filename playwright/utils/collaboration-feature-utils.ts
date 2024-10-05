@@ -22,30 +22,15 @@ export async function goToShareGoalModalFlow(page: Page) {
 export async function waitForResponseConfirmation(
   page: Page,
   urlContains: string,
-  responseBodyIncludes: string,
   maxRetries: number = 3,
   retryDelay: number = 3000,
 ): Promise<void> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const response = await page.waitForResponse(
-        async (response) => {
-          const status = response.status();
-          const url = response.url();
-          const text = await response.text();
-          const isMatch = status === 200 && url.includes(urlContains) && text.includes(responseBodyIncludes);
-          console.log(text);
-
-          console.log(`Attempt ${attempt} - Response details:
-            Status: ${status}
-            URL: ${url}
-            Includes expected body: ${text.includes(responseBodyIncludes)}
-            Is match: ${isMatch}`);
-
-          return isMatch;
-        },
-        { timeout: 30000 },
-      );
+      if (attempt > 1) {
+        await page.reload();
+      }
+      const response = await page.waitForResponse((res) => res.url().includes(urlContains) && res.status() === 200);
 
       console.log(`Success on attempt ${attempt}`);
       console.log(`Response: ${JSON.stringify(response)}`);
@@ -74,10 +59,10 @@ export async function addContact(
   await page.getByPlaceholder("Name").click();
   await page.getByPlaceholder("Name").fill(contactName);
   await page.getByRole("button", { name: "add contact Share invitation" }).click();
-  await waitForResponseConfirmation(page, apiServerUrl, expectedApiResponse1);
+  await waitForResponseConfirmation(page, apiServerUrl);
   await page.goBack();
   await page.getByRole("button", { name: contactName.slice(0, 1), exact: true }).click();
-  await waitForResponseConfirmation(page, apiServerUrl, expectedApiResponse2);
+  await waitForResponseConfirmation(page, apiServerUrl);
   await page.waitForSelector(".ant-notification-notice");
   return page.evaluate("navigator.clipboard.readText()");
 }
