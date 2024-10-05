@@ -174,21 +174,3 @@ export async function verifyUpdatedGoal(
     }
   }
 }
-
-export async function waitForPageLoad(page: Page, retries: number = 3, retryDelay: number = 3000) {
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      console.log(`Attempting to wait for networkidle state (Attempt ${attempt})...`);
-      await page.waitForLoadState("networkidle", { timeout: 5000 });
-      console.log("Page load state reached networkidle successfully.");
-      return; // Success, exit the function
-    } catch (error) {
-      console.warn(`Page load attempt ${attempt} failed. Retrying in ${retryDelay}ms...`);
-      if (attempt === retries) {
-        console.error(`Failed after ${retries} attempts: ${error.message}`);
-        throw new Error(`Failed to wait for page load state: ${error.message}`);
-      }
-      await page.waitForTimeout(retryDelay); // Wait before retrying
-    }
-  }
-}
