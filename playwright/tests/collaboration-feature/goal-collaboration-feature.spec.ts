@@ -84,7 +84,7 @@ test.describe("Goal Sharing Feature", () => {
         await titleInputContainer.fill(currentGoalTitle);
         await titleInputContainer.press("Enter");
       }
-      invitationLink = await addContact(sharerPage(), receiver, currentGoalTitle, "relId", "relationshipId");
+      invitationLink = await addContact(sharerPage(), receiver, currentGoalTitle);
       await goToMyGoalsPageFlow(sharerPage());
       await goToShareGoalModalFlow(sharerPage(), currentGoalTitle);
     });
@@ -108,7 +108,7 @@ test.describe("Goal Sharing Feature", () => {
     });
 
     test(`initiate collaboration between User ${sharer} and User ${receiver}`, async () => {
-      await receiverPage().waitForLoadState("networkidle");
+      await receiverPage().waitForLoadState("networkidle", { timeout: 5000 });
       await collaborateFlow(receiverPage(), currentGoalTitle);
     });
 

@@ -83,6 +83,8 @@ export async function addContact(page: Page, contactName: string, goalTitle: str
 
 export async function collaborateFlow(page: Page, goalTitle: string) {
   await goalActionFlow(page, "Collaborate", goalTitle);
+  await expect(page.getByRole("button", { name: "Collaborate on goal" })).toBeVisible();
+
   await page.getByRole("button", { name: "Collaborate on goal" }).click();
 }
 
@@ -112,14 +114,14 @@ export async function verifyUpdatedGoal(
         page.waitForResponse((res) => res.status() === 200 && res.url().includes(apiUrlGoal), { timeout: 10000 }),
       ]);
       await page.getByRole("button", { name: "Goals" }).click();
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("networkidle", { timeout: 5000 });
       const goalDropdownWithContact = page
         .locator(".user-goal-dark")
         .filter({
           has: page.locator(".contact-icon"),
         })
         .locator(".goal-dd-outer");
-
+      await expect(goalDropdownWithContact.getByTestId("notification-dot")).toBeVisible();
       await goalDropdownWithContact.click();
 
       await page.waitForSelector(`text=${expectedGoalTitle}`, { timeout: 10000 });
