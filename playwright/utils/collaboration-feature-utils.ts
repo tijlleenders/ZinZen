@@ -22,7 +22,7 @@ export async function goalActionFlow(page: Page, action: string, goalTitle: stri
 
   console.log("Clicking on the goal dropdown...");
   await goalDropdown.click();
-  await expect(page.getByTestId("zmodal")).toBeVisible();
+  await expect(page.getByTestId("zmodal")).toBeInViewport();
   console.log(`Clicking on the action "${action}"...`);
   await page
     .locator("div")
