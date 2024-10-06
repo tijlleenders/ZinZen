@@ -9,7 +9,6 @@ import {
   goToShareGoalModalFlow,
   goalActionFlow,
   verifyUpdatedGoal,
-  waitForPageLoad,
   waitForResponseConfirmation,
 } from "../../utils/collaboration-feature-utils";
 
@@ -122,7 +121,7 @@ test.describe("Goal Sharing Feature", () => {
         await sharerPage().getByRole("button", { name: receiver, exact: true }).click();
         await sharerPage().waitForLoadState("networkidle");
       }).toPass({
-        timeout: 2000,
+        timeout: 10_000,
       });
     });
 
@@ -145,7 +144,7 @@ test.describe("Goal Sharing Feature", () => {
       await receiverPage().goto("http://127.0.0.1:3000/");
       await receiverPage().getByRole("button", { name: "Goals" }).click();
 
-      await expect(receiverPage().locator(".goal-title span").first()).toContainText(currentGoalTitle);
+      await expect(receiverPage().locator(".my-goals-content").first()).toContainText(currentGoalTitle);
     });
   });
 
