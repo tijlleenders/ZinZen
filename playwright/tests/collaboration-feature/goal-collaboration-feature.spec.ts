@@ -141,10 +141,7 @@ test.describe("Goal Sharing Feature", () => {
 
     test(`check if collaborated goal is visible in User ${receiver}'s MyGoal`, async () => {
       console.log(`Checking if collaborated goal is visible in User ${receiver}'s MyGoal...`);
-      await receiverPage().goto("http://127.0.0.1:3000/");
-      await receiverPage().getByRole("button", { name: "Goals" }).click();
-      await receiverPage().reload();
-      await receiverPage().waitForLoadState("networkidle");
+      await goToMyGoalsPageFlow(receiverPage());
       await expect(receiverPage().locator(".my-goals-content").first()).toContainText(currentGoalTitle);
     });
   });
