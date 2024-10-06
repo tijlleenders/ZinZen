@@ -64,11 +64,11 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
 
   const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
 
-  const [hints, setHints] = useState(false);
+  const [hintOption, setHintOption] = useState(false);
 
   useEffect(() => {
     getGoalHintItem(goal.id).then((hintItem) => {
-      setHints(!!hintItem?.hint);
+      setHintOption(!!hintItem?.hintOptionEnabled);
     });
   }, [goal.id]);
 
@@ -143,7 +143,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
           extra: "",
         });
       }
-      await (isEditMode ? updateGoal(getFinalTags(), hints) : addGoal(getFinalTags(), hints, parentGoal));
+      await (isEditMode ? updateGoal(getFinalTags(), hintOption) : addGoal(getFinalTags(), hintOption, parentGoal));
     } else {
       setShowToast({
         open: true,
@@ -261,7 +261,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       setPerWeekHrs(selectedPerWeekBudget);
     }
     const hint = await getGoalHintItem(selectedGoal.id);
-    setHints(hint?.hint || false);
+    setHintOption(hint?.hintOptionEnabled || false);
   };
 
   const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
@@ -398,7 +398,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                 ))}
               </div>
               <div className="action-btn-container">
-                <HintToggle setHints={setHints} defaultValue={hints} />
+                <HintToggle setHints={setHintOption} defaultValue={hintOption} />
                 <button type="submit" className="action-btn place-middle gap-16">
                   {t(`${action} Budget`)}
                 </button>
@@ -407,7 +407,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
           ) : (
             <div className="d-flex f-col gap-16">
               <div className="action-btn-container">
-                <HintToggle setHints={setHints} defaultValue={hints} />
+                <HintToggle setHints={setHintOption} defaultValue={hintOption} />
                 <button type="submit" className="action-btn place-middle gap-16">
                   {t(`${action} Goal`)}
                 </button>
