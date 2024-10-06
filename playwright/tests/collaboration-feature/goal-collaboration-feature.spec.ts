@@ -141,7 +141,7 @@ test.describe("Goal Sharing Feature", () => {
 
     test(`check if collaborated goal is visible in User ${receiver}'s MyGoal`, async () => {
       console.log(`Checking if collaborated goal is visible in User ${receiver}'s MyGoal...`);
-      await goToMyGoalsPageFlow(receiverPage());
+      await receiverPage().locator(".header-logo-wrapper").click();
       await expect(receiverPage().locator(".my-goals-content").first()).toContainText(currentGoalTitle);
     });
   });
