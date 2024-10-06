@@ -2,10 +2,10 @@ import { test, expect } from "@playwright/test";
 import { STORAGE_STATE } from "playwright/config/constants";
 
 test.describe("BottomNavbar", () => {
-  test.use({ storageState: STORAGE_STATE });
-
   test.beforeEach(async ({ page }) => {
     await page.goto("http://127.0.0.1:3000/");
+    await page.getByText("English").click();
+    await page.getByRole("button", { name: "Continue zinzen faq" }).click();
   });
 
   test("should navigate to MyTime when Schedule button is clicked", async ({ page }) => {

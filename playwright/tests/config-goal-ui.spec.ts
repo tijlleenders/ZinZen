@@ -10,8 +10,7 @@ test.describe("Config Goal UI", () => {
 
   test("should add a new goal after pressing Enter key", async ({ page }) => {
     await page.getByRole("button", { name: "Goals" }).click();
-    await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-    await page.getByRole("button", { name: "Goal add goal", exact: true }).click();
+    await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click({});
 
     const titleInputContainer = page.getByPlaceholder("Goal title");
     const testGoalTitle = "Test Goal";
@@ -24,7 +23,9 @@ test.describe("Config Goal UI", () => {
 
   test("should add a new budget after pressing Enter key", async ({ page }) => {
     await page.getByRole("button", { name: "Goals" }).click();
-    await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
+    await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click({
+      delay: 1000,
+    });
     await page.getByRole("button", { name: "Budget add goal", exact: true }).click();
 
     const titleInputContainer = page.getByPlaceholder("Budget title");
