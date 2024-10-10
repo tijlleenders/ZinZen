@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { v4 as uuidv4 } from "uuid";
 import { getGoal } from "@src/api/GoalsAPI";
-import { colorPalleteList } from "@src/utils";
+import { arraysAreEqual, colorPalleteList } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
 import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
@@ -183,24 +183,22 @@ export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
   const res: ITagsChanges = { schemaVersion: {}, prettierVersion: {} };
   const goal1Tags = formatTagsToText(goal1);
   const goal2Tags = formatTagsToText(goal2);
-  console.log(goal1Tags, goal2Tags);
+
   tags.forEach((tag) => {
-    if (goal1[tag] !== goal2[tag] && tag !== "timeBudget") {
-      res.schemaVersion[tag] = goal2[tag] || null;
+    if (tag === "on") {
+      const goal1On = goal1.on || [];
+      const goal2On = goal2.on || [];
+      if (!arraysAreEqual(goal1On, goal2On)) {
+        res.schemaVersion[tag] = goal2On || null;
+        res.prettierVersion[tag] = {
+          oldVal: goal1On.join(" "),
+          newVal: goal2On.join(" "),
+        };
+      }
+    } else if (goal1[tag] !== goal2[tag] && tag !== "timeBudget") {
+      res.schemaVersion[tag] = goal2[tag] ?? null;
       if (tag === "afterTime" || tag === "beforeTime") {
         res.prettierVersion.timing = { oldVal: goal1Tags.timing, newVal: goal2Tags.timing };
-      } else if (tag === "timeBudget") {
-        // const g1TB = JSON.parse(goal1Tags.timeBudget);
-        // const g2TB = JSON.parse(goal2Tags.timeBudget);
-        // if (g1TB.perDay !== g2TB.perDay || g1TB.perWeek !== g2TB.perWeek) {
-        //   console.log("in");
-        //   const { perDay: oldPerDay, perWeek: oldPerWeek } = g1TB;
-        //   const { perDay: newPerDay, perWeek: newPerWeek } = g2TB;
-        //   res.prettierVersion[tag] = {
-        //     oldVal: `${oldPerDay === "-" ? "" : oldPerDay} ${oldPerWeek === "-" ? "" : oldPerWeek}`,
-        //     newVal: `${newPerDay === "-" ? "" : newPerDay} ${newPerWeek === "-" ? "" : newPerWeek}`,
-        //   };
-        // }
       } else res.prettierVersion[tag] = { oldVal: goal1Tags[tag], newVal: goal2Tags[tag] };
     }
   });

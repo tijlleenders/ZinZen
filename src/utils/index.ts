@@ -256,3 +256,8 @@ export const formatSingularPlural = (count: number, singularWord: string) => {
 export const hashObject = (obj: object) => {
   return sha256(JSON.stringify(obj)).toString();
 };
+
+export const arraysAreEqual = (arr1: string[], arr2: string[]): boolean => {
+  if (arr1.length !== arr2.length) return false;
+  return arr1.every((value, index) => value === arr2[index]);
+};
