@@ -35,4 +35,5 @@ export interface GoalItem {
   typeOfGoal: "myGoal" | "shared";
   category: TGoalCategory;
   newUpdates: boolean;
+  timestamp: number;
 }
