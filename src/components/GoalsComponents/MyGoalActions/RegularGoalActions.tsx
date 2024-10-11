@@ -28,7 +28,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { partnerId } = useParams();
-  const { openEditMode } = useGoalStore();
+  const { openEditMode, handleMove } = useGoalStore();
   const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
   const { deleteGoalAction } = useGoalActions();
   const isPartnerModeActive = !!partnerId;
@@ -148,6 +148,16 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
         >
           <ActionDiv label={t("Edit")} icon="Edit" />
         </div>
+        {!isPartnerModeActive && (
+          <div
+            className="goal-action shareOptions-btn"
+            onClickCapture={() => {
+              handleMove(goal);
+            }}
+          >
+            <ActionDiv label={t("Move")} icon="Move" />
+          </div>
+        )}
       </div>
     </ZModal>
   );

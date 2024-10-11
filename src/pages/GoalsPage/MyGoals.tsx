@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, act } from "react";
+import React, { useState, useEffect, ChangeEvent, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
@@ -34,6 +34,7 @@ import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
 import "./GoalsPage.scss";
+import MoveGoalGuide from "@components/GoalsComponents/MyGoal/MoveGoalGuide";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -62,6 +63,8 @@ export const MyGoals = () => {
   const showChangesModal = useRecoilValue(displayChangesModal);
 
   const [action, setLastAction] = useRecoilState(lastAction);
+
+  const goalWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const getAllGoals = async () => {
     const [goals, delGoals] = await Promise.all([getActiveGoals("true"), getDeletedGoals("root")]);
@@ -127,7 +130,8 @@ export const MyGoals = () => {
           />
         )}
 
-        <div className="myGoals-container">
+        <div className="myGoals-container" ref={goalWrapperRef}>
+          <MoveGoalGuide goalComponentRef={goalWrapperRef} />
           {parentId === "root" ? (
             <div className="my-goals-content">
               <div className="d-flex f-col">

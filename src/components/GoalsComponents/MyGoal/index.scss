@@ -1,0 +1,20 @@
+.move-goal-guide {
+  width: 250px;
+  .ant-tour-title {
+    font-size: 14px;
+  }
+}
+
+.user-goal-main {
+  .move-goal-button {
+    margin-top: 0;
+    margin-right: 10px;
+    align-self: center;
+    min-width: fit-content;
+  }
+}
+
+.goal-to-move-selected {
+  opacity: 0.5;
+  pointer-events: none;
+}

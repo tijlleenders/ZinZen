@@ -1,5 +1,5 @@
 import { GoalItem } from "@src/models/GoalItem";
-import { getSelectedLanguage, inheritParentProps } from "@src/utils";
+import { inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getSharedWMGoal, removeSharedWMChildrenGoals, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import {
@@ -10,6 +10,7 @@ import {
   removeGoalWithChildrens,
   getParticipantsOfGoals,
   getHintsFromAPI,
+  getChildrenGoals,
 } from "@src/api/GoalsAPI";
 import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
@@ -94,4 +95,49 @@ export const deleteSharedGoal = async (goal: GoalItem) => {
       await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
     });
   }
+};
+
+const updateRootGoal = async (goalId: string, newRootGoalId: string) => {
+  await updateGoal(goalId, { rootGoalId: newRootGoalId });
+
+  const childrenGoals = await getChildrenGoals(goalId);
+  if (childrenGoals) {
+    childrenGoals.forEach(async (goal: GoalItem) => {
+      await updateRootGoal(goal.id, newRootGoalId);
+    });
+  }
+};
+
+const removeGoalFromParentSublist = async (goalId: string, parentGoalId: string) => {
+  const parentGoal = await getGoal(parentGoalId);
+  if (!parentGoal) return;
+
+  const parentGoalSublist = parentGoal.sublist;
+  const childGoalIndex = parentGoalSublist.indexOf(goalId);
+  if (childGoalIndex !== -1) {
+    parentGoalSublist.splice(childGoalIndex, 1);
+  }
+  await updateGoal(parentGoal.id, { sublist: parentGoalSublist });
+};
+
+const addGoalToNewParentSublist = async (goalId: string, newParentGoalId: string) => {
+  const newParentGoal = await getGoal(newParentGoalId);
+  if (!newParentGoal) return;
+
+  const newParentGoalSublist = newParentGoal.sublist;
+  newParentGoalSublist.push(goalId);
+  await updateGoal(newParentGoal.id, { sublist: newParentGoalSublist });
+};
+
+export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string) => {
+  const goalToMove = await getGoal(goalId);
+  const newParentGoal = await getGoal(newParentGoalId);
+  if (!goalToMove) return;
+
+  await Promise.all([
+    updateGoal(goalToMove.id, { parentGoalId: newParentGoalId }),
+    removeGoalFromParentSublist(goalToMove.id, goalToMove.parentGoalId),
+    addGoalToNewParentSublist(goalToMove.id, newParentGoalId),
+    updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
+  ]);
 };

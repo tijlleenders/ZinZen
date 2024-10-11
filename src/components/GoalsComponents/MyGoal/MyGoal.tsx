@@ -8,9 +8,11 @@ import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { extractLinks, isGoalCode } from "@src/utils/patterns";
 import useGoalActions from "@src/hooks/useGoalActions";
+import { moveGoalState } from "@src/store/moveGoalState";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
+import GoalMoveButton from "../MoveGoalButton";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -21,6 +23,10 @@ interface MyGoalProps {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
   const { partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
+
+  const goalToMove = useRecoilValue(moveGoalState);
+
+  const shouldRenderMoveButton = goalToMove && goal.id !== goalToMove.id && goal.id !== goalToMove.parentGoalId;
 
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
@@ -91,7 +97,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
       key={String(`goal-${goal.id}`)}
       className={`user-goal${darkModeStatus ? "-dark" : ""} ${
         expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
-      }`}
+      } ${goalToMove && goalToMove.id === goal.id ? "goal-to-move-selected" : ""}`}
     >
       <div
         className="user-goal-main"
@@ -113,8 +119,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         <div aria-hidden className="goal-tile" onClick={(e) => handleGoalClick(e)}>
           <GoalTitle goal={goal} isImpossible={goal.impossible} />
         </div>
+        {shouldRenderMoveButton && <GoalMoveButton targetGoal={goal} />}
       </div>
-      {!isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
+      {!shouldRenderMoveButton && !isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
     </div>
   );
 };
