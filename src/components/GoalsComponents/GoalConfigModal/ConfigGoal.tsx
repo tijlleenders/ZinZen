@@ -225,16 +225,16 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const { openEditMode } = useGoalStore();
 
   const onSuggestionClick = async (selectedGoal: GoalItem) => {
-    await openEditMode(selectedGoal);
+    openEditMode(selectedGoal);
     setSuggestedGoal(selectedGoal);
     setTitle(selectedGoal.title);
     setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
-    setAfterTime(selectedGoal.afterTime || 9);
-    setBeforeTime(selectedGoal.beforeTime || 18);
+    setAfterTime(selectedGoal.afterTime ?? 9);
+    setBeforeTime(selectedGoal.beforeTime ?? 18);
     setTags({
       on: selectedGoal.on || convertOnFilterToArray("weekdays"),
       repeatWeekly: selectedGoal.habit === "weekly",
-      duration: selectedGoal.duration || "",
+      duration: selectedGoal.duration ?? "",
     });
     setDue(selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "");
     if (type === "Budget") {
