@@ -7,8 +7,8 @@ export interface IGoalHint {
 
 export interface HintItem {
   id: string;
-  hint: boolean;
-  goalHints: IGoalHint[];
+  hintOptionEnabled: boolean;
+  availableGoalHints: IGoalHint[];
   lastCheckedDate: string;
   nextCheckDate: string;
   deletedGoalHints?: Omit<IGoalHint, "id">[];
