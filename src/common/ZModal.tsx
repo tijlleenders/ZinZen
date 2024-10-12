@@ -29,6 +29,7 @@ const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width, 
       styles={{ mask: maskStyle }}
       width={width}
       style={style}
+      data-testid="zmodal"
     >
       {children}
     </Modal>
