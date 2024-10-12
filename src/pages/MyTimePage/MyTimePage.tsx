@@ -68,9 +68,7 @@ export const MyTimePage = () => {
               </div>
             </div>
           </div>
-          {tasks[day] && (
-            <ColorBands list={tasks[day]} day={day} tasksStatus={tasksStatus} active={showTasks.includes(day)} />
-          )}
+          {tasks[day] && <ColorBands list={tasks[day]} />}
         </button>
         <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
           {showTasks.includes(day) && tasks[day] && tasks[day].scheduled.length > 0 && (

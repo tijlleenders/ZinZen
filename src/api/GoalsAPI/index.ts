@@ -91,7 +91,7 @@ export const updateGoal = async (id: string, changes: Partial<GoalItem>) => {
   await db
     .transaction("rw", db.goalsCollection, async () => {
       await db.goalsCollection.update(id, changes).then((updated) => {
-        updateStatus = updated === 1 ? true : false;
+        updateStatus = updated === 1;
       });
     })
     .catch((e) => {
