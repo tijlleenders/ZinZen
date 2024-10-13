@@ -24,6 +24,7 @@ const breadcrumbStyle: React.CSSProperties = {
 };
 
 const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => {
+  console.log(goal.goalTitle);
   const { t } = useTranslation();
   return (
     <span
