@@ -4,11 +4,13 @@ import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 import { themeState } from "@src/store/ThemeState";
 import { ZModalProps } from "@src/Interfaces/ICommon";
+import { useKeyPress } from "@src/hooks/useKeyPress";
 
 const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width, style }) => {
   const theme = useRecoilValue(themeState);
   const darkModeStatus = useRecoilValue(darkModeState);
   const handleCancel = onCancel || (() => window.history.back());
+  const escapePress = useKeyPress("Escape");
 
   const commonClassName = `popupModal${darkModeStatus ? "-dark" : ""} ${darkModeStatus ? "dark" : "light"}-theme${
     theme[darkModeStatus ? "dark" : "light"]
@@ -20,19 +22,10 @@ const ZModal: React.FC<ZModalProps> = ({ children, type, open, onCancel, width, 
   };
 
   useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      event.stopPropagation();
-      if (event.key === "Escape") {
-        handleCancel();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleCancel]);
+    if (escapePress) {
+      handleCancel();
+    }
+  }, [escapePress]);
 
   return (
     <Modal
