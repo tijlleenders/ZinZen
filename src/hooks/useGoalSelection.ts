@@ -65,7 +65,11 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
 
   const openGoalActionsModal = (goal: GoalItem) => {
     if (!goal) return;
-    navigate(`/goals/root/${goal.id}?showOptions=true`);
+    if (goal.parentGoalId === "root") {
+      navigate(`/goals/root/${goal.id}?showOptions=true`);
+    } else {
+      navigate(`/goals/${goal.parentGoalId}/${goal.id}?showOptions=true`);
+    }
   };
 
   useEffect(() => {
