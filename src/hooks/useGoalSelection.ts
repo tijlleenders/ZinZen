@@ -14,7 +14,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
   const downPress = useKeyPress("ArrowDown");
   const rightPress = useKeyPress("ArrowRight");
   const leftPress = useKeyPress("ArrowLeft");
-  const spacePress = useKeyPress(" ");
+  const spacePress = useKeyPress("Space");
 
   const focusIndex = Number(searchParams.get("focus") || -1);
 
