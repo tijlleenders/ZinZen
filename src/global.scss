@@ -4,6 +4,30 @@ div::-webkit-scrollbar {
   display: none;
 }
 
+.mainDiv::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+
+.mainDiv::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 140, 140, 0.5);
+  border-radius: 4px;
+}
+
+.mainDiv {
+  max-width: 600px;
+  min-width: 236;
+  overflow: scroll;
+  scroll-behavior: smooth;
+  width: 100%;
+  margin-top: 60px;
+  margin-bottom: 7px;
+  height: calc(100vh - 112px);
+  overflow-y: scroll;
+  padding-bottom: 100px;
+  z-index: 0;
+}
+
 img {
   width: 24px;
   height: 24px;
