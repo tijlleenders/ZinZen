@@ -8,7 +8,7 @@ import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
 import archiveSound from "@assets/archive.mp3";
 
-import { lastAction, openDevMode, displayConfirmation, displayToast, displayToast } from "@src/store";
+import { lastAction, openDevMode, displayConfirmation, displayToast } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
 import useGoalActions from "@src/hooks/useGoalActions";
