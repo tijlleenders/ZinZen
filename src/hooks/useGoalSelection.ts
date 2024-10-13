@@ -14,6 +14,7 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
   const downPress = useKeyPress("ArrowDown");
   const rightPress = useKeyPress("ArrowRight");
   const leftPress = useKeyPress("ArrowLeft");
+  const spacePress = useKeyPress(" ");
 
   const focusIndex = Number(searchParams.get("focus") || -1);
 
@@ -62,6 +63,11 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
     [goals],
   );
 
+  const openGoalActionsModal = (goal: GoalItem) => {
+    if (!goal) return;
+    navigate(`/goals/root/${goal.id}?showOptions=true`);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
@@ -90,10 +96,14 @@ export const useGoalSelection = (goals: GoalItem[]): GoalItem | undefined => {
       window.history.back();
     }
 
+    if (spacePress && goals.length > 0) {
+      openGoalActionsModal(goals[focusIndex]);
+    }
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [downPress, upPress, rightPress, leftPress]);
+  }, [downPress, upPress, rightPress, leftPress, spacePress]);
 
   return goals[focusIndex];
 };
