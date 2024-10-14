@@ -362,14 +362,15 @@ export const fetchArchivedGoalByTitle = async (goalId: string, parentGoalId: str
 
   const getAllChildrenGoals = async (id: string): Promise<GoalItem[]> => {
     const directChildren = await getChildrenGoals(id);
-    let allChildren = [...directChildren];
 
-    for (const child of directChildren) {
-      const grandchildren = await getAllChildrenGoals(child.id);
-      allChildren = allChildren.concat(grandchildren);
-    }
+    const allChildren = await Promise.all(
+      directChildren.map(async (child) => {
+        const grandchildren = await getAllChildrenGoals(child.id);
+        return [child, ...grandchildren];
+      }),
+    );
 
-    return allChildren;
+    return allChildren.flat();
   };
 
   const allChildren = await getAllChildrenGoals(parentGoalId);
