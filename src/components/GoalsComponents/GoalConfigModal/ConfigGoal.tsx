@@ -17,7 +17,10 @@ import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
 import useGoalStore from "@src/hooks/useGoalStore";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
+import { ILocationState } from "@src/Interfaces";
+import { useLocation, useNavigate } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
+import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -40,6 +43,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const {
     parentData: { parentGoal },
   } = useParentGoalContext();
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   let defaultColorIndex = Math.floor(Math.random() * colorPalleteList.length - 1) + 1;
   let defaultAfterTime = isEditMode ? goal.afterTime || 9 : 9;
@@ -153,7 +159,12 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     }
     if (suggestedGoal) {
       await unarchiveUserGoal(suggestedGoal);
+      navigate(`/goals/${suggestedGoal.parentGoalId === "root" ? "" : suggestedGoal.parentGoalId}`, {
+        state: { ...location.state },
+        replace: true,
+      });
       setSuggestedGoal(null);
+      return;
     }
     window.history.back();
   };
@@ -217,15 +228,17 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     handleWeekSliderChange(perWeekHrs);
   }, [perDayHrs, setPerDayHrs, tags.on]);
 
-  // const modalStyle = {
-  //   transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
-  //   transition: "transform 0.3s ease-in-out",
-  // };
-
   const { openEditMode } = useGoalStore();
 
   const onSuggestionClick = async (selectedGoal: GoalItem) => {
-    await openEditMode(selectedGoal);
+    const updatedGoalsHistory = await getHistoryUptoGoal(selectedGoal.parentGoalId);
+
+    const newState: ILocationState = {
+      ...location.state,
+      goalsHistory: updatedGoalsHistory,
+    };
+
+    openEditMode(selectedGoal, newState);
     setSuggestedGoal(selectedGoal);
     setTitle(selectedGoal.title);
     setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
