@@ -48,15 +48,15 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const navigate = useNavigate();
 
   let defaultColorIndex = Math.floor(Math.random() * colorPalleteList.length - 1) + 1;
-  let defaultAfterTime = isEditMode ? goal.afterTime || 9 : 9;
-  let defaultBeforeTime = isEditMode ? goal.beforeTime || 18 : 18;
+  let defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
+  let defaultBeforeTime = isEditMode ? (goal.beforeTime ?? 18) : 18;
 
   if (isEditMode) {
     defaultColorIndex = colorPalleteList.indexOf(goal.goalColor);
   } else if (parentGoal) {
     defaultColorIndex = colorPalleteList.indexOf(parentGoal.goalColor);
-    defaultAfterTime = parentGoal.afterTime || 18;
-    defaultBeforeTime = parentGoal.beforeTime || 9;
+    defaultAfterTime = parentGoal.afterTime ?? 18;
+    defaultBeforeTime = parentGoal.beforeTime ?? 9;
   }
 
   const { t } = useTranslation();
@@ -78,7 +78,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     });
   }, [goal.id]);
 
-  const [title, setTitle] = useState(t(goal.title) as string);
+  const [title, setTitle] = useState<string>(t(goal.title));
   const handleTitleChange = (value: string) => {
     setTitle(value);
   };
@@ -89,7 +89,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const [tags, setTags] = useState({
     on: goal.on || convertOnFilterToArray("weekdays"),
     repeatWeekly: goal.habit === "weekly",
-    duration: goal.duration || "",
+    duration: goal.duration ?? "",
   });
   const numberOfDays = tags.on.length;
 
@@ -113,6 +113,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
+  const goalCategoryType = tags.duration !== "" ? "Standard" : "Cluster";
+  const category = type === "Budget" ? "Budget" : goalCategoryType;
+
   const getFinalTags = (): GoalItem => ({
     ...goal,
     due: due && due !== "" ? new Date(due).toISOString() : null,
@@ -129,13 +132,13 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
             perWeek: perWeekHrs.join("-"),
           }
         : undefined,
-    category: type === "Budget" ? "Budget" : tags.duration !== "" ? "Standard" : "Cluster",
+    category,
     title: title
       .split(" ")
       .filter((ele: string) => ele !== "")
       .join(" "),
     goalColor: colorPalleteList[colorIndex],
-    parentGoalId: parentGoal?.id || "root",
+    parentGoalId: parentGoal?.id ?? "root",
     language: getSelectedLanguage(),
   });
 
@@ -187,12 +190,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     if (betweenSliderUpdated) {
       const timeRange = beforeTime - afterTime;
       const weeklyRange = timeRange * numberOfDays;
-      const updatedPerDayHrs = perDayHrs.map((hour) =>
-        hour > timeRange ? timeRange : hour < timeRange ? timeRange : hour,
-      );
-      const updatedPerWeekHrs = perWeekHrs.map((hour) =>
-        hour > weeklyRange ? weeklyRange : hour < weeklyRange ? weeklyRange : hour,
-      );
+      const updatedPerDayHrs = perDayHrs.map((hour) => Math.min(Math.max(hour, timeRange), timeRange));
+      const updatedPerWeekHrs = perWeekHrs.map((hour) => Math.min(Math.max(hour, weeklyRange), weeklyRange));
+
       setPerDayHrs(updatedPerDayHrs);
       setPerWeekHrs(updatedPerWeekHrs);
       setBetweenSliderUpdated(false);
@@ -242,12 +242,12 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     setSuggestedGoal(selectedGoal);
     setTitle(selectedGoal.title);
     setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
-    setAfterTime(selectedGoal.afterTime || 9);
-    setBeforeTime(selectedGoal.beforeTime || 18);
+    setAfterTime(selectedGoal.afterTime ?? 9);
+    setBeforeTime(selectedGoal.beforeTime ?? 18);
     setTags({
       on: selectedGoal.on || convertOnFilterToArray("weekdays"),
       repeatWeekly: selectedGoal.habit === "weekly",
-      duration: selectedGoal.duration || "",
+      duration: selectedGoal.duration ?? "",
     });
     setDue(selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "");
     if (type === "Budget") {
@@ -263,7 +263,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
         .map((ele) => Number(ele));
       setPerDayHrs(selectedPerDayBudget);
 
-      const selectedNumberOfDays = selectedGoal.on?.length || 7;
+      const selectedNumberOfDays = selectedGoal.on?.length ?? 7;
       const selectedPerWeekBudget = (
         selectedGoal.timeBudget?.perWeek?.includes("-")
           ? selectedGoal.timeBudget.perWeek
