@@ -70,7 +70,7 @@ export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
   }, [parentId]);
 
   useEffect(() => {
-    if (suggestedGoal === null) {
+    if (!suggestedGoal) {
       init();
     }
   }, [suggestedGoal]);

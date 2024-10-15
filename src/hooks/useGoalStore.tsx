@@ -13,14 +13,12 @@ const useGoalStore = () => {
   const openEditMode = (goal: GoalItem, customState?: ILocationState) => {
     const prefix = `${partnerId ? `/partners/${partnerId}/` : "/"}goals`;
 
-    const newState = {
-      ...location.state,
-      goalType: goal.category === "Budget" ? "Budget" : "Goal",
-      ...customState,
-    };
-
     navigate(`${prefix}/${goal.parentGoalId}/${goal.id}?type=${goal.category}&mode=edit`, {
-      state: newState,
+      state: {
+        ...location.state,
+        goalType: goal.category === "Budget" ? "Budget" : "Goal",
+        ...customState,
+      },
       replace: true,
     });
   };

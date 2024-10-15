@@ -92,20 +92,11 @@ const useGoalActions = () => {
       // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], updatedHintOption);
       setLastAction("goalUpdated");
-      if (suggestedGoal) {
-        setShowToast({
-          open: true,
-          message: "Goal (re)created!",
-          extra: "",
-        });
-      } else {
-        setShowToast({
-          open: true,
-          message: "Goal updated!",
-          extra: "",
-        });
-      }
-
+      setShowToast({
+        open: true,
+        message: suggestedGoal ? "Goal (re)created!" : "Goal updated!",
+        extra: "",
+      });
       addGoalSound.play();
     }
   };

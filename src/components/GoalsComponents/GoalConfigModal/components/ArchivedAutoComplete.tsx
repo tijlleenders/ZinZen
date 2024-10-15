@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { GoalItem } from "@src/models/GoalItem";
 import AutocompleteComponent from "@components/GoalsComponents/GoalConfigModal/components/AutoComplete";
-import { fetchArchivedGoalByTitle } from "@src/api/GoalsAPI";
+import { fetchArchivedDescendantGoalByTitle } from "@src/api/GoalsAPI";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 
 interface ArchivedAutoCompleteProps {
@@ -26,7 +26,7 @@ const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
 
   const searchArchivedGoals = useCallback(
     async (value: string) => {
-      const goals = await fetchArchivedGoalByTitle(value, parentGoalId);
+      const goals = await fetchArchivedDescendantGoalByTitle(value, parentGoalId);
       setFilteredGoals(goals);
     },
     [parentGoalId],
