@@ -22,7 +22,7 @@ export const dbStoreSchema = {
   partnersCollection: null,
   goalTrashCollection:
     "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
-  hintsCollection: "id, hint, goalHints, lastCheckedDate, nextCheckDate",
+  hintsCollection: "id, hintOptionEnabled, availableGoalHints, lastCheckedDate, nextCheckDate",
   impossibleGoalsCollection: "goalId, goalTitle",
 };
 export const syncVersion = (transaction: Transaction, currentVersion: number) => {
