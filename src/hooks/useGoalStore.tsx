@@ -32,7 +32,7 @@ const useGoalStore = () => {
 
   const handleMove = (goal: GoalItem) => {
     setGoalToMove(goal);
-    navigate("/MyGoals", { state: { ...location.state, displayGoalActions: null } });
+    navigate("/goals", { replace: true });
   };
 
   return {

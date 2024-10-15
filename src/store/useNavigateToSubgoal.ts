@@ -27,7 +27,7 @@ const useNavigateToSubgoal = () => {
     };
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
 
-    navigate(`${prefix}/${goal.id}`, { state: newState });
+    navigate(`${prefix}/${goal.id}`, { state: newState, replace: true });
   };
 
   return navigateToSubgoal;
