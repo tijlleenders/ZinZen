@@ -13,12 +13,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, debounceSearch }
         maxWidth: 600,
         minWidth: 236,
         overflow: "scroll",
+        scrollBehavior: "smooth",
         width: "100%",
         marginTop: 60,
+        marginBottom: 7,
         height: "calc(100vh - 112px)",
-        position: "sticky",
-        paddingBottom: 150,
+        paddingBottom: 100,
+        zIndex: 0,
       }}
+      className="appLayout"
     >
       {children}
     </div>
