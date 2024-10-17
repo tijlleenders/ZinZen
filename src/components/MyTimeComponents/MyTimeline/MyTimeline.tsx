@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
 import { v4 as uuidv4 } from "uuid";
-import React, { useEffect, useState } from "react";
+import React, { act, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 
@@ -22,6 +22,7 @@ import { displayReschedule } from "@src/store/TaskState";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
+import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
 
 type ImpossibleTaskId = string;
 
@@ -95,6 +96,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     }
     if (actionName === TaskAction.Focus) {
       return handleFocusClick(task);
+    }
+    if (actionName === TaskAction.Done) {
+      await addTaskActionEvent(task, "completed");
     }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
