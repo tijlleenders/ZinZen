@@ -10,6 +10,7 @@ import { ITaskOfDay } from "@src/Interfaces/Task";
 import { addSchedulerRes, getFromOutbox, updateSchedulerCachedRes } from "@src/api/DumpboxAPI";
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { getAllTasks, getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
+import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TCompletedTaskTiming, TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
@@ -154,9 +155,16 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const startDate = convertDateToString(new Date(_today));
   const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
   const tasksCompletedToday: TCompletedTaskTiming[] = [];
-  getAllTasks().then((docs) =>
-    docs.filter((doc) => doc.completedToday > 0).map((doc) => tasksCompletedToday.push(...doc.completedTodayTimings)),
-  );
+
+  getAllTasksDoneToday().then((task) => {
+    task.forEach((ele) => {
+      tasksCompletedToday.push({
+        goalid: ele.goalId,
+        start: ele.scheduledStart,
+        deadline: ele.scheduledEnd,
+      });
+    });
+  });
 
   const schedulerInput: ISchedulerInput = {
     startDate,

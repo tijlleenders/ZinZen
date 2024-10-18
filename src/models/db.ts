@@ -13,6 +13,7 @@ import { HintItem } from "./HintItem";
 import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
 import { dbStoreSchema, syncVersion } from "./dexie";
 import { TaskHistoryItem } from "./TaskHistoryItem";
+import { TasksDoneTodayItem } from "./TasksDoneTodayItem";
 
 export const dexieVersion = 21;
 
@@ -43,6 +44,8 @@ export class ZinZenDB extends Dexie {
   impossibleGoalsCollection!: Table<ImpossibleGoalItem, string>;
 
   taskHistoryCollection!: Table<TaskHistoryItem, string>;
+
+  tasksDoneTodayCollection!: Table<TasksDoneTodayItem, string>;
 
   constructor() {
     super("ZinZenDB");

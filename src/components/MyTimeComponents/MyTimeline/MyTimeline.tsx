@@ -15,7 +15,7 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { useTranslation } from "react-i18next";
 import { displayToast, focusTaskTitle } from "@src/store";
-import { addTask, completeTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { addTask, getTaskByGoalId, newCompleteTask } from "@src/api/TasksAPI";
 
 import "./index.scss";
 import { displayReschedule } from "@src/store/TaskState";
@@ -98,6 +98,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       return handleFocusClick(task);
     }
     if (actionName === TaskAction.Done) {
+      await newCompleteTask(task.taskid, task.goalid, task.start, task.deadline);
       await addTaskActionEvent(task, "completed");
     }
     if (day === "Today") {
@@ -127,10 +128,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
               : [],
           blockedSlots: [],
         });
-      } else if (actionName === TaskAction.Done) {
-        const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
-        if (markDone) return null;
-        await completeTask(taskItem.id, Number(task.duration), task);
       } else if (actionName === TaskAction.NotNow) {
         setOpenReschedule(task);
       }
