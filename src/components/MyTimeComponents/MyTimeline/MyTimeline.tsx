@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
 import { v4 as uuidv4 } from "uuid";
-import React, { useEffect, useState } from "react";
+import React, { act, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 
@@ -15,13 +15,14 @@ import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { useTranslation } from "react-i18next";
 import { displayToast, focusTaskTitle } from "@src/store";
-import { addTask, completeTask, getTaskByGoalId } from "@src/api/TasksAPI";
+import { addTask, getTaskByGoalId, newCompleteTask } from "@src/api/TasksAPI";
 
 import "./index.scss";
 import { displayReschedule } from "@src/store/TaskState";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
+import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
 
 type ImpossibleTaskId = string;
 
@@ -96,6 +97,10 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     if (actionName === TaskAction.Focus) {
       return handleFocusClick(task);
     }
+    if (actionName === TaskAction.Done) {
+      await newCompleteTask(task.taskid, task.goalid, task.start, task.deadline);
+      await addTaskActionEvent(task, "completed");
+    }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
@@ -123,10 +128,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
               : [],
           blockedSlots: [],
         });
-      } else if (actionName === TaskAction.Done) {
-        const markDone = !!taskDetails[task.goalid]?.completedTodayIds.includes(task.taskid);
-        if (markDone) return null;
-        await completeTask(taskItem.id, Number(task.duration), task);
       } else if (actionName === TaskAction.NotNow) {
         setOpenReschedule(task);
       }

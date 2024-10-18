@@ -24,6 +24,8 @@ export const dbStoreSchema = {
     "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
   hintsCollection: "id, hintOptionEnabled, availableGoalHints, lastCheckedDate, nextCheckDate",
   impossibleGoalsCollection: "goalId, goalTitle",
+  taskHistoryCollection: "id, goalId, action, eventTime, scheduledStart, scheduledEnd, duration",
+  tasksDoneTodayCollection: "id, goalId, scheduledStart, scheduledEnd",
 };
 export const syncVersion = (transaction: Transaction, currentVersion: number) => {
   if (currentVersion < 9) {

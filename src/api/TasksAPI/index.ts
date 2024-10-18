@@ -7,6 +7,8 @@ import { convertDateToDay } from "@src/utils/SchedulerUtils";
 import { ITask } from "@src/Interfaces/Task";
 import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
 import { getGoal } from "../GoalsAPI";
+import { v4 as uuidv4 } from "uuid";
+import { addTaskDoneToday } from "../TasksDoneTodayAPI";
 
 export const addTask = async (taskDetails: TaskItem) => {
   let newTaskId;
@@ -123,6 +125,25 @@ export const completeTask = async (id: string, duration: number, task: ITask) =>
   }).catch((e) => {
     console.log(e.stack || e);
   });
+};
+
+export const newCompleteTask = async (
+  scheduledTaskId: string,
+  goalId: string,
+  scheduledStart: string,
+  scheduledEnd: string,
+) => {
+  try {
+    await addTaskDoneToday({
+      id: uuidv4(),
+      scheduledTaskId,
+      goalId,
+      scheduledStart,
+      scheduledEnd,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const skipTask = async (id: string, period: string, task: ITask) => {
