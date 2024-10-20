@@ -7,7 +7,7 @@ import ContactItem from "./ContactItem";
 import { InboxItem } from "./InboxItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
-import { DumpboxItem } from "./DumpboxItem";
+import { SchedulerOutputCacheItem } from "./SchedulerOutputCacheItem";
 import { TrashItem } from "./TrashItem";
 import { HintItem } from "./HintItem";
 import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
@@ -35,7 +35,7 @@ export class ZinZenDB extends Dexie {
 
   customizationCollection!: Table<GCustomItem, number>;
 
-  dumpboxCollection!: Table<DumpboxItem, string>;
+  schedulerOutputCacheCollection!: Table<SchedulerOutputCacheItem, string>;
 
   goalTrashCollection!: Table<TrashItem, string>;
 

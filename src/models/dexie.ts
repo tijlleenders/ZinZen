@@ -18,12 +18,13 @@ export const dbStoreSchema = {
   taskCollection:
     "id, goalId, title, hoursSpent, completedTodayIds, lastCompleted, lastSkipped, blockedSlots, skippedToday, completedToday",
   customizationCollection: "++id, goalId, posIndex",
-  dumpboxCollection: "id, key, value",
+  dumpboxCollection: null,
   partnersCollection: null,
   goalTrashCollection:
     "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
   hintsCollection: "id, hintOptionEnabled, availableGoalHints, lastCheckedDate, nextCheckDate",
   impossibleGoalsCollection: "goalId, goalTitle",
+  schedulerOutputCacheCollection: "id, key, value",
   taskHistoryCollection: "id, goalId, action, eventTime, scheduledStart, scheduledEnd, duration",
   tasksDoneTodayCollection: "id, goalId, scheduledStart, scheduledEnd",
 };

@@ -7,7 +7,7 @@ import {
   ISchedulerOutputGoal,
 } from "@src/Interfaces/IScheduler";
 import { ITaskOfDay } from "@src/Interfaces/Task";
-import { addSchedulerRes, getFromOutbox, updateSchedulerCachedRes } from "@src/api/DumpboxAPI";
+import { addSchedulerResToCache, getSchedulerCachedRes, updateSchedulerCachedRes } from "@src/api/SchedulerOutputCache";
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { getAllTasks, getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
 import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
@@ -186,7 +186,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
 };
 
 export const getCachedSchedule = async (generatedInputId: string) => {
-  const schedulerCachedRes = await getFromOutbox("scheduler");
+  const schedulerCachedRes = await getSchedulerCachedRes("scheduler");
 
   if (!schedulerCachedRes) {
     return { code: "not-exist" };
@@ -204,5 +204,5 @@ export const getCachedSchedule = async (generatedInputId: string) => {
 export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {
   return code === "expired"
     ? updateSchedulerCachedRes(generatedInputId, output)
-    : addSchedulerRes(generatedInputId, output);
+    : addSchedulerResToCache(generatedInputId, output);
 };
