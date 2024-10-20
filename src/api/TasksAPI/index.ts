@@ -29,26 +29,12 @@ export const getTaskByGoalId = async (goalId: string) => {
   }
 };
 
-export const getForgetHrsCount = (task: TaskItem) => {
-  let yesterdaysCount = 0;
-  task.skippedToday.forEach((slot) => {
-    const [start, end] = slot.split("-");
-    yesterdaysCount += Number(end) - Number(start);
-  });
-  return yesterdaysCount;
-};
-
 export const resetProgressOfToday = async () => {
   const tasks = await db.taskCollection.toArray();
   try {
     await db.transaction("rw", db.taskCollection, async () => {
       const updatedRows = tasks.map((_task) => {
         const task = { ..._task };
-        task.completedToday = 0;
-        task.completedTodayIds = [];
-        task.skippedToday = [];
-        task.lastCompleted = new Date().toLocaleDateString();
-        task.lastSkipped = new Date().toLocaleDateString();
         task.blockedSlots = [];
         return task;
       });
@@ -74,28 +60,8 @@ export const refreshTaskCollection = async () => {
       const updatedRows = tasks.map((_task) => {
         const task = { ..._task };
         const goal: GoalItem = goals[task.goalId];
-        const startDate = new Date(goal.start || goal.createdAt);
-        if (goal.habit === "daily") {
-          task.hoursSpent = 0;
-        } else if (goal.habit === "weekly") {
-          const dayIndex = calDays.indexOf(convertDateToDay(startDate));
-          const lastReset = getLastDayDate(dayIndex);
-          const lastAction = new Date(
-            new Date(task.lastSkipped) < new Date(task.lastCompleted) ? task.lastCompleted : task.lastSkipped,
-          );
-          if (lastAction < lastReset) {
-            task.hoursSpent = 0;
-          } else {
-            task.hoursSpent += task.completedToday + getForgetHrsCount(task);
-          }
-        } else {
-          task.hoursSpent += task.completedToday + getForgetHrsCount(task);
+        if (goal.habit === "weekly") {
         }
-        task.completedToday = 0;
-        task.completedTodayIds = [];
-        task.skippedToday = [];
-        task.lastCompleted = new Date().toLocaleDateString();
-        task.lastSkipped = new Date().toLocaleDateString();
         return task;
       });
 
@@ -112,13 +78,11 @@ export const completeTask = async (id: string, duration: number, task: ITask) =>
       .where("id")
       .equals(id)
       .modify((obj: TaskItem) => {
-        obj.completedToday += duration;
         obj.completedTodayTimings.push({
           goalid: task.goalid,
           start: task.start,
           deadline: task.deadline,
         });
-        obj.completedTodayIds.push(task.taskid);
       });
   }).catch((e) => {
     console.log(e.stack || e);
@@ -131,15 +95,11 @@ export const skipTask = async (id: string, period: string, task: ITask) => {
       .where("id")
       .equals(id)
       .modify((obj: TaskItem) => {
-        obj.skippedToday.push(period);
         obj.completedTodayTimings.push({
           goalid: task.goalid,
           start: task.start,
           deadline: task.deadline,
         });
-        if (obj.skippedToday.length > 1) {
-          obj.skippedToday.sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
-        }
       });
   }).catch((e) => {
     console.log(e.stack || e);
