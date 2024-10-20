@@ -8,7 +8,7 @@ import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { sendNewGoals } from "@src/helpers/BatchPublisher";
 import { darkModeState, lastAction } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { sendUpdatedGoal } from "@src/helpers/PubSubController";
+import { sendUpdatedGoal } from "@src/controllers/PubSubController";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { deleteGoalChangesInID, getInboxItem, removeGoalInbox, removePPTFromInboxOfGoal } from "@src/api/InboxAPI";

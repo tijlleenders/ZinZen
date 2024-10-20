@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
 import { v4 as uuidv4 } from "uuid";
-import React, { act, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 
@@ -11,38 +11,34 @@ import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
 import { ITask, TaskAction } from "@src/Interfaces/Task";
 import { getGoal } from "@src/api/GoalsAPI";
-import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { useTranslation } from "react-i18next";
 import { displayToast, focusTaskTitle } from "@src/store";
-import { addTask, getTaskByGoalId, newCompleteTask } from "@src/api/TasksAPI";
+import { addTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
 import { displayReschedule } from "@src/store/TaskState";
+import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
+import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
+import { completeTask } from "@src/controllers/TaskDoneTodayController";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
-import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
 
 type ImpossibleTaskId = string;
 
 interface MyTimelineProps {
   day: string;
-  taskDetails: { [goalid: string]: TaskItem };
-  setTaskDetails: React.Dispatch<
-    React.SetStateAction<{
-      [goalid: string]: TaskItem;
-    }>
-  >;
   myTasks: {
     scheduled: ITask[];
     impossible: ImpossibleTaskId[];
     freeHrsOfDay: number;
     scheduledHrs: number;
   };
+  doneTasks: TasksDoneTodayItem[];
 }
 
-export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetails, setTaskDetails }) => {
+export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -98,8 +94,10 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
       return handleFocusClick(task);
     }
     if (actionName === TaskAction.Done) {
-      await newCompleteTask(task.taskid, task.goalid, task.start, task.deadline);
+      await completeTask(task.taskid, task.goalid, task.start, task.deadline);
       await addTaskActionEvent(task, "completed");
+      await doneSound.play();
+      return null;
     }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
@@ -112,35 +110,16 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
           title: task.title,
           completedTodayIds: [],
           skippedToday: [],
-          completedToday: actionName === TaskAction.Done ? Number(task.duration) : 0,
+          completedToday: 0,
           lastSkipped: "",
-          lastCompleted: actionName === TaskAction.Done ? new Date().toLocaleDateString() : "",
+          lastCompleted: "",
           hoursSpent: 0,
-          completedTodayTimings:
-            actionName === TaskAction.Done
-              ? [
-                  {
-                    goalid: task.goalid,
-                    start: task.start,
-                    deadline: task.deadline,
-                  },
-                ]
-              : [],
           blockedSlots: [],
         });
       } else if (actionName === TaskAction.NotNow) {
         setOpenReschedule(task);
       }
-      if (actionName === TaskAction.Done) {
-        await doneSound.play();
-        const updatedTask = await getTaskByGoalId(task.goalid);
-        if (updatedTask) {
-          setTaskDetails({
-            ...taskDetails,
-            [task.goalid]: updatedTask,
-          });
-        }
-      } else if (actionName === TaskAction.NotNow) {
+      if (actionName === TaskAction.NotNow) {
         setOpenReschedule({ ...task });
       }
     } else {
@@ -161,9 +140,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
         const nextTask = myTasks.scheduled[index + 1];
         const nextStartTime = nextTask ? nextTask.start.split("T")[1].slice(0, 2) : null;
         const displayEndTime = endTime !== nextStartTime;
-        const markDone = !!taskDetails[task.goalid]?.completedTodayTimings.find(
-          (ele) => ele.start === task.start && ele.deadline === task.deadline,
-        );
+        const markDone = doneTasks.some((doneTask) => doneTask.scheduledTaskId === task.taskid);
         const showTaskOptions = displayOptionsIndex === task.taskid;
         return (
           <button

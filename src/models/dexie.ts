@@ -16,7 +16,7 @@ export const dbStoreSchema = {
   pubSubCollection: "id, subscribers",
   publicGroupsCollection: null,
   taskCollection:
-    "id, goalId, title, hoursSpent, completedTodayIds, completedTodayTimings, lastCompleted, lastSkipped, blockedSlots, skippedToday, completedToday",
+    "id, goalId, title, hoursSpent, completedTodayIds, lastCompleted, lastSkipped, blockedSlots, skippedToday, completedToday",
   customizationCollection: "++id, goalId, posIndex",
   dumpboxCollection: "id, key, value",
   partnersCollection: null,
@@ -161,7 +161,7 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
     console.log("processing updates for 20th version");
     const taskCollection = transaction.table("taskCollection");
     taskCollection.toCollection().modify((task: TaskItem) => {
-      task.completedTodayTimings = [];
+      // task.completedTodayTimings = [];
     });
   }
 };
