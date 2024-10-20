@@ -13,9 +13,6 @@
 //     const data = event.target.result;
 
 //     // Modify the desired field(s)
-//     data.lastCompleted = "5/5/2023";
-//     data.lastSkipped = "5/5/2023";
-//     data.hoursSpent = 5;
 
 //     // Put the modified data back into the object store
 //     const putRequest = objectStore.put(data);

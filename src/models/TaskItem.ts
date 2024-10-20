@@ -8,12 +8,6 @@ export interface TaskItem {
   id: string;
   goalId: string;
   title: string;
-  hoursSpent: number;
-  completedToday: number;
-  completedTodayIds: string[];
-  skippedToday: string[];
-  lastCompleted: string; // date
-  lastSkipped: string; // date
   blockedSlots: blockedSlotOfTask[];
   completedTodayTimings: TCompletedTaskTiming[]; //  to store timings of the tasks that are completed today
 }
