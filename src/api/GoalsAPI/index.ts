@@ -6,6 +6,7 @@ import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
 import { deleteAvailableGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
+import { deleteTasksDoneTodayByGoalId } from "../TasksDoneTodayAPI";
 
 export const addDeletedGoal = async (goal: GoalItem) => {
   await db
@@ -173,6 +174,7 @@ export const removeChildrenGoals = async (parentGoalId: string) => {
   childrenGoals.forEach((goal) => {
     removeChildrenGoals(goal.id);
     removeGoal(goal);
+    deleteTasksDoneTodayByGoalId(goal.id);
   });
 };
 
@@ -315,6 +317,7 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
 export const removeGoalWithChildrens = async (goal: GoalItem) => {
   await removeChildrenGoals(goal.id);
   await removeGoal(goal);
+  await deleteTasksDoneTodayByGoalId(goal.id);
   if (goal.parentGoalId !== "root") {
     getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;

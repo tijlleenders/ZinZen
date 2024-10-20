@@ -14,6 +14,10 @@ export const deleteTaskDoneToday = async (id: string) => {
   await db.tasksDoneTodayCollection.delete(id);
 };
 
+export const deleteTasksDoneTodayByGoalId = async (goalId: string) => {
+  await db.tasksDoneTodayCollection.where("goalId").equals(goalId).delete();
+};
+
 export const deleteAllTasksDoneToday = async () => {
   await db.tasksDoneTodayCollection.clear();
 };
