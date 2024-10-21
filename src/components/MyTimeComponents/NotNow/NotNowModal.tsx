@@ -12,6 +12,7 @@ import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { getGoalById } from "@src/api/GoalsAPI";
 import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import forgetTune from "@assets/forget.mp3";
+import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
 
 const NotNowModal = () => {
   const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
@@ -36,7 +37,7 @@ const NotNowModal = () => {
 
   if (!task) return null;
 
-  const handleReschedule = (hours: number) => {
+  const handleReschedule = async (hours: number) => {
     const startTime = new Date(task.start);
     const endTime = new Date(startTime.getTime() + hours * MILLISECONDS_IN_HOUR);
     const start = convertDateToString(startTime, false);
@@ -46,6 +47,7 @@ const NotNowModal = () => {
       start,
       end,
     });
+    await addTaskActionEvent(task, "postponed");
 
     console.log(`Task rescheduled from ${start} to ${end}`);
     setDisplayReschedule(null);
@@ -58,7 +60,8 @@ const NotNowModal = () => {
       return;
     }
     const period = `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`;
-    await skipTask(taskItem?.id, period, task);
+    await skipTask(taskItem?.id, period);
+    await addTaskActionEvent(task, "skipped");
     setDisplayReschedule(null);
     setLastAction("TaskSkipped");
     forgetSound.play();

@@ -4,7 +4,6 @@ import { blockedSlotOfTask, TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { calDays, convertDateToString, getLastDayDate } from "@src/utils";
 import { convertDateToDay } from "@src/utils/SchedulerUtils";
-import { ITask } from "@src/Interfaces/Task";
 import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
 import { getGoal } from "../GoalsAPI";
 

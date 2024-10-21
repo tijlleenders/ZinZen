@@ -86,6 +86,12 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
     navigate("/", { state: { ...state, displayFocus: true } });
   };
 
+  const handleDoneClick = async (task: ITask) => {
+    await completeTask(task.taskid, task.goalid, task.start, task.deadline);
+    await addTaskActionEvent(task, "completed");
+    await doneSound.play();
+  };
+
   const handleActionClick = async (actionName: TaskAction, task: ITask) => {
     if (actionName === TaskAction.Goal) {
       return handleOpenGoal(task.goalid);
@@ -94,10 +100,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
       return handleFocusClick(task);
     }
     if (actionName === TaskAction.Done) {
-      await completeTask(task.taskid, task.goalid, task.start, task.deadline);
-      await addTaskActionEvent(task, "completed");
-      await doneSound.play();
-      return null;
+      return handleDoneClick(task);
     }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
