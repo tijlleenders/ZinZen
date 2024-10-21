@@ -102,6 +102,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
     if (actionName === TaskAction.Done) {
       return handleDoneClick(task);
     }
+    if (actionName === TaskAction.NotNow) {
+      return setOpenReschedule({ ...task });
+    }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
@@ -119,11 +122,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
           hoursSpent: 0,
           blockedSlots: [],
         });
-      } else if (actionName === TaskAction.NotNow) {
-        setOpenReschedule(task);
-      }
-      if (actionName === TaskAction.NotNow) {
-        setOpenReschedule({ ...task });
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });

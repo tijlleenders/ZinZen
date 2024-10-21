@@ -4,15 +4,15 @@ import React, { useEffect, useState } from "react";
 import { lastAction } from "@src/store";
 import "./NotNowModal.scss";
 import ZModal from "@src/common/ZModal";
-import { addBlockedSlot, getTaskByGoalId, skipTask } from "@src/api/TasksAPI"; // Assume getGoalById exists
+import { addBlockedSlot } from "@src/api/TasksAPI";
 import { displayReschedule } from "@src/store/TaskState";
 import { MILLISECONDS_IN_HOUR, RESCHEDULE_OPTIONS } from "@src/constants/rescheduleOptions";
 import { convertDateToString } from "@src/utils";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { getGoalById } from "@src/api/GoalsAPI";
-import { getHrFromDateString } from "@src/utils/SchedulerUtils";
 import forgetTune from "@assets/forget.mp3";
 import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
+import { addTaskDoneToday } from "@src/api/TasksDoneTodayAPI";
 
 const NotNowModal = () => {
   const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
@@ -55,12 +55,12 @@ const NotNowModal = () => {
   };
 
   const handleSkip = async () => {
-    const taskItem = await getTaskByGoalId(task.goalid);
-    if (!taskItem) {
-      return;
-    }
-    const period = `${getHrFromDateString(task.start)}-${getHrFromDateString(task.deadline)}`;
-    await skipTask(taskItem?.id, period);
+    await addTaskDoneToday({
+      scheduledTaskId: task.taskid,
+      scheduledStart: task.start,
+      scheduledEnd: task.deadline,
+      goalId: task.goalid,
+    });
     await addTaskActionEvent(task, "skipped");
     setDisplayReschedule(null);
     setLastAction("TaskSkipped");

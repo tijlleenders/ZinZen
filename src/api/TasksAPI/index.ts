@@ -106,22 +106,6 @@ export const refreshTaskCollection = async () => {
   }
 };
 
-export const skipTask = async (id: string, period: string) => {
-  db.transaction("rw", db.taskCollection, async () => {
-    await db.taskCollection
-      .where("id")
-      .equals(id)
-      .modify((obj: TaskItem) => {
-        obj.skippedToday.push(period);
-        if (obj.skippedToday.length > 1) {
-          obj.skippedToday.sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
-        }
-      });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
-};
-
 export const getAllTasks = async () => {
   const allGoals = await db.taskCollection.toArray();
   allGoals.reverse();

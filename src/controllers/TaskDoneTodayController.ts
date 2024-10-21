@@ -1,5 +1,4 @@
 import { addTaskDoneToday, deleteAllTasksDoneToday, getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
-import { v4 as uuidv4 } from "uuid";
 
 export const completeTask = async (
   scheduledTaskId: string,
@@ -9,7 +8,6 @@ export const completeTask = async (
 ) => {
   try {
     await addTaskDoneToday({
-      id: uuidv4(),
       scheduledTaskId,
       goalId,
       scheduledStart,

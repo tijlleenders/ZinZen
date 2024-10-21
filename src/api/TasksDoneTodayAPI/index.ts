@@ -2,22 +2,43 @@ import { db } from "@src/models";
 import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
 
 export const addTaskDoneToday = async (completedTask: TasksDoneTodayItem) => {
-  await db.tasksDoneTodayCollection.add(completedTask);
+  try {
+    await db.tasksDoneTodayCollection.add(completedTask);
+  } catch (error) {
+    console.error("Error adding task:", error);
+  }
 };
 
 export const getAllTasksDoneToday = async () => {
-  const tasks = await db.tasksDoneTodayCollection.toArray();
-  return tasks;
+  try {
+    const tasks = await db.tasksDoneTodayCollection.toArray();
+    return tasks;
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    return [];
+  }
 };
 
 export const deleteTaskDoneToday = async (id: string) => {
-  await db.tasksDoneTodayCollection.delete(id);
+  try {
+    await db.tasksDoneTodayCollection.delete(id);
+  } catch (error) {
+    console.error("Error deleting task:", error);
+  }
 };
 
 export const deleteTasksDoneTodayByGoalId = async (goalId: string) => {
-  await db.tasksDoneTodayCollection.where("goalId").equals(goalId).delete();
+  try {
+    await db.tasksDoneTodayCollection.where("goalId").equals(goalId).delete();
+  } catch (error) {
+    console.error("Error deleting tasks by goalId:", error);
+  }
 };
 
 export const deleteAllTasksDoneToday = async () => {
-  await db.tasksDoneTodayCollection.clear();
+  try {
+    await db.tasksDoneTodayCollection.clear();
+  } catch (error) {
+    console.error("Error clearing tasks:", error);
+  }
 };
