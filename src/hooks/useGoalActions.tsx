@@ -1,8 +1,8 @@
 import { getAllLevelGoalsOfId, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
-import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/helpers/GoalController";
-import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
+import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/controllers/GoalController";
+import { suggestChanges, suggestNewGoal } from "@src/controllers/PartnerController";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayToast, lastAction, openDevMode } from "@src/store";
 

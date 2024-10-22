@@ -16,14 +16,17 @@ export const dbStoreSchema = {
   pubSubCollection: "id, subscribers",
   publicGroupsCollection: null,
   taskCollection:
-    "id, goalId, title, hoursSpent, completedTodayIds, completedTodayTimings, lastCompleted, lastSkipped, blockedSlots, skippedToday, completedToday",
+    "id, goalId, title, hoursSpent, completedTodayIds, lastCompleted, lastSkipped, blockedSlots, skippedToday, completedToday",
   customizationCollection: "++id, goalId, posIndex",
-  dumpboxCollection: "id, key, value",
+  dumpboxCollection: null,
   partnersCollection: null,
   goalTrashCollection:
     "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
   hintsCollection: "id, hintOptionEnabled, availableGoalHints, lastCheckedDate, nextCheckDate",
   impossibleGoalsCollection: "goalId, goalTitle",
+  schedulerOutputCacheCollection: "id, key, value",
+  taskHistoryCollection: "++id, goalId, eventType, eventTime, scheduledStart, scheduledEnd, duration",
+  tasksDoneTodayCollection: "++id, goalId, scheduledStart, scheduledEnd",
 };
 export const syncVersion = (transaction: Transaction, currentVersion: number) => {
   if (currentVersion < 9) {
@@ -158,8 +161,15 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
   if (currentVersion < 21) {
     console.log("processing updates for 20th version");
     const taskCollection = transaction.table("taskCollection");
-    taskCollection.toCollection().modify((task: TaskItem) => {
+    taskCollection.toCollection().modify((task) => {
       task.completedTodayTimings = [];
+    });
+  }
+  if (currentVersion < 22) {
+    console.log("processing updates for 22th version");
+    const taskCollection = transaction.table("taskCollection");
+    taskCollection.toCollection().modify((task) => {
+      delete task.completedTodayTimings;
     });
   }
 };
