@@ -161,8 +161,15 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
   if (currentVersion < 21) {
     console.log("processing updates for 20th version");
     const taskCollection = transaction.table("taskCollection");
-    taskCollection.toCollection().modify((task: TaskItem) => {
-      // task.completedTodayTimings = [];
+    taskCollection.toCollection().modify((task) => {
+      task.completedTodayTimings = [];
+    });
+  }
+  if (currentVersion < 22) {
+    console.log("processing updates for 22th version");
+    const taskCollection = transaction.table("taskCollection");
+    taskCollection.toCollection().modify((task) => {
+      delete task.completedTodayTimings;
     });
   }
 };
