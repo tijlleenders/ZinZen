@@ -218,9 +218,11 @@ const addGoalToNewParentSublist = async (goalId: string, newParentGoalId: string
 export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string) => {
   const goalToMove = await getGoal(goalId);
   const newParentGoal = await getGoal(newParentGoalId);
+  const oldParentGoal = goalToMove ? await getGoal(goalToMove.parentGoalId) : null;
   if (!goalToMove) return;
 
   const ancestors = await getGoalAncestors(newParentGoalId);
+  console.log("Ancestors:", ancestors);
 
   await Promise.all([
     updateGoal(goalToMove.id, { parentGoalId: newParentGoalId }),
@@ -229,5 +231,14 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
   ]);
 
-  createSharedGoal(goalToMove, newParentGoal?.id ?? "root", [...ancestors, newParentGoalId]);
+  if (
+    oldParentGoal?.participants?.length > 0 &&
+    (!newParentGoal?.participants || newParentGoal.participants.length === 0)
+  ) {
+    console.log("Sending delete update");
+    console.log("Ancestors:", ancestors);
+    sendFinalUpdateOnGoal(goalToMove.id, "deleted", [...ancestors, goalToMove.parentGoalId, goalToMove.id], false);
+  } else {
+    createSharedGoal(goalToMove, newParentGoal?.id ?? "root", [...ancestors, newParentGoalId]);
+  }
 };

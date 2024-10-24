@@ -81,14 +81,23 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
   } else if (["sharer", "suggestion"].includes(payload.type)) {
     const { rootGoalId, changes, changeType } = payload;
     const rootGoal = await getGoal(rootGoalId);
+    let allAreLatest: (changesInGoal | null)[] = [];
     if (rootGoal) {
-      const allAreLatest = await Promise.all(
-        changes.map(async (ele) => {
-          const isLatest = await isIncomingGoalLatest(ele.goal.id, ele.goal);
-          console.log(`Goal ID: ${ele.goal.id} is latest: ${isLatest}`);
-          return isLatest ? ele : null;
-        }),
-      );
+      if (payload.changeType === "deleted") {
+        allAreLatest = await Promise.all(
+          changes.map(async (ele) => {
+            const isLatest = true;
+            return isLatest ? ele : null;
+          }),
+        );
+      } else {
+        allAreLatest = await Promise.all(
+          changes.map(async (ele) => {
+            const isLatest = await isIncomingGoalLatest(ele.goal.id, ele.goal);
+            return isLatest ? ele : null;
+          }),
+        );
+      }
 
       const filteredChanges = allAreLatest.filter((ele) => ele !== null);
 
