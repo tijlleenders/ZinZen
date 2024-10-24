@@ -96,7 +96,7 @@ export const createSharedGoal = async (newGoal: GoalItem, parentGoalId: string, 
 
     if (newGoalId) {
       subscribers.map(async ({ sub, rootGoalId }) => {
-        await sendUpdatesToSubscriber(sub, rootGoalId, "subgoals", [
+        await sendUpdatesToSubscriber(sub, rootGoalId, "newGoalMoved", [
           {
             level,
             goal: { ...newGoal, id: newGoalId, parentGoalId },
@@ -110,7 +110,7 @@ export const createSharedGoal = async (newGoal: GoalItem, parentGoalId: string, 
           await sendUpdatesToSubscriber(
             sub,
             rootGoalId,
-            "subgoals",
+            "newGoalMoved",
             descendants.map((descendant) => ({
               level: level + 1,
               goal: {
@@ -249,16 +249,11 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
   ]);
 
-  if (true) {
-    console.log("Sending delete update");
-    console.log("Ancestors:", ancestors);
-    sendFinalUpdateOnGoal(
-      goalToMove.id,
-      "deleted",
-      [...ancestorGoalIds, goalToMove.parentGoalId, goalToMove.id],
-      false,
-    );
-  } else {
-    createSharedGoal(goalToMove, newParentGoal?.id ?? "root", [...ancestors, newParentGoalId]);
-  }
+  // if (true) {
+  //   console.log("Sending delete update");
+  //   console.log("Ancestors:", ancestors);
+  //   sendFinalUpdateOnGoal(goalToMove.id, "moved", [...ancestorGoalIds, goalToMove.parentGoalId, goalToMove.id], false);
+  // } else {
+  createSharedGoal(goalToMove, newParentGoal?.id ?? "root", [...ancestorGoalIds, newParentGoalId]);
+  // }
 };

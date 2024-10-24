@@ -43,7 +43,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       console.log("Changes ignored");
       return;
     }
-    if (payload.changeType === "subgoals") {
+    if (payload.changeType === "subgoals" || payload.changeType === "newGoalMoved") {
       const changes = [
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
       ];

@@ -42,6 +42,18 @@ const Header = ({
           {contactName} restored {title}.
         </>
       );
+    case "moved":
+      return (
+        <>
+          {contactName} moved {title}.
+        </>
+      );
+    case "newGoalMoved":
+      return (
+        <>
+          {contactName} moved {title} to your goal.
+        </>
+      );
     default:
       return <>&nbsp;</>;
   }

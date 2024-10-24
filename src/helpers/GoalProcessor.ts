@@ -112,6 +112,8 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
     typeAtPriority = "deleted";
   } else if (goalChanges.restored.length > 0) {
     typeAtPriority = "restored";
+  } else if (goalChanges.newGoalMoved.length > 0) {
+    typeAtPriority = "newGoalMoved";
   }
   return { typeAtPriority };
 };
@@ -129,15 +131,16 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
       const parentId =
         "id" in goalAtPriority
           ? goalAtPriority.id
-          : typeAtPriority === "subgoals"
+          : typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved"
             ? goalAtPriority.goal.parentGoalId
             : goalAtPriority.goal.id;
 
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
-        return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+        const result = { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+        return result;
       }
-      if (typeAtPriority === "subgoals") {
-        goalChanges.subgoals.forEach(({ intent, goal }) => {
+      if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
+        goalChanges[typeAtPriority].forEach(({ intent, goal }) => {
           if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });
       }
@@ -153,16 +156,18 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
         goals = [{ intent: goalIntent, goal: modifiedGoal }];
       }
 
-      return {
+      const result = {
         typeAtPriority,
         parentId,
         goals,
       };
+      return result;
     }
   } else {
     console.log("inbox item doesn't exist");
   }
-  return { typeAtPriority, parentId: "", goals: [] };
+  const defaultResult = { typeAtPriority, parentId: "", goals: [] };
+  return defaultResult;
 };
 
 export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {

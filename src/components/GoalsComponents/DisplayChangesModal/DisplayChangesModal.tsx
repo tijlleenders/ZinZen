@@ -125,7 +125,10 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     if (!goalUnderReview || !currentMainGoal) {
       return;
     }
-    const removeChanges = currentDisplay === "subgoals" ? newGoals.map(({ goal }) => goal.id) : [goalUnderReview.id];
+    const removeChanges =
+      currentDisplay === "subgoals" || currentDisplay === "newGoalMoved"
+        ? newGoals.map(({ goal }) => goal.id)
+        : [goalUnderReview.id];
     if (currentDisplay !== "none") {
       await deleteGoalChangesInID(currentMainGoal.id, participants[activePPT].relId, currentDisplay, removeChanges);
     }
@@ -139,7 +142,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     if (currentDisplay !== "none") {
       await deleteChanges();
     }
-    if (currentDisplay === "subgoals") {
+    if (currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") {
       const goalsToBeSelected = newGoals
         .filter(({ goal }) => !unselectedChanges.includes(goal.id))
         .map(({ goal }) => goal);
@@ -205,7 +208,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
         console.log("🚀 ~ getChanges ~ changedGoal:", changedGoal);
         if (changedGoal) {
           setGoalUnderReview({ ...changedGoal });
-          if (typeAtPriority === "subgoals") {
+          if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
             setNewGoals(goals || []);
           } else if (typeAtPriority === "modifiedGoals") {
             setUpdatesIntent(goals[0].intent);
@@ -289,7 +292,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
           )}
           {["deleted", "archived", "restored"].includes(currentDisplay) && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
-          {currentDisplay === "subgoals" && getSubgoalsList()}
+          {(currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") && getSubgoalsList()}
 
           <div className="d-flex justify-fe gap-20">
             {goalUnderReview && (
