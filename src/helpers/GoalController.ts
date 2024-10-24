@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { GoalItem } from "@src/models/GoalItem";
 import { inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
@@ -45,6 +46,86 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
     return { parentGoal };
   }
   await addGoal(newGoal);
+  return { parentGoal: null };
+};
+
+export const getGoalAncestors = async (goalId: string): Promise<string[]> => {
+  const ancestors: string[] = [];
+  let currentGoalId = goalId;
+
+  while (currentGoalId !== "root") {
+    const currentGoal = await getGoal(currentGoalId);
+    if (!currentGoal || currentGoal.parentGoalId === "root") break;
+
+    ancestors.unshift(currentGoal.parentGoalId);
+    currentGoalId = currentGoal.parentGoalId;
+  }
+
+  return ancestors;
+};
+
+const getAllDescendants = async (goalId: string): Promise<GoalItem[]> => {
+  const descendants: GoalItem[] = [];
+
+  const processGoalAndChildren = async (currentGoalId: string) => {
+    const childrenGoals = await getChildrenGoals(currentGoalId);
+    await Promise.all(
+      childrenGoals.map(async (childGoal) => {
+        descendants.push(childGoal);
+        await processGoalAndChildren(childGoal.id);
+      }),
+    );
+  };
+
+  await processGoalAndChildren(goalId);
+  return descendants;
+};
+
+export const createSharedGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[]) => {
+  const level = ancestors.length;
+
+  if (parentGoalId && parentGoalId !== "root") {
+    const parentGoal = await getGoal(parentGoalId);
+    if (!parentGoal) {
+      console.log("Parent goal not found");
+      return { parentGoal: null };
+    }
+
+    const newGoalId = newGoal.id;
+    const subscribers = await getParticipantsOfGoals(ancestors);
+
+    if (newGoalId) {
+      subscribers.map(async ({ sub, rootGoalId }) => {
+        await sendUpdatesToSubscriber(sub, rootGoalId, "subgoals", [
+          {
+            level,
+            goal: { ...newGoal, id: newGoalId, parentGoalId },
+          },
+        ]);
+      });
+
+      const descendants = await getAllDescendants(newGoalId);
+      if (descendants.length > 0) {
+        subscribers.map(async ({ sub, rootGoalId }) => {
+          await sendUpdatesToSubscriber(
+            sub,
+            rootGoalId,
+            "subgoals",
+            descendants.map((descendant) => ({
+              level: level + 1,
+              goal: {
+                ...descendant,
+                rootGoalId,
+              },
+            })),
+          );
+        });
+      }
+
+      console.log("Updates sent successfully");
+    }
+    return { parentGoal };
+  }
   return { parentGoal: null };
 };
 
@@ -139,10 +220,14 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
   const newParentGoal = await getGoal(newParentGoalId);
   if (!goalToMove) return;
 
+  const ancestors = await getGoalAncestors(newParentGoalId);
+
   await Promise.all([
     updateGoal(goalToMove.id, { parentGoalId: newParentGoalId }),
     removeGoalFromParentSublist(goalToMove.id, goalToMove.parentGoalId),
     addGoalToNewParentSublist(goalToMove.id, newParentGoalId),
     updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
   ]);
+
+  createSharedGoal(goalToMove, newParentGoal?.id ?? "root", [...ancestors, newParentGoalId]);
 };
