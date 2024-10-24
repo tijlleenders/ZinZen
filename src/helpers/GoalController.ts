@@ -215,13 +215,31 @@ const addGoalToNewParentSublist = async (goalId: string, newParentGoalId: string
   await updateGoal(newParentGoal.id, { sublist: newParentGoalSublist });
 };
 
+export const getGoalHistoryToRoot = async (goalId: string): Promise<{ goalID: string; title: string }[]> => {
+  const history: { goalID: string; title: string }[] = [];
+  let currentGoalId = goalId;
+
+  while (currentGoalId !== "root") {
+    const currentGoal = await getGoal(currentGoalId);
+
+    if (!currentGoal) {
+      break;
+    }
+
+    history.unshift({ goalID: currentGoal.id, title: currentGoal.title });
+    currentGoalId = currentGoal.parentGoalId;
+  }
+
+  return history;
+};
+
 export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string) => {
   const goalToMove = await getGoal(goalId);
   const newParentGoal = await getGoal(newParentGoalId);
-  const oldParentGoal = goalToMove ? await getGoal(goalToMove.parentGoalId) : null;
   if (!goalToMove) return;
 
-  const ancestors = await getGoalAncestors(newParentGoalId);
+  const ancestors = await getGoalHistoryToRoot(goalId);
+  const ancestorGoalIds = ancestors.map((ele) => ele.goalID);
   console.log("Ancestors:", ancestors);
 
   await Promise.all([
@@ -231,13 +249,15 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
   ]);
 
-  if (
-    oldParentGoal?.participants?.length > 0 &&
-    (!newParentGoal?.participants || newParentGoal.participants.length === 0)
-  ) {
+  if (true) {
     console.log("Sending delete update");
     console.log("Ancestors:", ancestors);
-    sendFinalUpdateOnGoal(goalToMove.id, "deleted", [...ancestors, goalToMove.parentGoalId, goalToMove.id], false);
+    sendFinalUpdateOnGoal(
+      goalToMove.id,
+      "deleted",
+      [...ancestorGoalIds, goalToMove.parentGoalId, goalToMove.id],
+      false,
+    );
   } else {
     createSharedGoal(goalToMove, newParentGoal?.id ?? "root", [...ancestors, newParentGoalId]);
   }
