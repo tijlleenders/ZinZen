@@ -24,6 +24,7 @@ import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
+import { getMovedSubgoalsList } from "./ShowChanges";
 
 const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -35,6 +36,31 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
   const [goalUnderReview, setGoalUnderReview] = useState<GoalItem>();
   const [participants, setParticipants] = useState<ContactItem[]>([]);
   const [currentDisplay, setCurrentDisplay] = useState<typeOfChange | "none">("none");
+  const [oldParentTitle, setOldParentTitle] = useState<string>("");
+  const [newParentTitle, setNewParentTitle] = useState<string>("");
+
+  useEffect(() => {
+    const fetchParentTitles = async () => {
+      if (!goalUnderReview) return;
+
+      try {
+        const [oldParent, newParent] = await Promise.all([
+          getGoal(goalUnderReview.oldParentId),
+          getGoal(goalUnderReview.parentGoalId),
+        ]);
+
+        setOldParentTitle(oldParent?.title || goalUnderReview.oldParentId);
+        setNewParentTitle(newParent?.title || "Non-shared goal");
+      } catch (error) {
+        console.error("Error fetching parent titles:", error);
+        // Handle error appropriately - maybe set default values
+        setOldParentTitle(goalUnderReview.oldParentId);
+        setNewParentTitle("Non-shared goal");
+      }
+    };
+
+    fetchParentTitles();
+  }, [goalUnderReview]);
 
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [unselectedChanges, setUnselectedChanges] = useState<string[]>([]);
@@ -122,36 +148,6 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     );
   };
 
-  const getMovedSubgoalsList = () => {
-    if (!goalUnderReview) return null;
-
-    return (
-      <div
-        style={{
-          background: "var(--secondary-background)",
-          borderRadius: 8,
-          padding: "22px",
-          border: "1px solid var(--default-border-color)",
-        }}
-      >
-        <div className="d-flex flex-column gap-2">
-          <div>
-            <span className="fw-500">Old Parent Goal: </span>
-            <span>{goalUnderReview.oldParentId === "root" ? "Root" : goalUnderReview.oldParentId}</span>
-          </div>
-          <div>
-            <span className="fw-500">New Parent Goal: </span>
-            <span>{goalUnderReview.parentGoalId === "root" ? "Root" : goalUnderReview.parentGoalId}</span>
-          </div>
-          <div>
-            <span className="fw-500">Goal Being Moved: </span>
-            <span>{goalUnderReview.title}</span>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const deleteChanges = async () => {
     if (!goalUnderReview || !currentMainGoal) {
       return;
@@ -180,18 +176,18 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
 
       const parentGoal = await getGoal(goalUnderReview.parentGoalId);
       console.log(
-        `[Move Goal] New parent goal found:`,
+        "[Move Goal] New parent goal found:",
         parentGoal ? `${parentGoal.id} (${parentGoal.title})` : "not found",
       );
 
       // If parent goal doesn't exist, it means the goal was moved out of shared hierarchy
       if (!parentGoal) {
-        console.log(`[Move Goal] Parent goal is not shared or doesn't exist. Removing goal and its children.`);
+        console.log("[Move Goal] Parent goal is not shared or doesn't exist. Removing goal and its children.");
         // Remove the goal and its children from the database
-        await removeGoalWithChildrens(goalUnderReview);
-        console.log(`[Move Goal] Successfully removed goal and its children`);
+        await deleteChanges();
+        console.log("[Move Goal] Successfully removed goal and its children");
       } else {
-        console.log(`[Move Goal] Moving goal within shared hierarchy`);
+        console.log("[Move Goal] Moving goal within shared hierarchy");
         // Goal was moved within shared hierarchy, update its position
         await Promise.all([
           updateGoal(goalUnderReview.id, { parentGoalId: parentGoal.id }),
@@ -372,7 +368,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
           {["deleted", "archived", "restored"].includes(currentDisplay) && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
           {(currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") && getSubgoalsList()}
-          {currentDisplay === "moved" && getMovedSubgoalsList()}
+          {currentDisplay === "moved" && getMovedSubgoalsList(goalUnderReview, oldParentTitle, newParentTitle)}
 
           <div className="d-flex justify-fe gap-20">
             {goalUnderReview && (
