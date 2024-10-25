@@ -114,6 +114,8 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
     typeAtPriority = "restored";
   } else if (goalChanges.newGoalMoved.length > 0) {
     typeAtPriority = "newGoalMoved";
+  } else if (goalChanges.moved.length > 0) {
+    typeAtPriority = "moved";
   }
   return { typeAtPriority };
 };
@@ -144,10 +146,10 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
           if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });
       }
-      if (typeAtPriority === "modifiedGoals") {
+      if (typeAtPriority === "modifiedGoals" || typeAtPriority === "moved") {
         let modifiedGoal = createGoalObjectFromTags({});
         let goalIntent;
-        goalChanges.modifiedGoals.forEach(({ goal, intent }) => {
+        goalChanges[typeAtPriority].forEach(({ goal, intent }) => {
           if (goal.id === parentId) {
             modifiedGoal = { ...modifiedGoal, ...goal };
             goalIntent = intent;
@@ -163,8 +165,6 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
       };
       return result;
     }
-  } else {
-    console.log("inbox item doesn't exist");
   }
   const defaultResult = { typeAtPriority, parentId: "", goals: [] };
   return defaultResult;

@@ -19,6 +19,7 @@ export interface IChangesInGoal {
   archived: changesInId[];
   deleted: changesInId[];
   restored: changesInId[];
+  moved: changesInGoal[];
   newGoalMoved: changesInGoal[];
 }
 

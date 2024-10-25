@@ -83,7 +83,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     const rootGoal = await getGoal(rootGoalId);
     let allAreLatest: (changesInGoal | null)[] = [];
     if (rootGoal) {
-      if (payload.changeType === "deleted") {
+      if (payload.changeType === "deleted" || payload.changeType === "moved") {
         allAreLatest = await Promise.all(
           changes.map(async (ele) => {
             const isLatest = true;

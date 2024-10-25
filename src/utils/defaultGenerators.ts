@@ -29,5 +29,6 @@ export function getDefaultValueOfGoalChanges() {
     deleted: [],
     restored: [],
     newGoalMoved: [],
+    moved: [],
   };
 }

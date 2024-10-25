@@ -19,6 +19,7 @@ import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
 
+import { addGoalToNewParentSublist, removeGoalFromParentSublist } from "@src/helpers/GoalController";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
@@ -121,6 +122,36 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     );
   };
 
+  const getMovedSubgoalsList = () => {
+    if (!goalUnderReview) return null;
+
+    return (
+      <div
+        style={{
+          background: "var(--secondary-background)",
+          borderRadius: 8,
+          padding: "22px",
+          border: "1px solid var(--default-border-color)",
+        }}
+      >
+        <div className="d-flex flex-column gap-2">
+          <div>
+            <span className="fw-500">Old Parent Goal: </span>
+            <span>{goalUnderReview.oldParentId === "root" ? "Root" : goalUnderReview.oldParentId}</span>
+          </div>
+          <div>
+            <span className="fw-500">New Parent Goal: </span>
+            <span>{goalUnderReview.parentGoalId === "root" ? "Root" : goalUnderReview.parentGoalId}</span>
+          </div>
+          <div>
+            <span className="fw-500">Goal Being Moved: </span>
+            <span>{goalUnderReview.title}</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const deleteChanges = async () => {
     if (!goalUnderReview || !currentMainGoal) {
       return;
@@ -141,6 +172,50 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     }
     if (currentDisplay !== "none") {
       await deleteChanges();
+    }
+    if (currentDisplay === "moved") {
+      console.log(`[Move Goal] Starting move process for goal: ${goalUnderReview.id} (${goalUnderReview.title})`);
+      console.log(`[Move Goal] Old parent: ${goalUnderReview.oldParentId}`);
+      console.log(`[Move Goal] New parent: ${goalUnderReview.parentGoalId}`);
+
+      const parentGoal = await getGoal(goalUnderReview.parentGoalId);
+      console.log(
+        `[Move Goal] New parent goal found:`,
+        parentGoal ? `${parentGoal.id} (${parentGoal.title})` : "not found",
+      );
+
+      // If parent goal doesn't exist, it means the goal was moved out of shared hierarchy
+      if (!parentGoal) {
+        console.log(`[Move Goal] Parent goal is not shared or doesn't exist. Removing goal and its children.`);
+        // Remove the goal and its children from the database
+        await removeGoalWithChildrens(goalUnderReview);
+        console.log(`[Move Goal] Successfully removed goal and its children`);
+      } else {
+        console.log(`[Move Goal] Moving goal within shared hierarchy`);
+        // Goal was moved within shared hierarchy, update its position
+        await Promise.all([
+          updateGoal(goalUnderReview.id, { parentGoalId: parentGoal.id }),
+          removeGoalFromParentSublist(goalUnderReview.id, goalUnderReview.oldParentId),
+          addGoalToNewParentSublist(goalUnderReview.id, parentGoal.id),
+        ]).then(() => {
+          console.log(`[Move Goal] Successfully updated goal position:`);
+          console.log(`  - Updated parentGoalId to: ${parentGoal.id}`);
+          console.log(`  - Removed from old parent: ${goalUnderReview.oldParentId}`);
+          console.log(`  - Added to new parent: ${parentGoal.id}`);
+        });
+
+        // Send update to all participants
+        console.log(
+          `[Move Goal] Sending updates to participants. Excluding: ${updatesIntent === "suggestion" ? participants[activePPT].relId : "none"}`,
+        );
+        await sendUpdatedGoal(
+          goalUnderReview.id,
+          [],
+          true,
+          updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
+        ).then(() => console.log(`[Move Goal] Successfully sent updates to participants`));
+      }
+      console.log(`[Move Goal] Move process completed for goal: ${goalUnderReview.id} (${goalUnderReview.title})`);
     }
     if (currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") {
       const goalsToBeSelected = newGoals
@@ -214,6 +289,10 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             setUpdatesIntent(goals[0].intent);
             const incGoal: GoalItem = { ...goals[0].goal };
             setUpdateList({ ...findGoalTagChanges(changedGoal, incGoal) });
+          } else if (typeAtPriority === "moved") {
+            const movedGoal = goals[0].goal;
+            setUpdatesIntent(goals[0].intent);
+            setGoalUnderReview({ ...movedGoal });
           }
         }
       }
@@ -293,6 +372,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
           {["deleted", "archived", "restored"].includes(currentDisplay) && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
           {(currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") && getSubgoalsList()}
+          {currentDisplay === "moved" && getMovedSubgoalsList()}
 
           <div className="d-flex justify-fe gap-20">
             {goalUnderReview && (
