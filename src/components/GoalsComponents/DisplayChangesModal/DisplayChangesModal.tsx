@@ -170,48 +170,24 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       await deleteChanges();
     }
     if (currentDisplay === "moved") {
-      console.log(`[Move Goal] Starting move process for goal: ${goalUnderReview.id} (${goalUnderReview.title})`);
-      console.log(`[Move Goal] Old parent: ${goalUnderReview.oldParentId}`);
-      console.log(`[Move Goal] New parent: ${goalUnderReview.parentGoalId}`);
-
       const parentGoal = await getGoal(goalUnderReview.parentGoalId);
-      console.log(
-        "[Move Goal] New parent goal found:",
-        parentGoal ? `${parentGoal.id} (${parentGoal.title})` : "not found",
-      );
 
-      // If parent goal doesn't exist, it means the goal was moved out of shared hierarchy
       if (!parentGoal) {
-        console.log("[Move Goal] Parent goal is not shared or doesn't exist. Removing goal and its children.");
-        // Remove the goal and its children from the database
         await deleteChanges();
-        console.log("[Move Goal] Successfully removed goal and its children");
       } else {
-        console.log("[Move Goal] Moving goal within shared hierarchy");
-        // Goal was moved within shared hierarchy, update its position
         await Promise.all([
           updateGoal(goalUnderReview.id, { parentGoalId: parentGoal.id }),
           removeGoalFromParentSublist(goalUnderReview.id, goalUnderReview.oldParentId),
           addGoalToNewParentSublist(goalUnderReview.id, parentGoal.id),
-        ]).then(() => {
-          console.log(`[Move Goal] Successfully updated goal position:`);
-          console.log(`  - Updated parentGoalId to: ${parentGoal.id}`);
-          console.log(`  - Removed from old parent: ${goalUnderReview.oldParentId}`);
-          console.log(`  - Added to new parent: ${parentGoal.id}`);
-        });
+        ]);
 
-        // Send update to all participants
-        console.log(
-          `[Move Goal] Sending updates to participants. Excluding: ${updatesIntent === "suggestion" ? participants[activePPT].relId : "none"}`,
-        );
         await sendUpdatedGoal(
           goalUnderReview.id,
           [],
           true,
           updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-        ).then(() => console.log(`[Move Goal] Successfully sent updates to participants`));
+        );
       }
-      console.log(`[Move Goal] Move process completed for goal: ${goalUnderReview.id} (${goalUnderReview.title})`);
     }
     if (currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") {
       const goalsToBeSelected = newGoals
