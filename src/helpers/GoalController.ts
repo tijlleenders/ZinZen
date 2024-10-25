@@ -258,7 +258,6 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
           ...goalToMove,
           parentGoalId: newParentGoalId,
           rootGoalId,
-          oldParentId,
         },
       },
     ]);

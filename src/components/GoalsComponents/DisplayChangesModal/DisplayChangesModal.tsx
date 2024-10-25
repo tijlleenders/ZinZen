@@ -44,17 +44,19 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       if (!goalUnderReview) return;
 
       try {
+        const currentGoalInDB = await getGoal(goalUnderReview.id);
+        const oldParentId = currentGoalInDB?.parentGoalId;
+
         const [oldParent, newParent] = await Promise.all([
-          getGoal(goalUnderReview.oldParentId),
+          oldParentId ? getGoal(oldParentId) : null,
           getGoal(goalUnderReview.parentGoalId),
         ]);
 
-        setOldParentTitle(oldParent?.title || goalUnderReview.oldParentId);
+        setOldParentTitle(oldParent?.title || "");
         setNewParentTitle(newParent?.title || "Non-shared goal");
       } catch (error) {
         console.error("Error fetching parent titles:", error);
-        // Handle error appropriately - maybe set default values
-        setOldParentTitle(goalUnderReview.oldParentId);
+        setOldParentTitle("");
         setNewParentTitle("Non-shared goal");
       }
     };
@@ -173,11 +175,13 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       const parentGoal = await getGoal(goalUnderReview.parentGoalId);
 
       if (!parentGoal) {
-        await deleteChanges();
+        await deleteChanges().then(() => {
+          console.log("Goal moved to non-shared goal");
+        });
       } else {
         await Promise.all([
           updateGoal(goalUnderReview.id, { parentGoalId: parentGoal.id }),
-          removeGoalFromParentSublist(goalUnderReview.id, goalUnderReview.oldParentId),
+          removeGoalFromParentSublist(goalUnderReview.id, oldParentTitle),
           addGoalToNewParentSublist(goalUnderReview.id, parentGoal.id),
         ]);
 
