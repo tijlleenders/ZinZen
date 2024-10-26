@@ -36,6 +36,23 @@ interface Payload {
 
 export const handleIncomingChanges = async (payload: Payload, relId: string) => {
   console.log("Incoming change", payload);
+
+  if (payload.changeType === "moved") {
+    const rootGoal = await getGoal(payload.rootGoalId);
+    const currentGoal = await getGoal(payload.changes[0].goal.id);
+
+    if (rootGoal) {
+      const movedGoal = payload.changes[0].goal;
+      const newParentGoal = await getGoal(movedGoal.parentGoalId);
+      if (
+        currentGoal?.participants.find((ele) => ele.relId === relId && ele.following) !== undefined &&
+        !newParentGoal
+      ) {
+        return;
+      }
+    }
+  }
+
   if (payload.type === "sharer" && (await getSharedWMGoal(payload.rootGoalId))) {
     console.log("Incoming change is a shared goal. Processing...");
     const incGoal = await getSharedWMGoal(payload.rootGoalId);
