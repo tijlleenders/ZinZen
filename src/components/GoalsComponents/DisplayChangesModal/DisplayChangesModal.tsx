@@ -19,7 +19,7 @@ import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
 
-import { addGoalToNewParentSublist, removeGoalFromParentSublist } from "@src/helpers/GoalController";
+import { addGoalToNewParentSublist, getAllDescendants, removeGoalFromParentSublist } from "@src/helpers/GoalController";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
@@ -157,11 +157,46 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     const removeChanges =
       currentDisplay === "subgoals" || currentDisplay === "newGoalMoved"
         ? newGoals.map(({ goal }) => goal.id)
-        : [goalUnderReview.id];
+        : currentDisplay === "moved"
+          ? [goalUnderReview.id, ...(await getAllDescendants(goalUnderReview.id)).map((goal: GoalItem) => goal.id)]
+          : [goalUnderReview.id];
+
     if (currentDisplay !== "none") {
       await deleteGoalChangesInID(currentMainGoal.id, participants[activePPT].relId, currentDisplay, removeChanges);
     }
     setCurrentDisplay("none");
+  };
+
+  const handleMoveChanges = async () => {
+    if (!goalUnderReview) {
+      console.log("No goal under review.");
+      return;
+    }
+    const parentGoal = await getGoal(goalUnderReview.parentGoalId);
+
+    if (!parentGoal || parentGoal.id === goalUnderReview.parentGoalId) {
+      await removeGoalWithChildrens(goalUnderReview, true)
+        .then(() => {
+          deleteChanges();
+        })
+        .then(() => {
+          setCurrentDisplay("none");
+        });
+    } else {
+      await Promise.all([
+        updateGoal(goalUnderReview.id, { parentGoalId: parentGoal.id }),
+        removeGoalFromParentSublist(goalUnderReview.id, oldParentTitle),
+        addGoalToNewParentSublist(goalUnderReview.id, parentGoal.id),
+      ]);
+
+      // TODO: handle this later
+      // await sendUpdatedGoal(
+      //   goalUnderReview.id,
+      //   [],
+      //   true,
+      //   updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
+      // );
+    }
   };
 
   const acceptChanges = async () => {
@@ -172,26 +207,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       await deleteChanges();
     }
     if (currentDisplay === "moved") {
-      const parentGoal = await getGoal(goalUnderReview.parentGoalId);
-
-      if (!parentGoal) {
-        await deleteChanges().then(() => {
-          console.log("Goal moved to non-shared goal");
-        });
-      } else {
-        await Promise.all([
-          updateGoal(goalUnderReview.id, { parentGoalId: parentGoal.id }),
-          removeGoalFromParentSublist(goalUnderReview.id, oldParentTitle),
-          addGoalToNewParentSublist(goalUnderReview.id, parentGoal.id),
-        ]);
-
-        await sendUpdatedGoal(
-          goalUnderReview.id,
-          [],
-          true,
-          updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-        );
-      }
+      await handleMoveChanges();
     }
     if (currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") {
       const goalsToBeSelected = newGoals
@@ -259,6 +275,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
         console.log("🚀 ~ getChanges ~ changedGoal:", changedGoal);
         if (changedGoal) {
           setGoalUnderReview({ ...changedGoal });
+          // TODO: remove the newGoalsMoved and try handle in subgoal only
           if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
             setNewGoals(goals || []);
           } else if (typeAtPriority === "modifiedGoals") {

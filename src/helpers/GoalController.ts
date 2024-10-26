@@ -64,7 +64,7 @@ export const getGoalAncestors = async (goalId: string): Promise<string[]> => {
   return ancestors;
 };
 
-const getAllDescendants = async (goalId: string): Promise<GoalItem[]> => {
+export const getAllDescendants = async (goalId: string): Promise<GoalItem[]> => {
   const descendants: GoalItem[] = [];
 
   const processGoalAndChildren = async (currentGoalId: string) => {
