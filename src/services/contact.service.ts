@@ -1,4 +1,5 @@
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+import { SharedGoalMessageResponse } from "@src/Interfaces/IContactMessages";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
 import { createContactRequest, getInstallId } from "@src/utils";
@@ -43,7 +44,7 @@ export const collaborateWithContact = async (relId: string, goal: GoalItem) => {
   return res;
 };
 
-export const getContactSharedGoals = async () => {
+export const getContactSharedGoals = async (): Promise<SharedGoalMessageResponse> => {
   const lastProcessedTimestamp = new Date(
     Number(localStorage.getItem(LocalStorageKeys.LAST_PROCESSED_TIMESTAMP)),
   ).toISOString();
@@ -54,7 +55,7 @@ export const getContactSharedGoals = async () => {
     ...(lastProcessedTimestamp ? { lastProcessedTimestamp } : {}),
   });
   localStorage.setItem(LocalStorageKeys.LAST_PROCESSED_TIMESTAMP, `${Date.now()}`);
-  return res;
+  return res as SharedGoalMessageResponse;
 };
 
 export const getRelationshipStatus = async (relationshipId: string) => {

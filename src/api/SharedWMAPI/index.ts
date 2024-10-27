@@ -2,7 +2,7 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { addDeletedGoal, addGoal } from "../GoalsAPI";
+import { addGoal } from "../GoalsAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -17,7 +17,7 @@ export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]
   });
 };
 
-export const addSharedWMGoal = async (goalDetails: object) => {
+export const addSharedWMGoal = async (goalDetails: GoalItem) => {
   const { participants } = goalDetails;
   const newGoal = createGoalObjectFromTags({ ...goalDetails, typeOfGoal: "shared" });
   if (participants) newGoal.participants = participants;

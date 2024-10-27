@@ -23,7 +23,7 @@ import { fixDateVlauesInGoalObject } from "@src/utils";
 import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import { isIncomingGoalLatest } from "./mergeSharedGoalItems";
 
-interface Payload {
+export interface Payload {
   relId: string;
   lastProcessedTimestamp: string;
   changeType: string;
