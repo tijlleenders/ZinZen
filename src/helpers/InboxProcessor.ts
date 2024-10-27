@@ -1,5 +1,5 @@
 import { GoalItem } from "@src/models/GoalItem";
-import { changesInGoal, InboxItem } from "@src/models/InboxItem";
+import { changesInGoal, changesInId, InboxItem } from "@src/models/InboxItem";
 
 import { getDefaultValueOfGoalChanges } from "@src/utils/defaultGenerators";
 import {
@@ -28,7 +28,7 @@ export interface Payload {
   lastProcessedTimestamp: string;
   changeType: string;
   rootGoalId: string;
-  changes: changesInGoal[];
+  changes: (changesInGoal | changesInId)[];
   type: string;
   timestamp: string;
   TTL: number;
@@ -96,55 +96,71 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       }
     }
   } else if (["sharer", "suggestion"].includes(payload.type)) {
-    const { rootGoalId, changes, changeType } = payload;
-    const rootGoal = await getGoal(rootGoalId);
-    let allAreLatest: (changesInGoal | null)[] = [];
-    if (rootGoal) {
-      if (payload.changeType === "deleted" || payload.changeType === "moved") {
-        allAreLatest = await Promise.all(
-          changes.map(async (ele) => {
-            const isLatest = true;
-            return isLatest ? ele : null;
-          }),
-        );
-      } else {
-        allAreLatest = await Promise.all(
-          changes.map(async (ele) => {
-            const isLatest = await isIncomingGoalLatest(ele.goal.id, ele.goal);
-            return isLatest ? ele : null;
-          }),
-        );
-      }
+    const { changes, changeType } = payload;
+    console.log("changes", changes);
 
-      const filteredChanges = allAreLatest.filter((ele) => ele !== null);
+    let currentGoal: GoalItem | null = null;
 
-      if (filteredChanges.length > 0) {
-        // Proceed if there are latest changes
-        console.log("Found latest changes. Proceeding with updates...");
-
-        let inbox: InboxItem = await getInboxItem(rootGoalId);
-        const defaultChanges = getDefaultValueOfGoalChanges();
-
-        // Add filtered changes to defaultChanges
-        defaultChanges[changeType] = filteredChanges.map((ele) => ({
-          ...ele,
-          intent: payload.type,
-        }));
-
-        if (!inbox) {
-          await createEmptyInboxItem(rootGoalId);
-          inbox = await getInboxItem(rootGoalId);
-        }
-
-        await Promise.all([
-          updateGoal(rootGoalId, { newUpdates: true }),
-          addGoalChangesInID(rootGoalId, relId, defaultChanges),
-        ]);
-      } else {
-        console.log("No latest changes. Skipping updates.");
-      }
+    if ("goal" in changes[0]) {
+      currentGoal = await getGoal(changes[0].goal.id);
     } else {
-      console.log(`Root goal with ID: ${rootGoalId} not found. Skipping update.`);
+      currentGoal = await getGoal(changes[0].id);
+    }
+
+    if (!currentGoal) {
+      console.log("Goal not found");
+      return;
+    }
+
+    if (currentGoal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
+      console.log("Changes ignored - goal not shared with participant");
+      return;
+    }
+
+    let allAreLatest: (changesInGoal | null)[] = [];
+
+    if (payload.changeType === "deleted" || payload.changeType === "moved") {
+      allAreLatest = await Promise.all(
+        changes.map(async (ele) => {
+          const isLatest = true;
+          return isLatest ? ele : null;
+        }),
+      );
+    } else {
+      allAreLatest = await Promise.all(
+        changes.map(async (ele) => {
+          const isLatest = await isIncomingGoalLatest(ele.goal.id, ele.goal);
+          return isLatest ? ele : null;
+        }),
+      );
+    }
+
+    const filteredChanges = allAreLatest.filter((ele) => ele !== null);
+
+    if (filteredChanges.length > 0) {
+      // Proceed if there are latest changes
+      console.log("Found latest changes. Proceeding with updates...");
+
+      let inbox: InboxItem = await getInboxItem(currentGoal.id);
+      const defaultChanges = getDefaultValueOfGoalChanges();
+
+      // Add filtered changes to defaultChanges
+      defaultChanges[changeType] = filteredChanges.map((ele) => ({
+        ...ele,
+        intent: payload.type,
+      }));
+
+      if (!inbox) {
+        await createEmptyInboxItem(currentGoal.id);
+        inbox = await getInboxItem(currentGoal.id);
+      }
+
+      await Promise.all([
+        updateGoal(currentGoal.id, { newUpdates: true }),
+        addGoalChangesInID(currentGoal.id, relId, defaultChanges),
+      ]);
+    } else {
+      console.log("No latest changes. Skipping updates.");
     }
   }
 };
