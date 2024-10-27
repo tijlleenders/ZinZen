@@ -81,20 +81,38 @@ function useApp() {
               console.log("🚀 ~ file: useApp.tsx:45 ~ resObject[relId].forEach ~ ele:", ele);
               if (ele.type === "shareMessage") {
                 const { goalWithChildrens }: { goalWithChildrens: GoalItem[] } = ele;
-                const rootGoal = goalWithChildrens[0];
-                rootGoal.participants.push({
+
+                const participant = {
                   name: contactItem.name,
                   relId,
-                  type: "sharer",
+                  type: "sharer" as const,
                   following: true,
-                });
-                addSharedWMGoal(rootGoal)
-                  .then(() => {
-                    goalWithChildrens.slice(1).forEach((goal) => {
-                      addSharedWMGoal(goal).catch((err) => console.log(`Failed to add in inbox ${goal.title}`, err));
-                    });
-                  })
-                  .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
+                };
+
+                const rootGoal = {
+                  ...goalWithChildrens[0],
+                  participants: [participant],
+                };
+
+                console.log("[useApp] Adding root goal with participant:", rootGoal.id);
+
+                try {
+                  await addSharedWMGoal(rootGoal);
+
+                  await Promise.all(
+                    goalWithChildrens.slice(1).map(async (goal) => {
+                      const goalWithParticipant = {
+                        ...goal,
+                        participants: [participant],
+                      };
+                      await addSharedWMGoal(goalWithParticipant);
+                    }),
+                  );
+
+                  console.log("[useApp] Successfully added all goals with participants");
+                } catch (error) {
+                  console.error("[useApp] Error adding shared goals:", error);
+                }
               } else if (["sharer", "suggestion"].includes(ele.type)) {
                 handleIncomingChanges(ele, relId).then(() => setLastAction("goalNewUpdates"));
               }

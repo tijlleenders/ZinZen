@@ -27,6 +27,7 @@ export interface GoalItem {
   language: string;
   link: string | null;
   participants: IParticipant[];
+  isShared: boolean;
   rootGoalId: string;
   timeBudget?: {
     perDay: string;
