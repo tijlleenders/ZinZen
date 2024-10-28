@@ -1,13 +1,6 @@
 import { GoalItem } from "./GoalItem";
 
-export type typeOfChange =
-  | "subgoals"
-  | "modifiedGoals"
-  | "archived"
-  | "deleted"
-  | "restored"
-  | "moved"
-  | "newGoalMoved";
+export type typeOfChange = "subgoals" | "modifiedGoals" | "archived" | "deleted" | "restored" | "moved";
 
 export type typeOfIntent = "suggestion" | "shared";
 export type changesInId = { level: number; id: string; intent: typeOfIntent };
@@ -19,8 +12,8 @@ export interface IChangesInGoal {
   archived: changesInId[];
   deleted: changesInId[];
   restored: changesInId[];
-  moved: changesInGoal[];
-  newGoalMoved: changesInGoal[];
+  moved: changesInId[];
+  // newGoalMoved: changesInGoal[];
 }
 
 export interface InboxItem {

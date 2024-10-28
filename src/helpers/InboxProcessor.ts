@@ -1,5 +1,5 @@
-import { GoalItem } from "@src/models/GoalItem";
-import { changesInGoal, changesInId, InboxItem } from "@src/models/InboxItem";
+import { GoalItem, typeOfSub } from "@src/models/GoalItem";
+import { changesInGoal, changesInId, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 
 import { getDefaultValueOfGoalChanges } from "@src/utils/defaultGenerators";
 import {
@@ -21,12 +21,13 @@ import {
 import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { fixDateVlauesInGoalObject } from "@src/utils";
 import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
+import { getContactByRelId } from "@src/api/ContactsAPI";
 import { isIncomingGoalLatest } from "./mergeSharedGoalItems";
 
 export interface Payload {
   relId: string;
   lastProcessedTimestamp: string;
-  changeType: string;
+  changeType: typeOfChange;
   rootGoalId: string;
   changes: (changesInGoal | changesInId)[];
   type: string;
@@ -96,68 +97,75 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       }
     }
   } else if (["sharer", "suggestion"].includes(payload.type)) {
-    const { changes, changeType } = payload;
-    console.log("changes", changes);
+    const { changes, changeType, rootGoalId } = payload;
+    if (changeType === "subgoals") {
+      const rootGoal = await getGoal(rootGoalId);
+      if (!rootGoal || !rootGoal.participants.find((p) => p.relId === relId && p.following)) {
+        return;
+      }
 
-    let goal: GoalItem | null = null;
+      const contact = await getContactByRelId(relId);
 
-    if ("goal" in changes[0]) {
-      const goalId =
-        changeType === "subgoals" || changeType === "newGoalMoved" ? changes[0].goal.parentGoalId : changes[0].goal.id;
+      const goalsWithParticipants = changes.map((ele: changesInGoal) => ({
+        ...ele,
+        goal: {
+          ...fixDateVlauesInGoalObject(ele.goal),
+          participants: [{ relId, following: true, type: "sharer" as typeOfSub, name: contact?.name || "" }],
+        },
+      }));
 
-      goal = await getGoal(goalId);
-    } else {
-      goal = await getGoal(changes[0].id);
-    }
+      const inbox = await getInboxItem(rootGoalId);
+      const defaultChanges = getDefaultValueOfGoalChanges();
+      defaultChanges[changeType] = [
+        ...goalsWithParticipants.map((ele) => ({ ...ele, intent: payload.type as typeOfIntent })),
+      ];
 
-    if (!goal) {
-      console.log("Goal not found");
+      if (!inbox) {
+        await createEmptyInboxItem(rootGoalId);
+      }
+
+      await Promise.all([
+        updateGoal(rootGoalId, { newUpdates: true }),
+        addGoalChangesInID(rootGoalId, relId, defaultChanges),
+      ]);
       return;
     }
 
-    if (!goal.participants.find((p) => p.relId === relId && p.following)) {
-      console.log("Changes ignored - goal not shared with participant");
+    const goalId = "goal" in changes[0] ? changes[0].goal.id : changes[0].id;
+    const goal = await getGoal(goalId);
+
+    if (!goal || !goal.participants.find((p) => p.relId === relId && p.following)) {
+      console.log("Goal not found or not shared with participant");
       return;
     }
 
-    let allAreLatest: (changesInGoal | changesInId | null)[] = [];
-
-    if (payload.changeType === "deleted" || payload.changeType === "moved") {
-      allAreLatest = changes.map((ele) => ele);
-    } else {
-      allAreLatest = await Promise.all(
+    let filteredChanges = changes;
+    if (changeType !== "deleted" && changeType !== "moved") {
+      const latestChanges = await Promise.all(
         changes.map(async (ele) => {
           const isLatest = await isIncomingGoalLatest(ele.goal.id, ele.goal);
           return isLatest ? ele : null;
         }),
       );
+      filteredChanges = latestChanges.filter((ele): ele is changesInGoal => ele !== null);
     }
 
-    const filteredChanges = allAreLatest.filter((ele) => ele !== null);
-
-    if (filteredChanges.length > 0) {
-      console.log("Found latest changes. Proceeding with updates...");
-
-      let inbox: InboxItem = await getInboxItem(goal.id);
-      const defaultChanges = getDefaultValueOfGoalChanges();
-
-      defaultChanges[changeType] = filteredChanges.map((ele) => ({
-        ...ele,
-        intent: payload.type,
-      }));
-
-      if (!inbox) {
-        await createEmptyInboxItem(goal.id);
-        inbox = await getInboxItem(goal.id);
-      }
-
-      await Promise.all([
-        updateGoal(goal.id, { newUpdates: true }),
-        addGoalChangesInID(goal.id, relId, defaultChanges),
-      ]);
-    } else {
-      console.log("No latest changes. Skipping updates.");
+    if (filteredChanges.length === 0) {
+      return;
     }
+
+    const inbox = await getInboxItem(goal.id);
+    const defaultChanges = getDefaultValueOfGoalChanges();
+    defaultChanges[changeType] = filteredChanges.map((ele) => ({
+      ...ele,
+      intent: payload.type,
+    }));
+
+    if (!inbox) {
+      await createEmptyInboxItem(goal.id);
+    }
+
+    await Promise.all([updateGoal(goal.id, { newUpdates: true }), addGoalChangesInID(goal.id, relId, defaultChanges)]);
   }
 };
 
@@ -165,7 +173,14 @@ export const acceptSelectedSubgoals = async (selectedGoals: GoalItem[], parentGo
   try {
     const childrens: string[] = [];
     selectedGoals.forEach(async (goal: GoalItem) => {
-      addGoal(fixDateVlauesInGoalObject({ ...goal, participants: [] })).catch((err) => console.log(err));
+      const { relId } = goal.participants[0];
+      const contact = await getContactByRelId(relId);
+      addGoal(
+        fixDateVlauesInGoalObject({
+          ...goal,
+          participants: [{ relId, following: true, type: "sharer", name: contact?.name || "" }],
+        }),
+      ).catch((err) => console.log(err));
       childrens.push(goal.id);
     });
     await addIntoSublist(parentGoal.id, childrens);

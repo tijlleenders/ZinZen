@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getSharedWMGoal, removeSharedWMChildrenGoals, updateSharedWMGoal } from "@src/api/SharedWMAPI";
@@ -19,32 +19,65 @@ import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
 export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], hintOption: boolean) => {
   const level = ancestors.length;
+
   if (hintOption) {
     getHintsFromAPI(newGoal)
-      .then((hints) => addHintItem(newGoal.id, hintOption, hints || []))
+      .then((hints) => {
+        addHintItem(newGoal.id, hintOption, hints || []);
+      })
       .catch((error) => console.error("Error fetching hints:", error));
   }
 
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
-    if (!parentGoal) return { parentGoal: null };
-    const newGoalId = await addGoal(inheritParentProps(newGoal, parentGoal));
-
-    const subscribers = await getParticipantsOfGoals(ancestors);
-    if (newGoalId) {
-      subscribers.map(async ({ sub, rootGoalId }) => {
-        sendUpdatesToSubscriber(sub, rootGoalId, "subgoals", [
-          {
-            level,
-            goal: { ...newGoal, id: newGoalId },
-          },
-        ]).then(() => console.log("update sent"));
-      });
+    if (!parentGoal) {
+      console.warn("Parent goal not found:", parentGoalId);
+      return { parentGoal: null };
     }
+
+    const ancestorGoals = await Promise.all(ancestors.map((id) => getGoal(id)));
+    const allParticipants = new Map<string, IParticipant>();
+
+    [...ancestorGoals, parentGoal].forEach((goal) => {
+      if (!goal?.participants) return;
+      goal.participants.forEach((participant) => {
+        if (participant.following) {
+          allParticipants.set(participant.relId, participant);
+        }
+      });
+    });
+    const goalWithParentProps = inheritParentProps(newGoal, parentGoal);
+    const updatedGoal = {
+      ...goalWithParentProps,
+      participants: Array.from(allParticipants.values()),
+    };
+
+    const newGoalId = await addGoal(updatedGoal);
+
+    if (newGoalId) {
+      const subscribers = await getParticipantsOfGoals(ancestors);
+      await Promise.all(
+        subscribers.map(async ({ sub, rootGoalId }) => {
+          await sendUpdatesToSubscriber(sub, rootGoalId, "subgoals", [
+            {
+              level,
+              goal: {
+                ...updatedGoal,
+                id: newGoalId,
+                rootGoalId,
+                participants: [],
+              },
+            },
+          ]);
+        }),
+      );
+    }
+
     const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
     await updateGoal(parentGoalId, { sublist: newSublist });
     return { parentGoal };
   }
+
   await addGoal(newGoal);
   return { parentGoal: null };
 };

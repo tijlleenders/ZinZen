@@ -1,6 +1,7 @@
 import { v5 as uuidv5 } from "uuid";
 
 import { GoalItem } from "@src/models/GoalItem";
+import { changesInGoal, changesInId } from "@src/models/InboxItem";
 import { myNameSpace } from ".";
 
 export const createPollObject = (goal: GoalItem, params: object = {}) => ({
@@ -23,12 +24,11 @@ export const createPollObject = (goal: GoalItem, params: object = {}) => ({
 
 export function getDefaultValueOfGoalChanges() {
   return {
-    subgoals: [],
-    modifiedGoals: [],
-    archived: [],
-    deleted: [],
-    restored: [],
-    newGoalMoved: [],
-    moved: [],
+    subgoals: [] as changesInGoal[],
+    modifiedGoals: [] as changesInGoal[],
+    archived: [] as changesInId[],
+    deleted: [] as changesInId[],
+    restored: [] as changesInId[],
+    moved: [] as changesInId[],
   };
 }
