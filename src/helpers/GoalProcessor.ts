@@ -112,8 +112,6 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
     typeAtPriority = "deleted";
   } else if (goalChanges.restored.length > 0) {
     typeAtPriority = "restored";
-  } else if (goalChanges.newGoalMoved.length > 0) {
-    typeAtPriority = "newGoalMoved";
   } else if (goalChanges.moved.length > 0) {
     typeAtPriority = "moved";
   }
