@@ -174,30 +174,19 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     }
     const parentGoal = await getGoal(goalUnderReview.parentGoalId);
 
-    if (!parentGoal) {
-      console.log("Removing goal with childrens");
-      await removeGoalWithChildrens(goalUnderReview, true)
-        .then(() => {
-          deleteChanges();
-        })
-        .then(() => {
-          setCurrentDisplay("none");
-        });
-    } else {
-      await Promise.all([
-        updateGoal(goalUnderReview.id, { parentGoalId: parentGoal.id }),
-        removeGoalFromParentSublist(goalUnderReview.id, parentGoal.title),
-        addGoalToNewParentSublist(goalUnderReview.id, parentGoal.id),
-      ]);
+    await Promise.all([
+      updateGoal(goalUnderReview.id, { parentGoalId: parentGoal?.id ?? "root" }),
+      removeGoalFromParentSublist(goalUnderReview.id, parentGoal?.title ?? "root"),
+      addGoalToNewParentSublist(goalUnderReview.id, parentGoal?.id ?? "root"),
+    ]);
 
-      // TODO: handle this later
-      // await sendUpdatedGoal(
-      //   goalUnderReview.id,
-      //   [],
-      //   true,
-      //   updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-      // );
-    }
+    // TODO: handle this later
+    // await sendUpdatedGoal(
+    //   goalUnderReview.id,
+    //   [],
+    //   true,
+    //   updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
+    // );
   };
 
   const acceptChanges = async () => {
@@ -285,7 +274,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             setUpdateList({ ...findGoalTagChanges(changedGoal, incGoal) });
           } else if (typeAtPriority === "moved") {
             setUpdatesIntent(goals[0].intent);
-            setGoalUnderReview({ ...movedGoal });
+            setGoalUnderReview({ ...goals[0].goal });
           }
         }
       }

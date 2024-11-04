@@ -295,39 +295,37 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     removeGoalFromParentSublist(goalToMove.id, oldParentId),
     addGoalToNewParentSublist(goalToMove.id, newParentGoalId),
     updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
-    sendUpdatedGoal(goalToMove.id, ancestorGoalIds, false),
   ]);
 
-  // const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
-  // subscribers.forEach(async ({ sub, rootGoalId }) => {
-  //   await sendUpdatesToSubscriber(sub, rootGoalId, "moved", [
-  //     {
-  //       level: ancestorGoalIds.length,
-  //       goal: {
-  //         ...goalToMove,
-  //         parentGoalId: newParentGoalId,
-  //         rootGoalId,
-  //       },
-  //     },
-  //   ]);
-  // });
+  const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
+  subscribers.forEach(async ({ sub, rootGoalId }) => {
+    await sendUpdatesToSubscriber(sub, rootGoalId, "moved", [
+      {
+        level: ancestorGoalIds.length,
+        goal: {
+          ...goalToMove,
+          parentGoalId: newParentGoalId,
+          rootGoalId,
+        },
+      },
+    ]);
+  });
 
-  // // Also send updates for all descendants
-  // const descendants = await getAllDescendants(goalId);
-  // if (descendants.length > 0) {
-  //   subscribers.forEach(async ({ sub, rootGoalId }) => {
-  //     await sendUpdatesToSubscriber(
-  //       sub,
-  //       rootGoalId,
-  //       "moved",
-  //       descendants.map((descendant) => ({
-  //         level: ancestorGoalIds.length + 1,
-  //         goal: {
-  //           ...descendant,
-  //           rootGoalId,
-  //         },
-  //       })),
-  //     );
-  //   });
-  // }
+  const descendants = await getAllDescendants(goalId);
+  if (descendants.length > 0) {
+    subscribers.forEach(async ({ sub, rootGoalId }) => {
+      await sendUpdatesToSubscriber(
+        sub,
+        rootGoalId,
+        "moved",
+        descendants.map((descendant) => ({
+          level: ancestorGoalIds.length + 1,
+          goal: {
+            ...descendant,
+            rootGoalId,
+          },
+        })),
+      );
+    });
+  }
 };

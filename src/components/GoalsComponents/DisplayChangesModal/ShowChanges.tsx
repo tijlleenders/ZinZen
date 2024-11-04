@@ -34,7 +34,7 @@ export const getMovedSubgoalsList = (
       {newParentTitle === "Non-shared goal" && (
         <div className="warning-message">
           <InfoCircleOutlined />
-          <span>The new parent goal is not shared. The goal will be deleted for you.</span>
+          <span>The new parent goal is not shared. The goal will be moved to the root.</span>
         </div>
       )}
     </div>

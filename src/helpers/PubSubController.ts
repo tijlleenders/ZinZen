@@ -30,7 +30,7 @@ export const sendUpdatedGoal = async (
 
 export const sendFinalUpdateOnGoal = async (
   goalId: string,
-  action: "archived" | "deleted" | "restored",
+  action: "archived" | "deleted" | "restored" | "moved",
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
