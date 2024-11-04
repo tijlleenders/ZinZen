@@ -23,6 +23,7 @@ import { fixDateVlauesInGoalObject } from "@src/utils";
 import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import { getContactByRelId } from "@src/api/ContactsAPI";
 import { isIncomingGoalLatest } from "./mergeSharedGoalItems";
+import { getRootGoalId, updateRootGoalNotification } from "./GoalController";
 
 export interface Payload {
   relId: string;
@@ -34,6 +35,18 @@ export interface Payload {
   timestamp: string;
   TTL: number;
 }
+
+const addChangesToRootGoal = async (goalId: string, relId: string, changes: any) => {
+  const rootGoalId = await getRootGoalId(goalId);
+  if (rootGoalId === "root") return;
+
+  const inbox = await getInboxItem(rootGoalId);
+  if (!inbox) {
+    await createEmptyInboxItem(rootGoalId);
+  }
+
+  await Promise.all([updateRootGoalNotification(rootGoalId), addGoalChangesInID(rootGoalId, relId, changes)]);
+};
 
 export const handleIncomingChanges = async (payload: Payload, relId: string) => {
   console.log("Incoming change", payload);
@@ -61,7 +74,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       console.log("Changes ignored");
       return;
     }
-    if (payload.changeType === "subgoals" || payload.changeType === "newGoalMoved") {
+    if (payload.changeType === "subgoals") {
       const changes = [
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
       ];
@@ -124,10 +137,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
         await createEmptyInboxItem(rootGoalId);
       }
 
-      await Promise.all([
-        updateGoal(rootGoalId, { newUpdates: true }),
-        addGoalChangesInID(rootGoalId, relId, defaultChanges),
-      ]);
+      await addChangesToRootGoal(rootGoalId, relId, defaultChanges);
       return;
     }
 
@@ -165,7 +175,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       await createEmptyInboxItem(goal.id);
     }
 
-    await Promise.all([updateGoal(goal.id, { newUpdates: true }), addGoalChangesInID(goal.id, relId, defaultChanges)]);
+    await addChangesToRootGoal(goal.id, relId, defaultChanges);
   }
 };
 

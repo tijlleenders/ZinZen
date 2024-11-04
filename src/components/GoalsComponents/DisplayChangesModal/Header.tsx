@@ -48,12 +48,6 @@ const Header = ({
           {contactName} moved {title}.
         </>
       );
-    case "newGoalMoved":
-      return (
-        <>
-          {contactName} moved {title} to your goal.
-        </>
-      );
     default:
       return <>&nbsp;</>;
   }

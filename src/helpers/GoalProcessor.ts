@@ -131,7 +131,7 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
       const parentId =
         "id" in goalAtPriority
           ? goalAtPriority.id
-          : typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved"
+          : typeAtPriority === "subgoals"
             ? goalAtPriority.goal.parentGoalId
             : goalAtPriority.goal.id;
 
@@ -139,7 +139,7 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
         const result = { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
         return result;
       }
-      if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
+      if (typeAtPriority === "subgoals") {
         goalChanges[typeAtPriority].forEach(({ intent, goal }) => {
           if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });

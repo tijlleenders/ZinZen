@@ -155,7 +155,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       return;
     }
     const removeChanges =
-      currentDisplay === "subgoals" || currentDisplay === "newGoalMoved"
+      currentDisplay === "subgoals"
         ? newGoals.map(({ goal }) => goal.id)
         : currentDisplay === "moved"
           ? [goalUnderReview.id, ...(await getAllDescendants(goalUnderReview.id)).map((goal: GoalItem) => goal.id)]
@@ -210,7 +210,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     if (currentDisplay === "moved") {
       await handleMoveChanges();
     }
-    if (currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") {
+    if (currentDisplay === "subgoals") {
       const goalsToBeSelected = newGoals
         .filter(({ goal }) => !unselectedChanges.includes(goal.id))
         .map(({ goal }) => goal);
@@ -277,14 +277,13 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
         if (changedGoal) {
           setGoalUnderReview({ ...changedGoal });
           // TODO: remove the newGoalsMoved and try handle in subgoal only
-          if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
+          if (typeAtPriority === "subgoals") {
             setNewGoals(goals || []);
           } else if (typeAtPriority === "modifiedGoals") {
             setUpdatesIntent(goals[0].intent);
             const incGoal: GoalItem = { ...goals[0].goal };
             setUpdateList({ ...findGoalTagChanges(changedGoal, incGoal) });
           } else if (typeAtPriority === "moved") {
-            const movedGoal = goals[0].goal;
             setUpdatesIntent(goals[0].intent);
             setGoalUnderReview({ ...movedGoal });
           }
@@ -312,6 +311,23 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     }
     init();
   }, [currentMainGoal]);
+
+  const getChangedGoalFromRoot = async (rootGoal: GoalItem, relId: string) => {
+    const { typeAtPriority, goals, parentId } = await jumpToLowestChanges(rootGoal.id, relId);
+
+    if (typeAtPriority === "none") return { typeAtPriority, goals, parentId };
+
+    const changedGoal = await getGoal(parentId);
+    if (!changedGoal) return { typeAtPriority, goals, parentId };
+
+    return {
+      typeAtPriority,
+      goals,
+      parentId,
+      changedGoal,
+      rootGoal,
+    };
+  };
 
   return (
     <ZModal type="popupModal" open>
@@ -365,7 +381,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
           )}
           {["deleted", "archived", "restored"].includes(currentDisplay) && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
-          {(currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") && getSubgoalsList()}
+          {currentDisplay === "subgoals" && getSubgoalsList()}
           {currentDisplay === "moved" && getMovedSubgoalsList(goalUnderReview, oldParentTitle, newParentTitle)}
 
           <div className="d-flex justify-fe gap-20">

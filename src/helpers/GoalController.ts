@@ -227,6 +227,21 @@ const updateRootGoal = async (goalId: string, newRootGoalId: string) => {
   }
 };
 
+export const getRootGoalId = async (goalId: string): Promise<string> => {
+  const goal = await getGoal(goalId);
+  if (!goal || goal.parentGoalId === "root") {
+    return goal?.id || "root";
+  }
+  return getRootGoalId(goal.parentGoalId);
+};
+
+export const updateRootGoalNotification = async (goalId: string) => {
+  const rootGoalId = await getRootGoalId(goalId);
+  if (rootGoalId !== "root") {
+    await updateGoal(rootGoalId, { newUpdates: true });
+  }
+};
+
 export const removeGoalFromParentSublist = async (goalId: string, parentGoalId: string) => {
   const parentGoal = await getGoal(parentGoalId);
   if (!parentGoal) return;
@@ -280,38 +295,39 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     removeGoalFromParentSublist(goalToMove.id, oldParentId),
     addGoalToNewParentSublist(goalToMove.id, newParentGoalId),
     updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
+    sendUpdatedGoal(goalToMove.id, ancestorGoalIds, false),
   ]);
 
-  const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
-  subscribers.forEach(async ({ sub, rootGoalId }) => {
-    await sendUpdatesToSubscriber(sub, rootGoalId, "moved", [
-      {
-        level: ancestorGoalIds.length,
-        goal: {
-          ...goalToMove,
-          parentGoalId: newParentGoalId,
-          rootGoalId,
-        },
-      },
-    ]);
-  });
+  // const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
+  // subscribers.forEach(async ({ sub, rootGoalId }) => {
+  //   await sendUpdatesToSubscriber(sub, rootGoalId, "moved", [
+  //     {
+  //       level: ancestorGoalIds.length,
+  //       goal: {
+  //         ...goalToMove,
+  //         parentGoalId: newParentGoalId,
+  //         rootGoalId,
+  //       },
+  //     },
+  //   ]);
+  // });
 
-  // Also send updates for all descendants
-  const descendants = await getAllDescendants(goalId);
-  if (descendants.length > 0) {
-    subscribers.forEach(async ({ sub, rootGoalId }) => {
-      await sendUpdatesToSubscriber(
-        sub,
-        rootGoalId,
-        "moved",
-        descendants.map((descendant) => ({
-          level: ancestorGoalIds.length + 1,
-          goal: {
-            ...descendant,
-            rootGoalId,
-          },
-        })),
-      );
-    });
-  }
+  // // Also send updates for all descendants
+  // const descendants = await getAllDescendants(goalId);
+  // if (descendants.length > 0) {
+  //   subscribers.forEach(async ({ sub, rootGoalId }) => {
+  //     await sendUpdatesToSubscriber(
+  //       sub,
+  //       rootGoalId,
+  //       "moved",
+  //       descendants.map((descendant) => ({
+  //         level: ancestorGoalIds.length + 1,
+  //         goal: {
+  //           ...descendant,
+  //           rootGoalId,
+  //         },
+  //       })),
+  //     );
+  //   });
+  // }
 };
