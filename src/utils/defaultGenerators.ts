@@ -30,5 +30,6 @@ export function getDefaultValueOfGoalChanges() {
     deleted: [] as changesInId[],
     restored: [] as changesInId[],
     moved: [] as changesInId[],
+    newGoalMoved: [] as changesInGoal[],
   };
 }

@@ -34,6 +34,7 @@ const AcceptBtn = ({ typeAtPriority, acceptChanges }: AcceptBtnProps) => {
       {typeAtPriority === "restored" && "Restore for me too"}
       {typeAtPriority === "deleted" && "Delete for me too"}
       {typeAtPriority === "subgoals" && "Add all checked"}
+      {typeAtPriority === "newGoalMoved" && "Move for me too"}
       {typeAtPriority === "modifiedGoals" && "Make all checked changes"}
       {typeAtPriority === "moved" && "Move for me too"}
     </button>

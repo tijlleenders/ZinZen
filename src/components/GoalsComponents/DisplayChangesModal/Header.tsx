@@ -18,6 +18,12 @@ const Header = ({
           {contactName} added to {title}.&nbsp; &nbsp; Add as well ?
         </>
       );
+    case "newGoalMoved":
+      return (
+        <>
+          {contactName} moved {title} to {title}.&nbsp; &nbsp; Move as well ?
+        </>
+      );
     case "modifiedGoals":
       return (
         <>

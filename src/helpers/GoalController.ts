@@ -284,11 +284,19 @@ export const getGoalHistoryToRoot = async (goalId: string): Promise<{ goalID: st
 export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string) => {
   const goalToMove = await getGoal(goalId);
   const newParentGoal = await getGoal(newParentGoalId);
-  if (!goalToMove) return;
+
+  if (!goalToMove) {
+    return;
+  }
 
   const oldParentId = goalToMove.parentGoalId;
   const ancestors = await getGoalHistoryToRoot(goalId);
   const ancestorGoalIds = ancestors.map((ele) => ele.goalID);
+
+  const ancestorGoalsIdsOfNewParent = await getGoalHistoryToRoot(newParentGoalId);
+  const ancestorGoalIdsOfNewParent = ancestorGoalsIdsOfNewParent.map((ele) => ele.goalID);
+
+  await createSharedGoal(goalToMove, newParentGoalId, ancestorGoalIdsOfNewParent);
 
   await Promise.all([
     updateGoal(goalToMove.id, { parentGoalId: newParentGoalId }),
@@ -298,6 +306,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
   ]);
 
   const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
+
   subscribers.forEach(async ({ sub, rootGoalId }) => {
     await sendUpdatesToSubscriber(sub, rootGoalId, "moved", [
       {
@@ -312,6 +321,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
   });
 
   const descendants = await getAllDescendants(goalId);
+
   if (descendants.length > 0) {
     subscribers.forEach(async ({ sub, rootGoalId }) => {
       await sendUpdatesToSubscriber(

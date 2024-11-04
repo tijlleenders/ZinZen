@@ -155,7 +155,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       return;
     }
     const removeChanges =
-      currentDisplay === "subgoals"
+      currentDisplay === "subgoals" || currentDisplay === "newGoalMoved"
         ? newGoals.map(({ goal }) => goal.id)
         : currentDisplay === "moved"
           ? [goalUnderReview.id, ...(await getAllDescendants(goalUnderReview.id)).map((goal: GoalItem) => goal.id)]
@@ -199,7 +199,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     if (currentDisplay === "moved") {
       await handleMoveChanges();
     }
-    if (currentDisplay === "subgoals") {
+    if (currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") {
       const goalsToBeSelected = newGoals
         .filter(({ goal }) => !unselectedChanges.includes(goal.id))
         .map(({ goal }) => goal);
@@ -266,7 +266,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
         if (changedGoal) {
           setGoalUnderReview({ ...changedGoal });
           // TODO: remove the newGoalsMoved and try handle in subgoal only
-          if (typeAtPriority === "subgoals") {
+          if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
             setNewGoals(goals || []);
           } else if (typeAtPriority === "modifiedGoals") {
             setUpdatesIntent(goals[0].intent);
@@ -370,7 +370,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
           )}
           {["deleted", "archived", "restored"].includes(currentDisplay) && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
-          {currentDisplay === "subgoals" && getSubgoalsList()}
+          {(currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") && getSubgoalsList()}
           {currentDisplay === "moved" && getMovedSubgoalsList(goalUnderReview, oldParentTitle, newParentTitle)}
 
           <div className="d-flex justify-fe gap-20">

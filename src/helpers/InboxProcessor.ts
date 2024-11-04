@@ -58,7 +58,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       console.log("Changes ignored");
       return;
     }
-    if (payload.changeType === "subgoals") {
+    if (payload.changeType === "subgoals" || payload.changeType === "newGoalMoved") {
       const changes = [
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
       ];
@@ -95,7 +95,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     }
   } else if (["sharer", "suggestion"].includes(payload.type)) {
     const { changes, changeType, rootGoalId } = payload;
-    if (changeType === "subgoals") {
+    if (changeType === "subgoals" || changeType === "newGoalMoved") {
       const rootGoal = await getGoal(rootGoalId);
       if (!rootGoal || !rootGoal.participants.find((p) => p.relId === relId && p.following)) {
         return;

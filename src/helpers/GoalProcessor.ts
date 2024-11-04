@@ -114,6 +114,8 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
     typeAtPriority = "restored";
   } else if (goalChanges.moved.length > 0) {
     typeAtPriority = "moved";
+  } else if (goalChanges.newGoalMoved.length > 0) {
+    typeAtPriority = "newGoalMoved";
   }
   return { typeAtPriority };
 };
@@ -131,7 +133,7 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
       const parentId =
         "id" in goalAtPriority
           ? goalAtPriority.id
-          : typeAtPriority === "subgoals"
+          : typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved"
             ? goalAtPriority.goal.parentGoalId
             : goalAtPriority.goal.id;
 
@@ -139,7 +141,7 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
         const result = { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
         return result;
       }
-      if (typeAtPriority === "subgoals") {
+      if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
         goalChanges[typeAtPriority].forEach(({ intent, goal }) => {
           if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });
