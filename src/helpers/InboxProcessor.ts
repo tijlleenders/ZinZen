@@ -58,18 +58,25 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       console.log("Changes ignored");
       return;
     }
-    if (payload.changeType === "subgoals" || payload.changeType === "newGoalMoved") {
+    if (payload.changeType === "subgoals") {
       const changes = [
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
       ];
-      await addGoalsInSharedWM([changes[0].goal]);
+      await addGoalsInSharedWM([changes[0].goal], relId);
+    } else if (payload.changeType === "newGoalMoved") {
+      const changes = [
+        ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
+      ];
+      changes.map(async (ele) => {
+        await addGoalsInSharedWM([ele.goal], relId);
+      });
     } else if (payload.changeType === "modifiedGoals") {
       const changes = [
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
       ];
       await updateSharedWMGoal(changes[0].goal.id, changes[0].goal);
     } else if (payload.changeType === "deleted") {
-      const goalToBeDeleted = await getSharedWMGoal(payload.changes[0].goal.id);
+      const goalToBeDeleted = await getSharedWMGoal(payload.changes[0].id);
       console.log("Deleting goal", goalToBeDeleted);
       await removeSharedWMChildrenGoals(goalToBeDeleted.id);
       await removeSharedWMGoal(goalToBeDeleted);

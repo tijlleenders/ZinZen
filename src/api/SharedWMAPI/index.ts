@@ -3,6 +3,7 @@ import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { addGoal } from "../GoalsAPI";
+import { getContactByRelId } from "../ContactsAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -17,29 +18,53 @@ export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]
   });
 };
 
-export const addSharedWMGoal = async (goalDetails: GoalItem) => {
+export const addSharedWMGoal = async (goalDetails: GoalItem, relId = "") => {
+  console.log("[addSharedWMGoal] Input goal details:", goalDetails);
+  console.log("[addSharedWMGoal] Input relId:", relId);
+
   const { participants } = goalDetails;
-  const newGoal = createGoalObjectFromTags({ ...goalDetails, typeOfGoal: "shared" });
-  if (participants) newGoal.participants = participants;
+  let updatedParticipants = participants || [];
+
+  if (relId) {
+    const contact = await getContactByRelId(relId);
+    if (contact) {
+      const contactExists = updatedParticipants.some((p) => p.relId === relId);
+      if (!contactExists) {
+        updatedParticipants = [...updatedParticipants, { ...contact, following: true, type: "sharer" }];
+      }
+    }
+  }
+
+  console.log("[addSharedWMGoal] Updated participants:", updatedParticipants);
+  const newGoal = createGoalObjectFromTags({
+    ...goalDetails,
+    typeOfGoal: "shared",
+    participants: updatedParticipants,
+  });
+
   await db
     .transaction("rw", db.sharedWMCollection, async () => {
       await db.sharedWMCollection.add(newGoal);
+      console.log("[addSharedWMGoal] Goal added to sharedWMCollection");
     })
     .then(async () => {
       const { parentGoalId } = newGoal;
       if (parentGoalId !== "root") {
+        console.log("[addSharedWMGoal] Adding goal to parent sublist. ParentId:", parentGoalId);
         await addSharedWMSublist(parentGoalId, [newGoal.id]);
       }
     })
     .catch((e) => {
-      console.log(e.stack || e);
+      console.error("[addSharedWMGoal] Error:", e.stack || e);
     });
+
+  console.log("[addSharedWMGoal] Successfully created goal with ID:", newGoal.id);
   return newGoal.id;
 };
 
-export const addGoalsInSharedWM = async (goals: GoalItem[]) => {
+export const addGoalsInSharedWM = async (goals: GoalItem[], relId: string) => {
   goals.forEach((ele) => {
-    addSharedWMGoal(ele).then((res) => console.log(res, "added"));
+    addSharedWMGoal(ele, relId).then((res) => console.log(res, "added"));
   });
 };
 

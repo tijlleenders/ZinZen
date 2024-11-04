@@ -56,6 +56,7 @@ const PartnerGoals = () => {
 
   const refreshActiveGoals = async () => {
     const rootGoals = await getRootGoalsOfPartner(relId);
+    console.log("rootGoals", rootGoals);
     handleUserGoals(rootGoals);
   };
 

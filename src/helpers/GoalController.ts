@@ -296,14 +296,50 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
   const ancestorGoalsIdsOfNewParent = await getGoalHistoryToRoot(newParentGoalId);
   const ancestorGoalIdsOfNewParent = ancestorGoalsIdsOfNewParent.map((ele) => ele.goalID);
 
-  await createSharedGoal(goalToMove, newParentGoalId, ancestorGoalIdsOfNewParent);
+  const ancestorGoals = await Promise.all(ancestorGoalIdsOfNewParent.map((id) => getGoal(id)));
+  const allParticipants = new Map<string, IParticipant>();
+
+  [...ancestorGoals, newParentGoal].forEach((goal) => {
+    if (!goal?.participants) return;
+    goal.participants.forEach((participant) => {
+      if (participant.following) {
+        allParticipants.set(participant.relId, participant);
+      }
+    });
+  });
+
+  goalToMove.participants.forEach((participant) => {
+    if (participant.following) {
+      allParticipants.set(participant.relId, participant);
+    }
+  });
+
+  const updatedGoal = {
+    ...goalToMove,
+    participants: Array.from(allParticipants.values()),
+  };
+
+  await createSharedGoal(updatedGoal, newParentGoalId, ancestorGoalIdsOfNewParent);
 
   await Promise.all([
-    updateGoal(goalToMove.id, { parentGoalId: newParentGoalId }),
+    updateGoal(goalToMove.id, {
+      parentGoalId: newParentGoalId,
+      participants: updatedGoal.participants,
+    }),
     removeGoalFromParentSublist(goalToMove.id, oldParentId),
     addGoalToNewParentSublist(goalToMove.id, newParentGoalId),
     updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
   ]);
+
+  const descendants = await getAllDescendants(goalId);
+  await Promise.all(
+    descendants.map((descendant) =>
+      updateGoal(descendant.id, {
+        participants: updatedGoal.participants,
+        rootGoalId: newParentGoal?.rootGoalId ?? "root",
+      }),
+    ),
+  );
 
   const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
 
@@ -312,15 +348,13 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
       {
         level: ancestorGoalIds.length,
         goal: {
-          ...goalToMove,
+          ...updatedGoal,
           parentGoalId: newParentGoalId,
           rootGoalId,
         },
       },
     ]);
   });
-
-  const descendants = await getAllDescendants(goalId);
 
   if (descendants.length > 0) {
     subscribers.forEach(async ({ sub, rootGoalId }) => {
@@ -332,6 +366,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
           level: ancestorGoalIds.length + 1,
           goal: {
             ...descendant,
+            participants: updatedGoal.participants,
             rootGoalId,
           },
         })),
