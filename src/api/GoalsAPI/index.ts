@@ -353,14 +353,29 @@ export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
   ]);
 };
 
-export const fetchArchivedGoalByTitle = async (value: string) => {
-  if (value.trim() === "") {
+export const fetchArchivedDescendantGoalByTitle = async (goalTitle: string, parentGoalId: string) => {
+  if (!goalTitle.trim()) {
     return [];
   }
-  const lowerCaseValue = value.toLowerCase();
-  return db.goalsCollection
-    .where("archived")
-    .equals("true")
-    .and((goal) => goal.title.toLowerCase().startsWith(lowerCaseValue))
-    .toArray();
+
+  const searchTitle = goalTitle.toLowerCase();
+
+  const getAllChildrenGoals = async (id: string): Promise<GoalItem[]> => {
+    const directChildren = await getChildrenGoals(id);
+
+    const allDescendantGoals = await Promise.all(
+      directChildren.map(async (child) => {
+        const grandchildren = await getAllChildrenGoals(child.id);
+        return [child, ...grandchildren];
+      }),
+    );
+
+    return allDescendantGoals.flat();
+  };
+
+  const allDescendantGoals = await getAllChildrenGoals(parentGoalId);
+
+  return allDescendantGoals.filter(
+    (goal) => goal.archived === "true" && goal.title.toLowerCase().startsWith(searchTitle),
+  );
 };
