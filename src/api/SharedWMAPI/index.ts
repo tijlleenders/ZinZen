@@ -182,3 +182,19 @@ export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
     })
     .catch((err) => console.log(err));
 };
+
+export const updateSharedWMParentSublist = async (oldParentId: string, newParentId: string, goalId: string) => {
+  // Remove from old parent
+  const oldParentGoal = await getSharedWMGoal(oldParentId);
+  if (oldParentGoal?.sublist) {
+    const updatedOldSublist = oldParentGoal.sublist.filter((id) => id !== goalId);
+    await updateSharedWMGoal(oldParentId, { sublist: updatedOldSublist });
+  }
+
+  // Add to new parent
+  const newParentGoal = await getSharedWMGoal(newParentId);
+  if (newParentGoal) {
+    const updatedNewSublist = [...(newParentGoal.sublist || []), goalId];
+    await updateSharedWMGoal(newParentId, { sublist: updatedNewSublist });
+  }
+};

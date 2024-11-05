@@ -1,5 +1,12 @@
 import { GoalItem, typeOfSub } from "@src/models/GoalItem";
-import { changesInGoal, changesInId, IdChangeTypes, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
+import {
+  ChangesByType,
+  changesInGoal,
+  changesInId,
+  IdChangeTypes,
+  typeOfChange,
+  typeOfIntent,
+} from "@src/models/InboxItem";
 
 import { getDefaultValueOfGoalChanges } from "@src/utils/defaultGenerators";
 import {
@@ -17,12 +24,13 @@ import {
   removeSharedWMChildrenGoals,
   removeSharedWMGoal,
   updateSharedWMGoal,
+  updateSharedWMParentSublist,
 } from "@src/api/SharedWMAPI";
 import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { fixDateVlauesInGoalObject } from "@src/utils";
 import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import { getContactByRelId } from "@src/api/ContactsAPI";
-import { getRootGoalId, updateRootGoalNotification } from "./GoalController";
+import { getAllDescendants, getRootGoalId, updateRootGoalNotification } from "./GoalController";
 
 export interface Payload {
   relId: string;
@@ -39,7 +47,30 @@ const isIdChangeType = (type: typeOfChange): type is IdChangeTypes => {
   return ["deleted", "moved", "restored", "archived"].includes(type);
 };
 
-const addChangesToRootGoal = async (goalId: string, relId: string, changes: any) => {
+const updateSharedWMGoalAndDescendants = async (movedGoal: GoalItem) => {
+  await updateSharedWMGoal(movedGoal.id, {
+    parentGoalId: movedGoal.parentGoalId,
+    rootGoalId: movedGoal.rootGoalId,
+  });
+
+  const descendants = await getAllDescendants(movedGoal.id);
+  if (descendants.length > 0) {
+    await Promise.all(
+      descendants.map((descendant) =>
+        updateSharedWMGoal(descendant.id, {
+          rootGoalId: movedGoal.rootGoalId,
+        }),
+      ),
+    );
+  }
+};
+
+const handleMoveOperation = async (movedGoal: GoalItem, goalToMove: GoalItem) => {
+  await updateSharedWMParentSublist(goalToMove.parentGoalId, movedGoal.parentGoalId, goalToMove.id);
+  await updateSharedWMGoalAndDescendants(movedGoal);
+};
+
+const addChangesToRootGoal = async (goalId: string, relId: string, changes: ChangesByType) => {
   const rootGoalId = await getRootGoalId(goalId);
   if (rootGoalId === "root") return;
 
@@ -141,6 +172,19 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       if (goalToBeRestored) {
         await restoreUserGoal(goalToBeRestored, true);
       }
+    } else if (payload.changeType === "moved") {
+      const changes = [
+        ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
+      ];
+      const movedGoal = changes[0].goal;
+      const goalToMove = await getSharedWMGoal(movedGoal.id);
+
+      if (!goalToMove) {
+        console.log("Goal to move not found");
+        return;
+      }
+
+      await handleMoveOperation(movedGoal, goalToMove);
     }
   } else if (["sharer", "suggestion"].includes(payload.type)) {
     const { changes, changeType, rootGoalId } = payload;
