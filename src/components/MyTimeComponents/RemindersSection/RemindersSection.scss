@@ -1,0 +1,45 @@
+.reminders-section {
+  margin-bottom: 1rem;
+
+  .reminders-header {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin: 0.5rem 0;
+    padding: 0 1rem;
+  }
+
+  .reminders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .reminder-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--secondary-background);
+    border-radius: 4px;
+
+    &.completed {
+      .reminder-title {
+        text-decoration: line-through;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .reminder-complete-btn {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--default-border-color);
+    background: var(--background);
+    color: var(--text-color);
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}

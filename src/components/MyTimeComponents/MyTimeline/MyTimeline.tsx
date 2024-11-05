@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { ITask } from "@src/Interfaces/Task";
 import { TaskItem } from "@src/models/TaskItem";
+import { GoalItem } from "@src/models/GoalItem";
+import { getAllGoals } from "@src/api/GoalsAPI";
 import "./index.scss";
 import { getTimePart } from "@src/utils";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
 import { useMyTimelineStore } from "./useMyTimelineStore";
 import Task from "./Task";
-
-type ImpossibleTaskId = string;
+import { RemindersSection } from "../RemindersSection/RemindersSection";
 
 interface MyTimelineProps {
   day: string;
   taskDetails: { [goalid: string]: TaskItem };
-  setTaskDetails: React.Dispatch<
-    React.SetStateAction<{
-      [goalid: string]: TaskItem;
-    }>
-  >;
+  setTaskDetails: React.Dispatch<React.SetStateAction<{ [goalid: string]: TaskItem }>>;
   myTasks: {
     scheduled: ITask[];
-    impossible: ImpossibleTaskId[];
+    impossible: string[];
     freeHrsOfDay: number;
     scheduledHrs: number;
   };
@@ -28,6 +25,17 @@ interface MyTimelineProps {
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetails, setTaskDetails }) => {
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState<string | null>(null);
   const { handleActionClick, handleOpenGoal } = useMyTimelineStore(day, taskDetails, setTaskDetails);
+  const [reminders, setReminders] = useState<GoalItem[]>([]);
+
+  useEffect(() => {
+    const fetchReminders = async () => {
+      const goals = await getAllGoals();
+      const dayReminders = goals.filter((goal) => goal.due && !goal.duration && goal.archived === "false");
+      setReminders(dayReminders);
+    };
+
+    fetchReminders();
+  }, [day]);
 
   useEffect(() => {
     updateImpossibleGoals(myTasks.impossible);
@@ -40,8 +48,11 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     return handleOpenGoal(task.goalid);
   };
 
+  console.log("reminders", reminders);
+
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
+      <RemindersSection reminders={reminders} />
       {myTasks.scheduled.map((task, index) => {
         const endTime = getTimePart(task.deadline);
         const nextTask = myTasks.scheduled[index + 1];
