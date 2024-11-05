@@ -81,7 +81,14 @@ const App = () => {
             {!isLanguageChosen ? (
               <Route path="/" element={<LandingPage />} />
             ) : (
-              <Route path="/" element={<MyTimePage />} />
+              <Route
+                path="/"
+                element={
+                  <ActiveGoalProvider>
+                    <MyTimePage />
+                  </ActiveGoalProvider>
+                }
+              />
             )}
             <Route path="/Feedback" element={<FeedbackPage />} />
             <Route

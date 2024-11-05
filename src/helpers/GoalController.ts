@@ -15,11 +15,11 @@ import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
-export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], goalHint: boolean) => {
+export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], hintOption: boolean) => {
   const level = ancestors.length;
-  if (goalHint) {
+  if (hintOption) {
     getHintsFromAPI(newGoal)
-      .then((hints) => addHintItem(newGoal.id, goalHint, hints || []))
+      .then((hints) => addHintItem(newGoal.id, hintOption, hints || []))
       .catch((error) => console.error("Error fetching hints:", error));
   }
 
@@ -47,14 +47,19 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
   return { parentGoal: null };
 };
 
-export const modifyGoal = async (goalId: string, goalTags: GoalItem, ancestors: string[], goalHint: boolean) => {
-  const hintsPromise = getHintsFromAPI(goalTags);
-  if (goalHint) {
-    hintsPromise
-      .then((hints) => updateHintItem(goalTags.id, goalHint, hints))
+export const modifyGoal = async (
+  goalId: string,
+  goalTags: GoalItem,
+  ancestors: string[],
+  hintOptionEnabled: boolean,
+) => {
+  if (hintOptionEnabled) {
+    const availableHintsPromise = getHintsFromAPI(goalTags);
+    availableHintsPromise
+      .then((availableGoalHints) => updateHintItem(goalTags.id, hintOptionEnabled, availableGoalHints))
       .catch((err) => console.error("Error updating hints:", err));
   } else {
-    updateHintItem(goalTags.id, goalHint, []);
+    updateHintItem(goalTags.id, hintOptionEnabled, []);
   }
   console.log(goalTags);
   await updateGoal(goalId, goalTags);

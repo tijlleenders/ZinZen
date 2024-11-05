@@ -9,37 +9,26 @@ Follow these simple steps to propose changes or fixes to ZinZen:
 ### Keep Your Repositories in Sync
 
 1. Before starting any work, make sure your local project matches ZinZen's latest version:
-    - Switch to your local project's main branch:
-        
-        `git checkout main`
-        
-    - Get the latest changes from ZinZen's repository (without merging them into your main branch):
-        
-        `git fetch upstream`
-        
-    - Merge these changes into your main branch:
-        
-        `git merge upstream/main`
-        
-    - Update your GitHub repository (origin) with these changes:
-        
-        `git push origin main`
-        
+   - Switch to your local project's main branch:
+     `git checkout main`
+   - Get the latest changes from ZinZen's repository (without merging them into your main branch):
+     `git fetch upstream`
+   - Merge these changes into your main branch:
+     `git merge upstream/main`
+   - Update your GitHub repository (origin) with these changes:
+     `git push origin main`
 
 ### Setup a feature branch
 
-1. Make a new branch in your local project for your fixes or features (called a "feature branch"). 
+1. Make a new branch in your local project for your fixes or features (called a "feature branch").
 2. Follow [branch naming conventions](./conventions/git.md):
 
    `[developer shortcut]/[issue number]/[meaningful name]`
-    - To create and switch to a new branch locally:
-        
-        `git checkout -b vin/01/my-fix-branch`
-        
-    - Push this branch to your GitHub repository:
-        
-        `git push origin vin/01/my-fix-branch`
-        
+
+   - To create and switch to a new branch locally:
+     `git checkout -b vin/01/my-fix-branch`
+   - Push this branch to your GitHub repository:
+     `git push origin vin/01/my-fix-branch`
 
 ### Work on Your Changes
 
@@ -87,19 +76,13 @@ ZinZen's main branch must always be error-free. Pull requests that fail tests or
 If your pull request receives feedback, make more commits to your branch and push them to your GitHub repository. They'll be added to the pull request automatically. Follow these steps:
 
 1. Update your local repository:
-    - Switch to the correct branch:
-        
-        `git checkout vin/01/my-fix-branch`
-        
-    - Get changes from ZinZen:
-        
-        `git pull --rebase upstream main`
-        
-    - Make the required changes in your branch.
-    - Once satisfied, push them to your GitHub repository to update your pull request:
-        
-        `git push origin vin/01/my-fix-branch`
-        
+   - Switch to the correct branch:
+     `git checkout vin/01/my-fix-branch`
+   - Get changes from ZinZen:
+     `git pull --rebase upstream main`
+   - Make the required changes in your branch.
+   - Once satisfied, push them to your GitHub repository to update your pull request:
+     `git push origin vin/01/my-fix-branch`
 
 Repeat this process until your changes are accepted and merged.
 

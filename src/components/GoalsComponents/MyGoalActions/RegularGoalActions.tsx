@@ -8,7 +8,7 @@ import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
 import archiveSound from "@assets/archive.mp3";
 
-import { lastAction, openDevMode, displayConfirmation } from "@src/store";
+import { lastAction, openDevMode, displayConfirmation, displayToast } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
 import useGoalActions from "@src/hooks/useGoalActions";
@@ -40,7 +40,17 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = (state?.goalsHistory || []).map((ele) => ele.goalID);
 
+  const setShowToast = useSetRecoilState(displayToast);
+
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
+
+  const showMessage = (message: string, extra = "") => {
+    setShowToast({
+      open: true,
+      message,
+      extra,
+    });
+  };
 
   const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
     await archiveThisGoal(goalToArchive, goalAncestors);
@@ -58,10 +68,12 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
     if (action === "delete") {
       await deleteGoalAction(goal);
       setLastAction("goalDeleted");
+      showMessage("Moved to trash!", "We'll delete it in 7 days.");
     } else if (action === "archive") {
       await handleArchiveGoal(goal, ancestors);
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
+      setLastAction("goalColabRequest");
     }
     window.history.back();
   };
@@ -105,7 +117,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
           className="goal-action shareOptions-btn"
           onClickCapture={async (e) => {
             e.stopPropagation();
-            await openConfirmationPopUp({ actionCategory: confirmActionCategory, actionName: "delete" });
+            await handleActionClick("delete");
           }}
         >
           <ActionDiv label={t("Delete")} icon="Delete" />

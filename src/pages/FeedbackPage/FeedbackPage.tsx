@@ -52,7 +52,7 @@ export const FeedbackPage = () => {
                 }}
               >
                 <span
-                  style={idx > userRating ? { color: `${darkModeStatus ? "#2e2e2e" : "#f1f1f1"}` } : {}}
+                  style={idx > userRating ? { color: `${darkModeStatus ? "#d1cfcf" : "#6b6767"}` } : {}}
                   className="star"
                 >
                   &#9733;

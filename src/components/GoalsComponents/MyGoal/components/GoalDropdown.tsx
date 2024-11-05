@@ -1,9 +1,9 @@
 import React from "react";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import { GoalItem } from "@src/models/GoalItem";
-import TriangleIcon from "../../../../assets/TriangleIcon";
 import CopyIcon from "@src/assets/CopyIcon";
 import { isGoalCode } from "@src/utils/patterns";
+import TriangleIcon from "../../../../assets/TriangleIcon";
 
 interface GoalDropdownProps {
   goal: GoalItem;

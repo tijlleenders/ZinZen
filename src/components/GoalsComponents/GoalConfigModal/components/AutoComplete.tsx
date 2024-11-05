@@ -62,8 +62,8 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   const suggestion = getSuggestion(inputvalue);
 
   return (
-    <div className="autocomplete-container w-100">
-      <button type="button" className="autocomplete-input-wrapper simple" onClick={handleSuggestionClick}>
+    <button className="autocomplete-container w-100 simple" type="button" onClick={handleSuggestionClick}>
+      <div className="autocomplete-input-wrapper">
         <input
           ref={inputRef}
           type="text"
@@ -82,8 +82,8 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
             {suggestion}
           </span>
         )}
-      </button>
-    </div>
+      </div>
+    </button>
   );
 };
 

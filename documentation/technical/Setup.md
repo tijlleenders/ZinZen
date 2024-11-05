@@ -9,10 +9,12 @@ The steps outlined in this section are a one-time process necessary for contribu
 Here's how to establish and maintain a fork of ZinZen and make periodic contributions:
 
 1. **Fork ZinZen:**
+
    - To begin, create a fork of the [ZinZen repository](https://github.com/tijlleenders/ZinZen) on GitHub.
    - Click the "Fork" button and choose a suitable GitHub account, such as your personal GitHub account, for the fork.
 
 2. **Clone Your Fork:**
+
    - Access your GitHub account and go to your Fork of ZinZen.
    - Click on the "<> Code" tab located in the upper left corner.
    - Within the dropdown menu that appears, select "HTTPS" (you can choose SSH if preferred, but this tutorial uses HTTPS for simplicity).

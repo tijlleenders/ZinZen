@@ -24,7 +24,7 @@ export default defineConfig({
   },
   server: {
     host: "127.0.0.1",
-    port: 5173,
+    port: 3000,
   },
   plugins: [
     VitePWA({
@@ -33,8 +33,8 @@ export default defineConfig({
       srcDir: "src/service-worker",
       filename: "service-worker.ts",
       manifest: {
-        short_name: "zinzen",
-        name: "zinzen-me.zinzen",
+        short_name: "ZinZen",
+        name: "ZinZen.me",
         icons: [
           {
             src: "pwa-192x192.png",

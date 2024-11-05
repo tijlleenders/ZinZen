@@ -3,17 +3,21 @@
   flex-direction: column;
   align-items: center;
 }
+
 .sec-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 21px;
+
   .back {
     width: unset;
     margin-left: 7%;
   }
+
   button {
     border: none;
   }
+
   .activeTab {
     text-decoration: underline;
     opacity: 1;
@@ -35,6 +39,7 @@
   overflow-y: auto;
   height: 50%;
 }
+
 #myGoals-list::-webkit-scrollbar {
   display: none;
 }
@@ -47,6 +52,7 @@
   cursor: pointer;
   width: 100%;
   background: transparent;
+
   .user-goal-main {
     display: flex;
     height: 100%;
@@ -54,10 +60,12 @@
     align-items: center;
     margin-left: 20px;
   }
+
   .contact-button {
     position: absolute;
     right: 28px;
     top: 23px;
+
     .contact-icon {
       border: none;
       border-radius: 50%;
@@ -164,32 +172,21 @@
   0%,
   100% {
     background-color: rgba(255, 215, 0, 0.2);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.7),
-      0 0 5px rgba(255, 215, 0, 0.7),
-      0 0 2px rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 2px rgba(255, 215, 0, 0.7), 0 0 5px rgba(255, 215, 0, 0.7), 0 0 2px rgba(255, 215, 0, 0.7);
   }
   15%,
   85% {
     background-color: rgba(255, 215, 0, 0.4);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.9),
-      0 0 5px rgba(255, 215, 0, 0.9),
-      0 0 2px rgba(255, 215, 0, 0.9);
+    box-shadow: 0 0 2px rgba(255, 215, 0, 0.9), 0 0 5px rgba(255, 215, 0, 0.9), 0 0 2px rgba(255, 215, 0, 0.9);
   }
   30%,
   70% {
     background-color: rgba(255, 215, 0, 0.6);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.7),
-      0 0 5px rgba(255, 215, 0, 0.7),
-      0 0 2px rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 2px rgba(255, 215, 0, 0.7), 0 0 5px rgba(255, 215, 0, 0.7), 0 0 2px rgba(255, 215, 0, 0.7);
   }
   50% {
     background-color: rgba(255, 215, 0, 0.8);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.7),
-      0 0 5px rgba(255, 215, 0);
+    box-shadow: 0 0 2px rgba(255, 215, 0, 0.7), 0 0 5px rgba(255, 215, 0);
   }
 }
 
@@ -278,301 +275,6 @@
   .ant-collapse-content-box {
     padding: 0 !important;
   }
-  .ant-collapse-header {
-    padding: 0 16 !important;
-  }
-}
-
-.myGoals-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.sec-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 21px;
-
-  .back {
-    width: unset;
-    margin-left: 7%;
-  }
-
-  button {
-    border: none;
-  }
-
-  .activeTab {
-    text-decoration: underline;
-    opacity: 1;
-  }
-}
-
-.myGoals_title,
-.myGoals_title-dark {
-  margin: 7px 18px 0 18px;
-  font-family: "Montserrat";
-  font-weight: bolder;
-  font-size: 1.429em;
-  opacity: 0.6;
-}
-
-#myGoals-list {
-  margin: 18px 18px 0% 18px;
-  height: 418px;
-  overflow-y: auto;
-  height: 50%;
-}
-
-#myGoals-list::-webkit-scrollbar {
-  display: none;
-}
-
-.user-goal,
-.user-goal-dark {
-  position: relative;
-  word-break: break-all;
-  text-align: left;
-  cursor: pointer;
-  width: 100%;
-  background: transparent;
-
-  .user-goal-main {
-    display: flex;
-    height: 100%;
-    gap: 16px;
-    align-items: center;
-    margin-left: 20px;
-  }
-
-  .contact-button {
-    position: absolute;
-    right: 28px;
-    top: 23px;
-
-    .contact-icon {
-      border: none;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-}
-
-.pps-icon > svg {
-  width: 16px;
-  height: 16px;
-}
-
-.goal-dropdown,
-.goal-dd-inner,
-.goal-dd-outer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.goal-dd-inner,
-.goal-dd-outer {
-  border-radius: 22px;
-  width: 28px;
-  height: 28px;
-}
-
-.goal-dd-inner {
-  width: 16px;
-  height: 16px;
-  border-radius: 22px;
-  border: 1px solid;
-}
-
-.goal-menu-dots {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding-top: 5px;
-}
-
-.goal-menu-dots span {
-  width: 3.5px;
-  height: 3.5px;
-  border-radius: 50%;
-  background-color: white;
-  display: inline-block;
-}
-
-#addGoal-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  cursor: pointer;
-}
-
-.goal-tile {
-  border: none;
-  display: flex;
-  font-family: "Montserrat";
-  font-weight: 400;
-  font-size: 18px;
-  width: 100%;
-  text-align: left !important;
-  max-width: unset;
-  overflow: hidden;
-  padding: 20px 0;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 6px;
-}
-
-.goal-title::-webkit-scrollbar {
-  display: none;
-}
-
-.goal-item-summary-wrapper {
-  white-space: pre-line;
-  font-size: 0.875em !important;
-  font-weight: 300 !important;
-}
-
-.goal-glow {
-  animation: glowAnimation 0.5s infinite ease-in-out;
-}
-
-@keyframes glowAnimation {
-  0%,
-  100% {
-    background-color: rgba(255, 215, 0, 0.2);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.7),
-      0 0 5px rgba(255, 215, 0, 0.7),
-      0 0 2px rgba(255, 215, 0, 0.7);
-  }
-
-  15%,
-  85% {
-    background-color: rgba(255, 215, 0, 0.4);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.9),
-      0 0 5px rgba(255, 215, 0, 0.9),
-      0 0 2px rgba(255, 215, 0, 0.9);
-  }
-
-  30%,
-  70% {
-    background-color: rgba(255, 215, 0, 0.6);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.7),
-      0 0 5px rgba(255, 215, 0, 0.7),
-      0 0 2px rgba(255, 215, 0, 0.7);
-  }
-
-  50% {
-    background-color: rgba(255, 215, 0, 0.8);
-    box-shadow:
-      0 0 2px rgba(255, 215, 0, 0.7),
-      0 0 5px rgba(255, 215, 0);
-  }
-}
-
-.goal-link {
-  // width: 100%;
-  border: none;
-
-  font-weight: bold;
-  font-size: 1em;
-}
-
-.my-goals-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-}
-
-#addGoalForm {
-  .mygoalsbutton-dark,
-  .mygoalsbutton-light {
-    display: none;
-  }
-
-  .todo-form {
-    margin-bottom: 24px !important;
-  }
-
-  .addtask-light,
-  .addtask-dark {
-    margin: 0 !important;
-    padding: 3% 4% !important;
-    width: 100% !important;
-    outline: none;
-  }
-}
-
-#updateGoalForm {
-  .mygoalsbutton-dark,
-  .mygoalsbutton-light {
-    display: none;
-  }
-
-  .todo-form {
-    margin-bottom: 24px !important;
-  }
-
-  .addtask-light,
-  .addtask-dark {
-    margin: 10px 0px 0px 0px !important;
-    padding: 3% 4% !important;
-    width: 100% !important;
-    outline: none;
-  }
-}
-
-#Notifications-accordion {
-  margin-top: 0 !important;
-}
-
-.notification-item {
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  min-height: unset;
-
-  p {
-    margin: 0;
-  }
-
-  button {
-    margin: 0;
-    place-self: initial;
-    padding: 8px 12px;
-    font-size: 0.875em;
-  }
-}
-
-.archived-drawer {
-  margin-top: 32px;
-
-  .ant-collapse-header,
-  .ant-collapse-item,
-  .ant-collapse-content {
-    border: none !important;
-  }
-
-  .ant-collapse-content {
-    background: transparent;
-  }
-
-  .ant-collapse-content-box {
-    padding: 0 !important;
-  }
-
   .ant-collapse-header {
     padding: 0 16 !important;
   }
