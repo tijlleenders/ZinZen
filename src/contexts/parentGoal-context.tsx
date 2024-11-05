@@ -3,6 +3,7 @@ import { getSharedWMChildrenGoals, getSharedWMGoalById } from "@src/api/SharedWM
 import { GoalItem } from "@src/models/GoalItem";
 import { lastAction } from "@src/store";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
+import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import React, { ReactNode, createContext, useContext, useEffect, useMemo, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -46,6 +47,7 @@ export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
   const setAllowBudgetGoal = useSetRecoilState(allowAddingBudgetGoal);
   const [parentData, dispatch] = useReducer(parentGoalReducer, initialState);
   const isPartnerModeActive = !!partnerId;
+  const suggestedGoal = useRecoilValue(suggestedGoalState);
 
   async function init() {
     if (parentId !== "root") {
@@ -66,6 +68,12 @@ export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     init();
   }, [parentId]);
+
+  useEffect(() => {
+    if (!suggestedGoal) {
+      init();
+    }
+  }, [suggestedGoal]);
 
   useEffect(() => {
     if (action === "goalArchived") {

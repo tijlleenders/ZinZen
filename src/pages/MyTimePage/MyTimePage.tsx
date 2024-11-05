@@ -55,9 +55,7 @@ export const MyTimePage = () => {
             </h3>
             {freeHours > 0 && <p className="MyTime-free-hours-text">{`${freeHours} hours free`}</p>}
           </div>
-          {tasks[day] && (
-            <ColorBands list={tasks[day]} day={day} tasksStatus={tasksStatus} active={showTasks.includes(day)} />
-          )}
+          {tasks[day] && <ColorBands list={tasks[day]} />}
         </button>
         {isActive && tasks[day] ? (
           <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} />

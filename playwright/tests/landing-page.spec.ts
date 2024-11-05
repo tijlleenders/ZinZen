@@ -10,7 +10,7 @@ test.describe("Onboarding", () => {
 
   test("should select a language and navigate to the FAQ page", async () => {
     await page.goto("http://127.0.0.1:3000/");
-    await page.getByRole("button", { name: "English" }).click();
+    await page.getByText("English").click();
     await expect(page).toHaveURL("http://127.0.0.1:3000/ZinZenFAQ");
   });
 
