@@ -92,7 +92,6 @@ function useApp() {
         );
       });
       const res = await getContactSharedGoals();
-      // @ts-ignore
       const resObject = res.response.reduce(
         (acc: { [key: string]: SharedGoalMessage[] }, curr) => ({
           ...acc,
@@ -104,7 +103,6 @@ function useApp() {
         Object.keys(resObject).forEach(async (relId: string) => {
           const contactItem = await getContactByRelId(relId);
           if (contactItem) {
-            // @ts-ignore
             resObject[relId].forEach(async (ele) => {
               console.log("🚀 ~ file: useApp.tsx:45 ~ resObject[relId].forEach ~ ele:", ele);
               if (ele.type === "shareMessage") {
@@ -112,19 +110,6 @@ function useApp() {
               } else if (["sharer", "suggestion"].includes(ele.type)) {
                 handleIncomingChanges(ele as unknown as Payload, relId).then(() => setLastAction("goalNewUpdates"));
               }
-              // else if (["suggestion", "shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
-              //   let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
-              //   if (ele.type === "collaborationInvite") {
-              //     typeOfSub = "collaborationInvite";
-              //   } else if (["collaboration", "suggestion"].includes(ele.type)) {
-              //     typeOfSub = ele.type;
-              //   } else if (ele.type === "shared") {
-              //     typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
-              //   }
-              //   if (typeOfSub !== "none") {
-              //     handleIncomingChanges({ ...ele, type: typeOfSub }).then(() => setLastAction("goalNewUpdates"));
-              //   }
-              // }
             });
           }
         });

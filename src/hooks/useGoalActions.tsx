@@ -130,7 +130,7 @@ const useGoalActions = () => {
       ...goalWithChildrens.map((ele) => ({
         ...ele,
         participants: [],
-        parentGoalId: ele.parentGoalId,
+        parentGoalId: ele.id === goal.id ? "root" : ele.parentGoalId,
         rootGoalId: goal.id,
       })),
     ]);
