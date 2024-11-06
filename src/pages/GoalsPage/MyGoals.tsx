@@ -30,11 +30,12 @@ import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
+import { moveGoalState } from "@src/store/moveGoalState";
+import MoveGoalGuide from "@components/GoalsComponents/MyGoal/MoveGoalGuide";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
 import "./GoalsPage.scss";
-import MoveGoalGuide from "@components/GoalsComponents/MyGoal/MoveGoalGuide";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -59,6 +60,7 @@ export const MyGoals = () => {
   const suggestedGoal = useRecoilValue(suggestedGoalState);
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
+  const goalToMove = useRecoilValue(moveGoalState);
 
   const showChangesModal = useRecoilValue(displayChangesModal);
 
@@ -102,17 +104,17 @@ export const MyGoals = () => {
 
   useEffect(() => {
     if (action === "goalArchived") return;
-    if (action !== "none") {
+    if (action !== "none" || goalToMove === null) {
       setLastAction("none");
       refreshActiveGoals();
     }
-  }, [action]);
+  }, [action, goalToMove]);
 
   useEffect(() => {
     if (parentId === "root") {
       refreshActiveGoals();
     }
-  }, [parentId, displaySearch, suggestedGoal]);
+  }, [parentId, displaySearch, suggestedGoal, goalToMove]);
 
   return (
     <AppLayout title="myGoals" debounceSearch={debounceSearch}>
@@ -131,7 +133,7 @@ export const MyGoals = () => {
         )}
 
         <div className="myGoals-container" ref={goalWrapperRef}>
-          <MoveGoalGuide goalComponentRef={goalWrapperRef} />
+          {/* <MoveGoalGuide goalComponentRef={goalWrapperRef} /> */}
           {parentId === "root" ? (
             <div className="my-goals-content">
               <div className="d-flex f-col">

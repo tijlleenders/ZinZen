@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -17,6 +17,9 @@ import { TGoalCategory } from "@src/models/GoalItem";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import useLongPress from "@src/hooks/useLongPress";
 import { useKeyPress } from "@src/hooks/useKeyPress";
+import { moveGoalState } from "@src/store/moveGoalState";
+import { moveGoalHierarchy } from "@src/helpers/GoalController";
+import { lastAction } from "@src/store";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -52,10 +55,14 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const { handleAddFeeling } = useFeelingStore();
   const isPartnerModeActive = !!partnerId;
 
+  const setLastAction = useSetRecoilState(lastAction);
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
+  const goalToMove = useRecoilValue(moveGoalState);
+  const setGoalToMove = useSetRecoilState(moveGoalState);
 
   const enterPressed = useKeyPress("Enter");
   const plusPressed = useKeyPress("+");
@@ -102,6 +109,15 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
 
+  const handleMoveGoalHere = async () => {
+    if (!goalToMove) return;
+
+    await moveGoalHierarchy(goalToMove.id, parentId);
+    setLastAction("goalMoved");
+    setGoalToMove(null);
+    window.history.back();
+  };
+
   useEffect(() => {
     if ((plusPressed || enterPressed) && !state.goalType) {
       // @ts-ignore
@@ -119,6 +135,11 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             window.history.back();
           }}
         />
+        {goalToMove && (
+          <AddGoalOption handleClick={handleMoveGoalHere} bottom={214}>
+            {t("Move Here")}
+          </AddGoalOption>
+        )}
         <AddGoalOption
           handleClick={() => {
             handleAddGoal("Budget");

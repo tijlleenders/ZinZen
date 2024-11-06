@@ -12,7 +12,6 @@ import { moveGoalState } from "@src/store/moveGoalState";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
-import GoalMoveButton from "../MoveGoalButton";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -25,8 +24,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const isPartnerModeActive = !!partnerId;
 
   const goalToMove = useRecoilValue(moveGoalState);
-
-  const shouldRenderMoveButton = goalToMove && goal.id !== goalToMove.id && goal.id !== goalToMove.parentGoalId;
 
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
@@ -119,9 +116,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         <div aria-hidden className="goal-tile" onClick={(e) => handleGoalClick(e)}>
           <GoalTitle goal={goal} isImpossible={goal.impossible} />
         </div>
-        {shouldRenderMoveButton && <GoalMoveButton targetGoal={goal} />}
       </div>
-      {!shouldRenderMoveButton && !isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
+      {!isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
     </div>
   );
 };
