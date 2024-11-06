@@ -180,13 +180,12 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       addGoalToNewParentSublist(goalUnderReview.id, parentGoal?.id ?? "root"),
     ]);
 
-    // TODO: handle this later
-    // await sendUpdatedGoal(
-    //   goalUnderReview.id,
-    //   [],
-    //   true,
-    //   updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-    // );
+    await sendUpdatedGoal(
+      goalUnderReview.id,
+      [],
+      true,
+      updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
+    );
   };
 
   const acceptChanges = async () => {
@@ -265,7 +264,6 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
         console.log("🚀 ~ getChanges ~ changedGoal:", changedGoal);
         if (changedGoal) {
           setGoalUnderReview({ ...changedGoal });
-          // TODO: remove the newGoalsMoved and try handle in subgoal only
           if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
             setNewGoals(goals || []);
           } else if (typeAtPriority === "modifiedGoals") {
