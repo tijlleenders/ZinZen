@@ -1,9 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { darkModeState } from "@src/store";
+import { darkModeState, lastAction } from "@src/store";
 import { themeSelectionMode, themeState } from "@src/store/ThemeState";
 import BottomNavLayout from "@src/layouts/BottomNavLayout";
 
@@ -13,11 +13,16 @@ import GlobalAddBtn from "@components/GlobalAddBtn";
 import "./BottomNavbar.scss";
 import Icon from "@src/common/Icon";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+import { moveGoalState } from "@src/store/moveGoalState";
+import { moveGoalHierarchy } from "@src/helpers/GoalController";
 
 const BottomNavbar = ({ title }: { title: string }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [goalToMove, setGoalToMove] = useRecoilState(moveGoalState);
+  const setLastAction = useSetRecoilState(lastAction);
 
   const { partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
@@ -66,6 +71,20 @@ const BottomNavbar = ({ title }: { title: string }) => {
   };
   const { activeGoalId } = location.state || {};
   const isAddBtnVisible = title !== "Focus" && (isPartnerModeActive ? !!activeGoalId : true);
+
+  const handleMoveHere = () => {
+    if (goalToMove) {
+      moveGoalHierarchy(goalToMove.id, activeGoalId ?? "root")
+        .then(() => {
+          setGoalToMove(null);
+          setLastAction("goalMoved");
+        })
+        .catch((error) => {
+          console.error("Error moving goal:", error);
+        });
+    }
+  };
+
   return (
     <>
       {themeSelection && (
@@ -80,23 +99,21 @@ const BottomNavbar = ({ title }: { title: string }) => {
         <button
           type="button"
           onClick={() => {
-            if (themeSelection) themeChange(-1);
+            if (goalToMove) setGoalToMove(null);
+            else if (themeSelection) themeChange(-1);
             else handleClick("MyTime");
           }}
           className={`bottom-nav-item ${currentPage === "" && !themeSelection ? "active" : ""}`}
         >
-          <div
-            style={{
-              transform: themeSelection ? "scaleX(-1)" : "none",
-            }}
-          >
+          <div style={goalToMove || themeSelection ? { transform: "scaleX(-1)" } : {}}>
             <Icon
+              title={goalToMove ? "ArrowIcon" : themeSelection ? "ArrowIcon" : "CalendarIcon"}
               active={currentPage === "" && !themeSelection}
-              title={themeSelection ? "ArrowIcon" : "CalendarIcon"}
             />
           </div>
-          {themeSelection ? <p>Prev</p> : <p>{t("Schedule")}</p>}
+          <p>{goalToMove ? t("Cancel") : themeSelection ? t("Prev") : t("Schedule")}</p>
         </button>
+
         <button
           type="button"
           onClick={() => {
@@ -104,27 +121,36 @@ const BottomNavbar = ({ title }: { title: string }) => {
           }}
           className={`bottom-nav-item ${currentPage === "goals" || themeSelection ? "active" : ""}`}
         >
-          <Icon active={currentPage === "goals" || themeSelection} title="GoalsIcon" />
-          {themeSelection ? <p>Switch Mode</p> : <p>{t("Goals")}</p>}
+          {goalToMove ? (
+            <div className="move-info">
+              <p className="move-label">{t("Moving")}:</p>
+              <p className="move-title" title={goalToMove.title}>
+                {goalToMove.title}
+              </p>
+            </div>
+          ) : (
+            <>
+              <Icon active={currentPage === "goals" || themeSelection} title="GoalsIcon" />
+              <p>{themeSelection ? t("Switch Mode") : t("Goals")}</p>
+            </>
+          )}
         </button>
+
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            if (themeSelection) themeChange(1);
+            if (goalToMove) handleMoveHere();
+            else if (themeSelection) themeChange(1);
             else handleClick("MyJournal");
-          }}
-          style={{
-            padding: 7.5,
-            gap: 10,
           }}
           className={`bottom-nav-item ${currentPage === "MyJournal" && !themeSelection ? "active" : ""}`}
         >
           <Icon
+            title={goalToMove ? "Correct" : themeSelection ? "ArrowIcon" : "JournalIcon"}
             active={currentPage === "MyJournal" && !themeSelection}
-            title={themeSelection ? "ArrowIcon" : "JournalIcon"}
           />
-          {themeSelection ? <p>Next</p> : <p>{t("Journal")}</p>}
+          <p>{goalToMove ? t("Move Here") : themeSelection ? t("Next") : t("Journal")}</p>
           {isAddBtnVisible && <GlobalAddBtn add={title} />}
         </button>
       </BottomNavLayout>
