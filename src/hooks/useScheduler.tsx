@@ -98,10 +98,28 @@ function useScheduler() {
     }
   }, [action]);
 
+  const checkGoalSchedule = async (goal: GoalItem) => {
+    try {
+      const activeGoals: GoalItem[] = await getAllGoals();
+      const goalsWithConfig = [...activeGoals, goal];
+
+      const { schedulerInput } = await organizeDataForInptPrep(goalsWithConfig);
+
+      await init();
+      const res = schedule(schedulerInput);
+
+      return res;
+    } catch (error) {
+      console.log("Error checking goal schedule:", error);
+      return undefined;
+    }
+  };
+
   return {
     tasks,
     tasksStatus,
     setTasksStatus,
+    checkGoalSchedule,
   };
 }
 

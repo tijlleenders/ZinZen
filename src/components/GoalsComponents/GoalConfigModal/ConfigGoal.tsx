@@ -21,6 +21,8 @@ import { ILocationState } from "@src/Interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
+import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
+import useScheduler from "@src/hooks/useScheduler";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -277,7 +279,64 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     setHintOption(hint?.hintOptionEnabled || false);
   };
 
+  const { checkGoalSchedule } = useScheduler();
+
   const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
+
+  type ScheduleStatus = "pending" | "scheduled" | "impossible" | "future" | null;
+
+  const [scheduleStatus, setScheduleStatus] = useState<ScheduleStatus>(null);
+
+  const checkSchedulingStatus = async (schedulerOutput: ISchedulerOutput | undefined, goalId: string) => {
+    if (!schedulerOutput) return "pending";
+
+    const { scheduled, impossible } = schedulerOutput;
+
+    if (impossible?.some((task) => task.id === goalId)) {
+      return "impossible";
+    }
+
+    const isScheduledInNext7Days = scheduled.some((day) => day.tasks.some((task) => task.goalid === goalId));
+
+    return isScheduledInNext7Days ? "scheduled" : "future";
+  };
+
+  const getScheduleStatusText = (status: ScheduleStatus) => {
+    switch (status) {
+      case "scheduled":
+        return "Auto scheduled";
+      case "impossible":
+        return "! Impossible";
+      case "future":
+        return "Scheduled someday";
+      default:
+        return "";
+    }
+  };
+
+  const checkSchedule = async () => {
+    // if (t) {
+    //   setScheduleStatus(null);
+    //   console.log("no duration");
+    //   return;
+    // }
+
+    setScheduleStatus("pending");
+    const schedulerOutput = await checkGoalSchedule(getFinalTags());
+    console.log("schedulerOutput", schedulerOutput);
+    const status = await checkSchedulingStatus(schedulerOutput, goal.id);
+    console.log("status", status);
+    setScheduleStatus(status);
+  };
+
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      console.log("checking schedule");
+      checkSchedule();
+    }, 1000);
+
+    return () => clearTimeout(debounceTimer);
+  }, [tags.duration, afterTime, beforeTime, tags.on]);
 
   return (
     <ZModal
@@ -415,6 +474,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                 <button type="submit" className="action-btn place-middle gap-16">
                   {t(`${action} Budget`)}
                 </button>
+                {scheduleStatus && (
+                  <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
+                )}
               </div>
             </>
           ) : (
@@ -425,6 +487,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                   {t(`${action} Goal`)}
                 </button>
               </div>
+              {scheduleStatus && (
+                <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
+              )}
               <div className="place-middle justify-fs gap-16">
                 <span>{t("duration")}</span>
                 <input
