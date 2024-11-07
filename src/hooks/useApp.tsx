@@ -83,7 +83,14 @@ function useApp() {
                     rootGoalId: goalId,
                   })),
                 ]).then(async () => {
-                  updateSharedStatusOfGoal(goalId, relId, name).then(() => console.log("status updated"));
+                  await Promise.all(
+                    goalWithChildrens.map(async (goalItem) => {
+                      console.log(goalItem.id, relId, name);
+                      await updateSharedStatusOfGoal(goalItem.id, relId, name);
+                    }),
+                  ).catch((error) => {
+                    console.error("[shareGoalWithRelId] Error updating shared status:", error);
+                  });
                 });
               }),
               clearTheQueue(relId),
