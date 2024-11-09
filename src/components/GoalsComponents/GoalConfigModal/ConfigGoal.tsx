@@ -313,11 +313,13 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
 
   const checkSchedule = async () => {
     setScheduleStatus("pending");
-    const schedulerOutput = await checkGoalSchedule(getFinalTags());
-    console.log("schedulerOutput", schedulerOutput);
-    const status = await checkSchedulingStatus(schedulerOutput, goal.id);
-    console.log("status", status);
-    setScheduleStatus(status);
+    try {
+      const schedulerOutput = await checkGoalSchedule(getFinalTags());
+      const status = await checkSchedulingStatus(schedulerOutput, goal.id);
+      setScheduleStatus(status);
+    } catch (error) {
+      setScheduleStatus(null);
+    }
   };
 
   useEffect(() => {
@@ -327,7 +329,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     }, 1000);
 
     return () => clearTimeout(debounceTimer);
-  }, [tags.duration, afterTime, beforeTime, tags.on]);
+  }, [tags.duration, afterTime, beforeTime, perDayHrs, perWeekHrs]);
 
   return (
     <ZModal

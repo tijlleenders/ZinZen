@@ -111,7 +111,7 @@ function useScheduler() {
       return res;
     } catch (error) {
       console.log("Error checking goal schedule:", error);
-      return undefined;
+      return null;
     }
   };
 
