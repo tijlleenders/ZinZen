@@ -58,7 +58,7 @@ const PartnerGoals = () => {
     const rootGoals = await getRootGoalsOfPartner(relId);
     handleUserGoals(rootGoals);
   };
-
+  refreshActiveGoals();
   const search = async (text: string) => {
     const rootGoals = await getRootGoalsOfPartner(relId);
     handleUserGoals(rootGoals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
