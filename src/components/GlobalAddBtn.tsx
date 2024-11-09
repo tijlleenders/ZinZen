@@ -19,7 +19,7 @@ import useLongPress from "@src/hooks/useLongPress";
 import { useKeyPress } from "@src/hooks/useKeyPress";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { moveGoalHierarchy } from "@src/helpers/GoalController";
-import { lastAction } from "@src/store";
+import { displayToast, lastAction } from "@src/store";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 
 interface AddGoalOptionProps {
@@ -55,6 +55,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const { state }: { state: ILocationState } = useLocation();
   const { handleAddFeeling } = useFeelingStore();
   const isPartnerModeActive = !!partnerId;
+
+  const setToastMessage = useSetRecoilState(displayToast);
 
   const setLastAction = useSetRecoilState(lastAction);
 
@@ -116,8 +118,9 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const handleMoveGoalHere = async () => {
     if (!goalToMove) return;
-
-    await moveGoalHierarchy(goalToMove.id, parentId);
+    await moveGoalHierarchy(goalToMove.id, parentId).then(() => {
+      setToastMessage({ open: true, message: "Goal moved successfully", extra: "" });
+    });
     setLastAction("goalMoved");
     setGoalToMove(null);
     window.history.back();
