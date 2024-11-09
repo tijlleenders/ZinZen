@@ -20,6 +20,7 @@ import { useKeyPress } from "@src/hooks/useKeyPress";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { moveGoalHierarchy } from "@src/helpers/GoalController";
 import { lastAction } from "@src/store";
+import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -56,6 +57,10 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const isPartnerModeActive = !!partnerId;
 
   const setLastAction = useSetRecoilState(lastAction);
+
+  const {
+    parentData: { parentGoal = { id: "root" } },
+  } = useParentGoalContext();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -125,6 +130,9 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     }
   }, [plusPressed, enterPressed]);
 
+  const shouldRenderMoveButton =
+    goalToMove && goalToMove.id !== parentGoal?.id && goalToMove.parentGoalId !== parentGoal?.id;
+
   if (searchParams?.get("addOptions")) {
     return (
       <>
@@ -135,7 +143,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             window.history.back();
           }}
         />
-        {goalToMove && (
+        {shouldRenderMoveButton && (
           <AddGoalOption handleClick={handleMoveGoalHere} bottom={214}>
             {t("Move Here")}
           </AddGoalOption>

@@ -114,8 +114,8 @@ export const MyGoals = () => {
   }, [parentId, displaySearch, suggestedGoal, goalToMove]);
 
   return (
-    <AppLayout title="myGoals" debounceSearch={debounceSearch}>
-      <ParentGoalProvider>
+    <ParentGoalProvider>
+      <AppLayout title="myGoals" debounceSearch={debounceSearch}>
         {showOptions && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {showParticipants && <Participants />}
@@ -151,7 +151,7 @@ export const MyGoals = () => {
             alt="Zinzen"
           />
         </div>
-      </ParentGoalProvider>
-    </AppLayout>
+      </AppLayout>
+    </ParentGoalProvider>
   );
 };
