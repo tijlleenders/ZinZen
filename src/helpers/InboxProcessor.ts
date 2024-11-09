@@ -14,6 +14,7 @@ import {
   addIntoSublist,
   // changeNewUpdatesStatus,
   getGoal,
+  getGoalById,
   updateGoal,
 } from "@src/api/GoalsAPI";
 import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
@@ -65,9 +66,20 @@ const updateSharedWMGoalAndDescendants = async (movedGoal: GoalItem) => {
   }
 };
 
-const handleMoveOperation = async (movedGoal: GoalItem, goalToMove: GoalItem) => {
-  await updateSharedWMParentSublist(goalToMove.parentGoalId, movedGoal.parentGoalId, goalToMove.id);
-  await updateSharedWMGoalAndDescendants(movedGoal);
+const handleMoveOperation = async (movedGoal: GoalItem, correspondingSharedWMGoal: GoalItem) => {
+  const isNewParentAvailable = await getSharedWMGoal(movedGoal.parentGoalId);
+  const updatedGoal = {
+    ...movedGoal,
+    parentGoalId: !isNewParentAvailable ? "root" : movedGoal.parentGoalId,
+    rootGoalId: !isNewParentAvailable ? "root" : movedGoal.rootGoalId,
+  };
+
+  await updateSharedWMParentSublist(
+    correspondingSharedWMGoal.parentGoalId,
+    updatedGoal.parentGoalId,
+    correspondingSharedWMGoal.id,
+  );
+  await updateSharedWMGoalAndDescendants(updatedGoal);
 };
 
 const addChangesToRootGoal = async (goalId: string, relId: string, changes: ChangesByType) => {
@@ -177,14 +189,14 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
       ];
       const movedGoal = changes[0].goal;
-      const goalToMove = await getSharedWMGoal(movedGoal.id);
+      const correspondingSharedWMGoal = await getSharedWMGoal(movedGoal.id);
 
-      if (!goalToMove) {
+      if (!correspondingSharedWMGoal) {
         console.log("Goal to move not found");
         return;
       }
 
-      await handleMoveOperation(movedGoal, goalToMove);
+      await handleMoveOperation(movedGoal, correspondingSharedWMGoal);
     }
   } else if (["sharer", "suggestion"].includes(payload.type)) {
     const { changes, changeType, rootGoalId } = payload;
