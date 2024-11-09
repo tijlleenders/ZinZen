@@ -17,7 +17,7 @@ import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import useGoalActions from "@src/hooks/useGoalActions";
 import useGoalStore from "@src/hooks/useGoalStore";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
-import { ILocationState } from "@src/Interfaces";
+import { ILocationState, ScheduleStatus } from "@src/Interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
@@ -48,6 +48,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { checkGoalSchedule } = useScheduler();
+  const [scheduleStatus, setScheduleStatus] = useState<ScheduleStatus>(null);
 
   let defaultColorIndex = Math.floor(Math.random() * colorPalleteList.length - 1) + 1;
   let defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
@@ -279,13 +282,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     setHintOption(hint?.hintOptionEnabled || false);
   };
 
-  const { checkGoalSchedule } = useScheduler();
-
   const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
-
-  type ScheduleStatus = "pending" | "scheduled" | "impossible" | "future" | null;
-
-  const [scheduleStatus, setScheduleStatus] = useState<ScheduleStatus>(null);
 
   const checkSchedulingStatus = async (schedulerOutput: ISchedulerOutput | undefined, goalId: string) => {
     if (!schedulerOutput) return "pending";
@@ -315,12 +312,6 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   };
 
   const checkSchedule = async () => {
-    // if (t) {
-    //   setScheduleStatus(null);
-    //   console.log("no duration");
-    //   return;
-    // }
-
     setScheduleStatus("pending");
     const schedulerOutput = await checkGoalSchedule(getFinalTags());
     console.log("schedulerOutput", schedulerOutput);
@@ -474,10 +465,10 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                 <button type="submit" className="action-btn place-middle gap-16">
                   {t(`${action} Budget`)}
                 </button>
-                {scheduleStatus && (
-                  <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
-                )}
               </div>
+              {scheduleStatus && (
+                <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
+              )}
             </>
           ) : (
             <div className="d-flex f-col gap-16">
@@ -487,9 +478,6 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                   {t(`${action} Goal`)}
                 </button>
               </div>
-              {scheduleStatus && (
-                <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
-              )}
               <div className="place-middle justify-fs gap-16">
                 <span>{t("duration")}</span>
                 <input
@@ -511,6 +499,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                   disablePastDates
                 />
               </div>
+              {scheduleStatus && tags.duration && (
+                <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
+              )}
             </div>
           )}
         </div>
