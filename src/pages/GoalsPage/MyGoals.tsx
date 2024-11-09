@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import { displayChangesModal } from "@src/store/GoalsState";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveGoals } from "@api/GoalsAPI";
@@ -31,11 +30,11 @@ import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { moveGoalState } from "@src/store/moveGoalState";
-import MoveGoalGuide from "@components/GoalsComponents/MyGoal/MoveGoalGuide";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
 import "./GoalsPage.scss";
+import MoveGoalAlert from "@components/GoalsComponents/MyGoal/MoveGoalAlert";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -61,8 +60,6 @@ export const MyGoals = () => {
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
   const goalToMove = useRecoilValue(moveGoalState);
-
-  const showChangesModal = useRecoilValue(displayChangesModal);
 
   const [action, setLastAction] = useRecoilState(lastAction);
 
@@ -133,7 +130,7 @@ export const MyGoals = () => {
         )}
 
         <div className="myGoals-container" ref={goalWrapperRef}>
-          {/* <MoveGoalGuide goalComponentRef={goalWrapperRef} /> */}
+          <MoveGoalAlert />
           {parentId === "root" ? (
             <div className="my-goals-content">
               <div className="d-flex f-col">

@@ -15,6 +15,29 @@
 }
 
 .goal-to-move-selected {
-  opacity: 0.5;
   pointer-events: none;
+}
+
+.move-goal-toast {
+  padding: 10px;
+  top: 20px;
+  z-index: 1000;
+  width: inherit;
+
+  .ant-alert {
+    background: var(--primary-background);
+    border: 1px solid var(--default-border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    .ant-alert-message {
+      color: inherit;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .ant-alert-description {
+      color: inherit;
+      font-size: 14px;
+    }
+  }
 }
