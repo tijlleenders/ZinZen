@@ -28,7 +28,7 @@ import CustomDatePicker from "./components/CustomDatePicker";
 import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
-import useOnScreenKeyboardScrollFix from "./useOnScreenKeyboardScrollFix";
+import useOnScreenKeyboardScrollFix from "../../../hooks/useOnScreenKeyboardScrollFix";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
