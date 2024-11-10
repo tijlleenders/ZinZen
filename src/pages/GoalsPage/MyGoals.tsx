@@ -34,7 +34,6 @@ import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
 import "./GoalsPage.scss";
-import MoveGoalAlert from "@components/GoalsComponents/MyGoal/MoveGoalAlert";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
@@ -130,7 +129,6 @@ export const MyGoals = () => {
         )}
 
         <div className="myGoals-container" ref={goalWrapperRef}>
-          <MoveGoalAlert />
           {parentId === "root" ? (
             <div className="my-goals-content">
               <div className="d-flex f-col">
