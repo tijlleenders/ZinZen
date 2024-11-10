@@ -17,6 +17,7 @@ const defaultConfirmationObj: TConfirmActionState = {
     addHint: true,
     deleteHint: true,
     reportHint: true,
+    move: true,
   },
   collaboration: {
     colabRequest: true,

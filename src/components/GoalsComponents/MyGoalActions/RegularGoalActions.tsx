@@ -162,8 +162,9 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
         {!isPartnerModeActive && (
           <div
             className="goal-action shareOptions-btn"
-            onClickCapture={() => {
-              handleMove(goal);
+            onClickCapture={async (e) => {
+              e.stopPropagation();
+              await openConfirmationPopUp({ actionCategory: "goal", actionName: "move" });
             }}
           >
             <ActionDiv label={t("Move")} icon="Move" />
