@@ -28,6 +28,7 @@ import CustomDatePicker from "./components/CustomDatePicker";
 import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
+import useOnScreenKeyboardScrollFix from "./useOnScreenKeyboardScrollFix";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -63,6 +64,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const addGoalSound = new Audio(plingSound);
 
   const isKeyboardOpen = useVirtualKeyboardOpen();
+  useOnScreenKeyboardScrollFix();
 
   const setShowToast = useSetRecoilState(displayToast);
 
