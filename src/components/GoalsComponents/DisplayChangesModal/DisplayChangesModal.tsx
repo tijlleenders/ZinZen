@@ -299,23 +299,6 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     init();
   }, [currentMainGoal]);
 
-  const getChangedGoalFromRoot = async (rootGoal: GoalItem, relId: string) => {
-    const { typeAtPriority, goals, parentId } = await jumpToLowestChanges(rootGoal.id, relId);
-
-    if (typeAtPriority === "none") return { typeAtPriority, goals, parentId };
-
-    const changedGoal = await getGoal(parentId);
-    if (!changedGoal) return { typeAtPriority, goals, parentId };
-
-    return {
-      typeAtPriority,
-      goals,
-      parentId,
-      changedGoal,
-      rootGoal,
-    };
-  };
-
   return (
     <ZModal type="popupModal" open>
       {currentMainGoal && (

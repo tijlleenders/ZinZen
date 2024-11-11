@@ -16,10 +16,10 @@ import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
 import { TrashItem } from "@src/models/TrashItem";
 import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
 import AvailableGoalHints from "@pages/GoalsPage/components/AvailableGoalHints";
+import { moveGoalState } from "@src/store/moveGoalState";
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
-import { moveGoalState } from "@src/store/moveGoalState";
 
 export const GoalSublist = () => {
   const {
