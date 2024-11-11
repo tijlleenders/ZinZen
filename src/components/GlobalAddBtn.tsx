@@ -155,7 +155,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         {goalToMove ? (
           <>
             <AddGoalOption handleClick={handleMoveGoalHere} bottom={144} disabled={!shouldRenderMoveButton}>
-              {t("Move Here")}
+              {t("Move here")}
             </AddGoalOption>
             <AddGoalOption
               handleClick={() => {

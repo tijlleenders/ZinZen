@@ -161,7 +161,7 @@
     },
     "move": {
       "header": "Do you want to move this goal?",
-      "note": "Navigate to the new location and press the + button to move."
+      "note": "<ul><li>Navigate to the new location.</li><li>Press the + button to move.</li></ul>"
     }
   },
   "collaboration": {
