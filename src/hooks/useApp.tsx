@@ -46,7 +46,9 @@ function useApp() {
             ...goal,
             participants: [participant],
           };
-          await addSharedWMGoal(goalWithParticipant);
+          await addSharedWMGoal(goalWithParticipant).then(() => {
+            setLastAction("goalNewUpdates");
+          });
         }),
       );
     } catch (error) {

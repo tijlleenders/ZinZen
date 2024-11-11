@@ -59,7 +59,6 @@ const PartnerGoals = () => {
     console.log("rootGoals", rootGoals);
     handleUserGoals(rootGoals);
   };
-
   const search = async (text: string) => {
     const rootGoals = await getRootGoalsOfPartner(relId);
     handleUserGoals(rootGoals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())));
