@@ -55,9 +55,10 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     e.stopPropagation();
 
     const url = extractLinks(goal.title);
-    if (url) {
+    if (url && !isGoalCode(goal.title)) {
       const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
       window.open(finalUrl, "_blank");
+      return;
     }
     if (isGoalCode(goal.title)) {
       copyCode(goal.title);
