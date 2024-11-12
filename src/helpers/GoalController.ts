@@ -65,7 +65,6 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
                 ...updatedGoal,
                 id: newGoalId,
                 rootGoalId,
-                participants: [],
               },
             },
           ]);

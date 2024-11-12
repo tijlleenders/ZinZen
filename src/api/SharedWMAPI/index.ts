@@ -108,7 +108,7 @@ export const getRootGoalsOfPartner = async (relId: string) => {
   ).reverse();
 };
 
-export const updateSharedWMGoal = async (id: string, changes: object) => {
+export const updateSharedWMGoal = async (id: string, changes: Partial<GoalItem>) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
     await db.sharedWMCollection.update(id, changes).then((updated) => updated);
   }).catch((e) => {

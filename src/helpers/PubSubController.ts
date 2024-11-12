@@ -22,7 +22,7 @@ export const sendUpdatedGoal = async (
       .filter((ele) => !excludeSubs.includes(ele.sub.relId))
       .forEach(async ({ sub, rootGoalId }) => {
         sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [
-          { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId, participants: [] } },
+          { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId } },
         ]).then(() => console.log("update sent"));
       });
   }
