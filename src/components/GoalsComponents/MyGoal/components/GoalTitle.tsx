@@ -51,10 +51,11 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
 
   const renderTextPart = (part: string) => {
     const cleanPart = removeBackTicks(part);
+    console.log(cleanPart);
     const match = cleanPart.match(/zURL-(\d+)/);
 
     if (!match) {
-      return <span key={`${id}-text-${part}`}>{part}</span>;
+      return <span key={`${id}-text-${part}`}>{cleanPart}</span>;
     }
 
     const urlIndex = parseInt(match[1], 10);
