@@ -6,7 +6,7 @@ type GoalChangeTypes = "subgoals" | "modifiedGoals" | "newGoalMoved";
 export type typeOfChange = IdChangeTypes | GoalChangeTypes;
 
 export type typeOfIntent = "suggestion" | "shared";
-export type changesInId = { level: number; id: string; intent: typeOfIntent; timestamp: string };
+export type changesInId = { level: number; id: string; intent: typeOfIntent; timestamp: number };
 export type changesInGoal = { level: number; goal: GoalItem; intent: typeOfIntent };
 
 export type ChangesByType = {

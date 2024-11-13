@@ -22,7 +22,7 @@ export const sendUpdatedGoal = async (
       .filter((ele) => !excludeSubs.includes(ele.sub.relId))
       .forEach(async ({ sub, rootGoalId }) => {
         sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [
-          { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId } },
+          { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId, timestamp: Date.now() } },
         ]).then(() => console.log("update sent"));
       });
   }
@@ -34,6 +34,7 @@ export const sendFinalUpdateOnGoal = async (
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
+  timestamp: number = Date.now(),
 ) => {
   console.log(`[sendFinalUpdateOnGoal] Starting for goalId: ${goalId}, action: ${action}`);
 
@@ -56,7 +57,7 @@ export const sendFinalUpdateOnGoal = async (
 
   filteredSubscribers.forEach(async ({ sub, rootGoalId }) => {
     console.log(`[sendFinalUpdateOnGoal] Sending update to subscriber ${sub.relId} for root goal ${rootGoalId}`);
-    sendUpdatesToSubscriber(sub, rootGoalId, action, [{ level: ancestorGoalIds.length, id: goalId }])
+    sendUpdatesToSubscriber(sub, rootGoalId, action, [{ level: ancestorGoalIds.length, id: goalId, timestamp }])
       .then(() => console.log(`[sendFinalUpdateOnGoal] Update sent successfully to ${sub.relId}`))
       .catch((error) => console.error(`[sendFinalUpdateOnGoal] Error sending update to ${sub.relId}:`, error));
   });
