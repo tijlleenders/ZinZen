@@ -14,7 +14,6 @@ import {
   addIntoSublist,
   // changeNewUpdatesStatus,
   getGoal,
-  getGoalById,
   updateGoal,
 } from "@src/api/GoalsAPI";
 import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
@@ -226,10 +225,17 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
 
     const inbox = await getInboxItem(goal.id);
     const defaultChanges = getDefaultValueOfGoalChanges();
-    defaultChanges[changeType] = filteredChanges.map((ele) => ({
-      ...(isIdChangeType(changeType) ? (ele as changesInId) : (ele as changesInGoal)),
-      intent: payload.type as typeOfIntent,
-    }));
+    if (isIdChangeType(changeType)) {
+      defaultChanges[changeType] = filteredChanges.map((ele) => ({
+        ...(ele as changesInId),
+        intent: payload.type as typeOfIntent,
+      }));
+    } else {
+      defaultChanges[changeType] = filteredChanges.map((ele) => ({
+        ...(ele as changesInGoal),
+        intent: payload.type as typeOfIntent,
+      }));
+    }
 
     if (!inbox) {
       await createEmptyInboxItem(goal.id);
