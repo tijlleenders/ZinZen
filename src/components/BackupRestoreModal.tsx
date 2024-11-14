@@ -9,6 +9,9 @@ import { backupRestoreModal, darkModeState, displayToast, lastAction } from "@sr
 
 import "dexie-export-import";
 import "./index.scss";
+import { ExportStrategy } from "@src/types/export";
+import { JsonExportStrategy } from "@src/utils/ExportStrategies/JsonExport.strategy";
+import { CsvExportStrategy } from "@src/utils/ExportStrategies/CsvExport.strategy";
 
 const backupImg =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADB0lEQVR4nO2Z3YtMYRzHP3a9jpc21sxQ5C1FFFHakJeibd24EQnXe4H2brkTpVUU+QMWiVLWhfdEsSHvNizLtkoJid3FLlvs6Nm+R481M7szc87OeTSfOs0855zn9/y+53n7nd+BAgUKhIHBwAJgE7Ad2AqsBRYCxTjAIuAI8BVIpDg+ArVAGSFkAnAK6LYcfg6cAA4Bh4E64FkvUXXAdELCcuC9HPsM7AYmpbl/BrALaFedVqCcPLMa+C6HTgLRDOqOV4+Zuj+BLeSJ2cA3ObIzSxuDVNcMyS5gCQER0UqzUkPCYwjwVCL2+NDOXtkyQ7QEH5kGHAc6e03ORmAdUKXydaDIh/aKgKuyWYNPlFsT0YzdR8A14LUlyAyFX8AsvxoF5smmeXgxP4x1yNlaLas2ZRLmLZ1+c0a2K3M1dFOG9vUxbyr9eGpJ2Kz2L5ID82XklSZzPojKh0+5GKnycRXKhU75MSKbykuB+zKQt41JtMiPqWRAzJpgXkBn7xf54K18OQCsAYb2VWGmtaS2aKJl1Z0+86TX3vUBqE41b8cBzbrxNDCK8DAGWAxs1KbcJT/vJovljuni5TyuUP3FRBm3rcjCCP0T7HVr956IGwxXOJRQL/WwXycO4hZx4Is6wUQgPJCQZbhHjd0JrSqMDagxMwTuBZgTSGhl44cKwwJqzFs2g6BEtttM4Y0K6d6rwypkpGybN1OuqLDeQSFzZPulKWxT4ayDQqqtdyVKrTdAk8pxRUjEisMqvJM7dOIdMMURIUdl95ayLz2Y/OsFS8yKEAuJWCLaFZn8xWjgvNXwOWADMLk/oXPAQiLAXM0JbziZXX1VqgrFurktTdI51VGfhZD6LNpJaDj90xPJKFXq/5L2GS90TnfcCFBIB9Ck1anCnhMDSZDL74BSEBI2nOyRh8BjvfSkEmKuNQB3CDEN1me2eBIhcV1LKGccWqLWd5Im5QA8ITHr2gsX8gNx66l7v/Z/u7dCT9R6+vbhRE/0JcZJER5xJdEaXRpO6Xomk8/UBfgf+A3SSyxFIXLo1QAAAABJRU5ErkJggg==";
@@ -21,16 +24,14 @@ const BackupRestoreModal = () => {
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
 
-  const backupData = async () => {
-    const file = await db.export({ prettyJson: true });
-    const blob = new Blob([file], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `ZinZenBackup-${new Date().toLocaleDateString()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  const exportData = async (strategy: ExportStrategy) => {
+    try {
+      await strategy.export();
+      window.history.back();
+    } catch (error) {
+      console.error(error);
+      setShowToast({ open: true, message: "Failed to export data", extra: error.message });
+    }
   };
 
   const importSuccessfull = () => {
@@ -80,32 +81,34 @@ const BackupRestoreModal = () => {
     }
   };
 
-  const getOption = (text: "Backup" | "Restore") => (
+  const getOption = (text: "Backup" | "CSV Export" | "Restore") => (
     <button
       type="button"
       className={`default-btn${darkModeStatus ? "-dark" : ""}`}
       style={{ display: "flex", flexDirection: "column", gap: 4 }}
       onClick={async () => {
         if (text === "Backup") {
-          await backupData();
-          window.history.back();
+          await exportData(new JsonExportStrategy());
+        } else if (text === "CSV Export") {
+          await exportData(new CsvExportStrategy());
         } else {
           document.getElementById("backupFileInput")?.click();
         }
       }}
     >
-      <img className="secondary-icon" alt={`${text} data`} src={text === "Backup" ? backupImg : restoreImg} />
+      <img className="secondary-icon" alt={`${text}`} src={text === "Restore" ? restoreImg : backupImg} />
       <p>{text}</p>
     </button>
   );
+
   return (
     <ZModal open={open} onCancel={() => window.history.back()} type="backupRestoreModal">
       <p className="popupModal-title" style={{ textAlign: "center" }}>
-        {" "}
         Choose an option from below
       </p>
       <div style={{ display: "flex", justifyContent: "center", gap: "60px" }}>
         {getOption("Backup")}
+        {getOption("CSV Export")}
         {getOption("Restore")}
       </div>
       <input type="file" id="backupFileInput" style={{ display: "none" }} onChange={restoreData} />
