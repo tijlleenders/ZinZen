@@ -58,19 +58,38 @@ const App = () => {
       }`,
     });
   };
-  const handleClick = () => {
-    api.destroy();
+
+  const handleOutsideClick = (e: MouseEvent) => {
+    const notifications = document.getElementsByClassName("ant-notification-notice");
+    let clickedInside = false;
+
+    Array.from(notifications).forEach((notificationElement) => {
+      if (notificationElement.contains(e.target as Node)) {
+        clickedInside = true;
+      }
+    });
+
+    if (!clickedInside) {
+      setTimeout(() => {
+        api.destroy();
+      }, 0);
+    }
   };
+
   useEffect(() => {
     if (showToast.open) {
       openNotification();
       setShowToast({ ...showToast, open: false });
     }
-    document.addEventListener("click", handleClick);
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
   }, [showToast]);
+
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick, true);
+    return () => {
+      document.removeEventListener("click", handleOutsideClick, true);
+    };
+  }, []);
+
   return (
     <div className={`${darkModeEnabled ? "dark" : "light"}-theme${theme[darkModeEnabled ? "dark" : "light"]}`}>
       <div className={`App-${darkModeEnabled ? "dark" : "light"}`}>
