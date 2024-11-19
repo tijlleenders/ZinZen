@@ -1,7 +1,5 @@
-import { db } from "@models";
-import { ExportStrategy } from "@src/types/export";
-
-function formatCsvValue(value: any): string {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export function formatCsvValue(value: any): string {
   if (value === null || value === undefined) {
     return '""';
   }
@@ -47,7 +45,7 @@ function formatCsvValue(value: any): string {
   return value.toString();
 }
 
-function convertJSONToCSV(jsonData: any[], columnHeaders: string[]): string {
+export function convertJSONToCSV(jsonData: any[], columnHeaders: string[]): string {
   if (jsonData.length === 0) {
     return "";
   }
@@ -63,36 +61,17 @@ function convertJSONToCSV(jsonData: any[], columnHeaders: string[]): string {
   return headers + rows;
 }
 
-export class CsvExportStrategy implements ExportStrategy {
-  async export(): Promise<void> {
-    try {
-      const goals = await db.goalsCollection.toArray();
-      const feelings = await db.feelingsCollection.toArray();
-      const goalsCollectionKeys = db.goalsCollection.schema.indexes;
-      const keys = goalsCollectionKeys.map((key) => key.name);
+export function getFileName(name: string, type: "json" | "csv"): string {
+  return `${name}-${new Date().toLocaleDateString()}.${type}`;
+}
 
-      const csvContent = convertJSONToCSV(goals, keys);
-
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      await this.downloadFile(blob);
-    } catch (error) {
-      console.error("CSV Export failed:", error);
-      throw error;
-    }
-  }
-
-  static getFileName(): string {
-    return `ZinZen-Export-${new Date().toLocaleDateString()}.csv`;
-  }
-
-  private async downloadFile(blob: Blob): Promise<void> {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = CsvExportStrategy.getFileName();
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
+export function downloadFile(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
