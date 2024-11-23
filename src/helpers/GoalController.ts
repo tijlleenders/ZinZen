@@ -124,30 +124,38 @@ export const createSharedGoal = async (newGoal: GoalItem, parentGoalId: string, 
 
     const newGoalId = newGoal.id;
     const subscribers = await getParticipantsOfGoals(ancestors);
+    const descendants = await getAllDescendants(newGoalId);
 
     if (newGoalId) {
       try {
-        await Promise.all(
-          subscribers.map(async ({ sub, rootGoalId }) => {
-            await sendUpdatesToSubscriber(sub, rootGoalId, "newGoalMoved", [
+        const subscriberUpdates = new Map<
+          string,
+          {
+            sub: IParticipant;
+            rootGoalId: string;
+            updates: Array<{ level: number; goal: Omit<GoalItem, "participants"> }>;
+          }
+        >();
+
+        subscribers.forEach(({ sub, rootGoalId }) => {
+          subscriberUpdates.set(sub.relId, {
+            sub,
+            rootGoalId,
+            updates: [
               {
                 level,
                 goal: { ...newGoal, id: newGoalId, parentGoalId },
               },
-            ]);
-          }),
-        );
-
-        const descendants = await getAllDescendants(newGoalId);
+            ],
+          });
+        });
 
         if (descendants.length > 0) {
-          await Promise.all(
-            subscribers.map(async ({ sub, rootGoalId }) => {
-              await sendUpdatesToSubscriber(
-                sub,
-                rootGoalId,
-                "newGoalMoved",
-                descendants.map((descendant) => ({
+          subscribers.forEach(({ sub, rootGoalId }) => {
+            const subscriberUpdate = subscriberUpdates.get(sub.relId);
+            if (subscriberUpdate) {
+              subscriberUpdate.updates.push(
+                ...descendants.map((descendant) => ({
                   level: level + 1,
                   goal: {
                     ...descendant,
@@ -155,9 +163,15 @@ export const createSharedGoal = async (newGoal: GoalItem, parentGoalId: string, 
                   },
                 })),
               );
-            }),
-          );
+            }
+          });
         }
+
+        await Promise.all(
+          Array.from(subscriberUpdates.values()).map(({ sub, rootGoalId, updates }) =>
+            sendUpdatesToSubscriber(sub, rootGoalId, "newGoalMoved", updates),
+          ),
+        );
       } catch (error) {
         console.error("[createSharedGoal] Error sending updates:", error);
       }
@@ -324,9 +338,9 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     participants: Array.from(allParticipants.values()),
   };
 
-  const isMovingToSharedParent = newParentGoal?.participants?.some((p) => p.following);
+  const isNonSharedGoal = !goalToMove?.participants?.some((p) => p.following);
 
-  if (isMovingToSharedParent) {
+  if (isNonSharedGoal) {
     await createSharedGoal(updatedGoal, newParentGoalId, ancestorGoalIdsOfNewParent);
   } else {
     const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
