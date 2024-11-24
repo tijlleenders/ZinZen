@@ -262,35 +262,20 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
 
 export const acceptSelectedSubgoals = async (selectedGoals: GoalItem[], parentGoal: GoalItem) => {
   try {
-    const currentSublist = parentGoal.sublist;
     const childrens: string[] = [];
 
-    await Promise.all(
-      selectedGoals.map(async (goal) => {
-        if (currentSublist.includes(goal.id)) {
-          console.log(`[acceptSelectedSubgoals] Goal ID ${goal.id} is already in the sublist, skipping.`);
-          return;
-        }
-
-        const { relId } = goal.participants[0];
-        const contact = await getContactByRelId(relId);
-        try {
-          await addGoal(
-            fixDateVlauesInGoalObject({
-              ...goal,
-              participants: [{ relId, following: true, type: "sharer", name: contact?.name || "" }],
-            }),
-          );
-          childrens.push(goal.id);
-        } catch (err) {
-          console.log(`[acceptSelectedSubgoals] Error adding goal ID ${goal.id}:`, err);
-        }
-      }),
-    );
-
-    if (childrens.length > 0) {
-      await addIntoSublist(parentGoal.id, childrens);
-    }
+    selectedGoals.forEach(async (goal: GoalItem) => {
+      const { relId } = goal.participants[0];
+      const contact = await getContactByRelId(relId);
+      addGoal(
+        fixDateVlauesInGoalObject({
+          ...goal,
+          participants: [{ relId, following: true, type: "sharer", name: contact?.name || "" }],
+        }),
+      ).catch((err) => console.log(err));
+      childrens.push(goal.id);
+    });
+    await addIntoSublist(parentGoal.id, childrens);
 
     return "Done!!";
   } catch (err) {
