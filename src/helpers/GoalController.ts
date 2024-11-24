@@ -277,6 +277,9 @@ export const addGoalToNewParentSublist = async (goalId: string, newParentGoalId:
   const newParentGoal = await getGoal(newParentGoalId);
   if (!newParentGoal) return;
 
+  const isGoalAlreadyInSublist = newParentGoal.sublist.includes(goalId);
+  if (isGoalAlreadyInSublist) return;
+
   const newParentGoalSublist = newParentGoal.sublist;
   newParentGoalSublist.push(goalId);
   await updateGoal(newParentGoal.id, { sublist: newParentGoalSublist });

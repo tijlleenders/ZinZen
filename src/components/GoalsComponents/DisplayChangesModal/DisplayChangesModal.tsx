@@ -172,12 +172,13 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       console.log("No goal under review.");
       return;
     }
-    const parentGoal = await getGoal(goalUnderReview.parentGoalId);
+    const localGoal = await getGoal(goalUnderReview.id);
+    const localParentGoalId = localGoal?.parentGoalId ?? "root";
 
     await Promise.all([
-      updateGoal(goalUnderReview.id, { parentGoalId: parentGoal?.id ?? "root" }),
-      removeGoalFromParentSublist(goalUnderReview.id, parentGoal?.title ?? "root"),
-      addGoalToNewParentSublist(goalUnderReview.id, parentGoal?.id ?? "root"),
+      updateGoal(goalUnderReview.id, { parentGoalId: goalUnderReview.parentGoalId }),
+      removeGoalFromParentSublist(goalUnderReview.id, localParentGoalId),
+      addGoalToNewParentSublist(goalUnderReview.id, goalUnderReview.parentGoalId),
     ]);
 
     await sendUpdatedGoal(
