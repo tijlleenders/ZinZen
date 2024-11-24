@@ -55,20 +55,44 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
     const newGoalId = await addGoal(updatedGoal);
 
     if (newGoalId) {
+      const subscriberUpdates = new Map<
+        string,
+        {
+          sub: IParticipant;
+          rootGoalId: string;
+          updates: Array<{ level: number; goal: Omit<GoalItem, "participants"> }>;
+        }
+      >();
+
       const subscribers = await getParticipantsOfGoals(ancestors);
+
+      const uniqueSubscribers = new Map<string, { sub: IParticipant; rootGoalId: string }>();
+
+      subscribers.forEach(({ sub, rootGoalId }) => {
+        if (!uniqueSubscribers.has(sub.relId)) {
+          uniqueSubscribers.set(sub.relId, { sub, rootGoalId });
+        }
+      });
+
+      uniqueSubscribers.forEach(({ sub, rootGoalId }) => {
+        if (!subscriberUpdates.has(sub.relId)) {
+          subscriberUpdates.set(sub.relId, { sub, rootGoalId, updates: [] });
+        }
+        const subscriberUpdate = subscriberUpdates.get(sub.relId);
+        subscriberUpdate?.updates.push({
+          level,
+          goal: {
+            ...updatedGoal,
+            id: newGoalId,
+            rootGoalId,
+          },
+        });
+      });
+
       await Promise.all(
-        subscribers.map(async ({ sub, rootGoalId }) => {
-          await sendUpdatesToSubscriber(sub, rootGoalId, "subgoals", [
-            {
-              level,
-              goal: {
-                ...updatedGoal,
-                id: newGoalId,
-                rootGoalId,
-              },
-            },
-          ]);
-        }),
+        Array.from(subscriberUpdates.values()).map(({ sub, rootGoalId, updates }) =>
+          sendUpdatesToSubscriber(sub, rootGoalId, "subgoals", updates),
+        ),
       );
     }
 
