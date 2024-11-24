@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -69,6 +69,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
   const [goalToMove, setGoalToMove] = useRecoilState(moveGoalState);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const enterPressed = useKeyPress("Enter");
   const plusPressed = useKeyPress("+");
@@ -124,11 +125,13 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const handleMoveGoalHere = async () => {
     if (!goalToMove) return;
+    setIsDisabled(true);
     await moveGoalHierarchy(goalToMove.id, parentId).then(() => {
       setToastMessage({ open: true, message: "Goal moved successfully", extra: "" });
     });
     setLastAction("goalMoved");
     setGoalToMove(null);
+    setIsDisabled(false);
     window.history.back();
   };
 
@@ -154,7 +157,11 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         />
         {goalToMove ? (
           <>
-            <AddGoalOption handleClick={handleMoveGoalHere} bottom={144} disabled={!shouldRenderMoveButton}>
+            <AddGoalOption
+              handleClick={handleMoveGoalHere}
+              bottom={144}
+              disabled={!shouldRenderMoveButton || isDisabled}
+            >
               {t("Move here")}
             </AddGoalOption>
             <AddGoalOption
