@@ -113,7 +113,11 @@ export const getAllDescendants = async (goalId: string): Promise<GoalItem[]> => 
   return descendants;
 };
 
-export const createSharedGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[]) => {
+export const createSharedGoalObjectForSending = async (
+  newGoal: GoalItem,
+  parentGoalId: string,
+  ancestors: string[],
+) => {
   const level = ancestors.length;
 
   if (parentGoalId && parentGoalId !== "root") {
@@ -344,7 +348,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
   const isNonSharedGoal = !goalToMove?.participants?.some((p) => p.following);
 
   if (isNonSharedGoal) {
-    await createSharedGoal(updatedGoal, newParentGoalId, ancestorGoalIdsOfNewParent);
+    await createSharedGoalObjectForSending(updatedGoal, newParentGoalId, ancestorGoalIdsOfNewParent);
   } else {
     const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
 

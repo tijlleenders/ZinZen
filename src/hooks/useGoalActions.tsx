@@ -1,7 +1,7 @@
 import { getAllLevelGoalsOfId, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
-import { createGoal, createSharedGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/helpers/GoalController";
+import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/helpers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/helpers/PartnerController";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayToast, lastAction, openDevMode } from "@src/store";
@@ -119,10 +119,6 @@ const useGoalActions = () => {
     }
   };
 
-  const addSharedGoal = async (newGoal: GoalItem, parentGoalId: string) => {
-    await createSharedGoal(newGoal, parentGoalId, ancestors);
-  };
-
   const shareGoalWithRelId = async (relId: string, name: string, goal: GoalItem) => {
     const goalWithChildrens = await getAllLevelGoalsOfId(goal.id, true);
 
@@ -179,7 +175,6 @@ const useGoalActions = () => {
     shareGoalWithRelId,
     addContact,
     copyCode,
-    addSharedGoal,
   };
 };
 
