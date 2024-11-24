@@ -49,9 +49,9 @@ export class ZinZenDB extends Dexie {
         console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
         syncVersion(db, currentVersion);
       });
-    this.goalsCollection.hook("updating", (modfications: GoalItem) => {
-      modfications.timestamp = Date.now();
-      return modfications;
+    this.goalsCollection.hook("updating", (modifications: GoalItem) => {
+      modifications.timestamp = Date.now();
+      return modifications;
     });
 
     this.goalsCollection.hook("creating", (primKey, obj) => {
