@@ -3,8 +3,8 @@ import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
 import ZModal from "@src/common/ZModal";
-import { darkModeState, lastAction } from "@src/store";
-import React from "react";
+import { darkModeState, displayToast, lastAction } from "@src/store";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -13,12 +13,23 @@ import { GoalItem } from "@src/models/GoalItem";
 import { useAvailableGoalHintContext } from "@src/contexts/availableGoalHint-context";
 import { addHintGoaltoMyGoals } from "@src/api/GoalsAPI";
 import { deleteAvailableGoalHint } from "@src/api/HintsAPI";
+import { reportHint } from "@src/api";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
   const restoreGoalSound = new Audio(plingSound);
   const setLastAction = useSetRecoilState(lastAction);
   const darkMode = useRecoilValue(darkModeState);
+  const setDisplayToast = useSetRecoilState(displayToast);
+  const [loading, setLoading] = useState(false);
+
+  const handleReportHint = async () => {
+    setLoading(true);
+    await reportHint(goal);
+    setLoading(false);
+    setDisplayToast({ open: true, message: "Hint reported", extra: "" });
+    window.history.back();
+  };
 
   return (
     <ZModal open width={400} type="interactables-modal">
@@ -55,10 +66,9 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
         </button>
         <button
           type="button"
-          className="goal-action-archive shareOptions-btn"
-          //   onClick={async () => {
-          //     window.history.back();
-          //   }}
+          className={`goal-action-archive shareOptions-btn ${loading ? "disabled" : ""}`}
+          disabled={loading}
+          onClick={handleReportHint}
         >
           <ActionDiv
             label={t("Report")}
