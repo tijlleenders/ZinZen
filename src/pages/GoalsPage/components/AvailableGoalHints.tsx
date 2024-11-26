@@ -14,6 +14,7 @@ import { useAvailableGoalHintContext } from "@src/contexts/availableGoalHint-con
 import { addHintGoaltoMyGoals } from "@src/api/GoalsAPI";
 import { deleteAvailableGoalHint } from "@src/api/HintsAPI";
 import { reportHint } from "@src/api";
+import ModalActionButton from "@components/Buttons/ModalActionButton";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
@@ -26,6 +27,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
   const handleReportHint = async () => {
     setLoading(true);
     await reportHint(goal);
+    await deleteAvailableGoalHint(goal.parentGoalId, goal.id);
     setLoading(false);
     setDisplayToast({ open: true, message: "Hint reported", extra: "" });
     window.history.back();
@@ -39,11 +41,8 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
         </p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-        <button
-          type="button"
-          className="goal-action-archive shareOptions-btn"
-          onClick={async (e) => {
-            e.stopPropagation();
+        <ModalActionButton
+          onClick={async () => {
             await deleteAvailableGoalHint(goal.parentGoalId, goal.id);
             setLastAction("goalHintDeleted");
             restoreGoalSound.play();
@@ -51,11 +50,9 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           }}
         >
           <ActionDiv label={t("Delete")} icon="Delete" />
-        </button>
+        </ModalActionButton>
 
-        <button
-          type="button"
-          className="goal-action-archive shareOptions-btn"
+        <ModalActionButton
           onClick={async () => {
             await addHintGoaltoMyGoals(goal);
             setLastAction("goalHintAdded");
@@ -63,13 +60,8 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           }}
         >
           <ActionDiv label={t("Add")} icon="Add" />
-        </button>
-        <button
-          type="button"
-          className={`goal-action-archive shareOptions-btn ${loading ? "disabled" : ""}`}
-          disabled={loading}
-          onClick={handleReportHint}
-        >
+        </ModalActionButton>
+        <ModalActionButton loading={loading} onClick={handleReportHint}>
           <ActionDiv
             label={t("Report")}
             icon={
@@ -82,7 +74,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
               />
             }
           />
-        </button>
+        </ModalActionButton>
       </div>
     </ZModal>
   );
