@@ -10,13 +10,18 @@ import { useLocation, useParams } from "react-router-dom";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
 import plingSound from "@assets/pling.mp3";
 
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
 import { hashObject } from "@src/utils";
 import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import { removeBackTicks } from "@src/utils/patterns";
+import { getGoalHintItem } from "@src/api/HintsAPI";
+import { suggestedGoalState } from "@src/store/SuggestedGoalState";
+
+const pageCrumple = new Audio(pageCrumplingSound);
+const addGoalSound = new Audio(plingSound);
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -27,9 +32,9 @@ const useGoalActions = () => {
   const subGoalsHistory = state?.goalsHistory || [];
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
   const { goal: activeGoal } = useActiveGoalContext();
+  const suggestedGoal = useRecoilValue(suggestedGoalState);
 
   const setShowToast = useSetRecoilState(displayToast);
-  const pageCrumple = new Audio(pageCrumplingSound);
 
   const showMessage = (message: string, extra = "") => {
     setShowToast({
@@ -64,13 +69,15 @@ const useGoalActions = () => {
     });
   };
 
-  const updateGoal = async (goal: GoalItem, hints: boolean) => {
-    const addGoalSound = new Audio(plingSound);
+  const updateGoal = async (goal: GoalItem, updatedHintOption: boolean) => {
+    const currentHintItem = await getGoalHintItem(goal.id);
+
     const titleContainsCode = /```/.test(goal.title);
     if (goal.sublist.length > 0 && titleContainsCode) {
       showMessage("Action Failed!!", "Cannot update the title to include code if the goal has a subgoal.");
       return;
     }
+
     if (isPartnerModeActive) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
@@ -78,20 +85,23 @@ const useGoalActions = () => {
         rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
-    } else if (activeGoal && hashObject(activeGoal) !== hashObject(goal)) {
+    } else if (
+      activeGoal &&
+      (hashObject({ ...activeGoal }) !== hashObject(goal) || currentHintItem?.hintOptionEnabled !== updatedHintOption)
+    ) {
       // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
-      await modifyGoal(goal.id, goal, [...ancestors, goal.id], hints);
+      await modifyGoal(goal.id, goal, [...ancestors, goal.id], updatedHintOption);
       setLastAction("goalUpdated");
       setShowToast({
         open: true,
-        message: "Goal updated!",
+        message: suggestedGoal ? "Goal (re)created!" : "Goal updated!",
         extra: "",
       });
       addGoalSound.play();
     }
   };
 
-  const addGoal = async (newGoal: GoalItem, hints: boolean, parentGoal?: GoalItem) => {
+  const addGoal = async (newGoal: GoalItem, hintOption: boolean, parentGoal?: GoalItem) => {
     if (isPartnerModeActive && subGoalsHistory.length) {
       const rootGoalId = subGoalsHistory[0].goalID;
       const rootGoal = await getSharedWMGoalById(rootGoalId);
@@ -100,7 +110,7 @@ const useGoalActions = () => {
       }
       suggestNewGoal(newGoal, parentGoal, rootGoal, subGoalsHistory.length);
     } else {
-      await createGoal(newGoal, newGoal.parentGoalId, ancestors, hints);
+      await createGoal(newGoal, newGoal.parentGoalId, ancestors, hintOption);
       if (!parentGoal && newGoal.title === "magic") {
         setDevMode(true);
         showMessage("Congratulations, you activated DEV mode", "Explore what's hidden");

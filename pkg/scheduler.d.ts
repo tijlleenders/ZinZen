@@ -1,14 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-
-import { ISchedulerInput, ISchedulerOutput } from "@src/Interfaces/IScheduler";
-
 /**
  * The main wasm function to call
- * @param {ISchedulerInput} input
- * @returns {ISchedulerOutput}
+ * @param {any} input
+ * @returns {any}
  */
-export function schedule(input: ISchedulerInput): ISchedulerOutput | undefined;
+export function schedule(input: any): any;
 
 interface Input {
   startDate: string;

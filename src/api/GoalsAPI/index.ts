@@ -5,7 +5,7 @@ import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { deleteGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
+import { deleteAvailableGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
 
 export const addDeletedGoal = async (goal: GoalItem) => {
   await db
@@ -207,7 +207,7 @@ export const getHintsFromAPI = async (goal: GoalItem) => {
   if (goal.parentGoalId !== "root") {
     const parentGoal = await getGoal(goal.parentGoalId);
     parentGoalTitle = parentGoal?.title || "";
-    parentGoalHint = (await getGoalHintItem(goal.parentGoalId))?.hint || false;
+    parentGoalHint = (await getGoalHintItem(goal.parentGoalId))?.hintOptionEnabled || false;
   }
 
   const { title, duration } = goal;
@@ -346,19 +346,36 @@ export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false
 };
 
 export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
-  await updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] });
-  await addGoal(goal);
-  await deleteGoalHint(goal.parentGoalId, goal.id);
+  await Promise.all([
+    updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] }),
+    addGoal(goal),
+    deleteAvailableGoalHint(goal.parentGoalId, goal.id),
+  ]);
 };
 
-export const fetchArchivedGoalByTitle = async (value: string) => {
-  if (value.trim() === "") {
+export const fetchArchivedDescendantGoalByTitle = async (goalTitle: string, parentGoalId: string) => {
+  if (!goalTitle.trim()) {
     return [];
   }
-  const lowerCaseValue = value.toLowerCase();
-  return db.goalsCollection
-    .where("archived")
-    .equals("true")
-    .and((goal) => goal.title.toLowerCase().startsWith(lowerCaseValue))
-    .toArray();
+
+  const searchTitle = goalTitle.toLowerCase();
+
+  const getAllChildrenGoals = async (id: string): Promise<GoalItem[]> => {
+    const directChildren = await getChildrenGoals(id);
+
+    const allDescendantGoals = await Promise.all(
+      directChildren.map(async (child) => {
+        const grandchildren = await getAllChildrenGoals(child.id);
+        return [child, ...grandchildren];
+      }),
+    );
+
+    return allDescendantGoals.flat();
+  };
+
+  const allDescendantGoals = await getAllChildrenGoals(parentGoalId);
+
+  return allDescendantGoals.filter(
+    (goal) => goal.archived === "true" && goal.title.toLowerCase().startsWith(searchTitle),
+  );
 };

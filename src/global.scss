@@ -4,6 +4,17 @@ div::-webkit-scrollbar {
   display: none;
 }
 
+/* App Layout */
+.appLayout::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+
+.appLayout::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 140, 140, 0.5);
+  border-radius: 4px;
+}
+
 img {
   width: 24px;
   height: 24px;

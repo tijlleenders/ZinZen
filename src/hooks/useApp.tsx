@@ -94,6 +94,9 @@ function useApp() {
                       addSharedWMGoal(goal).catch((err) => console.log(`Failed to add in inbox ${goal.title}`, err));
                     });
                   })
+                  .then(() => {
+                    setLastAction("goalNewUpdates");
+                  })
                   .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
               } else if (["sharer", "suggestion"].includes(ele.type)) {
                 handleIncomingChanges(ele, relId).then(() => setLastAction("goalNewUpdates"));

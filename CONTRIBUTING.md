@@ -1,3 +1,8 @@
+# No CLA
+
+Unlike some open source projects, we don't require a Contributor License Agreement.  
+This is a strong guarantee that the code will remain open forever - even when the project gets popular.
+
 # Branching convention
 
 [developer shortcut]/[issue number]/[meaningful name]
