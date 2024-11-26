@@ -7,8 +7,11 @@ export const reportHint = async (goal: GoalItem) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const parentGoal = await getGoal(goal.parentGoalId);
     const reportedHint = `Hint Reported: ${goal.title}\nParent Goal: ${parentGoal?.title}\nDuration: ${goal.duration}`;
-    const res = await submitFeedback(reportedHint);
-    return res;
+    await submitFeedback(reportedHint);
+    return {
+      status: "success",
+      message: "Hint reported",
+    };
   } catch (error) {
     return {
       status: "error",
