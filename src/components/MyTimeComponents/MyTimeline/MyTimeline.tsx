@@ -9,6 +9,8 @@ import { updateImpossibleGoals } from "./updateImpossibleGoals";
 import { useMyTimelineStore } from "./useMyTimelineStore";
 import Task from "./Task";
 import { RemindersSection } from "../RemindersSection/RemindersSection";
+import { lastAction } from "@src/store";
+import { useRecoilValue } from "recoil";
 
 interface MyTimelineProps {
   day: string;
@@ -26,7 +28,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState<string | null>(null);
   const { handleActionClick, handleOpenGoal } = useMyTimelineStore(day, taskDetails, setTaskDetails);
   const [reminders, setReminders] = useState<GoalItem[]>([]);
-
+  const action = useRecoilValue(lastAction);
   useEffect(() => {
     const fetchReminders = async () => {
       const goals = await getAllGoals();
@@ -35,7 +37,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, taskDetail
     };
 
     fetchReminders();
-  }, [day]);
+  }, [day, action]);
 
   useEffect(() => {
     updateImpossibleGoals(myTasks.impossible);

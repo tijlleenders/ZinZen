@@ -3,6 +3,8 @@ import { GoalItem } from "@src/models/GoalItem";
 import { archiveGoal } from "@src/helpers/GoalController";
 import { useTranslation } from "react-i18next";
 import "./RemindersSection.scss";
+import { lastAction } from "@src/store";
+import { useSetRecoilState } from "recoil";
 
 interface RemindersSectionProps {
   reminders: GoalItem[];
@@ -10,11 +12,13 @@ interface RemindersSectionProps {
 
 export const RemindersSection: React.FC<RemindersSectionProps> = ({ reminders }) => {
   const { t } = useTranslation();
+  const setLastAction = useSetRecoilState(lastAction);
 
   if (!reminders?.length) return null;
 
   const handleComplete = async (reminder: GoalItem) => {
     await archiveGoal(reminder, []);
+    setLastAction("reminderCompleted");
   };
 
   return (
