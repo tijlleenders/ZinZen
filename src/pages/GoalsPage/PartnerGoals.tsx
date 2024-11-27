@@ -24,6 +24,7 @@ import PartnersNavbar from "@components/PartnersNavbar";
 import { TGoalConfigMode } from "@src/types";
 import ArchivedGoals from "./components/ArchivedGoals";
 import InvitationStatus from "./InvitationStatus";
+import Contacts from "@src/helpers/Contacts";
 
 const PartnerGoals = () => {
   const [searchParams] = useSearchParams();
@@ -97,6 +98,7 @@ const PartnerGoals = () => {
           <div className="myGoals-container">
             {parentId === "root" ? (
               <div className="my-goals-content">
+                {partner && <Contacts contact={partner} />}
                 <div className="d-flex f-col">
                   <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
                 </div>
