@@ -1,14 +1,15 @@
 import GoalIcon from "@components/GoalsComponents/MyGoal/components/GoalIcon";
-import GoalTitle from "@components/GoalsComponents/MyGoal/components/GoalTitle";
 import { GoalContainer } from "@components/GoalsComponents/ZItemContainer";
-import Icon from "@src/common/Icon";
 import ContactItem from "@src/models/ContactItem";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Contacts = ({ contact }: { contact: ContactItem }) => {
   const [expandGoalId, setExpandGoalId] = useState("root");
 
   const [isAnimating, setIsAnimating] = useState(true);
+
+  const navigate = useNavigate();
 
   return (
     <GoalContainer id={`goal-${contact.id}`} expandGoalId={expandGoalId} isAnimating={isAnimating}>
@@ -26,7 +27,7 @@ const Contacts = ({ contact }: { contact: ContactItem }) => {
             {contact.name[0]}
           </GoalIcon>
         </div>
-        <div aria-hidden className="goal-tile" onClick={() => {}}>
+        <div aria-hidden className="goal-tile" onClick={() => navigate(`/partners/${contact.id}`)}>
           {contact.name}
         </div>
       </div>

@@ -10,7 +10,6 @@ import { extractLinks, isGoalCode } from "@src/utils/patterns";
 import useGoalActions from "@src/hooks/useGoalActions";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
-import GoalDropdown from "./components/GoalDropdown";
 import { GoalContainer } from "../ZItemContainer";
 import GoalIcon from "./components/GoalIcon";
 import NotificationSymbol from "@src/common/NotificationSymbol";
