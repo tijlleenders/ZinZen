@@ -20,6 +20,7 @@ import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
 
 import { MyGoals } from "@pages/GoalsPage/MyGoals";
+import ContactsPage from "@pages/GoalsPage/ContactsPage";
 import { PartnerProvider } from "./contexts/partner-context";
 import { ActiveGoalProvider } from "./contexts/activeGoal-context";
 
@@ -31,7 +32,6 @@ import "./global.scss";
 import "./customize.scss";
 import "./override.scss";
 import "./short.scss";
-import ContactsPage from "@pages/GoalsPage/ContactsPage";
 
 const Context = React.createContext({ name: "Default" });
 

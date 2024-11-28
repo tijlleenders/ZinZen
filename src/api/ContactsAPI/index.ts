@@ -3,6 +3,8 @@ import { db } from "@models";
 import ContactItem from "@src/models/ContactItem";
 import { getRelationshipStatus } from "@src/services/contact.service";
 import { v4 as uuidv4 } from "uuid";
+import { deleteSharedGoal } from "@src/helpers/GoalController";
+import { getAllSharedWMGoalByPartner } from "../SharedWMAPI";
 
 export const getAllContacts = async () => {
   return db.contactsCollection.toArray();
@@ -37,6 +39,42 @@ export const addContact = async (contactName: string, relId: string, type: strin
       console.log(e.stack || e);
     });
   return newContactId;
+};
+
+export const deleteContact = async (id: string) => {
+  try {
+    const partnerGoals = await getAllSharedWMGoalByPartner(id);
+    partnerGoals.forEach((goal) => {
+      deleteSharedGoal(goal);
+    });
+    await db.contactsCollection.delete(id);
+    return {
+      success: true,
+      message: "Contact deleted successfully",
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: false,
+      message: "Failed to delete contact",
+    };
+  }
+};
+
+export const updateContact = async (id: string, contact: ContactItem) => {
+  try {
+    await db.contactsCollection.put(contact);
+    return {
+      success: true,
+      message: "Contact updated successfully",
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      success: false,
+      message: "Failed to update contact",
+    };
+  }
 };
 
 export const getContactByRelId = async (relId: string) => {

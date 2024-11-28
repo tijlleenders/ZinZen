@@ -1,53 +1,66 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getAllContacts } from "@src/api/ContactsAPI";
+import { deleteContact, getAllContacts } from "@src/api/ContactsAPI";
 import Contacts from "@src/helpers/Contacts";
 import AppLayout from "@src/layouts/AppLayout";
 import ContactItem from "@src/models/ContactItem";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import ZModal from "@src/common/ZModal";
-import { useSetRecoilState } from "recoil";
-import { lastAction } from "@src/store";
+import { useSetRecoilState, useRecoilValue } from "recoil";
+import { displayToast, lastAction } from "@src/store";
 import { useTranslation } from "react-i18next";
+import EditContactModal from "@components/ContactsComponents/EditContactModal";
 
 const Actions = ({ contact }: { contact: ContactItem }) => {
   const { t } = useTranslation();
   const setLastAction = useSetRecoilState(lastAction);
+  const setShowToast = useSetRecoilState(displayToast);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   return (
-    <ZModal open width={400} type="interactables-modal">
-      <div style={{ textAlign: "left" }} className="header-title">
-        <p className="ordinary-element" id="title-field">
-          {contact.name}
-        </p>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-        <button
-          type="button"
-          className="goal-action-archive shareOptions-btn"
-          onClick={async (e) => {
-            e.stopPropagation();
-            console.log("delete contact");
-            setLastAction("contactDeleted");
+    <>
+      {showEditModal && (
+        <EditContactModal
+          contact={contact}
+          onClose={() => {
+            setShowEditModal(false);
             window.history.back();
           }}
-        >
-          <ActionDiv label={t("Delete")} icon="Delete" />
-        </button>
+        />
+      )}
+      <ZModal open width={400} type="interactables-modal">
+        <div style={{ textAlign: "left" }} className="header-title">
+          <p className="ordinary-element" id="title-field">
+            {contact.name}
+          </p>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+          <button
+            type="button"
+            className="goal-action-archive shareOptions-btn"
+            onClick={async (e) => {
+              e.stopPropagation();
+              const res = await deleteContact(contact.id);
+              if (res.success) {
+                setLastAction("contactDeleted");
+                setShowToast({
+                  open: true,
+                  message: res.message,
+                  extra: "",
+                });
+              }
+              window.history.back();
+            }}
+          >
+            <ActionDiv label={t("Delete")} icon="Delete" />
+          </button>
 
-        <button
-          type="button"
-          className="goal-action-archive shareOptions-btn"
-          onClick={async () => {
-            console.log("Edit name");
-            setLastAction("contactEdited");
-            window.history.back();
-          }}
-        >
-          <ActionDiv label={t("Edit")} icon="Edit" />
-        </button>
-      </div>
-    </ZModal>
+          <button type="button" className="goal-action-archive shareOptions-btn" onClick={() => setShowEditModal(true)}>
+            <ActionDiv label={t("Edit")} icon="Edit" />
+          </button>
+        </div>
+      </ZModal>
+    </>
   );
 };
 
@@ -61,11 +74,13 @@ const ContactsPage = () => {
     setSelectedContact(null);
   }, []);
 
+  const action = useRecoilValue(lastAction);
+
   useEffect(() => {
     getAllContacts().then((fetchedContacts) => {
       setContacts(fetchedContacts);
     });
-  }, []);
+  }, [action]);
 
   return (
     <AppLayout title="contacts" debounceSearch={() => {}}>
