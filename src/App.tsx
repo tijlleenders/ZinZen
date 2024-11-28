@@ -31,8 +31,7 @@ import "./global.scss";
 import "./customize.scss";
 import "./override.scss";
 import "./short.scss";
-import Contacts from "./helpers/Contacts";
-import Contactss from "@pages/GoalsPage/Contacts";
+import ContactsPage from "@pages/GoalsPage/ContactsPage";
 
 const Context = React.createContext({ name: "Default" });
 
@@ -136,7 +135,8 @@ const App = () => {
                 </ActiveGoalProvider>
               }
             />
-            <Route path="/partners" element={<Contactss />} />
+            <Route path="/partners" element={<ContactsPage />} />
+            <Route path="/partners/:partnerId" element={<ContactsPage />} />
 
             <Route
               path="partners/:partnerId/goals"
