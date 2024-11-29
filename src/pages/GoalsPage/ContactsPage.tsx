@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { deleteContact, getAllContacts } from "@src/api/ContactsAPI";
+import { deleteContact } from "@src/api/ContactsAPI";
 import Contacts from "@src/helpers/Contacts";
 import AppLayout from "@src/layouts/AppLayout";
 import ContactItem from "@src/models/ContactItem";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import ZModal from "@src/common/ZModal";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { displayToast, lastAction } from "@src/store";
 import { useTranslation } from "react-i18next";
 import EditContactModal from "@components/ContactsComponents/EditContactModal";
+import { usePartnerContext } from "@src/contexts/partner-context";
 
 const Actions = ({ contact }: { contact: ContactItem }) => {
   const { t } = useTranslation();
@@ -65,7 +66,6 @@ const Actions = ({ contact }: { contact: ContactItem }) => {
 };
 
 const ContactsPage = () => {
-  const [contacts, setContacts] = useState<ContactItem[]>([]);
   const [searchParams] = useSearchParams();
   const [selectedContact, setSelectedContact] = useState<ContactItem | null>(null);
   const showOptions = searchParams.get("showOptions") === "true" && selectedContact;
@@ -74,13 +74,7 @@ const ContactsPage = () => {
     setSelectedContact(null);
   }, []);
 
-  const action = useRecoilValue(lastAction);
-
-  useEffect(() => {
-    getAllContacts().then((fetchedContacts) => {
-      setContacts(fetchedContacts);
-    });
-  }, [action]);
+  const { partnersList } = usePartnerContext();
 
   return (
     <AppLayout title="contacts" debounceSearch={() => {}}>
@@ -88,7 +82,7 @@ const ContactsPage = () => {
       <div className="myGoals-container">
         <div className="my-goals-content">
           <div className="d-flex f-col">
-            {contacts.map((contact) => (
+            {partnersList.map((contact) => (
               <Contacts key={contact.id} contact={contact} setSelectedContact={setSelectedContact} />
             ))}
           </div>

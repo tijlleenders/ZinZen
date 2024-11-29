@@ -85,41 +85,38 @@ const PartnerGoals = () => {
   }, [parentId, partner, displaySearch]);
 
   return (
-    <>
-      <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
-        <ParentGoalProvider>
-          {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
-          {goalCategories.includes(goalType) && (
-            <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
+    <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
+      <ParentGoalProvider>
+        {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
+        {goalCategories.includes(goalType) && (
+          <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
+        )}
+
+        <div className="myGoals-container">
+          {parentId === "root" ? (
+            <div className="my-goals-content">
+              <div className="d-flex f-col">
+                <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
+              </div>
+              <ArchivedGoals goals={archivedGoals} />
+            </div>
+          ) : (
+            <GoalSublist />
           )}
 
-          <div className="myGoals-container">
-            {parentId === "root" ? (
-              <div className="my-goals-content">
-                <div className="d-flex f-col">
-                  <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
-                </div>
-                <ArchivedGoals goals={archivedGoals} />
-              </div>
-            ) : (
-              <GoalSublist />
-            )}
-
-            {!activeGoals?.length && parentId === "root" && (
-              <>
-                <InvitationStatus relId={relId} />
-                <img
-                  style={{ width: 350, height: 350, opacity: 0.3 }}
-                  src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-                  alt="Zinzen"
-                />
-              </>
-            )}
-          </div>
-        </ParentGoalProvider>
-      </AppLayout>
-      <PartnersNavbar />
-    </>
+          {!activeGoals?.length && parentId === "root" && (
+            <>
+              <InvitationStatus relId={relId} />
+              <img
+                style={{ width: 350, height: 350, opacity: 0.3 }}
+                src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+                alt="Zinzen"
+              />
+            </>
+          )}
+        </div>
+      </ParentGoalProvider>
+    </AppLayout>
   );
 };
 
