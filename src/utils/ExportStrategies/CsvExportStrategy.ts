@@ -8,6 +8,15 @@ export class CsvExportStrategy implements ExportStrategy {
     try {
       const goalsArray = await db.goalsCollection.toArray();
       const feelingsArray = await db.feelingsCollection.toArray();
+
+      // Format dates only show YYYY-MM-DD
+      const formattedFeelingsArray = feelingsArray.map((feeling) => ({
+        ...feeling,
+        date: new Date(feeling.date).toISOString().slice(0, 10),
+      }));
+
+      console.log(formattedFeelingsArray[0].date);
+
       const goalsCollectionKeys = db.goalsCollection.schema.indexes;
       const goalsKeys = goalsCollectionKeys.map((key) => key.name);
 
@@ -15,7 +24,7 @@ export class CsvExportStrategy implements ExportStrategy {
       const feelingsKeys = feelingsCollectionKeys.map((key) => key.name);
 
       const goalsCsvContent = convertJSONToCSV(goalsArray, goalsKeys);
-      const feelingsCsvContent = convertJSONToCSV(feelingsArray, feelingsKeys);
+      const feelingsCsvContent = convertJSONToCSV(formattedFeelingsArray, feelingsKeys);
 
       const goalsBlob = new Blob([goalsCsvContent], { type: "text/csv;charset=utf-8;" });
       const feelingsBlob = new Blob([feelingsCsvContent], { type: "text/csv;charset=utf-8;" });
