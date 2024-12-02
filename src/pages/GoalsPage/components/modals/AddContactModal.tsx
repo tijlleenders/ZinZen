@@ -3,14 +3,14 @@ import { addContact } from "@src/api/ContactsAPI";
 import { shareInvitation } from "@src/assets";
 import Loader from "@src/common/Loader";
 import { initRelationship } from "@src/services/contact.service";
-import { darkModeState, displayToast } from "@src/store";
+import { displayToast } from "@src/store";
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import ZModal from "@src/common/ZModal";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+import DefaultButton from "@src/common/DefaultButton";
 
 const AddContactModal = () => {
-  const darkModeStatus = useRecoilValue(darkModeState);
   const [loading, setLoading] = useState(false);
   const [newContact, setNewContact] = useState<{ contactName: string; relId: string } | null>(null);
 
@@ -72,18 +72,17 @@ const AddContactModal = () => {
         }}
       />
       <br />
-      <button
-        type="button"
-        disabled={loading}
+      <DefaultButton
         id="addContact-btn"
+        disabled={loading || newContact?.contactName === ""}
         onClick={async () => {
           await addNewContact();
         }}
-        className={`addContact-btn action-btn submit-icon${darkModeStatus ? "-dark" : ""}`}
+        customStyle={{ marginTop: 0 }}
       >
         {loading ? <Loader /> : <img alt="add contact" className="theme-icon" src={shareInvitation} />}
         <span style={loading ? { marginLeft: 28 } : {}}>Share invitation</span>
-      </button>
+      </DefaultButton>
     </ZModal>
   );
 };
