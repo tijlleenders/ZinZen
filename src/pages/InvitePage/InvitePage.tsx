@@ -8,6 +8,7 @@ import { acceptRelationship } from "@src/services/contact.service";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
 import { displayPartnerModeTour } from "@src/store/TourState";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+import DefaultInput from "@src/common/DefaultInput";
 
 const InvitePage = () => {
   const navigate = useNavigate();
@@ -60,11 +61,10 @@ const InvitePage = () => {
         <br />
         Add them to your contact list.
       </p>
-      <input
-        style={{ width: "100%", fontWeight: 500 }}
-        onChange={(e) => setNewContactName(e.target.value)}
-        className="default-input"
+      <DefaultInput
         placeholder="Contact name"
+        value={newContactName}
+        onChange={(e) => setNewContactName(e.target.value)}
       />
       {/* Make this button a component */}
       <button
@@ -73,7 +73,6 @@ const InvitePage = () => {
         style={{ alignSelf: "right" }}
         onClick={handleSubmit}
       >
-        {" "}
         Add to my contacts
       </button>
     </OnboardingLayout>

@@ -6,6 +6,7 @@ import { Progress } from "antd";
 import "./focus.scss";
 import { formatTimeDisplay } from "@src/utils";
 import { useTranslation } from "react-i18next";
+import DefaultInput from "@src/common/DefaultInput";
 
 export const Focus = () => {
   const { t } = useTranslation();
@@ -76,9 +77,7 @@ export const Focus = () => {
       />
       {editMode ? (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <input
-            className="default-input"
-            style={{ textAlign: "center", maxWidth: 100 }}
+          <DefaultInput
             placeholder="minutes"
             value={userEnteredTime}
             onChange={(e) => setUserEnteredTime(e.target.value)}

@@ -21,6 +21,7 @@ import { ILocationState } from "@src/Interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
+import DefaultInput from "@src/common/DefaultInput";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -429,14 +430,15 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
               </div>
               <div className="place-middle justify-fs gap-16">
                 <span>{t("duration")}</span>
-                <input
+                <DefaultInput
                   type="number"
-                  style={{ textAlign: "center", maxWidth: 30, width: 20, boxShadow: "var(--shadow)" }}
-                  className="default-input"
                   value={tags.duration}
+                  width={20}
+                  textAlign="center"
                   onChange={(e) => {
                     setTags({ ...tags, duration: roundOffHours(e.target.value) });
                   }}
+                  customStyle={{ borderRadius: "4px", padding: "8px 8px" }}
                 />
                 <span>{t("dueDate")}</span>
                 <CustomDatePicker
