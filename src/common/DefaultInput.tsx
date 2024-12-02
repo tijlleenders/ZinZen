@@ -28,7 +28,7 @@ const DefaultInput: React.FC<DefaultInputProps> = ({
 
   return (
     <input
-      className="default-input"
+      className="default-input fw-400 text-md"
       placeholder={placeholder}
       style={baseStyle}
       type={type}
