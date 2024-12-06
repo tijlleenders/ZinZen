@@ -20,6 +20,7 @@ import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
 
 import { MyGoals } from "@pages/GoalsPage/MyGoals";
+import ContactsPage from "@pages/GoalsPage/ContactsPage";
 import { PartnerProvider } from "./contexts/partner-context";
 import { ActiveGoalProvider } from "./contexts/activeGoal-context";
 
@@ -134,6 +135,24 @@ const App = () => {
                 </ActiveGoalProvider>
               }
             />
+
+            <Route
+              path="/partners"
+              element={
+                <PartnerProvider>
+                  <ContactsPage />
+                </PartnerProvider>
+              }
+            />
+            <Route
+              path="/partners/:partnerId"
+              element={
+                <PartnerProvider>
+                  <ContactsPage />
+                </PartnerProvider>
+              }
+            />
+
             <Route
               path="partners/:partnerId/goals"
               element={
