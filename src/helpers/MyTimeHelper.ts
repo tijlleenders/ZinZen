@@ -24,8 +24,6 @@ export const transformIntoSchInputGoals = (
   activeGoals.forEach(async (ele) => {
     const obj: ISchedulerInputGoal = { id: ele.id, title: t(ele.title), filters: {}, createdAt: ele.createdAt };
     const slotsNotallowed = blockedSlots[ele.id];
-    // obj.hoursSpent = dbTasks[ele.id]?.hoursSpent || 0;
-    // obj.skippedToday = dbTasks[ele.id]?.skippedToday || [];
     if (ele.duration) obj.minDuration = Number(ele.duration);
     if (ele.start) {
       obj.start = convertDateToString(new Date(ele.start));
@@ -154,9 +152,6 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const startDate = convertDateToString(new Date(_today));
   const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
   const tasksCompletedToday: TCompletedTaskTiming[] = [];
-  getAllTasks().then((docs) =>
-    docs.filter((doc) => doc.completedToday > 0).map((doc) => tasksCompletedToday.push(...doc.completedTodayTimings)),
-  );
 
   const schedulerInput: ISchedulerInput = {
     startDate,
