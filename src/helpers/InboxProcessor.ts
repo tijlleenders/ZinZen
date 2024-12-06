@@ -191,18 +191,33 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
         await restoreUserGoal(goalToBeRestored, true);
       }
     } else if (payload.changeType === "moved") {
+      console.log("[InboxProcessor] Processing move operation", { payload });
+
       const changes = [
         ...payload.changes.map((ele: changesInGoal) => ({ ...ele, goal: fixDateVlauesInGoalObject(ele.goal) })),
       ];
+      console.log("[InboxProcessor] Processed changes", { changes });
+
       const movedGoal = changes[0].goal;
+      console.log("[InboxProcessor] Extracted moved goal", { movedGoal });
+
       const correspondingSharedWMGoal = await getSharedWMGoal(movedGoal.id);
+      console.log("[InboxProcessor] Found corresponding shared WM goal", {
+        found: !!correspondingSharedWMGoal,
+        goalId: movedGoal.id,
+      });
 
       if (!correspondingSharedWMGoal) {
-        console.log("Goal to move not found");
+        console.error("[InboxProcessor] Goal to move not found", { goalId: movedGoal.id });
         return;
       }
 
+      console.log("[InboxProcessor] Starting move operation", {
+        movedGoal,
+        correspondingSharedWMGoal,
+      });
       await handleMoveOperation(movedGoal, correspondingSharedWMGoal);
+      console.log("[InboxProcessor] Move operation completed successfully");
     }
   } else if (["sharer", "suggestion"].includes(payload.type)) {
     const { changes, changeType, rootGoalId } = payload;

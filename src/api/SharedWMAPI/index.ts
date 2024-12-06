@@ -69,8 +69,7 @@ export const addGoalsInSharedWM = async (goals: GoalItem[], relId: string) => {
 };
 
 export const getSharedWMGoal = async (goalId: string) => {
-  const goal: GoalItem[] = await db.sharedWMCollection.where("id").equals(goalId).sortBy("createdAt");
-  return goal[0];
+  return db.sharedWMCollection.get(goalId);
 };
 
 export const getSharedWMGoalById = (id: string) => {

@@ -1,6 +1,5 @@
 import { getGoalById } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { changesInId } from "@src/models/InboxItem";
 
 export async function isIncomingGoalLatest(localGoalId: string, incomingGoal: GoalItem): Promise<boolean> {
   const localGoal = await getGoalById(localGoalId);
