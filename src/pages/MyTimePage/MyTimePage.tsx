@@ -18,6 +18,8 @@ import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
 import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
+import { useRecoilValue } from "recoil";
+import { lastAction } from "@src/store";
 
 export const MyTimePage = () => {
   const today = new Date();
@@ -26,6 +28,7 @@ export const MyTimePage = () => {
   const [doneTasks, setDoneTasks] = useState<TasksDoneTodayItem[]>([]);
   const { state } = useLocation();
   const [searchParams] = useSearchParams();
+  const action = useRecoilValue(lastAction);
 
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
@@ -33,7 +36,7 @@ export const MyTimePage = () => {
     getAllTasksDoneToday().then((task) => {
       setDoneTasks(task);
     });
-  });
+  }, [action]);
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {

@@ -13,7 +13,7 @@ import { ITask, TaskAction } from "@src/Interfaces/Task";
 import { getGoal } from "@src/api/GoalsAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { useTranslation } from "react-i18next";
-import { displayToast, focusTaskTitle } from "@src/store";
+import { displayToast, focusTaskTitle, lastAction } from "@src/store";
 import { addTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
@@ -47,7 +47,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
   const setShowToast = useSetRecoilState(displayToast);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
-
+  const setLastAction = useSetRecoilState(lastAction);
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
 
   const handleOpenGoal = async (goalId: string) => {
@@ -90,6 +90,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
     await completeTask(task.taskid, task.goalid, task.start, task.deadline);
     await addTaskActionEvent(task, "completed");
     await doneSound.play();
+    setLastAction("TaskCompleted");
   };
 
   const handleActionClick = async (actionName: TaskAction, task: ITask) => {
