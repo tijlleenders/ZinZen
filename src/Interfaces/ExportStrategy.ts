@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface ExportStrategy {
-  export(): Promise<void>;
+  export(options?: Record<string, any>): Promise<void>;
 }
