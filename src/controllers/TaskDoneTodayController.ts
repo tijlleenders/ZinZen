@@ -6,22 +6,18 @@ export const completeTask = async (
   scheduledStart: string,
   scheduledEnd: string,
 ) => {
-  try {
-    await addTaskDoneToday({
-      scheduledTaskId,
-      goalId,
-      scheduledStart,
-      scheduledEnd,
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  await addTaskDoneToday({
+    scheduledTaskId,
+    goalId,
+    scheduledStart,
+    scheduledEnd,
+  });
 };
 
 export const checkAndCleanupDoneTodayCollection = async () => {
   const tasks = await getAllTasksDoneToday();
 
-  if (tasks.length === 0) {
+  if (!tasks.length) {
     return;
   }
 
