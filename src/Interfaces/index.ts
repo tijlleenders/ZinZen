@@ -33,3 +33,5 @@ export interface ILocationState {
 export interface ImpossibleGoal extends GoalItem {
   impossible: boolean;
 }
+
+export type ScheduleStatus = "pending" | "scheduled" | "impossible" | "future" | null;
