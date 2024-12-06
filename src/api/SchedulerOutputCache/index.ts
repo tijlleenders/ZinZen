@@ -1,22 +1,22 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
-import { DumpboxItem } from "@src/models/DumpboxItem";
+import { SchedulerOutputCacheItem } from "@src/models/SchedulerOutputCacheItem";
 import { v4 as uuidv4 } from "uuid";
 
-export const getFromOutbox = async (key: string) => {
+export const getSchedulerCachedRes = async (key: string) => {
   try {
-    const dumpbox = await db.dumpboxCollection.where("key").equals(key).toArray();
-    return dumpbox[0];
+    const schedulerOutputCache = await db.schedulerOutputCacheCollection.where("key").equals(key).toArray();
+    return schedulerOutputCache[0];
   } catch (err) {
     return null;
   }
 };
 
-export const addSchedulerRes = async (uniqueId: string, output: string) => {
+export const addSchedulerResToCache = async (uniqueId: string, output: string) => {
   let newId;
   await db
-    .transaction("rw", db.dumpboxCollection, async () => {
-      newId = await db.dumpboxCollection.add({
+    .transaction("rw", db.schedulerOutputCacheCollection, async () => {
+      newId = await db.schedulerOutputCacheCollection.add({
         key: "scheduler",
         value: JSON.stringify({
           uniqueId,
@@ -32,11 +32,11 @@ export const addSchedulerRes = async (uniqueId: string, output: string) => {
 };
 
 export const updateSchedulerCachedRes = async (uniqueId: string, output: string) => {
-  db.transaction("rw", db.dumpboxCollection, async () => {
-    await db.dumpboxCollection
+  db.transaction("rw", db.schedulerOutputCacheCollection, async () => {
+    await db.schedulerOutputCacheCollection
       .where("key")
       .equals("scheduler")
-      .modify((obj: DumpboxItem) => {
+      .modify((obj: SchedulerOutputCacheItem) => {
         obj.value = JSON.stringify({
           uniqueId,
           output,

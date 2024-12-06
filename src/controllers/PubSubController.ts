@@ -2,7 +2,7 @@
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getGoal, getParticipantsOfGoals } from "@src/api/GoalsAPI";
 import { getParticipantsOfDeletedGoal } from "@src/api/TrashAPI";
-import { getHistoryUptoGoal } from "./GoalProcessor";
+import { getHistoryUptoGoal } from "../helpers/GoalProcessor";
 
 export const sendUpdatedGoal = async (
   goalId: string,

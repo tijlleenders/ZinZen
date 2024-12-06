@@ -1,6 +1,6 @@
 import { GoalItem } from "@src/models/GoalItem";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
-import { deleteSharedGoal, deleteGoal, archiveGoal } from "./GoalController";
+import { deleteSharedGoal, deleteGoal, archiveGoal } from "../controllers/GoalController";
 
 const pageCrumple = new Audio(pageCrumplingSound);
 
