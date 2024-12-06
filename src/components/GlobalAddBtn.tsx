@@ -1,5 +1,5 @@
-import React, { ReactNode, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import React, { ReactNode, useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -17,6 +17,10 @@ import { TGoalCategory } from "@src/models/GoalItem";
 import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import useLongPress from "@src/hooks/useLongPress";
 import { useKeyPress } from "@src/hooks/useKeyPress";
+import { moveGoalState } from "@src/store/moveGoalState";
+import { moveGoalHierarchy } from "@src/helpers/GoalController";
+import { displayToast, lastAction } from "@src/store";
+import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -52,10 +56,20 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const { handleAddFeeling } = useFeelingStore();
   const isPartnerModeActive = !!partnerId;
 
+  const setToastMessage = useSetRecoilState(displayToast);
+
+  const setLastAction = useSetRecoilState(lastAction);
+
+  const {
+    parentData: { parentGoal = { id: "root" } },
+  } = useParentGoalContext();
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
+  const [goalToMove, setGoalToMove] = useRecoilState(moveGoalState);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const enterPressed = useKeyPress("Enter");
   const plusPressed = useKeyPress("+");
@@ -77,6 +91,13 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   };
   const handleGlobalAddClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
+    if (goalToMove) {
+      if (add === "myGoals" || isPartnerModeActive) {
+        navigate(`/goals/${parentId}?addOptions=true`, { state });
+      }
+      return;
+    }
+
     if (themeSelection) {
       window.history.back();
     } else if (add === "myTime" || add === "myGoals" || isPartnerModeActive) {
@@ -102,12 +123,27 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
 
+  const handleMoveGoalHere = async () => {
+    if (!goalToMove) return;
+    setIsDisabled(true);
+    await moveGoalHierarchy(goalToMove.id, parentId).then(() => {
+      setToastMessage({ open: true, message: "Goal moved successfully", extra: "" });
+    });
+    setLastAction("goalMoved");
+    setGoalToMove(null);
+    setIsDisabled(false);
+    window.history.back();
+  };
+
   useEffect(() => {
     if ((plusPressed || enterPressed) && !state.goalType) {
       // @ts-ignore
       handleGlobalAddClick(new MouseEvent("click"));
     }
   }, [plusPressed, enterPressed]);
+
+  const shouldRenderMoveButton =
+    goalToMove && goalToMove.id !== parentGoal?.id && goalToMove.parentGoalId !== parentGoal?.id;
 
   if (searchParams?.get("addOptions")) {
     return (
@@ -119,23 +155,46 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             window.history.back();
           }}
         />
-        <AddGoalOption
-          handleClick={() => {
-            handleAddGoal("Budget");
-          }}
-          disabled={!isAddingBudgetGoalAllowed}
-          bottom={144}
-        >
-          {t("addBtnBudget")}
-        </AddGoalOption>
-        <AddGoalOption
-          handleClick={() => {
-            handleAddGoal("Standard");
-          }}
-          bottom={74}
-        >
-          {t("addBtnGoal")}
-        </AddGoalOption>
+        {goalToMove ? (
+          <>
+            <AddGoalOption
+              handleClick={handleMoveGoalHere}
+              bottom={144}
+              disabled={!shouldRenderMoveButton || isDisabled}
+            >
+              {t("Move here")}
+            </AddGoalOption>
+            <AddGoalOption
+              handleClick={() => {
+                setGoalToMove(null);
+                window.history.back();
+              }}
+              bottom={74}
+            >
+              {t("Cancel")}
+            </AddGoalOption>
+          </>
+        ) : (
+          <>
+            <AddGoalOption
+              handleClick={() => {
+                handleAddGoal("Budget");
+              }}
+              disabled={!isAddingBudgetGoalAllowed}
+              bottom={144}
+            >
+              {t("addBtnBudget")}
+            </AddGoalOption>
+            <AddGoalOption
+              handleClick={() => {
+                handleAddGoal("Standard");
+              }}
+              bottom={74}
+            >
+              {t("addBtnGoal")}
+            </AddGoalOption>
+          </>
+        )}
       </>
     );
   }

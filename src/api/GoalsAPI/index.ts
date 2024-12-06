@@ -157,22 +157,22 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
   await unarchiveGoal(goal);
 };
 
-export const removeGoal = async (goal: GoalItem) => {
+export const removeGoal = async (goal: GoalItem, permanently = false) => {
   await deleteHintItem(goal.id);
   await Promise.allSettled([
     db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
-    addDeletedGoal(goal),
+    permanently ? null : addDeletedGoal(goal),
   ]);
 };
 
-export const removeChildrenGoals = async (parentGoalId: string) => {
+export const removeChildrenGoals = async (parentGoalId: string, permanently = false) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
   if (childrenGoals.length === 0) {
     return;
   }
   childrenGoals.forEach((goal) => {
-    removeChildrenGoals(goal.id);
-    removeGoal(goal);
+    removeChildrenGoals(goal.id, permanently);
+    removeGoal(goal, permanently);
   });
 };
 
@@ -312,9 +312,9 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
 //   });
 // };
 
-export const removeGoalWithChildrens = async (goal: GoalItem) => {
-  await removeChildrenGoals(goal.id);
-  await removeGoal(goal);
+export const removeGoalWithChildrens = async (goal: GoalItem, permanently = false) => {
+  await removeChildrenGoals(goal.id, permanently);
+  await removeGoal(goal, permanently);
   if (goal.parentGoalId !== "root") {
     getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;
