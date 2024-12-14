@@ -3,7 +3,7 @@ import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getSelectedLanguage, inheritParentProps } from "@src/utils";
 
-import { createGoalObjectFromTags } from "./GoalProcessor";
+import { createGoalObjectFromTags } from "../helpers/GoalProcessor";
 
 const sendUpdate = (
   subscribers: IParticipant[],
