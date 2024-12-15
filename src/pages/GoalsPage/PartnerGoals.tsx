@@ -20,7 +20,6 @@ import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/Regula
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import PartnersNavbar from "@components/PartnersNavbar";
 import { TGoalConfigMode } from "@src/types";
 import ArchivedGoals from "./components/ArchivedGoals";
 import InvitationStatus from "./InvitationStatus";

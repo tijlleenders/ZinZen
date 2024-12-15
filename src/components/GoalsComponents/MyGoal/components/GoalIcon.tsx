@@ -27,5 +27,3 @@ export const GoalIcon: React.FC<GoalIconProps> = ({ color, showDottedBorder, chi
     </div>
   );
 };
-
-export default GoalIcon;

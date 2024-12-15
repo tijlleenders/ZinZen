@@ -2,19 +2,17 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { darkModeState } from "@src/store";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { extractLinks, isGoalCode } from "@src/utils/patterns";
+import NotificationSymbol from "@src/common/NotificationSymbol";
 import useGoalActions from "@src/hooks/useGoalActions";
+import TriangleIcon from "@src/assets/TriangleIcon";
+import { CopyIcon } from "@src/assets/CopyIcon";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import { GoalContainer } from "../ZItemContainer";
-import GoalIcon from "./components/GoalIcon";
-import NotificationSymbol from "@src/common/NotificationSymbol";
-import CopyIcon from "@src/assets/CopyIcon";
-import TriangleIcon from "@src/assets/TriangleIcon";
+import { GoalIcon } from "./components/GoalIcon";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -51,7 +49,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const {
     parentData: { parentGoal },
   } = useParentGoalContext();
-  const darkModeStatus = useRecoilValue(darkModeState);
 
   const redirect = (state: object, isDropdown = false) => {
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;

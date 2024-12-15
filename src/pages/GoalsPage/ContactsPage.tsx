@@ -77,7 +77,12 @@ const ContactsPage = () => {
   const { partnersList } = usePartnerContext();
 
   return (
-    <AppLayout title="contacts" debounceSearch={() => {}}>
+    <AppLayout
+      title="contacts"
+      debounceSearch={() => {
+        console.log("debounceSearch");
+      }}
+    >
       {showOptions && <Actions contact={selectedContact} />}
       <div className="myGoals-container">
         <div className="my-goals-content">
