@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { deleteContact } from "@src/api/ContactsAPI";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { deleteContact, getAllContacts } from "@src/api/ContactsAPI";
 import Contacts from "@src/helpers/Contacts";
 import AppLayout from "@src/layouts/AppLayout";
 import ContactItem from "@src/models/ContactItem";
@@ -10,13 +10,29 @@ import { useSetRecoilState } from "recoil";
 import { displayToast, lastAction } from "@src/store";
 import { useTranslation } from "react-i18next";
 import EditContactModal from "@components/ContactsComponents/EditContactModal";
-import { usePartnerContext } from "@src/contexts/partner-context";
+import { useQuery, useQueryClient } from "react-query";
 
 const Actions = ({ contact }: { contact: ContactItem }) => {
   const { t } = useTranslation();
   const setLastAction = useSetRecoilState(lastAction);
   const setShowToast = useSetRecoilState(displayToast);
   const [showEditModal, setShowEditModal] = useState(false);
+  const queryClient = useQueryClient();
+
+  const handleDeleteContact = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const res = await deleteContact(contact.id);
+    if (res.success) {
+      setLastAction("partnersRevalidate");
+      setShowToast({
+        open: true,
+        message: res.message,
+        extra: "",
+      });
+    }
+    queryClient.invalidateQueries({ queryKey: ["partners"] });
+    window.history.back();
+  };
 
   return (
     <>
@@ -36,23 +52,7 @@ const Actions = ({ contact }: { contact: ContactItem }) => {
           </p>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-          <button
-            type="button"
-            className="goal-action-archive shareOptions-btn"
-            onClick={async (e) => {
-              e.stopPropagation();
-              const res = await deleteContact(contact.id);
-              if (res.success) {
-                setLastAction("contactDeleted");
-                setShowToast({
-                  open: true,
-                  message: res.message,
-                  extra: "",
-                });
-              }
-              window.history.back();
-            }}
-          >
+          <button type="button" className="goal-action-archive shareOptions-btn" onClick={handleDeleteContact}>
             <ActionDiv label={t("Delete")} icon="Delete" />
           </button>
 
@@ -68,13 +68,19 @@ const Actions = ({ contact }: { contact: ContactItem }) => {
 const ContactsPage = () => {
   const [searchParams] = useSearchParams();
   const [selectedContact, setSelectedContact] = useState<ContactItem | null>(null);
+  const navigate = useNavigate();
   const showOptions = searchParams.get("showOptions") === "true" && selectedContact;
+  const { data: contacts } = useQuery({
+    queryKey: ["partners"],
+    queryFn: () => getAllContacts(),
+  });
 
   useEffect(() => {
     setSelectedContact(null);
-  }, []);
-
-  const { partnersList } = usePartnerContext();
+    if (!contacts || contacts.length === 0) {
+      navigate("/goals");
+    }
+  }, [contacts]);
 
   return (
     <AppLayout
@@ -87,7 +93,7 @@ const ContactsPage = () => {
       <div className="myGoals-container">
         <div className="my-goals-content">
           <div className="d-flex f-col">
-            {partnersList.map((contact) => (
+            {contacts?.map((contact) => (
               <Contacts key={contact.id} contact={contact} setSelectedContact={setSelectedContact} />
             ))}
           </div>
