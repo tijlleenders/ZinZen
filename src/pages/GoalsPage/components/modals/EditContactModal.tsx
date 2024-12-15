@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-autofocus */
+
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSetRecoilState } from "recoil";
@@ -54,51 +56,46 @@ const EditContactModal = ({ contact, onClose }: EditContactModalProps) => {
 
   return (
     <ZModal
+      type="addContact-modal"
       open
-      type="configModal"
       style={{
         transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
         transition: "transform 0.3s ease-in-out",
       }}
-      width={360}
       onCancel={onClose}
     >
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
+      <p className="popupModal-title">Edit contact name</p>
+      <input
+        type="text"
+        autoFocus
+        className="show-feelings__note-input"
+        style={{
+          padding: "8px 12px",
+          fontSize: "16px",
+          borderRadius: "4px",
+          border: "1px solid var(--border-color)",
+        }}
+        onKeyDown={async (e) => {
+          if (e.key === "Enter") {
+            await handleSave();
+          }
+        }}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder={t("Enter contact name")}
+      />
+
+      <br />
+      <button
+        type="button"
+        id="addContact-btn"
+        onClick={async () => {
           await handleSave();
         }}
+        className="addContact-btn action-btn submit-icon"
       >
-        <div style={{ textAlign: "left" }} className="header-title">
-          <input
-            type="text"
-            className="default-input"
-            style={{
-              width: "100%",
-              padding: "8px 12px",
-              fontSize: "16px",
-              borderRadius: "4px",
-              border: "1px solid var(--border-color)",
-            }}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={t("Enter contact name")}
-          />
-        </div>
-        <div
-          className="d-flex f-col gap-20"
-          style={{
-            marginTop: 24,
-            padding: "0 18px",
-          }}
-        >
-          <div className="action-btn-container">
-            <button type="submit" className="action-btn place-middle gap-16">
-              {t("Save Changes")}
-            </button>
-          </div>
-        </div>
-      </form>
+        <span>Save</span>
+      </button>
     </ZModal>
   );
 };

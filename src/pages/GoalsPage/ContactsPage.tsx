@@ -9,8 +9,8 @@ import ZModal from "@src/common/ZModal";
 import { useSetRecoilState } from "recoil";
 import { displayToast, lastAction } from "@src/store";
 import { useTranslation } from "react-i18next";
-import EditContactModal from "@components/ContactsComponents/EditContactModal";
 import { useQuery, useQueryClient } from "react-query";
+import EditContactModal from "./components/modals/EditContactModal";
 
 const Actions = ({ contact }: { contact: ContactItem }) => {
   const { t } = useTranslation();
@@ -41,6 +41,7 @@ const Actions = ({ contact }: { contact: ContactItem }) => {
           contact={contact}
           onClose={() => {
             setShowEditModal(false);
+            queryClient.invalidateQueries({ queryKey: ["partners"] });
             window.history.back();
           }}
         />
