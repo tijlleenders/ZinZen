@@ -14,6 +14,7 @@ import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
 import { useMyTimelineStore } from "./useMyTimelineStore";
+import { getTimePart } from "@src/utils";
 
 type ImpossibleTaskId = string;
 
@@ -41,15 +42,16 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
       {myTasks.scheduled.map((task, index) => {
-        const startTime = task.start ? task.start.split("T")[1].slice(0, 2) : null;
-        const endTime = task.deadline ? task.deadline.split("T")[1].slice(0, 2) : null;
+        const startTime = getTimePart(task.start);
+        const endTime = getTimePart(task.deadline);
         const nextTask = myTasks.scheduled[index + 1];
-        const nextStartTime = nextTask ? nextTask.start.split("T")[1].slice(0, 2) : null;
+        const nextStartTime = getTimePart(nextTask?.start);
         const displayEndTime = endTime !== nextStartTime;
         const markDone = doneTasks.some((doneTask) => doneTask.scheduledTaskId === task.taskid);
         const showTaskOptions = displayOptionsIndex === task.taskid;
         return (
           <button
+            key={task.taskid}
             className={`${day === "Today" && markDone ? "completedTask" : ""}`}
             type="button"
             style={

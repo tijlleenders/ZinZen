@@ -29,6 +29,7 @@ export const useMyTimelineStore = (day: string) => {
     const parentGoalId = openGoalId;
     if (!openGoalId) return;
     while (openGoalId !== "root") {
+      // eslint-disable-next-line no-await-in-loop
       tmpGoal = await getGoal(openGoalId);
       if (!tmpGoal) break;
       goalsHistory.push({
