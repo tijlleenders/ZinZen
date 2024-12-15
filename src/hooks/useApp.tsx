@@ -6,7 +6,7 @@ import { getTheme } from "@src/store/ThemeState";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { addSharedWMGoal } from "@src/api/SharedWMAPI";
-import { createDefaultGoals } from "@src/helpers/NewUserController";
+import { createDefaultGoals } from "@src/controllers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
 import { handleIncomingChanges, Payload } from "@src/helpers/InboxProcessor";
 import { getContactSharedGoals, shareGoalWithContact } from "@src/services/contact.service";
@@ -17,6 +17,7 @@ import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import ContactItem from "@src/models/ContactItem";
 import { SharedGoalMessage } from "@src/Interfaces/IContactMessages";
+import { checkAndCleanupDoneTodayCollection } from "@src/controllers/TaskDoneTodayController";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -155,6 +156,7 @@ function useApp() {
 
   useEffect(() => {
     checkAndCleanupTrash();
+    checkAndCleanupDoneTodayCollection();
   }, []);
 
   useEffect(() => {

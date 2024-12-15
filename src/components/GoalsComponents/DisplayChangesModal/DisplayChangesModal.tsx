@@ -8,7 +8,7 @@ import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { sendNewGoals } from "@src/helpers/BatchPublisher";
 import { darkModeState, lastAction } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { sendUpdatedGoal } from "@src/helpers/PubSubController";
+import { sendUpdatedGoal } from "@src/controllers/PubSubController";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { deleteGoalChangesInID, getInboxItem, removeGoalInbox, removePPTFromInboxOfGoal } from "@src/api/InboxAPI";
@@ -19,12 +19,16 @@ import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
 
-import { addGoalToNewParentSublist, getAllDescendants, removeGoalFromParentSublist } from "@src/helpers/GoalController";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
 import { getMovedSubgoalsList } from "./ShowChanges";
+import {
+  addGoalToNewParentSublist,
+  getAllDescendants,
+  removeGoalFromParentSublist,
+} from "@src/controllers/GoalController";
 
 const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);

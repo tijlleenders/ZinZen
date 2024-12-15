@@ -7,13 +7,15 @@ import ContactItem from "./ContactItem";
 import { InboxItem } from "./InboxItem";
 import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
-import { DumpboxItem } from "./DumpboxItem";
+import { SchedulerOutputCacheItem } from "./SchedulerOutputCacheItem";
 import { TrashItem } from "./TrashItem";
 import { HintItem } from "./HintItem";
 import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
 import { dbStoreSchema, syncVersion } from "./dexie";
+import { TaskHistoryItem } from "./TaskHistoryItem";
+import { TasksDoneTodayItem } from "./TasksDoneTodayItem";
 
-export const dexieVersion = 21;
+export const dexieVersion = 22;
 
 const currentVersion = Number(localStorage.getItem(LocalStorageKeys.DEXIE_VERSION) || dexieVersion);
 localStorage.setItem(LocalStorageKeys.DEXIE_VERSION, `${dexieVersion}`);
@@ -33,13 +35,17 @@ export class ZinZenDB extends Dexie {
 
   customizationCollection!: Table<GCustomItem, number>;
 
-  dumpboxCollection!: Table<DumpboxItem, string>;
+  schedulerOutputCacheCollection!: Table<SchedulerOutputCacheItem, string>;
 
   goalTrashCollection!: Table<TrashItem, string>;
 
   hintsCollection!: Table<HintItem, string>;
 
   impossibleGoalsCollection!: Table<ImpossibleGoalItem, string>;
+
+  taskHistoryCollection!: Table<TaskHistoryItem, string>;
+
+  tasksDoneTodayCollection!: Table<TasksDoneTodayItem, string>;
 
   constructor() {
     super("ZinZenDB");

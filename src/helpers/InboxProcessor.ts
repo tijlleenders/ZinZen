@@ -30,7 +30,7 @@ import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplay
 import { fixDateVlauesInGoalObject } from "@src/utils";
 import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import { getContactByRelId } from "@src/api/ContactsAPI";
-import { getAllDescendants, getRootGoalId, updateRootGoalNotification } from "./GoalController";
+import { getAllDescendants, getRootGoalId, updateRootGoalNotification } from "@src/controllers/GoalController";
 import { isIncomingGoalLatest, isIncomingIdChangeLatest } from "./mergeSharedGoalItems";
 
 export interface Payload {

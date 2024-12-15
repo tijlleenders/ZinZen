@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { GoalItem, IParticipant } from "@src/models/GoalItem";
+import { GoalItem } from "@src/models/GoalItem";
 import { inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getSharedWMGoal, removeSharedWMChildrenGoals, updateSharedWMGoal } from "@src/api/SharedWMAPI";

@@ -18,7 +18,7 @@ import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import useLongPress from "@src/hooks/useLongPress";
 import { useKeyPress } from "@src/hooks/useKeyPress";
 import { moveGoalState } from "@src/store/moveGoalState";
-import { moveGoalHierarchy } from "@src/helpers/GoalController";
+import { moveGoalHierarchy } from "@src/controllers/GoalController";
 import { displayToast, lastAction } from "@src/store";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 

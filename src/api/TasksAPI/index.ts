@@ -4,7 +4,6 @@ import { blockedSlotOfTask, TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { calDays, convertDateToString, getLastDayDate } from "@src/utils";
 import { convertDateToDay } from "@src/utils/SchedulerUtils";
-import { ITask } from "@src/Interfaces/Task";
 import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
 import { getGoal } from "../GoalsAPI";
 
@@ -105,45 +104,6 @@ export const refreshTaskCollection = async () => {
   } catch (error) {
     console.error("Error updating field:", error);
   }
-};
-export const completeTask = async (id: string, duration: number, task: ITask) => {
-  db.transaction("rw", db.taskCollection, async () => {
-    await db.taskCollection
-      .where("id")
-      .equals(id)
-      .modify((obj: TaskItem) => {
-        obj.completedToday += duration;
-        obj.completedTodayTimings.push({
-          goalid: task.goalid,
-          start: task.start,
-          deadline: task.deadline,
-        });
-        obj.completedTodayIds.push(task.taskid);
-      });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
-};
-
-export const skipTask = async (id: string, period: string, task: ITask) => {
-  db.transaction("rw", db.taskCollection, async () => {
-    await db.taskCollection
-      .where("id")
-      .equals(id)
-      .modify((obj: TaskItem) => {
-        obj.skippedToday.push(period);
-        obj.completedTodayTimings.push({
-          goalid: task.goalid,
-          start: task.start,
-          deadline: task.deadline,
-        });
-        if (obj.skippedToday.length > 1) {
-          obj.skippedToday.sort((a, b) => Number(a.split("-")[0]) - Number(b.split("-")[0]));
-        }
-      });
-  }).catch((e) => {
-    console.log(e.stack || e);
-  });
 };
 
 export const getAllTasks = async () => {
