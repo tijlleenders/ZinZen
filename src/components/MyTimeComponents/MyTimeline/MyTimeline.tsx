@@ -1,29 +1,19 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
-import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
 
-import archiveTune from "@assets/archive.mp3";
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
-import { ITask, TaskAction } from "@src/Interfaces/Task";
-import { getGoal } from "@src/api/GoalsAPI";
-import { GoalItem } from "@src/models/GoalItem";
+import { ITask } from "@src/Interfaces/Task";
 import { useTranslation } from "react-i18next";
-import { displayToast, focusTaskTitle, lastAction } from "@src/store";
-import { addTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
-import { displayReschedule } from "@src/store/TaskState";
 import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
-import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
-import { completeTask } from "@src/controllers/TaskDoneTodayController";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
+import { useMyTimelineStore } from "./useMyTimelineStore";
 
 type ImpossibleTaskId = string;
 
@@ -40,95 +30,9 @@ interface MyTimelineProps {
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { state } = useLocation();
-  const doneSound = new Audio(archiveTune);
-  const { state: locationState } = useLocation();
-  const setShowToast = useSetRecoilState(displayToast);
-  const setTaskTitle = useSetRecoilState(focusTaskTitle);
-  const setOpenReschedule = useSetRecoilState(displayReschedule);
-  const setLastAction = useSetRecoilState(lastAction);
   const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
 
-  const handleOpenGoal = async (goalId: string) => {
-    const goalsHistory = [];
-    let tmpGoal: GoalItem | null = await getGoal(goalId);
-    let openGoalId = tmpGoal?.parentGoalId;
-    const parentGoalId = openGoalId;
-    if (!openGoalId) {
-      return;
-    }
-    while (openGoalId !== "root") {
-      tmpGoal = await getGoal(openGoalId);
-      if (!tmpGoal) {
-        break;
-      }
-      goalsHistory.push({
-        goalID: tmpGoal.id || "root",
-        goalColor: tmpGoal.goalColor || "#ffffff",
-        goalTitle: tmpGoal.title || "",
-      });
-      openGoalId = tmpGoal.parentGoalId;
-    }
-    goalsHistory.reverse();
-    navigate("/goals", {
-      state: {
-        ...locationState,
-        from: "",
-        goalsHistory,
-        activeGoalId: parentGoalId,
-        expandedGoalId: goalId,
-      },
-    });
-  };
-  const handleFocusClick = (task: ITask) => {
-    setTaskTitle(task.title);
-    navigate("/", { state: { ...state, displayFocus: true } });
-  };
-
-  const handleDoneClick = async (task: ITask) => {
-    await completeTask(task.taskid, task.goalid, task.start, task.deadline);
-    await addTaskActionEvent(task, "completed");
-    await doneSound.play();
-    setLastAction("TaskCompleted");
-  };
-
-  const handleActionClick = async (actionName: TaskAction, task: ITask) => {
-    if (actionName === TaskAction.Goal) {
-      return handleOpenGoal(task.goalid);
-    }
-    if (actionName === TaskAction.Focus) {
-      return handleFocusClick(task);
-    }
-    if (actionName === TaskAction.Done) {
-      return handleDoneClick(task);
-    }
-    if (actionName === TaskAction.NotNow) {
-      return setOpenReschedule({ ...task });
-    }
-    if (day === "Today") {
-      const taskItem = await getTaskByGoalId(task.goalid);
-      if (!taskItem) {
-        console.log("task not found");
-
-        await addTask({
-          id: uuidv4(),
-          goalId: task.goalid,
-          title: task.title,
-          completedTodayIds: [],
-          skippedToday: [],
-          completedToday: 0,
-          lastSkipped: "",
-          lastCompleted: "",
-          hoursSpent: 0,
-          blockedSlots: [],
-        });
-      }
-    } else {
-      setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
-    }
-    return null;
-  };
+  const { handleActionClick, handleOpenGoal } = useMyTimelineStore(day);
 
   useEffect(() => {
     updateImpossibleGoals(myTasks.impossible);
