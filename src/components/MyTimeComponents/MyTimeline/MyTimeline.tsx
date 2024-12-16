@@ -11,10 +11,10 @@ import { useTranslation } from "react-i18next";
 import "./index.scss";
 import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
 import { getTimePart } from "@src/utils";
-import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
 import { useMyTimelineStore } from "./useMyTimelineStore";
+import { GoalTiming } from "./GoalTiming";
 
 type ImpossibleTaskId = string;
 
@@ -31,15 +31,12 @@ interface MyTimelineProps {
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks }) => {
   const { t } = useTranslation();
-  const [displayOptionsIndex, setDisplayOptionsIndex] = useState<string | null>(null);
+  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
 
   const { handleActionClick, handleOpenGoal } = useMyTimelineStore(day);
 
-  const handleToggleDisplayOptions = (task: ITask, isTaskCompleted: boolean) => {
-    if (!isTaskCompleted) {
-      return setDisplayOptionsIndex(displayOptionsIndex === task.taskid ? null : task.taskid);
-    }
-    return handleOpenGoal(task.goalid);
+  const toggleTaskOptions = (taskId: string) => {
+    setActiveTaskId((prevTaskId) => (prevTaskId === taskId ? null : taskId));
   };
 
   useEffect(() => {
@@ -48,6 +45,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
 
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
+      <h4 style={{ marginBottom: "10px" }}>My Timeline</h4>
       {myTasks.scheduled.map((task, index) => {
         const startTime = getTimePart(task.start);
         const endTime = getTimePart(task.deadline);
@@ -55,14 +53,20 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
         const nextStartTime = getTimePart(nextTask?.start);
         const displayEndTime = endTime !== nextStartTime;
         const markDone = doneTasks.some((doneTask) => doneTask.scheduledTaskId === task.taskid);
-        const showTaskOptions = displayOptionsIndex === task.taskid;
+        const showTaskOptions = activeTaskId === task.taskid;
         return (
           <button
             key={task.taskid}
             className={`MTL-taskItem simple ${markDone ? "completedTask" : ""}`}
             type="button"
             style={{ borderLeft: `6px solid ${task.goalColor}` }}
-            onClick={() => handleToggleDisplayOptions(task, markDone)}
+            onClick={() => {
+              if (markDone) {
+                handleOpenGoal(task.goalid);
+              } else {
+                toggleTaskOptions(task.taskid);
+              }
+            }}
           >
             <GoalTiming
               startTime={startTime}

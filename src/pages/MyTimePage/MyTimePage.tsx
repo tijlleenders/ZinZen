@@ -20,6 +20,7 @@ import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
 import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
 import { useRecoilValue } from "recoil";
 import { lastAction } from "@src/store";
+import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders";
 
 export const MyTimePage = () => {
   const today = new Date();
@@ -84,7 +85,10 @@ export const MyTimePage = () => {
         </button>
         <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
           {showTasks.includes(day) && tasks[day] && tasks[day].scheduled.length > 0 && (
-            <MyTimeline day={day} myTasks={tasks[day]} doneTasks={doneTasks} />
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <Reminders day={day} />
+              <MyTimeline day={day} myTasks={tasks[day]} doneTasks={doneTasks} />
+            </div>
           )}
         </div>
       </div>

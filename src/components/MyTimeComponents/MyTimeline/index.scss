@@ -11,6 +11,7 @@
     line-height: 22px;
 
     .MTL-taskTitleActionWrapper {
+      flex: 1;
       span {
         font-size: 1.143rem;
         font-weight: 500;
@@ -79,10 +80,12 @@
 .MTL-options {
   display: flex;
   margin-top: 0.7em;
+  justify-content: space-evenly;
 }
 
 .MTL-options > button {
   background: transparent;
+  flex: 1;
   border: 0px;
   font-weight: 400;
   border-right: 1px solid;
