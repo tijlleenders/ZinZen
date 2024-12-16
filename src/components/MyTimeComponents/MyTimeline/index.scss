@@ -2,13 +2,26 @@
   display: flex;
   flex-direction: column;
 
-  .MTL-taskTitle {
-    font-size: 1.143rem;
-    font-weight: 500;
+  .MTL-taskItem {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    line-height: 22px;
+    padding: 0.7em 0.7em 0.7em 0.7em;
+    line-height: 22px;
+
+    .MTL-taskTitleActionWrapper {
+      span {
+        font-size: 1.143rem;
+        font-weight: 500;
+        display: flex;
+        position: relative;
+      }
+    }
   }
 
   .MTL-goalTiming {
-    margin: 4px 5px 4px 5px;
+    margin: 4px 5px 4px 14px;
     border: none;
     font-weight: 500;
     line-height: 16px;
@@ -32,24 +45,6 @@
       line-height: 12px;
     }
   }
-}
-
-.MTL-display > button {
-  line-height: 22px;
-  padding: 0.7em 0;
-  line-height: 22px;
-  padding-bottom: 0.7em;
-  background: transparent;
-  border: none;
-}
-
-.MTL-display > button:first-child {
-  padding-top: 1.4em;
-}
-
-.MTL-display > button:last-child {
-  border: none;
-  margin-bottom: 0 !important;
 }
 
 .MTL-color-block {
@@ -111,12 +106,6 @@
   }
 }
 
-.task-dropdown {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
 .completedTask {
   opacity: 0.4;
 
@@ -130,4 +119,3 @@
   display: none;
   transition: opacity 0.5s ease-out;
 }
-

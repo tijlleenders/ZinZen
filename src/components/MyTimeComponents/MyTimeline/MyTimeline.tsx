@@ -10,11 +10,11 @@ import { useTranslation } from "react-i18next";
 
 import "./index.scss";
 import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
+import { getTimePart } from "@src/utils";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
 import { useMyTimelineStore } from "./useMyTimelineStore";
-import { getTimePart } from "@src/utils";
 
 type ImpossibleTaskId = string;
 
@@ -31,9 +31,16 @@ interface MyTimelineProps {
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks }) => {
   const { t } = useTranslation();
-  const [displayOptionsIndex, setDisplayOptionsIndex] = useState("root");
+  const [displayOptionsIndex, setDisplayOptionsIndex] = useState<string | null>(null);
 
   const { handleActionClick, handleOpenGoal } = useMyTimelineStore(day);
+
+  const handleToggleDisplayOptions = (task: ITask, isTaskCompleted: boolean) => {
+    if (!isTaskCompleted) {
+      return setDisplayOptionsIndex(displayOptionsIndex === task.taskid ? null : task.taskid);
+    }
+    return handleOpenGoal(task.goalid);
+  };
 
   useEffect(() => {
     updateImpossibleGoals(myTasks.impossible);
@@ -52,63 +59,24 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
         return (
           <button
             key={task.taskid}
-            className={`${day === "Today" && markDone ? "completedTask" : ""}`}
+            className={`MTL-taskItem simple ${markDone ? "completedTask" : ""}`}
             type="button"
-            style={
-              displayOptionsIndex !== task.taskid
-                ? { cursor: "pointer", display: "flex", flexDirection: "row" }
-                : { display: "flex", flexDirection: "row" }
-            }
-            onClick={() => {
-              if (displayOptionsIndex !== task.taskid) {
-                if (markDone) {
-                  handleOpenGoal(task.goalid);
-                } else {
-                  setDisplayOptionsIndex(task.taskid);
-                }
-              } else setDisplayOptionsIndex("");
-            }}
+            style={{ borderLeft: `6px solid ${task.goalColor}` }}
+            onClick={() => handleToggleDisplayOptions(task, markDone)}
           >
-            <div className="MTL-color-block" style={{ backgroundColor: `${task.goalColor}` }} />
             <GoalTiming
               startTime={startTime}
               endTime={endTime}
               showTaskOptions={showTaskOptions}
               displayEndTime={displayEndTime}
             />
-            <div style={{ flex: 1 }}>
-              <div style={{ display: "flex", position: "relative" }}>
-                <div style={{ marginLeft: "11px", color: `${task.goalColor}` }}>
-                  <button
-                    style={{ textDecorationColor: task.goalColor }}
-                    type="button"
-                    className="MTL-taskTitle"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDisplayOptionsIndex(displayOptionsIndex !== task.taskid ? task.taskid : "");
-                      if (displayOptionsIndex === task.taskid || markDone) {
-                        setDisplayOptionsIndex("");
-                      }
-                    }}
-                  >
-                    {t(`${task.title}`)}
-                  </button>
-                </div>
-
-                {showTaskOptions && (
-                  <button
-                    type="button"
-                    onClick={() => setDisplayOptionsIndex("")}
-                    className="MyTime-expand-btw task-dropdown"
-                  >
-                    <div>
-                      <img src={chevronLeftIcon} className="chevronDown theme-icon" alt="zinzen schedule" />
-                    </div>
-                  </button>
-                )}
-              </div>
+            <div className="MTL-taskTitleActionWrapper">
+              <span style={{ textDecorationColor: task.goalColor }}>{t(`${task.title}`)}</span>
               {showTaskOptions ? <TaskOptions task={task} handleActionClick={handleActionClick} /> : null}
             </div>
+            {showTaskOptions && (
+              <img src={chevronLeftIcon} className="MyTime-expand-btw chevronDown theme-icon" alt="zinzen schedule" />
+            )}
           </button>
         );
       })}
