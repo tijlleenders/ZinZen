@@ -12,6 +12,7 @@ import { completeTask } from "@src/controllers/TaskDoneTodayController";
 import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ILocationState } from "@src/Interfaces";
+import { ISubGoalHistory } from "@src/store/GoalsState";
 
 export const useMyTimelineStore = (day: string) => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const useMyTimelineStore = (day: string) => {
   const setOpenReschedule = useSetRecoilState(displayReschedule);
 
   const handleOpenGoal = async (goalId: string) => {
-    const goalsHistory = [];
+    const goalsHistory: ISubGoalHistory[] = [];
     let tmpGoal: GoalItem | null = await getGoal(goalId);
     let openGoalId = tmpGoal?.parentGoalId;
     const parentGoalId = openGoalId;
