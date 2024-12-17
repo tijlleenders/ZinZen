@@ -11,7 +11,5 @@ export interface TaskItem {
   completedToday: number;
   completedTodayIds: string[];
   skippedToday: string[];
-  lastCompleted: string; // date
-  lastSkipped: string; // date
   blockedSlots: blockedSlotOfTask[];
 }
