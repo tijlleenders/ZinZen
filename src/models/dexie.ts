@@ -49,8 +49,6 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
     const taskCollection = transaction.table("taskCollection");
     taskCollection.toCollection().modify((task: TaskItem) => {
       task.blockedSlots = [];
-      task.skippedToday = [];
-      task.completedToday = 0;
       task.completedTodayIds = [];
     });
   }

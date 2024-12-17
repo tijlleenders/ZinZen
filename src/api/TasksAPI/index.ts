@@ -25,24 +25,13 @@ export const getTaskByGoalId = async (goalId: string) => {
   }
 };
 
-export const getForgetHrsCount = (task: TaskItem) => {
-  let yesterdaysCount = 0;
-  task.skippedToday.forEach((slot) => {
-    const [start, end] = slot.split("-");
-    yesterdaysCount += Number(end) - Number(start);
-  });
-  return yesterdaysCount;
-};
-
 export const resetProgressOfToday = async () => {
   const tasks = await db.taskCollection.toArray();
   try {
     await db.transaction("rw", db.taskCollection, async () => {
       const updatedRows = tasks.map((_task) => {
         const task = { ..._task };
-        task.completedToday = 0;
         task.completedTodayIds = [];
-        task.skippedToday = [];
         task.blockedSlots = [];
         return task;
       });
@@ -61,9 +50,7 @@ export const refreshTaskCollection = async () => {
     await db.transaction("rw", db.taskCollection, async () => {
       const updatedRows = tasks.map((_task) => {
         const task = { ..._task };
-        task.completedToday = 0;
         task.completedTodayIds = [];
-        task.skippedToday = [];
         return task;
       });
 
