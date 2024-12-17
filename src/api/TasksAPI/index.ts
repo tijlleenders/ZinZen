@@ -44,7 +44,6 @@ export const resetProgressOfToday = async () => {
         task.completedTodayIds = [];
         task.skippedToday = [];
         task.lastCompleted = new Date().toLocaleDateString();
-        task.lastSkipped = new Date().toLocaleDateString();
         task.blockedSlots = [];
         return task;
       });
@@ -67,7 +66,6 @@ export const refreshTaskCollection = async () => {
         task.completedTodayIds = [];
         task.skippedToday = [];
         task.lastCompleted = new Date().toLocaleDateString();
-        task.lastSkipped = new Date().toLocaleDateString();
         return task;
       });
 
