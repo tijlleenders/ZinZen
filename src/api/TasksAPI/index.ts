@@ -1,11 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { blockedSlotOfTask, TaskItem } from "@src/models/TaskItem";
-import { GoalItem } from "@src/models/GoalItem";
-import { calDays, convertDateToString, getLastDayDate } from "@src/utils";
-import { convertDateToDay } from "@src/utils/SchedulerUtils";
+import { convertDateToString } from "@src/utils";
 import { ISchedulerInputGoal } from "@src/Interfaces/IScheduler";
-import { getGoal } from "../GoalsAPI";
 
 export const addTask = async (taskDetails: TaskItem) => {
   let newTaskId;
@@ -62,34 +59,10 @@ export const resetProgressOfToday = async () => {
 
 export const refreshTaskCollection = async () => {
   const tasks = await db.taskCollection.toArray();
-  const goals: { [key: string]: GoalItem } = (await Promise.all(tasks.map((ele) => getGoal(ele.goalId)))).reduce(
-    (acc, curr) => {
-      return curr ? { ...acc, [curr.id]: { ...curr } } : acc;
-    },
-    {},
-  );
   try {
     await db.transaction("rw", db.taskCollection, async () => {
       const updatedRows = tasks.map((_task) => {
         const task = { ..._task };
-        const goal: GoalItem = goals[task.goalId];
-        const startDate = new Date(goal.start || goal.createdAt);
-        if (goal.habit === "daily") {
-          task.hoursSpent = 0;
-        } else if (goal.habit === "weekly") {
-          const dayIndex = calDays.indexOf(convertDateToDay(startDate));
-          const lastReset = getLastDayDate(dayIndex);
-          const lastAction = new Date(
-            new Date(task.lastSkipped) < new Date(task.lastCompleted) ? task.lastCompleted : task.lastSkipped,
-          );
-          if (lastAction < lastReset) {
-            task.hoursSpent = 0;
-          } else {
-            task.hoursSpent += task.completedToday + getForgetHrsCount(task);
-          }
-        } else {
-          task.hoursSpent += task.completedToday + getForgetHrsCount(task);
-        }
         task.completedToday = 0;
         task.completedTodayIds = [];
         task.skippedToday = [];

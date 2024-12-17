@@ -54,7 +54,6 @@ export interface ISchedulerInputGoal {
   };
   children?: string[];
   createdAt: string;
-  hoursSpent?: number;
   skippedToday?: string[];
 }
 

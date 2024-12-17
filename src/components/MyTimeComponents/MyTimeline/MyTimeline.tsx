@@ -120,7 +120,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
           completedToday: 0,
           lastSkipped: "",
           lastCompleted: "",
-          hoursSpent: 0,
           blockedSlots: [],
         });
       }
