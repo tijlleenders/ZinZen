@@ -13,14 +13,18 @@ import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ILocationState } from "@src/Interfaces";
 import { ISubGoalHistory } from "@src/store/GoalsState";
+import { archiveGoal } from "@src/controllers/GoalController";
+import { useQueryClient } from "react-query";
 
 export const useMyTimelineStore = (day: string) => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { state }: { state: ILocationState } = useLocation();
   const setLastAction = useSetRecoilState(lastAction);
 
+  const subGoalsHistory = state?.goalsHistory || [];
+  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
   const doneSound = new Audio(archiveTune);
-
+  const queryClient = useQueryClient();
   const setShowToast = useSetRecoilState(displayToast);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
@@ -44,14 +48,14 @@ export const useMyTimelineStore = (day: string) => {
     }
     goalsHistory.reverse();
     const newState: ILocationState = {
-      ...location.state,
+      ...state,
       expandedGoalId: goalId,
       goalsHistory,
     };
     navigate(`/goals${parentGoalId === "root" ? "" : `/${parentGoalId}`}`, { state: newState });
   };
 
-  const handleFocusClick = (task: ITask) => {
+  const handleFocusClick = (task: ITask | GoalItem) => {
     setTaskTitle(task.title);
     navigate("/", { state: { displayFocus: true } });
   };
@@ -100,5 +104,23 @@ export const useMyTimelineStore = (day: string) => {
     return null;
   };
 
-  return { handleActionClick, handleOpenGoal };
+  const handleReminderDoneClick = async (reminder: GoalItem) => {
+    await archiveGoal(reminder, ancestors);
+    queryClient.invalidateQueries({ queryKey: ["reminders"] });
+    await doneSound.play();
+  };
+
+  const handleReminderActionClick = async (actionName: TaskAction, reminder: GoalItem) => {
+    if (actionName === TaskAction.Done) {
+      return handleReminderDoneClick(reminder);
+    }
+    if (actionName === TaskAction.Focus) {
+      return handleFocusClick(reminder);
+    }
+    if (actionName === TaskAction.Goal) {
+      return handleOpenGoal(reminder.id);
+    }
+    return null;
+  };
+  return { handleActionClick, handleOpenGoal, handleReminderActionClick };
 };

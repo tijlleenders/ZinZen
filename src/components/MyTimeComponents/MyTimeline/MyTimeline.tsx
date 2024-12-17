@@ -45,7 +45,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
 
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
-      <h4 style={{ marginBottom: "10px" }}>My Timeline</h4>
+      <h4 style={{ marginBottom: "10px", marginLeft: "4%" }}>Tasks</h4>
       {myTasks.scheduled.map((task, index) => {
         const startTime = getTimePart(task.start);
         const endTime = getTimePart(task.deadline);
@@ -75,7 +75,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
               displayEndTime={displayEndTime}
             />
             <div className="MTL-taskTitleActionWrapper">
-              <span style={{ textDecorationColor: task.goalColor }}>{t(`${task.title}`)}</span>
+              <span style={{ textDecorationColor: task.goalColor }} className="MTL-taskTitle">
+                {t(`${task.title}`)}
+              </span>
               {showTaskOptions ? <TaskOptions task={task} handleActionClick={handleActionClick} /> : null}
             </div>
             {showTaskOptions && (
