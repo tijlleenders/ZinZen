@@ -15,5 +15,4 @@ export interface TaskItem {
   lastCompleted: string; // date
   lastSkipped: string; // date
   blockedSlots: blockedSlotOfTask[];
-  completedTodayTimings: TCompletedTaskTiming[]; //  to store timings of the tasks that are completed today
 }

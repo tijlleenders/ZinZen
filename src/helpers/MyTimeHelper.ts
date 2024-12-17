@@ -7,9 +7,10 @@ import {
   ISchedulerOutputGoal,
 } from "@src/Interfaces/IScheduler";
 import { ITaskOfDay } from "@src/Interfaces/Task";
-import { addSchedulerRes, getFromOutbox, updateSchedulerCachedRes } from "@src/api/DumpboxAPI";
+import { addSchedulerResToCache, getSchedulerCachedRes, updateSchedulerCachedRes } from "@src/api/SchedulerOutputCache";
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { getAllTasks, getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
+import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TCompletedTaskTiming, TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
@@ -154,9 +155,16 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const startDate = convertDateToString(new Date(_today));
   const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
   const tasksCompletedToday: TCompletedTaskTiming[] = [];
-  getAllTasks().then((docs) =>
-    docs.filter((doc) => doc.completedToday > 0).map((doc) => tasksCompletedToday.push(...doc.completedTodayTimings)),
-  );
+
+  getAllTasksDoneToday().then((task) => {
+    task.forEach((ele) => {
+      tasksCompletedToday.push({
+        goalid: ele.goalId,
+        start: ele.scheduledStart,
+        deadline: ele.scheduledEnd,
+      });
+    });
+  });
 
   const schedulerInput: ISchedulerInput = {
     startDate,
@@ -178,7 +186,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
 };
 
 export const getCachedSchedule = async (generatedInputId: string) => {
-  const schedulerCachedRes = await getFromOutbox("scheduler");
+  const schedulerCachedRes = await getSchedulerCachedRes("scheduler");
 
   if (!schedulerCachedRes) {
     return { code: "not-exist" };
@@ -196,5 +204,5 @@ export const getCachedSchedule = async (generatedInputId: string) => {
 export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {
   return code === "expired"
     ? updateSchedulerCachedRes(generatedInputId, output)
-    : addSchedulerRes(generatedInputId, output);
+    : addSchedulerResToCache(generatedInputId, output);
 };
