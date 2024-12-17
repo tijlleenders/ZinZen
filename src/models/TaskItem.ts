@@ -8,6 +8,5 @@ export interface TaskItem {
   id: string;
   goalId: string;
   title: string;
-  completedTodayIds: string[];
   blockedSlots: blockedSlotOfTask[];
 }

@@ -31,7 +31,6 @@ export const resetProgressOfToday = async () => {
     await db.transaction("rw", db.taskCollection, async () => {
       const updatedRows = tasks.map((_task) => {
         const task = { ..._task };
-        task.completedTodayIds = [];
         task.blockedSlots = [];
         return task;
       });
@@ -50,7 +49,6 @@ export const refreshTaskCollection = async () => {
     await db.transaction("rw", db.taskCollection, async () => {
       const updatedRows = tasks.map((_task) => {
         const task = { ..._task };
-        task.completedTodayIds = [];
         return task;
       });
 
