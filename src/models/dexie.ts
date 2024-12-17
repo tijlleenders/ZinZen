@@ -49,9 +49,6 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
     const taskCollection = transaction.table("taskCollection");
     taskCollection.toCollection().modify((task: TaskItem) => {
       task.blockedSlots = [];
-      task.skippedToday = [];
-      task.completedToday = 0;
-      task.completedTodayIds = [];
     });
   }
   if (currentVersion < 12) {
@@ -170,6 +167,18 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
     const taskCollection = transaction.table("taskCollection");
     taskCollection.toCollection().modify((task) => {
       delete task.completedTodayTimings;
+    });
+  }
+  if (currentVersion < 23) {
+    console.log("processing updates for 23th version");
+    const taskCollection = transaction.table("taskCollection");
+    taskCollection.toCollection().modify((task) => {
+      delete task.completedTodayIds;
+      delete task.completedToday;
+      delete task.lastCompleted;
+      delete task.lastSkipped;
+      delete task.hoursSpent;
+      delete task.skippedToday;
     });
   }
 };
