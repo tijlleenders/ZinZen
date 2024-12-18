@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getSharedWMGoal, removeSharedWMChildrenGoals, updateSharedWMGoal } from "@src/api/SharedWMAPI";
@@ -20,6 +20,7 @@ import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], hintOption: boolean) => {
   const level = ancestors.length;
 
+  // handle hint
   if (hintOption) {
     getHintsFromAPI(newGoal)
       .then((hints) => {
@@ -35,6 +36,7 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
       return { parentGoal: null };
     }
 
+    // handle participants
     const ancestorGoals = await Promise.all(ancestors.map((id) => getGoal(id)));
     const allParticipants = new Map<string, IParticipant>();
 
@@ -263,7 +265,7 @@ export const deleteSharedGoal = async (goal: GoalItem) => {
   }
 };
 
-const updateRootGoal = async (goalId: string, newRootGoalId: string) => {
+export const updateRootGoal = async (goalId: string, newRootGoalId: string) => {
   await updateGoal(goalId, { rootGoalId: newRootGoalId });
 
   const childrenGoals = await getChildrenGoals(goalId);
@@ -343,13 +345,13 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
   const ancestors = await getGoalHistoryToRoot(goalId);
   const ancestorGoalIds = ancestors.map((ele) => ele.goalID);
 
-  const ancestorGoalsOfNewParent = await getGoalHistoryToRoot(newParentGoalId);
-  const ancestorGoalIdsOfNewParent = ancestorGoalsOfNewParent.map((ele) => ele.goalID);
+  const goalsHistoryOfNewParent = await getGoalHistoryToRoot(newParentGoalId);
+  const ancestorGoalIdsOfNewParent = goalsHistoryOfNewParent.map((ele) => ele.goalID);
 
-  const ancestorGoals = await Promise.all(ancestorGoalIdsOfNewParent.map((id) => getGoal(id)));
+  const ancestorGoalsOfNewParent = await Promise.all(ancestorGoalIdsOfNewParent.map((id) => getGoal(id)));
   const allParticipants = new Map<string, IParticipant>();
 
-  [...ancestorGoals, newParentGoal].forEach((goal) => {
+  [...ancestorGoalsOfNewParent, newParentGoal].forEach((goal) => {
     if (!goal?.participants) return;
     goal.participants.forEach((participant) => {
       if (participant.following) {

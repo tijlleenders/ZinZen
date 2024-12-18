@@ -14,17 +14,22 @@ export const sendUpdatedGoal = async (
   if (!goal) {
     return;
   }
+
   const ancestorGoalIds = redefineAncestors ? (await getHistoryUptoGoal(goalId)).map((ele) => ele.goalID) : ancestors;
+
   const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
+
+  const filteredSubscribers = subscribers.filter((ele) => !excludeSubs.includes(ele.sub.relId));
+
   if (goal) {
     const { participants, ...changes } = goal;
-    subscribers
-      .filter((ele) => !excludeSubs.includes(ele.sub.relId))
-      .forEach(async ({ sub, rootGoalId }) => {
-        sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [
-          { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId, timestamp: Date.now() } },
-        ]).then(() => console.log("update sent"));
-      });
+    filteredSubscribers.forEach(async ({ sub, rootGoalId }) => {
+      sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [
+        { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId, timestamp: Date.now() } },
+      ])
+        .then(() => console.log(`[sendUpdatedGoal] Update sent successfully to ${sub.relId}`))
+        .catch((error) => console.error(`[sendUpdatedGoal] Error sending update to ${sub.relId}:`, error));
+    });
   }
 };
 

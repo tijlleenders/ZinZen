@@ -12,7 +12,7 @@ export async function isIncomingGoalLatest(localGoalId: string, incomingGoal: Go
     return true;
   }
 
-  return false;
+  return true;
 }
 
 export async function isIncomingIdChangeLatest(localGoalId: string, incomingChangeTimestamp: number): Promise<boolean> {
@@ -22,5 +22,5 @@ export async function isIncomingIdChangeLatest(localGoalId: string, incomingChan
     return true;
   }
 
-  return incomingChangeTimestamp > localGoal.timestamp;
+  return true;
 }

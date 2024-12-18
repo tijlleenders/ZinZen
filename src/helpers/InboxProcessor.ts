@@ -1,4 +1,4 @@
-import { GoalItem, typeOfSub } from "@src/models/GoalItem";
+import { GoalItem, IParticipant, typeOfSub } from "@src/models/GoalItem";
 import {
   ChangesByType,
   changesInGoal,
@@ -30,7 +30,12 @@ import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplay
 import { fixDateVlauesInGoalObject } from "@src/utils";
 import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import { getContactByRelId } from "@src/api/ContactsAPI";
-import { getAllDescendants, getRootGoalId, updateRootGoalNotification } from "@src/controllers/GoalController";
+import {
+  getAllDescendants,
+  getGoalAncestors,
+  getRootGoalId,
+  updateRootGoalNotification,
+} from "@src/controllers/GoalController";
 import { isIncomingGoalLatest, isIncomingIdChangeLatest } from "./mergeSharedGoalItems";
 
 export interface Payload {
@@ -278,20 +283,50 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
 export const acceptSelectedSubgoals = async (selectedGoals: GoalItem[], parentGoal: GoalItem) => {
   try {
     const childrens: string[] = [];
+    const newParentAncestors = await getGoalAncestors(parentGoal.id);
 
-    selectedGoals.forEach(async (goal: GoalItem) => {
-      const { relId } = goal.participants[0];
-      const contact = await getContactByRelId(relId);
-      addGoal(
-        fixDateVlauesInGoalObject({
-          ...goal,
-          participants: [{ relId, following: true, type: "sharer", name: contact?.name || "" }],
-        }),
-      ).catch((err) => console.log(err));
-      childrens.push(goal.id);
+    // Get all ancestor goals to collect their participants
+    const ancestorGoals = await Promise.all(newParentAncestors.map((id) => getGoal(id)));
+    const allParticipants = new Map<string, IParticipant>();
+
+    [...ancestorGoals, parentGoal].forEach((goal) => {
+      if (!goal?.participants) return;
+      goal.participants.forEach((participant) => {
+        if (participant.following) {
+          allParticipants.set(participant.relId, participant);
+        }
+      });
     });
-    await addIntoSublist(parentGoal.id, childrens);
 
+    await Promise.all(
+      selectedGoals.map(async (goal: GoalItem) => {
+        const { relId } = goal.participants[0];
+        const contact = await getContactByRelId(relId);
+
+        const combinedParticipants = [];
+        if (!allParticipants.has(relId)) {
+          combinedParticipants.push({
+            relId,
+            following: true,
+            type: "sharer" as typeOfSub,
+            name: contact?.name || "",
+          });
+        }
+
+        combinedParticipants.push(...Array.from(allParticipants.values()));
+
+        await addGoal(
+          fixDateVlauesInGoalObject({
+            ...goal,
+            participants: combinedParticipants,
+            rootGoalId: await getRootGoalId(parentGoal.id),
+          }),
+        );
+        childrens.push(goal.id);
+      }),
+    );
+
+    await addIntoSublist(parentGoal.id, childrens);
     return "Done!!";
   } catch (err) {
     console.error("[acceptSelectedSubgoals] Failed to add changes:", err);
