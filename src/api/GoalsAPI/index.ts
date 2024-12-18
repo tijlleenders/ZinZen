@@ -38,8 +38,8 @@ export const addGoal = async (goalDetails: GoalItem) => {
 
 export const getGoal = async (goalId: string) => {
   try {
-    const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
-    return goal.length > 0 ? goal[0] : null;
+    const goal: GoalItem | undefined = await db.goalsCollection.where("id").equals(goalId).first();
+    return goal;
   } catch (error) {
     console.error(`Error fetching goal with ID ${goalId}:`, error);
     throw new Error(`Failed to fetch goal with ID ${goalId}`);

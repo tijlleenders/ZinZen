@@ -10,7 +10,7 @@ import { darkModeState, lastAction } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
 import { sendUpdatedGoal } from "@src/controllers/PubSubController";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
-import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
+import { archiveUserGoal, getGoal, getGoalById, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { deleteGoalChangesInID, getInboxItem, removeGoalInbox, removePPTFromInboxOfGoal } from "@src/api/InboxAPI";
 import { findGoalTagChanges, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import { acceptSelectedSubgoals, acceptSelectedTags } from "@src/helpers/InboxProcessor";
@@ -18,17 +18,18 @@ import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
+import {
+  addGoalToNewParentSublist,
+  getAllDescendants,
+  removeGoalFromParentSublist,
+  updateRootGoal,
+} from "@src/controllers/GoalController";
 
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
 import { getMovedSubgoalsList } from "./ShowChanges";
-import {
-  addGoalToNewParentSublist,
-  getAllDescendants,
-  removeGoalFromParentSublist,
-} from "@src/controllers/GoalController";
 
 const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -179,10 +180,14 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     const localGoal = await getGoal(goalUnderReview.id);
     const localParentGoalId = localGoal?.parentGoalId ?? "root";
 
+    const isNewParentAvailable = await getGoalById(goalUnderReview.parentGoalId);
+
     await Promise.all([
-      updateGoal(goalUnderReview.id, { parentGoalId: goalUnderReview.parentGoalId }),
+      updateGoal(goalUnderReview.id, { parentGoalId: isNewParentAvailable ? goalUnderReview.parentGoalId : "root" }),
       removeGoalFromParentSublist(goalUnderReview.id, localParentGoalId),
-      addGoalToNewParentSublist(goalUnderReview.id, goalUnderReview.parentGoalId),
+      isNewParentAvailable &&
+        addGoalToNewParentSublist(goalUnderReview.id, isNewParentAvailable ? goalUnderReview.parentGoalId : "root"),
+      updateRootGoal(goalUnderReview.id, isNewParentAvailable ? goalUnderReview.parentGoalId : "root"),
     ]);
 
     await sendUpdatedGoal(
