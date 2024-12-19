@@ -28,6 +28,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
     setLoading(true);
     const res = await reportHint(goal);
     await deleteAvailableGoalHint(goal.parentGoalId, goal.id);
+    setLastAction("goalHintReported");
     setLoading(false);
     setDisplayToast({ open: true, message: res.message, extra: "" });
     window.history.back();
