@@ -9,9 +9,11 @@ import Providers from "./Providers";
 const root = createRoot(document.getElementById("root"));
 
 root.render(
-  <Providers>
-    <App />
-  </Providers>,
+  <React.StrictMode>
+    <Providers>
+      <App />
+    </Providers>
+  </React.StrictMode>,
 );
 
 serviceWorkerRegistration.register();
