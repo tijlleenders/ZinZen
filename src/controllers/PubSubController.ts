@@ -9,6 +9,7 @@ export const sendUpdatedGoal = async (
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
+  changeType: "modifiedGoals" | "moved" = "modifiedGoals",
 ) => {
   const goal = await getGoal(goalId);
   if (!goal) {
@@ -24,7 +25,7 @@ export const sendUpdatedGoal = async (
   if (goal) {
     const { participants, ...changes } = goal;
     filteredSubscribers.forEach(async ({ sub, rootGoalId }) => {
-      sendUpdatesToSubscriber(sub, rootGoalId, "modifiedGoals", [
+      sendUpdatesToSubscriber(sub, rootGoalId, changeType, [
         { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId, timestamp: Date.now() } },
       ])
         .then(() => console.log(`[sendUpdatedGoal] Update sent successfully to ${sub.relId}`))

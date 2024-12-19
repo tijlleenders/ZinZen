@@ -195,6 +195,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       [],
       true,
       updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
+      "moved",
     );
   };
 
