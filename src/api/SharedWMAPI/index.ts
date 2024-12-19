@@ -2,7 +2,8 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { addDeletedGoal, addGoal } from "../GoalsAPI";
+import { addGoal } from "../GoalsAPI";
+import { getContactByRelId } from "../ContactsAPI";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -17,35 +18,58 @@ export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]
   });
 };
 
-export const addSharedWMGoal = async (goalDetails: object) => {
+export const addSharedWMGoal = async (goalDetails: GoalItem, relId = "") => {
+  console.log("[addSharedWMGoal] Input goal details:", goalDetails);
+  console.log("[addSharedWMGoal] Input relId:", relId);
+
   const { participants } = goalDetails;
-  const newGoal = createGoalObjectFromTags({ ...goalDetails, typeOfGoal: "shared" });
-  if (participants) newGoal.participants = participants;
+  let updatedParticipants = participants || [];
+
+  if (relId) {
+    const contact = await getContactByRelId(relId);
+    if (contact) {
+      const contactExists = updatedParticipants.some((p) => p.relId === relId);
+      if (!contactExists) {
+        updatedParticipants = [...updatedParticipants, { ...contact, following: true, type: "sharer" }];
+      }
+    }
+  }
+
+  console.log("[addSharedWMGoal] Updated participants:", updatedParticipants);
+  const newGoal = createGoalObjectFromTags({
+    ...goalDetails,
+    typeOfGoal: "shared",
+    participants: updatedParticipants,
+  });
+
   await db
     .transaction("rw", db.sharedWMCollection, async () => {
       await db.sharedWMCollection.add(newGoal);
+      console.log("[addSharedWMGoal] Goal added to sharedWMCollection");
     })
     .then(async () => {
       const { parentGoalId } = newGoal;
       if (parentGoalId !== "root") {
+        console.log("[addSharedWMGoal] Adding goal to parent sublist. ParentId:", parentGoalId);
         await addSharedWMSublist(parentGoalId, [newGoal.id]);
       }
     })
     .catch((e) => {
-      console.log(e.stack || e);
+      console.error("[addSharedWMGoal] Error:", e.stack || e);
     });
+
+  console.log("[addSharedWMGoal] Successfully created goal with ID:", newGoal.id);
   return newGoal.id;
 };
 
-export const addGoalsInSharedWM = async (goals: GoalItem[]) => {
+export const addGoalsInSharedWM = async (goals: GoalItem[], relId: string) => {
   goals.forEach((ele) => {
-    addSharedWMGoal(ele).then((res) => console.log(res, "added"));
+    addSharedWMGoal(ele, relId).then((res) => console.log(res, "added"));
   });
 };
 
 export const getSharedWMGoal = async (goalId: string) => {
-  const goal: GoalItem[] = await db.sharedWMCollection.where("id").equals(goalId).sortBy("createdAt");
-  return goal[0];
+  return db.sharedWMCollection.get(goalId);
 };
 
 export const getSharedWMGoalById = (id: string) => {
@@ -83,7 +107,7 @@ export const getRootGoalsOfPartner = async (relId: string) => {
   ).reverse();
 };
 
-export const updateSharedWMGoal = async (id: string, changes: object) => {
+export const updateSharedWMGoal = async (id: string, changes: Partial<GoalItem>) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
     await db.sharedWMCollection.update(id, changes).then((updated) => updated);
   }).catch((e) => {
@@ -156,4 +180,20 @@ export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
         .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
+};
+
+export const updateSharedWMParentSublist = async (oldParentId: string, newParentId: string, goalId: string) => {
+  // Remove from old parent
+  const oldParentGoal = await getSharedWMGoal(oldParentId);
+  if (oldParentGoal?.sublist) {
+    const updatedOldSublist = oldParentGoal.sublist.filter((id) => id !== goalId);
+    await updateSharedWMGoal(oldParentId, { sublist: updatedOldSublist });
+  }
+
+  // Add to new parent
+  const newParentGoal = await getSharedWMGoal(newParentId);
+  if (newParentGoal) {
+    const updatedNewSublist = [...(newParentGoal.sublist || []), goalId];
+    await updateSharedWMGoal(newParentId, { sublist: updatedNewSublist });
+  }
 };

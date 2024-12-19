@@ -10,7 +10,7 @@ import { darkModeState, lastAction } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
 import { sendUpdatedGoal } from "@src/controllers/PubSubController";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
-import { archiveUserGoal, getGoal, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
+import { archiveUserGoal, getGoal, getGoalById, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { deleteGoalChangesInID, getInboxItem, removeGoalInbox, removePPTFromInboxOfGoal } from "@src/api/InboxAPI";
 import { findGoalTagChanges, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
 import { acceptSelectedSubgoals, acceptSelectedTags } from "@src/helpers/InboxProcessor";
@@ -18,11 +18,18 @@ import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
+import {
+  addGoalToNewParentSublist,
+  getAllDescendants,
+  removeGoalFromParentSublist,
+  updateRootGoal,
+} from "@src/controllers/GoalController";
 
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
+import { getMovedSubgoalsList } from "./ShowChanges";
 
 const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -34,6 +41,33 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
   const [goalUnderReview, setGoalUnderReview] = useState<GoalItem>();
   const [participants, setParticipants] = useState<ContactItem[]>([]);
   const [currentDisplay, setCurrentDisplay] = useState<typeOfChange | "none">("none");
+  const [oldParentTitle, setOldParentTitle] = useState<string>("");
+  const [newParentTitle, setNewParentTitle] = useState<string>("");
+
+  useEffect(() => {
+    const fetchParentTitles = async () => {
+      if (!goalUnderReview) return;
+
+      try {
+        const currentGoalInDB = await getGoal(goalUnderReview.id);
+        const oldParentId = currentGoalInDB?.parentGoalId;
+
+        const [oldParent, newParent] = await Promise.all([
+          oldParentId ? getGoal(oldParentId) : null,
+          getGoal(goalUnderReview.parentGoalId),
+        ]);
+
+        setOldParentTitle(oldParent?.title || "root");
+        setNewParentTitle(newParent?.title || "Non-shared goal");
+      } catch (error) {
+        console.error("Error fetching parent titles:", error);
+        setOldParentTitle("root");
+        setNewParentTitle("Non-shared goal");
+      }
+    };
+
+    fetchParentTitles();
+  }, [goalUnderReview]);
 
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [unselectedChanges, setUnselectedChanges] = useState<string[]>([]);
@@ -125,11 +159,44 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     if (!goalUnderReview || !currentMainGoal) {
       return;
     }
-    const removeChanges = currentDisplay === "subgoals" ? newGoals.map(({ goal }) => goal.id) : [goalUnderReview.id];
+    const removeChanges =
+      currentDisplay === "subgoals" || currentDisplay === "newGoalMoved"
+        ? newGoals.map(({ goal }) => goal.id)
+        : currentDisplay === "moved"
+          ? [goalUnderReview.id, ...(await getAllDescendants(goalUnderReview.id)).map((goal: GoalItem) => goal.id)]
+          : [goalUnderReview.id];
+
     if (currentDisplay !== "none") {
       await deleteGoalChangesInID(currentMainGoal.id, participants[activePPT].relId, currentDisplay, removeChanges);
     }
     setCurrentDisplay("none");
+  };
+
+  const handleMoveChanges = async () => {
+    if (!goalUnderReview) {
+      console.log("No goal under review.");
+      return;
+    }
+    const localGoal = await getGoal(goalUnderReview.id);
+    const localParentGoalId = localGoal?.parentGoalId ?? "root";
+
+    const isNewParentAvailable = await getGoalById(goalUnderReview.parentGoalId);
+
+    await Promise.all([
+      updateGoal(goalUnderReview.id, { parentGoalId: isNewParentAvailable ? goalUnderReview.parentGoalId : "root" }),
+      removeGoalFromParentSublist(goalUnderReview.id, localParentGoalId),
+      isNewParentAvailable &&
+        addGoalToNewParentSublist(goalUnderReview.id, isNewParentAvailable ? goalUnderReview.parentGoalId : "root"),
+      updateRootGoal(goalUnderReview.id, isNewParentAvailable ? goalUnderReview.parentGoalId : "root"),
+    ]);
+
+    await sendUpdatedGoal(
+      goalUnderReview.id,
+      [],
+      true,
+      updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
+      "moved",
+    );
   };
 
   const acceptChanges = async () => {
@@ -139,7 +206,10 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     if (currentDisplay !== "none") {
       await deleteChanges();
     }
-    if (currentDisplay === "subgoals") {
+    if (currentDisplay === "moved") {
+      await handleMoveChanges();
+    }
+    if (currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") {
       const goalsToBeSelected = newGoals
         .filter(({ goal }) => !unselectedChanges.includes(goal.id))
         .map(({ goal }) => goal);
@@ -205,12 +275,15 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
         console.log("🚀 ~ getChanges ~ changedGoal:", changedGoal);
         if (changedGoal) {
           setGoalUnderReview({ ...changedGoal });
-          if (typeAtPriority === "subgoals") {
+          if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
             setNewGoals(goals || []);
           } else if (typeAtPriority === "modifiedGoals") {
             setUpdatesIntent(goals[0].intent);
             const incGoal: GoalItem = { ...goals[0].goal };
             setUpdateList({ ...findGoalTagChanges(changedGoal, incGoal) });
+          } else if (typeAtPriority === "moved") {
+            setUpdatesIntent(goals[0].intent);
+            setGoalUnderReview({ ...goals[0].goal });
           }
         }
       }
@@ -284,12 +357,14 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
                 contactName={participants[activePPT].name}
                 title={goalUnderReview.title}
                 currentDisplay={currentDisplay}
+                newParentTitle={newParentTitle}
               />
             </p>
           )}
           {["deleted", "archived", "restored"].includes(currentDisplay) && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
-          {currentDisplay === "subgoals" && getSubgoalsList()}
+          {(currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") && getSubgoalsList()}
+          {currentDisplay === "moved" && getMovedSubgoalsList(goalUnderReview, oldParentTitle, newParentTitle)}
 
           <div className="d-flex justify-fe gap-20">
             {goalUnderReview && (

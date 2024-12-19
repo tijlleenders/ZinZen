@@ -1,7 +1,7 @@
 import { Checkbox } from "antd";
 import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 import { darkModeState, displayConfirmation } from "@src/store";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
@@ -51,7 +51,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
         {t(headerKey)}
       </p>
       <p>
-        {t("note")}: {t(noteKey)}
+        {t("note")}: <Trans i18nKey={noteKey} components={{ br: <br />, ul: <ul />, li: <li /> }} />
       </p>
       <div style={{ display: "flex", gap: "5px" }}>
         <Checkbox
