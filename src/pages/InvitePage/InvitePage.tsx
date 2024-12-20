@@ -66,7 +66,9 @@ const InvitePage = () => {
         value={newContactName}
         onChange={(e) => setNewContactName(e.target.value)}
       />
-      <DefaultButton onClick={handleSubmit}>Add to my contacts</DefaultButton>
+      <DefaultButton onClick={handleSubmit} customStyle={{ marginTop: "20px", alignSelf: "flex-end" }}>
+        Add to my contacts
+      </DefaultButton>
     </OnboardingLayout>
   );
 };

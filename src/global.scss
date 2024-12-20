@@ -77,29 +77,6 @@ h6 {
   }
 }
 
-.publicGoal {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-top: 5px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
-  .loader {
-    position: absolute;
-    top: -3.5px;
-    left: -3px;
-    width: 47px !important;
-    height: 47px !important;
-  }
-  img {
-    width: 25px !important;
-    height: 23px !important;
-    margin: 0 !important;
-  }
-}
-
 .light-svg {
   filter: invert(68%) sepia(40%) saturate(4205%) hue-rotate(325deg) brightness(87%) contrast(82%);
 }
@@ -145,16 +122,16 @@ h6 {
 .default-btn,
 .default-btn-dark {
   font-weight: 600 !important;
-  background: transparent;
   border-radius: 5px;
   padding: 8px 15px;
   border: none;
-  margin-top: 20px;
+  //margin-top: 20px;
   width: max-content;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  place-self: flex-end;
+  gap: 10px;
+  //place-self: flex-end;
   background: var(--selection-color);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   font-size: 0.875em;
@@ -228,16 +205,6 @@ h6 {
     color: white;
   }
 }
-
-/* Loader */
-.loader {
-  position: absolute;
-  top: 18px;
-  left: 0;
-  width: 50px;
-  height: 50px;
-}
-
 .chevronDown,
 .chevronLeft,
 .chevronRight {

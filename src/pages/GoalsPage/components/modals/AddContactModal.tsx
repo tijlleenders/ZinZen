@@ -78,10 +78,20 @@ const AddContactModal = () => {
         onClick={async () => {
           await addNewContact();
         }}
-        customStyle={{ marginTop: 0 }}
+        customStyle={{ marginTop: 0, alignSelf: "flex-end" }}
       >
-        {loading ? <Loader /> : <img alt="add contact" className="theme-icon" src={shareInvitation} />}
-        <span style={loading ? { marginLeft: 28 } : {}}>Share invitation</span>
+        {loading ? (
+          <Loader />
+        ) : (
+          <img
+            alt="add contact"
+            style={{ marginRight: 0, height: 20, width: 20 }}
+            className="theme-icon"
+            src={shareInvitation}
+          />
+        )}
+
+        <span>Share invitation</span>
       </DefaultButton>
     </ZModal>
   );
