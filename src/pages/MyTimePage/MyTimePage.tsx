@@ -85,7 +85,7 @@ export const MyTimePage = () => {
         </button>
         <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
           {showTasks.includes(day) && tasks[day] && tasks[day].scheduled.length > 0 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div className="MyTime_dayList">
               <Reminders day={day} />
               <MyTimeline day={day} myTasks={tasks[day]} doneTasks={doneTasks} />
             </div>

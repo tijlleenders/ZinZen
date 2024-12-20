@@ -45,7 +45,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
 
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
-      <h4 style={{ marginBottom: "10px", marginLeft: "4%" }}>Tasks</h4>
+      <h4 className="MTL-header">Tasks</h4>
       {myTasks.scheduled.map((task, index) => {
         const startTime = getTimePart(task.start);
         const endTime = getTimePart(task.deadline);

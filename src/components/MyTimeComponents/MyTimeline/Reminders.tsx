@@ -7,7 +7,6 @@ import { useRecoilValue } from "recoil";
 import { lastAction } from "@src/store";
 import { useQuery } from "react-query";
 import { ReminderOptions } from "./ReminderOptions";
-import { GoalTiming } from "./GoalTiming";
 import "./index.scss";
 import { useMyTimelineStore } from "./useMyTimelineStore";
 
@@ -64,7 +63,7 @@ export const Reminders = ({ day }: { day: string }) => {
 
   return (
     <div className="MTL-display" style={{ marginTop: "10px" }}>
-      <h4 style={{ marginBottom: "10px", marginLeft: "4%" }}>Reminders</h4>
+      <h4 className="MTL-header">Reminders</h4>
       {reminders.map((reminder) => {
         const showTaskOptions = activeTaskId === reminder.id;
         return (
@@ -77,10 +76,7 @@ export const Reminders = ({ day }: { day: string }) => {
               toggleTaskOptions(reminder.id);
             }}
           >
-            <div style={{ display: "hidden" }}>
-              <GoalTiming startTime="0" endTime={null} showTaskOptions={showTaskOptions} displayEndTime={false} />
-            </div>
-            <div className="MTL-taskTitleActionWrapper">
+            <div style={{ marginLeft: "60px" }} className="MTL-taskTitleActionWrapper">
               <span>{t(`${reminder.title}`)}</span>
               {showTaskOptions ? (
                 <ReminderOptions reminder={reminder} handleActionClick={handleReminderActionClick} />

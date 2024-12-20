@@ -2,6 +2,11 @@
   display: flex;
   flex-direction: column;
 
+  .MTL-header {
+    margin-bottom: 10px;
+    margin-left: 4%;
+  }
+
   .MTL-taskItem {
     display: flex;
     flex-direction: row;
@@ -31,7 +36,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-self: normal;
-
+    min-width: 40px;
     .MTL-startTime {
       font-size: 1.143rem;
     }
@@ -62,6 +67,12 @@
   background: transparent;
 }
 
+.MyTime_dayList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .MTL-taskTitle {
   width: 100%;
   overflow: hidden;
@@ -89,7 +100,7 @@
   border: 0px;
   font-weight: 400;
   border-right: 1px solid;
-  padding: 0.5em 3em;
+  padding: 0.5em 2em;
   font-size: 0.875rem;
   cursor: pointer;
 }
