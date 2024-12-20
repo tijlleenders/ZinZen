@@ -7,6 +7,7 @@ import { darkModeState, displayConfirmation } from "@src/store";
 import { ConfirmationModalProps } from "@src/Interfaces/IPopupModals";
 import { getConfirmButtonText } from "@src/constants/goals";
 import ZModal from "./ZModal";
+import DefaultButton from "./DefaultButton";
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleClick, handleClose }) => {
   const { t } = useTranslation();
@@ -17,13 +18,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
   const [displayModal, setDisplayModal] = useRecoilState(displayConfirmation);
   const [headerKey, noteKey] = [`${actionCategory}.${actionName}.header`, `${actionCategory}.${actionName}.note`];
   const getChoiceButton = (choice: string) => (
-    <button
-      type="button"
-      className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-      style={{
-        boxShadow: darkModeStatus ? "rgba(255, 255, 255, 0.25) 0px 1px 2px" : "0px 1px 2px rgba(0, 0, 0, 0.25)",
-        background: choice !== "cancel" ? "var(--selection-color)" : "transparent",
-      }}
+    <DefaultButton
+      variant={choice === "cancel" ? "secondary" : "primary"}
       onClick={async () => {
         if (choice === "cancel") {
           handleClose();
@@ -43,30 +39,32 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
       }}
     >
       {t(choice)}
-    </button>
+    </DefaultButton>
   );
   return (
     <ZModal open onCancel={handleClose}>
-      <p className="popupModal-title" style={{ margin: 0 }}>
-        {t(headerKey)}
-      </p>
-      <p>
-        {t("note")}: {t(noteKey)}
-      </p>
-      <div style={{ display: "flex", gap: "5px" }}>
-        <Checkbox
-          checked={neverShowAgain}
-          className="checkbox"
-          onChange={() => {
-            setNeverShowAgain(!neverShowAgain);
-          }}
-        >
-          {t("dontAskAgain")}
-        </Checkbox>
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
-        {getChoiceButton("cancel")}
-        {getChoiceButton(getConfirmButtonText(actionName))}
+      <div className="d-flex f-col gap-16">
+        <p className="popupModal-title" style={{ margin: 0 }}>
+          {t(headerKey)}
+        </p>
+        <p className="m-0">
+          {t("note")}: {t(noteKey)}
+        </p>
+        <div style={{ display: "flex", gap: "5px" }}>
+          <Checkbox
+            checked={neverShowAgain}
+            className="checkbox"
+            onChange={() => {
+              setNeverShowAgain(!neverShowAgain);
+            }}
+          >
+            {t("dontAskAgain")}
+          </Checkbox>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          {getChoiceButton("cancel")}
+          {getChoiceButton(getConfirmButtonText(actionName))}
+        </div>
       </div>
     </ZModal>
   );

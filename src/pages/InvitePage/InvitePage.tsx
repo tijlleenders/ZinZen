@@ -1,17 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
-import { darkModeState, displayToast } from "@src/store";
+import { displayToast } from "@src/store";
 import { addContact, getAllContacts } from "@src/api/ContactsAPI";
 import { acceptRelationship } from "@src/services/contact.service";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
 import { displayPartnerModeTour } from "@src/store/TourState";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+import DefaultInput from "@src/common/DefaultInput";
+import DefaultButton from "@src/common/DefaultButton";
 
 const InvitePage = () => {
   const navigate = useNavigate();
-  const darkModeStatus = useRecoilValue(darkModeState);
   const setDisplayTour = useSetRecoilState(displayPartnerModeTour);
 
   const setShowToast = useSetRecoilState(displayToast);
@@ -60,22 +61,14 @@ const InvitePage = () => {
         <br />
         Add them to your contact list.
       </p>
-      <input
-        style={{ width: "100%", fontWeight: 500 }}
-        onChange={(e) => setNewContactName(e.target.value)}
-        className="default-input"
+      <DefaultInput
         placeholder="Contact name"
+        value={newContactName}
+        onChange={(e) => setNewContactName(e.target.value)}
       />
-      {/* Make this button a component */}
-      <button
-        type="button"
-        className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-        style={{ alignSelf: "right" }}
-        onClick={handleSubmit}
-      >
-        {" "}
+      <DefaultButton onClick={handleSubmit} customStyle={{ marginTop: "20px", alignSelf: "flex-end" }}>
         Add to my contacts
-      </button>
+      </DefaultButton>
     </OnboardingLayout>
   );
 };
