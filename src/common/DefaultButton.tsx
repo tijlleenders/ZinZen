@@ -8,17 +8,28 @@ interface DefaultButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement> | React.SyntheticEvent) => void | Promise<void>;
   disabled?: boolean;
   children: React.ReactNode;
+  variant?: "primary" | "secondary";
 }
 
-const DefaultButton: React.FC<DefaultButtonProps> = ({ children, customStyle, id, onClick, disabled = false }) => {
+const DefaultButton: React.FC<DefaultButtonProps> = ({
+  children,
+  customStyle,
+  id,
+  onClick,
+  disabled = false,
+  variant = "primary",
+}) => {
   const isDarkMode = useRecoilValue(darkModeState);
 
   return (
     <button
       type="button"
       id={id}
-      className={`default-btn${isDarkMode ? "-dark" : ""} ${disabled ? "" : "pointer"}`}
-      style={customStyle}
+      className={`default-btn${isDarkMode ? "-dark" : ""} ${disabled ? "" : "pointer"} ${variant}`}
+      style={{
+        ...customStyle,
+        background: variant === "secondary" ? "var(--secondary-background)" : "var(--selection-color)",
+      }}
       onClick={onClick}
       disabled={disabled}
     >
