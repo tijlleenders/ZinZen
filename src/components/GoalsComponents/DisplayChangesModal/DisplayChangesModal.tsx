@@ -279,7 +279,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             ))}
           </div>
           {goalUnderReview && participants.length > 0 && (
-            <p className="popupModal-title" style={{ margin: 0 }}>
+            <p className="popupModal-title m-0">
               <Header
                 contactName={participants[activePPT].name}
                 title={goalUnderReview.title}
