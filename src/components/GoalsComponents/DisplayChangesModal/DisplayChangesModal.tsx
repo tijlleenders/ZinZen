@@ -21,6 +21,7 @@ import ZModal from "@src/common/ZModal";
 import {
   addGoalToNewParentSublist,
   getAllDescendants,
+  getSharedRootGoal,
   removeGoalFromParentSublist,
   updateRootGoal,
 } from "@src/controllers/GoalController";
@@ -216,7 +217,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       await acceptSelectedSubgoals(goalsToBeSelected, goalUnderReview);
       if (goalsToBeSelected.length > 0) {
         const { intent } = newGoals[0];
-        await sendNewGoals(goalsToBeSelected, [], true, intent === "suggestion" ? [] : [participants[activePPT].relId]);
+        await sendNewGoals(goalsToBeSelected, [], intent === "suggestion" ? [] : [participants[activePPT].relId]);
       }
       setUnselectedChanges([]);
       setNewGoals([]);
@@ -251,6 +252,10 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       if (typeAtPriority === "none") {
         // remove participant from inbox
         if (participants.length === 1) {
+          const rootGoal = await getSharedRootGoal(currentMainGoal.id, participants[activePPT].relId);
+          if (rootGoal) {
+            removeGoalInbox(rootGoal.id);
+          }
           await Promise.allSettled([
             removeGoalInbox(currentMainGoal.id),
             updateGoal(currentMainGoal.id, { newUpdates: false }),

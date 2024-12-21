@@ -34,6 +34,7 @@ import {
   getAllDescendants,
   getGoalAncestors,
   getRootGoalId,
+  getSharedRootGoal,
   updateRootGoalNotification,
 } from "@src/controllers/GoalController";
 import { isIncomingGoalLatest, isIncomingIdChangeLatest } from "./mergeSharedGoalItems";
@@ -106,17 +107,6 @@ const handleSubgoalsChanges = async (
   relId: string,
   type: string,
 ) => {
-  const rootGoal = await getGoal(rootGoalId);
-  if (!rootGoal) {
-    console.warn("[handleSubgoalsChanges] Root goal not found:", rootGoalId);
-    return;
-  }
-
-  if (!rootGoal.participants.find((p) => p.relId === relId && p.following)) {
-    console.warn("[handleSubgoalsChanges] Participant not found or not following:", relId);
-    return;
-  }
-
   const contact = await getContactByRelId(relId);
 
   const goalsWithParticipants = changes.map((ele: changesInGoal) => ({
@@ -235,7 +225,22 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     const localGoal = await getGoal(goalId);
 
     if (!localGoal || !localGoal.participants.find((p) => p.relId === relId && p.following)) {
-      console.log("Goal not found or not shared with participant");
+      if (changeType === "moved") {
+        const defaultChanges = getDefaultValueOfGoalChanges();
+        if (isIdChangeType(changeType)) {
+          defaultChanges[changeType] = changes.map((ele) => ({
+            ...(ele as changesInId),
+            intent: payload.type as typeOfIntent,
+          }));
+        } else {
+          defaultChanges[changeType] = changes.map((ele) => ({
+            ...(ele as changesInGoal),
+            intent: payload.type as typeOfIntent,
+          }));
+        }
+
+        await addGoalChangesInID(rootGoalId, relId, defaultChanges);
+      }
       return;
     }
 
@@ -257,8 +262,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       console.log("All changes are not latest");
       return;
     }
-
-    const inbox = await getInboxItem(localGoal.id);
+    const inbox = await getInboxItem(rootGoalId);
     const defaultChanges = getDefaultValueOfGoalChanges();
     if (isIdChangeType(changeType)) {
       defaultChanges[changeType] = filteredChanges.map((ele) => ({
@@ -273,10 +277,10 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     }
 
     if (!inbox) {
-      await createEmptyInboxItem(localGoal.id);
+      await createEmptyInboxItem(rootGoalId);
     }
 
-    await addChangesToRootGoal(localGoal.id, relId, defaultChanges);
+    await addChangesToRootGoal(rootGoalId, relId, defaultChanges);
   }
 };
 

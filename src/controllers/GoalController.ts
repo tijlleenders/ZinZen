@@ -49,6 +49,7 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
       });
     });
     const goalWithParentProps = inheritParentProps(newGoal, parentGoal);
+
     const updatedGoal = {
       ...goalWithParentProps,
       participants: Array.from(allParticipants.values()),
@@ -57,44 +58,17 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
     const newGoalId = await addGoal(updatedGoal);
 
     if (newGoalId) {
-      const subscriberUpdates = new Map<
-        string,
-        {
-          sub: IParticipant;
-          rootGoalId: string;
-          updates: Array<{ level: number; goal: Omit<GoalItem, "participants"> }>;
-        }
-      >();
-
-      const subscribers = await getParticipantsOfGoals(ancestors);
-
-      const uniqueSubscribers = new Map<string, { sub: IParticipant; rootGoalId: string }>();
-
-      subscribers.forEach(({ sub, rootGoalId }) => {
-        if (!uniqueSubscribers.has(sub.relId)) {
-          uniqueSubscribers.set(sub.relId, { sub, rootGoalId });
-        }
-      });
-
-      uniqueSubscribers.forEach(({ sub, rootGoalId }) => {
-        if (!subscriberUpdates.has(sub.relId)) {
-          subscriberUpdates.set(sub.relId, { sub, rootGoalId, updates: [] });
-        }
-        const subscriberUpdate = subscriberUpdates.get(sub.relId);
-        subscriberUpdate?.updates.push({
-          level,
-          goal: {
-            ...updatedGoal,
-            id: newGoalId,
-            rootGoalId,
-          },
-        });
-      });
-
+      const newGoalParticipants = updatedGoal.participants;
       await Promise.all(
-        Array.from(subscriberUpdates.values()).map(({ sub, rootGoalId, updates }) =>
-          sendUpdatesToSubscriber(sub, rootGoalId, "subgoals", updates),
-        ),
+        newGoalParticipants.map(async (participant) => {
+          const rootGoal = await getSharedRootGoal(newGoalId, participant.relId);
+          sendUpdatesToSubscriber(participant, rootGoal?.id || newGoalId, "subgoals", [
+            {
+              level: 0,
+              goal: { ...updatedGoal, id: newGoalId, rootGoalId: rootGoal?.id || newGoalId },
+            },
+          ]);
+        }),
       );
     }
 
@@ -284,6 +258,44 @@ export const getRootGoalId = async (goalId: string): Promise<string> => {
   return getRootGoalId(goal.parentGoalId);
 };
 
+export const getSharedRootGoal = async (goalId: string, participantRelId: string): Promise<GoalItem | null> => {
+  console.log(
+    `[getSharedRootGoal] Starting search for shared root goal. GoalId: ${goalId}, ParticipantId: ${participantRelId}`,
+  );
+
+  const goal = await getGoal(goalId);
+  if (!goal) {
+    console.log(`[getSharedRootGoal] Goal not found for id: ${goalId}`);
+    return null;
+  }
+
+  if (goal.parentGoalId === "root" && goal.participants.some((p) => p.relId === participantRelId)) {
+    console.log(`[getSharedRootGoal] Found root shared goal: ${goalId}`);
+    return goal;
+  }
+
+  if (goal.parentGoalId !== "root") {
+    console.log(`[getSharedRootGoal] Checking parent goal: ${goal.parentGoalId}`);
+    const parentGoal = await getGoal(goal.parentGoalId);
+
+    if (!parentGoal) {
+      console.log(`[getSharedRootGoal] Parent goal not found, returning current goal: ${goalId}`);
+      return goal;
+    }
+
+    if (!parentGoal.participants.some((p) => p.relId === participantRelId)) {
+      console.log(`[getSharedRootGoal] Parent doesn't have participant, current goal is root: ${goalId}`);
+      return goal;
+    }
+
+    console.log(`[getSharedRootGoal] Parent has participant, traversing up to: ${goal.parentGoalId}`);
+    return getSharedRootGoal(goal.parentGoalId, participantRelId);
+  }
+
+  console.log(`[getSharedRootGoal] No shared root goal found for: ${goalId}`);
+  return null;
+};
+
 export const updateRootGoalNotification = async (goalId: string) => {
   const rootGoalId = await getRootGoalId(goalId);
   if (rootGoalId !== "root") {
@@ -380,18 +392,19 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
 
     try {
       await Promise.all(
-        subscribers.map(({ sub, rootGoalId }) =>
-          sendUpdatesToSubscriber(sub, rootGoalId, "moved", [
+        subscribers.map(async ({ sub }) => {
+          const rootGoal = await getSharedRootGoal(goalId, sub.relId);
+          sendUpdatesToSubscriber(sub, rootGoal?.id || goalId, "moved", [
             {
               level: ancestorGoalIds.length,
               goal: {
                 ...updatedGoal,
                 parentGoalId: newParentGoalId,
-                rootGoalId,
+                rootGoalId: rootGoal?.id || goalId,
               },
             },
-          ]),
-        ),
+          ]);
+        }),
       );
     } catch (error) {
       console.error("[moveGoalHierarchy] Error sending move updates:", error);
