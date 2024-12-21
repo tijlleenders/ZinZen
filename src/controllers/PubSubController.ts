@@ -26,7 +26,7 @@ export const sendUpdatedGoal = async (
     const { participants, ...changes } = goal;
     filteredSubscribers.forEach(async ({ sub, rootGoalId }) => {
       sendUpdatesToSubscriber(sub, rootGoalId, changeType, [
-        { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId, timestamp: Date.now() } },
+        { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId: goal.rootGoalId, timestamp: Date.now() } },
       ])
         .then(() => console.log(`[sendUpdatedGoal] Update sent successfully to ${sub.relId}`))
         .catch((error) => console.error(`[sendUpdatedGoal] Error sending update to ${sub.relId}:`, error));

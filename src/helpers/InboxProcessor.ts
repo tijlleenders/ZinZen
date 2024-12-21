@@ -88,16 +88,34 @@ const handleMoveOperation = async (movedGoal: GoalItem, correspondingSharedWMGoa
   await updateSharedWMGoalAndDescendants(updatedGoal);
 };
 
-const addChangesToRootGoal = async (goalId: string, relId: string, changes: ChangesByType) => {
-  const rootGoalId = await getRootGoalId(goalId);
-  if (rootGoalId === "root") return;
+const addChangesToRootGoal = async (
+  goalId: string,
+  relId: string,
+  changes: ChangesByType,
+  passedRootGoalId?: string,
+) => {
+  let rootGoalId = await getRootGoalId(goalId);
+
+  if (rootGoalId === "root") {
+    if (changes.subgoals && changes.subgoals.length > 0) {
+      rootGoalId = changes.subgoals[0].goal.rootGoalId;
+    }
+    if (changes.modifiedGoals && changes.modifiedGoals.length > 0) {
+      rootGoalId = passedRootGoalId || rootGoalId;
+    }
+  }
 
   const inbox = await getInboxItem(rootGoalId);
+
   if (!inbox) {
     await createEmptyInboxItem(rootGoalId);
   }
 
-  await Promise.all([updateRootGoalNotification(rootGoalId), addGoalChangesInID(rootGoalId, relId, changes)]);
+  await Promise.all([updateRootGoalNotification(rootGoalId), addGoalChangesInID(rootGoalId, relId, changes)]).catch(
+    (error) => {
+      console.error("[addChangesToRootGoal] Error adding changes:", error);
+    },
+  );
 };
 
 const handleSubgoalsChanges = async (
@@ -225,21 +243,25 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     const localGoal = await getGoal(goalId);
 
     if (!localGoal || !localGoal.participants.find((p) => p.relId === relId && p.following)) {
+      console.log("[InboxProcessor] Goal not found or participant not following");
       if (changeType === "moved") {
         const defaultChanges = getDefaultValueOfGoalChanges();
-        if (isIdChangeType(changeType)) {
-          defaultChanges[changeType] = changes.map((ele) => ({
-            ...(ele as changesInId),
-            intent: payload.type as typeOfIntent,
-          }));
-        } else {
-          defaultChanges[changeType] = changes.map((ele) => ({
-            ...(ele as changesInGoal),
-            intent: payload.type as typeOfIntent,
-          }));
-        }
+        defaultChanges[changeType] = changes.map((ele) => ({
+          ...(ele as changesInGoal),
+          intent: payload.type as typeOfIntent,
+        }));
 
-        await addGoalChangesInID(rootGoalId, relId, defaultChanges);
+        await addChangesToRootGoal(rootGoalId, relId, defaultChanges);
+      }
+
+      if (changeType === "modifiedGoals") {
+        const defaultChanges = getDefaultValueOfGoalChanges();
+        defaultChanges[changeType] = changes.map((ele) => ({
+          ...(ele as changesInGoal),
+          intent: payload.type as typeOfIntent,
+        }));
+
+        await addChangesToRootGoal(rootGoalId, relId, defaultChanges, rootGoalId);
       }
       return;
     }
@@ -358,4 +380,24 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     start: finalChanges.start ? new Date(finalChanges.start) : null,
     due: finalChanges.due ? new Date(finalChanges.due) : null,
   });
+};
+
+export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {
+  try {
+    const inbox = await getInboxItem(goalId);
+    const goal = await getGoal(goalId);
+
+    if (!goal) {
+      return;
+    }
+    if (inbox && Object.keys(inbox.changes).length > 0) {
+      if (!goal.newUpdates) {
+        await updateGoal(goalId, { newUpdates: true });
+      }
+    } else if (goal.newUpdates) {
+      await updateGoal(goalId, { newUpdates: false });
+    }
+  } catch (error) {
+    console.error("[checkAndUpdateGoalNewUpdatesStatus] Error checking inbox:", error);
+  }
 };

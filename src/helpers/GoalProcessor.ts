@@ -104,6 +104,8 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
   let typeAtPriority: typeOfChange | "none" = "none";
   if (goalChanges.subgoals.length > 0) {
     typeAtPriority = "subgoals";
+  } else if (goalChanges.newGoalMoved.length > 0) {
+    typeAtPriority = "newGoalMoved";
   } else if (goalChanges.modifiedGoals.length > 0) {
     typeAtPriority = "modifiedGoals";
   } else if (goalChanges.archived.length > 0) {
@@ -114,8 +116,6 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
     typeAtPriority = "restored";
   } else if (goalChanges.moved.length > 0) {
     typeAtPriority = "moved";
-  } else if (goalChanges.newGoalMoved.length > 0) {
-    typeAtPriority = "newGoalMoved";
   }
   return { typeAtPriority };
 };
