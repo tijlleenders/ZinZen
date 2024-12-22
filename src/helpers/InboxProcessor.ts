@@ -34,7 +34,6 @@ import {
   getAllDescendants,
   getGoalAncestors,
   getRootGoalId,
-  getSharedRootGoal,
   updateRootGoalNotification,
 } from "@src/controllers/GoalController";
 import { isIncomingGoalLatest, isIncomingIdChangeLatest } from "./mergeSharedGoalItems";
@@ -377,6 +376,7 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
   });
   await updateGoal(goal.id, {
     ...finalChanges,
+    newUpdates: false,
     start: finalChanges.start ? new Date(finalChanges.start) : null,
     due: finalChanges.due ? new Date(finalChanges.due) : null,
   });

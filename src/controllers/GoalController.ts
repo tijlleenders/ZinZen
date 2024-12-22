@@ -17,6 +17,41 @@ import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
+const inheritParticipants = (parentGoal: GoalItem) => {
+  const allParticipants = new Map<string, IParticipant>();
+
+  if (parentGoal?.participants) {
+    parentGoal.participants.forEach((participant) => {
+      if (participant.following) {
+        allParticipants.set(participant.relId, participant);
+      }
+    });
+  }
+
+  return Array.from(allParticipants.values());
+};
+
+export const getSharedRootGoal = async (goalId: string, participantRelId: string): Promise<GoalItem | null> => {
+  const goal = await getGoal(goalId);
+  if (!goal) {
+    return null;
+  }
+  if (goal.parentGoalId === "root" && goal.participants.some((p) => p.relId === participantRelId)) {
+    return goal;
+  }
+  if (goal.parentGoalId !== "root") {
+    const parentGoal = await getGoal(goal.parentGoalId);
+    if (!parentGoal) {
+      return goal;
+    }
+    if (!parentGoal.participants.some((p) => p.relId === participantRelId)) {
+      return goal;
+    }
+    return getSharedRootGoal(goal.parentGoalId, participantRelId);
+  }
+  return null;
+};
+
 export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], hintOption: boolean) => {
   const level = ancestors.length;
 
@@ -36,23 +71,11 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
       return { parentGoal: null };
     }
 
-    // handle participants
-    const ancestorGoals = await Promise.all(ancestors.map((id) => getGoal(id)));
-    const allParticipants = new Map<string, IParticipant>();
-
-    [...ancestorGoals, parentGoal].forEach((goal) => {
-      if (!goal?.participants) return;
-      goal.participants.forEach((participant) => {
-        if (participant.following) {
-          allParticipants.set(participant.relId, participant);
-        }
-      });
-    });
     const goalWithParentProps = inheritParentProps(newGoal, parentGoal);
 
     const updatedGoal = {
       ...goalWithParentProps,
-      participants: Array.from(allParticipants.values()),
+      participants: inheritParticipants(parentGoal),
     };
 
     const newGoalId = await addGoal(updatedGoal);
@@ -64,7 +87,7 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
           const rootGoal = await getSharedRootGoal(newGoalId, participant.relId);
           sendUpdatesToSubscriber(participant, rootGoal?.id || newGoalId, "subgoals", [
             {
-              level: 0,
+              level,
               goal: { ...updatedGoal, id: newGoalId, rootGoalId: rootGoal?.id || newGoalId },
             },
           ]);
@@ -258,45 +281,8 @@ export const getRootGoalId = async (goalId: string): Promise<string> => {
   return getRootGoalId(goal.parentGoalId);
 };
 
-export const getSharedRootGoal = async (goalId: string, participantRelId: string): Promise<GoalItem | null> => {
-  console.log(
-    `[getSharedRootGoal] Starting search for shared root goal. GoalId: ${goalId}, ParticipantId: ${participantRelId}`,
-  );
-
-  const goal = await getGoal(goalId);
-  if (!goal) {
-    console.log(`[getSharedRootGoal] Goal not found for id: ${goalId}`);
-    return null;
-  }
-
-  if (goal.parentGoalId === "root" && goal.participants.some((p) => p.relId === participantRelId)) {
-    console.log(`[getSharedRootGoal] Found root shared goal: ${goalId}`);
-    return goal;
-  }
-
-  if (goal.parentGoalId !== "root") {
-    console.log(`[getSharedRootGoal] Checking parent goal: ${goal.parentGoalId}`);
-    const parentGoal = await getGoal(goal.parentGoalId);
-
-    if (!parentGoal) {
-      console.log(`[getSharedRootGoal] Parent goal not found, returning current goal: ${goalId}`);
-      return goal;
-    }
-
-    if (!parentGoal.participants.some((p) => p.relId === participantRelId)) {
-      console.log(`[getSharedRootGoal] Parent doesn't have participant, current goal is root: ${goalId}`);
-      return goal;
-    }
-
-    console.log(`[getSharedRootGoal] Parent has participant, traversing up to: ${goal.parentGoalId}`);
-    return getSharedRootGoal(goal.parentGoalId, participantRelId);
-  }
-
-  console.log(`[getSharedRootGoal] No shared root goal found for: ${goalId}`);
-  return null;
-};
-
 export const updateRootGoalNotification = async (goalId: string) => {
+  console.trace("Updating root goal notification for goalId:", goalId);
   const rootGoalId = await getRootGoalId(goalId);
   if (rootGoalId !== "root") {
     await updateGoal(rootGoalId, { newUpdates: true });

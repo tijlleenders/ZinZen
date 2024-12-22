@@ -108,14 +108,14 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
     typeAtPriority = "newGoalMoved";
   } else if (goalChanges.modifiedGoals.length > 0) {
     typeAtPriority = "modifiedGoals";
+  } else if (goalChanges.moved.length > 0) {
+    typeAtPriority = "moved";
   } else if (goalChanges.archived.length > 0) {
     typeAtPriority = "archived";
   } else if (goalChanges.deleted.length > 0) {
     typeAtPriority = "deleted";
   } else if (goalChanges.restored.length > 0) {
     typeAtPriority = "restored";
-  } else if (goalChanges.moved.length > 0) {
-    typeAtPriority = "moved";
   }
   return { typeAtPriority };
 };

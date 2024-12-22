@@ -8,7 +8,7 @@ import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { sendNewGoals } from "@src/helpers/BatchPublisher";
 import { darkModeState, lastAction } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { sendUpdatedGoal } from "@src/controllers/PubSubController";
+import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "@src/controllers/PubSubController";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { archiveUserGoal, getGoal, getGoalById, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
 import { deleteGoalChangesInID, getInboxItem, removeGoalInbox, removePPTFromInboxOfGoal } from "@src/api/InboxAPI";
@@ -232,11 +232,32 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       setUnselectedChanges([]);
       setUpdateList({ schemaVersion: {}, prettierVersion: {} });
     } else if (currentDisplay === "deleted") {
+      await sendFinalUpdateOnGoal(
+        goalUnderReview.id,
+        "deleted",
+        [],
+        true,
+        updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
+      );
       await removeGoalWithChildrens(goalUnderReview);
     } else if (currentDisplay === "archived") {
       await archiveUserGoal(goalUnderReview);
+      sendFinalUpdateOnGoal(
+        goalUnderReview.id,
+        "archived",
+        [],
+        true,
+        updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
+      );
     } else if (currentDisplay === "restored") {
       await restoreUserGoal(goalUnderReview);
+      sendFinalUpdateOnGoal(
+        goalUnderReview.id,
+        "restored",
+        [],
+        true,
+        updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
+      );
     }
     setCurrentDisplay("none");
   };
