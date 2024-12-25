@@ -95,7 +95,7 @@ const addChangesToRootGoal = async (
 ) => {
   let rootGoalId = await getRootGoalId(goalId);
 
-  if (rootGoalId === "root") {
+  if (passedRootGoalId || rootGoalId === "root") {
     if (
       (changes.subgoals && changes.subgoals.length > 0) ||
       (changes.newGoalMoved && changes.newGoalMoved.length > 0)
@@ -103,6 +103,9 @@ const addChangesToRootGoal = async (
       rootGoalId = changes.subgoals[0].goal.rootGoalId;
     }
     if (changes.modifiedGoals && changes.modifiedGoals.length > 0) {
+      rootGoalId = passedRootGoalId || rootGoalId;
+    }
+    if (changes.moved && changes.moved.length > 0) {
       rootGoalId = passedRootGoalId || rootGoalId;
     }
   }
@@ -258,7 +261,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
           intent: payload.type as typeOfIntent,
         }));
 
-        await addChangesToRootGoal(rootGoalId, relId, defaultChanges);
+        await addChangesToRootGoal(rootGoalId, relId, defaultChanges, rootGoalId);
       }
 
       if (changeType === "modifiedGoals") {
