@@ -44,13 +44,14 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
   const [currentDisplay, setCurrentDisplay] = useState<typeOfChange | "none">("none");
   const [oldParentTitle, setOldParentTitle] = useState<string>("");
   const [newParentTitle, setNewParentTitle] = useState<string>("");
-
+  const [moveGoalTitle, setMoveGoalTitle] = useState<string>("");
   useEffect(() => {
     const fetchParentTitles = async () => {
       if (!goalUnderReview) return;
 
       try {
         const currentGoalInDB = await getGoal(goalUnderReview.id);
+        setMoveGoalTitle(currentGoalInDB?.title || "");
         const oldParentId = currentGoalInDB?.parentGoalId;
 
         const [oldParent, newParent] = await Promise.all([
@@ -68,7 +69,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     };
 
     fetchParentTitles();
-  }, [goalUnderReview]);
+  }, [goalUnderReview, newGoals]);
 
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [unselectedChanges, setUnselectedChanges] = useState<string[]>([]);
@@ -381,7 +382,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             <p className="popupModal-title" style={{ marginTop: 22 }}>
               <Header
                 contactName={participants[activePPT].name}
-                title={goalUnderReview.title}
+                title={currentDisplay === "moved" ? moveGoalTitle : goalUnderReview.title}
                 currentDisplay={currentDisplay}
                 newParentTitle={newParentTitle}
               />
@@ -390,7 +391,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
           {["deleted", "archived", "restored"].includes(currentDisplay) && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
           {(currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") && getSubgoalsList()}
-          {currentDisplay === "moved" && getMovedSubgoalsList(goalUnderReview, oldParentTitle, newParentTitle)}
+          {currentDisplay === "moved" && getMovedSubgoalsList(moveGoalTitle, oldParentTitle, newParentTitle)}
 
           <div className="d-flex justify-fe gap-20">
             {goalUnderReview && (

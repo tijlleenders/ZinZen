@@ -29,11 +29,11 @@ import {
 import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { fixDateVlauesInGoalObject } from "@src/utils";
 import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
-import { getContactByRelId } from "@src/api/ContactsAPI";
 import {
   getAllDescendants,
   getGoalAncestors,
   getRootGoalId,
+  inheritParticipants,
   updateRootGoalNotification,
 } from "@src/controllers/GoalController";
 import { isIncomingGoalLatest, isIncomingIdChangeLatest } from "./mergeSharedGoalItems";
@@ -96,7 +96,10 @@ const addChangesToRootGoal = async (
   let rootGoalId = await getRootGoalId(goalId);
 
   if (rootGoalId === "root") {
-    if (changes.subgoals && changes.subgoals.length > 0) {
+    if (
+      (changes.subgoals && changes.subgoals.length > 0) ||
+      (changes.newGoalMoved && changes.newGoalMoved.length > 0)
+    ) {
       rootGoalId = changes.subgoals[0].goal.rootGoalId;
     }
     if (changes.modifiedGoals && changes.modifiedGoals.length > 0) {
@@ -110,11 +113,14 @@ const addChangesToRootGoal = async (
     await createEmptyInboxItem(rootGoalId);
   }
 
-  await Promise.all([updateRootGoalNotification(rootGoalId), addGoalChangesInID(rootGoalId, relId, changes)]).catch(
-    (error) => {
-      console.error("[addChangesToRootGoal] Error adding changes:", error);
-    },
-  );
+  try {
+    await Promise.all([updateRootGoalNotification(rootGoalId), addGoalChangesInID(rootGoalId, relId, changes)]);
+  } catch (error) {
+    console.error("[addChangesToRootGoal] Error adding changes:", {
+      rootGoalId,
+      error,
+    });
+  }
 };
 
 const handleSubgoalsChanges = async (
@@ -124,17 +130,15 @@ const handleSubgoalsChanges = async (
   relId: string,
   type: string,
 ) => {
-  const contact = await getContactByRelId(relId);
-
   const goalsWithParticipants = changes.map((ele: changesInGoal) => ({
     ...ele,
     goal: {
       ...fixDateVlauesInGoalObject(ele.goal),
-      participants: [{ relId, following: true, type: "sharer" as typeOfSub, name: contact?.name || "" }],
     },
   }));
 
   const inbox = await getInboxItem(rootGoalId);
+
   if (!inbox) {
     await createEmptyInboxItem(rootGoalId);
   }
@@ -145,7 +149,11 @@ const handleSubgoalsChanges = async (
     intent: type as typeOfIntent,
   }));
 
-  await addChangesToRootGoal(rootGoalId, relId, defaultChanges);
+  try {
+    await addChangesToRootGoal(rootGoalId, relId, defaultChanges);
+  } catch (error) {
+    console.error("[handleSubgoalsChanges] Error adding changes to root goal:", error);
+  }
 };
 
 export const handleIncomingChanges = async (payload: Payload, relId: string) => {
@@ -325,26 +333,28 @@ export const acceptSelectedSubgoals = async (selectedGoals: GoalItem[], parentGo
 
     await Promise.all(
       selectedGoals.map(async (goal: GoalItem) => {
-        const { relId } = goal.participants[0];
-        const contact = await getContactByRelId(relId);
+        // const { relId } = parentGoal.participants[0];
+        // const contact = await getContactByRelId(relId);
 
-        const combinedParticipants = [];
-        if (!allParticipants.has(relId)) {
-          combinedParticipants.push({
-            relId,
-            following: true,
-            type: "sharer" as typeOfSub,
-            name: contact?.name || "",
-          });
-        }
+        // const combinedParticipants = [];
+        // if (!allParticipants.has(relId)) {
+        //   combinedParticipants.push({
+        //     relId,
+        //     following: true,
+        //     type: "sharer" as typeOfSub,
+        //     name: contact?.name || "",
+        //   });
+        // }
 
-        combinedParticipants.push(...Array.from(allParticipants.values()));
+        const participants = await inheritParticipants(parentGoal);
+
+        // combinedParticipants.push(...Array.from(allParticipants.values()));
 
         await addGoal(
           fixDateVlauesInGoalObject({
             ...goal,
-            participants: combinedParticipants,
-            rootGoalId: await getRootGoalId(parentGoal.id),
+            participants,
+            rootGoalId: parentGoal.rootGoalId,
           }),
         );
         childrens.push(goal.id);

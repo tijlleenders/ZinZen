@@ -17,7 +17,7 @@ import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
-const inheritParticipants = (parentGoal: GoalItem) => {
+export const inheritParticipants = (parentGoal: GoalItem) => {
   const allParticipants = new Map<string, IParticipant>();
 
   if (parentGoal?.participants) {
@@ -88,7 +88,7 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
           sendUpdatesToSubscriber(participant, rootGoal?.id || newGoalId, "subgoals", [
             {
               level,
-              goal: { ...updatedGoal, id: newGoalId, rootGoalId: rootGoal?.id || newGoalId },
+              goal: { ...updatedGoal, id: newGoalId },
             },
           ]);
         }),
