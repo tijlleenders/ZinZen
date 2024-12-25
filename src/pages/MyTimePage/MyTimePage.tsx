@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline/MyTimeline";
 import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
 import { getOrdinalSuffix } from "@src/utils";
@@ -16,15 +16,27 @@ import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
+import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
+import { useRecoilValue } from "recoil";
+import { lastAction } from "@src/store";
 
 export const MyTimePage = () => {
   const today = new Date();
-  const { tasks, tasksStatus, setTasksStatus } = useScheduler();
+  const { tasks } = useScheduler();
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
+  const [doneTasks, setDoneTasks] = useState<TasksDoneTodayItem[]>([]);
   const { state } = useLocation();
   const [searchParams] = useSearchParams();
+  const action = useRecoilValue(lastAction);
 
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
+
+  useEffect(() => {
+    getAllTasksDoneToday().then((task) => {
+      setDoneTasks(task);
+    });
+  }, [action]);
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
@@ -72,7 +84,7 @@ export const MyTimePage = () => {
         </button>
         <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
           {showTasks.includes(day) && tasks[day] && tasks[day].scheduled.length > 0 && (
-            <MyTimeline day={day} myTasks={tasks[day]} taskDetails={tasksStatus} setTaskDetails={setTasksStatus} />
+            <MyTimeline day={day} myTasks={tasks[day]} doneTasks={doneTasks} />
           )}
         </div>
       </div>

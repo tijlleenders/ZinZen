@@ -22,6 +22,11 @@
   .ant-select-selection-item {
     color: black;
   }
+
+  .ant-slider-dot {
+    display: none;
+  }
+
   .header-title {
     display: flex;
     align-items: center;
@@ -155,4 +160,9 @@
   display: flex;
   gap: 10px;
   justify-content: center;
+}
+
+.schedule-status {
+  margin-top: 8px;
+  text-align: center;
 }
