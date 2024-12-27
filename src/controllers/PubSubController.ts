@@ -3,6 +3,7 @@ import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getGoal, getParticipantsOfGoals } from "@src/api/GoalsAPI";
 import { getParticipantsOfDeletedGoal } from "@src/api/TrashAPI";
 import { getHistoryUptoGoal } from "../helpers/GoalProcessor";
+import { getSharedRootGoal } from "./GoalController";
 
 export const sendUpdatedGoal = async (
   goalId: string,
@@ -25,8 +26,10 @@ export const sendUpdatedGoal = async (
   if (goal) {
     const { participants, ...changes } = goal;
     filteredSubscribers.forEach(async ({ sub, rootGoalId }) => {
-      sendUpdatesToSubscriber(sub, rootGoalId, changeType, [
-        { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId: goal.rootGoalId, timestamp: Date.now() } },
+      const rootGoal = await getSharedRootGoal(goalId, sub.relId);
+      if (!rootGoal?.id) return;
+      sendUpdatesToSubscriber(sub, rootGoal.id, changeType, [
+        { level: ancestorGoalIds.length, goal: { ...changes, timestamp: Date.now() } },
       ])
         .then(() => console.log(`[sendUpdatedGoal] Update sent successfully to ${sub.relId}`))
         .catch((error) => console.error(`[sendUpdatedGoal] Error sending update to ${sub.relId}:`, error));
@@ -60,7 +63,9 @@ export const sendFinalUpdateOnGoal = async (
   const filteredSubscribers = goalParticipants?.filter((ele) => !excludeSubs.includes(ele.relId));
 
   filteredSubscribers?.forEach(async (participant) => {
-    await sendUpdatesToSubscriber(participant, goal.rootGoalId, action, [
+    const rootGoal = await getSharedRootGoal(goalId, participant.relId);
+    if (!rootGoal?.id) return;
+    await sendUpdatesToSubscriber(participant, rootGoal.id, action, [
       { level: ancestorGoalIds.length, id: goalId, timestamp },
     ]);
   });

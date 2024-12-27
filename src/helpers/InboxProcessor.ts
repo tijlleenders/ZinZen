@@ -20,12 +20,7 @@ import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api
 import { getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { fixDateVlauesInGoalObject } from "@src/utils";
-import {
-  getGoalAncestors,
-  getRootGoalId,
-  inheritParticipants,
-  updateRootGoalNotification,
-} from "@src/controllers/GoalController";
+import { getGoalAncestors, inheritParticipants, updateRootGoalNotification } from "@src/controllers/GoalController";
 import { isIncomingGoalLatest, isIncomingIdChangeLatest } from "./mergeSharedGoalItems";
 import { SharedGoalChangesManager } from "./strategies/SharedGoalChangesManager";
 import {
@@ -52,29 +47,7 @@ const isIdChangeType = (type: typeOfChange): type is IdChangeTypes => {
   return ["deleted", "moved", "restored", "archived"].includes(type);
 };
 
-const addChangesToRootGoal = async (
-  goalId: string,
-  relId: string,
-  changes: ChangesByType,
-  passedRootGoalId?: string,
-) => {
-  let rootGoalId = await getRootGoalId(goalId);
-
-  if (passedRootGoalId || rootGoalId === "root") {
-    if (
-      (changes.subgoals && changes.subgoals.length > 0) ||
-      (changes.newGoalMoved && changes.newGoalMoved.length > 0)
-    ) {
-      rootGoalId = changes.subgoals[0].goal.rootGoalId;
-    }
-    if (changes.modifiedGoals && changes.modifiedGoals.length > 0) {
-      rootGoalId = passedRootGoalId || rootGoalId;
-    }
-    if (changes.moved && changes.moved.length > 0) {
-      rootGoalId = passedRootGoalId || rootGoalId;
-    }
-  }
-
+const addChangesToRootGoal = async (relId: string, changes: ChangesByType, rootGoalId: string) => {
   const inbox = await getInboxItem(rootGoalId);
 
   if (!inbox) {
@@ -105,23 +78,12 @@ const handleSubgoalsChanges = async (
     },
   }));
 
-  const inbox = await getInboxItem(rootGoalId);
-
-  if (!inbox) {
-    await createEmptyInboxItem(rootGoalId);
-  }
-
   const defaultChanges = getDefaultValueOfGoalChanges();
   (defaultChanges[changeType] as changesInGoal[]) = goalsWithParticipants.map((ele) => ({
     ...ele,
     intent: type as typeOfIntent,
   }));
-
-  try {
-    await addChangesToRootGoal(rootGoalId, relId, defaultChanges);
-  } catch (error) {
-    console.error("[handleSubgoalsChanges] Error adding changes to root goal:", error);
-  }
+  await addChangesToRootGoal(relId, defaultChanges, rootGoalId);
 };
 
 export const handleIncomingChanges = async (payload: Payload, relId: string) => {
@@ -174,26 +136,24 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     const goalId = "goal" in changes[0] ? changes[0].goal.id : changes[0].id;
     const localGoal = await getGoal(goalId);
 
-    if (!localGoal || !localGoal.participants.find((p) => p.relId === relId && p.following)) {
-      console.log("[InboxProcessor] Goal not found or participant not following");
-      if (changeType === "moved") {
-        const defaultChanges = getDefaultValueOfGoalChanges();
+    if (!localGoal?.participants.find((p) => p.relId === relId && p.following)) {
+      console.log("[InboxProcessor] Participant not following");
+      return;
+    }
+
+    // handle the case where goal is already moved to other place
+    if (!localGoal) {
+      const defaultChanges = getDefaultValueOfGoalChanges();
+      if (isIdChangeType(changeType)) {
+        defaultChanges[changeType] = changes.map((ele) => ({
+          ...(ele as changesInId),
+          intent: payload.type as typeOfIntent,
+        }));
+      } else {
         defaultChanges[changeType] = changes.map((ele) => ({
           ...(ele as changesInGoal),
           intent: payload.type as typeOfIntent,
         }));
-
-        await addChangesToRootGoal(rootGoalId, relId, defaultChanges, rootGoalId);
-      }
-
-      if (changeType === "modifiedGoals") {
-        const defaultChanges = getDefaultValueOfGoalChanges();
-        defaultChanges[changeType] = changes.map((ele) => ({
-          ...(ele as changesInGoal),
-          intent: payload.type as typeOfIntent,
-        }));
-
-        await addChangesToRootGoal(rootGoalId, relId, defaultChanges, rootGoalId);
       }
       return;
     }
@@ -216,7 +176,6 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       console.log("All changes are not latest");
       return;
     }
-    const inbox = await getInboxItem(rootGoalId);
     const defaultChanges = getDefaultValueOfGoalChanges();
     if (isIdChangeType(changeType)) {
       defaultChanges[changeType] = filteredChanges.map((ele) => ({
@@ -230,11 +189,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       }));
     }
 
-    if (!inbox) {
-      await createEmptyInboxItem(rootGoalId);
-    }
-
-    await addChangesToRootGoal(rootGoalId, relId, defaultChanges);
+    await addChangesToRootGoal(relId, defaultChanges, rootGoalId);
   }
 };
 
@@ -258,22 +213,7 @@ export const acceptSelectedSubgoals = async (selectedGoals: GoalItem[], parentGo
 
     await Promise.all(
       selectedGoals.map(async (goal: GoalItem) => {
-        // const { relId } = parentGoal.participants[0];
-        // const contact = await getContactByRelId(relId);
-
-        // const combinedParticipants = [];
-        // if (!allParticipants.has(relId)) {
-        //   combinedParticipants.push({
-        //     relId,
-        //     following: true,
-        //     type: "sharer" as typeOfSub,
-        //     name: contact?.name || "",
-        //   });
-        // }
-
         const participants = await inheritParticipants(parentGoal);
-
-        // combinedParticipants.push(...Array.from(allParticipants.values()));
 
         await addGoal(
           fixDateVlauesInGoalObject({

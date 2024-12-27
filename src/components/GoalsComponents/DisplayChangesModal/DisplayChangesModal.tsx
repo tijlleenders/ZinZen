@@ -5,32 +5,32 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
-import { sendNewGoals } from "@src/helpers/BatchPublisher";
 import { darkModeState, lastAction } from "@src/store";
 import { getAllContacts } from "@src/api/ContactsAPI";
-import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "@src/controllers/PubSubController";
 import { typeOfChange, typeOfIntent } from "@src/models/InboxItem";
-import { archiveUserGoal, getGoal, getGoalById, removeGoalWithChildrens, updateGoal } from "@src/api/GoalsAPI";
+import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { deleteGoalChangesInID, getInboxItem, removeGoalInbox, removePPTFromInboxOfGoal } from "@src/api/InboxAPI";
 import { findGoalTagChanges, jumpToLowestChanges } from "@src/helpers/GoalProcessor";
-import { acceptSelectedSubgoals, acceptSelectedTags } from "@src/helpers/InboxProcessor";
-import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
+import { getDeletedGoal } from "@src/api/TrashAPI";
 import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
+import { getAllDescendants, getSharedRootGoal } from "@src/controllers/GoalController";
 import {
-  addGoalToNewParentSublist,
-  getAllDescendants,
-  getSharedRootGoal,
-  removeGoalFromParentSublist,
-  updateRootGoal,
-} from "@src/controllers/GoalController";
+  ArchivedStrategy,
+  DeletedStrategy,
+  ModifiedGoalsStrategy,
+  MovedStrategy,
+  RestoredStrategy,
+  SubgoalsStrategy,
+} from "@src/strategies/GoalChangeStrategies";
 
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
 import { getMovedSubgoalsList } from "./ShowChanges";
+import { ChangeAcceptStrategyContext } from "@src/strategies/ChangeAcceptStrategyContext";
 
 const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -81,12 +81,6 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
         {Object.keys(prettierVersion).map((k) => {
           const { oldVal } = prettierVersion[k];
           const { newVal } = prettierVersion[k];
-          // if (k === "timeBudget") {
-          //   const oldParsed = JSON.parse(oldVal);
-          //   const newParsed = JSON.parse(newVal);
-          //   oldVal = `${oldParsed.perDay}/day, ${oldParsed.perWeek}/week`;
-          //   newVal = `${newParsed.perDay}/day, ${newParsed.perWeek}/week`;
-          // }
           return (
             <div key={`${k}-edit`}>
               <Checkbox
@@ -139,18 +133,6 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
               className="checkbox"
             />
             <span style={{ marginLeft: 12 }}>{goal.title}</span>
-            {/* <span
-            className="intent"
-            style={{
-              border: `1px solid ${goal.goalColor}`,
-              position: "absolute",
-              right: 50,
-              padding: "0px 9px",
-              borderRadius: 12,
-            }}
-          >
-            {intent}
-          </span> */}
           </div>
         ))}
       </div>
@@ -174,92 +156,56 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     setCurrentDisplay("none");
   };
 
-  const handleMoveChanges = async () => {
-    if (!goalUnderReview) {
-      console.log("No goal under review.");
-      return;
-    }
-    const localGoal = await getGoal(goalUnderReview.id);
-    const localParentGoalId = localGoal?.parentGoalId ?? "root";
-
-    const isNewParentAvailable = await getGoalById(goalUnderReview.parentGoalId);
-
-    await Promise.all([
-      updateGoal(goalUnderReview.id, { parentGoalId: isNewParentAvailable ? goalUnderReview.parentGoalId : "root" }),
-      removeGoalFromParentSublist(goalUnderReview.id, localParentGoalId),
-      isNewParentAvailable &&
-        addGoalToNewParentSublist(goalUnderReview.id, isNewParentAvailable ? goalUnderReview.parentGoalId : "root"),
-      updateRootGoal(goalUnderReview.id, isNewParentAvailable ? goalUnderReview.parentGoalId : "root"),
-    ]);
-
-    await sendUpdatedGoal(
-      goalUnderReview.id,
-      [],
-      true,
-      updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-      "moved",
-    );
-  };
-
   const acceptChanges = async () => {
     if (!goalUnderReview) {
       return;
     }
+
+    const strategyContext = new ChangeAcceptStrategyContext();
+    const params = {
+      goalUnderReview,
+      newGoals,
+      unselectedChanges,
+      updateList,
+      updatesIntent,
+      participants,
+      activePPT,
+    };
+
     if (currentDisplay !== "none") {
       await deleteChanges();
     }
-    if (currentDisplay === "moved") {
-      await handleMoveChanges();
+    switch (currentDisplay) {
+      case "moved":
+        strategyContext.setStrategy(new MovedStrategy());
+        break;
+      case "subgoals":
+      case "newGoalMoved":
+        strategyContext.setStrategy(new SubgoalsStrategy());
+        break;
+      case "modifiedGoals":
+        strategyContext.setStrategy(new ModifiedGoalsStrategy());
+        break;
+      case "deleted":
+        strategyContext.setStrategy(new DeletedStrategy());
+        break;
+      case "archived":
+        strategyContext.setStrategy(new ArchivedStrategy());
+        break;
+      case "restored":
+        strategyContext.setStrategy(new RestoredStrategy());
+        break;
+      default:
+        return;
     }
-    if (currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") {
-      const goalsToBeSelected = newGoals
-        .filter(({ goal }) => !unselectedChanges.includes(goal.id))
-        .map(({ goal }) => goal);
-      await acceptSelectedSubgoals(goalsToBeSelected, goalUnderReview);
-      if (goalsToBeSelected.length > 0) {
-        const { intent } = newGoals[0];
-        await sendNewGoals(goalsToBeSelected, [], intent === "suggestion" ? [] : [participants[activePPT].relId]);
-      }
+    if (["subgoals", "newGoalMoved"].includes(currentDisplay)) {
       setUnselectedChanges([]);
       setNewGoals([]);
     } else if (currentDisplay === "modifiedGoals") {
-      await acceptSelectedTags(unselectedChanges, updateList, goalUnderReview);
-      await sendUpdatedGoal(
-        goalUnderReview.id,
-        [],
-        true,
-        updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-      );
       setUnselectedChanges([]);
       setUpdateList({ schemaVersion: {}, prettierVersion: {} });
-    } else if (currentDisplay === "deleted") {
-      await sendFinalUpdateOnGoal(
-        goalUnderReview.id,
-        "deleted",
-        [],
-        true,
-        updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-      );
-      await removeGoalWithChildrens(goalUnderReview);
-    } else if (currentDisplay === "archived") {
-      await archiveUserGoal(goalUnderReview);
-      sendFinalUpdateOnGoal(
-        goalUnderReview.id,
-        "archived",
-        [],
-        true,
-        updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-      );
-    } else if (currentDisplay === "restored") {
-      await restoreUserGoal(goalUnderReview);
-      sendFinalUpdateOnGoal(
-        goalUnderReview.id,
-        "restored",
-        [],
-        true,
-        updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-      );
     }
+    await strategyContext.executeStrategy(params);
     setCurrentDisplay("none");
   };
 
