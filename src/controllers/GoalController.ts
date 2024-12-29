@@ -352,16 +352,12 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
   [...ancestorGoalsOfNewParent, newParentGoal].forEach((goal) => {
     if (!goal?.participants) return;
     goal.participants.forEach((participant) => {
-      if (participant.following) {
-        allParticipants.set(participant.relId, participant);
-      }
+      allParticipants.set(participant.relId, participant);
     });
   });
 
   goalToMove.participants.forEach((participant) => {
-    if (participant.following) {
-      allParticipants.set(participant.relId, participant);
-    }
+    allParticipants.set(participant.relId, participant);
   });
 
   const updatedGoal = {

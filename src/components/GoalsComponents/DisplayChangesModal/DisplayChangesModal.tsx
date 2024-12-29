@@ -24,13 +24,14 @@ import {
   RestoredStrategy,
   SubgoalsStrategy,
 } from "@src/strategies/GoalChangeStrategies";
+import { ChangeAcceptStrategyContext } from "@src/strategies/ChangeAcceptStrategyContext";
+import { ChangeAcceptParams } from "@src/Interfaces/ChangeAccept";
 
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
 import "./DisplayChangesModal.scss";
 import { getMovedSubgoalsList } from "./ShowChanges";
-import { ChangeAcceptStrategyContext } from "@src/strategies/ChangeAcceptStrategyContext";
 
 const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem }) => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -156,13 +157,14 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     setCurrentDisplay("none");
   };
 
+  console.log("currentDisplay", participants[activePPT]);
   const acceptChanges = async () => {
     if (!goalUnderReview) {
       return;
     }
 
     const strategyContext = new ChangeAcceptStrategyContext();
-    const params = {
+    const params: ChangeAcceptParams = {
       goalUnderReview,
       newGoals,
       unselectedChanges,
@@ -330,7 +332,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
                 contactName={participants[activePPT].name}
                 title={currentDisplay === "moved" ? moveGoalTitle : goalUnderReview.title}
                 currentDisplay={currentDisplay}
-                newParentTitle={newParentTitle}
+                //newParentTitle={newParentTitle}
               />
             </p>
           )}
