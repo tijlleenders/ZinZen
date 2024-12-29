@@ -8,7 +8,7 @@ import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal
 import { addSharedWMGoal } from "@src/api/SharedWMAPI";
 import { createDefaultGoals } from "@src/controllers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
-import { handleIncomingChanges, Payload } from "@src/helpers/InboxProcessor";
+import { checkAndUpdateGoalNewUpdatesStatus, handleIncomingChanges, Payload } from "@src/helpers/InboxProcessor";
 import { getContactSharedGoals, shareGoalWithContact } from "@src/services/contact.service";
 import { updateAllUnacceptedContacts, getContactByRelId, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
@@ -18,6 +18,7 @@ import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import ContactItem from "@src/models/ContactItem";
 import { SharedGoalMessage } from "@src/Interfaces/IContactMessages";
 import { checkAndCleanupDoneTodayCollection } from "@src/controllers/TaskDoneTodayController";
+import { getAllInboxItems } from "@src/api/InboxAPI";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -56,6 +57,16 @@ function useApp() {
       console.error("[useApp] Error adding shared goals:", error);
     }
   };
+
+  useEffect(() => {
+    getAllInboxItems().then((inboxItems) => {
+      inboxItems.forEach((inboxItem) => {
+        if (inboxItem.id !== "root" && Object.keys(inboxItem.changes).length > 0) {
+          checkAndUpdateGoalNewUpdatesStatus(inboxItem.id);
+        }
+      });
+    });
+  }, []);
 
   useEffect(() => {
     const init = async () => {

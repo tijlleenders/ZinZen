@@ -157,7 +157,6 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
     setCurrentDisplay("none");
   };
 
-  console.log("currentDisplay", participants[activePPT]);
   const acceptChanges = async () => {
     if (!goalUnderReview) {
       return;

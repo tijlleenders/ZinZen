@@ -16,11 +16,16 @@ import {
   getGoal,
   updateGoal,
 } from "@src/api/GoalsAPI";
-import { addGoalChangesInID, createEmptyInboxItem, getInboxItem } from "@src/api/InboxAPI";
+import { addGoalChangesInID, createEmptyInboxItem, getInboxItem, removeGoalInbox } from "@src/api/InboxAPI";
 import { getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 import { fixDateVlauesInGoalObject } from "@src/utils";
-import { getGoalAncestors, inheritParticipants, updateRootGoalNotification } from "@src/controllers/GoalController";
+import {
+  getGoalAncestors,
+  getRootGoalId,
+  inheritParticipants,
+  updateRootGoalNotification,
+} from "@src/controllers/GoalController";
 import { isIncomingGoalLatest, isIncomingIdChangeLatest } from "./mergeSharedGoalItems";
 import { SharedGoalChangesManager } from "./strategies/SharedGoalChangesManager";
 import {
@@ -265,12 +270,33 @@ export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {
     if (!goal) {
       return;
     }
-    if (inbox && Object.keys(inbox.changes).length > 0) {
-      if (!goal.newUpdates) {
-        await updateGoal(goalId, { newUpdates: true });
+    const rootGoalId = await getRootGoalId(goalId);
+
+    if (goal.parentGoalId !== "root" && inbox && Object.keys(inbox.changes).length > 0) {
+      const rootInbox = await getInboxItem(rootGoalId);
+      console.log("rootInbox", rootInbox);
+      if (!rootInbox) {
+        await createEmptyInboxItem(rootGoalId);
       }
-    } else if (goal.newUpdates) {
-      await updateGoal(goalId, { newUpdates: false });
+
+      await Promise.all(
+        Object.entries(inbox.changes).map(([relId, changes]) => addGoalChangesInID(rootGoalId, relId, changes)),
+      );
+
+      await removeGoalInbox(goalId);
+    }
+
+    const rootInbox = await getInboxItem(rootGoalId);
+    if (rootInbox && Object.keys(rootInbox.changes).length > 0) {
+      const rootGoal = await getGoal(rootGoalId);
+      if (rootGoal && !rootGoal.newUpdates) {
+        await updateGoal(rootGoalId, { newUpdates: true });
+      }
+    } else {
+      const rootGoal = await getGoal(rootGoalId);
+      if (rootGoal?.newUpdates) {
+        await updateGoal(rootGoalId, { newUpdates: false });
+      }
     }
   } catch (error) {
     console.error("[checkAndUpdateGoalNewUpdatesStatus] Error checking inbox:", error);

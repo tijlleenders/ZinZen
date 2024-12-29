@@ -28,7 +28,6 @@ import Participants from "@components/GoalsComponents/Participants";
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
-import { checkAndUpdateGoalNewUpdatesStatus } from "@src/helpers/InboxProcessor";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { moveGoalState } from "@src/store/moveGoalState";
 import DeletedGoals from "./components/DeletedGoals";
@@ -78,12 +77,6 @@ export const MyGoals = () => {
   const refreshActiveGoals = async () => {
     const { goals, delGoals } = await getAllGoals();
     const sortedGoals = await priotizeImpossibleGoals(goals);
-
-    await Promise.all(
-      sortedGoals.map(async (goal) => {
-        await checkAndUpdateGoalNewUpdatesStatus(goal.id);
-      }),
-    );
 
     handleUserGoals(sortedGoals, delGoals);
   };
