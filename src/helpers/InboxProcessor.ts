@@ -23,6 +23,7 @@ import { fixDateVlauesInGoalObject } from "@src/utils";
 import {
   getGoalAncestors,
   getRootGoalId,
+  getSharedRootGoal,
   inheritParticipants,
   updateRootGoalNotification,
 } from "@src/controllers/GoalController";
@@ -141,11 +142,6 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     const goalId = "goal" in changes[0] ? changes[0].goal.id : changes[0].id;
     const localGoal = await getGoal(goalId);
 
-    if (!localGoal?.participants.find((p) => p.relId === relId && p.following)) {
-      console.log("[InboxProcessor] Participant not following");
-      return;
-    }
-
     // handle the case where goal is already moved to other place
     if (!localGoal) {
       const defaultChanges = getDefaultValueOfGoalChanges();
@@ -160,6 +156,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
           intent: payload.type as typeOfIntent,
         }));
       }
+      await addChangesToRootGoal(relId, defaultChanges, rootGoalId);
       return;
     }
 
@@ -193,8 +190,13 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
         intent: payload.type as typeOfIntent,
       }));
     }
-
-    await addChangesToRootGoal(relId, defaultChanges, rootGoalId);
+    let localRootGoalId = rootGoalId;
+    if (isIdChangeType(changeType)) {
+      localRootGoalId = (await getSharedRootGoal(goalId, relId))?.id ?? rootGoalId;
+    } else {
+      localRootGoalId = (await getSharedRootGoal(localGoal.id, relId))?.id ?? rootGoalId;
+    }
+    await addChangesToRootGoal(relId, defaultChanges, localRootGoalId);
   }
 };
 
@@ -268,6 +270,7 @@ export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {
     const goal = await getGoal(goalId);
 
     if (!goal) {
+      await removeGoalInbox(goalId);
       return;
     }
     const rootGoalId = await getRootGoalId(goalId);
