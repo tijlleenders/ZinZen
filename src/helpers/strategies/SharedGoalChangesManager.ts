@@ -1,4 +1,4 @@
-import { Payload } from "../InboxProcessor";
+import { Payload } from "@src/models/InboxItem";
 import { ChangeStrategy } from "./ChangeStrategy";
 
 export class SharedGoalChangesManager {

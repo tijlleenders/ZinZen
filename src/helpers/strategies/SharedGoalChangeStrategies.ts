@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
 import {
   addGoalsInSharedWM,
@@ -8,13 +9,12 @@ import {
   updateSharedWMGoal,
   updateSharedWMParentSublist,
 } from "@src/api/SharedWMAPI";
-import { changesInGoal, changesInId } from "@src/models/InboxItem";
+import { changesInGoal, changesInId, Payload } from "@src/models/InboxItem";
 import { fixDateVlauesInGoalObject } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
-import { getDeletedGoal } from "@src/api/TrashAPI";
+import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import { getAllDescendants } from "@src/controllers/GoalController";
 import { ChangeStrategy } from "./ChangeStrategy";
-import { Payload } from "../InboxProcessor";
 
 export class SubgoalsStrategy implements ChangeStrategy {
   async execute(payload: Payload, relId: string): Promise<void> {

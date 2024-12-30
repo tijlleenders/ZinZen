@@ -4,6 +4,7 @@ import {
   changesInGoal,
   changesInId,
   IdChangeTypes,
+  Payload,
   typeOfChange,
   typeOfIntent,
 } from "@src/models/InboxItem";
@@ -37,17 +38,6 @@ import {
   RestoredStrategy,
   SubgoalsStrategy,
 } from "./strategies/SharedGoalChangeStrategies";
-
-export interface Payload {
-  relId: string;
-  lastProcessedTimestamp: string;
-  changeType: typeOfChange;
-  rootGoalId: string;
-  changes: (changesInGoal | changesInId)[];
-  type: string;
-  timestamp: string;
-  TTL: number;
-}
 
 const isIdChangeType = (type: typeOfChange): type is IdChangeTypes => {
   return ["deleted", "moved", "restored", "archived"].includes(type);

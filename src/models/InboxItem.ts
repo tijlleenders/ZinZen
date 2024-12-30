@@ -29,3 +29,14 @@ export interface InboxItem {
     [relId: string]: ChangesByType;
   };
 }
+
+export interface Payload {
+  relId: string;
+  lastProcessedTimestamp: string;
+  changeType: typeOfChange;
+  rootGoalId: string;
+  changes: (changesInGoal | changesInId)[];
+  type: string;
+  timestamp: string;
+  TTL: number;
+}
