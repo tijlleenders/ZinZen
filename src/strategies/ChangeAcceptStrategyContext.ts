@@ -1,4 +1,4 @@
-import { ChangeAcceptStrategy } from "@src/Interfaces/ChangeAccept";
+import { ChangeAcceptParams, ChangeAcceptStrategy } from "@src/Interfaces/ChangeAccept";
 
 export class ChangeAcceptStrategyContext {
   private strategy: ChangeAcceptStrategy;
@@ -7,7 +7,7 @@ export class ChangeAcceptStrategyContext {
     this.strategy = strategy;
   }
 
-  async executeStrategy(params: any) {
+  async executeStrategy(params: ChangeAcceptParams) {
     await this.strategy.execute(params);
   }
 }

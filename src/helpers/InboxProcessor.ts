@@ -259,12 +259,14 @@ export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {
     const inbox = await getInboxItem(goalId);
     const goal = await getGoal(goalId);
 
+    // if the goal is not found, then remove the inbox
     if (!goal) {
       await removeGoalInbox(goalId);
       return;
     }
     const rootGoalId = await getRootGoalId(goalId);
 
+    // alter the inbox of the goal to be the inbox of the root goal
     if (goal.parentGoalId !== "root" && inbox && Object.keys(inbox.changes).length > 0) {
       const rootInbox = await getInboxItem(rootGoalId);
       console.log("rootInbox", rootInbox);
@@ -279,6 +281,7 @@ export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {
       await removeGoalInbox(goalId);
     }
 
+    // if the root goal has changes, then update the goal newUpdates status
     const rootInbox = await getInboxItem(rootGoalId);
     if (rootInbox && Object.keys(rootInbox.changes).length > 0) {
       const rootGoal = await getGoal(rootGoalId);

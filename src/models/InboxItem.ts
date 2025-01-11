@@ -30,13 +30,14 @@ export interface InboxItem {
   };
 }
 
+export type PayloadType = "sharer" | "suggestion";
 export interface Payload {
   relId: string;
   lastProcessedTimestamp: string;
   changeType: typeOfChange;
   rootGoalId: string;
   changes: (changesInGoal | changesInId)[];
-  type: string;
+  type: PayloadType;
   timestamp: string;
   TTL: number;
 }
