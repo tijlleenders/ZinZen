@@ -77,9 +77,6 @@ export const useMyTimelineStore = (day: string) => {
     if (actionName === TaskAction.Done) {
       return handleDoneClick(task);
     }
-    if (actionName === TaskAction.NotNow) {
-      return setOpenReschedule({ ...task });
-    }
     if (day === "Today") {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
@@ -89,14 +86,11 @@ export const useMyTimelineStore = (day: string) => {
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
-          completedTodayIds: [],
-          skippedToday: [],
-          completedToday: 0,
-          lastSkipped: "",
-          lastCompleted: "",
-          hoursSpent: 0,
           blockedSlots: [],
         });
+      }
+      if (actionName === TaskAction.NotNow) {
+        return setOpenReschedule({ ...task });
       }
     } else {
       setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
