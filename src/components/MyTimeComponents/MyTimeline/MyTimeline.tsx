@@ -112,12 +112,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
           id: uuidv4(),
           goalId: task.goalid,
           title: task.title,
-          completedTodayIds: [],
-          skippedToday: [],
-          completedToday: 0,
-          lastSkipped: "",
-          lastCompleted: "",
-          hoursSpent: 0,
           blockedSlots: [],
         });
       }
