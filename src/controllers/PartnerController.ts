@@ -8,7 +8,7 @@ import { createGoalObjectFromTags } from "../helpers/GoalProcessor";
 const sendUpdate = (
   subscribers: IParticipant[],
   rootGoalId: string,
-  type: "subgoals" | "modifiedGoals",
+  type: "subgoals" | "modifiedGoals" | "newGoalMoved",
   obj: {
     level: number;
     goal: GoalItem;

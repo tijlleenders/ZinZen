@@ -8,6 +8,7 @@ import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { extractLinks, isGoalCode } from "@src/utils/patterns";
 import useGoalActions from "@src/hooks/useGoalActions";
+import { moveGoalState } from "@src/store/moveGoalState";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import GoalDropdown from "./components/GoalDropdown";
@@ -21,6 +22,8 @@ interface MyGoalProps {
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
   const { partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
+
+  const goalToMove = useRecoilValue(moveGoalState);
 
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
@@ -92,7 +95,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
       key={String(`goal-${goal.id}`)}
       className={`user-goal${darkModeStatus ? "-dark" : ""} ${
         expandGoalId === goal.id && isAnimating ? "goal-glow" : ""
-      }`}
+      } ${goalToMove && goalToMove.id === goal.id ? "goal-to-move-selected" : ""}`}
     >
       <div
         className="user-goal-main"

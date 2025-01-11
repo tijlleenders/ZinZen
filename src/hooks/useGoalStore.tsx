@@ -1,14 +1,16 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayConfirmation } from "@src/store";
 import { ILocationState } from "@src/Interfaces";
+import { moveGoalState } from "@src/store/moveGoalState";
 
 const useGoalStore = () => {
   const { partnerId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const showConfirmation = useRecoilValue(displayConfirmation);
+  const setGoalToMove = useSetRecoilState(moveGoalState);
 
   const openEditMode = (goal: GoalItem, customState?: ILocationState) => {
     const prefix = `${partnerId ? `/partners/${partnerId}/` : "/"}goals`;
@@ -31,10 +33,16 @@ const useGoalStore = () => {
     navigate("/goals", { state: location.state });
   };
 
+  const handleMove = (goal: GoalItem) => {
+    setGoalToMove(goal);
+    navigate("/goals", { replace: true });
+  };
+
   return {
     openEditMode,
     handleConfirmation,
     handleDisplayChanges,
+    handleMove,
   };
 };
 

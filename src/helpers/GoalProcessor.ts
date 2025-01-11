@@ -104,8 +104,12 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
   let typeAtPriority: typeOfChange | "none" = "none";
   if (goalChanges.subgoals.length > 0) {
     typeAtPriority = "subgoals";
+  } else if (goalChanges.newGoalMoved.length > 0) {
+    typeAtPriority = "newGoalMoved";
   } else if (goalChanges.modifiedGoals.length > 0) {
     typeAtPriority = "modifiedGoals";
+  } else if (goalChanges.moved.length > 0) {
+    typeAtPriority = "moved";
   } else if (goalChanges.archived.length > 0) {
     typeAtPriority = "archived";
   } else if (goalChanges.deleted.length > 0) {
@@ -129,22 +133,23 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
       const parentId =
         "id" in goalAtPriority
           ? goalAtPriority.id
-          : typeAtPriority === "subgoals"
+          : typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved"
             ? goalAtPriority.goal.parentGoalId
             : goalAtPriority.goal.id;
 
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
-        return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+        const result = { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+        return result;
       }
-      if (typeAtPriority === "subgoals") {
-        goalChanges.subgoals.forEach(({ intent, goal }) => {
+      if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
+        goalChanges[typeAtPriority].forEach(({ intent, goal }) => {
           if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });
       }
-      if (typeAtPriority === "modifiedGoals") {
+      if (typeAtPriority === "modifiedGoals" || typeAtPriority === "moved") {
         let modifiedGoal = createGoalObjectFromTags({});
         let goalIntent;
-        goalChanges.modifiedGoals.forEach(({ goal, intent }) => {
+        goalChanges[typeAtPriority].forEach(({ goal, intent }) => {
           if (goal.id === parentId) {
             modifiedGoal = { ...modifiedGoal, ...goal };
             goalIntent = intent;
@@ -153,16 +158,16 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
         goals = [{ intent: goalIntent, goal: modifiedGoal }];
       }
 
-      return {
+      const result = {
         typeAtPriority,
         parentId,
         goals,
       };
+      return result;
     }
-  } else {
-    console.log("inbox item doesn't exist");
   }
-  return { typeAtPriority, parentId: "", goals: [] };
+  const defaultResult = { typeAtPriority, parentId: "", goals: [] };
+  return defaultResult;
 };
 
 export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {

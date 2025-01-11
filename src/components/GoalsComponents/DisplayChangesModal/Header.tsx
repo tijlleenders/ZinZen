@@ -18,6 +18,12 @@ const Header = ({
           {contactName} added to {title}.&nbsp; &nbsp; Add as well ?
         </>
       );
+    case "newGoalMoved":
+      return (
+        <>
+          {contactName} moved new goals to {title}.&nbsp; Move as well ?
+        </>
+      );
     case "modifiedGoals":
       return (
         <>
@@ -40,6 +46,12 @@ const Header = ({
       return (
         <>
           {contactName} restored {title}.
+        </>
+      );
+    case "moved":
+      return (
+        <>
+          {contactName} moved {title}.
         </>
       );
     default:
