@@ -3,8 +3,8 @@ import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
 import ZModal from "@src/common/ZModal";
-import { darkModeState, lastAction } from "@src/store";
-import React from "react";
+import { darkModeState, displayToast, lastAction } from "@src/store";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -13,12 +13,26 @@ import { GoalItem } from "@src/models/GoalItem";
 import { useAvailableGoalHintContext } from "@src/contexts/availableGoalHint-context";
 import { addHintGoaltoMyGoals } from "@src/api/GoalsAPI";
 import { deleteAvailableGoalHint } from "@src/api/HintsAPI";
+import { reportHint } from "@src/api";
+import ModalActionButton from "@components/Buttons/ModalActionButton";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
   const restoreGoalSound = new Audio(plingSound);
   const setLastAction = useSetRecoilState(lastAction);
   const darkMode = useRecoilValue(darkModeState);
+  const setDisplayToast = useSetRecoilState(displayToast);
+  const [loading, setLoading] = useState(false);
+
+  const handleReportHint = async () => {
+    setLoading(true);
+    const res = await reportHint(goal);
+    await deleteAvailableGoalHint(goal.parentGoalId, goal.id);
+    setLastAction("goalHintReported");
+    setLoading(false);
+    setDisplayToast({ open: true, message: res.message, extra: "" });
+    window.history.back();
+  };
 
   return (
     <ZModal open width={400} type="interactables-modal">
@@ -28,11 +42,8 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
         </p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-        <button
-          type="button"
-          className="goal-action-archive shareOptions-btn"
-          onClick={async (e) => {
-            e.stopPropagation();
+        <ModalActionButton
+          onClick={async () => {
             await deleteAvailableGoalHint(goal.parentGoalId, goal.id);
             setLastAction("goalHintDeleted");
             restoreGoalSound.play();
@@ -40,11 +51,9 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           }}
         >
           <ActionDiv label={t("Delete")} icon="Delete" />
-        </button>
+        </ModalActionButton>
 
-        <button
-          type="button"
-          className="goal-action-archive shareOptions-btn"
+        <ModalActionButton
           onClick={async () => {
             await addHintGoaltoMyGoals(goal);
             setLastAction("goalHintAdded");
@@ -52,14 +61,8 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           }}
         >
           <ActionDiv label={t("Add")} icon="Add" />
-        </button>
-        <button
-          type="button"
-          className="goal-action-archive shareOptions-btn"
-          //   onClick={async () => {
-          //     window.history.back();
-          //   }}
-        >
+        </ModalActionButton>
+        <ModalActionButton loading={loading} onClick={handleReportHint}>
           <ActionDiv
             label={t("Report")}
             icon={
@@ -72,7 +75,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
               />
             }
           />
-        </button>
+        </ModalActionButton>
       </div>
     </ZModal>
   );
