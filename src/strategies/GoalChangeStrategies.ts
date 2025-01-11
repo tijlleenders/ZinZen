@@ -114,7 +114,19 @@ export class SubgoalsStrategy implements ChangeAcceptStrategy {
 
     if (goalsToBeSelected.length > 0) {
       const { intent } = newGoals[0];
-      await sendNewGoals(goalsToBeSelected, [], intent === "suggestion" ? [] : [participants[activePPT].relId]);
+
+      const newlyCreatedGoals = await Promise.all(
+        goalsToBeSelected.map(async (goal) => {
+          const localGoal = await getGoal(goal.id);
+          if (!localGoal) {
+            return null;
+          }
+          return localGoal;
+        }),
+      );
+      const validGoals = newlyCreatedGoals.filter((goal): goal is GoalItem => goal !== null);
+
+      await sendNewGoals(validGoals, [], intent === "suggestion" ? [] : [participants[activePPT].relId]);
     }
   }
 }

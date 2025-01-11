@@ -32,7 +32,7 @@ export class SubgoalsStrategy implements ChangeStrategy {
 }
 
 export class ModifiedGoalsStrategy implements ChangeStrategy {
-  async execute(payload: Payload, relId: string): Promise<void> {
+  async execute(payload: Payload): Promise<void> {
     const changes = payload.changes.map((ele: changesInGoal) => ({
       ...ele,
       goal: fixDateVlauesInGoalObject(ele.goal),
@@ -42,7 +42,7 @@ export class ModifiedGoalsStrategy implements ChangeStrategy {
 }
 
 export class DeletedStrategy implements ChangeStrategy {
-  async execute(payload: Payload, relId: string): Promise<void> {
+  async execute(payload: Payload): Promise<void> {
     const change = payload.changes[0] as changesInId;
     const goalToBeDeleted = await getSharedWMGoal(change.id);
     if (!goalToBeDeleted) {
@@ -69,7 +69,7 @@ export class DeletedStrategy implements ChangeStrategy {
 }
 
 export class ArchivedStrategy implements ChangeStrategy {
-  async execute(payload: Payload, relId: string): Promise<void> {
+  async execute(payload: Payload): Promise<void> {
     const change = payload.changes[0] as changesInId;
     getSharedWMGoal(change.id).then(async (goal: GoalItem) =>
       archiveSharedWMGoal(goal).catch((err) => console.log(err, "failed to archive")),
@@ -78,7 +78,7 @@ export class ArchivedStrategy implements ChangeStrategy {
 }
 
 export class RestoredStrategy implements ChangeStrategy {
-  async execute(payload: Payload, relId: string): Promise<void> {
+  async execute(payload: Payload): Promise<void> {
     const change = payload.changes[0] as changesInId;
     const goalToBeRestored = await getDeletedGoal(change.id);
     if (goalToBeRestored) {
@@ -122,7 +122,7 @@ const handleMoveOperation = async (movedGoal: GoalItem, correspondingSharedWMGoa
 };
 
 export class MovedStrategy implements ChangeStrategy {
-  async execute(payload: Payload, relId: string): Promise<void> {
+  async execute(payload: Payload): Promise<void> {
     const changes = payload.changes.map((ele: changesInGoal) => ({
       ...ele,
       goal: fixDateVlauesInGoalObject(ele.goal),
