@@ -16,8 +16,6 @@
     margin: 0;
   }
 }
-.changes-list-dark {
-}
 
 .existingChange {
   text-decoration: line-through;
@@ -42,5 +40,11 @@
 }
 .default-checkbox-dark {
   .form-check-input:checked[type="checkbox"] {
+  }
+}
+
+.popupModal-modal {
+  .ant-modal-body .popupModal {
+    gap: 16px !important;
   }
 }

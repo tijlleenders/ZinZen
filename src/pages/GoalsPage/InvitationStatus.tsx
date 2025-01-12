@@ -1,12 +1,12 @@
 import React from "react";
 import { shareInvitation } from "@src/assets";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { displayToast, darkModeState } from "@src/store";
+import { useSetRecoilState } from "recoil";
+import { displayToast } from "@src/store";
 import useGetRelationshipStatus from "@src/hooks/useGetRelationshipStatus";
+import DefaultButton from "@src/common/DefaultButton";
 
 const InvitationStatus = ({ relId }: { relId: string }) => {
   const setShowToast = useSetRecoilState(displayToast);
-  const darkModeStatus = useRecoilValue(darkModeState);
   const { relationshipStatus, type, partnerName, loading } = useGetRelationshipStatus(relId);
 
   const handleSendInvitation = async () => {
@@ -30,18 +30,19 @@ const InvitationStatus = ({ relId }: { relId: string }) => {
   }
 
   return (
-    <div style={{ textAlign: "center", margin: "0 20px", fontWeight: 400, fontSize: 18 }}>
+    <div
+      className="fw-400 d-flex f-col text-lg gap-16 text-center"
+      style={{
+        margin: "0 20px",
+      }}
+    >
       <p>{message}</p>
       {!relationshipStatus && (
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <button
-            type="button"
-            className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-            onClick={handleSendInvitation}
-          >
+        <div className="place-middle">
+          <DefaultButton onClick={handleSendInvitation}>
             <img alt="add contact" className="theme-icon" src={shareInvitation} />
             <span>Share invitation</span>
-          </button>
+          </DefaultButton>
         </div>
       )}
     </div>
