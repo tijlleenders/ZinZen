@@ -17,7 +17,6 @@ import { convertDateToString } from "@src/utils";
 import { t } from "i18next";
 
 export const transformIntoSchInputGoals = (
-  dbTasks: { [goalid: string]: TaskItem },
   activeGoals: GoalItem[],
   blockedSlots: { [goalid: string]: blockedSlotOfTask[] },
 ) => {
@@ -177,10 +176,10 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
   console.log("blockedSlots", blockedSlots);
 
-  const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(dbTasks, activeGoals, blockedSlots);
+  const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(activeGoals, blockedSlots);
   const adjustedInputGoalsArr = await adjustNotOnBlocks(inputGoalsArr);
   schedulerInput.goals = adjustedInputGoalsArr;
-  return { dbTasks, schedulerInput };
+  return { schedulerInput };
 };
 
 export const getCachedSchedule = async (generatedInputId: string) => {
