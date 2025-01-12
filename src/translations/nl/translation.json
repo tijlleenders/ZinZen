@@ -220,5 +220,6 @@
   "everyWeek": "elke week",
   "daily": "dagelijks",
   "hourWithCount_one": "{{count}} uur",
-  "hourWithCount_other": "{{count}} uur"
+  "hourWithCount_other": "{{count}} uur",
+  "contacts": "Contacten"
 }

@@ -7,7 +7,7 @@ interface CopyIconProps {
   borderColor?: string;
 }
 
-const CopyIcon: React.FC<CopyIconProps> = ({ color, borderColor, size, borderWidth }) => {
+export const CopyIcon: React.FC<CopyIconProps> = ({ color, borderColor, size, borderWidth }) => {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -37,5 +37,3 @@ const CopyIcon: React.FC<CopyIconProps> = ({ color, borderColor, size, borderWid
     </svg>
   );
 };
-
-export default CopyIcon;
