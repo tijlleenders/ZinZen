@@ -51,7 +51,6 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
 
   const renderTextPart = (part: string) => {
     const cleanPart = removeBackTicks(part);
-    console.log(cleanPart);
     const match = cleanPart.match(/zURL-(\d+)/);
 
     if (!match) {
