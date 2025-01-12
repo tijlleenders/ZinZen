@@ -7,27 +7,14 @@ import { ISubGoalHistory } from "@src/store/GoalsState";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ILocationState } from "@src/Interfaces";
-
-const breadcrumbStyle: React.CSSProperties = {
-  fontWeight: 500,
-  borderRadius: 30,
-  padding: "0 3px 3px 3px",
-  display: "block",
-  width: 100,
-  whiteSpace: "nowrap",
-  textOverflow: "ellipsis",
-  overflow: "hidden",
-  textAlign: "center",
-  cursor: "pointer",
-  height: 18,
-};
+import "./GoalHistory.scss";
 
 const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => {
   const { t } = useTranslation();
   return (
     <span
+      className="breadcrumb-item fw-500"
       style={{
-        ...breadcrumbStyle,
         border: `1px solid ${goal.goalColor}`,
         background: `${goal.goalColor}33`,
       }}
@@ -55,17 +42,16 @@ const GoalHistory = () => {
   };
 
   return (
-    <div style={{ padding: "0 23px" }}>
+    <div className="goal-history">
       <Breadcrumb
-        style={{ margin: "24px 0px" }}
-        separator={<span style={{ color: darkModeStatus ? "rgba(255, 255, 255, 0.45)" : "inherit" }}>/</span>}
+        className="breadcrumb-container"
+        separator={<span className={`separator ${darkModeStatus ? "dark-mode" : ""}`}>/</span>}
         items={[
           {
             title: (
               <img
                 src={goalsIcon}
-                style={{ marginTop: "5px" }}
-                className={`${darkModeStatus ? "goals-icon-history" : ""}`}
+                className={`goals-icon ${darkModeStatus ? "goals-icon-history" : ""}`}
                 alt="my goals"
               />
             ),

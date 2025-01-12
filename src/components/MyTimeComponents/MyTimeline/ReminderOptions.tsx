@@ -18,10 +18,6 @@ const ActionButton: React.FC<{
   </button>
 );
 
-ActionButton.defaultProps = {
-  last: false,
-};
-
 export const ReminderOptions: React.FC<ReminderOptionsProps> = ({ reminder, handleActionClick }) => {
   return (
     <div className="MTL-options">
