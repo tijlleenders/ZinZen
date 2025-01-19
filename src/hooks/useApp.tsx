@@ -49,6 +49,7 @@ function useApp() {
             ...goal,
             participants: [participant],
           };
+          console.log("🚀 ~ file: useApp.tsx:52 ~ goalWithParticipant:", goalWithParticipant);
           await addSharedWMGoal(goalWithParticipant).then(() => {
             setLastAction("goalNewUpdates");
           });
@@ -122,17 +123,28 @@ function useApp() {
         {},
       );
       if (res.success) {
+        const processChangesSequentially = async (
+          changes: SharedGoalMessage[],
+          contactItem: ContactItem,
+          relId: string,
+        ) => {
+          for (const change of changes) {
+            try {
+              if (change.type === "shareMessage") {
+                await handleNewIncomingGoal(change, contactItem, relId);
+              } else if (["sharer", "suggestion"].includes(change.type)) {
+                await handleIncomingChanges(change as unknown as Payload, relId);
+                setLastAction("goalNewUpdates");
+              }
+            } catch (error) {
+              console.error("Error processing change:", error);
+            }
+          }
+        };
         Object.keys(resObject).forEach(async (relId: string) => {
           const contactItem = await getContactByRelId(relId);
           if (contactItem) {
-            resObject[relId].forEach(async (ele) => {
-              console.log("🚀 ~ file: useApp.tsx:45 ~ resObject[relId].forEach ~ ele:", ele);
-              if (ele.type === "shareMessage") {
-                handleNewIncomingGoal(ele, contactItem, relId);
-              } else if (["sharer", "suggestion"].includes(ele.type)) {
-                handleIncomingChanges(ele as unknown as Payload, relId).then(() => setLastAction("goalNewUpdates"));
-              }
-            });
+            await processChangesSequentially(resObject[relId], contactItem, relId);
           }
         });
       }
