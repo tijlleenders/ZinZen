@@ -51,10 +51,87 @@ export const getSharedRootGoal = async (goalId: string, participantRelId: string
   }
   return null;
 };
+export const getAllDescendants = async (goalId: string): Promise<GoalItem[]> => {
+  const descendants: GoalItem[] = [];
+
+  const processGoalAndChildren = async (currentGoalId: string) => {
+    const childrenGoals = await getChildrenGoals(currentGoalId);
+    await Promise.all(
+      childrenGoals.map(async (childGoal) => {
+        descendants.push(childGoal);
+        await processGoalAndChildren(childGoal.id);
+      }),
+    );
+  };
+
+  await processGoalAndChildren(goalId);
+  return descendants;
+};
+
+const sendNewGoalObject = async (
+  newGoal: GoalItem,
+  parentGoalId: string,
+  ancestors: string[],
+  changeType: "subgoals" | "newGoalMoved",
+) => {
+  const level = ancestors.length;
+  const newGoalId = newGoal.id;
+  const subscribers = await getParticipantsOfGoals(ancestors);
+  const descendants = await getAllDescendants(newGoalId);
+
+  if (newGoalId) {
+    try {
+      const subscriberUpdates = new Map<
+        string,
+        {
+          sub: IParticipant;
+          rootGoalId: string;
+          updates: Array<{ level: number; goal: Omit<GoalItem, "participants"> }>;
+        }
+      >();
+
+      subscribers.forEach(({ sub, rootGoalId }) => {
+        subscriberUpdates.set(sub.relId, {
+          sub,
+          rootGoalId,
+          updates: [
+            {
+              level,
+              goal: { ...newGoal, id: newGoalId, parentGoalId },
+            },
+          ],
+        });
+      });
+
+      if (descendants.length > 0) {
+        subscribers.forEach(({ sub, rootGoalId }) => {
+          const subscriberUpdate = subscriberUpdates.get(sub.relId);
+          if (subscriberUpdate) {
+            subscriberUpdate.updates.push(
+              ...descendants.map((descendant) => ({
+                level: level + 1,
+                goal: {
+                  ...descendant,
+                  rootGoalId,
+                },
+              })),
+            );
+          }
+        });
+      }
+
+      await Promise.all(
+        Array.from(subscriberUpdates.values()).map(({ sub, rootGoalId, updates }) =>
+          sendUpdatesToSubscriber(sub, rootGoalId, changeType, updates),
+        ),
+      );
+    } catch (error) {
+      console.error("[createSharedGoal] Error sending updates:", error);
+    }
+  }
+};
 
 export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], hintOption: boolean) => {
-  const level = ancestors.length;
-
   // handle hint
   if (hintOption) {
     getHintsFromAPI(newGoal)
@@ -79,21 +156,7 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
     };
 
     const newGoalId = await addGoal(updatedGoal);
-
-    if (newGoalId) {
-      const newGoalParticipants = updatedGoal.participants;
-      await Promise.all(
-        newGoalParticipants.map(async (participant) => {
-          const rootGoal = await getSharedRootGoal(newGoalId, participant.relId);
-          sendUpdatesToSubscriber(participant, rootGoal?.id || newGoalId, "subgoals", [
-            {
-              level,
-              goal: { ...updatedGoal, id: newGoalId },
-            },
-          ]);
-        }),
-      );
-    }
+    await sendNewGoalObject({ ...updatedGoal, id: newGoalId }, parentGoalId, ancestors, "subgoals");
 
     const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
     await updateGoal(parentGoalId, { sublist: newSublist });
@@ -119,90 +182,18 @@ export const getGoalAncestors = async (goalId: string): Promise<string[]> => {
   return ancestors;
 };
 
-export const getAllDescendants = async (goalId: string): Promise<GoalItem[]> => {
-  const descendants: GoalItem[] = [];
-
-  const processGoalAndChildren = async (currentGoalId: string) => {
-    const childrenGoals = await getChildrenGoals(currentGoalId);
-    await Promise.all(
-      childrenGoals.map(async (childGoal) => {
-        descendants.push(childGoal);
-        await processGoalAndChildren(childGoal.id);
-      }),
-    );
-  };
-
-  await processGoalAndChildren(goalId);
-  return descendants;
-};
-
 export const createSharedGoalObjectForSending = async (
   newGoal: GoalItem,
   parentGoalId: string,
   ancestors: string[],
 ) => {
-  const level = ancestors.length;
-
   if (parentGoalId && parentGoalId !== "root") {
     const parentGoal = await getGoal(parentGoalId);
     if (!parentGoal) {
       return { parentGoal: null };
     }
 
-    const newGoalId = newGoal.id;
-    const subscribers = await getParticipantsOfGoals(ancestors);
-    const descendants = await getAllDescendants(newGoalId);
-
-    if (newGoalId) {
-      try {
-        const subscriberUpdates = new Map<
-          string,
-          {
-            sub: IParticipant;
-            rootGoalId: string;
-            updates: Array<{ level: number; goal: Omit<GoalItem, "participants"> }>;
-          }
-        >();
-
-        subscribers.forEach(({ sub, rootGoalId }) => {
-          subscriberUpdates.set(sub.relId, {
-            sub,
-            rootGoalId,
-            updates: [
-              {
-                level,
-                goal: { ...newGoal, id: newGoalId, parentGoalId },
-              },
-            ],
-          });
-        });
-
-        if (descendants.length > 0) {
-          subscribers.forEach(({ sub, rootGoalId }) => {
-            const subscriberUpdate = subscriberUpdates.get(sub.relId);
-            if (subscriberUpdate) {
-              subscriberUpdate.updates.push(
-                ...descendants.map((descendant) => ({
-                  level: level + 1,
-                  goal: {
-                    ...descendant,
-                    rootGoalId,
-                  },
-                })),
-              );
-            }
-          });
-        }
-
-        await Promise.all(
-          Array.from(subscriberUpdates.values()).map(({ sub, rootGoalId, updates }) =>
-            sendUpdatesToSubscriber(sub, rootGoalId, "newGoalMoved", updates),
-          ),
-        );
-      } catch (error) {
-        console.error("[createSharedGoal] Error sending updates:", error);
-      }
-    }
+    await sendNewGoalObject(newGoal, parentGoalId, ancestors, "newGoalMoved");
     return { parentGoal };
   }
   return { parentGoal: null };

@@ -21,7 +21,7 @@ const Header = ({
     case "newGoalMoved":
       return (
         <>
-          {contactName} moved new goals to {title}.&nbsp; Move as well ?
+          {contactName} added to {title}.&nbsp; &nbsp; Add as well ?
         </>
       );
     case "modifiedGoals":

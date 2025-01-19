@@ -331,7 +331,6 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
                 contactName={participants[activePPT].name}
                 title={currentDisplay === "moved" ? moveGoalTitle : goalUnderReview.title}
                 currentDisplay={currentDisplay}
-                //newParentTitle={newParentTitle}
               />
             </p>
           )}
