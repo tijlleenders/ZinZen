@@ -18,9 +18,8 @@ import { addTask, getTaskByGoalId } from "@src/api/TasksAPI";
 
 import "./index.scss";
 import { displayReschedule } from "@src/store/TaskState";
-import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
-import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
-import { completeTask } from "@src/controllers/TaskDoneTodayController";
+import { TaskHistoryItem } from "@src/models/TaskHistoryItem";
+import { addTaskCompletedEvent } from "@src/api/TaskHistoryAPI";
 import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
@@ -35,7 +34,7 @@ interface MyTimelineProps {
     freeHrsOfDay: number;
     scheduledHrs: number;
   };
-  doneTasks: TasksDoneTodayItem[];
+  doneTasks: TaskHistoryItem[];
 }
 
 export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks }) => {
@@ -87,8 +86,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
   };
 
   const handleDoneClick = async (task: ITask) => {
-    await completeTask(task.taskid, task.goalid, task.start, task.deadline);
-    await addTaskActionEvent(task, "completed");
+    await addTaskCompletedEvent(task);
     await doneSound.play();
     setLastAction("TaskCompleted");
   };
@@ -100,14 +98,19 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
     if (actionName === TaskAction.Focus) {
       return handleFocusClick(task);
     }
-    if (actionName === TaskAction.Done) {
+    if (actionName === TaskAction.Done && day === "Today") {
       return handleDoneClick(task);
     }
-    if (day === "Today") {
+
+    if (day !== "Today") {
+      setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
+      return null;
+    }
+
+    if (actionName === TaskAction.NotNow) {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
-        console.log("task not found");
-
+        console.debug("Creating new task for goal:", task.goalid);
         await addTask({
           id: uuidv4(),
           goalId: task.goalid,
@@ -115,12 +118,9 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
           blockedSlots: [],
         });
       }
-      if (actionName === TaskAction.NotNow) {
-        return setOpenReschedule({ ...task });
-      }
-    } else {
-      setShowToast({ open: true, message: "Let's focus on Today :)", extra: "" });
+      return setOpenReschedule({ ...task });
     }
+
     return null;
   };
 
@@ -136,7 +136,7 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
         const nextTask = myTasks.scheduled[index + 1];
         const nextStartTime = nextTask ? nextTask.start.split("T")[1].slice(0, 2) : null;
         const displayEndTime = endTime !== nextStartTime;
-        const markDone = doneTasks.some((doneTask) => doneTask.scheduledTaskId === task.taskid);
+        const markDone = doneTasks.some((doneTask) => doneTask.taskId === task.taskid);
         const showTaskOptions = displayOptionsIndex === task.taskid;
         return (
           <button

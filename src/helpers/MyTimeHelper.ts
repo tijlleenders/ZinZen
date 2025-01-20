@@ -10,11 +10,11 @@ import { ITaskOfDay } from "@src/Interfaces/Task";
 import { addSchedulerResToCache, getSchedulerCachedRes, updateSchedulerCachedRes } from "@src/api/SchedulerOutputCache";
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { getAllTasks, getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
-import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { TCompletedTaskTiming, TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
 import { t } from "i18next";
+import { getAllTasksDoneToday, getAllTodaySkippedTasks } from "@src/api/TaskHistoryAPI";
 
 export const transformIntoSchInputGoals = (
   dbTasks: { [goalid: string]: TaskItem },
@@ -154,7 +154,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
   const tasksCompletedToday: TCompletedTaskTiming[] = [];
 
-  getAllTasksDoneToday().then((task) => {
+  getAllTasksDoneToday(startDate.split("T")[0]).then((task) => {
     task.forEach((ele) => {
       tasksCompletedToday.push({
         goalid: ele.goalId,
@@ -203,4 +203,13 @@ export const putSchedulerRes = async (code: string, generatedInputId: string, ou
   return code === "expired"
     ? updateSchedulerCachedRes(generatedInputId, output)
     : addSchedulerResToCache(generatedInputId, output);
+};
+
+export const tasksToMarkDoneToday = async () => {
+  const today = new Date();
+  const todayDate = convertDateToString(today).split("T")[0];
+  const tasksDoneToday = await getAllTasksDoneToday(todayDate);
+  console.log(tasksDoneToday);
+  const tasksSkippedToday = await getAllTodaySkippedTasks(todayDate);
+  return [...tasksDoneToday, ...tasksSkippedToday];
 };
