@@ -6,6 +6,7 @@ import download from "@assets/images/download.svg";
 
 import "./InvestPage.scss";
 import OnboardingLayout from "@src/layouts/OnboardingLayout";
+import DefaultButton from "@src/common/DefaultButton";
 
 const InvestPage = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -52,20 +53,18 @@ const InvestPage = () => {
 
         <p>We offer debt-financing </p>
         <p>and 200k will get us to default-alive within a year. </p>
-        <button
-          type="button"
-          style={{ fontSize: "14px", marginBottom: "5px" }}
-          onClick={() =>
+        <DefaultButton
+          onClick={(e) => {
+            e.preventDefault();
             window.open(
               "https://drive.google.com/u/0/uc?id=1w158k7GF9GyKDPkE--Zv7tgzSORfjXwQ&export=download",
               "_blank",
-            )
-          }
-          className={`default-btn${darkModeStatus ? "-dark" : ""}`}
+            );
+          }}
         >
           <img alt="download zinzen pitch" src={download} className={darkModeStatus ? "dark-svg" : ""} />
           Download ZinZen pitch deck
-        </button>
+        </DefaultButton>
       </div>
     </OnboardingLayout>
   );
