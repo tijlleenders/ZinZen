@@ -16,6 +16,7 @@ import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import { checkAndCleanupDoneTodayCollection } from "@src/controllers/TaskDoneTodayController";
+import { GoalActions, TaskActions } from "@src/constants/actions";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -96,25 +97,12 @@ function useApp() {
                     });
                   })
                   .then(() => {
-                    setLastAction("goalNewUpdates");
+                    setLastAction(GoalActions.GOAL_NEW_UPDATES);
                   })
                   .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
               } else if (["sharer", "suggestion"].includes(ele.type)) {
-                handleIncomingChanges(ele, relId).then(() => setLastAction("goalNewUpdates"));
+                handleIncomingChanges(ele, relId).then(() => setLastAction(GoalActions.GOAL_NEW_UPDATES));
               }
-              // else if (["suggestion", "shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
-              //   let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
-              //   if (ele.type === "collaborationInvite") {
-              //     typeOfSub = "collaborationInvite";
-              //   } else if (["collaboration", "suggestion"].includes(ele.type)) {
-              //     typeOfSub = ele.type;
-              //   } else if (ele.type === "shared") {
-              //     typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
-              //   }
-              //   if (typeOfSub !== "none") {
-              //     handleIncomingChanges({ ...ele, type: typeOfSub }).then(() => setLastAction("goalNewUpdates"));
-              //   }
-              // }
             });
           }
         });
@@ -183,7 +171,7 @@ function useApp() {
     if (lastRefresh !== today) {
       refreshTaskCollection().then(() => {
         localStorage.setItem(LocalStorageKeys.LAST_REFRESH, today);
-        setLastAction("TaskCollectionRefreshed");
+        setLastAction(TaskActions.TASK_COLLECTION_REFRESHED);
       });
     }
   }, []);
