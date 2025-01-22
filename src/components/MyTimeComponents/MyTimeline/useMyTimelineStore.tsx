@@ -15,6 +15,7 @@ import { ILocationState } from "@src/Interfaces";
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { archiveGoal } from "@src/controllers/GoalController";
 import { useQueryClient } from "react-query";
+import { TaskActions } from "@src/constants/actions";
 
 export const useMyTimelineStore = (day: string) => {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ export const useMyTimelineStore = (day: string) => {
     await completeTask(task.taskid, task.goalid, task.start, task.deadline);
     await addTaskActionEvent(task, "completed");
     await doneSound.play();
-    setLastAction("TaskCompleted");
+    setLastAction(TaskActions.TASK_COMPLETED);
   };
 
   const handleActionClick = async (actionName: TaskAction, task: ITask) => {

@@ -13,6 +13,7 @@ import { getGoalById } from "@src/api/GoalsAPI";
 import forgetTune from "@assets/forget.mp3";
 import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
 import { addTaskDoneToday } from "@src/api/TasksDoneTodayAPI";
+import { TaskActions } from "@src/constants/actions";
 
 const NotNowModal = () => {
   const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
@@ -51,7 +52,7 @@ const NotNowModal = () => {
 
     console.log(`Task rescheduled from ${start} to ${end}`);
     setDisplayReschedule(null);
-    setLastAction("TaskRescheduled");
+    setLastAction(TaskActions.TASK_RESCHEUDLED);
   };
 
   const handleSkip = async () => {
@@ -63,7 +64,7 @@ const NotNowModal = () => {
     });
     await addTaskActionEvent(task, "skipped");
     setDisplayReschedule(null);
-    setLastAction("TaskSkipped");
+    setLastAction(TaskActions.TASK_SKIPPED);
     forgetSound.play();
   };
 

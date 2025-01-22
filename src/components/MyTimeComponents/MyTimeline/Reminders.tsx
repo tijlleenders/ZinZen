@@ -24,6 +24,7 @@ export const Reminders = ({ day }: { day: string }) => {
 
   const reminders = useMemo(() => {
     const today = new Date();
+
     let targetDate: Date;
 
     if (day === "Today") {
@@ -45,6 +46,11 @@ export const Reminders = ({ day }: { day: string }) => {
       }
 
       const dueDate = new Date(goal.due);
+
+      if (day === "Today") {
+        return dueDate <= targetDate;
+      }
+
       return (
         dueDate.getDate() === targetDate.getDate() &&
         dueDate.getMonth() === targetDate.getMonth() &&
