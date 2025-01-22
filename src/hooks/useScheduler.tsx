@@ -17,7 +17,6 @@ import {
   organizeDataForInptPrep,
   putSchedulerRes,
 } from "@src/helpers/MyTimeHelper";
-import { GoalActions } from "@src/constants/actions";
 
 import { schedulerErrorState } from "@src/store/SchedulerErrorState";
 import init, { schedule } from "../../pkg/scheduler";
