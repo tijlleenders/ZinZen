@@ -1,6 +1,7 @@
 .MTL-display {
   display: flex;
   flex-direction: column;
+  margin-top: 10px;
 
   .MTL-header {
     margin-bottom: 10px;
@@ -14,6 +15,7 @@
     line-height: 22px;
     padding: 0.7em 0.7em 0.7em 0.7em;
     line-height: 22px;
+    width: 100%;
 
     .MTL-taskTitleActionWrapper {
       flex: 1;

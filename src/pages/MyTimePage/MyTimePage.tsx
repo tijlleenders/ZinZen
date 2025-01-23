@@ -20,7 +20,7 @@ import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
 import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
 import { useRecoilValue } from "recoil";
 import { lastAction } from "@src/store";
-import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders";
+import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders/Reminders";
 
 export const MyTimePage = () => {
   const today = new Date();
