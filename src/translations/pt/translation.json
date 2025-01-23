@@ -183,5 +183,6 @@
   "hour": "hora",
   "hours": "horas",
   "hourWithCount_one": "{{count}} hora",
-  "hourWithCount_other": "{{count}} horas"
+  "hourWithCount_other": "{{count}} horas",
+  "contacts": "Contatos"
 }

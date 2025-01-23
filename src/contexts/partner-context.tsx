@@ -2,6 +2,8 @@ import { getAllContacts, getPartnerById } from "@src/api/ContactsAPI";
 import ContactItem from "@src/models/ContactItem";
 import React, { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { lastAction } from "@src/store";
+import { useRecoilValue } from "recoil";
 import { ActiveGoalProvider } from "./activeGoal-context";
 
 type PartnerContext = {
@@ -16,7 +18,7 @@ export const PartnerProvider = ({ children }: { children: ReactNode }) => {
   const [partner, setPartner] = useState<ContactItem>();
   const [partnersList, setPartnersList] = useState<ContactItem[]>([]);
   const isPartnerModeActive = !!partnerId;
-
+  const action = useRecoilValue(lastAction);
   useEffect(() => {
     if (partnerId) {
       getPartnerById(partnerId).then((doc) => {
@@ -31,7 +33,7 @@ export const PartnerProvider = ({ children }: { children: ReactNode }) => {
       setPartnersList([...docs]);
       if (docs.length) setPartner(docs[0]);
     });
-  }, []);
+  }, [action]);
 
   const value = useMemo(() => ({ partner, partnersList }), [partner]);
 
