@@ -1,34 +1,20 @@
 import React from "react";
 import { Breadcrumb } from "antd";
 import { useRecoilValue } from "recoil";
-
 import { darkModeState } from "@src/store";
 import goalsIcon from "@assets/images/goalsIcon.svg";
-
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
-
-const breadcrumbStyle: React.CSSProperties = {
-  fontWeight: 500,
-  borderRadius: 30,
-  padding: "0 3px 3px 3px",
-  display: "block",
-  width: 100,
-  whiteSpace: "nowrap",
-  textOverflow: "ellipsis",
-  overflow: "hidden",
-  textAlign: "center",
-  cursor: "pointer",
-  height: 18,
-};
+import { useLocation, useNavigate } from "react-router-dom";
+import { ILocationState } from "@src/Interfaces";
+import "./GoalHistory.scss";
 
 const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => {
   const { t } = useTranslation();
   return (
     <span
+      className="breadcrumb-item fw-500"
       style={{
-        ...breadcrumbStyle,
         border: `1px solid ${goal.goalColor}`,
         background: `${goal.goalColor}33`,
       }}
@@ -37,71 +23,48 @@ const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => {
     </span>
   );
 };
+
 const GoalHistory = () => {
   const location = useLocation();
-  const goalsHistory = location.state?.goalsHistory ?? []; // default as an empty array if undefined.
-
+  const navigate = useNavigate();
+  const locationState: ILocationState = location.state;
+  const goalsHistory = locationState.goalsHistory ?? [];
   const darkModeStatus = useRecoilValue(darkModeState);
 
+  const handleBreadcrumbClick = (goalId: string, index: number) => {
+    const newGoalsHistory = goalsHistory.slice(0, index + 1);
+    navigate(`/goals/${goalId}`, {
+      state: {
+        ...locationState,
+        goalsHistory: newGoalsHistory,
+      },
+    });
+  };
+
   return (
-    <div style={{ padding: "0 23px" }}>
+    <div className="goal-history">
       <Breadcrumb
-        style={{
-          margin: "24px 0px",
-        }}
-        separator={<span style={{ color: darkModeStatus ? "rgba(255, 255, 255, 0.45)" : "inherit" }}>/</span>}
+        className="breadcrumb-container"
+        separator={<span className={`separator ${darkModeStatus ? "dark-mode" : ""}`}>/</span>}
         items={[
           {
             title: (
               <img
                 src={goalsIcon}
-                style={{ marginTop: "5px" }}
-                className={`${darkModeStatus ? "goals-icon-history" : ""}`}
+                className={`goals-icon ${darkModeStatus ? "goals-icon-history" : ""}`}
                 alt="my goals"
               />
             ),
             onClick: () => {
-              window.history.go(-goalsHistory.length);
+              navigate("/goals", {
+                state: { ...location.state, goalsHistory: [] },
+              });
             },
           },
-          ...(goalsHistory.length <= 3
-            ? goalsHistory.map((goal: ISubGoalHistory, index: number) => ({
-                title: <BreadcrumbItem goal={goal} />,
-                onClick: () => {
-                  if (index === goalsHistory.length - 1) {
-                    return;
-                  }
-                  window.history.go(index + 1 - goalsHistory.length);
-                },
-              }))
-            : [
-                ...goalsHistory.slice(0, 2).map((goal: ISubGoalHistory, index: number) => ({
-                  title: <BreadcrumbItem goal={goal} />,
-                  onClick: () => {
-                    window.history.go(index + 1 - goalsHistory.length);
-                  },
-                })),
-                {
-                  title: (
-                    <span style={{ ...breadcrumbStyle, border: "1px solid #d9d9d9", background: "#d9d9d933" }}>
-                      ...
-                    </span>
-                  ),
-                  onClick: () => {
-                    window.history.back();
-                  },
-                },
-                ...goalsHistory.slice(goalsHistory.length - 1).map((goal: ISubGoalHistory, index: number) => ({
-                  title: <BreadcrumbItem goal={goal} />,
-                  onClick: () => {
-                    const count = index + 1 - goalsHistory.length;
-                    if (-count === goalsHistory.length - 1) {
-                      return;
-                    }
-                    window.history.go(count);
-                  },
-                })),
-              ]),
+          ...goalsHistory.map((goal: ISubGoalHistory, index: number) => ({
+            title: <BreadcrumbItem goal={goal} />,
+            onClick: () => handleBreadcrumbClick(goal.goalID, index),
+          })),
         ]}
       />
     </div>

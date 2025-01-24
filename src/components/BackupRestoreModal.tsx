@@ -11,6 +11,7 @@ import "dexie-export-import";
 import "./index.scss";
 import { JsonExportStrategy } from "@src/utils/ExportStrategies/JsonExportStrategy";
 import { CsvExportStrategy } from "@src/utils/ExportStrategies/CsvExportStrategy";
+import { GoalActions } from "@src/constants/actions";
 import { ExportManager } from "../utils/ExportStrategies/ExportManager";
 
 const backupImg =
@@ -27,7 +28,7 @@ const BackupRestoreModal = () => {
   const setLastAction = useSetRecoilState(lastAction);
 
   const importSuccessfull = () => {
-    setLastAction("goalsRestored");
+    setLastAction(GoalActions.GOALS_RESTORED);
     window.history.back();
     setShowToast({ open: true, message: "Data Restored Successfully", extra: "" });
   };
