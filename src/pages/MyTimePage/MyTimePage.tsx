@@ -18,7 +18,7 @@ import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
 import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { lastAction } from "@src/store";
 import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders/Reminders";
 
@@ -29,14 +29,17 @@ export const MyTimePage = () => {
   const [doneTasks, setDoneTasks] = useState<TasksDoneTodayItem[]>([]);
   const { state } = useLocation();
   const [searchParams] = useSearchParams();
-  const action = useRecoilValue(lastAction);
-
+  const [action, setAction] = useRecoilState(lastAction);
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
   useEffect(() => {
-    getAllTasksDoneToday().then((task) => {
-      setDoneTasks(task);
-    });
+    getAllTasksDoneToday()
+      .then((task) => {
+        setDoneTasks(task);
+      })
+      .then(() => {
+        setAction("none");
+      });
   }, [action]);
 
   const handleShowTasks = (dayName: string) => {
