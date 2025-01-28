@@ -18,6 +18,17 @@ export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]
   });
 };
 
+export const removeSharedWMGoalFromParentSublist = async (goalId: string, parentGoalId: string) => {
+  db.transaction("rw", db.sharedWMCollection, async () => {
+    await db.sharedWMCollection
+      .where("id")
+      .equals(parentGoalId)
+      .modify((obj: GoalItem) => {
+        obj.sublist = obj.sublist.filter((id) => id !== goalId);
+      });
+  });
+};
+
 export const addSharedWMGoal = async (goalDetails: GoalItem, relId = "") => {
   console.log("[addSharedWMGoal] Input goal details:", goalDetails);
   console.log("[addSharedWMGoal] Input relId:", relId);
