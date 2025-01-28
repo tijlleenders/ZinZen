@@ -18,22 +18,29 @@ export const PartnerProvider = ({ children }: { children: ReactNode }) => {
   const isPartnerModeActive = !!partnerId;
 
   useEffect(() => {
-    if (partnerId) {
-      getPartnerById(partnerId).then((doc) => {
+    async function initPartner() {
+      if (partnerId) {
+        const doc = await getPartnerById(partnerId);
         setPartner(doc);
-      });
+      } else {
+        setPartner(undefined);
+      }
     }
-    setPartner(undefined);
+    initPartner();
   }, [isPartnerModeActive, partnerId]);
 
   useEffect(() => {
-    getAllContacts().then((docs) => {
-      setPartnersList([...docs]);
-      if (docs.length) setPartner(docs[0]);
-    });
-  }, []);
+    async function initPartnersList() {
+      const docs = await getAllContacts();
+      setPartnersList(docs);
+      if (!partnerId && docs.length) {
+        setPartner(docs[0]);
+      }
+    }
+    initPartnersList();
+  }, [partnerId]);
 
-  const value = useMemo(() => ({ partner, partnersList }), [partner]);
+  const value = useMemo(() => ({ partner, partnersList }), [partner, partnersList]);
 
   return (
     <ActiveGoalProvider>
