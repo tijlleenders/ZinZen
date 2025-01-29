@@ -356,7 +356,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
       await Promise.all(
         updatedGoal.participants.map(async (sub) => {
           const rootGoal = await getSharedRootGoal(goalId, sub.relId);
-          sendUpdatesToSubscriber(sub, rootGoal?.id || goalId, "moved", [
+          sendUpdatesToSubscriber(sub, rootGoal?.id || goalId, "modifiedGoals", [
             {
               level: ancestorGoalIds.length,
               goal: {

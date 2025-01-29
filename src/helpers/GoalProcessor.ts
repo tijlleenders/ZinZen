@@ -29,6 +29,7 @@ export const formatTagsToText = (_goal: GoalItem) => {
     link: "",
     language: goal.language,
     goalColor: goal.goalColor,
+    parentGoalId: goal.parentGoalId,
   };
   if ((goal.afterTime || goal.afterTime === 0) && goal.beforeTime) {
     response.timing = ` ${goal.afterTime}-${goal.beforeTime}`;
@@ -47,8 +48,12 @@ export const formatTagsToText = (_goal: GoalItem) => {
   response.on = goal.on ? `${goal.on.join(" ")}` : "";
   response.timeBudget = JSON.stringify(goal.timeBudget);
   response.link = goal.link ? ` ${goal.link}` : "";
-  const { title, duration, start, due, habit, on, timeBudget, link, timing } = response;
-  return { inputText: title + duration + start + due + timing + on + timeBudget + habit + link, ...response };
+  response.parentGoalId = goal.parentGoalId;
+  const { title, duration, start, due, habit, on, timeBudget, link, timing, parentGoalId } = response;
+  return {
+    inputText: title + duration + start + due + timing + on + timeBudget + habit + link + parentGoalId,
+    ...response,
+  };
 };
 
 export const createGoalObjectFromTags = (obj: object = {}) => {
@@ -120,16 +125,29 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
   return { typeAtPriority };
 };
 
+/**
+ * Finds and returns the lowest level changes for a given inbox item and relationship ID
+ * @param id - Inbox item ID
+ * @param relId - Relationship ID to identify specific changes
+ * @returns Object containing type of change, parent ID, and affected goals
+ */
 export const jumpToLowestChanges = async (id: string, relId: string) => {
+  // Fetch the inbox item containing changes
   const inbox: InboxItem = await getInboxItem(id);
   let typeAtPriority: typeOfChange | "none" = "none";
+
   if (inbox) {
     const goalChanges = inbox.changes[relId];
+    // Get the highest priority change type (subgoals > newGoalMoved > modifiedGoals > etc)
     typeAtPriority = getTypeAtPriority(goalChanges).typeAtPriority;
+
     if (typeAtPriority !== "none") {
+      // Sort changes by level (depth in goal hierarchy)
       goalChanges[typeAtPriority].sort((a: { level: number }, b: { level: number }) => a.level - b.level);
       let goals: { intent: typeOfIntent; goal: GoalItem }[] = [];
       const goalAtPriority = goalChanges[typeAtPriority][0];
+
+      // Determine the parent ID based on change type and goal structure
       const parentId =
         "id" in goalAtPriority
           ? goalAtPriority.id
@@ -137,22 +155,29 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
             ? goalAtPriority.goal.parentGoalId
             : goalAtPriority.goal.id;
 
+      // Handle archived or deleted goals
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
         const result = { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
         return result;
       }
+
+      // Handle subgoals and newly moved goals
       if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
+        // Collect all goals that share the same parent ID
         goalChanges[typeAtPriority].forEach(({ intent, goal }) => {
           if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });
       }
+
+      // Handle modified or moved goals
       if (typeAtPriority === "modifiedGoals" || typeAtPriority === "moved") {
         let modifiedGoal = createGoalObjectFromTags({});
         let goalIntent;
-        goalChanges[typeAtPriority].forEach(({ goal, intent }) => {
-          if (goal.id === parentId) {
-            modifiedGoal = { ...modifiedGoal, ...goal };
-            goalIntent = intent;
+        // Find and merge changes for the specific goal
+        goalChanges[typeAtPriority].forEach((change) => {
+          if ("goal" in change && change.goal.id === parentId) {
+            modifiedGoal = { ...modifiedGoal, ...change.goal };
+            goalIntent = change.intent;
           }
         });
         goals = [{ intent: goalIntent, goal: modifiedGoal }];
@@ -166,6 +191,8 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
       return result;
     }
   }
+
+  // Return default result if no changes found
   const defaultResult = { typeAtPriority, parentId: "", goals: [] };
   return defaultResult;
 };
@@ -184,6 +211,7 @@ export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
     "goalColor",
     "language",
     "timeBudget",
+    "parentGoalId",
   ];
   const res: ITagsChanges = { schemaVersion: {}, prettierVersion: {} };
   const goal1Tags = formatTagsToText(goal1);
