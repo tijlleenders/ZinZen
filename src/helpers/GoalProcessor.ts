@@ -125,29 +125,16 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
   return { typeAtPriority };
 };
 
-/**
- * Finds and returns the lowest level changes for a given inbox item and relationship ID
- * @param id - Inbox item ID
- * @param relId - Relationship ID to identify specific changes
- * @returns Object containing type of change, parent ID, and affected goals
- */
 export const jumpToLowestChanges = async (id: string, relId: string) => {
-  // Fetch the inbox item containing changes
   const inbox: InboxItem = await getInboxItem(id);
   let typeAtPriority: typeOfChange | "none" = "none";
-
   if (inbox) {
     const goalChanges = inbox.changes[relId];
-    // Get the highest priority change type (subgoals > newGoalMoved > modifiedGoals > etc)
     typeAtPriority = getTypeAtPriority(goalChanges).typeAtPriority;
-
     if (typeAtPriority !== "none") {
-      // Sort changes by level (depth in goal hierarchy)
       goalChanges[typeAtPriority].sort((a: { level: number }, b: { level: number }) => a.level - b.level);
       let goals: { intent: typeOfIntent; goal: GoalItem }[] = [];
       const goalAtPriority = goalChanges[typeAtPriority][0];
-
-      // Determine the parent ID based on change type and goal structure
       const parentId =
         "id" in goalAtPriority
           ? goalAtPriority.id
@@ -155,25 +142,18 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
             ? goalAtPriority.goal.parentGoalId
             : goalAtPriority.goal.id;
 
-      // Handle archived or deleted goals
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
         const result = { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
         return result;
       }
-
-      // Handle subgoals and newly moved goals
       if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
-        // Collect all goals that share the same parent ID
         goalChanges[typeAtPriority].forEach(({ intent, goal }) => {
           if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });
       }
-
-      // Handle modified or moved goals
       if (typeAtPriority === "modifiedGoals" || typeAtPriority === "moved") {
         let modifiedGoal = createGoalObjectFromTags({});
         let goalIntent;
-        // Find and merge changes for the specific goal
         goalChanges[typeAtPriority].forEach((change) => {
           if ("goal" in change && change.goal.id === parentId) {
             modifiedGoal = { ...modifiedGoal, ...change.goal };
@@ -191,8 +171,6 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
       return result;
     }
   }
-
-  // Return default result if no changes found
   const defaultResult = { typeAtPriority, parentId: "", goals: [] };
   return defaultResult;
 };
@@ -222,18 +200,6 @@ export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
       res.schemaVersion[tag] = goal2[tag] || null;
       if (tag === "afterTime" || tag === "beforeTime") {
         res.prettierVersion.timing = { oldVal: goal1Tags.timing, newVal: goal2Tags.timing };
-      } else if (tag === "timeBudget") {
-        // const g1TB = JSON.parse(goal1Tags.timeBudget);
-        // const g2TB = JSON.parse(goal2Tags.timeBudget);
-        // if (g1TB.perDay !== g2TB.perDay || g1TB.perWeek !== g2TB.perWeek) {
-        //   console.log("in");
-        //   const { perDay: oldPerDay, perWeek: oldPerWeek } = g1TB;
-        //   const { perDay: newPerDay, perWeek: newPerWeek } = g2TB;
-        //   res.prettierVersion[tag] = {
-        //     oldVal: `${oldPerDay === "-" ? "" : oldPerDay} ${oldPerWeek === "-" ? "" : oldPerWeek}`,
-        //     newVal: `${newPerDay === "-" ? "" : newPerDay} ${newPerWeek === "-" ? "" : newPerWeek}`,
-        //   };
-        // }
       } else res.prettierVersion[tag] = { oldVal: goal1Tags[tag], newVal: goal2Tags[tag] };
     }
   });

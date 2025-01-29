@@ -291,7 +291,6 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
           finalChanges.beforeTime = schemaVersion.beforeTime;
         }
       } else if (ele !== "parentGoalId") {
-        // Skip parentGoalId as it's handled above
         finalChanges[ele] = schemaVersion[ele];
       }
     }
