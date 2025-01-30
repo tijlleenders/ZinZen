@@ -46,6 +46,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
   const [oldParentTitle, setOldParentTitle] = useState<string>("");
   const [newParentTitle, setNewParentTitle] = useState<string>("");
   const [moveGoalTitle, setMoveGoalTitle] = useState<string>("");
+
   useEffect(() => {
     const fetchParentTitles = async () => {
       if (!goalUnderReview) return;
@@ -257,7 +258,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
           } else if (typeAtPriority === "modifiedGoals") {
             setUpdatesIntent(goals[0].intent);
             const incGoal: GoalItem = { ...goals[0].goal };
-            setUpdateList({ ...findGoalTagChanges(changedGoal, incGoal) });
+            setUpdateList({ ...(await findGoalTagChanges(changedGoal, incGoal)) });
           }
         }
       }

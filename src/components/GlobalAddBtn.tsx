@@ -21,6 +21,8 @@ import { moveGoalState } from "@src/store/moveGoalState";
 import { moveGoalHierarchy } from "@src/controllers/GoalController";
 import { displayToast, lastAction } from "@src/store";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
+import { suggestChanges } from "@src/controllers/PartnerController";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -55,6 +57,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const { state }: { state: ILocationState } = useLocation();
   const { handleAddFeeling } = useFeelingStore();
   const isPartnerModeActive = !!partnerId;
+
+  const subGoalsHistory = state?.goalsHistory || [];
 
   const setToastMessage = useSetRecoilState(displayToast);
 
@@ -93,7 +97,12 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     e.stopPropagation();
     if (goalToMove) {
       if (add === "myGoals" || isPartnerModeActive) {
-        navigate(`/goals/${parentId}?addOptions=true`, { state });
+        navigate(
+          isPartnerModeActive
+            ? `/partners/${partnerId}/goals/${parentId}?addOptions=true`
+            : `/goals/${parentId}?addOptions=true`,
+          { state },
+        );
       }
       return;
     }
@@ -126,10 +135,23 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const handleMoveGoalHere = async () => {
     if (!goalToMove) return;
     setIsDisabled(true);
-    await moveGoalHierarchy(goalToMove.id, parentId).then(() => {
-      setToastMessage({ open: true, message: "Goal moved successfully", extra: "" });
-    });
-    setLastAction("goalMoved");
+    if (isPartnerModeActive) {
+      let rootGoal = goalToMove;
+      if (state.goalsHistory && state.goalsHistory.length > 0) {
+        const rootGoalId = state.goalsHistory[0].goalID;
+        rootGoal = (await getSharedWMGoalById(rootGoalId)) || goalToMove;
+      }
+      suggestChanges(
+        rootGoal,
+        { ...goalToMove, parentGoalId: parentGoal.id || goalToMove.parentGoalId },
+        subGoalsHistory.length,
+      );
+    } else {
+      await moveGoalHierarchy(goalToMove.id, parentId).then(() => {
+        setToastMessage({ open: true, message: "Goal moved successfully", extra: "" });
+      });
+      setLastAction("goalMoved");
+    }
     setGoalToMove(null);
     setIsDisabled(false);
     window.history.back();

@@ -161,17 +161,15 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
         >
           <ActionDiv label={t("Edit")} icon="Edit" />
         </div>
-        {!isPartnerModeActive && (
-          <div
-            className="goal-action shareOptions-btn"
-            onClickCapture={async (e) => {
-              e.stopPropagation();
-              await openConfirmationPopUp({ actionCategory: "goal", actionName: "move" });
-            }}
-          >
-            <ActionDiv label={t("Move")} icon="Move" />
-          </div>
-        )}
+        <div
+          className="goal-action shareOptions-btn"
+          onClickCapture={async (e) => {
+            e.stopPropagation();
+            await openConfirmationPopUp({ actionCategory: "goal", actionName: "move" });
+          }}
+        >
+          <ActionDiv label={t("Move")} icon="Move" />
+        </div>
       </div>
     </ZModal>
   );

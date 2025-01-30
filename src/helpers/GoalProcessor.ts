@@ -7,7 +7,7 @@ import { getInboxItem } from "@src/api/InboxAPI";
 import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
-export const formatTagsToText = (_goal: GoalItem) => {
+export const formatTagsToText = async (_goal: GoalItem, currentGoal: GoalItem) => {
   const goal = { ..._goal };
   let startDate = new Date();
   let endDate = new Date();
@@ -31,6 +31,7 @@ export const formatTagsToText = (_goal: GoalItem) => {
     goalColor: goal.goalColor,
     parentGoalId: goal.parentGoalId,
   };
+
   if ((goal.afterTime || goal.afterTime === 0) && goal.beforeTime) {
     response.timing = ` ${goal.afterTime}-${goal.beforeTime}`;
   } else if (goal.afterTime || goal.afterTime === 0) {
@@ -38,6 +39,7 @@ export const formatTagsToText = (_goal: GoalItem) => {
   } else if (goal.beforeTime) {
     response.timing = ` before ${goal.beforeTime}`;
   }
+
   response.title = goal.title;
   response.duration = goal.duration ? ` ${goal.duration}h` : "";
   response.start = goal.start
@@ -48,7 +50,16 @@ export const formatTagsToText = (_goal: GoalItem) => {
   response.on = goal.on ? `${goal.on.join(" ")}` : "";
   response.timeBudget = JSON.stringify(goal.timeBudget);
   response.link = goal.link ? ` ${goal.link}` : "";
-  response.parentGoalId = goal.parentGoalId;
+
+  let parentGoalTitle = currentGoal?.title || "Unknown Goal";
+  if (currentGoal && currentGoal.parentGoalId !== goal.parentGoalId) {
+    if (goal.parentGoalId && goal.parentGoalId !== "root") {
+      const parentGoal = await getGoal(goal.parentGoalId);
+      parentGoalTitle = parentGoal?.title || "Unknown Goal";
+    }
+  }
+  response.parentGoalId = parentGoalTitle;
+
   const { title, duration, start, due, habit, on, timeBudget, link, timing, parentGoalId } = response;
   return {
     inputText: title + duration + start + due + timing + on + timeBudget + habit + link + parentGoalId,
@@ -175,7 +186,7 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
   return defaultResult;
 };
 
-export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
+export const findGoalTagChanges = async (goal1: GoalItem, goal2: GoalItem) => {
   const tags: ITagsAllowedToDisplay[] = [
     "title",
     "duration",
@@ -192,8 +203,13 @@ export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
     "parentGoalId",
   ];
   const res: ITagsChanges = { schemaVersion: {}, prettierVersion: {} };
-  const goal1Tags = formatTagsToText(goal1);
-  const goal2Tags = formatTagsToText(goal2);
+  const currentGoal1 = await getGoal(goal1.id);
+  const currentGoal2 = await getGoal(goal2.id);
+  if (!currentGoal1 || !currentGoal2) {
+    return res;
+  }
+  const goal1Tags = await formatTagsToText(goal1, currentGoal1);
+  const goal2Tags = await formatTagsToText(goal2, currentGoal2);
   console.log(goal1Tags, goal2Tags);
   tags.forEach((tag) => {
     if (goal1[tag] !== goal2[tag] && tag !== "timeBudget") {
