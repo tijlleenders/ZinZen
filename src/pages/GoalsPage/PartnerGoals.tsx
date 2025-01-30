@@ -56,6 +56,7 @@ const PartnerGoals = () => {
 
   const refreshActiveGoals = async () => {
     const rootGoals = await getRootGoalsOfPartner(relId);
+    console.log("rootGoals", rootGoals);
     handleUserGoals(rootGoals);
   };
   const search = async (text: string) => {
@@ -87,8 +88,8 @@ const PartnerGoals = () => {
 
   return (
     <>
-      <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
-        <ParentGoalProvider>
+      <ParentGoalProvider>
+        <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
           {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
           {goalCategories.includes(goalType) && (
             <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
@@ -117,8 +118,8 @@ const PartnerGoals = () => {
               </>
             )}
           </div>
-        </ParentGoalProvider>
-      </AppLayout>
+        </AppLayout>
+      </ParentGoalProvider>
       <PartnersNavbar />
     </>
   );

@@ -16,6 +16,7 @@ import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
 import { TrashItem } from "@src/models/TrashItem";
 import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
 import AvailableGoalHints from "@pages/GoalsPage/components/AvailableGoalHints";
+import { moveGoalState } from "@src/store/moveGoalState";
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
@@ -34,6 +35,7 @@ export const GoalSublist = () => {
   const goalID = useRecoilValue(displayGoalId);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
+  const goalToMove = useRecoilValue(moveGoalState);
 
   useEffect(() => {
     if (parentGoal === undefined) return;
@@ -59,7 +61,7 @@ export const GoalSublist = () => {
       setActiveGoals([...sortedGoals.filter((goal) => goal.archived === "false")]);
     }
     init();
-  }, [action, parentGoal, showSuggestionModal, showChangesModal, subgoals, goalID]);
+  }, [action, parentGoal, showSuggestionModal, showChangesModal, subgoals, goalID, goalToMove]);
 
   const setGoals = useCallback(
     (setGoalsStateUpdateWrapper: (prevGoals: GoalItem[]) => GoalItem[]) => {

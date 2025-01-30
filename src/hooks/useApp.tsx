@@ -3,19 +3,23 @@ import { useEffect } from "react";
 
 import { lastAction, displayConfirmation, openDevMode, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { addSharedWMGoal } from "@src/api/SharedWMAPI";
 import { createDefaultGoals } from "@src/controllers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
-import { handleIncomingChanges } from "@src/helpers/InboxProcessor";
+import { checkAndUpdateGoalNewUpdatesStatus, handleIncomingChanges } from "@src/helpers/InboxProcessor";
 import { getContactSharedGoals, shareGoalWithContact } from "@src/services/contact.service";
 import { updateAllUnacceptedContacts, getContactByRelId, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
+import ContactItem from "@src/models/ContactItem";
+import { SharedGoalMessage } from "@src/Interfaces/IContactMessages";
 import { checkAndCleanupDoneTodayCollection } from "@src/controllers/TaskDoneTodayController";
+import { getAllInboxItems } from "@src/api/InboxAPI";
+import { Payload } from "@src/models/InboxItem";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -29,6 +33,42 @@ function useApp() {
   const [devMode, setDevMode] = useRecoilState(openDevMode);
 
   const confirmationState = useRecoilValue(displayConfirmation);
+
+  const handleNewIncomingGoal = async (ele: SharedGoalMessage, contactItem: ContactItem, relId: string) => {
+    const { goalWithChildrens }: { goalWithChildrens: GoalItem[] } = ele;
+    const participant: IParticipant = {
+      name: contactItem.name,
+      relId,
+      type: "sharer",
+      following: true,
+    };
+    try {
+      await Promise.all(
+        goalWithChildrens.map(async (goal) => {
+          const goalWithParticipant = {
+            ...goal,
+            participants: [participant],
+          };
+          console.log("🚀 ~ file: useApp.tsx:52 ~ goalWithParticipant:", goalWithParticipant);
+          await addSharedWMGoal(goalWithParticipant).then(() => {
+            setLastAction("goalNewUpdates");
+          });
+        }),
+      );
+    } catch (error) {
+      console.error("[useApp] Error adding shared goals:", error);
+    }
+  };
+
+  useEffect(() => {
+    getAllInboxItems().then((inboxItems) => {
+      inboxItems.forEach((inboxItem) => {
+        if (inboxItem.id !== "root" && Object.keys(inboxItem.changes).length > 0) {
+          checkAndUpdateGoalNewUpdatesStatus(inboxItem.id);
+        }
+      });
+    });
+  }, []);
 
   useEffect(() => {
     const init = async () => {
@@ -59,7 +99,14 @@ function useApp() {
                     rootGoalId: goalId,
                   })),
                 ]).then(async () => {
-                  updateSharedStatusOfGoal(goalId, relId, name).then(() => console.log("status updated"));
+                  await Promise.all(
+                    goalWithChildrens.map(async (goalItem) => {
+                      console.log(goalItem.id, relId, name);
+                      await updateSharedStatusOfGoal(goalItem.id, relId, name);
+                    }),
+                  ).catch((error) => {
+                    console.error("[shareGoalWithRelId] Error updating shared status:", error);
+                  });
                 });
               }),
               clearTheQueue(relId),
@@ -68,54 +115,36 @@ function useApp() {
         );
       });
       const res = await getContactSharedGoals();
-      // @ts-ignore
       const resObject = res.response.reduce(
-        (acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }),
+        (acc: { [key: string]: SharedGoalMessage[] }, curr) => ({
+          ...acc,
+          [curr.relId]: [...(acc[curr.relId] || []), curr],
+        }),
         {},
       );
       if (res.success) {
+        const processChangesSequentially = async (
+          changes: SharedGoalMessage[],
+          contactItem: ContactItem,
+          relId: string,
+        ) => {
+          for (const change of changes) {
+            try {
+              if (change.type === "shareMessage") {
+                await handleNewIncomingGoal(change, contactItem, relId);
+              } else if (["sharer", "suggestion"].includes(change.type)) {
+                await handleIncomingChanges(change as unknown as Payload, relId);
+                setLastAction("goalNewUpdates");
+              }
+            } catch (error) {
+              console.error("Error processing change:", error);
+            }
+          }
+        };
         Object.keys(resObject).forEach(async (relId: string) => {
           const contactItem = await getContactByRelId(relId);
           if (contactItem) {
-            // @ts-ignore
-            resObject[relId].forEach(async (ele) => {
-              console.log("🚀 ~ file: useApp.tsx:45 ~ resObject[relId].forEach ~ ele:", ele);
-              if (ele.type === "shareMessage") {
-                const { goalWithChildrens }: { goalWithChildrens: GoalItem[] } = ele;
-                const rootGoal = goalWithChildrens[0];
-                rootGoal.participants.push({
-                  name: contactItem.name,
-                  relId,
-                  type: "sharer",
-                  following: true,
-                });
-                addSharedWMGoal(rootGoal)
-                  .then(() => {
-                    goalWithChildrens.slice(1).forEach((goal) => {
-                      addSharedWMGoal(goal).catch((err) => console.log(`Failed to add in inbox ${goal.title}`, err));
-                    });
-                  })
-                  .then(() => {
-                    setLastAction("goalNewUpdates");
-                  })
-                  .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
-              } else if (["sharer", "suggestion"].includes(ele.type)) {
-                handleIncomingChanges(ele, relId).then(() => setLastAction("goalNewUpdates"));
-              }
-              // else if (["suggestion", "shared", "collaboration", "collaborationInvite"].includes(ele.type)) {
-              //   let typeOfSub = ele.rootGoalId ? await findTypeOfSub(ele.rootGoalId) : "none";
-              //   if (ele.type === "collaborationInvite") {
-              //     typeOfSub = "collaborationInvite";
-              //   } else if (["collaboration", "suggestion"].includes(ele.type)) {
-              //     typeOfSub = ele.type;
-              //   } else if (ele.type === "shared") {
-              //     typeOfSub = typeOfSub === "collaboration" ? "collaboration" : "shared";
-              //   }
-              //   if (typeOfSub !== "none") {
-              //     handleIncomingChanges({ ...ele, type: typeOfSub }).then(() => setLastAction("goalNewUpdates"));
-              //   }
-              // }
-            });
+            await processChangesSequentially(resObject[relId], contactItem, relId);
           }
         });
       }

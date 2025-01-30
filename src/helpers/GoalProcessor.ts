@@ -7,7 +7,7 @@ import { getInboxItem } from "@src/api/InboxAPI";
 import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
-export const formatTagsToText = (_goal: GoalItem) => {
+export const formatTagsToText = async (_goal: GoalItem, currentGoal: GoalItem) => {
   const goal = { ..._goal };
   let startDate = new Date();
   let endDate = new Date();
@@ -29,7 +29,9 @@ export const formatTagsToText = (_goal: GoalItem) => {
     link: "",
     language: goal.language,
     goalColor: goal.goalColor,
+    parentGoalId: goal.parentGoalId,
   };
+
   if ((goal.afterTime || goal.afterTime === 0) && goal.beforeTime) {
     response.timing = ` ${goal.afterTime}-${goal.beforeTime}`;
   } else if (goal.afterTime || goal.afterTime === 0) {
@@ -37,6 +39,7 @@ export const formatTagsToText = (_goal: GoalItem) => {
   } else if (goal.beforeTime) {
     response.timing = ` before ${goal.beforeTime}`;
   }
+
   response.title = goal.title;
   response.duration = goal.duration ? ` ${goal.duration}h` : "";
   response.start = goal.start
@@ -47,8 +50,21 @@ export const formatTagsToText = (_goal: GoalItem) => {
   response.on = goal.on ? `${goal.on.join(" ")}` : "";
   response.timeBudget = JSON.stringify(goal.timeBudget);
   response.link = goal.link ? ` ${goal.link}` : "";
-  const { title, duration, start, due, habit, on, timeBudget, link, timing } = response;
-  return { inputText: title + duration + start + due + timing + on + timeBudget + habit + link, ...response };
+
+  let parentGoalTitle = currentGoal?.title || "Unknown Goal";
+  if (currentGoal && currentGoal.parentGoalId !== goal.parentGoalId) {
+    if (goal.parentGoalId && goal.parentGoalId !== "root") {
+      const parentGoal = await getGoal(goal.parentGoalId);
+      parentGoalTitle = parentGoal?.title || "Unknown Goal";
+    }
+  }
+  response.parentGoalId = parentGoalTitle;
+
+  const { title, duration, start, due, habit, on, timeBudget, link, timing, parentGoalId } = response;
+  return {
+    inputText: title + duration + start + due + timing + on + timeBudget + habit + link + parentGoalId,
+    ...response,
+  };
 };
 
 export const createGoalObjectFromTags = (obj: object = {}) => {
@@ -104,8 +120,12 @@ export const getTypeAtPriority = (goalChanges: IChangesInGoal) => {
   let typeAtPriority: typeOfChange | "none" = "none";
   if (goalChanges.subgoals.length > 0) {
     typeAtPriority = "subgoals";
+  } else if (goalChanges.newGoalMoved.length > 0) {
+    typeAtPriority = "newGoalMoved";
   } else if (goalChanges.modifiedGoals.length > 0) {
     typeAtPriority = "modifiedGoals";
+  } else if (goalChanges.moved.length > 0) {
+    typeAtPriority = "moved";
   } else if (goalChanges.archived.length > 0) {
     typeAtPriority = "archived";
   } else if (goalChanges.deleted.length > 0) {
@@ -129,43 +149,44 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
       const parentId =
         "id" in goalAtPriority
           ? goalAtPriority.id
-          : typeAtPriority === "subgoals"
+          : typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved"
             ? goalAtPriority.goal.parentGoalId
             : goalAtPriority.goal.id;
 
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
-        return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+        const result = { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+        return result;
       }
-      if (typeAtPriority === "subgoals") {
-        goalChanges.subgoals.forEach(({ intent, goal }) => {
+      if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
+        goalChanges[typeAtPriority].forEach(({ intent, goal }) => {
           if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });
       }
-      if (typeAtPriority === "modifiedGoals") {
+      if (typeAtPriority === "modifiedGoals" || typeAtPriority === "moved") {
         let modifiedGoal = createGoalObjectFromTags({});
         let goalIntent;
-        goalChanges.modifiedGoals.forEach(({ goal, intent }) => {
-          if (goal.id === parentId) {
-            modifiedGoal = { ...modifiedGoal, ...goal };
-            goalIntent = intent;
+        goalChanges[typeAtPriority].forEach((change) => {
+          if ("goal" in change && change.goal.id === parentId) {
+            modifiedGoal = { ...modifiedGoal, ...change.goal };
+            goalIntent = change.intent;
           }
         });
         goals = [{ intent: goalIntent, goal: modifiedGoal }];
       }
 
-      return {
+      const result = {
         typeAtPriority,
         parentId,
         goals,
       };
+      return result;
     }
-  } else {
-    console.log("inbox item doesn't exist");
   }
-  return { typeAtPriority, parentId: "", goals: [] };
+  const defaultResult = { typeAtPriority, parentId: "", goals: [] };
+  return defaultResult;
 };
 
-export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
+export const findGoalTagChanges = async (goal1: GoalItem, goal2: GoalItem) => {
   const tags: ITagsAllowedToDisplay[] = [
     "title",
     "duration",
@@ -179,28 +200,22 @@ export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
     "goalColor",
     "language",
     "timeBudget",
+    "parentGoalId",
   ];
   const res: ITagsChanges = { schemaVersion: {}, prettierVersion: {} };
-  const goal1Tags = formatTagsToText(goal1);
-  const goal2Tags = formatTagsToText(goal2);
+  const currentGoal1 = await getGoal(goal1.id);
+  const currentGoal2 = await getGoal(goal2.id);
+  if (!currentGoal1 || !currentGoal2) {
+    return res;
+  }
+  const goal1Tags = await formatTagsToText(goal1, currentGoal1);
+  const goal2Tags = await formatTagsToText(goal2, currentGoal2);
   console.log(goal1Tags, goal2Tags);
   tags.forEach((tag) => {
     if (goal1[tag] !== goal2[tag] && tag !== "timeBudget") {
       res.schemaVersion[tag] = goal2[tag] || null;
       if (tag === "afterTime" || tag === "beforeTime") {
         res.prettierVersion.timing = { oldVal: goal1Tags.timing, newVal: goal2Tags.timing };
-      } else if (tag === "timeBudget") {
-        // const g1TB = JSON.parse(goal1Tags.timeBudget);
-        // const g2TB = JSON.parse(goal2Tags.timeBudget);
-        // if (g1TB.perDay !== g2TB.perDay || g1TB.perWeek !== g2TB.perWeek) {
-        //   console.log("in");
-        //   const { perDay: oldPerDay, perWeek: oldPerWeek } = g1TB;
-        //   const { perDay: newPerDay, perWeek: newPerWeek } = g2TB;
-        //   res.prettierVersion[tag] = {
-        //     oldVal: `${oldPerDay === "-" ? "" : oldPerDay} ${oldPerWeek === "-" ? "" : oldPerWeek}`,
-        //     newVal: `${newPerDay === "-" ? "" : newPerDay} ${newPerWeek === "-" ? "" : newPerWeek}`,
-        //   };
-        // }
       } else res.prettierVersion[tag] = { oldVal: goal1Tags[tag], newVal: goal2Tags[tag] };
     }
   });
