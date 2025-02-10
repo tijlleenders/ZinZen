@@ -41,13 +41,15 @@ export const addContact = async (contactName: string, relId: string, type: strin
   return newContactId;
 };
 
-export const deleteContact = async (id: string) => {
+export const deleteContact = async (contact: ContactItem) => {
   try {
-    const partnerGoals = await getAllSharedWMGoalByPartner(id);
-    partnerGoals.forEach((goal) => {
-      deleteSharedGoal(goal);
-    });
-    await db.contactsCollection.delete(id);
+    const partnerGoals = await getAllSharedWMGoalByPartner(contact.relId);
+
+    // Await all delete operations
+    await Promise.all(partnerGoals.map((goal) => deleteSharedGoal(goal)));
+
+    // delete contact from contacts collection
+    await db.contactsCollection.delete(contact.id);
     return {
       success: true,
       message: "Contact deleted successfully",
@@ -61,7 +63,7 @@ export const deleteContact = async (id: string) => {
   }
 };
 
-export const updateContact = async (id: string, contact: ContactItem) => {
+export const updateContact = async (contact: ContactItem) => {
   try {
     await db.contactsCollection.put(contact);
     return {

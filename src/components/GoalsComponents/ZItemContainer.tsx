@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { darkModeState } from "@src/store";
 import { useRecoilValue } from "recoil";
 
-export const GoalContainer: React.FC<{
+export const ZItemContainer: React.FC<{
   id: string;
   expandGoalId?: string;
   isAnimating?: boolean;

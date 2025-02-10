@@ -21,7 +21,7 @@ const Actions = ({ contact }: { contact: ContactItem }) => {
 
   const handleDeleteContact = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const res = await deleteContact(contact.id);
+    const res = await deleteContact(contact);
     if (res.success) {
       setLastAction("partnersRevalidate");
       setShowToast({

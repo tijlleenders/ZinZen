@@ -29,7 +29,7 @@ const EditContactModal = ({ contact, onClose }: EditContactModalProps) => {
   const handleSave = async () => {
     if (name.trim().length) {
       try {
-        const res = await updateContact(contact.id, { ...contact, name: name.trim() });
+        const res = await updateContact({ ...contact, name: name.trim() });
         editSound.play();
         setLastAction("contactEdited");
         setShowToast({

@@ -53,8 +53,8 @@ export const getSharedWMGoalById = (id: string) => {
 };
 
 export const getAllSharedWMGoalByPartner = async (relId: string) => {
-  const goals = await db.sharedWMCollection.where("participants").equals(relId).toArray();
-  return goals;
+  const goals = await db.sharedWMCollection.toArray();
+  return goals.filter((goal: GoalItem) => goal.participants.some((participant) => participant.relId === relId));
 };
 
 export const getSharedWMChildrenGoals = async (parentGoalId: string) => {
@@ -138,6 +138,11 @@ export const removeSharedWMChildrenGoals = async (parentGoalId: string) => {
     removeSharedWMChildrenGoals(goal.id);
     removeSharedWMGoal(goal);
   });
+};
+
+export const removeSharedWMGoalWithChildrens = async (goal: GoalItem) => {
+  await removeSharedWMChildrenGoals(goal.id);
+  await removeSharedWMGoal(goal);
 };
 
 export const transferToMyGoals = async (id: string) => {

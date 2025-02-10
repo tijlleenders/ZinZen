@@ -11,8 +11,8 @@ import TriangleIcon from "@src/assets/TriangleIcon";
 import { CopyIcon } from "@src/assets/CopyIcon";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
-import { GoalContainer } from "../ZItemContainer";
 import { GoalIcon } from "./components/GoalIcon";
+import { ZItemContainer } from "../ZItemContainer";
 
 interface MyGoalProps {
   goal: ImpossibleGoal;
@@ -102,7 +102,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const titleIsCode = isGoalCode(goal.title);
 
   return (
-    <GoalContainer id={`goal-${goal.id}`} expandGoalId={expandGoalId} isAnimating={isAnimating}>
+    <ZItemContainer id={`goal-${goal.id}`} expandGoalId={expandGoalId} isAnimating={isAnimating}>
       <div
         style={{ touchAction: "none" }}
         onClickCapture={(e) => {
@@ -112,23 +112,23 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         {...dragAttributes}
         {...dragListeners}
       >
-        <GoalIcon color={goal.goalColor} showDottedBorder={!(goal.timeBudget?.perDay == null)}>
-          {titleIsCode ? (
-            <CopyIcon color={goal.goalColor} size={37} borderWidth={4} borderColor={innerBorderColor} />
-          ) : titleContainsVideoLink ? (
-            <TriangleIcon color={goal.goalColor} size={37} borderWidth={4} borderColor={goal.goalColor} />
-          ) : (
+        {titleIsCode ? (
+          <CopyIcon color={goal.goalColor} size={37} borderWidth={4} borderColor={innerBorderColor} />
+        ) : titleContainsVideoLink ? (
+          <TriangleIcon color={goal.goalColor} size={37} borderWidth={4} borderColor={goal.goalColor} />
+        ) : (
+          <GoalIcon color={goal.goalColor} showDottedBorder={!(goal.timeBudget?.perDay == null)}>
             <InnerCircle color={innerBorderColor}>
               {goal.newUpdates && <NotificationSymbol color={goal.goalColor} />}
             </InnerCircle>
-          )}
-        </GoalIcon>
+          </GoalIcon>
+        )}
       </div>
       <div aria-hidden className="goal-tile" onClick={(e) => handleGoalClick(e)}>
         <GoalTitle goal={goal} isImpossible={goal.impossible} />
       </div>
       {!isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
-    </GoalContainer>
+    </ZItemContainer>
   );
 };
 
