@@ -5,6 +5,7 @@ import { getRelationshipStatus } from "@src/services/contact.service";
 import { v4 as uuidv4 } from "uuid";
 import { deleteSharedGoal } from "@src/controllers/GoalController";
 import { getAllSharedWMGoalByPartner } from "../SharedWMAPI";
+import { getAllGoals } from "../GoalsAPI";
 
 export const getAllContacts = async () => {
   return db.contactsCollection.toArray();
@@ -41,12 +42,27 @@ export const addContact = async (contactName: string, relId: string, type: strin
   return newContactId;
 };
 
+const removeContactFromGoalParticipants = async (relId: string) => {
+  const goals = await getAllGoals();
+  const goalsWithContact = goals.filter((goal) => goal.participants.some((participant) => participant.relId === relId));
+
+  await Promise.all(
+    goalsWithContact.map((goal) => {
+      goal.participants = goal.participants.filter((participant) => participant.relId !== relId);
+      return db.goalsCollection.put(goal);
+    }),
+  );
+};
+
 export const deleteContact = async (contact: ContactItem) => {
   try {
     const partnerGoals = await getAllSharedWMGoalByPartner(contact.relId);
 
     // Await all delete operations
     await Promise.all(partnerGoals.map((goal) => deleteSharedGoal(goal)));
+
+    // remove contact from colaborated goal's participants
+    await removeContactFromGoalParticipants(contact.relId);
 
     // delete contact from contacts collection
     await db.contactsCollection.delete(contact.id);
