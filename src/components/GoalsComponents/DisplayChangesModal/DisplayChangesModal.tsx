@@ -95,7 +95,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
                 }}
               />
               <p>
-                &nbsp;{k}:&nbsp;
+                &nbsp;{k === "parentGoalId" ? "parentGoal" : k}:&nbsp;
                 <span className="existingChange">{oldVal}</span>&nbsp;
                 <span className="incomingChange">{newVal}</span>
               </p>
