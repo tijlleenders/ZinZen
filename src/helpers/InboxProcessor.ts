@@ -26,10 +26,10 @@ import {
   getAllDescendants,
   getGoalAncestors,
   getRootGoalId,
-  getSharedRootGoal,
+  findParticipantTopLevelGoal,
   inheritParticipants,
+  mergeParticipants,
   removeGoalFromParentSublist,
-  updateRootGoal,
   updateRootGoalNotification,
 } from "@src/controllers/GoalController";
 import { isIncomingGoalLatest, isIncomingIdChangeLatest } from "./mergeSharedGoalItems";
@@ -38,7 +38,6 @@ import {
   ArchivedStrategy,
   DeletedStrategy,
   ModifiedGoalsStrategy,
-  MovedStrategy,
   RestoredStrategy,
   SubgoalsStrategy,
 } from "./strategies/SharedGoalChangeStrategies";
@@ -137,9 +136,6 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       case "restored":
         sharedGoalManager.setStrategy(new RestoredStrategy());
         break;
-      case "moved":
-        sharedGoalManager.setStrategy(new MovedStrategy());
-        break;
       default:
         console.warn(`Unhandled change type: ${payload.changeType}`);
         break;
@@ -191,10 +187,10 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
 
     let localRootGoalId = rootGoalId;
     if (isIdChangeType(changeType)) {
-      const sharedRootGoalForCurrentParticipant = await getSharedRootGoal(goalId, relId);
+      const sharedRootGoalForCurrentParticipant = await findParticipantTopLevelGoal(goalId, relId);
       localRootGoalId = sharedRootGoalForCurrentParticipant?.id ?? rootGoalId;
     } else {
-      const sharedRootGoalForCurrentParticipant = await getSharedRootGoal(localGoal.id, relId);
+      const sharedRootGoalForCurrentParticipant = await findParticipantTopLevelGoal(localGoal.id, relId);
       localRootGoalId = sharedRootGoalForCurrentParticipant?.id ?? rootGoalId;
     }
     await addChangesToRootGoal(relId, defaultChanges, localRootGoalId);
@@ -246,41 +242,28 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
   const { schemaVersion, prettierVersion } = updateList;
   const finalChanges: ITagChangesSchemaVersion = {};
 
-  // Handle move changes first if parentGoalId is being changed and not unselected
+  // handle move change first
   if ("parentGoalId" in schemaVersion && !unselectedTags.includes("parentGoalId")) {
     const newParentGoalId = schemaVersion.parentGoalId as string;
     const newParentGoal = await getGoal(newParentGoalId);
 
-    if (newParentGoal || newParentGoalId === "root") {
-      // Update participants for the moved goal
-      const newParticipants = new Map<string, IParticipant>();
-
-      // Add current goal's participants
-      goal.participants.forEach((participant) => {
-        newParticipants.set(participant.relId, participant);
-      });
-
-      // Add new parent's participants if it exists
-      if (newParentGoal?.participants) {
-        newParentGoal.participants.forEach((participant) => {
-          newParticipants.set(participant.relId, participant);
-        });
-      }
-
-      // Handle the move operation
-      await Promise.all([
-        removeGoalFromParentSublist(goal.id, goal.parentGoalId),
-        addGoalToNewParentSublist(goal.id, newParentGoalId),
-        updateRootGoal(goal.id, newParentGoal?.rootGoalId ?? goal.id),
-      ]);
-
-      finalChanges.parentGoalId = newParentGoalId;
-      finalChanges.rootGoalId = newParentGoal?.rootGoalId ?? goal.id;
-      finalChanges.participants = Array.from(newParticipants.values());
+    if (!newParentGoal) {
+      // handle the case where the new parent goal is not found
     }
+
+    // update participants
+    finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants);
+
+    // update goal relationships
+    await Promise.all([
+      removeGoalFromParentSublist(goal.id, goal.parentGoalId),
+      addGoalToNewParentSublist(goal.id, newParentGoalId),
+    ]);
+
+    finalChanges.parentGoalId = newParentGoalId;
+    finalChanges.rootGoalId = newParentGoal?.rootGoalId ?? goal.id;
   }
 
-  // Handle other tag changes
   Object.keys(prettierVersion).forEach((ele) => {
     if (!unselectedTags.includes(ele)) {
       if (ele === "timing") {
@@ -296,7 +279,6 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     }
   });
 
-  // Update the goal with all changes
   await updateGoal(goal.id, {
     ...finalChanges,
     newUpdates: false,
@@ -304,15 +286,15 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     due: finalChanges.due ? new Date(finalChanges.due) : null,
   });
 
-  // Update descendants if it was a move operation
-  if (finalChanges.rootGoalId) {
+  // update descendants if it was a move operation
+  if (goal.parentGoalId !== finalChanges.parentGoalId) {
     const descendants = await getAllDescendants(goal.id);
     if (descendants.length > 0) {
       await Promise.all(
         descendants.map((descendant) => {
           return updateGoal(descendant.id, {
             rootGoalId: finalChanges.rootGoalId as string,
-            participants: finalChanges.participants as IParticipant[],
+            participants: mergeParticipants(descendant.participants, finalChanges.participants as IParticipant[]),
           });
         }),
       );

@@ -15,12 +15,11 @@ import { getDeletedGoal } from "@src/api/TrashAPI";
 import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
-import { getAllDescendants, getSharedRootGoal } from "@src/controllers/GoalController";
+import { getAllDescendants, findParticipantTopLevelGoal } from "@src/controllers/GoalController";
 import {
   ArchivedStrategy,
   DeletedStrategy,
   ModifiedGoalsStrategy,
-  MovedStrategy,
   RestoredStrategy,
   SubgoalsStrategy,
 } from "@src/strategies/GoalChangeStrategies";
@@ -178,9 +177,9 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       await deleteChanges();
     }
     switch (currentDisplay) {
-      case "moved":
-        strategyContext.setStrategy(new MovedStrategy());
-        break;
+      // case "moved":
+      //   strategyContext.setStrategy(new MovedStrategy());
+      //   break;
       case "subgoals":
       case "newGoalMoved":
         strategyContext.setStrategy(new SubgoalsStrategy());
@@ -222,7 +221,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       if (typeAtPriority === "none") {
         // remove participant from inbox
         if (participants.length === 1) {
-          const rootGoal = await getSharedRootGoal(currentMainGoal.id, participants[activePPT].relId);
+          const rootGoal = await findParticipantTopLevelGoal(currentMainGoal.id, participants[activePPT].relId);
           if (rootGoal) {
             removeGoalInbox(rootGoal.id);
           }

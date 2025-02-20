@@ -31,15 +31,21 @@ export const inheritParticipants = (parentGoal: GoalItem) => {
   return Array.from(allParticipants.values());
 };
 
-export const getSharedRootGoal = async (goalId: string, participantRelId: string): Promise<GoalItem | null> => {
+export const findParticipantTopLevelGoal = async (
+  goalId: string,
+  participantRelId: string,
+): Promise<GoalItem | null> => {
   const goal = await getGoal(goalId);
   if (!goal) {
     return null;
   }
+  // if goal is root and participant is in participants list
   if (goal.parentGoalId === "root" && goal.participants.some((p) => p.relId === participantRelId)) {
     return goal;
   }
+
   if (goal.parentGoalId !== "root") {
+    // if goal is not root, check for parent goal
     const parentGoal = await getGoal(goal.parentGoalId);
     if (!parentGoal) {
       return goal;
@@ -47,10 +53,11 @@ export const getSharedRootGoal = async (goalId: string, participantRelId: string
     if (!parentGoal.participants.some((p) => p.relId === participantRelId)) {
       return goal;
     }
-    return getSharedRootGoal(goal.parentGoalId, participantRelId);
+    return findParticipantTopLevelGoal(goal.parentGoalId, participantRelId);
   }
   return null;
 };
+
 export const getAllDescendants = async (goalId: string): Promise<GoalItem[]> => {
   const descendants: GoalItem[] = [];
 
@@ -86,7 +93,7 @@ const sendNewGoalObject = async (
         {
           sub: IParticipant;
           rootGoalId: string;
-          updates: Array<{ level: number; goal: Omit<GoalItem, "participants"> }>;
+          updates: Array<{ level: number; goal: GoalItem }>;
         }
       >();
 
@@ -97,7 +104,7 @@ const sendNewGoalObject = async (
           updates: [
             {
               level,
-              goal: { ...newGoal, id: newGoalId, parentGoalId },
+              goal: { ...newGoal, id: newGoalId, parentGoalId, participants: [] },
             },
           ],
         });
@@ -319,34 +326,45 @@ export const getGoalHistoryToRoot = async (goalId: string): Promise<{ goalID: st
   return history;
 };
 
+export const mergeParticipants = (
+  sourceParticipants: IParticipant[],
+  targetParticipants?: IParticipant[],
+): IParticipant[] => {
+  const mergedParticipants = new Map<string, IParticipant>();
+
+  sourceParticipants.forEach((participant) => {
+    mergedParticipants.set(participant.relId, participant);
+  });
+
+  targetParticipants?.forEach((participant) => {
+    mergedParticipants.set(participant.relId, participant);
+  });
+
+  return Array.from(mergedParticipants.values());
+};
+
 export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string) => {
+  // all thing is perfect here just have to rewrite the logic for sending update if goal is not shared
+
   const goalToMove = await getGoal(goalId);
   const newParentGoal = await getGoal(newParentGoalId);
 
   if (!goalToMove) return;
 
-  const goalsHistoryOfNewParent = await getGoalHistoryToRoot(newParentGoalId);
-  const ancestorGoalIdsOfNewParent = goalsHistoryOfNewParent.map((ele) => ele.goalID);
-
   // update participants
-  const newParticipants = new Map<string, IParticipant>();
-  // add participants of goalToMove
-  goalToMove.participants.forEach((participant) => {
-    newParticipants.set(participant.relId, participant);
-  });
-  // add participants of newParentGoal
-  newParentGoal?.participants.forEach((participant) => {
-    newParticipants.set(participant.relId, participant);
-  });
   const updatedGoal = {
     ...goalToMove,
-    participants: Array.from(newParticipants.values()),
     rootGoalId: newParentGoal?.rootGoalId || "root",
   };
 
+  // check if goaltomove is already shared with the original participants
+
   // send move update
+
   const isNonSharedGoal = !goalToMove?.participants?.some((p) => p.following);
   if (isNonSharedGoal) {
+    const goalsHistoryOfNewParent = await getGoalHistoryToRoot(newParentGoalId);
+    const ancestorGoalIdsOfNewParent = goalsHistoryOfNewParent.map((ele) => ele.goalID);
     await createSharedGoalObjectForSending(updatedGoal, newParentGoalId, ancestorGoalIdsOfNewParent);
   } else {
     const ancestors = await getGoalHistoryToRoot(goalId);
@@ -355,14 +373,14 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     try {
       await Promise.all(
         updatedGoal.participants.map(async (sub) => {
-          const rootGoal = await getSharedRootGoal(goalId, sub.relId);
+          const rootGoal = await findParticipantTopLevelGoal(goalId, sub.relId);
           sendUpdatesToSubscriber(sub, rootGoal?.id || goalId, "modifiedGoals", [
             {
               level: ancestorGoalIds.length,
               goal: {
                 ...updatedGoal,
                 parentGoalId: newParentGoalId,
-                rootGoalId: rootGoal?.id || goalId,
+                participants: [],
               },
             },
           ]);
@@ -373,17 +391,20 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     }
   }
 
-  const oldParentId = goalToMove.parentGoalId;
-
   try {
     // update goal relationships
+    const oldParentId = goalToMove.parentGoalId;
     await Promise.all([
+      // update parent id to new parent and participants to the new parent participants
       updateGoal(goalToMove.id, {
         parentGoalId: newParentGoalId,
-        participants: updatedGoal.participants,
+        participants: mergeParticipants(goalToMove.participants, newParentGoal?.participants),
       }),
+      // remove goal from old parent's sublist
       removeGoalFromParentSublist(goalToMove.id, oldParentId),
+      // add goal to new parent's sublist
       addGoalToNewParentSublist(goalToMove.id, newParentGoalId),
+      // update root goal id
       updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
     ]);
 
@@ -391,17 +412,10 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     const descendants = await getAllDescendants(goalId);
     if (descendants.length > 0) {
       await Promise.all(
-        descendants.map((descendant) => {
-          const descendantParticpants = new Map<string, IParticipant>();
-          descendant.participants.forEach((participant) => {
-            descendantParticpants.set(participant.relId, participant);
-          });
-          newParentGoal?.participants.forEach((participant) => {
-            descendantParticpants.set(participant.relId, participant);
-          });
-          return updateGoal(descendant.id, {
-            participants: Array.from(descendantParticpants.values()),
+        descendants.map((descendantGoal) => {
+          return updateGoal(descendantGoal.id, {
             rootGoalId: newParentGoal?.rootGoalId || "root",
+            participants: mergeParticipants(descendantGoal.participants, newParentGoal?.participants),
           });
         }),
       );

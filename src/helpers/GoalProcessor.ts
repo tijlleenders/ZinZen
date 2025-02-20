@@ -7,7 +7,10 @@ import { getInboxItem } from "@src/api/InboxAPI";
 import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
-export const formatTagsToText = async (_goal: GoalItem, currentGoal: GoalItem) => {
+export const formatTagsToText = async (_goal: GoalItem) => {
+  // _goal is the incoming changed goal
+  // currentGoal is the goal in the database
+
   const goal = { ..._goal };
   let startDate = new Date();
   let endDate = new Date();
@@ -51,13 +54,16 @@ export const formatTagsToText = async (_goal: GoalItem, currentGoal: GoalItem) =
   response.timeBudget = JSON.stringify(goal.timeBudget);
   response.link = goal.link ? ` ${goal.link}` : "";
 
-  let parentGoalTitle = currentGoal?.title || "Unknown Goal";
-  if (currentGoal && currentGoal.parentGoalId !== goal.parentGoalId) {
-    if (goal.parentGoalId && goal.parentGoalId !== "root") {
-      const parentGoal = await getGoal(goal.parentGoalId);
-      parentGoalTitle = parentGoal?.title || "Unknown Goal";
-    }
+  // if there is parentGoalId change then need to show parent's title instead of it id
+  let parentGoalTitle = "root";
+  const parentGoal = await getGoal(goal.parentGoalId);
+
+  if (!parentGoal) {
+    parentGoalTitle = "root";
+  } else {
+    parentGoalTitle = parentGoal.title;
   }
+
   response.parentGoalId = parentGoalTitle;
 
   const { title, duration, start, due, habit, on, timeBudget, link, timing, parentGoalId } = response;
@@ -203,13 +209,9 @@ export const findGoalTagChanges = async (goal1: GoalItem, goal2: GoalItem) => {
     "parentGoalId",
   ];
   const res: ITagsChanges = { schemaVersion: {}, prettierVersion: {} };
-  const currentGoal1 = await getGoal(goal1.id);
-  const currentGoal2 = await getGoal(goal2.id);
-  if (!currentGoal1 || !currentGoal2) {
-    return res;
-  }
-  const goal1Tags = await formatTagsToText(goal1, currentGoal1);
-  const goal2Tags = await formatTagsToText(goal2, currentGoal2);
+
+  const goal1Tags = await formatTagsToText(goal1);
+  const goal2Tags = await formatTagsToText(goal2);
   console.log(goal1Tags, goal2Tags);
   tags.forEach((tag) => {
     if (goal1[tag] !== goal2[tag] && tag !== "timeBudget") {

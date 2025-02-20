@@ -17,22 +17,18 @@ import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
 import { getAllDescendants, updateRootGoal } from "@src/controllers/GoalController";
 import { ChangeStrategy } from "./ChangeStrategy";
 
-const handleMoveOperation = async (goalToMoveId: string, newParentGoalId: string) => {
-  const goalToMove = await getSharedWMGoal(goalToMoveId);
-  if (!goalToMove) {
-    console.error("[MovedStrategy] Goal to move not found", { goalId: goalToMoveId });
+// this function is all perfect just need to manage case where the new parent goal is not shared
+const handleMoveOperation = async (newParentGoalId: string, goalToMove: GoalItem) => {
+  const newParentGoal = await getSharedWMGoal(newParentGoalId);
+
+  if (!newParentGoal) {
+    console.error("[MovedStrategy] New parent goal not found", { goalId: newParentGoalId });
     return;
   }
-  const newParentGoal = await getSharedWMGoal(newParentGoalId);
-  const updatedGoal = {
-    ...goalToMove,
-    rootGoalId: !newParentGoal ? "root" : newParentGoalId,
-  };
 
   await Promise.all([
     updateSharedWMGoal(goalToMove.id, {
       parentGoalId: newParentGoalId,
-      participants: updatedGoal.participants,
     }),
     removeSharedWMGoalFromParentSublist(goalToMove.id, goalToMove.parentGoalId),
     addSharedWMSublist(newParentGoalId, [goalToMove.id]),
@@ -72,11 +68,15 @@ export class ModifiedGoalsStrategy implements ChangeStrategy {
       ...ele,
       goal: fixDateVlauesInGoalObject(ele.goal),
     }));
-    const getGoal = await getSharedWMGoal(changes[0].goal.id);
+    const localSharedGoal = await getSharedWMGoal(changes[0].goal.id);
 
     // handle move operation if parentGoalId is being changed
-    if (getGoal?.parentGoalId !== changes[0].goal.parentGoalId) {
-      await handleMoveOperation(changes[0].goal.id, changes[0].goal.parentGoalId);
+    if (localSharedGoal?.parentGoalId !== changes[0].goal.parentGoalId) {
+      if (!localSharedGoal) {
+        console.error("[ModifiedGoalsStrategy] Goal to move not found", { goalId: changes[0].goal.id });
+        return;
+      }
+      await handleMoveOperation(changes[0].goal.parentGoalId, localSharedGoal, payload.rootGoalId);
     } else {
       // handle other modified changes
       await updateSharedWMGoal(changes[0].goal.id, changes[0].goal);
@@ -148,21 +148,21 @@ export class RestoredStrategy implements ChangeStrategy {
 //   }
 // };
 
-export class MovedStrategy implements ChangeStrategy {
-  async execute(payload: Payload): Promise<void> {
-    const changes = payload.changes.map((ele: changesInGoal) => ({
-      ...ele,
-      goal: fixDateVlauesInGoalObject(ele.goal),
-    }));
+// export class MovedStrategy implements ChangeStrategy {
+//   async execute(payload: Payload): Promise<void> {
+//     const changes = payload.changes.map((ele: changesInGoal) => ({
+//       ...ele,
+//       goal: fixDateVlauesInGoalObject(ele.goal),
+//     }));
 
-    const movedGoal = changes[0].goal;
-    const correspondingSharedWMGoal = await getSharedWMGoal(movedGoal.id);
+//     const movedGoal = changes[0].goal;
+//     const correspondingSharedWMGoal = await getSharedWMGoal(movedGoal.id);
 
-    if (!correspondingSharedWMGoal) {
-      console.error("[MovedStrategy] Goal to move not found", { goalId: movedGoal.id });
-      return;
-    }
+//     if (!correspondingSharedWMGoal) {
+//       console.error("[MovedStrategy] Goal to move not found", { goalId: movedGoal.id });
+//       return;
+//     }
 
-    await handleMoveOperation(movedGoal.id, movedGoal.parentGoalId);
-  }
-}
+//     await handleMoveOperation(movedGoal.id, movedGoal.parentGoalId);
+//   }
+// }
