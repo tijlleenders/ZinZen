@@ -261,3 +261,9 @@ export const arraysAreEqual = (arr1: string[], arr2: string[]): boolean => {
   if (arr1.length !== arr2.length) return false;
   return arr1.every((value, index) => value === arr2[index]);
 };
+
+export const checkOnArrayEquality = (arr1: string[], arr2: string[]): boolean => {
+  const arr1Sorted = arr1.sort();
+  const arr2Sorted = arr2.sort();
+  return arraysAreEqual(arr1Sorted, arr2Sorted);
+};
