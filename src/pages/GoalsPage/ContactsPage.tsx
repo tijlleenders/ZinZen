@@ -10,6 +10,7 @@ import { useSetRecoilState } from "recoil";
 import { displayToast, lastAction } from "@src/store";
 import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "react-query";
+import { PageTitle } from "@src/constants/pageTitle";
 import EditContactModal from "./components/modals/EditContactModal";
 
 const Actions = ({ contact }: { contact: ContactItem }) => {
@@ -22,14 +23,12 @@ const Actions = ({ contact }: { contact: ContactItem }) => {
   const handleDeleteContact = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const res = await deleteContact(contact);
-    if (res.success) {
-      setLastAction("partnersRevalidate");
-      setShowToast({
-        open: true,
-        message: res.message,
-        extra: "",
-      });
-    }
+    setLastAction("partnersRevalidate");
+    setShowToast({
+      open: true,
+      message: res.message,
+      extra: "",
+    });
     queryClient.invalidateQueries({ queryKey: ["partners"] });
     window.history.back();
   };
@@ -84,12 +83,7 @@ const ContactsPage = () => {
   }, [contacts]);
 
   return (
-    <AppLayout
-      title="contacts"
-      debounceSearch={() => {
-        console.log("debounceSearch");
-      }}
-    >
+    <AppLayout title={PageTitle.Contacts}>
       {showOptions && <Actions contact={selectedContact} />}
       <div className="myGoals-container">
         <div className="my-goals-content">

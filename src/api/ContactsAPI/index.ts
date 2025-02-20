@@ -81,17 +81,11 @@ export const deleteContact = async (contact: ContactItem) => {
 
 export const updateContact = async (contact: ContactItem) => {
   try {
-    await db.contactsCollection.put(contact);
-    return {
-      success: true,
-      message: "Contact updated successfully",
-    };
+    const updatedContact = await db.contactsCollection.put(contact);
+    return updatedContact;
   } catch (err) {
     console.log(err);
-    return {
-      success: false,
-      message: "Failed to update contact",
-    };
+    throw err;
   }
 };
 

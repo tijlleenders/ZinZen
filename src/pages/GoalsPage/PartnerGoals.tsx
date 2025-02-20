@@ -41,7 +41,7 @@ const PartnerGoals = () => {
 
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
-  // const [showActions, setShowActions] = useState({ open: "root", click: 1 });
+  const [isLoading, setIsLoading] = useState(true);
 
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -50,6 +50,7 @@ const PartnerGoals = () => {
   const handleUserGoals = (goals: GoalItem[]) => {
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
     setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
+    setIsLoading(false);
   };
 
   const refreshActiveGoals = async () => {
@@ -103,7 +104,7 @@ const PartnerGoals = () => {
             <GoalSublist />
           )}
 
-          {!activeGoals?.length && parentId === "root" && (
+          {!isLoading && !activeGoals?.length && parentId === "root" && (
             <>
               <InvitationStatus relId={relId} />
               <img

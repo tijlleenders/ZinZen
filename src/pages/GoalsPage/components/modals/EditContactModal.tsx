@@ -28,20 +28,24 @@ const EditContactModal = ({ contact, onClose }: EditContactModalProps) => {
 
   const handleSave = async () => {
     if (name.trim().length) {
+      if (name.trim() === contact.name) {
+        onClose();
+        return;
+      }
       try {
-        const res = await updateContact({ ...contact, name: name.trim() });
+        await updateContact({ ...contact, name: name.trim() });
         editSound.play();
         setLastAction("contactEdited");
         setShowToast({
           open: true,
-          message: res.message,
+          message: "Contact updated successfully",
           extra: "",
         });
         onClose();
       } catch (error) {
         setShowToast({
           open: true,
-          message: "Failed to update contact name",
+          message: "Failed to update contact",
           extra: "Please try again",
         });
       }
@@ -68,7 +72,6 @@ const EditContactModal = ({ contact, onClose }: EditContactModalProps) => {
       <input
         type="text"
         autoFocus
-        className="show-feelings__note-input"
         style={{
           padding: "8px 12px",
           fontSize: "16px",
