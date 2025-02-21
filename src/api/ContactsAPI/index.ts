@@ -15,7 +15,7 @@ export const getPartnersCount = async () => {
   return db.contactsCollection.count();
 };
 
-export const getPartnerById = (id: string) => {
+export const getPartnerById = async (id: string) => {
   return db.contactsCollection.get(id);
 };
 
@@ -54,8 +54,15 @@ const removeContactFromGoalParticipants = async (relId: string) => {
   );
 };
 
-export const deleteContact = async (contact: ContactItem) => {
+export const deleteContact = async (contactId: string) => {
   try {
+    const contact = await getPartnerById(contactId);
+    if (!contact) {
+      return {
+        success: false,
+        message: "Contact not found",
+      };
+    }
     const partnerGoals = await getAllSharedWMGoalByPartner(contact.relId);
 
     // Await all delete operations

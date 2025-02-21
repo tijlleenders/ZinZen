@@ -1,22 +1,11 @@
 import { GoalIcon } from "@components/GoalsComponents/MyGoal/components/GoalIcon";
 import { ZItemContainer } from "@components/GoalsComponents/ZItemContainer";
 import ContactItem from "@src/models/ContactItem";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Contacts = ({
-  contact,
-  setSelectedContact,
-}: {
-  contact: ContactItem;
-  setSelectedContact: Dispatch<SetStateAction<ContactItem | null>>;
-}) => {
+const Contacts = ({ contact }: { contact: ContactItem }) => {
   const navigate = useNavigate();
-
-  const redirect = () => {
-    const searchparam = "showOptions";
-    navigate(`/partners/${contact.id}/?${searchparam}=true`);
-  };
 
   return (
     <ZItemContainer id={`goal-${contact.id}`}>
@@ -24,11 +13,8 @@ const Contacts = ({
         style={{ touchAction: "none" }}
         onClickCapture={(e) => {
           e.stopPropagation();
-          redirect();
-          setSelectedContact(contact);
+          navigate(`/partners/${contact.id}/?showOptions=true`);
         }}
-        //   {...dragAttributes}
-        //   {...dragListeners}
       >
         <GoalIcon color="#007bff" showDottedBorder={false}>
           {contact.name[0]}

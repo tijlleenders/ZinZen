@@ -1,33 +1,61 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSetRecoilState } from "recoil";
-import { displayToast, lastAction } from "@src/store";
+import { displayToast } from "@src/store";
 import { useQueryClient } from "react-query";
-import { deleteContact } from "@src/api/ContactsAPI";
-import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
+import { useParams } from "react-router-dom";
+import { useGetPartnerById } from "@src/hooks/api/Contacts/useGetPartnerById";
+import { useDeleteContact } from "@src/hooks/api/Contacts/useDeleteContact";
 import EditContactModal from "./EditContactModal";
 
-const ContactActionModal = ({ contact }: { contact: ContactItem }) => {
+const ContactActionModal = () => {
   const { t } = useTranslation();
-  const setLastAction = useSetRecoilState(lastAction);
   const setShowToast = useSetRecoilState(displayToast);
   const [showEditModal, setShowEditModal] = useState(false);
   const queryClient = useQueryClient();
 
-  const handleDeleteContact = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const res = await deleteContact(contact);
-    setLastAction("partnersRevalidate");
+  const { partnerId } = useParams();
+
+  if (!partnerId) {
+    return null;
+  }
+
+  const { error: getContactError, contact } = useGetPartnerById(partnerId);
+
+  const { deleteContactMutation } = useDeleteContact(partnerId);
+
+  const handleDeleteContact = async () => {
+    try {
+      await deleteContactMutation();
+      setShowToast({
+        open: true,
+        message: "Contact deleted successfully",
+        extra: "",
+      });
+    } catch (err) {
+      setShowToast({
+        open: true,
+        message: "Error deleting contact",
+        extra: "",
+      });
+    } finally {
+      window.history.back();
+    }
+  };
+
+  if (!contact) {
+    return null;
+  }
+
+  if (getContactError) {
     setShowToast({
       open: true,
-      message: res.message,
+      message: "Error fetching contact",
       extra: "",
     });
-    queryClient.invalidateQueries({ queryKey: ["partners"] });
-    window.history.back();
-  };
+  }
 
   return (
     <>

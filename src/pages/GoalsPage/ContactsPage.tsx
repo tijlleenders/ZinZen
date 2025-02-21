@@ -1,39 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getAllContacts } from "@src/api/ContactsAPI";
 import Contacts from "@src/helpers/Contacts";
 import AppLayout from "@src/layouts/AppLayout";
-import ContactItem from "@src/models/ContactItem";
-import { useQuery } from "react-query";
 import { PageTitle } from "@src/constants/pageTitle";
+import { useGetAllContacts } from "@src/hooks/api/Contacts/useGetAllContacts";
+import { displayToast } from "@src/store";
+import { useSetRecoilState } from "recoil";
 import ContactActionModal from "./components/modals/ContactActionModal";
 
 const ContactsPage = () => {
   const [searchParams] = useSearchParams();
-  const [selectedContact, setSelectedContact] = useState<ContactItem | null>(null);
   const navigate = useNavigate();
-  const showOptions = searchParams.get("showOptions") === "true" && selectedContact;
-  const { data: contacts } = useQuery({
-    queryKey: ["partners"],
-    queryFn: () => getAllContacts(),
-  });
+  const showOptions = searchParams.get("showOptions") === "true";
+  const { contacts, isError, isLoading } = useGetAllContacts();
+  const setShowToast = useSetRecoilState(displayToast);
 
   useEffect(() => {
-    setSelectedContact(null);
+    if (isLoading) {
+      return;
+    }
+
+    if (isError) {
+      navigate("/goals");
+      return;
+    }
+
     if (!contacts || contacts.length === 0) {
+      setShowToast({
+        open: true,
+        message: "No contacts remaining",
+        extra: "Redirected to goals page",
+      });
       navigate("/goals");
     }
-  }, [contacts]);
+  }, [isError, contacts, navigate]);
 
   return (
     <AppLayout title={PageTitle.Contacts}>
-      {showOptions && <ContactActionModal contact={selectedContact} />}
+      {showOptions && <ContactActionModal />}
       <div className="myGoals-container">
         <div className="my-goals-content">
           <div className="d-flex f-col">
-            {contacts?.map((contact) => (
-              <Contacts key={contact.id} contact={contact} setSelectedContact={setSelectedContact} />
-            ))}
+            {contacts?.map((contact) => <Contacts key={contact.id} contact={contact} />)}
           </div>
         </div>
       </div>
