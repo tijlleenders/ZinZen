@@ -1,11 +1,13 @@
 import { GoalIcon } from "@components/GoalsComponents/MyGoal/components/GoalIcon";
 import { ZItemContainer } from "@components/GoalsComponents/ZItemContainer";
+import { usePartnerContext } from "@src/contexts/partner-context";
 import ContactItem from "@src/models/ContactItem";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Contacts = ({ contact }: { contact: ContactItem }) => {
   const navigate = useNavigate();
+  const { setCurrentPartner } = usePartnerContext();
 
   return (
     <ZItemContainer id={`goal-${contact.id}`}>
@@ -20,7 +22,14 @@ const Contacts = ({ contact }: { contact: ContactItem }) => {
           {contact.name[0]}
         </GoalIcon>
       </div>
-      <div aria-hidden className="goal-tile" onClick={() => navigate(`/partners/${contact.id}/goals`)}>
+      <div
+        aria-hidden
+        className="goal-tile"
+        onClick={() => {
+          setCurrentPartner(contact.id);
+          navigate(`/partners/${contact.id}/goals`);
+        }}
+      >
         {contact.name}
       </div>
     </ZItemContainer>

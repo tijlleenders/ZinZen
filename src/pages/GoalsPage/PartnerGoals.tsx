@@ -27,13 +27,13 @@ import InvitationStatus from "./InvitationStatus";
 const PartnerGoals = () => {
   const [searchParams] = useSearchParams();
   const { parentId = "root" } = useParams();
+  const { partner, setCurrentPartner } = usePartnerContext();
 
   let debounceTimeout: ReturnType<typeof setTimeout>;
   const showOptions = searchParams.get("showOptions") === "true";
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
   const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
 
-  const { partner } = usePartnerContext();
   const { goal: activeGoal } = useActiveGoalContext();
 
   const { name = "", relId = "" } = partner || {};
@@ -83,6 +83,12 @@ const PartnerGoals = () => {
       refreshActiveGoals();
     }
   }, [parentId, partner, displaySearch]);
+
+  useEffect(() => {
+    if (partner?.id) {
+      setCurrentPartner(partner.id);
+    }
+  }, [partner]);
 
   return (
     <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>

@@ -4,11 +4,13 @@ import React, { ReactNode, createContext, useContext, useEffect, useMemo, useSta
 import { useParams } from "react-router-dom";
 import { lastAction } from "@src/store";
 import { useRecoilValue } from "recoil";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { ActiveGoalProvider } from "./activeGoal-context";
 
 type PartnerContext = {
   partner: ContactItem | undefined;
   partnersList: ContactItem[];
+  setCurrentPartner: (partnerId: string) => void;
 };
 
 export const PartnerContext = createContext<PartnerContext | undefined>(undefined);
@@ -19,23 +21,36 @@ export const PartnerProvider = ({ children }: { children: ReactNode }) => {
   const [partnersList, setPartnersList] = useState<ContactItem[]>([]);
   const isPartnerModeActive = !!partnerId;
   const action = useRecoilValue(lastAction);
+
+  const setCurrentPartner = (partnerIdToSet: string) => {
+    localStorage.setItem(LocalStorageKeys.CURRENT_PARTNER, partnerIdToSet);
+  };
+
   useEffect(() => {
-    if (partnerId) {
-      getPartnerById(partnerId).then((doc) => {
+    const storedPartnerId = localStorage.getItem(LocalStorageKeys.CURRENT_PARTNER);
+    const idToUse = partnerId || storedPartnerId;
+
+    if (idToUse) {
+      getPartnerById(idToUse).then((doc) => {
         setPartner(doc);
       });
+    } else {
+      setPartner(undefined);
     }
-    setPartner(undefined);
   }, [isPartnerModeActive, partnerId]);
 
   useEffect(() => {
     getAllContacts().then((docs) => {
       setPartnersList([...docs]);
-      if (docs.length) setPartner(docs[0]);
+      if (docs.length) {
+        const storedPartnerId = localStorage.getItem(LocalStorageKeys.CURRENT_PARTNER);
+        const defaultPartner = storedPartnerId ? docs.find((doc) => doc.id === storedPartnerId) : docs[0];
+        setPartner(defaultPartner);
+      }
     });
   }, [action]);
 
-  const value = useMemo(() => ({ partner, partnersList }), [partner]);
+  const value = useMemo(() => ({ partner, partnersList, setCurrentPartner }), [partner, partnersList]);
 
   return (
     <ActiveGoalProvider>
