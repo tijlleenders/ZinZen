@@ -138,7 +138,6 @@ export const checkAndUpdateRelationshipStatus = async (relId: string) => {
 
 export const updateAllUnacceptedContacts = async (): Promise<ContactItem[]> => {
   const allContacts = await db.contactsCollection.toArray();
-
   const results = await Promise.allSettled(
     allContacts
       .filter((contact) => !contact.accepted)

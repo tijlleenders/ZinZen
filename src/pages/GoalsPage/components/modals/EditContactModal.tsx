@@ -1,60 +1,63 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSetRecoilState } from "recoil";
 import ZModal from "@src/common/ZModal";
-import { displayToast, lastAction } from "@src/store";
-import ContactItem from "@src/models/ContactItem";
-import { updateContact } from "@src/api/ContactsAPI";
-import plingSound from "@assets/pling.mp3";
+import { displayToast } from "@src/store";
 import useVirtualKeyboardOpen from "@src/hooks/useVirtualKeyBoardOpen";
 import useOnScreenKeyboardScrollFix from "@src/hooks/useOnScreenKeyboardScrollFix";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetPartnerById } from "@src/hooks/api/Contacts/useGetPartnerById";
+import { useUpdateContact } from "@src/hooks/api/Contacts/useUpdateContact";
 
-interface EditContactModalProps {
-  contact: ContactItem;
-  onClose: () => void;
-}
-
-const EditContactModal = ({ contact, onClose }: EditContactModalProps) => {
+const EditContactModal = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const setShowToast = useSetRecoilState(displayToast);
-  const setLastAction = useSetRecoilState(lastAction);
-  const editSound = new Audio(plingSound);
 
-  const [name, setName] = useState(contact.name);
+  const { partnerId } = useParams();
+  const { contact, isFetching } = useGetPartnerById(partnerId || "");
+  const { updateContactMutation, isLoading } = useUpdateContact();
+
+  const [name, setName] = useState("");
   const isKeyboardOpen = useVirtualKeyboardOpen();
   useOnScreenKeyboardScrollFix();
 
-  const handleSave = async () => {
-    if (name.trim().length) {
-      if (name.trim() === contact.name) {
-        onClose();
-        return;
-      }
-      try {
-        await updateContact({ ...contact, name: name.trim() });
-        editSound.play();
-        setLastAction("contactEdited");
-        setShowToast({
-          open: true,
-          message: "Contact updated successfully",
-          extra: "",
-        });
-        onClose();
-      } catch (error) {
-        setShowToast({
-          open: true,
-          message: "Failed to update contact",
-          extra: "Please try again",
-        });
-      }
-    } else {
+  useEffect(() => {
+    if (contact) {
+      setName(contact.name);
+    }
+  }, [contact]);
+
+  if (isFetching) {
+    return null;
+  }
+
+  if (!partnerId || !contact) {
+    return null;
+  }
+
+  const handleUpdateContact = async () => {
+    if (name.trim().length === 0) {
       setShowToast({
         open: true,
         message: "Contact name cannot be empty",
-        extra: "",
+        extra: "Please enter a valid name",
       });
+      return;
+    }
+
+    if (name.trim() === contact?.name) {
+      return;
+    }
+
+    try {
+      await updateContactMutation({ ...contact, name: name.trim() });
+    } catch (err) {
+      console.error("Error updating contact", err);
+    } finally {
+      navigate("/partners");
     }
   };
 
@@ -66,7 +69,7 @@ const EditContactModal = ({ contact, onClose }: EditContactModalProps) => {
         transform: `translate(0, ${isKeyboardOpen ? "-45%" : "0"})`,
         transition: "transform 0.3s ease-in-out",
       }}
-      onCancel={onClose}
+      onCancel={() => navigate("/partners")}
     >
       <p className="popupModal-title">Edit contact name</p>
       <input
@@ -80,21 +83,19 @@ const EditContactModal = ({ contact, onClose }: EditContactModalProps) => {
         }}
         onKeyDown={async (e) => {
           if (e.key === "Enter") {
-            await handleSave();
+            await handleUpdateContact();
           }
         }}
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder={t("Enter contact name")}
+        disabled={isLoading}
       />
-
       <br />
       <button
         type="button"
         id="addContact-btn"
-        onClick={async () => {
-          await handleSave();
-        }}
+        onClick={handleUpdateContact}
         className="addContact-btn action-btn submit-icon"
       >
         <span>Save</span>
