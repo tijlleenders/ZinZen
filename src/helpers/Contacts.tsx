@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Contacts = ({ contact }: { contact: ContactItem }) => {
   const navigate = useNavigate();
-  const { setCurrentPartner } = usePartnerContext();
+  const { setCurrentPartnerInLocalStorage } = usePartnerContext();
 
   return (
     <ZItemContainer id={`goal-${contact.id}`}>
@@ -26,7 +26,7 @@ const Contacts = ({ contact }: { contact: ContactItem }) => {
         aria-hidden
         className="goal-tile"
         onClick={() => {
-          setCurrentPartner(contact.id);
+          setCurrentPartnerInLocalStorage(contact.id);
           navigate(`/partners/${contact.id}/goals`);
         }}
       >

@@ -1,42 +1,30 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useSetRecoilState } from "recoil";
-import { displayToast } from "@src/store";
 import ZModal from "@src/common/ZModal";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetPartnerById } from "@src/hooks/api/Contacts/useGetPartnerById";
 import { useDeleteContact } from "@src/hooks/api/Contacts/useDeleteContact";
+import { usePartnerContext } from "@src/contexts/partner-context";
+import { displayToast } from "@src/store";
+import { useSetRecoilState } from "recoil";
 
 const ContactActionModal = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const setShowToast = useSetRecoilState(displayToast);
-
   const { partnerId } = useParams();
 
   if (!partnerId) {
     return null;
   }
 
-  const { error: getContactError, contact } = useGetPartnerById(partnerId);
+  const { partner: contact, isSuccess } = usePartnerContext();
 
   const { deleteContactMutation } = useDeleteContact(partnerId);
 
   const handleDeleteContact = async () => {
     try {
       await deleteContactMutation();
-      setShowToast({
-        open: true,
-        message: "Contact deleted successfully",
-        extra: "",
-      });
-    } catch (err) {
-      setShowToast({
-        open: true,
-        message: "Error deleting contact",
-        extra: "",
-      });
     } finally {
       window.history.back();
     }
@@ -46,7 +34,7 @@ const ContactActionModal = () => {
     return null;
   }
 
-  if (getContactError) {
+  if (!isSuccess) {
     setShowToast({
       open: true,
       message: "Error fetching contact",

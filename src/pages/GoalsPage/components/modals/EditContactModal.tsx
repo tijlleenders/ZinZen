@@ -8,8 +8,8 @@ import { displayToast } from "@src/store";
 import useVirtualKeyboardOpen from "@src/hooks/useVirtualKeyBoardOpen";
 import useOnScreenKeyboardScrollFix from "@src/hooks/useOnScreenKeyboardScrollFix";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetPartnerById } from "@src/hooks/api/Contacts/useGetPartnerById";
 import { useUpdateContact } from "@src/hooks/api/Contacts/useUpdateContact";
+import { usePartnerContext } from "@src/contexts/partner-context";
 
 const EditContactModal = () => {
   const { t } = useTranslation();
@@ -17,7 +17,8 @@ const EditContactModal = () => {
   const setShowToast = useSetRecoilState(displayToast);
 
   const { partnerId } = useParams();
-  const { contact, isFetching } = useGetPartnerById(partnerId || "");
+  const { partner: contact } = usePartnerContext();
+
   const { updateContactMutation, isLoading } = useUpdateContact();
 
   const [name, setName] = useState("");
@@ -29,10 +30,6 @@ const EditContactModal = () => {
       setName(contact.name);
     }
   }, [contact]);
-
-  if (isFetching) {
-    return null;
-  }
 
   if (!partnerId || !contact) {
     return null;

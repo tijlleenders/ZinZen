@@ -1,56 +1,52 @@
-import { getAllContacts, getPartnerById } from "@src/api/ContactsAPI";
 import ContactItem from "@src/models/ContactItem";
-import React, { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { ReactNode, createContext, useContext, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { lastAction } from "@src/store";
-import { useRecoilValue } from "recoil";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+import { getPartnerById } from "@src/api/ContactsAPI";
+import { useQuery } from "react-query";
 import { ActiveGoalProvider } from "./activeGoal-context";
 
 type PartnerContext = {
   partner: ContactItem | undefined;
-  partnersList: ContactItem[];
-  setCurrentPartner: (partnerId: string) => void;
+  setCurrentPartnerInLocalStorage: (partnerId: string) => void;
+  isFetching: boolean;
+  isSuccess: boolean;
+  error: unknown;
 };
 
 export const PartnerContext = createContext<PartnerContext | undefined>(undefined);
 
 export const PartnerProvider = ({ children }: { children: ReactNode }) => {
-  const { partnerId } = useParams();
-  const [partner, setPartner] = useState<ContactItem>();
-  const [partnersList, setPartnersList] = useState<ContactItem[]>([]);
-  const isPartnerModeActive = !!partnerId;
-  const action = useRecoilValue(lastAction);
+  const { partnerId: partnerIdFromUrl } = useParams();
 
-  const setCurrentPartner = (partnerIdToSet: string) => {
+  const cachedPartnerId = localStorage.getItem(LocalStorageKeys.CURRENT_PARTNER);
+  const partnerId = partnerIdFromUrl || cachedPartnerId || "";
+
+  const {
+    isFetching,
+    isSuccess,
+    error,
+    data: partner,
+  } = useQuery({
+    queryKey: ["partner", partnerId],
+    queryFn: () => getPartnerById(partnerId),
+    enabled: !!partnerId,
+  });
+
+  const setCurrentPartnerInLocalStorage = (partnerIdToSet: string) => {
     localStorage.setItem(LocalStorageKeys.CURRENT_PARTNER, partnerIdToSet);
   };
 
-  useEffect(() => {
-    const storedPartnerId = localStorage.getItem(LocalStorageKeys.CURRENT_PARTNER);
-    const idToUse = partnerId || storedPartnerId;
+  const value = useMemo(
+    () => ({ partner, setCurrentPartnerInLocalStorage, isFetching, isSuccess, error }),
+    [partner, isFetching, isSuccess, error],
+  );
 
-    if (idToUse) {
-      getPartnerById(idToUse).then((doc) => {
-        setPartner(doc);
-      });
-    } else {
-      setPartner(undefined);
+  useEffect(() => {
+    if (partner?.id) {
+      setCurrentPartnerInLocalStorage(partner.id);
     }
-  }, [isPartnerModeActive, partnerId]);
-
-  useEffect(() => {
-    getAllContacts().then((docs) => {
-      setPartnersList([...docs]);
-      if (docs.length) {
-        const storedPartnerId = localStorage.getItem(LocalStorageKeys.CURRENT_PARTNER);
-        const defaultPartner = storedPartnerId ? docs.find((doc) => doc.id === storedPartnerId) : docs[0];
-        setPartner(defaultPartner);
-      }
-    });
-  }, [action]);
-
-  const value = useMemo(() => ({ partner, partnersList, setCurrentPartner }), [partner, partnersList]);
+  }, [partner]);
 
   return (
     <ActiveGoalProvider>
