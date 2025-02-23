@@ -1,27 +1,23 @@
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 import { useTranslation } from "react-i18next";
-import React from "react";
-import { getAllReminders } from "@src/api/GoalsAPI";
-import { useRecoilValue } from "recoil";
-import { lastAction } from "@src/store";
-import { useQuery } from "react-query";
+import React, { useState } from "react";
+import { useGetRemindersForSelectedDay } from "../../../../hooks/Reminders/useGetRemindersForSeletedDay";
 import { ReminderOptions } from "./ReminderOptions";
 import "../index.scss";
 import { useMyTimelineStore } from "../useMyTimelineStore";
-import { useReminders } from "./useReminder";
 
 export const Reminders = ({ day }: { day: string }) => {
   const { t } = useTranslation();
 
   const { handleReminderActionClick } = useMyTimelineStore(day);
-  const action = useRecoilValue(lastAction);
 
-  const { data: reminderGoals = [] } = useQuery({
-    queryKey: ["reminders", action],
-    queryFn: () => getAllReminders(),
-  });
+  const { reminders } = useGetRemindersForSelectedDay(day);
 
-  const { reminders, activeTaskId, toggleTaskOptions } = useReminders(reminderGoals, day);
+  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+
+  const toggleTaskOptions = (taskId: string) => {
+    setActiveTaskId((prevTaskId) => (prevTaskId === taskId ? null : taskId));
+  };
 
   const isOverdue = (dueDate: Date) => {
     const today = new Date();

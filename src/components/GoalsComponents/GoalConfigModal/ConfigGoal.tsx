@@ -2,7 +2,7 @@ import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Slider } from "antd";
-import { displayToast, lastAction } from "@src/store";
+import { displayToast } from "@src/store";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import plingSound from "@assets/pling.mp3";
@@ -21,8 +21,8 @@ import { ILocationState, ScheduleStatus } from "@src/Interfaces";
 import { useLocation, useNavigate } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
-import { GoalActions } from "@src/constants/actions";
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
+import { useQueryClient } from "react-query";
 import useScheduler from "@src/hooks/useScheduler";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
@@ -48,6 +48,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     parentData: { parentGoal },
   } = useParentGoalContext();
 
+  const queryClient = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -79,8 +80,6 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
 
   const [hintOption, setHintOption] = useState(false);
-
-  const setLastAction = useSetRecoilState(lastAction);
 
   useEffect(() => {
     getGoalHintItem(goal.id).then((hintItem) => {
@@ -163,7 +162,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
         });
       }
       await (isEditMode ? updateGoal(getFinalTags(), hintOption) : addGoal(getFinalTags(), hintOption, parentGoal));
-      setLastAction(GoalActions.GOAL_SAVED);
+      queryClient.invalidateQueries({ queryKey: ["reminders"] });
     } else {
       setShowToast({
         open: true,

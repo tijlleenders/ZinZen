@@ -1,8 +1,18 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { GoalItem } from "@src/models/GoalItem";
+import { getAllReminders } from "@src/api/GoalsAPI";
+import { useQuery } from "react-query";
 
-export const useReminders = (reminderGoals: GoalItem[], day: string) => {
-  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+/**
+ * Custom hook to manage and filter reminders based on the selected day
+ * @param day - String representing the selected day ("Today", "Tomorrow", or weekday name)
+ * @returns Object containing filtered reminders for the selected day
+ */
+export const useGetRemindersForSelectedDay = (day: string) => {
+  const { data: reminderGoals = [] } = useQuery({
+    queryKey: ["reminders"],
+    queryFn: () => getAllReminders(),
+  });
 
   const reminders = useMemo(() => {
     const today = new Date();
@@ -38,13 +48,7 @@ export const useReminders = (reminderGoals: GoalItem[], day: string) => {
     });
   }, [reminderGoals, day]);
 
-  const toggleTaskOptions = (reminderId: string) => {
-    setActiveTaskId((prevTaskId) => (prevTaskId === reminderId ? null : reminderId));
-  };
-
   return {
     reminders,
-    activeTaskId,
-    toggleTaskOptions,
   };
 };
