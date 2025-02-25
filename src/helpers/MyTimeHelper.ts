@@ -18,22 +18,19 @@ import { t } from "i18next";
 import {
   getAllTasksDoneToday,
   getAllTodaySkippedTasks,
-  getTimeCompletedForGoalInLast7Days,
-  getTimeCompletedTodayForGoal,
-  getTotalTimeCompletedForGoal,
+  getTasksCompletedSinceMondayForGoal,
+  getTotalDurationCompletedForGoal,
 } from "@src/api/TaskHistoryAPI";
 
-const getGoalCompletedStats = async (goalId: string): Promise<IGoalCompletedStats> => {
-  const [timeCompletedToday, timeCompletedInLast7Days, totalTimeCompleted] = await Promise.all([
-    getTimeCompletedTodayForGoal(goalId),
-    getTimeCompletedForGoalInLast7Days(goalId),
-    getTotalTimeCompletedForGoal(goalId),
+const getGoalCompletedStats = async (goalId: string) => {
+  const [tasksCompletedSinceMonday, totalDurationCompletedToday] = await Promise.all([
+    getTasksCompletedSinceMondayForGoal(goalId),
+    getTotalDurationCompletedForGoal(goalId),
   ]);
 
   return {
-    timeCompletedToday,
-    timeCompletedInLast7Days,
-    totalTimeCompleted,
+    tasksCompletedSinceMonday,
+    totalDurationCompletedToday,
   };
 };
 
