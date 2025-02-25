@@ -11,6 +11,11 @@ export const createEmptyInboxItem = async (id: string) => {
   });
 };
 
+export const getAllInboxItems = async () => {
+  const inboxItems: InboxItem[] = await db.inboxCollection.toArray();
+  return inboxItems;
+};
+
 export const getInboxItem = async (id: string) => {
   const inboxItems: InboxItem[] = await db.inboxCollection.where("id").equals(id).toArray();
   return inboxItems[0];

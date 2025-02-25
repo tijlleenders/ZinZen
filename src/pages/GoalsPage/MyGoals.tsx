@@ -1,10 +1,9 @@
-import React, { useState, useEffect, ChangeEvent, act } from "react";
+import React, { useState, useEffect, ChangeEvent, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import { displayChangesModal } from "@src/store/GoalsState";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveGoals } from "@api/GoalsAPI";
@@ -30,6 +29,7 @@ import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
+import { moveGoalState } from "@src/store/moveGoalState";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -58,10 +58,11 @@ export const MyGoals = () => {
   const suggestedGoal = useRecoilValue(suggestedGoalState);
   const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
-
-  const showChangesModal = useRecoilValue(displayChangesModal);
+  const goalToMove = useRecoilValue(moveGoalState);
 
   const [action, setLastAction] = useRecoilState(lastAction);
+
+  const goalWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const getAllGoals = async () => {
     const [goals, delGoals] = await Promise.all([getActiveGoals("true"), getDeletedGoals("root")]);
@@ -76,6 +77,7 @@ export const MyGoals = () => {
   const refreshActiveGoals = async () => {
     const { goals, delGoals } = await getAllGoals();
     const sortedGoals = await priotizeImpossibleGoals(goals);
+
     handleUserGoals(sortedGoals, delGoals);
   };
   const search = async (text: string) => {
@@ -99,21 +101,21 @@ export const MyGoals = () => {
 
   useEffect(() => {
     if (action === "goalArchived") return;
-    if (action !== "none") {
+    if (action !== "none" || goalToMove === null) {
       setLastAction("none");
       refreshActiveGoals();
     }
-  }, [action]);
+  }, [action, goalToMove]);
 
   useEffect(() => {
     if (parentId === "root") {
       refreshActiveGoals();
     }
-  }, [parentId, displaySearch, suggestedGoal]);
+  }, [parentId, displaySearch, suggestedGoal, goalToMove]);
 
   return (
-    <AppLayout title="myGoals" debounceSearch={debounceSearch}>
-      <ParentGoalProvider>
+    <ParentGoalProvider>
+      <AppLayout title="myGoals" debounceSearch={debounceSearch}>
         {showOptions && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {showParticipants && <Participants />}
@@ -127,7 +129,7 @@ export const MyGoals = () => {
           />
         )}
 
-        <div className="myGoals-container">
+        <div className="myGoals-container" ref={goalWrapperRef}>
           {parentId === "root" ? (
             <div className="my-goals-content">
               <div className="d-flex f-col">
@@ -148,7 +150,7 @@ export const MyGoals = () => {
             alt="Zinzen"
           />
         </div>
-      </ParentGoalProvider>
-    </AppLayout>
+      </AppLayout>
+    </ParentGoalProvider>
   );
 };

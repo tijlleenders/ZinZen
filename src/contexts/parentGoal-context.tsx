@@ -84,7 +84,7 @@ export const ParentGoalProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [action]);
 
-  const value = useMemo(() => ({ parentData, dispatch }), [parentData]);
+  const value = useMemo(() => ({ parentData, dispatch }), [parentData, dispatch]);
 
   return <ParentGoalContext.Provider value={value}>{children}</ParentGoalContext.Provider>;
 };
