@@ -70,9 +70,7 @@ const App = () => {
     });
 
     if (!clickedInside) {
-      setTimeout(() => {
-        api.destroy();
-      }, 0);
+      api.destroy();
     }
   };
 
