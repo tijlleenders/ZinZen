@@ -256,3 +256,7 @@ export const formatSingularPlural = (count: number, singularWord: string) => {
 export const hashObject = (obj: object) => {
   return sha256(JSON.stringify(obj)).toString();
 };
+
+export const getTimePart = (datetime: string | null, part: "hour" | "minute" = "hour"): string | null => {
+  return datetime ? datetime.split("T")[1]?.slice(part === "hour" ? 0 : 3, part === "hour" ? 2 : 5) : null;
+};

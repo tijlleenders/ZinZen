@@ -19,6 +19,7 @@ import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
 
+import { GoalActions } from "@src/constants/actions";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
@@ -185,7 +186,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             removeGoalInbox(currentMainGoal.id),
             updateGoal(currentMainGoal.id, { newUpdates: false }),
           ]);
-          setLastAction("GoalChangesSynced");
+          setLastAction(GoalActions.GOAL_CHANGES_SYNCED);
           window.history.back();
           return;
         }

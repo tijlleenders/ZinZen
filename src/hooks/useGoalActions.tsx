@@ -19,6 +19,7 @@ import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import { removeBackTicks } from "@src/utils/patterns";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
+import { GoalActions } from "@src/constants/actions";
 
 const pageCrumple = new Audio(pageCrumplingSound);
 const addGoalSound = new Audio(plingSound);
@@ -53,18 +54,18 @@ const useGoalActions = () => {
     if (goal.title === "magic" && goal.parentGoalId === "root") {
       setDevMode(false);
     }
-    setLastAction("goalDeleted");
+    setLastAction(GoalActions.GOAL_DELETED);
   };
 
   const restoreDeletedGoal = async (goal: GoalItem) => {
     return restoreUserGoal(goal, goal.typeOfGoal === "shared").then(() => {
-      setLastAction("goalRestored");
+      setLastAction(GoalActions.GOAL_RESTORED);
     });
   };
 
-  const restoreArchivedGoal = async (goal: GoalItem, action: "goalRestored" | "none") => {
+  const restoreArchivedGoal = async (goal: GoalItem, action: GoalActions.GOAL_RESTORED | GoalActions.NONE) => {
     return unarchiveUserGoal(goal).then(() => {
-      if (action === "none") return;
+      if (action === GoalActions.NONE) return;
       setLastAction(action);
     });
   };
@@ -91,7 +92,7 @@ const useGoalActions = () => {
     ) {
       // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], updatedHintOption);
-      setLastAction("goalUpdated");
+      setLastAction(GoalActions.GOAL_UPDATED);
       setShowToast({
         open: true,
         message: suggestedGoal ? "Goal (re)created!" : "Goal updated!",
@@ -115,7 +116,7 @@ const useGoalActions = () => {
         setDevMode(true);
         showMessage("Congratulations, you activated DEV mode", "Explore what's hidden");
       }
-      setLastAction("goalItemCreated");
+      setLastAction(GoalActions.GOAL_ITEM_CREATED);
     }
   };
 
