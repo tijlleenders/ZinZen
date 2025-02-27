@@ -25,6 +25,7 @@ const Contacts = ({ contact }: { contact: ContactItem }) => {
       <div
         aria-hidden
         className="goal-tile"
+        data-testid={`contact-${contact.name}`}
         onClick={() => {
           setCurrentPartnerInLocalStorage(contact.id);
           navigate(`/partners/${contact.id}/goals`);
