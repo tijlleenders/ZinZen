@@ -92,15 +92,15 @@ const sendNewGoalObject = async (
         string,
         {
           sub: IParticipant;
-          rootGoalId: string;
+          notificationGoalId: string;
           updates: Array<{ level: number; goal: GoalItem }>;
         }
       >();
 
-      subscribers.forEach(({ sub, rootGoalId }) => {
+      subscribers.forEach(({ sub, notificationGoalId }) => {
         subscriberUpdates.set(sub.relId, {
           sub,
-          rootGoalId,
+          notificationGoalId,
           updates: [
             {
               level,
@@ -111,7 +111,7 @@ const sendNewGoalObject = async (
       });
 
       if (descendants.length > 0) {
-        subscribers.forEach(({ sub, rootGoalId }) => {
+        subscribers.forEach(({ sub, notificationGoalId }) => {
           const subscriberUpdate = subscriberUpdates.get(sub.relId);
           if (subscriberUpdate) {
             subscriberUpdate.updates.push(
@@ -119,7 +119,7 @@ const sendNewGoalObject = async (
                 level: level + 1,
                 goal: {
                   ...descendant,
-                  rootGoalId,
+                  notificationGoalId,
                 },
               })),
             );
@@ -128,8 +128,8 @@ const sendNewGoalObject = async (
       }
 
       await Promise.all(
-        Array.from(subscriberUpdates.values()).map(({ sub, rootGoalId, updates }) =>
-          sendUpdatesToSubscriber(sub, rootGoalId, changeType, updates),
+        Array.from(subscriberUpdates.values()).map(({ sub, notificationGoalId, updates }) =>
+          sendUpdatesToSubscriber(sub, notificationGoalId, changeType, updates),
         ),
       );
     } catch (error) {
@@ -260,30 +260,30 @@ export const deleteSharedGoal = async (goal: GoalItem) => {
   }
 };
 
-export const updateRootGoal = async (goalId: string, newRootGoalId: string) => {
-  await updateGoal(goalId, { rootGoalId: newRootGoalId });
+export const updateRootGoal = async (goalId: string, newNotificationGoalId: string) => {
+  await updateGoal(goalId, { notificationGoalId: newNotificationGoalId });
 
   const childrenGoals = await getChildrenGoals(goalId);
   if (childrenGoals) {
     childrenGoals.forEach(async (goal: GoalItem) => {
-      await updateRootGoal(goal.id, newRootGoalId);
+      await updateRootGoal(goal.id, newNotificationGoalId);
     });
   }
 };
 
-export const getRootGoalId = async (goalId: string): Promise<string> => {
+export const getNotificationGoalId = async (goalId: string): Promise<string> => {
   const goal = await getGoal(goalId);
   if (!goal || goal.parentGoalId === "root") {
     return goal?.id || "root";
   }
-  return getRootGoalId(goal.parentGoalId);
+  return getNotificationGoalId(goal.parentGoalId);
 };
 
 export const updateRootGoalNotification = async (goalId: string) => {
   console.trace("Updating root goal notification for goalId:", goalId);
-  const rootGoalId = await getRootGoalId(goalId);
-  if (rootGoalId !== "root") {
-    await updateGoal(rootGoalId, { newUpdates: true });
+  const notificationGoalId = await getNotificationGoalId(goalId);
+  if (notificationGoalId !== "root") {
+    await updateGoal(notificationGoalId, { newUpdates: true });
   }
 };
 
@@ -354,7 +354,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
   // update participants
   const updatedGoal = {
     ...goalToMove,
-    rootGoalId: newParentGoal?.rootGoalId || "root",
+    notificationGoalId: newParentGoal?.notificationGoalId || "root",
   };
 
   // check if goaltomove is already shared with the original participants
@@ -405,7 +405,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
       // add goal to new parent's sublist
       addGoalToNewParentSublist(goalToMove.id, newParentGoalId),
       // update root goal id
-      updateRootGoal(goalToMove.id, newParentGoal?.rootGoalId ?? "root"),
+      updateRootGoal(goalToMove.id, newParentGoal?.notificationGoalId ?? "root"),
     ]);
 
     // update participants in descendants
@@ -414,7 +414,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
       await Promise.all(
         descendants.map((descendantGoal) => {
           return updateGoal(descendantGoal.id, {
-            rootGoalId: newParentGoal?.rootGoalId || "root",
+            notificationGoalId: newParentGoal?.notificationGoalId || "root",
             participants: mergeParticipants(descendantGoal.participants, newParentGoal?.participants),
           });
         }),

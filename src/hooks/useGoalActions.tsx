@@ -81,8 +81,8 @@ const useGoalActions = () => {
     if (isPartnerModeActive) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
-        const rootGoalId = state.goalsHistory[0].goalID;
-        rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
+        const notificationGoalId = state.goalsHistory[0].goalID;
+        rootGoal = (await getSharedWMGoalById(notificationGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
     } else if (
@@ -103,8 +103,8 @@ const useGoalActions = () => {
 
   const addGoal = async (newGoal: GoalItem, hintOption: boolean, parentGoal?: GoalItem) => {
     if (isPartnerModeActive && subGoalsHistory.length) {
-      const rootGoalId = subGoalsHistory[0].goalID;
-      const rootGoal = await getSharedWMGoalById(rootGoalId);
+      const notificationGoalId = subGoalsHistory[0].goalID;
+      const rootGoal = await getSharedWMGoalById(notificationGoalId);
       if (!parentGoal || !rootGoal) {
         return;
       }
@@ -127,7 +127,7 @@ const useGoalActions = () => {
         ...ele,
         participants: [],
         parentGoalId: ele.id === goal.id ? "root" : ele.parentGoalId,
-        rootGoalId: goal.id,
+        notificationGoalId: goal.id,
       })),
     ]);
 

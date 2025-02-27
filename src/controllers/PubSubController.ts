@@ -25,7 +25,7 @@ export const sendUpdatedGoal = async (
 
   if (goal) {
     const { participants, ...changes } = goal;
-    filteredSubscribers.forEach(async ({ sub, rootGoalId }) => {
+    filteredSubscribers.forEach(async ({ sub }) => {
       const rootGoal = await findParticipantTopLevelGoal(goalId, sub.relId);
       if (!rootGoal?.id) return;
       sendUpdatesToSubscriber(sub, rootGoal.id, changeType, [

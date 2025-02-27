@@ -264,7 +264,9 @@ export const getParticipantsOfGoals = async (ids: string[]) => {
     .where("id")
     .anyOf(...ids)
     .toArray();
-  return goals.flatMap((goal) => goal.participants.map((participant) => ({ sub: participant, rootGoalId: goal.id })));
+  return goals.flatMap((goal) =>
+    goal.participants.map((participant) => ({ sub: participant, notificationGoalId: goal.id })),
+  );
 };
 
 // export const convertSharedGoalToColab = async (id: string, accepted = true) => {

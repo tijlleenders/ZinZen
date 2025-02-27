@@ -96,7 +96,7 @@ function useApp() {
                     ...ele,
                     participants: [],
                     parentGoalId: ele.id === goalId ? "root" : ele.parentGoalId,
-                    rootGoalId: goalId,
+                    notificationGoalId: goalId,
                   })),
                 ]).then(async () => {
                   await Promise.all(

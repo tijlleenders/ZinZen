@@ -28,7 +28,7 @@ export interface GoalItem {
   link: string | null;
   participants: IParticipant[];
   isShared: boolean;
-  rootGoalId: string;
+  notificationGoalId: string;
   timeBudget?: {
     perDay: string;
     perWeek: string;

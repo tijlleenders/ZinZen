@@ -25,7 +25,7 @@ import {
   addGoalToNewParentSublist,
   getAllDescendants,
   getGoalAncestors,
-  getRootGoalId,
+  getNotificationGoalId,
   findParticipantTopLevelGoal,
   inheritParticipants,
   mergeParticipants,
@@ -46,18 +46,21 @@ const isIdChangeType = (type: typeOfChange): type is IdChangeTypes => {
   return ["deleted", "moved", "restored", "archived"].includes(type);
 };
 
-const addChangesToRootGoal = async (relId: string, changes: ChangesByType, rootGoalId: string) => {
-  const inbox = await getInboxItem(rootGoalId);
+const addChangesToRootGoal = async (relId: string, changes: ChangesByType, notificationGoalId: string) => {
+  const inbox = await getInboxItem(notificationGoalId);
 
   if (!inbox) {
-    await createEmptyInboxItem(rootGoalId);
+    await createEmptyInboxItem(notificationGoalId);
   }
 
   try {
-    await Promise.all([updateRootGoalNotification(rootGoalId), addGoalChangesInID(rootGoalId, relId, changes)]);
+    await Promise.all([
+      updateRootGoalNotification(notificationGoalId),
+      addGoalChangesInID(notificationGoalId, relId, changes),
+    ]);
   } catch (error) {
     console.error("[addChangesToRootGoal] Error adding changes:", {
-      rootGoalId,
+      notificationGoalId,
       error,
     });
   }
@@ -66,7 +69,7 @@ const addChangesToRootGoal = async (relId: string, changes: ChangesByType, rootG
 const handleSubgoalsChanges = async (
   changes: changesInGoal[],
   changeType: typeOfChange,
-  rootGoalId: string,
+  notificationGoalId: string,
   relId: string,
   type: string,
 ) => {
@@ -82,7 +85,7 @@ const handleSubgoalsChanges = async (
     ...ele,
     intent: type as typeOfIntent,
   }));
-  await addChangesToRootGoal(relId, defaultChanges, rootGoalId);
+  await addChangesToRootGoal(relId, defaultChanges, notificationGoalId);
 };
 
 const createDefaultChangesWithIntent = (
@@ -108,9 +111,9 @@ const createDefaultChangesWithIntent = (
 export const handleIncomingChanges = async (payload: Payload, relId: string) => {
   console.log("Incoming change", payload);
 
-  if (payload.type === "sharer" && (await getSharedWMGoal(payload.rootGoalId))) {
+  if (payload.type === "sharer" && (await getSharedWMGoal(payload.notificationGoalId))) {
     console.log("Incoming change is a shared goal. Processing...");
-    const incGoal = await getSharedWMGoal(payload.rootGoalId);
+    const incGoal = await getSharedWMGoal(payload.notificationGoalId);
 
     if (!incGoal || incGoal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
       console.log("Changes ignored");
@@ -143,11 +146,11 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
 
     await sharedGoalManager.execute(payload, relId);
   } else if (["sharer", "suggestion"].includes(payload.type)) {
-    const { changes, changeType, rootGoalId } = payload;
+    const { changes, changeType, notificationGoalId } = payload;
 
     // handle new goals
     if (changeType === "subgoals") {
-      await handleSubgoalsChanges(changes as changesInGoal[], changeType, rootGoalId, relId, payload.type);
+      await handleSubgoalsChanges(changes as changesInGoal[], changeType, notificationGoalId, relId, payload.type);
       return;
     }
 
@@ -159,7 +162,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     // maybe already moved to other place or not yet added to local db
     if (!localGoal) {
       const defaultChanges = createDefaultChangesWithIntent(changes, changeType, payload.type as typeOfIntent);
-      await addChangesToRootGoal(relId, defaultChanges, rootGoalId);
+      await addChangesToRootGoal(relId, defaultChanges, notificationGoalId);
       return;
     }
 
@@ -185,15 +188,15 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
 
     const defaultChanges = createDefaultChangesWithIntent(filteredChanges, changeType, payload.type as typeOfIntent);
 
-    let localRootGoalId = rootGoalId;
+    let localNotificationGoalId = notificationGoalId;
     if (isIdChangeType(changeType)) {
       const sharedRootGoalForCurrentParticipant = await findParticipantTopLevelGoal(goalId, relId);
-      localRootGoalId = sharedRootGoalForCurrentParticipant?.id ?? rootGoalId;
+      localNotificationGoalId = sharedRootGoalForCurrentParticipant?.id ?? notificationGoalId;
     } else {
       const sharedRootGoalForCurrentParticipant = await findParticipantTopLevelGoal(localGoal.id, relId);
-      localRootGoalId = sharedRootGoalForCurrentParticipant?.id ?? rootGoalId;
+      localNotificationGoalId = sharedRootGoalForCurrentParticipant?.id ?? notificationGoalId;
     }
-    await addChangesToRootGoal(relId, defaultChanges, localRootGoalId);
+    await addChangesToRootGoal(relId, defaultChanges, localNotificationGoalId);
   }
 };
 
@@ -223,7 +226,7 @@ export const acceptSelectedSubgoals = async (selectedGoals: GoalItem[], parentGo
           fixDateVlauesInGoalObject({
             ...goal,
             participants,
-            rootGoalId: parentGoal.rootGoalId,
+            notificationGoalId: parentGoal.notificationGoalId,
           }),
         );
         childrens.push(goal.id);
@@ -261,7 +264,7 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     ]);
 
     finalChanges.parentGoalId = newParentGoalId;
-    finalChanges.rootGoalId = newParentGoal?.rootGoalId ?? goal.id;
+    finalChanges.notificationGoalId = newParentGoal?.notificationGoalId ?? goal.id;
   }
 
   Object.keys(prettierVersion).forEach((ele) => {
@@ -293,7 +296,7 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
       await Promise.all(
         descendants.map((descendant) => {
           return updateGoal(descendant.id, {
-            rootGoalId: finalChanges.rootGoalId as string,
+            notificationGoalId: finalChanges.notificationGoalId as string,
             participants: mergeParticipants(descendant.participants, finalChanges.participants as IParticipant[]),
           });
         }),
@@ -312,34 +315,34 @@ export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {
       await removeGoalInbox(goalId);
       return;
     }
-    const rootGoalId = await getRootGoalId(goalId);
+    const notificationGoalId = await getNotificationGoalId(goalId);
 
     // alter the inbox of the goal to be the inbox of the root goal
     if (goal.parentGoalId !== "root" && inbox && Object.keys(inbox.changes).length > 0) {
-      const rootInbox = await getInboxItem(rootGoalId);
-      console.log("rootInbox", rootInbox);
-      if (!rootInbox) {
-        await createEmptyInboxItem(rootGoalId);
+      const notificationInbox = await getInboxItem(notificationGoalId);
+      console.log("notificationInbox", notificationInbox);
+      if (!notificationInbox) {
+        await createEmptyInboxItem(notificationGoalId);
       }
 
       await Promise.all(
-        Object.entries(inbox.changes).map(([relId, changes]) => addGoalChangesInID(rootGoalId, relId, changes)),
+        Object.entries(inbox.changes).map(([relId, changes]) => addGoalChangesInID(notificationGoalId, relId, changes)),
       );
 
       await removeGoalInbox(goalId);
     }
 
     // if the root goal has changes, then update the goal newUpdates status
-    const rootInbox = await getInboxItem(rootGoalId);
-    if (rootInbox && Object.keys(rootInbox.changes).length > 0) {
-      const rootGoal = await getGoal(rootGoalId);
-      if (rootGoal && !rootGoal.newUpdates) {
-        await updateGoal(rootGoalId, { newUpdates: true });
+    const notificationInbox = await getInboxItem(notificationGoalId);
+    if (notificationInbox && Object.keys(notificationInbox.changes).length > 0) {
+      const notificationGoal = await getGoal(notificationGoalId);
+      if (notificationGoal && !notificationGoal.newUpdates) {
+        await updateGoal(notificationGoalId, { newUpdates: true });
       }
     } else {
-      const rootGoal = await getGoal(rootGoalId);
+      const rootGoal = await getGoal(notificationGoalId);
       if (rootGoal?.newUpdates) {
-        await updateGoal(rootGoalId, { newUpdates: false });
+        await updateGoal(notificationGoalId, { newUpdates: false });
       }
     }
   } catch (error) {

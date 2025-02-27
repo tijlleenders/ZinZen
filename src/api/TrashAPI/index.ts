@@ -91,7 +91,9 @@ export const getParticipantsOfDeletedGoal = async (id: string) => {
     .where("id")
     .anyOf(...[id])
     .toArray();
-  return goals.flatMap((goal) => goal.participants.map((participant) => ({ sub: participant, rootGoalId: goal.id })));
+  return goals.flatMap((goal) =>
+    goal.participants.map((participant) => ({ sub: participant, notificationGoalId: goal.id })),
+  );
 };
 
 export const cleanupTrash = async () => {

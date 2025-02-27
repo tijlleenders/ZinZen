@@ -7,9 +7,9 @@ import { TaskItem } from "./TaskItem";
 export const dbStoreSchema = {
   feelingsCollection: "++id, content, category, date, note",
   goalsCollection:
-    "id, category, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, isShared, timeBudget, typeOfGoal, timestamp",
+    "id, category, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, notificationGoalId, isShared, timeBudget, typeOfGoal, timestamp",
   sharedWMCollection:
-    "id, category, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, rootGoalId, isShared, timeBudget, typeOfGoal",
+    "id, category, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, notificationGoalId, isShared, timeBudget, typeOfGoal",
   contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt, type",
   outboxCollection: null,
   inboxCollection: "id, goalChanges",
@@ -21,7 +21,7 @@ export const dbStoreSchema = {
   dumpboxCollection: null,
   partnersCollection: null,
   goalTrashCollection:
-    "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, rootGoalId, timeBudget, typeOfGoal",
+    "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, notificationGoalId, timeBudget, typeOfGoal",
   hintsCollection: "id, hintOptionEnabled, availableGoalHints, lastCheckedDate, nextCheckDate",
   impossibleGoalsCollection: "goalId, goalTitle",
   schedulerOutputCacheCollection: "id, key, value",
@@ -179,6 +179,32 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
       delete task.lastSkipped;
       delete task.hoursSpent;
       delete task.skippedToday;
+    });
+  }
+  if (currentVersion < 24) {
+    console.log("processing updates for    version");
+    const goalsCollection = transaction.table("goalsCollection");
+    goalsCollection.toCollection().modify((goal) => {
+      if (goal.rootGoalId !== undefined) {
+        goal.notificationGoalId = goal.rootGoalId;
+        delete goal.rootGoalId;
+      }
+    });
+
+    const sharedWMCollection = transaction.table("sharedWMCollection");
+    sharedWMCollection.toCollection().modify((goal) => {
+      if (goal.rootGoalId !== undefined) {
+        goal.notificationGoalId = goal.rootGoalId;
+        delete goal.rootGoalId;
+      }
+    });
+
+    const goalTrashCollection = transaction.table("goalTrashCollection");
+    goalTrashCollection.toCollection().modify((goal) => {
+      if (goal.rootGoalId !== undefined) {
+        goal.notificationGoalId = goal.rootGoalId;
+        delete goal.rootGoalId;
+      }
     });
   }
 };

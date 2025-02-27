@@ -35,7 +35,7 @@ export interface Payload {
   relId: string;
   lastProcessedTimestamp: string;
   changeType: typeOfChange;
-  rootGoalId: string;
+  notificationGoalId: string;
   changes: (changesInGoal | changesInId)[];
   type: PayloadType;
   timestamp: string;

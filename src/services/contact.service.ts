@@ -70,7 +70,7 @@ export const getRelationshipStatus = async (relationshipId: string) => {
 
 export const sendUpdatesToSubscriber = async (
   sub: IParticipant,
-  rootGoalId: string,
+  notificationGoalId: string,
   changeType: typeOfChange,
   changes: { level: number; goal: GoalItem }[] | { level: number; id: string; timestamp: number }[],
   customEventType = "",
@@ -85,7 +85,7 @@ export const sendUpdatesToSubscriber = async (
     event: {
       type: customEventType !== "" ? customEventType : type,
       changeType,
-      rootGoalId,
+      notificationGoalId,
       changes,
     },
   };

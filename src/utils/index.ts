@@ -121,7 +121,7 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
     goal.due = parentGoal.due;
   }
 
-  goal.rootGoalId = parentGoal.rootGoalId;
+  goal.notificationGoalId = parentGoal.notificationGoalId;
   goal.typeOfGoal = parentGoal.typeOfGoal;
   return goal;
 }

@@ -7,7 +7,7 @@ import { createGoalObjectFromTags } from "../helpers/GoalProcessor";
 
 const sendUpdate = (
   subscribers: IParticipant[],
-  rootGoalId: string,
+  notificationGoalId: string,
   type: "subgoals" | "modifiedGoals" | "newGoalMoved",
   obj: {
     level: number;
@@ -15,7 +15,7 @@ const sendUpdate = (
   }[],
 ) => {
   return subscribers.map(async (sub) =>
-    sendUpdatesToSubscriber(sub, rootGoalId, type, obj, "suggestion").then(() => console.log("update sent")),
+    sendUpdatesToSubscriber(sub, notificationGoalId, type, obj, "suggestion").then(() => console.log("update sent")),
   );
 };
 
@@ -44,7 +44,5 @@ export const suggestChanges = async (rootGoal: GoalItem, goalTags: GoalItem, lev
     ...goalTags,
     newUpdates: false,
   };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { participants, ...changes } = goal;
-  sendUpdate(rootGoal.participants, rootGoal.id, "modifiedGoals", [{ level, goal: changes }]);
+  sendUpdate(rootGoal.participants, rootGoal.id, "modifiedGoals", [{ level, goal: { ...goal, participants: [] } }]);
 };

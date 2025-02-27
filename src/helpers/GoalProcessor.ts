@@ -87,7 +87,7 @@ export const createGoalObjectFromTags = (obj: object = {}) => {
     beforeTime: null,
     archived: "false",
     parentGoalId: "root",
-    rootGoalId: "root",
+    notificationGoalId: "root",
     link: null,
     sublist: [],
     goalColor: colorPalleteList[Math.floor(Math.random() * colorPalleteList.length)],
@@ -98,8 +98,8 @@ export const createGoalObjectFromTags = (obj: object = {}) => {
     category: "Standard",
     ...obj,
   };
-  if (newGoal.rootGoalId === "root") {
-    newGoal.rootGoalId = newGoal.id;
+  if (newGoal.notificationGoalId === "root") {
+    newGoal.notificationGoalId = newGoal.id;
   }
   return newGoal;
 };
@@ -108,7 +108,7 @@ export const getHistoryUptoGoal = async (id: string) => {
   const history = [];
   let openGoalOfId = id;
   while (openGoalOfId !== "root") {
-    const tmpGoal: GoalItem | null = await getGoal(openGoalOfId);
+    const tmpGoal: GoalItem | undefined = await getGoal(openGoalOfId);
     if (!tmpGoal) break;
     history.push({
       goalID: tmpGoal.id || "root",
