@@ -13,6 +13,7 @@ import GlobalAddBtn from "@components/GlobalAddBtn";
 import "./BottomNavbar.scss";
 import Icon from "@src/common/Icon";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
+import { PageTitle } from "@src/constants/pageTitle";
 
 const BottomNavbar = ({ title }: { title: string }) => {
   const { t } = useTranslation();
@@ -65,7 +66,8 @@ const BottomNavbar = ({ title }: { title: string }) => {
     }
   };
   const { activeGoalId } = location.state || {};
-  const isAddBtnVisible = title !== "Focus" && (isPartnerModeActive ? !!activeGoalId : true);
+  const isAddBtnVisible =
+    title !== "Focus" && title !== PageTitle.Contacts && (isPartnerModeActive ? !!activeGoalId : true);
   return (
     <>
       {themeSelection && (

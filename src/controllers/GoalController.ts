@@ -1,7 +1,7 @@
 import { GoalItem } from "@src/models/GoalItem";
 import { inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
-import { getSharedWMGoal, removeSharedWMChildrenGoals, updateSharedWMGoal } from "@src/api/SharedWMAPI";
+import { getSharedWMGoal, removeSharedWMGoalWithChildrens, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import {
   getGoal,
   addGoal,
@@ -88,14 +88,17 @@ export const restoreGoal = async (goal: GoalItem, ancestors: string[]) => {
 };
 
 export const deleteSharedGoal = async (goal: GoalItem) => {
-  await removeSharedWMChildrenGoals(goal.id);
+  await removeSharedWMGoalWithChildrens(goal);
+
   if (goal.parentGoalId !== "root") {
     getSharedWMGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;
       const childGoalIndex = parentGoalSublist.indexOf(goal.id);
+
       if (childGoalIndex !== -1) {
         parentGoalSublist.splice(childGoalIndex, 1);
       }
+
       await updateSharedWMGoal(parentGoal.id, { sublist: parentGoalSublist });
     });
   }

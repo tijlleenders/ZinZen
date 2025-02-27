@@ -60,7 +60,6 @@ const AddContactModal = () => {
         disabled={newContact ? newContact.relId !== "" : false}
         type="text"
         placeholder="Name"
-        className="show-feelings__note-input"
         value={newContact?.contactName || ""}
         onChange={(e) => {
           setNewContact({ contactName: e.target.value, relId: newContact?.relId || "" });
