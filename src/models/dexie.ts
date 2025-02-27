@@ -25,7 +25,7 @@ export const dbStoreSchema = {
   hintsCollection: "id, hintOptionEnabled, availableGoalHints, lastCheckedDate, nextCheckDate",
   impossibleGoalsCollection: "goalId, goalTitle",
   schedulerOutputCacheCollection: "id, key, value",
-  taskHistoryCollection: "++id, goalId, eventType, eventTime, scheduledStart, scheduledEnd, duration",
+  taskHistoryCollection: "++id, goalId, eventType, eventTime, scheduledStart, scheduledEnd, duration, taskId",
   tasksDoneTodayCollection: "++id, goalId, scheduledStart, scheduledEnd",
 };
 export const syncVersion = (transaction: Transaction, currentVersion: number) => {
