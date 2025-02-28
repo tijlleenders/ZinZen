@@ -23,14 +23,14 @@ import {
 } from "@src/api/TaskHistoryAPI";
 
 const getGoalCompletedStats = async (goalId: string) => {
-  const [tasksCompletedSinceMonday, totalDurationCompletedToday] = await Promise.all([
+  const [tasksCompletedSinceMonday, totalDurationCompleted] = await Promise.all([
     getTasksCompletedSinceMondayForGoal(goalId),
     getTotalDurationCompletedForGoal(goalId),
   ]);
 
   return {
+    totalDurationCompleted,
     tasksCompletedSinceMonday,
-    totalDurationCompletedToday,
   };
 };
 
