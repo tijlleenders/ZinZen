@@ -26,7 +26,7 @@ export const dbStoreSchema = {
   impossibleGoalsCollection: "goalId, goalTitle",
   schedulerOutputCacheCollection: "id, key, value",
   taskHistoryCollection: "++id, goalId, eventType, eventTime, scheduledStart, scheduledEnd, duration, taskId",
-  tasksDoneTodayCollection: "++id, goalId, scheduledStart, scheduledEnd",
+  tasksDoneTodayCollection: null,
 };
 export const syncVersion = (transaction: Transaction, currentVersion: number) => {
   if (currentVersion < 9) {
