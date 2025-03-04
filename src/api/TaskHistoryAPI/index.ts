@@ -96,24 +96,32 @@ export const getTotalDurationCompletedForGoal = async (goalId: string) => {
   return tasks.reduce((acc, task) => acc + task.duration, 0);
 };
 
-export const getTasksCompletedSinceMondayForGoal = async (
-  goalId: string,
-): Promise<{ scheduledStartDateTime: string; duration: number }[]> => {
-  const tasks = await getAllTasksHistoryCompletedEventsForGoal(goalId);
+export const getTotalDurationSkippedForGoal = async (goalId: string) => {
+  const tasks = await getAllTasksHistorySkippedEventsForGoal(goalId);
+  return tasks.reduce((acc, task) => acc + task.duration, 0);
+};
 
+const getTasksSinceMonday = (tasks: TaskHistoryItem[]) => {
   const today = new Date();
   const dayOfWeek = today.getDay();
   const monday = new Date(today);
   monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
   monday.setHours(0, 0, 0, 0);
 
-  const tasksSinceMonday = tasks.filter((task) => {
-    const taskDate = new Date(task.scheduledStart);
-    return taskDate >= monday;
-  });
+  return tasks
+    .filter((task) => new Date(task.scheduledStart) >= monday)
+    .map((task) => ({
+      scheduledStartDateTime: task.scheduledStart,
+      duration: task.duration,
+    }));
+};
 
-  return tasksSinceMonday.map((task) => ({
-    scheduledStartDateTime: task.scheduledStart,
-    duration: task.duration,
-  }));
+export const getTasksCompletedSinceMondayForGoal = async (goalId: string) => {
+  const completedTasks = await getAllTasksHistoryCompletedEventsForGoal(goalId);
+  return getTasksSinceMonday(completedTasks);
+};
+
+export const getTasksSkippedSinceMondayForGoal = async (goalId: string) => {
+  const skippedTasks = await getAllTasksHistorySkippedEventsForGoal(goalId);
+  return getTasksSinceMonday(skippedTasks);
 };

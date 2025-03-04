@@ -1,5 +1,4 @@
 import {
-  IGoalCompletedStats,
   IImpossibleTaskOfTheDay,
   IScheduleOfTheDay,
   ISchedulerInput,
@@ -19,18 +18,23 @@ import {
   getAllTasksDoneToday,
   getAllTodaySkippedTasks,
   getTasksCompletedSinceMondayForGoal,
+  getTasksSkippedSinceMondayForGoal,
   getTotalDurationCompletedForGoal,
+  getTotalDurationSkippedForGoal,
 } from "@src/api/TaskHistoryAPI";
 
 const getGoalCompletedStats = async (goalId: string) => {
-  const [tasksCompletedSinceMonday, totalDurationCompleted] = await Promise.all([
-    getTasksCompletedSinceMondayForGoal(goalId),
-    getTotalDurationCompletedForGoal(goalId),
-  ]);
+  const [totalDurationCompleted, totalDurationSkipped, tasksCompletedSinceMonday, tasksSkippedSinceMonday] =
+    await Promise.all([
+      getTotalDurationCompletedForGoal(goalId),
+      getTotalDurationSkippedForGoal(goalId),
+      getTasksCompletedSinceMondayForGoal(goalId),
+      getTasksSkippedSinceMondayForGoal(goalId),
+    ]);
 
   return {
-    totalDurationCompleted,
-    tasksCompletedSinceMonday,
+    totalDurationCompletedOrSkipped: totalDurationCompleted + totalDurationSkipped,
+    tasksCompletedOrSkippedSinceMonday: [...tasksCompletedSinceMonday, ...tasksSkippedSinceMonday],
   };
 };
 
