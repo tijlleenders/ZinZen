@@ -24,6 +24,11 @@
   flex-wrap: wrap;
 }
 
+.disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
 .d-flex {
   display: flex;
 }
@@ -88,6 +93,10 @@
   height: 100%;
 }
 
+.fw-400 {
+  font-weight: 400;
+}
+
 .fw-500 {
   font-weight: 500;
 }
@@ -96,12 +105,28 @@
   font-weight: 600;
 }
 
+.text-sm {
+  font-size: 0.856rem;
+}
+
+.text-md {
+  font-size: 1rem;
+}
+
 .text-lg {
   font-size: 1.25rem;
 }
 
 .m-0 {
   margin: 0;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .disabled {

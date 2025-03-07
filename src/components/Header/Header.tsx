@@ -56,7 +56,7 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
       navigate("/goals", { replace: true });
       return;
     }
-    navigate(`/partners/${partners[0].id}/goals`);
+    navigate("/partners");
   };
   const handlePopState = () => {
     const locationState = location.state || {};

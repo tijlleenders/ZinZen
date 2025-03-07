@@ -3,6 +3,7 @@
 export enum LocalStorageKeys {
   THEME = "theme",
   DEFAULT_PARTNER = "defaultPartner",
+  CURRENT_PARTNER = "currentPartner",
   DARK_MODE = "darkMode",
   CHECKED_IN = "checkedIn",
   LANGUAGE = "language",

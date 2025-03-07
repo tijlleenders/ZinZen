@@ -239,9 +239,9 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
   }, [currentMainGoal]);
 
   return (
-    <ZModal type="popupModal" open>
+    <ZModal style={{ gap: 16 }} type="popupModal" open>
       {currentMainGoal && (
-        <>
+        <div className="d-flex f-col gap-16">
           <SubHeader
             showLeftNav={showSuggestions}
             showRightNav={!showSuggestions}
@@ -280,7 +280,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             ))}
           </div>
           {goalUnderReview && participants.length > 0 && (
-            <p className="popupModal-title" style={{ marginTop: 22 }}>
+            <p className="popupModal-title m-0">
               <Header
                 contactName={participants[activePPT].name}
                 title={goalUnderReview.title}
@@ -300,7 +300,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
               </>
             )}
           </div>
-        </>
+        </div>
       )}
     </ZModal>
   );
