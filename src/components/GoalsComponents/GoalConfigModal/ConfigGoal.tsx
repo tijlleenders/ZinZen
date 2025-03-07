@@ -333,6 +333,13 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     return () => clearTimeout(debounceTimer);
   }, [tags.duration, afterTime, beforeTime, perDayHrs, perWeekHrs]);
 
+  const sliderTooltipAlignConfig = {
+    points: ["bc", "tc"],
+    offset: [0, -40],
+    overflow: { adjustX: true, adjustY: true },
+    useCssTransform: true,
+  };
+
   return (
     <ZModal
       open
@@ -378,7 +385,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
               <div>
                 <span>Between</span>
                 <Slider
-                  tooltip={{ prefixCls: isBudgetAccordianOpen ? "between-tooltip-open" : "between-tooltip-close" }}
+                  tooltip={{
+                    align: sliderTooltipAlignConfig,
+                  }}
                   min={0}
                   max={24}
                   marks={{
@@ -412,7 +421,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                         <div>
                           <span>{budgetPerHrSummary} hrs / day</span>
                           <Slider
-                            tooltip={{ prefixCls: "per-day-tooltip" }}
+                            tooltip={{
+                              align: sliderTooltipAlignConfig,
+                            }}
                             min={0}
                             max={beforeTime - afterTime}
                             marks={{
@@ -429,7 +440,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                         <div>
                           <span>{budgetPerWeekSummary}</span>
                           <Slider
-                            tooltip={{ prefixCls: "per-week-tooltip" }}
+                            tooltip={{
+                              align: sliderTooltipAlignConfig,
+                            }}
                             min={minWeekValue}
                             max={maxWeekValue}
                             marks={{
