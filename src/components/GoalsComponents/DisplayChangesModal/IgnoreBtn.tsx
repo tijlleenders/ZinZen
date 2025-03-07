@@ -1,29 +1,18 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
 
 import ignore from "@assets/images/ignore.svg";
 
-import { darkModeState } from "@src/store";
+import DefaultButton from "@src/common/DefaultButton";
 
 interface IgnoreBtnProps {
   deleteChanges: () => Promise<void>;
 }
 const IgnoreBtn = ({ deleteChanges }: IgnoreBtnProps) => {
-  const darkModeStatus = useRecoilValue(darkModeState);
   return (
-    <button
-      type="button"
-      style={{
-        padding: "8px 15px",
-        background: "var(--secondary-background)",
-        justifyContent: "flex-start",
-      }}
-      className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-      onClick={deleteChanges}
-    >
+    <DefaultButton variant="secondary" onClick={deleteChanges}>
       <img alt="add changes" src={ignore} width={25} />
-      &nbsp;Ignore all
-    </button>
+      Ignore all
+    </DefaultButton>
   );
 };
 

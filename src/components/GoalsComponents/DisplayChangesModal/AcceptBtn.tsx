@@ -6,6 +6,7 @@ import plus from "@assets/images/plus.svg";
 
 import { darkModeState } from "@src/store";
 import { typeOfChange } from "@src/models/InboxItem";
+import DefaultButton from "@src/common/DefaultButton";
 
 interface AcceptBtnProps {
   acceptChanges: () => Promise<void>;
@@ -15,10 +16,7 @@ interface AcceptBtnProps {
 const AcceptBtn = ({ typeAtPriority, acceptChanges }: AcceptBtnProps) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
-    <button
-      type="button"
-      style={{ padding: "8px 15px", justifyContent: "flex-start" }}
-      className={`default-btn${darkModeStatus ? "-dark" : ""}`}
+    <DefaultButton
       onClick={async () => {
         await acceptChanges();
       }}
@@ -35,7 +33,7 @@ const AcceptBtn = ({ typeAtPriority, acceptChanges }: AcceptBtnProps) => {
       {typeAtPriority === "deleted" && "Delete for me too"}
       {typeAtPriority === "subgoals" && "Add all checked"}
       {typeAtPriority === "modifiedGoals" && "Make all checked changes"}
-    </button>
+    </DefaultButton>
   );
 };
 

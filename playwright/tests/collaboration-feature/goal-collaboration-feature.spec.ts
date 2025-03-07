@@ -135,7 +135,7 @@ test.describe("Goal Sharing Feature", () => {
     });
 
     test(`initiate collaboration between User ${sharer} and User ${receiver}`, async () => {
-      console.log(`Initiating collaboration between User ${sharer} and User ${receiver}...`);
+      await receiverPage().getByTestId(`contact-${receiver}`).click();
       await collaborateFlow(receiverPage(), currentGoalTitle);
     });
 

@@ -184,5 +184,6 @@
   "hour": "heure",
   "hours": "heures",
   "hourWithCount_one": "{{count}} heure",
-  "hourWithCount_other": "{{count}} heures"
+  "hourWithCount_other": "{{count}} heures",
+  "contacts": "Contacts"
 }
