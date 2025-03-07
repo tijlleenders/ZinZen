@@ -5,12 +5,13 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { db } from "@models";
 import ZModal from "@src/common/ZModal";
 import { syncVersion } from "@src/models/dexie";
-import { backupRestoreModal, darkModeState, displayToast, lastAction } from "@src/store";
+import { backupRestoreModal, displayToast, lastAction } from "@src/store";
 
 import "dexie-export-import";
 import "./index.scss";
 import { JsonExportStrategy } from "@src/utils/ExportStrategies/JsonExportStrategy";
 import { CsvExportStrategy } from "@src/utils/ExportStrategies/CsvExportStrategy";
+import DefaultButton from "@src/common/DefaultButton";
 import { ExportManager } from "../utils/ExportStrategies/ExportManager";
 
 const backupImg =
@@ -22,7 +23,6 @@ const exportManager = new ExportManager(new JsonExportStrategy());
 
 const BackupRestoreModal = () => {
   const open = useRecoilValue(backupRestoreModal);
-  const darkModeStatus = useRecoilValue(darkModeState);
   const setShowToast = useSetRecoilState(displayToast);
   const setLastAction = useSetRecoilState(lastAction);
 
@@ -74,10 +74,8 @@ const BackupRestoreModal = () => {
   };
 
   const getOption = (text: "Backup" | "CSV Export" | "Restore") => (
-    <button
-      type="button"
-      className={`default-btn${darkModeStatus ? "-dark" : ""}`}
-      style={{ display: "flex", flexDirection: "column", gap: 4 }}
+    <DefaultButton
+      customStyle={{ flexDirection: "column" }}
       onClick={async () => {
         if (text === "Backup") {
           exportManager.setStrategy(new JsonExportStrategy());
@@ -90,9 +88,9 @@ const BackupRestoreModal = () => {
         }
       }}
     >
-      <img className="secondary-icon" alt={`${text}`} src={text === "Restore" ? restoreImg : backupImg} />
+      <img className="theme-icon" alt={`${text}`} src={text === "Restore" ? restoreImg : backupImg} />
       <p>{text}</p>
-    </button>
+    </DefaultButton>
   );
 
   return (
