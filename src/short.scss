@@ -24,6 +24,11 @@
   flex-wrap: wrap;
 }
 
+.disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
 .d-flex {
   display: flex;
 }
