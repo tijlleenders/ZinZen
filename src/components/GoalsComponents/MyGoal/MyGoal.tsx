@@ -75,7 +75,6 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     }
     const newState: ILocationState = {
       ...location.state,
-      activeGoalId: goal.id,
       goalsHistory: [
         ...(location.state?.goalsHistory || []),
         {
@@ -89,11 +88,15 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   };
 
   useEffect(() => {
-    if (location && location.pathname === "/goals") {
+    if (location && location.pathname.includes("/goals")) {
       const { expandedGoalId } = location.state || {};
-      setExpandGoalId(expandedGoalId);
+      if (expandedGoalId) {
+        setExpandGoalId(expandedGoalId);
+        const newState = { ...location.state, expandedGoalId: null };
+        navigate(location.pathname, { state: newState, replace: true });
+      }
     }
-  }, [location]);
+  }, [location, navigate]);
 
   const innerBorderColor = goal.sublist.length > 0 ? goal.goalColor : "transparent";
 
