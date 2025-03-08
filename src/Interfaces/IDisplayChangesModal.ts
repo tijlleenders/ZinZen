@@ -16,7 +16,7 @@ export type ITagsAllowedToDisplay =
   | "link";
 
 export interface ITagChangesSchemaVersion {
-  [K: string]: string | Date | number | null;
+  [K: string]: string | Date | number | null | string[];
 }
 
 export interface ITagChangesPrettierVersion {
