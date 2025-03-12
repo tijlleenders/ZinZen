@@ -81,8 +81,8 @@ const useGoalActions = () => {
     if (isPartnerModeActive) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
-        const rootGoalId = state.goalsHistory[0].goalID;
-        rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
+        const notificationGoalId = state.goalsHistory[0].goalID;
+        rootGoal = (await getSharedWMGoalById(notificationGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
     } else if (
@@ -103,8 +103,8 @@ const useGoalActions = () => {
 
   const addGoal = async (newGoal: GoalItem, hintOption: boolean, parentGoal?: GoalItem) => {
     if (isPartnerModeActive && subGoalsHistory.length) {
-      const rootGoalId = subGoalsHistory[0].goalID;
-      const rootGoal = await getSharedWMGoalById(rootGoalId);
+      const notificationGoalId = subGoalsHistory[0].goalID;
+      const rootGoal = await getSharedWMGoalById(notificationGoalId);
       if (!parentGoal || !rootGoal) {
         return;
       }
@@ -121,16 +121,25 @@ const useGoalActions = () => {
 
   const shareGoalWithRelId = async (relId: string, name: string, goal: GoalItem) => {
     const goalWithChildrens = await getAllLevelGoalsOfId(goal.id, true);
+
     await shareGoalWithContact(relId, [
       ...goalWithChildrens.map((ele) => ({
         ...ele,
         participants: [],
         parentGoalId: ele.id === goal.id ? "root" : ele.parentGoalId,
-        rootGoalId: goal.id,
+        notificationGoalId: goal.id,
       })),
     ]);
-    updateSharedStatusOfGoal(goal.id, relId, name).then(() => console.log("status updated"));
-    showMessage(`Cheers!!, Your goal is shared with ${name}`);
+
+    await Promise.all(
+      goalWithChildrens.map(async (goalItem) => {
+        await updateSharedStatusOfGoal(goalItem.id, relId, name);
+      }),
+    ).catch((error) => {
+      console.error("[shareGoalWithRelId] Error updating shared status:", error);
+    });
+
+    showMessage(`Cheers!! Your goal and its subgoals are shared with ${name}`);
   };
 
   const addContact = async (relId: string, goalId: string) => {
@@ -157,7 +166,6 @@ const useGoalActions = () => {
     goalTitle = `${goalTitle} copied!`;
     showMessage("Code copied to clipboard", goalTitle);
   };
-
   return {
     addGoal,
     deleteGoalAction,

@@ -38,8 +38,8 @@ export const addGoal = async (goalDetails: GoalItem) => {
 
 export const getGoal = async (goalId: string) => {
   try {
-    const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
-    return goal.length > 0 ? goal[0] : null;
+    const goal: GoalItem | undefined = await db.goalsCollection.where("id").equals(goalId).first();
+    return goal;
   } catch (error) {
     console.error(`Error fetching goal with ID ${goalId}:`, error);
     throw new Error(`Failed to fetch goal with ID ${goalId}`);
@@ -159,22 +159,22 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
   await unarchiveGoal(goal);
 };
 
-export const removeGoal = async (goal: GoalItem) => {
+export const removeGoal = async (goal: GoalItem, permanently = false) => {
   await deleteHintItem(goal.id);
   await Promise.allSettled([
     db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
-    addDeletedGoal(goal),
+    permanently ? null : addDeletedGoal(goal),
   ]);
 };
 
-export const removeChildrenGoals = async (parentGoalId: string) => {
+export const removeChildrenGoals = async (parentGoalId: string, permanently = false) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
   if (childrenGoals.length === 0) {
     return;
   }
   childrenGoals.forEach((goal) => {
-    removeChildrenGoals(goal.id);
-    removeGoal(goal);
+    removeChildrenGoals(goal.id, permanently);
+    removeGoal(goal, permanently);
     deleteTasksDoneTodayByGoalId(goal.id);
     deleteTaskHistoryItem(goal.id);
   });
@@ -264,7 +264,9 @@ export const getParticipantsOfGoals = async (ids: string[]) => {
     .where("id")
     .anyOf(...ids)
     .toArray();
-  return goals.flatMap((goal) => goal.participants.map((participant) => ({ sub: participant, rootGoalId: goal.id })));
+  return goals.flatMap((goal) =>
+    goal.participants.map((participant) => ({ sub: participant, notificationGoalId: goal.id })),
+  );
 };
 
 // export const convertSharedGoalToColab = async (id: string, accepted = true) => {
@@ -316,9 +318,9 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
 //   });
 // };
 
-export const removeGoalWithChildrens = async (goal: GoalItem) => {
-  await removeChildrenGoals(goal.id);
-  await removeGoal(goal);
+export const removeGoalWithChildrens = async (goal: GoalItem, permanently = false) => {
+  await removeChildrenGoals(goal.id, permanently);
+  await removeGoal(goal, permanently);
   await deleteTasksDoneTodayByGoalId(goal.id);
   await deleteTaskHistoryItem(goal.id);
   if (goal.parentGoalId !== "root") {

@@ -27,7 +27,8 @@ export interface GoalItem {
   language: string;
   link: string | null;
   participants: IParticipant[];
-  rootGoalId: string;
+  isShared: boolean;
+  notificationGoalId: string;
   timeBudget?: {
     perDay: string;
     perWeek: string;
@@ -35,4 +36,5 @@ export interface GoalItem {
   typeOfGoal: "myGoal" | "shared";
   category: TGoalCategory;
   newUpdates: boolean;
+  timestamp: number;
 }

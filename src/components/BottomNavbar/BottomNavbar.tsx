@@ -65,6 +65,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
       }
     }
   };
+
   const { activeGoalId } = location.state || {};
   const isAddBtnVisible =
     title !== "Focus" && title !== PageTitle.Contacts && (isPartnerModeActive ? !!activeGoalId : true);
