@@ -10,6 +10,7 @@ import useGoalActions from "@src/hooks/useGoalActions";
 import TriangleIcon from "@src/assets/TriangleIcon";
 import { CopyIcon } from "@src/assets/CopyIcon";
 import { moveGoalState } from "@src/store/moveGoalState";
+import { useRecoilValue } from "recoil";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import { GoalIcon } from "./components/GoalIcon";

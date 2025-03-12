@@ -14,11 +14,10 @@ type PartnerContext = {
   error: unknown;
 };
 
-export const PartnerContext = createContext<PartnerContext | undefined>(undefined);
+const PartnerContext = createContext<PartnerContext | undefined>(undefined);
 
 export const PartnerProvider = ({ children }: { children: ReactNode }) => {
   const { partnerId: partnerIdFromUrl } = useParams();
-
   const cachedPartnerId = localStorage.getItem(LocalStorageKeys.CURRENT_PARTNER);
   const partnerId = partnerIdFromUrl || cachedPartnerId || "";
 
@@ -46,20 +45,7 @@ export const PartnerProvider = ({ children }: { children: ReactNode }) => {
     if (partner?.id) {
       setCurrentPartnerInLocalStorage(partner.id);
     }
-    if (partnerId) {
-      getPartnerById(partnerId).then((doc) => {
-        setPartner(doc);
-      });
-    }
-    setPartner(undefined);
-  }, [isPartnerModeActive, partnerId]);
-
-  useEffect(() => {
-    getAllContacts().then((docs) => {
-      setPartnersList([...docs]);
-      if (docs.length) setPartner(docs[0]);
-    });
-  }, []);
+  }, [partner]);
 
   return (
     <ActiveGoalProvider>
