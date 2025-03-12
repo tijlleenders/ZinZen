@@ -9,7 +9,6 @@ import darkModeIcon from "@assets/images/darkModeIcon.svg";
 import lightModeIcon from "@assets/images/lightModeIcon.svg";
 
 import { IHeader } from "@src/Interfaces/ICommon";
-import { goalsHistory } from "@src/store/GoalsState";
 import { getAllContacts } from "@src/api/ContactsAPI";
 
 import PartnerModeTour from "@components/PartnerModeTour";

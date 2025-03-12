@@ -110,7 +110,6 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
     if (actionName === TaskAction.NotNow) {
       const taskItem = await getTaskByGoalId(task.goalid);
       if (!taskItem) {
-        console.debug("Creating new task for goal:", task.goalid);
         await addTask({
           id: uuidv4(),
           goalId: task.goalid,
