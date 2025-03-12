@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { v4 as uuidv4 } from "uuid";
 import { getGoal } from "@src/api/GoalsAPI";
-import { colorPalleteList } from "@src/utils";
+import { checkOnArrayEquality, colorPalleteList } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
 import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
@@ -212,10 +212,20 @@ export const findGoalTagChanges = async (goal1: GoalItem, goal2: GoalItem) => {
 
   const goal1Tags = await formatTagsToText(goal1);
   const goal2Tags = await formatTagsToText(goal2);
-  console.log(goal1Tags, goal2Tags);
+
   tags.forEach((tag) => {
-    if (goal1[tag] !== goal2[tag] && tag !== "timeBudget") {
-      res.schemaVersion[tag] = goal2[tag] || null;
+    if (tag === "on") {
+      const goal1On = goal1.on || [];
+      const goal2On = goal2.on || [];
+      if (!checkOnArrayEquality(goal1On, goal2On)) {
+        res.schemaVersion[tag] = goal2On || null;
+        res.prettierVersion[tag] = {
+          oldVal: goal1On.join(" "),
+          newVal: goal2On.join(" "),
+        };
+      }
+    } else if (goal1[tag] !== goal2[tag] && tag !== "timeBudget") {
+      res.schemaVersion[tag] = goal2[tag] ?? null;
       if (tag === "afterTime" || tag === "beforeTime") {
         res.prettierVersion.timing = { oldVal: goal1Tags.timing, newVal: goal2Tags.timing };
       } else res.prettierVersion[tag] = { oldVal: goal1Tags[tag], newVal: goal2Tags[tag] };

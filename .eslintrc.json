@@ -50,6 +50,7 @@
   },
   "plugins": ["react", "@typescript-eslint", "import"],
   "rules": {
+    "complexity": "warn",
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "quotes": [
       2,

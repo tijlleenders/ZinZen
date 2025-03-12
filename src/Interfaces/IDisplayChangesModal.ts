@@ -17,7 +17,7 @@ export type ITagsAllowedToDisplay =
   | "parentGoalId";
 
 export interface ITagChangesSchemaVersion {
-  [K: string]: string | Date | number | null | IParticipant[];
+  [K: string]: string | Date | number | null | string[] | IParticipant[];
 }
 
 export interface ITagChangesPrettierVersion {

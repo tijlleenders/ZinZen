@@ -23,6 +23,7 @@ import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
 import useScheduler from "@src/hooks/useScheduler";
+import DefaultInput from "@src/common/DefaultInput";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -333,6 +334,13 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     return () => clearTimeout(debounceTimer);
   }, [tags.duration, afterTime, beforeTime, perDayHrs, perWeekHrs]);
 
+  const sliderTooltipAlignConfig = {
+    points: ["bc", "tc"],
+    offset: [0, -40],
+    overflow: { adjustX: true, adjustY: true },
+    useCssTransform: true,
+  };
+
   return (
     <ZModal
       open
@@ -378,7 +386,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
               <div>
                 <span>Between</span>
                 <Slider
-                  tooltip={{ prefixCls: isBudgetAccordianOpen ? "between-tooltip-open" : "between-tooltip-close" }}
+                  tooltip={{
+                    align: sliderTooltipAlignConfig,
+                  }}
                   min={0}
                   max={24}
                   marks={{
@@ -412,7 +422,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                         <div>
                           <span>{budgetPerHrSummary} hrs / day</span>
                           <Slider
-                            tooltip={{ prefixCls: "per-day-tooltip" }}
+                            tooltip={{
+                              align: sliderTooltipAlignConfig,
+                            }}
                             min={0}
                             max={beforeTime - afterTime}
                             marks={{
@@ -429,7 +441,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
                         <div>
                           <span>{budgetPerWeekSummary}</span>
                           <Slider
-                            tooltip={{ prefixCls: "per-week-tooltip" }}
+                            tooltip={{
+                              align: sliderTooltipAlignConfig,
+                            }}
                             min={minWeekValue}
                             max={maxWeekValue}
                             marks={{
@@ -484,14 +498,15 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
               </div>
               <div className="place-middle justify-fs gap-16">
                 <span>{t("duration")}</span>
-                <input
+                <DefaultInput
                   type="number"
-                  style={{ textAlign: "center", maxWidth: 30, width: 20, boxShadow: "var(--shadow)" }}
-                  className="default-input"
                   value={tags.duration}
+                  width={20}
+                  textAlign="center"
                   onChange={(e) => {
                     setTags({ ...tags, duration: roundOffHours(e.target.value) });
                   }}
+                  customStyle={{ borderRadius: "4px", padding: "8px 8px" }}
                 />
                 <span>{t("dueDate")}</span>
                 <CustomDatePicker

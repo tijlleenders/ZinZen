@@ -15,6 +15,7 @@
   "discover": "Browse the code",
   "donate": "Donate",
   "myGoals": "My goals",
+  "contacts": "Contacts",
   "goalSubText": "Add your task in format-",
   "format": "task + duration + frequency",
   "addGoalPlaceholder": "Type your goal + 1h + daily",

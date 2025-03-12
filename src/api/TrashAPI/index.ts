@@ -99,20 +99,26 @@ export const getParticipantsOfDeletedGoal = async (id: string) => {
 export const cleanupTrash = async () => {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - TRASH_RETENTION_DAYS);
-  const oldTrashItems = await db.goalTrashCollection.where("deletedAt").below(sevenDaysAgo.toISOString()).toArray();
+  const allTrashItems = await db.goalTrashCollection.toArray();
+  const oldTrashItems = allTrashItems.filter((item) => new Date(item.deletedAt).getTime() < sevenDaysAgo.getTime());
   await Promise.all(oldTrashItems.map((item) => db.goalTrashCollection.delete(item.id)));
 };
 
 function isMoreThan24HoursAgo(isoTimestamp: string): boolean {
-  const timestamp = new Date(isoTimestamp).getTime();
-  const now = new Date().getTime();
+  const timestamp = new Date(isoTimestamp);
+  const now = new Date();
   const twentyFourHours = 24 * 60 * 60 * 1000;
-  return now - timestamp > twentyFourHours;
+  const diff = Math.abs(now.getTime() - timestamp.getTime());
+  return diff > twentyFourHours;
 }
 
+// This function checks if the last trash cleanup was more than 24 hours ago
+// If it is, it cleans up the trash
+// It also sets the last trash cleanup timestamp to the current time
 export const checkAndCleanupTrash = async () => {
   const lastCleanupTimestamp = localStorage.getItem("lastTrashCleanup");
   const currentTime = new Date().toISOString();
+
   if (!lastCleanupTimestamp || isMoreThan24HoursAgo(lastCleanupTimestamp)) {
     await cleanupTrash();
     localStorage.setItem("lastTrashCleanup", currentTime);
