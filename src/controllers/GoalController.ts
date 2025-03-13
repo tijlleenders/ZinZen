@@ -31,6 +31,26 @@ export const inheritParticipants = (parentGoal: GoalItem) => {
   return Array.from(allParticipants.values());
 };
 
+/**
+ * Recursively finds the top-level goal that a participant is associated with in the goal hierarchy.
+ * A top-level goal is either:
+ * 1. A root-level goal where the participant is directly listed
+ * 2. The highest level goal in the hierarchy where the participant is listed
+ *
+ * @param {string} goalId - The ID of the goal to start searching from
+ * @param {string} participantRelId - The relationship ID of the participant to find
+ *
+ * @returns {Promise<GoalItem | null>} Returns a Promise that resolves to:
+ *   - The top-level GoalItem that the participant is associated with
+ *   - The current goal if the parent goal doesn't exist or doesn't include the participant
+ *   - null if the initial goal doesn't exist
+ *
+ * @example
+ * const topLevelGoal = await findParticipantTopLevelGoal('goal123', 'participant456');
+ * if (topLevelGoal) {
+ *   console.log('Found top level goal:', topLevelGoal.title);
+ * }
+ */
 export const findParticipantTopLevelGoal = async (
   goalId: string,
   participantRelId: string,
@@ -311,6 +331,23 @@ export const addGoalToNewParentSublist = async (goalId: string, newParentGoalId:
   await updateGoal(newParentGoal.id, { sublist: [...newParentGoal.sublist, goalId] });
 };
 
+/**
+ * Retrieves the hierarchical path of goals from a given goal to the root.
+ * The function traverses up the goal tree, collecting each goal's ID and title
+ * until it reaches the root goal.
+ *
+ * @param {string} goalId - The ID of the goal to start the traversal from
+ * @returns {Promise<Array<{goalID: string, title: string}>>} An array of goal objects
+ *          containing IDs and titles, ordered from root to the target goal
+ *          (root's ancestors will be at the start of the array)
+ *
+ * @example
+ * const history = await getGoalHistoryToRoot('goal123');
+ * // Returns: [
+ * //   { goalID: 'parentGoal', title: 'Parent Goal' },
+ * //   { goalID: 'goal123', title: 'Current Goal' }
+ * // ]
+ */
 export const getGoalHistoryToRoot = async (goalId: string): Promise<{ goalID: string; title: string }[]> => {
   const history: { goalID: string; title: string }[] = [];
   let currentGoalId = goalId;
@@ -375,6 +412,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
 
     try {
       await Promise.all(
+        // send updates to participants of the goal to be moved before updating the goal
         updatedGoal.participants.map(async (sub) => {
           const rootGoal = await findParticipantTopLevelGoal(goalId, sub.relId);
           sendUpdatesToSubscriber(sub, rootGoal?.id || goalId, "modifiedGoals", [
