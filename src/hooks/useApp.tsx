@@ -3,9 +3,8 @@ import { useEffect } from "react";
 
 import { lastAction, displayConfirmation, openDevMode, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
-import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
-import { addSharedWMGoal } from "@src/api/SharedWMAPI";
+import { addSharedWMGoal, getSharedWMGoal } from "@src/api/SharedWMAPI";
 import { createDefaultGoals } from "@src/controllers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
 import { checkAndUpdateGoalNewUpdatesStatus, handleIncomingChanges } from "@src/helpers/InboxProcessor";
@@ -34,29 +33,35 @@ function useApp() {
 
   const confirmationState = useRecoilValue(displayConfirmation);
 
-  const handleNewIncomingGoal = async (ele: SharedGoalMessage, contactItem: ContactItem, relId: string) => {
-    const { goalWithChildrens }: { goalWithChildrens: GoalItem[] } = ele;
-    const participant: IParticipant = {
-      name: contactItem.name,
-      relId,
-      type: "sharer",
-      following: true,
-    };
+  const handleNewIncomingGoal = async (ele: SharedGoalMessage, relId: string) => {
+    const { goalWithChildrens } = ele;
     try {
+      // First attempt to add all goals and collect existing ones
+      const existingGoals = new Map();
+
       await Promise.all(
-        goalWithChildrens.map(async (goal) => {
-          const goalWithParticipant = {
-            ...goal,
-            participants: [participant],
-          };
-          console.log("🚀 ~ file: useApp.tsx:52 ~ goalWithParticipant:", goalWithParticipant);
-          await addSharedWMGoal(goalWithParticipant).then(() => {
-            setLastAction("goalNewUpdates");
-          });
+        goalWithChildrens.map(async (goal, index) => {
+          try {
+            await addSharedWMGoal(goal, relId);
+          } catch (error) {
+            const existingGoal = await getSharedWMGoal(goal.id);
+            if (existingGoal) {
+              existingGoals.set(goal.id, { goal, index });
+            }
+          }
         }),
       );
+
+      if (existingGoals.size > 0) {
+        // TODO: Process existing goals
+        existingGoals.forEach(({ goal, index }) => {
+          console.log(goal, index);
+        });
+      }
+
+      setLastAction("goalNewUpdates");
     } catch (error) {
-      console.error("[useApp] Error adding shared goals:", error);
+      console.error("[useApp] Error processing shared goals:", error);
     }
   };
 
@@ -131,7 +136,7 @@ function useApp() {
           for (const change of changes) {
             try {
               if (change.type === "shareMessage") {
-                await handleNewIncomingGoal(change, contactItem, relId);
+                await handleNewIncomingGoal(change, relId);
               } else if (["sharer", "suggestion"].includes(change.type)) {
                 await handleIncomingChanges(change as unknown as Payload, relId);
                 setLastAction("goalNewUpdates");

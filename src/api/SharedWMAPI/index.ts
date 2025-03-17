@@ -30,9 +30,6 @@ export const removeSharedWMGoalFromParentSublist = async (goalId: string, parent
 };
 
 export const addSharedWMGoal = async (goalDetails: GoalItem, relId = "") => {
-  console.log("[addSharedWMGoal] Input goal details:", goalDetails);
-  console.log("[addSharedWMGoal] Input relId:", relId);
-
   const { participants } = goalDetails;
   let updatedParticipants = participants || [];
 
@@ -46,7 +43,6 @@ export const addSharedWMGoal = async (goalDetails: GoalItem, relId = "") => {
     }
   }
 
-  console.log("[addSharedWMGoal] Updated participants:", updatedParticipants);
   const newGoal = createGoalObjectFromTags({
     ...goalDetails,
     typeOfGoal: "shared",
@@ -56,12 +52,10 @@ export const addSharedWMGoal = async (goalDetails: GoalItem, relId = "") => {
   await db
     .transaction("rw", db.sharedWMCollection, async () => {
       await db.sharedWMCollection.add(newGoal);
-      console.log("[addSharedWMGoal] Goal added to sharedWMCollection");
     })
     .then(async () => {
       const { parentGoalId } = newGoal;
       if (parentGoalId !== "root") {
-        console.log("[addSharedWMGoal] Adding goal to parent sublist. ParentId:", parentGoalId);
         await addSharedWMSublist(parentGoalId, [newGoal.id]);
       }
     })
@@ -69,7 +63,6 @@ export const addSharedWMGoal = async (goalDetails: GoalItem, relId = "") => {
       console.error("[addSharedWMGoal] Error:", e.stack || e);
     });
 
-  console.log("[addSharedWMGoal] Successfully created goal with ID:", newGoal.id);
   return newGoal.id;
 };
 

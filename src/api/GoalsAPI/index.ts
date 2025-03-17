@@ -180,30 +180,6 @@ export const removeChildrenGoals = async (parentGoalId: string, permanently = fa
   });
 };
 
-export const shareMyGoalAnonymously = async (goal: GoalItem, parent: string) => {
-  const shareableGoal = {
-    method: "shareMessage",
-    parentTitle: parent,
-    goal: {
-      title: goal.title,
-      duration: goal.duration,
-      habit: goal.habit,
-      start: goal.start?.toString(),
-      on: goal.on,
-      timeBudget: goal.timeBudget,
-      due: goal.due?.toString(),
-      afterTime: goal.afterTime,
-      beforeTime: goal.beforeTime,
-      createdAt: goal.createdAt,
-      goalColor: goal.goalColor,
-      language: goal.language,
-      link: goal.link,
-    },
-  };
-  const res = await shareGoal(shareableGoal);
-  return res;
-};
-
 export const getHintsFromAPI = async (goal: GoalItem) => {
   let parentGoalTitle = "root";
   let parentGoalHint = false;
