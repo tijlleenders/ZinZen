@@ -15,6 +15,7 @@ import { addHintGoaltoMyGoals } from "@src/api/GoalsAPI";
 import { deleteAvailableGoalHint } from "@src/api/HintsAPI";
 import { reportHint } from "@src/api";
 import ModalActionButton from "@components/Buttons/ModalActionButton";
+import { GoalHintActions } from "@src/constants/actions";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const { t } = useTranslation();
@@ -28,7 +29,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
     setLoading(true);
     const res = await reportHint(goal);
     await deleteAvailableGoalHint(goal.parentGoalId, goal.id);
-    setLastAction("goalHintReported");
+    setLastAction(GoalHintActions.GOAL_HINT_REPORTED);
     setLoading(false);
     setDisplayToast({ open: true, message: res.message, extra: "" });
     window.history.back();
@@ -45,7 +46,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
         <ModalActionButton
           onClick={async () => {
             await deleteAvailableGoalHint(goal.parentGoalId, goal.id);
-            setLastAction("goalHintDeleted");
+            setLastAction(GoalHintActions.GOAL_HINT_DELETED);
             restoreGoalSound.play();
             window.history.back();
           }}
@@ -56,7 +57,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
         <ModalActionButton
           onClick={async () => {
             await addHintGoaltoMyGoals(goal);
-            setLastAction("goalHintAdded");
+            setLastAction(GoalHintActions.GOAL_HINT_ADDED);
             window.history.back();
           }}
         >

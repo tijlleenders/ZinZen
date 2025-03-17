@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import rescheduleTune from "@assets/reschedule.mp3";
 
-import { TaskItem } from "@src/models/TaskItem";
 import { GoalItem } from "@src/models/GoalItem";
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { getAllGoals } from "@src/api/GoalsAPI";
@@ -25,7 +24,6 @@ import init, { schedule } from "../../pkg/scheduler";
 function useScheduler() {
   const rescheduleSound = new Audio(rescheduleTune);
 
-  const [tasksStatus, setTasksStatus] = useState<{ [goalId: string]: TaskItem }>({});
   const devMode = useRecoilValue(openDevMode);
   const [tasks, setTasks] = useState<{ [day: string]: ITaskOfDay }>({});
   const [action, setLastAction] = useRecoilState(lastAction);
@@ -33,8 +31,7 @@ function useScheduler() {
 
   const getInputForScheduler = async () => {
     const activeGoals: GoalItem[] = await getAllGoals();
-    const { dbTasks, schedulerInput } = await organizeDataForInptPrep(activeGoals);
-    setTasksStatus({ ...dbTasks });
+    const { schedulerInput } = await organizeDataForInptPrep(activeGoals);
     return schedulerInput;
   };
 
@@ -117,8 +114,6 @@ function useScheduler() {
 
   return {
     tasks,
-    tasksStatus,
-    setTasksStatus,
     checkGoalSchedule,
   };
 }

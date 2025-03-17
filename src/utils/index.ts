@@ -267,3 +267,7 @@ export const checkOnArrayEquality = (arr1: string[], arr2: string[]): boolean =>
   const arr2Sorted = arr2.sort();
   return arraysAreEqual(arr1Sorted, arr2Sorted);
 };
+
+export const getTimePart = (datetime: string | null, part: "hour" | "minute" = "hour"): string | null => {
+  return datetime ? datetime.split("T")[1]?.slice(part === "hour" ? 0 : 3, part === "hour" ? 2 : 5) : null;
+};

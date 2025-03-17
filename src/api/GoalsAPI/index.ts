@@ -385,3 +385,13 @@ export const fetchArchivedDescendantGoalByTitle = async (goalTitle: string, pare
     (goal) => goal.archived === "true" && goal.title.toLowerCase().startsWith(searchTitle),
   );
 };
+
+export const getAllReminders = async () => {
+  const goals = await getAllGoals();
+  return goals.filter((goal) => {
+    if (!goal.due || goal.duration) {
+      return false;
+    }
+    return true;
+  });
+};

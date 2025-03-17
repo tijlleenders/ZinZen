@@ -17,6 +17,7 @@ import { ILocationState } from "@src/Interfaces";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
 
+import { GoalActions } from "@src/constants/actions";
 import ActionDiv from "./ActionDiv";
 
 import "./MyGoalActions.scss";
@@ -54,7 +55,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
 
   const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
     await archiveThisGoal(goalToArchive, goalAncestors);
-    setLastAction("goalArchived");
+    setLastAction(GoalActions.GOAL_ARCHIVED);
     const goalTitleElement = document.querySelector(`#goal-${goalToArchive.id} .goal-title`) as HTMLElement;
     if (goalTitleElement) {
       goalTitleElement.style.textDecoration = "line-through";
@@ -67,13 +68,13 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
       await deleteGoalAction(goal);
-      setLastAction("goalDeleted");
+      setLastAction(GoalActions.GOAL_DELETED);
       showMessage("Moved to trash!", "We'll delete it in 7 days.");
     } else if (action === "archive") {
       await handleArchiveGoal(goal, ancestors);
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
-      setLastAction("goalColabRequest");
+      setLastAction(GoalActions.GOAL_COLAB_REQUEST);
     }
     window.history.back();
   };
