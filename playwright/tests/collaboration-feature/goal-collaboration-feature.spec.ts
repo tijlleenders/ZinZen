@@ -130,6 +130,7 @@ test.describe("Goal Sharing Feature", () => {
       await receiverPage().reload();
       await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
+      await receiverPage().waitForTimeout(1000);
       await receiverPage().reload();
       await expect(receiverPage().locator(".user-goal-main")).toBeVisible();
     });
