@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MyTimeline } from "@components/MyTimeComponents/MyTimeline/MyTimeline";
 import { Focus } from "@components/MyTimeComponents/Focus.tsx/Focus";
 import { getOrdinalSuffix } from "@src/utils";
@@ -16,31 +16,22 @@ import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { useRecoilState } from "recoil";
-import { lastAction } from "@src/store";
-import { TaskHistoryItem } from "@src/models/TaskHistoryItem";
 import { tasksToMarkDoneToday } from "@src/helpers/MyTimeHelper";
 import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders/Reminders";
+import { useQuery } from "react-query";
 
 export const MyTimePage = () => {
   const today = new Date();
   const { tasks } = useScheduler();
   const [showTasks, setShowTasks] = useState<string[]>(["Today"]);
-  const [doneTasks, setDoneTasks] = useState<TaskHistoryItem[]>([]);
   const { state } = useLocation();
   const [searchParams] = useSearchParams();
-  const [action, setAction] = useRecoilState(lastAction);
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
-  useEffect(() => {
-    tasksToMarkDoneToday()
-      .then((tasksToMarkDone) => {
-        setDoneTasks(tasksToMarkDone);
-      })
-      .then(() => {
-        setAction("none");
-      });
-  }, [action]);
+  const { data: tasksToMarkDone } = useQuery({
+    queryKey: ["tasksToMarkDone"],
+    queryFn: tasksToMarkDoneToday,
+  });
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
@@ -90,7 +81,7 @@ export const MyTimePage = () => {
           {showTasks.includes(day) && tasks[day] && tasks[day].scheduled.length > 0 && (
             <div className="MyTime_dayList">
               <Reminders day={day} />
-              <MyTimeline day={day} myTasks={tasks[day]} doneTasks={doneTasks} />
+              <MyTimeline day={day} myTasks={tasks[day]} doneTasks={tasksToMarkDone ?? []} />
             </div>
           )}
         </div>

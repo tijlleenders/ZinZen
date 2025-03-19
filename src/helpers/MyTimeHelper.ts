@@ -243,7 +243,6 @@ export const putSchedulerRes = async (code: string, generatedInputId: string, ou
 
 export const tasksToMarkDoneToday = async () => {
   const tasksDoneToday = await getAllTasksDoneToday();
-  console.log(tasksDoneToday);
   const tasksSkippedToday = await getAllTodaySkippedTasks();
   return [...tasksDoneToday, ...tasksSkippedToday];
 };
