@@ -9,12 +9,8 @@ import { ITask } from "@src/Interfaces/Task";
 import { useTranslation } from "react-i18next";
 
 import "./index.scss";
-import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
 import { getTimePart } from "@src/utils";
-import { displayReschedule } from "@src/store/TaskState";
 import { TaskHistoryItem } from "@src/models/TaskHistoryItem";
-import { addTaskCompletedEvent } from "@src/api/TaskHistoryAPI";
-import { GoalTiming } from "./GoalTiming";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
 import { useMyTimelineStore } from "./useMyTimelineStore";

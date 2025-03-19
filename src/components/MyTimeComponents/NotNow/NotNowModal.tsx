@@ -1,39 +1,29 @@
-import { useRecoilState, useSetRecoilState } from "recoil";
-import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import React, { useState } from "react";
 
-import { lastAction } from "@src/store";
 import "./NotNowModal.scss";
 import ZModal from "@src/common/ZModal";
-import { addBlockedSlot } from "@src/api/TasksAPI";
 import { displayReschedule } from "@src/store/TaskState";
 import { MILLISECONDS_IN_HOUR, RESCHEDULE_OPTIONS } from "@src/constants/rescheduleOptions";
 import { convertDateToString } from "@src/utils";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { getGoalById } from "@src/api/GoalsAPI";
-import forgetTune from "@assets/forget.mp3";
-import { addTaskPostponedEvent, addTaskSkippedEvent } from "@src/api/TaskHistoryAPI";
-import { TaskActions } from "@src/constants/actions";
+import { useSkipTask } from "@src/hooks/api/Tasks/useSkipTask";
+import { useRescheduleTask } from "@src/hooks/api/Tasks/useRescheduleTask";
+import { ITask } from "@src/Interfaces/Task";
 
 const NotNowModal = () => {
   const [task, setDisplayReschedule] = useRecoilState(displayReschedule);
-  const setLastAction = useSetRecoilState(lastAction);
   const [showSkip, setShowSkip] = useState(false);
 
-  const forgetSound = new Audio(forgetTune);
+  const { skipTaskMutation } = useSkipTask();
+  const { rescheduleTaskMutation } = useRescheduleTask(task as ITask);
 
-  useEffect(() => {
-    const checkGoalCategory = async () => {
-      if (task?.goalid) {
-        const goal = await getGoalById(task.goalid);
-        if (goal?.category === "Budget") {
-          setShowSkip(true);
-        } else {
-          setShowSkip(false);
-        }
-      }
-    };
-    checkGoalCategory();
-  }, [task]);
+  if (task?.goalid && !showSkip) {
+    getGoalById(task.goalid).then((goal) => {
+      setShowSkip(goal?.category === "Budget");
+    });
+  }
 
   if (!task) return null;
 
@@ -43,22 +33,11 @@ const NotNowModal = () => {
     const start = convertDateToString(startTime, false);
     const end = convertDateToString(endTime, false);
 
-    addBlockedSlot(task.goalid, {
-      start,
-      end,
-    });
-    await addTaskPostponedEvent(task);
-
-    console.log(`Task rescheduled from ${start} to ${end}`);
-    setDisplayReschedule(null);
-    setLastAction(TaskActions.TASK_RESCHEUDLED);
+    rescheduleTaskMutation({ start, end });
   };
 
   const handleSkip = async () => {
-    await addTaskSkippedEvent(task);
-    setDisplayReschedule(null);
-    setLastAction(TaskActions.TASK_SKIPPED);
-    forgetSound.play();
+    skipTaskMutation(task);
   };
 
   return (

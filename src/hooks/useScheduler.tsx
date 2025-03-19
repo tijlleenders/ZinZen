@@ -2,8 +2,6 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useEffect, useState } from "react";
 
-import rescheduleTune from "@assets/reschedule.mp3";
-
 import { GoalItem } from "@src/models/GoalItem";
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { getAllGoals } from "@src/api/GoalsAPI";
@@ -22,8 +20,6 @@ import { schedulerErrorState } from "@src/store/SchedulerErrorState";
 import init, { schedule } from "../../pkg/scheduler";
 
 function useScheduler() {
-  const rescheduleSound = new Audio(rescheduleTune);
-
   const devMode = useRecoilValue(openDevMode);
   const [tasks, setTasks] = useState<{ [day: string]: ITaskOfDay }>({});
   const [action, setLastAction] = useRecoilState(lastAction);
@@ -87,8 +83,7 @@ function useScheduler() {
   }, [devMode]);
 
   useEffect(() => {
-    if (action.includes("Task")) {
-      if (action === "TaskRescheduled") rescheduleSound.play();
+    if (action.includes("task")) {
       initialCall().then(async () => {
         setLastAction("none");
       });
