@@ -7,6 +7,9 @@ import { blockedSlotOfTask } from "@src/models/TaskItem";
 import { addBlockedSlot } from "@src/api/TasksAPI";
 import { TaskActions } from "@src/constants/actions";
 import { ITask } from "@src/Interfaces/Task";
+import rescheduleTune from "@assets/reschedule.mp3";
+
+const rescheduleSound = new Audio(rescheduleTune);
 
 export const useRescheduleTask = (task: ITask) => {
   const setShowToast = useSetRecoilState(displayToast);
@@ -26,6 +29,7 @@ export const useRescheduleTask = (task: ITask) => {
       addTaskPostponedEvent(task);
       setDisplayReschedule(null);
       setLastAction(TaskActions.TASK_RESCHEUDLED);
+      rescheduleSound.play();
     },
     onError: (err) => {
       console.error(err);
