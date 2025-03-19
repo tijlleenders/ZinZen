@@ -22,20 +22,12 @@ const createTaskHistoryEvent = (task: ITask, eventType: TaskHistoryEventTypes): 
   };
 };
 
-export async function addTaskCompletedEvent(task: ITask) {
-  const event = createTaskHistoryEvent(task, TaskHistoryEventTypes.COMPLETED);
-  await addTaskHistoryItemToDB(event);
-}
+const createTaskEventHandler = (eventType: TaskHistoryEventTypes) => (task: ITask) =>
+  addTaskHistoryItemToDB(createTaskHistoryEvent(task, eventType));
 
-export async function addTaskPostponedEvent(task: ITask) {
-  const event = createTaskHistoryEvent(task, TaskHistoryEventTypes.POSTPONED);
-  await addTaskHistoryItemToDB(event);
-}
-
-export async function addTaskSkippedEvent(task: ITask) {
-  const event = createTaskHistoryEvent(task, TaskHistoryEventTypes.SKIPPED);
-  await addTaskHistoryItemToDB(event);
-}
+export const addTaskCompletedEvent = createTaskEventHandler(TaskHistoryEventTypes.COMPLETED);
+export const addTaskPostponedEvent = createTaskEventHandler(TaskHistoryEventTypes.POSTPONED);
+export const addTaskSkippedEvent = createTaskEventHandler(TaskHistoryEventTypes.SKIPPED);
 
 export async function deleteTaskHistoryItem(goalId: string) {
   await db.taskHistoryCollection.where("goalId").equals(goalId).delete();
