@@ -19,6 +19,7 @@ import SubHeader from "@src/common/SubHeader";
 import ContactItem from "@src/models/ContactItem";
 import ZModal from "@src/common/ZModal";
 
+import { GoalActions } from "@src/constants/actions";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
@@ -185,7 +186,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             removeGoalInbox(currentMainGoal.id),
             updateGoal(currentMainGoal.id, { newUpdates: false }),
           ]);
-          setLastAction("GoalChangesSynced");
+          setLastAction(GoalActions.GOAL_CHANGES_SYNCED);
           window.history.back();
           return;
         }
@@ -238,9 +239,9 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
   }, [currentMainGoal]);
 
   return (
-    <ZModal type="popupModal" open>
+    <ZModal style={{ gap: 16 }} type="popupModal" open>
       {currentMainGoal && (
-        <>
+        <div className="d-flex f-col gap-16">
           <SubHeader
             showLeftNav={showSuggestions}
             showRightNav={!showSuggestions}
@@ -279,7 +280,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             ))}
           </div>
           {goalUnderReview && participants.length > 0 && (
-            <p className="popupModal-title" style={{ marginTop: 22 }}>
+            <p className="popupModal-title m-0">
               <Header
                 contactName={participants[activePPT].name}
                 title={goalUnderReview.title}
@@ -299,7 +300,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
               </>
             )}
           </div>
-        </>
+        </div>
       )}
     </ZModal>
   );

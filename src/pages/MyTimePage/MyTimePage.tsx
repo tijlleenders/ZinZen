@@ -16,10 +16,11 @@ import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { lastAction } from "@src/store";
 import { TaskHistoryItem } from "@src/models/TaskHistoryItem";
 import { tasksToMarkDoneToday } from "@src/helpers/MyTimeHelper";
+import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders/Reminders";
 
 export const MyTimePage = () => {
   const today = new Date();
@@ -28,14 +29,17 @@ export const MyTimePage = () => {
   const [doneTasks, setDoneTasks] = useState<TaskHistoryItem[]>([]);
   const { state } = useLocation();
   const [searchParams] = useSearchParams();
-  const action = useRecoilValue(lastAction);
-
+  const [action, setAction] = useRecoilState(lastAction);
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
   useEffect(() => {
-    tasksToMarkDoneToday().then((tasksToMarkDone) => {
-      setDoneTasks(tasksToMarkDone);
-    });
+    tasksToMarkDoneToday()
+      .then((tasksToMarkDone) => {
+        setDoneTasks(tasksToMarkDone);
+      })
+      .then(() => {
+        setAction("none");
+      });
   }, [action]);
 
   const handleShowTasks = (dayName: string) => {
@@ -84,7 +88,10 @@ export const MyTimePage = () => {
         </button>
         <div style={showTasks.includes(day) ? { background: "var(--bottom-nav-color)" } : {}}>
           {showTasks.includes(day) && tasks[day] && tasks[day].scheduled.length > 0 && (
-            <MyTimeline day={day} myTasks={tasks[day]} doneTasks={doneTasks} />
+            <div className="MyTime_dayList">
+              <Reminders day={day} />
+              <MyTimeline day={day} myTasks={tasks[day]} doneTasks={doneTasks} />
+            </div>
           )}
         </div>
       </div>

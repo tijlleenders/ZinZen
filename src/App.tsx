@@ -1,36 +1,24 @@
 import React, { useEffect } from "react";
 import { notification } from "antd";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, displayToast, backupRestoreModal, languageChangeModal } from "@store";
 
 import lightAvatar from "@assets/images/mainAvatarLight.svg";
 import darkAvatar from "@assets/images/mainAvatarDark.svg";
 
-import InvitePage from "@pages/InvitePage/InvitePage";
-import InvestPage from "@pages/InvestPage/InvestPage";
-import PartnerGoals from "@pages/GoalsPage/PartnerGoals";
 import BackupRestoreModal from "@components/BackupRestoreModal";
 
-import { FAQPage } from "@pages/FAQPage/FAQPage";
-import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
-import { LandingPage } from "@pages/LandingPage/LandingPage";
-import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
-import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { LanguageChangeModal } from "@components/LanguageChangeModal/LanguageChangeModal";
 
-import { MyGoals } from "@pages/GoalsPage/MyGoals";
-import { PartnerProvider } from "./contexts/partner-context";
-import { ActiveGoalProvider } from "./contexts/activeGoal-context";
-
 import useApp from "./hooks/useApp";
-import AppLayout from "./layouts/AppLayout";
 import { themeState } from "./store/ThemeState";
 
 import "./global.scss";
 import "./customize.scss";
 import "./override.scss";
 import "./short.scss";
+import { AppRoutes } from "./Routes";
 
 const Context = React.createContext({ name: "Default" });
 
@@ -70,9 +58,7 @@ const App = () => {
     });
 
     if (!clickedInside) {
-      setTimeout(() => {
-        api.destroy();
-      }, 0);
+      api.destroy();
     }
   };
 
@@ -96,89 +82,7 @@ const App = () => {
         <BrowserRouter>
           {isLanguageChosen}
           {contextHolder}
-          <Routes>
-            {!isLanguageChosen ? (
-              <Route path="/" element={<LandingPage />} />
-            ) : (
-              <Route
-                path="/"
-                element={
-                  <ActiveGoalProvider>
-                    <MyTimePage />
-                  </ActiveGoalProvider>
-                }
-              />
-            )}
-            <Route path="/Feedback" element={<FeedbackPage />} />
-            <Route
-              path="*"
-              element={
-                <ActiveGoalProvider>
-                  <MyGoals />
-                </ActiveGoalProvider>
-              }
-            />
-            <Route
-              path="/goals/:parentId"
-              element={
-                <ActiveGoalProvider>
-                  <MyGoals />
-                </ActiveGoalProvider>
-              }
-            />
-            <Route
-              path="/goals/:parentId/:activeGoalId"
-              element={
-                <ActiveGoalProvider>
-                  <MyGoals />
-                </ActiveGoalProvider>
-              }
-            />
-            <Route
-              path="partners/:partnerId/goals"
-              element={
-                <PartnerProvider>
-                  <PartnerGoals />
-                </PartnerProvider>
-              }
-            />
-            <Route
-              path="partners/:partnerId/goals/:parentId"
-              element={
-                <PartnerProvider>
-                  <PartnerGoals />
-                </PartnerProvider>
-              }
-            />
-            <Route
-              path="partners/:partnerId/goals/:parentId/:activeGoalId"
-              element={
-                <PartnerProvider>
-                  <PartnerGoals />
-                </PartnerProvider>
-              }
-            />
-            {/* <Route path="/goals" element={<GoalsPage />} /> */}
-
-            <Route
-              path="/MyJournal"
-              element={
-                <AppLayout title="myJournal">
-                  <FeelingsPage />
-                </AppLayout>
-              }
-            />
-            <Route path="/ZinZenFAQ" element={<FAQPage />} />
-            <Route path="/invite/:id" element={<InvitePage />} />
-            <Route path="/Invest" element={<InvestPage />} />
-            <Route
-              path="/donate"
-              Component={() => {
-                window.location.href = "https://donate.stripe.com/6oE4jK1iPcPT1m89AA";
-                return null;
-              }}
-            />
-          </Routes>
+          <AppRoutes />
         </BrowserRouter>
         {displayBackupRestoreModal && <BackupRestoreModal />}
         {displayLanguageChangeModal && <LanguageChangeModal />}

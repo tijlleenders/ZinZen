@@ -256,3 +256,18 @@ export const formatSingularPlural = (count: number, singularWord: string) => {
 export const hashObject = (obj: object) => {
   return sha256(JSON.stringify(obj)).toString();
 };
+
+export const arraysAreEqual = (arr1: string[], arr2: string[]): boolean => {
+  if (arr1.length !== arr2.length) return false;
+  return arr1.every((value, index) => value === arr2[index]);
+};
+
+export const checkOnArrayEquality = (arr1: string[], arr2: string[]): boolean => {
+  const arr1Sorted = arr1.sort();
+  const arr2Sorted = arr2.sort();
+  return arraysAreEqual(arr1Sorted, arr2Sorted);
+};
+
+export const getTimePart = (datetime: string | null, part: "hour" | "minute" = "hour"): string | null => {
+  return datetime ? datetime.split("T")[1]?.slice(part === "hour" ? 0 : 3, part === "hour" ? 2 : 5) : null;
+};

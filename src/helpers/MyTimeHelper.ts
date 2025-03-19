@@ -216,7 +216,7 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   console.log("inputGoalsArr", inputGoalsArr);
   const adjustedInputGoalsArr = await adjustNotOnBlocks(inputGoalsArr);
   schedulerInput.goals = adjustedInputGoalsArr;
-  return { dbTasks, schedulerInput };
+  return { schedulerInput };
 };
 
 export const getCachedSchedule = async (generatedInputId: string) => {
