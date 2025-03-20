@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -14,12 +15,13 @@ import "./BottomNavbar.scss";
 import Icon from "@src/common/Icon";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { PageTitle } from "@src/constants/pageTitle";
+import { moveGoalState } from "@src/store/moveGoalState";
 
 const BottomNavbar = ({ title }: { title: string }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const goalToMove = useRecoilValue(moveGoalState);
   const { partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
 
@@ -68,7 +70,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
 
   const { activeGoalId } = location.state || {};
   const isAddBtnVisible =
-    title !== "Focus" && title !== PageTitle.Contacts && (isPartnerModeActive ? !!activeGoalId : true);
+    title !== "Focus" && title !== PageTitle.Contacts && (isPartnerModeActive ? !!activeGoalId || goalToMove : true);
   return (
     <>
       {themeSelection && (

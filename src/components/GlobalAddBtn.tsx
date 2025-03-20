@@ -137,7 +137,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     setIsDisabled(true);
     if (isPartnerModeActive) {
       let rootGoal = goalToMove;
-      if (state.goalsHistory && state.goalsHistory.length > 0) {
+      if (state?.goalsHistory && state?.goalsHistory?.length > 0) {
         const rootGoalId = state.goalsHistory[0].goalID;
         rootGoal = (await getSharedWMGoalById(rootGoalId)) || goalToMove;
       }

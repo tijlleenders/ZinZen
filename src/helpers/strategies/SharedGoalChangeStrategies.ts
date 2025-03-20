@@ -21,7 +21,7 @@ import { ChangeStrategy } from "./ChangeStrategy";
 const handleMoveOperation = async (newParentGoalId: string, goalToMove: GoalItem) => {
   const newParentGoal = await getSharedWMGoal(newParentGoalId);
 
-  if (!newParentGoal) {
+  if (!newParentGoal && newParentGoalId !== "root") {
     console.error("[MovedStrategy] New parent goal not found", { goalId: newParentGoalId });
     return;
   }
