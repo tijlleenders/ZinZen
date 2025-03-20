@@ -1,8 +1,8 @@
-import { GoalItem } from "@src/models/GoalItem";
+import { ILevelGoals } from "@src/api/GoalsAPI";
 
 export interface SharedGoalMessage {
   relId: string;
-  goalWithChildrens: GoalItem[];
+  levelGoalsNode: ILevelGoals[];
   lastProcessedTimestamp: string;
   type: "shareMessage";
   installId: string;

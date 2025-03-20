@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
-import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
+import { createGetHintsRequest } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
@@ -311,22 +311,43 @@ export const removeGoalWithChildrens = async (goal: GoalItem, permanently = fals
   }
 };
 
-export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false) => {
-  const goalsAcc: GoalItem[] = [];
+export type ILevelGoals = {
+  parentId: string;
+  goals: GoalItem[];
+};
 
-  const processGoalAndChildren = async (goalId: string) => {
+export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false): Promise<ILevelGoals[]> => {
+  const levelMap = new Map<number, ILevelGoals>();
+  const queue: { goalId: string; level: number }[] = [{ goalId: id, level: 0 }];
+
+  while (queue.length > 0) {
+    const { goalId, level } = queue.shift()!;
+    // eslint-disable-next-line no-await-in-loop
     const goal = await getGoal(goalId);
-    if (!goal) return;
 
-    goalsAcc.push(resetSharedStatus ? { ...goal, participants: [] } : goal);
-    const childrenGoals = await getChildrenGoals(goalId);
-    await Promise.all(childrenGoals.map((childGoal) => processGoalAndChildren(childGoal.id)));
-  };
+    if (goal) {
+      // Initialize level if not exists
+      if (!levelMap.has(level)) {
+        levelMap.set(level, { parentId: goal.id === id ? "root" : goal.parentGoalId, goals: [] });
+      }
 
-  await processGoalAndChildren(id);
+      // Add goal to current level
+      const currentLevel = levelMap.get(level)!;
+      currentLevel.goals.push(resetSharedStatus ? { ...goal, participants: [] } : goal);
 
-  console.log(goalsAcc);
-  return goalsAcc;
+      // Get children and add them to queue
+      // eslint-disable-next-line no-await-in-loop
+      const childrenGoals = await getChildrenGoals(goalId);
+      childrenGoals.forEach((childGoal) => {
+        queue.push({ goalId: childGoal.id, level: level + 1 });
+      });
+    }
+  }
+
+  // Convert Map to sorted array by level number
+  return Array.from(levelMap.entries())
+    .sort(([levelA], [levelB]) => levelA - levelB)
+    .map(([_, value]) => value);
 };
 
 export const addHintGoaltoMyGoals = async (goal: GoalItem) => {

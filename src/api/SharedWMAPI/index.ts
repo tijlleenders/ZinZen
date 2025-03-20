@@ -58,9 +58,6 @@ export const addSharedWMGoal = async (goalDetails: GoalItem, relId = "") => {
       if (parentGoalId !== "root") {
         await addSharedWMSublist(parentGoalId, [newGoal.id]);
       }
-    })
-    .catch((e) => {
-      console.error("[addSharedWMGoal] Error:", e.stack || e);
     });
 
   return newGoal.id;

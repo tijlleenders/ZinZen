@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { lastAction, displayConfirmation, openDevMode, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
 import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
-import { addSharedWMGoal, getSharedWMGoal } from "@src/api/SharedWMAPI";
+import { addSharedWMGoal, getSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { createDefaultGoals } from "@src/controllers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
 import { checkAndUpdateGoalNewUpdatesStatus, handleIncomingChanges } from "@src/helpers/InboxProcessor";
@@ -14,11 +14,11 @@ import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
-import ContactItem from "@src/models/ContactItem";
 import { SharedGoalMessage } from "@src/Interfaces/IContactMessages";
 import { checkAndCleanupDoneTodayCollection } from "@src/controllers/TaskDoneTodayController";
 import { getAllInboxItems } from "@src/api/InboxAPI";
 import { Payload } from "@src/models/InboxItem";
+import { useQuery } from "react-query";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -34,30 +34,36 @@ function useApp() {
   const confirmationState = useRecoilValue(displayConfirmation);
 
   const handleNewIncomingGoal = async (ele: SharedGoalMessage, relId: string) => {
-    const { goalWithChildrens } = ele;
-    try {
-      // First attempt to add all goals and collect existing ones
-      const existingGoals = new Map();
+    const { levelGoalsNode } = ele;
 
+    try {
       await Promise.all(
-        goalWithChildrens.map(async (goal, index) => {
-          try {
-            await addSharedWMGoal(goal, relId);
-          } catch (error) {
-            const existingGoal = await getSharedWMGoal(goal.id);
-            if (existingGoal) {
-              existingGoals.set(goal.id, { goal, index });
-            }
-          }
+        levelGoalsNode.map(async (goalNode, index) => {
+          const { goals } = goalNode;
+          await Promise.all(
+            goals.map(async (goal) => {
+              try {
+                const existingGoal = await getSharedWMGoal(goal.id);
+                if (existingGoal) {
+                  const { parentGoalId } = goal;
+                  if (parentGoalId === "root") {
+                    console.log("No parent goal id");
+                    return;
+                  }
+                  await updateSharedWMGoal(goal.id, {
+                    ...existingGoal,
+                    parentGoalId,
+                  });
+                } else {
+                  await addSharedWMGoal(goal, relId);
+                }
+              } catch (error) {
+                console.error("[handleNewIncomingGoal] Error processing goal:", error);
+              }
+            }),
+          );
         }),
       );
-
-      if (existingGoals.size > 0) {
-        // TODO: Process existing goals
-        existingGoals.forEach(({ goal, index }) => {
-          console.log(goal, index);
-        });
-      }
 
       setLastAction("goalNewUpdates");
     } catch (error) {
@@ -75,6 +81,24 @@ function useApp() {
     });
   }, []);
 
+  const { data: sharedGoalsData } = useQuery({
+    queryKey: ["contactSharedGoals"],
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const res = await getContactSharedGoals();
+      if (!res.success) {
+        throw new Error("Failed to fetch shared goals");
+      }
+      return res.response.reduce(
+        (acc: { [key: string]: SharedGoalMessage[] }, curr) => ({
+          ...acc,
+          [curr.relId]: [...(acc[curr.relId] || []), curr],
+        }),
+        {},
+      );
+    },
+  });
+
   useEffect(() => {
     const init = async () => {
       updateAllUnacceptedContacts().then(async (contacts) => {
@@ -91,23 +115,26 @@ function useApp() {
             const { goalsToBeShared, relId, name } = contact;
             return Promise.allSettled([
               ...goalsToBeShared.map(async (goalId) => {
-                const goal = getGoal(goalId);
+                const goal = await getGoal(goalId);
                 if (!goal) {
                   return null;
                 }
                 const goalWithChildrens = await getAllLevelGoalsOfId(goalId, true);
-                return shareGoalWithContact(relId, [
-                  ...goalWithChildrens.map((ele) => ({
-                    ...ele,
+                const validGoals = goalWithChildrens.map((goalNode) => ({
+                  ...goalNode,
+                  goals: goalNode.goals.map((goalItem) => ({
+                    ...goalItem,
                     participants: [],
-                    parentGoalId: ele.id === goalId ? "root" : ele.parentGoalId,
-                    notificationGoalId: goalId,
+                    parentGoalId: goalItem.id === goal.id ? "root" : goalItem.parentGoalId,
+                    notificationGoalId: goal.id,
                   })),
-                ]).then(async () => {
+                }));
+                return shareGoalWithContact(relId, validGoals).then(async () => {
                   await Promise.all(
-                    goalWithChildrens.map(async (goalItem) => {
-                      console.log(goalItem.id, relId, name);
-                      await updateSharedStatusOfGoal(goalItem.id, relId, name);
+                    validGoals.map(async (goalNode) => {
+                      goalNode.goals.map(async (goalItem) => {
+                        await updateSharedStatusOfGoal(goalItem.id, relId, name);
+                      });
                     }),
                   ).catch((error) => {
                     console.error("[shareGoalWithRelId] Error updating shared status:", error);
@@ -119,39 +146,29 @@ function useApp() {
           }),
         );
       });
-      const res = await getContactSharedGoals();
-      const resObject = res.response.reduce(
-        (acc: { [key: string]: SharedGoalMessage[] }, curr) => ({
-          ...acc,
-          [curr.relId]: [...(acc[curr.relId] || []), curr],
-        }),
-        {},
-      );
-      if (res.success) {
-        const processChangesSequentially = async (
-          changes: SharedGoalMessage[],
-          contactItem: ContactItem,
-          relId: string,
-        ) => {
-          for (const change of changes) {
-            try {
-              if (change.type === "shareMessage") {
-                await handleNewIncomingGoal(change, relId);
-              } else if (["sharer", "suggestion"].includes(change.type)) {
-                await handleIncomingChanges(change as unknown as Payload, relId);
-                setLastAction("goalNewUpdates");
-              }
-            } catch (error) {
-              console.error("Error processing change:", error);
-            }
-          }
-        };
-        Object.keys(resObject).forEach(async (relId: string) => {
+
+      if (sharedGoalsData) {
+        // Process each relId sequentially
+        for (const relId of Object.keys(sharedGoalsData)) {
           const contactItem = await getContactByRelId(relId);
           if (contactItem) {
-            await processChangesSequentially(resObject[relId], contactItem, relId);
+            // Process all changes for this contact sequentially
+            const changes = sharedGoalsData[relId];
+            for (const change of changes) {
+              try {
+                if (change.type === "shareMessage") {
+                  console.log("change", change);
+                  await handleNewIncomingGoal(change, relId);
+                } else if (["sharer", "suggestion"].includes(change.type)) {
+                  await handleIncomingChanges(change as unknown as Payload, relId);
+                  setLastAction("goalNewUpdates");
+                }
+              } catch (error) {
+                console.error("Error processing change:", error);
+              }
+            }
           }
-        });
+        }
       }
     };
     const installId = localStorage.getItem(LocalStorageKeys.INSTALL_ID);
@@ -166,7 +183,7 @@ function useApp() {
     if (!isLanguageChosen && !exceptionRoutes.includes(currentPath)) {
       window.open("/", "_self");
     }
-  }, [langFromStorage]);
+  }, [langFromStorage, sharedGoalsData]);
 
   useEffect(() => {
     localStorage.setItem(LocalStorageKeys.CONFIRMATION_STATE, JSON.stringify(confirmationState));

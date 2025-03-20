@@ -1,4 +1,4 @@
-import { getAllLevelGoalsOfId, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getAllLevelGoalsOfId, ILevelGoals, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/controllers/GoalController";
@@ -120,24 +120,33 @@ const useGoalActions = () => {
   };
 
   const shareGoalWithRelId = async (relId: string, name: string, goal: GoalItem) => {
-    const goalWithChildrens = await getAllLevelGoalsOfId(goal.id, true);
+    // Fetch goal hierarchy
+    const goalWithChildrens: ILevelGoals[] = await getAllLevelGoalsOfId(goal.id, true);
 
-    await shareGoalWithContact(relId, [
-      ...goalWithChildrens.map((ele) => ({
-        ...ele,
+    // Create modified copies of all goals with appropriate sharing properties
+    const updatedGoalWithChildrens = goalWithChildrens.map((goalNode) => ({
+      ...goalNode,
+      goals: goalNode.goals.map((goalItem) => ({
+        ...goalItem,
         participants: [],
-        parentGoalId: ele.id === goal.id ? "root" : ele.parentGoalId,
+        parentGoalId: goalItem.id === goal.id ? "root" : goalItem.parentGoalId,
         notificationGoalId: goal.id,
       })),
-    ]);
+    }));
 
-    await Promise.all(
-      goalWithChildrens.map(async (goalItem) => {
-        await updateSharedStatusOfGoal(goalItem.id, relId, name);
-      }),
-    ).catch((error) => {
+    // Share the goals with the contact
+    await shareGoalWithContact(relId, updatedGoalWithChildrens);
+
+    try {
+      // Update sharing status for all goals
+      await Promise.all(
+        updatedGoalWithChildrens.flatMap((goalNode) =>
+          goalNode.goals.map((goalItem) => updateSharedStatusOfGoal(goalItem.id, relId, name)),
+        ),
+      );
+    } catch (error) {
       console.error("[shareGoalWithRelId] Error updating shared status:", error);
-    });
+    }
 
     showMessage(`Cheers!! Your goal and its subgoals are shared with ${name}`);
   };
