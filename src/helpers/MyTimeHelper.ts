@@ -1,5 +1,6 @@
 /* eslint-disable complexity */
 import {
+  IGoalCompletedStats,
   IImpossibleTaskOfTheDay,
   IScheduleOfTheDay,
   ISchedulerInput,
@@ -21,21 +22,19 @@ import {
   getTasksCompletedSinceMondayForGoal,
   getTasksSkippedSinceMondayForGoal,
   getTotalDurationCompletedForGoal,
-  getTotalDurationSkippedForGoal,
 } from "@src/api/TaskHistoryAPI";
 
-const getGoalCompletedStats = async (goalId: string) => {
-  const [totalDurationCompleted, totalDurationSkipped, tasksCompletedSinceMonday, tasksSkippedSinceMonday] =
-    await Promise.all([
-      getTotalDurationCompletedForGoal(goalId),
-      getTotalDurationSkippedForGoal(goalId),
-      getTasksCompletedSinceMondayForGoal(goalId),
-      getTasksSkippedSinceMondayForGoal(goalId),
-    ]);
+const getGoalCompletedStats = async (goalId: string): Promise<IGoalCompletedStats> => {
+  const [totalDurationCompleted, tasksCompletedSinceMonday, tasksSkippedSinceMonday] = await Promise.all([
+    getTotalDurationCompletedForGoal(goalId),
+    getTasksCompletedSinceMondayForGoal(goalId),
+    getTasksSkippedSinceMondayForGoal(goalId),
+  ]);
 
   return {
-    totalDurationCompletedOrSkipped: totalDurationCompleted + totalDurationSkipped,
-    tasksCompletedOrSkippedSinceMonday: [...tasksCompletedSinceMonday, ...tasksSkippedSinceMonday],
+    totalDurationCompleted,
+    tasksCompletedSinceMonday,
+    tasksSkippedSinceMonday,
   };
 };
 
@@ -57,7 +56,11 @@ export const transformIntoSchInputGoals = async (
       };
 
       // only include stats if there is data to report
-      if (stats.totalDurationCompletedOrSkipped > 0 || stats.tasksCompletedOrSkippedSinceMonday.length > 0) {
+      if (
+        stats.totalDurationCompleted > 0 ||
+        stats.tasksCompletedSinceMonday.length > 0 ||
+        stats.tasksSkippedSinceMonday.length > 0
+      ) {
         obj.stats = stats;
       }
 
