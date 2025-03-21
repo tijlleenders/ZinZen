@@ -9,9 +9,9 @@ import {
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { addSchedulerResToCache, getSchedulerCachedRes, updateSchedulerCachedRes } from "@src/api/SchedulerOutputCache";
 import { getAllGoals } from "@src/api/GoalsAPI";
-import { getAllTasks, getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
+import { getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { TCompletedTaskTiming, TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
+import { TCompletedTaskTiming, blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
 import { t } from "i18next";
 import {
@@ -205,15 +205,9 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
     goals: [],
     tasksCompletedToday,
   };
-  const dbTasks: { [goalid: string]: TaskItem } = (await getAllTasks()).reduce(
-    (acc, curr) => ({ ...acc, [curr.goalId]: curr }),
-    {},
-  );
-  const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
-  console.log("blockedSlots", blockedSlots);
 
+  const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
   const inputGoalsArr: ISchedulerInputGoal[] = await transformIntoSchInputGoals(activeGoals, blockedSlots);
-  console.log("inputGoalsArr", inputGoalsArr);
   const adjustedInputGoalsArr = await adjustNotOnBlocks(inputGoalsArr);
   schedulerInput.goals = adjustedInputGoalsArr;
   return { schedulerInput };
