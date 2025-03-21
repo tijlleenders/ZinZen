@@ -34,9 +34,9 @@ export interface ISchedulerOutput {
 }
 
 export interface IGoalCompletedStats {
-  totalDurationCompleted: number;
-  tasksCompletedSinceMonday: { scheduledStartDateTime: string; duration: number }[];
-  tasksSkippedSinceMonday: { scheduledStartDateTime: string; duration: number }[];
+  totalDurationCompleted?: number;
+  tasksCompletedSinceMonday?: { scheduledStartDateTime: string; duration: number }[];
+  tasksSkippedSinceMonday?: { scheduledStartDateTime: string; duration: number }[];
 }
 
 export interface ISchedulerInputGoal {

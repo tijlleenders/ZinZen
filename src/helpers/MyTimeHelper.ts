@@ -38,6 +38,24 @@ const getGoalCompletedStats = async (goalId: string): Promise<IGoalCompletedStat
   };
 };
 
+const getFilteredStats = (stats: IGoalCompletedStats): Partial<IGoalCompletedStats> | undefined => {
+  const statsToInclude: Partial<IGoalCompletedStats> = {};
+
+  if (stats.totalDurationCompleted && stats.totalDurationCompleted > 0) {
+    statsToInclude.totalDurationCompleted = stats.totalDurationCompleted;
+  }
+
+  if (stats.tasksCompletedSinceMonday && stats.tasksCompletedSinceMonday.length > 0) {
+    statsToInclude.tasksCompletedSinceMonday = stats.tasksCompletedSinceMonday;
+  }
+
+  if (stats.tasksSkippedSinceMonday && stats.tasksSkippedSinceMonday.length > 0) {
+    statsToInclude.tasksSkippedSinceMonday = stats.tasksSkippedSinceMonday;
+  }
+
+  return Object.keys(statsToInclude).length > 0 ? statsToInclude : undefined;
+};
+
 export const transformIntoSchInputGoals = async (
   activeGoals: GoalItem[],
   blockedSlots: { [goalid: string]: blockedSlotOfTask[] },
@@ -55,13 +73,9 @@ export const transformIntoSchInputGoals = async (
         createdAt: ele.createdAt,
       };
 
-      // only include stats if there is data to report
-      if (
-        stats.totalDurationCompleted > 0 ||
-        stats.tasksCompletedSinceMonday.length > 0 ||
-        stats.tasksSkippedSinceMonday.length > 0
-      ) {
-        obj.stats = stats;
+      const filteredStats = getFilteredStats(stats);
+      if (filteredStats) {
+        obj.stats = filteredStats;
       }
 
       const slotsNotallowed = blockedSlots[ele.id];

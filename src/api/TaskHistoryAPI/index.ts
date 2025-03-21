@@ -88,11 +88,6 @@ export const getTotalDurationCompletedForGoal = async (goalId: string) => {
   return tasks.reduce((acc, task) => acc + task.duration, 0);
 };
 
-export const getTotalDurationSkippedForGoal = async (goalId: string) => {
-  const tasks = await getAllTasksHistorySkippedEventsForGoal(goalId);
-  return tasks.reduce((acc, task) => acc + task.duration, 0);
-};
-
 const getTasksSinceMonday = (tasks: TaskHistoryItem[]) => {
   const today = new Date();
   const dayOfWeek = today.getDay();
