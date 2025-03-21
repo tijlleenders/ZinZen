@@ -11,7 +11,7 @@ import { addSchedulerResToCache, getSchedulerCachedRes, updateSchedulerCachedRes
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { TCompletedTaskTiming, blockedSlotOfTask } from "@src/models/TaskItem";
+import { blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
 import { t } from "i18next";
 import {
@@ -187,23 +187,11 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const _today = new Date();
   const startDate = convertDateToString(new Date(_today));
   const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
-  const tasksCompletedToday: TCompletedTaskTiming[] = [];
-
-  getAllTasksDoneToday().then((task) => {
-    task.forEach((ele) => {
-      tasksCompletedToday.push({
-        goalid: ele.goalId,
-        start: ele.scheduledStart,
-        deadline: ele.scheduledEnd,
-      });
-    });
-  });
 
   const schedulerInput: ISchedulerInput = {
     startDate,
     endDate,
     goals: [],
-    tasksCompletedToday,
   };
 
   const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();

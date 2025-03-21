@@ -1,4 +1,4 @@
-import { TCompletedTaskTiming, blockedSlotOfTask } from "@src/models/TaskItem";
+import { blockedSlotOfTask } from "@src/models/TaskItem";
 
 export interface ISchedulerOutputSlot {
   goalid: string;
@@ -75,7 +75,6 @@ export interface ISchedulerInput {
   startDate: string;
   endDate: string;
   goals: ISchedulerInputGoal[];
-  tasksCompletedToday: TCompletedTaskTiming[];
 }
 
 export type TBufferValue = { nextBuffer: number; availableBuffer: number };
