@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import {
   IImpossibleTaskOfTheDay,
   IScheduleOfTheDay,
@@ -53,8 +54,12 @@ export const transformIntoSchInputGoals = async (
         title: t(ele.title),
         filters: {},
         createdAt: ele.createdAt,
-        stats,
       };
+
+      // only include stats if there is data to report
+      if (stats.totalDurationCompletedOrSkipped > 0 || stats.tasksCompletedOrSkippedSinceMonday.length > 0) {
+        obj.stats = stats;
+      }
 
       const slotsNotallowed = blockedSlots[ele.id];
       if (ele.duration) obj.minDuration = Number(ele.duration);

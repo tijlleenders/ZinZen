@@ -59,7 +59,7 @@ export interface ISchedulerInputGoal {
   };
   children?: string[];
   createdAt: string;
-  stats: IGoalCompletedStats;
+  stats?: IGoalCompletedStats;
 }
 
 export interface ISchedulerOutputGoal {
