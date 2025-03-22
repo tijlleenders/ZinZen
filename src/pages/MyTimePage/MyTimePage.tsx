@@ -16,9 +16,7 @@ import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { tasksToMarkDoneToday } from "@src/helpers/MyTimeHelper";
 import { Reminders } from "@components/MyTimeComponents/MyTimeline/Reminders/Reminders";
-import { useQuery } from "react-query";
 
 export const MyTimePage = () => {
   const today = new Date();
@@ -27,11 +25,6 @@ export const MyTimePage = () => {
   const { state } = useLocation();
   const [searchParams] = useSearchParams();
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
-
-  const { data: tasksToMarkDone } = useQuery({
-    queryKey: ["tasksToMarkDone"],
-    queryFn: tasksToMarkDoneToday,
-  });
 
   const handleShowTasks = (dayName: string) => {
     if (showTasks.includes(dayName)) {
@@ -81,7 +74,7 @@ export const MyTimePage = () => {
           {showTasks.includes(day) && tasks[day] && tasks[day].scheduled.length > 0 && (
             <div className="MyTime_dayList">
               <Reminders day={day} />
-              <MyTimeline day={day} myTasks={tasks[day]} doneTasks={tasksToMarkDone ?? []} />
+              <MyTimeline day={day} myTasks={tasks[day]} />
             </div>
           )}
         </div>

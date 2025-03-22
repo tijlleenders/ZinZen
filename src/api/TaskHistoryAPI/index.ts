@@ -18,7 +18,6 @@ const createTaskHistoryEvent = (task: ITask, eventType: TaskHistoryEventTypes): 
     scheduledStart: task.start,
     scheduledEnd: task.deadline,
     eventTime: new Date().toISOString(),
-    taskId: task.taskid,
   };
 };
 

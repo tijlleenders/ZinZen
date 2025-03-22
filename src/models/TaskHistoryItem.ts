@@ -7,7 +7,6 @@ export enum TaskHistoryEventTypes {
 
 export interface TaskHistoryItem {
   goalId: string;
-  taskId: string;
   eventType: TaskHistoryEventTypes;
   scheduledStart: string;
   scheduledEnd: string;

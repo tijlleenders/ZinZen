@@ -17,8 +17,6 @@ import { blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
 import { t } from "i18next";
 import {
-  getAllTasksDoneToday,
-  getAllTodaySkippedTasks,
   getTasksCompletedSinceMondayForGoal,
   getTasksSkippedSinceMondayForGoal,
   getTotalDurationCompletedForGoal,
@@ -239,10 +237,4 @@ export const putSchedulerRes = async (code: string, generatedInputId: string, ou
   return code === "expired"
     ? updateSchedulerCachedRes(generatedInputId, output)
     : addSchedulerResToCache(generatedInputId, output);
-};
-
-export const tasksToMarkDoneToday = async () => {
-  const tasksDoneToday = await getAllTasksDoneToday();
-  const tasksSkippedToday = await getAllTodaySkippedTasks();
-  return [...tasksDoneToday, ...tasksSkippedToday];
 };

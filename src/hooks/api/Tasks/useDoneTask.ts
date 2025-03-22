@@ -1,15 +1,16 @@
 import { addTaskCompletedEvent } from "@src/api/TaskHistoryAPI";
 import { ITask } from "@src/Interfaces/Task";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { useSetRecoilState } from "recoil";
-import { displayToast } from "@src/store";
+import { displayToast, lastAction } from "@src/store";
 import archiveTune from "@assets/archive.mp3";
+import { TaskActions } from "@src/constants/actions";
 
 const doneSound = new Audio(archiveTune);
 
 export const useDoneTask = () => {
   const setShowToast = useSetRecoilState(displayToast);
-  const queryClient = useQueryClient();
+  const setLastAction = useSetRecoilState(lastAction);
   const {
     mutate: doneTaskMutation,
     isLoading,
@@ -18,8 +19,8 @@ export const useDoneTask = () => {
   } = useMutation({
     mutationFn: (task: ITask) => addTaskCompletedEvent(task),
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["tasksToMarkDone"] });
       await doneSound.play();
+      setLastAction(TaskActions.TASK_COMPLETED);
     },
     onError: (err) => {
       setShowToast({
