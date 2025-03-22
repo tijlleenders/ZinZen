@@ -71,7 +71,7 @@ export const getAllBlockedTasks = async () => {
   return tasks.reduce((acc, curr) => ({ ...acc, [curr.goalId]: curr.blockedSlots }), {});
 };
 
-export const addBlockedSlot = async (goalId: string, slot: { start: string; end: string }) => {
+export const addBlockedSlot = async (goalId: string, slot: blockedSlotOfTask) => {
   db.transaction("rw", db.taskCollection, async () => {
     await db.taskCollection
       .where("goalId")
