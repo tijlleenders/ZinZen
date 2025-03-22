@@ -38,22 +38,18 @@ const getGoalCompletedStats = async (goalId: string): Promise<IGoalCompletedStat
   };
 };
 
-const getFilteredStats = (stats: IGoalCompletedStats): Partial<IGoalCompletedStats> | undefined => {
-  const statsToInclude: Partial<IGoalCompletedStats> = {};
+const getFilteredStats = (stats: IGoalCompletedStats): IGoalCompletedStats => {
+  const statsToInclude: IGoalCompletedStats = {
+    totalDurationCompleted: 0,
+    tasksCompletedSinceMonday: [],
+    tasksSkippedSinceMonday: [],
+  };
 
-  if (stats.totalDurationCompleted && stats.totalDurationCompleted > 0) {
-    statsToInclude.totalDurationCompleted = stats.totalDurationCompleted;
-  }
+  statsToInclude.totalDurationCompleted = stats.totalDurationCompleted;
+  statsToInclude.tasksCompletedSinceMonday = stats.tasksCompletedSinceMonday;
+  statsToInclude.tasksSkippedSinceMonday = stats.tasksSkippedSinceMonday;
 
-  if (stats.tasksCompletedSinceMonday && stats.tasksCompletedSinceMonday.length > 0) {
-    statsToInclude.tasksCompletedSinceMonday = stats.tasksCompletedSinceMonday;
-  }
-
-  if (stats.tasksSkippedSinceMonday && stats.tasksSkippedSinceMonday.length > 0) {
-    statsToInclude.tasksSkippedSinceMonday = stats.tasksSkippedSinceMonday;
-  }
-
-  return Object.keys(statsToInclude).length > 0 ? statsToInclude : undefined;
+  return statsToInclude;
 };
 
 export const transformIntoSchInputGoals = async (
