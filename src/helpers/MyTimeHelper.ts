@@ -190,7 +190,6 @@ export const getCachedSchedule = async (generatedInputId: string) => {
   }
 
   const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
-
   if (!output) {
     return { code: "expired" };
   }
