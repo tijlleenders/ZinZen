@@ -1,6 +1,5 @@
 /* eslint-disable complexity */
 import {
-  IGoalCompletedStats,
   IImpossibleTaskOfTheDay,
   IScheduleOfTheDay,
   ISchedulerInput,
@@ -16,39 +15,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
 import { t } from "i18next";
-import {
-  getTasksCompletedSinceMondayForGoal,
-  getTasksSkippedSinceMondayForGoal,
-  getTotalDurationCompletedForGoal,
-} from "@src/api/TaskHistoryAPI";
-
-const getGoalCompletedStats = async (goalId: string): Promise<IGoalCompletedStats> => {
-  const [totalDurationCompleted, tasksCompletedSinceMonday, tasksSkippedSinceMonday] = await Promise.all([
-    getTotalDurationCompletedForGoal(goalId),
-    getTasksCompletedSinceMondayForGoal(goalId),
-    getTasksSkippedSinceMondayForGoal(goalId),
-  ]);
-
-  return {
-    totalDurationCompleted,
-    tasksCompletedSinceMonday,
-    tasksSkippedSinceMonday,
-  };
-};
-
-const getFilteredStats = (stats: IGoalCompletedStats): IGoalCompletedStats => {
-  const statsToInclude: IGoalCompletedStats = {
-    totalDurationCompleted: 0,
-    tasksCompletedSinceMonday: [],
-    tasksSkippedSinceMonday: [],
-  };
-
-  statsToInclude.totalDurationCompleted = stats.totalDurationCompleted;
-  statsToInclude.tasksCompletedSinceMonday = stats.tasksCompletedSinceMonday;
-  statsToInclude.tasksSkippedSinceMonday = stats.tasksSkippedSinceMonday;
-
-  return statsToInclude;
-};
+import { getFilteredGoalStats } from "./GoalStatsHelper";
 
 export const transformIntoSchInputGoals = async (
   activeGoals: GoalItem[],
@@ -58,8 +25,6 @@ export const transformIntoSchInputGoals = async (
 
   await Promise.all(
     activeGoals.map(async (ele) => {
-      const stats = await getGoalCompletedStats(ele.id);
-
       const obj: ISchedulerInputGoal = {
         id: ele.id,
         title: t(ele.title),
@@ -67,7 +32,7 @@ export const transformIntoSchInputGoals = async (
         createdAt: ele.createdAt,
       };
 
-      const filteredStats = getFilteredStats(stats);
+      const filteredStats = await getFilteredGoalStats(ele.id);
       if (filteredStats) {
         obj.stats = filteredStats;
       }

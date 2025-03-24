@@ -33,10 +33,15 @@ export interface ISchedulerOutput {
   impossible: IImpossibleTaskOfTheDay[];
 }
 
+export type TaskTimeSlot = {
+  scheduledStartDateTime: string;
+  duration: number;
+};
+
 export interface IGoalCompletedStats {
-  totalDurationCompleted: number;
-  tasksCompletedSinceMonday: { scheduledStartDateTime: string; duration: number }[];
-  tasksSkippedSinceMonday: { scheduledStartDateTime: string; duration: number }[];
+  totalDurationCompleted?: number;
+  tasksCompletedSinceMonday?: TaskTimeSlot[];
+  tasksSkippedSinceMonday?: TaskTimeSlot[];
 }
 
 export interface ISchedulerInputGoal {

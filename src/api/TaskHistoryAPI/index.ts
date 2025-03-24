@@ -1,6 +1,7 @@
 import { db } from "@src/models";
 import { TaskHistoryEventTypes, TaskHistoryItem } from "@src/models/TaskHistoryItem";
 import { ITask } from "@src/Interfaces/Task";
+import { TaskTimeSlot } from "@src/Interfaces/IScheduler";
 
 async function addTaskHistoryItemToDB(task: TaskHistoryItem) {
   try {
@@ -82,9 +83,10 @@ export const getAllTasksHistorySkippedEventsForGoal = async (goalId: string) => 
   return tasks.filter((task) => task.eventType === TaskHistoryEventTypes.SKIPPED);
 };
 
-export const getTotalDurationCompletedForGoal = async (goalId: string) => {
+export const getTotalDurationCompletedForGoal = async (goalId: string): Promise<number | undefined> => {
   const tasks = await getAllTasksHistoryCompletedEventsForGoal(goalId);
-  return tasks.reduce((acc, task) => acc + task.duration, 0);
+  const totalDuration = tasks.reduce((acc, task) => acc + task.duration, 0);
+  return totalDuration > 0 ? totalDuration : undefined;
 };
 
 const getTasksSinceMonday = (tasks: TaskHistoryItem[]) => {
@@ -102,12 +104,14 @@ const getTasksSinceMonday = (tasks: TaskHistoryItem[]) => {
     }));
 };
 
-export const getTasksCompletedSinceMondayForGoal = async (goalId: string) => {
+export const getTasksCompletedSinceMondayForGoal = async (goalId: string): Promise<TaskTimeSlot[] | undefined> => {
   const completedTasks = await getAllTasksHistoryCompletedEventsForGoal(goalId);
-  return getTasksSinceMonday(completedTasks);
+  const tasksSinceMonday = getTasksSinceMonday(completedTasks);
+  return tasksSinceMonday.length > 0 ? tasksSinceMonday : undefined;
 };
 
-export const getTasksSkippedSinceMondayForGoal = async (goalId: string) => {
+export const getTasksSkippedSinceMondayForGoal = async (goalId: string): Promise<TaskTimeSlot[] | undefined> => {
   const skippedTasks = await getAllTasksHistorySkippedEventsForGoal(goalId);
-  return getTasksSinceMonday(skippedTasks);
+  const tasksSinceMonday = getTasksSinceMonday(skippedTasks);
+  return tasksSinceMonday.length > 0 ? tasksSinceMonday : undefined;
 };
