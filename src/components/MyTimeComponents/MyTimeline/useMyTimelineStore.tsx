@@ -4,23 +4,21 @@ import { v4 as uuidv4 } from "uuid";
 
 import archiveTune from "@assets/archive.mp3";
 import { ITask, TaskAction } from "@src/Interfaces/Task";
-import { displayToast, focusTaskTitle, lastAction } from "@src/store";
+import { displayToast, focusTaskTitle } from "@src/store";
 import { displayReschedule } from "@src/store/TaskState";
 import { getGoal } from "@src/api/GoalsAPI";
 import { addTask, getTaskByGoalId } from "@src/api/TasksAPI";
-import { completeTask } from "@src/controllers/TaskDoneTodayController";
-import { addTaskActionEvent } from "@src/api/TaskHistoryAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ILocationState } from "@src/Interfaces";
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { archiveGoal } from "@src/controllers/GoalController";
 import { useQueryClient } from "react-query";
-import { TaskActions } from "@src/constants/actions";
+import { useDoneTask } from "@src/hooks/api/Tasks/useDoneTask";
 
 export const useMyTimelineStore = (day: string) => {
   const navigate = useNavigate();
   const { state }: { state: ILocationState } = useLocation();
-  const setLastAction = useSetRecoilState(lastAction);
+  const { doneTaskMutation } = useDoneTask();
 
   const subGoalsHistory = state?.goalsHistory || [];
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
@@ -62,10 +60,7 @@ export const useMyTimelineStore = (day: string) => {
   };
 
   const handleDoneClick = async (task: ITask) => {
-    await completeTask(task.taskid, task.goalid, task.start, task.deadline);
-    await addTaskActionEvent(task, "completed");
-    await doneSound.play();
-    setLastAction(TaskActions.TASK_COMPLETED);
+    doneTaskMutation(task);
   };
 
   const handleActionClick = async (actionName: TaskAction, task: ITask) => {

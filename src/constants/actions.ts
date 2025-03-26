@@ -11,6 +11,7 @@ export enum GoalActions {
   GOAL_NEW_UPDATES = "goalNewUpdates",
   GOAL_COLAB_REQUEST = "goalColabRequest",
   GOAL_UPDATED = "goalUpdated",
+  NONE = "none",
 }
 
 export enum GoalHintActions {

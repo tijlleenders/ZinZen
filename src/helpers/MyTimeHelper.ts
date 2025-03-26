@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import {
   IImpossibleTaskOfTheDay,
   IScheduleOfTheDay,
@@ -9,69 +10,85 @@ import {
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { addSchedulerResToCache, getSchedulerCachedRes, updateSchedulerCachedRes } from "@src/api/SchedulerOutputCache";
 import { getAllGoals } from "@src/api/GoalsAPI";
-import { getAllTasks, getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
-import { getAllTasksDoneToday } from "@src/api/TasksDoneTodayAPI";
+import { getAllBlockedTasks, adjustNotOnBlocks } from "@src/api/TasksAPI";
 import { GoalItem } from "@src/models/GoalItem";
-import { TCompletedTaskTiming, TaskItem, blockedSlotOfTask } from "@src/models/TaskItem";
+import { blockedSlotOfTask } from "@src/models/TaskItem";
 import { convertDateToString } from "@src/utils";
 import { t } from "i18next";
+import { getFilteredGoalStats } from "./GoalStatsHelper";
 
-export const transformIntoSchInputGoals = (
+export const transformIntoSchInputGoals = async (
   activeGoals: GoalItem[],
   blockedSlots: { [goalid: string]: blockedSlotOfTask[] },
 ) => {
   const inputGoalsArr: ISchedulerInputGoal[] = [];
-  activeGoals.forEach(async (ele) => {
-    const obj: ISchedulerInputGoal = { id: ele.id, title: t(ele.title), filters: {}, createdAt: ele.createdAt };
-    const slotsNotallowed = blockedSlots[ele.id];
-    if (ele.duration) obj.minDuration = Number(ele.duration);
-    if (ele.start) {
-      obj.start = convertDateToString(new Date(ele.start));
-    }
-    if (ele.due) {
-      obj.deadline = convertDateToString(new Date(ele.due));
-    }
-    if (obj.filters) {
-      if (ele.afterTime || ele.afterTime === 0) obj.filters.afterTime = ele.afterTime;
-      if (ele.beforeTime || ele.beforeTime === 0) obj.filters.beforeTime = ele.beforeTime;
-      if (ele.on) {
-        obj.filters.onDays = ele.on.map((day) => day.toLowerCase());
-      }
-    }
-    if (slotsNotallowed && slotsNotallowed.length > 0) {
-      obj.notOn = [...slotsNotallowed];
-    }
-    if (ele.habit) obj.repeat = "weekly";
-    if (ele.timeBudget) {
-      const { perDay, perWeek } = ele.timeBudget;
 
-      const [minPerDay, maxPerDay] = perDay
-        ? perDay.split("-").map((val) => (val !== "" ? Number(val) : undefined))
-        : [undefined, undefined];
-      const [minPerWeek, maxPerWeek] = perWeek
-        ? perWeek.split("-").map((val) => (val !== "" ? Number(val) : undefined))
-        : [undefined, undefined];
-
-      const budget = {
-        minPerDay,
-        maxPerDay,
-        minPerWeek,
-        maxPerWeek,
+  await Promise.all(
+    activeGoals.map(async (ele) => {
+      const obj: ISchedulerInputGoal = {
+        id: ele.id,
+        title: t(ele.title),
+        filters: {},
+        createdAt: ele.createdAt,
       };
 
-      if (Object.values(budget).some((val) => val !== undefined)) {
-        obj.budget = budget;
+      const filteredStats = await getFilteredGoalStats(ele.id);
+      if (filteredStats) {
+        obj.stats = filteredStats;
       }
-    }
-    if (ele.sublist.length > 0) obj.children = ele.sublist;
-    if (ele.afterTime == null && ele.beforeTime == null) {
-      delete obj.filters;
-    }
-    if (Object.keys(obj.filters || {}).length === 0) {
-      delete obj.filters;
-    }
-    inputGoalsArr.push(obj);
-  });
+
+      const slotsNotallowed = blockedSlots[ele.id];
+      if (ele.duration) obj.minDuration = Number(ele.duration);
+      if (ele.start) {
+        obj.start = convertDateToString(new Date(ele.start));
+      }
+      if (ele.due) {
+        obj.deadline = convertDateToString(new Date(ele.due));
+      }
+      if (obj.filters) {
+        if (ele.afterTime || ele.afterTime === 0) obj.filters.afterTime = ele.afterTime;
+        if (ele.beforeTime || ele.beforeTime === 0) obj.filters.beforeTime = ele.beforeTime;
+        if (ele.on) {
+          obj.filters.onDays = ele.on.map((day) => day.toLowerCase());
+        }
+      }
+      if (slotsNotallowed && slotsNotallowed.length > 0) {
+        obj.notOn = [...slotsNotallowed];
+      }
+      if (ele.habit) obj.repeat = "weekly";
+      if (ele.timeBudget) {
+        const { perDay, perWeek } = ele.timeBudget;
+
+        const [minPerDay, maxPerDay] = perDay
+          ? perDay.split("-").map((val) => (val !== "" ? Number(val) : undefined))
+          : [undefined, undefined];
+        const [minPerWeek, maxPerWeek] = perWeek
+          ? perWeek.split("-").map((val) => (val !== "" ? Number(val) : undefined))
+          : [undefined, undefined];
+
+        const budget = {
+          minPerDay,
+          maxPerDay,
+          minPerWeek,
+          maxPerWeek,
+        };
+
+        if (Object.values(budget).some((val) => val !== undefined)) {
+          obj.budget = budget;
+        }
+      }
+      if (ele.sublist.length > 0) obj.children = ele.sublist;
+      if (ele.afterTime == null && ele.beforeTime == null) {
+        delete obj.filters;
+      }
+      if (Object.keys(obj.filters || {}).length === 0) {
+        delete obj.filters;
+      }
+
+      inputGoalsArr.push(obj);
+    }),
+  );
+
   return inputGoalsArr;
 };
 
@@ -151,32 +168,15 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   const _today = new Date();
   const startDate = convertDateToString(new Date(_today));
   const endDate = convertDateToString(new Date(_today.setDate(_today.getDate() + 7)));
-  const tasksCompletedToday: TCompletedTaskTiming[] = [];
-
-  getAllTasksDoneToday().then((task) => {
-    task.forEach((ele) => {
-      tasksCompletedToday.push({
-        goalid: ele.goalId,
-        start: ele.scheduledStart,
-        deadline: ele.scheduledEnd,
-      });
-    });
-  });
 
   const schedulerInput: ISchedulerInput = {
     startDate,
     endDate,
     goals: [],
-    tasksCompletedToday,
   };
-  const dbTasks: { [goalid: string]: TaskItem } = (await getAllTasks()).reduce(
-    (acc, curr) => ({ ...acc, [curr.goalId]: curr }),
-    {},
-  );
-  const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
-  console.log("blockedSlots", blockedSlots);
 
-  const inputGoalsArr: ISchedulerInputGoal[] = transformIntoSchInputGoals(activeGoals, blockedSlots);
+  const blockedSlots: { [goalid: string]: blockedSlotOfTask[] } = await getAllBlockedTasks();
+  const inputGoalsArr: ISchedulerInputGoal[] = await transformIntoSchInputGoals(activeGoals, blockedSlots);
   const adjustedInputGoalsArr = await adjustNotOnBlocks(inputGoalsArr);
   schedulerInput.goals = adjustedInputGoalsArr;
   return { schedulerInput };
@@ -190,7 +190,6 @@ export const getCachedSchedule = async (generatedInputId: string) => {
   }
 
   const { uniqueId, output } = JSON.parse(schedulerCachedRes.value);
-
   if (!output) {
     return { code: "expired" };
   }

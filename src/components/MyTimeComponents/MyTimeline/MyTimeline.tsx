@@ -5,11 +5,10 @@ import React, { useEffect, useState } from "react";
 
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
-import { ITask } from "@src/Interfaces/Task";
+import { ITask, TaskStatusFromScheduler } from "@src/Interfaces/Task";
 import { useTranslation } from "react-i18next";
 
 import "./index.scss";
-import { TasksDoneTodayItem } from "@src/models/TasksDoneTodayItem";
 import { getTimePart } from "@src/utils";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
@@ -26,10 +25,9 @@ interface MyTimelineProps {
     freeHrsOfDay: number;
     scheduledHrs: number;
   };
-  doneTasks: TasksDoneTodayItem[];
 }
 
-export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks }) => {
+export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks }) => {
   const { t } = useTranslation();
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
 
@@ -52,21 +50,23 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks, doneTasks 
         const nextTask = myTasks.scheduled[index + 1];
         const nextStartTime = getTimePart(nextTask?.start);
         const displayEndTime = endTime !== nextStartTime;
-        const markDone = doneTasks.some((doneTask) => doneTask.scheduledTaskId === task.taskid);
         const showTaskOptions = activeTaskId === task.taskid;
+        const isTaskCompleted = task.status === TaskStatusFromScheduler.TaskDone;
+
+        const handleTaskClick = () => {
+          if (isTaskCompleted) {
+            handleOpenGoal(task.goalid);
+          } else {
+            toggleTaskOptions(task.taskid);
+          }
+        };
         return (
           <button
             key={task.taskid}
-            className={`MTL-taskItem simple ${markDone ? "completedTask" : ""}`}
+            className={`MTL-taskItem simple ${isTaskCompleted ? "completedTask" : ""}`}
             type="button"
             style={{ borderLeft: `6px solid ${task.goalColor}` }}
-            onClick={() => {
-              if (markDone) {
-                handleOpenGoal(task.goalid);
-              } else {
-                toggleTaskOptions(task.taskid);
-              }
-            }}
+            onClick={handleTaskClick}
           >
             <GoalTiming
               startTime={startTime}
