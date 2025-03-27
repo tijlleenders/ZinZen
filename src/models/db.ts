@@ -15,7 +15,7 @@ import { dbStoreSchema, syncVersion } from "./dexie";
 import { TaskHistoryItem } from "./TaskHistoryItem";
 import { TasksDoneTodayItem } from "./TasksDoneTodayItem";
 
-export const dexieVersion = 23;
+export const dexieVersion = 25;
 
 const currentVersion = Number(localStorage.getItem(LocalStorageKeys.DEXIE_VERSION) || dexieVersion);
 localStorage.setItem(LocalStorageKeys.DEXIE_VERSION, `${dexieVersion}`);

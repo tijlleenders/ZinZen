@@ -15,10 +15,10 @@ import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import { SharedGoalMessage } from "@src/Interfaces/IContactMessages";
-import { checkAndCleanupDoneTodayCollection } from "@src/controllers/TaskDoneTodayController";
 import { getAllInboxItems } from "@src/api/InboxAPI";
 import { Payload } from "@src/models/InboxItem";
 import { useQuery } from "react-query";
+import { GoalActions, TaskActions } from "@src/constants/actions";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -65,7 +65,7 @@ function useApp() {
         }),
       );
 
-      setLastAction("goalNewUpdates");
+      setLastAction(GoalActions.GOAL_NEW_UPDATES);
     } catch (error) {
       console.error("[useApp] Error processing shared goals:", error);
     }
@@ -148,27 +148,31 @@ function useApp() {
       });
 
       if (sharedGoalsData) {
-        // Process each relId sequentially
-        for (const relId of Object.keys(sharedGoalsData)) {
-          const contactItem = await getContactByRelId(relId);
-          if (contactItem) {
-            // Process all changes for this contact sequentially
-            const changes = sharedGoalsData[relId];
-            for (const change of changes) {
-              try {
-                if (change.type === "shareMessage") {
-                  console.log("change", change);
-                  await handleNewIncomingGoal(change, relId);
-                } else if (["sharer", "suggestion"].includes(change.type)) {
-                  await handleIncomingChanges(change as unknown as Payload, relId);
-                  setLastAction("goalNewUpdates");
-                }
-              } catch (error) {
-                console.error("Error processing change:", error);
-              }
+        // Process all relIds in parallel using Promise.all
+        await Promise.all(
+          Object.keys(sharedGoalsData).map(async (relId) => {
+            const contactItem = await getContactByRelId(relId);
+            if (contactItem) {
+              // Process all changes for this contact in parallel
+              const changes = sharedGoalsData[relId];
+              await Promise.all(
+                changes.map(async (change) => {
+                  try {
+                    if (change.type === "shareMessage") {
+                      console.log("change", change);
+                      await handleNewIncomingGoal(change, relId);
+                    } else if (["sharer", "suggestion"].includes(change.type)) {
+                      await handleIncomingChanges(change as unknown as Payload, relId);
+                      setLastAction(GoalActions.GOAL_NEW_UPDATES);
+                    }
+                  } catch (error) {
+                    console.error("Error processing change:", error);
+                  }
+                }),
+              );
             }
-          }
-        }
+          }),
+        );
       }
     };
     const installId = localStorage.getItem(LocalStorageKeys.INSTALL_ID);
@@ -202,7 +206,6 @@ function useApp() {
 
   useEffect(() => {
     checkAndCleanupTrash();
-    checkAndCleanupDoneTodayCollection();
   }, []);
 
   useEffect(() => {
@@ -234,7 +237,7 @@ function useApp() {
     if (lastRefresh !== today) {
       refreshTaskCollection().then(() => {
         localStorage.setItem(LocalStorageKeys.LAST_REFRESH, today);
-        setLastAction("TaskCollectionRefreshed");
+        setLastAction(TaskActions.TASK_COLLECTION_REFRESHED);
       });
     }
   }, []);

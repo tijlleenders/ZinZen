@@ -8,7 +8,7 @@ import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
 import archiveSound from "@assets/archive.mp3";
 
-import { lastAction, openDevMode, displayConfirmation, displayToast } from "@src/store";
+import { lastAction, displayConfirmation, displayToast } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
 import useGoalActions from "@src/hooks/useGoalActions";
@@ -17,6 +17,7 @@ import { ILocationState } from "@src/Interfaces";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
 
+import { GoalActions } from "@src/constants/actions";
 import ActionDiv from "./ActionDiv";
 
 import "./MyGoalActions.scss";
@@ -36,7 +37,6 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
   const showConfirmation = useRecoilValue(displayConfirmation);
-  const setDevMode = useSetRecoilState(openDevMode);
   const setLastAction = useSetRecoilState(lastAction);
   const ancestors = (state?.goalsHistory || []).map((ele) => ele.goalID);
 
@@ -54,7 +54,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
 
   const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
     await archiveThisGoal(goalToArchive, goalAncestors);
-    setLastAction("goalArchived");
+    setLastAction(GoalActions.GOAL_ARCHIVED);
     const goalTitleElement = document.querySelector(`#goal-${goalToArchive.id} .goal-title`) as HTMLElement;
     if (goalTitleElement) {
       goalTitleElement.style.textDecoration = "line-through";
@@ -67,13 +67,13 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
       await deleteGoalAction(goal);
-      setLastAction("goalDeleted");
+      setLastAction(GoalActions.GOAL_DELETED);
       showMessage("Moved to trash!", "We'll delete it in 7 days.");
     } else if (action === "archive") {
       await handleArchiveGoal(goal, ancestors);
     } else if (action === "colabRequest") {
       await convertSharedWMGoalToColab(goal);
-      setLastAction("goalColabRequest");
+      setLastAction(GoalActions.GOAL_COLAB_REQUEST);
     } else if (action === "move") {
       await handleMove(goal);
     }

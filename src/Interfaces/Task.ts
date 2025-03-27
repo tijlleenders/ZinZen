@@ -1,4 +1,9 @@
+/* eslint-disable no-shadow */
 import { CSSProperties } from "react";
+
+export enum TaskStatusFromScheduler {
+  TaskDone = 1,
+}
 
 export interface ITask {
   taskid: string;
@@ -9,6 +14,7 @@ export interface ITask {
   deadline: string;
   goalColor: string;
   parentGoalId: string;
+  status?: TaskStatusFromScheduler;
 }
 
 export interface ITaskOfDay {
@@ -29,4 +35,5 @@ export enum TaskAction {
   Done = "Done",
   Focus = "Focus",
   Goal = "Goal",
+  Skip = "Skip",
 }

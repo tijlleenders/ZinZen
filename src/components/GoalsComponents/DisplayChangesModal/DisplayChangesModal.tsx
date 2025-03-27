@@ -26,6 +26,7 @@ import {
 import { ChangeAcceptStrategyContext } from "@src/strategies/ChangeAcceptStrategyContext";
 import { ChangeAcceptParams } from "@src/Interfaces/ChangeAccept";
 
+import { GoalActions } from "@src/constants/actions";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
 import IgnoreBtn from "./IgnoreBtn";
@@ -229,7 +230,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
             removeGoalInbox(currentMainGoal.id),
             updateGoal(currentMainGoal.id, { newUpdates: false }),
           ]);
-          setLastAction("GoalChangesSynced");
+          setLastAction(GoalActions.GOAL_CHANGES_SYNCED);
           window.history.back();
           return;
         }

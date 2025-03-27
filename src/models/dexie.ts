@@ -26,7 +26,7 @@ export const dbStoreSchema = {
   impossibleGoalsCollection: "goalId, goalTitle",
   schedulerOutputCacheCollection: "id, key, value",
   taskHistoryCollection: "++id, goalId, eventType, eventTime, scheduledStart, scheduledEnd, duration",
-  tasksDoneTodayCollection: "++id, goalId, scheduledStart, scheduledEnd",
+  tasksDoneTodayCollection: null,
 };
 export const syncVersion = (transaction: Transaction, currentVersion: number) => {
   if (currentVersion < 9) {
@@ -182,7 +182,14 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
     });
   }
   if (currentVersion < 24) {
-    console.log("processing updates for    version");
+    console.log("processing updates for 24th version");
+    const taskHistoryCollection = transaction.table("taskHistoryCollection");
+    taskHistoryCollection.toCollection().modify((taskHistory) => {
+      delete taskHistory.taskId;
+    });
+  }
+  if (currentVersion < 25) {
+    console.log("processing updates for 25th version");
     const goalsCollection = transaction.table("goalsCollection");
     goalsCollection.toCollection().modify((goal) => {
       if (goal.rootGoalId !== undefined) {

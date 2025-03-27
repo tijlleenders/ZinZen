@@ -22,6 +22,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
+import { useQueryClient } from "react-query";
 import useScheduler from "@src/hooks/useScheduler";
 import DefaultInput from "@src/common/DefaultInput";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
@@ -48,6 +49,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     parentData: { parentGoal },
   } = useParentGoalContext();
 
+  const queryClient = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -161,6 +163,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
         });
       }
       await (isEditMode ? updateGoal(getFinalTags(), hintOption) : addGoal(getFinalTags(), hintOption, parentGoal));
+      queryClient.invalidateQueries({ queryKey: ["reminders"] });
     } else {
       setShowToast({
         open: true,

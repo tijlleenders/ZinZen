@@ -6,7 +6,6 @@ import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
 import { deleteAvailableGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
-import { deleteTasksDoneTodayByGoalId } from "../TasksDoneTodayAPI";
 import { deleteTaskHistoryItem } from "../TaskHistoryAPI";
 
 export const addDeletedGoal = async (goal: GoalItem) => {
@@ -175,7 +174,6 @@ export const removeChildrenGoals = async (parentGoalId: string, permanently = fa
   childrenGoals.forEach((goal) => {
     removeChildrenGoals(goal.id, permanently);
     removeGoal(goal, permanently);
-    deleteTasksDoneTodayByGoalId(goal.id);
     deleteTaskHistoryItem(goal.id);
   });
 };
@@ -297,7 +295,6 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
 export const removeGoalWithChildrens = async (goal: GoalItem, permanently = false) => {
   await removeChildrenGoals(goal.id, permanently);
   await removeGoal(goal, permanently);
-  await deleteTasksDoneTodayByGoalId(goal.id);
   await deleteTaskHistoryItem(goal.id);
   if (goal.parentGoalId !== "root") {
     getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
@@ -383,4 +380,14 @@ export const fetchArchivedDescendantGoalByTitle = async (goalTitle: string, pare
   return allDescendantGoals.filter(
     (goal) => goal.archived === "true" && goal.title.toLowerCase().startsWith(searchTitle),
   );
+};
+
+export const getAllReminders = async () => {
+  const goals = await getAllGoals();
+  return goals.filter((goal) => {
+    if (!goal.due || goal.duration) {
+      return false;
+    }
+    return true;
+  });
 };
