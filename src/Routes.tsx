@@ -14,9 +14,11 @@ import AppLayout from "./layouts/AppLayout";
 import { PartnerProvider } from "./contexts/partner-context";
 import { ActiveGoalProvider } from "./contexts/activeGoal-context";
 import useApp from "./hooks/useApp";
+import { useProcessSharedGoalData } from "./hooks/useProcessSharedGoalData";
 
 export const AppRoutes = () => {
   const { isLanguageChosen } = useApp();
+  useProcessSharedGoalData();
   return (
     <Routes>
       {!isLanguageChosen ? (
