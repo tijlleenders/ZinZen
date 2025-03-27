@@ -6,14 +6,12 @@ import { getTheme } from "@src/store/ThemeState";
 import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { createDefaultGoals } from "@src/controllers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
-import { checkAndUpdateGoalNewUpdatesStatus } from "@src/helpers/InboxProcessor";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { updateAllUnacceptedContacts, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
-import { getAllInboxItems } from "@src/api/InboxAPI";
 import { TaskActions } from "@src/constants/actions";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
@@ -28,16 +26,6 @@ function useApp() {
   const [devMode, setDevMode] = useRecoilState(openDevMode);
 
   const confirmationState = useRecoilValue(displayConfirmation);
-
-  useEffect(() => {
-    getAllInboxItems().then((inboxItems) => {
-      inboxItems.forEach((inboxItem) => {
-        if (inboxItem.id !== "root" && Object.keys(inboxItem.changes).length > 0) {
-          checkAndUpdateGoalNewUpdatesStatus(inboxItem.id);
-        }
-      });
-    });
-  }, []);
 
   useEffect(() => {
     const init = async () => {
