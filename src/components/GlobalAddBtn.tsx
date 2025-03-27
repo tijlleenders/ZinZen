@@ -1,5 +1,5 @@
-import React, { ReactNode, useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import React, { ReactNode, useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -18,11 +18,10 @@ import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import useLongPress from "@src/hooks/useLongPress";
 import { useKeyPress } from "@src/hooks/useKeyPress";
 import { moveGoalState } from "@src/store/moveGoalState";
-import { moveGoalHierarchy } from "@src/controllers/GoalController";
-import { displayToast, lastAction } from "@src/store";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { suggestChanges } from "@src/controllers/PartnerController";
+import { useGoalMoveMutation } from "./useGoalMoveMutation";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -60,10 +59,6 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const subGoalsHistory = state?.goalsHistory || [];
 
-  const setToastMessage = useSetRecoilState(displayToast);
-
-  const setLastAction = useSetRecoilState(lastAction);
-
   const {
     parentData: { parentGoal = { id: "root" } },
   } = useParentGoalContext();
@@ -73,7 +68,6 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const themeSelection = useRecoilValue(themeSelectionMode);
   const isAddingBudgetGoalAllowed = useRecoilValue(allowAddingBudgetGoal);
   const [goalToMove, setGoalToMove] = useRecoilState(moveGoalState);
-  const [isDisabled, setIsDisabled] = useState(false);
 
   const enterPressed = useKeyPress("Enter");
   const plusPressed = useKeyPress("+");
@@ -132,9 +126,10 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
 
+  const { moveGoalMutation, isLoading } = useGoalMoveMutation();
+
   const handleMoveGoalHere = async () => {
     if (!goalToMove) return;
-    setIsDisabled(true);
     if (isPartnerModeActive) {
       let rootGoal = goalToMove;
       if (state?.goalsHistory && state?.goalsHistory?.length > 0) {
@@ -147,14 +142,8 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         subGoalsHistory.length,
       );
     } else {
-      await moveGoalHierarchy(goalToMove.id, parentId).then(() => {
-        setToastMessage({ open: true, message: "Goal moved successfully", extra: "" });
-      });
-      setLastAction("goalMoved");
+      moveGoalMutation({ goalId: goalToMove.id, newParentGoalId: parentGoal.id });
     }
-    setGoalToMove(null);
-    setIsDisabled(false);
-    window.history.back();
   };
 
   useEffect(() => {
@@ -182,7 +171,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
             <AddGoalOption
               handleClick={handleMoveGoalHere}
               bottom={144}
-              disabled={!shouldRenderMoveButton || isDisabled}
+              disabled={!shouldRenderMoveButton || isLoading}
             >
               {t("Move here")}
             </AddGoalOption>

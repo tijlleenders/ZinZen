@@ -383,6 +383,7 @@ export const mergeParticipants = (
   return Array.from(mergedParticipants.values());
 };
 
+// we basically send the update to the shared goal
 export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string) => {
   // all thing is perfect here just have to rewrite the logic for sending update if goal is not shared
 
@@ -397,39 +398,42 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     notificationGoalId: newParentGoal?.notificationGoalId || "root",
   };
 
-  // check if goaltomove is already shared with the original participants
+  const originalParticipants = newParentGoal?.participants;
 
-  // send move update
+  try {
+    // For each participant in the new parent goal, check if they're already in the goalToMove
+    await Promise.all(
+      originalParticipants?.map(async (participant) => {
+        const isAlreadyShared = goalToMove.participants.some((p) => p.relId === participant.relId && p.following);
 
-  const isNonSharedGoal = !goalToMove?.participants?.some((p) => p.following);
-  if (isNonSharedGoal) {
-    const goalsHistoryOfNewParent = await getGoalHistoryToRoot(newParentGoalId);
-    const ancestorGoalIdsOfNewParent = goalsHistoryOfNewParent.map((ele) => ele.goalID);
-    await createSharedGoalObjectForSending(updatedGoal, newParentGoalId, ancestorGoalIdsOfNewParent);
-  } else {
-    const ancestors = await getGoalHistoryToRoot(goalId);
-    const ancestorGoalIds = ancestors.map((ele) => ele.goalID);
+        if (isAlreadyShared) {
+          // If already shared, send update to this participant
+          const rootGoal = await findParticipantTopLevelGoal(goalId, participant.relId);
+          if (rootGoal) {
+            const ancestors = await getGoalHistoryToRoot(goalId);
+            const ancestorGoalIds = ancestors.map((ele) => ele.goalID);
 
-    try {
-      await Promise.all(
-        // send updates to participants of the goal to be moved before updating the goal
-        updatedGoal.participants.map(async (sub) => {
-          const rootGoal = await findParticipantTopLevelGoal(goalId, sub.relId);
-          sendUpdatesToSubscriber(sub, rootGoal?.id || goalId, "modifiedGoals", [
-            {
-              level: ancestorGoalIds.length,
-              goal: {
-                ...updatedGoal,
-                parentGoalId: newParentGoalId,
-                participants: [],
+            await sendUpdatesToSubscriber(participant, rootGoal.id, "modifiedGoals", [
+              {
+                level: ancestorGoalIds.length,
+                goal: {
+                  ...updatedGoal,
+                  parentGoalId: newParentGoalId,
+                  participants: [],
+                },
               },
-            },
-          ]);
-        }),
-      );
-    } catch (error) {
-      console.error("[moveGoalHierarchy] Error sending move updates:", error);
-    }
+            ]);
+          }
+        } else {
+          // If not shared, create a new shared goal object for this participant
+          const goalsHistoryOfNewParent = await getGoalHistoryToRoot(newParentGoalId);
+          const ancestorGoalIdsOfNewParent = goalsHistoryOfNewParent.map((ele) => ele.goalID);
+          await createSharedGoalObjectForSending(updatedGoal, newParentGoalId, ancestorGoalIdsOfNewParent);
+        }
+      }) || [],
+    );
+  } catch (error) {
+    console.error("[moveGoalHierarchy] Error handling participant updates:", error);
   }
 
   try {
