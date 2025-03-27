@@ -385,12 +385,70 @@ export const mergeParticipants = (
 
 // we basically send the update to the shared goal
 export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string) => {
-  // all thing is perfect here just have to rewrite the logic for sending update if goal is not shared
-
   const goalToMove = await getGoal(goalId);
   const newParentGoal = await getGoal(newParentGoalId);
 
   if (!goalToMove) return;
+
+  // Special case: Moving to root
+  if (newParentGoalId === "root") {
+    try {
+      // Update the goal to be at root level
+      await updateGoal(goalToMove.id, {
+        parentGoalId: "root",
+        notificationGoalId: goalToMove.id, // When moving to root, the goal becomes its own notification root
+      });
+
+      // Remove from old parent's sublist
+      const oldParentId = goalToMove.parentGoalId;
+      if (oldParentId !== "root") {
+        await removeGoalFromParentSublist(goalToMove.id, oldParentId);
+      }
+
+      // Update notificationGoalId for all descendants
+      const descendants = await getAllDescendants(goalId);
+      if (descendants.length > 0) {
+        await Promise.all(
+          descendants.map((descendantGoal) => {
+            return updateGoal(descendantGoal.id, {
+              notificationGoalId: goalToMove.id,
+            });
+          }),
+        );
+      }
+
+      // Send updates to all participants
+      await Promise.all(
+        goalToMove.participants.map(async (participant) => {
+          if (participant.following) {
+            const rootGoal = await findParticipantTopLevelGoal(goalId, participant.relId);
+            if (rootGoal) {
+              const ancestors = await getGoalHistoryToRoot(goalId);
+              const ancestorGoalIds = ancestors.map((ele) => ele.goalID);
+
+              await sendUpdatesToSubscriber(participant, rootGoal.id, "modifiedGoals", [
+                {
+                  level: ancestorGoalIds.length,
+                  goal: {
+                    ...goalToMove,
+                    parentGoalId: "root",
+                    notificationGoalId: goalToMove.id,
+                    participants: [],
+                  },
+                },
+              ]);
+            }
+          }
+        }),
+      );
+
+      console.log("[moveGoalHierarchy] Successfully moved goal to root level");
+      return;
+    } catch (error) {
+      console.error("[moveGoalHierarchy] Error moving goal to root:", error);
+      return;
+    }
+  }
 
   // update participants
   const updatedGoal = {
