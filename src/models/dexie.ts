@@ -27,6 +27,7 @@ export const dbStoreSchema = {
   schedulerOutputCacheCollection: "id, key, value",
   taskHistoryCollection: "++id, goalId, eventType, eventTime, scheduledStart, scheduledEnd, duration",
   tasksDoneTodayCollection: null,
+  sharedGoalMetadataCollection: "id, parentGoalId",
 };
 export const syncVersion = (transaction: Transaction, currentVersion: number) => {
   if (currentVersion < 9) {
