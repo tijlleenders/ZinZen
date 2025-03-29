@@ -15,6 +15,7 @@ import {
 } from "@src/api/GoalsAPI";
 import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
+import { deleteSharedGoalMetadata } from "@src/api/SharedGoalNotMoved";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
 export const inheritParticipants = (parentGoal: GoalItem) => {
@@ -442,6 +443,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
         }),
       );
 
+      await deleteSharedGoalMetadata(goalId);
       console.log("[moveGoalHierarchy] Successfully moved goal to root level");
       return;
     } catch (error) {
@@ -523,6 +525,8 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
         }),
       );
     }
+
+    await deleteSharedGoalMetadata(goalId);
   } catch (error) {
     console.error("[moveGoalHierarchy] Error updating goal relationships:", error);
   }

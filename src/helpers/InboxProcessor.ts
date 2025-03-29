@@ -256,10 +256,13 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
 
     if (!newParentGoal) {
       // handle the case where the new parent goal is not found
+      // so if new parent goal is not found, then we need to move the goal to the root goal
+      finalChanges.parentGoalId = "root";
+      finalChanges.notificationGoalId = goal.id;
     }
 
     // update participants
-    finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants);
+    finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants ?? []);
 
     // update goal relationships
     await Promise.all([

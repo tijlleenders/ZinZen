@@ -1,4 +1,5 @@
 import { getContactByRelId } from "@src/api/ContactsAPI";
+import { createSharedGoalMetadata } from "@src/api/SharedGoalNotMoved";
 import { addSharedWMGoal, getSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { GoalActions } from "@src/constants/actions";
 import { handleIncomingChanges } from "@src/helpers/InboxProcessor";
@@ -31,13 +32,15 @@ export const useProcessSharedGoalData = () => {
     },
   });
 
+  console.log("sharedGoalsData", sharedGoalsData);
+
   const handleNewIncomingGoal = async (ele: SharedGoalMessage, relId: string) => {
     const { levelGoalsNode } = ele;
 
     try {
       await Promise.all(
         levelGoalsNode.map(async (goalNode) => {
-          const { goals } = goalNode;
+          const { goals, parentId: tempParentGoalId } = goalNode;
           await Promise.all(
             goals.map(async (goal) => {
               try {
@@ -54,6 +57,7 @@ export const useProcessSharedGoalData = () => {
                   });
                 } else {
                   await addSharedWMGoal(goal, relId);
+                  await createSharedGoalMetadata(goal.id, tempParentGoalId);
                 }
               } catch (error) {
                 console.error("[handleNewIncomingGoal] Error processing goal:", error);

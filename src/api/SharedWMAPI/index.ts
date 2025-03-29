@@ -2,8 +2,9 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { addGoal } from "../GoalsAPI";
+import { addGoal, getGoalById, updateGoal } from "../GoalsAPI";
 import { getContactByRelId } from "../ContactsAPI";
+import { getSharedGoalMetadataByGoalId } from "../SharedGoalNotMoved";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -170,22 +171,50 @@ export const removeSharedWMGoalWithChildrens = async (goal: GoalItem) => {
   await removeSharedWMGoal(goal);
 };
 
-export const transferToMyGoals = async (id: string) => {
+export const transferChildrenGoalsToMyGoals = async (id: string) => {
   const childrenGoals = await getSharedWMChildrenGoals(id);
+
   if (childrenGoals.length === 0) {
     return;
   }
-  childrenGoals.forEach((goal) => {
-    transferToMyGoals(goal.id);
-    addGoal(goal).then(async () => removeSharedWMGoal(goal));
+
+  childrenGoals.forEach(async (goal) => {
+    transferChildrenGoalsToMyGoals(goal.id);
+    const goalNotMoved = await getSharedGoalMetadataByGoalId(goal.id);
+
+    if (goalNotMoved) {
+      try {
+        const goalAlreadyExists = await getGoalById(goal.id);
+
+        if (goalAlreadyExists) {
+          try {
+            await updateGoal(goal.id, {
+              ...goal,
+              parentGoalId: goal.parentGoalId,
+            });
+          } catch (error) {
+            await addGoal(goal);
+          }
+        } else {
+          await addGoal(goal);
+        }
+
+        await removeSharedWMGoal(goal);
+      } catch (err) {
+        console.error(`[transferToMyGoals] Error processing goal ${goal.id}:`, err);
+      }
+    }
   });
 };
 
 export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
-  await transferToMyGoals(goal.id)
+  // first transfer all children goals to my goals
+  await transferChildrenGoalsToMyGoals(goal.id)
     .then(async () => {
+      // then add the main goal to my goals
       addGoal({ ...goal, typeOfGoal: "shared" })
         .then(async () => {
+          // then remove the shared goal
           removeSharedWMGoal(goal);
         })
         .catch((err) => console.log(err));

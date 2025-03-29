@@ -325,7 +325,7 @@ export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false
     if (goal) {
       // Initialize level if not exists
       if (!levelMap.has(level)) {
-        levelMap.set(level, { parentId: goal.id === id ? "root" : goal.parentGoalId, goals: [] });
+        levelMap.set(level, { parentId: goal.parentGoalId, goals: [] });
       }
 
       // Add goal to current level

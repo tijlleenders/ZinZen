@@ -129,9 +129,9 @@ const useGoalActions = () => {
       ...goalNode,
       goals: goalNode.goals.map((goalItem) => ({
         ...goalItem,
-        participants: [],
-        parentGoalId: goalItem.id === goal.id ? "root" : goalItem.parentGoalId,
-        notificationGoalId: goal.id,
+        participants: [], // remove participants before sharing
+        parentGoalId: goalItem.id === goal.id ? "root" : goalItem.parentGoalId, // if we want to share a subgoal, then we need to set the parentGoalId to the root goal
+        notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId, // if we want to share a subgoal, then we need to set the notificationGoalId to the goal id
       })),
     }));
 

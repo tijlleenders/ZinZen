@@ -54,7 +54,7 @@ function useApp() {
                     ...goalItem,
                     participants: [],
                     parentGoalId: goalItem.id === goal.id ? "root" : goalItem.parentGoalId,
-                    notificationGoalId: goal.id,
+                    notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId,
                   })),
                 }));
                 return shareGoalWithContact(relId, validGoals).then(async () => {
