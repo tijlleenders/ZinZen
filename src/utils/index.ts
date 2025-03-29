@@ -43,8 +43,6 @@ export async function createGroupRequest(url: string, body: object | null = null
   }
 }
 
-export const myNameSpace = "c95256dc-aa03-11ed-afa1-0242ac120002";
-
 export const getJustDate = (fullDate: Date) => new Date(fullDate.toDateString());
 
 export const truncateContent = (content: string, maxLength = 20) => {
@@ -123,7 +121,7 @@ export function inheritParentProps(newGoal: GoalItem, parentGoal: GoalItem) {
     goal.due = parentGoal.due;
   }
 
-  goal.rootGoalId = parentGoal.rootGoalId;
+  goal.notificationGoalId = parentGoal.notificationGoalId;
   goal.typeOfGoal = parentGoal.typeOfGoal;
   return goal;
 }

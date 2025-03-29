@@ -120,6 +120,7 @@
   "addHint": "Add hint",
   "deleteHint": "Delete hint",
   "reportHint": "Report hint",
+  "moveGoal": "Move goal",
   "confirm": "Confirm",
   "cancel": "Cancel",
   "duration": "Duration",
@@ -159,6 +160,10 @@
     "reportHint": {
       "header": "Do you want to report this hint?",
       "note": "You will be notified when it's reported."
+    },
+    "move": {
+      "header": "Do you want to move this goal?",
+      "note": "<ul><li>Navigate to the new location.</li><li>Press the + button to move.</li></ul>"
     }
   },
   "collaboration": {

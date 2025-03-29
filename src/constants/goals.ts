@@ -62,6 +62,9 @@ export const getConfirmButtonText = (actionName: string) => {
     case "reportHint":
       confirmButtonText = "reportHint";
       break;
+    case "move":
+      confirmButtonText = "moveGoal";
+      break;
     default:
   }
   return confirmButtonText;

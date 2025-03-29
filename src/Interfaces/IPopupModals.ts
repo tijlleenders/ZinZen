@@ -9,6 +9,7 @@ export interface TConfirmActionState {
     addHint: boolean;
     deleteHint: boolean;
     reportHint: boolean;
+    move: boolean;
   };
   collaboration: {
     colabRequest: boolean;
@@ -20,7 +21,7 @@ export interface TConfirmActionState {
 
 export interface TConfirmGoalAction {
   actionCategory: "goal";
-  actionName: "archive" | "delete" | "shareAnonymously" | "shareWithOne" | "restore";
+  actionName: "archive" | "delete" | "shareAnonymously" | "shareWithOne" | "restore" | "move";
 }
 
 export interface TConfirmColabGoalAction {

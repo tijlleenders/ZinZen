@@ -14,11 +14,10 @@ type PartnerContext = {
   error: unknown;
 };
 
-export const PartnerContext = createContext<PartnerContext | undefined>(undefined);
+const PartnerContext = createContext<PartnerContext | undefined>(undefined);
 
 export const PartnerProvider = ({ children }: { children: ReactNode }) => {
   const { partnerId: partnerIdFromUrl } = useParams();
-
   const cachedPartnerId = localStorage.getItem(LocalStorageKeys.CURRENT_PARTNER);
   const partnerId = partnerIdFromUrl || cachedPartnerId || "";
 
