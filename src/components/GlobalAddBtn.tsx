@@ -21,7 +21,7 @@ import { moveGoalState } from "@src/store/moveGoalState";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { suggestChanges } from "@src/controllers/PartnerController";
-import { useGoalMoveMutation } from "./useGoalMoveMutation";
+import { useGoalMoveMutation } from "./MoveGoal/useGoalMoveMutation";
 
 interface AddGoalOptionProps {
   children: ReactNode;

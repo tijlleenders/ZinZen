@@ -1,8 +1,8 @@
-import { moveGoalHierarchy } from "@src/controllers/GoalController";
 import { useMutation } from "react-query";
 import { useSetRecoilState } from "recoil";
 import { displayToast, lastAction } from "@store";
 import { moveGoalState } from "@src/store/moveGoalState";
+import { moveGoalHierarchy } from "./MoveGoal.helper";
 
 type MoveGoalParams = {
   goalId: string;
