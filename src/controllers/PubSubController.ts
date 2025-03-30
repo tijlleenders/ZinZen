@@ -4,13 +4,15 @@ import { getGoal, getParticipantsOfGoals } from "@src/api/GoalsAPI";
 import { getParticipantsOfDeletedGoal } from "@src/api/TrashAPI";
 import { getHistoryUptoGoal } from "../helpers/GoalProcessor";
 import { findParticipantTopLevelGoal } from "./GoalController";
+import { findMostRecentSharedAncestor } from "../components/MoveGoal/MoveGoal.helper";
 
 export const sendUpdatedGoal = async (
   goalId: string,
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
-  changeType: "modifiedGoals" | "moved" = "modifiedGoals",
+  changeType: "modifiedGoals",
+  isMoveOperation = false,
 ) => {
   const goal = await getGoal(goalId);
   if (!goal) {
@@ -28,8 +30,23 @@ export const sendUpdatedGoal = async (
     filteredSubscribers.forEach(async ({ sub }) => {
       const rootGoal = await findParticipantTopLevelGoal(goalId, sub.relId);
       if (!rootGoal?.id) return;
+
+      // If this is a move operation and parent ID has changed, find the most recent shared ancestor
+      let parentGoalId = changes.parentGoalId;
+      if (isMoveOperation) {
+        parentGoalId = await findMostRecentSharedAncestor(goalId, sub.relId);
+      }
+
       sendUpdatesToSubscriber(sub, rootGoal.id, changeType, [
-        { level: ancestorGoalIds.length, goal: { ...changes, timestamp: Date.now(), participants: [] } },
+        {
+          level: ancestorGoalIds.length,
+          goal: {
+            ...changes,
+            parentGoalId,
+            timestamp: Date.now(),
+            participants: [],
+          },
+        },
       ])
         .then(() => console.log(`[sendUpdatedGoal] Update sent successfully to ${sub.relId}`))
         .catch((error) => console.error(`[sendUpdatedGoal] Error sending update to ${sub.relId}:`, error));

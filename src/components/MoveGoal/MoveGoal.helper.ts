@@ -28,7 +28,7 @@ import { GoalItem, IParticipant } from "@src/models/GoalItem";
  * const ancestorId = await findMostRecentSharedAncestor("goalC", "user1");
  * console.log(ancestorId); // Output: "goalA"
  */
-const findMostRecentSharedAncestor = async (goalId: string, participantRelId: string): Promise<string> => {
+export const findMostRecentSharedAncestor = async (goalId: string, participantRelId: string): Promise<string> => {
   let currentGoalId = goalId;
 
   while (currentGoalId !== "root") {

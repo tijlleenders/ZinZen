@@ -162,6 +162,17 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     const goalId = "goal" in changes[0] ? changes[0].goal.id : changes[0].id;
     const localGoal = await getGoal(goalId);
 
+    // ignore the changes if incoming parentId and local parentId are the same
+    if (changeType === "modifiedGoals") {
+      if ("goal" in changes[0]) {
+        const currentGoal = await getGoal(changes[0].goal.id);
+        if (currentGoal && currentGoal.parentGoalId === changes[0].goal.parentGoalId) {
+          console.log("Ignoring change - parent goal ID is the same");
+          return;
+        }
+      }
+    }
+
     // handle the case where goal is not found in local db
     // maybe already moved to other place or not yet added to local db
     if (!localGoal) {
@@ -262,7 +273,7 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     }
 
     // update participants
-    finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants ?? []);
+    //finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants ?? []);
 
     // update goal relationships
     await Promise.all([
@@ -271,7 +282,7 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     ]);
 
     finalChanges.parentGoalId = newParentGoalId;
-    finalChanges.notificationGoalId = newParentGoal?.notificationGoalId ?? goal.id;
+    // finalChanges.notificationGoalId = newParentGoal?.notificationGoalId ?? goal.id;
   }
 
   Object.keys(prettierVersion).forEach((ele) => {
@@ -297,19 +308,19 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
   });
 
   // update descendants if it was a move operation
-  if (goal.parentGoalId !== finalChanges.parentGoalId) {
-    const descendants = await getAllDescendants(goal.id);
-    if (descendants.length > 0) {
-      await Promise.all(
-        descendants.map((descendant) => {
-          return updateGoal(descendant.id, {
-            notificationGoalId: finalChanges.notificationGoalId as string,
-            participants: mergeParticipants(descendant.participants, finalChanges.participants as IParticipant[]),
-          });
-        }),
-      );
-    }
-  }
+  // if (goal.parentGoalId !== finalChanges.parentGoalId) {
+  //   const descendants = await getAllDescendants(goal.id);
+  //   if (descendants.length > 0) {
+  //     await Promise.all(
+  //       descendants.map((descendant) => {
+  //         return updateGoal(descendant.id, {
+  //           notificationGoalId: finalChanges.notificationGoalId as string,
+  //           //participants: mergeParticipants(descendant.participants, finalChanges.participants as IParticipant[]),
+  //         });
+  //       }),
+  //     );
+  //   }
+  // }
 };
 
 export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {

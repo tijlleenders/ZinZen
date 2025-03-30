@@ -130,9 +130,11 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const handleMoveGoalHere = async () => {
     if (!goalToMove) return;
+    // TODO: try to simplify this logic later
     if (isPartnerModeActive) {
       let rootGoal = goalToMove;
       if (state?.goalsHistory && state?.goalsHistory?.length > 0) {
+        // TODO: understand this later
         const rootGoalId = state.goalsHistory[0].goalID;
         rootGoal = (await getSharedWMGoalById(rootGoalId)) || goalToMove;
       }

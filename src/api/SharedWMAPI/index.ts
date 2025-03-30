@@ -116,7 +116,7 @@ export const getRootGoalsOfPartner = async (relId: string) => {
 
 export const updateSharedWMGoal = async (id: string, changes: Partial<GoalItem>) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
-    await db.sharedWMCollection.update(id, changes).then((updated) => updated);
+    await db.sharedWMCollection.update(id, { ...changes, typeOfGoal: "shared" }).then((updated) => updated);
   }).catch((e) => {
     console.log(e.stack || e);
   });
