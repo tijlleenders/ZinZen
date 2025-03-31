@@ -3,9 +3,9 @@
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { addGoal, getGoalById, updateGoal } from "../GoalsAPI";
+import { addGoal, addIntoSublist, getGoalById, updateGoal } from "../GoalsAPI";
 import { getContactByRelId } from "../ContactsAPI";
-import { getSharedGoalMetadataByGoalId } from "../SharedGoalNotMoved";
+import { getSharedGoalMetadataByGoalId, isGoalMovedToOtherPlace } from "../SharedGoalNotMoved";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
@@ -181,39 +181,44 @@ export const transferChildrenGoalsToMyGoals = async (id: string) => {
 
   childrenGoals.forEach(async (goal) => {
     transferChildrenGoalsToMyGoals(goal.id);
-    const goalNotMoved = await getSharedGoalMetadataByGoalId(goal.id);
+    try {
+      const goalAlreadyExists = await getGoalById(goal.id);
 
-    if (goalNotMoved) {
-      try {
-        const goalAlreadyExists = await getGoalById(goal.id);
-
-        if (goalAlreadyExists) {
-          try {
-            await updateGoal(goal.id, {
-              ...goal,
-              parentGoalId: goal.parentGoalId,
-            });
-          } catch (error) {
-            await addGoal(goal);
-          }
-        } else {
+      if (goalAlreadyExists) {
+        try {
+          await updateGoal(goal.id, {
+            ...goal,
+            parentGoalId: goal.parentGoalId,
+          });
+        } catch (error) {
           await addGoal(goal);
         }
-
-        await removeSharedWMGoal(goal);
-      } catch (err) {
-        console.error(`[transferToMyGoals] Error processing goal ${goal.id}:`, err);
+      } else {
+        await addGoal(goal);
       }
+
+      await removeSharedWMGoal(goal);
+    } catch (err) {
+      console.error(`[transferToMyGoals] Error processing goal ${goal.id}:`, err);
     }
   });
 };
 
 export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
+  const getSharedGoalMetadata = await getSharedGoalMetadataByGoalId(goal.id);
+  if (!getSharedGoalMetadata) {
+    return;
+  }
+
+  const { sharedAncestorId } = getSharedGoalMetadata;
+
+  const sharedAncestorGoal = await getGoalById(sharedAncestorId);
+
   // first transfer all children goals to my goals
   await transferChildrenGoalsToMyGoals(goal.id)
     .then(async () => {
       // then add the main goal to my goals
-      addGoal({ ...goal, typeOfGoal: "shared" })
+      addGoal({ ...goal, typeOfGoal: "shared", parentGoalId: sharedAncestorGoal ? sharedAncestorId : "root" })
         .then(async () => {
           // then remove the shared goal
           removeSharedWMGoal(goal);
@@ -221,6 +226,10 @@ export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
         .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
+
+  if (sharedAncestorId !== "root" && sharedAncestorGoal) {
+    await addIntoSublist(sharedAncestorId, [goal.id]);
+  }
 };
 
 export const updateSharedWMParentSublist = async (oldParentId: string, newParentId: string, goalId: string) => {

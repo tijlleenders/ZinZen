@@ -13,6 +13,7 @@ import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import { TaskActions } from "@src/constants/actions";
+import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -47,6 +48,7 @@ function useApp() {
                 if (!goal) {
                   return null;
                 }
+                const sharedAncestorId = await findMostRecentSharedAncestor(goal.parentGoalId, relId);
                 const goalWithChildrens = await getAllLevelGoalsOfId(goalId, true);
                 const validGoals = goalWithChildrens.map((goalNode) => ({
                   ...goalNode,
@@ -57,7 +59,7 @@ function useApp() {
                     notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId,
                   })),
                 }));
-                return shareGoalWithContact(relId, validGoals).then(async () => {
+                return shareGoalWithContact(relId, validGoals, sharedAncestorId).then(async () => {
                   await Promise.all(
                     validGoals.map(async (goalNode) => {
                       goalNode.goals.map(async (goalItem) => {

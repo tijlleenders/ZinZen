@@ -20,6 +20,7 @@ import { removeBackTicks } from "@src/utils/patterns";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { GoalActions } from "@src/constants/actions";
+import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 
 const pageCrumple = new Audio(pageCrumplingSound);
 const addGoalSound = new Audio(plingSound);
@@ -124,6 +125,8 @@ const useGoalActions = () => {
     // Fetch goal hierarchy
     const goalWithChildrens: ILevelGoals[] = await getAllLevelGoalsOfId(goal.id, true);
 
+    const sharedAncestorId = await findMostRecentSharedAncestor(goal.parentGoalId, relId);
+
     // Create modified copies of all goals with appropriate sharing properties
     const updatedGoalWithChildrens = goalWithChildrens.map((goalNode) => ({
       ...goalNode,
@@ -136,7 +139,7 @@ const useGoalActions = () => {
     }));
 
     // Share the goals with the contact
-    await shareGoalWithContact(relId, updatedGoalWithChildrens);
+    await shareGoalWithContact(relId, updatedGoalWithChildrens, sharedAncestorId);
 
     try {
       // Update sharing status for all goals

@@ -23,13 +23,13 @@ export const acceptRelationship = async () => {
   return res;
 };
 
-export const shareGoalWithContact = async (relId: string, levelGoalsNode: ILevelGoals[]) => {
+export const shareGoalWithContact = async (relId: string, levelGoalsNode: ILevelGoals[], sharedAncestorId: string) => {
   const url = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
   const res = await createContactRequest(url, {
     method: "shareMessage",
     installId: getInstallId(),
     relId,
-    event: { type: "shareMessage", levelGoalsNode },
+    event: { type: "shareMessage", levelGoalsNode, sharedAncestorId },
   });
   return res;
 };
