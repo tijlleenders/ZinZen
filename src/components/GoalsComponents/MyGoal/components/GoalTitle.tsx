@@ -8,6 +8,7 @@ import { useTelHandler, useUrlHandler } from "../GoalTitleHandlers";
 interface GoalTitleProps {
   goal: GoalItem;
   isImpossible: boolean;
+  onTitleClick?: (e: React.MouseEvent) => void;
 }
 
 const UrlComponent = ({
@@ -15,11 +16,15 @@ const UrlComponent = ({
   goalId,
   urlIndex,
   isCodeSnippet,
+  copyCode,
+  title,
 }: {
   url: string;
   goalId: string;
   urlIndex: number;
   isCodeSnippet: boolean;
+  copyCode: (code: string) => void;
+  title: string;
 }) => {
   const TelHandlerComponent = useTelHandler(url);
   const UrlHandlerComponent = useUrlHandler(url);
@@ -29,12 +34,30 @@ const UrlComponent = ({
     return <TelHandlerComponent key={`${goalId}-tel-${urlIndex}`} />;
   }
   if (isCodeSnippet) {
-    return <span key={`${goalId}-url-${urlIndex}`}>{displayText}</span>;
+    return (
+      <span
+        onClick={(e) => {
+          e.stopPropagation();
+          copyCode(title);
+        }}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.stopPropagation();
+            copyCode(title);
+          }
+        }}
+        key={`${goalId}-url-${urlIndex}`}
+      >
+        {displayText}
+      </span>
+    );
   }
   return <UrlHandlerComponent key={`${goalId}-url-${urlIndex}`} />;
 };
 
-const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
+const GoalTitle = ({ goal, isImpossible, onTitleClick }: GoalTitleProps) => {
   const { t } = useTranslation();
   const { copyCode } = useGoalActions();
   const { id, title } = goal;
@@ -43,18 +66,19 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
   const { urlsWithIndexes, replacedString } = replaceUrlsWithText(t(title));
   const textParts = replacedString.split(/(zURL-\d+)/g);
 
-  const handleClick = () => {
-    if (isCodeSnippet) {
-      copyCode(title);
+  const handleClick = (e: React.MouseEvent) => {
+    // Only handle clicks if we're not clicking on a link or code snippet
+    if (!(e.target as HTMLElement).closest("button") && !isCodeSnippet) {
+      onTitleClick?.(e);
     }
   };
 
-  const renderTextPart = (part: string) => {
+  const renderTextPart = (part: string, index: number) => {
     const cleanPart = removeBackTicks(part);
     const match = cleanPart.match(/zURL-(\d+)/);
 
     if (!match) {
-      return <span key={`${id}-text-${part}`}>{cleanPart}</span>;
+      return <span key={`${id}-text-${part}-${index}`}>{cleanPart}</span>;
     }
 
     const urlIndex = parseInt(match[1], 10);
@@ -67,14 +91,16 @@ const GoalTitle = ({ goal, isImpossible }: GoalTitleProps) => {
         goalId={id}
         urlIndex={urlIndex}
         isCodeSnippet={isCodeSnippet}
+        copyCode={copyCode}
+        title={title}
       />
     );
   };
 
   return (
-    <div aria-hidden className="goal-title" onClick={isCodeSnippet ? handleClick : undefined}>
+    <div aria-hidden className="goal-title" onClick={handleClick} role="button" tabIndex={0}>
       {isImpossible && "! "}
-      {textParts.map(renderTextPart)}
+      {textParts.map((part, index) => renderTextPart(part, index))}
     </div>
   );
 };
