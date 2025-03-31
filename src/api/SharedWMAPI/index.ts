@@ -207,29 +207,26 @@ export const transferChildrenGoalsToMyGoals = async (id: string) => {
 export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
   const getSharedGoalMetadata = await getSharedGoalMetadataByGoalId(goal.id);
   if (!getSharedGoalMetadata) {
-    return;
+    return null;
   }
 
   const { sharedAncestorId } = getSharedGoalMetadata;
-
   const sharedAncestorGoal = await getGoalById(sharedAncestorId);
 
-  // first transfer all children goals to my goals
-  await transferChildrenGoalsToMyGoals(goal.id)
-    .then(async () => {
-      // then add the main goal to my goals
-      addGoal({ ...goal, typeOfGoal: "shared", parentGoalId: sharedAncestorGoal ? sharedAncestorId : "root" })
-        .then(async () => {
-          // then remove the shared goal
-          removeSharedWMGoal(goal);
-        })
-        .catch((err) => console.log(err));
-    })
-    .catch((err) => console.log(err));
+  await transferChildrenGoalsToMyGoals(goal.id);
+
+  await addGoal({ ...goal, typeOfGoal: "shared", parentGoalId: sharedAncestorGoal ? sharedAncestorId : "root" });
+
+  await removeSharedWMGoal(goal);
 
   if (sharedAncestorId !== "root" && sharedAncestorGoal) {
     await addIntoSublist(sharedAncestorId, [goal.id]);
   }
+
+  return {
+    convertedGoal: goal,
+    parentGoal: sharedAncestorGoal || "root",
+  };
 };
 
 export const updateSharedWMParentSublist = async (oldParentId: string, newParentId: string, goalId: string) => {

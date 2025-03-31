@@ -104,6 +104,7 @@ const useGoalActions = () => {
   };
 
   const addGoal = async (newGoal: GoalItem, hintOption: boolean, parentGoal?: GoalItem) => {
+    // handle partner mode
     if (isPartnerModeActive && subGoalsHistory.length) {
       const notificationGoalId = subGoalsHistory[0].goalID;
       const rootGoal = await getSharedWMGoalById(notificationGoalId);
@@ -112,6 +113,7 @@ const useGoalActions = () => {
       }
       suggestNewGoal(newGoal, parentGoal, rootGoal, subGoalsHistory.length);
     } else {
+      // handle regular mode
       await createGoal(newGoal, newGoal.parentGoalId, ancestors, hintOption);
       if (!parentGoal && newGoal.title === "magic") {
         setDevMode(true);
