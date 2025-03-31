@@ -11,7 +11,6 @@ export const sendUpdatedGoal = async (
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
-  changeType: "modifiedGoals",
   isMoveOperation = false,
 ) => {
   const goal = await getGoal(goalId);
@@ -32,17 +31,15 @@ export const sendUpdatedGoal = async (
       if (!rootGoal?.id) return;
 
       // If this is a move operation and parent ID has changed, find the most recent shared ancestor
-      let parentGoalId = changes.parentGoalId;
-      if (isMoveOperation) {
-        parentGoalId = await findMostRecentSharedAncestor(goalId, sub.relId);
-      }
 
-      sendUpdatesToSubscriber(sub, rootGoal.id, changeType, [
+      const recentParentGoalId = await findMostRecentSharedAncestor(goal.parentGoalId, sub.relId);
+
+      sendUpdatesToSubscriber(sub, rootGoal.id, "modifiedGoals", [
         {
           level: ancestorGoalIds.length,
           goal: {
             ...changes,
-            parentGoalId,
+            parentGoalId: recentParentGoalId,
             timestamp: Date.now(),
             participants: [],
           },

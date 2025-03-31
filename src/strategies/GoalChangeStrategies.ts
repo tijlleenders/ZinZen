@@ -135,7 +135,6 @@ export class ModifiedGoalsStrategy implements ChangeAcceptStrategy {
       [],
       true,
       updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-      "modifiedGoals",
       isMoveOperation,
     );
   }

@@ -158,7 +158,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       return;
     }
 
-    // get local goal
+    // get local goal version of the incoming changes
     const goalId = "goal" in changes[0] ? changes[0].goal.id : changes[0].id;
     const localGoal = await getGoal(goalId);
 
@@ -176,6 +176,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     // handle the case where goal is not found in local db
     // maybe already moved to other place or not yet added to local db
     if (!localGoal) {
+      console.log("Goal not found in local db. processing changes...");
       const defaultChanges = createDefaultChangesWithIntent(changes, changeType, payload.type as typeOfIntent);
       await addChangesToRootGoal(relId, defaultChanges, notificationGoalId);
       return;
