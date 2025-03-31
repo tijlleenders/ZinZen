@@ -23,12 +23,10 @@ import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplay
 import { fixDateVlauesInGoalObject } from "@src/utils";
 import {
   addGoalToNewParentSublist,
-  getAllDescendants,
   getGoalAncestors,
   getNotificationGoalId,
   findParticipantTopLevelGoal,
   inheritParticipants,
-  mergeParticipants,
   removeGoalFromParentSublist,
   updateRootGoalNotification,
 } from "@src/controllers/GoalController";
@@ -41,6 +39,35 @@ import {
   RestoredStrategy,
   SubgoalsStrategy,
 } from "./strategies/SharedGoalChangeStrategies";
+
+const checkThisTagsIfTheyAreChanged = [
+  "title",
+  "duration",
+  "on",
+  "due",
+  "start",
+  "beforeTime",
+  "afterTime",
+  "parentGoalId",
+  "goalColor",
+  "timeBudget",
+] as const;
+
+function checkIfTagsAreChanged(goal: GoalItem, changes: GoalItem): boolean {
+  // Check if any of the specified tags have different values between goal and changes
+  return checkThisTagsIfTheyAreChanged.some((tag) => {
+    const goalValue = goal[tag as keyof GoalItem];
+    const changesValue = changes[tag as keyof GoalItem];
+
+    // For arrays (like 'on' field), compare stringified versions
+    if (Array.isArray(goalValue) && Array.isArray(changesValue)) {
+      return JSON.stringify(goalValue) !== JSON.stringify(changesValue);
+    }
+
+    // For all other values, direct comparison
+    return goalValue !== changesValue;
+  });
+}
 
 const isIdChangeType = (type: typeOfChange): type is IdChangeTypes => {
   return ["deleted", "moved", "restored", "archived"].includes(type);
@@ -162,13 +189,16 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
     const goalId = "goal" in changes[0] ? changes[0].goal.id : changes[0].id;
     const localGoal = await getGoal(goalId);
 
-    // ignore the changes if incoming parentId and local parentId are the same
+    // ignore the changes if incoming changed tags are the same as local goal
     if (changeType === "modifiedGoals") {
       if ("goal" in changes[0]) {
         const currentGoal = await getGoal(changes[0].goal.id);
-        if (currentGoal && currentGoal.parentGoalId === changes[0].goal.parentGoalId) {
-          console.log("Ignoring change - parent goal ID is the same");
-          return;
+        if (currentGoal) {
+          const hasChanges = checkIfTagsAreChanged(currentGoal, changes[0].goal);
+          if (!hasChanges) {
+            console.log("Ignoring change - tags are the same");
+            return;
+          }
         }
       }
     }
