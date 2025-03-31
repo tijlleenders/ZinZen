@@ -136,12 +136,14 @@ const createDefaultChangesWithIntent = (
 export const handleIncomingChanges = async (payload: Payload, relId: string) => {
   console.log("Incoming change", payload);
 
-  // handle partner goal changes
-  if (payload.type === "sharer" && (await getSharedWMGoal(payload.notificationGoalId))) {
-    console.log("Incoming change is a shared goal. Processing...");
-    const incGoal = await getSharedWMGoal(payload.notificationGoalId);
+  const incGoal = await getSharedWMGoal(payload.notificationGoalId);
+  console.log("incGoal", incGoal);
 
-    if (!incGoal || incGoal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
+  // handle partner goal changes
+  if (payload.type === "sharer" && incGoal) {
+    console.log("Incoming change is a shared goal. Processing...");
+
+    if (!incGoal) {
       console.log("Changes ignored");
       return;
     }
