@@ -126,16 +126,12 @@ export class ModifiedGoalsStrategy implements ChangeAcceptStrategy {
     activePPT,
   }: ChangeAcceptParams) {
     if (!unselectedChanges || !updateList) return;
-    const initialGoal = await getGoal(goalUnderReview.id);
     await acceptSelectedTags(unselectedChanges, updateList, goalUnderReview);
-    const updatedGoal = await getGoal(goalUnderReview.id);
-    const isMoveOperation = initialGoal?.parentGoalId !== updatedGoal?.parentGoalId;
     await sendUpdatedGoal(
       goalUnderReview.id,
       [],
       true,
       updatesIntent === "suggestion" ? [] : [participants[activePPT].relId],
-      isMoveOperation,
     );
   }
 }

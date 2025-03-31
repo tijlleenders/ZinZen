@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { GoalItem } from "@src/models/GoalItem";

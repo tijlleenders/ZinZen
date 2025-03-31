@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 import { useSetRecoilState } from "recoil";
 import { displayToast, lastAction } from "@store";
 import { moveGoalState } from "@src/store/moveGoalState";
-import { moveGoalHierarchy } from "./MoveGoal.helper";
+import { moveGoalHierarchy } from "./MoveGoalHelper";
 
 type MoveGoalParams = {
   goalId: string;

@@ -1,3 +1,7 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable no-await-in-loop */
+// eslint-disable-next-line no-await-in-loop
+
 import { getGoal, updateGoal } from "@src/api/GoalsAPI";
 import { deleteSharedGoalMetadata } from "@src/api/SharedGoalNotMoved";
 import {
@@ -29,18 +33,27 @@ import { GoalItem, IParticipant } from "@src/models/GoalItem";
  * console.log(ancestorId); // Output: "goalA"
  */
 export const findMostRecentSharedAncestor = async (parentGoalId: string, participantRelId: string): Promise<string> => {
+  const goalIds: string[] = [];
   let currentGoalId = parentGoalId;
 
+  // First collect all goal IDs up to root
   while (currentGoalId !== "root") {
+    goalIds.push(currentGoalId);
     const currentGoal = await getGoal(currentGoalId);
     if (!currentGoal) break;
-
-    // Check if this goal is shared with the participant
-    if (currentGoal.participants?.some((p) => p.relId === participantRelId && p.following)) {
-      return currentGoalId;
-    }
-
     currentGoalId = currentGoal.parentGoalId;
+  }
+
+  // Then fetch all goals in a single batch
+  const goals = await Promise.all(goalIds.map((id) => getGoal(id)));
+
+  // Find the first shared ancestor
+  const sharedIndex = goals.findIndex((goal) =>
+    goal?.participants?.some((p) => p.relId === participantRelId && p.following),
+  );
+
+  if (sharedIndex !== -1) {
+    return goalIds[sharedIndex];
   }
 
   return "root";
@@ -75,12 +88,8 @@ const handleLocalGoalMove = async (goalToMove: GoalItem, newParentGoalId: string
 };
 
 // Function to send updates to participants
-const sendUpdatesToParticipants = async (
-  updatedGoal: GoalItem,
-  newParentGoalId: string,
-  isRootMove: boolean = false,
-) => {
-  const participants = updatedGoal.participants;
+const sendUpdatesToParticipants = async (updatedGoal: GoalItem, newParentGoalId: string, isRootMove = false) => {
+  const { participants } = updatedGoal;
 
   await Promise.all(
     participants?.map(async (participant: IParticipant) => {
@@ -113,7 +122,7 @@ const sendUpdatesToParticipants = async (
 // Main function to handle goal hierarchy move
 export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string) => {
   const goalToMove = await getGoal(goalId);
-  //const newParentGoal = await getGoal(newParentGoalId);
+  // const newParentGoal = await getGoal(newParentGoalId);
 
   if (!goalToMove) return;
 

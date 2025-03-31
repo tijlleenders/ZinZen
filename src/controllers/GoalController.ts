@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-await-in-loop */
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { inheritParentProps } from "@src/utils";
@@ -15,7 +16,6 @@ import {
 } from "@src/api/GoalsAPI";
 import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
-import { deleteSharedGoalMetadata } from "@src/api/SharedGoalNotMoved";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
 export const inheritParticipants = (parentGoal: GoalItem) => {

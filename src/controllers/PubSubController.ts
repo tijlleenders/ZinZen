@@ -1,17 +1,17 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getGoal, getParticipantsOfGoals } from "@src/api/GoalsAPI";
 import { getParticipantsOfDeletedGoal } from "@src/api/TrashAPI";
 import { getHistoryUptoGoal } from "../helpers/GoalProcessor";
 import { findParticipantTopLevelGoal } from "./GoalController";
-import { findMostRecentSharedAncestor } from "../components/MoveGoal/MoveGoal.helper";
+import { findMostRecentSharedAncestor } from "../components/MoveGoal/MoveGoalHelper";
 
 export const sendUpdatedGoal = async (
   goalId: string,
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
-  isMoveOperation = false,
 ) => {
   const goal = await getGoal(goalId);
   if (!goal) {

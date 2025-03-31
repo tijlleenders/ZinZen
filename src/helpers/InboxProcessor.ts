@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import {
   ChangesByType,
@@ -54,17 +55,14 @@ const checkThisTagsIfTheyAreChanged = [
 ] as const;
 
 function checkIfTagsAreChanged(goal: GoalItem, changes: GoalItem): boolean {
-  // Check if any of the specified tags have different values between goal and changes
   return checkThisTagsIfTheyAreChanged.some((tag) => {
     const goalValue = goal[tag as keyof GoalItem];
     const changesValue = changes[tag as keyof GoalItem];
 
-    // For arrays (like 'on' field), compare stringified versions
     if (Array.isArray(goalValue) && Array.isArray(changesValue)) {
       return JSON.stringify(goalValue) !== JSON.stringify(changesValue);
     }
 
-    // For all other values, direct comparison
     return goalValue !== changesValue;
   });
 }
@@ -304,7 +302,7 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     }
 
     // update participants
-    //finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants ?? []);
+    // finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants ?? []);
 
     // update goal relationships
     await Promise.all([
