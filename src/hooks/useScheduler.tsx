@@ -75,7 +75,7 @@ function useScheduler() {
 
   const processSchedulerResult = async (res: ISchedulerOutput, newGeneratedInputId: string) => {
     try {
-      if (newGeneratedInputId !== "") {
+      if (newGeneratedInputId) {
         await putSchedulerRes("expired", newGeneratedInputId, JSON.stringify(res));
       }
       const processedOutput = await handleSchedulerOutput(res);
