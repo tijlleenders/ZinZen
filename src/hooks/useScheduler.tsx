@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { GoalItem } from "@src/models/GoalItem";
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { getAllGoals } from "@src/api/GoalsAPI";
-import { ISchedulerInput, ISchedulerOutput } from "@src/Interfaces/IScheduler";
+import { ISchedulerInput, ISchedulerOutput, SchedulerCacheCode } from "@src/Interfaces/IScheduler";
 // import { resetProgressOfToday } from "@src/api/TasksAPI";
 import { lastAction, openDevMode } from "@src/store";
 import { generateUniqueIdForSchInput } from "@src/utils/SchedulerUtils";
@@ -73,11 +73,13 @@ function useScheduler() {
     }
   };
 
-  const processSchedulerResult = async (res: ISchedulerOutput, newGeneratedInputId: string) => {
+  const processSchedulerResult = async (
+    res: ISchedulerOutput,
+    newGeneratedInputId: string,
+    cachedResCode: SchedulerCacheCode,
+  ) => {
     try {
-      if (newGeneratedInputId) {
-        await putSchedulerRes("expired", newGeneratedInputId, JSON.stringify(res));
-      }
+      await putSchedulerRes(cachedResCode, newGeneratedInputId, JSON.stringify(res));
       const processedOutput = await handleSchedulerOutput(res);
       setTasks({ ...processedOutput });
     } catch (error) {
@@ -102,7 +104,7 @@ function useScheduler() {
         res = schedule(schedulerInputV2);
       }
 
-      await processSchedulerResult(res, newGeneratedInputId);
+      await processSchedulerResult(res, newGeneratedInputId, cachedRes.code);
     } catch (error) {
       setSchedulerError((prevErrors) => [...prevErrors, `Error in initial call: ${error}`]);
     }
