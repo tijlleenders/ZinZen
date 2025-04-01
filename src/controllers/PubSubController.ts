@@ -27,8 +27,8 @@ export const sendUpdatedGoal = async (
   if (goal) {
     const { participants, ...changes } = goal;
     filteredSubscribers.forEach(async ({ sub }) => {
-      //const rootGoal = await findParticipantTopLevelGoal(goalId, sub.relId);
-      //if (!rootGoal?.id) return;
+      // const rootGoal = await findParticipantTopLevelGoal(goalId, sub.relId);
+      // if (!rootGoal?.id) return;
 
       // If this is a move operation and parent ID has changed, find the most recent shared ancestor
 

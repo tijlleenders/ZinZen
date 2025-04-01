@@ -5,7 +5,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { addGoal, addIntoSublist, getGoalById, updateGoal } from "../GoalsAPI";
 import { getContactByRelId } from "../ContactsAPI";
-import { getSharedGoalMetadataByGoalId, isGoalMovedToOtherPlace } from "../SharedGoalNotMoved";
+import { getSharedGoalMetadataByGoalId } from "../SharedGoalNotMoved";
 
 export const addSharedWMSublist = async (parentGoalId: string, goalIds: string[]) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
