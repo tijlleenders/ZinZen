@@ -75,7 +75,9 @@ function useScheduler() {
 
   const processSchedulerResult = async (res: ISchedulerOutput, newGeneratedInputId: string) => {
     try {
-      await putSchedulerRes("not_found", newGeneratedInputId, JSON.stringify(res));
+      if (newGeneratedInputId !== "") {
+        await putSchedulerRes("expired", newGeneratedInputId, JSON.stringify(res));
+      }
       const processedOutput = await handleSchedulerOutput(res);
       setTasks({ ...processedOutput });
     } catch (error) {
@@ -92,12 +94,10 @@ function useScheduler() {
 
       if (cachedRes.code === "found" && cachedRes.output) {
         res = cachedRes.output;
-        console.log("here");
         logIO(JSON.stringify(schedulerInputV1), res);
       } else {
         const { generatedInputId, schedulerInput: schedulerInputV2 } = await generateSchedule();
         newGeneratedInputId = generatedInputId;
-
         await init();
         res = schedule(schedulerInputV2);
       }
