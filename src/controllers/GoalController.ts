@@ -305,20 +305,23 @@ export const updateRootGoal = async (goalId: string, newNotificationGoalId: stri
   }
 };
 
-export const getNotificationGoalId = async (goalId: string): Promise<string> => {
+export const getNotificationGoalId = async (goalId: string): Promise<string | null> => {
   const goal = await getGoal(goalId);
   if (!goal || goal.parentGoalId === "root") {
-    return goal?.id || "root";
+    return goal?.id || null;
   }
   return getNotificationGoalId(goal.parentGoalId);
 };
 
 export const updateRootGoalNotification = async (goalId: string) => {
-  console.trace("Updating root goal notification for goalId:", goalId);
   const notificationGoalId = await getNotificationGoalId(goalId);
-  if (notificationGoalId !== "root") {
-    await updateGoal(notificationGoalId, { newUpdates: true });
+
+  if (!notificationGoalId) {
+    console.log("Notification goal id not found", goalId);
+    return;
   }
+
+  await updateGoal(notificationGoalId, { newUpdates: true });
 };
 
 export const removeGoalFromParentSublist = async (goalId: string, parentGoalId: string) => {
