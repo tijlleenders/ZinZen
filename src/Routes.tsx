@@ -15,20 +15,22 @@ import { PartnerProvider } from "./contexts/partner-context";
 import { ActiveGoalProvider } from "./contexts/activeGoal-context";
 import useApp from "./hooks/useApp";
 import { useProcessSharedGoalData } from "./hooks/useProcessSharedGoalData";
+import { getAllInboxItems } from "./api/InboxAPI";
+import { checkAndUpdateGoalNewUpdatesStatus } from "./helpers/InboxProcessor";
 
 export const AppRoutes = () => {
   const { isLanguageChosen } = useApp();
   useProcessSharedGoalData();
 
-  // useEffect(() => {
-  //   getAllInboxItems().then((inboxItems) => {
-  //     inboxItems.forEach((inboxItem) => {
-  //       if (inboxItem.id !== "root" && Object.keys(inboxItem.changes).length > 0) {
-  //         checkAndUpdateGoalNewUpdatesStatus(inboxItem.id);
-  //       }
-  //     });
-  //   });
-  // }, []);
+  useEffect(() => {
+    getAllInboxItems().then((inboxItems) => {
+      inboxItems.forEach((inboxItem) => {
+        if (inboxItem.id !== "root" && Object.keys(inboxItem.changes).length > 0) {
+          checkAndUpdateGoalNewUpdatesStatus(inboxItem.id);
+        }
+      });
+    });
+  }, []);
 
   return (
     <Routes>

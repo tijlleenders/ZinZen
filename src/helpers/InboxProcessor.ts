@@ -356,8 +356,15 @@ export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {
     const inbox = await getInboxItem(goalId);
     const goal = await getGoal(goalId);
 
+    console.log("inbox", inbox);
+
+    const doesItContainsSubgoalChanges = Object.keys(inbox?.changes).some((key) => {
+      const changeObject = inbox.changes[key];
+      return Array.isArray(changeObject.subgoals) && changeObject.subgoals.length > 0;
+    });
+
     // if the goal is not found, then remove the inbox
-    if (!goal) {
+    if (!goal && !doesItContainsSubgoalChanges) {
       await removeGoalInbox(goalId);
       return;
     }
@@ -369,7 +376,7 @@ export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {
     }
 
     // alter the inbox of the goal to be the inbox of the root goal
-    if (goal.parentGoalId !== "root" && inbox && Object.keys(inbox.changes).length > 0) {
+    if (goal?.parentGoalId !== "root" && inbox && Object.keys(inbox.changes).length > 0) {
       const notificationInbox = await getInboxItem(notificationGoalId);
       console.log("notificationInbox", notificationInbox);
       if (!notificationInbox) {

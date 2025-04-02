@@ -3,12 +3,10 @@
 import { acceptSelectedSubgoals, acceptSelectedTags } from "@src/helpers/InboxProcessor";
 import { sendNewGoals } from "@src/helpers/BatchPublisher";
 import { sendUpdatedGoal, sendFinalUpdateOnGoal } from "@src/controllers/PubSubController";
-import { removeGoalWithChildrens, archiveUserGoal, getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { removeGoalWithChildrens, archiveUserGoal, getGoal } from "@src/api/GoalsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ChangeAcceptParams, ChangeAcceptStrategy } from "@src/Interfaces/ChangeAccept";
-import { createEmptyInboxItem, getInboxItem, removeGoalInbox, addGoalChangesInID } from "@src/api/InboxAPI";
-import { getNotificationGoalId } from "@src/controllers/GoalController";
 
 export class SubgoalsStrategy implements ChangeAcceptStrategy {
   async execute({ goalUnderReview, newGoals, unselectedChanges, participants, activePPT }: ChangeAcceptParams) {
@@ -21,23 +19,6 @@ export class SubgoalsStrategy implements ChangeAcceptStrategy {
 
     if (goalsToBeSelected.length > 0) {
       const { intent } = newGoals[0];
-
-      goalsToBeSelected.forEach(async (goal) => {
-        const inboxItem = await getInboxItem(goal.id);
-        if (inboxItem) {
-          const newIdForInbox = await getNotificationGoalId(goal.id);
-          if (newIdForInbox) {
-            await createEmptyInboxItem(newIdForInbox);
-            await addGoalChangesInID(
-              newIdForInbox,
-              Object.keys(inboxItem.changes)[0],
-              inboxItem.changes[Object.keys(inboxItem.changes)[0]],
-            );
-            await removeGoalInbox(goal.id);
-            await updateGoal(newIdForInbox, { newUpdates: true });
-          }
-        }
-      });
 
       const newlyCreatedGoals = await Promise.all(
         goalsToBeSelected.map(async (goal) => {
