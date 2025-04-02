@@ -20,6 +20,7 @@ import { removeBackTicks } from "@src/utils/patterns";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { GoalActions } from "@src/constants/actions";
+import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 
 const pageCrumple = new Audio(pageCrumplingSound);
 const addGoalSound = new Audio(plingSound);
@@ -103,6 +104,7 @@ const useGoalActions = () => {
   };
 
   const addGoal = async (newGoal: GoalItem, hintOption: boolean, parentGoal?: GoalItem) => {
+    // handle partner mode
     if (isPartnerModeActive && subGoalsHistory.length) {
       const notificationGoalId = subGoalsHistory[0].goalID;
       const rootGoal = await getSharedWMGoalById(notificationGoalId);
@@ -111,6 +113,7 @@ const useGoalActions = () => {
       }
       suggestNewGoal(newGoal, parentGoal, rootGoal, subGoalsHistory.length);
     } else {
+      // handle regular mode
       await createGoal(newGoal, newGoal.parentGoalId, ancestors, hintOption);
       if (!parentGoal && newGoal.title === "magic") {
         setDevMode(true);
@@ -124,19 +127,21 @@ const useGoalActions = () => {
     // Fetch goal hierarchy
     const goalWithChildrens: ILevelGoals[] = await getAllLevelGoalsOfId(goal.id, true);
 
+    const sharedAncestorId = await findMostRecentSharedAncestor(goal.parentGoalId, relId);
+
     // Create modified copies of all goals with appropriate sharing properties
     const updatedGoalWithChildrens = goalWithChildrens.map((goalNode) => ({
       ...goalNode,
       goals: goalNode.goals.map((goalItem) => ({
         ...goalItem,
         participants: [], // remove participants before sharing
-        parentGoalId: goalItem.id === goal.id ? "root" : goalItem.parentGoalId, // if we want to share a subgoal, then we need to set the parentGoalId to the root goal
+        parentGoalId: goalItem.id === goal.id ? sharedAncestorId : goalItem.parentGoalId, // if we want to share a subgoal, then we need to set the parentGoalId to the root goal
         notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId, // if we want to share a subgoal, then we need to set the notificationGoalId to the goal id
       })),
     }));
 
     // Share the goals with the contact
-    await shareGoalWithContact(relId, updatedGoalWithChildrens);
+    await shareGoalWithContact(relId, updatedGoalWithChildrens, sharedAncestorId);
 
     try {
       // Update sharing status for all goals

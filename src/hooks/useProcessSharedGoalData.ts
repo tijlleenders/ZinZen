@@ -35,7 +35,7 @@ export const useProcessSharedGoalData = () => {
   console.log("sharedGoalsData", sharedGoalsData);
 
   const handleNewIncomingGoal = async (ele: SharedGoalMessage, relId: string) => {
-    const { levelGoalsNode } = ele;
+    const { levelGoalsNode, sharedAncestorId } = ele;
 
     try {
       await Promise.all(
@@ -57,7 +57,7 @@ export const useProcessSharedGoalData = () => {
                   });
                 } else {
                   await addSharedWMGoal(goal, relId);
-                  await createSharedGoalMetadata(goal.id, tempParentGoalId);
+                  await createSharedGoalMetadata(goal.id, tempParentGoalId, sharedAncestorId);
                 }
               } catch (error) {
                 console.error("[handleNewIncomingGoal] Error processing goal:", error);

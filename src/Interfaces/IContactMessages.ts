@@ -3,6 +3,7 @@ import { ILevelGoals } from "@src/api/GoalsAPI";
 export interface SharedGoalMessage {
   relId: string;
   levelGoalsNode: ILevelGoals[];
+  sharedAncestorId: string;
   lastProcessedTimestamp: string;
   type: "shareMessage";
   installId: string;

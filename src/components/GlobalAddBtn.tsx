@@ -21,7 +21,7 @@ import { moveGoalState } from "@src/store/moveGoalState";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { suggestChanges } from "@src/controllers/PartnerController";
-import { useGoalMoveMutation } from "./useGoalMoveMutation";
+import { useGoalMoveMutation } from "./MoveGoal/useGoalMoveMutation";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -130,9 +130,11 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const handleMoveGoalHere = async () => {
     if (!goalToMove) return;
+    // TODO: try to simplify this logic later
     if (isPartnerModeActive) {
       let rootGoal = goalToMove;
       if (state?.goalsHistory && state?.goalsHistory?.length > 0) {
+        // TODO: understand this later
         const rootGoalId = state.goalsHistory[0].goalID;
         rootGoal = (await getSharedWMGoalById(rootGoalId)) || goalToMove;
       }

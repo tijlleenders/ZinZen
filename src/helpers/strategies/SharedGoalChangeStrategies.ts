@@ -14,7 +14,6 @@ import { changesInGoal, changesInId, Payload } from "@src/models/InboxItem";
 import { fixDateVlauesInGoalObject } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getDeletedGoal, restoreUserGoal } from "@src/api/TrashAPI";
-import { getAllDescendants, updateRootGoal } from "@src/controllers/GoalController";
 import { ChangeStrategy } from "./ChangeStrategy";
 
 // this function is all perfect just need to manage case where the new parent goal is not shared
@@ -32,19 +31,18 @@ const handleMoveOperation = async (newParentGoalId: string, goalToMove: GoalItem
     }),
     removeSharedWMGoalFromParentSublist(goalToMove.id, goalToMove.parentGoalId),
     addSharedWMSublist(newParentGoalId, [goalToMove.id]),
-    updateRootGoal(goalToMove.id, newParentGoal?.notificationGoalId ?? "root"),
   ]);
   // update participants in descendants
-  const descendants = await getAllDescendants(goalToMove.id);
-  if (descendants.length > 0) {
-    await Promise.all(
-      descendants.map((descendant) =>
-        updateSharedWMGoal(descendant.id, {
-          notificationGoalId: newParentGoal?.notificationGoalId || "root",
-        }),
-      ),
-    );
-  }
+  // const descendants = await getAllDescendants(goalToMove.id);
+  // if (descendants.length > 0) {
+  //   await Promise.all(
+  //     descendants.map((descendant) =>
+  //       updateSharedWMGoal(descendant.id, {
+  //         notificationGoalId: newParentGoal?.notificationGoalId || "root",
+  //       }),
+  //     ),
+  //   );
+  // }
 };
 
 export class SubgoalsStrategy implements ChangeStrategy {
@@ -70,8 +68,10 @@ export class ModifiedGoalsStrategy implements ChangeStrategy {
     }));
     const localSharedGoal = await getSharedWMGoal(changes[0].goal.id);
 
+    const isMoveOperation = localSharedGoal?.parentGoalId !== changes[0].goal.parentGoalId;
+
     // handle move operation if parentGoalId is being changed
-    if (localSharedGoal?.parentGoalId !== changes[0].goal.parentGoalId) {
+    if (isMoveOperation) {
       if (!localSharedGoal) {
         console.error("[ModifiedGoalsStrategy] Goal to move not found", { goalId: changes[0].goal.id });
         return;

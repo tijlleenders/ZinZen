@@ -72,7 +72,14 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
     } else if (action === "archive") {
       await handleArchiveGoal(goal, ancestors);
     } else if (action === "colabRequest") {
-      await convertSharedWMGoalToColab(goal);
+      const res = await convertSharedWMGoalToColab(goal);
+      if (res) {
+        setShowToast({
+          open: true,
+          message: `Goal ${res.convertedGoal?.title} has been added into ${res.parentGoal?.title}!`,
+          extra: "",
+        });
+      }
       setLastAction(GoalActions.GOAL_COLAB_REQUEST);
     } else if (action === "move") {
       await handleMove(goal);

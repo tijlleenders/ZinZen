@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import {
   ChangesByType,
@@ -23,12 +24,10 @@ import { ITagChangesSchemaVersion, ITagsChanges } from "@src/Interfaces/IDisplay
 import { fixDateVlauesInGoalObject } from "@src/utils";
 import {
   addGoalToNewParentSublist,
-  getAllDescendants,
   getGoalAncestors,
   getNotificationGoalId,
   findParticipantTopLevelGoal,
   inheritParticipants,
-  mergeParticipants,
   removeGoalFromParentSublist,
   updateRootGoalNotification,
 } from "@src/controllers/GoalController";
@@ -41,6 +40,32 @@ import {
   RestoredStrategy,
   SubgoalsStrategy,
 } from "./strategies/SharedGoalChangeStrategies";
+
+const checkThisTagsIfTheyAreChanged = [
+  "title",
+  "duration",
+  "on",
+  "due",
+  "start",
+  "beforeTime",
+  "afterTime",
+  "parentGoalId",
+  "goalColor",
+  "timeBudget",
+] as const;
+
+function checkIfTagsAreChanged(goal: GoalItem, changes: GoalItem): boolean {
+  return checkThisTagsIfTheyAreChanged.some((tag) => {
+    const goalValue = goal[tag as keyof GoalItem];
+    const changesValue = changes[tag as keyof GoalItem];
+
+    if (Array.isArray(goalValue) && Array.isArray(changesValue)) {
+      return JSON.stringify(goalValue) !== JSON.stringify(changesValue);
+    }
+
+    return goalValue !== changesValue;
+  });
+}
 
 const isIdChangeType = (type: typeOfChange): type is IdChangeTypes => {
   return ["deleted", "moved", "restored", "archived"].includes(type);
@@ -111,12 +136,14 @@ const createDefaultChangesWithIntent = (
 export const handleIncomingChanges = async (payload: Payload, relId: string) => {
   console.log("Incoming change", payload);
 
-  // handle partner goal changes
-  if (payload.type === "sharer" && (await getSharedWMGoal(payload.notificationGoalId))) {
-    console.log("Incoming change is a shared goal. Processing...");
-    const incGoal = await getSharedWMGoal(payload.notificationGoalId);
+  const incGoal = await getSharedWMGoal(payload.notificationGoalId);
+  console.log("incGoal", incGoal);
 
-    if (!incGoal || incGoal.participants.find((ele) => ele.relId === relId && ele.following) === undefined) {
+  // handle partner goal changes
+  if (payload.type === "sharer" && incGoal) {
+    console.log("Incoming change is a shared goal. Processing...");
+
+    if (!incGoal) {
       console.log("Changes ignored");
       return;
     }
@@ -158,13 +185,28 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
       return;
     }
 
-    // get local goal
+    // get local goal version of the incoming changes
     const goalId = "goal" in changes[0] ? changes[0].goal.id : changes[0].id;
     const localGoal = await getGoal(goalId);
+
+    // ignore the changes if incoming changed tags are the same as local goal
+    if (changeType === "modifiedGoals") {
+      if ("goal" in changes[0]) {
+        const currentGoal = await getGoal(changes[0].goal.id);
+        if (currentGoal) {
+          const hasChanges = checkIfTagsAreChanged(currentGoal, changes[0].goal);
+          if (!hasChanges) {
+            console.log("Ignoring change - tags are the same");
+            return;
+          }
+        }
+      }
+    }
 
     // handle the case where goal is not found in local db
     // maybe already moved to other place or not yet added to local db
     if (!localGoal) {
+      console.log("Goal not found in local db. processing changes...");
       const defaultChanges = createDefaultChangesWithIntent(changes, changeType, payload.type as typeOfIntent);
       await addChangesToRootGoal(relId, defaultChanges, notificationGoalId);
       return;
@@ -262,7 +304,7 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     }
 
     // update participants
-    finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants ?? []);
+    // finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants ?? []);
 
     // update goal relationships
     await Promise.all([
@@ -271,7 +313,7 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     ]);
 
     finalChanges.parentGoalId = newParentGoalId;
-    finalChanges.notificationGoalId = newParentGoal?.notificationGoalId ?? goal.id;
+    // finalChanges.notificationGoalId = newParentGoal?.notificationGoalId ?? goal.id;
   }
 
   Object.keys(prettierVersion).forEach((ele) => {
@@ -297,19 +339,19 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
   });
 
   // update descendants if it was a move operation
-  if (goal.parentGoalId !== finalChanges.parentGoalId) {
-    const descendants = await getAllDescendants(goal.id);
-    if (descendants.length > 0) {
-      await Promise.all(
-        descendants.map((descendant) => {
-          return updateGoal(descendant.id, {
-            notificationGoalId: finalChanges.notificationGoalId as string,
-            participants: mergeParticipants(descendant.participants, finalChanges.participants as IParticipant[]),
-          });
-        }),
-      );
-    }
-  }
+  // if (goal.parentGoalId !== finalChanges.parentGoalId) {
+  //   const descendants = await getAllDescendants(goal.id);
+  //   if (descendants.length > 0) {
+  //     await Promise.all(
+  //       descendants.map((descendant) => {
+  //         return updateGoal(descendant.id, {
+  //           notificationGoalId: finalChanges.notificationGoalId as string,
+  //           //participants: mergeParticipants(descendant.participants, finalChanges.participants as IParticipant[]),
+  //         });
+  //       }),
+  //     );
+  //   }
+  // }
 };
 
 export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {

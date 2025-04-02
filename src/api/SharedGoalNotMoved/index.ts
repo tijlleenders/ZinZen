@@ -16,6 +16,7 @@ export const getSharedGoalMetadataByGoalId = async (goalId: string): Promise<Sha
 export const createSharedGoalMetadata = async (
   goalId: string,
   parentGoalId: string,
+  sharedAncestorId: string,
 ): Promise<SharedGoalMetadata | null> => {
   // Check if entry already exists
   const existingEntry = await getSharedGoalMetadataByGoalId(goalId);
@@ -26,6 +27,7 @@ export const createSharedGoalMetadata = async (
   const newEntry: SharedGoalMetadata = {
     goalId,
     parentGoalId,
+    sharedAncestorId,
   };
 
   await db.sharedGoalMetadataCollection.add(newEntry);

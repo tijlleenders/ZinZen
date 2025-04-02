@@ -1,16 +1,17 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { getGoal, getParticipantsOfGoals } from "@src/api/GoalsAPI";
 import { getParticipantsOfDeletedGoal } from "@src/api/TrashAPI";
 import { getHistoryUptoGoal } from "../helpers/GoalProcessor";
 import { findParticipantTopLevelGoal } from "./GoalController";
+import { findMostRecentSharedAncestor } from "../components/MoveGoal/MoveGoalHelper";
 
 export const sendUpdatedGoal = async (
   goalId: string,
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
-  changeType: "modifiedGoals" | "moved" = "modifiedGoals",
 ) => {
   const goal = await getGoal(goalId);
   if (!goal) {
@@ -26,10 +27,23 @@ export const sendUpdatedGoal = async (
   if (goal) {
     const { participants, ...changes } = goal;
     filteredSubscribers.forEach(async ({ sub }) => {
-      const rootGoal = await findParticipantTopLevelGoal(goalId, sub.relId);
-      if (!rootGoal?.id) return;
-      sendUpdatesToSubscriber(sub, rootGoal.id, changeType, [
-        { level: ancestorGoalIds.length, goal: { ...changes, timestamp: Date.now(), participants: [] } },
+      // const rootGoal = await findParticipantTopLevelGoal(goalId, sub.relId);
+      // if (!rootGoal?.id) return;
+
+      // If this is a move operation and parent ID has changed, find the most recent shared ancestor
+
+      const recentParentGoalId = await findMostRecentSharedAncestor(goal.parentGoalId, sub.relId);
+
+      sendUpdatesToSubscriber(sub, goalId, "modifiedGoals", [
+        {
+          level: ancestorGoalIds.length,
+          goal: {
+            ...changes,
+            parentGoalId: recentParentGoalId,
+            timestamp: Date.now(),
+            participants: [],
+          },
+        },
       ])
         .then(() => console.log(`[sendUpdatedGoal] Update sent successfully to ${sub.relId}`))
         .catch((error) => console.error(`[sendUpdatedGoal] Error sending update to ${sub.relId}:`, error));
