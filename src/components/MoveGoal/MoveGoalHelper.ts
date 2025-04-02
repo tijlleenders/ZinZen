@@ -72,18 +72,6 @@ const handleLocalGoalMove = async (goalToMove: GoalItem, newParentGoalId: string
     addGoalToNewParentSublist(goalToMove.id, newParentGoalId),
   ]);
 
-  // Update descendants
-  //   const descendants = await getAllDescendants(goalToMove.id);
-  //   if (descendants.length > 0) {
-  //     await Promise.all(
-  //       descendants.map((descendantGoal) =>
-  //         updateGoal(descendantGoal.id, {
-  //           notificationGoalId: newParentGoalId,
-  //         }),
-  //       ),
-  //     );
-  //   }
-
   await deleteSharedGoalMetadata(goalToMove.id);
 };
 

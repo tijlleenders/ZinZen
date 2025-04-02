@@ -146,7 +146,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       return;
     }
     const removeChanges =
-      currentDisplay === "subgoals" || currentDisplay === "newGoalMoved"
+      currentDisplay === "subgoals"
         ? newGoals.map(({ goal }) => goal.id)
         : currentDisplay === "moved"
           ? [goalUnderReview.id, ...(await getAllDescendants(goalUnderReview.id)).map((goal: GoalItem) => goal.id)]
@@ -178,11 +178,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       await deleteChanges();
     }
     switch (currentDisplay) {
-      // case "moved":
-      //   strategyContext.setStrategy(new MovedStrategy());
-      //   break;
       case "subgoals":
-      case "newGoalMoved":
         strategyContext.setStrategy(new SubgoalsStrategy());
         break;
       case "modifiedGoals":
@@ -200,7 +196,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       default:
         return;
     }
-    if (["subgoals", "newGoalMoved"].includes(currentDisplay)) {
+    if (["subgoals"].includes(currentDisplay)) {
       setUnselectedChanges([]);
       setNewGoals([]);
     } else if (currentDisplay === "modifiedGoals") {
@@ -250,7 +246,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
         console.log("🚀 ~ getChanges ~ changedGoal:", changedGoal);
         if (changedGoal) {
           setGoalUnderReview({ ...changedGoal });
-          if (typeAtPriority === "subgoals" || typeAtPriority === "newGoalMoved") {
+          if (typeAtPriority === "subgoals") {
             setNewGoals(goals || []);
           } else if (typeAtPriority === "moved") {
             setUpdatesIntent(goals[0].intent);
@@ -337,7 +333,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
           )}
           {["deleted", "archived", "restored"].includes(currentDisplay) && <div />}
           {currentDisplay === "modifiedGoals" && getEditChangesList()}
-          {(currentDisplay === "subgoals" || currentDisplay === "newGoalMoved") && getSubgoalsList()}
+          {currentDisplay === "subgoals" && getSubgoalsList()}
           {currentDisplay === "moved" && getMovedSubgoalsList(moveGoalTitle, oldParentTitle, newParentTitle)}
 
           <div className="d-flex justify-fe gap-20">

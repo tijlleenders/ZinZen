@@ -152,7 +152,6 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
 
     switch (payload.changeType) {
       case "subgoals":
-      case "newGoalMoved":
         sharedGoalManager.setStrategy(new SubgoalsStrategy());
         break;
       case "modifiedGoals":

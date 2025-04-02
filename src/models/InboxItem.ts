@@ -1,7 +1,7 @@
 import { GoalItem } from "./GoalItem";
 
 export type IdChangeTypes = "deleted" | "moved" | "restored" | "archived";
-type GoalChangeTypes = "subgoals" | "modifiedGoals" | "newGoalMoved";
+type GoalChangeTypes = "subgoals" | "modifiedGoals";
 
 export type typeOfChange = IdChangeTypes | GoalChangeTypes;
 

@@ -100,7 +100,7 @@ const sendNewGoalObject = async (
   newGoal: GoalItem,
   parentGoalId: string,
   ancestors: string[],
-  changeType: "subgoals" | "newGoalMoved",
+  changeType: "subgoals",
 ) => {
   const level = ancestors.length;
   const newGoalId = newGoal.id;
@@ -235,23 +235,6 @@ export const getGoalAncestors = async (goalId: string): Promise<string[]> => {
   }
 
   return ancestors;
-};
-
-export const createSharedGoalObjectForSending = async (
-  newGoal: GoalItem,
-  parentGoalId: string,
-  ancestors: string[],
-) => {
-  if (parentGoalId && parentGoalId !== "root") {
-    const parentGoal = await getGoal(parentGoalId);
-    if (!parentGoal) {
-      return { parentGoal: null };
-    }
-
-    await sendNewGoalObject(newGoal, parentGoalId, ancestors, "newGoalMoved");
-    return { parentGoal };
-  }
-  return { parentGoal: null };
 };
 
 export const modifyGoal = async (
