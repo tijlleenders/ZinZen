@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import { getContactByRelId } from "@src/api/ContactsAPI";
 import { createSharedGoalMetadata } from "@src/api/SharedGoalNotMoved";
 import { addSharedWMGoal, getSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
@@ -76,31 +78,30 @@ export const useProcessSharedGoalData = () => {
   useEffect(() => {
     const processSharedGoals = async () => {
       if (sharedGoalsData) {
-        // Process all relIds in parallel using Promise.all
-        await Promise.all(
-          Object.keys(sharedGoalsData).map(async (relId) => {
+        // we need to process the updates sequentially thus cant use Promise.all
+        for (const relId of Object.keys(sharedGoalsData)) {
+          try {
             const contactItem = await getContactByRelId(relId);
             if (contactItem) {
-              // Process all changes for this contact in parallel
               const changes = sharedGoalsData[relId];
-              await Promise.all(
-                changes.map(async (change) => {
-                  try {
-                    if (change.type === "shareMessage") {
-                      console.log("change", change);
-                      await handleNewIncomingGoal(change, relId);
-                    } else if (["sharer", "suggestion"].includes(change.type)) {
-                      await handleIncomingChanges(change as unknown as Payload, relId);
-                      setLastAction(GoalActions.GOAL_NEW_UPDATES);
-                    }
-                  } catch (error) {
-                    console.error("Error processing change:", error);
+              for (const change of changes) {
+                try {
+                  if (change.type === "shareMessage") {
+                    console.log("change", change);
+                    await handleNewIncomingGoal(change, relId);
+                  } else if (["sharer", "suggestion"].includes(change.type)) {
+                    await handleIncomingChanges(change as unknown as Payload, relId);
+                    setLastAction(GoalActions.GOAL_NEW_UPDATES);
                   }
-                }),
-              );
+                } catch (error) {
+                  console.error("Error processing change:", error);
+                }
+              }
             }
-          }),
-        );
+          } catch (error) {
+            console.error(`Error processing relId ${relId}:`, error);
+          }
+        }
       }
     };
     processSharedGoals();

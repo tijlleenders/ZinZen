@@ -191,10 +191,10 @@ export const transferChildrenGoalsToMyGoals = async (id: string) => {
             parentGoalId: goal.parentGoalId,
           });
         } catch (error) {
-          await addGoal(goal);
+          await addGoal({ ...goal, typeOfGoal: "shared" });
         }
       } else {
-        await addGoal(goal);
+        await addGoal({ ...goal, typeOfGoal: "shared" });
       }
 
       await removeSharedWMGoal(goal);

@@ -356,8 +356,6 @@ export const checkAndUpdateGoalNewUpdatesStatus = async (goalId: string) => {
     const inbox = await getInboxItem(goalId);
     const goal = await getGoal(goalId);
 
-    console.log("inbox", inbox);
-
     const doesItContainsSubgoalChanges = Object.keys(inbox?.changes).some((key) => {
       const changeObject = inbox.changes[key];
       return Array.isArray(changeObject.subgoals) && changeObject.subgoals.length > 0;
