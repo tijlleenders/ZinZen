@@ -114,7 +114,7 @@ function useScheduler() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const checkGoalScheduleMutation = useMutation({
+  const { mutateAsync: checkGoalScheduleMutation, isLoading: isCheckingGoalSchedule } = useMutation({
     mutationFn: async (goal: GoalItem): Promise<ISchedulerOutput | null> => {
       try {
         const activeGoals: GoalItem[] = await getAllGoals();
@@ -141,7 +141,8 @@ function useScheduler() {
     tasks: tasks || {},
     isLoading,
     error: queryError,
-    checkGoalSchedule: checkGoalScheduleMutation.mutateAsync,
+    checkGoalSchedule: checkGoalScheduleMutation,
+    isCheckingGoalSchedule,
   };
 }
 
