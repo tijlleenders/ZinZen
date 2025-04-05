@@ -7,7 +7,10 @@ import { getInboxItem } from "@src/api/InboxAPI";
 import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
 import { ITagsAllowedToDisplay, ITagsChanges } from "@src/Interfaces/IDisplayChangesModal";
 
-export const formatTagsToText = (_goal: GoalItem) => {
+export const formatTagsToText = async (_goal: GoalItem) => {
+  // _goal is the incoming changed goal
+  // currentGoal is the goal in the database
+
   const goal = { ..._goal };
   let startDate = new Date();
   let endDate = new Date();
@@ -29,7 +32,9 @@ export const formatTagsToText = (_goal: GoalItem) => {
     link: "",
     language: goal.language,
     goalColor: goal.goalColor,
+    parentGoalId: goal.parentGoalId,
   };
+
   if ((goal.afterTime || goal.afterTime === 0) && goal.beforeTime) {
     response.timing = ` ${goal.afterTime}-${goal.beforeTime}`;
   } else if (goal.afterTime || goal.afterTime === 0) {
@@ -37,6 +42,7 @@ export const formatTagsToText = (_goal: GoalItem) => {
   } else if (goal.beforeTime) {
     response.timing = ` before ${goal.beforeTime}`;
   }
+
   response.title = goal.title;
   response.duration = goal.duration ? ` ${goal.duration}h` : "";
   response.start = goal.start
@@ -47,8 +53,24 @@ export const formatTagsToText = (_goal: GoalItem) => {
   response.on = goal.on ? `${goal.on.join(" ")}` : "";
   response.timeBudget = JSON.stringify(goal.timeBudget);
   response.link = goal.link ? ` ${goal.link}` : "";
-  const { title, duration, start, due, habit, on, timeBudget, link, timing } = response;
-  return { inputText: title + duration + start + due + timing + on + timeBudget + habit + link, ...response };
+
+  // if there is parentGoalId change then need to show parent's title instead of it id
+  let parentGoalTitle = "root";
+  const parentGoal = await getGoal(goal.parentGoalId);
+
+  if (!parentGoal) {
+    parentGoalTitle = "root";
+  } else {
+    parentGoalTitle = parentGoal.title;
+  }
+
+  response.parentGoalId = parentGoalTitle;
+
+  const { title, duration, start, due, habit, on, timeBudget, link, timing, parentGoalId } = response;
+  return {
+    inputText: title + duration + start + due + timing + on + timeBudget + habit + link + parentGoalId,
+    ...response,
+  };
 };
 
 export const createGoalObjectFromTags = (obj: object = {}) => {
@@ -65,7 +87,7 @@ export const createGoalObjectFromTags = (obj: object = {}) => {
     beforeTime: null,
     archived: "false",
     parentGoalId: "root",
-    rootGoalId: "root",
+    notificationGoalId: "root",
     link: null,
     sublist: [],
     goalColor: colorPalleteList[Math.floor(Math.random() * colorPalleteList.length)],
@@ -76,8 +98,8 @@ export const createGoalObjectFromTags = (obj: object = {}) => {
     category: "Standard",
     ...obj,
   };
-  if (newGoal.rootGoalId === "root") {
-    newGoal.rootGoalId = newGoal.id;
+  if (newGoal.notificationGoalId === "root") {
+    newGoal.notificationGoalId = newGoal.id;
   }
   return newGoal;
 };
@@ -86,7 +108,7 @@ export const getHistoryUptoGoal = async (id: string) => {
   const history = [];
   let openGoalOfId = id;
   while (openGoalOfId !== "root") {
-    const tmpGoal: GoalItem | null = await getGoal(openGoalOfId);
+    const tmpGoal: GoalItem | undefined = await getGoal(openGoalOfId);
     if (!tmpGoal) break;
     history.push({
       goalID: tmpGoal.id || "root",
@@ -134,38 +156,39 @@ export const jumpToLowestChanges = async (id: string, relId: string) => {
             : goalAtPriority.goal.id;
 
       if (typeAtPriority === "archived" || typeAtPriority === "deleted") {
-        return { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+        const result = { typeAtPriority, parentId, goals: [await getGoal(parentId)] };
+        return result;
       }
       if (typeAtPriority === "subgoals") {
-        goalChanges.subgoals.forEach(({ intent, goal }) => {
+        goalChanges[typeAtPriority].forEach(({ intent, goal }) => {
           if (goal.parentGoalId === parentId) goals.push({ intent, goal });
         });
       }
       if (typeAtPriority === "modifiedGoals") {
         let modifiedGoal = createGoalObjectFromTags({});
         let goalIntent;
-        goalChanges.modifiedGoals.forEach(({ goal, intent }) => {
-          if (goal.id === parentId) {
-            modifiedGoal = { ...modifiedGoal, ...goal };
-            goalIntent = intent;
+        goalChanges[typeAtPriority].forEach((change) => {
+          if ("goal" in change && change.goal.id === parentId) {
+            modifiedGoal = { ...modifiedGoal, ...change.goal };
+            goalIntent = change.intent;
           }
         });
         goals = [{ intent: goalIntent, goal: modifiedGoal }];
       }
 
-      return {
+      const result = {
         typeAtPriority,
         parentId,
         goals,
       };
+      return result;
     }
-  } else {
-    console.log("inbox item doesn't exist");
   }
-  return { typeAtPriority, parentId: "", goals: [] };
+  const defaultResult = { typeAtPriority, parentId: "", goals: [] };
+  return defaultResult;
 };
 
-export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
+export const findGoalTagChanges = async (goal1: GoalItem, goal2: GoalItem) => {
   const tags: ITagsAllowedToDisplay[] = [
     "title",
     "duration",
@@ -179,10 +202,12 @@ export const findGoalTagChanges = (goal1: GoalItem, goal2: GoalItem) => {
     "goalColor",
     "language",
     "timeBudget",
+    "parentGoalId",
   ];
   const res: ITagsChanges = { schemaVersion: {}, prettierVersion: {} };
-  const goal1Tags = formatTagsToText(goal1);
-  const goal2Tags = formatTagsToText(goal2);
+
+  const goal1Tags = await formatTagsToText(goal1);
+  const goal2Tags = await formatTagsToText(goal2);
 
   tags.forEach((tag) => {
     if (tag === "on") {

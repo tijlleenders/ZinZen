@@ -1,30 +1,26 @@
-import { getParticipantsOfGoals } from "@src/api/GoalsAPI";
+/* eslint- no-restricted-syntax */
+import { findParticipantTopLevelGoal } from "@src/controllers/GoalController";
 import { GoalItem } from "@src/models/GoalItem";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
-import { getHistoryUptoGoal } from "./GoalProcessor";
 
-export const sendNewGoals = async (
-  newGoals: GoalItem[],
-  ancestors: string[] = [],
-  redefineAncestors = true,
-  excludeSubs: string[] = [],
-) => {
-  const ancestorGoalIds = redefineAncestors
-    ? (await getHistoryUptoGoal(newGoals[0].id)).map((ele) => ele.goalID)
-    : ancestors;
-  const subscribers = await getParticipantsOfGoals(ancestorGoalIds);
-  subscribers
-    .filter((ele) => !excludeSubs.includes(ele.sub.relId))
-    .forEach(async ({ sub, rootGoalId }) => {
-      sendUpdatesToSubscriber(
-        sub,
-        rootGoalId,
-        "subgoals",
-        newGoals.map((goal) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { participants, ...changes } = goal;
-          return { level: ancestorGoalIds.length, goal: { ...changes, rootGoalId } };
-        }),
-      ).then(() => console.log("update sent"));
+export const sendNewGoals = async (newGoals: GoalItem[], ancestors: string[] = [], excludeSubs: string[] = []) => {
+  try {
+    newGoals.forEach((goal) => {
+      goal.participants.forEach(async (participant) => {
+        if (excludeSubs.includes(participant.relId) || !participant.following) return;
+        const rootGoal = await findParticipantTopLevelGoal(goal.id, participant.relId);
+        await sendUpdatesToSubscriber(participant, rootGoal?.id || goal.id, "subgoals", [
+          {
+            level: ancestors.length,
+            goal: {
+              ...goal,
+              participants: [],
+            },
+          },
+        ]);
+      });
     });
+  } catch (error) {
+    console.error("[sendNewGoals] Error sending updates:", error);
+  }
 };

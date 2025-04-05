@@ -14,8 +14,9 @@ import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
 import { dbStoreSchema, syncVersion } from "./dexie";
 import { TaskHistoryItem } from "./TaskHistoryItem";
 import { TasksDoneTodayItem } from "./TasksDoneTodayItem";
+import { SharedGoalMetadata } from "./SharedGoalNotMoved";
 
-export const dexieVersion = 24;
+export const dexieVersion = 25;
 
 const currentVersion = Number(localStorage.getItem(LocalStorageKeys.DEXIE_VERSION) || dexieVersion);
 localStorage.setItem(LocalStorageKeys.DEXIE_VERSION, `${dexieVersion}`);
@@ -47,6 +48,8 @@ export class ZinZenDB extends Dexie {
 
   tasksDoneTodayCollection!: Table<TasksDoneTodayItem, string>;
 
+  sharedGoalMetadataCollection!: Table<SharedGoalMetadata, string>;
+
   constructor() {
     super("ZinZenDB");
     this.version(dexieVersion)
@@ -55,6 +58,14 @@ export class ZinZenDB extends Dexie {
         console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
         syncVersion(db, currentVersion);
       });
+    this.goalsCollection.hook("updating", (modifications: GoalItem) => {
+      modifications.timestamp = Date.now();
+      return modifications;
+    });
+
+    this.goalsCollection.hook("creating", (primKey, obj) => {
+      obj.timestamp = Date.now();
+    });
   }
 }
 
