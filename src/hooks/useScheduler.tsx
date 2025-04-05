@@ -39,7 +39,7 @@ function useScheduler() {
     generatedInputId: string;
     schedulerInput: ISchedulerInput;
     cachedRes: {
-      code: string;
+      code: SchedulerCacheCode;
       output?: ISchedulerOutput;
     };
   }
