@@ -40,34 +40,36 @@ export const useProcessSharedGoalData = () => {
     const { levelGoalsNode, sharedAncestorId } = ele;
 
     try {
-      await Promise.all(
-        levelGoalsNode.map(async (goalNode) => {
-          const { goals, parentId: tempParentGoalId } = goalNode;
-          await Promise.all(
-            goals.map(async (goal) => {
-              try {
-                const existingGoal = await getSharedWMGoal(goal.id);
-                if (existingGoal) {
-                  const { parentGoalId } = goal;
-                  if (parentGoalId === "root") {
-                    console.log("No parent goal id");
-                    return;
-                  }
-                  await updateSharedWMGoal(goal.id, {
-                    ...existingGoal,
-                    parentGoalId,
-                  });
-                } else {
-                  await addSharedWMGoal(goal, relId);
-                  await createSharedGoalMetadata(goal.id, tempParentGoalId, sharedAncestorId);
-                }
-              } catch (error) {
-                console.error("[handleNewIncomingGoal] Error processing goal:", error);
+      for (const goalNode of levelGoalsNode) {
+        const { goals, parentId: tempParentGoalId } = goalNode;
+
+        for (const goal of goals) {
+          try {
+            const existingGoal = await getSharedWMGoal(goal.id);
+            const isSharedParentGoalAvailable = await getSharedWMGoal(goal.parentGoalId);
+
+            if (existingGoal) {
+              const { parentGoalId } = goal;
+              if (parentGoalId !== "root") {
+                await updateSharedWMGoal(goal.id, {
+                  ...existingGoal,
+                  parentGoalId: isSharedParentGoalAvailable ? parentGoalId : "root",
+                });
+              } else {
+                console.log("No parent goal id");
               }
-            }),
-          );
-        }),
-      );
+            } else {
+              await addSharedWMGoal(
+                { ...goal, parentGoalId: isSharedParentGoalAvailable ? goal.parentGoalId : "root" },
+                relId,
+              );
+              await createSharedGoalMetadata(goal.id, tempParentGoalId, sharedAncestorId);
+            }
+          } catch (error) {
+            console.error("[handleNewIncomingGoal] Error processing goal:", error);
+          }
+        }
+      }
 
       setLastAction(GoalActions.GOAL_NEW_UPDATES);
     } catch (error) {

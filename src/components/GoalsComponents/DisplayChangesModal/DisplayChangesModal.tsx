@@ -248,9 +248,6 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
           setGoalUnderReview({ ...changedGoal });
           if (typeAtPriority === "subgoals") {
             setNewGoals(goals || []);
-          } else if (typeAtPriority === "moved") {
-            setUpdatesIntent(goals[0].intent);
-            setGoalUnderReview({ ...goals[0].goal });
           } else if (typeAtPriority === "modifiedGoals") {
             setUpdatesIntent(goals[0].intent);
             const incGoal: GoalItem = { ...goals[0].goal };
