@@ -188,7 +188,6 @@ export const getCachedSchedule = async (
 ): Promise<{ code: SchedulerCacheCode; output?: ISchedulerOutput }> => {
   const schedulerCachedRes = await getSchedulerCachedRes("scheduler");
 
-  // if scheduler entry yet return this
   if (!schedulerCachedRes) {
     return { code: "not-exist" };
   }
