@@ -14,8 +14,10 @@ export const getSchedulerCachedRes = async (key: string) => {
 
 export const addSchedulerResToCache = async (uniqueId: string, output: string) => {
   let newId;
+  console.log("adding to cache");
   await db
     .transaction("rw", db.schedulerOutputCacheCollection, async () => {
+      await db.schedulerOutputCacheCollection.clear();
       newId = await db.schedulerOutputCacheCollection.add({
         key: "scheduler",
         value: JSON.stringify({

@@ -6,6 +6,7 @@ import {
   ISchedulerInputGoal,
   ISchedulerOutput,
   ISchedulerOutputGoal,
+  SchedulerCacheCode,
 } from "@src/Interfaces/IScheduler";
 import { ITaskOfDay } from "@src/Interfaces/Task";
 import { addSchedulerResToCache, getSchedulerCachedRes, updateSchedulerCachedRes } from "@src/api/SchedulerOutputCache";
@@ -182,7 +183,9 @@ export const organizeDataForInptPrep = async (inputGoals: GoalItem[]) => {
   return { schedulerInput };
 };
 
-export const getCachedSchedule = async (generatedInputId: string) => {
+export const getCachedSchedule = async (
+  generatedInputId: string,
+): Promise<{ code: SchedulerCacheCode; output?: ISchedulerOutput }> => {
   const schedulerCachedRes = await getSchedulerCachedRes("scheduler");
 
   if (!schedulerCachedRes) {
@@ -197,8 +200,10 @@ export const getCachedSchedule = async (generatedInputId: string) => {
   return uniqueId === generatedInputId ? { code: "found", output: JSON.parse(output) } : { code: "expired" };
 };
 
-export const putSchedulerRes = async (code: string, generatedInputId: string, output: string) => {
-  return code === "expired"
-    ? updateSchedulerCachedRes(generatedInputId, output)
-    : addSchedulerResToCache(generatedInputId, output);
+export const putSchedulerRes = async (code: SchedulerCacheCode, generatedInputId: string, output: string) => {
+  if (code === "expired") {
+    updateSchedulerCachedRes(generatedInputId, output);
+  } else if (code === "not-exist") {
+    addSchedulerResToCache(generatedInputId, output);
+  }
 };
