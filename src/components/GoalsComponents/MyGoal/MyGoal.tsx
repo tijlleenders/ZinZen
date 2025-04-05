@@ -63,16 +63,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const handleGoalClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
 
-    const url = extractLinks(goal.title);
-    if (url && !isGoalCode(goal.title)) {
-      const finalUrl = url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
-      window.open(finalUrl, "_blank");
-      return;
-    }
     if (isGoalCode(goal.title)) {
       copyCode(goal.title);
       return;
     }
+
     const newState: ILocationState = {
       ...location.state,
       goalsHistory: [
@@ -127,8 +122,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
           </GoalIcon>
         )}
       </div>
-      <div aria-hidden className="goal-tile" onClick={(e) => handleGoalClick(e)}>
-        <GoalTitle goal={goal} isImpossible={goal.impossible} />
+      <div className="goal-tile" onClick={handleGoalClick} role="presentation">
+        <GoalTitle goal={goal} isImpossible={goal.impossible} onTitleClick={handleGoalClick} />
       </div>
       {!isPartnerModeActive && goal.participants?.length > 0 && <GoalAvatar goal={goal} />}
     </ZItemContainer>
