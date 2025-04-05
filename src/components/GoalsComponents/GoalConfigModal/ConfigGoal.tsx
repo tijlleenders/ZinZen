@@ -164,6 +164,7 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
       }
       await (isEditMode ? updateGoal(getFinalTags(), hintOption) : addGoal(getFinalTags(), hintOption, parentGoal));
       queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
     } else {
       setShowToast({
         open: true,
@@ -320,8 +321,8 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const checkSchedule = async () => {
     setScheduleStatus("pending");
     try {
-      const schedulerOutput = await checkGoalSchedule(getFinalTags());
-      const status = await checkSchedulingStatus(schedulerOutput, goal.id);
+      const result = await checkGoalSchedule(getFinalTags());
+      const status = await checkSchedulingStatus(result || undefined, goal.id);
       setScheduleStatus(status);
     } catch (error) {
       setScheduleStatus(null);
