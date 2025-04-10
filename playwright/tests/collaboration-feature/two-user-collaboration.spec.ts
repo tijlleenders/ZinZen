@@ -5,7 +5,6 @@ import {
   addContact,
   createGoalFromGoalPage,
   createUserContextAndPage,
-  goalActionFlow,
   goToAppPage,
   goToShareGoalModalFlow,
   waitForResponseConfirmation,
@@ -152,6 +151,23 @@ test.describe("Goal Sharing Feature", () => {
         .click();
 
       await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeHidden();
+    });
+
+    test("sharer shares the moved subgoal with User receiver and check if it is visible in User receiver MyGoal", async () => {
+      console.log(`User ${sharer} is moving a subgoal into the shared goal...`);
+      await sharerPage().getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+      await sharerPage().getByTestId("zmodal").getByText("Share").click();
+
+      await expect(async () => {
+        await sharerPage().getByRole("button", { name: receiver, exact: true }).click();
+        await sharerPage().waitForSelector(".share-modal", { state: "hidden" });
+        await sharerPage().waitForSelector(`text=Cheers!! Your goal and its subgoals are shared with ${receiver}`);
+      }).toPass({
+        timeout: 10_000,
+      });
+
+      await receiverPage().reload();
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
     });
   });
 });
