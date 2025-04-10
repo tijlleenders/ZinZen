@@ -39,8 +39,8 @@ export async function goToShareGoalModalFlow(page: Page, goalTitle: string) {
 export async function waitForResponseConfirmation(
   page: Page,
   urlContains: string,
-  maxRetries: number = 3,
-  retryDelay: number = 2000,
+  maxRetries = 3,
+  retryDelay = 2000,
 ): Promise<void> {
   console.log(`Waiting for response confirmation for URL containing "${urlContains}"...`);
   let response;
@@ -120,10 +120,21 @@ export async function acceptContactInvitation(page: Page, invitationLink: string
   await page.getByRole("button", { name: "Add to my contacts" }).click();
 }
 
-export async function goToMyGoalsPageFlow(page: Page) {
+export type AppPageName = "Goals" | "Feelings" | "Groups";
+
+export async function goToAppPage(page: Page, appPageName: AppPageName, reload = false) {
   console.log("Navigating to 'My Goals' page...");
-  await page.goto("http://127.0.0.1:3000/");
-  await page.getByRole("button", { name: "Goals" }).click();
+  if (reload) {
+    await page.goto("http://127.0.0.1:3000/");
+  }
+  await page.getByRole("button", { name: appPageName }).click();
+}
+
+export async function createGoalFromGoalPage(page: Page, goalTitle: string) {
+  await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
+  const titleInputContainer = page.getByPlaceholder("Goal title");
+  await titleInputContainer.fill(goalTitle);
+  await titleInputContainer.press("Enter");
 }
 
 export async function verifyUpdatedGoal(

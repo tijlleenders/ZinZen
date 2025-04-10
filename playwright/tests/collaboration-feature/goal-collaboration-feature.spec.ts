@@ -5,7 +5,7 @@ import {
   addContact,
   collaborateFlow,
   createUserContextAndPage,
-  goToMyGoalsPageFlow,
+  goToAppPage,
   goToShareGoalModalFlow,
   goalActionFlow,
   verifyUpdatedGoal,
@@ -85,7 +85,7 @@ test.describe("Goal Sharing Feature", () => {
   userCollaborationScenarios.forEach(({ sharer, receiver, sharerPage, receiverPage }) => {
     test(`from User ${sharer} share invitation to User ${receiver}`, async () => {
       console.log(`User ${sharer} is navigating to their goals page...`);
-      await goToMyGoalsPageFlow(sharerPage());
+      await goToAppPage(sharerPage(), "Goals", true);
 
       if (sharer === "A") {
         console.log(`User ${sharer} is creating a new goal titled "${currentGoalTitle}"...`);
@@ -99,7 +99,7 @@ test.describe("Goal Sharing Feature", () => {
       invitationLink = await addContact(sharerPage(), receiver, currentGoalTitle);
 
       console.log(`User ${sharer} is navigating to their goals page again...`);
-      await goToMyGoalsPageFlow(sharerPage());
+      await goToAppPage(sharerPage(), "Goals", true);
 
       console.log(`User ${sharer} is opening the share goal modal for "${currentGoalTitle}"...`);
       await goToShareGoalModalFlow(sharerPage(), currentGoalTitle);
@@ -113,7 +113,7 @@ test.describe("Goal Sharing Feature", () => {
 
     test(`share goal from User ${receiver} to User ${sharer}`, async () => {
       console.log(`User ${sharer} is sharing the goal with User ${receiver}...`);
-      await goToMyGoalsPageFlow(sharerPage());
+      await goToAppPage(sharerPage(), "Goals", true);
 
       console.log(`User ${sharer} is opening the share goal modal for "${currentGoalTitle}"...`);
       await goToShareGoalModalFlow(sharerPage(), currentGoalTitle);
@@ -152,7 +152,7 @@ test.describe("Goal Sharing Feature", () => {
       test(`goal update by ${sharer}: edit goal in User ${sharer}`, async () => {
         console.log(`User ${sharer} is updating the goal "${currentGoalTitle}"...`);
         await expect(async () => {
-          await goToMyGoalsPageFlow(sharerPage());
+          await goToAppPage(sharerPage(), "Goals", true);
           await goalActionFlow(sharerPage(), "Edit", currentGoalTitle);
           await sharerPage().locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by ${sharer}`);
           await sharerPage().locator(".action-btn-container").locator(".action-btn").click();

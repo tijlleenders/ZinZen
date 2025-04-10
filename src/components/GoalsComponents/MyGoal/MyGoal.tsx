@@ -112,6 +112,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
     <ZItemContainer
       id={`goal-${goal.id}`}
       expandGoalId={expandGoalId}
+      dataTestId={`goal-${goal.title}`}
       isAnimating={isAnimating}
       isGoalToBeMoved={goalToMove?.id === goal.id}
     >

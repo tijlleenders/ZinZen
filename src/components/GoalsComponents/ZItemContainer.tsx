@@ -11,12 +11,22 @@ export const ZItemContainer: React.FC<{
   isGoalToBeMoved?: boolean;
   children: ReactNode;
   extraContent?: ReactNode;
-}> = ({ id, expandGoalId = "root", isAnimating = false, isGoalToBeMoved = false, children, extraContent }) => {
+  dataTestId?: string;
+}> = ({
+  id,
+  expandGoalId = "root",
+  isAnimating = false,
+  isGoalToBeMoved = false,
+  children,
+  extraContent,
+  dataTestId,
+}) => {
   const darkModeStatus = useRecoilValue(darkModeState);
   return (
     <div
       key={id}
       id={id}
+      data-testid={dataTestId}
       className={`user-goal${darkModeStatus ? "-dark" : ""} ${expandGoalId === id && isAnimating ? "goal-glow" : ""} ${isGoalToBeMoved ? "goal-to-move-selected" : ""}`}
     >
       <div className="user-goal-main">{children}</div>
