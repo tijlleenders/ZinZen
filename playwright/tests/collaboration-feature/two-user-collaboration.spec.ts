@@ -11,7 +11,7 @@ import {
 } from "../../utils/collaboration-feature-utils";
 import { shareGoalFlow } from "../../utils/move-feature-utils";
 
-test.describe.configure({ timeout: 100000, mode: "serial" });
+test.describe.configure({ timeout: 100000 });
 
 test.describe("Goal Sharing Feature", () => {
   let userAPage: Page;
