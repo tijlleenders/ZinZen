@@ -18,6 +18,7 @@ test.describe("Goal Sharing Feature", () => {
   let invitationLink: string;
   const currentGoalTitle = "Test Goal";
   const subgoalTitle = "Subgoal";
+  const secondGoalTitle = "Second Shared Goal";
   test.beforeAll(async ({ browser }) => {
     console.log("Setting up users A, B, and C pages...");
     ({ page: userAPage } = await createUserContextAndPage(browser));
@@ -169,5 +170,62 @@ test.describe("Goal Sharing Feature", () => {
       await receiverPage().reload();
       await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
     });
+  });
+
+  test("sharer moves shared subgoal into another shared goal and check if it is visible in User receiver MyGoal", async () => {
+    // create a new goal in sender's MyGoal
+
+    await goToAppPage(userAPage, "Goals", true);
+    await createGoalFromGoalPage(userAPage, secondGoalTitle);
+
+    await userAPage.waitForTimeout(10000);
+    // share the second goal with receiver
+    // await goToShareGoalModalFlow(userAPage, secondGoalTitle);
+
+    await userAPage.getByTestId(`goal-${secondGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+    await userAPage.getByTestId("zmodal").getByTestId("share-action").click();
+
+    await expect(async () => {
+      await userAPage.getByRole("button", { name: "B", exact: true }).click();
+      await userAPage.waitForSelector(".share-modal", { state: "hidden" });
+      await userAPage.waitForSelector(`text=Cheers!! Your goal and its subgoals are shared with B`);
+    }).toPass({
+      timeout: 10_000,
+    });
+
+    await userAPage.goBack();
+
+    // move the subgoal into the second shared goal
+    await userAPage.getByTestId(`goal-${secondGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+    await userAPage.getByTestId("zmodal").getByText("Move").click();
+    await userAPage.getByRole("button", { name: "Move goal" }).click();
+    await userAPage
+      .getByTestId(`goal-${currentGoalTitle}`)
+      .locator("div")
+      .filter({ hasText: currentGoalTitle })
+      .first()
+      .click();
+
+    await userAPage
+      .getByTestId(`goal-${subgoalTitle}`)
+      .locator("div")
+      .filter({ hasText: subgoalTitle })
+      .first()
+      .click();
+    await userAPage.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
+    await userAPage.getByRole("button", { name: "Move here add goal", exact: true }).click();
+
+    // check if the moved subgoal is visible in receiver's view of the second shared goal
+    await userBPage.goto("http://127.0.0.1:3000");
+    await userBPage.getByRole("img", { name: "ZinZen" }).click();
+    await userBPage.getByTestId("contact-B").locator("div").first().click();
+    await userBPage
+      .getByTestId(`goal-${currentGoalTitle}`)
+      .locator("div")
+      .filter({ hasText: currentGoalTitle })
+      .nth(1)
+      .click();
+    await userBPage.getByTestId(`goal-${subgoalTitle}`).locator("div").filter({ hasText: subgoalTitle }).nth(1).click();
+    await expect(userBPage.getByTestId(`goal-${secondGoalTitle}`)).toBeVisible();
   });
 });

@@ -9,26 +9,8 @@ export async function createUserContextAndPage(browser: Browser) {
 }
 
 export async function goalActionFlow(page: Page, action: string, goalTitle: string) {
-  console.log(`Executing action "${action}" on goal titled "${goalTitle}"...`);
-  const goalDiv = await page.locator(".user-goal-main").filter({ hasText: new RegExp(`^${goalTitle}$`) });
-  console.log("Located goal div:", goalDiv);
-
-  const goalDropdown = await page
-    .locator(".user-goal-main")
-    .filter({
-      has: page.locator('.goal-title:has-text("Test Goal")'),
-    })
-    .locator(".goal-dd-outer");
-
-  console.log("Clicking on the goal dropdown...");
-  await goalDropdown.click();
-  await expect(page.getByTestId("zmodal")).toBeInViewport();
-  console.log(`Clicking on the action "${action}"...`);
-  await page
-    .locator("div")
-    .filter({ hasText: new RegExp(`^${action}$`) })
-    .first()
-    .click({ force: true });
+  await page.getByTestId(`goal-${goalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+  await page.getByTestId("zmodal").getByText(action).first().click();
 }
 
 export async function goToShareGoalModalFlow(page: Page, goalTitle: string) {

@@ -157,6 +157,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
             <ActionDiv
               label={t(isPartnerModeActive ? "Collaborate" : "Share")}
               icon={isPartnerModeActive ? "Collaborate" : "SingleAvatar"}
+              dataTestId={isPartnerModeActive ? "collaborate-action" : "share-action"}
             />
           </div>
         )}
@@ -175,7 +176,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
             await openConfirmationPopUp({ actionCategory: "goal", actionName: "move" });
           }}
         >
-          <ActionDiv label={t("Move")} icon="Move" />
+          <ActionDiv label={t("Move")} icon="Move" dataTestId="move-action" />
         </div>
       </div>
     </ZModal>

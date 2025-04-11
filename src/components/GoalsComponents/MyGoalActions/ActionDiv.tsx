@@ -5,9 +5,10 @@ import Icon from "@src/common/Icon";
 interface IActionDivProps {
   label: string;
   icon: React.ReactNode;
+  dataTestId?: string;
 }
 
-const ActionDiv: React.FC<IActionDivProps> = ({ icon, label }) => {
+const ActionDiv: React.FC<IActionDivProps> = ({ icon, label, dataTestId }) => {
   return (
     <>
       <Row justify="center">
@@ -15,7 +16,7 @@ const ActionDiv: React.FC<IActionDivProps> = ({ icon, label }) => {
       </Row>
       <Row justify="center">
         <Col>
-          <p>{label}</p>
+          <p data-testid={dataTestId}>{label}</p>
         </Col>
       </Row>
     </>
