@@ -188,6 +188,48 @@ test.describe("Goal Sharing Feature", () => {
         .nth(1)
         .click();
       await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+
+      // suggesting changes from receiver to subgoal
+
+      await receiverPage().goto("http://127.0.0.1:3000");
+      await receiverPage().getByRole("img", { name: "ZinZen" }).click();
+      await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
+      await receiverPage()
+        .getByTestId(`goal-${currentGoalTitle}`)
+        .locator("div")
+        .filter({ hasText: currentGoalTitle })
+        .nth(1)
+        .click();
+
+      await receiverPage().getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+      await receiverPage().getByTestId("zmodal").getByText("Move").click();
+      await receiverPage().getByRole("button", { name: "Move goal" }).click();
+
+      await receiverPage().getByRole("img", { name: "my goals" }).click();
+      await receiverPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
+      await receiverPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
+
+      await sharerPage().goto("http://127.0.0.1:3000/goals");
+
+      // first verify that the notification dot exists
+      await expect(sharerPage().getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
+
+      // then click on the goal icon
+      await sharerPage()
+        .getByTestId(`goal-${currentGoalTitle}`)
+        .getByTestId("goal-icon")
+        .locator("div")
+        .first()
+        .click();
+
+      await sharerPage().getByRole("button", { name: "add changes  Make all checked" }).click();
+      await expect(sharerPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+
+      await receiverPage().goto("http://127.0.0.1:3000/");
+      await receiverPage().getByRole("img", { name: "ZinZen" }).click();
+      await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
+
+      await expect(sharerPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
     });
 
     test("move should work correct if private goal is present in the shared hierarchy", async () => {

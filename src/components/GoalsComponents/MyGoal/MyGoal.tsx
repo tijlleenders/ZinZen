@@ -132,7 +132,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         ) : (
           <GoalIcon color={goal.goalColor} showDottedBorder={!(goal.timeBudget?.perDay == null)}>
             <InnerCircle color={innerBorderColor}>
-              {goal.newUpdates && <NotificationSymbol color={goal.goalColor} />}
+              {goal.newUpdates && (
+                <NotificationSymbol color={goal.goalColor} dataTestId={`notification-dot-${goal.title}`} />
+              )}
             </InnerCircle>
           </GoalIcon>
         )}
