@@ -6,6 +6,7 @@ import {
   createGoalFromGoalPage,
   createUserContextAndPage,
   goToAppPage,
+  goToShareGoalModalFlow,
   waitForResponseConfirmation,
 } from "../../utils/collaboration-feature-utils";
 import { shareGoalFlow } from "../../utils/move-feature-utils";
@@ -18,8 +19,6 @@ test.describe("Goal Sharing Feature", () => {
   let userCPage: Page;
   let invitationLink: string;
   const currentGoalTitle = "Test Goal";
-  const subgoalTitle = "Subgoal";
-  const secondGoalTitle = "Second Shared Goal";
   test.beforeAll(async ({ browser }) => {
     console.log("Setting up users A, B, and C pages...");
     ({ page: userAPage } = await createUserContextAndPage(browser));
@@ -106,80 +105,111 @@ test.describe("Goal Sharing Feature", () => {
   ];
 
   userCollaborationScenarios.forEach(({ sharer, receiver, sharerPage, receiverPage }) => {
-    test("check if move ", async () => {
-      console.log(`User ${sharer} is moving a subgoal into the shared goal...`);
+    test("check if collaboration works between users correctly", async () => {
       await userAPage.goto("http://127.0.0.1:3000/goals");
 
-      // create a subgoal and share it from user A to user B then collaborate and then share to user C
-      await createGoalFromGoalPage(userAPage, subgoalTitle);
-      await shareGoalFlow(userAPage, subgoalTitle, "B");
-
-      await userBPage.goto("http://127.0.0.1:3000/");
-      await userBPage.getByRole("img", { name: "ZinZen" }).click();
-      await userBPage.getByTestId(`contact-${receiver}`).locator("div").first().click();
-
-      await userBPage.getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
-      await userBPage.getByTestId("zmodal").getByText("Collaborate").click();
-      await userBPage.getByRole("button", { name: "Collaborate on goal" }).click();
-      await userBPage.getByRole("button", { name: "Goals" }).click();
-
-      await shareGoalFlow(userBPage, subgoalTitle, "C");
-
-      await userCPage.goto("http://127.0.0.1:3000");
-      await userCPage.getByRole("img", { name: "ZinZen" }).click();
-      await userCPage.getByTestId(`contact-${"C"}`).locator("div").first().click();
-
-      await userCPage.getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
-      await userCPage.getByTestId("zmodal").getByText("Collaborate").click();
-      await userCPage.getByRole("button", { name: "Collaborate on goal" }).click();
-      await userCPage.getByRole("button", { name: "Goals" }).click();
-
       await userAPage.getByRole("button", { name: "Goals" }).click();
-      await userAPage.getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
-      await userAPage.getByTestId("zmodal").getByText("Move").click();
-      await userAPage.getByRole("button", { name: "Move goal" }).click();
-
-      await userAPage.getByRole("button", { name: "Goals" }).click();
-      await userAPage
-        .getByTestId(`goal-${currentGoalTitle}`)
-        .locator("div")
-        .filter({ hasText: currentGoalTitle })
-        .first()
-        .click();
-
-      await userAPage.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
-      await userAPage.getByRole("button", { name: "Move here add goal", exact: true }).click();
+      await userAPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+      await userAPage.getByTestId("zmodal").getByText("Edit").click();
+      await userAPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by A`);
+      await userAPage.locator(".action-btn-container").locator(".action-btn").click();
 
       await userBPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
 
-      await expect(userBPage.getByTestId(`notification-dot-${subgoalTitle}`)).toBeVisible();
-      // then click on the goal icon
-      await userBPage.getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+      await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
+      await userBPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
       await userBPage.getByRole("button", { name: "add changes  Make all checked" }).click();
 
-      await userBPage
-        .getByTestId(`goal-${currentGoalTitle}`)
-        .locator("div")
-        .filter({ hasText: currentGoalTitle })
-        .first()
-        .click();
-      await expect(userBPage.getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by A`)).toBeVisible();
 
       await userCPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL);
 
-      await expect(userCPage.getByTestId(`notification-dot-${subgoalTitle}`)).toBeVisible();
-      await userCPage.getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+      await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
+      await userCPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
       await userCPage.getByRole("button", { name: "add changes  Make all checked" }).click();
+      await expect(userCPage.getByTestId(`goal-${currentGoalTitle} edited by A`)).toBeVisible();
 
-      await userCPage
-        .getByTestId(`goal-${currentGoalTitle}`)
+      await userBPage.getByRole("button", { name: "Goals" }).click();
+      await userBPage
+        .getByTestId(`goal-${currentGoalTitle} edited by A`)
+        .getByTestId("goal-icon")
         .locator("div")
-        .filter({ hasText: currentGoalTitle })
         .first()
         .click();
-      await expect(userCPage.getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      await userBPage.getByTestId("zmodal").getByText("Edit").first().click();
+      await userBPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by B`);
+      await userBPage.locator(".action-btn-container").locator(".action-btn").click();
+
+      await userBPage.waitForTimeout(1000);
+
+      await userCPage.goto("http://127.0.0.1:3000/goals");
+      await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL);
+
+      await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible();
+      await userCPage
+        .getByTestId(`goal-${currentGoalTitle} edited by A`)
+        .getByTestId("goal-icon")
+        .locator("div")
+        .first()
+        .click();
+      await userCPage.getByRole("button", { name: "add changes  Make all checked" }).click();
+      await expect(userCPage.getByTestId(`goal-${currentGoalTitle} edited by B`)).toBeVisible();
+
+      await userAPage.goto("http://127.0.0.1:3000/goals");
+      await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL);
+
+      await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible();
+      await userAPage
+        .getByTestId(`goal-${currentGoalTitle} edited by A`)
+        .getByTestId("goal-icon")
+        .locator("div")
+        .first()
+        .click();
+      await userAPage.getByRole("button", { name: "add changes  Make all checked" }).click();
+      await expect(userAPage.getByTestId(`goal-${currentGoalTitle} edited by B`)).toBeVisible();
+
+      await userCPage.getByRole("button", { name: "Goals" }).click();
+      await userCPage
+        .getByTestId(`goal-${currentGoalTitle} edited by B`)
+        .getByTestId("goal-icon")
+        .locator("div")
+        .first()
+        .click();
+      await userCPage.getByTestId("zmodal").getByText("Edit").first().click();
+      await userCPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by C`);
+      await userCPage.locator(".action-btn-container").locator(".action-btn").click();
+
+      await userCPage.waitForTimeout(1000);
+
+      await userBPage.goto("http://127.0.0.1:3000/goals");
+      await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
+
+      await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible();
+      await userBPage
+        .getByTestId(`goal-${currentGoalTitle} edited by B`)
+        .getByTestId("goal-icon")
+        .locator("div")
+        .first()
+        .click();
+      await userBPage.getByRole("button", { name: "add changes  Make all checked" }).click();
+      await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by C`)).toBeVisible();
+
+      await userBPage.waitForTimeout(1000);
+
+      await userAPage.goto("http://127.0.0.1:3000/goals");
+      await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL);
+
+      await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible();
+      await userAPage
+        .getByTestId(`goal-${currentGoalTitle} edited by B`)
+        .getByTestId("goal-icon")
+        .locator("div")
+        .first()
+        .click();
+      await userAPage.getByRole("button", { name: "add changes  Make all checked" }).click();
+      await expect(userAPage.getByTestId(`goal-${currentGoalTitle} edited by C`)).toBeVisible();
     });
   });
 });
