@@ -16,6 +16,7 @@ import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import { GoalActions, TaskActions } from "@src/constants/actions";
+import useScheduler from "./useScheduler";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -27,6 +28,7 @@ function useApp() {
   const setLastAction = useSetRecoilState(lastAction);
   const setShowToast = useSetRecoilState(displayToast);
   const [devMode, setDevMode] = useRecoilState(openDevMode);
+  const { generateInitialSchedule } = useScheduler();
 
   const confirmationState = useRecoilValue(displayConfirmation);
 
@@ -125,7 +127,6 @@ function useApp() {
     localStorage.setItem(LocalStorageKeys.CONFIRMATION_STATE, JSON.stringify(confirmationState));
   }, [confirmationState]);
 
-  // Check for missed hint calls
   useEffect(() => {
     scheduledHintCalls()
       .then(() => {
@@ -141,27 +142,37 @@ function useApp() {
   }, []);
 
   useEffect(() => {
-    const checkDevMode = async () => {
-      const isDevMode = await checkMagicGoal();
-      if (!devMode && isDevMode) {
-        setDevMode(isDevMode);
+    const initializeApp = async () => {
+      const checkDevMode = async () => {
+        const isDevMode = await checkMagicGoal();
+        if (!devMode && isDevMode) {
+          setDevMode(isDevMode);
+        }
+      };
+      const checkUpdates = async () => {
+        navigator.serviceWorker
+          .register("./service-worker.js")
+          .then((registration) => {
+            if (registration.waiting) {
+              registration.waiting?.postMessage({ type: "SKIP_WAITING" });
+              window.location.reload();
+            }
+          })
+          .catch((err) => console.log(err));
+      };
+
+      await checkUpdates();
+      await checkDevMode();
+      await createDefaultGoals();
+      try {
+        await generateInitialSchedule();
+      } catch (error) {
+        console.error("Failed to generate initial schedule:", error);
       }
     };
-    const checkUpdates = async () => {
-      navigator.serviceWorker
-        .register("./service-worker.js")
-        .then((registration) => {
-          if (registration.waiting) {
-            registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-            window.location.reload();
-          }
-        })
-        .catch((err) => console.log(err));
-    };
-    checkUpdates();
-    checkDevMode();
-    createDefaultGoals();
-  }, []);
+
+    initializeApp();
+  }, [generateInitialSchedule, setDevMode, devMode]);
 
   useEffect(() => {
     const lastRefresh = localStorage.getItem(LocalStorageKeys.LAST_REFRESH);

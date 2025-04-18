@@ -91,6 +91,7 @@ function useScheduler() {
     data: tasks,
     isLoading,
     error: queryError,
+    refetch: generateInitialSchedule,
   } = useQuery({
     queryKey: ["scheduler"],
     queryFn: async () => {
@@ -143,6 +144,7 @@ function useScheduler() {
     error: queryError,
     checkGoalSchedule: checkGoalScheduleMutation,
     isCheckingGoalSchedule,
+    generateInitialSchedule,
   };
 }
 
