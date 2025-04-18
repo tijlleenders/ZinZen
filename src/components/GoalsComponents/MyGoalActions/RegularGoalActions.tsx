@@ -76,7 +76,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
       if (res) {
         setShowToast({
           open: true,
-          message: `Goal ${res.convertedGoal?.title} has been added into ${res.parentGoal?.title}!`,
+          message: `Goal ${res.convertedGoal?.title} has been added into ${res.parentGoalName}!`,
           extra: "",
         });
       }

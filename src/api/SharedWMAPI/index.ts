@@ -225,7 +225,7 @@ export const convertSharedWMGoalToColab = async (goal: GoalItem) => {
 
   return {
     convertedGoal: goal,
-    parentGoal: sharedAncestorGoal || "root",
+    parentGoalName: sharedAncestorGoal?.title || "root",
   };
 };
 
