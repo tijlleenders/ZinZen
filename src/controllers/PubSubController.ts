@@ -35,7 +35,6 @@ export const sendUpdatedGoal = async (
           goal: {
             ...changes,
             parentGoalId: recentParentGoalId,
-            timestamp: Date.now(),
             participants: [],
           },
         },
@@ -52,7 +51,6 @@ export const sendFinalUpdateOnGoal = async (
   ancestors: string[] = [],
   redefineAncestors = true,
   excludeSubs: string[] = [],
-  timestamp: number = Date.now(),
 ) => {
   const goal = await getGoal(goalId);
   if (!goal) {
@@ -74,8 +72,6 @@ export const sendFinalUpdateOnGoal = async (
   filteredSubscribers?.forEach(async (participant) => {
     const rootGoal = await findParticipantTopLevelGoal(goalId, participant.relId);
     if (!rootGoal?.id) return;
-    await sendUpdatesToSubscriber(participant, rootGoal.id, action, [
-      { level: ancestorGoalIds.length, id: goalId, timestamp },
-    ]);
+    await sendUpdatesToSubscriber(participant, rootGoal.id, action, [{ level: ancestorGoalIds.length, id: goalId }]);
   });
 };

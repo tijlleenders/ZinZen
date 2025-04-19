@@ -88,6 +88,7 @@ export const sendUpdatesToSubscriber = async (
       changeType,
       notificationGoalId,
       changes,
+      timestamp: Date.now(),
     },
   };
   const res = await createContactRequest(url, requestBody);

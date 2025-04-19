@@ -22,5 +22,9 @@ export async function isIncomingIdChangeLatest(localGoalId: string, incomingChan
     return true;
   }
 
-  return true;
+  if (incomingChangeTimestamp > localGoal.timestamp) {
+    return true;
+  }
+
+  return false;
 }
