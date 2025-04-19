@@ -1,13 +1,13 @@
 /* eslint-disable import/no-relative-packages */
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
 import { GoalItem } from "@src/models/GoalItem";
-import { ITaskOfDay } from "@src/Interfaces/Task";
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { ISchedulerInput, ISchedulerOutput, SchedulerCacheCode } from "@src/Interfaces/IScheduler";
 // import { resetProgressOfToday } from "@src/api/TasksAPI";
-import { lastAction, openDevMode } from "@src/store";
+import { lastAction } from "@src/store";
 import { generateUniqueIdForSchInput } from "@src/utils/SchedulerUtils";
 import {
   getCachedSchedule,
@@ -20,10 +20,9 @@ import { schedulerErrorState } from "@src/store/SchedulerErrorState";
 import init, { schedule } from "../../pkg/scheduler";
 
 function useScheduler() {
-  const devMode = useRecoilValue(openDevMode);
-  const [tasks, setTasks] = useState<{ [day: string]: ITaskOfDay }>({});
   const [action, setLastAction] = useRecoilState(lastAction);
   const setSchedulerError = useSetRecoilState(schedulerErrorState);
+  const queryClient = useQueryClient();
 
   const getInputForScheduler = async (activeGoals: GoalItem[]) => {
     try {
@@ -81,15 +80,21 @@ function useScheduler() {
     try {
       await putSchedulerRes(cachedResCode, newGeneratedInputId, JSON.stringify(res));
       const processedOutput = await handleSchedulerOutput(res);
-      setTasks({ ...processedOutput });
+      return processedOutput;
     } catch (error) {
       setSchedulerError((prevErrors) => [...prevErrors, `Error processing scheduler result: ${error}`]);
       throw error;
     }
   };
 
-  const initialCall = async () => {
-    try {
+  const {
+    data: tasks,
+    isLoading,
+    error: queryError,
+    refetch: generateInitialSchedule,
+  } = useQuery({
+    queryKey: ["scheduler"],
+    queryFn: async () => {
       const { schedulerInput: schedulerInputV1, cachedRes } = await generateSchedule();
       let newGeneratedInputId = "";
       let res: ISchedulerOutput = { scheduled: [], impossible: [] };
@@ -104,41 +109,42 @@ function useScheduler() {
         res = schedule(schedulerInputV2);
       }
 
-      await processSchedulerResult(res, newGeneratedInputId, cachedRes.code);
-    } catch (error) {
-      setSchedulerError((prevErrors) => [...prevErrors, `Error in initial call: ${error}`]);
-    }
-  };
+      return processSchedulerResult(res, newGeneratedInputId, cachedRes.code);
+    },
+    enabled: true,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  useEffect(() => {
-    initialCall();
-  }, [devMode]);
+  const { mutateAsync: checkGoalScheduleMutation, isLoading: isCheckingGoalSchedule } = useMutation({
+    mutationFn: async (goal: GoalItem): Promise<ISchedulerOutput | null> => {
+      try {
+        const activeGoals: GoalItem[] = await getAllGoals();
+        const goalsWithConfig = [...activeGoals, goal];
+        const { schedulerInput } = await organizeDataForInptPrep(goalsWithConfig);
+
+        await init();
+        return schedule(schedulerInput);
+      } catch (err) {
+        setSchedulerError((prevErrors) => [...prevErrors, `Error checking goal schedule: ${err}`]);
+        return null;
+      }
+    },
+  });
 
   useEffect(() => {
     if (action.includes("task")) {
-      initialCall().then(async () => {
-        setLastAction("none");
-      });
+      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
+      setLastAction("none");
     }
-  }, [action]);
-
-  const checkGoalSchedule = async (goal: GoalItem): Promise<ISchedulerOutput | null> => {
-    try {
-      const activeGoals: GoalItem[] = await getAllGoals();
-      const goalsWithConfig = [...activeGoals, goal];
-      const { schedulerInput } = await organizeDataForInptPrep(goalsWithConfig);
-
-      await init();
-      return schedule(schedulerInput);
-    } catch (error) {
-      setSchedulerError((prevErrors) => [...prevErrors, `Error checking goal schedule: ${error}`]);
-      return null;
-    }
-  };
+  }, [action, queryClient, setLastAction]);
 
   return {
-    tasks,
-    checkGoalSchedule,
+    tasks: tasks || {},
+    isLoading,
+    error: queryError,
+    checkGoalSchedule: checkGoalScheduleMutation,
+    isCheckingGoalSchedule,
+    generateInitialSchedule,
   };
 }
 
