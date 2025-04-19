@@ -9,6 +9,11 @@ export interface IParticipant {
 
 export type TGoalCategory = "Standard" | "Budget" | "Cluster";
 
+export type TGoalTimeBudget = {
+  perDay: string;
+  perWeek: string;
+};
+
 export interface GoalItem {
   id: string;
   title: string;
@@ -29,10 +34,7 @@ export interface GoalItem {
   participants: IParticipant[];
   isShared: boolean;
   notificationGoalId: string;
-  timeBudget?: {
-    perDay: string;
-    perWeek: string;
-  };
+  timeBudget?: TGoalTimeBudget;
   typeOfGoal: "myGoal" | "shared";
   category: TGoalCategory;
   newUpdates: boolean;

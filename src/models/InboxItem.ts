@@ -38,6 +38,6 @@ export interface Payload {
   notificationGoalId: string;
   changes: (changesInGoal | changesInId)[];
   type: PayloadType;
-  timestamp: string;
+  timestamp: number;
   TTL: number;
 }

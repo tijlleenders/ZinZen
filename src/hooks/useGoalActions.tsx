@@ -1,4 +1,10 @@
-import { getAllLevelGoalsOfId, ILevelGoals, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import {
+  getAllLevelGoalsOfId,
+  ILevelGoals,
+  unarchiveUserGoal,
+  updateSharedStatusOfGoal,
+  updateTimestamp,
+} from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/controllers/GoalController";
@@ -114,6 +120,7 @@ const useGoalActions = () => {
       suggestNewGoal(newGoal, parentGoal, rootGoal, subGoalsHistory.length);
     } else {
       // handle regular mode
+      await updateTimestamp(newGoal.parentGoalId);
       await createGoal(newGoal, newGoal.parentGoalId, ancestors, hintOption);
       if (!parentGoal && newGoal.title === "magic") {
         setDevMode(true);

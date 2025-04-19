@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 // eslint-disable-next-line no-await-in-loop
 
-import { getGoal, updateGoal } from "@src/api/GoalsAPI";
+import { getGoal, updateGoal, updateTimestamp } from "@src/api/GoalsAPI";
 import { deleteSharedGoalMetadata } from "@src/api/SharedGoalNotMoved";
 import {
   addGoalToNewParentSublist,
@@ -62,6 +62,8 @@ export const findMostRecentSharedAncestor = async (parentGoalId: string, partici
 // Function to handle local goal move
 const handleLocalGoalMove = async (goalToMove: GoalItem, newParentGoalId: string) => {
   const oldParentId = goalToMove.parentGoalId;
+
+  await updateTimestamp(goalToMove.id);
 
   // Update goal relationships
   await Promise.all([

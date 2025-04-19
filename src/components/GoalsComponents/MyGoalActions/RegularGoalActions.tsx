@@ -18,6 +18,7 @@ import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
 
 import { GoalActions } from "@src/constants/actions";
+import { updateTimestamp } from "@src/api/GoalsAPI";
 import ActionDiv from "./ActionDiv";
 
 import "./MyGoalActions.scss";
@@ -53,6 +54,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   };
 
   const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
+    await updateTimestamp(goalToArchive.id);
     await archiveThisGoal(goalToArchive, goalAncestors);
     setLastAction(GoalActions.GOAL_ARCHIVED);
     const goalTitleElement = document.querySelector(`#goal-${goalToArchive.id} .goal-title`) as HTMLElement;

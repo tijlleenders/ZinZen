@@ -8,6 +8,11 @@ import { sortGoalsByProps } from "../GCustomAPI";
 import { deleteAvailableGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
 import { deleteTaskHistoryItem } from "../TaskHistoryAPI";
 
+export const updateTimestamp = async (id: string) => {
+  const now = Date.now();
+  await db.goalsCollection.update(id, { timestamp: now });
+};
+
 export const addDeletedGoal = async (goal: GoalItem) => {
   await db
     .transaction("rw", db.goalTrashCollection, async () => {

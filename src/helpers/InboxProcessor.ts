@@ -30,7 +30,6 @@ import {
   removeGoalFromParentSublist,
   updateRootGoalNotification,
 } from "@src/controllers/GoalController";
-import { isIncomingGoalLatest, isIncomingIdChangeLatest } from "./mergeSharedGoalItems";
 import { SharedGoalChangesManager } from "./strategies/SharedGoalChangesManager";
 import {
   ArchivedStrategy,
@@ -58,12 +57,40 @@ function checkIfTagsAreChanged(goal: GoalItem, changes: GoalItem): boolean {
     const goalValue = goal[tag as keyof GoalItem];
     const changesValue = changes[tag as keyof GoalItem];
 
-    if (Array.isArray(goalValue) && Array.isArray(changesValue)) {
-      return JSON.stringify(goalValue) !== JSON.stringify(changesValue);
+    let areDifferent = false;
+    if (tag === "timeBudget") {
+      // Directly compare known properties of timeBudget
+      const goalBudget = goalValue as GoalItem["timeBudget"];
+      const changesBudget = changesValue as GoalItem["timeBudget"];
+
+      if (goalBudget && changesBudget) {
+        areDifferent = goalBudget.perDay !== changesBudget.perDay || goalBudget.perWeek !== changesBudget.perWeek;
+      } else {
+        areDifferent = goalBudget !== changesBudget;
+      }
+    } else if (Array.isArray(goalValue) && Array.isArray(changesValue)) {
+      areDifferent = JSON.stringify(goalValue) !== JSON.stringify(changesValue);
+    } else {
+      areDifferent = goalValue !== changesValue;
     }
 
-    return goalValue !== changesValue;
+    if (areDifferent) {
+      console.log(`Tag changed: ${tag}, Goal value:`, goalValue, "Changes value:", changesValue);
+    }
+
+    return areDifferent;
   });
+}
+
+export async function isIncomingIdChangeLatest(
+  localGoalTimestamp: number,
+  incomingChangeTimestamp: number,
+): Promise<boolean> {
+  if (incomingChangeTimestamp > localGoalTimestamp) {
+    return true;
+  }
+
+  return false;
 }
 
 const isIdChangeType = (type: typeOfChange): type is IdChangeTypes => {
@@ -187,7 +214,7 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
 
   // handle collaborator goal changes
   else if (["sharer", "suggestion"].includes(payload.type)) {
-    const { changes, changeType } = payload;
+    const { changes, changeType, timestamp } = payload;
 
     // handle new goals
     if (changeType === "subgoals") {
@@ -211,50 +238,46 @@ export const handleIncomingChanges = async (payload: Payload, relId: string) => 
           }
         }
       }
-    }
 
-    // handle the case where goal is not found in local db
-    // maybe already moved to other place or not yet added to local db
-    if (!localGoal) {
-      console.log("Goal not found in local db. processing changes...");
-      const defaultChanges = createDefaultChangesWithIntent(changes, changeType, payload.type as typeOfIntent);
+      // handle the case where goal is not found in local db
+      // maybe already moved to other place or not yet added to local db
+      if (!localGoal) {
+        console.log("Goal not found in local db. processing changes...");
+        const defaultChanges = createDefaultChangesWithIntent(changes, changeType, payload.type as typeOfIntent);
+
+        const notificationGoalId = await getNotificationGoalId(goalId);
+
+        await addChangesToRootGoal(relId, defaultChanges, notificationGoalId || goalId);
+        return;
+      }
+
+      // check if all changes are latest for LWW
+      const allAreLatest = await Promise.all(
+        changes.map(async (ele) => {
+          const isLatest = await isIncomingIdChangeLatest(localGoal?.timestamp || 0, timestamp);
+
+          return isLatest ? ele : null;
+        }),
+      );
+
+      const filteredChanges = allAreLatest.filter((ele) => ele !== null);
+
+      if (filteredChanges.length === 0) {
+        console.log("All changes are not latest");
+        return;
+      }
+
+      const defaultChanges = createDefaultChangesWithIntent(filteredChanges, changeType, payload.type as typeOfIntent);
 
       const notificationGoalId = await getNotificationGoalId(goalId);
 
-      await addChangesToRootGoal(relId, defaultChanges, notificationGoalId || goalId);
-      return;
+      if (!notificationGoalId) {
+        console.log("Notification goal id not found", goalId);
+        return;
+      }
+
+      await addChangesToRootGoal(relId, defaultChanges, notificationGoalId);
     }
-
-    // check if all changes are latest for LWW
-    const allAreLatest = await Promise.all(
-      changes.map(async (ele) => {
-        let isLatest = true;
-        if ("goal" in ele) {
-          isLatest = await isIncomingGoalLatest(localGoal.id, ele.goal);
-        } else {
-          isLatest = await isIncomingIdChangeLatest(localGoal.id, ele.timestamp);
-        }
-        return isLatest ? ele : null;
-      }),
-    );
-
-    const filteredChanges = allAreLatest.filter((ele) => ele !== null);
-
-    if (filteredChanges.length === 0) {
-      console.log("All changes are not latest");
-      return;
-    }
-
-    const defaultChanges = createDefaultChangesWithIntent(filteredChanges, changeType, payload.type as typeOfIntent);
-
-    const notificationGoalId = await getNotificationGoalId(goalId);
-
-    if (!notificationGoalId) {
-      console.log("Notification goal id not found", goalId);
-      return;
-    }
-
-    await addChangesToRootGoal(relId, defaultChanges, notificationGoalId);
   }
 };
 
@@ -346,8 +369,9 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
   await updateGoal(goal.id, {
     ...finalChanges,
     newUpdates: false,
-    start: finalChanges.start ? new Date(finalChanges.start) : null,
-    due: finalChanges.due ? new Date(finalChanges.due) : null,
+    start:
+      finalChanges.start && typeof finalChanges.start === "string" ? new Date(finalChanges.start).toISOString() : null,
+    due: finalChanges.due && typeof finalChanges.due === "string" ? new Date(finalChanges.due).toISOString() : null,
   });
 };
 

@@ -13,6 +13,7 @@ import {
   getParticipantsOfGoals,
   getHintsFromAPI,
   getChildrenGoals,
+  updateTimestamp,
 } from "@src/api/GoalsAPI";
 import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
@@ -253,6 +254,8 @@ export const modifyGoal = async (
   }
   console.log(goalTags);
   await updateGoal(goalId, goalTags);
+  await updateTimestamp(goalId);
+
   sendUpdatedGoal(goalId, ancestors);
 };
 
