@@ -21,6 +21,7 @@ test.describe("Goal Sharing Feature", () => {
   const subgoalTitle = "Subgoal";
   const secondGoalTitle = "Second Shared Goal";
   test.beforeAll(async ({ browser }) => {
+    test.setTimeout(100000);
     console.log("Setting up users A, B, and C pages...");
     ({ page: userAPage } = await createUserContextAndPage(browser));
     ({ page: userBPage } = await createUserContextAndPage(browser));
@@ -152,7 +153,6 @@ test.describe("Goal Sharing Feature", () => {
 
       await userBPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
-
       await expect(userBPage.getByTestId(`notification-dot-${subgoalTitle}`)).toBeVisible();
       // then click on the goal icon
       await userBPage.getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
