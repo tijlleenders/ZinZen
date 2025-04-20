@@ -84,3 +84,5 @@ export interface ISchedulerInput {
 }
 
 export type TBufferValue = { nextBuffer: number; availableBuffer: number };
+
+export type SchedulerCacheCode = "not-exist" | "expired" | "found";
