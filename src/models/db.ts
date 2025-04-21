@@ -58,16 +58,6 @@ export class ZinZenDB extends Dexie {
         console.log("🚀 ~ file: db.ts:63 ~ ZinZenDB ~ .upgrade ~ this.verno:", currentVersion);
         syncVersion(db, currentVersion);
       });
-    // this.goalsCollection.hook("updating", (modifications: GoalItem) => {
-    //   if (modifications.typeOfGoal === "shared") {
-    //     modifications.timestamp = Date.now();
-    //   }
-    //   return modifications;
-    // });
-
-    // this.goalsCollection.hook("creating", (primKey, obj) => {
-    //   obj.timestamp = Date.now();
-    // });
   }
 }
 

@@ -13,25 +13,6 @@ import {
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 
-/**
- * Finds the most recent ancestor goal that is shared with a specific participant.
- * Traverses up the goal hierarchy until it finds a goal that is shared with the participant
- * or reaches the root level.
- *
- * @param goalId - The ID of the goal to start searching from
- * @param participantRelId - The relationship ID of the participant to check sharing with
- * @returns Promise<string> - The ID of the most recent shared ancestor goal, or "root" if none found
- *
- * @example
- * // Given the following goal hierarchy:
- * // root
- * // └── goalA (shared with participant "user1")
- * //     └── goalB
- * //         └── goalC
- *
- * const ancestorId = await findMostRecentSharedAncestor("goalC", "user1");
- * console.log(ancestorId); // Output: "goalA"
- */
 export const findMostRecentSharedAncestor = async (parentGoalId: string, participantRelId: string): Promise<string> => {
   const goalIds: string[] = [];
   let currentGoalId = parentGoalId;

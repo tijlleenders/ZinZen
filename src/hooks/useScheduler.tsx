@@ -6,7 +6,6 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { GoalItem } from "@src/models/GoalItem";
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { ISchedulerInput, ISchedulerOutput, SchedulerCacheCode } from "@src/Interfaces/IScheduler";
-// import { resetProgressOfToday } from "@src/api/TasksAPI";
 import { lastAction } from "@src/store";
 import { generateUniqueIdForSchInput } from "@src/utils/SchedulerUtils";
 import {

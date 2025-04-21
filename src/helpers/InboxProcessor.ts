@@ -338,9 +338,6 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
       finalChanges.notificationGoalId = goal.id;
     }
 
-    // update participants
-    // finalChanges.participants = mergeParticipants(goal.participants, newParentGoal?.participants ?? []);
-
     // update goal relationships
     await Promise.all([
       removeGoalFromParentSublist(goal.id, goal.parentGoalId),
@@ -348,7 +345,6 @@ export const acceptSelectedTags = async (unselectedTags: string[], updateList: I
     ]);
 
     finalChanges.parentGoalId = newParentGoalId;
-    // finalChanges.notificationGoalId = newParentGoal?.notificationGoalId ?? goal.id;
   }
 
   Object.keys(prettierVersion).forEach((ele) => {
