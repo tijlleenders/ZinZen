@@ -55,6 +55,7 @@ const PartnerGoals = () => {
 
   const refreshActiveGoals = async () => {
     const rootGoals = await getRootGoalsOfPartner(relId);
+    console.log("rootGoals", rootGoals);
     handleUserGoals(rootGoals);
   };
   const search = async (text: string) => {
@@ -85,8 +86,8 @@ const PartnerGoals = () => {
   }, [parentId, partner, displaySearch]);
 
   return (
-    <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
-      <ParentGoalProvider>
+    <ParentGoalProvider>
+      <AppLayout title={`${partnerName}'s Goals`} debounceSearch={debounceSearch}>
         {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
         {goalCategories.includes(goalType) && (
           <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
@@ -104,7 +105,7 @@ const PartnerGoals = () => {
             <GoalSublist />
           )}
 
-          {!isLoading && !activeGoals?.length && parentId === "root" && (
+          {!activeGoals?.length && parentId === "root" && (
             <>
               <InvitationStatus relId={relId} />
               <img
@@ -115,8 +116,8 @@ const PartnerGoals = () => {
             </>
           )}
         </div>
-      </ParentGoalProvider>
-    </AppLayout>
+      </AppLayout>
+    </ParentGoalProvider>
   );
 };
 

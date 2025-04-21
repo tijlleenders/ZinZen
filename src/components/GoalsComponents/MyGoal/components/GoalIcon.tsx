@@ -14,7 +14,7 @@ export const GoalIcon: React.FC<GoalIconProps> = ({ color, showDottedBorder, chi
   const outerBorderStyle = showDottedBorder ? `2px dashed ${color}` : `1px solid ${color}`;
 
   return (
-    <div className="d-flex f-col gap-4">
+    <div data-testid="goal-icon" className="d-flex f-col gap-4">
       <div
         className="goal-dropdown goal-dd-outer"
         style={{

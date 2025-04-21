@@ -3,20 +3,18 @@ import { useEffect } from "react";
 
 import { lastAction, displayConfirmation, openDevMode, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
-import { GoalItem } from "@src/models/GoalItem";
 import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
-import { addSharedWMGoal } from "@src/api/SharedWMAPI";
 import { createDefaultGoals } from "@src/controllers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
-import { handleIncomingChanges } from "@src/helpers/InboxProcessor";
-import { getContactSharedGoals, shareGoalWithContact } from "@src/services/contact.service";
-import { updateAllUnacceptedContacts, getContactByRelId, clearTheQueue } from "@src/api/ContactsAPI";
+import { shareGoalWithContact } from "@src/services/contact.service";
+import { updateAllUnacceptedContacts, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
-import { GoalActions, TaskActions } from "@src/constants/actions";
+import { TaskActions } from "@src/constants/actions";
 import useScheduler from "./useScheduler";
+import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -48,20 +46,31 @@ function useApp() {
             const { goalsToBeShared, relId, name } = contact;
             return Promise.allSettled([
               ...goalsToBeShared.map(async (goalId) => {
-                const goal = getGoal(goalId);
+                const goal = await getGoal(goalId);
                 if (!goal) {
                   return null;
                 }
+                const sharedAncestorId = await findMostRecentSharedAncestor(goal.parentGoalId, relId);
                 const goalWithChildrens = await getAllLevelGoalsOfId(goalId, true);
-                return shareGoalWithContact(relId, [
-                  ...goalWithChildrens.map((ele) => ({
-                    ...ele,
+                const validGoals = goalWithChildrens.map((goalNode) => ({
+                  ...goalNode,
+                  goals: goalNode.goals.map((goalItem) => ({
+                    ...goalItem,
                     participants: [],
-                    parentGoalId: ele.id === goalId ? "root" : ele.parentGoalId,
-                    rootGoalId: goalId,
+                    parentGoalId: goalItem.id === goal.id ? "root" : goalItem.parentGoalId,
+                    notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId,
                   })),
-                ]).then(async () => {
-                  updateSharedStatusOfGoal(goalId, relId, name).then(() => console.log("status updated"));
+                }));
+                return shareGoalWithContact(relId, validGoals, sharedAncestorId).then(async () => {
+                  await Promise.all(
+                    validGoals.map(async (goalNode) => {
+                      goalNode.goals.map(async (goalItem) => {
+                        await updateSharedStatusOfGoal(goalItem.id, relId, name);
+                      });
+                    }),
+                  ).catch((error) => {
+                    console.error("[shareGoalWithRelId] Error updating shared status:", error);
+                  });
                 });
               }),
               clearTheQueue(relId),
@@ -69,45 +78,6 @@ function useApp() {
           }),
         );
       });
-      const res = await getContactSharedGoals();
-      // @ts-ignore
-      const resObject = res.response.reduce(
-        (acc, curr) => ({ ...acc, [curr.relId]: [...(acc[curr.relId] || []), curr] }),
-        {},
-      );
-      if (res.success) {
-        Object.keys(resObject).forEach(async (relId: string) => {
-          const contactItem = await getContactByRelId(relId);
-          if (contactItem) {
-            // @ts-ignore
-            resObject[relId].forEach(async (ele) => {
-              console.log("🚀 ~ file: useApp.tsx:45 ~ resObject[relId].forEach ~ ele:", ele);
-              if (ele.type === "shareMessage") {
-                const { goalWithChildrens }: { goalWithChildrens: GoalItem[] } = ele;
-                const rootGoal = goalWithChildrens[0];
-                rootGoal.participants.push({
-                  name: contactItem.name,
-                  relId,
-                  type: "sharer",
-                  following: true,
-                });
-                addSharedWMGoal(rootGoal)
-                  .then(() => {
-                    goalWithChildrens.slice(1).forEach((goal) => {
-                      addSharedWMGoal(goal).catch((err) => console.log(`Failed to add in inbox ${goal.title}`, err));
-                    });
-                  })
-                  .then(() => {
-                    setLastAction(GoalActions.GOAL_NEW_UPDATES);
-                  })
-                  .catch((err) => console.log(`Failed to add root goal ${rootGoal.title}`, err));
-              } else if (["sharer", "suggestion"].includes(ele.type)) {
-                handleIncomingChanges(ele, relId).then(() => setLastAction(GoalActions.GOAL_NEW_UPDATES));
-              }
-            });
-          }
-        });
-      }
     };
     const installId = localStorage.getItem(LocalStorageKeys.INSTALL_ID);
     if (!installId) {

@@ -1,4 +1,10 @@
-import { getAllLevelGoalsOfId, unarchiveUserGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import {
+  getAllLevelGoalsOfId,
+  ILevelGoals,
+  unarchiveUserGoal,
+  updateSharedStatusOfGoal,
+  updateTimestamp,
+} from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/controllers/GoalController";
@@ -20,6 +26,7 @@ import { removeBackTicks } from "@src/utils/patterns";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { GoalActions } from "@src/constants/actions";
+import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 
 const pageCrumple = new Audio(pageCrumplingSound);
 const addGoalSound = new Audio(plingSound);
@@ -82,8 +89,8 @@ const useGoalActions = () => {
     if (isPartnerModeActive) {
       let rootGoal = goal;
       if (state.goalsHistory && state.goalsHistory.length > 0) {
-        const rootGoalId = state.goalsHistory[0].goalID;
-        rootGoal = (await getSharedWMGoalById(rootGoalId)) || goal;
+        const notificationGoalId = state.goalsHistory[0].goalID;
+        rootGoal = (await getSharedWMGoalById(notificationGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
     } else if (
@@ -103,14 +110,17 @@ const useGoalActions = () => {
   };
 
   const addGoal = async (newGoal: GoalItem, hintOption: boolean, parentGoal?: GoalItem) => {
+    // handle partner mode
     if (isPartnerModeActive && subGoalsHistory.length) {
-      const rootGoalId = subGoalsHistory[0].goalID;
-      const rootGoal = await getSharedWMGoalById(rootGoalId);
+      const notificationGoalId = subGoalsHistory[0].goalID;
+      const rootGoal = await getSharedWMGoalById(notificationGoalId);
       if (!parentGoal || !rootGoal) {
         return;
       }
       suggestNewGoal(newGoal, parentGoal, rootGoal, subGoalsHistory.length);
     } else {
+      // handle regular mode
+      await updateTimestamp(newGoal.parentGoalId);
       await createGoal(newGoal, newGoal.parentGoalId, ancestors, hintOption);
       if (!parentGoal && newGoal.title === "magic") {
         setDevMode(true);
@@ -121,17 +131,37 @@ const useGoalActions = () => {
   };
 
   const shareGoalWithRelId = async (relId: string, name: string, goal: GoalItem) => {
-    const goalWithChildrens = await getAllLevelGoalsOfId(goal.id, true);
-    await shareGoalWithContact(relId, [
-      ...goalWithChildrens.map((ele) => ({
-        ...ele,
-        participants: [],
-        parentGoalId: ele.id === goal.id ? "root" : ele.parentGoalId,
-        rootGoalId: goal.id,
+    // Fetch goal hierarchy
+    const goalWithChildrens: ILevelGoals[] = await getAllLevelGoalsOfId(goal.id, true);
+
+    const sharedAncestorId = await findMostRecentSharedAncestor(goal.parentGoalId, relId);
+
+    // Create modified copies of all goals with appropriate sharing properties
+    const updatedGoalWithChildrens = goalWithChildrens.map((goalNode) => ({
+      ...goalNode,
+      goals: goalNode.goals.map((goalItem) => ({
+        ...goalItem,
+        participants: [], // remove participants before sharing
+        parentGoalId: goalItem.id === goal.id ? sharedAncestorId : goalItem.parentGoalId, // if we want to share a subgoal, then we need to set the parentGoalId to the root goal
+        notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId, // if we want to share a subgoal, then we need to set the notificationGoalId to the goal id
       })),
-    ]);
-    updateSharedStatusOfGoal(goal.id, relId, name).then(() => console.log("status updated"));
-    showMessage(`Cheers!!, Your goal is shared with ${name}`);
+    }));
+
+    // Share the goals with the contact
+    await shareGoalWithContact(relId, updatedGoalWithChildrens, sharedAncestorId);
+
+    try {
+      // Update sharing status for all goals
+      await Promise.all(
+        updatedGoalWithChildrens.flatMap((goalNode) =>
+          goalNode.goals.map((goalItem) => updateSharedStatusOfGoal(goalItem.id, relId, name)),
+        ),
+      );
+    } catch (error) {
+      console.error("[shareGoalWithRelId] Error updating shared status:", error);
+    }
+
+    showMessage(`Cheers!! Your goal and its subgoals are shared with ${name}`);
   };
 
   const addContact = async (relId: string, goalId: string) => {
@@ -158,7 +188,6 @@ const useGoalActions = () => {
     goalTitle = `${goalTitle} copied!`;
     showMessage("Code copied to clipboard", goalTitle);
   };
-
   return {
     addGoal,
     deleteGoalAction,

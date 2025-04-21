@@ -9,6 +9,8 @@ import NotificationSymbol from "@src/common/NotificationSymbol";
 import useGoalActions from "@src/hooks/useGoalActions";
 import TriangleIcon from "@src/assets/TriangleIcon";
 import { CopyIcon } from "@src/assets/CopyIcon";
+import { moveGoalState } from "@src/store/moveGoalState";
+import { useRecoilValue } from "recoil";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import { GoalIcon } from "./components/GoalIcon";
@@ -31,6 +33,8 @@ const InnerCircle: React.FC<{ color: string; children: ReactNode }> = ({ color, 
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
   const { partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
+
+  const goalToMove = useRecoilValue(moveGoalState);
 
   const [expandGoalId, setExpandGoalId] = useState("root");
   const [isAnimating, setIsAnimating] = useState(true);
@@ -100,7 +104,13 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const titleIsCode = isGoalCode(goal.title);
 
   return (
-    <ZItemContainer id={`goal-${goal.id}`} expandGoalId={expandGoalId} isAnimating={isAnimating}>
+    <ZItemContainer
+      id={`goal-${goal.id}`}
+      expandGoalId={expandGoalId}
+      dataTestId={`goal-${goal.title}`}
+      isAnimating={isAnimating}
+      isGoalToBeMoved={goalToMove?.id === goal.id}
+    >
       <div
         style={{ touchAction: "none" }}
         onClickCapture={(e) => {
@@ -117,7 +127,9 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         ) : (
           <GoalIcon color={goal.goalColor} showDottedBorder={!(goal.timeBudget?.perDay == null)}>
             <InnerCircle color={innerBorderColor}>
-              {goal.newUpdates && <NotificationSymbol color={goal.goalColor} />}
+              {goal.newUpdates && (
+                <NotificationSymbol color={goal.goalColor} dataTestId={`notification-dot-${goal.title}`} />
+              )}
             </InnerCircle>
           </GoalIcon>
         )}

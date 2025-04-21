@@ -9,26 +9,8 @@ export async function createUserContextAndPage(browser: Browser) {
 }
 
 export async function goalActionFlow(page: Page, action: string, goalTitle: string) {
-  console.log(`Executing action "${action}" on goal titled "${goalTitle}"...`);
-  const goalDiv = await page.locator(".user-goal-main").filter({ hasText: new RegExp(`^${goalTitle}$`) });
-  console.log("Located goal div:", goalDiv);
-
-  const goalDropdown = await page
-    .locator(".user-goal-main")
-    .filter({
-      has: page.locator('.goal-title:has-text("Test Goal")'),
-    })
-    .locator(".goal-dd-outer");
-
-  console.log("Clicking on the goal dropdown...");
-  await goalDropdown.click();
-  await expect(page.getByTestId("zmodal")).toBeInViewport();
-  console.log(`Clicking on the action "${action}"...`);
-  await page
-    .locator("div")
-    .filter({ hasText: new RegExp(`^${action}$`) })
-    .first()
-    .click({ force: true });
+  await page.getByTestId(`goal-${goalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+  await page.getByTestId("zmodal").getByText(action).first().click();
 }
 
 export async function goToShareGoalModalFlow(page: Page, goalTitle: string) {
@@ -39,8 +21,8 @@ export async function goToShareGoalModalFlow(page: Page, goalTitle: string) {
 export async function waitForResponseConfirmation(
   page: Page,
   urlContains: string,
-  maxRetries: number = 3,
-  retryDelay: number = 2000,
+  maxRetries = 3,
+  retryDelay = 2000,
 ): Promise<void> {
   console.log(`Waiting for response confirmation for URL containing "${urlContains}"...`);
   let response;
@@ -120,10 +102,21 @@ export async function acceptContactInvitation(page: Page, invitationLink: string
   await page.getByRole("button", { name: "Add to my contacts" }).click();
 }
 
-export async function goToMyGoalsPageFlow(page: Page) {
+export type AppPageName = "Goals" | "Feelings" | "Groups";
+
+export async function goToAppPage(page: Page, appPageName: AppPageName, reload = false) {
   console.log("Navigating to 'My Goals' page...");
-  await page.goto("http://127.0.0.1:3000/");
-  await page.getByRole("button", { name: "Goals" }).click();
+  if (reload) {
+    await page.goto("http://127.0.0.1:3000/");
+  }
+  await page.getByRole("button", { name: appPageName }).click();
+}
+
+export async function createGoalFromGoalPage(page: Page, goalTitle: string) {
+  await page.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
+  const titleInputContainer = page.getByPlaceholder("Goal title");
+  await titleInputContainer.fill(goalTitle);
+  await titleInputContainer.press("Enter");
 }
 
 export async function verifyUpdatedGoal(
@@ -151,7 +144,7 @@ export async function verifyUpdatedGoal(
         .locator(".goal-dd-outer");
 
       console.log("Checking for notification dot...");
-      await expect(goalDropdownWithContact.getByTestId("notification-dot")).toBeVisible();
+      await expect(goalDropdownWithContact.getByTestId(`notification-dot-${expectedGoalTitle}`)).toBeVisible();
       await goalDropdownWithContact.click();
 
       console.log(`Waiting for goal titled "${expectedGoalTitle}" to be visible...`);

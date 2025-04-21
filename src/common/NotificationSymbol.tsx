@@ -1,8 +1,8 @@
 import React from "react";
 
-const NotificationSymbol = ({ color }: { color: string }) => (
+const NotificationSymbol = ({ color, dataTestId }: { color: string; dataTestId?: string }) => (
   <div
-    data-testid="notification-dot"
+    data-testid={dataTestId}
     style={{
       width: 6,
       height: 6,

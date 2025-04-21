@@ -1,12 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
-import { createGetHintsRequest, shareGoal } from "@src/services/goal.service";
+import { createGetHintsRequest } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
 import { deleteAvailableGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
 import { deleteTaskHistoryItem } from "../TaskHistoryAPI";
+
+export const updateTimestamp = async (id: string) => {
+  const now = Date.now();
+  await db.goalsCollection.update(id, { timestamp: now });
+};
 
 export const addDeletedGoal = async (goal: GoalItem) => {
   await db
@@ -37,8 +43,8 @@ export const addGoal = async (goalDetails: GoalItem) => {
 
 export const getGoal = async (goalId: string) => {
   try {
-    const goal: GoalItem[] = await db.goalsCollection.where("id").equals(goalId).toArray();
-    return goal.length > 0 ? goal[0] : null;
+    const goal: GoalItem | undefined = await db.goalsCollection.where("id").equals(goalId).first();
+    return goal;
   } catch (error) {
     console.error(`Error fetching goal with ID ${goalId}:`, error);
     throw new Error(`Failed to fetch goal with ID ${goalId}`);
@@ -158,48 +164,24 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
   await unarchiveGoal(goal);
 };
 
-export const removeGoal = async (goal: GoalItem) => {
+export const removeGoal = async (goal: GoalItem, permanently = false) => {
   await deleteHintItem(goal.id);
   await Promise.allSettled([
     db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
-    addDeletedGoal(goal),
+    permanently ? null : addDeletedGoal(goal),
   ]);
 };
 
-export const removeChildrenGoals = async (parentGoalId: string) => {
+export const removeChildrenGoals = async (parentGoalId: string, permanently = false) => {
   const childrenGoals = await getChildrenGoals(parentGoalId);
   if (childrenGoals.length === 0) {
     return;
   }
   childrenGoals.forEach((goal) => {
-    removeChildrenGoals(goal.id);
-    removeGoal(goal);
+    removeChildrenGoals(goal.id, permanently);
+    removeGoal(goal, permanently);
     deleteTaskHistoryItem(goal.id);
   });
-};
-
-export const shareMyGoalAnonymously = async (goal: GoalItem, parent: string) => {
-  const shareableGoal = {
-    method: "shareMessage",
-    parentTitle: parent,
-    goal: {
-      title: goal.title,
-      duration: goal.duration,
-      habit: goal.habit,
-      start: goal.start?.toString(),
-      on: goal.on,
-      timeBudget: goal.timeBudget,
-      due: goal.due?.toString(),
-      afterTime: goal.afterTime,
-      beforeTime: goal.beforeTime,
-      createdAt: goal.createdAt,
-      goalColor: goal.goalColor,
-      language: goal.language,
-      link: goal.link,
-    },
-  };
-  const res = await shareGoal(shareableGoal);
-  return res;
 };
 
 export const getHintsFromAPI = async (goal: GoalItem) => {
@@ -262,27 +244,10 @@ export const getParticipantsOfGoals = async (ids: string[]) => {
     .where("id")
     .anyOf(...ids)
     .toArray();
-  return goals.flatMap((goal) => goal.participants.map((participant) => ({ sub: participant, rootGoalId: goal.id })));
+  return goals.flatMap((goal) =>
+    goal.participants.map((participant) => ({ sub: participant, notificationGoalId: goal.id })),
+  );
 };
-
-// export const convertSharedGoalToColab = async (id: string, accepted = true) => {
-//   db.transaction("rw", db.goalsCollection, async () => {
-//     await db.goalsCollection
-//       .where("id")
-//       .equals(id)
-//       .modify((obj: GoalItem) => {
-//         if (accepted) {
-//           obj.collaboration.collaborators.push(obj.shared.contacts[0]);
-//           obj.typeOfGoal = "collaboration";
-//           obj.shared = getDefaultValueOfShared();
-//         } else {
-//           obj.shared.conversionRequests = getDefaultValueOfShared().conversionRequests;
-//         }
-//       });
-//   }).catch((e) => {
-//     console.log(e.stack || e);
-//   });
-// };
 
 export const notifyNewColabRequest = async (id: string, relId: string) => {
   db.transaction("rw", db.goalsCollection, async () => {
@@ -297,26 +262,9 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
   });
 };
 
-// export const changeNewUpdatesStatus = async (newUpdates: boolean, goalId: string) => {
-//   db.transaction("rw", db.goalsCollection, async () => {
-//     await db.goalsCollection
-//       .where("id")
-//       .equals(goalId)
-//       .modify(async (obj: GoalItem) => {
-//         obj.collaboration = {
-//           ...obj.collaboration,
-//           newUpdates,
-//           allowed: false,
-//         };
-//       });
-//   }).catch((e) => {
-//     console.log(e.stack || e, goalId);
-//   });
-// };
-
-export const removeGoalWithChildrens = async (goal: GoalItem) => {
-  await removeChildrenGoals(goal.id);
-  await removeGoal(goal);
+export const removeGoalWithChildrens = async (goal: GoalItem, permanently = false) => {
+  await removeChildrenGoals(goal.id, permanently);
+  await removeGoal(goal, permanently);
   await deleteTaskHistoryItem(goal.id);
   if (goal.parentGoalId !== "root") {
     getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
@@ -330,22 +278,43 @@ export const removeGoalWithChildrens = async (goal: GoalItem) => {
   }
 };
 
-export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false) => {
-  const goalsAcc: GoalItem[] = [];
+export type ILevelGoals = {
+  parentId: string;
+  goals: GoalItem[];
+};
 
-  const processGoalAndChildren = async (goalId: string) => {
+export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false): Promise<ILevelGoals[]> => {
+  const levelMap = new Map<number, ILevelGoals>();
+  const queue: { goalId: string; level: number }[] = [{ goalId: id, level: 0 }];
+
+  while (queue.length > 0) {
+    const { goalId, level } = queue.shift()!;
+    // eslint-disable-next-line no-await-in-loop
     const goal = await getGoal(goalId);
-    if (!goal) return;
 
-    goalsAcc.push(resetSharedStatus ? { ...goal, participants: [] } : goal);
-    const childrenGoals = await getChildrenGoals(goalId);
-    await Promise.all(childrenGoals.map((childGoal) => processGoalAndChildren(childGoal.id)));
-  };
+    if (goal) {
+      // Initialize level if not exists
+      if (!levelMap.has(level)) {
+        levelMap.set(level, { parentId: goal.parentGoalId, goals: [] });
+      }
 
-  await processGoalAndChildren(id);
+      // Add goal to current level
+      const currentLevel = levelMap.get(level)!;
+      currentLevel.goals.push(resetSharedStatus ? { ...goal, participants: [] } : goal);
 
-  console.log(goalsAcc);
-  return goalsAcc;
+      // Get children and add them to queue
+      // eslint-disable-next-line no-await-in-loop
+      const childrenGoals = await getChildrenGoals(goalId);
+      childrenGoals.forEach((childGoal) => {
+        queue.push({ goalId: childGoal.id, level: level + 1 });
+      });
+    }
+  }
+
+  // Convert Map to sorted array by level number
+  return Array.from(levelMap.entries())
+    .sort(([levelA], [levelB]) => levelA - levelB)
+    .map(([_, value]) => value);
 };
 
 export const addHintGoaltoMyGoals = async (goal: GoalItem) => {

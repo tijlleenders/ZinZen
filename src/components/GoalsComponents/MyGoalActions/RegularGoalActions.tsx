@@ -18,6 +18,7 @@ import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
 
 import { GoalActions } from "@src/constants/actions";
+import { updateTimestamp } from "@src/api/GoalsAPI";
 import ActionDiv from "./ActionDiv";
 
 import "./MyGoalActions.scss";
@@ -29,7 +30,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { partnerId } = useParams();
-  const { openEditMode } = useGoalStore();
+  const { openEditMode, handleMove } = useGoalStore();
   const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
   const { deleteGoalAction } = useGoalActions();
   const isPartnerModeActive = !!partnerId;
@@ -53,6 +54,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   };
 
   const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
+    await updateTimestamp(goalToArchive.id);
     await archiveThisGoal(goalToArchive, goalAncestors);
     setLastAction(GoalActions.GOAL_ARCHIVED);
     const goalTitleElement = document.querySelector(`#goal-${goalToArchive.id} .goal-title`) as HTMLElement;
@@ -72,8 +74,17 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
     } else if (action === "archive") {
       await handleArchiveGoal(goal, ancestors);
     } else if (action === "colabRequest") {
-      await convertSharedWMGoalToColab(goal);
+      const res = await convertSharedWMGoalToColab(goal);
+      if (res) {
+        setShowToast({
+          open: true,
+          message: `Goal ${res.convertedGoal?.title} has been added into ${res.parentGoalName}!`,
+          extra: "",
+        });
+      }
       setLastAction(GoalActions.GOAL_COLAB_REQUEST);
+    } else if (action === "move") {
+      await handleMove(goal);
     }
     window.history.back();
   };
@@ -148,6 +159,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
             <ActionDiv
               label={t(isPartnerModeActive ? "Collaborate" : "Share")}
               icon={isPartnerModeActive ? "Collaborate" : "SingleAvatar"}
+              dataTestId={isPartnerModeActive ? "collaborate-action" : "share-action"}
             />
           </div>
         )}
@@ -158,6 +170,15 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
           }}
         >
           <ActionDiv label={t("Edit")} icon="Edit" />
+        </div>
+        <div
+          className="goal-action shareOptions-btn"
+          onClickCapture={async (e) => {
+            e.stopPropagation();
+            await openConfirmationPopUp({ actionCategory: "goal", actionName: "move" });
+          }}
+        >
+          <ActionDiv label={t("Move")} icon="Move" dataTestId="move-action" />
         </div>
       </div>
     </ZModal>

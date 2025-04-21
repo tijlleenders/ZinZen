@@ -42,6 +42,12 @@ const Header = ({
           {contactName} restored {title}.
         </>
       );
+    case "moved":
+      return (
+        <>
+          {contactName} moved {title}.
+        </>
+      );
     default:
       return <>&nbsp;</>;
   }

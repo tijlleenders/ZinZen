@@ -1,4 +1,4 @@
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
 
 export type ITagsAllowedToDisplay =
@@ -13,10 +13,11 @@ export type ITagsAllowedToDisplay =
   | "beforeTime"
   | "goalColor"
   | "language"
-  | "link";
+  | "link"
+  | "parentGoalId";
 
 export interface ITagChangesSchemaVersion {
-  [K: string]: string | Date | number | null | string[];
+  [K: string]: string | Date | number | null | string[] | IParticipant[];
 }
 
 export interface ITagChangesPrettierVersion {

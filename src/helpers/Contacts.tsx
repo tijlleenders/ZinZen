@@ -10,7 +10,7 @@ const Contacts = ({ contact }: { contact: ContactItem }) => {
   const { setCurrentPartnerInLocalStorage } = usePartnerContext();
 
   return (
-    <ZItemContainer id={`goal-${contact.id}`}>
+    <ZItemContainer id={`contact-${contact.id}`} dataTestId={`contact-${contact.name}`}>
       <div
         style={{ touchAction: "none" }}
         onClickCapture={(e) => {

@@ -14,8 +14,9 @@ import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
 import { dbStoreSchema, syncVersion } from "./dexie";
 import { TaskHistoryItem } from "./TaskHistoryItem";
 import { TasksDoneTodayItem } from "./TasksDoneTodayItem";
+import { SharedGoalMetadata } from "./SharedGoalNotMoved";
 
-export const dexieVersion = 24;
+export const dexieVersion = 25;
 
 const currentVersion = Number(localStorage.getItem(LocalStorageKeys.DEXIE_VERSION) || dexieVersion);
 localStorage.setItem(LocalStorageKeys.DEXIE_VERSION, `${dexieVersion}`);
@@ -46,6 +47,8 @@ export class ZinZenDB extends Dexie {
   taskHistoryCollection!: Table<TaskHistoryItem, string>;
 
   tasksDoneTodayCollection!: Table<TasksDoneTodayItem, string>;
+
+  sharedGoalMetadataCollection!: Table<SharedGoalMetadata, string>;
 
   constructor() {
     super("ZinZenDB");
