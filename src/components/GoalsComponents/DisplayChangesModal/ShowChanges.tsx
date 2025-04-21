@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from "react";
 import "./ShowChanges.scss";
 import { InfoCircleOutlined } from "@ant-design/icons";

@@ -1,4 +1,4 @@
-import { GoalItem, IParticipant } from "@src/models/GoalItem";
+import { GoalItem } from "@src/models/GoalItem";
 import { getGoal } from "@src/api/GoalsAPI";
 
 // Shared function to find participant's top level goal

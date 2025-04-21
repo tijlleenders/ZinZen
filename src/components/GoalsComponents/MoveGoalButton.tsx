@@ -1,11 +1,11 @@
 import React from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { moveGoalHierarchy } from "@src/helpers/GoalController";
 import ZButton from "@src/common/ZButton";
 import { GoalItem } from "@src/models/GoalItem";
 import { lastAction } from "@src/store";
 import { moveGoalState } from "@src/store/moveGoalState";
 import useNavigateToSubgoal from "@src/store/useNavigateToSubgoal";
+import { moveGoalHierarchy } from "@components/MoveGoal/MoveGoalHelper";
 
 interface GoalMoveButtonProps {
   targetGoal: GoalItem;

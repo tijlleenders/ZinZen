@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-param-reassign */
 import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
