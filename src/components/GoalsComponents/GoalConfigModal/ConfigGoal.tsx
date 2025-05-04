@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
@@ -154,17 +155,20 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
 
   const handleSave = async () => {
     if (title.trim().length) {
-      if (!isEditMode) {
-        addGoalSound.play();
-        setShowToast({
-          open: true,
-          message: `${title.slice(0, 15)}${title.length > 15 ? "..." : ""} created!`,
-          extra: "",
-        });
-      }
-      await (isEditMode ? updateGoal(getFinalTags(), hintOption) : addGoal(getFinalTags(), hintOption, parentGoal));
-      queryClient.invalidateQueries({ queryKey: ["reminders"] });
-      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
+      await (
+        isEditMode ? updateGoal(getFinalTags(), hintOption) : addGoal(getFinalTags(), hintOption, parentGoal)
+      ).then(() => {
+        if (!isEditMode) {
+          addGoalSound.play();
+          setShowToast({
+            open: true,
+            message: `${title.slice(0, 15)}${title.length > 15 ? "..." : ""} created!`,
+            extra: "",
+          });
+          queryClient.invalidateQueries({ queryKey: ["scheduler"] });
+          queryClient.invalidateQueries({ queryKey: ["reminders"] });
+        }
+      });
     } else {
       setShowToast({
         open: true,

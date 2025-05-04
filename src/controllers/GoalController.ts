@@ -192,7 +192,7 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
 
     const newGoalId = await addGoal(updatedGoal);
 
-    await sendNewGoalObject({ ...updatedGoal, id: newGoalId }, parentGoalId, ancestors, "subgoals");
+    sendNewGoalObject({ ...updatedGoal, id: newGoalId }, parentGoalId, ancestors, "subgoals");
 
     const newSublist = parentGoal && parentGoal.sublist ? [...parentGoal.sublist, newGoalId] : [newGoalId];
     await updateGoal(parentGoalId, { sublist: newSublist });
