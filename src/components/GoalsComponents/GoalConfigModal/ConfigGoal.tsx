@@ -3,10 +3,7 @@ import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { Slider } from "antd";
-import { displayToast } from "@src/store";
-import { useRecoilState, useSetRecoilState } from "recoil";
-
-import plingSound from "@assets/pling.mp3";
+import { useRecoilState } from "recoil";
 
 import ColorPicker from "@src/common/ColorPicker";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
@@ -15,7 +12,6 @@ import ZAccordion from "@src/common/Accordion";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import { useParentGoalContext } from "@src/contexts/parentGoal-context";
-import useGoalActions from "@src/hooks/useGoalActions";
 import useGoalStore from "@src/hooks/useGoalStore";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { ILocationState, ScheduleStatus } from "@src/Interfaces";
@@ -23,9 +19,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
-import { useQueryClient } from "react-query";
 import useScheduler from "@src/hooks/useScheduler";
 import DefaultInput from "@src/common/DefaultInput";
+import { useAddGoal } from "@src/hooks/api/Goals/useAddGoal";
+import { useEditGoal } from "@src/hooks/api/Goals/useEditGoal";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -45,12 +42,12 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const [suggestedGoal, setSuggestedGoal] = useRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
   const action = isEditMode ? "Update" : "Create";
-  const { updateGoal, addGoal } = useGoalActions();
+  const { addGoalMutation } = useAddGoal();
+  const { editGoalMutation } = useEditGoal();
   const {
     parentData: { parentGoal },
   } = useParentGoalContext();
 
-  const queryClient = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -70,12 +67,9 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   }
 
   const { t } = useTranslation();
-  const addGoalSound = new Audio(plingSound);
 
   const isKeyboardOpen = useVirtualKeyboardOpen();
   useOnScreenKeyboardScrollFix();
-
-  const setShowToast = useSetRecoilState(displayToast);
 
   const [colorIndex, setColorIndex] = useState(defaultColorIndex);
 
@@ -155,26 +149,15 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
 
   const handleSave = async () => {
     if (title.trim().length) {
-      await (
-        isEditMode ? updateGoal(getFinalTags(), hintOption) : addGoal(getFinalTags(), hintOption, parentGoal)
-      ).then(() => {
-        if (!isEditMode) {
-          addGoalSound.play();
-          setShowToast({
-            open: true,
-            message: `${title.slice(0, 15)}${title.length > 15 ? "..." : ""} created!`,
-            extra: "",
-          });
-          queryClient.invalidateQueries({ queryKey: ["scheduler"] });
-          queryClient.invalidateQueries({ queryKey: ["reminders"] });
-        }
-      });
-    } else {
-      setShowToast({
-        open: true,
-        message: `Goal cannot be ${isEditMode ? "updated" : "added"} without title`,
-        extra: "",
-      });
+      if (isEditMode) {
+        await editGoalMutation({ goal: getFinalTags(), hintOption });
+      } else {
+        await addGoalMutation({
+          newGoal: getFinalTags(),
+          hintOption,
+          parentGoal,
+        });
+      }
     }
     if (suggestedGoal) {
       await unarchiveUserGoal(suggestedGoal);
