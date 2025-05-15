@@ -1,11 +1,11 @@
 /* eslint-disable complexity */
-import React, { useState, useEffect, ChangeEvent, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
-import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
+import { TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { getActiveRootGoals } from "@api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
@@ -32,6 +32,7 @@ import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { useGetActiveRootGoals } from "@src/hooks/api/Goals/useGetActiveRootGoals";
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
+import { useGetArchivedGoals } from "@src/hooks/api/Goals/useGetArchivedGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -42,8 +43,7 @@ export const MyGoals = () => {
 
   const { activeRootGoals } = useGetActiveRootGoals();
   const { deletedGoals } = useGetDeletedGoals("root");
-
-  const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
+  const { archivedGoals } = useGetArchivedGoals("root");
 
   const { parentId = "root" } = useParams();
   const { goal: activeGoal } = useActiveGoalContext();
@@ -73,17 +73,9 @@ export const MyGoals = () => {
     return { goals, delGoals };
   };
 
-  const handleUserGoals = (goals: GoalItem[]) => {
-    setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
-  };
   const refreshActiveGoals = async () => {
     const { goals, delGoals } = await getAllGoals();
     const sortedGoals = await priotizeImpossibleGoals(goals);
-
-    console.log("goals", goals);
-    console.log("delGoals", delGoals);
-
-    handleUserGoals(sortedGoals);
   };
   // const search = async (text: string) => {
   //   const { goals, delGoals } = await getAllGoals();
@@ -142,7 +134,7 @@ export const MyGoals = () => {
               <DeletedGoalProvider>
                 {deletedGoals && deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
               </DeletedGoalProvider>
-              <ArchivedGoals goals={archivedGoals} />
+              <ArchivedGoals goals={archivedGoals || []} />
             </div>
           ) : (
             <GoalSublist />

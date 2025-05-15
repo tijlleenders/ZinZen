@@ -71,8 +71,12 @@ export const getAllGoals = async (includeArchived = "false") => {
   return allGoals;
 };
 
-export const getArchivedGoals = async () => {
-  const archivedGoals: GoalItem[] = await db.goalsCollection.where("archived").equals("true").sortBy("createdAt");
+export const getArchivedGoals = async (parentGoalId: string) => {
+  const archivedGoals: GoalItem[] = await db.goalsCollection
+    .where("parentGoalId")
+    .equals(parentGoalId)
+    .and((goal) => goal.archived === "true")
+    .sortBy("createdAt");
   archivedGoals.reverse();
   return sortGoalsByProps(archivedGoals);
 };
