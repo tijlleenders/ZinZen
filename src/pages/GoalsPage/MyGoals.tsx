@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useState, useEffect, ChangeEvent, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
@@ -15,7 +16,6 @@ import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
-import { TrashItem } from "@src/models/TrashItem";
 import { getDeletedGoals } from "@src/api/TrashAPI";
 import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
@@ -31,6 +31,7 @@ import { goalCategories } from "@src/constants/goals";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { useGetActiveRootGoals } from "@src/hooks/api/Goals/useGetActiveRootGoals";
+import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -40,8 +41,9 @@ export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
   const { activeRootGoals } = useGetActiveRootGoals();
+  const { deletedGoals } = useGetDeletedGoals("root");
+
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
-  const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
 
   const { parentId = "root" } = useParams();
   const { goal: activeGoal } = useActiveGoalContext();
@@ -71,8 +73,7 @@ export const MyGoals = () => {
     return { goals, delGoals };
   };
 
-  const handleUserGoals = (goals: GoalItem[], delGoals: TrashItem[]) => {
-    setDeletedGoals([...delGoals]);
+  const handleUserGoals = (goals: GoalItem[]) => {
     setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
   };
   const refreshActiveGoals = async () => {
@@ -82,24 +83,23 @@ export const MyGoals = () => {
     console.log("goals", goals);
     console.log("delGoals", delGoals);
 
-    handleUserGoals(sortedGoals, delGoals);
+    handleUserGoals(sortedGoals);
   };
-  const search = async (text: string) => {
-    const { goals, delGoals } = await getAllGoals();
-    handleUserGoals(
-      goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())),
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      delGoals.filter(({ deletedAt, ...goal }) => goal.title.toUpperCase().includes(text.toUpperCase())),
-    );
-  };
-  const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
-    }
-    debounceTimeout = setTimeout(() => {
-      search(event.target.value);
-    }, 300);
-  };
+  // const search = async (text: string) => {
+  //   const { goals, delGoals } = await getAllGoals();
+  //   handleUserGoals(
+  //     goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())),
+  //     deletedGoals?.filter(({ deletedAt, ...goal }) => goal.title.toUpperCase().includes(text.toUpperCase())),
+  //   );
+  // };
+  // const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
+  //   if (debounceTimeout) {
+  //     clearTimeout(debounceTimeout);
+  //   }
+  //   debounceTimeout = setTimeout(() => {
+  //     search(event.target.value);
+  //   }, 300);
+  // };
 
   const zinZenLogoHeight = activeRootGoals && activeRootGoals.length > 0 ? 125 : 350;
 
@@ -119,7 +119,7 @@ export const MyGoals = () => {
 
   return (
     <ParentGoalProvider>
-      <AppLayout title="myGoals" debounceSearch={debounceSearch}>
+      <AppLayout title="myGoals" debounceSearch={() => {}}>
         {showOptions && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {showParticipants && <Participants />}
@@ -140,7 +140,7 @@ export const MyGoals = () => {
                 <GoalsList goals={activeRootGoals || []} />
               </div>
               <DeletedGoalProvider>
-                {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
+                {deletedGoals && deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
               </DeletedGoalProvider>
               <ArchivedGoals goals={archivedGoals} />
             </div>
