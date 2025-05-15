@@ -14,9 +14,8 @@ import { displayToast, lastAction, openDevMode } from "@src/store";
 
 import { useLocation, useParams } from "react-router-dom";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
-import plingSound from "@assets/pling.mp3";
 
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
@@ -24,12 +23,10 @@ import { hashObject } from "@src/utils";
 import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import { removeBackTicks } from "@src/utils/patterns";
 import { getGoalHintItem } from "@src/api/HintsAPI";
-import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { GoalActions } from "@src/constants/actions";
 import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 
 const pageCrumple = new Audio(pageCrumplingSound);
-const addGoalSound = new Audio(plingSound);
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -40,7 +37,6 @@ const useGoalActions = () => {
   const subGoalsHistory = state?.goalsHistory || [];
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
   const { goal: activeGoal } = useActiveGoalContext();
-  const suggestedGoal = useRecoilValue(suggestedGoalState);
 
   const setShowToast = useSetRecoilState(displayToast);
 
@@ -99,13 +95,6 @@ const useGoalActions = () => {
     ) {
       // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], updatedHintOption);
-      setLastAction(GoalActions.GOAL_UPDATED);
-      setShowToast({
-        open: true,
-        message: suggestedGoal ? "Goal (re)created!" : "Goal updated!",
-        extra: "",
-      });
-      addGoalSound.play();
     }
   };
 
@@ -126,7 +115,6 @@ const useGoalActions = () => {
         setDevMode(true);
         showMessage("Congratulations, you activated DEV mode", "Explore what's hidden");
       }
-      setLastAction(GoalActions.GOAL_ITEM_CREATED);
     }
   };
 
