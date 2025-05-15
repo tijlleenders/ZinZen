@@ -82,11 +82,11 @@ export const checkMagicGoal = async () => {
   return !!(goal && goal.length > 0);
 };
 
-export const getActiveGoals = async (includeArchived = "false") => {
+export const getActiveRootGoals = async () => {
   const activeGoals: GoalItem[] = await db.goalsCollection
     .where("parentGoalId")
     .equals("root")
-    .and((goal) => (includeArchived === "true" ? true : goal.parentGoalId === "root"))
+    .and((goal) => goal.archived === "false")
     .sortBy("createdAt");
   activeGoals.reverse();
   const sortedGoals = await sortGoalsByProps(activeGoals);

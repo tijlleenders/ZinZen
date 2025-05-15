@@ -6,7 +6,7 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
-import { getActiveGoals } from "@api/GoalsAPI";
+import { getActiveRootGoals } from "@api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { darkModeState, lastAction, searchActive } from "@src/store";
 
@@ -30,6 +30,7 @@ import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { moveGoalState } from "@src/store/moveGoalState";
+import { useGetActiveRootGoals } from "@src/hooks/api/Goals/useGetActiveRootGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -37,7 +38,8 @@ import "./GoalsPage.scss";
 
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
-  const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
+
+  const { activeRootGoals } = useGetActiveRootGoals();
   const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
   const [deletedGoals, setDeletedGoals] = useState<TrashItem[]>([]);
 
@@ -65,18 +67,20 @@ export const MyGoals = () => {
   const goalWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const getAllGoals = async () => {
-    const [goals, delGoals] = await Promise.all([getActiveGoals("true"), getDeletedGoals("root")]);
+    const [goals, delGoals] = await Promise.all([getActiveRootGoals(), getDeletedGoals("root")]);
     return { goals, delGoals };
   };
 
   const handleUserGoals = (goals: GoalItem[], delGoals: TrashItem[]) => {
     setDeletedGoals([...delGoals]);
-    setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
     setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
   };
   const refreshActiveGoals = async () => {
     const { goals, delGoals } = await getAllGoals();
     const sortedGoals = await priotizeImpossibleGoals(goals);
+
+    console.log("goals", goals);
+    console.log("delGoals", delGoals);
 
     handleUserGoals(sortedGoals, delGoals);
   };
@@ -97,7 +101,7 @@ export const MyGoals = () => {
     }, 300);
   };
 
-  const zinZenLogoHeight = activeGoals.length > 0 ? 125 : 350;
+  const zinZenLogoHeight = activeRootGoals && activeRootGoals.length > 0 ? 125 : 350;
 
   useEffect(() => {
     if (action === "goalArchived") return;
@@ -133,7 +137,7 @@ export const MyGoals = () => {
           {parentId === "root" ? (
             <div className="my-goals-content">
               <div className="d-flex f-col">
-                <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
+                <GoalsList goals={activeRootGoals || []} />
               </div>
               <DeletedGoalProvider>
                 {deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
