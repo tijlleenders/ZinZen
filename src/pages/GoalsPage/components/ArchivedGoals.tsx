@@ -12,10 +12,15 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import plingSound from "@assets/pling.mp3";
+import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
+import { GoalActions } from "@src/constants/actions";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const darkMode = useRecoilValue(darkModeState);
-  const { restoreArchivedGoal, deleteGoalAction } = useGoalActions();
+  const { restoreArchivedGoal } = useGoalActions();
+
+  const { deleteGoalMutation } = useDeleteGoal();
+
   const { t } = useTranslation();
   const restoreGoalSound = new Audio(plingSound);
 
@@ -23,7 +28,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
     const goalTitleElement = document.querySelector(`#goal-${goal.id} .goal-title`) as HTMLElement;
     const lastAction = goalTitleElement.style.textDecoration.includes("line-through");
     goalTitleElement.style.textDecoration = "none";
-    await restoreArchivedGoal(goal, lastAction ? "none" : "goalRestored");
+    await restoreArchivedGoal(goal, lastAction ? GoalActions.NONE : GoalActions.GOAL_RESTORED);
     restoreGoalSound.play();
     window.history.back();
   };
@@ -62,7 +67,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           type="button"
           className="goal-action-archive shareOptions-btn"
           onClick={async () => {
-            await deleteGoalAction(goal);
+            await deleteGoalMutation(goal);
             window.history.back();
           }}
         >

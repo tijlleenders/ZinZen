@@ -11,7 +11,6 @@ import archiveSound from "@assets/archive.mp3";
 import { lastAction, displayConfirmation, displayToast } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
-import useGoalActions from "@src/hooks/useGoalActions";
 
 import { ILocationState } from "@src/Interfaces";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
@@ -19,6 +18,7 @@ import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
 
 import { GoalActions } from "@src/constants/actions";
 import { updateTimestamp } from "@src/api/GoalsAPI";
+import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
 import ActionDiv from "./ActionDiv";
 
 import "./MyGoalActions.scss";
@@ -32,7 +32,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const { partnerId } = useParams();
   const { openEditMode, handleMove } = useGoalStore();
   const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
-  const { deleteGoalAction } = useGoalActions();
+  const { deleteGoalMutation } = useDeleteGoal();
   const isPartnerModeActive = !!partnerId;
 
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
@@ -44,14 +44,6 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const setShowToast = useSetRecoilState(displayToast);
 
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
-
-  const showMessage = (message: string, extra = "") => {
-    setShowToast({
-      open: true,
-      message,
-      extra,
-    });
-  };
 
   const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
     await updateTimestamp(goalToArchive.id);
@@ -68,9 +60,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
 
   const handleActionClick = async (action: string) => {
     if (action === "delete") {
-      await deleteGoalAction(goal);
-      setLastAction(GoalActions.GOAL_DELETED);
-      showMessage("Moved to trash!", "We'll delete it in 7 days.");
+      await deleteGoalMutation(goal);
     } else if (action === "archive") {
       await handleArchiveGoal(goal, ancestors);
     } else if (action === "colabRequest") {

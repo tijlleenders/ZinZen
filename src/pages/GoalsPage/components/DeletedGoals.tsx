@@ -12,10 +12,12 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import plingSound from "@assets/pling.mp3";
+import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
-  const { restoreDeletedGoal, deleteGoalAction } = useGoalActions();
+  const { restoreDeletedGoal } = useGoalActions();
+  const { deleteGoalMutation } = useDeleteGoal();
   const { t } = useTranslation();
   const restoreGoalSound = new Audio(plingSound);
 
@@ -55,7 +57,7 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           type="button"
           className="goal-action-archive shareOptions-btn"
           onClick={async () => {
-            await deleteGoalAction(goal);
+            await deleteGoalMutation(goal);
             window.history.back();
           }}
         >

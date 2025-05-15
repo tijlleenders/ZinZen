@@ -13,7 +13,6 @@ import { GoalItem } from "@src/models/GoalItem";
 import { displayToast, lastAction, openDevMode } from "@src/store";
 
 import { useLocation, useParams } from "react-router-dom";
-import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
 
 import { useSetRecoilState } from "recoil";
 import { shareGoalWithContact } from "@src/services/contact.service";
@@ -25,8 +24,6 @@ import { removeBackTicks } from "@src/utils/patterns";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { GoalActions } from "@src/constants/actions";
 import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
-
-const pageCrumple = new Audio(pageCrumplingSound);
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -48,7 +45,6 @@ const useGoalActions = () => {
     });
   };
   const deleteGoalAction = async (goal: GoalItem) => {
-    pageCrumple.play();
     if (isPartnerModeActive) {
       await deleteSharedGoal(goal);
     } else {
@@ -57,7 +53,6 @@ const useGoalActions = () => {
     if (goal.title === "magic" && goal.parentGoalId === "root") {
       setDevMode(false);
     }
-    setLastAction(GoalActions.GOAL_DELETED);
   };
 
   const restoreDeletedGoal = async (goal: GoalItem) => {
