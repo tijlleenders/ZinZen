@@ -6,7 +6,6 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
-import archiveSound from "@assets/archive.mp3";
 
 import { lastAction, displayConfirmation, displayToast } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
@@ -14,17 +13,14 @@ import { TConfirmAction } from "@src/Interfaces/IPopupModals";
 
 import { ILocationState } from "@src/Interfaces";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
-import { archiveThisGoal } from "@src/helpers/GoalActionHelper";
 
 import { GoalActions } from "@src/constants/actions";
-import { updateTimestamp } from "@src/api/GoalsAPI";
 import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
+import { useArchiveGoal } from "@src/hooks/api/Goals/useArchiveGoal";
 import ActionDiv from "./ActionDiv";
 
 import "./MyGoalActions.scss";
 import GoalItemSummary from "../../../common/GoalItemSummary/GoalItemSummary";
-
-const doneSound = new Audio(archiveSound);
 
 const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const navigate = useNavigate();
@@ -33,6 +29,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const { openEditMode, handleMove } = useGoalStore();
   const { state, pathname }: { state: ILocationState; pathname: string } = useLocation();
   const { deleteGoalMutation } = useDeleteGoal();
+  const { archiveGoalMutation } = useArchiveGoal();
   const isPartnerModeActive = !!partnerId;
 
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
@@ -46,16 +43,13 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
 
   const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
-    await updateTimestamp(goalToArchive.id);
-    await archiveThisGoal(goalToArchive, goalAncestors);
-    setLastAction(GoalActions.GOAL_ARCHIVED);
+    await archiveGoalMutation({ goal: goalToArchive, ancestors: goalAncestors });
     const goalTitleElement = document.querySelector(`#goal-${goalToArchive.id} .goal-title`) as HTMLElement;
     if (goalTitleElement) {
       goalTitleElement.style.textDecoration = "line-through";
       goalTitleElement.style.textDecorationColor = goalToArchive.goalColor;
       goalTitleElement.style.textDecorationThickness = "4px";
     }
-    await doneSound.play();
   };
 
   const handleActionClick = async (action: string) => {
