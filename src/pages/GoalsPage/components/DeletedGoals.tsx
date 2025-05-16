@@ -4,22 +4,20 @@ import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
 import ZModal from "@src/common/ZModal";
 import { useDeletedGoalContext } from "@src/contexts/deletedGoal-context";
-import useGoalActions from "@src/hooks/useGoalActions";
 import { TrashItem } from "@src/models/TrashItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import plingSound from "@assets/pling.mp3";
 import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
+import { useRestoreDeletedGoal } from "@src/hooks/api/Goals/useRestoreDeletedGoal";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
-  const { restoreDeletedGoal } = useGoalActions();
+  const { restoreDeletedGoalMutation } = useRestoreDeletedGoal();
   const { deleteGoalMutation } = useDeleteGoal();
   const { t } = useTranslation();
-  const restoreGoalSound = new Audio(plingSound);
 
   return (
     <ZModal open width={400} type="interactables-modal">
@@ -34,8 +32,7 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           className="goal-action-archive shareOptions-btn"
           onClick={async (e) => {
             e.stopPropagation();
-            await restoreDeletedGoal(goal);
-            restoreGoalSound.play();
+            await restoreDeletedGoalMutation({ goal });
             window.history.back();
           }}
         >
