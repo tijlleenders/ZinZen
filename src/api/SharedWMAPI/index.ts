@@ -123,7 +123,7 @@ export const updateSharedWMGoal = async (id: string, changes: Partial<GoalItem>)
   });
 };
 
-export const archiveGoal = async (goal: GoalItem) => {
+export const archiveGoalSharedWMRepository = async (goal: GoalItem) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
     await db.sharedWMCollection.update(goal.id, { archived: "true" });
   });
@@ -142,14 +142,14 @@ export const archiveChildrenGoals = async (id: string) => {
   if (childrenGoals) {
     childrenGoals.forEach(async (goal: GoalItem) => {
       await archiveChildrenGoals(goal.id);
-      await archiveGoal(goal);
+      await archiveGoalSharedWMRepository(goal);
     });
   }
 };
 
 export const archiveSharedWMGoal = async (goal: GoalItem) => {
   await archiveChildrenGoals(goal.id);
-  await archiveGoal(goal);
+  await archiveGoalSharedWMRepository(goal);
 };
 
 export const removeSharedWMGoal = async (goal: GoalItem) => {

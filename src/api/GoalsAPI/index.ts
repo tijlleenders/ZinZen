@@ -112,7 +112,7 @@ export const updateGoal = async (id: string, changes: Partial<GoalItem>) => {
   return updateStatus;
 };
 
-export const archiveGoal = async (goal: GoalItem) => {
+const archiveGoalRepository = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, { archived: "true" });
   });
@@ -131,14 +131,14 @@ export const archiveChildrenGoals = async (id: string) => {
   if (childrenGoals) {
     childrenGoals.forEach(async (goal: GoalItem) => {
       await archiveChildrenGoals(goal.id);
-      await archiveGoal(goal);
+      await archiveGoalRepository(goal);
     });
   }
 };
 
 export const archiveUserGoal = async (goal: GoalItem) => {
   await archiveChildrenGoals(goal.id);
-  await archiveGoal(goal);
+  await archiveGoalRepository(goal);
 };
 
 export const unarchiveGoal = async (goal: GoalItem) => {
