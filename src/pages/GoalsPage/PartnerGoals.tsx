@@ -99,7 +99,7 @@ const PartnerGoals = () => {
               <div className="d-flex f-col">
                 <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
               </div>
-              <ArchivedGoals goals={archivedGoals} />
+              <ArchivedGoals />
             </div>
           ) : (
             <GoalSublist />

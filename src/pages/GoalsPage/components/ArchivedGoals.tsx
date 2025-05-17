@@ -8,7 +8,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
 import { useRestoreArchivedGoal } from "@src/hooks/api/Goals/useRestoreArchivedGoal";
@@ -77,10 +77,10 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
 const ArchivedGoals = () => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
+  const { parentId } = useParams();
   const { goal: activeGoal } = useActiveGoalContext();
   const showOptions = !!searchParams.get("showOptions") && activeGoal?.archived === "true";
-
-  const { archivedGoals } = useGetArchivedGoals(activeGoal?.parentGoalId || "root");
+  const { archivedGoals } = useGetArchivedGoals(parentId || "root");
 
   if (!archivedGoals) {
     return null;

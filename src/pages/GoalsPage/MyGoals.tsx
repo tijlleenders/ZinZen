@@ -27,7 +27,6 @@ import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
 import { useGetActiveRootGoals } from "@src/hooks/api/Goals/useGetActiveRootGoals";
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
-import { useGetArchivedGoals } from "@src/hooks/api/Goals/useGetArchivedGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -38,7 +37,6 @@ export const MyGoals = () => {
 
   const { activeRootGoals } = useGetActiveRootGoals();
   const { deletedGoals } = useGetDeletedGoals("root");
-  const { archivedGoals } = useGetArchivedGoals("root");
 
   const { parentId = "root" } = useParams();
   const { goal: activeGoal } = useActiveGoalContext();
@@ -119,7 +117,7 @@ export const MyGoals = () => {
               <DeletedGoalProvider>
                 {deletedGoals && deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
               </DeletedGoalProvider>
-              <ArchivedGoals goals={archivedGoals || []} />
+              <ArchivedGoals />
             </div>
           ) : (
             <GoalSublist />
