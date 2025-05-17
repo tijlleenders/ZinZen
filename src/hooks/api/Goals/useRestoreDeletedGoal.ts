@@ -20,7 +20,7 @@ export const useRestoreDeletedGoal = () => {
     },
     onSuccess: (_data, { goal }) => {
       setLastAction(GoalActions.GOAL_RESTORED);
-      queryClient.invalidateQueries({ queryKey: ["activeRootGoals"] });
+      queryClient.invalidateQueries({ queryKey: ["activeGoals", goal.parentGoalId] });
       queryClient.invalidateQueries({ queryKey: ["deletedGoals", goal.parentGoalId] });
       setShowToast({
         open: true,

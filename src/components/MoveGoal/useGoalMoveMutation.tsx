@@ -1,6 +1,6 @@
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useSetRecoilState } from "recoil";
-import { displayToast, lastAction } from "@store";
+import { displayToast } from "@store";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { moveGoalHierarchy } from "./MoveGoalHelper";
 
@@ -10,8 +10,8 @@ type MoveGoalParams = {
 };
 
 export const useGoalMoveMutation = () => {
+  const queryClient = useQueryClient();
   const setToastMessage = useSetRecoilState(displayToast);
-  const setLastAction = useSetRecoilState(lastAction);
   const setGoalToMove = useSetRecoilState(moveGoalState);
   const {
     mutate: moveGoalMutation,
@@ -22,9 +22,9 @@ export const useGoalMoveMutation = () => {
     mutationFn: async ({ goalId, newParentGoalId }) => {
       await moveGoalHierarchy(goalId, newParentGoalId);
     },
-    onSuccess: () => {
+    onSuccess: (_, data) => {
       setToastMessage({ open: true, message: "Goal moved successfully", extra: "" });
-      setLastAction("goalMoved");
+      queryClient.invalidateQueries({ queryKey: ["activeGoals", data.newParentGoalId] });
     },
     onError: () => {
       setToastMessage({ open: true, message: "Error moving goal", extra: "" });

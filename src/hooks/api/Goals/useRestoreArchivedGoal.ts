@@ -19,7 +19,7 @@ export const useRestoreArchivedGoal = () => {
     onSuccess: (_data, { goal }) => {
       setLastAction(GoalActions.GOAL_RESTORED);
       queryClient.invalidateQueries(["archivedGoals", goal.parentGoalId]);
-      queryClient.invalidateQueries(["activeRootGoals"]);
+      queryClient.invalidateQueries(["activeGoals", goal.parentGoalId]);
       queryClient.invalidateQueries(["reminders"]);
       restoreGoalSound.play();
     },

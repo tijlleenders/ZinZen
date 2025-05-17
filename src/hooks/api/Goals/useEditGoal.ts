@@ -24,10 +24,11 @@ export const useEditGoal = () => {
   const { mutate: editGoalMutation, isLoading: isEditingGoal } = useMutation({
     mutationFn: ({ goal, hintOption }: EditGoalMutation) => updateGoal(goal, hintOption),
 
-    onSuccess: () => {
+    onSuccess: (_, { goal }) => {
       queryClient.invalidateQueries({
         queryKey: [["scheduler"], ["reminders"]],
       });
+      queryClient.invalidateQueries({ queryKey: ["activeGoals", goal.parentGoalId] });
 
       setShowToast({
         open: true,

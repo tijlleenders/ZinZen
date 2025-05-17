@@ -17,7 +17,7 @@ export const useDeleteGoal = () => {
   const { mutate: deleteGoalMutation, isLoading: isDeletingGoal } = useMutation({
     mutationFn: (goal: GoalItem) => deleteGoalAction(goal),
     onSuccess: (_, { parentGoalId }) => {
-      queryClient.invalidateQueries({ queryKey: ["activeRootGoals"] });
+      queryClient.invalidateQueries({ queryKey: ["activeGoals", parentGoalId] });
       queryClient.invalidateQueries({ queryKey: ["deletedGoals", parentGoalId] });
       queryClient.invalidateQueries({ queryKey: ["archivedGoals", parentGoalId] });
       setLastAction(GoalActions.GOAL_DELETED);
