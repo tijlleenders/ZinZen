@@ -9,6 +9,7 @@ import { TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { darkModeState } from "@src/store";
+import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
@@ -18,13 +19,13 @@ import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal
 
 import { useParams, useSearchParams } from "react-router-dom";
 import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
-import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
 import Participants from "@components/GoalsComponents/Participants";
 
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
+import { useGetGoalById } from "@src/hooks/api/Goals/useGetGoalById";
 import { useGetActiveGoals } from "@src/hooks/api/Goals/useGetActiveGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
@@ -34,10 +35,10 @@ import "./GoalsPage.scss";
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
+  const { parentId = "root", activeGoalId } = useParams();
   const { activeGoals } = useGetActiveGoals("root");
-
-  const { parentId = "root" } = useParams();
-  const { goal: activeGoal } = useActiveGoalContext();
+  const { data: activeGoal } = useGetGoalById(activeGoalId || "");
+  // const [sortedGoals, setSortedGoals] = useState<GoalItem[]>([]);
 
   const [searchParams] = useSearchParams();
   const showShareModal = searchParams.get("share") === "true";
@@ -53,6 +54,11 @@ export const MyGoals = () => {
   const darkModeStatus = useRecoilValue(darkModeState);
 
   const goalWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  // useEffect(() => {
+  //   if (!activeGoals) return;
+  //   priotizeImpossibleGoals(activeGoals).then(setSortedGoals);
+  // }, [activeGoals]);
 
   // const refreshActiveGoals = async () => {
   //   const { goals, delGoals } = await getAllGoals();
