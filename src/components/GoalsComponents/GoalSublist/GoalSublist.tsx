@@ -15,15 +15,18 @@ import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
 import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
 import AvailableGoalHints from "@pages/GoalsPage/components/AvailableGoalHints";
 import { moveGoalState } from "@src/store/moveGoalState";
+import { useParams } from "react-router-dom";
+import { useGetActiveGoals } from "@src/hooks/api/Goals/useGetActiveGoals";
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
 
 export const GoalSublist = () => {
+  const { parentId } = useParams();
   const {
     parentData: { parentGoal, subgoals },
   } = useParentGoalContext();
-  const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
+  const { activeGoals } = useGetActiveGoals(parentId || "root");
   const [goalHints, setGoalHints] = useState<GoalItem[]>([]);
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
@@ -49,7 +52,6 @@ export const GoalSublist = () => {
     async function init() {
       if (!parentGoal) return;
       const sortedGoals = await priotizeImpossibleGoals(subgoals);
-      setActiveGoals([...sortedGoals.filter((goal) => goal.archived === "false")]);
     }
     init();
   }, [action, parentGoal, showSuggestionModal, showChangesModal, subgoals, goalID, goalToMove]);
@@ -66,7 +68,7 @@ export const GoalSublist = () => {
             </span>
           )}
           <div className="sublist-list-container">
-            <GoalsList goals={activeGoals} />
+            <GoalsList goals={activeGoals || []} />
             <AvailableGoalHintProvider goalHints={goalHints}>
               <AvailableGoalHints goals={goalHints} />
             </AvailableGoalHintProvider>

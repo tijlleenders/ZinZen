@@ -15,18 +15,18 @@ export const useUpdateGoalPositions = () => {
       await Promise.all(posIndexPromises);
     },
     onMutate: async ({ goals }) => {
-      await queryClient.cancelQueries({ queryKey: ["activeRootGoals"] });
-      const previousGoals = queryClient.getQueryData(["activeRootGoals"]);
-      queryClient.setQueryData(["activeRootGoals"], goals);
+      await queryClient.cancelQueries({ queryKey: ["activeGoals"] });
+      const previousGoals = queryClient.getQueryData(["activeGoals"]);
+      queryClient.setQueryData(["activeGoals"], goals);
       return { previousGoals };
     },
     onError: (err, newGoals, context) => {
       if (context?.previousGoals) {
-        queryClient.setQueryData(["activeRootGoals"], context.previousGoals);
+        queryClient.setQueryData(["activeGoals"], context.previousGoals);
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["activeRootGoals"] });
+      queryClient.invalidateQueries({ queryKey: ["activeGoals"] });
     },
   });
 };

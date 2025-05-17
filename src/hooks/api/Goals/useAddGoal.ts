@@ -23,23 +23,43 @@ export const useAddGoal = () => {
   const { mutate: addGoalMutation, isLoading: isAddingGoal } = useMutation({
     mutationFn: ({ newGoal, hintOption, parentGoal }: AddGoalMutation) => addGoal(newGoal, hintOption, parentGoal),
 
-    onSuccess: (_, { newGoal }) => {
-      queryClient.invalidateQueries({ queryKey: ["scheduler", "reminders"] });
-      setLastAction(GoalActions.GOAL_ITEM_CREATED);
-      addGoalSound.play();
-      setShowToast({
-        open: true,
-        message: `${newGoal.title.slice(0, 15)}${newGoal.title.length > 15 ? "..." : ""} created!`,
-        extra: "",
+    onMutate: async ({ newGoal }) => {
+      await queryClient.cancelQueries({ queryKey: ["activeGoals", newGoal.parentGoalId] });
+
+      const previousGoals = queryClient.getQueryData(["activeGoals", newGoal.parentGoalId]);
+
+      queryClient.setQueryData(["activeGoals", newGoal.parentGoalId], (old: GoalItem[] = []) => {
+        return [newGoal, ...old];
       });
+
+      return { previousGoals };
     },
-    onError: (error) => {
+
+    onError: (error, { newGoal }, context) => {
+      if (context?.previousGoals) {
+        queryClient.setQueryData(["activeGoals", newGoal.parentGoalId], context.previousGoals);
+      }
       console.error(error);
       setShowToast({
         open: true,
         message: "Goal cannot be added without title",
         extra: "",
       });
+    },
+
+    onSettled: (_, __, { newGoal }) => {
+      queryClient.invalidateQueries({ queryKey: ["activeGoals", newGoal.parentGoalId] });
+    },
+
+    onSuccess: (_, { newGoal }) => {
+      queryClient.invalidateQueries({ queryKey: ["scheduler", "reminders"] });
+      setLastAction(GoalActions.GOAL_ITEM_CREATED);
+      setShowToast({
+        open: true,
+        message: `${newGoal.title.slice(0, 15)}${newGoal.title.length > 15 ? "..." : ""} created!`,
+        extra: "",
+      });
+      addGoalSound.play();
     },
   });
 

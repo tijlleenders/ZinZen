@@ -25,7 +25,7 @@ import Participants from "@components/GoalsComponents/Participants";
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
-import { useGetActiveRootGoals } from "@src/hooks/api/Goals/useGetActiveRootGoals";
+import { useGetActiveGoals } from "@src/hooks/api/Goals/useGetActiveGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -34,7 +34,7 @@ import "./GoalsPage.scss";
 export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
-  const { activeRootGoals } = useGetActiveRootGoals();
+  const { activeGoals } = useGetActiveGoals("root");
 
   const { parentId = "root" } = useParams();
   const { goal: activeGoal } = useActiveGoalContext();
@@ -74,7 +74,7 @@ export const MyGoals = () => {
   //   }, 300);
   // };
 
-  const zinZenLogoHeight = activeRootGoals && activeRootGoals.length > 0 ? 125 : 350;
+  const zinZenLogoHeight = activeGoals && activeGoals.length > 0 ? 125 : 350;
 
   // useEffect(() => {
   //   if (action === "goalArchived") return;
@@ -110,7 +110,7 @@ export const MyGoals = () => {
           {parentId === "root" ? (
             <div className="my-goals-content">
               <div className="d-flex f-col">
-                <GoalsList goals={activeRootGoals || []} />
+                <GoalsList goals={activeGoals || []} />
               </div>
               <DeletedGoalProvider>
                 <DeletedGoals />
