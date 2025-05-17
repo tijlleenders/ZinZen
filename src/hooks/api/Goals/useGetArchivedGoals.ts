@@ -8,7 +8,9 @@ export const useGetArchivedGoals = (parentGoalId: string) => {
     error,
   } = useQuery({
     queryKey: ["archivedGoals", parentGoalId],
-    queryFn: () => getArchivedGoals(parentGoalId),
+    queryFn: () => {
+      return getArchivedGoals(parentGoalId);
+    },
   });
   return { archivedGoals, isLoading, error };
 };

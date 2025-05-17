@@ -4,32 +4,28 @@ import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
 import ZModal from "@src/common/ZModal";
 import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
-import useGoalActions from "@src/hooks/useGoalActions";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import plingSound from "@assets/pling.mp3";
 import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
-import { GoalActions } from "@src/constants/actions";
+import { useRestoreArchivedGoal } from "@src/hooks/api/Goals/useRestoreArchivedGoal";
+import { useGetArchivedGoals } from "@src/hooks/api/Goals/useGetArchivedGoals";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const darkMode = useRecoilValue(darkModeState);
-  const { restoreArchivedGoal } = useGoalActions();
 
   const { deleteGoalMutation } = useDeleteGoal();
+  const { mutate: restoreArchivedGoal } = useRestoreArchivedGoal();
 
   const { t } = useTranslation();
-  const restoreGoalSound = new Audio(plingSound);
 
   const handleRestoreClick = async () => {
     const goalTitleElement = document.querySelector(`#goal-${goal.id} .goal-title`) as HTMLElement;
-    const lastAction = goalTitleElement.style.textDecoration.includes("line-through");
     goalTitleElement.style.textDecoration = "none";
-    await restoreArchivedGoal(goal, lastAction ? GoalActions.NONE : GoalActions.GOAL_RESTORED);
-    restoreGoalSound.play();
+    await restoreArchivedGoal({ goal });
     window.history.back();
   };
 
@@ -78,16 +74,22 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
   );
 };
 
-const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
+const ArchivedGoals = () => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
   const { goal: activeGoal } = useActiveGoalContext();
   const showOptions = !!searchParams.get("showOptions") && activeGoal?.archived === "true";
 
+  const { archivedGoals } = useGetArchivedGoals(activeGoal?.parentGoalId || "root");
+
+  if (!archivedGoals) {
+    return null;
+  }
+
   return (
     <>
       {showOptions && <Actions goal={activeGoal} />}
-      {goals.length > 0 && (
+      {archivedGoals.length > 0 && (
         <div className="archived-drawer">
           <ZAccordion
             showCount
@@ -98,7 +100,9 @@ const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
             panels={[
               {
                 header: "Done",
-                body: goals.map((goal) => <MyGoal key={`goal-${goal.id}`} goal={{ ...goal, impossible: false }} />),
+                body: archivedGoals.map((goal) => (
+                  <MyGoal key={`goal-${goal.id}`} goal={{ ...goal, impossible: false }} />
+                )),
               },
             ]}
           />
