@@ -9,7 +9,6 @@ import { TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { darkModeState } from "@src/store";
-import { priotizeImpossibleGoals } from "@src/utils/priotizeImpossibleGoals";
 
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
@@ -32,9 +31,10 @@ import ArchivedGoals from "./components/ArchivedGoals";
 
 import "./GoalsPage.scss";
 
-export const MyGoals = () => {
-  let debounceTimeout: ReturnType<typeof setTimeout>;
+// TODO: re-implement sorting priority goals
+// TODO: re-implement search goals
 
+export const MyGoals = () => {
   const { parentId = "root", activeGoalId } = useParams();
   const { activeGoals } = useGetActiveGoals("root");
   const { data: activeGoal } = useGetGoalById(activeGoalId || "");
@@ -55,46 +55,7 @@ export const MyGoals = () => {
 
   const goalWrapperRef = useRef<HTMLDivElement | null>(null);
 
-  // useEffect(() => {
-  //   if (!activeGoals) return;
-  //   priotizeImpossibleGoals(activeGoals).then(setSortedGoals);
-  // }, [activeGoals]);
-
-  // const refreshActiveGoals = async () => {
-  //   const { goals, delGoals } = await getAllGoals();
-  //   const sortedGoals = await priotizeImpossibleGoals(goals);
-  // };
-  // const search = async (text: string) => {
-  //   const { goals, delGoals } = await getAllGoals();
-  //   handleUserGoals(
-  //     goals.filter((goal) => goal.title.toUpperCase().includes(text.toUpperCase())),
-  //     deletedGoals?.filter(({ deletedAt, ...goal }) => goal.title.toUpperCase().includes(text.toUpperCase())),
-  //   );
-  // };
-  // const debounceSearch = (event: ChangeEvent<HTMLInputElement>) => {
-  //   if (debounceTimeout) {
-  //     clearTimeout(debounceTimeout);
-  //   }
-  //   debounceTimeout = setTimeout(() => {
-  //     search(event.target.value);
-  //   }, 300);
-  // };
-
   const zinZenLogoHeight = activeGoals && activeGoals.length > 0 ? 125 : 350;
-
-  // useEffect(() => {
-  //   if (action === "goalArchived") return;
-  //   if (action !== "none" || goalToMove === null) {
-  //     setLastAction("none");
-  //     refreshActiveGoals();
-  //   }
-  // }, [action, goalToMove]);
-
-  // useEffect(() => {
-  //   if (parentId === "root") {
-  //     refreshActiveGoals();
-  //   }
-  // }, [parentId, displaySearch, suggestedGoal, goalToMove]);
 
   return (
     <ParentGoalProvider>

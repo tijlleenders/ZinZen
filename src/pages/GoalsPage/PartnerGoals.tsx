@@ -7,7 +7,7 @@ import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
-import { darkModeState, lastAction, searchActive } from "@src/store";
+import { darkModeState, lastAction } from "@src/store";
 
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import AppLayout from "@src/layouts/AppLayout";
@@ -40,17 +40,12 @@ const PartnerGoals = () => {
   const partnerName = name.charAt(0).toUpperCase() + name.slice(1, 4);
 
   const [activeGoals, setActiveGoals] = useState<GoalItem[]>([]);
-  const [archivedGoals, setArchivedGoals] = useState<GoalItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const displaySearch = useRecoilValue(searchActive);
   const darkModeStatus = useRecoilValue(darkModeState);
   const [action, setLastAction] = useRecoilState(lastAction);
 
   const handleUserGoals = (goals: GoalItem[]) => {
     setActiveGoals([...goals.filter((goal) => goal.archived === "false")]);
-    setArchivedGoals([...goals.filter((goal) => goal.archived === "true" && goal.typeOfGoal === "myGoal")]);
-    setIsLoading(false);
   };
 
   const refreshActiveGoals = async () => {
@@ -83,7 +78,7 @@ const PartnerGoals = () => {
     if (parentId === "root") {
       refreshActiveGoals();
     }
-  }, [parentId, partner, displaySearch]);
+  }, [parentId, partner]);
 
   return (
     <ParentGoalProvider>
@@ -97,7 +92,7 @@ const PartnerGoals = () => {
           {parentId === "root" ? (
             <div className="my-goals-content">
               <div className="d-flex f-col">
-                <GoalsList goals={activeGoals} setGoals={setActiveGoals} />
+                <GoalsList goals={activeGoals} />
               </div>
               <ArchivedGoals />
             </div>
