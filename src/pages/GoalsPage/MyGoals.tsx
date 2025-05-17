@@ -26,7 +26,6 @@ import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
 import { useGetActiveRootGoals } from "@src/hooks/api/Goals/useGetActiveRootGoals";
-import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -36,7 +35,6 @@ export const MyGoals = () => {
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
   const { activeRootGoals } = useGetActiveRootGoals();
-  const { deletedGoals } = useGetDeletedGoals("root");
 
   const { parentId = "root" } = useParams();
   const { goal: activeGoal } = useActiveGoalContext();
@@ -115,7 +113,7 @@ export const MyGoals = () => {
                 <GoalsList goals={activeRootGoals || []} />
               </div>
               <DeletedGoalProvider>
-                {deletedGoals && deletedGoals.length > 0 && <DeletedGoals goals={deletedGoals} />}
+                <DeletedGoals />
               </DeletedGoalProvider>
               <ArchivedGoals />
             </div>

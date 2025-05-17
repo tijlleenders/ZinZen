@@ -8,10 +8,11 @@ import { TrashItem } from "@src/models/TrashItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
 import { useRestoreDeletedGoal } from "@src/hooks/api/Goals/useRestoreDeletedGoal";
+import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
@@ -65,18 +66,23 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
   );
 };
 
-const DeletedGoals = ({ goals }: { goals: TrashItem[] }) => {
+const DeletedGoals = () => {
+  const { parentId } = useParams();
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
-
   const { goal: deletedGoal } = useDeletedGoalContext();
+  const { deletedGoals } = useGetDeletedGoals(parentId || "root");
 
   const showOptions = !!searchParams.get("showOptions") && deletedGoal;
+
+  if (!deletedGoals) {
+    return null;
+  }
 
   return (
     <div className="archived-drawer">
       {showOptions && <Actions goal={deletedGoal} />}
-      {goals.length > 0 && (
+      {deletedGoals.length > 0 && (
         <ZAccordion
           showCount
           style={{
@@ -86,7 +92,9 @@ const DeletedGoals = ({ goals }: { goals: TrashItem[] }) => {
           panels={[
             {
               header: "Trash",
-              body: goals.map(({ deletedAt: _, ...goal }) => <MyGoal key={`goal-${goal.id}`} goal={goal} />),
+              body: deletedGoals.map(({ deletedAt: _, ...goal }) => (
+                <MyGoal key={`goal-${goal.id}`} goal={{ ...goal, impossible: false }} />
+              )),
             },
           ]}
         />
