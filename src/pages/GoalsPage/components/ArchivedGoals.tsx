@@ -8,11 +8,10 @@ import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
 import { useRestoreArchivedGoal } from "@src/hooks/api/Goals/useRestoreArchivedGoal";
-import { useGetArchivedGoals } from "@src/hooks/api/Goals/useGetArchivedGoals";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const darkMode = useRecoilValue(darkModeState);
@@ -74,22 +73,15 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
   );
 };
 
-const ArchivedGoals = () => {
+const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
-  const { parentId } = useParams();
   const { goal: activeGoal } = useActiveGoalContext();
   const showOptions = !!searchParams.get("showOptions") && activeGoal?.archived === "true";
-  const { archivedGoals } = useGetArchivedGoals(parentId || "root");
-
-  if (!archivedGoals) {
-    return null;
-  }
-
   return (
     <>
       {showOptions && <Actions goal={activeGoal} />}
-      {archivedGoals.length > 0 && (
+      {goals.length > 0 && (
         <div className="archived-drawer">
           <ZAccordion
             showCount
@@ -100,9 +92,7 @@ const ArchivedGoals = () => {
             panels={[
               {
                 header: "Done",
-                body: archivedGoals.map((goal) => (
-                  <MyGoal key={`goal-${goal.id}`} goal={{ ...goal, impossible: false }} />
-                )),
+                body: goals.map((goal) => <MyGoal key={`goal-${goal.id}`} goal={{ ...goal, impossible: false }} />),
               },
             ]}
           />

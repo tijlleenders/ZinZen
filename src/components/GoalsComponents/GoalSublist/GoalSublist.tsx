@@ -12,23 +12,26 @@ import DeletedGoals from "@pages/GoalsPage/components/DeletedGoals";
 import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
 import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
 import AvailableGoalHints from "@pages/GoalsPage/components/AvailableGoalHints";
-import { useParams } from "react-router-dom";
-import { useGetActiveGoals } from "@src/hooks/api/Goals/useGetActiveGoals";
 import { useGetGoalById } from "@src/hooks/api/Goals/useGetGoalById";
+import { useGetArchivedGoals } from "@src/hooks/api/Goals/useGetArchivedGoals";
+import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
+import { useParams } from "react-router-dom";
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
 
-export const GoalSublist = () => {
+export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
   const { parentId } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId || "");
-  const { activeGoals } = useGetActiveGoals(parentId || "root");
   const [goalHints, setGoalHints] = useState<GoalItem[]>([]);
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
   const goalID = useRecoilValue(displayGoalId);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
+
+  const { archivedGoals } = useGetArchivedGoals(parentId || "");
+  const { deletedGoals } = useGetDeletedGoals(parentId || "");
 
   useEffect(() => {
     if (!parentId) return;
@@ -41,7 +44,7 @@ export const GoalSublist = () => {
       });
       setGoalHints(array || []);
     });
-  }, [action, parentId, showSuggestionModal, showChangesModal, activeGoals, goalID]);
+  }, [action, parentId, showSuggestionModal, showChangesModal, goalID]);
 
   // TODO: re-implement sorting of goals
 
@@ -57,14 +60,14 @@ export const GoalSublist = () => {
             </span>
           )}
           <div className="sublist-list-container">
-            <GoalsList goals={activeGoals || []} />
+            <GoalsList goals={goals} />
             <AvailableGoalHintProvider goalHints={goalHints}>
               <AvailableGoalHints goals={goalHints} />
             </AvailableGoalHintProvider>
             <DeletedGoalProvider>
-              <DeletedGoals />
+              <DeletedGoals deletedGoals={deletedGoals || []} />
             </DeletedGoalProvider>
-            <ArchivedGoals />
+            <ArchivedGoals goals={archivedGoals || []} />
           </div>
         </div>
       </div>

@@ -26,6 +26,8 @@ import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
 import { useGetGoalById } from "@src/hooks/api/Goals/useGetGoalById";
 import { useGetActiveGoals } from "@src/hooks/api/Goals/useGetActiveGoals";
+import { useGetArchivedGoals } from "@src/hooks/api/Goals/useGetArchivedGoals";
+import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
@@ -38,7 +40,10 @@ export const MyGoals = () => {
   const { parentId = "root", activeGoalId } = useParams();
   const { activeGoals } = useGetActiveGoals("root");
   const { data: activeGoal } = useGetGoalById(activeGoalId || "");
-  // const [sortedGoals, setSortedGoals] = useState<GoalItem[]>([]);
+  const { activeGoals: activeChildrenGoals } = useGetActiveGoals(parentId || "root");
+
+  const { archivedGoals } = useGetArchivedGoals(parentId || "root");
+  const { deletedGoals } = useGetDeletedGoals(parentId || "root");
 
   const [searchParams] = useSearchParams();
   const showShareModal = searchParams.get("share") === "true";
@@ -59,7 +64,7 @@ export const MyGoals = () => {
 
   return (
     <ParentGoalProvider>
-      <AppLayout title="myGoals" debounceSearch={() => {}}>
+      <AppLayout title="myGoals">
         {showOptions && <RegularGoalActions goal={activeGoal} />}
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {showParticipants && <Participants />}
@@ -80,12 +85,12 @@ export const MyGoals = () => {
                 <GoalsList goals={activeGoals || []} />
               </div>
               <DeletedGoalProvider>
-                <DeletedGoals />
+                <DeletedGoals deletedGoals={deletedGoals || []} />
               </DeletedGoalProvider>
-              <ArchivedGoals />
+              <ArchivedGoals goals={archivedGoals || []} />
             </div>
           ) : (
-            <GoalSublist />
+            <GoalSublist goals={activeChildrenGoals || []} />
           )}
 
           <img

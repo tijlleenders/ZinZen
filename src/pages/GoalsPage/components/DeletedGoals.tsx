@@ -8,11 +8,10 @@ import { TrashItem } from "@src/models/TrashItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
 import { useRestoreDeletedGoal } from "@src/hooks/api/Goals/useRestoreDeletedGoal";
-import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
@@ -66,18 +65,12 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
   );
 };
 
-const DeletedGoals = () => {
-  const { parentId } = useParams();
+const DeletedGoals = ({ deletedGoals }: { deletedGoals: TrashItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
   const { goal: deletedGoal } = useDeletedGoalContext();
-  const { deletedGoals } = useGetDeletedGoals(parentId || "root");
 
   const showOptions = !!searchParams.get("showOptions") && deletedGoal;
-
-  if (!deletedGoals) {
-    return null;
-  }
 
   return (
     <div className="archived-drawer">

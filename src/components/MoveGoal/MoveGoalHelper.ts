@@ -82,7 +82,6 @@ const sendUpdatesToParticipants = async (updatedGoal: GoalItem, newParentGoalId:
           goal: {
             ...updatedGoal,
             parentGoalId,
-            participants: [],
           },
         },
       ]);
