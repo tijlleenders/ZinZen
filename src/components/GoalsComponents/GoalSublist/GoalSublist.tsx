@@ -13,7 +13,9 @@ import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
 import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
 import AvailableGoalHints from "@pages/GoalsPage/components/AvailableGoalHints";
 import { useGetGoalById } from "@src/hooks/api/Goals/useGetGoalById";
+import { useGetSharedWMGoalsArchived } from "@src/hooks/api/SharedWMGoals/useGetSharedWMGoalsArchived";
 import { useGetArchivedGoals } from "@src/hooks/api/Goals/useGetArchivedGoals";
+import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/useGetContactByPartnerId";
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
 import { useParams } from "react-router-dom";
 import GoalsList from "../GoalsList";
@@ -21,7 +23,7 @@ import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
 
 export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
-  const { parentId } = useParams();
+  const { parentId, partnerId } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId || "");
   const [goalHints, setGoalHints] = useState<GoalItem[]>([]);
   const { t } = useTranslation();
@@ -32,6 +34,8 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
 
   const { archivedGoals } = useGetArchivedGoals(parentId || "");
   const { deletedGoals } = useGetDeletedGoals(parentId || "");
+  const { partner } = useGetContactByPartnerId(partnerId || "");
+  const { data: archivedSharedWMGoals } = useGetSharedWMGoalsArchived(parentId || "", partner?.relId || "");
 
   useEffect(() => {
     if (!parentId) return;
@@ -67,7 +71,7 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
             <DeletedGoalProvider>
               <DeletedGoals deletedGoals={deletedGoals || []} />
             </DeletedGoalProvider>
-            <ArchivedGoals goals={archivedGoals || []} />
+            <ArchivedGoals goals={partnerId ? archivedSharedWMGoals || [] : archivedGoals || []} />
           </div>
         </div>
       </div>
