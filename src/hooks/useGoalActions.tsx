@@ -19,21 +19,21 @@ import { shareGoalWithContact } from "@src/services/contact.service";
 import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
 import { hashObject } from "@src/utils";
-import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import { removeBackTicks } from "@src/utils/patterns";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { GoalActions } from "@src/constants/actions";
 import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
+import { useGetGoalById } from "./api/Goals/useGetGoalById";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
-  const { partnerId } = useParams();
+  const { partnerId, activeGoalId } = useParams();
   const isPartnerModeActive = !!partnerId;
   const setLastAction = useSetRecoilState(lastAction);
   const setDevMode = useSetRecoilState(openDevMode);
   const subGoalsHistory = state?.goalsHistory || [];
   const ancestors = subGoalsHistory.map((ele) => ele.goalID);
-  const { goal: activeGoal } = useActiveGoalContext();
+  const { data: activeGoal } = useGetGoalById(activeGoalId || "");
 
   const setShowToast = useSetRecoilState(displayToast);
 

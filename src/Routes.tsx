@@ -12,7 +12,6 @@ import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
 import AppLayout from "./layouts/AppLayout";
 import { PartnerProvider } from "./contexts/partner-context";
-import { ActiveGoalProvider } from "./contexts/activeGoal-context";
 import useApp from "./hooks/useApp";
 import { useProcessSharedGoalData } from "./hooks/useProcessSharedGoalData";
 import { getAllInboxItems } from "./api/InboxAPI";
@@ -34,43 +33,11 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
-      {!isLanguageChosen ? (
-        <Route path="/" element={<LandingPage />} />
-      ) : (
-        <Route
-          path="/"
-          element={
-            <ActiveGoalProvider>
-              <MyTimePage />
-            </ActiveGoalProvider>
-          }
-        />
-      )}
+      {!isLanguageChosen ? <Route path="/" element={<LandingPage />} /> : <Route path="/" element={<MyTimePage />} />}
       <Route path="/Feedback" element={<FeedbackPage />} />
-      <Route
-        path="*"
-        element={
-          <ActiveGoalProvider>
-            <MyGoals />
-          </ActiveGoalProvider>
-        }
-      />
-      <Route
-        path="/goals/:parentId"
-        element={
-          <ActiveGoalProvider>
-            <MyGoals />
-          </ActiveGoalProvider>
-        }
-      />
-      <Route
-        path="/goals/:parentId/:activeGoalId"
-        element={
-          <ActiveGoalProvider>
-            <MyGoals />
-          </ActiveGoalProvider>
-        }
-      />
+      <Route path="*" element={<MyGoals />} />
+      <Route path="/goals/:parentId" element={<MyGoals />} />
+      <Route path="/goals/:parentId/:activeGoalId" element={<MyGoals />} />
 
       <Route
         path="/partners"

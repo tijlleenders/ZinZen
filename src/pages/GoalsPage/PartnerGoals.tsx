@@ -13,12 +13,12 @@ import GoalsList from "@components/GoalsComponents/GoalsList";
 import AppLayout from "@src/layouts/AppLayout";
 
 import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
-import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
 import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/useGetContactByPartnerId";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
+import { useGetSharedWMGoalById } from "@src/hooks/api/SharedWMGoals/useGetSharedWMGoalById";
 import { TGoalConfigMode } from "@src/types";
 import { useGetSharedWMActiveGoals } from "@src/hooks/api/SharedWMGoals/useGetSharedWMActiveGoals";
 import InvitationStatus from "./InvitationStatus";
@@ -34,7 +34,8 @@ const PartnerGoals = () => {
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
   const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
 
-  const { goal: activeGoal } = useActiveGoalContext();
+  const { activeGoalId } = useParams();
+  const { sharedWMGoal: activeGoal } = useGetSharedWMGoalById(activeGoalId || "");
 
   const { name = "" } = contact || {};
   const partnerName = name.charAt(0).toUpperCase() + name.slice(1, 4);

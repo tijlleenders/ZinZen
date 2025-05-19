@@ -3,15 +3,15 @@ import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
 import ZModal from "@src/common/ZModal";
-import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
 import { useRestoreArchivedGoal } from "@src/hooks/api/Goals/useRestoreArchivedGoal";
+import { useGetGoalById } from "@src/hooks/api/Goals/useGetGoalById";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const darkMode = useRecoilValue(darkModeState);
@@ -76,7 +76,8 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
 const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
-  const { goal: activeGoal } = useActiveGoalContext();
+  const { activeGoalId } = useParams();
+  const { data: activeGoal } = useGetGoalById(activeGoalId || "");
   const showOptions = !!searchParams.get("showOptions") && activeGoal?.archived === "true";
   return (
     <>
