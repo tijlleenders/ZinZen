@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from "react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import plingSound from "@assets/pling.mp3";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
-import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { GoalActions } from "@src/constants/actions";
 
 const editGoalSound = new Audio(plingSound);
@@ -24,12 +23,11 @@ export const useEditGoal = () => {
 
   const { mutate: editGoalMutation, isLoading: isEditingGoal } = useMutation({
     mutationFn: ({ goal, hintOption }: EditGoalMutation) => updateGoal(goal, hintOption),
-
-    onSuccess: (_, { goal }) => {
+    mutationKey: ["goals"],
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [["scheduler"], ["reminders"]],
       });
-      queryClient.invalidateQueries({ queryKey: GOAL_QUERY_KEYS.list("active", goal.parentGoalId) });
 
       setShowToast({
         open: true,

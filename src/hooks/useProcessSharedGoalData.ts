@@ -94,7 +94,7 @@ export const useProcessSharedGoalData = () => {
                     await handleNewIncomingGoal(change, relId);
                   } else if (["sharer", "suggestion"].includes(change.type)) {
                     await handleIncomingChanges(change as unknown as Payload, relId);
-                    queryClient.invalidateQueries(GOAL_QUERY_KEYS.lists());
+                    queryClient.invalidateQueries(GOAL_QUERY_KEYS.all);
                     queryClient.invalidateQueries(["sharedWMActiveGoals"]);
                     setLastAction(GoalActions.GOAL_NEW_UPDATES);
                   }

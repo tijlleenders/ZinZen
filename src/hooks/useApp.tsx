@@ -9,12 +9,12 @@ import { refreshTaskCollection } from "@src/api/TasksAPI";
 import { shareGoalWithContact } from "@src/services/contact.service";
 import { updateAllUnacceptedContacts, clearTheQueue } from "@src/api/ContactsAPI";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
+import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import { TaskActions } from "@src/constants/actions";
 import useScheduler from "./useScheduler";
-import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];

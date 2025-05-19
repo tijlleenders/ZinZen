@@ -13,6 +13,7 @@ export const useUpdateGoalPositions = () => {
   const { parentId = "root" } = useParams();
 
   return useMutation({
+    mutationKey: ["goals", "updatePositions"],
     mutationFn: async ({ goals }: UpdateGoalPositionsParams) => {
       const posIndexPromises = goals.map(async (goal, index) => updatePositionIndex(goal.id, index));
       await Promise.all(posIndexPromises);
@@ -32,9 +33,6 @@ export const useUpdateGoalPositions = () => {
       if (context?.previousGoals && context?.parentId) {
         queryClient.setQueryData<GoalItem[]>(GOAL_QUERY_KEYS.list("active", context.parentId), context.previousGoals);
       }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("active", parentId));
     },
   });
 };

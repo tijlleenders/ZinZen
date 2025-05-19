@@ -36,6 +36,8 @@ export const useAddGoal = () => {
       return { previousGoals };
     },
 
+    mutationKey: ["goals", "add"],
+
     onError: (error, { newGoal }, context) => {
       if (context?.previousGoals) {
         queryClient.setQueryData(GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId), context.previousGoals);

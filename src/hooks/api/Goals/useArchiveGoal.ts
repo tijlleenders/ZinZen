@@ -24,6 +24,7 @@ export const useArchiveGoal = () => {
       });
       return archiveUserGoal(goal);
     },
+    mutationKey: ["goals", "archive"],
     onSuccess: async (_, { goal }) => {
       queryClient.invalidateQueries({ queryKey: ["reminders"] });
       await updateTimestamp(goal.id);
