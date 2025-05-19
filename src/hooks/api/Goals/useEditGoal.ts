@@ -1,11 +1,14 @@
 import useGoalActions from "@src/hooks/useGoalActions";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayToast, lastAction } from "@src/store";
+import { displayToast } from "@src/store";
 import { useMutation, useQueryClient } from "react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import plingSound from "@assets/pling.mp3";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
-import { GoalActions } from "@src/constants/actions";
+import { hashObject } from "@src/utils";
+import { getGoalHintItem } from "@src/api/HintsAPI";
+import { useParams } from "react-router-dom";
+import { useGetGoalById } from "./useGetGoalById";
 
 const editGoalSound = new Audio(plingSound);
 
@@ -19,24 +22,34 @@ export const useEditGoal = () => {
   const setShowToast = useSetRecoilState(displayToast);
   const suggestedGoal = useRecoilValue(suggestedGoalState);
   const { updateGoal } = useGoalActions();
-  const setLastAction = useSetRecoilState(lastAction);
+  const { activeGoalId } = useParams();
+  const { data: activeGoal } = useGetGoalById(activeGoalId || "");
 
   const { mutate: editGoalMutation, isLoading: isEditingGoal } = useMutation({
-    mutationFn: ({ goal, hintOption }: EditGoalMutation) => updateGoal(goal, hintOption),
+    mutationFn: async ({ goal, hintOption }: EditGoalMutation) => {
+      const currentHintItem = await getGoalHintItem(goal.id);
+
+      const hasGoalChanged =
+        hashObject({ ...activeGoal }) !== hashObject(goal) || currentHintItem?.hintOptionEnabled !== hintOption;
+
+      await updateGoal(goal, hintOption);
+      return hasGoalChanged;
+    },
     mutationKey: ["goals"],
-    onSuccess: () => {
+    onSuccess: (hasGoalChanged) => {
       queryClient.invalidateQueries({
         queryKey: [["scheduler"], ["reminders"]],
       });
 
-      setShowToast({
-        open: true,
-        message: suggestedGoal ? "Goal (re)created!" : "Goal updated!",
-        extra: "",
-      });
+      if (hasGoalChanged) {
+        setShowToast({
+          open: true,
+          message: suggestedGoal ? "Goal (re)created!" : "Goal updated!",
+          extra: "",
+        });
 
-      editGoalSound.play();
-      setLastAction(GoalActions.GOAL_UPDATED);
+        editGoalSound.play();
+      }
     },
 
     onError: (error: Error) => {
