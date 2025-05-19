@@ -22,9 +22,13 @@ export const useAddGoal = () => {
   const { addGoal } = useGoalActions();
 
   const { mutate: addGoalMutation, isLoading: isAddingGoal } = useMutation({
-    mutationFn: ({ newGoal, hintOption, parentGoal }: AddGoalMutation) => addGoal(newGoal, hintOption, parentGoal),
+    mutationFn: ({ newGoal, hintOption, parentGoal }: AddGoalMutation) => {
+      console.time("goal-mutation-execution");
+      return addGoal(newGoal, hintOption, parentGoal);
+    },
 
     onMutate: async ({ newGoal }) => {
+      console.time("goal-optimistic-update");
       await queryClient.cancelQueries({ queryKey: GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId) });
 
       const previousGoals = queryClient.getQueryData(GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId));
@@ -32,6 +36,7 @@ export const useAddGoal = () => {
       queryClient.setQueryData(GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId), (old: GoalItem[] = []) => {
         return [newGoal, ...old];
       });
+      console.timeEnd("goal-optimistic-update");
 
       return { previousGoals };
     },
@@ -39,6 +44,7 @@ export const useAddGoal = () => {
     mutationKey: ["goals", "add"],
 
     onError: (error, { newGoal }, context) => {
+      console.timeEnd("goal-mutation-execution");
       if (context?.previousGoals) {
         queryClient.setQueryData(GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId), context.previousGoals);
       }
@@ -51,6 +57,7 @@ export const useAddGoal = () => {
     },
 
     onSettled: (_, __, { newGoal }) => {
+      console.timeEnd("goal-mutation-execution");
       queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId));
     },
 
