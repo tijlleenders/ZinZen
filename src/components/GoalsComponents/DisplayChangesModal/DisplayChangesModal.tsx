@@ -23,6 +23,7 @@ import {
   RestoredStrategy,
   SubgoalsStrategy,
 } from "@src/strategies/GoalChangeStrategies";
+import { useQueryClient } from "react-query";
 import { ChangeAcceptStrategyContext } from "@src/strategies/ChangeAcceptStrategyContext";
 import { ChangeAcceptParams } from "@src/Interfaces/ChangeAccept";
 
@@ -46,6 +47,8 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
   const [oldParentTitle, setOldParentTitle] = useState<string>("");
   const [newParentTitle, setNewParentTitle] = useState<string>("");
   const [moveGoalTitle, setMoveGoalTitle] = useState<string>("");
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const fetchParentTitles = async () => {
@@ -204,6 +207,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       setUpdateList({ schemaVersion: {}, prettierVersion: {} });
     }
     await strategyContext.executeStrategy(params);
+    queryClient.invalidateQueries(["activeGoals", currentMainGoal.parentGoalId]);
     setCurrentDisplay("none");
   };
 

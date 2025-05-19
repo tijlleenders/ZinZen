@@ -10,12 +10,12 @@ import { Payload } from "@src/models/InboxItem";
 import { getContactSharedGoals } from "@src/services/contact.service";
 import { lastAction } from "@src/store";
 import { useEffect } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useSetRecoilState } from "recoil";
 
 export const useProcessSharedGoalData = () => {
   const setLastAction = useSetRecoilState(lastAction);
-
+  const queryClient = useQueryClient();
   const { data: sharedGoalsData } = useQuery({
     queryKey: ["contactSharedGoals"],
     refetchOnWindowFocus: false,
@@ -93,6 +93,8 @@ export const useProcessSharedGoalData = () => {
                     await handleNewIncomingGoal(change, relId);
                   } else if (["sharer", "suggestion"].includes(change.type)) {
                     await handleIncomingChanges(change as unknown as Payload, relId);
+                    queryClient.invalidateQueries(["activeGoals"]);
+                    queryClient.invalidateQueries(["sharedWMActiveGoals"]);
                     setLastAction(GoalActions.GOAL_NEW_UPDATES);
                   }
                 } catch (error) {
