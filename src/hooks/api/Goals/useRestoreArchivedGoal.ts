@@ -6,6 +6,7 @@ import plingSound from "@assets/pling.mp3";
 import { displayToast, lastAction } from "@src/store";
 import { useSetRecoilState } from "recoil";
 import { GoalActions } from "@src/constants/actions";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 
 const restoreGoalSound = new Audio(plingSound);
 
@@ -18,8 +19,8 @@ export const useRestoreArchivedGoal = () => {
     mutationFn: ({ goal }: { goal: GoalItem }) => unarchiveUserGoal(goal),
     onSuccess: (_data, { goal }) => {
       setLastAction(GoalActions.GOAL_RESTORED);
-      queryClient.invalidateQueries(["archivedGoals", goal.parentGoalId]);
-      queryClient.invalidateQueries(["activeGoals", goal.parentGoalId]);
+      queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("archived", goal.parentGoalId));
+      queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("active", goal.parentGoalId));
       queryClient.invalidateQueries(["reminders"]);
       restoreGoalSound.play();
     },

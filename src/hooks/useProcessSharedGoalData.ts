@@ -4,6 +4,7 @@ import { getContactByRelId } from "@src/api/ContactsAPI";
 import { createSharedGoalMetadata } from "@src/api/SharedGoalNotMoved";
 import { addSharedWMGoal, getSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import { GoalActions } from "@src/constants/actions";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { handleIncomingChanges } from "@src/helpers/InboxProcessor";
 import { SharedGoalMessage } from "@src/Interfaces/IContactMessages";
 import { Payload } from "@src/models/InboxItem";
@@ -93,7 +94,7 @@ export const useProcessSharedGoalData = () => {
                     await handleNewIncomingGoal(change, relId);
                   } else if (["sharer", "suggestion"].includes(change.type)) {
                     await handleIncomingChanges(change as unknown as Payload, relId);
-                    queryClient.invalidateQueries(["activeGoals"]);
+                    queryClient.invalidateQueries(GOAL_QUERY_KEYS.lists());
                     queryClient.invalidateQueries(["sharedWMActiveGoals"]);
                     setLastAction(GoalActions.GOAL_NEW_UPDATES);
                   }

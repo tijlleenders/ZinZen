@@ -27,6 +27,7 @@ import { useQueryClient } from "react-query";
 import { ChangeAcceptStrategyContext } from "@src/strategies/ChangeAcceptStrategyContext";
 import { ChangeAcceptParams } from "@src/Interfaces/ChangeAccept";
 
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { GoalActions } from "@src/constants/actions";
 import Header from "./Header";
 import AcceptBtn from "./AcceptBtn";
@@ -207,7 +208,7 @@ const DisplayChangesModal = ({ currentMainGoal }: { currentMainGoal: GoalItem })
       setUpdateList({ schemaVersion: {}, prettierVersion: {} });
     }
     await strategyContext.executeStrategy(params);
-    queryClient.invalidateQueries(["activeGoals", currentMainGoal.parentGoalId]);
+    queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("active", currentMainGoal.parentGoalId));
     setCurrentDisplay("none");
   };
 

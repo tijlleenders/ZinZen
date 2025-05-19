@@ -1,5 +1,6 @@
 import { getActiveGoals } from "@src/api/GoalsAPI";
 import { useQuery } from "react-query";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 
 export const useGetActiveGoals = (parentGoalId: string) => {
   const {
@@ -7,7 +8,7 @@ export const useGetActiveGoals = (parentGoalId: string) => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["activeGoals", parentGoalId],
+    queryKey: GOAL_QUERY_KEYS.list("active", parentGoalId),
     queryFn: () => getActiveGoals(parentGoalId),
   });
   return { activeGoals, isLoading, error };

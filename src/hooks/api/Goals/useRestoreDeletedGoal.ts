@@ -6,6 +6,7 @@ import { restoreUserGoal } from "@src/api/TrashAPI";
 import { GoalActions } from "@src/constants/actions";
 import { GoalItem } from "@src/models/GoalItem";
 import { useSetRecoilState } from "recoil";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 
 const restoreGoalSound = new Audio(plingSound);
 
@@ -20,8 +21,8 @@ export const useRestoreDeletedGoal = () => {
     },
     onSuccess: (_data, { goal }) => {
       setLastAction(GoalActions.GOAL_RESTORED);
-      queryClient.invalidateQueries({ queryKey: ["activeGoals", goal.parentGoalId] });
-      queryClient.invalidateQueries({ queryKey: ["deletedGoals", goal.parentGoalId] });
+      queryClient.invalidateQueries({ queryKey: GOAL_QUERY_KEYS.list("active", goal.parentGoalId) });
+      queryClient.invalidateQueries({ queryKey: GOAL_QUERY_KEYS.list("deleted", goal.parentGoalId) });
       setShowToast({
         open: true,
         message: "Deleted goal restored successfully",

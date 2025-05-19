@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { useSetRecoilState } from "recoil";
 import plingSound from "@assets/pling.mp3";
 import useGoalActions from "@src/hooks/useGoalActions";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { GoalActions } from "@src/constants/actions";
 
 const addGoalSound = new Audio(plingSound);
@@ -24,11 +25,11 @@ export const useAddGoal = () => {
     mutationFn: ({ newGoal, hintOption, parentGoal }: AddGoalMutation) => addGoal(newGoal, hintOption, parentGoal),
 
     onMutate: async ({ newGoal }) => {
-      await queryClient.cancelQueries({ queryKey: ["activeGoals", newGoal.parentGoalId] });
+      await queryClient.cancelQueries({ queryKey: GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId) });
 
-      const previousGoals = queryClient.getQueryData(["activeGoals", newGoal.parentGoalId]);
+      const previousGoals = queryClient.getQueryData(GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId));
 
-      queryClient.setQueryData(["activeGoals", newGoal.parentGoalId], (old: GoalItem[] = []) => {
+      queryClient.setQueryData(GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId), (old: GoalItem[] = []) => {
         return [newGoal, ...old];
       });
 
@@ -37,7 +38,7 @@ export const useAddGoal = () => {
 
     onError: (error, { newGoal }, context) => {
       if (context?.previousGoals) {
-        queryClient.setQueryData(["activeGoals", newGoal.parentGoalId], context.previousGoals);
+        queryClient.setQueryData(GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId), context.previousGoals);
       }
       console.error(error);
       setShowToast({
@@ -48,7 +49,7 @@ export const useAddGoal = () => {
     },
 
     onSettled: (_, __, { newGoal }) => {
-      queryClient.invalidateQueries({ queryKey: ["activeGoals", newGoal.parentGoalId] });
+      queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("active", newGoal.parentGoalId));
     },
 
     onSuccess: (_, { newGoal }) => {

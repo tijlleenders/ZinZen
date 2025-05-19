@@ -1,6 +1,7 @@
 import { GoalItem } from "@src/models/GoalItem";
-import { updatePositionIndex } from "@src/api/GCustomAPI";
 import { useMutation, useQueryClient } from "react-query";
+import { updatePositionIndex } from "@src/api/GCustomAPI";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { useParams } from "react-router-dom";
 
 interface UpdateGoalPositionsParams {
@@ -18,24 +19,22 @@ export const useUpdateGoalPositions = () => {
     },
     onMutate: async ({ goals }) => {
       await queryClient.cancelQueries({
-        queryKey: ["activeGoals", parentId],
+        queryKey: GOAL_QUERY_KEYS.list("active", parentId),
       });
 
-      const previousGoals = queryClient.getQueryData<GoalItem[]>(["activeGoals", parentId]);
+      const previousGoals = queryClient.getQueryData<GoalItem[]>(GOAL_QUERY_KEYS.list("active", parentId));
 
-      queryClient.setQueryData<GoalItem[]>(["activeGoals", parentId], goals);
+      queryClient.setQueryData<GoalItem[]>(GOAL_QUERY_KEYS.list("active", parentId), goals);
 
       return { previousGoals, parentId };
     },
     onError: (err, variables, context) => {
       if (context?.previousGoals && context?.parentId) {
-        queryClient.setQueryData<GoalItem[]>(["activeGoals", context.parentId], context.previousGoals);
+        queryClient.setQueryData<GoalItem[]>(GOAL_QUERY_KEYS.list("active", context.parentId), context.previousGoals);
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["activeGoals", parentId],
-      });
+      queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("active", parentId));
     },
   });
 };
