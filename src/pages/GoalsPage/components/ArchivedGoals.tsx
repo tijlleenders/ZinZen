@@ -9,9 +9,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
-import { useRestoreArchivedGoal } from "@src/hooks/api/Goals/useRestoreArchivedGoal";
-import { useGetGoalById } from "@src/hooks/api/Goals/useGetGoalById";
+import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
+import { useRestoreArchivedGoal } from "@src/hooks/api/Goals/mutations/useRestoreArchivedGoal";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const darkMode = useRecoilValue(darkModeState);
@@ -63,7 +63,6 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           className="goal-action-archive shareOptions-btn"
           onClick={async () => {
             await deleteGoalMutation(goal);
-            window.history.back();
           }}
         >
           <ActionDiv label={t("Delete")} icon="Delete" />

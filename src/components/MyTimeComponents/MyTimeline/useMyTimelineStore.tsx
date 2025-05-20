@@ -11,7 +11,7 @@ import { GoalItem } from "@src/models/GoalItem";
 import { ILocationState } from "@src/Interfaces";
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { useDoneTask } from "@src/hooks/api/Tasks/useDoneTask";
-import { useArchiveGoal } from "@src/hooks/api/Goals/useArchiveGoal";
+import { useArchiveGoal } from "@src/hooks/api/Goals/mutations/useArchiveGoal";
 
 export const useMyTimelineStore = (day: string) => {
   const navigate = useNavigate();

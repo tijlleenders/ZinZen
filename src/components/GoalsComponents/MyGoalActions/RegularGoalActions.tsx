@@ -15,8 +15,8 @@ import { ILocationState } from "@src/Interfaces";
 import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 
 import { GoalActions } from "@src/constants/actions";
-import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
-import { useArchiveGoal } from "@src/hooks/api/Goals/useArchiveGoal";
+import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
+import { useArchiveGoal } from "@src/hooks/api/Goals/mutations/useArchiveGoal";
 import ActionDiv from "./ActionDiv";
 
 import "./MyGoalActions.scss";

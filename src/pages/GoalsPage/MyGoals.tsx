@@ -24,10 +24,10 @@ import Participants from "@components/GoalsComponents/Participants";
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import { goalCategories } from "@src/constants/goals";
-import { useGetGoalById } from "@src/hooks/api/Goals/useGetGoalById";
-import { useGetActiveGoals } from "@src/hooks/api/Goals/useGetActiveGoals";
-import { useGetArchivedGoals } from "@src/hooks/api/Goals/useGetArchivedGoals";
-import { useGetDeletedGoals } from "@src/hooks/api/Goals/useGetDeletedGoals";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
+import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
+import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
+import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 

@@ -7,7 +7,7 @@ import ZModal from "@src/common/ZModal";
 import { IParticipant } from "@src/models/GoalItem";
 import { followContactOnGoal } from "@src/api/GoalsAPI";
 import { useParams } from "react-router-dom";
-import { useGetGoalById } from "@src/hooks/api/Goals/useGetGoalById";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
 const Participants = () => {
   const { activeGoalId } = useParams();

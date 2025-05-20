@@ -14,13 +14,11 @@ export const useRestoreDeletedGoal = () => {
 
   const { mutate: restoreDeletedGoalMutation, isLoading } = useMutation({
     mutationFn: ({ goal }: { goal: GoalItem }) => {
-      console.time("goal-restore-mutation-execution");
       return restoreUserGoal(goal, goal.typeOfGoal === "shared");
     },
     mutationKey: ["goals"],
     onMutate: async ({ goal }) => {
       window.history.back();
-      console.time("goal-restore-optimistic-update");
       await queryClient.cancelQueries({ queryKey: GOAL_QUERY_KEYS.list("trash", "") });
 
       const previousGoals = queryClient.getQueryData(GOAL_QUERY_KEYS.list("trash", ""));
@@ -33,7 +31,6 @@ export const useRestoreDeletedGoal = () => {
       queryClient.setQueryData(GOAL_QUERY_KEYS.list("active", goal.parentGoalId), (old: GoalItem[] = []) => {
         return [goal, ...old];
       });
-      console.timeEnd("goal-restore-optimistic-update");
       setShowToast({
         open: true,
         message: "Deleted goal restored successfully",
@@ -44,7 +41,6 @@ export const useRestoreDeletedGoal = () => {
     },
     onError: (error, { goal }, context) => {
       window.history.back();
-      console.timeEnd("goal-restore-mutation-execution");
       if (context?.previousGoals) {
         queryClient.setQueryData(GOAL_QUERY_KEYS.list("trash", ""), context.previousGoals);
         // Remove from active goals if it was added
@@ -60,8 +56,7 @@ export const useRestoreDeletedGoal = () => {
       });
     },
     onSettled: (_, __, { goal }) => {
-      console.timeEnd("goal-restore-mutation-execution");
-      queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("trash", ""));
+      queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("deleted", goal.parentGoalId));
       queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("active", goal.parentGoalId));
     },
   });

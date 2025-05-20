@@ -7,7 +7,7 @@ import {
 } from "@src/api/GoalsAPI";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { restoreUserGoal } from "@src/api/TrashAPI";
-import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/controllers/GoalController";
+import { createGoal, modifyGoal } from "@src/controllers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/controllers/PartnerController";
 import { GoalItem } from "@src/models/GoalItem";
 import { displayToast, lastAction } from "@src/store";
@@ -23,7 +23,7 @@ import { removeBackTicks } from "@src/utils/patterns";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { GoalActions } from "@src/constants/actions";
 import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
-import { useGetGoalById } from "./api/Goals/useGetGoalById";
+import { useGetGoalById } from "./api/Goals/queries/useGetGoalById";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -43,13 +43,6 @@ const useGoalActions = () => {
       message,
       extra,
     });
-  };
-  const deleteGoalAction = async (goal: GoalItem) => {
-    if (isPartnerModeActive) {
-      await deleteSharedGoal(goal);
-    } else {
-      await deleteGoal(goal);
-    }
   };
 
   const restoreDeletedGoal = async (goal: GoalItem) => {
@@ -166,7 +159,6 @@ const useGoalActions = () => {
   };
   return {
     addGoal,
-    deleteGoalAction,
     restoreDeletedGoal,
     restoreArchivedGoal,
     updateGoal,

@@ -15,7 +15,7 @@ import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { ImpossibleGoal } from "@src/Interfaces";
 import { useGoalSelection } from "@src/hooks/useGoalSelection";
-import { useUpdateGoalPositions } from "@src/hooks/api/Goals/useUpdateGoalPositions";
+import { useUpdateGoalPositions } from "@src/hooks/api/Goals/mutations/useUpdateGoalPositions";
 
 import SortableItem from "./MyGoal/SortableItem";
 

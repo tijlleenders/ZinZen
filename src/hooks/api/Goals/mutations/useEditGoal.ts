@@ -8,7 +8,7 @@ import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { hashObject } from "@src/utils";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { useParams } from "react-router-dom";
-import { useGetGoalById } from "./useGetGoalById";
+import { useGetGoalById } from "../queries/useGetGoalById";
 
 const editGoalSound = new Audio(plingSound);
 

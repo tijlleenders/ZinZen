@@ -1,19 +1,19 @@
 import { useMutation, useQueryClient } from "react-query";
 import { GoalItem } from "@src/models/GoalItem";
-import useGoalActions from "@src/hooks/useGoalActions";
+import { deleteSharedGoal, deleteGoal } from "@src/controllers/GoalController";
 import { useSetRecoilState } from "recoil";
 import { displayToast } from "@src/store";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
 import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { ILocationState } from "@src/Interfaces";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { sendFinalUpdateOnGoal } from "@src/controllers/PubSubController";
 
 const pageCrumpleSound = new Audio(pageCrumplingSound);
 
 export const useDeleteGoal = () => {
   const queryClient = useQueryClient();
-  const { deleteGoalAction } = useGoalActions();
+  const { partnerId } = useParams();
   const setShowToast = useSetRecoilState(displayToast);
   const { state }: { state: ILocationState } = useLocation();
   const subGoalsHistory = state?.goalsHistory || [];
@@ -22,9 +22,10 @@ export const useDeleteGoal = () => {
 
   const { mutate: deleteGoalMutation, isLoading: isDeletingGoal } = useMutation({
     mutationFn: (goal: GoalItem) => {
-      return deleteGoalAction(goal);
+      return partnerId ? deleteSharedGoal(goal) : deleteGoal(goal);
     },
     mutationKey: ["goals"],
+
     onMutate: async (goal: GoalItem) => {
       window.history.back();
       setShowToast({
@@ -37,7 +38,6 @@ export const useDeleteGoal = () => {
       await queryClient.cancelQueries({ queryKey: GOAL_QUERY_KEYS.list("active", goal.parentGoalId) });
       await queryClient.cancelQueries({ queryKey: GOAL_QUERY_KEYS.list("deleted", goal.parentGoalId) });
 
-      console.time("goal-delete-optimistic-update");
       const previousActiveGoals = queryClient.getQueryData(GOAL_QUERY_KEYS.list("active", goal.parentGoalId));
       const previousTrashGoals = queryClient.getQueryData(GOAL_QUERY_KEYS.list("deleted", goal.parentGoalId));
 
@@ -53,6 +53,7 @@ export const useDeleteGoal = () => {
 
       return { previousActiveGoals, previousTrashGoals };
     },
+
     onError: (error, goal, context) => {
       if (context?.previousActiveGoals) {
         queryClient.setQueryData(GOAL_QUERY_KEYS.list("active", goal.parentGoalId), context.previousActiveGoals);
@@ -67,10 +68,12 @@ export const useDeleteGoal = () => {
         extra: "Please try again",
       });
     },
+
     onSettled: (_, __, goal) => {
       queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("active", goal.parentGoalId));
       queryClient.invalidateQueries(GOAL_QUERY_KEYS.list("deleted", goal.parentGoalId));
     },
+
     onSuccess: (_, goal) => {
       sendFinalUpdateOnGoal(goal.id, "deleted", [...ancestors, goal.id], false).then(() => {
         console.log("Update Sent");

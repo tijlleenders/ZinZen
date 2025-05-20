@@ -21,8 +21,7 @@ import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
 import useScheduler from "@src/hooks/useScheduler";
 import DefaultInput from "@src/common/DefaultInput";
-import { useAddGoal } from "@src/hooks/api/Goals/useAddGoal";
-import { useEditGoal } from "@src/hooks/api/Goals/useEditGoal";
+import { useAddGoal } from "@src/hooks/api/Goals/mutations/useAddGoal";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -31,6 +30,7 @@ import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
 import useOnScreenKeyboardScrollFix from "../../../hooks/useOnScreenKeyboardScrollFix";
+import { useEditGoal } from "@src/hooks/api/Goals/mutations/useEditGoal";
 
 const onDays = [...calDays.slice(1), "Sun"];
 

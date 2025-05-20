@@ -10,8 +10,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useDeleteGoal } from "@src/hooks/api/Goals/useDeleteGoal";
-import { useRestoreDeletedGoal } from "@src/hooks/api/Goals/useRestoreDeletedGoal";
+import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
+import { useRestoreDeletedGoal } from "@src/hooks/api/Goals/mutations/useRestoreDeletedGoal";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
