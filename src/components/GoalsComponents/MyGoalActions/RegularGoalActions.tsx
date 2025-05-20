@@ -36,14 +36,13 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
 
   const showConfirmation = useRecoilValue(displayConfirmation);
   const setLastAction = useSetRecoilState(lastAction);
-  const ancestors = (state?.goalsHistory || []).map((ele) => ele.goalID);
 
   const setShowToast = useSetRecoilState(displayToast);
 
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
 
-  const handleArchiveGoal = async (goalToArchive: GoalItem, goalAncestors: string[]) => {
-    await archiveGoalMutation({ goal: goalToArchive, ancestors: goalAncestors });
+  const handleArchiveGoal = async (goalToArchive: GoalItem) => {
+    await archiveGoalMutation({ goal: goalToArchive });
     const goalTitleElement = document.querySelector(`#goal-${goalToArchive.id} .goal-title`) as HTMLElement;
     if (goalTitleElement) {
       goalTitleElement.style.textDecoration = "line-through";
@@ -56,7 +55,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
     if (action === "delete") {
       await deleteGoalMutation(goal);
     } else if (action === "archive") {
-      await handleArchiveGoal(goal, ancestors);
+      await handleArchiveGoal(goal);
     } else if (action === "colabRequest") {
       const res = await convertSharedWMGoalToColab(goal);
       if (res) {

@@ -19,8 +19,6 @@ export const useMyTimelineStore = (day: string) => {
   const { doneTaskMutation } = useDoneTask();
   const { archiveGoalMutation } = useArchiveGoal();
 
-  const subGoalsHistory = state?.goalsHistory || [];
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
   const setShowToast = useSetRecoilState(displayToast);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
@@ -93,7 +91,7 @@ export const useMyTimelineStore = (day: string) => {
 
   const handleReminderActionClick = async (actionName: TaskAction, reminder: GoalItem) => {
     if (actionName === TaskAction.Done) {
-      return archiveGoalMutation({ goal: reminder, ancestors });
+      return archiveGoalMutation({ goal: reminder });
     }
     if (actionName === TaskAction.Focus) {
       return handleFocusClick(reminder);
