@@ -3,19 +3,15 @@
 import { getContactByRelId } from "@src/api/ContactsAPI";
 import { createSharedGoalMetadata } from "@src/api/SharedGoalNotMoved";
 import { addSharedWMGoal, getSharedWMGoal, updateSharedWMGoal } from "@src/api/SharedWMAPI";
-import { GoalActions } from "@src/constants/actions";
-import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
+import { GOAL_QUERY_KEYS, SHARED_WM_GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { handleIncomingChanges } from "@src/helpers/InboxProcessor";
 import { SharedGoalMessage } from "@src/Interfaces/IContactMessages";
 import { Payload } from "@src/models/InboxItem";
 import { getContactSharedGoals } from "@src/services/contact.service";
-import { lastAction } from "@src/store";
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useSetRecoilState } from "recoil";
 
 export const useProcessSharedGoalData = () => {
-  const setLastAction = useSetRecoilState(lastAction);
   const queryClient = useQueryClient();
   const { data: sharedGoalsData } = useQuery({
     queryKey: ["contactSharedGoals"],
@@ -71,8 +67,6 @@ export const useProcessSharedGoalData = () => {
           }
         }
       }
-
-      setLastAction(GoalActions.GOAL_NEW_UPDATES);
     } catch (error) {
       console.error("[useApp] Error processing shared goals:", error);
     }
@@ -91,12 +85,15 @@ export const useProcessSharedGoalData = () => {
                 try {
                   if (change.type === "shareMessage") {
                     console.log("change", change);
-                    await handleNewIncomingGoal(change, relId);
+                    await handleNewIncomingGoal(change, relId).then(() => {
+                      queryClient.invalidateQueries(GOAL_QUERY_KEYS.all);
+                      queryClient.invalidateQueries(SHARED_WM_GOAL_QUERY_KEYS.all);
+                    });
                   } else if (["sharer", "suggestion"].includes(change.type)) {
-                    await handleIncomingChanges(change as unknown as Payload, relId);
-                    queryClient.invalidateQueries(GOAL_QUERY_KEYS.all);
-                    queryClient.invalidateQueries(["sharedWMActiveGoals"]);
-                    setLastAction(GoalActions.GOAL_NEW_UPDATES);
+                    await handleIncomingChanges(change as unknown as Payload, relId).then(() => {
+                      queryClient.invalidateQueries(GOAL_QUERY_KEYS.all);
+                      queryClient.invalidateQueries(SHARED_WM_GOAL_QUERY_KEYS.all);
+                    });
                   }
                 } catch (error) {
                   console.error("Error processing change:", error);

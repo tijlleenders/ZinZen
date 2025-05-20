@@ -81,11 +81,6 @@ export const getArchivedGoals = async (parentGoalId: string) => {
   return sortGoalsByProps(archivedGoals);
 };
 
-export const checkMagicGoal = async () => {
-  const goal = await db.goalsCollection.where("title").equals("magic").toArray();
-  return !!(goal && goal.length > 0);
-};
-
 export const getActiveGoals = async (parentGoalId: string) => {
   const activeGoals: GoalItem[] = await db.goalsCollection
     .where("parentGoalId")
