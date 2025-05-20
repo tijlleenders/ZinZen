@@ -32,10 +32,11 @@ const useGoalActions = () => {
   const setLastAction = useSetRecoilState(lastAction);
   const setDevMode = useSetRecoilState(openDevMode);
   const subGoalsHistory = state?.goalsHistory || [];
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
   const { data: activeGoal } = useGetGoalById(activeGoalId || "");
 
   const setShowToast = useSetRecoilState(displayToast);
+
+  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
 
   const showMessage = (message: string, extra = "") => {
     setShowToast({
@@ -48,10 +49,7 @@ const useGoalActions = () => {
     if (isPartnerModeActive) {
       await deleteSharedGoal(goal);
     } else {
-      await deleteGoal(goal, ancestors);
-    }
-    if (goal.title === "magic" && goal.parentGoalId === "root") {
-      setDevMode(false);
+      await deleteGoal(goal);
     }
   };
 

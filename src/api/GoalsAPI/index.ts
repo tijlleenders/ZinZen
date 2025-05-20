@@ -269,7 +269,7 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
 export const removeGoalWithChildrens = async (goal: GoalItem, permanently = false) => {
   await removeChildrenGoals(goal.id, permanently);
   await removeGoal(goal, permanently);
-  await deleteTaskHistoryItem(goal.id);
+  deleteTaskHistoryItem(goal.id);
   if (goal.parentGoalId !== "root") {
     getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;
