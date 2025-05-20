@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 import { useSetRecoilState } from "recoil";
 import { displayToast } from "@store";
 import { moveGoalState } from "@src/store/moveGoalState";
-import { moveGoalHierarchy } from "./MoveGoalHelper";
+import { moveGoalHierarchy } from "@components/MoveGoal/MoveGoalHelper";
 
 type MoveGoalParams = {
   goalId: string;
@@ -21,6 +21,7 @@ export const useGoalMoveMutation = () => {
     mutationFn: async ({ goalId, newParentGoalId }) => {
       await moveGoalHierarchy(goalId, newParentGoalId);
     },
+    mutationKey: "goals",
     onSuccess: () => {
       setToastMessage({ open: true, message: "Goal moved successfully", extra: "" });
     },

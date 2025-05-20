@@ -20,7 +20,7 @@ import { useKeyPress } from "@src/hooks/useKeyPress";
 import { moveGoalState } from "@src/store/moveGoalState";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { suggestChanges } from "@src/controllers/PartnerController";
-import { useGoalMoveMutation } from "./MoveGoal/useGoalMoveMutation";
+import { useGoalMoveMutation } from "../hooks/api/Goals/mutations/useGoalMoveMutation";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -121,7 +121,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
 
-  const { moveGoalMutation, isLoading } = useGoalMoveMutation();
+  const { moveGoalMutation } = useGoalMoveMutation();
 
   const handleMoveGoalHere = async () => {
     if (!goalToMove) return;
@@ -164,11 +164,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         />
         {goalToMove ? (
           <>
-            <AddGoalOption
-              handleClick={handleMoveGoalHere}
-              bottom={144}
-              disabled={!shouldRenderMoveButton || isLoading}
-            >
+            <AddGoalOption handleClick={handleMoveGoalHere} bottom={144} disabled={!shouldRenderMoveButton}>
               {t("Move here")}
             </AddGoalOption>
             <AddGoalOption

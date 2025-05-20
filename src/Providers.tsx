@@ -10,7 +10,6 @@ const Providers = ({ children }: { children: ReactNode }) => {
     mutationCache: new MutationCache({
       onSuccess: (data, variables, context, mutation) => {
         const { mutationKey } = mutation.options;
-        console.log(mutationKey);
         if (mutationKey && !EXCLUDED_MUTATION_KEYS.includes(mutationKey as string)) {
           queryClient.invalidateQueries({ queryKey: mutationKey });
         }

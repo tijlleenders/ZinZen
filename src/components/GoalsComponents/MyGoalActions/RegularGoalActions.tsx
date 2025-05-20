@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 import useGoalStore from "@src/hooks/useGoalStore";
 import ConfirmationModal from "@src/common/ConfirmationModal";
 import ZModal from "@src/common/ZModal";
 
-import { lastAction, displayConfirmation, displayToast } from "@src/store";
+import { displayConfirmation } from "@src/store";
 import { GoalItem } from "@src/models/GoalItem";
 import { TConfirmAction } from "@src/Interfaces/IPopupModals";
 
 import { ILocationState } from "@src/Interfaces";
-import { convertSharedWMGoalToColab } from "@src/api/SharedWMAPI";
 
-import { GoalActions } from "@src/constants/actions";
+import { useConvertToNormalGoal } from "@src/hooks/api/SharedWMGoals/useConvertToNormalGoal";
 import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
 import { useArchiveGoal } from "@src/hooks/api/Goals/mutations/useArchiveGoal";
 import ActionDiv from "./ActionDiv";
@@ -35,9 +34,8 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const confirmActionCategory = goal.typeOfGoal === "shared" && goal.parentGoalId === "root" ? "collaboration" : "goal";
 
   const showConfirmation = useRecoilValue(displayConfirmation);
-  const setLastAction = useSetRecoilState(lastAction);
 
-  const setShowToast = useSetRecoilState(displayToast);
+  const { convertToNormalGoal } = useConvertToNormalGoal();
 
   const [confirmationAction, setConfirmationAction] = useState<TConfirmAction | null>(null);
 
@@ -57,15 +55,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
     } else if (action === "archive") {
       await handleArchiveGoal(goal);
     } else if (action === "colabRequest") {
-      const res = await convertSharedWMGoalToColab(goal);
-      if (res) {
-        setShowToast({
-          open: true,
-          message: `Goal ${res.convertedGoal?.title} has been added into ${res.parentGoalName}!`,
-          extra: "",
-        });
-      }
-      setLastAction(GoalActions.GOAL_COLAB_REQUEST);
+      await convertToNormalGoal(goal);
     } else if (action === "move") {
       await handleMove(goal);
     }

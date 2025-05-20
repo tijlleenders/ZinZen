@@ -100,8 +100,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     // Handle root move case
     if (newParentGoalId === "root") {
       await handleLocalGoalMove(goalToMove, "root");
-      await sendUpdatesToParticipants(goalToMove, "root", true);
-      console.log("[moveGoalHierarchy] Successfully moved goal to root level");
+      sendUpdatesToParticipants(goalToMove, "root", true);
       return;
     }
 
@@ -113,7 +112,7 @@ export const moveGoalHierarchy = async (goalId: string, newParentGoalId: string)
     if (!updatedGoal) return;
 
     // Then send updates to participants
-    await sendUpdatesToParticipants(updatedGoal, newParentGoalId);
+    sendUpdatesToParticipants(updatedGoal, newParentGoalId);
 
     console.log("[moveGoalHierarchy] Successfully completed goal hierarchy move");
   } catch (error) {
