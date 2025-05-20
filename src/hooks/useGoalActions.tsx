@@ -10,7 +10,7 @@ import { restoreUserGoal } from "@src/api/TrashAPI";
 import { createGoal, deleteGoal, deleteSharedGoal, modifyGoal } from "@src/controllers/GoalController";
 import { suggestChanges, suggestNewGoal } from "@src/controllers/PartnerController";
 import { GoalItem } from "@src/models/GoalItem";
-import { displayToast, lastAction, openDevMode } from "@src/store";
+import { displayToast, lastAction } from "@src/store";
 
 import { useLocation, useParams } from "react-router-dom";
 
@@ -30,7 +30,6 @@ const useGoalActions = () => {
   const { partnerId, activeGoalId } = useParams();
   const isPartnerModeActive = !!partnerId;
   const setLastAction = useSetRecoilState(lastAction);
-  const setDevMode = useSetRecoilState(openDevMode);
   const subGoalsHistory = state?.goalsHistory || [];
   const { data: activeGoal } = useGetGoalById(activeGoalId || "");
 
@@ -104,10 +103,6 @@ const useGoalActions = () => {
       // handle regular mode
       await updateTimestamp(newGoal.parentGoalId);
       await createGoal(newGoal, newGoal.parentGoalId, ancestors, hintOption);
-      if (!parentGoal && newGoal.title === "magic") {
-        setDevMode(true);
-        showMessage("Congratulations, you activated DEV mode", "Explore what's hidden");
-      }
     }
   };
 
