@@ -26,6 +26,7 @@ export const useDeleteGoal = () => {
     },
     mutationKey: ["goals"],
     onMutate: async (goal: GoalItem) => {
+      window.history.back();
       setShowToast({
         open: true,
         message: "Moved to trash!",

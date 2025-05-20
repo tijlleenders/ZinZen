@@ -70,7 +70,9 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
     } else if (action === "move") {
       await handleMove(goal);
     }
-    window.history.back();
+    if (action !== "delete") {
+      window.history.back();
+    }
   };
 
   const openConfirmationPopUp = async (action: TConfirmAction) => {

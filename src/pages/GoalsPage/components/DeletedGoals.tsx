@@ -33,7 +33,6 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           onClick={async (e) => {
             e.stopPropagation();
             await restoreDeletedGoalMutation({ goal });
-            window.history.back();
           }}
         >
           <ActionDiv
@@ -55,7 +54,6 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           className="goal-action-archive shareOptions-btn"
           onClick={async () => {
             await deleteGoalMutation(goal);
-            window.history.back();
           }}
         >
           <ActionDiv label={t("Delete")} icon="Delete" />
