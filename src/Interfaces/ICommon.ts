@@ -1,10 +1,5 @@
-import { ChangeEvent, ReactNode } from "react";
+import { ReactNode } from "react";
 import { SetterOrUpdater } from "recoil";
-
-export interface IHeader {
-  title: string;
-  debounceSearch?: (event: ChangeEvent<HTMLInputElement>) => void;
-}
 
 export interface IBackdrop {
   opacity: number;

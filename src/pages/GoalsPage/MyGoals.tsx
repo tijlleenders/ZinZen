@@ -9,6 +9,7 @@ import { TGoalCategory } from "@src/models/GoalItem";
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { darkModeState } from "@src/store";
+import { searchQueryState } from "@src/store/GoalsState";
 
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
@@ -34,18 +35,19 @@ import ArchivedGoals from "./components/ArchivedGoals";
 import "./GoalsPage.scss";
 
 // TODO: re-implement sorting priority goals
-// TODO: re-implement search goals
 
 export const MyGoals = () => {
   const { parentId = "root", activeGoalId } = useParams();
   const { activeGoals } = useGetActiveGoals("root");
+  const [searchParams] = useSearchParams();
+  const searchQuery = useRecoilValue(searchQueryState);
+
   const { data: activeGoal } = useGetGoalById(activeGoalId || "");
   const { activeGoals: activeChildrenGoals } = useGetActiveGoals(parentId || "root");
 
   const { archivedGoals } = useGetArchivedGoals(parentId || "root");
   const { deletedGoals } = useGetDeletedGoals(parentId || "root");
 
-  const [searchParams] = useSearchParams();
   const showShareModal = searchParams.get("share") === "true";
   const showOptions = searchParams.get("showOptions") === "true" && activeGoal && activeGoal.archived === "false";
 
@@ -61,6 +63,14 @@ export const MyGoals = () => {
   const goalWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const zinZenLogoHeight = activeGoals && activeGoals.length > 0 ? 125 : 350;
+
+  const filteredActiveGoals = activeGoals?.filter((goal) =>
+    goal.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+  const filteredActiveChildrenGoals = activeChildrenGoals?.filter((goal) =>
+    goal.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
     <ParentGoalProvider>
@@ -82,7 +92,7 @@ export const MyGoals = () => {
           {parentId === "root" ? (
             <div className="my-goals-content">
               <div className="d-flex f-col">
-                <GoalsList goals={activeGoals || []} />
+                <GoalsList goals={filteredActiveGoals || []} />
               </div>
               <DeletedGoalProvider>
                 <DeletedGoals deletedGoals={deletedGoals || []} />
@@ -90,7 +100,7 @@ export const MyGoals = () => {
               <ArchivedGoals goals={archivedGoals || []} />
             </div>
           ) : (
-            <GoalSublist goals={activeChildrenGoals || []} />
+            <GoalSublist goals={filteredActiveChildrenGoals || []} />
           )}
 
           <img

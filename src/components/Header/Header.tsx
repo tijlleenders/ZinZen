@@ -1,34 +1,32 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 import zinzenLightLogo from "@assets/images/zinzenLightLogo.svg";
 import searchIcon from "@assets/images/searchIcon.svg";
 import darkModeIcon from "@assets/images/darkModeIcon.svg";
 import lightModeIcon from "@assets/images/lightModeIcon.svg";
-
-import { IHeader } from "@src/Interfaces/ICommon";
 import { getAllContacts } from "@src/api/ContactsAPI";
 
 import PartnerModeTour from "@components/PartnerModeTour";
 
 import { darkModeState, displayToast, flipAnimationState, searchActive } from "@src/store";
 import { displayPartnerModeTour } from "@src/store/TourState";
-
+import { showSearchState } from "@src/store/GoalsState";
+import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import HeaderBtn from "./HeaderBtn";
 import Search from "../../common/Search";
-
 import "./Header.scss";
 
-const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
+const Header = ({ title }: { title: string }) => {
   const { t } = useTranslation();
+  const [showSearch, setShowSearch] = useRecoilState(showSearchState);
   const location = useLocation();
 
   const navigate = useNavigate();
   const setShowToast = useSetRecoilState(displayToast);
 
-  const darkModeStatus = useRecoilValue(darkModeState);
   const subGoalHistory = location.state?.goalsHistory || [];
 
   const [partnerModeTour, setPartnerModeTour] = useRecoilState(displayPartnerModeTour);
@@ -76,10 +74,22 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
   const currentHour = new Date().getHours();
   const isNighttime = currentHour >= 18 || currentHour < 6;
 
+  const [darkModeStatus, setDarkModeStatus] = useRecoilState(darkModeState);
+
+  const handleDarkModeClick = () => {
+    localStorage.setItem(LocalStorageKeys.DARK_MODE, darkModeStatus ? "off" : "on");
+    setDarkModeStatus(!darkModeStatus);
+  };
+
+  const handleLightModeClick = () => {
+    localStorage.setItem(LocalStorageKeys.DARK_MODE, darkModeStatus ? "off" : "on");
+    setDarkModeStatus(!darkModeStatus);
+  };
+
   return (
     <div className="header">
-      {displaySearch && debounceSearch ? (
-        <Search debounceSearch={debounceSearch} />
+      {showSearch ? (
+        <Search />
       ) : (
         <>
           <div className="header-logo-title">
@@ -103,11 +113,14 @@ const Header: React.FC<IHeader> = ({ title, debounceSearch }) => {
               <HeaderBtn
                 path={darkModeStatus ? lightModeIcon : darkModeIcon}
                 alt={`${darkModeStatus ? "light" : "dark"} mode`}
+                onClick={handleDarkModeClick}
               />
             ) : (
-              <HeaderBtn path={darkModeIcon} alt="light mode" />
+              <HeaderBtn path={darkModeIcon} alt="light mode" onClick={handleLightModeClick} />
             )}
-            {title === "myGoals" && <HeaderBtn path={searchIcon} alt="zinzen search" />}
+            {title === "myGoals" && (
+              <HeaderBtn path={searchIcon} alt="zinzen search" onClick={() => setShowSearch(!showSearch)} />
+            )}
             <HeaderBtn path="" alt="zinzen settings" />
           </div>
         </>
