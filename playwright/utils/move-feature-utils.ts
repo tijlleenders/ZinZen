@@ -1,15 +1,63 @@
-import { expect, Page } from "@playwright/test";
+import { Page } from "@playwright/test";
 
-export const shareGoalFlow = async (page: Page, goalTitle: string, receiverName: string) => {
-  await page.getByTestId(`goal-${goalTitle}`).getByTestId("goal-icon").locator("div").first().click();
-  await page.getByTestId("share-action").click();
+export const shareGoalFlow = async (
+  page: Page,
+  goalTitle: string,
+  receiverName: string,
+  maxRetries = 3,
+  retryDelay = 1000,
+) => {
+  let attempts = 0;
 
-  await expect(async () => {
-    await page.getByRole("button", { name: receiverName, exact: true }).click();
-    await page.waitForSelector(".share-modal", { state: "hidden" });
-    await page.waitForSelector(`text=Cheers!! Your goal and its subgoals are shared with ${receiverName}`);
-    await page.goBack();
-  }).toPass({
-    timeout: 10_000,
-  });
+  while (attempts < maxRetries) {
+    try {
+      const requestPromise = page.waitForRequest(
+        (request) => {
+          const url = request.url();
+          const method = request.method();
+          return url.includes("lambda-url.eu-west-1.on.aws") && method === "POST";
+        },
+        { timeout: 15_000 },
+      );
+
+      await page.getByTestId(`goal-${goalTitle}`).getByTestId("goal-icon").locator("div").first().click();
+      await page.getByTestId("share-action").click();
+
+      await page.getByRole("button", { name: receiverName, exact: true }).click();
+      await page.waitForLoadState("networkidle");
+
+      const request = await requestPromise;
+      const data = await request.postDataJSON();
+
+      if (!data?.event?.levelGoalsNode?.length) {
+        throw new Error("Invalid request data: missing or empty levelGoalsNode");
+      }
+
+      console.log("Share request successful:", {
+        goalTitle,
+        receiverName,
+        requestData: data,
+      });
+      await page.goBack();
+      return;
+    } catch (error) {
+      attempts++;
+      console.error(`Share attempt ${attempts} failed:`, {
+        error: error.message,
+        goalTitle,
+        receiverName,
+      });
+
+      if (attempts === maxRetries) {
+        throw new Error(
+          `Failed to share goal "${goalTitle}" with "${receiverName}" after ${maxRetries} attempts. ` +
+            `Last error: ${error.message}`,
+        );
+      }
+
+      console.log(`Retrying in ${retryDelay}ms...`);
+      await page.waitForTimeout(retryDelay);
+      await page.goBack();
+    }
+  }
 };

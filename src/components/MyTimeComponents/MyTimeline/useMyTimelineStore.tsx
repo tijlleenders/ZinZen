@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { v4 as uuidv4 } from "uuid";
 
-import archiveTune from "@assets/archive.mp3";
 import { ITask, TaskAction } from "@src/Interfaces/Task";
 import { displayToast, focusTaskTitle } from "@src/store";
 import { displayReschedule } from "@src/store/TaskState";
@@ -11,19 +10,15 @@ import { addTask, getTaskByGoalId } from "@src/api/TasksAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import { ILocationState } from "@src/Interfaces";
 import { ISubGoalHistory } from "@src/store/GoalsState";
-import { archiveGoal } from "@src/controllers/GoalController";
-import { useQueryClient } from "react-query";
 import { useDoneTask } from "@src/hooks/api/Tasks/useDoneTask";
+import { useArchiveGoal } from "@src/hooks/api/Goals/mutations/useArchiveGoal";
 
 export const useMyTimelineStore = (day: string) => {
   const navigate = useNavigate();
   const { state }: { state: ILocationState } = useLocation();
   const { doneTaskMutation } = useDoneTask();
+  const { archiveGoalMutation } = useArchiveGoal();
 
-  const subGoalsHistory = state?.goalsHistory || [];
-  const ancestors = subGoalsHistory.map((ele) => ele.goalID);
-  const doneSound = new Audio(archiveTune);
-  const queryClient = useQueryClient();
   const setShowToast = useSetRecoilState(displayToast);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
@@ -94,15 +89,9 @@ export const useMyTimelineStore = (day: string) => {
     return null;
   };
 
-  const handleReminderDoneClick = async (reminder: GoalItem) => {
-    await archiveGoal(reminder, ancestors);
-    queryClient.invalidateQueries({ queryKey: ["reminders"] });
-    await doneSound.play();
-  };
-
   const handleReminderActionClick = async (actionName: TaskAction, reminder: GoalItem) => {
     if (actionName === TaskAction.Done) {
-      return handleReminderDoneClick(reminder);
+      return archiveGoalMutation({ goal: reminder });
     }
     if (actionName === TaskAction.Focus) {
       return handleFocusClick(reminder);

@@ -87,11 +87,6 @@ export const displayToast = atom({
   default: { open: false, message: "Awww... no hints today. We'll keep looking!", extra: "" },
 });
 
-export const openDevMode = atom({
-  key: "openDevMode",
-  default: false,
-});
-
 export const displayPartner = atom({
   key: "showPartner",
   default: null as ContactItem | null,

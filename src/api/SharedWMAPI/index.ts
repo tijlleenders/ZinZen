@@ -93,26 +93,26 @@ export const getSharedWMChildrenGoals = async (parentGoalId: string) => {
   return childrenGoals;
 };
 
-export const getAllSharedWMGoals = async () => {
-  const allGoals = await db.sharedWMCollection.toArray();
-  allGoals.reverse();
-  return allGoals;
-};
-
-export const getActiveSharedWMGoals = async () => {
-  const activeGoals: GoalItem[] = await db.sharedWMCollection.where("parentGoalId").equals("root").sortBy("createdAt");
+export const getActiveSharedWMGoals = async (parentGoalId: string, relId?: string) => {
+  const activeGoals: GoalItem[] = await db.sharedWMCollection
+    .where("parentGoalId")
+    .equals(parentGoalId)
+    .and((x) => (relId ? x.participants.length > 0 && x.participants[0].relId === relId : true))
+    .and((x) => x.archived !== "true")
+    .sortBy("createdAt");
   activeGoals.reverse();
   return activeGoals;
 };
 
-export const getRootGoalsOfPartner = async (relId: string) => {
-  return (
-    await db.sharedWMCollection
-      .where("parentGoalId")
-      .equals("root")
-      .and((x) => x.participants.length > 0 && x.participants[0].relId === relId)
-      .sortBy("createdAt")
-  ).reverse();
+export const getArchivedSharedWMGoals = async (parentGoalId: string, relId?: string) => {
+  const archivedGoals: GoalItem[] = await db.sharedWMCollection
+    .where("parentGoalId")
+    .equals(parentGoalId)
+    .and((x) => (relId ? x.participants.length > 0 && x.participants[0].relId === relId : true))
+    .and((x) => x.archived === "true")
+    .sortBy("createdAt");
+  archivedGoals.reverse();
+  return archivedGoals;
 };
 
 export const updateSharedWMGoal = async (id: string, changes: Partial<GoalItem>) => {
@@ -123,7 +123,7 @@ export const updateSharedWMGoal = async (id: string, changes: Partial<GoalItem>)
   });
 };
 
-export const archiveGoal = async (goal: GoalItem) => {
+export const archiveGoalSharedWMRepository = async (goal: GoalItem) => {
   db.transaction("rw", db.sharedWMCollection, async () => {
     await db.sharedWMCollection.update(goal.id, { archived: "true" });
   });
@@ -142,14 +142,14 @@ export const archiveChildrenGoals = async (id: string) => {
   if (childrenGoals) {
     childrenGoals.forEach(async (goal: GoalItem) => {
       await archiveChildrenGoals(goal.id);
-      await archiveGoal(goal);
+      await archiveGoalSharedWMRepository(goal);
     });
   }
 };
 
 export const archiveSharedWMGoal = async (goal: GoalItem) => {
   await archiveChildrenGoals(goal.id);
-  await archiveGoal(goal);
+  await archiveGoalSharedWMRepository(goal);
 };
 
 export const removeSharedWMGoal = async (goal: GoalItem) => {

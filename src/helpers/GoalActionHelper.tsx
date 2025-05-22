@@ -1,6 +1,6 @@
 import { GoalItem } from "@src/models/GoalItem";
 import pageCrumplingSound from "@assets/page-crumpling-sound.mp3";
-import { deleteSharedGoal, deleteGoal, archiveGoal } from "../controllers/GoalController";
+import { deleteSharedGoal, deleteGoal } from "../controllers/GoalController";
 
 const pageCrumple = new Audio(pageCrumplingSound);
 
@@ -11,8 +11,4 @@ export const removeThisGoal = async (goal: GoalItem, ancestors: string[], showPa
   } else {
     await deleteGoal(goal, ancestors);
   }
-};
-
-export const archiveThisGoal = async (goal: GoalItem, ancestors: string[]) => {
-  await archiveGoal(goal, ancestors);
 };

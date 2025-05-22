@@ -24,7 +24,7 @@ export const getDeletedGoalById = (id: string) => {
   return db.goalTrashCollection.get(id);
 };
 
-export const restoreGoal = async (goal: GoalItem, isShareWMType = false) => {
+export const restoreGoalRepository = async (goal: GoalItem, isShareWMType = false) => {
   db.goalTrashCollection.delete(goal.id).catch((err) => console.log("failed to delete", err));
   if (isShareWMType) {
     await addSharedWMGoal(goal);
@@ -40,14 +40,14 @@ export const restoreChildrenGoals = async (id: string, isShareWMType = false) =>
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     childrenGoals.forEach(async ({ deletedAt, ...goal }) => {
       await restoreChildrenGoals(goal.id, isShareWMType);
-      await restoreGoal(goal, isShareWMType);
+      await restoreGoalRepository(goal, isShareWMType);
     });
   }
 };
 
 export const restoreUserGoal = async (goal: GoalItem, isShareWMType = false) => {
   await restoreChildrenGoals(goal.id, isShareWMType);
-  await restoreGoal(goal, isShareWMType);
+  await restoreGoalRepository(goal, isShareWMType);
 };
 
 export const removeDeletedGoal = async (goal: GoalItem) => {

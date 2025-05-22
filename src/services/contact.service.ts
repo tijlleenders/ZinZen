@@ -78,6 +78,13 @@ export const sendUpdatesToSubscriber = async (
 ) => {
   const url = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";
   const { relId, type } = sub;
+  const changesWithParticipants = changes.map((change) => {
+    if ("goal" in change) {
+      const { participants, ...goalWithoutParticipants } = change.goal;
+      return { ...change, goal: goalWithoutParticipants };
+    }
+    return change;
+  });
   const requestBody = {
     method: "shareMessage",
     installId: getInstallId(),
@@ -87,7 +94,7 @@ export const sendUpdatesToSubscriber = async (
       type: customEventType !== "" ? customEventType : type,
       changeType,
       notificationGoalId,
-      changes,
+      changes: changesWithParticipants,
       timestamp: Date.now(),
     },
   };

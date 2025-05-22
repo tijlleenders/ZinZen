@@ -7,7 +7,7 @@ interface GoalTimingProps {
   displayEndTime: boolean;
 }
 
-export const GoalTiming: React.FC<GoalTimingProps> = ({ startTime, endTime, showTaskOptions, displayEndTime }) => {
+const GoalTiming: React.FC<GoalTimingProps> = ({ startTime, endTime, showTaskOptions, displayEndTime }) => {
   const renderTime = (time: string, className: string) => (
     <p className={className}>
       {parseInt(time, 10)} <sup>00</sup>
@@ -21,3 +21,5 @@ export const GoalTiming: React.FC<GoalTimingProps> = ({ startTime, endTime, show
     </div>
   );
 };
+
+export default React.memo(GoalTiming);

@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { GoalItem } from "@src/models/GoalItem";
 import AutocompleteComponent from "@components/GoalsComponents/GoalConfigModal/components/AutoComplete";
 import { fetchArchivedDescendantGoalByTitle } from "@src/api/GoalsAPI";
-import { useParentGoalContext } from "@src/contexts/parentGoal-context";
+import { useParams } from "react-router-dom";
 
 interface ArchivedAutoCompleteProps {
   onGoalSelect: (goal: GoalItem) => void;
@@ -17,19 +17,16 @@ const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
   inputValue,
   placeholder,
 }) => {
-  const [filteredGoals, setFilteredGoals] = useState<GoalItem[]>([]);
-  const {
-    parentData: { parentGoal },
-  } = useParentGoalContext();
+  const { parentId = "root" } = useParams();
 
-  const parentGoalId = parentGoal ? parentGoal.id : "root";
+  const [filteredGoals, setFilteredGoals] = useState<GoalItem[]>([]);
 
   const searchArchivedGoals = useCallback(
     async (value: string) => {
-      const goals = await fetchArchivedDescendantGoalByTitle(value, parentGoalId);
+      const goals = await fetchArchivedDescendantGoalByTitle(value, parentId);
       setFilteredGoals(goals);
     },
-    [parentGoalId],
+    [parentId],
   );
 
   const handleInputChange = useCallback(

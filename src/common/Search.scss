@@ -1,0 +1,25 @@
+.header-search-container {
+  width: calc(100% - 26px);
+  max-width: 560px;
+  display: flex;
+  align-items: center;
+  button {
+    display: flex;
+    padding: 0;
+  }
+  img {
+    width: 18px;
+    height: 18px;
+    align-self: center;
+    padding: 14px 14px 14px 26px;
+  }
+}
+
+.header-search {
+  font-size: 1em;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+}

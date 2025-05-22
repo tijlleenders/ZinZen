@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import ZModal from "@src/common/ZModal";
+import DefaultButton from "@src/common/DefaultButton";
 
 const NoteModal = ({
   open,
@@ -42,9 +43,7 @@ const NoteModal = ({
               Delete
             </button>
           )}
-          <button type="submit" className="simple bg-primary fw-500 br-4">
-            Save
-          </button>
+          <DefaultButton type="submit">Save</DefaultButton>
         </div>
       </form>
     </ZModal>

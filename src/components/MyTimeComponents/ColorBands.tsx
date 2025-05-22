@@ -16,4 +16,4 @@ const ColorBands: React.FC<IColorBands> = ({ list }) => {
   );
 };
 
-export default ColorBands;
+export default React.memo(ColorBands);

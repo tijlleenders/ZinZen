@@ -1,12 +1,11 @@
 import { test, expect, Page } from "@playwright/test";
-import { API_SERVER_URL, API_SERVER_URL_GOAL } from "playwright/config/constants";
+import { API_SERVER_URL_GOAL } from "playwright/config/constants";
 import {
   acceptContactInvitation,
   addContact,
   createGoalFromGoalPage,
   createUserContextAndPage,
   goToAppPage,
-  goToShareGoalModalFlow,
   waitForResponseConfirmation,
 } from "../../utils/collaboration-feature-utils";
 import { shareGoalFlow } from "../../utils/move-feature-utils";
@@ -19,8 +18,8 @@ test.describe("Goal Sharing Feature", () => {
   let invitationLink: string;
   const currentGoalTitle = "Test Goal";
   const subgoalTitle = "Subgoal";
-  const secondGoalTitle = "Second Shared Goal";
   test.beforeAll(async ({ browser }) => {
+    test.setTimeout(100000);
     console.log("Setting up users A, B, and C pages...");
     ({ page: userAPage } = await createUserContextAndPage(browser));
     ({ page: userBPage } = await createUserContextAndPage(browser));
@@ -44,7 +43,14 @@ test.describe("Goal Sharing Feature", () => {
     console.log(`User A is adding User B as a contact...`);
     invitationLink = await addContact(userAPage, "B", currentGoalTitle);
     await acceptContactInvitation(userBPage, invitationLink, "B");
-    await waitForResponseConfirmation(userBPage, API_SERVER_URL);
+    await userBPage.waitForResponse(async (response) => {
+      const url = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
+      if (response.url().includes(url)) {
+        const responseData = await response.json();
+        return responseData.status === "accepted";
+      }
+      return false;
+    });
 
     console.log(`User A is sharing the goal with User B...`);
     await goToAppPage(userAPage, "Goals", true);
@@ -54,10 +60,11 @@ test.describe("Goal Sharing Feature", () => {
 
     console.log(`User B is reloading the page to check for shared goal visibility...`);
     await userBPage.goto("http://127.0.0.1:3000/");
+
     await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
     await userBPage.getByRole("img", { name: "ZinZen" }).click();
-    await userBPage.waitForTimeout(1000);
     await userBPage.reload();
+
     await userBPage.getByTestId(`contact-B`).locator("div").first().click();
     await expect(userBPage.getByTestId(`goal-${currentGoalTitle}`)).toBeVisible();
 

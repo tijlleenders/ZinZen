@@ -38,12 +38,10 @@ const InvitationStatus = ({ relId }: { relId: string }) => {
     >
       <p>{message}</p>
       {!relationshipStatus && (
-        <div className="place-middle">
-          <DefaultButton onClick={handleSendInvitation}>
-            <img alt="add contact" className="theme-icon" src={shareInvitation} />
-            <span>Share invitation</span>
-          </DefaultButton>
-        </div>
+        <DefaultButton onClick={handleSendInvitation}>
+          <img alt="add contact" className="theme-icon" src={shareInvitation} />
+          <span>Share invitation</span>
+        </DefaultButton>
       )}
     </div>
   );

@@ -1,10 +1,10 @@
 import { deleteContact } from "@src/api/ContactsAPI";
+import { CONTACT_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { displayToast } from "@src/store";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { useSetRecoilState } from "recoil";
 
 export const useDeleteContact = (contactId: string) => {
-  const queryClient = useQueryClient();
   const setShowToast = useSetRecoilState(displayToast);
 
   const {
@@ -20,8 +20,8 @@ export const useDeleteContact = (contactId: string) => {
         message: "Contact deleted successfully",
         extra: "",
       });
-      queryClient.invalidateQueries({ queryKey: ["contacts"] });
     },
+    mutationKey: CONTACT_QUERY_KEYS.all,
     onError: () => {
       setShowToast({
         open: true,

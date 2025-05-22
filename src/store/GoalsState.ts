@@ -85,3 +85,13 @@ export const completedGoalsState = atom({
   key: "completedGoalsState",
   default: {} as Record<string, boolean>,
 });
+
+export const searchQueryState = atom({
+  key: "searchQueryState",
+  default: "",
+});
+
+export const showSearchState = atom({
+  key: "showSearchState",
+  default: false,
+});

@@ -18,10 +18,9 @@ import { allowAddingBudgetGoal } from "@src/store/GoalsState";
 import useLongPress from "@src/hooks/useLongPress";
 import { useKeyPress } from "@src/hooks/useKeyPress";
 import { moveGoalState } from "@src/store/moveGoalState";
-import { useParentGoalContext } from "@src/contexts/parentGoal-context";
 import { getSharedWMGoalById } from "@src/api/SharedWMAPI";
 import { suggestChanges } from "@src/controllers/PartnerController";
-import { useGoalMoveMutation } from "./MoveGoal/useGoalMoveMutation";
+import { useGoalMoveMutation } from "../hooks/api/Goals/mutations/useGoalMoveMutation";
 
 interface AddGoalOptionProps {
   children: ReactNode;
@@ -58,10 +57,6 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   const isPartnerModeActive = !!partnerId;
 
   const subGoalsHistory = state?.goalsHistory || [];
-
-  const {
-    parentData: { parentGoal = { id: "root" } },
-  } = useParentGoalContext();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -126,7 +121,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
 
   const { onClick, onMouseDown, onMouseUp, onTouchStart, onTouchEnd } = handlers;
 
-  const { moveGoalMutation, isLoading } = useGoalMoveMutation();
+  const { moveGoalMutation } = useGoalMoveMutation();
 
   const handleMoveGoalHere = async () => {
     if (!goalToMove) return;
@@ -140,11 +135,11 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
       }
       suggestChanges(
         rootGoal,
-        { ...goalToMove, parentGoalId: parentGoal.id || goalToMove.parentGoalId },
+        { ...goalToMove, parentGoalId: parentId || goalToMove.parentGoalId },
         subGoalsHistory.length,
       );
     } else {
-      moveGoalMutation({ goalId: goalToMove.id, newParentGoalId: parentGoal.id });
+      moveGoalMutation({ goalId: goalToMove.id, newParentGoalId: parentId });
     }
   };
 
@@ -155,8 +150,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
     }
   }, [plusPressed, enterPressed]);
 
-  const shouldRenderMoveButton =
-    goalToMove && goalToMove.id !== parentGoal?.id && goalToMove.parentGoalId !== parentGoal?.id;
+  const shouldRenderMoveButton = goalToMove && goalToMove.id !== parentId && goalToMove.parentGoalId !== parentId;
 
   if (searchParams?.get("addOptions")) {
     return (
@@ -170,11 +164,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
         />
         {goalToMove ? (
           <>
-            <AddGoalOption
-              handleClick={handleMoveGoalHere}
-              bottom={144}
-              disabled={!shouldRenderMoveButton || isLoading}
-            >
+            <AddGoalOption handleClick={handleMoveGoalHere} bottom={144} disabled={!shouldRenderMoveButton}>
               {t("Move here")}
             </AddGoalOption>
             <AddGoalOption

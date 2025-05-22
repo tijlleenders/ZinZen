@@ -9,6 +9,7 @@ interface DefaultButtonProps {
   disabled?: boolean;
   children: React.ReactNode;
   variant?: "primary" | "secondary";
+  type?: "button" | "submit";
 }
 
 const DefaultButton: React.FC<DefaultButtonProps> = ({
@@ -18,12 +19,13 @@ const DefaultButton: React.FC<DefaultButtonProps> = ({
   onClick,
   disabled = false,
   variant = "primary",
+  type = "button",
 }) => {
   const isDarkMode = useRecoilValue(darkModeState);
 
   return (
     <button
-      type="button"
+      type={type === "submit" ? "submit" : "button"}
       id={id}
       className={`default-btn${isDarkMode ? "-dark" : ""} ${disabled ? "" : "pointer"} ${variant}`}
       style={{

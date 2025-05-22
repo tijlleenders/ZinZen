@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Contacts from "@src/helpers/Contacts";
 import AppLayout from "@src/layouts/AppLayout";
 import { PageTitle } from "@src/constants/pageTitle";
-import { useGetAllContacts } from "@src/hooks/api/Contacts/useGetAllContacts";
+import { useGetAllContacts } from "@src/hooks/api/Contacts/queries/useGetAllContacts";
 import { displayToast } from "@src/store";
 import { useSetRecoilState } from "recoil";
 import ContactActionModal from "./components/modals/ContactActionModal";
