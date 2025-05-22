@@ -62,4 +62,4 @@ const ColorPicker: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex })
   );
 };
 
-export default ColorPicker;
+export default React.memo(ColorPicker);
