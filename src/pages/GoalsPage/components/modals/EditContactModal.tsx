@@ -8,8 +8,8 @@ import { displayToast } from "@src/store";
 import useVirtualKeyboardOpen from "@src/hooks/useVirtualKeyBoardOpen";
 import useOnScreenKeyboardScrollFix from "@src/hooks/useOnScreenKeyboardScrollFix";
 import { useNavigate, useParams } from "react-router-dom";
-import { useUpdateContact } from "@src/hooks/api/Contacts/useUpdateContact";
 import { usePartnerContext } from "@src/contexts/partner-context";
+import { useUpdateContact } from "@src/hooks/api/Contacts/mutations/useUpdateContact";
 
 const EditContactModal = () => {
   const { t } = useTranslation();

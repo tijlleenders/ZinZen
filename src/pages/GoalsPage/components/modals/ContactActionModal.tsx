@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import ZModal from "@src/common/ZModal";
 import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDeleteContact } from "@src/hooks/api/Contacts/useDeleteContact";
 import { usePartnerContext } from "@src/contexts/partner-context";
 import { displayToast } from "@src/store";
 import { useSetRecoilState } from "recoil";
+import { useDeleteContact } from "@src/hooks/api/Contacts/queries/useDeleteContact";
 
 const ContactActionModal = () => {
   const navigate = useNavigate();
