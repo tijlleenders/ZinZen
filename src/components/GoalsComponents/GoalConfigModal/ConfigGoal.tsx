@@ -22,6 +22,7 @@ import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
 import useScheduler from "@src/hooks/useScheduler";
 import DefaultInput from "@src/common/DefaultInput";
 import { useAddGoal } from "@src/hooks/api/Goals/mutations/useAddGoal";
+import { useEditGoal } from "@src/hooks/api/Goals/mutations/useEditGoal";
 import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../../utils";
 
 import "./ConfigGoal.scss";
@@ -30,7 +31,6 @@ import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
 import useOnScreenKeyboardScrollFix from "../../../hooks/useOnScreenKeyboardScrollFix";
-import { useEditGoal } from "@src/hooks/api/Goals/mutations/useEditGoal";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -88,9 +88,6 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
     setTitle(value);
   };
   const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
-  // const [start, setStart] = useState((goal.start ? new Date(goal.start) : new Date()).toISOString().slice(0, 10));
-  // const [endTime, setEndTime] = useState(goal.due ? new Date(goal.due).getHours() : 0);
-  // const [startTime, setStartTime] = useState(goal.start ? new Date(goal.start).getHours() : 0);
   const [tags, setTags] = useState({
     on: goal.on || convertOnFilterToArray("weekdays"),
     repeatWeekly: goal.habit === "weekly",
@@ -124,7 +121,6 @@ const ConfigGoal = ({ type, goal, mode }: { type: TGoalCategory; mode: TGoalConf
   const getFinalTags = (): GoalItem => ({
     ...goal,
     due: due && due !== "" ? new Date(due).toISOString() : null,
-    // start: start && start !== "" ? new Date(start).toString() : null,
     duration: tags.duration !== "" ? `${tags.duration}` : null,
     afterTime: type === "Budget" ? afterTime : null,
     beforeTime: type === "Budget" ? beforeTime : null,

@@ -10,6 +10,7 @@ import useOnScreenKeyboardScrollFix from "@src/hooks/useOnScreenKeyboardScrollFi
 import { useNavigate, useParams } from "react-router-dom";
 import { usePartnerContext } from "@src/contexts/partner-context";
 import { useUpdateContact } from "@src/hooks/api/Contacts/mutations/useUpdateContact";
+import DefaultButton from "@src/common/DefaultButton";
 
 const EditContactModal = () => {
   const { t } = useTranslation();
@@ -89,14 +90,9 @@ const EditContactModal = () => {
         disabled={isLoading}
       />
       <br />
-      <button
-        type="button"
-        id="addContact-btn"
-        onClick={handleUpdateContact}
-        className="addContact-btn action-btn submit-icon"
-      >
-        <span>Save</span>
-      </button>
+      <DefaultButton customStyle={{ alignSelf: "end" }} onClick={handleUpdateContact}>
+        Save
+      </DefaultButton>
     </ZModal>
   );
 };
