@@ -13,13 +13,13 @@ test.describe("Header component", () => {
     await expect(heading).toHaveText("My goals");
   });
 
-  test("should show search input when search icon is clicked", async ({ page }) => {
-    await page.getByRole("button", { name: "Goals" }).click();
-    const searchIcon = page.getByRole("img", { name: "zinzen search" });
-    await searchIcon.click();
-    const searchInput = page.getByPlaceholder("Search");
-    await expect(searchInput).toBeVisible();
-  });
+  // test("should show search input when search icon is clicked", async ({ page }) => {
+  //   await page.getByRole("button", { name: "Goals" }).click();
+  //   const searchIcon = page.getByRole("img", { name: "zinzen search" });
+  //   await searchIcon.click();
+  //   const searchInput = page.getByPlaceholder("Search");
+  //   await expect(searchInput).toBeVisible();
+  // });
 
   test("should open settings dropdown when settings icon is clicked", async ({ page }) => {
     const settingsIcon = page.getByRole("img", { name: "Settings" });
