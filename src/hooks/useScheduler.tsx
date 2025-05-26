@@ -1,12 +1,10 @@
 /* eslint-disable import/no-relative-packages */
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useSetRecoilState } from "recoil";
+import { useQuery, useMutation } from "react-query";
 
 import { GoalItem } from "@src/models/GoalItem";
 import { getAllGoals } from "@src/api/GoalsAPI";
 import { ISchedulerInput, ISchedulerOutput, SchedulerCacheCode } from "@src/Interfaces/IScheduler";
-import { lastAction } from "@src/store";
 import { generateUniqueIdForSchInput } from "@src/utils/SchedulerUtils";
 import {
   getCachedSchedule,
@@ -19,9 +17,7 @@ import { schedulerErrorState } from "@src/store/SchedulerErrorState";
 import init, { schedule } from "../../pkg/scheduler";
 
 function useScheduler() {
-  const [action, setLastAction] = useRecoilState(lastAction);
   const setSchedulerError = useSetRecoilState(schedulerErrorState);
-  const queryClient = useQueryClient();
 
   const getInputForScheduler = async (activeGoals: GoalItem[]) => {
     try {
@@ -110,8 +106,7 @@ function useScheduler() {
 
       return processSchedulerResult(res, newGeneratedInputId, cachedRes.code);
     },
-    enabled: true,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   const { mutateAsync: checkGoalScheduleMutation, isLoading: isCheckingGoalSchedule } = useMutation({
@@ -129,13 +124,6 @@ function useScheduler() {
       }
     },
   });
-
-  useEffect(() => {
-    if (action.includes("task")) {
-      queryClient.invalidateQueries({ queryKey: ["scheduler"] });
-      setLastAction("none");
-    }
-  }, [action, queryClient, setLastAction]);
 
   return {
     tasks: tasks || {},

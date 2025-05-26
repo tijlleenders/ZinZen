@@ -13,6 +13,7 @@ const Providers = ({ children }: { children: ReactNode }) => {
         if (mutationKey && !EXCLUDED_MUTATION_KEYS.includes(mutationKey as string)) {
           queryClient.invalidateQueries({ queryKey: mutationKey });
         }
+        queryClient.invalidateQueries({ queryKey: ["scheduler"] });
       },
     }),
   });
