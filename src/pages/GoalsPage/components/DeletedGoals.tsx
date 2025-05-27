@@ -4,20 +4,20 @@ import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
 import ZModal from "@src/common/ZModal";
 import { useDeletedGoalContext } from "@src/contexts/deletedGoal-context";
-import useGoalActions from "@src/hooks/useGoalActions";
 import { TrashItem } from "@src/models/TrashItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import plingSound from "@assets/pling.mp3";
+import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
+import { useRestoreDeletedGoal } from "@src/hooks/api/Goals/mutations/useRestoreDeletedGoal";
 
 const Actions = ({ goal }: { goal: TrashItem }) => {
   const darkMode = useRecoilValue(darkModeState);
-  const { restoreDeletedGoal, deleteGoalAction } = useGoalActions();
+  const { restoreDeletedGoalMutation } = useRestoreDeletedGoal();
+  const { deleteGoalMutation } = useDeleteGoal();
   const { t } = useTranslation();
-  const restoreGoalSound = new Audio(plingSound);
 
   return (
     <ZModal open width={400} type="interactables-modal">
@@ -32,9 +32,7 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           className="goal-action-archive shareOptions-btn"
           onClick={async (e) => {
             e.stopPropagation();
-            await restoreDeletedGoal(goal);
-            restoreGoalSound.play();
-            window.history.back();
+            await restoreDeletedGoalMutation({ goal });
           }}
         >
           <ActionDiv
@@ -55,8 +53,7 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
           type="button"
           className="goal-action-archive shareOptions-btn"
           onClick={async () => {
-            await deleteGoalAction(goal);
-            window.history.back();
+            await deleteGoalMutation(goal);
           }}
         >
           <ActionDiv label={t("Delete")} icon="Delete" />
@@ -66,10 +63,9 @@ const Actions = ({ goal }: { goal: TrashItem }) => {
   );
 };
 
-const DeletedGoals = ({ goals }: { goals: TrashItem[] }) => {
+const DeletedGoals = ({ deletedGoals }: { deletedGoals: TrashItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
-
   const { goal: deletedGoal } = useDeletedGoalContext();
 
   const showOptions = !!searchParams.get("showOptions") && deletedGoal;
@@ -77,7 +73,7 @@ const DeletedGoals = ({ goals }: { goals: TrashItem[] }) => {
   return (
     <div className="archived-drawer">
       {showOptions && <Actions goal={deletedGoal} />}
-      {goals.length > 0 && (
+      {deletedGoals.length > 0 && (
         <ZAccordion
           showCount
           style={{
@@ -87,7 +83,9 @@ const DeletedGoals = ({ goals }: { goals: TrashItem[] }) => {
           panels={[
             {
               header: "Trash",
-              body: goals.map(({ deletedAt: _, ...goal }) => <MyGoal key={`goal-${goal.id}`} goal={goal} />),
+              body: deletedGoals.map(({ deletedAt: _, ...goal }) => (
+                <MyGoal key={`goal-${goal.id}`} goal={{ ...goal, impossible: false }} />
+              )),
             },
           ]}
         />

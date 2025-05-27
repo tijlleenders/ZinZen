@@ -246,10 +246,7 @@ export const archiveGoal = async (goal: GoalItem, ancestors: string[]) => {
   await archiveUserGoal(goal);
 };
 
-export const deleteGoal = async (goal: GoalItem, ancestors: string[]) => {
-  sendFinalUpdateOnGoal(goal.id, "deleted", [...ancestors, goal.id], false).then(() => {
-    console.log("Update Sent");
-  });
+export const deleteGoal = async (goal: GoalItem) => {
   await removeGoalWithChildrens(goal);
 };
 

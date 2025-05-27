@@ -1,4 +1,5 @@
 import { getAllContacts } from "@src/api/ContactsAPI";
+import { CONTACT_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import { useQuery } from "react-query";
 
 export const useGetAllContacts = () => {
@@ -8,7 +9,7 @@ export const useGetAllContacts = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["contacts"],
+    queryKey: CONTACT_QUERY_KEYS.lists(),
     queryFn: () => getAllContacts(),
   });
 

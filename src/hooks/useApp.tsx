@@ -1,20 +1,22 @@
 import { v4 as uuidv4 } from "uuid";
 import { useEffect } from "react";
 
-import { lastAction, displayConfirmation, openDevMode, languageSelectionState, displayToast } from "@src/store";
+import { lastAction, displayConfirmation, languageSelectionState, displayToast } from "@src/store";
 import { getTheme } from "@src/store/ThemeState";
-import { checkMagicGoal, getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
+import { getAllLevelGoalsOfId, getGoal, updateSharedStatusOfGoal } from "@src/api/GoalsAPI";
 import { createDefaultGoals } from "@src/controllers/NewUserController";
 import { refreshTaskCollection } from "@src/api/TasksAPI";
 import { shareGoalWithContact } from "@src/services/contact.service";
+import { useQueryClient } from "react-query";
 import { updateAllUnacceptedContacts, clearTheQueue } from "@src/api/ContactsAPI";
-import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
+import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 import { scheduledHintCalls } from "@src/api/HintsAPI/ScheduledHintCall";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { checkAndCleanupTrash } from "@src/api/TrashAPI";
 import { TaskActions } from "@src/constants/actions";
+import { GOAL_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 import useScheduler from "./useScheduler";
-import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
 
 const langFromStorage = localStorage.getItem(LocalStorageKeys.LANGUAGE)?.slice(1, -1);
 const exceptionRoutes = ["/", "/invest", "/feedback", "/donate"];
@@ -25,17 +27,17 @@ function useApp() {
 
   const setLastAction = useSetRecoilState(lastAction);
   const setShowToast = useSetRecoilState(displayToast);
-  const [devMode, setDevMode] = useRecoilState(openDevMode);
   const { generateInitialSchedule } = useScheduler();
 
   const confirmationState = useRecoilValue(displayConfirmation);
-
+  const queryClient = useQueryClient();
   useEffect(() => {
     const init = async () => {
       updateAllUnacceptedContacts().then(async (contacts) => {
         if (contacts.length === 0) {
           return;
         }
+        queryClient.invalidateQueries(GOAL_QUERY_KEYS.all);
         setShowToast({
           open: true,
           message: `${contacts.map(({ name }) => name).join(", ")} accepted your invite`,
@@ -113,12 +115,6 @@ function useApp() {
 
   useEffect(() => {
     const initializeApp = async () => {
-      const checkDevMode = async () => {
-        const isDevMode = await checkMagicGoal();
-        if (!devMode && isDevMode) {
-          setDevMode(isDevMode);
-        }
-      };
       const checkUpdates = async () => {
         navigator.serviceWorker
           .register("./service-worker.js")
@@ -132,7 +128,6 @@ function useApp() {
       };
 
       await checkUpdates();
-      await checkDevMode();
       await createDefaultGoals();
       try {
         await generateInitialSchedule();
@@ -142,7 +137,7 @@ function useApp() {
     };
 
     initializeApp();
-  }, [generateInitialSchedule, setDevMode, devMode]);
+  }, [generateInitialSchedule]);
 
   useEffect(() => {
     const lastRefresh = localStorage.getItem(LocalStorageKeys.LAST_REFRESH);

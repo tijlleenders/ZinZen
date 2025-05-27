@@ -1,7 +1,7 @@
 {
   "buildHash": {
-    "schedulerFileHash": "b66a66a2",
-    "indexFileHash": "94f0e947"
+    "schedulerFileHash": "wasm",
+    "indexFileHash": "js"
   },
-  "buildDate": "2024-09-22T10:46:12.194Z"
+  "buildDate": "2025-05-21T06:02:36.779Z"
 }

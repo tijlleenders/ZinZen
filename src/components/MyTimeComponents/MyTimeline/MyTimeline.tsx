@@ -13,7 +13,7 @@ import { getTimePart } from "@src/utils";
 import { TaskOptions } from "./TaskOptions";
 import { updateImpossibleGoals } from "./updateImpossibleGoals";
 import { useMyTimelineStore } from "./useMyTimelineStore";
-import { GoalTiming } from "./GoalTiming";
+import GoalTiming from "./GoalTiming";
 
 type ImpossibleTaskId = string;
 
@@ -27,7 +27,7 @@ interface MyTimelineProps {
   };
 }
 
-export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks }) => {
+const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks }) => {
   const { t } = useTranslation();
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
 
@@ -89,3 +89,5 @@ export const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks }) => {
     </div>
   );
 };
+
+export default MyTimeline;

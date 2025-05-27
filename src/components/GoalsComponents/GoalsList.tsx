@@ -15,16 +15,17 @@ import { useRecoilValue } from "recoil";
 import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { ImpossibleGoal } from "@src/Interfaces";
 import { useGoalSelection } from "@src/hooks/useGoalSelection";
+import { useUpdateGoalPositions } from "@src/hooks/api/Goals/mutations/useUpdateGoalPositions";
 
 import SortableItem from "./MyGoal/SortableItem";
 
 interface GoalsListProps {
   goals: GoalItem[];
-  setGoals: React.Dispatch<React.SetStateAction<GoalItem[]>>;
 }
 
-const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
+const GoalsList = ({ goals }: GoalsListProps) => {
   const impossibleGoals = useRecoilValue(impossibleGoalsList);
+  const { mutate: updatePositions } = useUpdateGoalPositions();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -62,14 +63,10 @@ const GoalsList = ({ goals, setGoals }: GoalsListProps) => {
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     if (active.id !== over?.id) {
-      setGoals((items) => {
-        const originalPos = getGoalsPos(active.id);
-        const newPos = getGoalsPos(over?.id);
-        const newItems = arrayMove(items, originalPos, newPos);
-        const posIndexPromises = newItems.map(async (ele, index) => updatePositionIndex(ele.id, index));
-        Promise.all(posIndexPromises).catch((err) => console.log("error in sorting", err));
-        return newItems;
-      });
+      const originalPos = getGoalsPos(active.id);
+      const newPos = getGoalsPos(over?.id);
+      const newItems = arrayMove(goals, originalPos, newPos);
+      updatePositions({ goals: newItems });
     }
   };
 

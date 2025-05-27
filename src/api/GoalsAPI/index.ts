@@ -71,22 +71,21 @@ export const getAllGoals = async (includeArchived = "false") => {
   return allGoals;
 };
 
-export const getArchivedGoals = async () => {
-  const archivedGoals: GoalItem[] = await db.goalsCollection.where("archived").equals("true").sortBy("createdAt");
+export const getArchivedGoals = async (parentGoalId: string) => {
+  const archivedGoals: GoalItem[] = await db.goalsCollection
+    .where("parentGoalId")
+    .equals(parentGoalId)
+    .and((goal) => goal.archived === "true")
+    .sortBy("createdAt");
   archivedGoals.reverse();
   return sortGoalsByProps(archivedGoals);
 };
 
-export const checkMagicGoal = async () => {
-  const goal = await db.goalsCollection.where("title").equals("magic").toArray();
-  return !!(goal && goal.length > 0);
-};
-
-export const getActiveGoals = async (includeArchived = "false") => {
+export const getActiveGoals = async (parentGoalId: string) => {
   const activeGoals: GoalItem[] = await db.goalsCollection
     .where("parentGoalId")
-    .equals("root")
-    .and((goal) => (includeArchived === "true" ? true : goal.parentGoalId === "root"))
+    .equals(parentGoalId)
+    .and((goal) => goal.archived === "false")
     .sortBy("createdAt");
   activeGoals.reverse();
   const sortedGoals = await sortGoalsByProps(activeGoals);
@@ -108,7 +107,7 @@ export const updateGoal = async (id: string, changes: Partial<GoalItem>) => {
   return updateStatus;
 };
 
-export const archiveGoal = async (goal: GoalItem) => {
+const archiveGoalRepository = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, { archived: "true" });
   });
@@ -127,17 +126,17 @@ export const archiveChildrenGoals = async (id: string) => {
   if (childrenGoals) {
     childrenGoals.forEach(async (goal: GoalItem) => {
       await archiveChildrenGoals(goal.id);
-      await archiveGoal(goal);
+      await archiveGoalRepository(goal);
     });
   }
 };
 
 export const archiveUserGoal = async (goal: GoalItem) => {
   await archiveChildrenGoals(goal.id);
-  await archiveGoal(goal);
+  await archiveGoalRepository(goal);
 };
 
-export const unarchiveGoal = async (goal: GoalItem) => {
+export const unarchiveGoalRepository = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, { archived: "false" });
   });
@@ -154,14 +153,14 @@ export const unarchiveChildrenGoals = async (id: string) => {
   if (childrenGoals) {
     childrenGoals.forEach(async (goal: GoalItem) => {
       await unarchiveChildrenGoals(goal.id);
-      await unarchiveGoal(goal);
+      await unarchiveGoalRepository(goal);
     });
   }
 };
 
 export const unarchiveUserGoal = async (goal: GoalItem) => {
   await unarchiveChildrenGoals(goal.id);
-  await unarchiveGoal(goal);
+  await unarchiveGoalRepository(goal);
 };
 
 export const removeGoal = async (goal: GoalItem, permanently = false) => {
@@ -265,7 +264,7 @@ export const notifyNewColabRequest = async (id: string, relId: string) => {
 export const removeGoalWithChildrens = async (goal: GoalItem, permanently = false) => {
   await removeChildrenGoals(goal.id, permanently);
   await removeGoal(goal, permanently);
-  await deleteTaskHistoryItem(goal.id);
+  deleteTaskHistoryItem(goal.id);
   if (goal.parentGoalId !== "root") {
     getGoal(goal.parentGoalId).then(async (parentGoal: GoalItem) => {
       const parentGoalSublist = parentGoal.sublist;

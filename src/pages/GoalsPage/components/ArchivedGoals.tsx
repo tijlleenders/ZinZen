@@ -3,28 +3,28 @@ import ActionDiv from "@components/GoalsComponents/MyGoalActions/ActionDiv";
 import { unarchiveIcon } from "@src/assets";
 import ZAccordion from "@src/common/Accordion";
 import ZModal from "@src/common/ZModal";
-import { useActiveGoalContext } from "@src/contexts/activeGoal-context";
-import useGoalActions from "@src/hooks/useGoalActions";
 import { GoalItem } from "@src/models/GoalItem";
 import { darkModeState } from "@src/store";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import plingSound from "@assets/pling.mp3";
+import { useDeleteGoal } from "@src/hooks/api/Goals/mutations/useDeleteGoal";
+import { useRestoreArchivedGoal } from "@src/hooks/api/Goals/mutations/useRestoreArchivedGoal";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
 const Actions = ({ goal }: { goal: GoalItem }) => {
   const darkMode = useRecoilValue(darkModeState);
-  const { restoreArchivedGoal, deleteGoalAction } = useGoalActions();
+
+  const { deleteGoalMutation } = useDeleteGoal();
+  const { mutate: restoreArchivedGoal } = useRestoreArchivedGoal();
+
   const { t } = useTranslation();
-  const restoreGoalSound = new Audio(plingSound);
 
   const handleRestoreClick = async () => {
     const goalTitleElement = document.querySelector(`#goal-${goal.id} .goal-title`) as HTMLElement;
-    const lastAction = goalTitleElement.style.textDecoration.includes("line-through");
     goalTitleElement.style.textDecoration = "none";
-    await restoreArchivedGoal(goal, lastAction ? "none" : "goalRestored");
-    restoreGoalSound.play();
+    await restoreArchivedGoal({ goal });
     window.history.back();
   };
 
@@ -62,8 +62,7 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
           type="button"
           className="goal-action-archive shareOptions-btn"
           onClick={async () => {
-            await deleteGoalAction(goal);
-            window.history.back();
+            await deleteGoalMutation(goal);
           }}
         >
           <ActionDiv label={t("Delete")} icon="Delete" />
@@ -76,9 +75,9 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
 const ArchivedGoals = ({ goals }: { goals: GoalItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
-  const { goal: activeGoal } = useActiveGoalContext();
+  const { activeGoalId } = useParams();
+  const { data: activeGoal } = useGetGoalById(activeGoalId || "");
   const showOptions = !!searchParams.get("showOptions") && activeGoal?.archived === "true";
-
   return (
     <>
       {showOptions && <Actions goal={activeGoal} />}

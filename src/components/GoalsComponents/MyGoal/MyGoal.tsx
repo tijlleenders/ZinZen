@@ -3,8 +3,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
-import { useParentGoalContext } from "@src/contexts/parentGoal-context";
-import { extractLinks, isGoalCode } from "@src/utils/patterns";
+import { isGoalCode } from "@src/utils/patterns";
 import NotificationSymbol from "@src/common/NotificationSymbol";
 import useGoalActions from "@src/hooks/useGoalActions";
 import TriangleIcon from "@src/assets/TriangleIcon";
@@ -31,7 +30,7 @@ const InnerCircle: React.FC<{ color: string; children: ReactNode }> = ({ color, 
 };
 
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
-  const { partnerId } = useParams();
+  const { parentId = "root", partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
 
   const goalToMove = useRecoilValue(moveGoalState);
@@ -50,15 +49,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const {
-    parentData: { parentGoal },
-  } = useParentGoalContext();
-
   const redirect = (state: object, isDropdown = false) => {
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
     if (isDropdown) {
       const searchparam = goal.newUpdates ? "showNewChanges" : "showOptions";
-      navigate(`${prefix}/${parentGoal?.id || "root"}/${goal.id}?${searchparam}=true`, { state });
+      navigate(`${prefix}/${parentId}/${goal.id}?${searchparam}=true`, { state });
     } else {
       navigate(`${prefix}/${goal.id}`, { state });
     }

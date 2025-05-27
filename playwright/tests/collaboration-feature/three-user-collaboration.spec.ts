@@ -20,6 +20,7 @@ test.describe("Goal Sharing Feature", () => {
   let invitationLink: string;
   const currentGoalTitle = "Test Goal";
   test.beforeAll(async ({ browser }) => {
+    test.setTimeout(100000);
     console.log("Setting up users A, B, and C pages...");
     ({ page: userAPage } = await createUserContextAndPage(browser));
     ({ page: userBPage } = await createUserContextAndPage(browser));

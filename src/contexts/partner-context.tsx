@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 import { getPartnerById } from "@src/api/ContactsAPI";
 import { useQuery } from "react-query";
-import { ActiveGoalProvider } from "./activeGoal-context";
 
 type PartnerContext = {
   partner: ContactItem | undefined;
@@ -47,11 +46,7 @@ export const PartnerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [partner]);
 
-  return (
-    <ActiveGoalProvider>
-      <PartnerContext.Provider value={value}>{children}</PartnerContext.Provider>
-    </ActiveGoalProvider>
-  );
+  return <PartnerContext.Provider value={value}>{children}</PartnerContext.Provider>;
 };
 
 export const usePartnerContext = () => {
