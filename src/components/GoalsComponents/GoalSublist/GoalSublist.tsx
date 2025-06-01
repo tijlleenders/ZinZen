@@ -63,13 +63,9 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
           <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
           {parentGoal && <GoalItemSummary goal={parentGoal} showAddGoal={showConfig} setShowAddGoal={setShowConfig} />}
           <div className="sublist-list-container">
-            {showConfig && (
+            {showConfig && parentGoal && (
               <div className="config-goal-container">
-                <ConfigGoal
-                  goal={createGoalObjectFromTags({ ...parentGoal, parentGoalId: parentId })}
-                  type={parentGoal?.type as TGoalCategory}
-                  mode={parentGoal?.mode as TGoalConfigMode}
-                />
+                <ConfigGoal goal={parentGoal} type={parentGoal?.category} mode="edit" useModal={false} />
               </div>
             )}
             <GoalsList goals={goals} />

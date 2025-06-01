@@ -12,7 +12,6 @@ import { darkModeState } from "@src/store";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import AppLayout from "@src/layouts/AppLayout";
 
-import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
 import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 import { goalCategories } from "@src/constants/goals";
@@ -47,38 +46,36 @@ const PartnerGoals = () => {
   // TODO: Add debounce search
 
   return (
-    <ParentGoalProvider>
-      <AppLayout title={`${partnerName}'s Goals`}>
-        {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
-        {goalCategories.includes(goalType) && (
-          <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
+    <AppLayout title={`${partnerName}'s Goals`}>
+      {showOptions && activeGoal && <RegularGoalActions goal={activeGoal} />}
+      {goalCategories.includes(goalType) && (
+        <ConfigGoal type={goalType} goal={activeGoal || createGoalObjectFromTags()} mode={mode} />
+      )}
+
+      <div className="myGoals-container">
+        {parentId === "root" ? (
+          <div className="my-goals-content">
+            <div className="d-flex f-col">
+              <GoalsList goals={activeSharedWMGoals || []} />
+            </div>
+            {/* <ArchivedGoals /> */}
+          </div>
+        ) : (
+          <GoalSublist goals={activeSharedWmChildrenGoals || []} />
         )}
 
-        <div className="myGoals-container">
-          {parentId === "root" ? (
-            <div className="my-goals-content">
-              <div className="d-flex f-col">
-                <GoalsList goals={activeSharedWMGoals || []} />
-              </div>
-              {/* <ArchivedGoals /> */}
-            </div>
-          ) : (
-            <GoalSublist goals={activeSharedWmChildrenGoals || []} />
-          )}
-
-          {!activeSharedWMGoals?.length && parentId === "root" && (
-            <>
-              <InvitationStatus relId={contact?.relId || ""} />
-              <img
-                style={{ width: 350, height: 350, opacity: 0.3 }}
-                src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-                alt="Zinzen"
-              />
-            </>
-          )}
-        </div>
-      </AppLayout>
-    </ParentGoalProvider>
+        {!activeSharedWMGoals?.length && parentId === "root" && (
+          <>
+            <InvitationStatus relId={contact?.relId || ""} />
+            <img
+              style={{ width: 350, height: 350, opacity: 0.3 }}
+              src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+              alt="Zinzen"
+            />
+          </>
+        )}
+      </div>
+    </AppLayout>
   );
 };
 
