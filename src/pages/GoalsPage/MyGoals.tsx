@@ -13,7 +13,7 @@ import { searchQueryState } from "@src/store/GoalsState";
 
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
-import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
+import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
@@ -79,14 +79,14 @@ export const MyGoals = () => {
         {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
         {showParticipants && <Participants />}
         {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}
-
+        {/* 
         {goalCategories.includes(goalType) && (
-          <ConfigGoal
-            type={goalType}
-            goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
-            mode={mode}
-          />
-        )}
+          // <ConfigGoal
+          //   type={goalType}
+          //   goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
+          //   mode={mode}
+          // />
+        )} */}
 
         <div className="myGoals-container" ref={goalWrapperRef}>
           {parentId === "root" ? (

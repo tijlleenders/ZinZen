@@ -19,7 +19,7 @@ import { useArchiveGoal } from "@src/hooks/api/Goals/mutations/useArchiveGoal";
 import ActionDiv from "./ActionDiv";
 
 import "./MyGoalActions.scss";
-import GoalItemSummary from "../../../common/GoalItemSummary/GoalItemSummary";
+import GoalItemSummary from "../../GoalItemSummary/GoalItemSummary";
 
 const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
   const navigate = useNavigate();

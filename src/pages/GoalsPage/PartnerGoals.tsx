@@ -14,7 +14,7 @@ import AppLayout from "@src/layouts/AppLayout";
 
 import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
-import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
+import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 import { goalCategories } from "@src/constants/goals";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { useGetSharedWMGoalById } from "@src/hooks/api/SharedWMGoals/useGetSharedWMGoalById";
