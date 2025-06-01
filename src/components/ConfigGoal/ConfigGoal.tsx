@@ -23,7 +23,7 @@ import DefaultInput from "@src/common/DefaultInput";
 import { useAddGoal } from "@src/hooks/api/Goals/mutations/useAddGoal";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useEditGoal } from "@src/hooks/api/Goals/mutations/useEditGoal";
-import { colorPalleteList, calDays, convertOnFilterToArray, getSelectedLanguage } from "../../utils";
+import { colorPalleteList, getSelectedLanguage } from "../../utils";
 
 import "./ConfigGoal.scss";
 import CustomDatePicker from "./components/CustomDatePicker";
@@ -31,12 +31,23 @@ import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
 import useOnScreenKeyboardScrollFix from "../../hooks/useOnScreenKeyboardScrollFix";
+import { calDays, convertOnFilterToArray, roundOffHours } from "./ConfigGoal.helper";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
-const roundOffHours = (hrsValue: string) => {
-  return hrsValue === "" ? "" : String(Math.min(Math.max(Math.round(Number(hrsValue)), 0), 99));
-};
+interface FormState {
+  colorIndex: number;
+  hintOption: boolean;
+  title: string;
+  due: string;
+  on: string[];
+  repeatWeekly: boolean;
+  duration: string;
+  afterTime: number;
+  beforeTime: number;
+  perDayHrs: number[];
+  perWeekHrs: number[];
+}
 
 interface ConfigGoalContentProps {
   type: TGoalCategory;
@@ -61,6 +72,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
 
   const { checkGoalSchedule } = useScheduler();
   const [scheduleStatus, setScheduleStatus] = useState<ScheduleStatus>(null);
+  const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
 
   let defaultColorIndex = Math.floor(Math.random() * colorPalleteList.length - 1) + 1;
   let defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
@@ -79,86 +91,88 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   const isKeyboardOpen = useVirtualKeyboardOpen();
   useOnScreenKeyboardScrollFix();
 
-  const [colorIndex, setColorIndex] = useState(defaultColorIndex);
-
-  const [betweenSliderUpdated, setBetweenSliderUpdated] = useState(false);
-
-  const [hintOption, setHintOption] = useState(false);
-
-  useEffect(() => {
-    getGoalHintItem(goal.id).then((hintItem) => {
-      setHintOption(!!hintItem?.hintOptionEnabled);
-    });
-  }, [goal.id]);
-
-  const [title, setTitle] = useState<string>(t(goal.title));
-  const handleTitleChange = (value: string) => {
-    setTitle(value);
-  };
-  const [due, setDue] = useState(goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "");
-  const [tags, setTags] = useState({
-    on: goal.on || convertOnFilterToArray("weekdays"),
-    repeatWeekly: goal.habit === "weekly",
-    duration: goal.duration ?? "",
-  });
-  const numberOfDays = tags.on.length;
-
-  const [afterTime, setAfterTime] = useState(defaultAfterTime);
-  const [beforeTime, setBeforeTime] = useState(defaultBeforeTime);
-  const timeDiff = beforeTime - afterTime;
+  const timeDiff = defaultBeforeTime - defaultAfterTime;
   const perDayBudget = (goal.timeBudget?.perDay?.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
     .split("-")
     .map((ele) => Number(ele));
   const perWeekBudget = (
     goal.timeBudget?.perWeek?.includes("-")
       ? goal.timeBudget.perWeek
-      : `${timeDiff * numberOfDays}-${timeDiff * numberOfDays}`
+      : `${timeDiff * (goal.on?.length ?? 7)}-${timeDiff * (goal.on?.length ?? 7)}`
   )
     .split("-")
     .map((ele) => Number(ele));
 
-  const [perDayHrs, setPerDayHrs] = useState(perDayBudget);
-  const [perWeekHrs, setPerWeekHrs] = useState(perWeekBudget);
+  const [formState, setFormState] = useState<FormState>({
+    colorIndex: defaultColorIndex,
+    hintOption: false,
+    title: t(goal.title),
+    due: goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "",
+    on: goal.on || convertOnFilterToArray("weekdays"),
+    repeatWeekly: goal.habit === "weekly",
+    duration: goal.duration ?? "",
+    afterTime: defaultAfterTime,
+    beforeTime: defaultBeforeTime,
+    perDayHrs: perDayBudget,
+    perWeekHrs: perWeekBudget,
+  });
 
-  const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
+  useEffect(() => {
+    getGoalHintItem(goal.id).then((hintItem) => {
+      setFormState((prev) => ({
+        ...prev,
+        hintOption: !!hintItem?.hintOptionEnabled,
+      }));
+    });
+  }, [goal.id]);
+
+  const handleTitleChange = (value: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      title: value,
+    }));
+  };
+
+  const numberOfDays = formState.on.length;
+
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
-  const goalCategoryType = tags.duration !== "" ? "Standard" : "Cluster";
+  const goalCategoryType = formState.duration !== "" ? "Standard" : "Cluster";
   const category = type === "Budget" ? "Budget" : goalCategoryType;
 
   const getFinalTags = (): GoalItem => ({
     ...goal,
-    due: due && due !== "" ? new Date(due).toISOString() : null,
-    duration: tags.duration !== "" ? `${tags.duration}` : null,
-    afterTime: type === "Budget" ? afterTime : null,
-    beforeTime: type === "Budget" ? beforeTime : null,
-    habit: tags.repeatWeekly ? "weekly" : null,
-    on: type === "Budget" ? calDays.filter((ele) => tags.on.includes(ele)) : null,
+    due: formState.due && formState.due !== "" ? new Date(formState.due).toISOString() : null,
+    duration: formState.duration !== "" ? `${formState.duration}` : null,
+    afterTime: type === "Budget" ? formState.afterTime : null,
+    beforeTime: type === "Budget" ? formState.beforeTime : null,
+    habit: formState.repeatWeekly ? "weekly" : null,
+    on: type === "Budget" ? calDays.filter((ele) => formState.on.includes(ele)) : null,
     timeBudget:
       type === "Budget"
         ? {
-            perDay: perDayHrs.join("-"),
-            perWeek: perWeekHrs.join("-"),
+            perDay: formState.perDayHrs.join("-"),
+            perWeek: formState.perWeekHrs.join("-"),
           }
         : undefined,
     category,
-    title: title
+    title: formState.title
       .split(" ")
       .filter((ele: string) => ele !== "")
       .join(" "),
-    goalColor: colorPalleteList[colorIndex],
+    goalColor: colorPalleteList[formState.colorIndex],
     parentGoalId: parentGoal?.id ?? "root",
     language: getSelectedLanguage(),
   });
 
   const handleSave = async () => {
-    if (title.trim().length) {
+    if (formState.title.trim().length) {
       if (isEditMode) {
-        editGoalMutation({ goal: getFinalTags(), hintOption });
+        editGoalMutation({ goal: getFinalTags(), hintOption: formState.hintOption });
       } else {
         addGoalMutation({
           newGoal: getFinalTags(),
-          hintOption,
+          hintOption: formState.hintOption,
           parentGoal,
         });
       }
@@ -190,24 +204,29 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   }, []);
 
   useEffect(() => {
-    if (betweenSliderUpdated) {
-      const timeRange = beforeTime - afterTime;
-      const weeklyRange = timeRange * numberOfDays;
-      const updatedPerDayHrs = perDayHrs.map((hour) => Math.min(Math.max(hour, timeRange), timeRange));
-      const updatedPerWeekHrs = perWeekHrs.map((hour) => Math.min(Math.max(hour, weeklyRange), weeklyRange));
+    const timeRange = formState.beforeTime - formState.afterTime;
+    const weeklyRange = timeRange * numberOfDays;
+    const updatedPerDayHrs = formState.perDayHrs.map((hour) => Math.min(Math.max(hour, timeRange), timeRange));
+    const updatedPerWeekHrs = formState.perWeekHrs.map((hour) => Math.min(Math.max(hour, weeklyRange), weeklyRange));
 
-      setPerDayHrs(updatedPerDayHrs);
-      setPerWeekHrs(updatedPerWeekHrs);
-      setBetweenSliderUpdated(false);
-    }
-  }, [afterTime, beforeTime, numberOfDays, betweenSliderUpdated]);
+    setFormState((prev) => ({
+      ...prev,
+      perDayHrs: updatedPerDayHrs,
+      perWeekHrs: updatedPerWeekHrs,
+    }));
+  }, [formState.afterTime, formState.beforeTime, numberOfDays]);
 
-  const budgetPerHrSummary = perDayHrs[0] === perDayHrs[1] ? perDayHrs[0] : `${perDayHrs[0]} - ${perDayHrs[1]}`;
+  const budgetPerHrSummary =
+    formState.perDayHrs[0] === formState.perDayHrs[1]
+      ? formState.perDayHrs[0]
+      : `${formState.perDayHrs[0]} - ${formState.perDayHrs[1]}`;
   const budgetPerWeekSummary =
-    perWeekHrs[0] === perWeekHrs[1] ? `${perWeekHrs[0]} hrs / week` : `${perWeekHrs[0]} - ${perWeekHrs[1]} hrs / week`;
+    formState.perWeekHrs[0] === formState.perWeekHrs[1]
+      ? `${formState.perWeekHrs[0]} hrs / week`
+      : `${formState.perWeekHrs[0]} - ${formState.perWeekHrs[1]} hrs / week`;
 
-  const minWeekValue = perDayHrs[0] * numberOfDays;
-  const maxWeekValue = perDayHrs[1] * numberOfDays;
+  const minWeekValue = formState.perDayHrs[0] * numberOfDays;
+  const maxWeekValue = formState.perDayHrs[1] * numberOfDays;
 
   const handleWeekSliderChange = (value: number[]) => {
     let adjustedValue: number[] = value.slice();
@@ -219,17 +238,20 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
       [adjustedValue[0], adjustedValue[1]] = [adjustedValue[1], adjustedValue[0]];
     }
 
-    if (perDayHrs[0] === perDayHrs[1]) {
+    if (formState.perDayHrs[0] === formState.perDayHrs[1]) {
       adjustedValue = [minWeekValue, maxWeekValue];
     }
 
     adjustedValue = adjustedValue.map((val) => Math.max(minWeekValue, Math.min(val, maxWeekValue)));
-    setPerWeekHrs(adjustedValue);
+    setFormState((prev) => ({
+      ...prev,
+      perWeekHrs: adjustedValue,
+    }));
   };
 
   useEffect(() => {
-    handleWeekSliderChange(perWeekHrs);
-  }, [perDayHrs, setPerDayHrs, tags.on]);
+    handleWeekSliderChange(formState.perWeekHrs);
+  }, [formState.perDayHrs, formState.on]);
 
   const { openEditMode } = useGoalStore();
 
@@ -243,41 +265,47 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
 
     openEditMode(selectedGoal, newState);
     setSuggestedGoal(selectedGoal);
-    setTitle(selectedGoal.title);
-    setColorIndex(colorPalleteList.indexOf(selectedGoal.goalColor));
-    setAfterTime(selectedGoal.afterTime ?? 9);
-    setBeforeTime(selectedGoal.beforeTime ?? 18);
-    setTags({
+
+    const selectedPerDayBudget =
+      selectedGoal.beforeTime && selectedGoal.afterTime
+        ? (selectedGoal.timeBudget?.perDay?.includes("-")
+            ? selectedGoal.timeBudget.perDay
+            : `${selectedGoal.beforeTime - selectedGoal.afterTime}-${selectedGoal.beforeTime - selectedGoal.afterTime}`
+          )
+            .split("-")
+            .map((ele) => Number(ele))
+        : [0, 0];
+
+    const selectedNumberOfDays = selectedGoal.on?.length ?? 7;
+    const selectedPerWeekBudget =
+      selectedGoal.beforeTime && selectedGoal.afterTime
+        ? (selectedGoal.timeBudget?.perWeek?.includes("-")
+            ? selectedGoal.timeBudget.perWeek
+            : `${selectedPerDayBudget[0] * selectedNumberOfDays}-${selectedPerDayBudget[1] * selectedNumberOfDays}`
+          )
+            .split("-")
+            .map((ele) => Number(ele))
+        : [0, 0];
+
+    setFormState({
+      colorIndex: colorPalleteList.indexOf(selectedGoal.goalColor),
+      hintOption: false,
+      title: selectedGoal.title,
+      due: selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "",
       on: selectedGoal.on || convertOnFilterToArray("weekdays"),
       repeatWeekly: selectedGoal.habit === "weekly",
       duration: selectedGoal.duration ?? "",
+      afterTime: selectedGoal.afterTime ?? 9,
+      beforeTime: selectedGoal.beforeTime ?? 18,
+      perDayHrs: selectedPerDayBudget,
+      perWeekHrs: selectedPerWeekBudget,
     });
-    setDue(selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "");
-    if (type === "Budget") {
-      if (selectedGoal.beforeTime == null || selectedGoal.afterTime == null) {
-        return;
-      }
-      const selectedPerDayBudget = (
-        selectedGoal.timeBudget?.perDay?.includes("-")
-          ? selectedGoal.timeBudget.perDay
-          : `${selectedGoal.beforeTime - selectedGoal.afterTime}-${selectedGoal.beforeTime - selectedGoal.afterTime}`
-      )
-        .split("-")
-        .map((ele) => Number(ele));
-      setPerDayHrs(selectedPerDayBudget);
 
-      const selectedNumberOfDays = selectedGoal.on?.length ?? 7;
-      const selectedPerWeekBudget = (
-        selectedGoal.timeBudget?.perWeek?.includes("-")
-          ? selectedGoal.timeBudget.perWeek
-          : `${selectedPerDayBudget[0] * selectedNumberOfDays}-${selectedPerDayBudget[1] * selectedNumberOfDays}`
-      )
-        .split("-")
-        .map((ele) => Number(ele));
-      setPerWeekHrs(selectedPerWeekBudget);
-    }
     const hint = await getGoalHintItem(selectedGoal.id);
-    setHintOption(hint?.hintOptionEnabled || false);
+    setFormState((prev) => ({
+      ...prev,
+      hintOption: hint?.hintOptionEnabled || false,
+    }));
   };
 
   const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
@@ -327,7 +355,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     }, 1000);
 
     return () => clearTimeout(debounceTimer);
-  }, [tags.duration, afterTime, beforeTime, perDayHrs, perWeekHrs]);
+  }, [formState.duration, formState.afterTime, formState.beforeTime, formState.perDayHrs, formState.perWeekHrs]);
 
   const sliderTooltipAlignConfig = {
     points: ["bc", "tc"],
@@ -345,10 +373,13 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
       }}
     >
       <div style={{ textAlign: "left" }} className="header-title">
-        <ColorPicker colorIndex={colorIndex} setColorIndex={setColorIndex} />
+        <ColorPicker
+          colorIndex={formState.colorIndex}
+          setColorIndex={(index: number) => setFormState((prev) => ({ ...prev, colorIndex: index }))}
+        />
         <ArchivedAutoComplete
           placeholder={titlePlaceholder}
-          inputValue={title}
+          inputValue={formState.title}
           onGoalSelect={onSuggestionClick}
           onInputChange={handleTitleChange}
         />
@@ -372,15 +403,17 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                 max={24}
                 marks={{
                   ...marks,
-                  [afterTime]: `${afterTime}`,
-                  [beforeTime]: `${beforeTime}`,
+                  [formState.afterTime]: `${formState.afterTime}`,
+                  [formState.beforeTime]: `${formState.beforeTime}`,
                 }}
                 range
-                value={[afterTime, beforeTime]}
+                value={[formState.afterTime, formState.beforeTime]}
                 onChange={(val) => {
-                  setAfterTime(val[0]);
-                  setBeforeTime(val[1]);
-                  setBetweenSliderUpdated(true);
+                  setFormState((prev) => ({
+                    ...prev,
+                    afterTime: val[0],
+                    beforeTime: val[1],
+                  }));
                 }}
               />
             </div>
@@ -403,16 +436,21 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                             align: sliderTooltipAlignConfig,
                           }}
                           min={0}
-                          max={beforeTime - afterTime}
+                          max={formState.beforeTime - formState.afterTime}
                           marks={{
                             0: "0",
-                            [perDayHrs[0]]: `${perDayHrs[0]}`,
-                            [perDayHrs[1]]: `${perDayHrs[1]}`,
-                            [beforeTime - afterTime]: `${beforeTime - afterTime}`,
+                            [formState.perDayHrs[0]]: `${formState.perDayHrs[0]}`,
+                            [formState.perDayHrs[1]]: `${formState.perDayHrs[1]}`,
+                            [formState.beforeTime - formState.afterTime]:
+                              `${formState.beforeTime - formState.afterTime}`,
                           }}
                           range
-                          value={[perDayHrs[0], perDayHrs[1]]}
-                          onChange={(val) => handleSliderChange(val, setPerDayHrs)}
+                          value={[formState.perDayHrs[0], formState.perDayHrs[1]]}
+                          onChange={(val) =>
+                            handleSliderChange(val, (hours: number[]) =>
+                              setFormState((prev) => ({ ...prev, perDayHrs: hours })),
+                            )
+                          }
                         />
                       </div>
                       <div>
@@ -425,12 +463,12 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                           max={maxWeekValue}
                           marks={{
                             [minWeekValue]: `${minWeekValue}`,
-                            [perWeekHrs[0]]: `${perWeekHrs[0]}`,
-                            [perWeekHrs[1]]: `${perWeekHrs[1]}`,
+                            [formState.perWeekHrs[0]]: `${formState.perWeekHrs[0]}`,
+                            [formState.perWeekHrs[1]]: `${formState.perWeekHrs[1]}`,
                             [maxWeekValue]: `${maxWeekValue}`,
                           }}
                           range
-                          value={[perWeekHrs[0], perWeekHrs[1]]}
+                          value={[formState.perWeekHrs[0], formState.perWeekHrs[1]]}
                           onChange={(val) => handleWeekSliderChange(val)}
                         />
                       </div>
@@ -443,12 +481,12 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
               {onDays.map((d) => (
                 <span
                   onClickCapture={() => {
-                    setTags({
-                      ...tags,
-                      on: tags.on.includes(d) ? [...tags.on.filter((ele) => ele !== d)] : [...tags.on, d],
-                    });
+                    setFormState((prev) => ({
+                      ...prev,
+                      on: prev.on.includes(d) ? [...prev.on.filter((ele) => ele !== d)] : [...prev.on, d],
+                    }));
                   }}
-                  className={`on_day ${tags.on.includes(d) ? "selected" : ""}`}
+                  className={`on_day ${formState.on.includes(d) ? "selected" : ""}`}
                   key={d}
                 >
                   {t(d)[0]}
@@ -456,7 +494,10 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
               ))}
             </div>
             <div className="action-btn-container">
-              <HintToggle setHints={setHintOption} defaultValue={hintOption} />
+              <HintToggle
+                setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
+                defaultValue={formState.hintOption}
+              />
               <button type="submit" className="action-btn place-middle gap-16">
                 {t(`${action} Budget`)}
               </button>
@@ -468,7 +509,10 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
         ) : (
           <div className="d-flex f-col gap-16">
             <div className="action-btn-container">
-              <HintToggle setHints={setHintOption} defaultValue={hintOption} />
+              <HintToggle
+                setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
+                defaultValue={formState.hintOption}
+              />
               <button type="submit" className="action-btn place-middle gap-16">
                 {t(`${action} Goal`)}
               </button>
@@ -477,25 +521,31 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
               <span>{t("duration")}</span>
               <DefaultInput
                 type="number"
-                value={tags.duration}
+                value={formState.duration}
                 width={20}
                 textAlign="center"
                 onChange={(e) => {
-                  setTags({ ...tags, duration: roundOffHours(e.target.value) });
+                  setFormState((prev) => ({
+                    ...prev,
+                    duration: roundOffHours(e.target.value),
+                  }));
                 }}
                 customStyle={{ borderRadius: "4px", padding: "8px 8px" }}
               />
               <span>{t("dueDate")}</span>
               <CustomDatePicker
-                dateValue={due}
+                dateValue={formState.due}
                 handleDateChange={(newDate) => {
-                  setDue(newDate);
+                  setFormState((prev) => ({
+                    ...prev,
+                    due: newDate,
+                  }));
                 }}
                 timeValue={0}
                 disablePastDates
               />
             </div>
-            {scheduleStatus && tags.duration && (
+            {scheduleStatus && formState.duration && (
               <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
             )}
           </div>

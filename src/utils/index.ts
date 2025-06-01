@@ -154,13 +154,6 @@ export function getOrdinalSuffix(dayOfMonth: number): string {
   return "th";
 }
 
-// do not change the order
-export const calDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-export function convertOnFilterToArray(on: "weekdays" | "weekends") {
-  return on === "weekdays" ? ["Mon", "Tue", "Wed", "Thu", "Fri"] : ["Sat", "Sun"];
-}
-
 export const getMonthByIndex = (index: number) => {
   const month = [
     "January",
