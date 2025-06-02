@@ -1,4 +1,5 @@
 import { GoalItem } from "@src/models/GoalItem";
+import { getRandomColor } from "@src/utils";
 
 export const roundOffHours = (hrsValue: string) => {
   return hrsValue === "" ? "" : String(Math.min(Math.max(Math.round(Number(hrsValue)), 0), 99));
@@ -11,19 +12,19 @@ export function convertOnFilterToArray(on: "weekdays" | "weekends") {
   return on === "weekdays" ? ["Mon", "Tue", "Wed", "Thu", "Fri"] : ["Sat", "Sun"];
 }
 
-export const getDefaultColorIndex = (
+export const getDefaultColor = (
   isEditMode: boolean,
   goal: GoalItem,
   parentGoal: GoalItem | undefined,
   colorPalleteList: string[],
-): number => {
+): string => {
   if (isEditMode) {
-    return colorPalleteList.indexOf(goal.goalColor);
+    return goal.goalColor;
   }
 
   if (parentGoal) {
-    return colorPalleteList.indexOf(parentGoal.goalColor);
+    return parentGoal.goalColor;
   }
 
-  return Math.floor(Math.random() * colorPalleteList.length - 1) + 1;
+  return getRandomColor(colorPalleteList);
 };

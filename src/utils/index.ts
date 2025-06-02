@@ -89,6 +89,10 @@ export const colorPalleteList = [
   "#FF007C",
 ];
 
+export const getRandomColor = (colorPalette: string[]): string => {
+  return colorPalette[Math.floor(Math.random() * colorPalette.length - 1) + 1];
+};
+
 export const fixDateVlauesInGoalObject = (goal: GoalItem) => ({
   ...goal,
   start: goal.start ? new Date(goal.start).toString() : null,

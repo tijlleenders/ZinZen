@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { colorPalleteList } from "@src/utils";
-import { ColorPaletteProps } from "@src/Interfaces/ICommon";
 import "./ColorPicker.scss";
 
-const ColorPicker: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex }) => {
-  const [isOpen, setIsOpen] = useState(false);
+export interface ColorPaletteProps {
+  color: string;
+  setColor: (color: string) => void;
+}
+
+const ColorPicker: React.FC<ColorPaletteProps> = ({ color, setColor }) => {
+  const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
 
   const handleColorSelect = (index: number) => {
-    setColorIndex(index);
-    setIsOpen(false);
+    setColor(colorPalleteList[index]);
+    setIsColorPaletteOpen(false);
   };
 
   const toggleColorPalette = () => {
-    setIsOpen(!isOpen);
+    setIsColorPaletteOpen(!isColorPaletteOpen);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent, action: () => void) => {
@@ -22,33 +26,31 @@ const ColorPicker: React.FC<ColorPaletteProps> = ({ colorIndex, setColorIndex })
   };
 
   useEffect(() => {
-    const element = document.getElementById(`color-${colorIndex}`);
+    const element = document.getElementById(`color-${colorPalleteList.indexOf(color)}`);
     if (element !== null) {
       element.focus();
     }
-  }, [isOpen, colorIndex]);
+  }, [isColorPaletteOpen, color]);
 
   return (
     <div className="color-picker-container">
-      <div
+      <button
+        type="button"
         className="goal-color"
-        style={{ backgroundColor: colorPalleteList[colorIndex] }}
+        style={{ backgroundColor: color }}
         onClick={toggleColorPalette}
         onKeyDown={(e) => handleKeyDown(e, toggleColorPalette)}
-        role="button"
-        tabIndex={0}
-        aria-label="Select color"
-        aria-expanded={isOpen}
+        aria-label="Color Picker"
       />
 
-      {isOpen && (
+      {isColorPaletteOpen && (
         <div className="color-palette-popup">
-          {colorPalleteList.map((color, index) => (
+          {colorPalleteList.map((colorItem, index) => (
             <button
               id={`color-${index}`}
-              key={`color-${color}`}
+              key={`color-${colorItem}`}
               className="color-btn"
-              style={{ backgroundColor: color }}
+              style={{ backgroundColor: colorItem }}
               onClick={() => handleColorSelect(index)}
               onKeyDown={(e) => handleKeyDown(e, () => handleColorSelect(index))}
               type="button"

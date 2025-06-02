@@ -31,17 +31,17 @@ import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
 import useOnScreenKeyboardScrollFix from "../../hooks/useOnScreenKeyboardScrollFix";
-import { calDays, convertOnFilterToArray, roundOffHours, getDefaultColorIndex } from "./ConfigGoal.helper";
+import { calDays, convertOnFilterToArray, roundOffHours, getDefaultColor } from "./ConfigGoal.helper";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
 interface FormState {
-  colorIndex: number;
+  goalColor: string;
   hintOption: boolean;
   title: string;
   due: string;
   on: string[];
-  duration: string;
+  duration: string | null;
   afterTime: number;
   beforeTime: number;
   perDayHrs: number[];
@@ -94,12 +94,12 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     .map((ele) => Number(ele));
 
   const [formState, setFormState] = useState<FormState>({
-    colorIndex: getDefaultColorIndex(isEditMode, goal, parentGoal, colorPalleteList),
+    goalColor: getDefaultColor(isEditMode, goal, parentGoal, colorPalleteList),
     hintOption: false,
     title: t(goal.title),
     due: goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "",
     on: goal.on || convertOnFilterToArray("weekdays"),
-    duration: goal.duration ?? "",
+    duration: goal.duration ?? null,
     afterTime: defaultAfterTime,
     beforeTime: defaultBeforeTime,
     perDayHrs: perDayBudget,
@@ -115,24 +115,17 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     });
   }, [goal.id]);
 
-  const handleTitleChange = (value: string) => {
-    setFormState((prev) => ({
-      ...prev,
-      title: value,
-    }));
-  };
-
   const numberOfDays = formState.on.length;
 
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
-  const goalCategoryType = formState.duration !== "" ? "Standard" : "Cluster";
+  const goalCategoryType = formState.duration !== null ? "Standard" : "Cluster";
   const category = type === "Budget" ? "Budget" : goalCategoryType;
 
   const getFinalTags = (): GoalItem => ({
     ...goal,
     due: formState.due && formState.due !== "" ? new Date(formState.due).toISOString() : null,
-    duration: formState.duration !== "" ? `${formState.duration}` : null,
+    duration: formState.duration !== null ? `${formState.duration}` : null,
     afterTime: type === "Budget" ? formState.afterTime : null,
     beforeTime: type === "Budget" ? formState.beforeTime : null,
     on: type === "Budget" ? calDays.filter((ele) => formState.on.includes(ele)) : null,
@@ -148,7 +141,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
       .split(" ")
       .filter((ele: string) => ele !== "")
       .join(" "),
-    goalColor: colorPalleteList[formState.colorIndex],
+    goalColor: formState.goalColor,
     parentGoalId: parentGoal?.id ?? "root",
     language: getSelectedLanguage(),
   });
@@ -276,12 +269,12 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
         : [0, 0];
 
     setFormState({
-      colorIndex: colorPalleteList.indexOf(selectedGoal.goalColor),
+      goalColor: selectedGoal.goalColor,
       hintOption: false,
       title: selectedGoal.title,
       due: selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "",
       on: selectedGoal.on || convertOnFilterToArray("weekdays"),
-      duration: selectedGoal.duration ?? "",
+      duration: selectedGoal.duration ?? null,
       afterTime: selectedGoal.afterTime ?? 9,
       beforeTime: selectedGoal.beforeTime ?? 18,
       perDayHrs: selectedPerDayBudget,
@@ -361,14 +354,14 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     >
       <div style={{ textAlign: "left" }} className="header-title">
         <ColorPicker
-          colorIndex={formState.colorIndex}
-          setColorIndex={(index: number) => setFormState((prev) => ({ ...prev, colorIndex: index }))}
+          color={formState.goalColor}
+          setColor={(color: string) => setFormState((prev) => ({ ...prev, goalColor: color }))}
         />
         <ArchivedAutoComplete
           placeholder={titlePlaceholder}
           inputValue={formState.title}
           onGoalSelect={onSuggestionClick}
-          onInputChange={handleTitleChange}
+          onInputChange={(value) => setFormState((prev) => ({ ...prev, title: value }))}
         />
       </div>
       <div
@@ -508,7 +501,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
               <span>{t("duration")}</span>
               <DefaultInput
                 type="number"
-                value={formState.duration}
+                value={formState.duration ?? ""}
                 width={20}
                 textAlign="center"
                 onChange={(e) => {

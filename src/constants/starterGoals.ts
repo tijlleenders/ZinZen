@@ -1,7 +1,7 @@
 import { addGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { TGoalCategory } from "@src/models/GoalItem";
-import { colorPalleteList } from "@src/utils";
+import { colorPalleteList, getRandomColor } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
 const starterGoals = [];
@@ -16,13 +16,12 @@ export const addStarterGoal = async (
     parentGoalId?: string;
     category: TGoalCategory;
   },
-  colorIndex: number,
 ) => {
   await addGoal(
     createGoalObjectFromTags({
       title: goalTitle,
       ...goalTags,
-      goalColor: colorPalleteList[colorIndex % colorPalleteList.length],
+      goalColor: getRandomColor(colorPalleteList),
     }),
   );
 };

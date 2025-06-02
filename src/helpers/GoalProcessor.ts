@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { v4 as uuidv4 } from "uuid";
 import { getGoal } from "@src/api/GoalsAPI";
-import { checkOnArrayEquality, colorPalleteList } from "@src/utils";
+import { checkOnArrayEquality, colorPalleteList, getRandomColor } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
 import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
@@ -84,7 +84,7 @@ export const createGoalObjectFromTags = (obj: object = {}) => {
     parentGoalId: "root",
     notificationGoalId: "root",
     sublist: [],
-    goalColor: colorPalleteList[Math.floor(Math.random() * colorPalleteList.length)],
+    goalColor: getRandomColor(colorPalleteList),
     typeOfGoal: "myGoal",
     createdAt: "",
     participants: [],
