@@ -31,7 +31,7 @@ import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../hooks/useVirtualKeyBoardOpen";
 import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
 import useOnScreenKeyboardScrollFix from "../../hooks/useOnScreenKeyboardScrollFix";
-import { calDays, convertOnFilterToArray, roundOffHours } from "./ConfigGoal.helper";
+import { calDays, convertOnFilterToArray, roundOffHours, getDefaultColorIndex } from "./ConfigGoal.helper";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -73,17 +73,8 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   const [scheduleStatus, setScheduleStatus] = useState<ScheduleStatus>(null);
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
 
-  let defaultColorIndex = Math.floor(Math.random() * colorPalleteList.length - 1) + 1;
-  let defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
-  let defaultBeforeTime = isEditMode ? (goal.beforeTime ?? 18) : 18;
-
-  if (isEditMode) {
-    defaultColorIndex = colorPalleteList.indexOf(goal.goalColor);
-  } else if (parentGoal) {
-    defaultColorIndex = colorPalleteList.indexOf(parentGoal.goalColor);
-    defaultAfterTime = parentGoal.afterTime ?? 18;
-    defaultBeforeTime = parentGoal.beforeTime ?? 9;
-  }
+  const defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
+  const defaultBeforeTime = isEditMode ? (goal.beforeTime ?? 18) : 18;
 
   const { t } = useTranslation();
 
@@ -103,7 +94,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     .map((ele) => Number(ele));
 
   const [formState, setFormState] = useState<FormState>({
-    colorIndex: defaultColorIndex,
+    colorIndex: getDefaultColorIndex(isEditMode, goal, parentGoal, colorPalleteList),
     hintOption: false,
     title: t(goal.title),
     due: goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "",
