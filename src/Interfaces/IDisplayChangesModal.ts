@@ -4,7 +4,6 @@ import { typeOfChange } from "@src/models/InboxItem";
 export type ITagsAllowedToDisplay =
   | "title"
   | "duration"
-  | "habit"
   | "on"
   | "timeBudget"
   | "start"

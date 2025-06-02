@@ -29,13 +29,10 @@ const useGoalSummaryStore = (goal: GoalItem) => {
 
   const getDueDateSummaryText = () => (goal.due ? calculateDaysLeft(goal.due) : "");
 
-  const getHabitSummaryText = () => (goal.habit === "weekly" ? t("everyWeek") : "");
-
   return {
     sublistSummary: getSublistSummaryText(),
     durationSummary: getDurationSummaryText(),
     dueDateSummary: getDueDateSummaryText(),
-    habitSummary: getHabitSummaryText(),
   };
 };
 

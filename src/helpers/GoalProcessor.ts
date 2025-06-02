@@ -25,7 +25,6 @@ export const formatTagsToText = async (_goal: GoalItem) => {
     duration: "",
     start: "",
     due: "",
-    habit: "",
     on: "",
     timeBudget: "",
     timing: "",
@@ -49,7 +48,6 @@ export const formatTagsToText = async (_goal: GoalItem) => {
     ? ` start ${startDate.getDate()}/${startDate.getMonth() + 1} @${startDate.getHours()}`
     : "";
   response.due = goal.due ? ` due ${endDate.getDate()}/${endDate.getMonth() + 1} @${endDate.getHours()}` : "";
-  response.habit = goal.habit ? ` ${goal.habit}` : "";
   response.on = goal.on ? `${goal.on.join(" ")}` : "";
   response.timeBudget = JSON.stringify(goal.timeBudget);
   response.link = goal.link ? ` ${goal.link}` : "";
@@ -66,9 +64,9 @@ export const formatTagsToText = async (_goal: GoalItem) => {
 
   response.parentGoalId = parentGoalTitle;
 
-  const { title, duration, start, due, habit, on, timeBudget, link, timing, parentGoalId } = response;
+  const { title, duration, start, due, on, timeBudget, link, timing, parentGoalId } = response;
   return {
-    inputText: title + duration + start + due + timing + on + timeBudget + habit + link + parentGoalId,
+    inputText: title + duration + start + due + timing + on + timeBudget + link + parentGoalId,
     ...response,
   };
 };
@@ -78,7 +76,6 @@ export const createGoalObjectFromTags = (obj: object = {}) => {
     id: uuidv4(),
     title: "",
     language: "English",
-    habit: null,
     on: null,
     duration: null,
     start: null,
@@ -192,7 +189,6 @@ export const findGoalTagChanges = async (goal1: GoalItem, goal2: GoalItem) => {
   const tags: ITagsAllowedToDisplay[] = [
     "title",
     "duration",
-    "habit",
     "on",
     "timeBudget",
     "start",

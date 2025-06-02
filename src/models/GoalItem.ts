@@ -19,7 +19,6 @@ export interface GoalItem {
   title: string;
   duration: string | null;
   sublist: string[];
-  habit: string | null;
   on: string[] | null;
   due: string | null;
   start: string | null;

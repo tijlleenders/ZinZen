@@ -56,7 +56,6 @@ export const transformIntoSchInputGoals = async (
       if (slotsNotallowed && slotsNotallowed.length > 0) {
         obj.notOn = [...slotsNotallowed];
       }
-      if (ele.habit) obj.repeat = "weekly";
       if (ele.timeBudget) {
         const { perDay, perWeek } = ele.timeBudget;
 

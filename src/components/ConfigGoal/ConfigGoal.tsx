@@ -41,7 +41,6 @@ interface FormState {
   title: string;
   due: string;
   on: string[];
-  repeatWeekly: boolean;
   duration: string;
   afterTime: number;
   beforeTime: number;
@@ -109,7 +108,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     title: t(goal.title),
     due: goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "",
     on: goal.on || convertOnFilterToArray("weekdays"),
-    repeatWeekly: goal.habit === "weekly",
     duration: goal.duration ?? "",
     afterTime: defaultAfterTime,
     beforeTime: defaultBeforeTime,
@@ -146,7 +144,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     duration: formState.duration !== "" ? `${formState.duration}` : null,
     afterTime: type === "Budget" ? formState.afterTime : null,
     beforeTime: type === "Budget" ? formState.beforeTime : null,
-    habit: formState.repeatWeekly ? "weekly" : null,
     on: type === "Budget" ? calDays.filter((ele) => formState.on.includes(ele)) : null,
     timeBudget:
       type === "Budget"
@@ -293,7 +290,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
       title: selectedGoal.title,
       due: selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "",
       on: selectedGoal.on || convertOnFilterToArray("weekdays"),
-      repeatWeekly: selectedGoal.habit === "weekly",
       duration: selectedGoal.duration ?? "",
       afterTime: selectedGoal.afterTime ?? 9,
       beforeTime: selectedGoal.beforeTime ?? 18,

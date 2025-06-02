@@ -7,7 +7,7 @@ import { TaskItem } from "./TaskItem";
 export const dbStoreSchema = {
   feelingsCollection: "++id, content, category, date, note",
   goalsCollection:
-    "id, category, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, notificationGoalId, isShared, timeBudget, typeOfGoal, timestamp",
+    "id, category, title, duration, sublist, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, notificationGoalId, isShared, timeBudget, typeOfGoal, timestamp",
   sharedWMCollection:
     "id, category, title, duration, sublist, repeat, start, due, afterTime, beforeTime, createdAt, parentGoalId, participants, archived, goalColor, language, link, notificationGoalId, isShared, timeBudget, typeOfGoal",
   contactsCollection: "id, name, relId, accepted, goalsToBeShared, createdAt, type",
@@ -21,7 +21,7 @@ export const dbStoreSchema = {
   dumpboxCollection: null,
   partnersCollection: null,
   goalTrashCollection:
-    "id, category, deletedAt, title, duration, sublist, habit, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, notificationGoalId, timeBudget, typeOfGoal",
+    "id, category, deletedAt, title, duration, sublist, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, link, notificationGoalId, timeBudget, typeOfGoal",
   hintsCollection: "id, hintOptionEnabled, availableGoalHints, lastCheckedDate, nextCheckDate",
   impossibleGoalsCollection: "goalId, goalTitle",
   schedulerOutputCacheCollection: "id, key, value",
