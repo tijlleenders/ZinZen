@@ -39,6 +39,7 @@ import HintToggle from "./components/HintToggle";
 import ZAccordion from "@src/common/Accordion";
 import { Slider } from "antd";
 import BetweenSlider from "./BetweenSlider";
+import BudgetPerHr from "./BudgetPerHr";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -145,35 +146,33 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     document.getElementById("title-field")?.focus();
   }, []);
 
-  useEffect(() => {
-    if (!budgetGoal?.beforeTime || !budgetGoal?.afterTime) return;
+  // useEffect(() => {
+  //   if (!budgetGoal?.beforeTime || !budgetGoal?.afterTime) return;
 
-    const timeRange = budgetGoal.beforeTime - budgetGoal.afterTime;
-    const weeklyRange = timeRange * (numberOfDays ?? 0);
-    const updatedPerDayHrs = budgetGoal.perDayHrs.map((hour) => Math.min(Math.max(hour, timeRange), timeRange));
-    const updatedPerWeekHrs = budgetGoal.perWeekHrs.map((hour) => Math.min(Math.max(hour, weeklyRange), weeklyRange));
+  //   const timeRange = budgetGoal.beforeTime - budgetGoal.afterTime;
+  //   const weeklyRange = timeRange * (numberOfDays ?? 0);
+  //   const updatedPerDayHrs = budgetGoal.perDayHrs.map((hour) => Math.min(Math.max(hour, timeRange), timeRange));
+  //   const updatedPerWeekHrs = budgetGoal.perWeekHrs.map((hour) => Math.min(Math.max(hour, weeklyRange), weeklyRange));
 
-    setFormState((prev) => ({
-      ...prev,
-      budgetGoal: {
-        ...prev.budgetGoal!,
-        perDayHrs: updatedPerDayHrs,
-        perWeekHrs: updatedPerWeekHrs,
-      },
-    }));
-  }, [budgetGoal?.afterTime, budgetGoal?.beforeTime, numberOfDays]);
+  //   setFormState((prev) => ({
+  //     ...prev,
+  //     budgetGoal: {
+  //       ...prev.budgetGoal!,
+  //       perDayHrs: updatedPerDayHrs,
+  //       perWeekHrs: updatedPerWeekHrs,
+  //     },
+  //   }));
+  // }, [budgetGoal?.afterTime, budgetGoal?.beforeTime, numberOfDays]);
 
-  const budgetPerHrSummary =
-    budgetGoal?.perDayHrs[0] === budgetGoal?.perDayHrs[1]
-      ? budgetGoal?.perDayHrs[0]
-      : `${budgetGoal?.perDayHrs[0]} - ${budgetGoal?.perDayHrs[1]}`;
+  const budgetPerHrSummary = `${budgetGoal?.perDayHrs.min ?? 0} - ${budgetGoal?.perDayHrs.max ?? 0}`;
+
   const budgetPerWeekSummary =
-    budgetGoal?.perWeekHrs[0] === budgetGoal?.perWeekHrs[1]
-      ? `${budgetGoal?.perWeekHrs[0]} hrs / week`
-      : `${budgetGoal?.perWeekHrs[0]} - ${budgetGoal?.perWeekHrs[1]} hrs / week`;
+    budgetGoal?.perWeekHrs.min === budgetGoal?.perWeekHrs.max
+      ? `${budgetGoal?.perWeekHrs.min} hrs / week`
+      : `${budgetGoal?.perWeekHrs.min} - ${budgetGoal?.perWeekHrs.max} hrs / week`;
 
-  const minWeekValue = budgetGoal?.perDayHrs[0] * (numberOfDays ?? 0);
-  const maxWeekValue = budgetGoal?.perDayHrs[1] * (numberOfDays ?? 0);
+  const minWeekValue = (budgetGoal?.perDayHrs.min ?? 0) * (numberOfDays ?? 0);
+  const maxWeekValue = (budgetGoal?.perDayHrs.max ?? 0) * (numberOfDays ?? 0);
 
   const handleWeekSliderChange = (value: number[]) => {
     let adjustedValue: number[] = value.slice();
@@ -185,7 +184,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
       [adjustedValue[0], adjustedValue[1]] = [adjustedValue[1], adjustedValue[0]];
     }
 
-    if (budgetGoal?.perDayHrs[0] === budgetGoal?.perDayHrs[1]) {
+    if (budgetGoal?.perDayHrs.min === budgetGoal?.perDayHrs.max) {
       adjustedValue = [minWeekValue, maxWeekValue];
     }
 
@@ -196,9 +195,9 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     }));
   };
 
-  useEffect(() => {
-    handleWeekSliderChange(budgetGoal?.perWeekHrs ?? []);
-  }, [budgetGoal?.perDayHrs, budgetGoal?.on]);
+  // useEffect(() => {
+  //   handleWeekSliderChange(budgetGoal?.perWeekHrs ?? []);
+  // }, [budgetGoal?.perDayHrs, budgetGoal?.on]);
 
   const { openEditMode } = useGoalStore();
 
@@ -348,26 +347,16 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                   body: (
                     <div>
                       <div>
-                        <span>{budgetPerHrSummary} hrs / day</span>
-                        <Slider
-                          tooltip={{
-                            align: sliderTooltipAlignConfig,
-                          }}
-                          min={0}
-                          max={formState.beforeTime - formState.afterTime}
-                          marks={{
-                            0: "0",
-                            [formState.perDayHrs[0]]: `${formState.perDayHrs[0]}`,
-                            [formState.perDayHrs[1]]: `${formState.perDayHrs[1]}`,
-                            [formState.beforeTime - formState.afterTime]:
-                              `${formState.beforeTime - formState.afterTime}`,
-                          }}
-                          range
-                          value={[formState.perDayHrs[0], formState.perDayHrs[1]]}
+                        <BudgetPerHr
+                          budgetPerHrSummary={budgetPerHrSummary}
+                          first={budgetGoal?.perDayHrs.min ?? 0}
+                          second={budgetGoal?.perDayHrs.max ?? 0}
+                          max={(budgetGoal?.beforeTime ?? 0) - (budgetGoal?.afterTime ?? 0)}
                           onChange={(val) =>
-                            handleSliderChange(val, (hours: number[]) =>
-                              setFormState((prev) => ({ ...prev, perDayHrs: hours })),
-                            )
+                            setFormState((prev) => ({
+                              ...prev,
+                              budgetGoal: { ...prev.budgetGoal!, perDayHrs: { min: val[0], max: val[1] } },
+                            }))
                           }
                         />
                       </div>
