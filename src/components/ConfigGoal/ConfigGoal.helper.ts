@@ -88,8 +88,8 @@ export const getDefaultFormStateForBudgetGoal = (goal: GoalItem, isEditMode: boo
   //   .map((ele) => Number(ele));
 
   const perWeekBudget = {
-    min: goal.timeBudget?.perWeek?.min ?? timeDiff * (goal.on?.length ?? 7),
-    max: goal.timeBudget?.perWeek?.max ?? timeDiff * (goal.on?.length ?? 7),
+    min: goal.timeBudget?.perWeek?.min ?? timeDiff * (goal.on?.length ?? 5),
+    max: goal.timeBudget?.perWeek?.max ?? timeDiff * (goal.on?.length ?? 5),
   };
 
   return {

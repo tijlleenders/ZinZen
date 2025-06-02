@@ -40,6 +40,7 @@ import ZAccordion from "@src/common/Accordion";
 import { Slider } from "antd";
 import BetweenSlider from "./BetweenSlider";
 import BudgetPerHr from "./BudgetPerHr";
+import BudgetPerWeek from "./BudgetPerWeek";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -379,6 +380,19 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                           onChange={(val) => handleWeekSliderChange(val)}
                         />
                       </div> */}
+                      <BudgetPerWeek
+                        budgetPerWeekSummary={budgetPerWeekSummary}
+                        minWeekValue={minWeekValue}
+                        maxWeekValue={maxWeekValue}
+                        first={budgetGoal?.perWeekHrs.min ?? 0}
+                        second={budgetGoal?.perWeekHrs.max ?? 0}
+                        onChange={(val) =>
+                          setFormState((prev) => ({
+                            ...prev,
+                            budgetGoal: { ...prev.budgetGoal!, perWeekHrs: { min: val[0], max: val[1] } },
+                          }))
+                        }
+                      />
                     </div>
                   ),
                 },
