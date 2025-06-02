@@ -1,14 +1,10 @@
 /* eslint-disable complexity */
-import { SliderMarks } from "antd/es/slider";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { Slider } from "antd";
 import { useRecoilState } from "recoil";
 
-import ColorPicker from "@components/ConfigGoal/components/ColorPicker";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
-import ZAccordion from "@src/common/Accordion";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import useGoalStore from "@src/hooks/useGoalStore";
@@ -19,34 +15,32 @@ import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
 import useScheduler from "@src/hooks/useScheduler";
-import DefaultInput from "@src/common/DefaultInput";
 import { useAddGoal } from "@src/hooks/api/Goals/mutations/useAddGoal";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useEditGoal } from "@src/hooks/api/Goals/mutations/useEditGoal";
-import { colorPalleteList, getSelectedLanguage } from "../../utils";
+import { colorPalleteList } from "../../utils";
 
 import "./ConfigGoal.scss";
-import CustomDatePicker from "./components/CustomDatePicker";
-import HintToggle from "./components/HintToggle";
 import useVirtualKeyboardOpen from "../../hooks/useVirtualKeyBoardOpen";
-import ArchivedAutoComplete from "./components/ArchivedAutoComplete";
 import useOnScreenKeyboardScrollFix from "../../hooks/useOnScreenKeyboardScrollFix";
-import { calDays, convertOnFilterToArray, roundOffHours, getDefaultColor } from "./ConfigGoal.helper";
+import {
+  calDays,
+  convertOnFilterToArray,
+  getDefaultColor,
+  FormState,
+  getDefaultFormStateForSimpleGoal,
+  getFinalTags,
+  checkSchedulingStatus,
+  getDefaultFormStateForBudgetGoal,
+} from "./ConfigGoal.helper";
+import ConfigGoalHeader from "./components/ConfigGoalHeader";
+import SimpleGoal from "./components/SimpleGoal";
+import HintToggle from "./components/HintToggle";
+import ZAccordion from "@src/common/Accordion";
+import { Slider } from "antd";
+import BetweenSlider from "./BetweenSlider";
 
 const onDays = [...calDays.slice(1), "Sun"];
-
-interface FormState {
-  goalColor: string;
-  hintOption: boolean;
-  title: string;
-  due: string;
-  on: string[];
-  duration: string | null;
-  afterTime: number;
-  beforeTime: number;
-  perDayHrs: number[];
-  perWeekHrs: number[];
-}
 
 interface ConfigGoalContentProps {
   type: TGoalCategory;
@@ -73,37 +67,24 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   const [scheduleStatus, setScheduleStatus] = useState<ScheduleStatus>(null);
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
 
-  const defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
-  const defaultBeforeTime = isEditMode ? (goal.beforeTime ?? 18) : 18;
-
   const { t } = useTranslation();
 
   const isKeyboardOpen = useVirtualKeyboardOpen();
   useOnScreenKeyboardScrollFix();
 
-  const timeDiff = defaultBeforeTime - defaultAfterTime;
-  const perDayBudget = (goal.timeBudget?.perDay?.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
-    .split("-")
-    .map((ele) => Number(ele));
-  const perWeekBudget = (
-    goal.timeBudget?.perWeek?.includes("-")
-      ? goal.timeBudget.perWeek
-      : `${timeDiff * (goal.on?.length ?? 7)}-${timeDiff * (goal.on?.length ?? 7)}`
-  )
-    .split("-")
-    .map((ele) => Number(ele));
-
   const [formState, setFormState] = useState<FormState>({
     goalColor: getDefaultColor(isEditMode, goal, parentGoal, colorPalleteList),
     hintOption: false,
     title: t(goal.title),
-    due: goal.due ? new Date(goal.due).toISOString().slice(0, 10) : "",
-    on: goal.on || convertOnFilterToArray("weekdays"),
-    duration: goal.duration ?? null,
-    afterTime: defaultAfterTime,
-    beforeTime: defaultBeforeTime,
-    perDayHrs: perDayBudget,
-    perWeekHrs: perWeekBudget,
+    ...(type === "Standard"
+      ? {
+          simpleGoal: getDefaultFormStateForSimpleGoal(goal),
+          budgetGoal: undefined,
+        }
+      : {
+          simpleGoal: undefined,
+          budgetGoal: getDefaultFormStateForBudgetGoal(goal, isEditMode),
+        }),
   });
 
   useEffect(() => {
@@ -115,44 +96,24 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     });
   }, [goal.id]);
 
-  const numberOfDays = formState.on.length;
+  const { simpleGoal, budgetGoal } = formState;
 
-  const marks: SliderMarks = { 0: "0", 24: "24" };
+  const numberOfDays = budgetGoal?.on.length;
 
-  const goalCategoryType = formState.duration !== null ? "Standard" : "Cluster";
+  const goalCategoryType = simpleGoal?.duration !== null ? "Standard" : "Cluster";
   const category = type === "Budget" ? "Budget" : goalCategoryType;
 
-  const getFinalTags = (): GoalItem => ({
-    ...goal,
-    due: formState.due && formState.due !== "" ? new Date(formState.due).toISOString() : null,
-    duration: formState.duration !== null ? `${formState.duration}` : null,
-    afterTime: type === "Budget" ? formState.afterTime : null,
-    beforeTime: type === "Budget" ? formState.beforeTime : null,
-    on: type === "Budget" ? calDays.filter((ele) => formState.on.includes(ele)) : null,
-    timeBudget:
-      type === "Budget"
-        ? {
-            perDay: formState.perDayHrs.join("-"),
-            perWeek: formState.perWeekHrs.join("-"),
-          }
-        : undefined,
-    category,
-    title: formState.title
-      .split(" ")
-      .filter((ele: string) => ele !== "")
-      .join(" "),
-    goalColor: formState.goalColor,
-    parentGoalId: parentGoal?.id ?? "root",
-    language: getSelectedLanguage(),
-  });
-
   const handleSave = async () => {
+    console.log("formState", formState);
     if (formState.title.trim().length) {
       if (isEditMode) {
-        editGoalMutation({ goal: getFinalTags(), hintOption: formState.hintOption });
+        editGoalMutation({
+          goal: getFinalTags({ goal, formState, parentGoal }),
+          hintOption: formState.hintOption,
+        });
       } else {
         addGoalMutation({
-          newGoal: getFinalTags(),
+          newGoal: getFinalTags({ goal, formState, parentGoal }),
           hintOption: formState.hintOption,
           parentGoal,
         });
@@ -185,29 +146,34 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   }, []);
 
   useEffect(() => {
-    const timeRange = formState.beforeTime - formState.afterTime;
-    const weeklyRange = timeRange * numberOfDays;
-    const updatedPerDayHrs = formState.perDayHrs.map((hour) => Math.min(Math.max(hour, timeRange), timeRange));
-    const updatedPerWeekHrs = formState.perWeekHrs.map((hour) => Math.min(Math.max(hour, weeklyRange), weeklyRange));
+    if (!budgetGoal?.beforeTime || !budgetGoal?.afterTime) return;
+
+    const timeRange = budgetGoal.beforeTime - budgetGoal.afterTime;
+    const weeklyRange = timeRange * (numberOfDays ?? 0);
+    const updatedPerDayHrs = budgetGoal.perDayHrs.map((hour) => Math.min(Math.max(hour, timeRange), timeRange));
+    const updatedPerWeekHrs = budgetGoal.perWeekHrs.map((hour) => Math.min(Math.max(hour, weeklyRange), weeklyRange));
 
     setFormState((prev) => ({
       ...prev,
-      perDayHrs: updatedPerDayHrs,
-      perWeekHrs: updatedPerWeekHrs,
+      budgetGoal: {
+        ...prev.budgetGoal!,
+        perDayHrs: updatedPerDayHrs,
+        perWeekHrs: updatedPerWeekHrs,
+      },
     }));
-  }, [formState.afterTime, formState.beforeTime, numberOfDays]);
+  }, [budgetGoal?.afterTime, budgetGoal?.beforeTime, numberOfDays]);
 
   const budgetPerHrSummary =
-    formState.perDayHrs[0] === formState.perDayHrs[1]
-      ? formState.perDayHrs[0]
-      : `${formState.perDayHrs[0]} - ${formState.perDayHrs[1]}`;
+    budgetGoal?.perDayHrs[0] === budgetGoal?.perDayHrs[1]
+      ? budgetGoal?.perDayHrs[0]
+      : `${budgetGoal?.perDayHrs[0]} - ${budgetGoal?.perDayHrs[1]}`;
   const budgetPerWeekSummary =
-    formState.perWeekHrs[0] === formState.perWeekHrs[1]
-      ? `${formState.perWeekHrs[0]} hrs / week`
-      : `${formState.perWeekHrs[0]} - ${formState.perWeekHrs[1]} hrs / week`;
+    budgetGoal?.perWeekHrs[0] === budgetGoal?.perWeekHrs[1]
+      ? `${budgetGoal?.perWeekHrs[0]} hrs / week`
+      : `${budgetGoal?.perWeekHrs[0]} - ${budgetGoal?.perWeekHrs[1]} hrs / week`;
 
-  const minWeekValue = formState.perDayHrs[0] * numberOfDays;
-  const maxWeekValue = formState.perDayHrs[1] * numberOfDays;
+  const minWeekValue = budgetGoal?.perDayHrs[0] * (numberOfDays ?? 0);
+  const maxWeekValue = budgetGoal?.perDayHrs[1] * (numberOfDays ?? 0);
 
   const handleWeekSliderChange = (value: number[]) => {
     let adjustedValue: number[] = value.slice();
@@ -219,7 +185,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
       [adjustedValue[0], adjustedValue[1]] = [adjustedValue[1], adjustedValue[0]];
     }
 
-    if (formState.perDayHrs[0] === formState.perDayHrs[1]) {
+    if (budgetGoal?.perDayHrs[0] === budgetGoal?.perDayHrs[1]) {
       adjustedValue = [minWeekValue, maxWeekValue];
     }
 
@@ -231,8 +197,8 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   };
 
   useEffect(() => {
-    handleWeekSliderChange(formState.perWeekHrs);
-  }, [formState.perDayHrs, formState.on]);
+    handleWeekSliderChange(budgetGoal?.perWeekHrs ?? []);
+  }, [budgetGoal?.perDayHrs, budgetGoal?.on]);
 
   const { openEditMode } = useGoalStore();
 
@@ -247,61 +213,51 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     openEditMode(selectedGoal, newState);
     setSuggestedGoal(selectedGoal);
 
-    const selectedPerDayBudget =
-      selectedGoal.beforeTime && selectedGoal.afterTime
-        ? (selectedGoal.timeBudget?.perDay?.includes("-")
-            ? selectedGoal.timeBudget.perDay
-            : `${selectedGoal.beforeTime - selectedGoal.afterTime}-${selectedGoal.beforeTime - selectedGoal.afterTime}`
-          )
-            .split("-")
-            .map((ele) => Number(ele))
-        : [0, 0];
+    // const selectedPerDayBudget =
+    //   selectedGoal.beforeTime && selectedGoal.afterTime
+    //     ? (selectedGoal.timeBudget?.perDay?.includes("-")
+    //         ? selectedGoal.timeBudget.perDay
+    //         : `${selectedGoal.beforeTime - selectedGoal.afterTime}-${selectedGoal.beforeTime - selectedGoal.afterTime}`
+    //       )
+    //         .split("-")
+    //         .map((ele) => Number(ele))
+    //     : [0, 0];
 
-    const selectedNumberOfDays = selectedGoal.on?.length ?? 7;
-    const selectedPerWeekBudget =
-      selectedGoal.beforeTime && selectedGoal.afterTime
-        ? (selectedGoal.timeBudget?.perWeek?.includes("-")
-            ? selectedGoal.timeBudget.perWeek
-            : `${selectedPerDayBudget[0] * selectedNumberOfDays}-${selectedPerDayBudget[1] * selectedNumberOfDays}`
-          )
-            .split("-")
-            .map((ele) => Number(ele))
-        : [0, 0];
+    // const selectedNumberOfDays = selectedGoal.on?.length ?? 7;
+    // const selectedPerWeekBudget =
+    //   selectedGoal.beforeTime && selectedGoal.afterTime
+    //     ? (selectedGoal.timeBudget?.perWeek?.includes("-")
+    //         ? selectedGoal.timeBudget.perWeek
+    //         : `${selectedPerDayBudget[0] * selectedNumberOfDays}-${selectedPerDayBudget[1] * selectedNumberOfDays}`
+    //       )
+    //         .split("-")
+    //         .map((ele) => Number(ele))
+    //     : [0, 0];
 
-    setFormState({
-      goalColor: selectedGoal.goalColor,
-      hintOption: false,
-      title: selectedGoal.title,
-      due: selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "",
-      on: selectedGoal.on || convertOnFilterToArray("weekdays"),
-      duration: selectedGoal.duration ?? null,
-      afterTime: selectedGoal.afterTime ?? 9,
-      beforeTime: selectedGoal.beforeTime ?? 18,
-      perDayHrs: selectedPerDayBudget,
-      perWeekHrs: selectedPerWeekBudget,
-    });
+    // setFormState({
+    //   goalColor: selectedGoal.goalColor,
+    //   hintOption: false,
+    //   title: selectedGoal.title,
+    //   simpleGoal: {
+    //     duration: selectedGoal.duration ?? null,
+    //     due: selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "",
+    //   },
+    //   // budgetGoal: {
+    //   //   on: selectedGoal.on || convertOnFilterToArray("weekdays"),
+    //   //   afterTime: selectedGoal.afterTime ?? 9,
+    //   //   beforeTime: selectedGoal.beforeTime ?? 18,
+    //   // //on: selectedGoal.on || convertOnFilterToArray("weekdays"),
+    //   // //afterTime: selectedGoal.afterTime ?? 9,
+    //   //beforeTime: selectedGoal.beforeTime ?? 18,
+    //   //perDayHrs: selectedPerDayBudget,
+    //   //perWeekHrs: selectedPerWeekBudget,
+    // });
 
     const hint = await getGoalHintItem(selectedGoal.id);
     setFormState((prev) => ({
       ...prev,
       hintOption: hint?.hintOptionEnabled || false,
     }));
-  };
-
-  const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
-
-  const checkSchedulingStatus = async (schedulerOutput: ISchedulerOutput | undefined, goalId: string) => {
-    if (!schedulerOutput) return "pending";
-
-    const { scheduled, impossible } = schedulerOutput;
-
-    if (impossible?.some((task) => task.id === goalId)) {
-      return "impossible";
-    }
-
-    const isScheduledInNext7Days = scheduled.some((day) => day.tasks.some((task) => task.goalid === goalId));
-
-    return isScheduledInNext7Days ? "scheduled" : "future";
   };
 
   const getScheduleStatusText = (status: ScheduleStatus) => {
@@ -320,7 +276,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   const checkSchedule = async () => {
     setScheduleStatus("pending");
     try {
-      const result = await checkGoalSchedule(getFinalTags());
+      const result = await checkGoalSchedule(getFinalTags({ goal, formState, parentGoal }));
       const status = await checkSchedulingStatus(result || undefined, goal.id);
       setScheduleStatus(status);
     } catch (error) {
@@ -335,14 +291,13 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     }, 1000);
 
     return () => clearTimeout(debounceTimer);
-  }, [formState.duration, formState.afterTime, formState.beforeTime, formState.perDayHrs, formState.perWeekHrs]);
-
-  const sliderTooltipAlignConfig = {
-    points: ["bc", "tc"],
-    offset: [0, -40],
-    overflow: { adjustX: true, adjustY: true },
-    useCssTransform: true,
-  };
+  }, [
+    formState.simpleGoal?.duration,
+    formState.budgetGoal?.afterTime,
+    formState.budgetGoal?.beforeTime,
+    formState.budgetGoal?.perDayHrs,
+    formState.budgetGoal?.perWeekHrs,
+  ]);
 
   return (
     <form
@@ -352,18 +307,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
         await handleSave();
       }}
     >
-      <div style={{ textAlign: "left" }} className="header-title">
-        <ColorPicker
-          color={formState.goalColor}
-          setColor={(color: string) => setFormState((prev) => ({ ...prev, goalColor: color }))}
-        />
-        <ArchivedAutoComplete
-          placeholder={titlePlaceholder}
-          inputValue={formState.title}
-          onGoalSelect={onSuggestionClick}
-          onInputChange={(value) => setFormState((prev) => ({ ...prev, title: value }))}
-        />
-      </div>
+      <ConfigGoalHeader formState={formState} setFormState={setFormState} onSuggestionClick={onSuggestionClick} />
       <div
         className="d-flex f-col gap-20"
         style={{
@@ -371,30 +315,24 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
           padding: "0 18px",
         }}
       >
-        {type === "Budget" ? (
+        {type === "Standard" || type === "Cluster" ? (
+          <SimpleGoal
+            formState={formState}
+            setFormState={setFormState}
+            scheduleStatus={scheduleStatus}
+            getScheduleStatusText={getScheduleStatusText}
+          />
+        ) : (
           <>
             <div>
-              <span>Between</span>
-              <Slider
-                tooltip={{
-                  align: sliderTooltipAlignConfig,
-                }}
-                min={0}
-                max={24}
-                marks={{
-                  ...marks,
-                  [formState.afterTime]: `${formState.afterTime}`,
-                  [formState.beforeTime]: `${formState.beforeTime}`,
-                }}
-                range
-                value={[formState.afterTime, formState.beforeTime]}
-                onChange={(val) => {
+              <BetweenSlider
+                value={[budgetGoal?.afterTime ?? 9, budgetGoal?.beforeTime ?? 18]}
+                onChange={(val) =>
                   setFormState((prev) => ({
                     ...prev,
-                    afterTime: val[0],
-                    beforeTime: val[1],
-                  }));
-                }}
+                    budgetGoal: { ...prev.budgetGoal!, afterTime: val[0], beforeTime: val[1] },
+                  }))
+                }
               />
             </div>
             <ZAccordion
@@ -433,7 +371,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                           }
                         />
                       </div>
-                      <div>
+                      {/* <div>
                         <span>{budgetPerWeekSummary}</span>
                         <Slider
                           tooltip={{
@@ -443,36 +381,41 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                           max={maxWeekValue}
                           marks={{
                             [minWeekValue]: `${minWeekValue}`,
-                            [formState.perWeekHrs[0]]: `${formState.perWeekHrs[0]}`,
-                            [formState.perWeekHrs[1]]: `${formState.perWeekHrs[1]}`,
+                            [budgetGoal?.perWeekHrs[0]]: `${budgetGoal?.perWeekHrs[0]}`,
+                            [budgetGoal?.perWeekHrs[1]]: `${budgetGoal?.perWeekHrs[1]}`,
                             [maxWeekValue]: `${maxWeekValue}`,
                           }}
                           range
-                          value={[formState.perWeekHrs[0], formState.perWeekHrs[1]]}
+                          value={[budgetGoal?.perWeekHrs[0], budgetGoal?.perWeekHrs[1]]}
                           onChange={(val) => handleWeekSliderChange(val)}
                         />
-                      </div>
+                      </div> */}
                     </div>
                   ),
                 },
               ]}
             />
-            <div className="place-middle gap-8 h-100">
+            {/* <div className="place-middle gap-8 h-100">
               {onDays.map((d) => (
                 <span
                   onClickCapture={() => {
                     setFormState((prev) => ({
                       ...prev,
-                      on: prev.on.includes(d) ? [...prev.on.filter((ele) => ele !== d)] : [...prev.on, d],
+                      budgetGoal: {
+                        ...prev.budgetGoal!,
+                        on: prev.budgetGoal?.on.includes(d)
+                          ? [...prev.budgetGoal?.on.filter((ele) => ele !== d)]
+                          : [...prev.budgetGoal?.on, d],
+                      },
                     }));
                   }}
-                  className={`on_day ${formState.on.includes(d) ? "selected" : ""}`}
+                  className={`on_day ${budgetGoal?.on.includes(d) ? "selected" : ""}`}
                   key={d}
                 >
                   {t(d)[0]}
                 </span>
               ))}
-            </div>
+            </div> */}
             <div className="action-btn-container">
               <HintToggle
                 setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
@@ -486,49 +429,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
               <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
             )}
           </>
-        ) : (
-          <div className="d-flex f-col gap-16">
-            <div className="action-btn-container">
-              <HintToggle
-                setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
-                defaultValue={formState.hintOption}
-              />
-              <button type="submit" className="action-btn place-middle gap-16">
-                {t(`${action} Goal`)}
-              </button>
-            </div>
-            <div className="place-middle justify-fs gap-16">
-              <span>{t("duration")}</span>
-              <DefaultInput
-                type="number"
-                value={formState.duration ?? ""}
-                width={20}
-                textAlign="center"
-                onChange={(e) => {
-                  setFormState((prev) => ({
-                    ...prev,
-                    duration: roundOffHours(e.target.value),
-                  }));
-                }}
-                customStyle={{ borderRadius: "4px", padding: "8px 8px" }}
-              />
-              <span>{t("dueDate")}</span>
-              <CustomDatePicker
-                dateValue={formState.due}
-                handleDateChange={(newDate) => {
-                  setFormState((prev) => ({
-                    ...prev,
-                    due: newDate,
-                  }));
-                }}
-                timeValue={0}
-                disablePastDates
-              />
-            </div>
-            {scheduleStatus && formState.duration && (
-              <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
-            )}
-          </div>
         )}
       </div>
     </form>

@@ -1,28 +1,13 @@
 import React from "react";
-import { Select } from "antd";
-import { useTranslation } from "react-i18next";
 
 interface ICustomDatePicker {
   label?: string;
   dateValue: string;
-  timeValue: number;
   handleDateChange: (value: string) => void;
-  handleTimeChange?: (value: number) => void;
-  showTime?: boolean;
   disablePastDates?: boolean;
 }
 
-const CustomDatePicker: React.FC<ICustomDatePicker> = ({
-  label,
-  dateValue,
-  timeValue,
-  handleDateChange,
-  handleTimeChange,
-  showTime,
-  disablePastDates,
-}) => {
-  const { t } = useTranslation();
-
+const CustomDatePicker: React.FC<ICustomDatePicker> = ({ label, dateValue, handleDateChange, disablePastDates }) => {
   const todayDate = new Date().toISOString().slice(0, 10);
 
   return (
@@ -56,21 +41,6 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({
         min={disablePastDates ? todayDate : undefined}
         className="datepicker"
       />
-      {showTime && (
-        <>
-          <span>{t("at")}</span>
-          <Select
-            className="timepicker"
-            value={timeValue || 0}
-            placeholder="Select Time"
-            onChange={handleTimeChange}
-            options={[...Array(24).keys()].map((hr) => ({
-              value: hr,
-              label: `${hr > 9 ? "" : "0"}${hr}:00`,
-            }))}
-          />
-        </>
-      )}
     </div>
   );
 };
