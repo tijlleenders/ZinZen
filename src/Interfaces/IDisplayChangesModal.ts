@@ -12,7 +12,6 @@ export type ITagsAllowedToDisplay =
   | "beforeTime"
   | "goalColor"
   | "language"
-  | "link"
   | "parentGoalId";
 
 export interface ITagChangesSchemaVersion {

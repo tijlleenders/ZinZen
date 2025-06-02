@@ -29,7 +29,6 @@ export interface GoalItem {
   parentGoalId: string;
   goalColor: string;
   language: string;
-  link: string | null;
   participants: IParticipant[];
   isShared: boolean;
   notificationGoalId: string;

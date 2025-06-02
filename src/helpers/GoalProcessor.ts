@@ -28,7 +28,6 @@ export const formatTagsToText = async (_goal: GoalItem) => {
     on: "",
     timeBudget: "",
     timing: "",
-    link: "",
     language: goal.language,
     goalColor: goal.goalColor,
     parentGoalId: goal.parentGoalId,
@@ -50,7 +49,6 @@ export const formatTagsToText = async (_goal: GoalItem) => {
   response.due = goal.due ? ` due ${endDate.getDate()}/${endDate.getMonth() + 1} @${endDate.getHours()}` : "";
   response.on = goal.on ? `${goal.on.join(" ")}` : "";
   response.timeBudget = JSON.stringify(goal.timeBudget);
-  response.link = goal.link ? ` ${goal.link}` : "";
 
   // if there is parentGoalId change then need to show parent's title instead of it id
   let parentGoalTitle = "root";
@@ -64,9 +62,9 @@ export const formatTagsToText = async (_goal: GoalItem) => {
 
   response.parentGoalId = parentGoalTitle;
 
-  const { title, duration, start, due, on, timeBudget, link, timing, parentGoalId } = response;
+  const { title, duration, start, due, on, timeBudget, timing, parentGoalId } = response;
   return {
-    inputText: title + duration + start + due + timing + on + timeBudget + link + parentGoalId,
+    inputText: title + duration + start + due + timing + on + timeBudget + parentGoalId,
     ...response,
   };
 };
@@ -85,7 +83,6 @@ export const createGoalObjectFromTags = (obj: object = {}) => {
     archived: "false",
     parentGoalId: "root",
     notificationGoalId: "root",
-    link: null,
     sublist: [],
     goalColor: colorPalleteList[Math.floor(Math.random() * colorPalleteList.length)],
     typeOfGoal: "myGoal",
