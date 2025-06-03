@@ -5,11 +5,11 @@ import { formatBudgetHrsToText } from "./GoalSummary.helpers";
 const useBudgetSummaryStore = (goal: GoalItem) => {
   const { t } = useTranslation();
 
-  const { perDay = null, perWeek = null } = goal.timeBudget || {};
+  const { perDay = { min: 0, max: 0 }, perWeek = { min: 0, max: 0 } } = goal.timeBudget || {};
 
-  const getPerDaySummary = () => formatBudgetHrsToText(perDay);
+  const getPerDaySummary = () => formatBudgetHrsToText(perDay?.min, perDay?.max);
 
-  const getPerWeekSummary = () => `${formatBudgetHrsToText(perWeek)} ${t("perWeek")}`;
+  const getPerWeekSummary = () => `${formatBudgetHrsToText(perWeek?.min ?? 0, perWeek?.max ?? 0)} ${t("perWeek")}`;
 
   const getOnDaysSummary = () => {
     const onLength = goal.on?.length ?? 0;

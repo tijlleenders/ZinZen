@@ -70,22 +70,10 @@ export const getDefaultFormStateForBudgetGoal = (goal: GoalItem, isEditMode: boo
 
   const timeDiff = defaultBeforeTime - defaultAfterTime;
 
-  // const perDayBudget = (goal.timeBudget?.perDay?.includes("-") ? goal.timeBudget.perDay : `${timeDiff}-${timeDiff}`)
-  //   .split("-")
-  //   .map((ele) => Number(ele));
-
   const perDayBudget = {
     min: goal.timeBudget?.perDay?.min ?? timeDiff,
     max: goal.timeBudget?.perDay?.max ?? timeDiff,
   };
-
-  // const perWeekBudget = (
-  //   goal.timeBudget?.perWeek?.includes("-")
-  //     ? goal.timeBudget.perWeek
-  //     : `${timeDiff * (goal.on?.length ?? 7)}-${timeDiff * (goal.on?.length ?? 7)}`
-  // )
-  //   .split("-")
-  //   .map((ele) => Number(ele));
 
   const perWeekBudget = {
     min: goal.timeBudget?.perWeek?.min ?? timeDiff * (goal.on?.length ?? 5),
@@ -121,18 +109,24 @@ export const getFinalTags = ({ goal, formState, parentGoal }: GetFinalTagsParams
         due:
           formState.simpleGoal.due && formState.simpleGoal.due !== ""
             ? new Date(formState.simpleGoal.due).toISOString()
-            : null,
+            : undefined,
         duration: formState.simpleGoal.duration,
         category: "Standard",
       }
     : {
         category: "Budget",
-        afterTime: formState.budgetGoal?.afterTime ?? null,
-        beforeTime: formState.budgetGoal?.beforeTime ?? null,
-        on: formState.budgetGoal?.on ? calDays.filter((ele) => formState.budgetGoal?.on.includes(ele)) : null,
+        afterTime: formState.budgetGoal?.afterTime ?? undefined,
+        beforeTime: formState.budgetGoal?.beforeTime ?? undefined,
+        on: formState.budgetGoal?.on ? calDays.filter((ele) => formState.budgetGoal?.on.includes(ele)) : undefined,
         timeBudget: {
-          perDay: formState.budgetGoal?.perDayHrs.join("-") ?? "",
-          perWeek: formState.budgetGoal?.perWeekHrs.join("-") ?? "",
+          perDay: {
+            min: formState.budgetGoal?.perDayHrs.min ?? 0,
+            max: formState.budgetGoal?.perDayHrs.max ?? 0,
+          },
+          perWeek: {
+            min: formState.budgetGoal?.perWeekHrs.min ?? 0,
+            max: formState.budgetGoal?.perWeekHrs.max ?? 0,
+          },
         },
       }),
 });

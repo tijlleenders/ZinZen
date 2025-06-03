@@ -1,19 +1,18 @@
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 
-export const formatBudgetHrsToText = (hours: string | null) => {
-  if (hours === null) {
+export const formatBudgetHrsToText = (min: number, max: number) => {
+  if (min === 0 && max === 0) {
     return "";
   }
-  const parts = hours.split("-").map(Number);
 
-  if (parts.length === 2 && parts[0] === parts[1]) {
-    const translationKey = `hourWithCount_${parts[0] <= 1 ? "one" : "other"}`;
-    return i18next.t(translationKey, { count: parts[0] });
+  if (min === max) {
+    const translationKey = `hourWithCount_${min <= 1 ? "one" : "other"}`;
+    return i18next.t(translationKey, { count: min });
   }
 
-  const translationKey = `hourWithCount_${parts[1] <= 1 ? "one" : "other"}`;
-  return `${parts[0]}-${i18next.t(translationKey, { count: parts[1] })}`;
+  const translationKey = `hourWithCount_${max <= 1 ? "one" : "other"}`;
+  return `${min}-${i18next.t(translationKey, { count: max })}`;
 };
 
 // Utility function for singular/plural formatting

@@ -41,6 +41,7 @@ import { Slider } from "antd";
 import BetweenSlider from "./BetweenSlider";
 import BudgetPerHr from "./BudgetPerHr";
 import BudgetPerWeek from "./BudgetPerWeek";
+import OnDays from "./OnDays";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -161,31 +162,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   const minWeekValue = (budgetGoal?.perDayHrs.min ?? 0) * (numberOfDays ?? 0);
   const maxWeekValue = (budgetGoal?.perDayHrs.max ?? 0) * (numberOfDays ?? 0);
 
-  const handleWeekSliderChange = (value: number[]) => {
-    let adjustedValue: number[] = value.slice();
-
-    adjustedValue[0] = Math.max(adjustedValue[0], minWeekValue);
-    adjustedValue[1] = Math.min(adjustedValue[1], maxWeekValue);
-
-    if (adjustedValue[0] > adjustedValue[1]) {
-      [adjustedValue[0], adjustedValue[1]] = [adjustedValue[1], adjustedValue[0]];
-    }
-
-    if (budgetGoal?.perDayHrs.min === budgetGoal?.perDayHrs.max) {
-      adjustedValue = [minWeekValue, maxWeekValue];
-    }
-
-    adjustedValue = adjustedValue.map((val) => Math.max(minWeekValue, Math.min(val, maxWeekValue)));
-    setFormState((prev) => ({
-      ...prev,
-      perWeekHrs: adjustedValue,
-    }));
-  };
-
-  // useEffect(() => {
-  //   handleWeekSliderChange(budgetGoal?.perWeekHrs ?? []);
-  // }, [budgetGoal?.perDayHrs, budgetGoal?.on]);
-
   const { openEditMode } = useGoalStore();
 
   const onSuggestionClick = async (selectedGoal: GoalItem) => {
@@ -199,45 +175,28 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     openEditMode(selectedGoal, newState);
     setSuggestedGoal(selectedGoal);
 
-    // const selectedPerDayBudget =
-    //   selectedGoal.beforeTime && selectedGoal.afterTime
-    //     ? (selectedGoal.timeBudget?.perDay?.includes("-")
-    //         ? selectedGoal.timeBudget.perDay
-    //         : `${selectedGoal.beforeTime - selectedGoal.afterTime}-${selectedGoal.beforeTime - selectedGoal.afterTime}`
-    //       )
-    //         .split("-")
-    //         .map((ele) => Number(ele))
-    //     : [0, 0];
-
-    // const selectedNumberOfDays = selectedGoal.on?.length ?? 7;
-    // const selectedPerWeekBudget =
-    //   selectedGoal.beforeTime && selectedGoal.afterTime
-    //     ? (selectedGoal.timeBudget?.perWeek?.includes("-")
-    //         ? selectedGoal.timeBudget.perWeek
-    //         : `${selectedPerDayBudget[0] * selectedNumberOfDays}-${selectedPerDayBudget[1] * selectedNumberOfDays}`
-    //       )
-    //         .split("-")
-    //         .map((ele) => Number(ele))
-    //     : [0, 0];
-
-    // setFormState({
-    //   goalColor: selectedGoal.goalColor,
-    //   hintOption: false,
-    //   title: selectedGoal.title,
-    //   simpleGoal: {
-    //     duration: selectedGoal.duration ?? null,
-    //     due: selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "",
-    //   },
-    //   // budgetGoal: {
-    //   //   on: selectedGoal.on || convertOnFilterToArray("weekdays"),
-    //   //   afterTime: selectedGoal.afterTime ?? 9,
-    //   //   beforeTime: selectedGoal.beforeTime ?? 18,
-    //   // //on: selectedGoal.on || convertOnFilterToArray("weekdays"),
-    //   // //afterTime: selectedGoal.afterTime ?? 9,
-    //   //beforeTime: selectedGoal.beforeTime ?? 18,
-    //   //perDayHrs: selectedPerDayBudget,
-    //   //perWeekHrs: selectedPerWeekBudget,
-    // });
+    setFormState({
+      goalColor: selectedGoal.goalColor,
+      hintOption: false,
+      title: selectedGoal.title,
+      simpleGoal: {
+        duration: selectedGoal.duration ?? undefined,
+        due: selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "",
+      },
+      budgetGoal: {
+        on: selectedGoal.on || convertOnFilterToArray("weekdays"),
+        afterTime: selectedGoal.afterTime ?? 9,
+        beforeTime: selectedGoal.beforeTime ?? 18,
+        perDayHrs: {
+          min: selectedGoal.timeBudget?.perDay?.min ?? 0,
+          max: selectedGoal.timeBudget?.perDay?.max ?? 0,
+        },
+        perWeekHrs: {
+          min: selectedGoal.timeBudget?.perWeek?.min ?? 0,
+          max: selectedGoal.timeBudget?.perWeek?.max ?? 0,
+        },
+      },
+    });
 
     const hint = await getGoalHintItem(selectedGoal.id);
     setFormState((prev) => ({
@@ -278,11 +237,11 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
 
     return () => clearTimeout(debounceTimer);
   }, [
-    formState.simpleGoal?.duration,
-    formState.budgetGoal?.afterTime,
-    formState.budgetGoal?.beforeTime,
-    formState.budgetGoal?.perDayHrs,
-    formState.budgetGoal?.perWeekHrs,
+    simpleGoal?.duration,
+    budgetGoal?.afterTime,
+    budgetGoal?.beforeTime,
+    budgetGoal?.perDayHrs,
+    budgetGoal?.perWeekHrs,
   ]);
 
   return (
@@ -354,25 +313,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                           }}
                         />
                       </div>
-                      {/* <div>
-                        <span>{budgetPerWeekSummary}</span>
-                        <Slider
-                          tooltip={{
-                            align: sliderTooltipAlignConfig,
-                          }}
-                          min={minWeekValue}
-                          max={maxWeekValue}
-                          marks={{
-                            [minWeekValue]: `${minWeekValue}`,
-                            [budgetGoal?.perWeekHrs[0]]: `${budgetGoal?.perWeekHrs[0]}`,
-                            [budgetGoal?.perWeekHrs[1]]: `${budgetGoal?.perWeekHrs[1]}`,
-                            [maxWeekValue]: `${maxWeekValue}`,
-                          }}
-                          range
-                          value={[budgetGoal?.perWeekHrs[0], budgetGoal?.perWeekHrs[1]]}
-                          onChange={(val) => handleWeekSliderChange(val)}
-                        />
-                      </div> */}
                       <BudgetPerWeek
                         budgetPerWeekSummary={budgetPerWeekSummary}
                         minWeekValue={minWeekValue}
@@ -391,27 +331,9 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                 },
               ]}
             />
-            {/* <div className="place-middle gap-8 h-100">
-              {onDays.map((d) => (
-                <span
-                  onClickCapture={() => {
-                    setFormState((prev) => ({
-                      ...prev,
-                      budgetGoal: {
-                        ...prev.budgetGoal!,
-                        on: prev.budgetGoal?.on.includes(d)
-                          ? [...prev.budgetGoal?.on.filter((ele) => ele !== d)]
-                          : [...prev.budgetGoal?.on, d],
-                      },
-                    }));
-                  }}
-                  className={`on_day ${budgetGoal?.on.includes(d) ? "selected" : ""}`}
-                  key={d}
-                >
-                  {t(d)[0]}
-                </span>
-              ))}
-            </div> */}
+            <div className="place-middle gap-8 h-100">
+              <OnDays onDays={onDays} setFormState={setFormState} budgetGoal={budgetGoal} />
+            </div>
             <div className="action-btn-container">
               <HintToggle
                 setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
