@@ -133,44 +133,30 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
     await onSave();
   };
 
-  const handleSliderChange = (value: number[], setHours: React.Dispatch<React.SetStateAction<number[]>>) => {
-    if (value[0] === 0 && value[1] === 0) {
-      setHours([0, 1]);
-    } else if (value[0] === 0 && value[1] < 1) {
-      setHours([0, 1]);
-    } else {
-      setHours(value);
-    }
-  };
-
   useEffect(() => {
     document.getElementById("title-field")?.focus();
   }, []);
 
-  // useEffect(() => {
-  //   if (!budgetGoal?.beforeTime || !budgetGoal?.afterTime) return;
+  const defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
+  const defaultBeforeTime = isEditMode ? (goal.beforeTime ?? 18) : 18;
 
-  //   const timeRange = budgetGoal.beforeTime - budgetGoal.afterTime;
-  //   const weeklyRange = timeRange * (numberOfDays ?? 0);
-  //   const updatedPerDayHrs = budgetGoal.perDayHrs.map((hour) => Math.min(Math.max(hour, timeRange), timeRange));
-  //   const updatedPerWeekHrs = budgetGoal.perWeekHrs.map((hour) => Math.min(Math.max(hour, weeklyRange), weeklyRange));
+  const timeDiff = (budgetGoal?.beforeTime ?? defaultBeforeTime) - (budgetGoal?.afterTime ?? defaultAfterTime);
+  const weeklyRange = timeDiff * (numberOfDays ?? 5);
+  const updatedPerDayHrs = {
+    min: Math.min(budgetGoal?.perDayHrs.min ?? timeDiff, timeDiff),
+    max: Math.min(budgetGoal?.perDayHrs.max ?? timeDiff, timeDiff),
+  };
+  const updatedPerWeekHrs = {
+    min: Math.min(budgetGoal?.perWeekHrs.min ?? timeDiff, weeklyRange),
+    max: Math.min(budgetGoal?.perWeekHrs.max ?? timeDiff, weeklyRange),
+  };
 
-  //   setFormState((prev) => ({
-  //     ...prev,
-  //     budgetGoal: {
-  //       ...prev.budgetGoal!,
-  //       perDayHrs: updatedPerDayHrs,
-  //       perWeekHrs: updatedPerWeekHrs,
-  //     },
-  //   }));
-  // }, [budgetGoal?.afterTime, budgetGoal?.beforeTime, numberOfDays]);
-
-  const budgetPerHrSummary = `${budgetGoal?.perDayHrs.min ?? 0} - ${budgetGoal?.perDayHrs.max ?? 0}`;
+  const budgetPerHrSummary = `${updatedPerDayHrs.min} - ${updatedPerDayHrs.max}`;
 
   const budgetPerWeekSummary =
-    budgetGoal?.perWeekHrs.min === budgetGoal?.perWeekHrs.max
-      ? `${budgetGoal?.perWeekHrs.min} hrs / week`
-      : `${budgetGoal?.perWeekHrs.min} - ${budgetGoal?.perWeekHrs.max} hrs / week`;
+    updatedPerWeekHrs.min === updatedPerWeekHrs.max
+      ? `${updatedPerWeekHrs.min} hrs / week`
+      : `${updatedPerWeekHrs.min} - ${updatedPerWeekHrs.max} hrs / week`;
 
   const minWeekValue = (budgetGoal?.perDayHrs.min ?? 0) * (numberOfDays ?? 0);
   const maxWeekValue = (budgetGoal?.perDayHrs.max ?? 0) * (numberOfDays ?? 0);
@@ -350,15 +336,22 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                       <div>
                         <BudgetPerHr
                           budgetPerHrSummary={budgetPerHrSummary}
-                          first={budgetGoal?.perDayHrs.min ?? 0}
-                          second={budgetGoal?.perDayHrs.max ?? 0}
-                          max={(budgetGoal?.beforeTime ?? 0) - (budgetGoal?.afterTime ?? 0)}
-                          onChange={(val) =>
-                            setFormState((prev) => ({
-                              ...prev,
-                              budgetGoal: { ...prev.budgetGoal!, perDayHrs: { min: val[0], max: val[1] } },
-                            }))
-                          }
+                          first={updatedPerDayHrs.min}
+                          second={updatedPerDayHrs.max}
+                          max={timeDiff}
+                          onChange={(val) => {
+                            if (val[0] === 0 && val[1] < 1) {
+                              setFormState((prev) => ({
+                                ...prev,
+                                budgetGoal: { ...prev.budgetGoal!, perDayHrs: { min: 0, max: 1 } },
+                              }));
+                            } else {
+                              setFormState((prev) => ({
+                                ...prev,
+                                budgetGoal: { ...prev.budgetGoal!, perDayHrs: { min: val[0], max: val[1] } },
+                              }));
+                            }
+                          }}
                         />
                       </div>
                       {/* <div>
@@ -384,8 +377,8 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
                         budgetPerWeekSummary={budgetPerWeekSummary}
                         minWeekValue={minWeekValue}
                         maxWeekValue={maxWeekValue}
-                        first={budgetGoal?.perWeekHrs.min ?? 0}
-                        second={budgetGoal?.perWeekHrs.max ?? 0}
+                        first={updatedPerWeekHrs.min}
+                        second={updatedPerWeekHrs.max}
                         onChange={(val) =>
                           setFormState((prev) => ({
                             ...prev,

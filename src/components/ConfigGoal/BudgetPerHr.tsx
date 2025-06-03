@@ -1,6 +1,6 @@
 import { Slider } from "antd";
 import React from "react";
-import { FormState, sliderTooltipAlignConfig } from "./ConfigGoal.helper";
+import { sliderTooltipAlignConfig } from "./ConfigGoal.helper";
 
 interface BudgetPerHrProps {
   budgetPerHrSummary: string;
