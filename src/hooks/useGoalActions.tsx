@@ -58,7 +58,7 @@ const useGoalActions = () => {
     });
   };
 
-  const updateGoal = async (goal: GoalItem, updatedHintOption: boolean) => {
+  const updateGoal = async (goal: GoalItem, updatedHintOption: boolean, goalToCompare: GoalItem) => {
     const currentHintItem = await getGoalHintItem(goal.id);
 
     const titleContainsCode = /```/.test(goal.title);
@@ -75,8 +75,9 @@ const useGoalActions = () => {
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
     } else if (
-      activeGoal &&
-      (hashObject({ ...activeGoal }) !== hashObject(goal) || currentHintItem?.hintOptionEnabled !== updatedHintOption)
+      goalToCompare &&
+      (hashObject({ ...goalToCompare }) !== hashObject(goal) ||
+        currentHintItem?.hintOptionEnabled !== updatedHintOption)
     ) {
       // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], updatedHintOption);

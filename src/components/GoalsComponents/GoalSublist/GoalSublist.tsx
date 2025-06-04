@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { displayChangesModal, displayGoalId, displaySuggestionsModal } from "@src/store/GoalsState";
-import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
+import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { lastAction } from "@src/store";
 import { getGoalHintItem } from "@src/api/HintsAPI";
@@ -16,7 +16,6 @@ import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useGetSharedWMGoalsArchived } from "@src/hooks/api/SharedWMGoals/useGetSharedWMGoalsArchived";
 import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
-import { TGoalConfigMode } from "@src/types";
 import { useParams } from "react-router-dom";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import GoalsList from "../GoalsList";
@@ -26,7 +25,7 @@ import ConfigGoal from "../../ConfigGoal/ConfigGoal";
 
 export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
   const { parentId, partnerId } = useParams();
-  const [showConfig, setShowConfig] = useState(true);
+  const [showConfig, setShowConfig] = useState(false);
   const { data: parentGoal } = useGetGoalById(parentId || "");
   const [goalHints, setGoalHints] = useState<GoalItem[]>([]);
   const { t } = useTranslation();

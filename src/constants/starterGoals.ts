@@ -10,8 +10,8 @@ export const addStarterGoal = async (
   goalTitle: string,
   goalTags: {
     id?: string | null;
-    afterTime: number | null;
-    beforeTime: number | null;
+    afterTime: number | undefined;
+    beforeTime: number | undefined;
     sublist?: string[];
     parentGoalId?: string;
     category: TGoalCategory;
@@ -33,9 +33,9 @@ starterGoals.push(
   {
     title: "Sleep 😴🌙",
     goalTags: {
+      beforeTime: 7,
       afterTime: 22,
       id: otherGoalIds[0],
-      beforeTime: 7,
       timeBudget: {
         perDay: {
           min: 6,
@@ -135,8 +135,6 @@ starterGoals.push(
     title: "Daily habits 🔁",
     goalTags: {
       id: dailyHabitsId,
-      afterTime: null,
-      beforeTime: null,
       sublist: [otherGoalIds[5], otherGoalIds[6], otherGoalIds[7], otherGoalIds[8], otherGoalIds[9]],
       category: "Cluster",
     },

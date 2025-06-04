@@ -3,7 +3,7 @@ import { SliderMarks } from "antd/es/slider";
 import React from "react";
 import { sliderTooltipAlignConfig } from "./ConfigGoal.helper";
 
-const BetweenSlider = ({ value, onChange }: { value: number[]; onChange: (value: number[]) => void }) => {
+const BetweenSlider = ({ value: sliderValue, onChange }: { value: number[]; onChange: (value: number[]) => void }) => {
   const marks: SliderMarks = { 0: "0", 24: "24" };
 
   return (
@@ -17,11 +17,11 @@ const BetweenSlider = ({ value, onChange }: { value: number[]; onChange: (value:
         max={24}
         marks={{
           ...marks,
-          [value[0]]: `${value[0]}`,
-          [value[1]]: `${value[1]}`,
+          [sliderValue[0]]: `${sliderValue[0]}`,
+          [sliderValue[1]]: `${sliderValue[1]}`,
         }}
         range
-        value={value}
+        value={sliderValue}
         onChange={onChange}
       />
     </>

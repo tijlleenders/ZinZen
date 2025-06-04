@@ -6,21 +6,22 @@ import "./GoalItemSummary.scss";
 
 const GoalItemSummary = ({
   goal,
-  showAddGoal = false,
+  showAddGoal,
   setShowAddGoal,
 }: {
   goal: GoalItem;
-  showAddGoal: boolean;
-  setShowAddGoal: (show: boolean) => void;
+  showAddGoal?: boolean;
+  setShowAddGoal?: (show: boolean) => void;
 }) => {
   const isBudget = goal.timeBudget !== undefined;
 
-  const handleShowConfig = () => {
-    setShowAddGoal(!showAddGoal);
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowAddGoal?.(!showAddGoal);
   };
 
   return (
-    <button type="button" className="goal-item-summary-wrapper" onClick={handleShowConfig}>
+    <button type="button" className="goal-item-summary-wrapper" onClickCapture={handleClick}>
       {isBudget ? <BudgetSummary goal={goal} /> : <GoalSummary goal={goal} />}
     </button>
   );

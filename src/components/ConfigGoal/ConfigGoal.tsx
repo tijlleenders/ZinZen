@@ -1,23 +1,21 @@
 /* eslint-disable complexity */
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import useGoalStore from "@src/hooks/useGoalStore";
-import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { ILocationState, ScheduleStatus } from "@src/Interfaces";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
+import { useGoalSave } from "@src/hooks/useGoalSave";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
-import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
 import useScheduler from "@src/hooks/useScheduler";
-import { useAddGoal } from "@src/hooks/api/Goals/mutations/useAddGoal";
+import ZAccordion from "@src/common/Accordion";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
-import { useEditGoal } from "@src/hooks/api/Goals/mutations/useEditGoal";
 import { colorPalleteList } from "../../utils";
 
 import "./ConfigGoal.scss";
@@ -36,8 +34,6 @@ import {
 import ConfigGoalHeader from "./components/ConfigGoalHeader";
 import SimpleGoal from "./components/SimpleGoal";
 import HintToggle from "./components/HintToggle";
-import ZAccordion from "@src/common/Accordion";
-import { Slider } from "antd";
 import BetweenSlider from "./BetweenSlider";
 import BudgetPerHr from "./BudgetPerHr";
 import BudgetPerWeek from "./BudgetPerWeek";
@@ -49,22 +45,22 @@ interface ConfigGoalContentProps {
   type: TGoalCategory;
   mode: TGoalConfigMode;
   goal: GoalItem;
-  onSave: () => Promise<void>;
-  onCancel?: () => void;
+  onSave: (editMode: boolean, formState: FormState) => Promise<void>;
+  formState: FormState;
+  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
 }
 
-const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalContentProps) => {
-  const [suggestedGoal, setSuggestedGoal] = useRecoilState(suggestedGoalState);
+const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState }: ConfigGoalContentProps) => {
+  const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
   const action = isEditMode ? "Update" : "Create";
-  const { addGoalMutation } = useAddGoal();
-  const { editGoalMutation } = useEditGoal();
+
+  console.log("formState", formState);
 
   const { parentId } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId ?? "");
 
   const location = useLocation();
-  const navigate = useNavigate();
 
   const { checkGoalSchedule } = useScheduler();
   const [scheduleStatus, setScheduleStatus] = useState<ScheduleStatus>(null);
@@ -74,21 +70,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
 
   const isKeyboardOpen = useVirtualKeyboardOpen();
   useOnScreenKeyboardScrollFix();
-
-  const [formState, setFormState] = useState<FormState>({
-    goalColor: getDefaultColor(isEditMode, goal, parentGoal, colorPalleteList),
-    hintOption: false,
-    title: t(goal.title),
-    ...(type === "Standard"
-      ? {
-          simpleGoal: getDefaultFormStateForSimpleGoal(goal),
-          budgetGoal: undefined,
-        }
-      : {
-          simpleGoal: undefined,
-          budgetGoal: getDefaultFormStateForBudgetGoal(goal, isEditMode),
-        }),
-  });
 
   useEffect(() => {
     getGoalHintItem(goal.id).then((hintItem) => {
@@ -102,37 +83,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   const { simpleGoal, budgetGoal } = formState;
 
   const numberOfDays = budgetGoal?.on.length;
-
-  const goalCategoryType = simpleGoal?.duration !== null ? "Standard" : "Cluster";
-  const category = type === "Budget" ? "Budget" : goalCategoryType;
-
-  const handleSave = async () => {
-    console.log("formState", formState);
-    if (formState.title.trim().length) {
-      if (isEditMode) {
-        editGoalMutation({
-          goal: getFinalTags({ goal, formState, parentGoal }),
-          hintOption: formState.hintOption,
-        });
-      } else {
-        addGoalMutation({
-          newGoal: getFinalTags({ goal, formState, parentGoal }),
-          hintOption: formState.hintOption,
-          parentGoal,
-        });
-      }
-    }
-    if (suggestedGoal) {
-      await unarchiveUserGoal(suggestedGoal);
-      navigate(`/goals/${suggestedGoal.parentGoalId === "root" ? "" : suggestedGoal.parentGoalId}`, {
-        state: { ...location.state },
-        replace: true,
-      });
-      setSuggestedGoal(null);
-      return;
-    }
-    await onSave();
-  };
 
   useEffect(() => {
     document.getElementById("title-field")?.focus();
@@ -221,10 +171,11 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
   const checkSchedule = async () => {
     setScheduleStatus("pending");
     try {
-      const result = await checkGoalSchedule(getFinalTags({ goal, formState, parentGoal }));
+      const result = await checkGoalSchedule(getFinalTags({ goal, formState, type, parentGoal }));
       const status = await checkSchedulingStatus(result || undefined, goal.id);
       setScheduleStatus(status);
     } catch (error) {
+      console.error("Failed to check schedule:", error);
       setScheduleStatus(null);
     }
   };
@@ -249,7 +200,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, onCancel }: ConfigGoalCon
       className="configGoal"
       onSubmit={async (e) => {
         e.preventDefault();
-        await handleSave();
+        await onSave(isEditMode, formState);
       }}
     >
       <ConfigGoalHeader formState={formState} setFormState={setFormState} onSuggestionClick={onSuggestionClick} />
@@ -358,30 +309,57 @@ interface ConfigGoalProps {
   mode: TGoalConfigMode;
   goal: GoalItem;
   useModal?: boolean;
-  onSave?: () => Promise<void>;
-  onCancel?: () => Promise<void>;
 }
 
-const ConfigGoal = ({ type, goal, mode, useModal = true, onSave, onCancel }: ConfigGoalProps) => {
+const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
   const isKeyboardOpen = useVirtualKeyboardOpen();
-  const [title, setTitle] = useState<string>("");
+  const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
+  const isEditMode = mode === "edit";
+  const { t } = useTranslation();
 
-  const handleSave = async () => {
-    if (onSave) {
-      await onSave();
+  const { parentId = "", activeGoalId = "" } = useParams();
+  const { data: parentGoal } = useGetGoalById(parentId ?? "");
+
+  const [formState, setFormState] = useState<FormState>({
+    goalColor: getDefaultColor(isEditMode, goal, parentGoal, colorPalleteList),
+    hintOption: false,
+    title: t(goal.title),
+    ...(type === "Standard" || type === "Cluster"
+      ? {
+          simpleGoal: getDefaultFormStateForSimpleGoal(goal),
+          budgetGoal: undefined,
+        }
+      : {
+          simpleGoal: undefined,
+          budgetGoal: getDefaultFormStateForBudgetGoal(goal, isEditMode),
+        }),
+  });
+
+  const { handleSave } = useGoalSave({
+    goal,
+    parentGoal,
+    type,
+    activeGoalId: useModal ? activeGoalId : parentId,
+  });
+
+  const handleCancel = async () => {
+    if (!formState.title.trim().length) {
+      window.history.back();
+      setSuggestedGoal(null);
     } else {
+      await handleSave(isEditMode, formState);
       window.history.back();
     }
   };
 
-  const handleCancel = async () => {
-    if (onCancel) {
-      await onCancel();
-    } else if (!title.trim().length) {
-      window.history.back();
-    } else {
-      await handleSave();
-    }
+  const handleModalSave = async (editMode: boolean, form: FormState) => {
+    await handleSave(editMode, form);
+    window.history.back();
+    console.log("called modal save");
+  };
+
+  const handleInlineSave = async (editMode: boolean, form: FormState) => {
+    await handleSave(editMode, form);
   };
 
   if (useModal) {
@@ -396,12 +374,28 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onSave, onCancel }: Con
         width={360}
         onCancel={handleCancel}
       >
-        <ConfigGoalContent type={type} mode={mode} goal={goal} onSave={handleSave} onCancel={handleCancel} />
+        <ConfigGoalContent
+          type={type}
+          mode={mode}
+          goal={goal}
+          onSave={handleModalSave}
+          formState={formState}
+          setFormState={setFormState}
+        />
       </ZModal>
     );
   }
 
-  return <ConfigGoalContent type={type} mode={mode} goal={goal} onSave={handleSave} onCancel={handleCancel} />;
+  return (
+    <ConfigGoalContent
+      type={type}
+      mode={mode}
+      goal={goal}
+      onSave={handleInlineSave}
+      formState={formState}
+      setFormState={setFormState}
+    />
+  );
 };
 
 export default ConfigGoal;

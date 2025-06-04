@@ -1,10 +1,11 @@
 import React from "react";
 import { t } from "i18next";
+import { FormState } from "./ConfigGoal.helper";
 
 interface OnDaysProps {
   onDays: string[];
-  setFormState: (state: any) => void;
-  budgetGoal: any;
+  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  budgetGoal: FormState["budgetGoal"];
 }
 
 const OnDays = ({ onDays, setFormState, budgetGoal }: OnDaysProps) => {

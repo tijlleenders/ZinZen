@@ -1,5 +1,5 @@
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
-import { GoalItem } from "@src/models/GoalItem";
+import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import { getRandomColor, getSelectedLanguage } from "@src/utils";
 
 export interface FormState {
@@ -92,44 +92,50 @@ export const getDefaultFormStateForBudgetGoal = (goal: GoalItem, isEditMode: boo
 interface GetFinalTagsParams {
   goal: GoalItem;
   formState: FormState;
-  parentGoal: GoalItem | undefined;
+  parentGoal?: GoalItem;
+  type: TGoalCategory;
 }
 
-export const getFinalTags = ({ goal, formState, parentGoal }: GetFinalTagsParams): GoalItem => ({
-  ...goal,
-  title: formState.title
-    .split(" ")
-    .filter((ele: string) => ele !== "")
-    .join(" "),
-  goalColor: formState.goalColor,
-  parentGoalId: parentGoal?.id ?? "root",
-  language: getSelectedLanguage(),
-  ...(formState.simpleGoal
-    ? {
-        due:
-          formState.simpleGoal.due && formState.simpleGoal.due !== ""
-            ? new Date(formState.simpleGoal.due).toISOString()
-            : undefined,
-        duration: formState.simpleGoal.duration,
-        category: "Standard",
-      }
-    : {
-        category: "Budget",
-        afterTime: formState.budgetGoal?.afterTime ?? undefined,
-        beforeTime: formState.budgetGoal?.beforeTime ?? undefined,
-        on: formState.budgetGoal?.on ? calDays.filter((ele) => formState.budgetGoal?.on.includes(ele)) : undefined,
-        timeBudget: {
-          perDay: {
-            min: formState.budgetGoal?.perDayHrs.min ?? 0,
-            max: formState.budgetGoal?.perDayHrs.max ?? 0,
+export const getFinalTags = ({ goal, formState, type, parentGoal }: GetFinalTagsParams): GoalItem => {
+  const goalCategoryType = formState.simpleGoal?.duration !== "" ? "Standard" : "Cluster";
+  const category = type === "Budget" ? "Budget" : goalCategoryType;
+
+  return {
+    ...goal,
+    title: formState.title
+      .split(" ")
+      .filter((ele: string) => ele !== "")
+      .join(" "),
+    goalColor: formState.goalColor,
+    parentGoalId: parentGoal?.id ?? "root",
+    language: getSelectedLanguage(),
+    ...(formState.simpleGoal
+      ? {
+          due:
+            formState.simpleGoal.due && formState.simpleGoal.due !== ""
+              ? new Date(formState.simpleGoal.due).toISOString()
+              : undefined,
+          duration: formState.simpleGoal.duration,
+          category,
+        }
+      : {
+          category,
+          afterTime: formState.budgetGoal?.afterTime ?? undefined,
+          beforeTime: formState.budgetGoal?.beforeTime ?? undefined,
+          on: formState.budgetGoal?.on ? calDays.filter((ele) => formState.budgetGoal?.on.includes(ele)) : undefined,
+          timeBudget: {
+            perDay: {
+              min: formState.budgetGoal?.perDayHrs.min ?? 0,
+              max: formState.budgetGoal?.perDayHrs.max ?? 0,
+            },
+            perWeek: {
+              min: formState.budgetGoal?.perWeekHrs.min ?? 0,
+              max: formState.budgetGoal?.perWeekHrs.max ?? 0,
+            },
           },
-          perWeek: {
-            min: formState.budgetGoal?.perWeekHrs.min ?? 0,
-            max: formState.budgetGoal?.perWeekHrs.max ?? 0,
-          },
-        },
-      }),
-});
+        }),
+  };
+};
 
 export const checkSchedulingStatus = async (schedulerOutput: ISchedulerOutput | undefined, goalId: string) => {
   if (!schedulerOutput) return "pending";
