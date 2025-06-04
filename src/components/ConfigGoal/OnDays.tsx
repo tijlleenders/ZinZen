@@ -1,6 +1,7 @@
 import React from "react";
 import { t } from "i18next";
 import { FormState } from "./ConfigGoal.helper";
+import "./OnDays.scss";
 
 interface OnDaysProps {
   onDays: string[];

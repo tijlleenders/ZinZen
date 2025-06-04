@@ -1,0 +1,17 @@
+.on_day {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  cursor: pointer;
+  color: #000;
+  border-radius: 50%;
+  align-items: center;
+  place-content: center;
+  background: var(--not-active);
+
+  &.selected {
+    border: none;
+    color: #fff;
+    background: var(--selection-color);
+  }
+}
