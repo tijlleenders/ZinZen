@@ -14,6 +14,7 @@ import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { useGoalSave } from "@src/hooks/useGoalSave";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import useScheduler from "@src/hooks/useScheduler";
+import DefaultButton from "@src/common/DefaultButton";
 import ZAccordion from "@src/common/Accordion";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { colorPalleteList } from "../../utils";
@@ -305,9 +306,12 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
                 setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
                 defaultValue={formState.hintOption}
               />
-              <button type="submit" className="action-btn place-middle gap-16">
+              {/* <button type="submit" className="action-btn place-middle gap-16">
                 {t(`${action} Budget`)}
-              </button>
+              </button> */}
+              <DefaultButton className="apply-changes-btn" type="submit">
+                {t(`${action} Budget`)}
+              </DefaultButton>
             </div>
             {scheduleStatus && (
               <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
@@ -370,7 +374,6 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
   const handleModalSave = async (editMode: boolean, form: FormState) => {
     await handleSave(editMode, form);
     window.history.back();
-    console.log("called modal save");
   };
 
   const handleInlineSave = async (editMode: boolean, form: FormState) => {

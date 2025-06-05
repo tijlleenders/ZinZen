@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { ScheduleStatus } from "@src/Interfaces";
 import { useSearchParams } from "react-router-dom";
+import DefaultButton from "@src/common/DefaultButton";
 import HintToggle from "./HintToggle";
 import { FormState } from "../ConfigGoal.helper";
 import Duration from "../Duration";
@@ -27,9 +28,9 @@ const SimpleGoal: React.FC<SimpleGoalProps> = ({ formState, setFormState, schedu
           setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
           defaultValue={formState.hintOption}
         />
-        <button type="submit" className="action-btn place-middle gap-16">
+        <DefaultButton className="apply-changes-btn" type="submit">
           {t(`${action} Goal`)}
-        </button>
+        </DefaultButton>
       </div>
       <div className="place-middle justify-fs gap-16">
         <Duration
