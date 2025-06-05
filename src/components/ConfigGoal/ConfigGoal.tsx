@@ -38,6 +38,7 @@ import BetweenSlider from "./BetweenSlider";
 import BudgetPerHr from "./BudgetPerHr";
 import BudgetPerWeek from "./BudgetPerWeek";
 import OnDays from "./OnDays";
+import ColorPicker from "./components/ColorPicker";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -48,9 +49,10 @@ interface ConfigGoalContentProps {
   onSave: (editMode: boolean, formState: FormState) => Promise<void>;
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  isModal?: boolean;
 }
 
-const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState }: ConfigGoalContentProps) => {
+const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, isModal }: ConfigGoalContentProps) => {
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
   const action = isEditMode ? "Update" : "Create";
@@ -203,7 +205,20 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState }
         await onSave(isEditMode, formState);
       }}
     >
-      <ConfigGoalHeader formState={formState} setFormState={setFormState} onSuggestionClick={onSuggestionClick} />
+      {!isModal && (
+        <ColorPicker
+          color={formState.goalColor}
+          setColor={(color: string) => setFormState((prev) => ({ ...prev, goalColor: color }))}
+          className="inline-position"
+        />
+      )}
+
+      <ConfigGoalHeader
+        formState={formState}
+        setFormState={setFormState}
+        onSuggestionClick={onSuggestionClick}
+        isModal={isModal}
+      />
       <div
         className="d-flex f-col gap-20"
         style={{
@@ -381,6 +396,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
           onSave={handleModalSave}
           formState={formState}
           setFormState={setFormState}
+          isModal
         />
       </ZModal>
     );

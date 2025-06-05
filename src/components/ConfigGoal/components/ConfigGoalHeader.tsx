@@ -10,9 +10,10 @@ interface ConfigGoalHeaderProps {
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   onSuggestionClick: (selectedGoal: GoalItem) => Promise<void>;
+  isModal?: boolean;
 }
 
-const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({ formState, setFormState, onSuggestionClick }) => {
+const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({ formState, setFormState, onSuggestionClick, isModal }) => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
@@ -21,10 +22,13 @@ const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({ formState, setFormS
 
   return (
     <div style={{ textAlign: "left" }} className="header-title">
-      <ColorPicker
-        color={formState.goalColor}
-        setColor={(color: string) => setFormState((prev) => ({ ...prev, goalColor: color }))}
-      />
+      {isModal && (
+        <ColorPicker
+          color={formState.goalColor}
+          setColor={(color: string) => setFormState((prev) => ({ ...prev, goalColor: color }))}
+          className="modal-position"
+        />
+      )}
       <ArchivedAutoComplete
         placeholder={titlePlaceholder}
         inputValue={formState.title}

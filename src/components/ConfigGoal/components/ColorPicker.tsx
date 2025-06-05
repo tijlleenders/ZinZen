@@ -5,9 +5,10 @@ import "./ColorPicker.scss";
 export interface ColorPaletteProps {
   color: string;
   setColor: (color: string) => void;
+  className?: string;
 }
 
-const ColorPicker: React.FC<ColorPaletteProps> = ({ color, setColor }) => {
+const ColorPicker: React.FC<ColorPaletteProps> = ({ color, setColor, className }) => {
   const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
 
   const handleColorSelect = (index: number) => {
@@ -33,7 +34,7 @@ const ColorPicker: React.FC<ColorPaletteProps> = ({ color, setColor }) => {
   }, [isColorPaletteOpen, color]);
 
   return (
-    <div className="color-picker-container">
+    <div className={`color-picker-container ${className}`}>
       <button
         type="button"
         className="goal-color"

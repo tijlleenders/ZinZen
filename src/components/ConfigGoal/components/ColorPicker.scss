@@ -1,7 +1,18 @@
 .color-picker-container {
-  position: absolute;
-  top: -19px;
-  left: 45%;
+  &.modal-position {
+    position: absolute;
+    top: -20px;
+    left: 45%;
+  }
+
+  &.inline-position {
+    display: flex;
+    margin-bottom: 10px;
+
+    button {
+      margin: 0 auto;
+    }
+  }
 
   .goal-color {
     width: 40px;
