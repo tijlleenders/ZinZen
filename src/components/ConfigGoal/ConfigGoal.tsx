@@ -58,8 +58,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
   const isEditMode = mode === "edit";
   const action = isEditMode ? "Update" : "Create";
 
-  console.log("formState", formState);
-
   const { parentId } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId ?? "");
 
@@ -71,7 +69,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
 
   const { t } = useTranslation();
 
-  const isKeyboardOpen = useVirtualKeyboardOpen();
   useOnScreenKeyboardScrollFix();
 
   useEffect(() => {

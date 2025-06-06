@@ -1,4 +1,6 @@
 .color-picker-container {
+  position: relative;
+
   &.modal-position {
     position: absolute;
     top: -20px;
@@ -22,10 +24,12 @@
   .color-palette-popup {
     width: 145px;
     overflow-x: auto;
-    position: relative;
-    top: 5px;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
     white-space: nowrap;
-    z-index: 1;
+    z-index: 1000;
     display: flex;
     padding: 5px;
     border-radius: 10px;
