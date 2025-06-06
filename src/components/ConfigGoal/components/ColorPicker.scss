@@ -6,12 +6,9 @@
   }
 
   &.inline-position {
-    display: flex;
+    text-align: center;
+    display: block;
     margin-bottom: 10px;
-
-    button {
-      margin: 0 auto;
-    }
   }
 
   .goal-color {
@@ -19,14 +16,15 @@
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
+    border: none;
   }
 
   .color-palette-popup {
     width: 145px;
     overflow-x: auto;
     position: relative;
-    white-space: nowrap;
     top: 5px;
+    white-space: nowrap;
     z-index: 1;
     display: flex;
     padding: 5px;

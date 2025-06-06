@@ -21,15 +21,18 @@
       border: 2px solid var(--Linear, var(--icon-grad-1)) !important ;
     }
   }
-}
-.popupModal-dark {
+
+  /* Slider */
+  .ant-slider-mark-text {
+    color: inherit;
+    font-weight: 400;
+  }
+
   .ant-slider-rail {
     background: var(--not-active);
   }
-  .ant-slider-mark-text {
-    color: inherit !important;
-  }
 }
+
 // .App-dark,
 // .popupModal-dark {
 //   .checkbox {

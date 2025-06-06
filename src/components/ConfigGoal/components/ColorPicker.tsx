@@ -44,22 +44,24 @@ const ColorPicker: React.FC<ColorPaletteProps> = ({ color, setColor, className }
         aria-label="Color Picker"
       />
 
-      {isColorPaletteOpen && (
-        <div className="color-palette-popup">
-          {colorPalleteList.map((colorItem, index) => (
-            <button
-              id={`color-${index}`}
-              key={`color-${colorItem}`}
-              className="color-btn"
-              style={{ backgroundColor: colorItem }}
-              onClick={() => handleColorSelect(index)}
-              onKeyDown={(e) => handleKeyDown(e, () => handleColorSelect(index))}
-              type="button"
-              aria-label={`Color ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
+      <div>
+        {isColorPaletteOpen && (
+          <div className="color-palette-popup">
+            {colorPalleteList.map((colorItem, index) => (
+              <button
+                id={`color-${index}`}
+                key={`color-${colorItem}`}
+                className="color-btn"
+                style={{ backgroundColor: colorItem }}
+                onClick={() => handleColorSelect(index)}
+                onKeyDown={(e) => handleKeyDown(e, () => handleColorSelect(index))}
+                type="button"
+                aria-label={`Color ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
