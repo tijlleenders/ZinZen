@@ -35,6 +35,7 @@ const CustomDatePicker: React.FC<ICustomDatePicker> = ({ label, dateValue, handl
         type="date"
         style={{
           boxShadow: "var(--shadow)",
+          backgroundColor: "var(--secondary-background)",
         }}
         value={dateValue}
         onChange={(e) => handleDateChange(e.target.value)}
