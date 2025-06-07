@@ -102,7 +102,10 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
     max: Math.min(budgetGoal?.perWeekHrs.max ?? timeDiff, weeklyRange),
   };
 
-  const budgetPerHrSummary = `${updatedPerDayHrs.min} - ${updatedPerDayHrs.max}`;
+  const budgetPerHrSummary =
+    updatedPerDayHrs.min === updatedPerDayHrs.max
+      ? `${updatedPerDayHrs.min} hrs / day`
+      : `${updatedPerDayHrs.min} - ${updatedPerDayHrs.max} hrs / day`;
 
   const budgetPerWeekSummary =
     updatedPerWeekHrs.min === updatedPerWeekHrs.max
@@ -253,7 +256,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
               onChange={() => setIsBudgetAccordianOpen(!isBudgetAccordianOpen)}
               panels={[
                 {
-                  header: isBudgetAccordianOpen ? "Budget" : `${budgetPerHrSummary} hr / day, ${budgetPerWeekSummary}`,
+                  header: isBudgetAccordianOpen ? "Budget" : `${budgetPerHrSummary}, ${budgetPerWeekSummary}`,
                   body: (
                     <div>
                       <div>

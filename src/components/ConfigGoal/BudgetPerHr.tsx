@@ -13,7 +13,7 @@ interface BudgetPerHrProps {
 const BudgetPerHr = ({ budgetPerHrSummary, first, second, max, onChange }: BudgetPerHrProps) => {
   return (
     <>
-      <span>{budgetPerHrSummary} hrs / day</span>
+      <span>{budgetPerHrSummary}</span>
       <Slider
         tooltip={{
           align: sliderTooltipAlignConfig,
