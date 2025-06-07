@@ -18,7 +18,7 @@ const Participants = () => {
   };
 
   return (
-    <ZModal type="configModal" open onCancel={() => window.history.back()}>
+    <ZModal type="configGoal" open onCancel={() => window.history.back()}>
       <div style={{ textAlign: "left", padding: 20 }} className="header-title fw-600">
         Following
       </div>

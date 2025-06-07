@@ -4,7 +4,6 @@ import { typeOfChange } from "@src/models/InboxItem";
 export type ITagsAllowedToDisplay =
   | "title"
   | "duration"
-  | "habit"
   | "on"
   | "timeBudget"
   | "start"
@@ -13,7 +12,6 @@ export type ITagsAllowedToDisplay =
   | "beforeTime"
   | "goalColor"
   | "language"
-  | "link"
   | "parentGoalId";
 
 export interface ITagChangesSchemaVersion {

@@ -1,24 +1,35 @@
-/* Color Picker */
-
 .color-picker-container {
-  position: absolute;
-  top: -19px;
-  left: 45%;
+  position: relative;
+
+  &.modal-position {
+    position: absolute;
+    top: -20px;
+    left: 45%;
+  }
+
+  &.inline-position {
+    text-align: center;
+    display: block;
+    margin-bottom: 10px;
+  }
 
   .goal-color {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
+    border: none;
   }
 
   .color-palette-popup {
     width: 145px;
     overflow-x: auto;
-    position: relative;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
     white-space: nowrap;
-    top: 5px;
-    z-index: 1;
+    z-index: 1000;
     display: flex;
     padding: 5px;
     border-radius: 10px;

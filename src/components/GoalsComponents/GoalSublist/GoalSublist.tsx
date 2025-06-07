@@ -10,7 +10,7 @@ import { AvailableGoalHintProvider } from "@src/contexts/availableGoalHint-conte
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import DeletedGoals from "@pages/GoalsPage/components/DeletedGoals";
 import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
-import GoalItemSummary from "@src/common/GoalItemSummary/GoalItemSummary";
+import GoalItemSummary from "@components/GoalItemSummary/GoalItemSummary";
 import AvailableGoalHints from "@pages/GoalsPage/components/AvailableGoalHints";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useGetSharedWMGoalsArchived } from "@src/hooks/api/SharedWMGoals/useGetSharedWMGoalsArchived";
@@ -21,9 +21,11 @@ import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGet
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
+import ConfigGoal from "../../ConfigGoal/ConfigGoal";
 
 export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
   const { parentId, partnerId } = useParams();
+  const [showConfig, setShowConfig] = useState(false);
   const { data: parentGoal } = useGetGoalById(parentId || "");
   const [goalHints, setGoalHints] = useState<GoalItem[]>([]);
   const { t } = useTranslation();
@@ -58,12 +60,13 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
       <div className="sublist-content-container">
         <div className="sublist-content">
           <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
-          {parentGoal && (
-            <span className="goal-item-summary-wrapper">
-              <GoalItemSummary goal={parentGoal} />
-            </span>
-          )}
+          {parentGoal && <GoalItemSummary goal={parentGoal} showAddGoal={showConfig} setShowAddGoal={setShowConfig} />}
           <div className="sublist-list-container">
+            {showConfig && parentGoal && (
+              <div className="config-goal-container">
+                <ConfigGoal goal={parentGoal} type={parentGoal?.category} mode="edit" useModal={false} />
+              </div>
+            )}
             <GoalsList goals={goals} />
             <AvailableGoalHintProvider goalHints={goalHints}>
               <AvailableGoalHints goals={goalHints} />

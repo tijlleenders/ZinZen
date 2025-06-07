@@ -10,7 +10,7 @@ const classifyChildrenGoalItems = (childrenGoals: GoalItem[]) => {
 
   childrenGoals.forEach((childGoal) => {
     if (childGoal) {
-      if (childGoal.timeBudget && childGoal.timeBudget.perDay !== null) {
+      if (childGoal?.timeBudget?.perDay !== null) {
         budgetsCount += 1;
       } else {
         goalsCount += 1;

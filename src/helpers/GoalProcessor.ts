@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { v4 as uuidv4 } from "uuid";
 import { getGoal } from "@src/api/GoalsAPI";
-import { checkOnArrayEquality, colorPalleteList } from "@src/utils";
+import { checkOnArrayEquality, colorPalleteList, getRandomColor } from "@src/utils";
 import { GoalItem } from "@src/models/GoalItem";
 import { getInboxItem } from "@src/api/InboxAPI";
 import { IChangesInGoal, InboxItem, typeOfChange, typeOfIntent } from "@src/models/InboxItem";
@@ -25,11 +25,9 @@ export const formatTagsToText = async (_goal: GoalItem) => {
     duration: "",
     start: "",
     due: "",
-    habit: "",
     on: "",
     timeBudget: "",
     timing: "",
-    link: "",
     language: goal.language,
     goalColor: goal.goalColor,
     parentGoalId: goal.parentGoalId,
@@ -49,10 +47,8 @@ export const formatTagsToText = async (_goal: GoalItem) => {
     ? ` start ${startDate.getDate()}/${startDate.getMonth() + 1} @${startDate.getHours()}`
     : "";
   response.due = goal.due ? ` due ${endDate.getDate()}/${endDate.getMonth() + 1} @${endDate.getHours()}` : "";
-  response.habit = goal.habit ? ` ${goal.habit}` : "";
   response.on = goal.on ? `${goal.on.join(" ")}` : "";
   response.timeBudget = JSON.stringify(goal.timeBudget);
-  response.link = goal.link ? ` ${goal.link}` : "";
 
   // if there is parentGoalId change then need to show parent's title instead of it id
   let parentGoalTitle = "root";
@@ -66,9 +62,9 @@ export const formatTagsToText = async (_goal: GoalItem) => {
 
   response.parentGoalId = parentGoalTitle;
 
-  const { title, duration, start, due, habit, on, timeBudget, link, timing, parentGoalId } = response;
+  const { title, duration, start, due, on, timeBudget, timing, parentGoalId } = response;
   return {
-    inputText: title + duration + start + due + timing + on + timeBudget + habit + link + parentGoalId,
+    inputText: title + duration + start + due + timing + on + timeBudget + parentGoalId,
     ...response,
   };
 };
@@ -78,19 +74,17 @@ export const createGoalObjectFromTags = (obj: object = {}) => {
     id: uuidv4(),
     title: "",
     language: "English",
-    habit: null,
-    on: null,
-    duration: null,
-    start: null,
-    due: null,
-    afterTime: null,
-    beforeTime: null,
+    on: undefined,
+    duration: undefined,
+    start: undefined,
+    due: undefined,
+    afterTime: undefined,
+    beforeTime: undefined,
     archived: "false",
     parentGoalId: "root",
     notificationGoalId: "root",
-    link: null,
     sublist: [],
-    goalColor: colorPalleteList[Math.floor(Math.random() * colorPalleteList.length)],
+    goalColor: getRandomColor(colorPalleteList),
     typeOfGoal: "myGoal",
     createdAt: "",
     participants: [],
@@ -192,7 +186,6 @@ export const findGoalTagChanges = async (goal1: GoalItem, goal2: GoalItem) => {
   const tags: ITagsAllowedToDisplay[] = [
     "title",
     "duration",
-    "habit",
     "on",
     "timeBudget",
     "start",
