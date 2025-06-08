@@ -274,7 +274,11 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
                             } else {
                               setFormState((prev) => ({
                                 ...prev,
-                                budgetGoal: { ...prev.budgetGoal!, perDayHrs: { min: val[0], max: val[1] } },
+                                budgetGoal: {
+                                  ...prev.budgetGoal!,
+                                  perDayHrs: { min: val[0], max: val[1] },
+                                  perWeekHrs: { min: val[0] * (numberOfDays ?? 0), max: val[1] * (numberOfDays ?? 0) },
+                                },
                               }));
                             }
                           }}
