@@ -56,16 +56,13 @@ export const transformIntoSchInputGoals = async (
       if (slotsNotallowed && slotsNotallowed.length > 0) {
         obj.notOn = [...slotsNotallowed];
       }
-      if (ele.habit) obj.repeat = "weekly";
       if (ele.timeBudget) {
         const { perDay, perWeek } = ele.timeBudget;
 
-        const [minPerDay, maxPerDay] = perDay
-          ? perDay.split("-").map((val) => (val !== "" ? Number(val) : undefined))
-          : [undefined, undefined];
-        const [minPerWeek, maxPerWeek] = perWeek
-          ? perWeek.split("-").map((val) => (val !== "" ? Number(val) : undefined))
-          : [undefined, undefined];
+        const minPerDay = perDay?.min;
+        const maxPerDay = perDay?.max;
+        const minPerWeek = perWeek?.min;
+        const maxPerWeek = perWeek?.max;
 
         const budget = {
           minPerDay,

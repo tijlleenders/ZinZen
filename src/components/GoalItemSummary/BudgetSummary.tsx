@@ -1,4 +1,4 @@
-import useBudgetSummaryStore from "@src/hooks/useBudgetSummaryStore";
+import useBudgetSummaryStore from "@components/GoalItemSummary/useBudgetSummaryStore";
 import { GoalItem } from "@src/models/GoalItem";
 import React from "react";
 

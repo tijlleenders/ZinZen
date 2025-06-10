@@ -13,12 +13,11 @@ import { searchQueryState } from "@src/store/GoalsState";
 
 import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
-import ConfigGoal from "@components/GoalsComponents/GoalConfigModal/ConfigGoal";
+import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
 import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import { useParams, useSearchParams } from "react-router-dom";
-import { ParentGoalProvider } from "@src/contexts/parentGoal-context";
 import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
 import Participants from "@components/GoalsComponents/Participants";
 
@@ -73,43 +72,41 @@ export const MyGoals = () => {
   );
 
   return (
-    <ParentGoalProvider>
-      <AppLayout title="myGoals">
-        {showOptions && <RegularGoalActions goal={activeGoal} />}
-        {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
-        {showParticipants && <Participants />}
-        {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}
+    <AppLayout title="myGoals">
+      {showOptions && <RegularGoalActions goal={activeGoal} />}
+      {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
+      {showParticipants && <Participants />}
+      {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}
 
-        {goalCategories.includes(goalType) && (
-          <ConfigGoal
-            type={goalType}
-            goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
-            mode={mode}
-          />
+      {goalCategories.includes(goalType) && (
+        <ConfigGoal
+          type={goalType}
+          goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
+          mode={mode}
+        />
+      )}
+
+      <div className="myGoals-container" ref={goalWrapperRef}>
+        {parentId === "root" ? (
+          <div className="my-goals-content">
+            <div className="d-flex f-col">
+              <GoalsList goals={filteredActiveGoals || []} />
+            </div>
+            <DeletedGoalProvider>
+              <DeletedGoals deletedGoals={deletedGoals || []} />
+            </DeletedGoalProvider>
+            <ArchivedGoals goals={archivedGoals || []} />
+          </div>
+        ) : (
+          <GoalSublist goals={filteredActiveChildrenGoals || []} />
         )}
 
-        <div className="myGoals-container" ref={goalWrapperRef}>
-          {parentId === "root" ? (
-            <div className="my-goals-content">
-              <div className="d-flex f-col">
-                <GoalsList goals={filteredActiveGoals || []} />
-              </div>
-              <DeletedGoalProvider>
-                <DeletedGoals deletedGoals={deletedGoals || []} />
-              </DeletedGoalProvider>
-              <ArchivedGoals goals={archivedGoals || []} />
-            </div>
-          ) : (
-            <GoalSublist goals={filteredActiveChildrenGoals || []} />
-          )}
-
-          <img
-            style={{ width: 180, height: zinZenLogoHeight, opacity: 0.3 }}
-            src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
-            alt="Zinzen"
-          />
-        </div>
-      </AppLayout>
-    </ParentGoalProvider>
+        <img
+          style={{ width: 180, height: zinZenLogoHeight, opacity: 0.3 }}
+          src={darkModeStatus ? ZinZenTextDark : ZinZenTextLight}
+          alt="Zinzen"
+        />
+      </div>
+    </AppLayout>
   );
 };

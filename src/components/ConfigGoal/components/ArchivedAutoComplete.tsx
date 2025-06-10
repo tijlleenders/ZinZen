@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { GoalItem } from "@src/models/GoalItem";
-import AutocompleteComponent from "@components/GoalsComponents/GoalConfigModal/components/AutoComplete";
+import AutocompleteComponent from "@components/ConfigGoal/components/AutoComplete";
 import { fetchArchivedDescendantGoalByTitle } from "@src/api/GoalsAPI";
 import { useParams } from "react-router-dom";
 

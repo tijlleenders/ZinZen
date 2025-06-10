@@ -64,7 +64,11 @@ function checkIfTagsAreChanged(goal: GoalItem, changes: GoalItem): boolean {
       const changesBudget = changesValue as GoalItem["timeBudget"];
 
       if (goalBudget && changesBudget) {
-        areDifferent = goalBudget.perDay !== changesBudget.perDay || goalBudget.perWeek !== changesBudget.perWeek;
+        areDifferent =
+          goalBudget.perDay.min !== changesBudget.perDay.min ||
+          goalBudget.perDay.max !== changesBudget.perDay.max ||
+          goalBudget.perWeek.min !== changesBudget.perWeek.min ||
+          goalBudget.perWeek.max !== changesBudget.perWeek.max;
       } else {
         areDifferent = goalBudget !== changesBudget;
       }

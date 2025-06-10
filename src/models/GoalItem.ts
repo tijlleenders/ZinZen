@@ -10,31 +10,35 @@ export interface IParticipant {
 export type TGoalCategory = "Standard" | "Budget" | "Cluster";
 
 export type TGoalTimeBudget = {
-  perDay: string;
-  perWeek: string;
+  perDay: {
+    min: number;
+    max: number;
+  };
+  perWeek: {
+    min: number;
+    max: number;
+  };
 };
 
 export interface GoalItem {
   id: string;
   title: string;
-  duration: string | null;
+  duration: string | undefined;
   sublist: string[];
-  habit: string | null;
-  on: string[] | null;
-  due: string | null;
-  start: string | null;
-  beforeTime: number | null;
-  afterTime: number | null;
+  on: string[] | undefined;
+  due: string | undefined;
+  start: string | undefined;
+  beforeTime: number | undefined;
+  afterTime: number | undefined;
   createdAt: string;
   archived: "false" | "true";
   parentGoalId: string;
   goalColor: string;
   language: string;
-  link: string | null;
   participants: IParticipant[];
   isShared: boolean;
   notificationGoalId: string;
-  timeBudget?: TGoalTimeBudget;
+  timeBudget: TGoalTimeBudget | undefined;
   typeOfGoal: "myGoal" | "shared";
   category: TGoalCategory;
   newUpdates: boolean;
