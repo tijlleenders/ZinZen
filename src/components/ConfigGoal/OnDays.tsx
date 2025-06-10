@@ -10,6 +10,8 @@ interface OnDaysProps {
 }
 
 const OnDays = ({ onDays, setFormState, budgetGoal }: OnDaysProps) => {
+  const numberOfDays = budgetGoal?.on.length;
+
   return (
     <>
       {onDays.map((d) => (
@@ -22,6 +24,10 @@ const OnDays = ({ onDays, setFormState, budgetGoal }: OnDaysProps) => {
                 on: prev.budgetGoal?.on.includes(d)
                   ? [...(prev.budgetGoal?.on?.filter((ele: string) => ele !== d) ?? [])]
                   : [...(prev.budgetGoal?.on ?? []), d],
+                perWeekHrs: {
+                  min: (prev.budgetGoal?.perWeekHrs?.min ?? 0) * (numberOfDays ?? 0),
+                  max: (prev.budgetGoal?.perWeekHrs?.max ?? 0) * (numberOfDays ?? 0),
+                },
               },
             }));
           }}
