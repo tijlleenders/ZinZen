@@ -1,8 +1,11 @@
 .goal-history {
   padding: 0 23px;
+  background: none;
+  border: none;
+  width: 100%;
 
   .breadcrumb-container {
-    margin: 24px 0px;
+    padding: 24px 0px;
   }
 
   .breadcrumb-item {
