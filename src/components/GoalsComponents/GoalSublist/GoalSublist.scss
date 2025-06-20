@@ -7,6 +7,15 @@
   min-width: 236px;
   width: 100%;
   padding-top: 10;
+
+  .clickable-container {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+  }
 }
 
 .sublist-title {

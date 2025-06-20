@@ -310,9 +310,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
                 setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
                 defaultValue={formState.hintOption}
               />
-              {/* <button type="submit" className="action-btn place-middle gap-16">
-                {t(`${action} Budget`)}
-              </button> */}
               <DefaultButton className="apply-changes-btn" type="submit">
                 {t(`${action} Budget`)}
               </DefaultButton>
