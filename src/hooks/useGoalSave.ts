@@ -13,19 +13,19 @@ interface UseGoalSaveProps {
   parentGoal: GoalItem | undefined;
   activeGoalId: string;
   type: TGoalCategory;
+  isModal: boolean;
 }
 
-export const useGoalSave = ({ goal, parentGoal, activeGoalId, type }: UseGoalSaveProps) => {
+export const useGoalSave = ({ goal, parentGoal, activeGoalId, type, isModal }: UseGoalSaveProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [suggestedGoal, setSuggestedGoal] = useRecoilState(suggestedGoalState);
   const { addGoalMutation } = useAddGoal();
-  const { editGoalMutation } = useEditGoal(activeGoalId);
+  const { editGoalMutation } = useEditGoal(activeGoalId, isModal);
 
   const handleSave = async (editMode: boolean, formState: FormState) => {
     if (formState.title.trim().length) {
       if (editMode) {
-        console.log("editMode", editMode);
         editGoalMutation({
           goal: getFinalTags({ goal, formState, type }),
           hintOption: formState.hintOption,

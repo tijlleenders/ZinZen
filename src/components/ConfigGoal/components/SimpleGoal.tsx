@@ -1,8 +1,5 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { ScheduleStatus } from "@src/Interfaces";
-import { useSearchParams } from "react-router-dom";
-import DefaultButton from "@src/common/DefaultButton";
 import HintToggle from "./HintToggle";
 import { FormState } from "../ConfigGoal.helper";
 import Duration from "../Duration";
@@ -16,11 +13,6 @@ interface SimpleGoalProps {
 }
 
 const SimpleGoal: React.FC<SimpleGoalProps> = ({ formState, setFormState, scheduleStatus, getScheduleStatusText }) => {
-  const [searchParams] = useSearchParams();
-  const action = searchParams.get("mode") === "edit" ? "Update" : "Create";
-
-  const { t } = useTranslation();
-
   return (
     <div className="d-flex f-col gap-16">
       <div className="action-btn-container">
@@ -28,9 +20,6 @@ const SimpleGoal: React.FC<SimpleGoalProps> = ({ formState, setFormState, schedu
           setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
           defaultValue={formState.hintOption}
         />
-        <DefaultButton className="apply-changes-btn" type="submit">
-          {t(`${action} Goal`)}
-        </DefaultButton>
       </div>
       <div className="place-middle justify-fs gap-16">
         <Duration

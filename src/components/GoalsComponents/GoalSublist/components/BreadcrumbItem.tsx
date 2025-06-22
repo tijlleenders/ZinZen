@@ -1,13 +1,17 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { ISubGoalHistory } from "@src/store/GoalsState";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
+import "./BreadcrumbItem.scss";
 
 interface BreadcrumbItemProps {
-  goal: ISubGoalHistory;
+  goalId: string;
 }
 
-export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({ goal }) => {
+export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({ goalId }) => {
   const { t } = useTranslation();
+  const { data: goal } = useGetGoalById(goalId);
+
+  if (!goal) return null;
 
   return (
     <span
@@ -17,7 +21,7 @@ export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({ goal }) => {
         background: `${goal.goalColor}33`,
       }}
     >
-      {t(goal.goalTitle)}
+      {t(goal.title)}
     </span>
   );
 };

@@ -14,7 +14,6 @@ import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { useGoalSave } from "@src/hooks/useGoalSave";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import useScheduler from "@src/hooks/useScheduler";
-import DefaultButton from "@src/common/DefaultButton";
 import ZAccordion from "@src/common/Accordion";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { colorPalleteList } from "../../utils";
@@ -56,7 +55,6 @@ interface ConfigGoalContentProps {
 const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, isModal }: ConfigGoalContentProps) => {
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
-  const action = isEditMode ? "Update" : "Create";
 
   const { parentId } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId ?? "");
@@ -66,8 +64,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
   const { checkGoalSchedule } = useScheduler();
   const [scheduleStatus, setScheduleStatus] = useState<ScheduleStatus>(null);
   const [isBudgetAccordianOpen, setIsBudgetAccordianOpen] = useState(false);
-
-  const { t } = useTranslation();
 
   useOnScreenKeyboardScrollFix();
 
@@ -310,9 +306,6 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
                 setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
                 defaultValue={formState.hintOption}
               />
-              <DefaultButton className="apply-changes-btn" type="submit">
-                {t(`${action} Budget`)}
-              </DefaultButton>
             </div>
             {scheduleStatus && (
               <div className={`schedule-status ${scheduleStatus}`}>{getScheduleStatusText(scheduleStatus)}</div>
@@ -360,6 +353,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
     parentGoal,
     type,
     activeGoalId: useModal ? activeGoalId : parentId,
+    isModal: useModal,
   });
 
   const handleCancel = async () => {
@@ -380,6 +374,12 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
   const handleInlineSave = async (editMode: boolean, form: FormState) => {
     await handleSave(editMode, form);
   };
+
+  useEffect(() => {
+    if (!useModal) {
+      handleSave(isEditMode, formState);
+    }
+  }, [formState]);
 
   if (useModal) {
     return (

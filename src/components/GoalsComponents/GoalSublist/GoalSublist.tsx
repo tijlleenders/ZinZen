@@ -78,7 +78,7 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
               )}
             </button>
           )}
-          <div className="sublist-list-container">
+          <div className="sublist-list-container" style={{ marginTop: !showConfig ? "10px" : "0px" }}>
             {showConfig && parentGoal && (
               <div className="config-goal-container">
                 <ConfigGoal goal={parentGoal} type={parentGoal?.category} mode="edit" useModal={false} />

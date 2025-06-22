@@ -16,7 +16,7 @@ type EditGoalMutation = {
   hintOption: boolean;
 };
 
-export const useEditGoal = (activeGoalId: string) => {
+export const useEditGoal = (activeGoalId: string, isModal = false) => {
   const queryClient = useQueryClient();
   const setShowToast = useSetRecoilState(displayToast);
   const suggestedGoal = useRecoilValue(suggestedGoalState);
@@ -38,7 +38,7 @@ export const useEditGoal = (activeGoalId: string) => {
         queryKey: [["scheduler"], ["reminders"]],
       });
 
-      if (hasGoalChanged) {
+      if (hasGoalChanged && isModal) {
         setShowToast({
           open: true,
           message: suggestedGoal ? "Goal (re)created!" : "Goal updated!",
