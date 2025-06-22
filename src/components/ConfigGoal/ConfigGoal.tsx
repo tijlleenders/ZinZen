@@ -376,9 +376,13 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
   };
 
   useEffect(() => {
-    if (!useModal) {
-      handleSave(isEditMode, formState);
-    }
+    const debounceTimer = setTimeout(() => {
+      if (!useModal) {
+        handleSave(isEditMode, formState);
+      }
+    }, 1000);
+
+    return () => clearTimeout(debounceTimer);
   }, [formState]);
 
   if (useModal) {
