@@ -29,18 +29,13 @@ const GoalHistory: React.FC = () => {
   const isPartnerGoalActive = Boolean(partnerId);
 
   const handleBreadcrumbClick = (goalId: string, index: number) => {
-    console.log("handleBreadcrumbClick", goalId, index);
-
-    // Check if this is the last goal in the breadcrumb (current page)
     const isLastGoal = index === goalsHistory.length - 1;
 
     if (isLastGoal) {
-      // Toggle config if clicking on the last breadcrumb item
       setShowConfig(!showConfig);
       return;
     }
 
-    // Otherwise, navigate to the selected goal
     const newGoalsHistory = goalsHistory.slice(0, index + 1);
     const path = isPartnerGoalActive ? `/partners/${partnerId}/goals/${goalId}` : `/goals/${goalId}`;
 
@@ -72,7 +67,7 @@ const GoalHistory: React.FC = () => {
       onClick: handleHomeClick,
     },
     ...goalsHistory.map((goal: ISubGoalHistory, index: number) => ({
-      title: <BreadcrumbItem goal={goal} />,
+      title: <BreadcrumbItem goalId={goal.goalID} />,
       onClick: () => handleBreadcrumbClick(goal.goalID, index),
     })),
   ];
