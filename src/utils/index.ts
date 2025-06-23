@@ -210,5 +210,11 @@ export const checkOnArrayEquality = (arr1: string[], arr2: string[]): boolean =>
 };
 
 export const getTimePart = (datetime: string | null, part: "hour" | "minute" = "hour"): string | null => {
-  return datetime ? datetime.split("T")[1]?.slice(part === "hour" ? 0 : 3, part === "hour" ? 2 : 5) : null;
+  if (!datetime) return null;
+  const date = new Date(datetime);
+  return part === "hour" ? date.getHours().toString() : date.getMinutes().toString();
+};
+
+export const getVariantClassName = (baseClass: string, variant = "default", additionalClasses = ""): string => {
+  return `${baseClass} ${baseClass}--${variant} ${additionalClasses}`.trim();
 };

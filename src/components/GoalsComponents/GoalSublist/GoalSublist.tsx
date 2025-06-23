@@ -56,7 +56,7 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
 
   // TODO: re-implement sorting of goals
 
-  const handleClickableContainerClick = () => {
+  const handleToggleConfig = () => {
     setShowConfig(!showConfig);
   };
 
@@ -71,11 +71,9 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
       <div className="sublist-content-container">
         <div className="sublist-content">
           {!showConfig && (
-            <button className="clickable-container" type="button" onClick={handleClickableContainerClick}>
+            <button className="clickable-container" type="button" onClick={handleToggleConfig}>
               <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
-              {parentGoal && (
-                <GoalItemSummary goal={parentGoal} showAddGoal={showConfig} setShowAddGoal={setShowConfig} />
-              )}
+              {parentGoal && <GoalItemSummary onClick={handleToggleConfig} goal={parentGoal} variant="default" />}
             </button>
           )}
           <div className="sublist-list-container" style={{ marginTop: !showConfig ? "10px" : "0px" }}>

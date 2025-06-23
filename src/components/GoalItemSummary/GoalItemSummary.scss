@@ -7,4 +7,9 @@
   cursor: pointer;
   border: none;
   background: none;
+  line-height: 1.5;
+  &--modal {
+    padding: 0px;
+    text-align: left;
+  }
 }

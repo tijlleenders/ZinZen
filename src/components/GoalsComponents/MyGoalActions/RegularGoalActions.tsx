@@ -87,7 +87,7 @@ const RegularGoalActions = ({ goal }: { goal: GoalItem }) => {
         <p className="ordinary-element" id="title-field">
           {t(`${goal.title}`)}
         </p>
-        <GoalItemSummary goal={goal} />
+        <GoalItemSummary goal={goal} variant="modal" />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
         {confirmationAction && (
