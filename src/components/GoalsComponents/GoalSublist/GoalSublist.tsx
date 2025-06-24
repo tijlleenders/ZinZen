@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useTranslation } from "react-i18next";
-import { displayChangesModal, displayGoalId, displaySuggestionsModal } from "@src/store/GoalsState";
+import { displayChangesModal, displayGoalId, displaySuggestionsModal, searchQueryState } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { lastAction } from "@src/store";
@@ -24,7 +24,7 @@ import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
 import ConfigGoal from "../../ConfigGoal/ConfigGoal";
 
-export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
+export const GoalSublist = ({ goals, isLoading = false }: { goals: GoalItem[]; isLoading?: boolean }) => {
   const { parentId, partnerId } = useParams();
   const showConfig = useRecoilValue(goalConfigDisplayState);
   const setShowConfig = useSetRecoilState(goalConfigDisplayState);
@@ -35,6 +35,7 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
   const goalID = useRecoilValue(displayGoalId);
   const showChangesModal = useRecoilValue(displayChangesModal);
   const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
+  const searchQuery = useRecoilValue(searchQueryState);
 
   const { archivedGoals } = useGetArchivedGoals(parentId || "");
   const { deletedGoals } = useGetDeletedGoals(parentId || "");
@@ -65,19 +66,31 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
     return () => setShowConfig(false);
   }, [setShowConfig]);
 
+  useEffect(() => {
+    if (goals.length === 0) {
+      setShowConfig(true);
+    } else {
+      setShowConfig(false);
+    }
+  }, [goals, setShowConfig]);
+
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <div className="sublist-container">
       <GoalHistory />
       <div className="sublist-content-container">
         <div className="sublist-content">
-          {!showConfig && (
+          {!showConfig && searchQuery !== "" && (
             <button className="clickable-container" type="button" onClick={handleToggleConfig}>
               <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
               {parentGoal && <GoalItemSummary onClick={handleToggleConfig} goal={parentGoal} variant="default" />}
             </button>
           )}
           <div className="sublist-list-container" style={{ marginTop: !showConfig ? "10px" : "0px" }}>
-            {showConfig && parentGoal && (
+            {showConfig && parentGoal && searchQuery === "" && (
               <div className="config-goal-container">
                 <ConfigGoal goal={parentGoal} type={parentGoal?.category} mode="edit" useModal={false} />
               </div>

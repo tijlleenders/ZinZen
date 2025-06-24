@@ -42,7 +42,9 @@ export const MyGoals = () => {
   const searchQuery = useRecoilValue(searchQueryState);
 
   const { data: activeGoal } = useGetGoalById(activeGoalId || "");
-  const { activeGoals: activeChildrenGoals } = useGetActiveGoals(parentId || "root");
+  const { activeGoals: activeChildrenGoals, isLoading: isFetchingChildrenGoals } = useGetActiveGoals(
+    parentId || "root",
+  );
 
   const { archivedGoals } = useGetArchivedGoals(parentId || "root");
   const { deletedGoals } = useGetDeletedGoals(parentId || "root");
@@ -98,7 +100,7 @@ export const MyGoals = () => {
             <ArchivedGoals goals={archivedGoals || []} />
           </div>
         ) : (
-          <GoalSublist goals={filteredActiveChildrenGoals || []} />
+          <GoalSublist goals={filteredActiveChildrenGoals || []} isLoading={isFetchingChildrenGoals} />
         )}
 
         <img
