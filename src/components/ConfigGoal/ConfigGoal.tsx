@@ -50,9 +50,19 @@ interface ConfigGoalContentProps {
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   isModal?: boolean;
+  shouldFocusOnTitle?: boolean;
 }
 
-const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, isModal }: ConfigGoalContentProps) => {
+const ConfigGoalContent = ({
+  type,
+  goal,
+  mode,
+  onSave,
+  formState,
+  setFormState,
+  isModal,
+  shouldFocusOnTitle = true,
+}: ConfigGoalContentProps) => {
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
 
@@ -81,8 +91,10 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
   const numberOfDays = budgetGoal?.on.length;
 
   useEffect(() => {
-    document.getElementById("title-field")?.focus();
-  }, []);
+    if (shouldFocusOnTitle) {
+      document.getElementById("title-field")?.focus();
+    }
+  }, [shouldFocusOnTitle]);
 
   const defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
   const defaultBeforeTime = isEditMode ? (goal.beforeTime ?? 18) : 18;
@@ -322,9 +334,10 @@ interface ConfigGoalProps {
   mode: TGoalConfigMode;
   goal: GoalItem;
   useModal?: boolean;
+  shouldFocusOnTitle?: boolean;
 }
 
-const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
+const ConfigGoal = ({ type, goal, mode, useModal = true, shouldFocusOnTitle = true }: ConfigGoalProps) => {
   const isKeyboardOpen = useVirtualKeyboardOpen();
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
@@ -418,6 +431,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
       onSave={handleInlineSave}
       formState={formState}
       setFormState={setFormState}
+      shouldFocusOnTitle={shouldFocusOnTitle}
     />
   );
 };

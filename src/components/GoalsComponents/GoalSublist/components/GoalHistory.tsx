@@ -15,10 +15,11 @@ interface BreadcrumbItem {
   onClick: () => void;
 }
 
-const GoalHistory: React.FC<{ showConfig: boolean; setShowConfig: (showConfig: boolean) => void }> = ({
-  showConfig,
-  setShowConfig,
-}) => {
+const GoalHistory: React.FC<{
+  showConfig: boolean;
+  setShowConfig: (showConfig: boolean) => void;
+  setIsShowConfigToggledByUser: (value: boolean) => void;
+}> = ({ showConfig, setShowConfig, setIsShowConfigToggledByUser }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { partnerId } = useParams();
@@ -29,11 +30,16 @@ const GoalHistory: React.FC<{ showConfig: boolean; setShowConfig: (showConfig: b
   const darkModeStatus = useRecoilValue(darkModeState);
   const isPartnerGoalActive = Boolean(partnerId);
 
+  const handleToggleConfig = () => {
+    setShowConfig(!showConfig);
+    setIsShowConfigToggledByUser(true);
+  };
+
   const handleBreadcrumbClick = (goalId: string, index: number) => {
     const isLastGoal = index === goalsHistory.length - 1;
 
     if (isLastGoal) {
-      setShowConfig(!showConfig);
+      handleToggleConfig();
       return;
     }
 
@@ -74,12 +80,7 @@ const GoalHistory: React.FC<{ showConfig: boolean; setShowConfig: (showConfig: b
   ];
 
   return (
-    <button
-      className="goal-history"
-      type="button"
-      aria-label="Toggle goal configuration"
-      onClick={() => setShowConfig(!showConfig)}
-    >
+    <button className="goal-history" type="button" aria-label="Toggle goal configuration" onClick={handleToggleConfig}>
       <Breadcrumb
         className="breadcrumb-container"
         separator={<span className={`separator ${darkModeStatus ? "dark-mode" : ""}`}>/</span>}
