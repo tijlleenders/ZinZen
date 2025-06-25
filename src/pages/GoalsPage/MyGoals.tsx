@@ -73,6 +73,8 @@ export const MyGoals = () => {
     goal.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  if (!filteredActiveChildrenGoals) return null;
+
   return (
     <AppLayout title="myGoals">
       {showOptions && <RegularGoalActions goal={activeGoal} />}
@@ -100,7 +102,7 @@ export const MyGoals = () => {
             <ArchivedGoals goals={archivedGoals || []} />
           </div>
         ) : (
-          <GoalSublist goals={filteredActiveChildrenGoals || []} isLoading={isFetchingChildrenGoals} />
+          <GoalSublist goals={filteredActiveChildrenGoals} />
         )}
 
         <img

@@ -1,13 +1,12 @@
 import React from "react";
 import { Breadcrumb } from "antd";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { darkModeState } from "@src/store";
 import goalsIcon from "@assets/images/goalsIcon.svg";
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ILocationState } from "@src/Interfaces";
-import { goalConfigDisplayState } from "@src/store/GoalConfigDisplayState";
 import "./GoalHistory.scss";
 import { BreadcrumbItem } from "./BreadcrumbItem";
 
@@ -16,12 +15,14 @@ interface BreadcrumbItem {
   onClick: () => void;
 }
 
-const GoalHistory: React.FC = () => {
+const GoalHistory: React.FC<{ showConfig: boolean; setShowConfig: (showConfig: boolean) => void }> = ({
+  showConfig,
+  setShowConfig,
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { partnerId } = useParams();
   const { t } = useTranslation();
-  const [showConfig, setShowConfig] = useRecoilState(goalConfigDisplayState);
 
   const locationState: ILocationState = location.state;
   const goalsHistory = locationState.goalsHistory ?? [];

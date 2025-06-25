@@ -16,7 +16,6 @@ import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useGetSharedWMGoalsArchived } from "@src/hooks/api/SharedWMGoals/useGetSharedWMGoalsArchived";
 import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
-import { goalConfigDisplayState } from "@src/store/GoalConfigDisplayState";
 import { useParams } from "react-router-dom";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import GoalsList from "../GoalsList";
@@ -26,9 +25,8 @@ import ConfigGoal from "../../ConfigGoal/ConfigGoal";
 
 export const GoalSublist = ({ goals, isLoading = false }: { goals: GoalItem[]; isLoading?: boolean }) => {
   const { parentId, partnerId } = useParams();
-  const showConfig = useRecoilValue(goalConfigDisplayState);
-  const setShowConfig = useSetRecoilState(goalConfigDisplayState);
   const { data: parentGoal } = useGetGoalById(parentId || "");
+  const [showConfig, setShowConfig] = useState(goals.length === 0);
   const [goalHints, setGoalHints] = useState<GoalItem[]>([]);
   const { t } = useTranslation();
   const action = useRecoilValue(lastAction);
@@ -61,29 +59,16 @@ export const GoalSublist = ({ goals, isLoading = false }: { goals: GoalItem[]; i
     setShowConfig(!showConfig);
   };
 
-  // Cleanup when component unmounts
-  useEffect(() => {
-    return () => setShowConfig(false);
-  }, [setShowConfig]);
-
-  useEffect(() => {
-    if (goals.length === 0) {
-      setShowConfig(true);
-    } else {
-      setShowConfig(false);
-    }
-  }, [goals, setShowConfig]);
-
   if (isLoading) {
     return null;
   }
 
   return (
     <div className="sublist-container">
-      <GoalHistory />
+      <GoalHistory showConfig={showConfig} setShowConfig={setShowConfig} />
       <div className="sublist-content-container">
         <div className="sublist-content">
-          {!showConfig && searchQuery !== "" && (
+          {!showConfig && (
             <button className="clickable-container" type="button" onClick={handleToggleConfig}>
               <p className="sublist-title">{parentGoal && t(parentGoal?.title)}</p>
               {parentGoal && <GoalItemSummary onClick={handleToggleConfig} goal={parentGoal} variant="default" />}
