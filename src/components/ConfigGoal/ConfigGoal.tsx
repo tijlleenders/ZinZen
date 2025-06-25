@@ -351,7 +351,6 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, shouldFocusOnTitle = tr
   const { parentId = "", activeGoalId = "" } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId ?? "");
 
-  // Generate unique ID for this instance
   const titleFieldId = `title-field-${useModal ? "modal" : "inline"}-${goal.id}`;
 
   const [formState, setFormState] = useState<FormState>({
