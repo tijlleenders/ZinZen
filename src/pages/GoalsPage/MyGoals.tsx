@@ -87,6 +87,7 @@ export const MyGoals = () => {
           type={goalType}
           goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
           mode={mode}
+          shouldFocusOnTitle
         />
       )}
 

@@ -51,6 +51,7 @@ interface ConfigGoalContentProps {
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   isModal?: boolean;
   shouldFocusOnTitle?: boolean;
+  titleFieldId?: string;
 }
 
 const ConfigGoalContent = ({
@@ -62,6 +63,7 @@ const ConfigGoalContent = ({
   setFormState,
   isModal,
   shouldFocusOnTitle = true,
+  titleFieldId = "title-field",
 }: ConfigGoalContentProps) => {
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
@@ -92,9 +94,12 @@ const ConfigGoalContent = ({
 
   useEffect(() => {
     if (shouldFocusOnTitle) {
-      document.getElementById("title-field")?.focus();
+      const titleField = document.getElementById(titleFieldId);
+      if (titleField) {
+        titleField.focus();
+      }
     }
-  }, [shouldFocusOnTitle]);
+  }, [shouldFocusOnTitle, titleFieldId]);
 
   const defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
   const defaultBeforeTime = isEditMode ? (goal.beforeTime ?? 18) : 18;
@@ -193,7 +198,6 @@ const ConfigGoalContent = ({
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
-      console.log("checking schedule");
       checkSchedule();
     }, 1000);
 
@@ -227,6 +231,7 @@ const ConfigGoalContent = ({
         setFormState={setFormState}
         onSuggestionClick={onSuggestionClick}
         isModal={isModal}
+        titleFieldId={titleFieldId}
       />
       <div
         className="d-flex f-col gap-20"
@@ -346,6 +351,9 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, shouldFocusOnTitle = tr
   const { parentId = "", activeGoalId = "" } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId ?? "");
 
+  // Generate unique ID for this instance
+  const titleFieldId = `title-field-${useModal ? "modal" : "inline"}-${goal.id}`;
+
   const [formState, setFormState] = useState<FormState>({
     goalColor: getDefaultColor(isEditMode, goal, parentGoal, colorPalleteList),
     hintOption: false,
@@ -418,6 +426,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, shouldFocusOnTitle = tr
           formState={formState}
           setFormState={setFormState}
           isModal
+          titleFieldId={titleFieldId}
         />
       </ZModal>
     );
@@ -432,6 +441,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, shouldFocusOnTitle = tr
       formState={formState}
       setFormState={setFormState}
       shouldFocusOnTitle={shouldFocusOnTitle}
+      titleFieldId={titleFieldId}
     />
   );
 };

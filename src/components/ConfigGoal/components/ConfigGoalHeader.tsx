@@ -11,9 +11,16 @@ interface ConfigGoalHeaderProps {
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   onSuggestionClick: (selectedGoal: GoalItem) => Promise<void>;
   isModal?: boolean;
+  titleFieldId?: string;
 }
 
-const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({ formState, setFormState, onSuggestionClick, isModal }) => {
+const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({
+  formState,
+  setFormState,
+  onSuggestionClick,
+  isModal,
+  titleFieldId,
+}) => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
@@ -34,6 +41,7 @@ const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({ formState, setFormS
         inputValue={formState.title}
         onGoalSelect={onSuggestionClick}
         onInputChange={(value) => setFormState((prev) => ({ ...prev, title: value }))}
+        titleFieldId={titleFieldId}
       />
     </div>
   );

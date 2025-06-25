@@ -8,6 +8,7 @@ interface AutocompleteComponentProps {
   onInputChange: (value: string) => void;
   inputvalue: string;
   placeholder: string;
+  titleFieldId?: string;
 }
 
 const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
@@ -16,50 +17,53 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   onInputChange,
   inputvalue,
   placeholder,
+  titleFieldId = "title-field",
 }) => {
   const [isSuggestionVisible, setIsSuggestionVisible] = useState(false);
+  const [suggestion, setSuggestion] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
   const suggestionRef = useRef<HTMLSpanElement>(null);
 
-  const getSuggestion = (value: string): string => {
-    const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(value.toLowerCase()));
-    const suggestion = filteredData.length > 0 ? filteredData[0] : null;
-    return suggestion ? suggestion.title.slice(value.length) : "";
+  const handleInputChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+    onInputChange(value);
+
+    if (value.trim() === "") {
+      setIsSuggestionVisible(false);
+      setSuggestion("");
+      return;
+    }
+
+    const matchingGoal = data.find((goal) => goal.title.toLowerCase().startsWith(value.toLowerCase()));
+    if (matchingGoal && matchingGoal.title.toLowerCase() !== value.toLowerCase()) {
+      setSuggestion(matchingGoal.title);
+      setIsSuggestionVisible(true);
+    } else {
+      setIsSuggestionVisible(false);
+      setSuggestion("");
+    }
   };
 
-  // Adjust input width
-  useEffect(() => {
-    if (inputRef.current && spanRef.current) {
-      inputRef.current.style.width = isSuggestionVisible ? `${spanRef.current.offsetWidth + 2}px` : "100%";
-    }
-  }, [inputvalue, isSuggestionVisible]);
-
-  const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { value } = event.target;
-      onInputChange(value);
-      if (value.trim() === "") {
-        setIsSuggestionVisible(false);
-        return;
+  const handleSuggestionClick = () => {
+    if (suggestion && isSuggestionVisible) {
+      const matchingGoal = data.find((goal) => goal.title === suggestion);
+      if (matchingGoal) {
+        onSuggestionClick(matchingGoal);
       }
-      const suggestion = getSuggestion(value);
-      setIsSuggestionVisible(!!suggestion);
-    },
-    [onInputChange, data],
-  );
-
-  const handleSuggestionClick = useCallback(() => {
-    const filteredData = data.filter((item) => item.title.toLowerCase().startsWith(inputvalue.toLowerCase()));
-    const suggestion = filteredData.length > 0 ? filteredData[0] : null;
-    if (suggestion && suggestionRef.current) {
-      onSuggestionClick(suggestion);
-      onInputChange(suggestion.title);
     }
-    setIsSuggestionVisible(false);
-  }, [inputvalue, data, onSuggestionClick, onInputChange]);
+  };
 
-  const suggestion = getSuggestion(inputvalue);
+  useEffect(() => {
+    if (spanRef.current) {
+      spanRef.current.textContent = inputvalue;
+    }
+  }, [inputvalue]);
+
+  useEffect(() => {
+    if (suggestionRef.current && isSuggestionVisible) {
+      suggestionRef.current.style.width = `${spanRef.current?.offsetWidth || 0}px`;
+    }
+  }, [suggestion, isSuggestionVisible]);
 
   return (
     <button className="autocomplete-container w-100 simple" type="button" onClick={handleSuggestionClick}>
@@ -71,7 +75,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
           onChange={handleInputChange}
           placeholder={placeholder}
           className="ordinary-element"
-          id="title-field"
+          id={titleFieldId}
           inputMode="text"
         />
         <span ref={spanRef} className="hidden-span">
