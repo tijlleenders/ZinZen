@@ -107,7 +107,7 @@ export const getFinalTags = ({ goal, formState, type, parentGoal }: GetFinalTags
       .filter((ele: string) => ele !== "")
       .join(" "),
     goalColor: formState.goalColor,
-    parentGoalId: parentGoal?.id ?? "root",
+    parentGoalId: parentGoal?.id ?? goal.parentGoalId,
     language: getSelectedLanguage(),
     ...(formState.simpleGoal
       ? {
