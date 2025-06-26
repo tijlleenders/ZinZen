@@ -76,7 +76,13 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
           <div className="sublist-list-container" style={{ marginTop: !showConfig ? "10px" : "0px" }}>
             {showConfig && parentGoal && searchQuery === "" && (
               <div className="config-goal-container">
-                <ConfigGoal goal={parentGoal} type={parentGoal?.category} mode="edit" useModal={false} />
+                <ConfigGoal
+                  key={`edit-${parentGoal.id}`}
+                  goal={parentGoal}
+                  type={parentGoal?.category}
+                  mode="edit"
+                  useModal={false}
+                />
               </div>
             )}
             <GoalsList goals={goals} />

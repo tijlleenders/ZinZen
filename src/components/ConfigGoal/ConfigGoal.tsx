@@ -381,7 +381,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
       if (!useModal) {
         handleSave(isEditMode, formState);
       }
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(debounceTimer);
   }, [formState]);
