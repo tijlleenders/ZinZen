@@ -89,7 +89,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
   const defaultAfterTime = isEditMode ? (goal.afterTime ?? 9) : 9;
   const defaultBeforeTime = isEditMode ? (goal.beforeTime ?? 18) : 18;
 
-  const timeDiff = (budgetGoal?.beforeTime ?? defaultBeforeTime) - (budgetGoal?.afterTime ?? defaultAfterTime);
+  const timeDiff = Math.abs(budgetGoal?.beforeTime ?? defaultBeforeTime) - (budgetGoal?.afterTime ?? defaultAfterTime);
   const weeklyRange = timeDiff * (numberOfDays ?? 5);
   const updatedPerDayHrs = {
     min: Math.min(budgetGoal?.perDayHrs.min ?? timeDiff, timeDiff),
