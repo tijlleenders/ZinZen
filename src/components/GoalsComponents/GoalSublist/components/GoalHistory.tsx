@@ -18,8 +18,7 @@ interface BreadcrumbItem {
 const GoalHistory: React.FC<{
   showConfig: boolean;
   setShowConfig: (showConfig: boolean) => void;
-  setIsShowConfigToggledByUser: (value: boolean) => void;
-}> = ({ showConfig, setShowConfig, setIsShowConfigToggledByUser }) => {
+}> = ({ showConfig, setShowConfig }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { partnerId } = useParams();
@@ -32,7 +31,6 @@ const GoalHistory: React.FC<{
 
   const handleToggleConfig = () => {
     setShowConfig(!showConfig);
-    setIsShowConfigToggledByUser(true);
   };
 
   const handleBreadcrumbClick = (goalId: string, index: number) => {

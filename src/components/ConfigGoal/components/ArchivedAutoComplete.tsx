@@ -9,7 +9,6 @@ interface ArchivedAutoCompleteProps {
   onInputChange: (value: string) => void;
   inputValue: string;
   placeholder: string;
-  titleFieldId?: string;
 }
 
 const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
@@ -17,7 +16,6 @@ const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
   onInputChange,
   inputValue,
   placeholder,
-  titleFieldId,
 }) => {
   const { parentId = "root" } = useParams();
 
@@ -46,7 +44,6 @@ const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
       onSuggestionClick={onGoalSelect}
       onInputChange={handleInputChange}
       placeholder={placeholder}
-      titleFieldId={titleFieldId}
     />
   );
 };

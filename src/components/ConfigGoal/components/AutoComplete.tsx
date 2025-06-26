@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./AutoComplete.scss";
 import { GoalItem } from "@src/models/GoalItem";
 
@@ -8,7 +8,6 @@ interface AutocompleteComponentProps {
   onInputChange: (value: string) => void;
   inputvalue: string;
   placeholder: string;
-  titleFieldId?: string;
 }
 
 const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
@@ -17,7 +16,6 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   onInputChange,
   inputvalue,
   placeholder,
-  titleFieldId = "title-field",
 }) => {
   const [isSuggestionVisible, setIsSuggestionVisible] = useState(false);
   const [suggestion, setSuggestion] = useState<string>("");
@@ -75,7 +73,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
           onChange={handleInputChange}
           placeholder={placeholder}
           className="ordinary-element"
-          id={titleFieldId}
+          id="title-field"
           inputMode="text"
         />
         <span ref={spanRef} className="hidden-span">
