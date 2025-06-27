@@ -102,7 +102,7 @@ export const MyGoals = () => {
             <ArchivedGoals goals={archivedGoals || []} />
           </div>
         ) : (
-          <GoalSublist goals={filteredActiveChildrenGoals} />
+          <GoalSublist key={parentId} goals={filteredActiveChildrenGoals} />
         )}
 
         <img
