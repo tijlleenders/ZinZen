@@ -1,88 +1,124 @@
 import React from "react";
 import { Breadcrumb } from "antd";
 import { useRecoilValue } from "recoil";
+
 import { darkModeState } from "@src/store";
 import goalsIcon from "@assets/images/goalsIcon.svg";
+
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { ILocationState } from "@src/Interfaces";
+import { useLocation } from "react-router-dom";
+
 import "./GoalHistory.scss";
-import { BreadcrumbItem } from "./BreadcrumbItem";
 
-interface BreadcrumbItem {
-  title: React.ReactNode;
-  onClick: () => void;
-}
+const breadcrumbStyle: React.CSSProperties = {
+  fontWeight: 500,
+  borderRadius: 30,
+  padding: "0 3px 3px 3px",
+  display: "block",
+  width: 100,
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  textAlign: "center",
+  cursor: "pointer",
+  height: 18,
+};
 
-const GoalHistory: React.FC<{
-  showConfig: boolean;
-  setShowConfig: (showConfig: boolean) => void;
-}> = ({ showConfig, setShowConfig }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { partnerId } = useParams();
+const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => {
   const { t } = useTranslation();
+  return (
+    <span
+      style={{
+        ...breadcrumbStyle,
+        border: `1px solid ${goal.goalColor}`,
+        background: `${goal.goalColor}33`,
+      }}
+    >
+      {t(goal.goalTitle)}
+    </span>
+  );
+};
 
-  const locationState: ILocationState = location.state;
-  const goalsHistory = locationState.goalsHistory ?? [];
+const GoalHistory = ({
+  showConfig,
+  setShowConfig,
+}: {
+  showConfig: boolean;
+  setShowConfig: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const location = useLocation();
+  const goalsHistory = location.state?.goalsHistory ?? []; // default as an empty array if undefined.
+
   const darkModeStatus = useRecoilValue(darkModeState);
-  const isPartnerGoalActive = Boolean(partnerId);
-
-  const handleToggleConfig = () => {
-    setShowConfig(!showConfig);
-  };
-
-  const handleBreadcrumbClick = (goalId: string, index: number) => {
-    const isLastGoal = index === goalsHistory.length - 1;
-
-    if (isLastGoal) {
-      handleToggleConfig();
-      return;
-    }
-
-    const newGoalsHistory = goalsHistory.slice(0, index + 1);
-    const path = isPartnerGoalActive ? `/partners/${partnerId}/goals/${goalId}` : `/goals/${goalId}`;
-
-    navigate(path, {
-      state: {
-        ...locationState,
-        goalsHistory: newGoalsHistory,
-      },
-    });
-  };
-
-  const handleHomeClick = () => {
-    const path = isPartnerGoalActive ? `/partners/${partnerId}/goals` : "/goals";
-
-    navigate(path, {
-      state: { ...location.state, goalsHistory: [] },
-    });
-  };
-
-  const breadcrumbItems: BreadcrumbItem[] = [
-    {
-      title: (
-        <img
-          src={goalsIcon}
-          className={`goals-icon ${darkModeStatus ? "goals-icon-history" : ""}`}
-          alt={t("my goals")}
-        />
-      ),
-      onClick: handleHomeClick,
-    },
-    ...goalsHistory.map((goal: ISubGoalHistory, index: number) => ({
-      title: <BreadcrumbItem goalId={goal.goalID} />,
-      onClick: () => handleBreadcrumbClick(goal.goalID, index),
-    })),
-  ];
 
   return (
-    <button className="goal-history" type="button" aria-label="Toggle goal configuration" onClick={handleToggleConfig}>
+    <button
+      type="button"
+      className="goal-history"
+      aria-label="Goals history"
+      onClick={() => {
+        setShowConfig(!showConfig);
+      }}
+    >
       <Breadcrumb
         className="breadcrumb-container"
         separator={<span className={`separator ${darkModeStatus ? "dark-mode" : ""}`}>/</span>}
-        items={breadcrumbItems}
+        items={[
+          {
+            title: (
+              <img
+                src={goalsIcon}
+                style={{ marginTop: "5px" }}
+                className={`${darkModeStatus ? "goals-icon-history" : ""}`}
+                alt="my goals"
+              />
+            ),
+            onClick: () => {
+              window.history.go(-goalsHistory.length);
+            },
+          },
+          ...(goalsHistory.length <= 3
+            ? goalsHistory.map((goal: ISubGoalHistory, index: number) => ({
+                title: <BreadcrumbItem goal={goal} />,
+                onClick: () => {
+                  if (index === goalsHistory.length - 1) {
+                    setShowConfig(!showConfig);
+                    return;
+                  }
+                  window.history.go(index + 1 - goalsHistory.length);
+                },
+              }))
+            : [
+                ...goalsHistory.slice(0, 2).map((goal: ISubGoalHistory, index: number) => ({
+                  title: <BreadcrumbItem goal={goal} />,
+                  onClick: () => {
+                    window.history.go(index + 1 - goalsHistory.length);
+                  },
+                })),
+                {
+                  title: (
+                    <span style={{ ...breadcrumbStyle, border: "1px solid #d9d9d9", background: "#d9d9d933" }}>
+                      ...
+                    </span>
+                  ),
+                  onClick: () => {
+                    window.history.back();
+                  },
+                },
+                ...goalsHistory.slice(goalsHistory.length - 1).map((goal: ISubGoalHistory, index: number) => ({
+                  title: <BreadcrumbItem goal={goal} />,
+                  onClick: () => {
+                    const count = index + 1 - goalsHistory.length;
+                    if (-count === goalsHistory.length - 1) {
+                      setShowConfig(!showConfig);
+                      return;
+                    }
+                    window.history.go(count);
+                  },
+                })),
+              ]),
+        ]}
       />
     </button>
   );

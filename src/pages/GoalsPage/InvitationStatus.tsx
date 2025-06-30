@@ -34,6 +34,7 @@ const InvitationStatus = ({ relId }: { relId: string }) => {
       className="fw-400 d-flex f-col text-lg gap-16 text-center"
       style={{
         margin: "0 20px",
+        alignItems: "center",
       }}
     >
       <p>{message}</p>
