@@ -6,6 +6,7 @@ export const useGetGoalById = (goalId: string) => {
   const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: GOAL_QUERY_KEYS.detail(goalId),
     queryFn: () => getGoalById(goalId),
+    cacheTime: 0,
     enabled: !!goalId,
   });
 
