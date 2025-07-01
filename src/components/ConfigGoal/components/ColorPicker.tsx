@@ -34,7 +34,7 @@ const ColorPicker: React.FC<ColorPaletteProps> = ({ color, setColor, className }
   }, [isColorPaletteOpen, color]);
 
   return (
-    <div className={`color-picker-container ${className}`}>
+    <span className={`color-picker-container ${className}`}>
       <button
         type="button"
         className="goal-color"
@@ -62,7 +62,7 @@ const ColorPicker: React.FC<ColorPaletteProps> = ({ color, setColor, className }
           </div>
         )}
       </div>
-    </div>
+    </span>
   );
 };
 

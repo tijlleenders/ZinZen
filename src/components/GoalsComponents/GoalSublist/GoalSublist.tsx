@@ -84,6 +84,7 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
                   type={parentGoal?.category}
                   mode="edit"
                   useModal={false}
+                  onToggleConfig={handleToggleConfig}
                 />
               </div>
             )}

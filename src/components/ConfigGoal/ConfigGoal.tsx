@@ -51,9 +51,19 @@ interface ConfigGoalContentProps {
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   isModal?: boolean;
+  onToggleConfig?: () => void;
 }
 
-const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, isModal }: ConfigGoalContentProps) => {
+const ConfigGoalContent = ({
+  type,
+  goal,
+  mode,
+  onSave,
+  formState,
+  setFormState,
+  isModal,
+  onToggleConfig,
+}: ConfigGoalContentProps) => {
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
 
@@ -201,6 +211,16 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
     await onSave(editMode, newFormState);
   }, 1000);
 
+  const handleColorPickerAreaClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest(".goal-color")) {
+      return;
+    }
+
+    if (onToggleConfig) {
+      onToggleConfig();
+    }
+  };
+
   return (
     <form
       className="configGoal"
@@ -210,15 +230,17 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
       }}
     >
       {!isModal && (
-        <ColorPicker
-          color={formState.goalColor}
-          setColor={(color: string) => {
-            const newState = { ...formState, goalColor: color };
-            setFormState(newState);
-            debouncedSave(isEditMode, newState);
-          }}
-          className="inline-position"
-        />
+        <div className="color-picker-wrapper" onClickCapture={handleColorPickerAreaClick}>
+          <ColorPicker
+            color={formState.goalColor}
+            setColor={(color: string) => {
+              const newState = { ...formState, goalColor: color };
+              setFormState(newState);
+              debouncedSave(isEditMode, newState);
+            }}
+            className="inline-position"
+          />
+        </div>
       )}
 
       <ConfigGoalHeader
@@ -348,9 +370,10 @@ interface ConfigGoalProps {
   mode: TGoalConfigMode;
   goal: GoalItem;
   useModal?: boolean;
+  onToggleConfig?: () => void;
 }
 
-const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
+const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: ConfigGoalProps) => {
   const isKeyboardOpen = useVirtualKeyboardOpen();
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
@@ -431,6 +454,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
           formState={formState}
           setFormState={setFormState}
           isModal
+          onToggleConfig={onToggleConfig}
         />
       </ZModal>
     );
@@ -444,6 +468,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
       onSave={handleInlineSave}
       formState={formState}
       setFormState={setFormState}
+      onToggleConfig={onToggleConfig}
     />
   );
 };
