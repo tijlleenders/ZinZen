@@ -11,9 +11,18 @@ interface ConfigGoalHeaderProps {
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   onSuggestionClick: (selectedGoal: GoalItem) => Promise<void>;
   isModal?: boolean;
+  debouncedSave: (editMode: boolean, newFormState: FormState) => Promise<void>;
+  isEditMode: boolean;
 }
 
-const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({ formState, setFormState, onSuggestionClick, isModal }) => {
+const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({
+  formState,
+  setFormState,
+  onSuggestionClick,
+  isModal,
+  debouncedSave,
+  isEditMode,
+}) => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
@@ -33,7 +42,11 @@ const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({ formState, setFormS
         placeholder={titlePlaceholder}
         inputValue={formState.title}
         onGoalSelect={onSuggestionClick}
-        onInputChange={(value) => setFormState((prev) => ({ ...prev, title: value }))}
+        onInputChange={(value) => {
+          const newState = { ...formState, title: value };
+          setFormState(newState);
+          debouncedSave(isEditMode, newState);
+        }}
       />
     </div>
   );

@@ -10,9 +10,18 @@ interface SimpleGoalProps {
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
   scheduleStatus: ScheduleStatus | null;
   getScheduleStatusText: (status: ScheduleStatus) => string;
+  debouncedSave: (editMode: boolean, newFormState: FormState) => Promise<void>;
+  isEditMode: boolean;
 }
 
-const SimpleGoal: React.FC<SimpleGoalProps> = ({ formState, setFormState, scheduleStatus, getScheduleStatusText }) => {
+const SimpleGoal: React.FC<SimpleGoalProps> = ({
+  formState,
+  setFormState,
+  scheduleStatus,
+  getScheduleStatusText,
+  debouncedSave,
+  isEditMode,
+}) => {
   return (
     <div className="d-flex f-col gap-16">
       <div className="action-btn-container">
@@ -26,13 +35,9 @@ const SimpleGoal: React.FC<SimpleGoalProps> = ({ formState, setFormState, schedu
           value={formState.simpleGoal?.duration ?? ""}
           onChange={(value) => {
             if (formState.simpleGoal) {
-              setFormState((prev) => ({
-                ...prev,
-                simpleGoal: {
-                  due: prev.simpleGoal!.due,
-                  duration: value,
-                },
-              }));
+              const newState = { ...formState, simpleGoal: { due: formState.simpleGoal.due, duration: value } };
+              setFormState(newState);
+              debouncedSave(isEditMode, newState);
             }
           }}
         />
@@ -40,10 +45,9 @@ const SimpleGoal: React.FC<SimpleGoalProps> = ({ formState, setFormState, schedu
         <DueDate
           dateValue={formState.simpleGoal?.due ?? ""}
           handleDateChange={(newDate) => {
-            setFormState((prev) => ({
-              ...prev,
-              simpleGoal: { due: newDate, duration: prev.simpleGoal!.duration },
-            }));
+            const newState = { ...formState, simpleGoal: { due: newDate, duration: formState.simpleGoal!.duration } };
+            setFormState(newState);
+            debouncedSave(isEditMode, newState);
           }}
         />
       </div>

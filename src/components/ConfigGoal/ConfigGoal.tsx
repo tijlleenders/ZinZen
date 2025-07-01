@@ -16,6 +16,7 @@ import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import useScheduler from "@src/hooks/useScheduler";
 import ZAccordion from "@src/common/Accordion";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
+import { useDebounce } from "@src/hooks/useDebounce";
 import { colorPalleteList } from "../../utils";
 
 import "./ConfigGoal.scss";
@@ -195,6 +196,11 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
     budgetGoal?.perWeekHrs,
   ]);
 
+  const debouncedSave = useDebounce(async (editMode: boolean, newFormState: FormState) => {
+    if (isModal) return;
+    await onSave(editMode, newFormState);
+  }, 1000);
+
   return (
     <form
       className="configGoal"
@@ -206,7 +212,11 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
       {!isModal && (
         <ColorPicker
           color={formState.goalColor}
-          setColor={(color: string) => setFormState((prev) => ({ ...prev, goalColor: color }))}
+          setColor={(color: string) => {
+            const newState = { ...formState, goalColor: color };
+            setFormState(newState);
+            debouncedSave(isEditMode, newState);
+          }}
           className="inline-position"
         />
       )}
@@ -216,6 +226,8 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
         setFormState={setFormState}
         onSuggestionClick={onSuggestionClick}
         isModal={isModal}
+        debouncedSave={debouncedSave}
+        isEditMode={isEditMode}
       />
       <div
         className="d-flex f-col gap-20"
@@ -230,18 +242,22 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
             setFormState={setFormState}
             scheduleStatus={scheduleStatus}
             getScheduleStatusText={getScheduleStatusText}
+            debouncedSave={debouncedSave}
+            isEditMode={isEditMode}
           />
         ) : (
           <>
             <div>
               <BetweenSlider
                 value={[budgetGoal?.afterTime ?? 9, budgetGoal?.beforeTime ?? 18]}
-                onChange={(val) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    budgetGoal: { ...prev.budgetGoal!, afterTime: val[0], beforeTime: val[1] },
-                  }))
-                }
+                onChange={(val) => {
+                  const newState = {
+                    ...formState,
+                    budgetGoal: { ...budgetGoal!, afterTime: val[0], beforeTime: val[1] },
+                  };
+                  setFormState(newState);
+                  debouncedSave(isEditMode, newState);
+                }}
               />
             </div>
             <ZAccordion
@@ -263,20 +279,20 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
                           second={updatedPerDayHrs.max}
                           max={timeDiff}
                           onChange={(val) => {
+                            const newState = { ...formState };
                             if (val[0] === 0 && val[1] < 1) {
-                              setFormState((prev) => ({
-                                ...prev,
-                                budgetGoal: { ...prev.budgetGoal!, perDayHrs: { min: 0, max: 1 } },
-                              }));
+                              newState.budgetGoal!.perDayHrs = { min: 0, max: 1 };
+                              newState.budgetGoal!.perWeekHrs = { min: 0, max: 1 };
+                              setFormState(newState);
+                              debouncedSave(isEditMode, newState);
                             } else {
-                              setFormState((prev) => ({
-                                ...prev,
-                                budgetGoal: {
-                                  ...prev.budgetGoal!,
-                                  perDayHrs: { min: val[0], max: val[1] },
-                                  perWeekHrs: { min: val[0] * (numberOfDays ?? 0), max: val[1] * (numberOfDays ?? 0) },
-                                },
-                              }));
+                              newState.budgetGoal!.perDayHrs = { min: val[0], max: val[1] };
+                              newState.budgetGoal!.perWeekHrs = {
+                                min: val[0] * (numberOfDays ?? 0),
+                                max: val[1] * (numberOfDays ?? 0),
+                              };
+                              setFormState(newState);
+                              debouncedSave(isEditMode, newState);
                             }
                           }}
                         />
@@ -287,12 +303,14 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
                         maxWeekValue={maxWeekValue}
                         first={updatedPerWeekHrs.min}
                         second={updatedPerWeekHrs.max}
-                        onChange={(val) =>
-                          setFormState((prev) => ({
-                            ...prev,
-                            budgetGoal: { ...prev.budgetGoal!, perWeekHrs: { min: val[0], max: val[1] } },
-                          }))
-                        }
+                        onChange={(val) => {
+                          const newState = {
+                            ...formState,
+                            budgetGoal: { ...budgetGoal!, perWeekHrs: { min: val[0], max: val[1] } },
+                          };
+                          setFormState(newState);
+                          debouncedSave(isEditMode, newState);
+                        }}
                       />
                     </div>
                   ),
@@ -300,7 +318,14 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
               ]}
             />
             <div className="place-middle gap-8 h-100">
-              <OnDays onDays={onDays} setFormState={setFormState} budgetGoal={budgetGoal} />
+              <OnDays
+                onDays={onDays}
+                setFormState={setFormState}
+                budgetGoal={budgetGoal}
+                debouncedSave={debouncedSave}
+                isEditMode={isEditMode}
+                formState={formState}
+              />
             </div>
             <div className="action-btn-container">
               <HintToggle
@@ -376,15 +401,15 @@ const ConfigGoal = ({ type, goal, mode, useModal = true }: ConfigGoalProps) => {
     await handleSave(editMode, form);
   };
 
-  useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      if (!useModal) {
-        handleSave(isEditMode, formState);
-      }
-    }, 500);
+  // useEffect(() => {
+  //   const debounceTimer = setTimeout(() => {
+  //     if (!useModal) {
+  //       handleSave(isEditMode, formState);
+  //     }
+  //   }, 500);
 
-    return () => clearTimeout(debounceTimer);
-  }, [formState]);
+  //   return () => clearTimeout(debounceTimer);
+  // }, [formState]);
 
   if (useModal) {
     return (
