@@ -212,7 +212,7 @@ const ConfigGoalContent = ({
   }, 1000);
 
   const handleColorPickerAreaClick = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest(".goal-color")) {
+    if ((e.target as HTMLElement).closest(".goal-color") || (e.target as HTMLElement).closest(".color-palette-popup")) {
       return;
     }
 
