@@ -7,9 +7,9 @@ import goalsIcon from "@assets/images/goalsIcon.svg";
 
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
 
 import "./GoalHistory.scss";
+import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 
 const breadcrumbStyle: React.CSSProperties = {
   fontWeight: 500,
@@ -25,31 +25,31 @@ const breadcrumbStyle: React.CSSProperties = {
   height: 18,
 };
 
-const BreadcrumbItem = ({ goal }: { goal: ISubGoalHistory }) => {
+const BreadcrumbItem = ({ goal, isLast }: { goal: ISubGoalHistory; isLast: boolean }) => {
   const { t } = useTranslation();
+  const { data: fetchedGoal } = useGetGoalById(goal.goalID);
   return (
     <span
       style={{
         ...breadcrumbStyle,
-        border: `1px solid ${goal.goalColor}`,
-        background: `${goal.goalColor}33`,
+        border: `1px solid ${isLast ? fetchedGoal?.goalColor || "" : goal.goalColor}`,
+        background: `${isLast ? fetchedGoal?.goalColor || "" : goal.goalColor}33`,
       }}
     >
-      {t(goal.goalTitle)}
+      {t(isLast ? fetchedGoal?.title || "" : goal.goalTitle)}
     </span>
   );
 };
 
 const GoalHistory = ({
+  goalsHistory,
   showConfig,
   setShowConfig,
 }: {
+  goalsHistory: ISubGoalHistory[];
   showConfig: boolean;
   setShowConfig: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const location = useLocation();
-  const goalsHistory = location.state?.goalsHistory ?? []; // default as an empty array if undefined.
-
   const darkModeStatus = useRecoilValue(darkModeState);
 
   return (
@@ -80,7 +80,7 @@ const GoalHistory = ({
           },
           ...(goalsHistory.length <= 3
             ? goalsHistory.map((goal: ISubGoalHistory, index: number) => ({
-                title: <BreadcrumbItem goal={goal} />,
+                title: <BreadcrumbItem goal={goal} isLast={index === goalsHistory.length - 1} />,
                 onClick: () => {
                   if (index === goalsHistory.length - 1) {
                     setShowConfig(!showConfig);
@@ -91,7 +91,8 @@ const GoalHistory = ({
               }))
             : [
                 ...goalsHistory.slice(0, 2).map((goal: ISubGoalHistory, index: number) => ({
-                  title: <BreadcrumbItem goal={goal} />,
+                  title: <BreadcrumbItem goal={goal} isLast={false} />,
+                  key: goal.goalID,
                   onClick: () => {
                     window.history.go(index + 1 - goalsHistory.length);
                   },
@@ -107,7 +108,7 @@ const GoalHistory = ({
                   },
                 },
                 ...goalsHistory.slice(goalsHistory.length - 1).map((goal: ISubGoalHistory, index: number) => ({
-                  title: <BreadcrumbItem goal={goal} />,
+                  title: <BreadcrumbItem goal={goal} isLast />,
                   onClick: () => {
                     const count = index + 1 - goalsHistory.length;
                     if (-count === goalsHistory.length - 1) {
