@@ -8,6 +8,7 @@ interface AutocompleteComponentProps {
   onInputChange: (value: string) => void;
   inputvalue: string;
   placeholder: string;
+  isModal?: boolean;
 }
 
 const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
@@ -16,6 +17,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   onInputChange,
   inputvalue,
   placeholder,
+  isModal = false,
 }) => {
   const [isSuggestionVisible, setIsSuggestionVisible] = useState(false);
   const [suggestion, setSuggestion] = useState<string>("");
@@ -73,7 +75,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
           onChange={handleInputChange}
           placeholder={placeholder}
           className="ordinary-element"
-          id="title-field"
+          id={isModal ? "title-field-modal" : "title-field"}
           inputMode="text"
         />
         <span ref={spanRef} className="hidden-span">

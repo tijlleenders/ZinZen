@@ -9,6 +9,7 @@ interface ArchivedAutoCompleteProps {
   onInputChange: (value: string) => void;
   inputValue: string;
   placeholder: string;
+  isModal?: boolean;
 }
 
 const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
@@ -16,6 +17,7 @@ const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
   onInputChange,
   inputValue,
   placeholder,
+  isModal = false,
 }) => {
   const { parentId = "root" } = useParams();
 
@@ -44,6 +46,7 @@ const ArchivedAutoComplete: React.FC<ArchivedAutoCompleteProps> = ({
       onSuggestionClick={onGoalSelect}
       onInputChange={handleInputChange}
       placeholder={placeholder}
+      isModal={isModal}
     />
   );
 };

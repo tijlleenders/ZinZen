@@ -42,6 +42,7 @@ const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({
         placeholder={titlePlaceholder}
         inputValue={formState.title}
         onGoalSelect={onSuggestionClick}
+        isModal={isModal}
         onInputChange={(value) => {
           const newState = { ...formState, title: value };
           setFormState(newState);

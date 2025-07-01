@@ -83,7 +83,7 @@ const ConfigGoalContent = ({ type, goal, mode, onSave, formState, setFormState, 
 
   useEffect(() => {
     if (isModal) {
-      document.getElementById("title-field")?.focus();
+      document.getElementById("title-field-modal")?.focus();
     }
   }, []);
 
