@@ -230,5 +230,31 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
         goal.timeBudget.perWeek = { min, max };
       }
     });
+    const sharedWMCollection = transaction.table("sharedWMCollection");
+    sharedWMCollection.toCollection().modify((goal) => {
+      const perDayBudget = goal.timeBudget?.perDay?.split("-").map((ele: string) => Number(ele));
+      const perWeekBudget = goal.timeBudget?.perWeek?.split("-").map((ele: string) => Number(ele));
+      if (perDayBudget) {
+        const [min, max] = perDayBudget;
+        goal.timeBudget.perDay = { min, max };
+      }
+      if (perWeekBudget) {
+        const [min, max] = perWeekBudget;
+        goal.timeBudget.perWeek = { min, max };
+      }
+    });
+    const goalTrashCollection = transaction.table("goalTrashCollection");
+    goalTrashCollection.toCollection().modify((goal) => {
+      const perDayBudget = goal.timeBudget?.perDay?.split("-").map((ele: string) => Number(ele));
+      const perWeekBudget = goal.timeBudget?.perWeek?.split("-").map((ele: string) => Number(ele));
+      if (perDayBudget) {
+        const [min, max] = perDayBudget;
+        goal.timeBudget.perDay = { min, max };
+      }
+      if (perWeekBudget) {
+        const [min, max] = perWeekBudget;
+        goal.timeBudget.perWeek = { min, max };
+      }
+    });
   }
 };
