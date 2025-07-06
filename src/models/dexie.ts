@@ -215,4 +215,22 @@ export const syncVersion = (transaction: Transaction, currentVersion: number) =>
       }
     });
   }
+  if (currentVersion < 26) {
+    console.log("processing updates for 26th version");
+    const goalsCollection = transaction.table("goalsCollection");
+    goalsCollection.toCollection().modify((goal) => {
+      const perDayBudget = goal.timeBudget?.perDay?.split("-").map((ele: string) => Number(ele));
+      const perWeekBudget = goal.timeBudget?.perWeek?.split("-").map((ele: string) => Number(ele));
+      if (perDayBudget) {
+        const [min, max] = perDayBudget;
+        goal.timeBudget.perDay.min = min;
+        goal.timeBudget.perDay.max = max;
+      }
+      if (perWeekBudget) {
+        const [min, max] = perWeekBudget;
+        goal.timeBudget.perWeek.min = min;
+        goal.timeBudget.perWeek.max = max;
+      }
+    });
+  }
 };
