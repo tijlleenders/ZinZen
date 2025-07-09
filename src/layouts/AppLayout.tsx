@@ -1,13 +1,15 @@
-import React from "react";
-
-import { AppLayoutProps } from "@src/Interfaces/ILayouts";
+import React, { ReactNode } from "react";
 import BottomNavbar from "@components/BottomNavbar/BottomNavbar";
-
 import Header from "../components/Header/Header";
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children, title, debounceSearch }) => (
+export interface AppLayoutProps {
+  title: string;
+  children: ReactNode;
+}
+
+const AppLayout: React.FC<AppLayoutProps> = ({ children, title }) => (
   <>
-    <Header title={title} debounceSearch={debounceSearch} />
+    <Header title={title} />
     <div
       style={{
         maxWidth: 600,
@@ -29,4 +31,4 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, title, debounceSearch }
   </>
 );
 
-export default AppLayout;
+export default React.memo(AppLayout);

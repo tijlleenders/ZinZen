@@ -1,25 +1,19 @@
 /* eslint-disable complexity */
-import React, { useRef } from "react";
+import React from "react";
 import { useRecoilValue } from "recoil";
 
 import ZinZenTextLight from "@assets/images/LogoTextLight.svg";
 import ZinZenTextDark from "@assets/images/LogoTextDark.svg";
 
 import { TGoalCategory } from "@src/models/GoalItem";
-import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { darkModeState } from "@src/store";
 import { searchQueryState } from "@src/store/GoalsState";
 
-import AppLayout from "@src/layouts/AppLayout";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
-import ShareGoalModal from "@pages/GoalsPage/components/modals/ShareGoalModal";
-import DisplayChangesModal from "@components/GoalsComponents/DisplayChangesModal/DisplayChangesModal";
 
 import { useParams, useSearchParams } from "react-router-dom";
-import RegularGoalActions from "@components/GoalsComponents/MyGoalActions/RegularGoalActions";
-import Participants from "@components/GoalsComponents/Participants";
 
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
@@ -32,6 +26,7 @@ import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
 
 import "./GoalsPage.scss";
+import GoalModals from "./GoalModals";
 
 // TODO: re-implement sorting priority goals
 
@@ -42,26 +37,16 @@ export const MyGoals = () => {
   const searchQuery = useRecoilValue(searchQueryState);
 
   const { data: activeGoal } = useGetGoalById(activeGoalId || "");
-  const { activeGoals: activeChildrenGoals, isLoading: isFetchingChildrenGoals } = useGetActiveGoals(
-    parentId || "root",
-  );
 
-  const { archivedGoals } = useGetArchivedGoals(parentId || "root");
-  const { deletedGoals } = useGetDeletedGoals(parentId || "root");
-
-  const showShareModal = searchParams.get("share") === "true";
-  const showOptions = searchParams.get("showOptions") === "true" && activeGoal && activeGoal.archived === "false";
-
-  const showParticipants = searchParams.get("showParticipants") === "true";
-  const showNewChanges = searchParams.get("showNewChanges") === "true";
+  const { activeGoals: activeChildrenGoals } = useGetActiveGoals(parentId);
+  const { archivedGoals } = useGetArchivedGoals(parentId);
+  const { deletedGoals } = useGetDeletedGoals(parentId);
 
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
   const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
 
   const darkModeStatus = useRecoilValue(darkModeState);
-
-  const goalWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const zinZenLogoHeight = activeGoals && activeGoals.length > 0 ? 125 : 350;
 
@@ -76,21 +61,8 @@ export const MyGoals = () => {
   if (!filteredActiveChildrenGoals) return null;
 
   return (
-    <AppLayout title="myGoals">
-      {showOptions && <RegularGoalActions goal={activeGoal} />}
-      {showShareModal && activeGoal && <ShareGoalModal goal={activeGoal} />}
-      {showParticipants && <Participants />}
-      {showNewChanges && activeGoal && <DisplayChangesModal currentMainGoal={activeGoal} />}
-
-      {goalCategories.includes(goalType) && (
-        <ConfigGoal
-          type={goalType}
-          goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
-          mode={mode}
-        />
-      )}
-
-      <div className="myGoals-container" ref={goalWrapperRef}>
+    <>
+      <div className="myGoals-container">
         {parentId === "root" ? (
           <div className="my-goals-content">
             <div className="d-flex f-col">
@@ -102,7 +74,7 @@ export const MyGoals = () => {
             <ArchivedGoals goals={archivedGoals || []} />
           </div>
         ) : (
-          <GoalSublist key={parentId} goals={filteredActiveChildrenGoals} />
+          <div>Loading...</div>
         )}
 
         <img
@@ -111,6 +83,17 @@ export const MyGoals = () => {
           alt="Zinzen"
         />
       </div>
-    </AppLayout>
+
+      {/* Modals */}
+      {goalCategories.includes(goalType) && (
+        <ConfigGoal
+          type={goalType}
+          goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
+          mode={mode}
+        />
+      )}
+
+      {activeGoal && <GoalModals activeGoal={activeGoal} />}
+    </>
   );
 };

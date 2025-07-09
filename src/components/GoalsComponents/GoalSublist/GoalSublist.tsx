@@ -17,6 +17,7 @@ import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useGetSharedWMGoalsArchived } from "@src/hooks/api/SharedWMGoals/useGetSharedWMGoalsArchived";
 import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
+import { Spin } from "antd";
 import { useLocation, useParams } from "react-router-dom";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import GoalsList from "../GoalsList";
@@ -24,7 +25,7 @@ import GoalHistory from "./components/GoalHistory";
 import "./GoalSublist.scss";
 import ConfigGoal from "../../ConfigGoal/ConfigGoal";
 
-export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
+export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading: boolean }) => {
   const { parentId, partnerId } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId || "");
   const [showConfig, setShowConfig] = useState(goals.length === 0);
@@ -88,7 +89,13 @@ export const GoalSublist = ({ goals }: { goals: GoalItem[] }) => {
                 />
               </div>
             )}
-            <GoalsList goals={goals} />
+            {isLoading ? (
+              <div className="place-middle">
+                <Spin />
+              </div>
+            ) : (
+              <GoalsList goals={goals} />
+            )}
             <AvailableGoalHintProvider goalHints={goalHints}>
               <AvailableGoalHints goals={goalHints} />
             </AvailableGoalHintProvider>

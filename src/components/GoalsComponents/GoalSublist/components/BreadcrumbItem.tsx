@@ -1,27 +1,23 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import "./BreadcrumbItem.scss";
 
 interface BreadcrumbItemProps {
-  goalId: string;
+  color: string;
+  title: string;
 }
 
-export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({ goalId }) => {
-  const { t } = useTranslation();
-  const { data: goal } = useGetGoalById(goalId);
-
-  if (!goal) return null;
-
+const BreadcrumbItem = ({ color, title }: BreadcrumbItemProps) => {
   return (
     <span
       className="breadcrumb-item fw-500"
       style={{
-        border: `1px solid ${goal.goalColor}`,
-        background: `${goal.goalColor}33`,
+        border: `1px solid ${color}`,
+        background: `${color}33`,
       }}
     >
-      {t(goal.title)}
+      {title}
     </span>
   );
 };
+
+export default BreadcrumbItem;
