@@ -10,6 +10,7 @@ import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import InvitePage from "@pages/InvitePage/InvitePage";
 import InvestPage from "@pages/InvestPage/InvestPage";
+import SublistGoalsPage from "@pages/GoalsPage/SublistGoalsPage";
 import AppLayout from "./layouts/AppLayout";
 import { PartnerProvider } from "./contexts/partner-context";
 import useApp from "./hooks/useApp";
@@ -36,8 +37,11 @@ export const AppRoutes = () => {
       {!isLanguageChosen ? <Route path="/" element={<LandingPage />} /> : <Route path="/" element={<MyTimePage />} />}
       <Route path="/Feedback" element={<FeedbackPage />} />
       <Route path="*" element={<MyGoals />} />
-      <Route path="/goals/:parentId" element={<MyGoals />} />
-      <Route path="/goals/:parentId/:activeGoalId" element={<MyGoals />} />
+      <Route path="/goals/root" element={<MyGoals />} />
+      <Route path="/goals/root/:activeGoalId" element={<MyGoals />} />
+
+      <Route path="/goals/:parentId" element={<SublistGoalsPage />} />
+      <Route path="/goals/:parentId/:activeGoalId" element={<SublistGoalsPage />} />
 
       <Route
         path="/partners"
@@ -80,7 +84,6 @@ export const AppRoutes = () => {
           </PartnerProvider>
         }
       />
-      {/* <Route path="/goals" element={<GoalsPage />} /> */}
 
       <Route
         path="/MyJournal"
