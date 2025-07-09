@@ -9,7 +9,7 @@ import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import useGoalStore from "@src/hooks/useGoalStore";
 import { ILocationState, ScheduleStatus } from "@src/Interfaces";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { useGoalSave } from "@src/hooks/useGoalSave";
 import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
@@ -64,6 +64,7 @@ const ConfigGoalContent = ({
   isModal,
   onToggleConfig,
 }: ConfigGoalContentProps) => {
+  const navigate = useNavigate();
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
 
@@ -221,6 +222,38 @@ const ConfigGoalContent = ({
     }
   };
 
+  const handleColorChange = (color: string) => {
+    const newState = { ...formState, goalColor: color };
+    setFormState(newState);
+    if (!isModal) {
+      const currentGoalsHistory = location.state?.goalsHistory || [];
+      const updatedGoalsHistory =
+        currentGoalsHistory.length > 0
+          ? [
+              ...currentGoalsHistory.slice(0, -1),
+              {
+                ...currentGoalsHistory[currentGoalsHistory.length - 1],
+                goalColor: color,
+              },
+            ]
+          : [
+              {
+                goalID: goal.id,
+                goalTitle: goal.title,
+                goalColor: color,
+              },
+            ];
+
+      navigate(".", {
+        replace: true,
+        state: {
+          goalsHistory: updatedGoalsHistory,
+        },
+      });
+      debouncedSave(isEditMode, newState);
+    }
+  };
+
   return (
     <form
       className="configGoal"
@@ -233,11 +266,7 @@ const ConfigGoalContent = ({
         <div className="color-picker-wrapper" onClickCapture={handleColorPickerAreaClick}>
           <ColorPicker
             color={formState.goalColor}
-            setColor={(color: string) => {
-              const newState = { ...formState, goalColor: color };
-              setFormState(newState);
-              debouncedSave(isEditMode, newState);
-            }}
+            setColor={(color: string) => handleColorChange(color)}
             className="inline-position"
           />
         </div>

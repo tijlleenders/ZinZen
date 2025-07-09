@@ -1,7 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { ISubGoalHistory } from "@src/store/GoalsState";
 import ColorPicker from "./ColorPicker";
 import ArchivedAutoComplete from "./ArchivedAutoComplete";
 import { FormState } from "../ConfigGoal.helper";
@@ -26,8 +27,44 @@ const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const prevGoalHistory = location.state?.goalsHistory as ISubGoalHistory[];
 
   const titlePlaceholder = t(`${type !== "Budget" ? "goal" : "budget"}Title`);
+
+  const handleTitleChange = (value: string) => {
+    const newState = { ...formState, title: value };
+    setFormState(newState);
+    if (!isModal) {
+      const currentGoalsHistory = location.state?.goalsHistory || [];
+      const updatedGoalsHistory =
+        currentGoalsHistory.length > 0
+          ? [
+              ...currentGoalsHistory.slice(0, -1),
+              {
+                ...currentGoalsHistory[currentGoalsHistory.length - 1],
+                goalTitle: value,
+              },
+            ]
+          : [
+              {
+                goalID: prevGoalHistory?.[prevGoalHistory.length - 1]?.goalID || "",
+                goalTitle: value,
+                goalColor: formState.goalColor,
+              },
+            ];
+
+      navigate(".", {
+        replace: true,
+        state: {
+          goalsHistory: updatedGoalsHistory,
+        },
+      });
+    }
+    debouncedSave(isEditMode, newState);
+  };
 
   return (
     <div style={{ textAlign: "left" }} className="header-title">
@@ -43,11 +80,7 @@ const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({
         inputValue={formState.title}
         onGoalSelect={onSuggestionClick}
         isModal={isModal}
-        onInputChange={(value) => {
-          const newState = { ...formState, title: value };
-          setFormState(newState);
-          debouncedSave(isEditMode, newState);
-        }}
+        onInputChange={(value) => handleTitleChange(value)}
       />
     </div>
   );
