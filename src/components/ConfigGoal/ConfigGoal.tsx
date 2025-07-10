@@ -40,6 +40,7 @@ import BudgetPerHr from "./BudgetPerHr";
 import BudgetPerWeek from "./BudgetPerWeek";
 import OnDays from "./OnDays";
 import ColorPicker from "./components/ColorPicker";
+import { useKeyPress } from "@src/hooks/useKeyPress";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -407,6 +408,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
   const { t } = useTranslation();
+  const enterPress = useKeyPress("Enter");
 
   const { parentId = "", activeGoalId = "" } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId ?? "");
@@ -453,15 +455,11 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
     await handleSave(editMode, form);
   };
 
-  // useEffect(() => {
-  //   const debounceTimer = setTimeout(() => {
-  //     if (!useModal) {
-  //       handleSave(isEditMode, formState);
-  //     }
-  //   }, 500);
-
-  //   return () => clearTimeout(debounceTimer);
-  // }, [formState]);
+  useEffect(() => {
+    if (enterPress && useModal) {
+      handleCancel();
+    }
+  }, [enterPress]);
 
   if (useModal) {
     return (
