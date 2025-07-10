@@ -31,8 +31,8 @@ const GoalHistory = ({
   setShowConfig,
 }: {
   goalsHistory: ISubGoalHistory[];
-  showConfig: boolean;
-  setShowConfig: React.Dispatch<React.SetStateAction<boolean>>;
+  showConfig?: boolean;
+  setShowConfig?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { t } = useTranslation();
   const darkModeStatus = useRecoilValue(darkModeState);
@@ -46,7 +46,7 @@ const GoalHistory = ({
         if ((e.target as HTMLElement).closest(".ant-breadcrumb-link")) {
           return;
         }
-        setShowConfig(!showConfig);
+        setShowConfig?.(!showConfig);
       }}
     >
       <Breadcrumb
@@ -71,7 +71,7 @@ const GoalHistory = ({
                 title: <BreadcrumbItem color={goal.goalColor} title={t(goal.goalTitle)} />,
                 onClick: () => {
                   if (index === goalsHistory.length - 1) {
-                    setShowConfig(!showConfig);
+                    setShowConfig?.(!showConfig);
                     return;
                   }
                   window.history.go(index + 1 - goalsHistory.length);
@@ -100,7 +100,7 @@ const GoalHistory = ({
                   onClick: () => {
                     const count = index + 1 - goalsHistory.length;
                     if (-count === goalsHistory.length - 1) {
-                      setShowConfig(!showConfig);
+                      setShowConfig?.(!showConfig);
                       return;
                     }
                     window.history.go(count);

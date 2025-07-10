@@ -1,6 +1,6 @@
 import { GoalSublist } from "@components/GoalsComponents/GoalSublist/GoalSublist";
 import React from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 
 import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
@@ -12,6 +12,8 @@ import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 import { TGoalCategory } from "@src/models/GoalItem";
 import { TGoalConfigMode } from "@src/types";
 import AppLayout from "@src/layouts/AppLayout";
+import { Spin } from "antd";
+import GoalHistory from "@components/GoalsComponents/GoalSublist/components/GoalHistory";
 import GoalModals from "./GoalModals";
 
 const SublistGoalsPage = () => {
@@ -20,7 +22,7 @@ const SublistGoalsPage = () => {
   const { activeGoals, isLoading } = useGetActiveGoals(parentId || "");
   const [searchParams] = useSearchParams();
   const searchQuery = useRecoilValue(searchQueryState);
-
+  const location = useLocation();
   const goalType = (searchParams.get("type") as TGoalCategory) || "";
 
   const mode = (searchParams.get("mode") as TGoalConfigMode) || "";
@@ -29,10 +31,19 @@ const SublistGoalsPage = () => {
     goal.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  const goalsHistory = location.state?.goalsHistory ?? [];
+
   return (
     <AppLayout title="myGoals">
       <div className="myGoals-container">
-        <GoalSublist key={parentId} goals={filteredActiveGoals || []} isLoading={isLoading} />
+        {isLoading && <GoalHistory goalsHistory={goalsHistory} />}
+        {isLoading ? (
+          <div className="place-middle">
+            <Spin />
+          </div>
+        ) : (
+          <GoalSublist key={parentId} goals={filteredActiveGoals || []} isLoading={isLoading} />
+        )}
         {/* Modals */}
         {goalCategories.includes(goalType) && (
           <ConfigGoal
