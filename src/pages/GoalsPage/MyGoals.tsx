@@ -36,9 +36,8 @@ export const MyGoals = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = useRecoilValue(searchQueryState);
 
-  const { data: activeGoal } = useGetGoalById(activeGoalId || "");
-
-  const { activeGoals: activeChildrenGoals } = useGetActiveGoals(parentId);
+  const isActiveGoalIdEmpty = activeGoalId === "";
+  const { data: activeGoal } = useGetGoalById(activeGoalId || "", isActiveGoalIdEmpty);
   const { archivedGoals } = useGetArchivedGoals(parentId);
   const { deletedGoals } = useGetDeletedGoals(parentId);
 
@@ -53,12 +52,6 @@ export const MyGoals = () => {
   const filteredActiveGoals = activeGoals?.filter((goal) =>
     goal.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
-
-  const filteredActiveChildrenGoals = activeChildrenGoals?.filter((goal) =>
-    goal.title.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
-  if (!filteredActiveChildrenGoals) return null;
 
   return (
     <>
@@ -87,6 +80,7 @@ export const MyGoals = () => {
       {/* Modals */}
       {goalCategories.includes(goalType) && (
         <ConfigGoal
+          key={`${mode}-${activeGoalId}`}
           type={goalType}
           goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
           mode={mode}

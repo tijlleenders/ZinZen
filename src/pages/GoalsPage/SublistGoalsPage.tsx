@@ -15,7 +15,6 @@ import AppLayout from "@src/layouts/AppLayout";
 import GoalModals from "./GoalModals";
 
 const SublistGoalsPage = () => {
-  console.log("SublistGoalsPage");
   const { parentId, activeGoalId } = useParams();
   const { data: activeGoal } = useGetGoalById(activeGoalId || "");
   const { activeGoals, isLoading } = useGetActiveGoals(parentId || "");
@@ -37,6 +36,7 @@ const SublistGoalsPage = () => {
         {/* Modals */}
         {goalCategories.includes(goalType) && (
           <ConfigGoal
+            key={`${mode}-${activeGoalId}`}
             type={goalType}
             goal={mode === "edit" && activeGoal ? activeGoal : createGoalObjectFromTags()}
             mode={mode}
