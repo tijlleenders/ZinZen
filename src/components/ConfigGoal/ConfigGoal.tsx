@@ -48,9 +48,9 @@ interface ConfigGoalContentProps {
   type: TGoalCategory;
   mode: TGoalConfigMode;
   goal: GoalItem;
-  onSave: (editMode: boolean, formState: FormState) => Promise<void>;
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+  onSave?: (editMode: boolean, formState: FormState) => Promise<void>;
   isModal?: boolean;
   onToggleConfig?: () => void;
 }
@@ -210,7 +210,9 @@ const ConfigGoalContent = ({
 
   const debouncedSave = useDebounce(async (editMode: boolean, newFormState: FormState) => {
     if (isModal) return;
-    await onSave(editMode, newFormState);
+    if (onSave) {
+      await onSave(editMode, newFormState);
+    }
   }, 1000);
 
   const handleColorPickerAreaClick = (e: React.MouseEvent) => {
@@ -256,13 +258,7 @@ const ConfigGoalContent = ({
   };
 
   return (
-    <form
-      className="configGoal"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        await onSave(isEditMode, formState);
-      }}
-    >
+    <div className="configGoal">
       {!isModal && (
         <div className="color-picker-wrapper" onClickCapture={handleColorPickerAreaClick}>
           <ColorPicker
@@ -391,7 +387,7 @@ const ConfigGoalContent = ({
           </>
         )}
       </div>
-    </form>
+    </div>
   );
 };
 
@@ -446,11 +442,6 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
     }
   };
 
-  const handleModalSave = async (editMode: boolean, form: FormState) => {
-    await handleSave(editMode, form);
-    window.history.back();
-  };
-
   const handleInlineSave = async (editMode: boolean, form: FormState) => {
     await handleSave(editMode, form);
   };
@@ -477,7 +468,6 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
           type={type}
           mode={mode}
           goal={goal}
-          onSave={handleModalSave}
           formState={formState}
           setFormState={setFormState}
           isModal
