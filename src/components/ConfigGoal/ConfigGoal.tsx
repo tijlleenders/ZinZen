@@ -16,6 +16,7 @@ import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import useScheduler from "@src/hooks/useScheduler";
 import ZAccordion from "@src/common/Accordion";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
+import { useKeyPress } from "@src/hooks/useKeyPress";
 import { useDebounce } from "@src/hooks/useDebounce";
 import { colorPalleteList } from "../../utils";
 
@@ -40,7 +41,6 @@ import BudgetPerHr from "./BudgetPerHr";
 import BudgetPerWeek from "./BudgetPerWeek";
 import OnDays from "./OnDays";
 import ColorPicker from "./components/ColorPicker";
-import { useKeyPress } from "@src/hooks/useKeyPress";
 
 const onDays = [...calDays.slice(1), "Sun"];
 
@@ -404,10 +404,10 @@ interface ConfigGoalProps {
 }
 
 const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: ConfigGoalProps) => {
+  const { t } = useTranslation();
   const isKeyboardOpen = useVirtualKeyboardOpen();
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
-  const { t } = useTranslation();
   const enterPress = useKeyPress("Enter");
 
   const { parentId = "", activeGoalId = "" } = useParams();
