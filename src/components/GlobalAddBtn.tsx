@@ -144,7 +144,7 @@ const GlobalAddBtn = ({ add }: { add: string }) => {
   };
 
   useEffect(() => {
-    if ((plusPressed || enterPressed) && !state.goalType) {
+    if ((plusPressed || enterPressed) && !state?.goalType) {
       // @ts-ignore
       handleGlobalAddClick(new MouseEvent("click"));
     }
