@@ -11,15 +11,11 @@ const ActionButton: React.FC<{
   task: ITask;
   last?: boolean;
   onActionClick: (action: TaskAction, task: ITask) => void;
-}> = ({ action, task, last, onActionClick }) => (
+}> = ({ action, task, last = false, onActionClick }) => (
   <button type="button" onClick={() => onActionClick(action, task)} className={last ? "last-btn" : ""}>
     {action}
   </button>
 );
-
-ActionButton.defaultProps = {
-  last: false,
-};
 
 export const TaskOptions: React.FC<TaskOptionsProps> = ({ task, handleActionClick }) => {
   return (

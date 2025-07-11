@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ILocationState, ImpossibleGoal } from "@src/Interfaces";
 import { isGoalCode } from "@src/utils/patterns";
@@ -9,7 +9,8 @@ import useGoalActions from "@src/hooks/useGoalActions";
 import TriangleIcon from "@src/assets/TriangleIcon";
 import { CopyIcon } from "@src/assets/CopyIcon";
 import { moveGoalState } from "@src/store/moveGoalState";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { glowGoalIdState } from "@src/store/GlowGoalIdState";
 import GoalAvatar from "../GoalAvatar";
 import GoalTitle from "./components/GoalTitle";
 import { GoalIcon } from "./components/GoalIcon";
@@ -32,19 +33,9 @@ const InnerCircle: React.FC<{ color: string; children: ReactNode }> = ({ color, 
 const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
   const { parentId = "root", partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
-
-  const goalToMove = useRecoilValue(moveGoalState);
-
-  const [expandGoalId, setExpandGoalId] = useState("root");
-  const [isAnimating, setIsAnimating] = useState(true);
   const { copyCode } = useGoalActions();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAnimating(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
+  const goalToMove = useRecoilValue(moveGoalState);
+  const [glowGoalId, setGlowGoalId] = useRecoilState(glowGoalIdState);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -82,15 +73,21 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   };
 
   useEffect(() => {
-    if (location && location.pathname.includes("/goals")) {
-      const { expandedGoalId } = location.state || {};
-      if (expandedGoalId) {
-        setExpandGoalId(expandedGoalId);
-        const newState = { ...location.state, expandedGoalId: null };
-        navigate(location.pathname, { state: newState, replace: true });
+    if (glowGoalId === goal.id) {
+      const goalElement = document.getElementById(`goal-${goal.id}`);
+      if (goalElement) {
+        goalElement.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest",
+        });
       }
+
+      setTimeout(() => {
+        setGlowGoalId("");
+      }, 500);
     }
-  }, [location, navigate]);
+  }, []);
 
   const innerBorderColor = goal.sublist.length > 0 ? goal.goalColor : "transparent";
 
@@ -101,9 +98,8 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   return (
     <ZItemContainer
       id={`goal-${goal.id}`}
-      expandGoalId={expandGoalId}
+      shouldAnimate={glowGoalId === goal.id}
       dataTestId={`goal-${goal.title}`}
-      isAnimating={isAnimating}
       isGoalToBeMoved={goalToMove?.id === goal.id}
     >
       <div

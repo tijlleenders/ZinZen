@@ -12,6 +12,7 @@ import { ILocationState } from "@src/Interfaces";
 import { ISubGoalHistory } from "@src/store/GoalsState";
 import { useDoneTask } from "@src/hooks/api/Tasks/useDoneTask";
 import { useArchiveGoal } from "@src/hooks/api/Goals/mutations/useArchiveGoal";
+import { glowGoalIdState } from "@src/store/GlowGoalIdState";
 
 export const useMyTimelineStore = (day: string) => {
   const navigate = useNavigate();
@@ -22,10 +23,11 @@ export const useMyTimelineStore = (day: string) => {
   const setShowToast = useSetRecoilState(displayToast);
   const setTaskTitle = useSetRecoilState(focusTaskTitle);
   const setOpenReschedule = useSetRecoilState(displayReschedule);
-
+  const setAnimatedGoalId = useSetRecoilState(glowGoalIdState);
   const handleOpenGoal = async (goalId: string) => {
+    setAnimatedGoalId(goalId);
     const goalsHistory: ISubGoalHistory[] = [];
-    let tmpGoal: GoalItem | null = await getGoal(goalId);
+    let tmpGoal: GoalItem | undefined = await getGoal(goalId);
     let openGoalId = tmpGoal?.parentGoalId;
     const parentGoalId = openGoalId;
     if (!openGoalId) return;
