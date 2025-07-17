@@ -1,18 +1,18 @@
 import React from "react";
 import { Transaction } from "dexie";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useQueryClient } from "react-query";
 
 import { db } from "@models";
 import ZModal from "@src/common/ZModal";
 import { syncVersion } from "@src/models/dexie";
-import { backupRestoreModal, displayToast, lastAction } from "@src/store";
+import { backupRestoreModal, displayToast } from "@src/store";
 
 import "dexie-export-import";
 import "./index.scss";
 import { JsonExportStrategy } from "@src/utils/ExportStrategies/JsonExportStrategy";
 import { CsvExportStrategy } from "@src/utils/ExportStrategies/CsvExportStrategy";
 import DefaultButton from "@src/common/DefaultButton";
-import { GoalActions } from "@src/constants/actions";
 import { ExportManager } from "../utils/ExportStrategies/ExportManager";
 
 const backupImg =
@@ -25,10 +25,10 @@ const exportManager = new ExportManager(new JsonExportStrategy());
 const BackupRestoreModal = () => {
   const open = useRecoilValue(backupRestoreModal);
   const setShowToast = useSetRecoilState(displayToast);
-  const setLastAction = useSetRecoilState(lastAction);
+  const queryClient = useQueryClient();
 
   const importSuccessfull = () => {
-    setLastAction(GoalActions.GOALS_RESTORED);
+    queryClient.invalidateQueries();
     window.history.back();
     setShowToast({ open: true, message: "Data Restored Successfully", extra: "" });
   };
@@ -42,7 +42,7 @@ const BackupRestoreModal = () => {
       const reader = new FileReader();
       reader.readAsText(e.target.files[0]);
       reader.onload = async () => {
-        if (reader.result) {
+        if (reader.result && typeof reader.result === "string") {
           const { data } = JSON.parse(reader.result);
           const currentVersion = data.databaseVersion;
           await Promise.all(
