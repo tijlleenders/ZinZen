@@ -21,7 +21,17 @@ export const TaskOptions: React.FC<TaskOptionsProps> = ({ task, handleActionClic
   return (
     <div className="MTL-options">
       <ActionButton action={TaskAction.NotNow} task={task} onActionClick={handleActionClick} />
-      <ActionButton action={TaskAction.Done} task={task} onActionClick={handleActionClick} />
+      <ActionButton
+        action={TaskAction.Done}
+        task={task}
+        onActionClick={(action, taskItem) => {
+          const element = document.getElementById(taskItem.taskid);
+          if (element) {
+            element.classList.add("completedTask");
+          }
+          handleActionClick(action, taskItem);
+        }}
+      />
       <ActionButton action={TaskAction.Focus} task={task} onActionClick={handleActionClick} />
       <ActionButton action={TaskAction.Goal} task={task} onActionClick={handleActionClick} last />
     </div>

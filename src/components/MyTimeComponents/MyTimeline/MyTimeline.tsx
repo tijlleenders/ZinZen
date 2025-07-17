@@ -63,6 +63,7 @@ const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks }) => {
         return (
           <button
             key={task.taskid}
+            id={task.taskid}
             className={`MTL-taskItem simple ${isTaskCompleted ? "completedTask" : ""}`}
             type="button"
             style={{ borderLeft: `6px solid ${task.goalColor}` }}
