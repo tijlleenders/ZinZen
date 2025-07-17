@@ -16,10 +16,18 @@ import GoalTitle from "./components/GoalTitle";
 import { GoalIcon } from "./components/GoalIcon";
 import { ZItemContainer } from "../ZItemContainer";
 
+// eslint-disable-next-line no-shadow
+export enum ActionModal {
+  ACTIVE = "active",
+  DELETED = "deleted",
+  ARCHIVED = "archived",
+}
+
 interface MyGoalProps {
   goal: ImpossibleGoal;
   dragAttributes?: any;
   dragListeners?: any;
+  actionModal?: ActionModal;
 }
 
 const InnerCircle: React.FC<{ color: string; children: ReactNode }> = ({ color, children }) => {
@@ -30,7 +38,7 @@ const InnerCircle: React.FC<{ color: string; children: ReactNode }> = ({ color, 
   );
 };
 
-const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) => {
+const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners, actionModal = ActionModal.ACTIVE }) => {
   const { parentId = "root", partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
   const { copyCode } = useGoalActions();
@@ -40,11 +48,11 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const redirect = (state: object, isDropdown = false) => {
+  const redirect = (state: object, isDropdown = false, actionModalType = ActionModal.ACTIVE) => {
     const prefix = `${isPartnerModeActive ? `/partners/${partnerId}/` : "/"}goals`;
     if (isDropdown) {
       const searchparam = goal.newUpdates ? "showNewChanges" : "showOptions";
-      navigate(`${prefix}/${parentId}/${goal.id}?${searchparam}=true`, { state });
+      navigate(`${prefix}/${parentId}/${goal.id}?${searchparam}=true`, { state: { ...state, actionModalType } });
     } else {
       navigate(`${prefix}/${goal.id}`, { state });
     }
@@ -106,7 +114,7 @@ const MyGoal: React.FC<MyGoalProps> = ({ goal, dragAttributes, dragListeners }) 
         style={{ touchAction: "none" }}
         onClickCapture={(e) => {
           e.stopPropagation();
-          redirect(location.state, true);
+          redirect(location.state, true, actionModal);
         }}
         {...dragAttributes}
         {...dragListeners}

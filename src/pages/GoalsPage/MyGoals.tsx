@@ -13,7 +13,7 @@ import { searchQueryState } from "@src/store/GoalsState";
 import GoalsList from "@components/GoalsComponents/GoalsList";
 import ConfigGoal from "@components/ConfigGoal/ConfigGoal";
 
-import { useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 
 import { TGoalConfigMode } from "@src/types";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
@@ -21,6 +21,7 @@ import { goalCategories } from "@src/constants/goals";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
 import { useGetActiveGoals } from "@src/hooks/api/Goals/queries/useGetActiveGoals";
 import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchivedGoals";
+import { ActionModal } from "@components/GoalsComponents/MyGoal/MyGoal";
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
 import DeletedGoals from "./components/DeletedGoals";
 import ArchivedGoals from "./components/ArchivedGoals";
@@ -32,6 +33,7 @@ import GoalModals from "./GoalModals";
 
 export const MyGoals = () => {
   const { parentId = "root", activeGoalId } = useParams();
+  const location = useLocation();
   const { activeGoals } = useGetActiveGoals("root");
   const [searchParams] = useSearchParams();
   const searchQuery = useRecoilValue(searchQueryState);
@@ -87,7 +89,7 @@ export const MyGoals = () => {
         />
       )}
 
-      {activeGoal && <GoalModals activeGoal={activeGoal} />}
+      {activeGoal && location.state?.actionModalType === ActionModal.ACTIVE && <GoalModals activeGoal={activeGoal} />}
     </>
   );
 };
