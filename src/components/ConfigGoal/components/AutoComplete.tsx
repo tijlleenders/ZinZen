@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./AutoComplete.scss";
 import { GoalItem } from "@src/models/GoalItem";
 
@@ -19,33 +19,36 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   placeholder,
   isModal = false,
 }) => {
-  const [isSuggestionVisible, setIsSuggestionVisible] = useState(false);
   const [suggestion, setSuggestion] = useState<string>("");
+  const [remainingText, setRemainingText] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const spanRef = useRef<HTMLSpanElement>(null);
-  const suggestionRef = useRef<HTMLSpanElement>(null);
+  const ghostTextRef = useRef<HTMLSpanElement>(null);
+  const measureSpanRef = useRef<HTMLSpanElement>(null);
 
   const handleInputChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
     onInputChange(value);
 
     if (value.trim() === "") {
-      setIsSuggestionVisible(false);
       setSuggestion("");
+      setRemainingText("");
       return;
     }
 
     const matchingGoal = data.find((goal) => goal.title.toLowerCase().startsWith(value.toLowerCase()));
+
     if (matchingGoal && matchingGoal.title.toLowerCase() !== value.toLowerCase()) {
       setSuggestion(matchingGoal.title);
-      setIsSuggestionVisible(true);
+      // Calculate the remaining text (what user hasn't typed yet)
+      const remaining = matchingGoal.title.substring(value.length);
+      setRemainingText(remaining);
     } else {
-      setIsSuggestionVisible(false);
       setSuggestion("");
+      setRemainingText("");
     }
   };
 
   const handleSuggestionClick = () => {
-    if (suggestion && isSuggestionVisible) {
+    if (suggestion) {
       const matchingGoal = data.find((goal) => goal.title === suggestion);
       if (matchingGoal) {
         onSuggestionClick(matchingGoal);
@@ -53,20 +56,17 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
     }
   };
 
+  // Update ghost text position based on input text width
   useEffect(() => {
-    if (spanRef.current) {
-      spanRef.current.textContent = inputvalue;
+    if (measureSpanRef.current && ghostTextRef.current && remainingText) {
+      measureSpanRef.current.textContent = inputvalue;
+      const textWidth = measureSpanRef.current.offsetWidth;
+      ghostTextRef.current.style.left = `${textWidth}px`;
     }
-  }, [inputvalue]);
-
-  useEffect(() => {
-    if (suggestionRef.current && isSuggestionVisible) {
-      suggestionRef.current.style.width = `${spanRef.current?.offsetWidth || 0}px`;
-    }
-  }, [suggestion, isSuggestionVisible]);
+  }, [inputvalue, remainingText]);
 
   return (
-    <button className="autocomplete-container w-100 simple" type="button" onClick={handleSuggestionClick}>
+    <div className=" w-100 ">
       <div className="autocomplete-input-wrapper">
         <input
           ref={inputRef}
@@ -78,16 +78,28 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
           id={isModal ? "title-field-modal" : "title-field"}
           inputMode="text"
         />
-        <span ref={spanRef} className="hidden-span">
+        <span ref={measureSpanRef} className="measure-span">
           {inputvalue}
         </span>
-        {isSuggestionVisible && suggestion && (
-          <span ref={suggestionRef} className="autocomplete-suggestion">
-            {suggestion}
+        {remainingText && (
+          <span
+            ref={ghostTextRef}
+            className="autocomplete-ghost-text"
+            onClick={handleSuggestionClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleSuggestionClick();
+              }
+            }}
+          >
+            {remainingText}
           </span>
         )}
       </div>
-    </button>
+    </div>
   );
 };
 

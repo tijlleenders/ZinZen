@@ -1,45 +1,45 @@
-.autocomplete-container {
+.autocomplete-input-wrapper {
   position: relative;
-  display: inline-block;
-  max-width: 400px;
+  display: flex;
+  align-items: center;
 
-  .autocomplete-suggestion {
-    opacity: 0.5;
-    font-size: 1.143rem;
-    cursor: pointer;
-    white-space: nowrap;
-    pointer-events: auto;
-    padding-top: 3px;
-    padding-left: 0px;
-    margin-left: -1px;
+  input {
+    background: transparent;
+    font-size: 1.3rem;
+    outline: none;
+    padding-right: 0;
+    margin: 0;
+    width: auto;
+    z-index: 2;
   }
 
-  .autocomplete-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 0;
-    font-size: inherit;
-    font-family: inherit;
-
-    input {
-      background: transparent;
-      border: none;
-      font-size: 1.3rem;
-      outline: none;
-      padding-right: 0;
-      margin: 0;
-      width: auto;
-    }
-  }
-
-  .hidden-span {
+  .measure-span {
     position: absolute;
     visibility: hidden;
     white-space: pre;
-    font-size: 1.243rem;
+    font-size: 1.3rem;
     font-family: inherit;
     padding: 0;
     margin: 0;
+    pointer-events: none;
+  }
+
+  .autocomplete-ghost-text {
+    position: absolute;
+    top: 0;
+    color: inherit;
+    opacity: 0.5;
+    font-size: 1.3rem;
+    pointer-events: auto;
+    white-space: nowrap;
+    user-select: none;
+    z-index: 1;
+    padding: 5px 0 0 12px;
+    margin: 0;
+    font-family: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
   }
 }
