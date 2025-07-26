@@ -3,14 +3,18 @@ import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { ISubGoalHistory } from "@src/store/GoalsState";
+import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
+import { ILocationState } from "@src/Interfaces";
+import { useSetRecoilState } from "recoil";
+import { suggestedGoalState } from "@src/store/SuggestedGoalState";
+import useGoalStore from "@src/hooks/useGoalStore";
+import { FormState } from "../ConfigGoal.helper";
 import ColorPicker from "./ColorPicker";
 import ArchivedAutoComplete from "./ArchivedAutoComplete";
-import { FormState } from "../ConfigGoal.helper";
 
 interface ConfigGoalHeaderProps {
   formState: FormState;
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
-  onSuggestionClick: (selectedGoal: GoalItem) => Promise<void>;
   isModal?: boolean;
   debouncedSave: (editMode: boolean, newFormState: FormState) => Promise<void>;
   isEditMode: boolean;
@@ -19,12 +23,13 @@ interface ConfigGoalHeaderProps {
 const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({
   formState,
   setFormState,
-  onSuggestionClick,
   isModal,
   debouncedSave,
   isEditMode,
 }) => {
   const { t } = useTranslation();
+  const { openEditMode } = useGoalStore();
+
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
   const navigate = useNavigate();
@@ -64,6 +69,18 @@ const ConfigGoalHeader: React.FC<ConfigGoalHeaderProps> = ({
       });
     }
     debouncedSave(isEditMode, newState);
+  };
+
+  const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
+
+  const onSuggestionClick = async (selectedGoal: GoalItem) => {
+    const updatedGoalsHistory = await getHistoryUptoGoal(selectedGoal.parentGoalId);
+    const newState: ILocationState = {
+      ...location.state,
+      goalsHistory: updatedGoalsHistory,
+    };
+    setSuggestedGoal(selectedGoal);
+    openEditMode(selectedGoal, newState);
   };
 
   return (

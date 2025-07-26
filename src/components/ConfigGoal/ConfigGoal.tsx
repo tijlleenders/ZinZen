@@ -1,18 +1,16 @@
 /* eslint-disable complexity */
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
 import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
-import useGoalStore from "@src/hooks/useGoalStore";
-import { ILocationState, ScheduleStatus } from "@src/Interfaces";
+import { ScheduleStatus } from "@src/Interfaces";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { useGoalSave } from "@src/hooks/useGoalSave";
-import { getHistoryUptoGoal } from "@src/helpers/GoalProcessor";
 import useScheduler from "@src/hooks/useScheduler";
 import ZAccordion from "@src/common/Accordion";
 import { useGetGoalById } from "@src/hooks/api/Goals/queries/useGetGoalById";
@@ -25,7 +23,6 @@ import useVirtualKeyboardOpen from "../../hooks/useVirtualKeyBoardOpen";
 import useOnScreenKeyboardScrollFix from "../../hooks/useOnScreenKeyboardScrollFix";
 import {
   calDays,
-  convertOnFilterToArray,
   getDefaultColor,
   FormState,
   getDefaultFormStateForSimpleGoal,
@@ -66,7 +63,6 @@ const ConfigGoalContent = ({
   onToggleConfig,
 }: ConfigGoalContentProps) => {
   const navigate = useNavigate();
-  const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
   const isEditMode = mode === "edit";
 
   const { parentId } = useParams();
@@ -125,49 +121,6 @@ const ConfigGoalContent = ({
 
   const minWeekValue = (budgetGoal?.perDayHrs.min ?? 0) * (numberOfDays ?? 0);
   const maxWeekValue = (budgetGoal?.perDayHrs.max ?? 0) * (numberOfDays ?? 0);
-
-  const { openEditMode } = useGoalStore();
-
-  const onSuggestionClick = async (selectedGoal: GoalItem) => {
-    const updatedGoalsHistory = await getHistoryUptoGoal(selectedGoal.parentGoalId);
-
-    const newState: ILocationState = {
-      ...location.state,
-      goalsHistory: updatedGoalsHistory,
-    };
-
-    openEditMode(selectedGoal, newState);
-    setSuggestedGoal(selectedGoal);
-
-    setFormState({
-      goalColor: selectedGoal.goalColor,
-      hintOption: false,
-      title: selectedGoal.title,
-      simpleGoal: {
-        duration: selectedGoal.duration ?? undefined,
-        due: selectedGoal.due ? new Date(selectedGoal.due).toISOString().slice(0, 10) : "",
-      },
-      budgetGoal: {
-        on: selectedGoal.on || convertOnFilterToArray("weekdays"),
-        afterTime: selectedGoal.afterTime ?? 9,
-        beforeTime: selectedGoal.beforeTime ?? 18,
-        perDayHrs: {
-          min: selectedGoal.timeBudget?.perDay?.min ?? 0,
-          max: selectedGoal.timeBudget?.perDay?.max ?? 0,
-        },
-        perWeekHrs: {
-          min: selectedGoal.timeBudget?.perWeek?.min ?? 0,
-          max: selectedGoal.timeBudget?.perWeek?.max ?? 0,
-        },
-      },
-    });
-
-    const hint = await getGoalHintItem(selectedGoal.id);
-    setFormState((prev) => ({
-      ...prev,
-      hintOption: hint?.hintOptionEnabled || false,
-    }));
-  };
 
   const getScheduleStatusText = (status: ScheduleStatus) => {
     switch (status) {
@@ -272,7 +225,6 @@ const ConfigGoalContent = ({
       <ConfigGoalHeader
         formState={formState}
         setFormState={setFormState}
-        onSuggestionClick={onSuggestionClick}
         isModal={isModal}
         debouncedSave={debouncedSave}
         isEditMode={isEditMode}
@@ -403,6 +355,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
   const { t } = useTranslation();
   const isKeyboardOpen = useVirtualKeyboardOpen();
   const setSuggestedGoal = useSetRecoilState(suggestedGoalState);
+  const suggestedGoal = useRecoilValue(suggestedGoalState);
   const isEditMode = mode === "edit";
   const enterPress = useKeyPress("Enter");
 
@@ -410,19 +363,30 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
   const { data: parentGoal } = useGetGoalById(parentId ?? "");
 
   const [formState, setFormState] = useState<FormState>({
-    goalColor: getDefaultColor(isEditMode, goal, parentGoal, colorPalleteList),
+    goalColor: suggestedGoal?.goalColor ?? getDefaultColor(isEditMode, goal, parentGoal, colorPalleteList),
     hintOption: false,
-    title: t(goal.title),
+    title: t(suggestedGoal?.title ?? goal.title),
     ...(type === "Standard" || type === "Cluster"
       ? {
-          simpleGoal: getDefaultFormStateForSimpleGoal(goal),
+          simpleGoal: getDefaultFormStateForSimpleGoal(suggestedGoal ?? goal),
           budgetGoal: undefined,
         }
       : {
           simpleGoal: undefined,
-          budgetGoal: getDefaultFormStateForBudgetGoal(goal, isEditMode),
+          budgetGoal: getDefaultFormStateForBudgetGoal(suggestedGoal ?? goal, isEditMode),
         }),
   });
+
+  useEffect(() => {
+    if (suggestedGoal) {
+      getGoalHintItem(suggestedGoal.id).then((hint) => {
+        setFormState((prev) => ({
+          ...prev,
+          hintOption: hint?.hintOptionEnabled || false,
+        }));
+      });
+    }
+  }, [suggestedGoal]);
 
   const { handleSave } = useGoalSave({
     goal,

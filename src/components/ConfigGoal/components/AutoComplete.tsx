@@ -52,6 +52,8 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
       const matchingGoal = data.find((goal) => goal.title === suggestion);
       if (matchingGoal) {
         onSuggestionClick(matchingGoal);
+        setSuggestion("");
+        setRemainingText("");
       }
     }
   };
@@ -66,7 +68,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
   }, [inputvalue, remainingText]);
 
   return (
-    <div className=" w-100 ">
+    <div className="w-100 ">
       <div className="autocomplete-input-wrapper">
         <input
           ref={inputRef}
@@ -85,7 +87,7 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
           <span
             ref={ghostTextRef}
             className="autocomplete-ghost-text"
-            onClick={handleSuggestionClick}
+            onClickCapture={handleSuggestionClick}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {

@@ -140,10 +140,12 @@ export const unarchiveGoalRepository = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, { archived: "false" });
   });
+
   if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
-      await db.goalsCollection.update(goal.parentGoalId, { sublist: [...parentGoal.sublist, goal.id] });
+      const updatedSublist = [...(parentGoal?.sublist ?? []), goal.id];
+      await db.goalsCollection.update(goal.parentGoalId, { sublist: updatedSublist });
     });
   }
 };
