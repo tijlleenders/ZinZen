@@ -1,4 +1,3 @@
-import { updatePositionIndex } from "@src/api/GCustomAPI";
 import { GoalItem } from "@src/models/GoalItem";
 import React from "react";
 import {
@@ -11,8 +10,6 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { useRecoilValue } from "recoil";
-import { impossibleGoalsList } from "@src/store/ImpossibleGoalState";
 import { ImpossibleGoal } from "@src/Interfaces";
 import { useGoalSelection } from "@src/hooks/useGoalSelection";
 import { useUpdateGoalPositions } from "@src/hooks/api/Goals/mutations/useUpdateGoalPositions";
@@ -24,7 +21,6 @@ interface GoalsListProps {
 }
 
 const GoalsList = ({ goals }: GoalsListProps) => {
-  const impossibleGoals = useRecoilValue(impossibleGoalsList);
   const { mutate: updatePositions } = useUpdateGoalPositions();
 
   const sensors = useSensors(
@@ -42,17 +38,11 @@ const GoalsList = ({ goals }: GoalsListProps) => {
   );
 
   const addImpossibleProp = (goal: GoalItem): ImpossibleGoal => {
-    const isImpossibleGoal = impossibleGoals.some((impossibleGoal) => goal.id === impossibleGoal.goalId);
-
-    const isImpossibleSublistGoal =
-      !isImpossibleGoal &&
-      goal.sublist.some((sublistGoal) =>
-        impossibleGoals.some((impossibleSublistGoal) => impossibleSublistGoal.goalId === sublistGoal),
-      );
+    const isImpossibleFromGoal = goal.impossible === true;
 
     return {
       ...goal,
-      impossible: isImpossibleGoal || isImpossibleSublistGoal,
+      impossible: isImpossibleFromGoal,
     };
   };
 

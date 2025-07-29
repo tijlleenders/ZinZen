@@ -43,4 +43,5 @@ export interface GoalItem {
   category: TGoalCategory;
   newUpdates: boolean;
   timestamp: number;
+  impossible?: boolean;
 }
