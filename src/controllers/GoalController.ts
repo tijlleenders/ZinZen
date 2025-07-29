@@ -3,6 +3,7 @@
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { inheritParentProps } from "@src/utils";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
+import { createSharedGoalObject } from "@src/utils/sharedGoalUtils";
 import { getSharedWMGoal, removeSharedWMGoalWithChildrens, updateSharedWMGoal } from "@src/api/SharedWMAPI";
 import {
   getGoal,
@@ -122,13 +123,14 @@ const sendNewGoalObject = async (
           return;
         }
 
+        const sharedGoal = createSharedGoalObject(newGoal);
         subscriberUpdates.set(sub.relId, {
           sub,
           notificationGoalId: rootGoal.id || newGoalId,
           updates: [
             {
               level,
-              goal: { ...newGoal, id: newGoalId, parentGoalId, participants: [] },
+              goal: { ...sharedGoal, id: newGoalId, parentGoalId },
             },
           ],
         });
@@ -141,13 +143,16 @@ const sendNewGoalObject = async (
         const subscriberUpdate = subscriberUpdates.get(sub.relId);
         if (subscriberUpdate) {
           subscriberUpdate.updates.push(
-            ...descendants.map((descendant) => ({
-              level: level + 1,
-              goal: {
-                ...descendant,
-                notificationGoalId,
-              },
-            })),
+            ...descendants.map((descendant) => {
+              const sharedDescendant = createSharedGoalObject(descendant);
+              return {
+                level: level + 1,
+                goal: {
+                  ...sharedDescendant,
+                  notificationGoalId,
+                },
+              };
+            }),
           );
         }
       });
