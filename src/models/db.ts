@@ -10,13 +10,12 @@ import { GCustomItem } from "./GCustomItem";
 import { SchedulerOutputCacheItem } from "./SchedulerOutputCacheItem";
 import { TrashItem } from "./TrashItem";
 import { HintItem } from "./HintItem";
-import { ImpossibleGoalItem } from "./ImpossibleGoalItem";
 import { dbStoreSchema, syncVersion } from "./dexie";
 import { TaskHistoryItem } from "./TaskHistoryItem";
 import { TasksDoneTodayItem } from "./TasksDoneTodayItem";
 import { SharedGoalMetadata } from "./SharedGoalNotMoved";
 
-export const dexieVersion = 26;
+export const dexieVersion = 27;
 
 const currentVersion = Number(localStorage.getItem(LocalStorageKeys.DEXIE_VERSION) || dexieVersion);
 localStorage.setItem(LocalStorageKeys.DEXIE_VERSION, `${dexieVersion}`);
@@ -41,8 +40,6 @@ export class ZinZenDB extends Dexie {
   goalTrashCollection!: Table<TrashItem, string>;
 
   hintsCollection!: Table<HintItem, string>;
-
-  impossibleGoalsCollection!: Table<ImpossibleGoalItem, string>;
 
   taskHistoryCollection!: Table<TaskHistoryItem, string>;
 
