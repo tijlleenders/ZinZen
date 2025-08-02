@@ -1,13 +1,9 @@
 /* eslint-disable complexity */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
-import { displayChangesModal, displayGoalId, displaySuggestionsModal, searchQueryState } from "@src/store/GoalsState";
+import { searchQueryState } from "@src/store/GoalsState";
 import { GoalItem } from "@src/models/GoalItem";
-import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
-import { lastAction } from "@src/store";
-import { getGoalHintItem } from "@src/api/HintsAPI";
-import { AvailableGoalHintProvider } from "@src/contexts/availableGoalHint-context";
 import { DeletedGoalProvider } from "@src/contexts/deletedGoal-context";
 import DeletedGoals from "@pages/GoalsPage/components/DeletedGoals";
 import ArchivedGoals from "@pages/GoalsPage/components/ArchivedGoals";
@@ -29,12 +25,8 @@ export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading
   const { parentId, partnerId } = useParams();
   const { data: parentGoal } = useGetGoalById(parentId || "");
   const [showConfig, setShowConfig] = useState(goals.length === 0);
-  const [goalHints, setGoalHints] = useState<GoalItem[]>([]);
   const { t } = useTranslation();
-  const action = useRecoilValue(lastAction);
-  const goalID = useRecoilValue(displayGoalId);
-  const showChangesModal = useRecoilValue(displayChangesModal);
-  const showSuggestionModal = useRecoilValue(displaySuggestionsModal);
+
   const searchQuery = useRecoilValue(searchQueryState);
   const location = useLocation();
   const goalsHistory = location.state?.goalsHistory ?? [];
@@ -43,21 +35,6 @@ export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading
   const { deletedGoals } = useGetDeletedGoals(parentId || "");
   const { partner } = useGetContactByPartnerId(partnerId || "");
   const { data: archivedSharedWMGoals } = useGetSharedWMGoalsArchived(parentId || "", partner?.relId || "");
-
-  useEffect(() => {
-    if (!parentId) return;
-    getGoalHintItem(parentId).then((hintItem) => {
-      const array: GoalItem[] = [];
-      hintItem?.availableGoalHints?.forEach((availableGoalHint) => {
-        if (availableGoalHint) {
-          array.push(createGoalObjectFromTags({ ...availableGoalHint, parentGoalId: parentId }));
-        }
-      });
-      setGoalHints(array || []);
-    });
-  }, [action, parentId, showSuggestionModal, showChangesModal, goalID]);
-
-  // TODO: re-implement sorting of goals
 
   const handleToggleConfig = () => {
     setShowConfig(!showConfig);
@@ -96,9 +73,7 @@ export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading
             ) : (
               <GoalsList goals={goals} />
             )}
-            <AvailableGoalHintProvider goalHints={goalHints}>
-              <AvailableGoalHints goals={goalHints} />
-            </AvailableGoalHintProvider>
+            <AvailableGoalHints />
             <DeletedGoalProvider>
               <DeletedGoals deletedGoals={deletedGoals || []} />
             </DeletedGoalProvider>
