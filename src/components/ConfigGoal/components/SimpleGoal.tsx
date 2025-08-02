@@ -26,7 +26,11 @@ const SimpleGoal: React.FC<SimpleGoalProps> = ({
     <div className="d-flex f-col gap-16">
       <div className="action-btn-container">
         <HintToggle
-          setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
+          setHints={(value: boolean) => {
+            console.log("value", value);
+            setFormState((prev) => ({ ...prev, hintOption: value }));
+            debouncedSave(isEditMode, { ...formState, hintOption: value });
+          }}
           defaultValue={formState.hintOption}
         />
       </div>

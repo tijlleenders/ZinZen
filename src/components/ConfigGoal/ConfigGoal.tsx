@@ -329,7 +329,10 @@ const ConfigGoalContent = ({
             </div>
             <div className="action-btn-container">
               <HintToggle
-                setHints={(value: boolean) => setFormState((prev) => ({ ...prev, hintOption: value }))}
+                setHints={(value: boolean) => {
+                  setFormState((prev) => ({ ...prev, hintOption: value }));
+                  debouncedSave(isEditMode, { ...formState, hintOption: value });
+                }}
                 defaultValue={formState.hintOption}
               />
             </div>
