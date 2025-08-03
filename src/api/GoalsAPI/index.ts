@@ -4,9 +4,9 @@ import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { createGetHintsRequest } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
-import { IHintRequestBody } from "@src/models/HintItem";
+import { IGoalHint, IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { deleteAvailableGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
+import { deleteAvailableGoalHint, ensureGoalHintsHaveIds } from "../HintsAPI";
 import { deleteTaskHistoryItem } from "../TaskHistoryAPI";
 
 export const updateTimestamp = async (id: string) => {
@@ -140,10 +140,12 @@ export const unarchiveGoalRepository = async (goal: GoalItem) => {
   db.transaction("rw", db.goalsCollection, async () => {
     await db.goalsCollection.update(goal.id, { archived: "false" });
   });
+
   if (goal.parentGoalId !== "root" && goal.typeOfGoal !== "shared") {
     const parentGoal = await getGoal(goal.parentGoalId);
     db.transaction("rw", db.goalsCollection, async () => {
-      await db.goalsCollection.update(goal.parentGoalId, { sublist: [...parentGoal.sublist, goal.id] });
+      const updatedSublist = [...(parentGoal?.sublist ?? []), goal.id];
+      await db.goalsCollection.update(goal.parentGoalId, { sublist: updatedSublist });
     });
   }
 };
@@ -164,7 +166,6 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
 };
 
 export const removeGoal = async (goal: GoalItem, permanently = false) => {
-  await deleteHintItem(goal.id);
   await Promise.allSettled([
     db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
     permanently ? null : addDeletedGoal(goal),
@@ -190,7 +191,7 @@ export const getHintsFromAPI = async (goal: GoalItem) => {
   if (goal.parentGoalId !== "root") {
     const parentGoal = await getGoal(goal.parentGoalId);
     parentGoalTitle = parentGoal?.title || "";
-    parentGoalHint = (await getGoalHintItem(goal.parentGoalId))?.hintOptionEnabled || false;
+    parentGoalHint = parentGoal?.hints?.hintOptionEnabled || false;
   }
 
   const { title, duration } = goal;
@@ -206,7 +207,9 @@ export const getHintsFromAPI = async (goal: GoalItem) => {
   }
 
   const res = await createGetHintsRequest(requestBody);
-  return res.response;
+  const hints = res.response as IGoalHint[];
+  const updatedHints = ensureGoalHintsHaveIds(hints);
+  return updatedHints;
 };
 
 export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string) => {
@@ -316,11 +319,14 @@ export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false
     .map(([_, value]) => value);
 };
 
-export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
+export const addHintGoaltoMyGoals = async (hint: GoalItem) => {
   await Promise.all([
-    updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] }),
-    addGoal(goal),
-    deleteAvailableGoalHint(goal.parentGoalId, goal.id),
+    // update the parent goal sublist
+    updateGoal(hint.parentGoalId, { sublist: [...hint.sublist, hint.id] }),
+    // add the hint to the my goals
+    addGoal(hint),
+    // delete the hint from the available hints
+    deleteAvailableGoalHint(hint.parentGoalId, hint.id),
   ]);
 };
 

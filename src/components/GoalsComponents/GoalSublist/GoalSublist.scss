@@ -7,6 +7,15 @@
   min-width: 236px;
   width: 100%;
   padding-top: 10;
+
+  .clickable-container {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+  }
 }
 
 .sublist-title {
@@ -19,7 +28,6 @@
 }
 
 .sublist-list-container {
-  margin-top: 10px;
   padding: 0 !important;
 }
 
@@ -27,12 +35,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  .goal-item-summary-wrapper {
-    margin: 10px auto;
-    text-align: center;
-    padding: 0 24px;
-  }
 
   .mygoalsbutton-dark,
   .mygoalsbutton-light {
@@ -46,4 +48,16 @@
 
 .ant-breadcrumb > ol {
   align-items: center;
+}
+
+.config-goal-container {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+
+  .autocomplete-container {
+    input {
+      border-radius: 10px;
+    }
+  }
 }

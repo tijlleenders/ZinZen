@@ -23,11 +23,6 @@ export interface ZModalProps {
   style?: React.CSSProperties;
 }
 
-export interface ColorPaletteProps {
-  colorIndex: number;
-  setColorIndex: SetterOrUpdater<number>;
-}
-
 export interface ISubHeaderProps {
   title: string;
   leftNav?: () => void;

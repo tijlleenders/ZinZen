@@ -30,7 +30,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ action, handleCli
             const newDisplayModal = { ...displayModal };
             // @ts-ignore
             newDisplayModal[actionCategory] = actionChange;
-            console.log(newDisplayModal);
             setDisplayModal({ ...newDisplayModal, open: false });
           }
           await handleClick(choice === "cancel" ? choice : actionName);

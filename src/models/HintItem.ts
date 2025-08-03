@@ -6,11 +6,10 @@ export interface IGoalHint {
 }
 
 export interface HintItem {
-  id: string;
   hintOptionEnabled: boolean;
-  availableGoalHints: IGoalHint[];
-  lastCheckedDate: string;
-  nextCheckDate: string;
+  availableGoalHints?: IGoalHint[];
+  lastCheckedDate?: string;
+  nextCheckDate?: string;
   deletedGoalHints?: Omit<IGoalHint, "id">[];
 }
 

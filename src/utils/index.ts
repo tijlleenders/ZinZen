@@ -1,7 +1,5 @@
-import { useTranslation } from "react-i18next";
 import { GoalItem } from "@src/models/GoalItem";
 import { languagesFullForms } from "@src/translations/i18n";
-import i18next from "i18next";
 import sha256 from "crypto-js/sha256";
 import { LocalStorageKeys } from "@src/constants/localStorageKeys";
 
@@ -78,23 +76,6 @@ export const getDiffInHours = (date1: Date, date2: Date) => {
   return diff;
 };
 
-export const getDiffInDates = (date1: Date, date2: Date, resetTime = true) => {
-  const a = new Date(date1);
-  const b = new Date(date2);
-  if (resetTime) {
-    a.setHours(0, 0, 0, 0);
-    b.setHours(0, 0, 0, 0);
-  }
-  // Convert both dates to milliseconds
-  const date1MS = a.getTime();
-  const date2MS = b.getTime();
-  // Calculate the difference in milliseconds
-  const differenceMS = date2MS - date1MS;
-  // Convert the difference to days
-  const daysDifference = Math.ceil(differenceMS / (1000 * 60 * 60 * 24));
-  return daysDifference;
-};
-
 export const colorPalleteList = [
   "#A963B9",
   "#6B6EFF",
@@ -107,6 +88,10 @@ export const colorPalleteList = [
   "#FD5B78",
   "#FF007C",
 ];
+
+export const getRandomColor = (colorPalette: string[]): string => {
+  return colorPalette[Math.floor(Math.random() * colorPalette.length - 1) + 1];
+};
 
 export const fixDateVlauesInGoalObject = (goal: GoalItem) => ({
   ...goal,
@@ -173,13 +158,6 @@ export function getOrdinalSuffix(dayOfMonth: number): string {
   return "th";
 }
 
-// do not change the order
-export const calDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-export function convertOnFilterToArray(on: "weekdays" | "weekends") {
-  return on === "weekdays" ? ["Mon", "Tue", "Wed", "Thu", "Fri"] : ["Sat", "Sun"];
-}
-
 export const getMonthByIndex = (index: number) => {
   const month = [
     "January",
@@ -216,41 +194,6 @@ export const getSvgForGoalPps = (count: number) => {
   }
 };
 
-export const formatBudgetHrsToText = (hours: string | null) => {
-  if (hours === null) {
-    return "";
-  }
-  const parts = hours.split("-").map(Number);
-  if (parts.length === 2 && parts[0] === parts[1]) {
-    return `${i18next.t(`hourWithCount_${parts[0] <= 1 ? "one" : "other"}`, { count: parts[0] })}`;
-  }
-
-  return `${parts[0]}-${i18next.t(`hourWithCount_${parts[1] <= 1 ? "one" : "other"}`, { count: parts[1] })}`;
-};
-
-export const calculateDaysLeft = (dueDate: string) => {
-  const { t } = useTranslation();
-  if (!dueDate) return null;
-  const currentDate = new Date();
-  const due = new Date(dueDate);
-  const daysLeft = getDiffInDates(currentDate, due);
-
-  if (daysLeft === 0) {
-    return t("dueToday");
-  }
-  if (daysLeft >= 0) {
-    return daysLeft === 1 ? t("daysLeftSingular", { days: daysLeft }) : t("daysLeft", { days: daysLeft });
-  }
-  return daysLeft >= -1
-    ? t("dueDatePassedSingular", { days: Math.abs(daysLeft) })
-    : t("dueDatePassed", { days: Math.abs(daysLeft) });
-};
-
-// Utility function for singular/plural formatting
-export const formatSingularPlural = (count: number, singularWord: string) => {
-  return `${count} ${singularWord}${count !== 1 ? "s" : ""}`;
-};
-
 export const hashObject = (obj: object) => {
   return sha256(JSON.stringify(obj)).toString();
 };
@@ -267,5 +210,11 @@ export const checkOnArrayEquality = (arr1: string[], arr2: string[]): boolean =>
 };
 
 export const getTimePart = (datetime: string | null, part: "hour" | "minute" = "hour"): string | null => {
-  return datetime ? datetime.split("T")[1]?.slice(part === "hour" ? 0 : 3, part === "hour" ? 2 : 5) : null;
+  if (!datetime) return null;
+  const date = new Date(datetime);
+  return part === "hour" ? date.getHours().toString() : date.getMinutes().toString();
+};
+
+export const getVariantClassName = (baseClass: string, variant = "default", additionalClasses = ""): string => {
+  return `${baseClass} ${baseClass}--${variant} ${additionalClasses}`.trim();
 };
