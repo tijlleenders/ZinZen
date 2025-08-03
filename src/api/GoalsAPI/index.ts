@@ -4,9 +4,9 @@ import { db } from "@models";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { createGetHintsRequest } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
-import { IHintRequestBody } from "@src/models/HintItem";
+import { IGoalHint, IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { deleteAvailableGoalHint, deleteHintItem, getGoalHintItem } from "../HintsAPI";
+import { deleteAvailableGoalHint, deleteHintItem, ensureGoalHintsHaveIds, getGoalHintItem } from "../HintsAPI";
 import { deleteTaskHistoryItem } from "../TaskHistoryAPI";
 
 export const updateTimestamp = async (id: string) => {
@@ -208,7 +208,9 @@ export const getHintsFromAPI = async (goal: GoalItem) => {
   }
 
   const res = await createGetHintsRequest(requestBody);
-  return res.response;
+  const hints = res.response as IGoalHint[];
+  const updatedHints = ensureGoalHintsHaveIds(hints);
+  return updatedHints;
 };
 
 export const updateSharedStatusOfGoal = async (id: string, relId: string, name: string) => {
@@ -318,11 +320,14 @@ export const getAllLevelGoalsOfId = async (id: string, resetSharedStatus = false
     .map(([_, value]) => value);
 };
 
-export const addHintGoaltoMyGoals = async (goal: GoalItem) => {
+export const addHintGoaltoMyGoals = async (hint: GoalItem) => {
   await Promise.all([
-    updateGoal(goal.parentGoalId, { sublist: [...goal.sublist, goal.id] }),
-    addGoal(goal),
-    deleteAvailableGoalHint(goal.parentGoalId, goal.id),
+    // update the parent goal sublist
+    updateGoal(hint.parentGoalId, { sublist: [...hint.sublist, hint.id] }),
+    // add the hint to the my goals
+    addGoal(hint),
+    // delete the hint from the available hints
+    deleteAvailableGoalHint(hint.parentGoalId, hint.id),
   ]);
 };
 

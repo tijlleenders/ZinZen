@@ -59,8 +59,6 @@ const useGoalActions = () => {
   };
 
   const updateGoal = async (goal: GoalItem, updatedHintOption: boolean, goalToCompare: GoalItem) => {
-    const currentHintItem = await getGoalHintItem(goal.id);
-
     const titleContainsCode = /```/.test(goal.title);
     if (goal.sublist.length > 0 && titleContainsCode) {
       showMessage("Action Failed!!", "Cannot update the title to include code if the goal has a subgoal.");
@@ -74,12 +72,7 @@ const useGoalActions = () => {
         rootGoal = (await getSharedWMGoalById(notificationGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
-    } else if (
-      goalToCompare &&
-      (hashObject({ ...goalToCompare }) !== hashObject(goal) ||
-        currentHintItem?.hintOptionEnabled !== updatedHintOption)
-    ) {
-      // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
+    } else if (goalToCompare && hashObject({ ...goalToCompare }) !== hashObject(goal)) {
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], updatedHintOption);
     }
   };

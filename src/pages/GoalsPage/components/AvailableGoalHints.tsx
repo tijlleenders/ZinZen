@@ -10,7 +10,6 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { GoalItem } from "@src/models/GoalItem";
 import ModalActionButton from "@components/Buttons/ModalActionButton";
-import { useGetGoalHints } from "../../../hooks/api/Hints/queries/useGetGoalHints";
 import { useDeleteGoalHint } from "../../../hooks/api/Hints/mutations/useDeleteGoalHint";
 import { useReportGoalHints } from "../../../hooks/api/Hints/mutations/useReportGoalHints";
 import { useAddGoalHintsToMyGoal } from "../../../hooks/api/Hints/mutations/useAddGoalHintsToMyGoal";
@@ -65,23 +64,18 @@ const Actions = ({ goal }: { goal: GoalItem }) => {
   );
 };
 
-const AvailableGoalHints = () => {
+const AvailableGoalHints = ({ hints }: { hints: GoalItem[] }) => {
   const darkMode = useRecoilValue(darkModeState);
   const [searchParams] = useSearchParams();
   const { activeGoalId } = useParams();
-  const { hints: goalHints, isLoading: goalHintsLoading } = useGetGoalHints();
 
-  const goalHint = goalHints?.find((goal) => goal.id === activeGoalId);
+  const goalHint = hints?.find((goal) => goal.id === activeGoalId);
   const showOptions = !!searchParams.get("showOptions") && goalHint;
-
-  if (goalHintsLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="archived-drawer">
       {showOptions && <Actions goal={goalHint} />}
-      {goalHints && goalHints.length > 0 && (
+      {hints && hints.length > 0 && (
         <ZAccordion
           showCount
           style={{
@@ -91,7 +85,7 @@ const AvailableGoalHints = () => {
           panels={[
             {
               header: "Hints",
-              body: goalHints.map((goal) => <MyGoal key={`goal-${goal.id}`} goal={{ ...goal, impossible: false }} />),
+              body: hints.map((goal) => <MyGoal key={`goal-${goal.id}`} goal={{ ...goal, impossible: false }} />),
             },
           ]}
         />

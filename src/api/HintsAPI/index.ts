@@ -32,7 +32,6 @@ export const addHintItem = async (goalId: string, hintOption: boolean, available
   const now = new Date();
   const oneDayLater = new Date(now.getTime() + 24 * 60 * 60 * 1000);
   const hintObject: HintItem = {
-    id: goalId,
     hintOptionEnabled: hintOption,
     availableGoalHints: updatedAvailableGoalHintsWithId,
     lastCheckedDate: now.toISOString(),
@@ -96,30 +95,51 @@ export const deleteHintItem = async (goalId: string) => {
     });
 };
 
-export const deleteAvailableGoalHint = async (parentGoalId: string, goalId: string) => {
+export const deleteAvailableGoalHint = async (parentGoalId: string, hintId: string): Promise<boolean> => {
   try {
-    await db.transaction("rw", db.hintsCollection, async () => {
-      const goalHintsItem = await db.hintsCollection.get(parentGoalId);
+    // Get the goal with proper error handling
+    const goal = await db.goalsCollection.get(parentGoalId);
+    if (!goal) {
+      console.error(`Goal with id ${parentGoalId} not found`);
+      return false;
+    }
 
-      if (goalHintsItem) {
-        const { availableGoalHints, deletedGoalHints = [] } = goalHintsItem;
+    const { hints } = goal;
+    if (!hints) {
+      console.error(`No hints found for goal ${parentGoalId}`);
+      return false;
+    }
 
-        const deletedGoalHint = availableGoalHints.find((hint) => hint.id === goalId);
-        const updatedGoalHints = availableGoalHints.filter((hint) => hint.id !== goalId);
+    const { availableGoalHints, deletedGoalHints = [] } = hints;
+    if (!availableGoalHints || availableGoalHints.length === 0) {
+      console.error(`No available goal hints found for goal ${parentGoalId}`);
+      return false;
+    }
 
-        if (deletedGoalHint) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { id, ...deletedHintDetails } = deletedGoalHint;
-          const updatedDeletedGoalHints = [...deletedGoalHints, deletedHintDetails];
+    const deletedGoalHint = availableGoalHints.find((hint) => hint.id === hintId);
+    if (!deletedGoalHint) {
+      console.error(`Hint with id ${hintId} not found in available hints`);
+      return false;
+    }
 
-          await db.hintsCollection.update(parentGoalId, {
-            availableGoalHints: updatedGoalHints,
-            deletedGoalHints: updatedDeletedGoalHints,
-          });
-        }
-      }
+    const updatedGoalHints = availableGoalHints.filter((hint) => hint.id !== hintId);
+    const updatedDeletedGoalHints = [...deletedGoalHints, deletedGoalHint];
+
+    // Use transaction for data consistency
+    await db.transaction("rw", db.goalsCollection, async () => {
+      await db.goalsCollection.update(parentGoalId, {
+        hints: {
+          ...hints, // Preserve other hint properties
+          availableGoalHints: updatedGoalHints,
+          deletedGoalHints: updatedDeletedGoalHints,
+        },
+      });
     });
-  } catch (e) {
-    console.error("Failed to delete available goal hint:", e);
+
+    console.log(`Successfully deleted hint ${hintId} from goal ${parentGoalId}`);
+    return true;
+  } catch (error) {
+    console.error("Failed to delete available goal hint:", error);
+    return false;
   }
 };

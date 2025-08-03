@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { useTranslation } from "react-i18next";
 import { searchQueryState } from "@src/store/GoalsState";
@@ -15,6 +15,7 @@ import { useGetArchivedGoals } from "@src/hooks/api/Goals/queries/useGetArchived
 import { useGetDeletedGoals } from "@src/hooks/api/Goals/queries/useGetDeletedGoals";
 import { Spin } from "antd";
 import { useLocation, useParams } from "react-router-dom";
+import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { useGetContactByPartnerId } from "@src/hooks/api/Contacts/queries/useGetContactByPartnerId";
 import GoalsList from "../GoalsList";
 import GoalHistory from "./components/GoalHistory";
@@ -39,6 +40,14 @@ export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading
   const handleToggleConfig = () => {
     setShowConfig(!showConfig);
   };
+
+  const hints = useMemo(
+    () =>
+      parentGoal?.hints?.availableGoalHints?.map((hint) =>
+        createGoalObjectFromTags({ ...hint, parentGoalId: parentId, id: hint.id }),
+      ),
+    [parentGoal],
+  );
 
   return (
     <div className="sublist-container">
@@ -73,7 +82,7 @@ export const GoalSublist = ({ goals, isLoading }: { goals: GoalItem[]; isLoading
             ) : (
               <GoalsList goals={goals} />
             )}
-            <AvailableGoalHints />
+            <AvailableGoalHints hints={hints || []} />
             <DeletedGoalProvider>
               <DeletedGoals deletedGoals={deletedGoals || []} />
             </DeletedGoalProvider>

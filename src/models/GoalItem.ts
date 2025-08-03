@@ -1,3 +1,5 @@
+import { HintItem } from "./HintItem";
+
 export type typeOfSub = "sharer" | "collaborator" | "assignee";
 
 export interface IParticipant {
@@ -44,4 +46,5 @@ export interface GoalItem {
   newUpdates: boolean;
   timestamp: number;
   impossible?: boolean;
+  hints?: HintItem;
 }

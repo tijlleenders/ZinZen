@@ -16,7 +16,7 @@ import {
   getChildrenGoals,
   updateTimestamp,
 } from "@src/api/GoalsAPI";
-import { addHintItem, updateHintItem } from "@src/api/HintsAPI";
+import { IGoalHint } from "@src/models/HintItem";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
 
@@ -173,12 +173,10 @@ const sendNewGoalObject = async (
 
 export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancestors: string[], hintOption: boolean) => {
   // handle hint
-  if (hintOption) {
-    getHintsFromAPI(newGoal)
-      .then((hints) => {
-        addHintItem(newGoal.id, hintOption, hints || []);
-      })
-      .catch((error) => console.error("Error fetching hints:", error));
+
+  let availableGoalHints: IGoalHint[] = [];
+  if (newGoal.hints?.hintOptionEnabled) {
+    availableGoalHints = await getHintsFromAPI(newGoal);
   }
 
   if (parentGoalId && parentGoalId !== "root") {
@@ -195,7 +193,10 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
       participants: inheritParticipants(parentGoal),
     };
 
-    const newGoalId = await addGoal(updatedGoal);
+    const newGoalId = await addGoal({
+      ...updatedGoal,
+      hints: { ...newGoal.hints, hintOptionEnabled: hintOption, availableGoalHints },
+    });
 
     sendNewGoalObject({ ...updatedGoal, id: newGoalId }, parentGoalId, ancestors, "subgoals");
 
@@ -204,7 +205,7 @@ export const createGoal = async (newGoal: GoalItem, parentGoalId: string, ancest
     return { parentGoal };
   }
 
-  await addGoal(newGoal);
+  await addGoal({ ...newGoal, hints: { ...newGoal.hints, hintOptionEnabled: hintOption, availableGoalHints } });
   return { parentGoal: null };
 };
 
@@ -229,16 +230,24 @@ export const modifyGoal = async (
   ancestors: string[],
   hintOptionEnabled: boolean,
 ) => {
-  if (hintOptionEnabled) {
-    const availableHintsPromise = getHintsFromAPI(goalTags);
-    availableHintsPromise
-      .then((availableGoalHints) => updateHintItem(goalTags.id, hintOptionEnabled, availableGoalHints))
-      .catch((err) => console.error("Error updating hints:", err));
-  } else {
-    updateHintItem(goalTags.id, hintOptionEnabled, []);
+  let availableGoalHints: IGoalHint[] = [];
+  if (goalTags.hints?.hintOptionEnabled) {
+    availableGoalHints = await getHintsFromAPI(goalTags);
+
+    // check if the available hint is in the deleted hints - compare by title
+    const deletedHints = goalTags.hints?.deletedGoalHints;
+    if (deletedHints) {
+      availableGoalHints = availableGoalHints.filter((hint) => {
+        return !deletedHints.some(
+          (deletedHint) => deletedHint.title.toLowerCase().trim() === hint.title.toLowerCase().trim(),
+        );
+      });
+    }
   }
-  console.log(goalTags);
-  await updateGoal(goalId, goalTags);
+  await updateGoal(goalId, {
+    ...goalTags,
+    hints: { ...goalTags.hints, hintOptionEnabled, availableGoalHints },
+  });
   await updateTimestamp(goalId);
 
   sendUpdatedGoal(goalId, ancestors);

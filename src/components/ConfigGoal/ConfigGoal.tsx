@@ -76,15 +76,6 @@ const ConfigGoalContent = ({
 
   useOnScreenKeyboardScrollFix();
 
-  useEffect(() => {
-    getGoalHintItem(goal.id).then((hintItem) => {
-      setFormState((prev) => ({
-        ...prev,
-        hintOption: !!hintItem?.hintOptionEnabled,
-      }));
-    });
-  }, [goal.id]);
-
   const { simpleGoal, budgetGoal } = formState;
 
   const numberOfDays = budgetGoal?.on.length;
@@ -367,7 +358,7 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
 
   const [formState, setFormState] = useState<FormState>({
     goalColor: suggestedGoal?.goalColor ?? getDefaultColor(isEditMode, goal, parentGoal, colorPalleteList),
-    hintOption: false,
+    hintOption: goal.hints?.hintOptionEnabled ?? false,
     title: t(suggestedGoal?.title ?? goal.title),
     ...(type === "Standard" || type === "Cluster"
       ? {

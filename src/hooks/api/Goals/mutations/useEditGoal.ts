@@ -7,7 +7,6 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import plingSound from "@assets/pling.mp3";
 import { suggestedGoalState } from "@src/store/SuggestedGoalState";
 import { hashObject } from "@src/utils";
-import { getGoalHintItem } from "@src/api/HintsAPI";
 import { unarchiveUserGoal } from "@src/api/GoalsAPI";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetGoalById } from "../queries/useGetGoalById";
@@ -19,6 +18,19 @@ type EditGoalMutation = {
   hintOption: boolean;
 };
 
+function hasGoalChangedFn(goalA: GoalItem | undefined, goalB: GoalItem): boolean {
+  return (
+    hashObject({
+      ...goalA,
+      hints: { ...goalA?.hints, availableGoalHints: [], lastCheckedDate: "", nextCheckDate: "" },
+    }) !==
+    hashObject({
+      ...goalB,
+      hints: { ...goalB.hints, availableGoalHints: [], lastCheckedDate: "", nextCheckDate: "" },
+    })
+  );
+}
+
 export const useEditGoal = (activeGoalId: string, isModal = false) => {
   const queryClient = useQueryClient();
   const setShowToast = useSetRecoilState(displayToast);
@@ -29,21 +41,17 @@ export const useEditGoal = (activeGoalId: string, isModal = false) => {
   const location = useLocation();
   const { mutate: editGoalMutation, isLoading: isEditingGoal } = useMutation({
     mutationFn: async ({ goal, hintOption }: EditGoalMutation) => {
-      const currentHintItem = await getGoalHintItem(goal.id);
-
-      let hasGoalChanged =
-        hashObject({ ...activeGoal }) !== hashObject(goal) || currentHintItem?.hintOptionEnabled !== hintOption;
-      await updateGoal(goal, hintOption, activeGoal!);
-
-      if (suggestedGoal) {
-        console.log("here");
-        await unarchiveUserGoal(suggestedGoal);
-        navigate(`/goals/${suggestedGoal.parentGoalId === "root" ? "" : suggestedGoal.parentGoalId}`, {
-          state: { ...location.state } as ILocationState,
-          replace: true,
-        });
-        setSuggestedGoal(null);
-        hasGoalChanged = true;
+      const hasGoalChanged = hasGoalChangedFn(activeGoal, goal);
+      if (hasGoalChanged) {
+        await updateGoal(goal, hintOption, activeGoal!);
+        if (suggestedGoal) {
+          await unarchiveUserGoal(suggestedGoal);
+          navigate(`/goals/${suggestedGoal.parentGoalId === "root" ? "" : suggestedGoal.parentGoalId}`, {
+            state: { ...location.state } as ILocationState,
+            replace: true,
+          });
+          setSuggestedGoal(null);
+        }
       }
       return hasGoalChanged;
     },

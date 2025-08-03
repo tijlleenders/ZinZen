@@ -1,5 +1,6 @@
 import { ISchedulerOutput } from "@src/Interfaces/IScheduler";
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
+import { HintItem } from "@src/models/HintItem";
 import { getRandomColor, getSelectedLanguage } from "@src/utils";
 
 export interface FormState {
@@ -96,6 +97,30 @@ interface GetFinalTagsParams {
   type: TGoalCategory;
 }
 
+export const getHint = (goal: GoalItem, formState: FormState): HintItem | undefined => {
+  // If hint option is enabled
+  if (formState.hintOption) {
+    return {
+      hintOptionEnabled: formState.hintOption,
+      availableGoalHints: [],
+      lastCheckedDate: new Date().toISOString(),
+      nextCheckDate: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
+      deletedGoalHints: goal.hints?.deletedGoalHints ?? [],
+    };
+  }
+
+  // If hint option is disabled but goal has existing hints, preserve deletedGoalHints
+  if (formState.hintOption === false && goal.hints) {
+    return {
+      hintOptionEnabled: formState.hintOption,
+      deletedGoalHints: goal.hints?.deletedGoalHints ?? [],
+    };
+  }
+
+  // If hint option is disabled and no existing hints, return undefined
+  return undefined;
+};
+
 export const getFinalTags = ({ goal, formState, type, parentGoal }: GetFinalTagsParams): GoalItem => {
   const goalCategoryType = formState.simpleGoal?.duration !== "" ? "Standard" : "Cluster";
   const category = type === "Budget" ? "Budget" : goalCategoryType;
@@ -108,6 +133,7 @@ export const getFinalTags = ({ goal, formState, type, parentGoal }: GetFinalTags
       .join(" "),
     goalColor: formState.goalColor,
     parentGoalId: parentGoal?.id ?? goal.parentGoalId,
+    hints: getHint(goal, formState),
     language: getSelectedLanguage(),
     ...(formState.simpleGoal
       ? {

@@ -9,12 +9,12 @@ import { HINT_QUERY_KEYS } from "@src/factories/queryKeyFactory";
 export const useDeleteGoalHint = () => {
   const restoreGoalSound = new Audio(plingSound);
   const queryClient = useQueryClient();
+  const { parentId = "", activeGoalId: hintId = "" } = useParams();
 
-  const { parentId = "", activeGoalId: goalId = "" } = useParams();
   const setShowToast = useSetRecoilState(displayToast);
   const { mutate: deleteGoalHint, isLoading: isDeletingGoalHint } = useMutation({
     mutationKey: ["goals"],
-    mutationFn: () => deleteAvailableGoalHint(parentId, goalId),
+    mutationFn: () => deleteAvailableGoalHint(parentId, hintId),
     onSuccess: () => {
       queryClient.invalidateQueries(HINT_QUERY_KEYS.all);
       restoreGoalSound.play();
