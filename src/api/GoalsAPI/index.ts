@@ -6,7 +6,7 @@ import { createGetHintsRequest } from "@src/services/goal.service";
 import { getInstallId } from "@src/utils";
 import { IGoalHint, IHintRequestBody } from "@src/models/HintItem";
 import { sortGoalsByProps } from "../GCustomAPI";
-import { deleteAvailableGoalHint, deleteHintItem, ensureGoalHintsHaveIds, getGoalHintItem } from "../HintsAPI";
+import { deleteAvailableGoalHint, ensureGoalHintsHaveIds } from "../HintsAPI";
 import { deleteTaskHistoryItem } from "../TaskHistoryAPI";
 
 export const updateTimestamp = async (id: string) => {
@@ -166,7 +166,6 @@ export const unarchiveUserGoal = async (goal: GoalItem) => {
 };
 
 export const removeGoal = async (goal: GoalItem, permanently = false) => {
-  await deleteHintItem(goal.id);
   await Promise.allSettled([
     db.goalsCollection.delete(goal.id).catch((err) => console.log("failed to delete", err)),
     permanently ? null : addDeletedGoal(goal),
@@ -192,7 +191,7 @@ export const getHintsFromAPI = async (goal: GoalItem) => {
   if (goal.parentGoalId !== "root") {
     const parentGoal = await getGoal(goal.parentGoalId);
     parentGoalTitle = parentGoal?.title || "";
-    parentGoalHint = (await getGoalHintItem(goal.parentGoalId))?.hintOptionEnabled || false;
+    parentGoalHint = parentGoal?.hints?.hintOptionEnabled || false;
   }
 
   const { title, duration } = goal;

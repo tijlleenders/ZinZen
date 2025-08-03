@@ -16,6 +16,7 @@ import {
   getChildrenGoals,
   updateTimestamp,
 } from "@src/api/GoalsAPI";
+import { filterDeletedHints } from "@src/api/HintsAPI";
 import { IGoalHint } from "@src/models/HintItem";
 import { restoreUserGoal } from "@src/api/TrashAPI";
 import { sendFinalUpdateOnGoal, sendUpdatedGoal } from "./PubSubController";
@@ -233,17 +234,10 @@ export const modifyGoal = async (
   let availableGoalHints: IGoalHint[] = [];
   if (goalTags.hints?.hintOptionEnabled) {
     availableGoalHints = await getHintsFromAPI(goalTags);
-
-    // check if the available hint is in the deleted hints - compare by title
-    const deletedHints = goalTags.hints?.deletedGoalHints;
-    if (deletedHints) {
-      availableGoalHints = availableGoalHints.filter((hint) => {
-        return !deletedHints.some(
-          (deletedHint) => deletedHint.title.toLowerCase().trim() === hint.title.toLowerCase().trim(),
-        );
-      });
-    }
   }
+  const deletedHints = goalTags.hints?.deletedGoalHints;
+  availableGoalHints = filterDeletedHints(availableGoalHints, deletedHints);
+
   await updateGoal(goalId, {
     ...goalTags,
     hints: { ...goalTags.hints, hintOptionEnabled, availableGoalHints },

@@ -20,18 +20,15 @@ import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
 import { hashObject } from "@src/utils";
 import { removeBackTicks } from "@src/utils/patterns";
-import { getGoalHintItem } from "@src/api/HintsAPI";
 import { GoalActions } from "@src/constants/actions";
 import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
-import { useGetGoalById } from "./api/Goals/queries/useGetGoalById";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
-  const { partnerId, activeGoalId } = useParams();
+  const { partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
   const setLastAction = useSetRecoilState(lastAction);
   const subGoalsHistory = state?.goalsHistory || [];
-  const { data: activeGoal } = useGetGoalById(activeGoalId || "");
 
   const setShowToast = useSetRecoilState(displayToast);
 

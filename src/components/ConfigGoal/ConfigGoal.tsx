@@ -5,7 +5,6 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { GoalItem, TGoalCategory } from "@src/models/GoalItem";
 import ZModal from "@src/common/ZModal";
-import { getGoalHintItem } from "@src/api/HintsAPI";
 import { TGoalConfigMode } from "@src/types";
 import { ScheduleStatus } from "@src/Interfaces";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -370,17 +369,6 @@ const ConfigGoal = ({ type, goal, mode, useModal = true, onToggleConfig }: Confi
           budgetGoal: getDefaultFormStateForBudgetGoal(suggestedGoal ?? goal, isEditMode),
         }),
   });
-
-  useEffect(() => {
-    if (suggestedGoal) {
-      getGoalHintItem(suggestedGoal.id).then((hint) => {
-        setFormState((prev) => ({
-          ...prev,
-          hintOption: hint?.hintOptionEnabled || false,
-        }));
-      });
-    }
-  }, [suggestedGoal]);
 
   const { handleSave } = useGoalSave({
     goal,

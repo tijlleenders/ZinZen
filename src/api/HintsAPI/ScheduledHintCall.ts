@@ -1,36 +1,46 @@
 import { db } from "@src/models";
 import { IGoalHint } from "@src/models/HintItem";
-import { checkForNewGoalHints, getGoalHintItem } from ".";
-import { getGoal, getHintsFromAPI } from "../GoalsAPI";
+import { checkForNewGoalHints, filterDeletedHints } from ".";
+import { getGoal, getHintsFromAPI, updateGoal } from "../GoalsAPI";
 
 const manageHintCalls = async (goalId: string) => {
-  const hintItem = await getGoalHintItem(goalId);
-  if (!hintItem) {
-    console.error("No hint item found for the provided ID.");
+  const goal = await getGoal(goalId);
+  if (!goal) {
+    console.log(`Goal not found for ID: ${goalId}`);
+    return;
+  }
+  const { hints } = goal;
+  if (!hints) {
+    console.log(`No hints found for goal: ${goalId}`);
+    return;
+  }
+  const { hintOptionEnabled, availableGoalHints, nextCheckDate: hintNextCheckDate } = hints;
+
+  if (!hintOptionEnabled) {
+    console.log(`Hint option not enabled for goal: ${goalId}`);
     return;
   }
 
   const now = new Date();
-  const nextCheck = new Date(hintItem.nextCheckDate);
+  const nextCheck = new Date(hintNextCheckDate!);
 
   if (now >= nextCheck) {
-    const goal = await getGoal(goalId);
-    if (!goal) {
-      console.log(`Goal not found for ID: ${goalId}`);
-      return;
-    }
     const newHints: IGoalHint[] = await getHintsFromAPI(goal);
-    const hasNewHints = await checkForNewGoalHints(goalId, newHints);
-    console.log(`New hints found: ${hasNewHints}`);
+    const hasNewHints = await checkForNewGoalHints(availableGoalHints!, newHints);
 
     const oneDay = 24 * 60 * 60 * 1000;
     const oneWeek = 7 * oneDay;
     const nextCheckDate = new Date(now.getTime() + (hasNewHints ? oneDay : oneWeek));
 
-    await db.hintsCollection.update(goalId, {
-      lastCheckedDate: now.toISOString(),
-      nextCheckDate: nextCheckDate.toISOString(),
-      goalHints: newHints,
+    const filteredNewHints = filterDeletedHints(newHints, hints.deletedGoalHints);
+
+    await updateGoal(goalId, {
+      hints: {
+        ...hints,
+        lastCheckedDate: now.toISOString(),
+        nextCheckDate: nextCheckDate.toISOString(),
+        availableGoalHints: filteredNewHints,
+      },
     });
 
     console.log(`Hints API called for goal ${goalId}. New hints: ${hasNewHints ? "found" : "not found"}`);
@@ -39,7 +49,7 @@ const manageHintCalls = async (goalId: string) => {
 
 export const scheduledHintCalls = async () => {
   const now = new Date().toISOString();
-  const goalsDueForCheck = await db.hintsCollection.where("nextCheckDate").belowOrEqual(now).toArray();
+  const goalsDueForCheck = await db.goalsCollection.where("hints.nextCheckDate").belowOrEqual(now).toArray();
 
   await Promise.all(goalsDueForCheck.map((goal) => manageHintCalls(goal.id)));
 };

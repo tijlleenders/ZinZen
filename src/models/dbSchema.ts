@@ -22,7 +22,7 @@ export const dbStoreSchema = {
   partnersCollection: null,
   goalTrashCollection:
     "id, category, deletedAt, title, duration, sublist, on, start, due, afterTime, beforeTime, createdAt, parentGoalId, archived, participants, goalColor, language, notificationGoalId, timeBudget, typeOfGoal",
-  hintsCollection: "id, hintOptionEnabled, availableGoalHints, lastCheckedDate, nextCheckDate",
+  hintsCollection: null,
   schedulerOutputCacheCollection: "id, key, value",
   taskHistoryCollection: "++id, goalId, eventType, eventTime, scheduledStart, scheduledEnd, duration",
   tasksDoneTodayCollection: null,

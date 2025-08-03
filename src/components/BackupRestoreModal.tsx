@@ -5,7 +5,7 @@ import { useQueryClient } from "react-query";
 
 import { db } from "@models";
 import ZModal from "@src/common/ZModal";
-import { syncVersion } from "@src/models/dexie";
+import { syncVersion } from "@src/models/dbSchema";
 import { backupRestoreModal, displayToast } from "@src/store";
 
 import "dexie-export-import";

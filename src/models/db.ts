@@ -9,8 +9,7 @@ import { TaskItem } from "./TaskItem";
 import { GCustomItem } from "./GCustomItem";
 import { SchedulerOutputCacheItem } from "./SchedulerOutputCacheItem";
 import { TrashItem } from "./TrashItem";
-import { HintItem } from "./HintItem";
-import { dbStoreSchema, syncVersion } from "./dexie";
+import { dbStoreSchema, syncVersion } from "./dbSchema";
 import { TaskHistoryItem } from "./TaskHistoryItem";
 import { TasksDoneTodayItem } from "./TasksDoneTodayItem";
 import { SharedGoalMetadata } from "./SharedGoalNotMoved";
@@ -38,8 +37,6 @@ export class ZinZenDB extends Dexie {
   schedulerOutputCacheCollection!: Table<SchedulerOutputCacheItem, string>;
 
   goalTrashCollection!: Table<TrashItem, string>;
-
-  hintsCollection!: Table<HintItem, string>;
 
   taskHistoryCollection!: Table<TaskHistoryItem, string>;
 
