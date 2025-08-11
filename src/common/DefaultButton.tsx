@@ -10,6 +10,7 @@ interface DefaultButtonProps {
   children: React.ReactNode;
   variant?: "primary" | "secondary";
   type?: "button" | "submit";
+  className?: string;
 }
 
 const DefaultButton: React.FC<DefaultButtonProps> = ({
@@ -20,6 +21,7 @@ const DefaultButton: React.FC<DefaultButtonProps> = ({
   disabled = false,
   variant = "primary",
   type = "button",
+  className,
 }) => {
   const isDarkMode = useRecoilValue(darkModeState);
 
@@ -27,7 +29,7 @@ const DefaultButton: React.FC<DefaultButtonProps> = ({
     <button
       type={type === "submit" ? "submit" : "button"}
       id={id}
-      className={`default-btn${isDarkMode ? "-dark" : ""} ${disabled ? "" : "pointer"} ${variant}`}
+      className={`default-btn${isDarkMode ? "-dark" : ""} ${disabled ? "" : "pointer"} ${variant} ${className}`}
       style={{
         ...customStyle,
         background: variant === "secondary" ? "var(--secondary-background)" : "var(--selection-color)",

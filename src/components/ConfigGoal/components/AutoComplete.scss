@@ -1,0 +1,50 @@
+.autocomplete-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+
+  input {
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    outline: none;
+    padding-right: 0;
+    margin: 0;
+    width: auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .measure-span {
+    position: absolute;
+    visibility: hidden;
+    white-space: pre;
+    font-size: 1.3rem;
+    font-family: inherit;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .autocomplete-ghost-text {
+    position: absolute;
+    top: 0;
+    color: inherit;
+    opacity: 0.5;
+    font-size: 1.3rem;
+    pointer-events: auto;
+    white-space: nowrap;
+    user-select: none;
+    z-index: 100;
+    padding: 5px 0 0 12px;
+    margin: 0;
+    font-family: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+}

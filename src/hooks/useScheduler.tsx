@@ -12,6 +12,7 @@ import {
   organizeDataForInptPrep,
   putSchedulerRes,
 } from "@src/helpers/MyTimeHelper";
+import { updateGoalsImpossibleStatus } from "@src/utils/updateGoalsImpossibleStatus";
 
 import { schedulerErrorState } from "@src/store/SchedulerErrorState";
 import init, { schedule } from "../../pkg/scheduler";
@@ -74,6 +75,7 @@ function useScheduler() {
   ) => {
     try {
       await putSchedulerRes(cachedResCode, newGeneratedInputId, JSON.stringify(res));
+      await updateGoalsImpossibleStatus(res);
       const processedOutput = await handleSchedulerOutput(res);
       return processedOutput;
     } catch (error) {

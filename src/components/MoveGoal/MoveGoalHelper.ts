@@ -12,6 +12,7 @@ import {
 } from "@src/controllers/GoalController";
 import { sendUpdatesToSubscriber } from "@src/services/contact.service";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
+import { createSharedGoalObject } from "@src/utils/sharedGoalUtils";
 
 export const findMostRecentSharedAncestor = async (parentGoalId: string, participantRelId: string): Promise<string> => {
   const goalIds: string[] = [];
@@ -76,11 +77,13 @@ const sendUpdatesToParticipants = async (updatedGoal: GoalItem, newParentGoalId:
       // For regular move, find the most recent shared ancestor for this participant
       const parentGoalId = isRootMove ? "root" : await findMostRecentSharedAncestor(newParentGoalId, participant.relId);
 
+      const sharedGoal = createSharedGoalObject(updatedGoal);
+
       await sendUpdatesToSubscriber(participant, rootGoal?.id || updatedGoal.id, "modifiedGoals", [
         {
           level: ancestorGoalIds.length,
           goal: {
-            ...updatedGoal,
+            ...sharedGoal,
             parentGoalId,
           },
         },

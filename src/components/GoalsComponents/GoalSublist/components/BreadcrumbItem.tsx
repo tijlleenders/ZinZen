@@ -1,23 +1,23 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { ISubGoalHistory } from "@src/store/GoalsState";
+import "./BreadcrumbItem.scss";
 
 interface BreadcrumbItemProps {
-  goal: ISubGoalHistory;
+  color: string;
+  title: string;
 }
 
-export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({ goal }) => {
-  const { t } = useTranslation();
-
+const BreadcrumbItem = ({ color, title }: BreadcrumbItemProps) => {
   return (
     <span
       className="breadcrumb-item fw-500"
       style={{
-        border: `1px solid ${goal.goalColor}`,
-        background: `${goal.goalColor}33`,
+        border: `1px solid ${color}`,
+        background: `${color}33`,
       }}
     >
-      {t(goal.goalTitle)}
+      {title}
     </span>
   );
 };
+
+export default BreadcrumbItem;

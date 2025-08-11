@@ -4,6 +4,7 @@ import { SharedGoalMessageResponse } from "@src/Interfaces/IContactMessages";
 import { GoalItem, IParticipant } from "@src/models/GoalItem";
 import { typeOfChange } from "@src/models/InboxItem";
 import { createContactRequest, getInstallId } from "@src/utils";
+import { SharedGoalItem } from "@src/utils/sharedGoalUtils";
 
 export const initRelationship = async () => {
   const url = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
@@ -73,7 +74,7 @@ export const sendUpdatesToSubscriber = async (
   sub: IParticipant,
   notificationGoalId: string,
   changeType: typeOfChange,
-  changes: { level: number; goal: GoalItem }[] | { level: number; id: string; timestamp: number }[],
+  changes: { level: number; goal: SharedGoalItem }[] | { level: number; id: string; timestamp: number }[],
   customEventType = "",
 ) => {
   const url = "https://x7phxjeuwd4aqpgbde6f74s4ey0yobfi.lambda-url.eu-west-1.on.aws/";

@@ -14,17 +14,12 @@ const ContactActionModal = () => {
   const setShowToast = useSetRecoilState(displayToast);
   const { partnerId } = useParams();
 
-  if (!partnerId) {
-    return null;
-  }
-
+  const { deleteContactMutation } = useDeleteContact(partnerId ?? "");
   const { partner: contact, isSuccess } = usePartnerContext();
-
-  const { deleteContactMutation } = useDeleteContact(partnerId);
 
   const handleDeleteContact = async () => {
     try {
-      await deleteContactMutation();
+      deleteContactMutation();
     } finally {
       window.history.back();
     }
