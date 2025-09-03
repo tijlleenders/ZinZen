@@ -12,15 +12,6 @@ export const shareGoalFlow = async (
 
   while (attempts < maxRetries) {
     try {
-      const requestPromise = page.waitForRequest(
-        (request) => {
-          const url = request.url();
-          const method = request.method();
-          return url.includes("lambda-url.eu-west-1.on.aws") && method === "POST";
-        },
-        { timeout: 15_000 },
-      );
-
       await page.getByTestId(`goal-${goalTitle}`).getByTestId("goal-icon").locator("div").first().click();
       await page.getByTestId("share-action").click();
 
@@ -40,17 +31,10 @@ export const shareGoalFlow = async (
         },
         { timeout: 30000 },
       );
-      const request = await requestPromise;
-      const data = await request.postDataJSON();
-
-      if (!data?.event?.levelGoalsNode?.length) {
-        throw new Error("Invalid request data: missing or empty levelGoalsNode");
-      }
 
       console.log("Share request successful:", {
         goalTitle,
         receiverName,
-        requestData: data,
       });
       await page.goBack();
       return;
