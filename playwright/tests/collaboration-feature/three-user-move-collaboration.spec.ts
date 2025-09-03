@@ -202,6 +202,9 @@ test.describe("Goal Sharing Feature", () => {
       await userAPage.getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await userAPage.getByRole("button", { name: "Move here add goal", exact: true }).click();
 
+      // Wait for move operation to complete
+      await userAPage.waitForTimeout(3000);
+
       await userBPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
       await userBPage.reload();

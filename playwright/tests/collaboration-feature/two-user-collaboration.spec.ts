@@ -153,6 +153,8 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
+      await sharerPage().waitForTimeout(3000);
+
       // check if the subgoal is not visible in User receiver MyGoal
       await receiverPage().goto("http://127.0.0.1:3000");
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
@@ -215,6 +217,20 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
+      await sharerPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       // check if the subgoal is visible in receiver in the root goal
       await receiverPage().goto("http://127.0.0.1:3000/");
       await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
@@ -239,7 +255,20 @@ test.describe("Goal Sharing Feature", () => {
 
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
-
+      await sharerPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       // check if the subgoal is visible in receiver under the currentGoalTitle
       await receiverPage().goto("http://127.0.0.1:3000/");
       await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
@@ -275,8 +304,22 @@ test.describe("Goal Sharing Feature", () => {
       await receiverPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await receiverPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
-      await sharerPage().goto("http://127.0.0.1:3000/goals");
+      await receiverPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
 
+      await sharerPage().goto("http://127.0.0.1:3000/goals");
       // first verify that the notification dot exists
       await expectWithRetry(sharerPage(), async () => {
         await expect(sharerPage().getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
@@ -412,6 +455,20 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
+      await sharerPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       await receiverPage().goto("http://127.0.0.1:3000/");
       await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
@@ -449,7 +506,20 @@ test.describe("Goal Sharing Feature", () => {
 
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
-
+      await sharerPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       await receiverPage().goto("http://127.0.0.1:3000/");
       await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();

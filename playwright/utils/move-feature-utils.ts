@@ -1,4 +1,5 @@
 import { Page } from "@playwright/test";
+import { API_SERVER_URL_GOAL_SHARING } from "../config/constants";
 
 export const shareGoalFlow = async (
   page: Page,
@@ -24,8 +25,21 @@ export const shareGoalFlow = async (
       await page.getByTestId("share-action").click();
 
       await page.getByRole("button", { name: receiverName, exact: true }).click();
-      await page.waitForLoadState("networkidle");
 
+      await page.waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       const request = await requestPromise;
       const data = await request.postDataJSON();
 

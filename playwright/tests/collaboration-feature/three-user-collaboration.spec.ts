@@ -166,6 +166,21 @@ test.describe("Goal Sharing Feature", () => {
       await userAPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by A`);
       await userAPage.locator(".ant-modal-wrap").click();
 
+      await userAPage.waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
+
       await userBPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
 
@@ -174,6 +189,21 @@ test.describe("Goal Sharing Feature", () => {
       });
       await userBPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
       await userBPage.getByRole("button", { name: "add changes  Make all checked" }).click();
+
+      await userBPage.waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
 
       await expectWithRetry(userBPage, async () => {
         await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by A`)).toBeVisible();
@@ -202,7 +232,15 @@ test.describe("Goal Sharing Feature", () => {
       await userBPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by B`);
       await userBPage.locator(".ant-modal-wrap").click();
 
-      await userBPage.waitForTimeout(1000);
+      await userBPage.waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            return true;
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
 
       await userCPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
@@ -234,6 +272,7 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
       await userAPage.getByRole("button", { name: "add changes  Make all checked" }).click();
+
       await expectWithRetry(userAPage, async () => {
         await expect(userAPage.getByTestId(`goal-${currentGoalTitle} edited by B`)).toBeVisible();
       });
@@ -249,8 +288,6 @@ test.describe("Goal Sharing Feature", () => {
       await userCPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by C`);
       await userCPage.locator(".ant-modal-wrap").click();
 
-      await userCPage.waitForTimeout(1000);
-
       await userBPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
 
@@ -264,11 +301,23 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
       await userBPage.getByRole("button", { name: "add changes  Make all checked" }).click();
+      await userBPage.waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       await expectWithRetry(userBPage, async () => {
         await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by C`)).toBeVisible();
       });
-
-      await userBPage.waitForTimeout(1000);
 
       await userAPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL_SHARING);
