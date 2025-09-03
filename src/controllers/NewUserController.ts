@@ -8,8 +8,8 @@ export const createDefaultGoals = async () => {
   if (activeGoals.length !== 0) {
     return;
   }
-  starterGoals.forEach(async (goal, index) => {
-    addStarterGoal(t(goal.title), goal.goalTags, index).catch((error) => {
+  starterGoals.forEach(async (goal) => {
+    addStarterGoal(t(goal.title), goal.goalTags).catch((error) => {
       console.log(error, goal);
     });
   });

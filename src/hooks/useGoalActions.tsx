@@ -20,18 +20,16 @@ import { addToSharingQueue } from "@src/api/ContactsAPI";
 import { ILocationState } from "@src/Interfaces";
 import { hashObject } from "@src/utils";
 import { removeBackTicks } from "@src/utils/patterns";
-import { getGoalHintItem } from "@src/api/HintsAPI";
 import { GoalActions } from "@src/constants/actions";
 import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
-import { useGetGoalById } from "./api/Goals/queries/useGetGoalById";
+import { createSharedGoalObject } from "@src/utils/sharedGoalUtils";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
-  const { partnerId, activeGoalId } = useParams();
+  const { partnerId } = useParams();
   const isPartnerModeActive = !!partnerId;
   const setLastAction = useSetRecoilState(lastAction);
   const subGoalsHistory = state?.goalsHistory || [];
-  const { data: activeGoal } = useGetGoalById(activeGoalId || "");
 
   const setShowToast = useSetRecoilState(displayToast);
 
@@ -58,9 +56,7 @@ const useGoalActions = () => {
     });
   };
 
-  const updateGoal = async (goal: GoalItem, updatedHintOption: boolean) => {
-    const currentHintItem = await getGoalHintItem(goal.id);
-
+  const updateGoal = async (goal: GoalItem, updatedHintOption: boolean, goalToCompare: GoalItem) => {
     const titleContainsCode = /```/.test(goal.title);
     if (goal.sublist.length > 0 && titleContainsCode) {
       showMessage("Action Failed!!", "Cannot update the title to include code if the goal has a subgoal.");
@@ -74,11 +70,7 @@ const useGoalActions = () => {
         rootGoal = (await getSharedWMGoalById(notificationGoalId)) || goal;
       }
       suggestChanges(rootGoal, goal, subGoalsHistory.length);
-    } else if (
-      activeGoal &&
-      (hashObject({ ...activeGoal }) !== hashObject(goal) || currentHintItem?.hintOptionEnabled !== updatedHintOption)
-    ) {
-      // Comparing hashes of the old (activeGoal) and updated (goal) versions to check if the goal has changed
+    } else if (goalToCompare && hashObject({ ...goalToCompare }) !== hashObject(goal)) {
       await modifyGoal(goal.id, goal, [...ancestors, goal.id], updatedHintOption);
     }
   };
@@ -108,12 +100,14 @@ const useGoalActions = () => {
     // Create modified copies of all goals with appropriate sharing properties
     const updatedGoalWithChildrens = goalWithChildrens.map((goalNode) => ({
       ...goalNode,
-      goals: goalNode.goals.map((goalItem) => ({
-        ...goalItem,
-        participants: [], // remove participants before sharing
-        parentGoalId: goalItem.id === goal.id ? sharedAncestorId : goalItem.parentGoalId, // if we want to share a subgoal, then we need to set the parentGoalId to the root goal
-        notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId, // if we want to share a subgoal, then we need to set the notificationGoalId to the goal id
-      })),
+      goals: goalNode.goals.map((goalItem) => {
+        const sharedGoal = createSharedGoalObject({
+          ...goalItem,
+          parentGoalId: goalItem.id === goal.id ? sharedAncestorId : goalItem.parentGoalId, // if we want to share a subgoal, then we need to set the parentGoalId to the root goal
+          notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId, // if we want to share a subgoal, then we need to set the notificationGoalId to the goal id
+        });
+        return sharedGoal;
+      }),
     }));
 
     // Share the goals with the contact

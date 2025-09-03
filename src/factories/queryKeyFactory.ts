@@ -22,3 +22,7 @@ export const CONTACT_QUERY_KEYS = {
   details: () => [...CONTACT_QUERY_KEYS.all, "detail"],
   detail: (contactId: string) => [...CONTACT_QUERY_KEYS.details(), contactId],
 } as const;
+
+export const HINT_QUERY_KEYS = {
+  all: ["hints"],
+} as const;

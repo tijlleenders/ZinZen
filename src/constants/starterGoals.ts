@@ -1,7 +1,7 @@
 import { addGoal } from "@src/api/GoalsAPI";
 import { createGoalObjectFromTags } from "@src/helpers/GoalProcessor";
 import { TGoalCategory } from "@src/models/GoalItem";
-import { colorPalleteList } from "@src/utils";
+import { colorPalleteList, getRandomColor } from "@src/utils";
 import { v4 as uuidv4 } from "uuid";
 
 const starterGoals = [];
@@ -10,19 +10,18 @@ export const addStarterGoal = async (
   goalTitle: string,
   goalTags: {
     id?: string | null;
-    afterTime: number | null;
-    beforeTime: number | null;
+    afterTime: number | undefined;
+    beforeTime: number | undefined;
     sublist?: string[];
     parentGoalId?: string;
     category: TGoalCategory;
   },
-  colorIndex: number,
 ) => {
   await addGoal(
     createGoalObjectFromTags({
       title: goalTitle,
       ...goalTags,
-      goalColor: colorPalleteList[colorIndex % colorPalleteList.length],
+      goalColor: getRandomColor(colorPalleteList),
     }),
   );
 };
@@ -34,12 +33,18 @@ starterGoals.push(
   {
     title: "Sleep 😴🌙",
     goalTags: {
+      beforeTime: 7,
       afterTime: 22,
       id: otherGoalIds[0],
-      beforeTime: 7,
       timeBudget: {
-        perDay: "6-8",
-        perWeek: "42-52",
+        perDay: {
+          min: 6,
+          max: 8,
+        },
+        perWeek: {
+          min: 42,
+          max: 52,
+        },
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
@@ -53,8 +58,14 @@ starterGoals.push(
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
-        perDay: "0-4",
-        perWeek: "1-4",
+        perDay: {
+          min: 0,
+          max: 4,
+        },
+        perWeek: {
+          min: 1,
+          max: 4,
+        },
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       category: "Budget",
@@ -67,8 +78,14 @@ starterGoals.push(
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
-        perDay: "1-3",
-        perWeek: "2-3",
+        perDay: {
+          min: 1,
+          max: 3,
+        },
+        perWeek: {
+          min: 2,
+          max: 3,
+        },
       },
       on: ["Sat", "Sun"],
       category: "Budget",
@@ -81,8 +98,14 @@ starterGoals.push(
       afterTime: 9,
       beforeTime: 24,
       timeBudget: {
-        perDay: "1-6",
-        perWeek: "10-10",
+        perDay: {
+          min: 1,
+          max: 6,
+        },
+        perWeek: {
+          min: 10,
+          max: 10,
+        },
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       category: "Budget",
@@ -95,8 +118,14 @@ starterGoals.push(
       afterTime: 6,
       beforeTime: 18,
       timeBudget: {
-        perDay: "6-10",
-        perWeek: "40-40",
+        perDay: {
+          min: 6,
+          max: 10,
+        },
+        perWeek: {
+          min: 40,
+          max: 40,
+        },
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri"],
       category: "Budget",
@@ -106,8 +135,6 @@ starterGoals.push(
     title: "Daily habits 🔁",
     goalTags: {
       id: dailyHabitsId,
-      afterTime: null,
-      beforeTime: null,
       sublist: [otherGoalIds[5], otherGoalIds[6], otherGoalIds[7], otherGoalIds[8], otherGoalIds[9]],
       category: "Cluster",
     },
@@ -119,8 +146,14 @@ starterGoals.push(
       afterTime: 6,
       beforeTime: 21,
       timeBudget: {
-        perDay: "1-1",
-        perWeek: "7-7",
+        perDay: {
+          min: 1,
+          max: 1,
+        },
+        perWeek: {
+          min: 7,
+          max: 7,
+        },
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
@@ -134,8 +167,14 @@ starterGoals.push(
       afterTime: 5,
       beforeTime: 23,
       timeBudget: {
-        perDay: "1-1",
-        perWeek: "7-7",
+        perDay: {
+          min: 1,
+          max: 1,
+        },
+        perWeek: {
+          min: 7,
+          max: 7,
+        },
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
@@ -149,8 +188,14 @@ starterGoals.push(
       afterTime: 18,
       beforeTime: 20,
       timeBudget: {
-        perDay: "1-1",
-        perWeek: "7-7",
+        perDay: {
+          min: 1,
+          max: 1,
+        },
+        perWeek: {
+          min: 7,
+          max: 7,
+        },
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
@@ -164,8 +209,14 @@ starterGoals.push(
       afterTime: 12,
       beforeTime: 14,
       timeBudget: {
-        perDay: "1-1",
-        perWeek: "7-7",
+        perDay: {
+          min: 1,
+          max: 1,
+        },
+        perWeek: {
+          min: 7,
+          max: 7,
+        },
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,
@@ -179,8 +230,14 @@ starterGoals.push(
       afterTime: 6,
       beforeTime: 9,
       timeBudget: {
-        perDay: "1-1",
-        perWeek: "7-7",
+        perDay: {
+          min: 1,
+          max: 1,
+        },
+        perWeek: {
+          min: 7,
+          max: 7,
+        },
       },
       on: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       parentGoalId: dailyHabitsId,

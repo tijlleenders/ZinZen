@@ -107,6 +107,7 @@ const BottomNavbar = ({ title }: { title: string }) => {
           onClick={() => {
             handleClick("goals");
           }}
+          data-testid="navigation-button-Goals"
           className={`bottom-nav-item ${currentPage === "goals" || themeSelection ? "active" : ""}`}
         >
           <Icon active={currentPage === "goals" || themeSelection} title="GoalsIcon" />

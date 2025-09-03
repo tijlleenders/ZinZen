@@ -3,13 +3,14 @@ import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { MyTimePage } from "@pages/MyTimePage/MyTimePage";
 import { FeedbackPage } from "@pages/FeedbackPage/FeedbackPage";
-import { MyGoals } from "@pages/GoalsPage/MyGoals";
 import ContactsPage from "@pages/GoalsPage/ContactsPage";
 import PartnerGoals from "@pages/GoalsPage/PartnerGoals";
 import { FeelingsPage } from "@pages/FeelingsPage/FeelingsPage";
 import { FAQPage } from "@pages/FAQPage/FAQPage";
 import InvitePage from "@pages/InvitePage/InvitePage";
+import MyGoalsPage from "@pages/GoalsPage/MyGoalsPage";
 import InvestPage from "@pages/InvestPage/InvestPage";
+import SublistGoalsPage from "@pages/GoalsPage/SublistGoalsPage";
 import AppLayout from "./layouts/AppLayout";
 import { PartnerProvider } from "./contexts/partner-context";
 import useApp from "./hooks/useApp";
@@ -35,9 +36,12 @@ export const AppRoutes = () => {
     <Routes>
       {!isLanguageChosen ? <Route path="/" element={<LandingPage />} /> : <Route path="/" element={<MyTimePage />} />}
       <Route path="/Feedback" element={<FeedbackPage />} />
-      <Route path="*" element={<MyGoals />} />
-      <Route path="/goals/:parentId" element={<MyGoals />} />
-      <Route path="/goals/:parentId/:activeGoalId" element={<MyGoals />} />
+      <Route path="*" element={<MyGoalsPage />} />
+      <Route path="/goals/root" element={<MyGoalsPage />} />
+      <Route path="/goals/root/:activeGoalId" element={<MyGoalsPage />} />
+
+      <Route path="/goals/:parentId" element={<SublistGoalsPage />} />
+      <Route path="/goals/:parentId/:activeGoalId" element={<SublistGoalsPage />} />
 
       <Route
         path="/partners"
@@ -80,7 +84,6 @@ export const AppRoutes = () => {
           </PartnerProvider>
         }
       />
-      {/* <Route path="/goals" element={<GoalsPage />} /> */}
 
       <Route
         path="/MyJournal"

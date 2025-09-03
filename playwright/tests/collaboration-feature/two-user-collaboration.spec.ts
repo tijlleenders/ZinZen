@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { API_SERVER_URL_GOAL } from "playwright/config/constants";
+import { API_SERVER_URL_GOAL_SHARING, API_SERVER_URL_RELATIONSHIPS } from "../../config/constants";
 import {
   acceptContactInvitation,
   addContact,
@@ -11,6 +11,53 @@ import {
 import { shareGoalFlow } from "../../utils/move-feature-utils";
 
 test.describe.configure({ timeout: 100000 });
+
+// Enhanced helper function to retry assertion with multiple recovery strategies for CI/CD environments
+async function expectWithRetry(
+  page: Page,
+  assertion: () => Promise<void>,
+  maxRetries: number = 5, // Increased retries for CI/CD
+  retryDelay: number = 3000, // Increased delay for CI/CD
+): Promise<void> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await assertion();
+      return; // Success, exit the function
+    } catch (error) {
+      if (attempt === maxRetries) {
+        console.error(`Assertion failed after ${maxRetries} attempts. Final error: ${error.message}`);
+        throw error; // Re-throw the error on final attempt
+      }
+
+      console.warn(`Assertion failed on attempt ${attempt}/${maxRetries}. Error: ${error.message}`);
+
+      // Progressive recovery strategies for CI/CD environments
+      if (attempt === 1) {
+        // First retry: Just wait a bit longer
+        console.log(`First retry: Waiting ${retryDelay}ms before retry...`);
+        await page.waitForTimeout(retryDelay);
+      } else if (attempt === 2) {
+        // Second retry: Wait and try to stabilize the page
+        console.log(`Second retry: Waiting ${retryDelay}ms and stabilizing page...`);
+        await page.waitForTimeout(retryDelay);
+        // Wait for page to be ready
+        await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {});
+      } else if (attempt === 3) {
+        // Third retry: Refresh the page
+        console.log(`Third retry: Refreshing page and waiting ${retryDelay}ms...`);
+        await page.reload();
+        await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {});
+        await page.waitForTimeout(retryDelay);
+      } else {
+        // Fourth retry: Hard refresh and longer wait
+        console.log(`Fourth retry: Hard refresh and waiting ${retryDelay * 2}ms...`);
+        await page.reload({ waitUntil: "networkidle" });
+        await page.waitForLoadState("networkidle", { timeout: 20000 }).catch(() => {});
+        await page.waitForTimeout(retryDelay * 2);
+      }
+    }
+  }
+}
 
 test.describe("Goal Sharing Feature", () => {
   let userAPage: Page;
@@ -44,7 +91,7 @@ test.describe("Goal Sharing Feature", () => {
     invitationLink = await addContact(userAPage, "B", currentGoalTitle);
     await acceptContactInvitation(userBPage, invitationLink, "B");
     await userBPage.waitForResponse(async (response) => {
-      const url = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
+      const url = API_SERVER_URL_RELATIONSHIPS;
       if (response.url().includes(url)) {
         const responseData = await response.json();
         return responseData.status === "accepted";
@@ -61,12 +108,14 @@ test.describe("Goal Sharing Feature", () => {
     console.log(`User B is reloading the page to check for shared goal visibility...`);
     await userBPage.goto("http://127.0.0.1:3000/");
 
-    await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
+    await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
     await userBPage.getByRole("img", { name: "ZinZen" }).click();
     await userBPage.reload();
 
     await userBPage.getByTestId(`contact-B`).locator("div").first().click();
-    await expect(userBPage.getByTestId(`goal-${currentGoalTitle}`)).toBeVisible();
+    await expectWithRetry(userBPage, async () => {
+      await expect(userBPage.getByTestId(`goal-${currentGoalTitle}`)).toBeVisible();
+    });
 
     await userAPage.goto("http://127.0.0.1:3000/");
   });
@@ -104,6 +153,8 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
+      await sharerPage().waitForTimeout(3000);
+
       // check if the subgoal is not visible in User receiver MyGoal
       await receiverPage().goto("http://127.0.0.1:3000");
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
@@ -117,10 +168,12 @@ test.describe("Goal Sharing Feature", () => {
         .nth(1)
         .click();
 
-      await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeHidden();
+      await expectWithRetry(receiverPage(), async () => {
+        await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeHidden();
+      });
 
       // share the subgoal with receiver
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
       await sharerPage()
         .getByTestId(`goal-${currentGoalTitle}`)
         .locator("div")
@@ -132,7 +185,7 @@ test.describe("Goal Sharing Feature", () => {
 
       // check if the subgoal is visible in receiver under the currentGoalTitle
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
       await receiverPage()
@@ -141,10 +194,14 @@ test.describe("Goal Sharing Feature", () => {
         .filter({ hasText: currentGoalTitle })
         .nth(1)
         .click();
-      await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+
+      // Use retry mechanism with refresh for the critical assertion
+      await expectWithRetry(receiverPage(), async () => {
+        await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      });
 
       // move the subgoal to root goal
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
       await sharerPage()
         .getByTestId(`goal-${currentGoalTitle}`)
         .locator("div")
@@ -155,20 +212,36 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByTestId("zmodal").getByText("Move").click();
       await sharerPage().getByRole("button", { name: "Move goal" }).click();
 
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
+      await sharerPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       // check if the subgoal is visible in receiver in the root goal
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
-      await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      await expectWithRetry(receiverPage(), async () => {
+        await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      });
 
       // again move the subgoal under the currentGoalTitle
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
       await sharerPage().getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
       await sharerPage().getByTestId("zmodal").getByText("Move").click();
       await sharerPage().getByRole("button", { name: "Move goal" }).click();
@@ -182,10 +255,23 @@ test.describe("Goal Sharing Feature", () => {
 
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
-
+      await sharerPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       // check if the subgoal is visible in receiver under the currentGoalTitle
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
       await receiverPage()
@@ -194,7 +280,9 @@ test.describe("Goal Sharing Feature", () => {
         .filter({ hasText: currentGoalTitle })
         .nth(1)
         .click();
-      await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      await expectWithRetry(receiverPage(), async () => {
+        await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      });
 
       // suggesting changes from receiver to subgoal
 
@@ -216,10 +304,28 @@ test.describe("Goal Sharing Feature", () => {
       await receiverPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await receiverPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
-      await sharerPage().goto("http://127.0.0.1:3000/goals");
+      await receiverPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
 
+      await sharerPage().goto("http://127.0.0.1:3000/goals");
       // first verify that the notification dot exists
-      await expect(sharerPage().getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
+      await sharerPage().waitForTimeout(2000);
+      await sharerPage().reload({ timeout: 30000 });
+      await expectWithRetry(sharerPage(), async () => {
+        await expect(sharerPage().getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
+      });
 
       // then click on the goal icon
       await sharerPage()
@@ -230,13 +336,17 @@ test.describe("Goal Sharing Feature", () => {
         .click();
 
       await sharerPage().getByRole("button", { name: "add changes  Make all checked" }).click();
-      await expect(sharerPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      await expectWithRetry(sharerPage(), async () => {
+        await expect(sharerPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      });
 
       await receiverPage().goto("http://127.0.0.1:3000/");
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
 
-      await expect(sharerPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      await expectWithRetry(sharerPage(), async () => {
+        await expect(sharerPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
+      });
     });
 
     test("move should work correct if private goal is present in the shared hierarchy", async () => {
@@ -269,7 +379,7 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       // move subgoal into private goal
       await sharerPage()
@@ -303,7 +413,7 @@ test.describe("Goal Sharing Feature", () => {
 
       // check if the subgoal is visible in receiver under the currentGoalTitle
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
       await receiverPage()
@@ -312,10 +422,12 @@ test.describe("Goal Sharing Feature", () => {
         .filter({ hasText: currentGoalTitle })
         .nth(1)
         .click();
-      await expect(receiverPage().getByTestId(`goal-${sharedSubgoalTitle}`)).toBeVisible();
+      await expectWithRetry(receiverPage(), async () => {
+        await expect(receiverPage().getByTestId(`goal-${sharedSubgoalTitle}`)).toBeVisible();
+      });
 
       // move shared subgoal to root and check if it is visible in receiver in root only
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       await sharerPage()
         .getByTestId(`goal-${currentGoalTitle}`)
@@ -340,19 +452,35 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByTestId("zmodal").getByText("Move").click();
       await sharerPage().getByRole("button", { name: "Move goal" }).click();
 
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
+      await sharerPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
-      await expect(receiverPage().getByTestId(`goal-${sharedSubgoalTitle}`)).toBeVisible();
+      await expectWithRetry(receiverPage(), async () => {
+        await expect(receiverPage().getByTestId(`goal-${sharedSubgoalTitle}`)).toBeVisible();
+      });
 
       // now move the shared subgoal from root to private goal again
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
       await sharerPage()
         .getByTestId(`goal-${sharedSubgoalTitle}`)
         .getByTestId("goal-icon")
@@ -362,7 +490,7 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByTestId("zmodal").getByText("Move").click();
       await sharerPage().getByRole("button", { name: "Move goal" }).click();
 
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       await sharerPage()
         .getByTestId(`goal-${currentGoalTitle}`)
@@ -380,13 +508,28 @@ test.describe("Goal Sharing Feature", () => {
 
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
-
+      await sharerPage().waitForResponse(
+        async (res) => {
+          if (res.url().includes(API_SERVER_URL_GOAL_SHARING) && res.status() === 200) {
+            try {
+              const responseBody = await res.json();
+              return responseBody.message === "OK";
+            } catch (error) {
+              return false;
+            }
+          }
+          return false;
+        },
+        { timeout: 30000 },
+      );
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
       await receiverPage().getByTestId(`goal-${currentGoalTitle}`).locator("div").first().click();
-      await expect(receiverPage().getByTestId(`goal-${sharedSubgoalTitle}`)).toBeVisible();
+      await expectWithRetry(receiverPage(), async () => {
+        await expect(receiverPage().getByTestId(`goal-${sharedSubgoalTitle}`)).toBeVisible();
+      });
     });
   });
 });

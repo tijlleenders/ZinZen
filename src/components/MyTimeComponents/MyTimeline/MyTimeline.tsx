@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/jsx-key */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import chevronLeftIcon from "@assets/images/chevronLeft.svg";
 
@@ -11,7 +11,6 @@ import { useTranslation } from "react-i18next";
 import "./index.scss";
 import { getTimePart } from "@src/utils";
 import { TaskOptions } from "./TaskOptions";
-import { updateImpossibleGoals } from "./updateImpossibleGoals";
 import { useMyTimelineStore } from "./useMyTimelineStore";
 import GoalTiming from "./GoalTiming";
 
@@ -37,10 +36,6 @@ const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks }) => {
     setActiveTaskId((prevTaskId) => (prevTaskId === taskId ? null : taskId));
   };
 
-  useEffect(() => {
-    updateImpossibleGoals(myTasks.impossible);
-  }, []);
-
   return (
     <div className="MTL-display" style={{ paddingTop: `${myTasks.scheduled.length > 0 ? "" : "1.125rem"}` }}>
       <h4 className="MTL-header">Tasks</h4>
@@ -63,6 +58,7 @@ const MyTimeline: React.FC<MyTimelineProps> = ({ day, myTasks }) => {
         return (
           <button
             key={task.taskid}
+            id={task.taskid}
             className={`MTL-taskItem simple ${isTaskCompleted ? "completedTask" : ""}`}
             type="button"
             style={{ borderLeft: `6px solid ${task.goalColor}` }}
