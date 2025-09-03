@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { API_SERVER_URL_GOAL, API_SERVER_URL_RELATIONSHIPS } from "playwright/config/constants";
+import { API_SERVER_URL_GOAL_SHARING, API_SERVER_URL_RELATIONSHIPS } from "../../config/constants";
 import {
   acceptContactInvitation,
   addContact,
@@ -59,7 +59,7 @@ test.describe("Goal Sharing Feature", () => {
 
     console.log(`User B is reloading the page to check for shared goal visibility...`);
     await userBPage.goto("http://127.0.0.1:3000/");
-    await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
+    await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
     await userBPage.getByRole("img", { name: "ZinZen" }).click();
     await userBPage.waitForTimeout(1000);
     await userBPage.reload();
@@ -73,7 +73,7 @@ test.describe("Goal Sharing Feature", () => {
     await userBPage.getByRole("button", { name: "Goals" }).click();
     invitationLink = await addContact(userBPage, "C", currentGoalTitle);
     await acceptContactInvitation(userCPage, invitationLink, "C");
-    await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL);
+    await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
 
     await goToAppPage(userBPage, "Goals", true);
 
@@ -81,7 +81,7 @@ test.describe("Goal Sharing Feature", () => {
     await shareGoalFlow(userBPage, currentGoalTitle, "C");
 
     await userCPage.goto("http://127.0.0.1:3000/");
-    await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL);
+    await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
     await userCPage.getByRole("img", { name: "ZinZen" }).click();
     await userCPage.waitForTimeout(1000);
     await userCPage.reload();
@@ -116,7 +116,7 @@ test.describe("Goal Sharing Feature", () => {
       await userAPage.locator(".ant-modal-wrap").click();
 
       await userBPage.goto("http://127.0.0.1:3000/goals");
-      await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
 
       await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
       await userBPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
@@ -125,7 +125,7 @@ test.describe("Goal Sharing Feature", () => {
       await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by A`)).toBeVisible();
 
       await userCPage.goto("http://127.0.0.1:3000/goals");
-      await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
 
       await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
       await userCPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
@@ -146,7 +146,7 @@ test.describe("Goal Sharing Feature", () => {
       await userBPage.waitForTimeout(1000);
 
       await userCPage.goto("http://127.0.0.1:3000/goals");
-      await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
 
       await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible();
       await userCPage
@@ -159,7 +159,7 @@ test.describe("Goal Sharing Feature", () => {
       await expect(userCPage.getByTestId(`goal-${currentGoalTitle} edited by B`)).toBeVisible();
 
       await userAPage.goto("http://127.0.0.1:3000/goals");
-      await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL_SHARING);
 
       await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible();
       await userAPage
@@ -185,7 +185,7 @@ test.describe("Goal Sharing Feature", () => {
       await userCPage.waitForTimeout(1000);
 
       await userBPage.goto("http://127.0.0.1:3000/goals");
-      await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
 
       await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible();
       await userBPage
@@ -200,7 +200,7 @@ test.describe("Goal Sharing Feature", () => {
       await userBPage.waitForTimeout(1000);
 
       await userAPage.goto("http://127.0.0.1:3000/goals");
-      await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL_SHARING);
 
       await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible();
       await userAPage

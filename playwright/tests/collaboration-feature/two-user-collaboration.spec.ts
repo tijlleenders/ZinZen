@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { API_SERVER_URL_GOAL, API_SERVER_URL_RELATIONSHIPS } from "playwright/config/constants";
+import { API_SERVER_URL_GOAL_SHARING, API_SERVER_URL_RELATIONSHIPS } from "../../config/constants";
 import {
   acceptContactInvitation,
   addContact,
@@ -61,7 +61,7 @@ test.describe("Goal Sharing Feature", () => {
     console.log(`User B is reloading the page to check for shared goal visibility...`);
     await userBPage.goto("http://127.0.0.1:3000/");
 
-    await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
+    await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
     await userBPage.getByRole("img", { name: "ZinZen" }).click();
     await userBPage.reload();
 
@@ -131,8 +131,9 @@ test.describe("Goal Sharing Feature", () => {
       await shareGoalFlow(sharerPage(), subgoalTitle, receiver);
 
       // check if the subgoal is visible in receiver under the currentGoalTitle
+      await receiverPage().waitForTimeout(1000);
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
       await receiverPage()
@@ -162,7 +163,7 @@ test.describe("Goal Sharing Feature", () => {
 
       // check if the subgoal is visible in receiver in the root goal
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
       await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
@@ -185,7 +186,7 @@ test.describe("Goal Sharing Feature", () => {
 
       // check if the subgoal is visible in receiver under the currentGoalTitle
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
       await receiverPage()
@@ -303,7 +304,7 @@ test.describe("Goal Sharing Feature", () => {
 
       // check if the subgoal is visible in receiver under the currentGoalTitle
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
       await receiverPage()
@@ -346,9 +347,10 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
+      await receiverPage().reload();
       await expect(receiverPage().getByTestId(`goal-${sharedSubgoalTitle}`)).toBeVisible();
 
       // now move the shared subgoal from root to private goal again
@@ -382,7 +384,7 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
       await receiverPage().goto("http://127.0.0.1:3000/");
-      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL);
+      await waitForResponseConfirmation(receiverPage(), API_SERVER_URL_GOAL_SHARING);
       await receiverPage().getByRole("img", { name: "ZinZen" }).click();
       await receiverPage().getByTestId(`contact-${receiver}`).locator("div").first().click();
       await receiverPage().getByTestId(`goal-${currentGoalTitle}`).locator("div").first().click();
