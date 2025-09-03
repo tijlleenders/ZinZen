@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { API_SERVER_URL, API_SERVER_URL_GOAL } from "playwright/config/constants";
+import { API_SERVER_URL_GOAL, API_SERVER_URL_RELATIONSHIPS } from "playwright/config/constants";
 import {
   acceptContactInvitation,
   addContact,
@@ -49,7 +49,7 @@ test.describe("Goal Sharing Feature", () => {
     console.log(`User A is adding User B as a contact...`);
     invitationLink = await addContact(userAPage, "B", currentGoalTitle);
     await acceptContactInvitation(userBPage, invitationLink, "B");
-    await waitForResponseConfirmation(userBPage, API_SERVER_URL);
+    await waitForResponseConfirmation(userBPage, API_SERVER_URL_RELATIONSHIPS);
 
     console.log(`User A is sharing the goal with User B...`);
     await goToAppPage(userAPage, "Goals", true);
@@ -73,7 +73,7 @@ test.describe("Goal Sharing Feature", () => {
     await userBPage.getByRole("button", { name: "Goals" }).click();
     invitationLink = await addContact(userBPage, "C", currentGoalTitle);
     await acceptContactInvitation(userCPage, invitationLink, "C");
-    await waitForResponseConfirmation(userCPage, API_SERVER_URL);
+    await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL);
 
     await goToAppPage(userBPage, "Goals", true);
 
@@ -113,7 +113,7 @@ test.describe("Goal Sharing Feature", () => {
       await userAPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
       await userAPage.getByTestId("zmodal").getByText("Edit").click();
       await userAPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by A`);
-      await userAPage.locator(".action-btn-container").locator(".action-btn").click();
+      await userAPage.locator(".ant-modal-wrap").click();
 
       await userBPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL);
@@ -141,7 +141,7 @@ test.describe("Goal Sharing Feature", () => {
         .click();
       await userBPage.getByTestId("zmodal").getByText("Edit").first().click();
       await userBPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by B`);
-      await userBPage.locator(".action-btn-container").locator(".action-btn").click();
+      await userBPage.locator(".ant-modal-wrap").click();
 
       await userBPage.waitForTimeout(1000);
 
@@ -180,7 +180,7 @@ test.describe("Goal Sharing Feature", () => {
         .click();
       await userCPage.getByTestId("zmodal").getByText("Edit").first().click();
       await userCPage.locator(".header-title").locator("input").fill(`${currentGoalTitle} edited by C`);
-      await userCPage.locator(".action-btn-container").locator(".action-btn").click();
+      await userCPage.locator(".ant-modal-wrap").click();
 
       await userCPage.waitForTimeout(1000);
 

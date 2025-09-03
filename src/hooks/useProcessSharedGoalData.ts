@@ -22,7 +22,7 @@ export const useProcessSharedGoalData = () => {
         throw new Error("Failed to fetch shared goals");
       }
       return res.response.reduce(
-        (acc: { [key: string]: SharedGoalMessage[] }, curr) => ({
+        (acc: { [key: string]: SharedGoalMessage[] }, curr: SharedGoalMessage) => ({
           ...acc,
           [curr.relId]: [...(acc[curr.relId] || []), curr],
         }),

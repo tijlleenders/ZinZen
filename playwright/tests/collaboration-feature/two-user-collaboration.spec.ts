@@ -1,5 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
-import { API_SERVER_URL_GOAL } from "playwright/config/constants";
+import { API_SERVER_URL_GOAL, API_SERVER_URL_RELATIONSHIPS } from "playwright/config/constants";
 import {
   acceptContactInvitation,
   addContact,
@@ -44,7 +44,7 @@ test.describe("Goal Sharing Feature", () => {
     invitationLink = await addContact(userAPage, "B", currentGoalTitle);
     await acceptContactInvitation(userBPage, invitationLink, "B");
     await userBPage.waitForResponse(async (response) => {
-      const url = "https://sfk3sq5mfzgfjfy3hytp4tmon40bbjpu.lambda-url.eu-west-1.on.aws/";
+      const url = API_SERVER_URL_RELATIONSHIPS;
       if (response.url().includes(url)) {
         const responseData = await response.json();
         return responseData.status === "accepted";
@@ -120,7 +120,7 @@ test.describe("Goal Sharing Feature", () => {
       await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeHidden();
 
       // share the subgoal with receiver
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
       await sharerPage()
         .getByTestId(`goal-${currentGoalTitle}`)
         .locator("div")
@@ -144,7 +144,7 @@ test.describe("Goal Sharing Feature", () => {
       await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
 
       // move the subgoal to root goal
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
       await sharerPage()
         .getByTestId(`goal-${currentGoalTitle}`)
         .locator("div")
@@ -155,7 +155,7 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByTestId("zmodal").getByText("Move").click();
       await sharerPage().getByRole("button", { name: "Move goal" }).click();
 
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
@@ -168,7 +168,7 @@ test.describe("Goal Sharing Feature", () => {
       await expect(receiverPage().getByTestId(`goal-${subgoalTitle}`)).toBeVisible();
 
       // again move the subgoal under the currentGoalTitle
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
       await sharerPage().getByTestId(`goal-${subgoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
       await sharerPage().getByTestId("zmodal").getByText("Move").click();
       await sharerPage().getByRole("button", { name: "Move goal" }).click();
@@ -269,7 +269,7 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
 
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       // move subgoal into private goal
       await sharerPage()
@@ -315,7 +315,7 @@ test.describe("Goal Sharing Feature", () => {
       await expect(receiverPage().getByTestId(`goal-${sharedSubgoalTitle}`)).toBeVisible();
 
       // move shared subgoal to root and check if it is visible in receiver in root only
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       await sharerPage()
         .getByTestId(`goal-${currentGoalTitle}`)
@@ -340,7 +340,7 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByTestId("zmodal").getByText("Move").click();
       await sharerPage().getByRole("button", { name: "Move goal" }).click();
 
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       await sharerPage().getByRole("button", { name: "add goal | add feeling | add group", exact: true }).click();
       await sharerPage().getByRole("button", { name: "Move here add goal", exact: true }).click();
@@ -352,7 +352,7 @@ test.describe("Goal Sharing Feature", () => {
       await expect(receiverPage().getByTestId(`goal-${sharedSubgoalTitle}`)).toBeVisible();
 
       // now move the shared subgoal from root to private goal again
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
       await sharerPage()
         .getByTestId(`goal-${sharedSubgoalTitle}`)
         .getByTestId("goal-icon")
@@ -362,7 +362,7 @@ test.describe("Goal Sharing Feature", () => {
       await sharerPage().getByTestId("zmodal").getByText("Move").click();
       await sharerPage().getByRole("button", { name: "Move goal" }).click();
 
-      await sharerPage().getByRole("button", { name: "Goals" }).click();
+      await sharerPage().getByTestId(`navigation-button-Goals`).click();
 
       await sharerPage()
         .getByTestId(`goal-${currentGoalTitle}`)

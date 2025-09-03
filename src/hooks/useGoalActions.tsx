@@ -22,6 +22,7 @@ import { hashObject } from "@src/utils";
 import { removeBackTicks } from "@src/utils/patterns";
 import { GoalActions } from "@src/constants/actions";
 import { findMostRecentSharedAncestor } from "@components/MoveGoal/MoveGoalHelper";
+import { createSharedGoalObject } from "@src/utils/sharedGoalUtils";
 
 const useGoalActions = () => {
   const { state }: { state: ILocationState } = useLocation();
@@ -99,12 +100,14 @@ const useGoalActions = () => {
     // Create modified copies of all goals with appropriate sharing properties
     const updatedGoalWithChildrens = goalWithChildrens.map((goalNode) => ({
       ...goalNode,
-      goals: goalNode.goals.map((goalItem) => ({
-        ...goalItem,
-        participants: [], // remove participants before sharing
-        parentGoalId: goalItem.id === goal.id ? sharedAncestorId : goalItem.parentGoalId, // if we want to share a subgoal, then we need to set the parentGoalId to the root goal
-        notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId, // if we want to share a subgoal, then we need to set the notificationGoalId to the goal id
-      })),
+      goals: goalNode.goals.map((goalItem) => {
+        const sharedGoal = createSharedGoalObject({
+          ...goalItem,
+          parentGoalId: goalItem.id === goal.id ? sharedAncestorId : goalItem.parentGoalId, // if we want to share a subgoal, then we need to set the parentGoalId to the root goal
+          notificationGoalId: goalItem.id === goal.id ? goal.id : goalItem.notificationGoalId, // if we want to share a subgoal, then we need to set the notificationGoalId to the goal id
+        });
+        return sharedGoal;
+      }),
     }));
 
     // Share the goals with the contact
