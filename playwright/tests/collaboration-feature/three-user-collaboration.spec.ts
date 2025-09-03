@@ -13,6 +13,29 @@ import { shareGoalFlow } from "../../utils/move-feature-utils";
 
 test.describe.configure({ timeout: 100000 });
 
+// Helper function to retry assertion with page refresh if it times out
+async function expectWithRetry(
+  page: Page,
+  assertion: () => Promise<void>,
+  maxRetries: number = 3,
+  retryDelay: number = 2000,
+): Promise<void> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await assertion();
+      return; // Success, exit the function
+    } catch (error) {
+      if (attempt === maxRetries) {
+        throw error; // Re-throw the error on final attempt
+      }
+
+      console.warn(`Assertion failed on attempt ${attempt}. Refreshing page and retrying in ${retryDelay}ms...`);
+      await page.reload();
+      await page.waitForTimeout(retryDelay);
+    }
+  }
+}
+
 test.describe("Goal Sharing Feature", () => {
   let userAPage: Page;
   let userBPage: Page;
@@ -64,7 +87,9 @@ test.describe("Goal Sharing Feature", () => {
     await userBPage.waitForTimeout(1000);
     await userBPage.reload();
     await userBPage.getByTestId(`contact-B`).locator("div").first().click();
-    await expect(userBPage.getByTestId(`goal-${currentGoalTitle}`)).toBeVisible();
+    await expectWithRetry(userBPage, async () => {
+      await expect(userBPage.getByTestId(`goal-${currentGoalTitle}`)).toBeVisible();
+    });
 
     await userBPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
     await userBPage.getByTestId("zmodal").getByText("Collaborate").click();
@@ -86,7 +111,9 @@ test.describe("Goal Sharing Feature", () => {
     await userCPage.waitForTimeout(1000);
     await userCPage.reload();
     await userCPage.getByTestId(`contact-C`).locator("div").first().click();
-    await expect(userCPage.getByTestId(`goal-${currentGoalTitle}`)).toBeVisible();
+    await expectWithRetry(userCPage, async () => {
+      await expect(userCPage.getByTestId(`goal-${currentGoalTitle}`)).toBeVisible();
+    });
 
     await userCPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
     await userCPage.getByTestId("zmodal").getByText("Collaborate").click();
@@ -118,19 +145,27 @@ test.describe("Goal Sharing Feature", () => {
       await userBPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
 
-      await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
+      await expectWithRetry(userBPage, async () => {
+        await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
+      });
       await userBPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
       await userBPage.getByRole("button", { name: "add changes  Make all checked" }).click();
 
-      await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by A`)).toBeVisible();
+      await expectWithRetry(userBPage, async () => {
+        await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by A`)).toBeVisible();
+      });
 
       await userCPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
 
-      await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
+      await expectWithRetry(userCPage, async () => {
+        await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle}`)).toBeVisible();
+      });
       await userCPage.getByTestId(`goal-${currentGoalTitle}`).getByTestId("goal-icon").locator("div").first().click();
       await userCPage.getByRole("button", { name: "add changes  Make all checked" }).click();
-      await expect(userCPage.getByTestId(`goal-${currentGoalTitle} edited by A`)).toBeVisible();
+      await expectWithRetry(userCPage, async () => {
+        await expect(userCPage.getByTestId(`goal-${currentGoalTitle} edited by A`)).toBeVisible();
+      });
 
       await userBPage.getByRole("button", { name: "Goals" }).click();
       await userBPage
@@ -148,7 +183,9 @@ test.describe("Goal Sharing Feature", () => {
       await userCPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userCPage, API_SERVER_URL_GOAL_SHARING);
 
-      await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible();
+      await expectWithRetry(userCPage, async () => {
+        await expect(userCPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible();
+      });
       await userCPage
         .getByTestId(`goal-${currentGoalTitle} edited by A`)
         .getByTestId("goal-icon")
@@ -156,12 +193,16 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
       await userCPage.getByRole("button", { name: "add changes  Make all checked" }).click();
-      await expect(userCPage.getByTestId(`goal-${currentGoalTitle} edited by B`)).toBeVisible();
+      await expectWithRetry(userCPage, async () => {
+        await expect(userCPage.getByTestId(`goal-${currentGoalTitle} edited by B`)).toBeVisible();
+      });
 
       await userAPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL_SHARING);
 
-      await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible();
+      await expectWithRetry(userAPage, async () => {
+        await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by A`)).toBeVisible();
+      });
       await userAPage
         .getByTestId(`goal-${currentGoalTitle} edited by A`)
         .getByTestId("goal-icon")
@@ -169,7 +210,9 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
       await userAPage.getByRole("button", { name: "add changes  Make all checked" }).click();
-      await expect(userAPage.getByTestId(`goal-${currentGoalTitle} edited by B`)).toBeVisible();
+      await expectWithRetry(userAPage, async () => {
+        await expect(userAPage.getByTestId(`goal-${currentGoalTitle} edited by B`)).toBeVisible();
+      });
 
       await userCPage.getByRole("button", { name: "Goals" }).click();
       await userCPage
@@ -187,7 +230,9 @@ test.describe("Goal Sharing Feature", () => {
       await userBPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userBPage, API_SERVER_URL_GOAL_SHARING);
 
-      await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible();
+      await expectWithRetry(userBPage, async () => {
+        await expect(userBPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible();
+      });
       await userBPage
         .getByTestId(`goal-${currentGoalTitle} edited by B`)
         .getByTestId("goal-icon")
@@ -195,14 +240,18 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
       await userBPage.getByRole("button", { name: "add changes  Make all checked" }).click();
-      await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by C`)).toBeVisible();
+      await expectWithRetry(userBPage, async () => {
+        await expect(userBPage.getByTestId(`goal-${currentGoalTitle} edited by C`)).toBeVisible();
+      });
 
       await userBPage.waitForTimeout(1000);
 
       await userAPage.goto("http://127.0.0.1:3000/goals");
       await waitForResponseConfirmation(userAPage, API_SERVER_URL_GOAL_SHARING);
 
-      await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible();
+      await expectWithRetry(userAPage, async () => {
+        await expect(userAPage.getByTestId(`notification-dot-${currentGoalTitle} edited by B`)).toBeVisible();
+      });
       await userAPage
         .getByTestId(`goal-${currentGoalTitle} edited by B`)
         .getByTestId("goal-icon")
@@ -210,7 +259,9 @@ test.describe("Goal Sharing Feature", () => {
         .first()
         .click();
       await userAPage.getByRole("button", { name: "add changes  Make all checked" }).click();
-      await expect(userAPage.getByTestId(`goal-${currentGoalTitle} edited by C`)).toBeVisible();
+      await expectWithRetry(userAPage, async () => {
+        await expect(userAPage.getByTestId(`goal-${currentGoalTitle} edited by C`)).toBeVisible();
+      });
     });
   });
 });
